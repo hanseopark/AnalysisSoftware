@@ -495,6 +495,19 @@ void ExtractSignalV2(   TString meson                   = "",
             fHistoYieldLambdaWithPi0DaughterRec                     = (TH1D*)TrueConversionContainer->FindObject(ObjectNameLambdaRecPi0.Data());
             if(fHistoYieldLambdaWithPi0DaughterRec) fHistoYieldLambdaWithPi0DaughterRec->Sumw2();
         }
+
+        fHistoTrueContBckInvMassVSPt                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueContBck.Data());
+        fHistoTrueGGBckInvMassVSPt                          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueGGBck.Data());
+        if(fHistoTrueContBckInvMassVSPt && fHistoTrueGGBckInvMassVSPt){
+          fEnableNormBckHistoComparisonToTrueBck = kTRUE;
+          FillMassMCTrueContBckHistosArray(fHistoTrueContBckInvMassVSPt);
+          FillMassMCTrueGGBckHistosArray(fHistoTrueGGBckInvMassVSPt);
+          fHistoTrueAllBckInvMassVSPt                         = (TH2D*)fHistoTrueGGBckInvMassVSPt->Clone(ObjectNameTrueAllBck.Data());
+          fHistoTrueAllBckInvMassVSPt->Sumw2();
+          fHistoTrueAllBckInvMassVSPt->Add(fHistoTrueContBckInvMassVSPt);
+          FillMassMCTrueAllBckHistosArray(fHistoTrueAllBckInvMassVSPt);
+        }
+
     
         if (meson.Contains("Pi0")){
             fHistoTrueSecMesonInvMassVSPt[0]                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecFromK0S.Data());
@@ -596,6 +609,7 @@ void ExtractSignalV2(   TString meson                   = "",
         ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRange);
         fHistoMappingSignalInvMassPtBin[iPt] = fSignal;
         fHistoMappingBackNormInvMassPtBin[iPt] = fBckNorm;
+        if(fEnableNormBckHistoComparisonToTrueBck) fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt] = (TH1D*) fHistoMappingBackNormInvMassPtBin[iPt]->Clone(Form("histoBackNormAndRemainingBGBin%02d",iPt));
 
         fHistoMappingSignalInvMassPtBin[iPt]->SetName(Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d",iPt));
         
@@ -624,6 +638,16 @@ void ExtractSignalV2(   TString meson                   = "",
                 fMesonChi2[0][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
             else 
                 fMesonChi2[0][iPt]                      = -1;
+
+            if(fEnableNormBckHistoComparisonToTrueBck){
+              for (Int_t j = fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->GetXaxis()->FindBin(fMesonFitRange[0]); j < fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->GetXaxis()->FindBin(fMesonFitRange[1])+1; j++){
+                  Double_t startBinEdge                                   = fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->GetXaxis()->GetBinLowEdge(j);
+                  Double_t endBinEdge                                     = fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->GetXaxis()->GetBinUpEdge(j);
+                  Double_t intLinearBack                                  = fFitBckInvMassPtBin[iPt]->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                  fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->SetBinContent(j,intLinearBack+fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->GetBinContent(j));
+              }
+            }
+
             FitSubtractedPol2InvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
             fFitSignalWithOtherBGInvMassPtBin[0][iPt]   = fFitReco;
             fFitBckOtherInvMassPtBin[0][iPt]            = fFitLinearBck;
@@ -1640,6 +1664,15 @@ void ExtractSignalV2(   TString meson                   = "",
             
         }
         
+        if( fEnableNormBckHistoComparisonToTrueBck ){
+          nameMeson       = Form("%s_MesonWithBckAndTrueBck%s", plotPrefix.Data(), plotSuffix.Data());
+          nameCanvas      = "MesonWithBckAndTrueBckCanvas";
+          namePad         = "MesonWithBckAndTrueBckPad";
+          cout << nameMeson.Data() << endl;
+
+          PlotInvMassInPtBins( fHistoMappingBackNormAndRemainingBGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, fHistoMappingTrueAllBckInvMassPtBins, fHistoMappingTrueGGBckInvMassPtBins, fHistoMappingTrueContBckInvMassPtBins, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
+                              fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
+        }
     }
 
     CreatePtHistos();
@@ -2847,6 +2880,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fHistoMappingSignalRemainingBGSubInvMassPtBin                   = new TH1D*[fNBinsPt];
     fHistoMappingRemainingBGInvMassPtBin                            = new TH1D*[fNBinsPt];
     fHistoMappingRatioSBInvMassPtBin                                = new TH1D*[fNBinsPt];
+    fHistoMappingBackNormAndRemainingBGInvMassPtBin                 = new TH1D*[fNBinsPt];
 
     // initial  fit-pt-arrays for  data inv mass
     fFitSignalInvMassPtBin                                          = new TF1*[fNBinsPt];
@@ -2911,11 +2945,12 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         
         fHistoMappingGGInvMassPtBin[i]                                      = NULL;
         fHistoMappingBackInvMassPtBin[i]                                    = NULL;
-        fHistoMappingBackNormInvMassPtBin[i]                               = NULL;
+        fHistoMappingBackNormInvMassPtBin[i]                                = NULL;
         fHistoMappingSignalInvMassPtBin[i]                                  = NULL;
         fHistoMappingSignalRemainingBGSubInvMassPtBin[i]                    = NULL;
         fHistoMappingRemainingBGInvMassPtBin[i]                             = NULL;
         fHistoMappingRatioSBInvMassPtBin[i]                                 = NULL;
+        fHistoMappingBackNormAndRemainingBGInvMassPtBin[i]                  = NULL;
 
         fFitSignalInvMassPtBin[i]                                           = NULL;
         fFitRemainingBGInvMassPtBin[i]                                      = NULL;
@@ -5654,6 +5689,13 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
                 }
                 
             }
+            if(fMode == 4 || fMode == 5){
+              if(fHistoMappingTrueGGBckInvMassPtBins[ii]!=0x00 && fHistoMappingTrueContBckInvMassPtBins[ii]!=0x00 && fHistoMappingTrueAllBckInvMassPtBins[ii]!=0x00){
+                fHistoMappingTrueGGBckInvMassPtBins[ii]->Write();
+                fHistoMappingTrueContBckInvMassPtBins[ii]->Write();
+                fHistoMappingTrueAllBckInvMassPtBins[ii]->Write();
+              }
+            }
             for (Int_t j = 0; j < 4; j++){
                 if (fHistoMappingTrueSecMesonInvMassPtBins[j][ii] != 0x00) fHistoMappingTrueSecMesonInvMassPtBins[j][ii]->Write();
             }    
@@ -6127,6 +6169,7 @@ void Delete(){
     if (fHistoMappingTrueContBckInvMassPtBins)                  delete fHistoMappingTrueContBckInvMassPtBins;
     if (fHistoMappingTrueAllBckInvMassPtBins)                   delete fHistoMappingTrueAllBckInvMassPtBins;
     if (fHistoMappingGGInvMassPtBin)                            delete fHistoMappingGGInvMassPtBin;
+    if (fHistoMappingBackNormAndRemainingBGInvMassPtBin)        delete fHistoMappingBackNormAndRemainingBGInvMassPtBin;
     if (fHistoMappingBackInvMassPtBin)                          delete fHistoMappingBackInvMassPtBin;
     if (fHistoMappingBackNormInvMassPtBin)                      delete fHistoMappingBackNormInvMassPtBin;
     if (fHistoMappingSignalInvMassPtBin)                        delete fHistoMappingSignalInvMassPtBin;

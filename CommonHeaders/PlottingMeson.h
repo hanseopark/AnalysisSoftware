@@ -94,6 +94,27 @@
         } else {
             if( bck == 2 ){
                 histo1->DrawCopy("same");
+            }else if (bck == 3){
+              histo1->SetLineStyle(1);
+              histo1->SetLineColor(kRed+2);
+              histo1->SetMarkerColor(kRed+2);
+              histo1->SetMarkerStyle(24);
+              histo1->SetLineWidth(1);
+              histo1->DrawCopy("hist,same");
+            }else if (bck == 4){
+              histo1->SetLineStyle(1);
+              histo1->SetLineColor(kGreen+3);
+              histo1->SetMarkerColor(kGreen+3);
+              histo1->SetMarkerStyle(24);
+              histo1->SetLineWidth(1);
+              histo1->DrawCopy("hist,same");
+            }else if (bck == -1){
+              histo1->SetLineStyle(1);
+              histo1->SetLineColor(11);
+              histo1->SetMarkerColor(11);
+              histo1->SetMarkerStyle(24);
+              histo1->SetLineWidth(1);
+              histo1->DrawCopy("hist,same");
             } else {
                 if(Title.Length() > 0){
                     histo1->SetTitle("");

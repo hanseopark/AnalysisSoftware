@@ -979,6 +979,257 @@
         delete canvasDataSpectra;
     }
 
+
+    //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
+    void PlotInvMassInPtBins(   TH1D** fHistoMappingBackWithRemainNormInvMassPtBinPlot,
+                                TH1D** fHistoMappingBackNormInvMassPtBinPlot,
+                                TH1D** fHistoMappingTrueAllBackNormInvMassPtBinPlot,
+                                TH1D** fHistoMappingTrueGGBackNormInvMassPtBinPlot,
+                                TH1D** fHistoMappingTrueContBackNormInvMassPtBinPlot,
+                                TString namePlot,
+                                TString nameCanvas,
+                                TString namePad,
+                                Double_t* fPlottingRangeMeson,
+                                TString dateDummy,
+                                TString fMesonType,
+                                Int_t fRowPlot,
+                                Int_t fColumnPlot,
+                                Int_t fStartBinPtRange,
+                                Int_t fNumberPtBins,
+                                Double_t* fRangeBinsPt,
+                                TString fDecayChannel,
+                                Bool_t fMonteCarloInfo,
+                                TString decayChannel,
+                                TString fDetectionChannel,
+                                TString fEnergy,
+                                Bool_t isVsPtConv               = kFALSE
+                            ){
+        TGaxis::SetMaxDigits(3);
+
+        TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
+        canvasDataSpectra->SetTopMargin(0.0);
+        canvasDataSpectra->SetBottomMargin(0.0);
+        canvasDataSpectra->SetRightMargin(0.0);
+        canvasDataSpectra->SetLeftMargin(0.0);
+
+        TPad * padDataSpectra           = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+        padDataSpectra->SetFillColor(0);
+        padDataSpectra->GetFrame()->SetFillColor(0);
+        padDataSpectra->SetBorderMode(0);
+        padDataSpectra->SetLogy(0);
+        padDataSpectra->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+        padDataSpectra->Draw();
+
+    //     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+    //     cout << fMesonType.Data() << endl;
+        Int_t place                     = 0;
+        for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+    //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+            Double_t startPt            = fRangeBinsPt[iPt];
+            Double_t endPt              = fRangeBinsPt[iPt+1];
+
+            place                       = place + 1; //give the right place in the page
+            if (place == fColumnPlot){
+                iPt--;
+                padDataSpectra->cd(place);
+
+    //             cout << "entered ALICE plotting" << endl;
+                TString textAlice       = "ALICE performance";
+                TString textEvents;
+                if(fMonteCarloInfo){
+                    textEvents          = "MC";
+                } else {
+                    textEvents          = "Data";
+                }
+                Double_t nPixels        = 13;
+                Double_t textHeight     = 0.08;
+                if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                    textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+                } else {
+                    textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+                }
+
+                Double_t startTextX     = 0.10;
+                Double_t startTextY     = 0.9;
+                Double_t differenceText = textHeight*1.25;
+
+                TLatex *alice           = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+                TLatex *latexDate       = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+                TLatex *energy          = new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
+                TLatex *process         = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+                TLatex *detprocess      = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionChannel);
+                TLatex *events          = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+
+                alice->SetNDC();
+                alice->SetTextColor(1);
+                alice->SetTextSize(textHeight*1.3);
+                alice->Draw();
+
+                latexDate->SetNDC();
+                latexDate->SetTextColor(1);
+                latexDate->SetTextSize(textHeight);
+                latexDate->Draw();
+
+                energy->SetNDC();
+                energy->SetTextColor(1);
+                energy->SetTextSize(textHeight);
+                energy->Draw();
+
+                process->SetNDC();
+                process->SetTextColor(1);
+                process->SetTextSize(textHeight);
+                process->Draw();
+
+                detprocess->SetNDC();
+                detprocess->SetTextColor(1);
+                detprocess->SetTextSize(textHeight);
+                detprocess->Draw();
+
+                events->SetNDC();
+                events->SetTextColor(1);
+                events->SetTextSize(textHeight);
+                events->Draw();
+
+                TLegend* legendData     = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+3.)*differenceText);
+                legendData->SetTextSize(textHeight);
+                legendData->SetTextFont(62);
+                legendData->SetFillColor(0);
+                legendData->SetFillStyle(0);
+                legendData->SetLineWidth(0);
+                legendData->SetLineColor(0);
+                legendData->SetMargin(0.15);
+                Size_t markersize       = fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMarkerSize();
+                fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
+                legendData->AddEntry(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt],"mixed evt. + rem. bck.","ep");
+
+                fHistoMappingBackNormInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
+                legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],"mixed evt.","ep");
+
+                Size_t linesize         = fHistoMappingTrueAllBackNormInvMassPtBinPlot[iPt]->GetLineWidth();
+                fHistoMappingTrueAllBackNormInvMassPtBinPlot[iPt]->SetLineWidth(5*linesize);
+                legendData->AddEntry(fHistoMappingTrueAllBackNormInvMassPtBinPlot[iPt],"true mixed ALL","l");
+                legendData->Draw();
+
+                fHistoMappingTrueGGBackNormInvMassPtBinPlot[iPt]->SetLineWidth(5*linesize);
+                legendData->AddEntry(fHistoMappingTrueGGBackNormInvMassPtBinPlot[iPt],"true mixed GG","l");
+                legendData->Draw();
+
+                fHistoMappingTrueContBackNormInvMassPtBinPlot[iPt]->SetLineWidth(5*linesize);
+                legendData->AddEntry(fHistoMappingTrueContBackNormInvMassPtBinPlot[iPt],"true mixed cont","l");
+                legendData->Draw();
+            } else {
+
+                padDataSpectra->cd(place);
+                padDataSpectra->cd(place)->SetTopMargin(0.12);
+                padDataSpectra->cd(place)->SetBottomMargin(0.15);
+                padDataSpectra->cd(place)->SetRightMargin(0.02);
+    //             cout << "place: " << place << endl;
+                int remaining           = (place-1)%fColumnPlot;
+                if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
+                else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+    //             cout << "here" << endl;
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                    titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+
+                DrawGammaHisto( fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+                if (fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]!=0x00){
+                        TString nameOfPlot = fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetName();
+                        Double_t mass = fMesonMass[iPt];
+                        if (nameOfPlot.Contains("Left"))
+                            mass                        = fMesonMassLeft[iPt];
+                        if (nameOfPlot.Contains("True"))
+                            mass                        = fMesonTrueMass[iPt];
+                        Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
+                        Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
+                        Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];
+                        Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
+                        Double_t intRangeWideHigh       = mass + fMesonIntDeltaRangeWide[1];
+                        Double_t intRangeNarrowHigh     = mass + fMesonIntDeltaRangeNarrow[1];
+
+                        Double_t normalLow              = intRangeLow-(intRangeLow-fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->GetBinLowEdge(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->FindBin(intRangeLow)));
+                        Double_t normalUp               = intRangeHigh+(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->GetBinUpEdge(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->FindBin(intRangeHigh))-intRangeHigh);
+                        Double_t wideLow                = intRangeWideLow-(intRangeWideLow-fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->GetBinLowEdge(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->FindBin(intRangeWideLow)));
+                        Double_t wideUp                 = intRangeWideHigh+(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->GetBinUpEdge(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->FindBin(intRangeWideHigh))-intRangeWideHigh);
+                        Double_t narrowLow              = intRangeNarrowLow-(intRangeNarrowLow-fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->GetBinLowEdge(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->FindBin(intRangeNarrowLow)));
+                        Double_t narrowUp               = intRangeNarrowHigh+(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->GetBinUpEdge(fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetXaxis()->FindBin(intRangeNarrowHigh))-intRangeNarrowHigh);
+
+                        TLine * lmassPos                = new TLine (mass,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),mass,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum()*0.4);
+                        lmassPos->SetLineColor(kRed+2);
+                        lmassPos->SetLineStyle(1);
+                        lmassPos->SetLineWidth(1);
+                        lmassPos->Draw("same");
+                        TLine * l1a                     = new TLine (normalLow,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),normalLow,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum());
+                        l1a->SetLineColor(kGray+1);
+                        l1a->SetLineStyle(1);
+                        l1a->SetLineWidth(1);
+                        l1a->Draw("same");
+                        TLine * l1b                     = new TLine (normalUp,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),normalUp,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum());
+                        l1b->SetLineColor(kGray+1);
+                        l1b->SetLineStyle(1);
+                        l1b->SetLineWidth(1);
+                        l1b->Draw("same");
+                        TLine * l2a                     = new TLine (wideLow,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),wideLow,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum());
+                        l2a->SetLineColor(kGray+1);
+                        l2a->SetLineStyle(2);
+                        l2a->SetLineWidth(1);
+                        l2a->Draw("same");
+                        TLine * l2b                     = new TLine (wideUp,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),wideUp,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum());
+                        l2b->SetLineColor(kGray+1);
+                        l2b->SetLineStyle(2);
+                        l2b->SetLineWidth(1);
+                        l2b->Draw("same");
+                        TLine * l3a                     = new TLine (narrowLow,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),narrowLow,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum());
+                        l3a->SetLineColor(kGray+1);
+                        l3a->SetLineStyle(3);
+                        l3a->SetLineWidth(1);
+                        l3a->Draw("same");
+                        TLine * l3b                     = new TLine (narrowUp,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMinimum(),narrowUp,fHistoMappingBackWithRemainNormInvMassPtBinPlot[iPt]->GetMaximum());
+                        l3b->SetLineColor(kGray+1);
+                        l3b->SetLineStyle(3);
+                        l3b->SetLineWidth(1);
+                        l3b->Draw("same");
+                }
+                DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],-1);
+    //             cout << "here" << endl;
+                DrawGammaHisto( fHistoMappingTrueAllBackNormInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
+    //             cout << "here" << endl;
+                DrawGammaHisto( fHistoMappingTrueGGBackNormInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],3);
+    //             cout << "here" << endl;
+                DrawGammaHisto( fHistoMappingTrueContBackNormInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],4);
+    //             cout << "here" << endl;
+                Double_t fBGFitRangeLow     = fBGFitRange[0];
+                Double_t fBGFitRangeHigh    = fBGFitRange[1];
+                if (namePlot.Contains("Left")){
+                    fBGFitRangeLow          = fBGFitRangeLeft[0];
+                    fBGFitRangeHigh         = fBGFitRangeLeft[1];
+                }
+                TBox *box               = new TBox(fBGFitRangeLow,fHistoMappingBackNormInvMassPtBinPlot[iPt]->GetMaximum()*0.93,fBGFitRangeHigh,fHistoMappingBackNormInvMassPtBinPlot[iPt]->GetMaximum()*0.91);
+                box->SetFillStyle(1001);
+                box->SetFillColor(kAzure+9);
+                box->Draw("same");
+            }
+        }
+        canvasDataSpectra->Print(namePlot.Data());
+        delete padDataSpectra;
+        delete canvasDataSpectra;
+    }
+
     //________________________________________ Plot Invariant Mass Bin With Secondary Contribution _______________________________
     void PlotInvMassSecondaryInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot, 
                                         TH1D** fHistoMappingSecondaryTotalInvMassPtBinPlot, 

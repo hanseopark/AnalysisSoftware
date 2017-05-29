@@ -31,6 +31,7 @@ Bool_t      fEnableDCMeson                                              = kFALSE
 Bool_t      fEnableDCCluster                                            = kFALSE;
 Bool_t      fUseRPBackground                                            = kFALSE;
 Bool_t      fNewMCOutput                                                = kFALSE;
+Bool_t      fEnableNormBckHistoComparisonToTrueBck                      = kFALSE;
 
 TString     fEventCutSelection                                          = "";
 TString     fGammaCutSelection                                          = "";
@@ -309,6 +310,7 @@ TH1D**      fHistoMappingTrueSecMesonInvMassPtBins[4]                   = {NULL,
 TH1D**      fHistoMappingGGInvMassPtBin                                 = NULL;    
 TH1D**      fHistoMappingBackInvMassPtBin                               = NULL;
 TH1D**      fHistoMappingBackNormInvMassPtBin                           = NULL;
+TH1D**      fHistoMappingBackNormAndRemainingBGInvMassPtBin             = NULL;
 TH1D**      fHistoMappingRatioSBInvMassPtBin                            = NULL;
 TH1D**      fHistoMappingSignalInvMassPtBin                             = NULL;
 TH1D**      fHistoMappingRemainingBGInvMassPtBin                        = NULL;
