@@ -109,13 +109,13 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
       ""
     };
 
-    TString train = "Legotrain-vAN-20170519-8TeV-EMCal_openAngleStudies";
-    Int_t trainRuns[nSets] = {419,420};
+    TString train = "Legotrain-vAN-20170525-8TeV-EMCal_openAngleStudiesTrueBck";
+    Int_t trainRuns[nSets] = {421,422};
     TString runlist[nSets] = {"merge","merge"};
 
-    const Int_t nFiles = 4;
+    const Int_t nFiles = 3;
     TString Files[nFiles] = {
-      "GammaCalo_169","GammaCalo_170","GammaCalo_171","GammaCalo_172"
+      "GammaCalo_101","GammaCalo_126","GammaCalo_146"
                             };
 
     const Int_t nMerge = 1;
@@ -125,6 +125,43 @@ void Grid_CopyFilesJetJet(TString system = "pp", TString type = "ESD", TString f
     for(Int_t i=0; i<nSets; i++){
       if(0<=i && i<=1) mergeVec[0].push_back(i);
     }
+
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+    //*********************************************************************************************************************************
+
+//    const Int_t nSets = 2;
+//    const Int_t nData = 0;
+//    TString DataSets[nSets]={
+//      "LHC16c2",
+//      "LHC16c2_plus"
+//    };
+//    TString PrefixDataSets[nSets]={
+//      "/alice/sim/2016/LHC16c2/",
+//      "/alice/sim/2016/LHC16c2_plus/"
+//    };
+
+//    TString AODfiltering[nSets]={
+//      "/AOD185",
+//      ""
+//    };
+
+//    TString train = "Legotrain-vAN-20170519-8TeV-EMCal_openAngleStudies";
+//    Int_t trainRuns[nSets] = {419,420};
+//    TString runlist[nSets] = {"merge","merge"};
+
+//    const Int_t nFiles = 4;
+//    TString Files[nFiles] = {
+//      "GammaCalo_169","GammaCalo_170","GammaCalo_171","GammaCalo_172"
+//                            };
+
+//    const Int_t nMerge = 1;
+//    TString strMerge[nMerge]={"LHC16c2_merge"};
+//    std::vector<Int_t> mergeVec[nMerge];
+//    std::vector<Int_t>::iterator it;
+//    for(Int_t i=0; i<nSets; i++){
+//      if(0<=i && i<=1) mergeVec[0].push_back(i);
+//    }
 
     //---------------------------------------------------------------------------------------------------
 
