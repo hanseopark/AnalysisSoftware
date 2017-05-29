@@ -781,7 +781,7 @@ void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax){
 
     while(max==0.){
 		max = hist->GetBinContent(--iMax);
-		if(iMax==1){
+        if(iMax==1 && max==0.){
 			iMax = hist->GetNbinsX();
             cout << "INFO: Empty histogram given to GetMinMaxBin: '" << hist->GetName() << "'" << endl;
 			break;

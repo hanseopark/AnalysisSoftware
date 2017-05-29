@@ -96,13 +96,14 @@ void DrawPeriodQAHistoTH2(TCanvas* canvas,Double_t leftMargin,Double_t rightMarg
                     TH2* fHist, TString title,TString xTitle,TString yTitle, Double_t xOffset, Double_t yOffset);
 void SaveCanvasAndWriteHistogram(TCanvas* canvas, TObject* hist, TString output);
 
-void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOutput.txt")
+void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOutput.txt", TString outputDir = "DebugPlots", Int_t debugOption = 0)
 {
   gROOT->Reset();
   StyleSettingsThesis();
   SetPlotStyle();
 
   pi0cand cand;
+  Int_t nEvent = 0;
 
   cout << Form("Reading from %s...", filePath.Data()) << endl;
   fstream file;
@@ -118,7 +119,7 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
           if(fVar.Sizeof()>1)
           {
             if(fVar.BeginsWith("--pi0cand")){
-                cout << "--------------------------" << endl;
+                if(debugOption>1) cout << "--------------------------" << endl;
                 file >> fVar;
                 file >> fVar;
                 cand.pi0cand_openAngle.push_back(fVar.Atof());
@@ -128,9 +129,9 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
                 file >> fVar;
                 file >> fVar;
                 cand.pi0cand_clusterInvMass.push_back(fVar.Atof());
-                cout << "pi0cand - opening angle: '" << cand.pi0cand_openAngle.at(cand.pi0cand_openAngle.size()-1) << "' - pT: '" << cand.pi0cand_pT.at(cand.pi0cand_openAngle.size()-1) << "'" << endl;
+                if(debugOption>1) cout << "pi0cand - opening angle: '" << cand.pi0cand_openAngle.at(cand.pi0cand_openAngle.size()-1) << "' - pT: '" << cand.pi0cand_pT.at(cand.pi0cand_openAngle.size()-1) << "'" << endl;
             }else if(fVar.BeginsWith("--cluster")){
-                cout << "cluster" << iClus;
+                if(debugOption>1) cout << "cluster" << iClus;
                 file >> fVar;
                 Int_t nCells = 0;
                 do{
@@ -142,9 +143,10 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
                     file >> fVar;
                     cand.cluster_cellEnergy.push_back(fVar.Atof());
                     file >> fVar;
-                    cout << ".";
+                    if(debugOption>1) cout << ".";
                     nCells++;
                 }while(!fVar.Contains("phi"));
+                if(debugOption>1) cout << " - " << nCells << " cells";
                 cand.cluster_cellNCells.push_back(nCells);
                 file >> fVar;
                 cand.cluster_phi.push_back(fVar.Atof());
@@ -152,12 +154,13 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
                 file >> fVar;
                 cand.cluster_eta.push_back(fVar.Atof());
                 iClus++;
-                cout << endl;
+                if(debugOption>1) cout << endl;
             } else if(fVar.BeginsWith("--event")){
               file >> fVar;
               file >> fVar;
-              cout << "--------------------------" << endl;
-              cout << "#clusters in event: " << fVar.Atoi() << endl;
+              if(debugOption>1) cout << "--------------------------" << endl;
+              if(debugOption>1) cout << "#event: " << nEvent++ << endl;
+              if(debugOption>1) cout << "#clusters in event: " << fVar.Atoi() << endl;
               cand.pi0cand_openAngle.push_back(0.);
               cand.pi0cand_pT.push_back(0.);
               cand.pi0cand_clusterInvMass.push_back(0.);
@@ -173,12 +176,11 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
   file.close();
 
   TCanvas* canvas         = new TCanvas("canvas","",10,10,750,750);  // gives the page size
-  Double_t leftMargin     = 0.1;
-  Double_t rightMargin    = 0.1;
-  Double_t topMargin      = 0.1;
-  Double_t bottomMargin   = 0.1;
+  Double_t leftMargin     = 0.15;
+  Double_t rightMargin    = 0.15;
+  Double_t topMargin      = 0.15;
+  Double_t bottomMargin   = 0.15;
 
-  TString outputDir           = "DebugPlots2";
   gSystem->Exec("mkdir -p "+outputDir);
 
   const Int_t nEmcalEtaBins             = 96;
@@ -213,6 +215,9 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
   for(Int_t iEvent = 0; iEvent<(Int_t)cand.cluster_NClusters.size(); iEvent++){
     vecCenterClus.clear();
     vecSepClus.clear();
+    if(debugOption>1) cout << "--------" << endl;
+    if(debugOption>1) cout << "#event: " << iEvent << endl;
+    if(debugOption>1) cout << cand.cluster_NClusters.at(iEvent) << endl;
     if((Int_t)cand.cluster_NClusters.at(iEvent)==0) continue;
     iClusMax += (Int_t)cand.cluster_NClusters.at(iEvent);
     TH2F* fHistClusterEtavsPhiAfterQA     = new TH2F(Form("clusters_%i",iEvent),"EtaPhi_afterClusterQA",nEmcalPhiBins,EmcalPhiBins,nEmcalEtaBins,EmcalEtaBins);
@@ -221,12 +226,14 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
         sepClusters centerTemp;
         centerTemp.lowX = cand.cluster_phi.at(iClus);
         centerTemp.lowY = cand.cluster_eta.at(iClus);
+        if(debugOption>1) cout << "clus" << iClus << " - " << centerTemp.lowX << "/" << centerTemp.lowY << endl;
         vecCenterClus.push_back(centerTemp);
-        sepClusters sepTemp;
-        sepTemp.lowX=-1;sepTemp.lowY=-1;
-        vecSepClus.push_back(sepTemp);
+
         iCellMax+=(Int_t)cand.cluster_cellNCells.at(iClus);
+        if(debugOption>1) cout << iCell << "/" << iCellMax << endl;
+
         for(; iCell<iCellMax; iCell++){
+          if(debugOption>1) cout << iCell << " - " << cand.cluster_cellAbsId.at(iCell) << endl;
           fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi.at(iCell),cand.cluster_cellEta.at(iCell),cand.cluster_cellEnergy.at(iCell));
         }
       }
@@ -235,22 +242,21 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
         sepClusters centerTemp;
         centerTemp.lowX = cand.cluster_phi.at(iClus);
         centerTemp.lowY = cand.cluster_eta.at(iClus);
+        if(debugOption>1) cout << "clus" << iClus << " - " << centerTemp.lowX << "/" << centerTemp.lowY << endl;
         vecCenterClus.push_back(centerTemp);
 
-        if(iClus>0)iCell+=(Int_t)cand.cluster_cellNCells.at(iClus-1);
         iCellMax+=(Int_t)cand.cluster_cellNCells.at(iClus);
+        if(debugOption>1) cout << iCell << "/" << iCellMax  << endl;
 
         std::vector<Int_t> tempBins;
-        for(Int_t iCell1=iCell; iCell1<iCellMax; iCell1++){
-          tempBins.push_back(fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi.at(iCell1),cand.cluster_cellEta.at(iCell1),cand.cluster_cellEnergy.at(iCell1)));
+        for(; iCell<iCellMax; iCell++){
+          if(debugOption>1) cout << iCell<< " - " << cand.cluster_cellAbsId.at(iCell) << endl;
+          tempBins.push_back(fHistClusterEtavsPhiAfterQA->Fill(cand.cluster_cellPhi.at(iCell),cand.cluster_cellEta.at(iCell),cand.cluster_cellEnergy.at(iCell)));
         }
 
         Int_t iCell_sec=iCell;
         Int_t iCellMax_sec=iCellMax;
-        for(Int_t iClus2=iClus; iClus2<iClusMax; iClus2++){
-          if(iClus2==iClus) continue;
-
-          if(iClus2>0)iCell_sec+=(Int_t)cand.cluster_cellNCells.at(iClus2-1);
+        for(Int_t iClus2=iClus+1; iClus2<iClusMax; iClus2++){
           iCellMax_sec+=(Int_t)cand.cluster_cellNCells.at(iClus2);
 
           for(Int_t iCell2=iCell_sec; iCell2<iCellMax_sec; iCell2++){
@@ -285,6 +291,7 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
               }
             }
           }
+          iCell_sec+=(Int_t)cand.cluster_cellNCells.at(iClus2);
         }
         tempBins.clear();
       }
@@ -297,8 +304,13 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
     SetXRange(fHistClusterEtavsPhiAfterQA,minB,maxB);
     SetYRange(fHistClusterEtavsPhiAfterQA,minYB,maxYB);
     SetZMinMaxTH2(fHistClusterEtavsPhiAfterQA,minB,maxB,minYB,maxYB);
+    fHistClusterEtavsPhiAfterQA->GetZaxis()->SetMoreLogLabels();
+    fHistClusterEtavsPhiAfterQA->GetZaxis()->SetNoExponent();
+    fHistClusterEtavsPhiAfterQA->GetZaxis()->SetTitle("GeV");
+    fHistClusterEtavsPhiAfterQA->GetZaxis()->SetTitleOffset(1.1);
     DrawPeriodQAHistoTH2(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                         fHistClusterEtavsPhiAfterQA,"","#phi","#eta",1,1);
+                         fHistClusterEtavsPhiAfterQA,"","#phi","#eta",1,1.4);
+
     for(Int_t iBx=minB; iBx<maxB; iBx++){
       if(minYB-1 < 1) line->DrawLine(fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(minYB),fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(maxYB));
       else line->DrawLine(fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(minYB-1),fHistClusterEtavsPhiAfterQA->GetXaxis()->GetBinUpEdge(iBx), fHistClusterEtavsPhiAfterQA->GetYaxis()->GetBinUpEdge(maxYB));
@@ -314,16 +326,15 @@ void Grid_PlotGammaCaloDebug(TString filePath = "/home/daniel/data/work/debugOut
     }
     for(Int_t iVec = 0; iVec<(Int_t) vecSepClus.size(); iVec++){
       sepClusters temp = vecSepClus.at(iVec);
-      if(temp.lowX!=-1 && temp.lowY!=-1){
-        lineClusters->DrawLine(temp.lowX,
-                               temp.lowY,
-                               temp.upX,
-                               temp.upY);
-      }
+      lineClusters->DrawLine(temp.lowX,
+                             temp.lowY,
+                             temp.upX,
+                             temp.upY);
     }
 
     SaveCanvasAndWriteHistogram(canvas, fHistClusterEtavsPhiAfterQA, Form("%s/output_%i.%s", outputDir.Data(), iEvent, "eps"));
 
+    if(debugOption>1) cout << "end:" << iCell << "/" << iCellMax << endl;
     delete fHistClusterEtavsPhiAfterQA;
   }
 
@@ -452,7 +463,7 @@ void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax){
 
     while(max==0.){
         max = hist->GetBinContent(--iMax);
-        if(iMax==1){
+        if(iMax==1 && max==0.){
             iMax = hist->GetNbinsX();
             cout << "INFO: Empty histogram given to GetMinMaxBin: '" << hist->GetName() << "'" << endl;
             break;
