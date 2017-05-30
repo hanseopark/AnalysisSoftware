@@ -1,0 +1,15 @@
+select LHC10b_pass4PHOS
+mode 5
+nSets 1
+cutNr 0
+energy 7TeV
+pathDataSets /GridOutput/20170521-1/LHC10b_pass4/LHC10b_1_GammaCalo_351.root STOP
+DataSetNames LHC10b_pass4_1 STOP
+DataSetNamesPlot LHC10b_pass4_1 STOP
+
+enableCellQACuts 1
+setQAEnergy 0 0.17 0 0.18 STOP
+setQATime -0.5E-7 2E-7 -0.1E-6 0.8E-6 STOP
+setQAHotCells1D 0 2.2E2 0 2.0 STOP
+min2D 0 95 95 95 95 95 95 95 95 STOP
+max2D 0 105 105 105 105 105 105 105 105 STOP

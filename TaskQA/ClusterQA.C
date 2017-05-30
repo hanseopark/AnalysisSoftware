@@ -18,7 +18,13 @@ void ClusterQA(
                 TString suffix          = "eps",        // output format of plots
                 TString labelData       = "Data",       // Label for data    
                 Bool_t addSubfolder     = kFALSE,       // flag to enable subdirectory creation for primary cut
-                Bool_t runMergedClust   = kFALSE        // flag to switch to merged cluster cuts instead of standard cluster cut           
+                Bool_t runMergedClust   = kFALSE,        // flag to switch to merged cluster cuts instead of standard cluster cut
+                Int_t useCellQAcutsExt  = 0,        //
+                Double_t* arrSetQAEnergy= NULL,
+                Double_t* arrSetQATime  = NULL,
+                Double_t* arrSetQAHotCells1D= NULL,
+                Double_t* arrSetMin2D   = NULL,
+                Double_t* arrSetMax2D   = NULL
               )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -254,10 +260,14 @@ void ClusterQA(
         iCalo               = 2;
         fClusters           = Form("%s clusters", calo.Data());
         nCaloModules        = 5;
-        nCaloCells          = 6000;
+        nCaloCells          = 10700;
         if(DataSets[0].Contains("LHC10")){
             nCaloModules    = 5;
-            nCaloCells      = 6000;
+            nCaloCells      = 10700;
+        }
+        if(DataSets[0].Contains("LHC15")){
+            nCaloModules    = 5;
+            nCaloCells      = 14300;
         }
     } else {
         cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;
@@ -387,123 +397,139 @@ void ClusterQA(
     line->SetLineStyle(2);
     line->SetLineWidth(2);
     line->SetLineColor(1);
-    if(CheckForData8TeV(DataSets[0])){
-        if(!DataSets[0].Contains("-kEMC") && DataSets[0].CompareTo("LHC12")!=0 && DataSets[0].CompareTo("LHC12-periods")!=0){
+    if(useCellQAcutsExt==1){
+        doCellQA                = kTRUE;
+        cellQAData              = new CellQAObj();
+        setQAEnergy(cellQAData,arrSetQAEnergy[0],arrSetQAEnergy[1],arrSetQAEnergy[2],arrSetQAEnergy[3]);
+        setQATime(cellQAData,arrSetQATime[0],arrSetQATime[1],arrSetQATime[2],arrSetQATime[3]);
+        setQAHotCells1D(cellQAData,arrSetQAHotCells1D[0],arrSetQAHotCells1D[1],arrSetQAHotCells1D[2],arrSetQAHotCells1D[3]);
+        const Int_t dim2D       = 9;
+        Double_t min2D[dim2D];
+        Double_t max2D[dim2D];
+        for(Int_t i=1;i<9;i++){
+            min2D[i]=arrSetMin2D[i];
+            max2D[i]=arrSetMax2D[i];
+        }
+        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
+    }else{
+        if(CheckForData8TeV(DataSets[0])){
+            if(!DataSets[0].Contains("-kEMC") && DataSets[0].CompareTo("LHC12")!=0 && DataSets[0].CompareTo("LHC12-periods")!=0){
+                doCellQA                = kTRUE;
+                cellQAData              = new CellQAObj();
+                setQAEnergy(cellQAData,0,0.3,0,0.25);
+                setQATime(cellQAData,-0.025E-6,0.05E-6,0.002E-6,0.15E-6);
+                const Int_t dim2D       = 9;
+                Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.4,0.25,0.15,0.1,0.08};
+                Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
+                setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
+
+                setQAHotCells1D(cellQAData,0,4E4,0,1.8);
+                if(useGoodRuns && DataSets[0].CompareTo("LHC12")==0){
+                    //            const Int_t nGoodCells = ;
+                    //            Int_t goodCells[nGoodCells]={129,760,869,1039,1367,1377,};
+                    //            FillGoodCells(cellQAData,nGoodCells,goodCells);
+                }
+                if(DataSets[0].CompareTo("LHC12a")==0) setQAHotCells1D(cellQAData,0,9E3,0,1.8);
+                if(DataSets[0].CompareTo("LHC12b")==0) setQAHotCells1D(cellQAData,0,5E3,0,1.8);
+                if(DataSets[0].CompareTo("LHC12c")==0) setQAHotCells1D(cellQAData,0,1.5E3,0,1.8);
+                if(DataSets[0].CompareTo("LHC12d")==0) setQAHotCells1D(cellQAData,0,1.5E4,0,1.8);
+                if(DataSets[0].CompareTo("LHC12f")==0) setQAHotCells1D(cellQAData,0,4E3,0,1.8);
+                if(DataSets[0].CompareTo("LHC12g")==0){
+                    setQAEnergy(cellQAData,0,0.3,0,0.4);
+                    setQATime(cellQAData,-0.1E-6,0.1E-6,-0.002E-6,0.3E-6);
+                    setQAHotCells1D(cellQAData,0,50,0,10);
+                    min2D[8]=0.15; min2D[7]=0.2; min2D[6]=0.25;min2D[5]=0.3;
+                    setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
+                }
+                if(DataSets[0].CompareTo("LHC12h")==0) {
+                    setQATime(cellQAData,0,0.05E-6,0.05E-6,0.2E-6);
+                    setQAHotCells1D(cellQAData,0,1E4,0,1.8);
+                }
+                if(DataSets[0].CompareTo("LHC12i")==0) {
+                    setQATime(cellQAData,0,0.07E-6,0.05E-6,0.2E-6);
+                    setQAHotCells1D(cellQAData,0,1E3,0,1.8);
+                }
+            }
+            //    } else if(DataSets[0].BeginsWith("LHC12-kEMC")){//CheckForTriggerData8TeV(DataSet)){
+            //        doCellQA = kTRUE;
+            //        cellQAData = new CellQAObj();
+            //        setQAEnergy(cellQAData,0,0.4,0,0.35);
+            //        setQATime(cellQAData,-0.1E-6,0.1E-6,0,0.4E-6);
+            //        setQAHotCells1D(cellQAData,1E4,2E6,0,10);
+            //        const Int_t dim2D= 9;
+            //        Double_t min2D[dim2D]={0,4,2.5,1.5,1,0.75,0.5,0.3,0.2};
+            //        Double_t max2D[dim2D]={0,105,105,105,105,105,105,105,105};
+            //        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
+        } else if(DataSets[0].CompareTo("LHC11a_p4_wSDD")==0){
             doCellQA                = kTRUE;
             cellQAData              = new CellQAObj();
-            setQAEnergy(cellQAData,0,0.3,0,0.25);
-            setQATime(cellQAData,-0.025E-6,0.05E-6,0.002E-6,0.15E-6);
+            setQAEnergy(cellQAData,0,0.25,0,0.25);
+            setQATime(cellQAData,-0.005E-6,0.025E-6,0.005E-6,0.04E-6);
+            setQAHotCells1D(cellQAData,0,6E3,0,1.5);
+            const Int_t dim2D       = 9;
+            Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.4,0.25,0.15,0.1,0.08};
+            Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
+            setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
+        } else if(DataSets[0].CompareTo("LHC11a_p4_wSDD-kEMC1")==0){
+            doCellQA                = kTRUE;
+            cellQAData              = new CellQAObj();
+            setQAEnergy(cellQAData,0,0.4,0,0.5);
+            setQATime(cellQAData,-0.01E-6,0.025E-6,0,0.04E-6);
+            setQAHotCells1D(cellQAData,0,1E3,0,1.5);
+            const Int_t dim2D       = 9;
+            Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.7,0.6,0.5,0.4,0.3};
+            Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
+            setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
+        } else if(CheckForData7TeV(DataSets[0])){
+            doCellQA                = kTRUE;
+            cellQAData              = new CellQAObj();
+            setQAEnergy(cellQAData,0,0.2,0,0.2);
             const Int_t dim2D       = 9;
             Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.4,0.25,0.15,0.1,0.08};
             Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
             setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
 
-            setQAHotCells1D(cellQAData,0,4E4,0,1.8);
-            if(useGoodRuns && DataSets[0].CompareTo("LHC12")==0){
-                //            const Int_t nGoodCells = ;
-                //            Int_t goodCells[nGoodCells]={129,760,869,1039,1367,1377,};
-                //            FillGoodCells(cellQAData,nGoodCells,goodCells);
+            if(DataSets[0].CompareTo("LHC10b_pass4")==0){
+                setQAHotCells1D(cellQAData,1E3,7E3,0,4);
+                setQATime(cellQAData,6E-7,7E-7,4E-8,6E-8);
+            } else if(DataSets[0].CompareTo("LHC10c_pass4")==0){
+                setQAHotCells1D(cellQAData,2E3,2E4,0,2);
+                setQATime(cellQAData,6E-7,6.8E-7,2E-8,5E-8);
+            } else if(DataSets[0].CompareTo("LHC10d_pass4")==0){
+                setQAHotCells1D(cellQAData,5E3,2.5E4,0,2);
+                setQATime(cellQAData,6E-7,6.8E-7,0,3E-8);
+            } else if(DataSets[0].CompareTo("LHC10e_pass4")==0){
+                setQAHotCells1D(cellQAData,3E3,3E4,0,2);
+                setQATime(cellQAData,5.5E-7,6.5E-7,0,3E-8);
+            } else if(DataSets[0].CompareTo("LHC10f_pass4")==0){
+                setQAHotCells1D(cellQAData,2E3,1.2E4,0,2);
+                setQATime(cellQAData,6E-7,7E-7,8E-8,1.4E-7);
+            } else{
+                setQAHotCells1D(cellQAData,0,1E5,0,4);
+                setQATime(cellQAData,6E-7,7E-7,0,1E-7);
             }
-            if(DataSets[0].CompareTo("LHC12a")==0) setQAHotCells1D(cellQAData,0,9E3,0,1.8);
-            if(DataSets[0].CompareTo("LHC12b")==0) setQAHotCells1D(cellQAData,0,5E3,0,1.8);
-            if(DataSets[0].CompareTo("LHC12c")==0) setQAHotCells1D(cellQAData,0,1.5E3,0,1.8);
-            if(DataSets[0].CompareTo("LHC12d")==0) setQAHotCells1D(cellQAData,0,1.5E4,0,1.8);
-            if(DataSets[0].CompareTo("LHC12f")==0) setQAHotCells1D(cellQAData,0,4E3,0,1.8);
-            if(DataSets[0].CompareTo("LHC12g")==0){
-                setQAEnergy(cellQAData,0,0.3,0,0.4);
-                setQATime(cellQAData,-0.1E-6,0.1E-6,-0.002E-6,0.3E-6);
-                setQAHotCells1D(cellQAData,0,50,0,10);
-                min2D[8]=0.15; min2D[7]=0.2; min2D[6]=0.25;min2D[5]=0.3;
-                setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
-            }
-            if(DataSets[0].CompareTo("LHC12h")==0) {
-                setQATime(cellQAData,0,0.05E-6,0.05E-6,0.2E-6);
-                setQAHotCells1D(cellQAData,0,1E4,0,1.8);
-            }
-            if(DataSets[0].CompareTo("LHC12i")==0) {
-                setQATime(cellQAData,0,0.07E-6,0.05E-6,0.2E-6);
-                setQAHotCells1D(cellQAData,0,1E3,0,1.8);
-            }
-        }
-        //    } else if(DataSets[0].BeginsWith("LHC12-kEMC")){//CheckForTriggerData8TeV(DataSet)){
-        //        doCellQA = kTRUE;
-        //        cellQAData = new CellQAObj();
-        //        setQAEnergy(cellQAData,0,0.4,0,0.35);
-        //        setQATime(cellQAData,-0.1E-6,0.1E-6,0,0.4E-6);
-        //        setQAHotCells1D(cellQAData,1E4,2E6,0,10);
-        //        const Int_t dim2D= 9;
-        //        Double_t min2D[dim2D]={0,4,2.5,1.5,1,0.75,0.5,0.3,0.2};
-        //        Double_t max2D[dim2D]={0,105,105,105,105,105,105,105,105};
-        //        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
-    } else if(DataSets[0].CompareTo("LHC11a_p4_wSDD")==0){
-        doCellQA                = kTRUE;
-        cellQAData              = new CellQAObj();
-        setQAEnergy(cellQAData,0,0.25,0,0.25);
-        setQATime(cellQAData,-0.005E-6,0.025E-6,0.005E-6,0.04E-6);
-        setQAHotCells1D(cellQAData,0,6E3,0,1.5);
-        const Int_t dim2D       = 9;
-        Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.4,0.25,0.15,0.1,0.08};
-        Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
-        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
-    } else if(DataSets[0].CompareTo("LHC11a_p4_wSDD-kEMC1")==0){
-        doCellQA                = kTRUE;
-        cellQAData              = new CellQAObj();
-        setQAEnergy(cellQAData,0,0.4,0,0.5);
-        setQATime(cellQAData,-0.01E-6,0.025E-6,0,0.04E-6);
-        setQAHotCells1D(cellQAData,0,1E3,0,1.5);
-        const Int_t dim2D       = 9;
-        Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.7,0.6,0.5,0.4,0.3};
-        Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
-        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
-    } else if(CheckForData7TeV(DataSets[0])){
-        doCellQA                = kTRUE;
-        cellQAData              = new CellQAObj();
-        setQAEnergy(cellQAData,0,0.2,0,0.2);
-        const Int_t dim2D       = 9;
-        Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.4,0.25,0.15,0.1,0.08};
-        Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
-        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
-
-        if(DataSets[0].CompareTo("LHC10b_pass4")==0){
-            setQAHotCells1D(cellQAData,1E3,7E3,0,4);
-            setQATime(cellQAData,6E-7,7E-7,4E-8,6E-8);
-        } else if(DataSets[0].CompareTo("LHC10c_pass4")==0){
-            setQAHotCells1D(cellQAData,2E3,2E4,0,2);
-            setQATime(cellQAData,6E-7,6.8E-7,2E-8,5E-8);
-        } else if(DataSets[0].CompareTo("LHC10d_pass4")==0){
-            setQAHotCells1D(cellQAData,5E3,2.5E4,0,2);
-            setQATime(cellQAData,6E-7,6.8E-7,0,3E-8);
-        } else if(DataSets[0].CompareTo("LHC10e_pass4")==0){
-            setQAHotCells1D(cellQAData,3E3,3E4,0,2);
-            setQATime(cellQAData,5.5E-7,6.5E-7,0,3E-8);
-        } else if(DataSets[0].CompareTo("LHC10f_pass4")==0){
-            setQAHotCells1D(cellQAData,2E3,1.2E4,0,2);
-            setQATime(cellQAData,6E-7,7E-7,8E-8,1.4E-7);
+        } else if(DataSets[0].CompareTo("LHC15o")==0){
+            doCellQA                = kTRUE;
+            cellQAData              = new CellQAObj();
+            setQAEnergy(cellQAData,0.06,0.22,0.06,0.22);
+            setQATime(cellQAData,-0.005E-6,0.015E-6,0.005E-6,0.04E-6);
+            setQAHotCells1D(cellQAData,0.1E6,1.4E6,0,1.7);
+            const Int_t dim2D       = 9;
+            Double_t min2D[dim2D]   = {0.7,0.6,0.5,0.4,0.3,0.25,0.2,0.2,0.2};
+            Double_t max2D[dim2D]   = {1E3,1E3,105,105,105,105,105,105,105};
+            setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
         } else{
-            setQAHotCells1D(cellQAData,0,1E5,0,4);
-            setQATime(cellQAData,6E-7,7E-7,0,1E-7);
+            cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            cout << "\tWARNING: For DataSet " << DataSets[0].Data() << " there are no cell cuts defined yet!" << endl;
+            cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            fLog << "\tWARNING: For DataSet " << DataSets[0].Data() << " there are no cell cuts defined yet!" << endl;
+            fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         }
-    } else if(DataSets[0].CompareTo("LHC15o")==0){
-        doCellQA                = kTRUE;
-        cellQAData              = new CellQAObj();
-        setQAEnergy(cellQAData,0.06,0.22,0.06,0.22);
-        setQATime(cellQAData,-0.005E-6,0.015E-6,0.005E-6,0.04E-6);
-        setQAHotCells1D(cellQAData,0.1E6,1.4E6,0,1.7);
-        const Int_t dim2D       = 9;
-        Double_t min2D[dim2D]   = {0.7,0.6,0.5,0.4,0.3,0.25,0.2,0.2,0.2};
-        Double_t max2D[dim2D]   = {1E3,1E3,105,105,105,105,105,105,105};
-        setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
-    } else{
-        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "\tWARNING: For DataSet " << DataSets[0].Data() << " there are no cell cuts defined yet!" << endl;
-        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        fLog << "\tWARNING: For DataSet " << DataSets[0].Data() << " there are no cell cuts defined yet!" << endl;
-        fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     }
 
     TString charge[2]       = {"pos","neg"};
@@ -2058,10 +2084,10 @@ void ClusterQA(
             // cell ID vs energy and time of the cells
             if(fHistCellTimeVsCellID){
                 fHistCellTimeVsCellID->GetYaxis()->SetRangeUser(0,nCaloCells);
-                DrawPeriodQAHistoTH2(canvasJPG,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistCellTimeVsCellID,Form("%s - %s %s- %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), fClusters.Data()),
                                     "Cell Time (#mus)","CellID",1,1);
-                SaveCanvasAndWriteHistogram(canvasJPG, fHistCellTimeVsCellID, Form("%s/CellTimeVsCellID_%s.jpg", outputDir.Data(), DataSets[i].Data()));
+                SaveCanvasAndWriteHistogram(canvas, fHistCellTimeVsCellID, Form("%s/CellTimeVsCellID_%s.jpg", outputDir.Data(), DataSets[i].Data()));
                 vecCellTimingForComparison.push_back(new TH2D(*fHistCellTimeVsCellID));
 
                 PlotCellMeanVsSigma(cellQA,nCaloCells,fHistCellTimeVsCellID,
@@ -4028,7 +4054,7 @@ void ClusterQA(
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "AllCells.size before sort and unique: " << allCells.size() << ".";
         fLog << "AllCells.size before sort and unique: " << allCells.size() << ".";
-        if((Int_t)allCells.size()>200){
+        if((Int_t)allCells.size()>2000){
             cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
             cout << "ERROR: allCells.size() too big " << allCells.size() << ", check cuts!" << endl;
             cout << "RETURNING..." << endl;

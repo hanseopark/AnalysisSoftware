@@ -2367,14 +2367,15 @@ void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TStrin
 				if(temp->Integral(1,temp->GetNbinsX())>0){
 					//Double_t nTotal = temp->Integral(1,temp->GetXaxis()->GetNbins());
 					Double_t nCell = temp->Integral(1,iBin);
+                    Double_t nCellTotal = temp->Integral(1, temp->GetXaxis()->GetNbins());
 					Double_t nCellAbove = temp->Integral(iBin+1,temp->GetXaxis()->GetNbins());
 					Double_t fraction = 100;
 					if(nCell>0) fraction = nCellAbove / nCell;
 					if(fraction>100) fraction = 100;
 					if(fraction<0.0001) fraction = 0.0001;
 					outHist2D->Fill(fraction,((Double_t)iBin+0.05)/10.);
-					if(obj && (fraction < obj->HotCells2D[iBin-1][0] || fraction > obj->HotCells2D[iBin-1][1]) ){
-						if(!CheckGoodCell(obj,iY-1)) obj->cellIDsHotCells2D.push_back(iY-1);
+					if(obj && fraction > obj->HotCells2D[iBin-1][0] && fraction < obj->HotCells2D[iBin-1][1] ){
+						if(!CheckGoodCell(obj,iY-1)&&nCellTotal>1000) obj->cellIDsHotCells2D.push_back(iY-1);
 					}
 					//if(fraction>10){ cout << "iBin:" << iBin << ", cell" << iY << endl;}
 				}
