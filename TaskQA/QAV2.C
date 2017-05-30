@@ -36,6 +36,12 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     TString pathDataSets    [maxSets];
     TString pathPhotonQA    [maxSets];
     Bool_t diffPhotonQAPath         = kFALSE;
+    Int_t fuseClusterQAValues       = 0;
+    Double_t arrQAEnergy[4];
+    Double_t arrQATime[4];
+    Double_t arrQAHotCells1D[4];
+    Double_t arrmin2D[9];
+    Double_t arrmax2D[9];
     
     // initialize arrays
     for (Int_t i = 0; i< maxSets; i++){
@@ -137,6 +143,48 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
                 else 
                     i                   = tempArr->GetEntries();
             }    
+        } else if (tempValue.BeginsWith("enableCellQACuts",TString::kIgnoreCase)){
+            fuseClusterQAValues          = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+        } else if (tempValue.BeginsWith("setQAEnergy",TString::kIgnoreCase)){    
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 5; i++){
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
+                    arrQAEnergy[i-1]            = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
+                }
+                else 
+                    i                   = tempArr->GetEntries();
+            }    
+        } else if (tempValue.BeginsWith("setQATime",TString::kIgnoreCase)){    
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 5; i++){
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
+                    arrQATime[i-1]              = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
+                }
+                else 
+                    i                   = tempArr->GetEntries();
+            }    
+        } else if (tempValue.BeginsWith("setQAHotCells1D",TString::kIgnoreCase)){    
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 5; i++){
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
+                    arrQAHotCells1D[i-1]        = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
+                }
+                else 
+                    i                   = tempArr->GetEntries();
+            }    
+        } else if (tempValue.BeginsWith("min2D",TString::kIgnoreCase)){    
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 10; i++){
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
+                    arrmin2D[i-1]               = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
+                }
+                else 
+                    i                   = tempArr->GetEntries();
+            }    
+        } else if (tempValue.BeginsWith("max2D",TString::kIgnoreCase)){    
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 10; i++){
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
+                    arrmax2D[i-1]               = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
+                }
+                else 
+                    i                   = tempArr->GetEntries();
+            }    
         }    
         
         delete tempArr;
@@ -182,7 +230,12 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     //**************************************************************************************************************
     if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
-    if ( doClusterQA )  ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    if ( doClusterQA){
+        if(fuseClusterQAValues==1)
+            ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kFALSE, fuseClusterQAValues, arrQAEnergy, arrQATime, arrQAHotCells1D, arrmin2D, arrmax2D);
+        else
+            ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    }
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);
     return;
 
