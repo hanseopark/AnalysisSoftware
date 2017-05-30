@@ -1213,16 +1213,6 @@
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],4);
     //             cout << "here" << endl;
-                Double_t fBGFitRangeLow     = fBGFitRange[0];
-                Double_t fBGFitRangeHigh    = fBGFitRange[1];
-                if (namePlot.Contains("Left")){
-                    fBGFitRangeLow          = fBGFitRangeLeft[0];
-                    fBGFitRangeHigh         = fBGFitRangeLeft[1];
-                }
-                TBox *box               = new TBox(fBGFitRangeLow,fHistoMappingBackNormInvMassPtBinPlot[iPt]->GetMaximum()*0.93,fBGFitRangeHigh,fHistoMappingBackNormInvMassPtBinPlot[iPt]->GetMaximum()*0.91);
-                box->SetFillStyle(1001);
-                box->SetFillColor(kAzure+9);
-                box->Draw("same");
             }
         }
         canvasDataSpectra->Print(namePlot.Data());
