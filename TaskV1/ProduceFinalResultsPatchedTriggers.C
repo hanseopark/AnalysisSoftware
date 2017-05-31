@@ -503,7 +503,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histoAcceptancePi0WOEvtWeights[i]                   = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptanceWOEvtWeights.Data());
         
         histoEffectCorrPi0FromK0s[i]                        = NULL;
-        histoEffectCorrPi0FromK0s[i]                        = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonFromToyToRaw");
+        histoEffectCorrPi0FromK0s[i]                        = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonFromCocktailToRaw");
+        if (!histoEffectCorrPi0FromK0s[i])
+          histoEffectCorrPi0FromK0s[i]                      = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonFromToyToRaw");
+
         if (!histoEffectCorrPi0FromK0s[i] || isMC.CompareTo("MC") == 0 )
             histoEffectCorrPi0FromK0s[i]                    = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonToRaw");
         if (histoEffectCorrPi0FromK0s[i])
