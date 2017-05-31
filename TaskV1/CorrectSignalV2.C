@@ -617,13 +617,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
                     Double_t minPtSecFitConst   = 2.5;
-                    if ((kCollisionSystem ==2 && mode == 2) || kCollisionSystem==1)
-                        minPtSecFitConst        = 4.0;
+                    if (kCollisionSystem ==2 && mode == 2) minPtSecFitConst        = 4.0;
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
                     
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
                     fithistoRatioSecEffDivTrueEff[k][j]->SetRange(minPtMesonSec,maxPtMeson);
-                    if(!(mode == 0 && kCollisionSystem==1))fithistoRatioSecEffDivTrueEff[k][j]->FixParameter(2,fitConst->GetParameter(0));
+                    if(mode == 0 && kCollisionSystem==1 && !(centralityString.Contains("20-40%") || centralityString.Contains("20-50%"))) cout << "const factor not fixed" << endl; 
+                    else fithistoRatioSecEffDivTrueEff[k][j]->FixParameter(2,fitConst->GetParameter(0));
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fithistoRatioSecEffDivTrueEff[k][j],"QNRME+","",minPtMesonSec,maxPtMeson);
                 }   
 
@@ -3231,7 +3231,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
             Double_t rangeSecRatio[2]   = {0, 0.30};    
             if (mode == 0){
-                rangeSecRatio[1]        = 0.05;
+                if(kCollisionSystem==1) rangeSecRatio[1]        = 0.07;
+                else rangeSecRatio[1]        = 0.05;
             } else if (mode == 2){
                 rangeSecRatio[1]        = 0.05;
             } else if (mode == 4){
