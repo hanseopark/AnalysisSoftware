@@ -735,7 +735,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoEMCALEtaToPi0Stat                        = (TH1D*)directoryEMCALEta->Get("EtaToPi0YShiftedStatError");
         TGraphAsymmErrors* graphEMCALEtaToPi0Stat           = new TGraphAsymmErrors(histoEMCALEtaToPi0Stat);
         for(Int_t i=0; i<5; i++) graphEMCALEtaToPi0Stat->RemovePoint(0);
-        for(Int_t i=0; i<4; i++) graphEMCALEtaToPi0Stat->RemovePoint(graphEMCALEtaToPi0Stat->GetN()-1);
+        for(Int_t i=0; i<3; i++) graphEMCALEtaToPi0Stat->RemovePoint(graphEMCALEtaToPi0Stat->GetN()-1);
 
         TGraphAsymmErrors* graphEMCALEtaToPi0Sys            = (TGraphAsymmErrors*)directoryEMCALEta->Get("EtaToPi0YShiftedSystError");
         

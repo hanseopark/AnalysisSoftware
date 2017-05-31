@@ -4025,7 +4025,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*400./100.;
                   TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13.){
+                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]==13.){
+                    fMesonFitRange[0] = 0.08;
+                    fMesonFitRange[1] = 0.25;
+                  }else if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=14.){
                     fMesonFitRange[0] = 0.08;
                     fMesonFitRange[1] = 0.28;
                   }

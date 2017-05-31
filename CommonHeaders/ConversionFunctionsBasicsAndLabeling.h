@@ -3653,13 +3653,27 @@
         case 5:
         return "#theta_{meson} > 0.0202";
         case 6:
-        return "#theta_{meson} > 0.0404";
+        return "#theta_{meson} > 0.017";
         case 7:
-        return "#theta_{meson} > 0.0303";
+        return "#theta_{meson} > 0.016";
         case 8:
-        return "#theta_{meson} > 0.02525";
+        return "#theta_{meson} > 0.018";
         case 9:
-        return "#theta_{meson} > 0.03535";
+        return "#theta_{meson} > 0.019";
+        case 10:
+        return "#theta_{meson} > 0. + 1 cell dist";
+        case 11:
+        return "#theta_{meson} > 0.0152 + 1 cell dist";
+        case 12:
+        return "#theta_{meson} > 0.016 + 1 cell dist";
+        case 13:
+        return "#theta_{meson} > 0.017 + 1 cell dist";
+        case 14:
+        return "#theta_{meson} > 0.018 + 1 cell dist";
+        case 15:
+        return "#theta_{meson} > 0.019 + 1 cell dist";
+        case 16:
+        return "#theta_{meson} > 0.020 + 1 cell dist";
         default:
         return "#theta_{meson} cut unknown";
     }
