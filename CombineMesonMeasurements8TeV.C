@@ -5747,7 +5747,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
     eta2pi0MtScaledTCM->SetLineWidth(2.);
 
-    Double_t eta2Pi0Const = 0.458937;
+    Double_t eta2Pi0Const = 0.460176;
     Double_t mPi0 = 0.134977;
     Double_t mEta = 0.547853;
     for (Int_t i=1; i<=eta2pi0MtScaled->GetNbinsX(); i++) {
