@@ -52,7 +52,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                 TString file                = "",
                                 TString cutSelection        = "",
                                 TString suffix              = "",
-                                TString isMC                = "",
+                                TString optionMC                = "",
                                 TString option              = "",
                                 TString directphotonPlots   = "",
                                 TString period              = "",
@@ -173,7 +173,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     TString fDecayChannel                                                       = "#gamma#gamma";
     
     //***************************** Specification Data/MC ***********************************************
-    if(isMC.CompareTo("kTRUE") == 0){
+    if(optionMC.CompareTo("kTRUE") == 0){
         fIsMC                                                                   = 1;
         fPrefix2                                                                = "MC";
     } else {
