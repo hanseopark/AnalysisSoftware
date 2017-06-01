@@ -45,10 +45,11 @@
 using namespace std;
 
 
-void SeparateDifferentCutnumbers(   TString nameInputFile1,
-                                    TString nameOutputFileBase,                           
-                                    Int_t mode = 0,
-                                    Bool_t removeDCAtree = kFALSE
+void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
+                                    TString nameOutputFileBase      = "",                           
+                                    Int_t mode                      = 0,
+                                    Int_t splitAll                  = kFALSE,
+                                    Bool_t removeDCAtree            = kFALSE
                                 ){
 
     TFile *fileInput1 = new TFile(nameInputFile1.Data());
@@ -74,7 +75,7 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1,
             nDiffCutNumbers++;
         }
     }
-    if (nDiffCutNumbers < 2){
+    if (nDiffCutNumbers < 2 && !splitAll){
         cout << "only one cut present + additional folders for basis cuts available, no need to split" << endl;
         return;
     }
@@ -100,14 +101,28 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1,
                     listOutput          = new TList();
                     listOutput->SetName(defaultMainDir.Data());
                 }
-                if (!removeDCAtree){
-                    listOutput->Add(listToSave);
-                }    
+                listOutput->Add(listToSave);
                 listOutput->Write("",TObject::kSingleKey);
             fileOutput->Close();
             delete fileOutput;
             n++;
-        }
+        } else {
+            cout<< "found:" << dirname<<endl;
+            TString nameOutputFile  = Form("%s_Basic.root", nameOutputFileBase.Data());
+            TFile *fileOutput       = new TFile(nameOutputFile.Data(),"UPDATE");
+                TList *listOutput       = (TList*)fileOutput->Get(defaultMainDir.Data());
+                Bool_t kNewList         = kFALSE;
+                if (!listOutput){
+                    kNewList            = kTRUE;
+                    listOutput          = new TList();
+                    listOutput->SetName(defaultMainDir.Data());
+                }
+                listOutput->Add(listToSave);
+                listOutput->Write("",TObject::kSingleKey);
+            fileOutput->Close();
+            delete fileOutput;
+            
+        }    
     }
     delete fileInput1;
 }
