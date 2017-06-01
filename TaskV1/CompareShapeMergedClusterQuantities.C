@@ -234,7 +234,12 @@ void PlotMergedCompDataMCInPtBins(  TH1D**      fHistoMergedRecDataPtBinPlot,
             
             if (fHistoMergedRecDataPtBinPlot){
                 if (fHistoMergedRecDataPtBinPlot[iPt]){
-                    DrawGammaHistoColored( fHistoMergedRecDataPtBinPlot[iPt], labelAbove, xaxisLabel, yaxisLabel, fPlottingRangeMeson[0],fPlottingRangeMeson[1],1,kBlack,20,0.8);
+                    if (plottingMode != 2 ){
+                        DrawGammaHistoColored( fHistoMergedRecDataPtBinPlot[iPt], labelAbove, xaxisLabel, yaxisLabel, fPlottingRangeMeson[0],fPlottingRangeMeson[1],1,kBlack,20,0.8);
+                    } else {
+                        DrawGammaHistoColored( fHistoMergedRecDataPtBinPlot[iPt], labelAbove, xaxisLabel, yaxisLabel, fPlottingRangeMeson[0],fPlottingRangeMeson[1],0,kBlack,20,0.8);
+                        fHistoMergedRecDataPtBinPlot[iPt]->Draw("pe");
+                    }    
                 } else {
                     continue;
                 }
@@ -300,6 +305,148 @@ void PlotMergedCompDataMCInPtBins(  TH1D**      fHistoMergedRecDataPtBinPlot,
 }
 
 
+//__________________________________________ Plotting _______________________________________________
+void PlotMergedCompDataMCSingleBin( TH1D**      fHistoMergedRecDataPtBinPlot, 
+                                    TH1D**      fHistoMergedRecMCPtBinPlot, 
+                                    TH1D**      fHistoMergedValMCPtBinPlot, 
+                                    Double_t*   fChi2Value,
+                                    Double_t*   fMeanData,
+                                    Double_t*   fMeanMC,
+                                    TString     namePlot, 
+                                    TString     nameCanvas, 
+                                    TString     namePad, 
+                                    Double_t*   fPlottingRangeMeson, 
+                                    TString     dateDummy, 
+                                    TString     fMesonType, 
+                                    Int_t       iPtBin, 
+                                    Double_t*   fRangeBinsPt, 
+                                    Int_t       detMode, 
+                                    TString     fEnergy,
+                                    Int_t       trigger,
+                                    Int_t       plotttingMode   = 0
+                                    ){
+    
+    TString methodStr               = ReturnTextReconstructionProcess(detMode);
+    TString triggerStr2             = ReturnTriggerName(trigger,fEnergy);
+    TString triggerStr              = Form("%s triggered", triggerStr2.Data());
+
+    if (!fHistoMergedRecDataPtBinPlot[iPtBin]){
+        cout << "I am missing the data hist" << endl;
+        return;  
+    } 
+    
+    Double_t marginUp       = 0.015;
+    if (plotttingMode == 2)
+        marginUp       = 0.035;
+    TCanvas* canvasMergedSamplePlot     = new TCanvas("canvasMergedSamplePlotNew","",0,0,1500,1500);  // gives the page size
+    DrawGammaCanvasSettings( canvasMergedSamplePlot,  0.09, 0.015, marginUp, 0.08);
+    
+    Double_t startPt                    = fRangeBinsPt[iPtBin];
+    Double_t endPt                      = fRangeBinsPt[iPtBin+1];
+    Double_t startTextY                 = 0.945-marginUp;
+    
+    Double_t textSizeLabelsPixel        = 100*3/5;
+    Double_t marginSample               = 0.1*1500;
+    Double_t textsizeLabelsSample       = 0;
+    Double_t textsizeFacSample          = 0;
+    if (canvasMergedSamplePlot->XtoPixel(canvasMergedSamplePlot->GetX2()) < canvasMergedSamplePlot->YtoPixel(canvasMergedSamplePlot->GetY1())){
+        textsizeLabelsSample       = (Double_t)textSizeLabelsPixel/canvasMergedSamplePlot->XtoPixel(canvasMergedSamplePlot->GetX2()) ;
+        textsizeFacSample          = (Double_t)1./canvasMergedSamplePlot->XtoPixel(canvasMergedSamplePlot->GetX2()) ;
+    } else {
+        textsizeLabelsSample       = (Double_t)textSizeLabelsPixel/canvasMergedSamplePlot->YtoPixel(canvasMergedSamplePlot->GetY1());
+        textsizeFacSample          = (Double_t)1./canvasMergedSamplePlot->YtoPixel(canvasMergedSamplePlot->GetY1());
+    }
+
+    TString xaxisLabel  = fHistoMergedRecDataPtBinPlot[iPtBin]->GetXaxis()->GetTitle();
+    TString yaxisLabel  = fHistoMergedRecDataPtBinPlot[iPtBin]->GetYaxis()->GetTitle();
+    
+    TH1F * histo1DSampleDummy;
+    histo1DSampleDummy             = new TH1F("histo1DSample2","histo1DSample2",11000,fPlottingRangeMeson[0],fPlottingRangeMeson[1]);
+    SetStyleHistoTH1ForGraphs(histo1DSampleDummy, xaxisLabel, yaxisLabel, 0.85*textsizeLabelsSample, textsizeLabelsSample,
+                            0.85*textsizeLabelsSample, textsizeLabelsSample,0.88, 0.115/(textsizeFacSample*marginSample));
+    histo1DSampleDummy->GetYaxis()->SetLabelOffset(0.008);
+    histo1DSampleDummy->GetXaxis()->SetLabelOffset(0.005);
+
+    TString ptLabel         =  "#it{p}_{T} ";
+    TString unit            =  "GeV/#it{c}";
+    if (plotttingMode == 2){
+        unit                =  "GeV";
+        ptLabel             =  "#it{E} ";
+    }    
+    // Set range for fits and labels
+    TLatex *labelSamplePtRange;
+
+    if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+        labelSamplePtRange = new TLatex(0.95,startTextY, Form("#pi^{0}: %3.1f %s < %s< %3.1f %s",startPt, unit.Data(), ptLabel.Data(),endPt, unit.Data() ));
+    } else {
+        labelSamplePtRange = new TLatex(0.95,startTextY, Form("#eta:  %3.1f %s < %s< %3.1f %s",startPt, unit.Data(), ptLabel.Data(),endPt, unit.Data() ));
+    }
+
+    Double_t minimum = fHistoMergedRecDataPtBinPlot[iPtBin]->GetMinimum();
+    if (minimum < 0) minimum = 1.1*minimum;
+    else if (minimum == 0) minimum = -0.001;
+    else minimum = 0.9*minimum;
+
+    Double_t scale = 1;
+    if (plotttingMode == 1)
+        scale = 1.3;
+    canvasMergedSamplePlot->cd();
+    histo1DSampleDummy->GetYaxis()->SetRangeUser(minimum,scale*fHistoMergedRecDataPtBinPlot[iPtBin]->GetMaximum());
+    histo1DSampleDummy->Draw("AXIS");
+  
+    DrawGammaSetMarker(fHistoMergedRecDataPtBinPlot[iPtBin], 20, 2, kBlack, kBlack);
+    fHistoMergedRecDataPtBinPlot[iPtBin]->Draw("same");
+    if (fHistoMergedRecMCPtBinPlot){
+        if (fHistoMergedRecMCPtBinPlot[iPtBin]){
+            DrawGammaSetMarker(fHistoMergedRecMCPtBinPlot[iPtBin], 24, 2, kRed+2, kRed+2);
+            fHistoMergedRecMCPtBinPlot[iPtBin]->Draw("same");
+        }
+    }
+
+    // labels left side
+    TLatex *labelALICE      = new TLatex(0.135,startTextY,"ALICE this work");
+    SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4, 1, 43);
+    labelALICE->Draw();    
+    TLatex *labelSampleEnergy      = new TLatex(0.135,startTextY-0.9*textsizeLabelsSample,fEnergy.Data());
+    SetStyleTLatex( labelSampleEnergy, 0.85*textSizeLabelsPixel,4, 1, 43);
+    labelSampleEnergy->Draw();
+    TLatex *labelTrigger  = new TLatex(0.135,startTextY-2*0.9*textsizeLabelsSample,triggerStr.Data());
+    SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4, 1, 43);
+    labelTrigger->Draw();
+    TLatex *labelSampleReco  = new TLatex(0.135,startTextY-3*0.9*textsizeLabelsSample, methodStr);
+    SetStyleTLatex( labelSampleReco, 0.85*textSizeLabelsPixel,4, 1, 43);
+    labelSampleReco->Draw();
+
+    // labels right side
+    SetStyleTLatex( labelSamplePtRange, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
+    labelSamplePtRange->Draw();
+    TLatex *chi2Value  = new TLatex(0.95, startTextY-4*0.9*textsizeLabelsSample, Form("#chi^{2}/ndf = %2.2f",fChi2Value[iPtBin]));
+    SetStyleTLatex( chi2Value, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
+    chi2Value->Draw();
+    TLatex *meanData  = new TLatex(0.95, startTextY-5*0.9*textsizeLabelsSample, Form("#mu_{Data} = %2.2f",fMeanData[iPtBin]));
+    SetStyleTLatex( meanData, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
+    meanData->Draw();
+    TLatex *meanMC  = new TLatex(0.95, startTextY-6*0.9*textsizeLabelsSample, Form("#mu_{MC} = %2.2f",fMeanMC[iPtBin]));
+    SetStyleTLatex( meanMC, 0.85*textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
+    meanMC->Draw();
+    
+    Int_t nLegendLines               = 0;
+    if (fHistoMergedRecDataPtBinPlot) nLegendLines++;
+    if (fHistoMergedRecMCPtBinPlot) nLegendLines++;
+
+    TLegend* legendSample  = GetAndSetLegend2(0.82, startTextY-0.01-nLegendLines*0.9*textsizeLabelsSample, 0.95, startTextY-0.01, 0.85*textSizeLabelsPixel);
+    legendSample->SetMargin(0.4);
+    if( fHistoMergedRecDataPtBinPlot[iPtBin]) legendSample->AddEntry(fHistoMergedRecDataPtBinPlot[iPtBin],"Data","p");
+    if( fHistoMergedRecMCPtBinPlot[iPtBin]) legendSample->AddEntry(fHistoMergedRecMCPtBinPlot[iPtBin],"MC","p");
+    legendSample->Draw();
+    histo1DSampleDummy->Draw("AXIS,same");
+
+    cout << "done plotting single" << endl;
+    canvasMergedSamplePlot->Print(namePlot.Data());
+    delete canvasMergedSamplePlot;
+}
+
+
 
 //************************************************************************************************************
 //******************************* Main routine for comparing MC & data ***************************************
@@ -349,7 +496,8 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
     TString fMesonCutSelection          = "";
     TString dummyString                 = "";
     ReturnSeparatedCutNumberAdvanced( fCutSelection, fEventCutSelection, fClusterCutSelection, fClusterMergedCutSelection, dummyString, fMesonCutSelection, mode);
-
+    Int_t fTrigger                      = ((TString)fEventCutSelection(3,2)).Atoi();
+    
     //****************************** Specification of collision system ************************************************
     TString textProcess                 = ReturnMesonString (mesonType);
     if(textProcess.CompareTo("") == 0 ){
@@ -566,7 +714,7 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
         
         Double_t fMergedNCellsRange[2]              = {-0.5,55.5};
         Double_t fMergedNCellsAroundRange[2]        = {1,55.5};
-        Double_t fMergedERange[2]                   = {1.1,50};
+        Double_t fMergedERange[2]                   = {10.5,50};
         Double_t fMergedNCellsAroundAndInRange[2]   = {1,75.5};
         
         for (Int_t iPt = fStartPtBin; iPt < fNBinsPt; iPt++){
@@ -683,6 +831,7 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
             TString fNameDataHistoMergedEAroundE    = Form("EAroundEMerged_in_Pt_Bin%02d", iPt);
             if (histoDataMergedEAroundE){
                 histoDataMergedEAroundEBin[iPt]     = FillProjectionX(histoDataMergedEAroundE, fNameDataHistoMergedEAroundE, fBinsPt[iPt], fBinsPt[iPt+1], 1);
+                histoDataMergedEAroundEBin[iPt]->Rebin(5);
                 if (histoDataMergedEAroundEBin[iPt]){
                     meanDataEAround[iPt]            = histoDataMergedEAroundEBin[iPt]->GetMean();
                     histoDataEAroundChi2Test        = CorrectBinContentForChi2Test(histoDataMergedEAroundEBin[iPt]);
@@ -697,6 +846,7 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
             TString fNameMCHistoMergedEAroundE      = Form("EAroundMerged_in_Pt_Bin%02d", iPt);
             if (histoMCMergedEAroundE){
                 histoMCMergedEAroundEBin[iPt]       = FillProjectionX(histoMCMergedEAroundE, fNameMCHistoMergedEAroundE, fBinsPt[iPt], fBinsPt[iPt+1], 1);
+                histoMCMergedEAroundEBin[iPt]->Rebin(5);
                 if (histoMCMergedEAroundEBin[iPt]){
                     meanMCEAround[iPt]              = histoMCMergedEAroundEBin[iPt]->GetMean();
                     histoMCEAroundChi2Test          = CorrectBinContentForChi2Test(histoMCMergedEAroundEBin[iPt]);
@@ -718,24 +868,50 @@ void CompareShapeMergedClusterQuantities(   TString dataFileName    = "rawSignal
             PlotMergedCompDataMCInPtBins(   histoDataMergedNCellsPtBin, histoMCMergedNCellsPtBin, NULL, chi2NDFNCells, meanDataNCells, meanMCNCells,
                                             nameCompPlotNCellsPlot,  "bla", "bla", fMergedNCellsRange, 
                                             fdate, mesonType, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fDecayChannel, fDetectionProcessPtBins, fCollisionSystem, 3);
+            nameCompPlotNCellsPlot          = Form("%s/%s_MergedClusterNCellsComparedSingleBin1.%s",outputDir.Data(),mesonType.Data(),fSuffix.Data()) ;
+            PlotMergedCompDataMCSingleBin(  histoDataMergedNCellsPtBin, histoMCMergedNCellsPtBin, NULL, chi2NDFNCells, meanDataNCells, meanMCNCells,
+                                            nameCompPlotNCellsPlot,  "bla", "bla", fMergedNCellsAroundRange, 
+                                            fdate, mesonType, fExampleBin, fBinsPt, mode, fCollisionSystem, fTrigger,1); 
+            nameCompPlotNCellsPlot          = Form("%s/%s_MergedClusterNCellsComparedSingleBin2.%s",outputDir.Data(),mesonType.Data(),fSuffix.Data()) ;
+            PlotMergedCompDataMCSingleBin(  histoDataMergedNCellsPtBin, histoMCMergedNCellsPtBin, NULL, chi2NDFNCells, meanDataNCells, meanMCNCells,
+                                            nameCompPlotNCellsPlot,  "bla", "bla", fMergedNCellsAroundRange, 
+                                            fdate, mesonType, fExampleBin, fBinsPt+2, mode, fCollisionSystem, fTrigger,1); 
         }
         if (histoDataMergedNCellsAroundPt && histoMCMergedNCellsAroundPt) {
             TString nameCompPlotNCellsAroundPlot    = Form("%s/%s_MergedClusterNCellsAroundClusterCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()) ;
             PlotMergedCompDataMCInPtBins(   histoDataMergedNCellsAroundPtBin, histoMCMergedNCellsAroundPtBin, NULL, chi2NDFNCellsAround, meanDataNCellsAround, meanMCNCellsAround,
                                             nameCompPlotNCellsAroundPlot,  "bla", "bla", fMergedNCellsAroundRange, 
                                             fdate, mesonType, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fDecayChannel, fDetectionProcessPtBins, fCollisionSystem, 3);
+            nameCompPlotNCellsAroundPlot    = Form("%s/%s_MergedClusterNCellsAroundClusterComparedSingleBin.%s",outputDir.Data(),mesonType.Data(),fSuffix.Data()) ;
+            PlotMergedCompDataMCSingleBin(  histoDataMergedNCellsAroundPtBin, histoMCMergedNCellsAroundPtBin, NULL, chi2NDFNCellsAround, meanDataNCellsAround, meanMCNCellsAround,
+                                            nameCompPlotNCellsAroundPlot,  "bla", "bla", fMergedNCellsAroundRange, 
+                                            fdate, mesonType, fExampleBin, fBinsPt, mode, fCollisionSystem, fTrigger); 
         }
         if (histoDataMergedNCellsAroundAndInPt && histoMCMergedNCellsAroundAndInPt) {
             TString nameCompPlotNCellsAroundAndInPlot   = Form("%s/%s_MergedClusterNCellsAroundAndInClusterCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()) ;
             PlotMergedCompDataMCInPtBins(   histoDataMergedNCellsAroundAndInPtBin, histoMCMergedNCellsAroundAndInPtBin, NULL, chi2NDFNCellsAroundAndIn, meanDataNCellsAroundAndIn, meanMCNCellsAroundAndIn,
                                             nameCompPlotNCellsAroundAndInPlot,  "bla", "bla", fMergedNCellsAroundAndInRange, 
                                             fdate, mesonType, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fDecayChannel, fDetectionProcessPtBins, fCollisionSystem, 3);
-        }
+            nameCompPlotNCellsAroundAndInPlot   = Form("%s/%s_MergedClusterNCellsAroundAndInClusterComparedSingleBin.%s",outputDir.Data(),mesonType.Data(),fSuffix.Data()) ;
+            PlotMergedCompDataMCSingleBin( histoDataMergedNCellsAroundAndInPtBin, histoMCMergedNCellsAroundAndInPtBin, NULL, chi2NDFNCellsAroundAndIn, meanDataNCellsAroundAndIn, meanMCNCellsAroundAndIn,
+                                            nameCompPlotNCellsAroundAndInPlot,  "bla", "bla", fMergedNCellsAroundAndInRange, 
+                                            fdate, mesonType, fExampleBin, fBinsPt, mode, fCollisionSystem, fTrigger); 
+        }                            
+
+        
         if (histoDataMergedEAroundE && histoMCMergedEAroundE) {
-            TString nameCompPlotEAroundPlot    = Form("%s/%s_MergedClusterEAroundClusterCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()) ;
+            TString nameCompPlotEAroundPlot = Form("%s/%s_MergedClusterEAroundClusterCompared_%s.%s",outputDir.Data(),mesonType.Data(),fCutSelection.Data(),fSuffix.Data()) ;
+            for (Int_t i= fStartPtBin; i< fNBinsPt; i++){
+                cout << histoDataMergedEAroundEBin[i]->GetBinContent(histoDataMergedEAroundEBin[i]->FindBin(12.0)) << endl;
+                histoDataMergedEAroundEBin[i]->GetYaxis()->SetRangeUser(-0.001,histoMCMergedEAroundEBin[i]->GetBinContent(histoMCMergedEAroundEBin[i]->FindBin(10.5)*10));
+            }    
             PlotMergedCompDataMCInPtBins(   histoDataMergedEAroundEBin, histoMCMergedEAroundEBin, NULL, chi2NDFEAround, meanDataEAround, meanMCEAround,
                                             nameCompPlotEAroundPlot,  "bla", "bla", fMergedERange, 
                                             fdate, mesonType, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fDecayChannel, fDetectionProcessPtBins, fCollisionSystem, 2);
+            nameCompPlotEAroundPlot         = Form("%s/%s_MergedClusterEAroundClusterComparedSingleBin.%s",outputDir.Data(),mesonType.Data(),fSuffix.Data()) ;
+            PlotMergedCompDataMCSingleBin(  histoDataMergedEAroundEBin, histoMCMergedEAroundEBin, NULL, chi2NDFEAround, meanDataEAround, meanMCEAround,
+                                            nameCompPlotEAroundPlot,  "bla", "bla", fMergedERange, 
+                                            fdate, mesonType, fExampleBin, fBinsPt, mode, fCollisionSystem, fTrigger, 2); 
         }
     }    
 }
