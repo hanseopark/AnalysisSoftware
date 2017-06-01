@@ -98,7 +98,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString fileNameEtaToPi0                    = "ExternalInput/WorldDataPi0Eta.root";
     TString fileNamePOWHEG8TeV                  = "ExternalInput/Theory/POWHEG_Pythia/powhegDijetShoweredWithPythia_pi0_eta_invariantXsec_NNPDF23LOas0130.root";
 
-//    TString fileName2760GeV                     = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_12_15_FrediV2Clusterizer.root";
+    TString fileName2760GeV                     = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_12_15_FrediV2Clusterizer.root";
+    TString fileName7TeV                        = "ExternalInput/CombinedResultsPaperPP7TeV_2017_04_20.root";
 
     TString fileNamePCMMB                       = "ExternalInput/PCM/8TeV/8TeV_data_PCMResults_InvMassBins.root";
 
@@ -1093,12 +1094,31 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 27. ) graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
 
 
-//     TFile* file2760GeV                              = new TFile(fileName2760GeV.Data());
-//     TF1* fit2760GeVPi0Tsallis                       = (TF1*) file2760GeV->Get("Pi02.76TeV/TsallisFitPi0");
-//     fit2760GeVPi0Tsallis->SetName("fit2760GeVPi0Tsallis");
+     TFile* file2760GeV                              = new TFile(fileName2760GeV.Data());
+     TF1* fit2760GeVPi0TCM                           = (TF1*) file2760GeV->Get("Pi02.76TeV/TwoComponentModelFitPi0");
+     fit2760GeVPi0TCM->SetName("fit2760GeVPi0TCM");
+     TF1* fit2760GeVEtaTCM                           = (TF1*) file2760GeV->Get("Eta2.76TeV/TwoComponentModelFitEta");
+     fit2760GeVEtaTCM->SetName("fit2760GeVEtaTCM");
+     TF1* fit2760GeVEtaTsallis                       = (TF1*) file2760GeV->Get("Eta2.76TeV/TsallisFitEta");
+     fit2760GeVEtaTsallis->SetName("fit2760GeVEtaTsallis");
 
-//     TH1F* histoPythia8InvXSection2760GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi02760GeV");
-//     histoPythia8InvXSection2760GeV->GetXaxis()->SetRangeUser(0.3,35);
+     TH1F* histoPythia8InvXSection2760GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi02760GeV");
+     histoPythia8InvXSection2760GeV->GetXaxis()->SetRangeUser(0.3,35);
+     TH1F* histoPythia8InvXSection2760GeVEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta2760GeV");
+     histoPythia8InvXSection2760GeVEta->GetXaxis()->SetRangeUser(0.4,35);
+
+     TFile* file7TeV                              = new TFile(fileName7TeV.Data());
+     TF1* fit7TeVPi0TCM                           = (TF1*) file7TeV->Get("Pi07TeV/TwoComponentModelFitPi0");
+     fit7TeVPi0TCM->SetName("fit7TeVPi0TCM");
+     TF1* fit7TeVEtaTCM                           = (TF1*) file7TeV->Get("Eta7TeV/TwoComponentModelFitEta");
+     fit7TeVEtaTCM->SetName("fit7TeVEtaTCM");
+     TF1* fit7TeVEtaTsallis                       = (TF1*) file7TeV->Get("Eta7TeV/TsallisFitEta");
+     fit7TeVEtaTsallis->SetName("fit7TeVEtaTsallis");
+
+     TH1F* histoPythia8InvXSection7TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi07TeV");
+     histoPythia8InvXSection7TeV->GetXaxis()->SetRangeUser(0.3,35);
+     TH1F* histoPythia8InvXSection7TeVEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta7TeV");
+     histoPythia8InvXSection7TeVEta->GetXaxis()->SetRangeUser(0.4,35);
 
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
@@ -5611,6 +5631,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_Eta.%s",outputDir.Data(),suffix.Data()));
 
+    histoPythia8InvXSectionEta->Scale(1/scaleFacEtaForCombPlot);
+    histoPythia8_4CInvXSectionEta->Scale(1/scaleFacEtaForCombPlot);
+
     // ***************************************************************************************************************
     // ******************************* eta/pi0 graphs without x-error  ***********************************************
     // ***************************************************************************************************************
@@ -6368,53 +6391,210 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //*************************************************************************************************************
     //*************************************************************************************************************
 
-//    canvasEtatoPi0combo->cd();
-//    canvasEtatoPi0combo->SetLogx();
-//    canvasEtatoPi0combo->SetLogy();
+    canvasEtatoPi0combo->cd();
+    canvasEtatoPi0combo->SetLogx();
 
-//    TH2F * histoRatioEnergies;
-//    histoRatioEnergies               = new TH2F("histoRatioEnergies","histoRatioEnergies",1000,0.05,35.,1000,0.01,1.    );
-//    SetStyleHistoTH2ForGraphs(histoRatioEnergies, "#it{p}_{T} (GeV/#it{c})","ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
-//                              0.85*textsizeLabelsEtaToPi0,textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
-//    histoRatioEnergies->GetXaxis()->SetMoreLogLabels();
-//    histoRatioEnergies->GetXaxis()->SetNoExponent(kTRUE);
-//    histoRatioEnergies->Draw("copy");
+    TH2F * histoRatioEnergies;
+    histoRatioEnergies               = new TH2F("histoRatioEnergies","histoRatioEnergies",1000,0.3,35.,1000,0.01,6.2    );
+    SetStyleHistoTH2ForGraphs(histoRatioEnergies, "#it{p}_{T} (GeV/#it{c})","ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
+                              0.85*textsizeLabelsEtaToPi0,textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
+    histoRatioEnergies->GetXaxis()->SetMoreLogLabels();
+    histoRatioEnergies->GetXaxis()->SetNoExponent(kTRUE);
+    histoRatioEnergies->DrawCopy();
 
-//    // plotting data
-//    TH1F *ratioOfEnergies = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergies");
-//    ratioOfEnergies->SetTitle("");
-//    ratioOfEnergies->SetLineColor(kBlue+2);
-//    ratioOfEnergies->SetLineWidth(2.);
-//    ratioOfEnergies->GetYaxis()->SetRangeUser(0.01,1.);
+    // plotting data 8TeV/2.76TeV
+    TH1F *ratioOfEnergies = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergies");
+    ratioOfEnergies->SetTitle("");
+    ratioOfEnergies->SetLineColor(kRed+2);
+    ratioOfEnergies->SetMarkerColor(kRed+2);
+    ratioOfEnergies->SetMarkerStyle(20);
+    ratioOfEnergies->SetLineWidth(2.);
 
-//    TH1F *ratioOfEnergiesToPythia = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergiesToPythia");
-//    ratioOfEnergiesToPythia->SetTitle("");
-//    ratioOfEnergiesToPythia->SetLineColor(kRed+2);
-//    ratioOfEnergiesToPythia->SetLineWidth(2.);
-//    ratioOfEnergiesToPythia->GetYaxis()->SetRangeUser(0.01,1.);
+    TH1F *ratioOfEnergiesToPythia = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergiesToPythia");
+    ratioOfEnergiesToPythia->SetTitle("");
+    ratioOfEnergiesToPythia->SetLineColor(kRed+2);
+    ratioOfEnergiesToPythia->SetMarkerColor(kRed+2);
+    ratioOfEnergiesToPythia->SetMarkerStyle(24);
+    ratioOfEnergiesToPythia->SetLineWidth(2.);
 
-//    for (Int_t i=1; i<=ratioOfEnergies->GetNbinsX(); i++) {
-//      Double_t temp = fit2760GeVPi0Tsallis->Eval(ratioOfEnergies->GetBinCenter(i))/fitInvXSectionPi0->Eval(ratioOfEnergies->GetBinCenter(i));
-//      ratioOfEnergies->SetBinContent(i,temp);
-//      ratioOfEnergies->SetBinError(i,0.);
-//    }
+    for (Int_t i=1; i<=ratioOfEnergies->GetNbinsX(); i++) {
+      Double_t temp = fitTCMInvXSectionPi0->Eval(ratioOfEnergies->GetBinCenter(i))/fit2760GeVPi0TCM->Eval(ratioOfEnergies->GetBinCenter(i));
+      ratioOfEnergies->SetBinContent(i,temp);
+      ratioOfEnergies->SetBinError(i,0.);
+    }
 
-//    for (Int_t i=1; i<=ratioOfEnergiesToPythia->GetNbinsX(); i++) {
-//      Double_t temp = histoPythia8InvXSection2760GeV->GetBinContent(i)/histoPythia8InvXSection->GetBinContent(i);
-//      ratioOfEnergiesToPythia->SetBinContent(i,temp);
-//      ratioOfEnergiesToPythia->SetBinError(i,0.);
-//    }
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection->GetBinContent(i)/histoPythia8InvXSection2760GeV->GetBinContent(i);
+      ratioOfEnergiesToPythia->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia->SetBinError(i,0.);
+    }
 
-//    ratioOfEnergies->DrawCopy();
-//    ratioOfEnergiesToPythia->DrawCopy("same");
+    ratioOfEnergies->DrawCopy("p,same");
+    ratioOfEnergiesToPythia->DrawCopy("p,same");
 
-//    DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
+    // plotting data 8TeV/7TeV
+    TH1F *ratioOfEnergies2 = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergies2");
+    ratioOfEnergies2->SetTitle("");
+    ratioOfEnergies2->SetLineColor(kBlue+2);
+    ratioOfEnergies2->SetMarkerColor(kBlue+2);
+    ratioOfEnergies2->SetMarkerStyle(20);
+    ratioOfEnergies2->SetLineWidth(2.);
 
-//    histoRatioEnergies->Draw("axis,same");
+    TH1F *ratioOfEnergiesToPythia2 = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergiesToPythia2");
+    ratioOfEnergiesToPythia2->SetTitle("");
+    ratioOfEnergiesToPythia2->SetLineColor(kBlue+2);
+    ratioOfEnergiesToPythia2->SetMarkerColor(kBlue+2);
+    ratioOfEnergiesToPythia2->SetMarkerStyle(24);
+    ratioOfEnergiesToPythia2->SetLineWidth(2.);
 
-//    canvasEtatoPi0combo->Update();
-//    canvasEtatoPi0combo->SaveAs(Form("%s/diffEnergy_ratio.%s",outputDir.Data(), suffix.Data()));
+    for (Int_t i=1; i<=ratioOfEnergies2->GetNbinsX(); i++) {
+      Double_t temp = fitTCMInvXSectionPi0->Eval(ratioOfEnergies->GetBinCenter(i))/fit7TeVPi0TCM->Eval(ratioOfEnergies->GetBinCenter(i));
+      ratioOfEnergies2->SetBinContent(i,temp);
+      ratioOfEnergies2->SetBinError(i,0.);
+    }
 
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia2->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection->GetBinContent(i)/histoPythia8InvXSection7TeV->GetBinContent(i);
+      ratioOfEnergiesToPythia2->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia2->SetBinError(i,0.);
+    }
+
+    ratioOfEnergies2->DrawCopy("p,same");
+    ratioOfEnergiesToPythia2->DrawCopy("p,same");
+
+
+    // plotting data 7TeV/2.76TeV
+    TH1F *ratioOfEnergies3 = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergies3");
+    ratioOfEnergies3->SetTitle("");
+    ratioOfEnergies3->SetLineColor(kGreen+2);
+    ratioOfEnergies3->SetMarkerColor(kGreen+2);
+    ratioOfEnergies3->SetMarkerStyle(20);
+    ratioOfEnergies3->SetLineWidth(2.);
+
+    TH1F *ratioOfEnergiesToPythia3 = (TH1F*)histoPythia8InvXSection->Clone("ratioOfEnergiesToPythia3");
+    ratioOfEnergiesToPythia3->SetTitle("");
+    ratioOfEnergiesToPythia3->SetLineColor(kGreen+2);
+    ratioOfEnergiesToPythia3->SetMarkerColor(kGreen+2);
+    ratioOfEnergiesToPythia3->SetMarkerStyle(24);
+    ratioOfEnergiesToPythia3->SetLineWidth(2.);
+
+    for (Int_t i=1; i<=ratioOfEnergies3->GetNbinsX(); i++) {
+      Double_t temp = fit7TeVPi0TCM->Eval(ratioOfEnergies->GetBinCenter(i))/fit2760GeVPi0TCM->Eval(ratioOfEnergies->GetBinCenter(i));
+      ratioOfEnergies3->SetBinContent(i,temp);
+      ratioOfEnergies3->SetBinError(i,0.);
+    }
+
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia3->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection7TeV->GetBinContent(i)/histoPythia8InvXSection2760GeV->GetBinContent(i);
+      ratioOfEnergiesToPythia3->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia3->SetBinError(i,0.);
+    }
+
+    ratioOfEnergies3->DrawCopy("p,same");
+    ratioOfEnergiesToPythia3->DrawCopy("p,same");
+
+    TLegend* legendRatios  = GetAndSetLegend2(0.15, 0.75, 0.4, 0.95, 0.85*textSizeLabelsPixel);
+    legendRatios->SetMargin(0.25);
+    legendRatios->AddEntry((TObject*)0,"#pi^{0} ALICE - TCM fits","");
+    legendRatios->AddEntry(ratioOfEnergies, "8TeV/2.76TeV","p");
+    legendRatios->AddEntry(ratioOfEnergies2,"8TeV/7TeV","p");
+    legendRatios->AddEntry(ratioOfEnergies3,"7TeV/2.76TeV","p");
+    legendRatios->Draw();
+
+    TLegend* legendRatiosMC  = GetAndSetLegend2(0.5, 0.75, 0.75, 0.95, 0.85*textSizeLabelsPixel);
+    legendRatiosMC->SetMargin(0.25);
+    legendRatiosMC->AddEntry((TObject*)0,"#pi^{0} PYTHIA Monash2013","");
+    legendRatiosMC->AddEntry(ratioOfEnergiesToPythia, "8TeV/2.76TeV","p");
+    legendRatiosMC->AddEntry(ratioOfEnergiesToPythia2, "8TeV/7TeV","p");
+    legendRatiosMC->AddEntry(ratioOfEnergiesToPythia3, "7TeV/2.76TeV","p");
+    legendRatiosMC->Draw();
+
+    DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
+
+    histoRatioEnergies->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/Pi0_diffEnergy_ratio.%s",outputDir.Data(), suffix.Data()));
+
+    TH2F * histoRatioEnergies2;
+    histoRatioEnergies2               = new TH2F("histoRatioEnergies","histoRatioEnergies",1000,0.3,35.,1000,0.01,7.8    );
+    SetStyleHistoTH2ForGraphs(histoRatioEnergies2, "#it{p}_{T} (GeV/#it{c})","ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
+                              0.85*textsizeLabelsEtaToPi0,textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
+    histoRatioEnergies2->GetXaxis()->SetMoreLogLabels();
+    histoRatioEnergies2->GetXaxis()->SetNoExponent(kTRUE);
+    histoRatioEnergies2->DrawCopy();
+
+    // eta plotting
+    // plotting data 8TeV/2.76TeV
+    for (Int_t i=1; i<=ratioOfEnergies->GetNbinsX(); i++) {
+      Double_t temp = fitInvXSectionEta->Eval(ratioOfEnergies->GetBinCenter(i))/fit2760GeVEtaTsallis->Eval(ratioOfEnergies->GetBinCenter(i));
+      ratioOfEnergies->SetBinContent(i,temp);
+      ratioOfEnergies->SetBinError(i,0.);
+    }
+
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSectionEta->GetBinContent(i)/histoPythia8InvXSection2760GeVEta->GetBinContent(i);
+      ratioOfEnergiesToPythia->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia->SetBinError(i,0.);
+    }
+
+    ratioOfEnergies->DrawCopy("p,same");
+    ratioOfEnergiesToPythia->DrawCopy("p,same");
+
+    // plotting data 8TeV/7TeV
+    for (Int_t i=1; i<=ratioOfEnergies2->GetNbinsX(); i++) {
+      Double_t temp = fitInvXSectionEta->Eval(ratioOfEnergies->GetBinCenter(i))/fit7TeVEtaTsallis->Eval(ratioOfEnergies->GetBinCenter(i));
+      ratioOfEnergies2->SetBinContent(i,temp);
+      ratioOfEnergies2->SetBinError(i,0.);
+    }
+
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia2->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSectionEta->GetBinContent(i)/histoPythia8InvXSection7TeVEta->GetBinContent(i);
+      ratioOfEnergiesToPythia2->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia2->SetBinError(i,0.);
+    }
+
+    ratioOfEnergies2->DrawCopy("p,same");
+    ratioOfEnergiesToPythia2->DrawCopy("p,same");
+
+    // plotting data 7TeV/2.76TeV
+    for (Int_t i=1; i<=ratioOfEnergies3->GetNbinsX(); i++) {
+      Double_t temp = fit7TeVEtaTsallis->Eval(ratioOfEnergies->GetBinCenter(i))/fit2760GeVEtaTsallis->Eval(ratioOfEnergies->GetBinCenter(i));
+      ratioOfEnergies3->SetBinContent(i,temp);
+      ratioOfEnergies3->SetBinError(i,0.);
+    }
+
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia3->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection7TeVEta->GetBinContent(i)/histoPythia8InvXSection2760GeVEta->GetBinContent(i);
+      ratioOfEnergiesToPythia3->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia3->SetBinError(i,0.);
+    }
+
+    ratioOfEnergies3->DrawCopy("p,same");
+    ratioOfEnergiesToPythia3->DrawCopy("p,same");
+
+    TLegend* legendRatiosEta  = GetAndSetLegend2(0.15, 0.75, 0.4, 0.95, 0.85*textSizeLabelsPixel);
+    legendRatiosEta->SetMargin(0.25);
+    legendRatiosEta->AddEntry((TObject*)0,"#eta ALICE - Tsallis fits","");
+    legendRatiosEta->AddEntry(ratioOfEnergies, "8TeV/2.76TeV","p");
+    legendRatiosEta->AddEntry(ratioOfEnergies2,"8TeV/7TeV","p");
+    legendRatiosEta->AddEntry(ratioOfEnergies3,"7TeV/2.76TeV","p");
+    legendRatiosEta->Draw();
+
+    TLegend* legendRatiosEtaMC  = GetAndSetLegend2(0.5, 0.75, 0.75, 0.95, 0.85*textSizeLabelsPixel);
+    legendRatiosEtaMC->SetMargin(0.25);
+    legendRatiosEtaMC->AddEntry((TObject*)0,"#eta PYTHIA Monash2013","");
+    legendRatiosEtaMC->AddEntry(ratioOfEnergiesToPythia, "8TeV/2.76TeV","p");
+    legendRatiosEtaMC->AddEntry(ratioOfEnergiesToPythia2, "8TeV/7TeV","p");
+    legendRatiosEtaMC->AddEntry(ratioOfEnergiesToPythia3, "7TeV/2.76TeV","p");
+    legendRatiosEtaMC->Draw();
+
+    DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
+
+    histoRatioEnergies2->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/Eta_diffEnergy_ratio.%s",outputDir.Data(), suffix.Data()));
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
     // **********************************************************************************************************************
