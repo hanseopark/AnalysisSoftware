@@ -679,22 +679,22 @@
     Double_t fBinsEtapPb5TeVDalitzPt[10]            = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
     Int_t fBinsEtapPb5TeVDalitzPtRebin[9]           = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
 
-    Int_t fBinsPi0EtaBinningpPb5TevPtRebin[22]      = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsPi0EtapPb5TeVPtRebin[22]             = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 2, 2, 2, 4, 4, 4, 4, 4,
                                                         4, 4};
-    Int_t fBinsPi0EtaBinningpPb5TeVPCMEMCPtRebin[22]= { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsPi0EtapPb5TeVPCMEMCPtRebin[22]       = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 2, 2, 2, 4, 4, 4, 8, 10,
+                                                        10, 10};
+    Int_t fBinsPi0EtapPb5TeVPCMPHOSPtRebin[22]      = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 2, 2, 2, 4, 4, 4, 4, 4,
                                                         4, 4};
-    Int_t fBinsPi0EtaBinningpPb5TeVPCMPHOSPtRebin[22]= { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                        1, 1, 2, 2, 2, 4, 4, 4, 4, 4,
-                                                        4, 4};
-    Int_t fBinsPi0EtaBinningpPb5TeVEMCPtRebin[22]   = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                        1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
-                                                        2, 2};
-    Int_t fBinsPi0EtaBinningpPb5TeVPHOSPtRebin[22]  = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsPi0EtapPb5TeVEMCPtRebin[22]          = { 8, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 5, 5, 8, 10,
+                                                        10, 10};
+    Int_t fBinsPi0EtapPb5TeVPHOSPtRebin[22]         = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 2, 2, 2, 4, 4,
                                                         4, 4};
-    Int_t fBinsPi0EtaBinningpPb5TeVDalitzPtRebin[9] = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
+    Int_t fBinsPi0EtapPb5TeVDalitzPtRebin[9]        = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
 
     Double_t fBinsEtapPb5TeVPt3Body[15]             = { 0., 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0, 2.5,
                                                         3.0, 4.0, 6.0, 8.0, 10};
@@ -881,7 +881,7 @@
                 } else if (mode == 1){      // PCM-Dalitz
                     return 3;
                 } else if (mode == 2) {     // PCM-EMC
-                    switch (trigger){
+                    switch (trigger){   
                         case 0:             // INT1 13g
                         case 1:             // INT1 13g
                             return 7;
@@ -3118,25 +3118,25 @@
                             if (modi == 0 && !setPi0.CompareTo("Eta"))
                                 fNRebin[i]  = fBinsEtapPb5TeVPtRebin[i];
                             else if (modi == 0 && !setPi0.CompareTo("Pi0EtaBinning"))
-                                fNRebin[i]  = fBinsPi0EtaBinningpPb5TeVPtRebin[i];
+                                fNRebin[i]  = fBinsPi0EtapPb5TeVPtRebin[i];
                             else if (modi == 1)
                                 fNRebin[i]  = fBinsEtapPb5TeVDalitzPtRebin[i];
                             else if (modi == 2 && !setPi0.CompareTo("Eta"))
                                 fNRebin[i]  = fBinsEtapPb5TeVPCMEMCPtRebin[i];
                             else if (modi == 2 && !setPi0.CompareTo("Pi0EtaBinning"))
-                                fNRebin[i]  = fBinsPi0EtaBinningpPb5TeVPCMEMCPtRebin[i];
+                                fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCPtRebin[i];
                             else if (modi == 3 && !setPi0.CompareTo("Eta"))
                                 fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSPtRebin[i];
                             else if (modi == 3 && !setPi0.CompareTo("Pi0EtaBinning"))
-                                fNRebin[i]  = fBinsPi0EtaBinningpPb5TeVPCMPHOSPtRebin[i];
+                                fNRebin[i]  = fBinsPi0EtapPb5TeVPCMPHOSPtRebin[i];
                             else if (modi == 4 && !setPi0.CompareTo("Eta"))
                                 fNRebin[i]  = fBinsEtapPb5TeVEMCPtRebin[i];
                             else if (modi == 4 && !setPi0.CompareTo("Pi0EtaBinning"))
-                                fNRebin[i]  = fBinsPi0EtaBinningpPb5TeVEMCPtRebin[i];
+                                fNRebin[i]  = fBinsPi0EtapPb5TeVEMCPtRebin[i];
                             else if (modi == 5 && !setPi0.CompareTo("Eta"))
                                 fNRebin[i]  = fBinsEtapPb5TeVPHOSPtRebin[i];
                             else if (modi == 5 && !setPi0.CompareTo("Pi0EtaBinning"))
-                                fNRebin[i]  = fBinsPi0EtaBinningpPb5TeVPHOSPtRebin[i];
+                                fNRebin[i]  = fBinsPi0EtapPb5TeVPHOSPtRebin[i];
                             else 
                                 fNRebin[i]  = fBinsEtapPb5TeVPtRebin[i];
                         }

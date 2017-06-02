@@ -293,14 +293,9 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	TH1D *histoSBMeson		= 			(TH1D*)fileUncorrected.Get("histoSBMeson");
 
 	Float_t nEvt = 0;	
-	//if (	optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
-	  if (	optionEnergy.CompareTo("PbPb_2.76TeV") == 0 ){
-	  
-	  
-		nEvt = histoEventQuality->GetBinContent(1);
-		
+	if (	optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb") ){
+		nEvt = histoEventQuality->GetBinContent(1);		
 	} else {
-	  
 		nEvt = GetNEvents(histoEventQuality);
 		// BinContent 5 - Zvertex-position, BinContent 4 - no Trigger Bit, BinContent 7 - PileUp 
 	}
@@ -440,7 +435,7 @@ void  CorrectSignalDalitzV2(TString fileNameUnCorrectedFile = "myOutput", TStrin
 	histoEffiWidePtFixed = FixEfficiency(histoEffiWidePtFixed,histoEffiWidePt,optionEnergy,centralityString);
 
 	Float_t nEvtMC = 0;
-	if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
+	if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb")){
 		nEvtMC = histoEventQualityMC->GetBinContent(1);
 	} else {
 		nEvtMC = GetNEvents(histoEventQualityMC);

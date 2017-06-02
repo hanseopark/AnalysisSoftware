@@ -778,8 +778,10 @@ void EventQA_Runwise(
                 return;
             }
             Double_t nEvents;
-	    if(fEnergyFlag.Contains("PbPb")) nEvents = EVENTS->GetBinContent(1);
-	    else                             nEvents = GetNEvents((TH1*)EVENTS,kFALSE);
+            if(fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb")) 
+                nEvents = EVENTS->GetBinContent(1);
+            else                      
+                nEvents = GetNEvents((TH1*)EVENTS,kFALSE);
             Double_t nEventsAll         = EVENTS->GetEntries() - EVENTS->GetBinContent(4);
             sumEventsAll[i]             += nEventsAll;
             sumEvents[i]                += nEvents;

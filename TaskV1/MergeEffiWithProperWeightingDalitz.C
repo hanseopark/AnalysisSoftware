@@ -85,7 +85,7 @@ void MergeEffiWithProperWeightingDalitz(TString sourcePath, TString fCutSelectio
       TList *ESDContainer = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelection.Data()));   
       
       TH1F* fEventQuality = (TH1F*)ESDContainer->FindObject("NEvents");
-		if (fEnergyFlag.CompareTo("HI")==0){
+		if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb")){
 			numberEvents[nFiles] = fEventQuality->GetBinContent(1);
 		} else {
 					      

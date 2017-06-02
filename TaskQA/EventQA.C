@@ -178,6 +178,7 @@ void EventQA(
 
     Int_t fIsHeavyIonInt = -1;
     Bool_t fIsPbPb = kFALSE;
+    Bool_t fIspPb = kFALSE;
     TString fIsHeavyIon = fEventCutSelection[0](0,1);
     fIsHeavyIonInt = fIsHeavyIon.Atoi();
     if(fIsHeavyIonInt > 0 & fIsHeavyIonInt < 8){
@@ -186,7 +187,9 @@ void EventQA(
       fIsPbPb = kTRUE;
       processLabelOffsetX1 = 0.76;
       processLabelOffsetX2 = 0.58;
-    }else if (fIsHeavyIonInt == -1){
+    } else if(fIsHeavyIonInt == 8 || fIsHeavyIonInt == 9){
+      fIspPb = kTRUE;  
+    } else if (fIsHeavyIonInt == -1){
       cout << "ERROR detecting collision system" << endl;
     }
 
@@ -377,9 +380,11 @@ void EventQA(
         }    
         //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
         if(fHistNEvents){
-	    if(fIsPbPb) nEvents[i]      = (Double_t) fHistNEvents->GetBinContent(1);
-	    else        nEvents[i]      = (Double_t) GetNEvents(fHistNEvents,kFALSE);
-	    nEventsAll[i]   = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
+            if(fIsPbPb || fIspPb ) 
+                nEvents[i]     = (Double_t) fHistNEvents->GetBinContent(1);
+            else
+                nEvents[i]     = (Double_t) GetNEvents(fHistNEvents,kFALSE);
+            nEventsAll[i]      = fHistNEvents->GetEntries() - fHistNEvents->GetBinContent(4);
         }
         else{
             cout << "ERROR: Object |fHistNEvents| could not be found in File '" << pathDataSets[i].Data() << "'! Returning..." << endl;

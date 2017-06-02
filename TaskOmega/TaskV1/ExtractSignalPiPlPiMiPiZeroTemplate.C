@@ -1097,7 +1097,7 @@ void ExtractSignalPiPlPiMiPiZeroTemplate(TString meson="", TString subDir="", TS
 	}
 	
 	fMesonMassExpect = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
-	if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+	if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb") ){
 		fNEvents = fEventQuality->GetBinContent(1);
 	} else {
 		fNEvents =  GetNEvents(fEventQuality);

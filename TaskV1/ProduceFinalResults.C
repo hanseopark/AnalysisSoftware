@@ -308,7 +308,11 @@ void  ProduceFinalResults( const char *fileNamePi0 = "myOutput",
     }
     
 //     widthMeV = histoMesonSignalFullPtInvMass->GetBinWidth(10)*1000;
-    nEvt =  GetNEvents(histoEventQualtityPi0);
+    if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb") )
+        nEvt =  histoEventQualtityPi0->GetBinContent(1);
+    else     
+        nEvt =  GetNEvents(histoEventQualtityPi0);
+    
     pictDrawingCoordinates[8] = nEvt;
     
     cout << "reading eta file" << endl;

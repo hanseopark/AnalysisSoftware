@@ -330,8 +330,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         return;  
     }
     Int_t kCollisionSystem = 0; // 0 : pp, 1: PbPb, 2: pPb
-    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0) kCollisionSystem = 1;
-    if (optionEnergy.CompareTo("pPb_5.023TeV") == 0) kCollisionSystem = 2;
+    if (optionEnergy.Contains("PbPb"))  kCollisionSystem = 1;
+    if (optionEnergy.Contains("pPb"))   kCollisionSystem = 2;
     
     TString centralityString    = GetCentralityString(fEventCutSelection);
     TString centralityString2   = GetCentralityString(fEventCutSelection);
@@ -437,7 +437,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
     // calculate number of events
     Float_t nEvt    = 0;
-    if (kCollisionSystem == 1){
+    if (kCollisionSystem > 0){
         nEvt        = histoEventQuality->GetBinContent(1);
     } else {
         nEvt        = GetNEvents(histoEventQuality);
@@ -888,7 +888,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoMCrecWidthGaussMeson                 = (TH1D*)fileCorrections->Get("histoWidthGaussianMeson");
     
     Float_t nEvtMC = 0;
-    if (kCollisionSystem == 1){
+    if (kCollisionSystem > 0){
         nEvtMC = histoEventQualityMC->GetBinContent(1);
     } else {
         nEvtMC = GetNEvents(histoEventQualityMC);
@@ -896,7 +896,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
     Float_t nEvtMCAddSig = 0;
     if (histoEventQualityMCAddedSig){
-        if (kCollisionSystem == 1){
+        if (kCollisionSystem > 0){
             nEvtMCAddSig = histoEventQualityMCAddedSig->GetBinContent(1);
         } else {
             nEvtMCAddSig = GetNEvents(histoEventQualityMCAddedSig);
@@ -905,7 +905,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
     Float_t nEvtMCJetJet = 0;
     if (histoEventQualityMCJetJet){
-        if (kCollisionSystem == 1){
+        if (kCollisionSystem > 0){
             nEvtMCJetJet = histoEventQualityMCJetJet->GetBinContent(1);
         } else {
             nEvtMCJetJet = GetNEvents(histoEventQualityMCJetJet);

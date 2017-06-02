@@ -132,9 +132,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         return;
     }
     Int_t kCollisionSystem                      = 0; // 0 : pp, 1: PbPb, 2: pPb
-    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0) 
+    if (optionEnergy.Contains("PbPb") == 0) 
         kCollisionSystem                        = 1;
-    if (optionEnergy.CompareTo("pPb_5.023TeV") == 0) 
+    if (optionEnergy.Contains("pPb") == 0) 
         kCollisionSystem                        = 2;
 
     
@@ -174,7 +174,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     TList *ESDContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelection.Data()));
     TH1D* fEventQuality                 = (TH1D*)ESDContainer->FindObject("NEvents");
     Float_t nEvtMC                      = 0;
-    if (kCollisionSystem == 1){
+    if (kCollisionSystem > 0 ){
         nEvtMC                          = fEventQuality->GetBinContent(1);
     } else {
         nEvtMC                          = GetNEvents(fEventQuality);

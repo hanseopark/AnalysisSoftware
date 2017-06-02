@@ -509,7 +509,11 @@ void ClusterQA_Compare( TString suffix          = "eps",
         if(FileRunwise->IsZombie()) {cout << "Warning: ROOT file '" << fFileRunwise.Data() << "' could not be openend!" << endl;}
         if(File->IsZombie()&&FileRunwise->IsZombie()) {cout << "ERROR: Only Zombies around, return..." << endl; return;}
 
-        nEvents[i] = GetNEvents((TH1*) File->Get("NEvents"),kFALSE);
+                
+        if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
+            nEvents[i]      = ((TH1*) File->Get("NEvents"))->GetBinContent(1);
+        else 
+            nEvents[i]      = GetNEvents((TH1*) File->Get("NEvents"),kFALSE);
 
         cout << endl;
         cout << "\t\t----------------------------------------------------------------------------" << endl;

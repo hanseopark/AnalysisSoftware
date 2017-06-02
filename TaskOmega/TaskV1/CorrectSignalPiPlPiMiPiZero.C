@@ -249,7 +249,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput", 
 	TH1D *histoMesonBckNormFullPtInvMass=  (TH1D*)fileUncorrected.Get("Mapping_BackNorm_InvMass_FullPt");
 
 		Float_t nEvt = 0;
-	if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
+	if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb")){
 		nEvt = histoEventQuality->GetBinContent(1);
 	} else {
 		nEvt = GetNEvents(histoEventQuality);

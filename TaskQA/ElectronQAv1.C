@@ -263,18 +263,13 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
        
        
        
-        
-        fEventQualityData = (TH1F*)fESDContainerData->FindObject("NEvents");
-	
-        if ( energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 ){ 
-	
-		nEventsData = fEventQualityData->GetBinContent(1);
-	   
-	 } else {	   
-	   
-		nEventsData =  GetNEvents(fEventQualityData);
-		
-	 }
+
+    fEventQualityData = (TH1F*)fESDContainerData->FindObject("NEvents");
+    if ( energy.Contains("PbPb") || energy.Contains("pPb") ){ 
+        nEventsData = fEventQualityData->GetBinContent(1);
+    } else {	   
+        nEventsData =  GetNEvents(fEventQualityData);
+    }
        
    
    
@@ -584,38 +579,20 @@ void ElectronQAv1(TString outputData="",TString outputMC="", TString fCutSelecti
 	 
        }
        
+        fEventQualityMC = (TH1F*)fESDContainerMC->FindObject("NEvents");
+        if ( energy.Contains("PbPb") || energy.Contains("pPb") ){ 
+            nEventsMC = fEventQualityMC->GetBinContent(1);
+        } else {
+            nEventsMC =  GetNEvents(fEventQualityMC);
+        }
         
-       
-       
-       
-       fEventQualityMC = (TH1F*)fESDContainerMC->FindObject("NEvents");
-				
-		
-		
-	if ( energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 ){ 
-	
-		nEventsMC = fEventQualityMC->GetBinContent(1);
-	   
-	 } else {
-	   
-		nEventsMC =  GetNEvents(fEventQualityMC);
-	 }	
-		
-		
-       
         fESD_NumberOfGoodESDTracksMC = (TH1F*)fESDContainerMC->FindObject("GoodESDTracks");
-		
-      
         mean_MC = fESD_NumberOfGoodESDTracksMC->GetMean();  
-	
-	NormFactorMC = 1./nEventsMC*1./mean_MC;
-	//NormFactorMC = 1./mean_MC;
-	
-	
-	
-	cout<<"Normalization Factor: "<<NormFactorMC<<endl;
-	
-	cout<<"Mean MC: "<<mean_MC<<endl;
+        NormFactorMC = 1./nEventsMC*1./mean_MC;
+        //NormFactorMC = 1./mean_MC;
+        
+        cout<<"Normalization Factor: "<<NormFactorMC<<endl;        
+        cout<<"Mean MC: "<<mean_MC<<endl;
 	
 	
 	

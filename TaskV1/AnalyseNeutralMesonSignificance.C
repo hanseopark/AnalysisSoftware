@@ -262,7 +262,7 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
 
     TH1D* fEventQualityData             = (TH1D*)ESDContainerData->FindObject("NEvents");
     Double_t nEventsData                = 0;
-    if (optEnergy.CompareTo("PbPb_2.76TeV") == 0 || optEnergy.CompareTo("pPb_5.023TeV") == 0){
+    if (optEnergy.Contains("PbPb") || optEnergy.Contains("pPb")){
         nEventsData                     = fEventQualityData->GetBinContent(1);
     } else {
         nEventsData                     =  GetNEvents(fEventQualityData);
@@ -327,10 +327,10 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
 
     TH1D* fEventQualityMC               = (TH1D*)ESDContainerMC->FindObject("NEvents");
     Double_t nEventsMC                  = 0;
-    if (optEnergy.CompareTo("PbPb_2.76TeV") == 0 || optEnergy.CompareTo("pPb_5.023TeV") == 0){
+    if (optEnergy.Contains("PbPb") || optEnergy.Contains("pPb")){
         nEventsMC                       = fEventQualityMC->GetBinContent(1);
     }else {
-        nEventsMC                       =  GetNEvents(fEventQualityMC);
+        nEventsMC                       = GetNEvents(fEventQualityMC);
     }
 
     TH2F* histoPi0RapidityPtMC          = (TH2F*) ESDContainerMC->FindObject(nameMesonHistoPtY.Data());

@@ -256,7 +256,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     // calculate number of events used for normalization of spectra
     fNumberOfGoodESDTracks                                                      = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
     fEventQuality                                                               = (TH1D*)ESDContainer->FindObject("NEvents");
-    if (option.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
+    if (option.Contains("PbPb") || option.Contains("pPb") ) 
         fNEvents                                                                = fEventQuality->GetBinContent(1);
     else
         fNEvents                                                                = GetNEvents(fEventQuality);

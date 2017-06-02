@@ -358,9 +358,11 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       }
       
       if(i == 0){
-
          histoEventQuality = (TH1F*)Cutcorrfile[i]->Get("NEvents");
-         nEvt = GetNEvents(histoEventQuality);
+         if ( optionEnergy.Contains("pPb") || optionEnergy.Contains("PbPb") )
+            nEvt = histoEventQuality->GetBinContent(1);
+         else 
+            nEvt = GetNEvents(histoEventQuality);
          pictDrawingCoordinates[8] = nEvt;
          centralityString = GetCentralityString(cutNumberAdv[i].Data());
          cout << centralityString.Data()<< endl;

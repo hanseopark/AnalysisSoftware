@@ -164,10 +164,10 @@ void AnalyseDCATestV1(  TString meson           ="",
     }
 
     TH1D* fEventQuality                     = (TH1D*)ESDContainer->FindObject("NEvents");
-    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0){
+    if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb")){
         fNEvents                            = fEventQuality->GetBinContent(1);
     } else {
-        fNEvents                            =  GetNEvents(fEventQuality);
+        fNEvents                            = GetNEvents(fEventQuality);
     }
 
     // Initialize histogram arrays & different ranges for fitting, extraction ...

@@ -360,7 +360,10 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         histoNEventsWWeight[i]->SetName(Form("NEventsWWeight%d",i));
 
         nGeneratedEvents[i]                         = histoNEvents[i]->GetEntries();
-        nWeightedEvents[i]                          = GetNEvents(histoNEventsWWeight[i]);
+        if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb"))
+            nWeightedEvents[i]                      = histoNEventsWWeight[i]->GetBinContent(1);
+        else     
+            nWeightedEvents[i]                      = GetNEvents(histoNEventsWWeight[i]);
         
         profXSection[i]                             = (TProfile*)ESDContainer->FindObject("XSection");
         profXSection[i]->SetName(Form("XSection%d",i));

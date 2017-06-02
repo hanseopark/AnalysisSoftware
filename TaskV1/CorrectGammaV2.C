@@ -254,12 +254,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************* Calculate number of events for normalization *************************
     TH1D*   histoEventQuality                                       = (TH1D*)fileUnCorrected->Get("NEvents");
     Float_t nEvt                                                    = 0.;
-    if (energy.CompareTo("PbPb_2.76TeV") == 0)  nEvt                = histoEventQuality->GetBinContent(1);
+    if (energy.Contains("PbPb") || energy.Contains("pPb")  )  nEvt  = histoEventQuality->GetBinContent(1);
     else                                        nEvt                = GetNEvents(histoEventQuality);
 
     TH1F*   histoEventQualityMC                                     = (TH1F*)fileCorrections->Get("NEvents");
     Float_t nEvtMC                                                  = 0.;
-    if (energy.CompareTo("PbPb_2.76TeV") == 0)  nEvtMC              = histoEventQualityMC->GetBinContent(1);
+    if (energy.Contains("PbPb") || energy.Contains("pPb") )  nEvtMC = histoEventQualityMC->GetBinContent(1);
     else                                        nEvtMC              = GetNEvents(histoEventQualityMC);
 
     //******************* Binning histogram ****************************************************

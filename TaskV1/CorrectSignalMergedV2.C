@@ -203,9 +203,9 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     }
     
     Int_t kCollisionSystem                      = 0; // 0 : pp, 1: PbPb, 2: pPb
-    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0) 
+    if (optionEnergy.Contains("PbPb") == 0) 
         kCollisionSystem                        = 1;
-    if (optionEnergy.CompareTo("pPb_5.023TeV") == 0) 
+    if (optionEnergy.Contains("pPb") == 0) 
         kCollisionSystem                        = 2;
     
     TString intermediate                        = GetCentralityString(fEventCutSelection);
@@ -268,7 +268,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     }  
     
     Float_t nEvt                                = 0;
-    if (kCollisionSystem == 1){
+    if (kCollisionSystem > 0){
         nEvt                                    = histoEventQuality->GetBinContent(1);
     } else {
         nEvt                                    = GetNEvents(histoEventQuality);
@@ -597,7 +597,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         
 
     Float_t nEvtMC                              = 0;
-    if (kCollisionSystem == 1){
+    if (kCollisionSystem > 0){
         nEvtMC                                  = histoEventQualityMC->GetBinContent(1);
     } else {
         nEvtMC                                  = GetNEvents(histoEventQualityMC);

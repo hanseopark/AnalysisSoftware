@@ -297,7 +297,7 @@ void CrossCheckTriggerClustersCalo(   TString fileDataInput                = "",
     histoCellIDvsClusterEnergyMax->Sumw2();
     TH1D* fEventQuality                 = (TH1D*)MainCutContainer->FindObject("NEvents");
     Double_t fNEvents                   = 0;
-    if (optEnergy.CompareTo("PbPb_2.76TeV") == 0 || optEnergy.CompareTo("pPb_5.023TeV") == 0){
+    if (optEnergy.Contains("PbPb") || optEnergy.Contains("pPb") ){
         fNEvents                        = fEventQuality->GetBinContent(1);
     } else {
         fNEvents                        =  GetNEvents(fEventQuality);

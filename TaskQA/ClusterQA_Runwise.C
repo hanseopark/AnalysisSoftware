@@ -768,11 +768,17 @@ void ClusterQA_Runwise(
             else 
                 bin                     = fRunNumber.Atoi() - hFBin;
             Double_t nEvents            = 0;
-            if ((TH1*) ESDContainer->FindObject("NEventsWOWeights")){
-                nEvents            = GetNEvents((TH1*) ESDContainer->FindObject("NEventsWOWeights"),kFALSE);
+            if ((TH1*) ESDContainer->FindObject("NEventsWOWeights")){            
+                if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
+                    nEvents         = ((TH1*) ESDContainer->FindObject("NEventsWOWeights"))->GetBinContent(1);
+                else 
+                    nEvents         = GetNEvents((TH1*) ESDContainer->FindObject("NEventsWOWeights"),kFALSE);
                 cout << "INFO: Output contains event weights" << endl;
             } else {
-                nEvents            = GetNEvents((TH1*) ESDContainer->FindObject("NEvents"),kFALSE);
+                if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
+                    nEvents        = ((TH1*) ESDContainer->FindObject("NEvents"))->GetBinContent(1);
+                else 
+                    nEvents        = GetNEvents((TH1*) ESDContainer->FindObject("NEvents"),kFALSE);
             }    
             //--------------------------------------------------------------------------------------------------------
             fLog[i] << "----------------------------------------------------------------------------" << endl;

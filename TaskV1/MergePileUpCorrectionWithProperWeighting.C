@@ -63,7 +63,7 @@ void MergePileUpCorrectionWithProperWeighting(TString fCutSelection, TString mes
    for (Int_t nFiles = 0; nFiles < 4; nFiles ++){
       TFile* fileInput = new TFile(nameFilesDCAAna[nFiles]);
       TH1F* fEventQuality = (TH1F*)fileInput->Get("NEvents");
-      if (fEnergyFlag.CompareTo("PbPb_2.76TeV")==0){
+      if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb")){
          numberEvents[nFiles] = fEventQuality->GetBinContent(1);
       } else {
          numberEvents[nFiles]=  GetNEvents(fEventQuality);

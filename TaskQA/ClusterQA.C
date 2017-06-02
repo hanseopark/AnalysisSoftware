@@ -628,8 +628,12 @@ void ClusterQA(
             fHistNEvents                = (TH1D*)ESDContainer->FindObject("NEvents");
         }    
         
-        if(fHistNEvents) nEvents[i]     = (Double_t) GetNEvents(fHistNEvents,kFALSE);
-        else cout << "INFO: Object |fHistNEvents| could not be found!" << endl;
+        if(fHistNEvents){
+            if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
+                nEvents[i]     = (Double_t) fHistNEvents->GetBinContent(1);
+            else 
+                nEvents[i]     = (Double_t) GetNEvents(fHistNEvents,kFALSE);
+        } else cout << "INFO: Object |fHistNEvents| could not be found!" << endl;
         //---------------------------------------------------------------------------------------------------------------
         cout << endl;
         cout << "----------------------------------------------------------------------------" << endl;

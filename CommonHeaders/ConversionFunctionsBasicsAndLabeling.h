@@ -328,6 +328,32 @@
             // BinContent 12 - SPD cluster vs tracklets
             if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
             return nEvents;
+        }else if(histo->GetNbinsX()==13){
+            if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)-histo->GetBinContent(13)==0) return 0;
+            Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
+            Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
+            for (Int_t i = 1; i<14; i++ ){
+                if(doCout) cout << histo->GetBinContent(i) << "\t";
+            }    
+            if(doCout) cout << nEventsMB  << endl;
+            for (Int_t i = 1; i<14; i++ ){
+                    if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
+            }
+            if(doCout) cout << "accepted \t" << (Float_t)nEvents/nEventsMB << endl;
+            if(doCout) cout << endl;
+            // BinContent 1 - good events
+            // BinContent 2 - centrality not selected
+            // BinContent 3 - MC corrupt
+            // BinContent 4 - no Trigger Bit
+            // BinContent 5 - Zvertex-position,
+            // BinContent 6 - no Contributors to vtx
+            // BinContent 7 - PileUp
+            // BinContent 8 - no SDD
+            // BinContent 9 - no V0AND
+            // BinContent 12 - SPD cluster vs tracklets
+            // BinContent 13 - Out of bunch pileup
+            if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
+            return nEvents;
         }else{
             cout << "ERROR: GetNEvents, dimension of histogram not known! Returning 0...!" << endl;
             return 0;
@@ -340,24 +366,32 @@
     Double_t GetMissMCEventFrac (  TH1* histo ){
         if (!histo) cout << "NO EVENT HISTO" << endl;
         if(histo->GetNbinsX()==11){
-        if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(4)==0) return 0;
-        Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
-        Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
-        Double_t missEventFrac = 0;
-        if (nEventsMB > 0)
-            missEventFrac = histo->GetBinContent(3)/nEventsMB;
-        return missEventFrac;
+            if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(4)==0) return 0;
+            Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
+            Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
+            Double_t missEventFrac = 0;
+            if (nEventsMB > 0)
+                missEventFrac = histo->GetBinContent(3)/nEventsMB;
+            return missEventFrac;
         }else if(histo->GetNbinsX()==12){
-        if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)==0) return 0;
-        Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
-        Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
-        Double_t missEventFrac = 0;
-        if (nEventsMB > 0)
-            missEventFrac = histo->GetBinContent(3)/nEventsMB;
-        return missEventFrac;
+            if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)==0) return 0;
+            Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
+            Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
+            Double_t missEventFrac = 0;
+            if (nEventsMB > 0)
+                missEventFrac = histo->GetBinContent(3)/nEventsMB;
+            return missEventFrac;
+        }else if(histo->GetNbinsX()==13){
+            if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(13)-histo->GetBinContent(4)==0) return 0;
+            Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
+            Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
+            Double_t missEventFrac = 0;
+            if (nEventsMB > 0)
+                missEventFrac = histo->GetBinContent(3)/nEventsMB;
+            return missEventFrac;
         }else{
-        cout << "ERROR: GetNEvents, dimension of histogram not known! Returning 0...!" << endl;
-        return 0;
+            cout << "ERROR: GetNEvents, dimension of histogram not known! Returning 0...!" << endl;
+            return 0;
         }
     }
 

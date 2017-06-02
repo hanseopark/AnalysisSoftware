@@ -298,7 +298,10 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         histoUncorrectedYieldPi0->Scale(fPileUpCorrectionConv7TeV);
     }
     
-    nEvt =  GetNEvents(histoEventQualtityPi0);
+    if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb") )
+        nEvt =  histoEventQualtityPi0->GetBinContent(1);
+    else     
+        nEvt =  GetNEvents(histoEventQualtityPi0);
     
     cout << "reading eta file" << endl;
     fileEta                                 = new TFile(fileNameEta);
