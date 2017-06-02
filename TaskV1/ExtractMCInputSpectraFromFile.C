@@ -132,9 +132,9 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         return;
     }
     Int_t kCollisionSystem                      = 0; // 0 : pp, 1: PbPb, 2: pPb
-    if (optionEnergy.Contains("PbPb") == 0) 
+    if (optionEnergy.Contains("PbPb")) 
         kCollisionSystem                        = 1;
-    if (optionEnergy.Contains("pPb") == 0) 
+    if (optionEnergy.Contains("pPb")) 
         kCollisionSystem                        = 2;
 
     
