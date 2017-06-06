@@ -525,23 +525,25 @@
                 newBinning[startBinNewBins]     = binningA[i];
                 binsToBeMergedB                 = 1;
                 binsToBeMergedA                 = 1;
-    //              cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
-                while( (binningA[i] - binningB[c])>decisionBoundary){
-                    cout << binningA[i] << "\t" << binningB[c] << endl;
+                cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
+                while(TMath::Abs(binningA[i]- binningB[c]) > decisionBoundary ){
+                  if (c > nBinsB-1) return startBinNewBins;
+                  if (i > nBinsA-1) return startBinNewBins;
+
+                  if((binningA[i] - binningB[c])>decisionBoundary){
+                    cout << "nächstes bin ist größer in B" << endl;
+                    cout << " müssen einen hoch" << endl;
                     c++;
-                    binsToBeMergedB++; 
-                    if (!((binningA[i] - binningB[c])>decisionBoundary)){
-    //                      cout << "nächstes bin ist größer in B" << endl;
-                        if (TMath::Abs(binningA[i]- binningB[c]) < decisionBoundary) {
-    //                          cout << " alles super" << endl;
-                        } else {
-    //                          cout << " müssen einen hoch" << endl;
-                            i++;
-                            newBinning[startBinNewBins]     = binningA[i];
-                            binsToBeMergedA++;
-                        }
-                    }
-                    if (c > nBinsB-1) return startBinNewBins;
+                    binsToBeMergedB++;
+                  }else{
+                    cout << "nächstes bin ist größer in A" << endl;
+                    cout << " müssen einen hoch" << endl;
+                    i++;
+                    newBinning[startBinNewBins]     = binningA[i];
+                    binsToBeMergedA++;
+                  }
+                  cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
+
                 }
                 nBinsToBeCombinedB[startBinNewBins-1]       = binsToBeMergedB;
                 nBinsToBeCombinedA[startBinNewBins-1]       = binsToBeMergedA;
@@ -588,24 +590,26 @@
                 newBinning[startBinNewBins]     = binningA[i];
                 binsToBeMergedB                 = 1;
                 binsToBeMergedA                 = 1;
-    //             cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
-                while( (binningA[i] - binningB[c])>decisionBoundary){
-    //                 cout << binningA[i] << "\t" << binningB[c] << endl;
-                    if (!((binningA[i] - binningB[c+1])>decisionBoundary)){
-    //                     cout << "nächstes bin ist größer in B" << endl;
-                        if (TMath::Abs(binningA[i]- binningB[c+1]) < decisionBoundary) {
-    //                         cout << " alles super" << endl;
-                        } else {
-    //                         cout << " müssen einen hoch" << endl;
-                            i++;
-                            newBinning[startBinNewBins] = binningA[i];
-                            binsToBeMergedA++;
-                        }
-                    }
-                    c++;
-                    binsToBeMergedB++; 
-                    if (c > nBinsB-1) return startBinNewBins-1;
-                }
+                 cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
+                 while(TMath::Abs(binningA[i]- binningB[c]) > decisionBoundary ){
+                   if (c > nBinsB-1) return startBinNewBins;
+                   if (i > nBinsA-1) return startBinNewBins;
+
+                   if((binningA[i] - binningB[c])>decisionBoundary){
+                     cout << "nächstes bin ist größer in B" << endl;
+                     cout << " müssen einen hoch" << endl;
+                     c++;
+                     binsToBeMergedB++;
+                   }else{
+                     cout << "nächstes bin ist größer in A" << endl;
+                     cout << " müssen einen hoch" << endl;
+                     i++;
+                     newBinning[startBinNewBins]     = binningA[i];
+                     binsToBeMergedA++;
+                   }
+                   cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
+
+                 }
                 nBinsToBeCombinedB[startBinNewBins-1]   = binsToBeMergedB;
                 nBinsToBeCombinedA[startBinNewBins-1]   = binsToBeMergedA;
                 cout << "exiting loop " << binningA[i] << "\t" << binningB[c] << "\t bins needed to merged A :"<<nBinsToBeCombinedA[startBinNewBins-1] <<" B :"<<nBinsToBeCombinedB[startBinNewBins-1] <<endl;
@@ -638,27 +642,29 @@
                 newBinning[startBinNewBins]     = binningA[i];
                 binsToBeMergedB                 = 1;
                 binsToBeMergedA                 = 1;
-    //             cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
-                while( (binningA[i] - binningB[c])>decisionBoundary){
-    //                 cout << binningA[i] << "\t" << binningB[c] << endl;
-                    if (!((binningA[i] - binningB[c+1])>decisionBoundary)){
-    //                     cout << "nächstes bin ist größer in B" << endl;
-                        if (TMath::Abs(binningA[i]- binningB[c+1]) < decisionBoundary) {
-    //                         cout << " alles super" << endl;
-                        } else {
-    //                         cout << " müssen einen hoch" << endl;
-                            i++;
-                            newBinning[startBinNewBins] = binningA[i];
-                            binsToBeMergedA++;
-                        }
-                    }
-                    c++;
-                    binsToBeMergedB++; 
-                    if (c > nBinsB-1) return startBinNewBins-1;
-                }
+                 cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
+                 while(TMath::Abs(binningA[i]- binningB[c]) > decisionBoundary ){
+                   if (c > nBinsB-1) return startBinNewBins;
+                   if (i > nBinsA-1) return startBinNewBins;
+
+                   if((binningA[i] - binningB[c])>decisionBoundary){
+                     cout << "nächstes bin ist größer in B" << endl;
+                     cout << " müssen einen hoch" << endl;
+                     c++;
+                     binsToBeMergedB++;
+                   }else{
+                     cout << "nächstes bin ist größer in A" << endl;
+                     cout << " müssen einen hoch" << endl;
+                     i++;
+                     newBinning[startBinNewBins]     = binningA[i];
+                     binsToBeMergedA++;
+                   }
+                   cout << "entering loop " << binningA[i] << "\t" << binningB[c] << endl;
+
+                 }
                 nBinsToBeCombinedB[startBinNewBins-1]   = binsToBeMergedB;
                 nBinsToBeCombinedA[startBinNewBins-1]   = binsToBeMergedA;
-    //             cout << "exiting loop " << binningA[i] << "\t" << binningB[c] << "\t bins needed to merged A :"<<nBinsToBeCombinedA[startBinNewBins-1] <<" B :"<<nBinsToBeCombinedB[startBinNewBins-1] <<endl;
+                 cout << "exiting loop " << binningA[i] << "\t" << binningB[c] << "\t bins needed to merged A :"<<nBinsToBeCombinedA[startBinNewBins-1] <<" B :"<<nBinsToBeCombinedB[startBinNewBins-1] <<endl;
                 startBinNewBins++;
                 c++;
             }            
@@ -930,7 +936,7 @@
                                                                 TGraphErrors** graphRebinnedAStat = NULL, TGraphErrors** graphRebinnedASyst = NULL, 
                                                                 TGraphErrors** graphRebinnedBStat = NULL, TGraphErrors** graphRebinnedBSyst = NULL ){
         
-        cout << "Reading from Object A " << endl;
+//        cout << "Reading from Object A " << endl;
         TString ClassNameA      = Obj_DummyAStat->ClassName();
         Int_t nBinsXA           = 0;
         if(ClassNameA.BeginsWith("TH1")){
@@ -943,7 +949,7 @@
         Double_t binningXA[nBinsXA];
         Int_t validBinsA        = GetBinning(Obj_DummyAStat, binningXA);
         
-        cout << "Reading from Object B " << endl;
+//        cout << "Reading from Object B " << endl;
         TString ClassNameB      = Obj_DummyBStat->ClassName();
         Int_t nBinsXB           = 0 ;
         if(ClassNameB.BeginsWith("TH1")){
@@ -970,11 +976,11 @@
         Int_t binningCombinedBinsToBeMergedB[nBinsComb];
         Int_t nBinsNew          = CompareBinning( validBinsA, binningXA,validBinsB, binningXB, binningCombined, binningCombinedBinsToBeMergedA,binningCombinedBinsToBeMergedB, "A");
         
-        cout << "Object A"  << endl;
+//        cout << "Object A"  << endl;
         AliConvDataObject rebinnedA[nBinsComb];
         RebinObjects(Obj_DummyAStat,Obj_DummyASyst, binningCombined, binningCombinedBinsToBeMergedA, nBinsNew,rebinnedA, Obj_DummyAStat->ClassName(), Obj_DummyASyst->ClassName(),scaleByBinCenterA);
 
-        cout << "Object B"  << endl;
+//        cout << "Object B"  << endl;
         AliConvDataObject rebinnedB[nBinsComb];
         RebinObjects(Obj_DummyBStat,Obj_DummyBSyst, binningCombined, binningCombinedBinsToBeMergedB, nBinsNew,rebinnedB, Obj_DummyBStat->ClassName(), Obj_DummyBSyst->ClassName(), scaleByBinCenterB);
         
@@ -982,16 +988,16 @@
         Double_t errorX[nBinsComb];
         Double_t ratioY[nBinsComb];
         Double_t errorY[nBinsComb];
-        cout << nBinsNew-1 << "\t" <<nBinsComb << endl;
+//        cout << nBinsNew-1 << "\t" <<nBinsComb << endl;
         for (Int_t commonBin = 0; commonBin < nBinsNew-1; commonBin++){
-    //         cout << "A "<<commonBin<< "\t"  <<rebinnedA[commonBin].valueX << "\t +- " << rebinnedA[commonBin].errorXLow << " \t " << rebinnedA[commonBin].valueY<< "\t+" << rebinnedA[commonBin].errorYStatHigh<<"\t-"<< rebinnedA[commonBin].errorYStatLow<< "\t+" << rebinnedA[commonBin].errorYSystHigh<<"\t-"<< rebinnedA[commonBin].errorYSystLow<< "\t+" << rebinnedA[commonBin].errorYTotHigh<<"\t-"<< rebinnedA[commonBin].errorYTotLow<< "\t" << rebinnedA[commonBin].errorYTotHigh/rebinnedA[commonBin].valueY*100 << "%"<<endl;
-    //         cout << "B " <<commonBin<< "\t"  <<rebinnedB[commonBin].valueX << "\t +- " << rebinnedB[commonBin].errorXLow << " \t " << rebinnedB[commonBin].valueY<< "\t+" << rebinnedB[commonBin].errorYStatHigh<<"\t-"<< rebinnedB[commonBin].errorYStatLow<< "\t+" << rebinnedB[commonBin].errorYSystHigh<<"\t-"<< rebinnedB[commonBin].errorYSystLow<< "\t+" << rebinnedB[commonBin].errorYTotHigh<<"\t-"<< rebinnedB[commonBin].errorYTotLow<< "\t" << rebinnedB[commonBin].errorYTotHigh/rebinnedB[commonBin].valueY*100 << "%"<<endl;
+//             cout << "A "<<commonBin<< "\t"  <<rebinnedA[commonBin].valueX << "\t +- " << rebinnedA[commonBin].errorXLow << " \t " << rebinnedA[commonBin].valueY<< "\t+" << rebinnedA[commonBin].errorYStatHigh<<"\t-"<< rebinnedA[commonBin].errorYStatLow<< "\t+" << rebinnedA[commonBin].errorYSystHigh<<"\t-"<< rebinnedA[commonBin].errorYSystLow<< "\t+" << rebinnedA[commonBin].errorYTotHigh<<"\t-"<< rebinnedA[commonBin].errorYTotLow<< "\t" << rebinnedA[commonBin].errorYTotHigh/rebinnedA[commonBin].valueY*100 << "%"<<endl;
+//             cout << "B " <<commonBin<< "\t"  <<rebinnedB[commonBin].valueX << "\t +- " << rebinnedB[commonBin].errorXLow << " \t " << rebinnedB[commonBin].valueY<< "\t+" << rebinnedB[commonBin].errorYStatHigh<<"\t-"<< rebinnedB[commonBin].errorYStatLow<< "\t+" << rebinnedB[commonBin].errorYSystHigh<<"\t-"<< rebinnedB[commonBin].errorYSystLow<< "\t+" << rebinnedB[commonBin].errorYTotHigh<<"\t-"<< rebinnedB[commonBin].errorYTotLow<< "\t" << rebinnedB[commonBin].errorYTotHigh/rebinnedB[commonBin].valueY*100 << "%"<<endl;
             ratioX[commonBin]   = rebinnedA[commonBin].valueX;
             errorX[commonBin]   = rebinnedA[commonBin].errorXHigh;
             ratioY[commonBin]   = rebinnedA[commonBin].valueY/rebinnedB[commonBin].valueY;
             errorY[commonBin]   = TMath::Sqrt(TMath::Power(rebinnedA[commonBin].errorYTotHigh/rebinnedA[commonBin].valueY,2) +TMath::Power(rebinnedB[commonBin].errorYTotHigh/rebinnedB[commonBin].valueY,2))*ratioY[commonBin];
-    //         cout << "Ratio: " << ratioX[commonBin] << "\t" <<  errorX[commonBin] << "\t" << ratioY[commonBin] << "\t" << errorY[commonBin] << "\t" << errorY[commonBin]/ratioY[commonBin]*100 << "%"<<endl;
-        }
+//             cout << "Ratio: " << ratioX[commonBin] << "\t" <<  errorX[commonBin] << "\t" << ratioY[commonBin] << "\t" << errorY[commonBin] << "\t" << errorY[commonBin]/ratioY[commonBin]*100 << "%"<<endl;
+       }
         
         
         Double_t rebinnedSpectrumAY[nBinsNew-1];
