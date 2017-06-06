@@ -2237,7 +2237,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     if (containsWOWeights &&  nameMeson.Contains("Pi0")){ //(mode!=0 || mode!=9) &&
 
-//         if ( !(mode == 0 && optionEnergy.CompareTo("2.76TeV") == 0 )){
+        if ( !(mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )){
             TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
             TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
             TH1D* histoRatioEffWOWeightingEffCFPol1[3]  = {NULL, NULL, NULL};
@@ -2246,6 +2246,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
 
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.4,maxPtMeson);
+                cout << "fitting ratio norm/true eff with pol0" << endl;
                 cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
                 fitEffiBiasWOWeightsPol0[k]->SetLineColor(colorEffiShadePol0[k]);
                 fitEffiBiasWOWeightsPol0[k]->SetLineStyle(1);
@@ -2258,6 +2259,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
                 if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
+                cout << "fitting ratio norm/true eff with pol1" << endl;
                 cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
                 fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
                 fitEffiBiasWOWeightsPol1[k]->SetLineStyle(7);
@@ -2291,6 +2293,16 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     fitEffiBiasWOWeightsPol1[k]->Draw("same");
                     histoRatioEffWOWeightingEff[k]->Draw("e1,same");
 
+                    TLegend* legendRatioNormToTrueEff = GetAndSetLegend2(0.45, 0.12, 0.65, 0.22, 28);
+                    legendRatioNormToTrueEff->SetNColumns(2);
+                    legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEff[k],"ratio","pl");
+                    legendRatioNormToTrueEff->AddEntry((TObject*)0,"","");
+                    legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol0[k],"pol0 fit","l");
+                    legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol0[k],"pol0 CI","f");
+                    legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol1[k],"pol1 fit","l");
+                    legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol1[k],"pol1 CI","f");
+                    legendRatioNormToTrueEff->Draw();
+
                     PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
 
                 canvasCompEffSimple->Update();
@@ -2307,10 +2319,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             histoRatioEffWOWeightingEff[0]->Draw("e1");
             DrawGammaSetMarker(histoRatioEffWOWeightingTrueEffCorr, 20, 1.5, kAzure-6, kAzure-6);
             histoRatioEffWOWeightingTrueEffCorr->Draw("same,e1");
+            
+            TLegend* legendAfterFix = GetAndSetLegend2(0.45, 0.12, 0.65, 0.22, 28);
+            legendAfterFix->AddEntry(histoRatioEffWOWeightingEff[0],"Norm to TrueWOW eff, std interval");
+            legendAfterFix->AddEntry(histoRatioEffWOWeightingTrueEffCorr,"ratio after correction");
+            legendAfterFix->Draw();
 
             canvasCompEffSimple->Update();
             canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0WeightingNormalRatioAfterFix_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
-//         }
+        }
     }
 
     //**********************************************************************************
