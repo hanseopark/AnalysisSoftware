@@ -1028,6 +1028,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         histoPythia8InvXSection->GetXaxis()->SetRangeUser(0.3,35);
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV");
         histoPythia8InvXSectionEta->GetXaxis()->SetRangeUser(0.4,35);
+        TH1F* histoPythia8InvXSectionChPion             = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoChPion8TeV");
+        histoPythia8InvXSectionChPion->GetXaxis()->SetRangeUser(0.3,35);
         TGraphErrors* graphPythia8InvXSection               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi08TeV"));
         while(graphPythia8InvXSection->GetX()[0] < 0.3) graphPythia8InvXSection->RemovePoint(0);
         while(graphPythia8InvXSection->GetX()[graphPythia8InvXSection->GetN()-1] > 35.) graphPythia8InvXSection->RemovePoint(graphPythia8InvXSection->GetN()-1);
@@ -1111,6 +1113,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
      histoPythia8InvXSection2760GeV->GetXaxis()->SetRangeUser(0.3,35);
      TH1F* histoPythia8InvXSection2760GeVEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta2760GeV");
      histoPythia8InvXSection2760GeVEta->GetXaxis()->SetRangeUser(0.4,35);
+     TH1F* histoPythia8InvXSection2760GeVChPion                 = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoChPion2760GeV");
+     histoPythia8InvXSection2760GeVChPion->GetXaxis()->SetRangeUser(0.3,35);
 
      TFile* file7TeV                              = new TFile(fileName7TeV.Data());
      TGraphAsymmErrors* graph7TeVPi0Stat          = (TGraphAsymmErrors*) file7TeV->Get("Pi07TeV/graphInvCrossSectionPi0CombStat");
@@ -1133,6 +1137,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
      histoPythia8InvXSection7TeV->GetXaxis()->SetRangeUser(0.3,35);
      TH1F* histoPythia8InvXSection7TeVEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta7TeV");
      histoPythia8InvXSection7TeVEta->GetXaxis()->SetRangeUser(0.4,35);
+     TH1F* histoPythia8InvXSection7TeVChPion                 = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoChPion7TeV");
+     histoPythia8InvXSection7TeVChPion->GetXaxis()->SetRangeUser(0.3,35);
 
     // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
@@ -6610,62 +6616,31 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histoRatioEnergiesRa->GetXaxis()->SetNoExponent(kTRUE);
     histoRatioEnergiesRa->DrawCopy();
 
-//        TGraphAsymmErrors* plotGraph2760GeVPi0 = new TGraphAsymmErrors(*graph2760GeVPi0);
-//        // plotting data 8TeV/2.76TeV
-//        for (Int_t i=1; i<plotGraph2760GeVPi0->GetN(); i++) {
-//          Double_t temp = plotGraph2760GeVPi0->GetY()[i]/fitInvXSectionPi0->Eval(plotGraph2760GeVPi0->GetX()[i]);
-//          cout << plotGraph2760GeVPi0->GetX()[i] << ": "<< temp << " - " << plotGraph2760GeVPi0->GetEYhigh()[i]/fitInvXSectionPi0->Eval(plotGraph2760GeVPi0->GetX()[i]) << endl;
-//          plotGraph2760GeVPi0->GetY()[i]=temp;
-//          plotGraph2760GeVPi0->GetEYhigh()[i] = plotGraph2760GeVPi0->GetEYhigh()[i]/fitInvXSectionPi0->Eval(plotGraph2760GeVPi0->GetX()[i]);
-//          plotGraph2760GeVPi0->GetEYlow()[i] = plotGraph2760GeVPi0->GetEYlow()[i]/fitInvXSectionPi0->Eval(plotGraph2760GeVPi0->GetX()[i]);
-//        }
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection->GetBinContent(i)/histoPythia8InvXSection2760GeV->GetBinContent(i);
+      ratioOfEnergiesToPythia->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia->SetBinError(i,0.);
+    }
 
-        for (Int_t i=1; i<=ratioOfEnergiesToPythia->GetNbinsX(); i++) {
-          Double_t temp = histoPythia8InvXSection->GetBinContent(i)/histoPythia8InvXSection2760GeV->GetBinContent(i);
-          ratioOfEnergiesToPythia->SetBinContent(i,temp);
-          ratioOfEnergiesToPythia->SetBinError(i,0.);
-        }
+    ratioOfEnergiesToPythia->DrawCopy("p,same");
 
-//        plotGraph2760GeVPi0->Draw("p,same");
-        ratioOfEnergiesToPythia->DrawCopy("p,same");
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia2->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection->GetBinContent(i)/histoPythia8InvXSection7TeV->GetBinContent(i);
+      ratioOfEnergiesToPythia2->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia2->SetBinError(i,0.);
+    }
 
-//        // plotting data 8TeV/7TeV
-//        TGraphAsymmErrors* plotGraph7TeVPi0 = new TGraphAsymmErrors(*graph7TeVPi0);
-//        // plotting data 8TeV/2.76TeV
-//        for (Int_t i=1; i<plotGraph7TeVPi0->GetN(); i++) {
-//          Double_t temp = plotGraph7TeVPi0->GetY()[i]/fitInvXSectionPi0->Eval(plotGraph7TeVPi0->GetX()[i]);
-//          plotGraph7TeVPi0->GetY()[i]=temp;
-//          plotGraph7TeVPi0->GetEYhigh()[i] = plotGraph7TeVPi0->GetEYhigh()[i]/fitInvXSectionPi0->Eval(plotGraph7TeVPi0->GetX()[i]);
-//          plotGraph7TeVPi0->GetEYlow()[i] = plotGraph7TeVPi0->GetEYlow()[i]/fitInvXSectionPi0->Eval(plotGraph7TeVPi0->GetX()[i]);
-//        }
+    ratioOfEnergiesToPythia2->DrawCopy("p,same");
 
-        for (Int_t i=1; i<=ratioOfEnergiesToPythia2->GetNbinsX(); i++) {
-          Double_t temp = histoPythia8InvXSection->GetBinContent(i)/histoPythia8InvXSection7TeV->GetBinContent(i);
-          ratioOfEnergiesToPythia2->SetBinContent(i,temp);
-          ratioOfEnergiesToPythia2->SetBinError(i,0.);
-        }
+    for (Int_t i=1; i<=ratioOfEnergiesToPythia3->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection7TeV->GetBinContent(i)/histoPythia8InvXSection2760GeV->GetBinContent(i);
+      ratioOfEnergiesToPythia3->SetBinContent(i,temp);
+      ratioOfEnergiesToPythia3->SetBinError(i,0.);
+    }
 
-//        plotGraph7TeVPi0->Draw("p,same");
-        ratioOfEnergiesToPythia2->DrawCopy("p,same");
+    ratioOfEnergiesToPythia3->DrawCopy("p,same");
 
-
-        // plotting data 7TeV/2.76TeV
-//        for (Int_t i=1; i<=ratioOfEnergies3->GetNbinsX(); i++) {
-//          Double_t temp = fit7TeVPi0TCM->Eval(ratioOfEnergies->GetBinCenter(i))/fit2760GeVPi0Tsallis->Eval(ratioOfEnergies->GetBinCenter(i));
-//          ratioOfEnergies3->SetBinContent(i,temp);
-//          ratioOfEnergies3->SetBinError(i,0.);
-//        }
-
-        for (Int_t i=1; i<=ratioOfEnergiesToPythia3->GetNbinsX(); i++) {
-          Double_t temp = histoPythia8InvXSection7TeV->GetBinContent(i)/histoPythia8InvXSection2760GeV->GetBinContent(i);
-          ratioOfEnergiesToPythia3->SetBinContent(i,temp);
-          ratioOfEnergiesToPythia3->SetBinError(i,0.);
-        }
-
-//        ratioOfEnergies3->DrawCopy("p,same");
-        ratioOfEnergiesToPythia3->DrawCopy("p,same");
-
-        Bool_t doMaterialError = kTRUE;
+        Bool_t doMaterialError = kFALSE;
 
         TGraphErrors* graphRatioBinByBin7000_2760AStat = NULL;
         TGraphErrors* graphRatioBinByBin7000_2760ASys  = NULL;
@@ -6691,6 +6666,18 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                                             &graphRatioBinByBin7000_2760AStat, &graphRatioBinByBin7000_2760ASys,
                                                                                                             &graphRatioBinByBin7000_2760BStat, &graphRatioBinByBin7000_2760BSys )    ;
 
+        TGraphErrors* graphRatioBinByBin7000_2760stat = CalculateRatioBetweenSpectraWithDifferentBinning(
+                                                                                                            graph7TeVPi0Stat->Clone(), graph7TeVPi0Stat->Clone(),
+                                                                                                            graph2760GeVPi0Stat->Clone(), graph2760GeVPi0Stat->Clone(),
+                                                                                                            kTRUE,  kTRUE,
+                                                                                                            &graphRatioBinByBin7000_2760AStat, &graphRatioBinByBin7000_2760ASys,
+                                                                                                            &graphRatioBinByBin7000_2760BStat, &graphRatioBinByBin7000_2760BSys )    ;
+
+        for(Int_t i=0; i<graphRatioBinByBin7000_2760stat->GetN(); i++){
+           graphRatioBinByBin7000_2760stat->GetEX()[i] = 0.;
+           graphRatioBinByBin7000_2760stat->GetEY()[i] /= TMath::Sqrt2();
+        }
+
         TGraphErrors* graphRatioBinByBin8000_2760AStat = NULL;
         TGraphErrors* graphRatioBinByBin8000_2760ASys  = NULL;
         TGraphErrors* graphRatioBinByBin8000_2760BStat = NULL;
@@ -6714,6 +6701,17 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                                             kTRUE,  kTRUE,
                                                                                                             &graphRatioBinByBin8000_2760AStat, &graphRatioBinByBin8000_2760ASys,
                                                                                                             &graphRatioBinByBin8000_2760BStat, &graphRatioBinByBin8000_2760BSys )    ;
+        TGraphErrors* graphRatioBinByBin8000_2760stat = CalculateRatioBetweenSpectraWithDifferentBinning(
+                                                                                                            graphCombPi0InvXSectionStatA->Clone(), graphCombPi0InvXSectionStatA->Clone(),
+                                                                                                            graph2760GeVPi0Stat->Clone(), graph2760GeVPi0Stat->Clone(),
+                                                                                                            kTRUE,  kTRUE,
+                                                                                                            &graphRatioBinByBin8000_2760AStat, &graphRatioBinByBin8000_2760ASys,
+                                                                                                            &graphRatioBinByBin8000_2760BStat, &graphRatioBinByBin8000_2760BSys )    ;
+
+        for(Int_t i=0; i<graphRatioBinByBin8000_2760stat->GetN(); i++){
+           graphRatioBinByBin8000_2760stat->GetEX()[i] = 0.;
+           graphRatioBinByBin8000_2760stat->GetEY()[i] /= TMath::Sqrt2();
+        }
 
         TGraphErrors* graphRatioBinByBin8000_7000AStat = NULL;
         TGraphErrors* graphRatioBinByBin8000_7000ASys  = NULL;
@@ -6738,22 +6736,50 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                                             kTRUE,  kTRUE,
                                                                                                             &graphRatioBinByBin8000_7000AStat, &graphRatioBinByBin8000_7000ASys,
                                                                                                             &graphRatioBinByBin8000_7000BStat, &graphRatioBinByBin8000_7000BSys )    ;
+        TGraphErrors* graphRatioBinByBin8000_7000stat = CalculateRatioBetweenSpectraWithDifferentBinning(
+                                                                                                            graphCombPi0InvXSectionStatA->Clone(), graphCombPi0InvXSectionStatA->Clone(),
+                                                                                                            graph7TeVPi0Stat->Clone(), graph7TeVPi0Stat->Clone(),
+                                                                                                            kTRUE,  kTRUE,
+                                                                                                            &graphRatioBinByBin8000_7000AStat, &graphRatioBinByBin8000_7000ASys,
+                                                                                                            &graphRatioBinByBin8000_7000BStat, &graphRatioBinByBin8000_7000BSys )    ;
+
+        for(Int_t i=0; i<graphRatioBinByBin8000_7000stat->GetN(); i++){
+           graphRatioBinByBin8000_7000stat->GetEX()[i] = 0.;
+           graphRatioBinByBin8000_7000stat->GetEY()[i] /= TMath::Sqrt2();
+        }
 
         graphRatioBinByBin7000_2760->SetMarkerStyle(20);
         graphRatioBinByBin7000_2760->SetMarkerColor(kGreen+2);
         graphRatioBinByBin7000_2760->SetLineColor(kGreen+2);
         graphRatioBinByBin7000_2760->SetMarkerSize(2);
         graphRatioBinByBin7000_2760->Draw("p,same");
+        graphRatioBinByBin7000_2760stat->SetMarkerStyle(1);
+        graphRatioBinByBin7000_2760stat->SetMarkerColor(kGreen+2);
+        graphRatioBinByBin7000_2760stat->SetLineColor(kGreen+2);
+        graphRatioBinByBin7000_2760stat->SetLineWidth(3);
+        graphRatioBinByBin7000_2760stat->Draw("p,same");
+
         graphRatioBinByBin8000_2760->SetMarkerStyle(20);
         graphRatioBinByBin8000_2760->SetMarkerColor(kRed+2);
         graphRatioBinByBin8000_2760->SetLineColor(kRed+2);
         graphRatioBinByBin8000_2760->SetMarkerSize(2);
         graphRatioBinByBin8000_2760->Draw("p,same");
+        graphRatioBinByBin8000_2760stat->SetMarkerStyle(1);
+        graphRatioBinByBin8000_2760stat->SetMarkerColor(kRed+2);
+        graphRatioBinByBin8000_2760stat->SetLineColor(kRed+2);
+        graphRatioBinByBin8000_2760stat->SetLineWidth(3);
+        graphRatioBinByBin8000_2760stat->Draw("p,same");
+
         graphRatioBinByBin8000_7000->SetMarkerStyle(20);
         graphRatioBinByBin8000_7000->SetMarkerColor(kBlue+2);
         graphRatioBinByBin8000_7000->SetLineColor(kBlue+2);
         graphRatioBinByBin8000_7000->SetMarkerSize(2);
         graphRatioBinByBin8000_7000->Draw("p,same");
+        graphRatioBinByBin8000_7000stat->SetMarkerStyle(1);
+        graphRatioBinByBin8000_7000stat->SetMarkerColor(kBlue+2);
+        graphRatioBinByBin8000_7000stat->SetLineColor(kBlue+2);
+        graphRatioBinByBin8000_7000stat->SetLineWidth(3);
+        graphRatioBinByBin8000_7000stat->Draw("p,same");
 
         TLegend* legendRatios_2  = GetAndSetLegend2(0.15, 0.75, 0.4, 0.95, 0.85*textSizeLabelsPixel);
         legendRatios_2->SetMargin(0.25);
@@ -6780,21 +6806,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratioOfEnergiesToPythia2->DrawCopy("p,same");
         ratioOfEnergiesToPythia3->DrawCopy("p,same");
 
-        graphRatioBinByBin7000_2760->SetMarkerStyle(20);
-        graphRatioBinByBin7000_2760->SetMarkerColor(kGreen+2);
-        graphRatioBinByBin7000_2760->SetLineColor(kGreen+2);
-        graphRatioBinByBin7000_2760->SetMarkerSize(2);
         graphRatioBinByBin7000_2760->Draw("p,same");
-        graphRatioBinByBin8000_2760->SetMarkerStyle(20);
-        graphRatioBinByBin8000_2760->SetMarkerColor(kRed+2);
-        graphRatioBinByBin8000_2760->SetLineColor(kRed+2);
-        graphRatioBinByBin8000_2760->SetMarkerSize(2);
+        graphRatioBinByBin7000_2760stat->Draw("p,same");
         graphRatioBinByBin8000_2760->Draw("p,same");
-        graphRatioBinByBin8000_7000->SetMarkerStyle(20);
-        graphRatioBinByBin8000_7000->SetMarkerColor(kBlue+2);
-        graphRatioBinByBin8000_7000->SetLineColor(kBlue+2);
-        graphRatioBinByBin8000_7000->SetMarkerSize(2);
+        graphRatioBinByBin8000_2760stat->Draw("p,same");
         graphRatioBinByBin8000_7000->Draw("p,same");
+        graphRatioBinByBin8000_7000stat->Draw("p,same");
 
         legendRatios_2->Draw();
 
@@ -6915,6 +6932,77 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/Eta_diffEnergy_ratio.%s",outputDir.Data(), suffix.Data()));
+
+
+// -----------------------------------------------------------------------------------------------------------------
+
+
+    histoRatioEnergies->DrawCopy();
+
+    // plotting data 8TeV/2.76TeV
+    TH1F *ratioOfEnergiesChPionToPythia = (TH1F*)histoPythia8InvXSectionChPion->Clone("ratioOfEnergiesChPionToPythia");
+    ratioOfEnergiesChPionToPythia->SetTitle("");
+    ratioOfEnergiesChPionToPythia->SetLineColor(kRed+2);
+    ratioOfEnergiesChPionToPythia->SetMarkerColor(kRed+2);
+    ratioOfEnergiesChPionToPythia->SetMarkerStyle(24);
+    ratioOfEnergiesChPionToPythia->SetLineWidth(2.);
+
+    for (Int_t i=1; i<=ratioOfEnergiesChPionToPythia->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSectionChPion->GetBinContent(i)/histoPythia8InvXSection2760GeVChPion->GetBinContent(i);
+      ratioOfEnergiesChPionToPythia->SetBinContent(i,temp);
+      ratioOfEnergiesChPionToPythia->SetBinError(i,0.);
+    }
+
+    ratioOfEnergiesChPionToPythia->DrawCopy("p,same");
+
+    // plotting data 8TeV/7TeV
+
+    TH1F *ratioOfEnergiesChPionToPythia2 = (TH1F*)histoPythia8InvXSectionChPion->Clone("ratioOfEnergiesChPionToPythia2");
+    ratioOfEnergiesChPionToPythia2->SetTitle("");
+    ratioOfEnergiesChPionToPythia2->SetLineColor(kBlue+2);
+    ratioOfEnergiesChPionToPythia2->SetMarkerColor(kBlue+2);
+    ratioOfEnergiesChPionToPythia2->SetMarkerStyle(24);
+    ratioOfEnergiesChPionToPythia2->SetLineWidth(2.);
+
+    for (Int_t i=1; i<=ratioOfEnergiesChPionToPythia2->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSectionChPion->GetBinContent(i)/histoPythia8InvXSection7TeVChPion->GetBinContent(i);
+      ratioOfEnergiesChPionToPythia2->SetBinContent(i,temp);
+      ratioOfEnergiesChPionToPythia2->SetBinError(i,0.);
+    }
+
+    ratioOfEnergiesChPionToPythia2->DrawCopy("p,same");
+
+    // plotting data 7TeV/2.76TeV
+    TH1F *ratioOfEnergiesChPionToPythia3 = (TH1F*)histoPythia8InvXSectionChPion->Clone("ratioOfEnergiesChPionToPythia3");
+    ratioOfEnergiesChPionToPythia3->SetTitle("");
+    ratioOfEnergiesChPionToPythia3->SetLineColor(kGreen+2);
+    ratioOfEnergiesChPionToPythia3->SetMarkerColor(kGreen+2);
+    ratioOfEnergiesChPionToPythia3->SetMarkerStyle(24);
+    ratioOfEnergiesChPionToPythia3->SetLineWidth(2.);
+
+    for (Int_t i=1; i<=ratioOfEnergiesChPionToPythia3->GetNbinsX(); i++) {
+      Double_t temp = histoPythia8InvXSection7TeVChPion->GetBinContent(i)/histoPythia8InvXSection2760GeVChPion->GetBinContent(i);
+      ratioOfEnergiesChPionToPythia3->SetBinContent(i,temp);
+      ratioOfEnergiesChPionToPythia3->SetBinError(i,0.);
+    }
+
+    ratioOfEnergiesChPionToPythia3->DrawCopy("p,same");
+
+    TLegend* legendRatiosMCChPion  = GetAndSetLegend2(0.5, 0.75, 0.75, 0.95, 0.85*textSizeLabelsPixel);
+    legendRatiosMCChPion->SetMargin(0.25);
+    legendRatiosMCChPion->AddEntry((TObject*)0,"#pi^{+/-} PYTHIA Monash2013","");
+    legendRatiosMCChPion->AddEntry(ratioOfEnergiesChPionToPythia, "8TeV/2.76TeV","p");
+    legendRatiosMCChPion->AddEntry(ratioOfEnergiesChPionToPythia2, "8TeV/7TeV","p");
+    legendRatiosMCChPion->AddEntry(ratioOfEnergiesChPionToPythia3, "7TeV/2.76TeV","p");
+    legendRatiosMCChPion->Draw();
+
+    DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
+
+    histoRatioEnergies->Draw("axis,same");
+
+    canvasEtatoPi0combo->Update();
+    canvasEtatoPi0combo->SaveAs(Form("%s/ChPion_diffEnergy_ratio.%s",outputDir.Data(), suffix.Data()));
+
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
     // **********************************************************************************************************************
