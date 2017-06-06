@@ -64,7 +64,6 @@ struct SysErrorConversion {
 void CombineMesonMeasurementsPbPbLHC11h_AllCent(TString meson = "Eta",
                                                 TString fileNamePCM = "",
                                                 TString suffix = "pdf",
-                                                Bool_t PaperPi0 = kTRUE,
                                                 Bool_t noXerrorBars = kTRUE,
                                                 TString bWCorrection=""){
 

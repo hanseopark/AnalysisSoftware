@@ -45,6 +45,11 @@ if [ $1 = "dmuhlhei" ]; then
 	ln -sf $PHOTONCONVDIR/DataQA DataQA
 fi
 
+if [ $1 = "leardini" ]; then 
+    mkdir -p LHC11hExternalInputs
+	ln -sf $PHOTONCONVDIR/LHC11hExternalInputs/* LHC11hExternalInputs/
+fi
+
 ln -sf $PHOTONCONVDIR/*.eps .
 ln -sf $PHOTONCONVDIR/*.C .
 ln -sf $PHOTONCONVDIR/*.h .

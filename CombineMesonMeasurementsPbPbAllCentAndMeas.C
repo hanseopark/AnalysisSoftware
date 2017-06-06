@@ -887,21 +887,10 @@ void CombineMesonMeasurementsPbPbAllCentAndMeas(TString meson = "Eta",
         }
     }
 
-    Double_t fitStart;
-    Double_t fitStop;
     Int_t rangePi0LowComb[3] = {0,3,14};
     Int_t rangePi0HighComb[3] = {19,18,21};
     Int_t rangeEtaLowComb[3] = {0,0,4};
     Int_t rangeEtaHighComb[3] = {6,0,10};
-    if(meson.CompareTo("Pi0")==0){
-      fitStart = 0.4;
-      fitStop = 14.;
-    } else if(meson.CompareTo("Eta")==0){
-      fitStart = 1.;
-      fitStop = 10.;
-    }
-
-
 
     for(Int_t c = 0; c< nCent; c++){
 
