@@ -309,10 +309,6 @@ Size_t      markerSize2050      = 2;
 Size_t      markerSizepp      = 3;
 
 //plot range for yields
-Double_t minYaxisYields = 2e-8; //1e-9
-Double_t maxYaxisYields = 1e4; //1e3
-Double_t minPtYields = 0.25;
-Double_t maxPtYields = 70.;
 Double_t FontSize = 0.035;
 Double_t maxYEtatoPi0 = 1.05;
 Double_t minPtRange = 0.4;
@@ -387,6 +383,8 @@ Style_t     styleLineNLOMuTwoBKK    = 3;
 Style_t     styleLineNLOMuTwoDSS    = 6;
 Size_t      sizeMarkerNLO           = 1;
 Width_t     widthLineNLO            = 2.;
+
+
 
 Color_t colorComb0005               = kRed+1;
 Color_t colorComb0010               = kRed+1;
@@ -785,7 +783,7 @@ TGraphErrors* graphRatioEtaPCMToChargedKaon_2050 = NULL;
 TGraphErrors* graphRatioEtaEMCalToChargedKaon_2050 = NULL;
 
 
-TH2F * histo2DInvYieldSectionPi0LHC11h;
+TH2F * histo2DInvariantYield;
 TLatex *labelRatioToFitPi0;
 TLatex *labelRelSysErrPi0;
 TLatex *labelWeightsPi0;
@@ -803,7 +801,8 @@ TLatex *labelDetSysInvYieldSectionPi0LHC11hwithPP;
 TLatex *labelRelStatErrPi0;
 TLegend* legendXsectionPaperOnlyRatios;
 TLatex *labelDetSysRatioToModelsLHC11h;
-TH2F * histo2DInvYieldSectionLHC11hwithPP;
+TH2F * histo2DInvariantYieldwithPP;
+TH2F *histo2DInvariantYieldAndModels;
 
 TGraphAsymmErrors* sysErrorRel2010and2011_0010[2];
 TGraphAsymmErrors* sysErrorRel2010and2011_2040[2];

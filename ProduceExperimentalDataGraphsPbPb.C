@@ -51,13 +51,14 @@ extern TSystem*	gSystem;
 extern TMinuit*  	gMinuit;
 
 void ProduceExperimentalDataGraphsPbPb(){	
+        
+    //pi0 Raa points from http://arxiv.org/pdf/0801.4020v1.pdf
+    //pi0 yields point from http://inspirehep.net/record/1107625, http://www.phenix.bnl.gov/phenix/WWW/info/data/ppg138_data.html
     
-    //********************************************************************************************************************************************	
-    //*************************************** Raa theory Xiao-Fang *******************************************************************************
-    
-    //PHENIX 200 GeV
-    //pi0 points from http://arxiv.org/pdf/0801.4020v1.pdf
-    //eta points from http://arxiv.org/pdf/1005.4916v1.pdf
+    //PHENIX 200 GeV 
+    //---> RAA in 0-10%, 10-20%, 0-20%, 20-30%, 30-40%, 40-50%, 50-60% 60-70%, 70-80%
+    //---> invariant yields in
+    //produced by hand: 20-40%, 20-50%, 40-60%, 60-80%
     Double_t PHENIX200GeVpt_0010[23] =  { 1.25, 1.75, 2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25, 5.75, 6.25, 6.75, 7.25, 7.75, 8.25, 8.75, 9.25, 9.75, 11, 13, 15, 17, 19};
     Double_t PHENIX200GeVRAA_0010[23] =  {3.640e-01, 4.123e-01, 3.958e-01, 3.159e-01, 2.556e-01, 2.272e-01, 2.103e-01, 2.051e-01, 1.855e-01, 1.854e-01, 1.911e-01, 2.070e-01, 1.964e-01, 1.875e-01, 1.856e-01, 1.901e-01, 2.004e-01, 2.200e-01, 2.099e-01, 1.663e-01, 2.892e-01, 3.739e-01, 3.449e-01};
     Double_t PHENIX200GeVRAAErr_0010[23] = {3.572e-02, 4.197e-02, 4.287e-02, 3.558e-02, 2.952e-02, 2.641e-02, 2.547e-02, 2.483e-02, 2.240e-02, 2.232e-02, 2.299e-02, 2.482e-02, 2.355e-02, 2.251e-02, 2.237e-02, 2.302e-02, 2.452e-02, 2.719e-02, 2.812e-02, 2.704e-02, 5.437e-02, 8.636e-02, 1.534e-01};
@@ -75,11 +76,34 @@ void ProduceExperimentalDataGraphsPbPb(){
     Double_t PHENIX200GeVNormError_0020 = TMath::Sqrt(6.85*6.85+9.7*9.7);
     
     
+    TString fileNamePHENIXPi0InvYield200GeV_0010 = "ExternalInputPbPb/OtherExperiments/pi0yield_0010AuAu200GeV.txt";
+    Int_t nlinesPi00010 = 0;
+//     Double_t ptYield_0010[23];
+    Double_t PHENIX200GeVInvYield_0010[23];
+    Double_t PHENIX200GeVInvYieldStatErr_0010[23];
+    Double_t PHENIX200GeVInvYielPtUncorrErr_0010[23];
+    Double_t PHENIX200GeVInvYieldSystErr_0010[23];
+    Double_t notneeded;
+    ifstream inPi0yield0010;
+    inPi0yield0010.open(fileNamePHENIXPi0InvYield200GeV_0010,ios_base::in);        
+    while(!inPi0yield0010.eof()){
+        //     pT	yield		staterr		Rat(%)	ptuncorerr	Rat(%)	ptcorsys	Rat(%)	Chi2ND
+        inPi0yield0010 >> notneeded >> PHENIX200GeVInvYield_0010[nlinesPi00010] >> PHENIX200GeVInvYieldStatErr_0010[nlinesPi00010] >> notneeded >> PHENIX200GeVInvYielPtUncorrErr_0010[nlinesPi00010] >> notneeded >> PHENIX200GeVInvYieldSystErr_0010[nlinesPi00010] >> notneeded >> notneeded;
+        nlinesPi00010++;
+    }
+    inPi0yield0010.close();
+
+    
+    TGraphAsymmErrors* graphPHENIX200GeVInvYield_0010 = new TGraphAsymmErrors(23);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_0010 = new TGraphAsymmErrors(23);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_0020 = new TGraphAsymmErrors(23);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_1020 = new TGraphAsymmErrors(23);
 
     for(Int_t i=0; i<23; i++){
+        Double_t YieldquadErr = TMath::Sqrt(PHENIX200GeVInvYieldStatErr_0010[i]*PHENIX200GeVInvYieldStatErr_0010[i] + PHENIX200GeVInvYielPtUncorrErr_0010[i]*PHENIX200GeVInvYielPtUncorrErr_0010[i] + PHENIX200GeVInvYieldSystErr_0010[i] * PHENIX200GeVInvYieldSystErr_0010[i]);
+        graphPHENIX200GeVInvYield_0010->SetPoint(i, PHENIX200GeVpt_0010[i],  PHENIX200GeVInvYield_0010[i]);
+        graphPHENIX200GeVInvYield_0010->SetPointError(i, 0.05, 0.05, YieldquadErr,YieldquadErr);
+
         Double_t quadErr1 = TMath::Sqrt(PHENIX200GeVRAAErr_0010[i]*PHENIX200GeVRAAErr_0010[i] + PHENIX200GeVRAAErrPt_0010[i] * PHENIX200GeVRAAErrPt_0010[i]);
         Double_t quadErr2 = TMath::Sqrt(PHENIX200GeVRAAErr_1020[i]*PHENIX200GeVRAAErr_1020[i] + PHENIX200GeVRAAErrPt_1020[i] * PHENIX200GeVRAAErrPt_1020[i]);
         Double_t quadErr3 = TMath::Sqrt(PHENIX200GeVRAAErr_0020[i]*PHENIX200GeVRAAErr_0020[i] + PHENIX200GeVRAAErrPt_0020[i] * PHENIX200GeVRAAErrPt_0020[i]);
@@ -102,11 +126,60 @@ void ProduceExperimentalDataGraphsPbPb(){
     Double_t PHENIX200GeVRAAErrPt_3040[22] = {6.366e-03, 5.802e-03, 5.487e-03, 5.459e-03, 5.580e-03, 6.384e-03, 5.832e-03, 7.060e-03, 8.289e-03, 1.044e-02, 1.208e-02, 1.129e-02, 1.492e-02, 1.844e-02, 2.123e-02, 2.361e-02, 2.830e-02, 4.268e-02, 2.891e-02, 5.306e-02, 9.278e-02, 1.761e-01};
     Double_t PHENIX200GeVNormError_3040 = TMath::Sqrt(8.41*8.41+9.7*9.7);
 
+    TString fileNamePHENIXPi0InvYield200GeV_2030 = "ExternalInputPbPb/OtherExperiments/pi0yield_2030AuAu200GeV.txt";
+    Int_t nlinesPi02030 = 0;
+    Double_t PHENIX200GeVInvYield_2030[22];
+    Double_t PHENIX200GeVInvYieldStatErr_2030[22];
+    Double_t PHENIX200GeVInvYielPtUncorrErr_2030[22];
+    Double_t PHENIX200GeVInvYieldSystErr_2030[22];
+    ifstream inPi0yield2030;
+    inPi0yield2030.open(fileNamePHENIXPi0InvYield200GeV_2030,ios_base::in);        
+    while(!inPi0yield2030.eof()){
+        //     pT	yield		staterr		Rat(%)	ptuncorerr	Rat(%)	ptcorsys	Rat(%)	Chi2ND
+        inPi0yield2030 >> notneeded >> PHENIX200GeVInvYield_2030[nlinesPi02030] >> PHENIX200GeVInvYieldStatErr_2030[nlinesPi02030] >> notneeded >> PHENIX200GeVInvYielPtUncorrErr_2030[nlinesPi02030] >> notneeded >> PHENIX200GeVInvYieldSystErr_2030[nlinesPi02030] >> notneeded >> notneeded;
+        nlinesPi02030++;
+    }
+    inPi0yield2030.close();
+    
+    TString fileNamePHENIXPi0InvYield200GeV_3040 = "ExternalInputPbPb/OtherExperiments/pi0yield_3040AuAu200GeV.txt";
+    Int_t nlinesPi03040 = 0;
+    Double_t PHENIX200GeVInvYield_3040[22];
+    Double_t PHENIX200GeVInvYieldStatErr_3040[22];
+    Double_t PHENIX200GeVInvYielPtUncorrErr_3040[22];
+    Double_t PHENIX200GeVInvYieldSystErr_3040[22];
+    ifstream inPi0yield3040;
+    inPi0yield3040.open(fileNamePHENIXPi0InvYield200GeV_3040,ios_base::in);        
+    while(!inPi0yield3040.eof()){
+        //     pT	yield		staterr		Rat(%)	ptuncorerr	Rat(%)	ptcorsys	Rat(%)	Chi2ND
+        inPi0yield3040 >> notneeded >> PHENIX200GeVInvYield_3040[nlinesPi03040] >> PHENIX200GeVInvYieldStatErr_3040[nlinesPi03040] >> notneeded >> PHENIX200GeVInvYielPtUncorrErr_3040[nlinesPi03040] >> notneeded >> PHENIX200GeVInvYieldSystErr_3040[nlinesPi03040] >> notneeded >> notneeded;
+        nlinesPi03040++;
+    }
+    inPi0yield3040.close();
+
+    
+    TGraphAsymmErrors* graphPHENIX200GeVInvYield_2030 = new TGraphAsymmErrors(22);
+    TGraphAsymmErrors* graphPHENIX200GeVInvYield_3040 = new TGraphAsymmErrors(22);
+    TGraphAsymmErrors* graphPHENIX200GeVInvYield_2040 = new TGraphAsymmErrors(22);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_2030 = new TGraphAsymmErrors(22);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_3040 = new TGraphAsymmErrors(22);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_2040 = new TGraphAsymmErrors(22);
     
     for(Int_t i=0; i<22; i++){
+        Double_t YieldquadErr1 = TMath::Sqrt(PHENIX200GeVInvYieldStatErr_2030[i]*PHENIX200GeVInvYieldStatErr_2030[i] + PHENIX200GeVInvYielPtUncorrErr_2030[i]*PHENIX200GeVInvYielPtUncorrErr_2030[i] + PHENIX200GeVInvYieldSystErr_2030[i] * PHENIX200GeVInvYieldSystErr_2030[i]);
+        graphPHENIX200GeVInvYield_2030->SetPoint(i, PHENIX200GeVpt_2030[i],  PHENIX200GeVInvYield_2030[i]);
+        graphPHENIX200GeVInvYield_2030->SetPointError(i, 0.05, 0.05, YieldquadErr1,YieldquadErr1);
+        Double_t YieldquadErr2 = TMath::Sqrt(PHENIX200GeVInvYieldStatErr_3040[i]*PHENIX200GeVInvYieldStatErr_3040[i] + PHENIX200GeVInvYielPtUncorrErr_3040[i]*PHENIX200GeVInvYielPtUncorrErr_3040[i] + PHENIX200GeVInvYieldSystErr_3040[i] * PHENIX200GeVInvYieldSystErr_3040[i]);
+        graphPHENIX200GeVInvYield_3040->SetPoint(i, PHENIX200GeVpt_2030[i],  PHENIX200GeVInvYield_3040[i]);
+        graphPHENIX200GeVInvYield_3040->SetPointError(i, 0.05, 0.05, YieldquadErr2,YieldquadErr2);
+        
+        Double_t valYield = (PHENIX200GeVInvYield_2030[i]+PHENIX200GeVInvYield_3040[i])/2.;
+        Double_t errorYieldStat = TMath::Sqrt(PHENIX200GeVInvYieldStatErr_2030[i]*PHENIX200GeVInvYieldStatErr_2030[i] + PHENIX200GeVInvYieldStatErr_3040[i]*PHENIX200GeVInvYieldStatErr_3040[i]);
+        Double_t errorYieldSys = TMath::Sqrt(PHENIX200GeVInvYielPtUncorrErr_2030[i]*PHENIX200GeVInvYielPtUncorrErr_2030[i] + PHENIX200GeVInvYieldSystErr_2030[i] * PHENIX200GeVInvYieldSystErr_2030[i] + PHENIX200GeVInvYielPtUncorrErr_3040[i]*PHENIX200GeVInvYielPtUncorrErr_3040[i] + PHENIX200GeVInvYieldSystErr_3040[i] * PHENIX200GeVInvYieldSystErr_3040[i]);
+        Double_t errorYield = TMath::Sqrt(errorYieldStat*errorYieldStat + errorYieldSys*errorYieldSys);
+        graphPHENIX200GeVInvYield_2040->SetPoint(i, PHENIX200GeVpt_2030[i],  valYield);
+        graphPHENIX200GeVInvYield_2040->SetPointError(i, 0.05, 0.05, errorYield,errorYield);
+
+        
         Double_t quadErr1 = TMath::Sqrt(PHENIX200GeVRAAErr_2030[i]*PHENIX200GeVRAAErr_2030[i] + PHENIX200GeVRAAErrPt_2030[i] * PHENIX200GeVRAAErrPt_2030[i]);
         Double_t quadErr2 = TMath::Sqrt(PHENIX200GeVRAAErr_3040[i]*PHENIX200GeVRAAErr_3040[i] + PHENIX200GeVRAAErrPt_3040[i] * PHENIX200GeVRAAErrPt_3040[i]);
         graphPHENIX200GeVRAA_2030->SetPoint(i, PHENIX200GeVpt_2030[i],  PHENIX200GeVRAA_2030[i]);
@@ -131,17 +204,53 @@ void ProduceExperimentalDataGraphsPbPb(){
     Double_t PHENIX200GeVRAAErrPt_5060[21] = {6.694e-03, 6.859e-03, 6.502e-03, 6.850e-03, 7.724e-03, 9.208e-03, 9.970e-03, 1.298e-02, 1.682e-02, 1.964e-02, 2.529e-02, 2.379e-02, 2.921e-02, 3.814e-02, 4.656e-02, 5.159e-02, 5.704e-02, 9.234e-02, 5.745e-02, 1.121e-01, 5.687e-01};
     Double_t PHENIX200GeVNormError_5060 =  TMath::Sqrt(15.9*15.9+9.7*9.7);
 
+    TString fileNamePHENIXPi0InvYield200GeV_4050 = "ExternalInputPbPb/OtherExperiments/pi0yield_4050AuAu200GeV.txt";
+    Int_t nlinesPi04050 = 0;
+    Double_t PHENIX200GeVInvYield_4050[21];
+    Double_t PHENIX200GeVInvYieldStatErr_4050[21];
+    Double_t PHENIX200GeVInvYielPtUncorrErr_4050[21];
+    Double_t PHENIX200GeVInvYieldSystErr_4050[21];
+    ifstream inPi0yield4050;
+    inPi0yield4050.open(fileNamePHENIXPi0InvYield200GeV_4050,ios_base::in);        
+    while(!inPi0yield4050.eof()){
+        //     pT	yield		staterr		Rat(%)	ptuncorerr	Rat(%)	ptcorsys	Rat(%)	Chi2ND
+        inPi0yield4050 >> notneeded >> PHENIX200GeVInvYield_4050[nlinesPi04050] >> PHENIX200GeVInvYieldStatErr_4050[nlinesPi04050] >> notneeded >> PHENIX200GeVInvYielPtUncorrErr_4050[nlinesPi04050] >> notneeded >> PHENIX200GeVInvYieldSystErr_4050[nlinesPi04050] >> notneeded >> notneeded;
+        nlinesPi04050++;
+    }
+    inPi0yield4050.close();
+
+    TGraphAsymmErrors* graphPHENIX200GeVInvYield_4050 = new TGraphAsymmErrors(21);
+    TGraphAsymmErrors* graphPHENIX200GeVInvYield_2050 = new TGraphAsymmErrors(21);
+    TGraphAsymmErrors* graphPHENIX200GeVRAA_2050 = new TGraphAsymmErrors(21);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_4050 = new TGraphAsymmErrors(21);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_5060 = new TGraphAsymmErrors(21);
     TGraphAsymmErrors* graphPHENIX200GeVRAA_4060 = new TGraphAsymmErrors(21);
     
     for(Int_t i=0; i<21; i++){
+        Double_t YieldquadErr = TMath::Sqrt(PHENIX200GeVInvYieldStatErr_4050[i]*PHENIX200GeVInvYieldStatErr_4050[i] + PHENIX200GeVInvYielPtUncorrErr_4050[i]*PHENIX200GeVInvYielPtUncorrErr_4050[i] + PHENIX200GeVInvYieldSystErr_4050[i] * PHENIX200GeVInvYieldSystErr_4050[i]);
+        graphPHENIX200GeVInvYield_4050->SetPoint(i, PHENIX200GeVpt_4050[i],  PHENIX200GeVInvYield_4050[i]);
+        graphPHENIX200GeVInvYield_4050->SetPointError(i, 0.05, 0.05, YieldquadErr,YieldquadErr);        
+        Double_t valYield = (PHENIX200GeVInvYield_2030[i] + PHENIX200GeVInvYield_3040[i] + PHENIX200GeVInvYield_4050[i])/3.;
+        Double_t errorYieldStat = TMath::Sqrt(PHENIX200GeVInvYieldStatErr_2030[i]*PHENIX200GeVInvYieldStatErr_2030[i] + PHENIX200GeVInvYieldStatErr_3040[i]*PHENIX200GeVInvYieldStatErr_3040[i] + PHENIX200GeVInvYieldStatErr_4050[i]*PHENIX200GeVInvYieldStatErr_4050[i]);
+        Double_t errorYieldSys = TMath::Sqrt(PHENIX200GeVInvYielPtUncorrErr_2030[i]*PHENIX200GeVInvYielPtUncorrErr_2030[i] + PHENIX200GeVInvYieldSystErr_2030[i] * PHENIX200GeVInvYieldSystErr_2030[i] + PHENIX200GeVInvYielPtUncorrErr_3040[i]*PHENIX200GeVInvYielPtUncorrErr_3040[i] + PHENIX200GeVInvYieldSystErr_3040[i] * PHENIX200GeVInvYieldSystErr_3040[i] + PHENIX200GeVInvYielPtUncorrErr_4050[i]*PHENIX200GeVInvYielPtUncorrErr_4050[i] + PHENIX200GeVInvYieldSystErr_4050[i] * PHENIX200GeVInvYieldSystErr_4050[i]);
+        Double_t errorYield = TMath::Sqrt(errorYieldStat*errorYieldStat + errorYieldSys*errorYieldSys);
+        graphPHENIX200GeVInvYield_2050->SetPoint(i, PHENIX200GeVpt_4050[i],  valYield);
+        graphPHENIX200GeVInvYield_2050->SetPointError(i, 0.05, 0.05, errorYield,errorYield);
+
+        
         Double_t quadErr1 = TMath::Sqrt(PHENIX200GeVRAAErr_4050[i]*PHENIX200GeVRAAErr_4050[i] + PHENIX200GeVRAAErrPt_4050[i] * PHENIX200GeVRAAErrPt_4050[i]);
         Double_t quadErr2 = TMath::Sqrt(PHENIX200GeVRAAErr_5060[i]*PHENIX200GeVRAAErr_5060[i] + PHENIX200GeVRAAErrPt_5060[i] * PHENIX200GeVRAAErrPt_5060[i]);
         graphPHENIX200GeVRAA_4050->SetPoint(i, PHENIX200GeVpt_4050[i],  PHENIX200GeVRAA_4050[i]);
         graphPHENIX200GeVRAA_4050->SetPointError(i, 0.05, 0.05, quadErr1, quadErr1);
         graphPHENIX200GeVRAA_5060->SetPoint(i, PHENIX200GeVpt_4050[i],  PHENIX200GeVRAA_5060[i]);
         graphPHENIX200GeVRAA_5060->SetPointError(i, 0.05, 0.05, quadErr2, quadErr2);
+        Double_t val1 = (PHENIX200GeVRAA_2030[i]+PHENIX200GeVRAA_3040[i]+PHENIX200GeVRAA_4050[i])/3.;
+        Double_t errorStat1 = TMath::Sqrt(PHENIX200GeVRAA_2030[i]*PHENIX200GeVRAA_2030[i] + PHENIX200GeVRAA_3040[i]*PHENIX200GeVRAA_3040[i] + PHENIX200GeVRAAErrPt_4050[i]*PHENIX200GeVRAAErrPt_4050[i]);
+        Double_t errorSys1 = (PHENIX200GeVRAAErr_2030[i] + PHENIX200GeVRAAErr_3040[i] + PHENIX200GeVRAAErr_4050[i])/3.;
+        Double_t error1 = TMath::Sqrt(errorStat1*errorStat1 + errorSys1*errorSys1);
+        graphPHENIX200GeVRAA_2050->SetPoint(i, PHENIX200GeVpt_4050[i],  val1);
+        graphPHENIX200GeVRAA_2050->SetPointError(i, 0.05, 0.05, error1,error1);
+
         Double_t val = (PHENIX200GeVRAA_4050[i]+PHENIX200GeVRAA_5060[i])/2.;
         Double_t errorStat = TMath::Sqrt(PHENIX200GeVRAAErrPt_5060[i]*PHENIX200GeVRAAErrPt_5060[i] + PHENIX200GeVRAAErrPt_4050[i]*PHENIX200GeVRAAErrPt_4050[i]);
         Double_t errorSys = (PHENIX200GeVRAAErr_4050[i] + PHENIX200GeVRAAErr_5060[i])/2.;
@@ -184,22 +293,22 @@ void ProduceExperimentalDataGraphsPbPb(){
 
     }
     
-    
-    //======================= eta RAA 0-10% ======================
+    //PHENIX 200 GeV 
+    //---> yields
+    //---> RAA in 0-10%, 20-40%, 20-60%, (60-92%)
+    //eta points from http://arxiv.org/pdf/1005.4916v1.pdf and Phys.Rev.Lett.96:202301,2006
     Double_t PHENIX200GeVEtapt_0010[9] =  { 5.5, 6.5, 7.5, 8.5, 9.5, 11, 13, 15, 17};
     Double_t PHENIX200GeVEtaRAA_0010[9] =  {1.96e-01, 1.64e-01, 2.14e-01, 2.50e-01, 2.37e-01, 2.36e-01, 3.64e-01, 1.51e-01, 1.70e-01};
     Double_t PHENIX200GeVEtaRAAStatErr_0010[9] = {1.71e-02, 1.88e-02, 2.38e-02, 3.06e-02, 4.13e-02, 4.14e-02, 6.67e-02, 9.41e-02, 1.44e-01};
     Double_t PHENIX200GeVEtaRAASysErrB_0010[9] = {2.64e-02, 2.21e-02, 2.89e-02, 3.37e-02, 3.20e-02, 3.18e-02, 4.92e-02, 2.03e-02, 2.30e-02};
     Double_t PHENIX200GeVEtaRAASysErrC_0010[9] = {2.39e-02, 2.00e-02, 2.61e-02, 3.04e-02, 2.89e-02, 2.87e-02, 4.44e-02, 1.84e-02, 2.07e-02};
     
-    //======================= eta RAA 20-40% ======================
     Double_t PHENIX200GeVEtapt_2040[10] =  { 5.5, 6.5, 7.5, 8.5, 9.5, 11, 13, 15, 17, 19};
     Double_t PHENIX200GeVEtaRAA_2040[10] =  {3.92e-01, 3.85e-01, 4.11e-01, 3.62e-01, 4.77e-01, 3.33e-01, 7.00e-01, 1.57e-01, 6.33e-01, 2.11};
     Double_t PHENIX200GeVEtaRAAStatErr_2040[10] = {2.33e-02, 2.56e-02, 3.21e-02, 4.05e-02, 6.25e-02, 6.41e-02, 1.12e-01, 1.37e-01, 2.62e-01, 1.80};
     Double_t PHENIX200GeVEtaRAASysErrB_2040[10] = {5.29e-02, 5.20e-02, 5.55e-02, 4.88e-02, 6.44e-02, 4.50e-02, 9.45e-02, 2.11e-02, 8.55e-02, 2.85e-01};
     Double_t PHENIX200GeVEtaRAASysErrC_2040[10] = {4.78e-02, 4.70e-02, 5.02e-02, 4.41e-02, 5.82e-02, 4.07e-02, 8.54e-02, 1.91e-02, 7.73e-02, 2.57e-01};
 
-    //======================= eta RAA 20-60% ======================
     Double_t PHENIX200GeVEtapt_2060[10] =  { 5.5, 6.5, 7.5, 8.5, 9.5, 11, 13, 15, 17, 19};
     Double_t PHENIX200GeVEtaRAA_2060[10] =  {4.52e-01, 4.47e-01, 4.41e-01, 4.27e-01, 5.54e-01, 3.79e-01, 6.95e-01, 3.60e-01, 7.05e-01, 1.57};
     Double_t PHENIX200GeVEtaRAAStatErr_2060[10] = {2.38e-02, 2.56e-02, 3.08e-02, 3.92e-02, 6.12e-02, 6.38e-02, 1.04e-01, 1.35e-01, 2.47e-01, 8.16e-01};
@@ -231,24 +340,30 @@ void ProduceExperimentalDataGraphsPbPb(){
 
     }	
 
-    //============================================================	
     
-    
-    
-
-    Double_t PHENIX39GeVpt_0010[18] = {0.90, 1.10, 1.30, 1.50, 1.70,
-                                                1.90, 2.10, 2.30, 2.50, 2.70, 
-                                                2.90, 3.20, 3.80, 4.20, 4.80,
-                                                5.50, 6.50, 7.50};
+    //PHENIX 39 GeV 
+    //---> RAA in 0-10%, 0-20%, 20-40%, 40-60%, 60-86%
+    //---> invariant yields in 0-10%, (10-20%,) 20-40%, (40-60%, 60-80%)    
+    Double_t PHENIX39GeVpt_0010[18] = {0.90, 1.10, 1.30, 1.50, 1.70, 1.90, 2.10, 2.30, 2.50, 2.70, 2.90, 3.20, 3.80, 4.20, 4.80, 5.50, 6.50, 7.50};
     Double_t PHENIX39GeVRAA_0010[18] =  {3.69e-01, 4.47e-01, 4.19e-01, 4.85e-01, 4.70e-01, 4.57e-01, 4.76e-01, 5.09e-01, 5.39e-01, 5.37e-01, 5.63e-01, 5.39e-01, 5.25e-01, 4.96e-01, 4.91e-01, 4.68e-01, 4.28e-01, 3.77e-01};
     Double_t PHENIX39GeVRAAErrPt_0010[18] = {7.54e-05, 1.13e-04, 1.33e-04, 1.98e-04, 2.51e-04, 3.24e-04, 4.49e-04, 6.42e-04, 9.01e-04, 1.21e-03, 1.66e-03, 2.70e-03, 5.01e-03, 8.88e-03, 1.54e-02, 3.18e-02, 8.92e-02, 2.10e-01};
     Double_t PHENIX39GeVRAAErr_0010[18] = {8.85e-02, 8.33e-02, 9.69e-02, 9.40e-02, 9.18e-02, 1.08e-01, 1.13e-01, 1.32e-01, 1.07e-01, 1.05e-01, 9.98e-02, 1.06e-01, 1.01e-01, 1.05e-01, 9.88e-02, 9.35e-02, 1.38e-01};
 
+    Double_t PHENIX39GeVInvYield_0010[18] = {7.17e+00, 2.90e+00, 1.29e+00, 5.80e-01, 2.66e-01, 1.22e-01, 5.74e-02, 2.74e-02, 1.35e-02, 6.49e-03, 3.39e-03, 1.06e-03, 2.35e-04, 5.57e-05, 1.55e-05, 2.54e-06, 2.66e-07, 3.09e-08};
+    Double_t PHENIX39GeVInvYieldStatErr_0010[18] = {1.47e-03, 7.34e-04, 4.09e-04, 2.37e-04, 1.42e-04, 8.65e-05, 5.42e-05, 3.45e-05, 2.25e-05, 1.47e-05, 1.00e-05, 5.31e-06, 2.24e-06, 9.98e-07, 4.89e-07, 2.49e-06, 5.55e-08, 1.72e-08};
+    Double_t PHENIX39GeVInvYieldSystErr_0010[18] = {9.15e-01, 3.71e-01, 1.64e-01, 7.47e-02, 3.42e-02, 1.57e-02, 7.52e-03, 3.65e-03, 1.83e-03, 8.85e-04, 4.66e-04, 1.47e-04, 3.51e-05, 8.62e-06,  1.73e-07, 4.07e-07, 4.26e-08, 4.94e-09};
+
     TGraphAsymmErrors* graphPHENIX39GeVRAA_0010 = new TGraphAsymmErrors(18);
+    TGraphAsymmErrors* graphPHENIX39GeVInvYield_0010 = new TGraphAsymmErrors(18);
     for(Int_t i=0; i<18; i++){
         Double_t quadErr = TMath::Sqrt(PHENIX39GeVRAAErr_0010[i]*PHENIX39GeVRAAErr_0010[i] + PHENIX39GeVRAAErrPt_0010[i] * PHENIX39GeVRAAErrPt_0010[i]);
         graphPHENIX39GeVRAA_0010->SetPoint(i, PHENIX39GeVpt_0010[i],  PHENIX39GeVRAA_0010[i]);
         graphPHENIX39GeVRAA_0010->SetPointError(i, 0.0, 0.0, quadErr,quadErr);
+        
+        Double_t YieldquadErr = TMath::Sqrt(PHENIX39GeVInvYieldStatErr_0010[i]*PHENIX39GeVInvYieldStatErr_0010[i] + PHENIX39GeVInvYieldSystErr_0010[i] * PHENIX39GeVInvYieldSystErr_0010[i]);
+        graphPHENIX39GeVInvYield_0010->SetPoint(i, PHENIX39GeVpt_0010[i],  PHENIX39GeVInvYield_0010[i]);
+        graphPHENIX39GeVInvYield_0010->SetPointError(i, 0.0, 0.0, YieldquadErr,YieldquadErr);
+        
     }
 
     Double_t PHENIX39GeVpt_0020[18] = {0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9, 3.25, 3.75, 4.25, 4.75, 5.5, 6.5, 7.5};
@@ -268,11 +383,21 @@ void ProduceExperimentalDataGraphsPbPb(){
     Double_t PHENIX39GeVRAAErrPt_2040[19] = {1.10e-04, 1.58e-04, 1.78e-04, 2.61e-04, 3.27e-04, 4.26e-04, 5.96e-04, 8.58e-04, 1.21e-03, 1.68e-03, 2.28e-03, 3.85e-03, 7.30e-03, 1.30e-02, 2.32e-02, 5.58e-02, 1.43e-01, 3.96e-01, 7.03e-01};
     Double_t PHENIX39GeVRAAErr_2040[19] = {9.86e-02, 1.20e-01, 1.07e-01, 1.23e-01, 1.18e-01, 1.18e-01, 1.42e-01, 1.50e-01, 1.76e-01, 1.51e-01, 1.45e-01, 1.47e-01, 1.61e-01, 1.53e-01, 1.64e-01, 1.70e-01, 1.66e-01, 3.47e-01, 4.24e-01};
 
+    Double_t PHENIX39GeVInvYield_2040[19] = {3.16e+00, 1.28e+00, 5.40e-01, 2.40e-01, 1.09e-01, 5.12e-02, 2.46e-02, 1.19e-02, 5.88e-03, 3.01e-03, 1.52e-03, 5.10e-04, 1.16e-04, 2.76e-05, 7.96e-06, 1.43e-06, 1.54e-07, 2.52e-08, 3.43e-09};
+    Double_t PHENIX39GeVInvYieldStatErr_2040[19] = {6.99e-04, 3.36e-04, 1.78e-04, 1.02e-04, 6.03e-05, 3.71e-05, 2.35e-05, 1.51e-05, 9.88e-06, 6.64e-06, 4.48e-06, 2.47e-06, 1.06e-06, 4.78e-07, 2.39e-07, 9.90e-08, 2.90e-08, 1.06e-08, 3.43e-09};
+    Double_t PHENIX39GeVInvYieldSystErr_2040[19] = {4.04e-01 , 1.64e-01, 6.89e-02, 3.09e-02, 1.41e-02, 6.60e-03, 3.22e-03, 1.58e-03, 7.96e-04, 4.10e-04, 2.10e-04, 7.07e-05, 1.73e-05, 4.27e-06, 1.27e-06, 2.29e-07, 2.47e-08, 4.04e-09, 5.50e-10};
+     
     TGraphAsymmErrors* graphPHENIX39GeVRAA_2040 = new TGraphAsymmErrors(19);
+    TGraphAsymmErrors* graphPHENIX39GeVInvYield_2040 = new TGraphAsymmErrors(19);
     for(Int_t i=0; i<19; i++){
         Double_t quadErr = TMath::Sqrt(PHENIX39GeVRAAErr_2040[i]*PHENIX39GeVRAAErr_2040[i] + PHENIX39GeVRAAErrPt_2040[i] * PHENIX39GeVRAAErrPt_2040[i]);
         graphPHENIX39GeVRAA_2040->SetPoint(i, PHENIX39GeVpt_2040[i],  PHENIX39GeVRAA_2040[i]);
         graphPHENIX39GeVRAA_2040->SetPointError(i, 0.0, 0.0, quadErr,quadErr);
+
+        Double_t YieldquadErr = TMath::Sqrt(PHENIX39GeVInvYieldStatErr_2040[i]*PHENIX39GeVInvYieldStatErr_2040[i] + PHENIX39GeVInvYieldSystErr_2040[i] * PHENIX39GeVInvYieldSystErr_2040[i]);
+        graphPHENIX39GeVInvYield_2040->SetPoint(i, PHENIX39GeVpt_2040[i],  PHENIX39GeVInvYield_2040[i]);
+        graphPHENIX39GeVInvYield_2040->SetPointError(i, 0.0, 0.0, YieldquadErr,YieldquadErr);
+        
     }
 
     Double_t PHENIX39GeVpt_4060[18] = {0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9, 3.25, 3.75, 4.25, 4.75, 5.5, 6.5, 7.5};
@@ -299,15 +424,31 @@ void ProduceExperimentalDataGraphsPbPb(){
         graphPHENIX39GeVRAA_6086->SetPointError(i, 0.0, 0.0, quadErr,quadErr);
     }
 
+    
+    
+    //PHENIX 62 GeV 
+    //---> RAA in 0-10%, 0-20%, 20-40%, 40-60%, 60-86%
+    //---> invariant yields in 0-10%, (10-20%,) 20-40%, (40-60%, 60-80%)
     Double_t PHENIX62GeVpt_0010[23] = {0.90, 1.10, 1.30, 1.50, 1.70, 1.90, 2.10, 2.30, 2.50, 2.70, 2.90, 3.20, 3.80, 4.20, 4.80, 5.20, 5.80, 6.20, 6.8, 7.2, 7.8, 8.5, 9.5};
     Double_t PHENIX62GeVRAA_0010[23] =  {3.57e-01, 3.73e-01, 4.31e-01, 4.75e-01, 4.88e-01, 5.11e-01, 5.03e-01, 4.94e-01, 4.72e-01, 4.56e-01, 4.35e-01, 4.04e-01, 3.82e-01, 3.59e-01, 3.16e-01, 3.18e-01, 2.92e-01, 2.31e-01, 2.62e-01, 2.33e-01, 2.34e-01, 1.89e-01, 2.09e-01};
     Double_t PHENIX62GeVRAAErrPt_0010[23] = {4.59e-05, 5.92e-05, 8.33e-05, 1.15e-04, 1.52e-04, 2.06e-04, 2.64e-04, 3.43e-04, 4.29e-04, 5.40e-04, 6.70e-04, 6.56e-03, 1.10e-02, 1.74e-02, 2.53e-02, 3.78e-02, 4.74e-02, 5.83e-02, 2.77e-02, 3.25e-02, 4.56e-02, 4.56e-02, 1.58e-01};
     Double_t PHENIX62GeVRAAErr_0010[23] = {3.96e-02, 3.72e-02, 4.26e-02, 4.78e-02, 5.00e-02, 5.35e-02, 5.82e-02, 6.26e-02, 6.30e-02, 6.38e-02, 6.39e-02, 6.20e-02, 6.11e-02, 6.08e-02, 5.77e-02, 6.48e-02, 6.81e-02, 6.93e-02, 4.99e-02, 4.68e-02, 4.93e-02, 4.25e-02, 5.11e-02};
+    
+    Double_t PHENIX62GeVInvYield_0010[23] = {1.06e+01, 4.03e+00, 1.83e+00, 8.52e-01, 3.96e-01, 1.90e-01, 9.39e-02, 4.56e-02, 2.32e-02, 1.20e-02, 6.41e-03, 2.20e-03, 5.62e-04, 1.58e-04, 4.56e-05, 1.67e-05, 6.00e-06, 2.12e-06, 1.14e-06, 5.04e-07, 2.64e-07, 8.51e-08, 3.14e-08};
+    Double_t PHENIX62GeVInvYieldStatErr_0010[23] = {1.36e-03, 6.41e-04, 3.54e-04, 2.06e-04, 1.24e-04, 7.69e-05, 4.92e-05, 3.17e-05, 2.11e-05, 1.43e-05, 9.86e-06, 5.50e-06, 2.51e-06, 1.22e-06, 6.15e-07, 3.51e-07, 1.99e-07, 1.13e-07, 7.88e-08, 5.00e-08, 4.13e-08, 1.67e-08, 2.32e-08};
+    Double_t PHENIX62GeVInvYieldSystErr_0010[23] = {8.68e-01, 2.80e-01, 1.27e-01, 5.90e-02, 2.74e-02, 1.32e-02, 7.68e-03, 4.28e-03, 2.32e-03, 1.27e-03, 7.12e-04, 2.51e-04, 6.49e-05, 1.85e-05, 5.37e-06, 1.97e-06, 7.06e-07, 2.50e-07, 1.34e-07, 5.93e-08, 3.11e-08, 1.00e-08,  3.70e-09};
+    
     TGraphAsymmErrors* graphPHENIX62GeVRAA_0010 = new TGraphAsymmErrors(23);
+    TGraphAsymmErrors* graphPHENIX62GeVInvYield_0010 = new TGraphAsymmErrors(23);
     for(Int_t i=0; i<23; i++){
         Double_t quadErr = TMath::Sqrt(PHENIX62GeVRAAErr_0010[i]*PHENIX62GeVRAAErr_0010[i] + PHENIX62GeVRAAErrPt_0010[i] * PHENIX62GeVRAAErrPt_0010[i]);
         graphPHENIX62GeVRAA_0010->SetPoint(i, PHENIX62GeVpt_0010[i],  PHENIX62GeVRAA_0010[i]);
         graphPHENIX62GeVRAA_0010->SetPointError(i, 0.0, 0.0, quadErr,quadErr);
+        
+        Double_t YieldquadErr = TMath::Sqrt(PHENIX62GeVInvYieldStatErr_0010[i]*PHENIX62GeVInvYieldStatErr_0010[i] + PHENIX62GeVInvYieldSystErr_0010[i] * PHENIX62GeVInvYieldSystErr_0010[i]);
+        graphPHENIX62GeVInvYield_0010->SetPoint(i, PHENIX62GeVpt_0010[i],  PHENIX62GeVInvYield_0010[i]);
+        graphPHENIX62GeVInvYield_0010->SetPointError(i, 0.0, 0.0, YieldquadErr,YieldquadErr);
+        
     }
 
     Double_t PHENIX62GeVpt_0020[23] = {0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9, 3.25, 3.75, 4.25, 4.75, 5.25, 5.75, 6.25, 6.75, 7.25, 7.75, 8.5, 9.5};
@@ -325,11 +466,22 @@ void ProduceExperimentalDataGraphsPbPb(){
     Double_t PHENIX62GeVRAA_2040[23] =  {4.99e-01, 5.17e-01, 5.57e-01, 5.94e-01, 6.18e-01, 6.56e-01, 6.47e-01, 6.58e-01, 6.42e-01, 6.39e-01, 6.22e-01, 6.06e-01, 5.91e-01, 5.83e-01, 5.71e-01, 5.64e-01, 5.36e-01, 4.43e-01, 4.19e-01, 3.48e-01, 3.47e-01, 2.74e-01, 2.32e-01};
     Double_t PHENIX62GeVRAAErrPt_2040[23] = {6.97e-05, 8.51e-05, 1.13e-04, 1.52e-04, 2.01e-04, 2.74e-04, 3.50e-04, 4.64e-04, 5.86e-04, 7.52e-04, 9.42e-04, 9.83e-03, 1.70e-02, 2.82e-02, 4.56e-02, 6.68e-02, 8.66e-02, 1.11e-01, 4.32e-02, 4.78e-02, 6.48e-02, 7.11e-02, 1.46e-01};
     Double_t PHENIX62GeVRAAErr_2040[23] = {5.53e-02, 5.17e-02, 5.51e-02, 5.98e-02, 6.33e-02, 6.87e-02, 7.49e-02, 8.34e-02, 8.57e-02, 8.96e-02, 9.13e-02, 9.30e-02, 9.46e-02, 9.87e-02, 1.04e-01, 1.15e-01, 1.25e-01, 1.33e-01, 8.01e-02, 7.00e-02, 7.31e-02, 6.17e-02, 5.70e-02};
+    
+    Double_t PHENIX62GeVInvYield_2040[23] = {4.75e+00, 1.80e+00, 7.60e-01, 3.41e-01, 1.61e-01, 7.83e-02, 3.87e-02, 1.95e-02, 1.01e-02, 5.42e-03, 2.94e-03, 1.06e-03, 2.79e-04, 8.21e-05, 2.65e-05, 9.50e-06, 3.53e-06, 1.31e-06, 5.88e-07, 2.42e-07, 1.26e-07, 3.96e-08, 1.12e-08};
+    Double_t PHENIX62GeVInvYieldStatErr_2040[23] = {6.63e-04, 2.96e-04, 1.54e-04, 8.73e-05, 5.24e-05, 3.27e-05, 2.10e-05, 1.38e-05, 9.25e-06,  6.37e-06, 4.45e-06, 2.55e-06, 1.19e-06, 5.97e-07, 3.17e-07, 1.79e-07, 1.03e-07, 5.96e-08, 3.79e-08, 2.31e-08, 1.83e-08, 8.62e-09, 6.79e-09};
+    Double_t PHENIX62GeVInvYieldSystErr_2040[23] = {3.89e-01, 1.25e-01, 5.26e-02, 2.37e-02, 1.11e-02, 5.43e-03, 3.17e-03, 1.83e-03, 1.01e-03, 5.71e-04, 3.27e-04, 1.21e-04, 3.22e-05, 9.66e-06, 3.11e-06, 1.12e-06, 4.16e-07, 1.54e-07, -6.92e-08, 2.85e-08, 1.48e-08, 4.66e-09, 1.32e-09};
+         
     TGraphAsymmErrors* graphPHENIX62GeVRAA_2040 = new TGraphAsymmErrors(23);
+    TGraphAsymmErrors* graphPHENIX62GeVInvYield_2040 = new TGraphAsymmErrors(23);
     for(Int_t i=0; i<23; i++){
         Double_t quadErr = TMath::Sqrt(PHENIX62GeVRAAErr_2040[i]*PHENIX62GeVRAAErr_2040[i] + PHENIX62GeVRAAErrPt_2040[i] * PHENIX62GeVRAAErrPt_2040[i]);
         graphPHENIX62GeVRAA_2040->SetPoint(i, PHENIX62GeVpt_2040[i],  PHENIX62GeVRAA_2040[i]);
         graphPHENIX62GeVRAA_2040->SetPointError(i, 0.0, 0.0, quadErr,quadErr);
+        
+        Double_t YieldquadErr = TMath::Sqrt(PHENIX62GeVInvYieldStatErr_2040[i]*PHENIX62GeVInvYieldStatErr_2040[i] + PHENIX62GeVInvYieldSystErr_2040[i] * PHENIX62GeVInvYieldSystErr_2040[i]);
+        graphPHENIX62GeVInvYield_2040->SetPoint(i, PHENIX62GeVpt_2040[i],  PHENIX62GeVInvYield_2040[i]);
+        graphPHENIX62GeVInvYield_2040->SetPointError(i, 0.0, 0.0, YieldquadErr,YieldquadErr);
+                
     }
 
     Double_t PHENIX62GeVpt_4060[23] = {0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 2.9, 3.25, 3.75, 4.25, 4.75, 5.25, 5.75, 6.25, 6.75, 7.25, 7.75, 8.5, 9.5};
@@ -354,13 +506,9 @@ void ProduceExperimentalDataGraphsPbPb(){
         graphPHENIX62GeVRAA_6086->SetPointError(i, 0.0, 0.0, quadErr,quadErr);
     }
 
-    TFile* fileWA98Pi0 = 	new TFile("ExternalInputPbPb/OtherExperiments/wa98_pi0_raa_pC_and_pPb_ref.root");
-        TGraphErrors* graphWA09_0013 = (TGraphErrors*)fileWA98Pi0->Get("g_raa_pC_ref_0_13");
         
-    // data from:
     // 200 GeV: http://arxiv.org/abs/1208.2254, link to data: http://www.phenix.bnl.gov/phenix/WWW/info/data/ppg133_data.html
     // 39, 62.4 GeV: http://arxiv.org/abs/1204.1526, link to data: http://www.phenix.bnl.gov/phenix/WWW/info/data/ppg138_data.html
-
     TGraphErrors* g200 = new TGraphErrors(0);
     TGraphErrors* g62 = new TGraphErrors(0);
     TGraphErrors* g39 = new TGraphErrors(0);
@@ -389,7 +537,12 @@ void ProduceExperimentalDataGraphsPbPb(){
 
     
     
-    TFile fileTheoryGraphs("ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbWithEta.root","RECREATE");
+    // data from:
+    TFile* fileWA98Pi0 = 	new TFile("ExternalInputPbPb/OtherExperiments/wa98_pi0_raa_pC_and_pPb_ref.root");
+        TGraphErrors* graphWA09_0013 = (TGraphErrors*)fileWA98Pi0->Get("g_raa_pC_ref_0_13");
+
+        
+    TFile fileTheoryGraphs("ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbPi0andEta.root","RECREATE");
         graphWA09_0013->Write("graphWA98RAA_0013");
         graphPHENIX200GeVRAA_0010->Write("graphPHENIX200GeVRAA_0010");
         graphPHENIX200GeVRAA_0020->Write("graphPHENIX200GeVRAA_0020");
@@ -397,6 +550,7 @@ void ProduceExperimentalDataGraphsPbPb(){
         graphPHENIX200GeVRAA_2030->Write("graphPHENIX200GeVRAA_2030");
         graphPHENIX200GeVRAA_3040->Write("graphPHENIX200GeVRAA_3040");
         graphPHENIX200GeVRAA_2040->Write("graphPHENIX200GeVRAA_2040");
+        graphPHENIX200GeVRAA_2050->Write("graphPHENIX200GeVRAA_2050");
         graphPHENIX200GeVRAA_4050->Write("graphPHENIX200GeVRAA_4050");
         graphPHENIX200GeVRAA_5060->Write("graphPHENIX200GeVRAA_5060");
         graphPHENIX200GeVRAA_4060->Write("graphPHENIX200GeVRAA_4060");
@@ -413,11 +567,21 @@ void ProduceExperimentalDataGraphsPbPb(){
         graphPHENIX62GeVRAA_2040->Write("graphPHENIX62GeVRAA_2040");
         graphPHENIX62GeVRAA_4060->Write("graphPHENIX62GeVRAA_4060");
         graphPHENIX62GeVRAA_6086->Write("graphPHENIX62GeVRAA_6086");
+        graphPHENIX200GeVInvYield_0010->Write("graphPHENIX200GeVInvYield_0010");
+        graphPHENIX200GeVInvYield_2030->Write("graphPHENIX200GeVInvYield_2030");
+        graphPHENIX200GeVInvYield_3040->Write("graphPHENIX200GeVInvYield_3040");
+        graphPHENIX200GeVInvYield_4050->Write("graphPHENIX200GeVInvYield_4050");
+        graphPHENIX200GeVInvYield_2040->Write("graphPHENIX200GeVInvYield_2040");
+        graphPHENIX200GeVInvYield_2050->Write("graphPHENIX200GeVInvYield_2050");
+        graphPHENIX39GeVInvYield_0010->Write("graphPHENIX39GeVInvYield_0010");
+        graphPHENIX39GeVInvYield_2040->Write("graphPHENIX39GeVInvYield_2040");
+        graphPHENIX62GeVInvYield_0010->Write("graphPHENIX62GeVInvYield_0010");
+        graphPHENIX62GeVInvYield_2040->Write("graphPHENIX62GeVInvYield_2040");
         graphPHENIX200GeVEtaRAA_0010->Write("graphPHENIX200GeVEtaRAA_0010");
         graphPHENIX200GeVEtaRAA_2040->Write("graphPHENIX200GeVEtaRAA_2040");
         graphPHENIX200GeVEtaRAA_2060->Write("graphPHENIX200GeVEtaRAA_2060");
-    g200->Write("graphPHENIX200GeVRAAvsNPartAt7GeVc");
-    g62->Write("graphPHENIX62GeVRAAvsNPartAt7GeVc");
-    g39->Write("graphPHENIX39GeVRAAvsNPartAt7GeVc");
+        g200->Write("graphPHENIX200GeVRAAvsNPartAt7GeVc");
+        g62->Write("graphPHENIX62GeVRAAvsNPartAt7GeVc");
+        g39->Write("graphPHENIX39GeVRAAvsNPartAt7GeVc");
     fileTheoryGraphs.Close();
 }
