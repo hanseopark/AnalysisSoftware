@@ -3842,14 +3842,9 @@
                         else return Form("%s rec. w/ mPHOS", meson.Data());
                     }    
                 case 12:
-                    if (clusterCutNumber.CompareTo("") != 0){
-                        Int_t nlm = ReturnClusterNLM(clusterCutNumber);
-                        if (meson.CompareTo("") == 0) return Form("rec. w/ mDCal, %d lm", nlm );
-                        else return Form("%s rec. w/ mDCal, %d lm", meson.Data(), nlm);                    
-                    } else {    
-                        if (meson.CompareTo("") == 0) return "rec. w/ mDCal";
-                        else return Form("%s rec. w/ mDCal", meson.Data());
-                    }   
+                    return "#gamma's rec. with DCal";
+                case 13:
+                    return "#gamma's rec. with PCM, DCal";
                 case 20:
                     return "combined";
                 default:
@@ -3865,6 +3860,10 @@
                 case 6:
                 case 7:    
                     return "#gamma*'s rec. with Dalitz";
+                case 12:
+                    return "#gamma's rec. with DCAL";
+                case 13:
+                    return "#gamma's rec. with PCM, DCal";
                 default:
                     return "not known";
             }
@@ -3881,7 +3880,10 @@
                 case 5:
                 case 7:
                     return "#gamma's rec. with PHOS";
-
+                case 12:
+                    return "#gamma's rec. with DCAL";
+                case 13:
+                    return "#gamma's rec. with PCM, DCal";
                 default:
                     return "not known";
             }    

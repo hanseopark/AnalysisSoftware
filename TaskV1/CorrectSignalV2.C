@@ -525,9 +525,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t minPtMesonSec  = 0.3;
     if (mode == 0 && kCollisionSystem==1)
         minPtMesonSec       = minPtMeson;
-    else if (mode == 2)
+    else if (mode == 2 || mode == 13)
         minPtMesonSec       = minPtMeson;
-    else if (mode == 4)
+    else if (mode == 4 || mode == 12)
         minPtMesonSec       = minPtMeson;
     cout << "minimum pT: " << minPtMeson << ", maximum pT: " << maxPtMeson << endl;
 
@@ -560,7 +560,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     for (Int_t j = 0; j< 4; j++){
         histoSecAcceptance[j]                       = (TH1D*)fileCorrections->Get(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
         if (histoSecAcceptance[j]){
-            if ( mode == 4 &&  ( j == 1 || j == 2) ){
+            if ( (mode == 4 || mode == 12) &&  ( j == 1 || j == 2) ){
                 Double_t    accSec                  = ReturnDeltaEtaCalo(fClusterCutSelection)/deltaRapid*ReturnDeltaPhiCalo(fClusterCutSelection)/(2*TMath::Pi());
                 for (Int_t iPt = histoSecAcceptance[j]->FindBin(minPtMeson); iPt< histoSecAcceptance[j]->GetNbinsX()+1; iPt++ ){
                     histoSecAcceptance[j]->SetBinContent(iPt, accSec);
@@ -568,7 +568,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }    
                 modifiedSecAcc[j]                   = kTRUE;
             }    
-            if ( mode == 2 &&  j < 3 && kCollisionSystem == 2){
+            if (( mode == 2 || mode == 13 ) &&  j < 3 && kCollisionSystem == 2){
                 histoSecAcceptance[j]               = (TH1D*)histoAcceptance->Clone(Form("fMCSecPi0From%sAccepPt_mod",nameSecMeson[j].Data()));
                 if (j == 1)
                     histoSecAcceptance[j]->Scale(1.1);
@@ -621,7 +621,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
                     Double_t minPtSecFitConst   = 2.5;
-                    if (kCollisionSystem ==2 && mode == 2) minPtSecFitConst        = 4.0;
+                    if (kCollisionSystem ==2 && (mode == 2 || mode == 13)) minPtSecFitConst        = 4.0;
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
                     
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
@@ -647,7 +647,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (optionEnergy.CompareTo("2.76TeV") == 0){
                     histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // crude assumptions // need to be validated for other energies
-                    if (mode == 4 ){
+                    if (mode == 4 || mode == 12 ){
                         if (j == 0 ){
                             if ( fitConst->GetParameter(0) > 0.3 && fitConst->GetParameter(0) < 0.7)
                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
@@ -664,7 +664,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             else     
                                 histoSecTrueEffi[k][j]->Scale(0.75);   
                         }    
-                    } else if (mode == 2 ) {
+                    } else if (mode == 2 || mode == 13 ) {
                         cout << "entered here" << endl;
                         if (j == 0){
                             if ( fitConst->GetParameter(0) > 0.2 && fitConst->GetParameter(0) < 0.3)
@@ -700,12 +700,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                 histoSecTrueEffi[k][j]->Scale(0.1);
                         }    
                     }
-                    if ( mode == 0 || mode == 2 || mode == 4){
+                    if ( mode == 0 || mode == 2 || mode == 13 || mode == 4 || mode == 12){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }
                 } else if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("900GeV") == 0){
-                    if (mode == 4 ){
+                    if (mode == 4 || mode == 12 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
                           if(optionEnergy.CompareTo("900GeV") == 0){
@@ -730,7 +730,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
                         }
-                    } else if (mode == 2 ) {
+                    } else if (mode == 2 || mode == 13 ) {
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
                           if(optionEnergy.CompareTo("900GeV") == 0){
@@ -755,7 +755,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 } else if (optionEnergy.CompareTo("pPb_5.023TeV") == 0){
                     histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // crude assumptions // need to be validated for other energies
-                    if (mode == 4 ){
+                    if (mode == 4 || mode == 12 ){
                         if (j == 0 ){
                             if ( fitConst->GetParameter(0) > 0.3 && fitConst->GetParameter(0) < 0.7){
                                 histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
@@ -778,7 +778,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                 histoSecTrueEffi[k][j]->Scale(0.75);   
                             }    
                         }    
-                    } else if (mode == 2 ) {
+                    } else if (mode == 2 || mode == 13 ) {
                         cout << "entered here" << endl;
                         if (j == 1 || j == 2){
                             if ( (fitConst->GetParameter(0) > 0. && fitConst->GetParameter(0) < 0.15) && !(Double_t)nBinsActive/nBinsTot < 0.5 )
@@ -809,7 +809,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             modifiedSecTrueEffi[k][j]   = kTRUE;
                         }    
                     }
-                    if ( mode == 4 ){
+                    if ( mode == 4 || mode == 12 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }
@@ -972,7 +972,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             fitSecFracPLWithConst[k][j]             = new TF1( Form("fitSecFracPLWithConstFrom%s%s",nameSecMeson[k].Data(),nameIntRange[k].Data()) ,"[0]/pow(x,[1])+[2]");
             if ( optionEnergy.CompareTo("8TeV") == 0 ){
                if ( mode != 2 && mode != 4 ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
-            }else if ( (mode == 2 || mode == 4) ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
+            }else if ( (mode == 2 || mode == 13 || mode == 4 || mode == 12) ) fitSecFracPLWithConst[k][j]->SetParLimits(1,0,1000);
         }    
     }
     TH1D* histoYieldSecMeson[6][4]                  = { { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL}, { NULL, NULL, NULL, NULL},
@@ -1640,15 +1640,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
-            if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
-            if (mode == 4 && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
-            if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
+            if (mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
+            if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
+            if (mode == 2 || mode == 13 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
-            if ((mode == 2 ||mode == 4) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.170);
+            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.170);
         } else {
             histoMassMeson->GetYaxis()->SetRangeUser(0.54,0.56);
-            if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.50,0.57);
-            if ((mode == 2 ||mode == 4) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.45,0.65);
+            if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.50,0.57);
+            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.45,0.65);
         }               
         histoMassMeson->GetYaxis()->SetNdivisions(510); 
         
@@ -1706,7 +1706,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                         kTRUE, 0.95, 1.05, 
                                         kFALSE, 0., 10.);
             DrawGammaSetMarker(histoRatioRecMass, 20, 0.8, kBlack, kBlack);
-            if ((mode == 2 ||mode == 4) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoRatioRecMass->GetYaxis()->SetRangeUser(0.75,1.25);
+            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoRatioRecMass->GetYaxis()->SetRangeUser(0.75,1.25);
             histoRatioRecMass->DrawCopy("e1,p");
             DrawGammaSetMarker(histoRatioValRecMass, 24, 0.8, kRed+2, kRed+2);
             histoRatioValRecMass->DrawCopy("same,e1,p"); 
@@ -1761,12 +1761,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             
             if ( !kIsEta ){
                 histoMassMeson->GetYaxis()->SetRangeUser(0.125,0.150);
-                if (mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
-                if (mode == 2 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
+                if (mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
+                if (mode == 2 || mode == 13 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
                 if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
-                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
+                if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
             }               
 
             histoMassMeson->DrawCopy("e1,p"); 
@@ -1820,7 +1820,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //******************** Mass Plot further decomposed for PCM + Calo *****************
         //**********************************************************************************        
         canvasMass->cd();
-        if (mode==2 || mode == 3){
+        if (mode == 2 || mode == 13 || mode == 3){
             // read additional histos
             TH1D* histoTrueMassCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloPhoton");            
             TH1D* histoTrueMassCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloConvPhoton");
@@ -1833,7 +1833,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (optionEnergy.CompareTo("8TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
-                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
+                if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
             }               
 
             histoMassMeson->DrawCopy("e1,p"); 
@@ -1888,7 +1888,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //**********************************************************************************
         //******************** Mass Plot further decomposed for Calo + Calo *****************
         //**********************************************************************************        
-        if (mode==4 || mode == 5){
+        if (mode == 4 || mode == 12 || mode == 5){
             // read additional histos
             TH1D* histoTrueMassCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloPhoton");
             TH1D* histoTrueMassCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMesonCaloConvPhoton");
@@ -1899,7 +1899,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (optionEnergy.CompareTo("8TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.155);
             } else {
                 histoMassMeson->GetYaxis()->SetRangeUser(0.52,0.58);
-                if (mode == 2 || mode == 4 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
+                if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.48,0.57);
             }               
 
             histoMassMeson->DrawCopy("e1,p"); 
@@ -1964,20 +1964,20 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaCanvasSettings( canvasFWHM, 0.07, 0.01, 0.031, 0.082);
         
         Double_t maxFWHM        = 0.030;
-        if (mode == 2)
+        if (mode == 2 || mode == 13)
           maxFWHM               = 0.015;
         if (kIsEta) 
           maxFWHM               = 0.022;
-        if (kIsEta && mode == 4)
+        if (kIsEta && (mode == 4 || mode == 12))
           maxFWHM               = 0.060;
-        if (kIsEta && mode == 2)
+        if (kIsEta && (mode == 2 || mode == 13))
           maxFWHM               = 0.060;
 
-        if (mode == 4 && optionEnergy.CompareTo("8TeV") == 0) maxFWHM = 0.05;
+        if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV") == 0) maxFWHM = 0.05;
 
         Double_t minFWHM        = -0.004;
         if (kIsEta) minFWHM     = 0.00;
-        if (mode == 4) minFWHM  = 0.00; 
+        if (mode == 4 || mode == 12) minFWHM  = 0.00; 
         //if (mode == 2 && optionEnergy.CompareTo("8TeV") == 0) minFWHM = 0.003;
 
         
@@ -2021,13 +2021,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         
         if (histoWidthGaussianMeson){
             Double_t maxFWHMGaus    = 0.030;
-            if (mode == 2)
+            if (mode == 2 || mode == 13)
                 maxFWHMGaus         = 0.015;
             if (kIsEta) 
                 maxFWHMGaus         = 0.022;
-            if (kIsEta && mode == 4)
+            if (kIsEta && (mode == 4 || mode == 12))
                 maxFWHMGaus         = 0.060;
-            if (kIsEta && mode == 2)
+            if (kIsEta && (mode == 2 || mode == 13))
                 maxFWHMGaus         = 0.060;
           
             histoFWHMMeson->GetYaxis()->SetRangeUser(minFWHM, maxFWHMGaus);
@@ -2080,18 +2080,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //******************** FWHM Plot further decomposed for PCM + Calo *****************
         //**********************************************************************************        
         Double_t maxFWHMAdd         = 0.030;
-        if (mode == 2)      
+        if (mode == 2 || mode == 13)      
             maxFWHMAdd              = 0.015;
-        if ( (mode == 2 || mode == 4) && optionEnergy.CompareTo("8TeV")==0)
+        if ( (mode == 2 || mode == 13 || mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV")==0)
             maxFWHMAdd              = 0.025;
         if (kIsEta) 
             maxFWHMAdd              = 0.030;
-        if (kIsEta && mode == 4)
+        if (kIsEta && (mode == 4 || mode == 12))
             maxFWHMAdd              = 0.070;
-        if (kIsEta && mode == 2)
+        if (kIsEta && (mode == 2 || mode == 13))
             maxFWHMAdd              = 0.060;
 
-        if (mode==2 || mode == 3){
+        if (mode == 2 || mode == 13 || mode == 3){
 
             // read additional histos   
             TH1D* histoTrueFWHMCaloPhotonMeson          = (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
@@ -2156,7 +2156,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         //******************** FWHM Plot further decomposed for Calo + Calo *****************
         //**********************************************************************************        
 
-        if (mode==4 || mode == 5){
+        if (mode == 4 || mode == 12 || mode == 5){
             // read additional histos
             TH1D* histoTrueFWHMCaloPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloPhoton");
             TH1D* histoTrueFWHMCaloConvPhotonMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMesonCaloConvPhoton");
@@ -2355,7 +2355,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (kIsEta) 
                     rangeAcc[0] = 0.5; 
             }    
-        } else if (mode == 2 || mode == 4){
+        } else if (mode == 2 || mode == 13 || mode == 4 || mode == 12){
             rangeAcc[0]         = 0.; 
             rangeAcc[1]         = 0.3;             
         }
@@ -2449,9 +2449,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             Double_t rangeSecRatio[2]   = {0, 0.10};    
             if (mode == 0){
                 rangeSecRatio[1]        = 0.025;
-            } else if (mode == 2){
+            } else if (mode == 2 || mode == 13){
                 rangeSecRatio[1]        = 0.05;
-            } else if (mode == 4){
+            } else if (mode == 4 || mode == 12){
                 rangeSecRatio[1]        = 0.05;
             }    
             
@@ -2610,7 +2610,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoTrueEffiPtWOWeights[0]->DrawCopy("same,e1,p");
                 DrawGammaSetMarker(histoTrueEffiPt[0], 21, 1., kBlue+1, kBlue+1);
                 histoTrueEffiPt[0]->DrawCopy("same,e1,p");
-            } else if (mode == 4 || mode == 2 || mode == 0){
+            } else if (mode == 4 || mode == 12 || mode == 2 || mode == 13 || mode == 0){
                 DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
                 histoEffiPt[0]->DrawCopy("same,e1,p");            
             }    
@@ -2620,7 +2620,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendEff->AddEntry(histoTrueEffiPtWOWeights[0],"validated efficiency, w/o weights"); 
                 legendEff->AddEntry(histoEffiPt[0],"reconstructed efficiency, as in Data"); 
                 legendEff->AddEntry(histoTrueEffiPt[0],"corr validated efficiency"); 
-            } else if (mode == 4 || mode == 2 || mode == 0 ) {
+            } else if (mode == 4 || mode == 12 || mode == 2 || mode == 13 || mode == 0 ) {
                 legendEff->AddEntry(histoEffiPt[0],"reconstructed efficiency, as in Data"); 
                 legendEff->AddEntry(histoTrueEffiPtUnmod[0],"validated efficiency");            
             } else {
@@ -2648,7 +2648,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoEffiPt[0]->DrawCopy("same,e1,p");
                 legendEffWithSec->AddEntry(histoTrueEffiPt[0],"val. prim");
                 legendEffWithSec->AddEntry(histoEffiPt[0],"rec. prim, as in Data"); 
-            } else if (mode == 4){
+            } else if (mode == 4 || mode == 12){
                 DrawGammaSetMarker(histoTrueEffiPtUnmod[0], 20, 1., kBlack, kBlack);
                 histoTrueEffiPtUnmod[0]->DrawCopy("same,e1,p");
                 DrawGammaSetMarker(histoEffiPt[0], 25, 1., kGreen+2, kGreen+2);
@@ -3254,9 +3254,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (mode == 0){
                 if(kCollisionSystem==1) rangeSecRatio[1]        = 0.07;
                 else rangeSecRatio[1]        = 0.05;
-            } else if (mode == 2){
+            } else if (mode == 2 || mode == 13){
                 rangeSecRatio[1]        = 0.05;
-            } else if (mode == 4){
+            } else if (mode == 4 || mode == 12){
                 rangeSecRatio[1]        = 0.075;
             }    
             
@@ -3367,7 +3367,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // *******************************************************************************************
     // ****** Show fractions of cluster origin in MC to total for Calo related analysis path *****
     // *******************************************************************************************
-    if ((mode==2 || mode == 3) && kIsMC ){
+    if ((mode == 2 || mode == 13 || mode == 3) && kIsMC ){
         TH1D* histoTrueTotalRecYield            = (TH1D*)fileCorrections->Get("histoYieldTrueMesonFixedWindow");
         if (histoTrueTotalRecYield){
             TH1D* histoTrueTotalRecYieldGamma       = (TH1D*)fileCorrections->Get("histoYieldTrueMesonGammaFixedWindow");
@@ -3415,7 +3415,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // *******************************************************************************************
     // ****** Show fractions of cluster origin in MC to total for Calo related analysis path *****
     // *******************************************************************************************    
-    if ((mode==4 || mode == 5) && kIsMC ){
+    if ((mode == 4 || mode == 12 || mode == 5) && kIsMC ){
         TH1D* histoTrueTotalRecYield                = (TH1D*)fileCorrections->Get("histoYieldTrueMesonFixedWindow");
         if (histoTrueTotalRecYield){
             TH1D* histoTrueTotalRecYieldGamma           = (TH1D*)fileCorrections->Get("histoYieldTrueMesonGammaFixedWindow");

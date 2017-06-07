@@ -4289,9 +4289,9 @@
             nominalMainDir         = "GammaConvV1";
         else if( mode == 1 )
             nominalMainDir        = "GammaConvDalitzV1";
-        else if (mode == 2 || mode == 3) 
+        else if (mode == 2 || mode == 3 || mode == 13) 
             nominalMainDir         = "GammaConvCalo";
-        else if (mode == 4 || mode == 5) 
+        else if (mode == 4 || mode == 12 || mode == 5) 
             nominalMainDir         = "GammaCalo";
         else if( mode == 6 || mode == 7 )
             nominalMainDir         = "GammaConvDalitzCalo";
@@ -4318,9 +4318,9 @@
             nominalMainDir         = "GammaConvV1";
         else if( mode == 1 )
             nominalMainDir        = "GammaConvDalitzV1";
-        else if (mode == 2 || mode == 3) 
+        else if (mode == 2 || mode == 3 || mode == 13) 
             nominalMainDir         = "GammaConvCalo";
-        else if (mode == 4 || mode == 5) 
+        else if (mode == 4 || mode == 12 || mode == 5) 
             nominalMainDir         = "GammaCalo";
         else if( mode == 6 || mode == 7 )
             nominalMainDir         = "GammaConvDalitzCalo";

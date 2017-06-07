@@ -78,6 +78,8 @@ void ExtractSignalV2(   TString meson                   = "",
     //         4 // new output EMCAL-EMCAL
     //         5 // new output PHOS-PHOS
     //         9 // old output PCM-PCM
+    //         12// new output DCal-DCal
+    //         13// new output PCM-DCal
     
     if(directphotonPlots){}
 
@@ -126,7 +128,7 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << fCutSelectionRead.Data() << endl;
     }
     
-    if(mode == 4 && optionMC.CompareTo("kTRUE") == 0){
+    if((mode == 4 || mode == 12 || mode == 13) && optionMC.CompareTo("kTRUE") == 0){
         cout << "changing trigger for MC (no EMC trigger in MC)" << endl;
         TString fEventCutSelectionTriggerRead   = fEventCutSelection(3,fEventCutSelection.Length()-5);
         cout << fEventCutSelectionTriggerRead.Data() << endl;
@@ -295,7 +297,7 @@ void ExtractSignalV2(   TString meson                   = "",
     TList *ESDContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
     TList *BackgroundContainer          = (TList*) HistosGammaConversion->FindObject(Form("%s Back histograms",fCutSelectionRead.Data()));
     TList *MotherContainer              = (TList*) HistosGammaConversion->FindObject(Form("%s Mother histograms",fCutSelectionRead.Data()));
-    if (fMode == 2 || fMode == 3 ){
+    if (fMode == 2 || fMode == 13 || fMode == 3 ){
         TList *ClusterContainer             = (TList*) HistosGammaConversion->FindObject(Form("%s Cluster Output",fCutSelectionRead.Data()));
         if (ClusterContainer){
             fHistoClustersPt                = (TH1D*)ClusterContainer->FindObject("ClusGamma_Pt");
@@ -312,7 +314,7 @@ void ExtractSignalV2(   TString meson                   = "",
             }
         }
     }
-    if ( fMode == 4  || fMode == 5 ){
+    if ( fMode == 4 || fMode == 12  || fMode == 5 ){
         fHistoClustersPt                = (TH1D*)ESDContainer->FindObject("ClusGamma_Pt");
         fHistoClustersE                 = (TH1D*)ESDContainer->FindObject("ClusGamma_E");
         fHistoClustersOverlapHeadersPt  = (TH1D*)ESDContainer->FindObject("ClusGammaOverlapHeaders_Pt");
@@ -368,7 +370,7 @@ void ExtractSignalV2(   TString meson                   = "",
 
             // histos with gamma's in acceptance
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0Acc.Data());
-//             if ( fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ){
+//             if ( fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5 ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOWeights.Data());
                 fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOEvtWeights.Data());
 //             }
@@ -412,7 +414,7 @@ void ExtractSignalV2(   TString meson                   = "",
         }   
 
         // load double counting histograms for Calo mode
-        if (fMode == 4 || fMode == 5){
+        if (fMode == 4 || fMode == 12 || fMode == 5){
             TH2F* fHistoTrue2DGammaDCClusPt     = (TH2F*)TrueConversionContainer->FindObject(ObjectNameDCGammaClusPt.Data());
             if (fHistoTrue2DGammaDCClusPt!=NULL) fEnableDCCluster= kTRUE;
             if (fEnableDCCluster){
@@ -447,7 +449,7 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "line " << __LINE__ << endl;
         cout << fMode << endl;
         
-        if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
+        if (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5){
             fHistoTrueMesonCaloPhotonInvMassVSPt                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloPhoton.Data());
             if (fHistoTrueMesonCaloPhotonInvMassVSPt==NULL) fAdvancedMesonQA = kFALSE;
             else fAdvancedMesonQA = kTRUE;
@@ -460,7 +462,7 @@ void ExtractSignalV2(   TString meson                   = "",
         }
                 
         if (fAdvancedMesonQA) {
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 fHistoTrueMesonCaloPhotonInvMassVSPt                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloPhoton.Data());
                 FillMassMCTrueMesonCaloPhotonHistosArray(fHistoTrueMesonCaloPhotonInvMassVSPt);
                 fHistoTrueMesonCaloConvPhotonInvMassVSPt            = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloConvPhoton.Data());
@@ -469,7 +471,7 @@ void ExtractSignalV2(   TString meson                   = "",
                 FillMassMCTrueMesonCaloMergedClusterHistosArray(fHistoTrueMesonMergedClusterInvMassVSPt);
                 fHistoTrueMesonMergedClusterPartConvInvMassVSPt     = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloMergedPartConv.Data());
                 FillMassMCTrueMesonCaloMergedClusterPartConvHistosArray(fHistoTrueMesonMergedClusterPartConvInvMassVSPt);
-            } else if (fMode == 4 || fMode == 5){
+            } else if (fMode == 4 || fMode == 12 || fMode == 5){
                 fHistoTrueMesonCaloPhotonInvMassVSPt                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloPhoton.Data());
                 FillMassMCTrueMesonCaloPhotonHistosArray(fHistoTrueMesonCaloPhotonInvMassVSPt);
                 fHistoTrueMesonCaloConvPhotonInvMassVSPt            = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloConvPhoton.Data());
@@ -942,7 +944,7 @@ void ExtractSignalV2(   TString meson                   = "",
                 }
             }
             
-            if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+            if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5)){
                 if (fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]->GetEntries() !=0){
                     if(fCrysFitting==0){
                         fFileErrLog << "Using exp fit"<<endl;
@@ -995,7 +997,7 @@ void ExtractSignalV2(   TString meson                   = "",
                     }
                     
                     IntegrateHistoInvMassStream( fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt], fIntFixedRange);
-                    if (fMode == 4 || fMode ==5 ){
+                    if (fMode == 4 || fMode == 12 || fMode ==5 ){
                         fMesonTrueYieldConvGammaConvGammaFixedWindow[iPt]       = fYields;
                         fMesonTrueYieldConvGammaConvGammaErrorFixedWindow[iPt]  = fYieldsError;
                     } else {
@@ -1055,7 +1057,7 @@ void ExtractSignalV2(   TString meson                   = "",
                     }
                 }
             }
-            if (fAdvancedMesonQA && (fMode == 4 || fMode == 5)){
+            if (fAdvancedMesonQA && (fMode == 4 || fMode == 12 || fMode == 5)){
                 if (fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins[iPt]->GetEntries() !=0){
                     if(fCrysFitting==0){
                         fFileErrLog << "Using exp fit"<<endl;
@@ -1588,7 +1590,7 @@ void ExtractSignalV2(   TString meson                   = "",
                                         fCollisionSystem);
         }
         
-        if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+        if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5)){
 
             nameMesonTrue       = Form("%s_TrueMesonCaloPhoton%s", plotPrefix.Data(), plotSuffix.Data());
             nameCanvasTrue      = "TrueMesonCaloPhotonCanvasFitted";
@@ -1632,7 +1634,7 @@ void ExtractSignalV2(   TString meson                   = "",
             
         }
         cout << "line" << __LINE__ << endl;
-        if (fAdvancedMesonQA && (fMode == 4 || fMode == 5)){
+        if (fAdvancedMesonQA && (fMode == 4 || fMode == 12 || fMode == 5)){
             nameMesonTrue       = Form("%s_TrueMesonMixedCaloConvPhoton%s", plotPrefix.Data(), plotSuffix.Data());
             nameCanvasTrue      = "TrueMesonMixedCaloConvPhotonCanvasFitted";
             namePadTrue         = "TrueMesonMixedCaloConvPhotonPadFitted";
@@ -1655,7 +1657,7 @@ void ExtractSignalV2(   TString meson                   = "",
                                     fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, triggerInt.Atoi(), fMode, addSig);
 
             
-        } else if (fAdvancedMesonQA && (fMode == 2 || fMode == 3)){
+        } else if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3)){
             nameMesonTrue       = Form("%s_TrueMesonDecomposedPhotonsAndElectron%s", plotPrefix.Data(), plotSuffix.Data());
             cout << nameMesonTrue.Data() << endl;
             PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(fHistoMappingTrueFullMesonInvMassPtBins, fHistoMappingTrueMesonCaloPhotonInvMassPtBins,  NULL,
@@ -3008,13 +3010,13 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     // MC histograms primaries
     ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
     ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
-    if(fMode == 4 || fMode == 5)
+    if(fMode == 4 || fMode == 12 || fMode == 5)
       ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0WOEvtWeightInAcc_Pt";
     else
       ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0_WOEventWeightsInAcc_Pt";
     ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
     ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
-    if(fMode == 4 || fMode == 5)
+    if(fMode == 4 || fMode == 12 || fMode == 5)
       ObjectNameMCEtaAccWOEvtWeights    = "MC_EtaWOEvtWeightInAcc_Pt";
     else
       ObjectNameMCEtaAccWOEvtWeights    = "MC_Eta_WOEventWeightsInAcc_Pt";
@@ -3708,7 +3710,7 @@ void CreatePtHistos(){
     fHistoTrueSBMeson->Sumw2();
     
     // Mass & Width histos for real signal in different reco methods
-    if (fAdvancedMesonQA && (fMode ==2 || fMode == 3 || fMode ==4 || fMode == 5)){
+    if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5)){
         fHistoTrueMassMesonCaloConvPhoton       = new TH1D("histoTrueMassMesonCaloConvPhoton","",fNBinsPt,fBinsPt);
         fHistoTrueMassMesonCaloConvPhoton->Sumw2();
         fHistoTrueMassMesonCaloElectron         = new TH1D("histoTrueMassMesonCaloConvElectron","",fNBinsPt,fBinsPt);
@@ -3739,7 +3741,7 @@ void CreatePtHistos(){
         fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->Sumw2();
     }
     // Mass & Width histos for real signal in different reco methods
-    if (fAdvancedMesonQA && (fMode ==4 || fMode == 5)){
+    if (fAdvancedMesonQA && (fMode == 4 || fMode == 12 || fMode == 5)){
         fHistoTrueMassMesonMixedCaloConvPhoton =       new TH1D("histoTrueMassMesonMixedCaloConvPhoton","",fNBinsPt,fBinsPt);
         fHistoTrueMassMesonMixedCaloConvPhoton->Sumw2();
         fHistoTrueFWHMMesonMixedCaloConvPhoton =       new TH1D("histoTrueFWHMMesonMixedCaloConvPhoton","",fNBinsPt,fBinsPt);
@@ -3823,7 +3825,7 @@ void FillPtHistos(){
             fHistoTrueSBMeson->SetBinContent(iPt,fMesonTrueSB[iPt-1]);
             fHistoTrueSBMeson->SetBinError(iPt,fMesonTrueSBError[iPt-1]);
             
-            if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode ==4 || fMode == 5)){
+            if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5)){
                 fHistoTrueMassMesonCaloConvPhoton->SetBinContent(iPt,fMesonTrueMassCaloConvPhoton[iPt-1]);
                 fHistoTrueMassMesonCaloConvPhoton->SetBinError(iPt,fMesonTrueMassErrorCaloConvPhoton[iPt-1]);
                 fHistoTrueMassMesonCaloElectron->SetBinContent(iPt,fMesonTrueMassCaloElectron[iPt-1]);
@@ -3854,7 +3856,7 @@ void FillPtHistos(){
                 fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->SetBinContent(iPt,fMesonTrueYieldConvGammaConvGammaFixedWindow[iPt-1]);
                 fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->SetBinError(iPt,fMesonTrueYieldConvGammaConvGammaErrorFixedWindow[iPt-1]);
             } 
-            if (fAdvancedMesonQA && ( fMode ==4 || fMode == 5)){
+            if (fAdvancedMesonQA && ( fMode == 4 || fMode == 12 || fMode == 5)){
                 fHistoTrueFWHMMesonMixedCaloConvPhoton->SetBinContent(iPt,fMesonTrueFWHMMixedCaloConvPhoton[iPt-1]);
                 fHistoTrueFWHMMesonMixedCaloConvPhoton->SetBinError(iPt,fMesonTrueFWHMErrorMixedCaloConvPhoton[iPt-1]);
                 fHistoTrueMassMesonMixedCaloConvPhoton->SetBinContent(iPt,fMesonTrueMassMixedCaloConvPhoton[iPt-1]);
@@ -4006,11 +4008,11 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 else  mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
@@ -4041,10 +4043,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 mesonAmplitudeMin = mesonAmplitude*40./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4069,7 +4071,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if (fMode == 3 && !fEnergyFlag.CompareTo("8TeV"))
@@ -4079,7 +4081,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4105,14 +4107,14 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
                 if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
             }
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   mesonAmplitudeMin = mesonAmplitude*20./100.;
                   mesonAmplitudeMax = mesonAmplitude*115./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4140,7 +4142,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
-    if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
+    if( fEnergyFlag.CompareTo("8TeV") == 0 && (fMode == 4 || fMode == 12 )){
       fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
@@ -4241,21 +4243,21 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
             else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
             else mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
         } else {
             mesonAmplitudeMin = mesonAmplitude*30./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4280,7 +4282,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4288,7 +4290,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4311,14 +4313,14 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
                 if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
             }
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   mesonAmplitudeMin = mesonAmplitude*20./100.;
                   mesonAmplitudeMax = mesonAmplitude*115./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4423,21 +4425,21 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
             else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
             else mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
         } else {
             mesonAmplitudeMin = mesonAmplitude*30./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4462,7 +4464,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4470,7 +4472,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4493,14 +4495,14 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
                 if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
             }
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   mesonAmplitudeMin = mesonAmplitude*20./100.;
                   mesonAmplitudeMax = mesonAmplitude*115./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4605,21 +4607,21 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
             else if(ptBin > 17) mesonAmplitudeMin = mesonAmplitude*80./100.;
             else mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
         } else {
             mesonAmplitudeMin = mesonAmplitude*30./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4644,7 +4646,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
-            if (fMode == 2 || fMode == 3) {
+            if (fMode == 2 || fMode == 13 || fMode == 3) {
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4652,7 +4654,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                   mesonAmplitudeMax = mesonAmplitude*600./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5) {
+            if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -4675,14 +4677,14 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
                 if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
             }
-            if (fMode == 2 || fMode == 3){
+            if (fMode == 2 || fMode == 13 || fMode == 3){
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
                   mesonAmplitudeMin = mesonAmplitude*20./100.;
                   mesonAmplitudeMax = mesonAmplitude*115./100.;
                 }
             }
-            if (fMode == 4 || fMode == 5){
+            if (fMode == 4 || fMode == 12 || fMode == 5){
                 mesonAmplitudeMin = mesonAmplitude*5./100.;
             }
         }
@@ -4784,11 +4786,11 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
-        if (fMode == 2 || fMode == 3) {
+        if (fMode == 2 || fMode == 13 || fMode == 3) {
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
         }
-        if (fMode == 4 || fMode == 5) {
+        if (fMode == 4 || fMode == 12 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
@@ -4805,14 +4807,14 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
     } else {
         mesonAmplitudeMin = mesonAmplitude*50./100.;
         mesonAmplitudeMax = mesonAmplitude*120./100.;
-        if (fMode == 2 || fMode == 3){
+        if (fMode == 2 || fMode == 13 || fMode == 3){
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
               mesonAmplitudeMin = mesonAmplitude*10./100.;
               mesonAmplitudeMax = mesonAmplitude*200./100.;
             }
         }
-        if(fMode == 4){
+        if(fMode == 4 || fMode == 12){
             mesonAmplitudeMin = mesonAmplitude*30./100.;
             mesonAmplitudeMax = mesonAmplitude*220./100.;
         }
@@ -5021,18 +5023,18 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
         mesonAmplitudeMin = mesonAmplitude*99./100.;
         mesonAmplitudeMax = mesonAmplitude*110./100.;
-        if (fMode == 2 || fMode == 3){
+        if (fMode == 2 || fMode == 13 || fMode == 3){
             mesonAmplitudeMin = mesonAmplitude*20./100.;
             mesonAmplitudeMax = mesonAmplitude*1000./100.;
         }
-        if (fMode == 4 || fMode == 5) {
+        if (fMode == 4 || fMode == 12 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
         }
     } else {
         mesonAmplitudeMin = mesonAmplitude*95./100.;
         mesonAmplitudeMax = mesonAmplitude*130./100.;
-        if (fMode == 2 || fMode == 3){
+        if (fMode == 2 || fMode == 13 || fMode == 3){
             mesonAmplitudeMin = mesonAmplitude*95./100.;
             mesonAmplitudeMax = mesonAmplitude*1000./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){
@@ -5040,7 +5042,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
               mesonAmplitudeMax = mesonAmplitude*1000./100.;
             }
         }
-        if (fMode == 4 || fMode == 5) {
+        if (fMode == 4 || fMode == 12 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
@@ -5052,7 +5054,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     
     fFitReco = NULL;
     TF1* fFitRecoPre = new TF1("fGauss","([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0], fMesonFitRange[1]);
-    if (fMode == 2 || fMode == 4){
+    if (fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12){
         fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
                         fMesonFitRange[0], fMesonFitRange[1]);
     } else {
@@ -5065,7 +5067,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     fFitRecoPre->SetParameter(2,fMesonWidthExpect);
     fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitRecoPre->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
-    if (fMode == 2 || fMode == 4) fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if (fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12) fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
     if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
       fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
@@ -5079,7 +5081,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     }
     
     Double_t mass = fMesonMassExpect;
-    if (fMode == 4){
+    if (fMode == 4 || fMode == 12){
         mass = fFitRecoPre->GetParameter(1);
         fFitReco->SetParameter(0,fFitRecoPre->GetParameter(0));
         fFitReco->SetParameter(1,mass);
@@ -5090,14 +5092,14 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         fFitReco->SetParameter(2,fMesonWidthExpect);
     }
     
-    if (fMode == 2){
+    if (fMode == 2 || fMode == 13){
         if (ptBin > fStartPtBin) fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     } else fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     
-    if ( !(fMode == 2 || fMode == 4)) fFitReco->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
-    if (fMode == 2 ) fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
-    if (fMode == 4 ) fFitReco->SetParLimits(1,mass*0.95,mass*1.08);
-//    if (fMode == 4) fFitReco->SetParLimits(1,fMesonMassExpect*0.97,fMesonMassExpect*1.05);
+    if ( !(fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12)) fFitReco->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
+    if (fMode == 2 || fMode == 13 ) fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if (fMode == 4 || fMode == 12 ) fFitReco->SetParLimits(1,mass*0.95,mass*1.08);
+//    if (fMode == 4 || fMode == 12) fFitReco->SetParLimits(1,fMesonMassExpect*0.97,fMesonMassExpect*1.05);
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
@@ -5134,11 +5136,11 @@ void FitTrueInvMassPureGaussianInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSin
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
-        if (fMode == 2 || fMode == 3) {
+        if (fMode == 2 || fMode == 13 || fMode == 3) {
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
         }
-        if (fMode == 4 || fMode == 5) {
+        if (fMode == 4 || fMode == 12 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
@@ -5150,7 +5152,7 @@ void FitTrueInvMassPureGaussianInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSin
     } else {
         mesonAmplitudeMin = mesonAmplitude*50./100.;
         mesonAmplitudeMax = mesonAmplitude*120./100.;
-        if (fMode == 2 || fMode == 3){
+        if (fMode == 2 || fMode == 13 || fMode == 3){
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
               mesonAmplitudeMin = mesonAmplitude*10./100.;
@@ -5208,7 +5210,7 @@ void FitCBSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle,
     Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin      = mesonAmplitude*50./100.;
     Double_t mesonAmplitudeMax      = mesonAmplitude*200./100.;
-    if (fMode == 4) 
+    if (fMode == 4 || fMode == 12) 
         mesonAmplitudeMin           = mesonAmplitude*5./100.;
     
     fFitReco = NULL;
@@ -5682,7 +5684,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         fHistoMappingSignalInvMassPtBin[ii]->SetTitle(titleHistoSignal.Data());
         fHistoMappingSignalInvMassPtBin[ii]->Write(nameHistoSignal.Data());
         fHistoMappingSignalInvMassLeftPtBin[ii]->Write(nameHistoSignalLeft.Data());//Added 12.12.2014
-        if( fMode == 4 ) {
+        if( fMode == 4 || fMode == 12 ) {
             nameHistoBckNormLeft = Form("Mapping_BckNormLeft_InvMass_in_Pt_Bin%02d", ii);
             fHistoMappingBackNormInvMassLeftPtBin[ii]->Write(nameHistoBckNormLeft.Data());            
             fitnameSignalLeft = Form("SignalnewLeft_InvMassFit_in_Pt_Bin%02d", ii);
@@ -5696,7 +5698,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         fitnameSignalOther   = Form("Signal_InvMassFitWithExp2_in_Pt_Bin%02d", ii);
         if (fFitSignalWithOtherBGInvMassPtBin[2][ii] != 0x00) fFitSignalWithOtherBGInvMassPtBin[2][ii]->Write(fitnameSignalOther.Data());
         
-        if (fCrysFitting==1 ){ //|| fMode == 4
+        if (fCrysFitting==1 ){ 
             if (fHistoMappingSignalRemainingBGSubInvMassPtBin[ii]) fHistoMappingSignalRemainingBGSubInvMassPtBin[ii]->Write();
             if (fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[ii]) fHistoMappingSignalRemainingBGSubInvMassLeftPtBin[ii]->Write();
             if (fHistoMappingRemainingBGInvMassPtBin[ii]) fHistoMappingRemainingBGInvMassPtBin[ii]->Write();
@@ -5731,7 +5733,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
             fHistoMappingTrueMesonInvMassPtReweightedBins[ii]->Write();
             fHistoMappingTrueMesonInvMassPtUnweightedBins[ii]->Write();
             if (fAdvancedMesonQA){
-                if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
+                if (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5){
                     if (fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[ii])fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[ii]->Write();
 //                    if (fHistoMappingTrueMesonCaloElectronInvMassPtBins[ii])fHistoMappingTrueMesonCaloElectronInvMassPtBins[ii]->Write();
                     if (fHistoMappingTrueMesonCaloPhotonInvMassPtBins[ii])fHistoMappingTrueMesonCaloPhotonInvMassPtBins[ii]->Write();
@@ -5747,13 +5749,13 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
                     fHistoMappingTrueContBckInvMassPtBins[ii]->Write();
                     fHistoMappingTrueAllBckInvMassPtBins[ii]->Write();
                 }
-                if (fMode == 4 || fMode == 5){
+                if (fMode == 4 || fMode == 12 || fMode == 5){
                     if (fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins[ii])fHistoMappingTrueMesonMixedCaloConvPhotonInvMassPtBins[ii]->Write();
                     if (fFitTrueSignalMixedCaloConvPhotonInvMassPtBin[ii]!=0x00) fFitTrueSignalMixedCaloConvPhotonInvMassPtBin[ii]->Write();
                 }
                 
             }
-            if(fMode == 4 || fMode == 5){
+            if(fMode == 4 || fMode == 12 || fMode == 5){
               if(fHistoMappingTrueGGBckInvMassPtBins[ii]!=0x00 && fHistoMappingTrueContBckInvMassPtBins[ii]!=0x00 && fHistoMappingTrueAllBckInvMassPtBins[ii]!=0x00){
                 fHistoMappingTrueGGBckInvMassPtBins[ii]->Write();
                 if(fHistoMappingTrueMesonContainedInvMassPtBins[ii]!=0x00)fHistoMappingTrueMesonContainedInvMassPtBins[ii]->Write();
@@ -5897,7 +5899,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
     if (fHistoTrueFWHMMeson)            fHistoTrueFWHMMeson->Write();
     if (fHistoTrueFWHMMesonReweighted)  fHistoTrueFWHMMesonReweighted->Write();
     if (fHistoTrueFWHMMesonUnweighted)  fHistoTrueFWHMMesonUnweighted->Write();
-    if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+    if (fAdvancedMesonQA && (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5)){
         if (fHistoTrueMassMesonCaloPhoton)                  fHistoTrueMassMesonCaloPhoton->Write();
         if (fHistoTrueMassMesonCaloElectron)                fHistoTrueMassMesonCaloElectron->Write();
         if (fHistoTrueMassMesonCaloConvPhoton)              fHistoTrueMassMesonCaloConvPhoton->Write();
@@ -5913,7 +5915,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoYieldTrueMesonGammaConvGammaFixedWindow)  fHistoYieldTrueMesonGammaConvGammaFixedWindow->Write();
         if (fHistoYieldTrueMesonConvGammaConvGammaFixedWindow)fHistoYieldTrueMesonConvGammaConvGammaFixedWindow->Write();
     }
-    if (fAdvancedMesonQA && (fMode == 4 || fMode == 5)){
+    if (fAdvancedMesonQA && (fMode == 4 || fMode == 12 || fMode == 5)){
         if (fHistoTrueMassMesonMixedCaloConvPhoton)         fHistoTrueMassMesonMixedCaloConvPhoton->Write();
         if (fHistoTrueFWHMMesonMixedCaloConvPhoton)         fHistoTrueFWHMMesonMixedCaloConvPhoton->Write();
     }

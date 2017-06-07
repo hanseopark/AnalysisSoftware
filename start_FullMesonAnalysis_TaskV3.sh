@@ -2,12 +2,12 @@
 #
 #
 #
-# This script gests as input a directory where the GammaConvV1 root file is stored,    
+# This script gests as input a directory where the GammaConvV1 root file is stored,
 # it also needs the desired output directory where the produced root files are put.
 # If nothing is given it will use ./ for the input directory and ./Output for the output
 #
 #Input 1: Root file to analyze Default: AnalyisResults
-#Input 2: Input directory  Default:$PWD 
+#Input 2: Input directory  Default:$PWD
 #Input 3: Output directory Default: $PWD/Results  (directory will be created if it does not exist)
 #
 
@@ -48,7 +48,7 @@ BinsPtGamma=0
 function GiveBinning5TeV()
 {
      echo "how many p_t bins do you want to use for the pi0? 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c)";
-     
+
      read answer
          if [ $answer = 19 ]; then
          echo "19 bins --> max p_t = XX GeV/c ...";
@@ -253,7 +253,7 @@ function GiveBinningDirectPhotonHI()
 }
 
 function GiveBinningDirectPhotonpPb()
-{    
+{
     echo "How many p_T bins do you want to use for the Pi0? 17(8GeV), 18(11GeV) 19 (14GeV)";
     read answer
     if [ $answer = 17 ]; then
@@ -342,7 +342,7 @@ function GiveBinningDirectPhoton7TeV()
 function GiveBinning7TeV()
 {
      echo "how many p_t bins do you want to use for the pi0? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
-    
+
      read answer
 	  if [ $answer = 9 ]; then
          echo "9 bins --> max p_t = 1.4 gev ...";
@@ -428,7 +428,7 @@ function GiveBinning7TeV()
          echo "pi0 binning was not set correctly. please try again.";
          correctPi0=0
      fi
-     
+
      echo "how many p_t bins do you want to use for the eta? 9(3gev), 11(4gev), 12(5gev), 13(6gev), 14(8gev) 15(10gev)";
      read answer
      if [ $answer = 10 ]; then
@@ -648,7 +648,7 @@ function GiveBinning8TeV()
             correctEta=0
        fi
        BinsPtGamma=$BinsPtPi0
-    fi    
+    fi
 }
 
 function GiveBinning900GeV()
@@ -674,7 +674,7 @@ function GiveBinning900GeV()
     else
         echo "Pi0 Binniing was not set correctly. Please try again.";
     fi
-    
+
     echo "How many p_t bins do you want to use for the eta meson? 2 (1.8 GeV), 3 (3 GeV), only EMC related: 4 (5 GeV)"
     read answer
     if [ $answer = 2 ]; then
@@ -793,7 +793,7 @@ function GiveBinning2760GeV()
     else
         echo "Pi0 Binning was not set correctly. Please try again.";
     fi
-    
+
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
         echo "How many p_t bins do you want to use for the eta meson? 6 (4. GeV), 7 (6 GeV), for conv calo: 8 (8 GeV), 9 (10 GeV), 10 (12 GeV), 11 (16 GeV), 12 (20 GeV), 13 (25 GeV)"
         read answer
@@ -834,9 +834,9 @@ function GiveBinning2760GeV()
             echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0
         fi
-    else 
+    else
         correctEta=1
-    fi    
+    fi
     BinsPtGamma=$BinsPtPi0
 }
 
@@ -942,7 +942,7 @@ function GiveBinningHI()
         elif [ $answer = 10 ]; then
             echo "10 Bins --> Max p_T = 12 GeV ...";
             correctEta=1
-            BinsPtEta=10    
+            BinsPtEta=10
         elif [ $answer = 11 ]; then
             echo "11 Bins --> Max p_T = 15 GeV ...";
             correctEta=1
@@ -1021,8 +1021,8 @@ function GiveBinningpPb()
         BinsPtGamma=$BinsPtPi0
     else
         correctPi0=1
-    fi    
-    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then 
+    fi
+    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
         echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
         echo "for calo triggers bins reach to 30."
         read answer
@@ -1030,7 +1030,7 @@ function GiveBinningpPb()
         correctEta=1
         echo "You have chosen " $answer " pt bins for eta";
     fi
-    if [ $mode == 2 ] && [ $DoGamma -eq 1 ]; then
+    if [ [ $mode == 2 ] || [ $mode == 13 ] ] && [ $DoGamma -eq 1 ]; then
         echo "How many p_T bins do you want to use for direct photon?  ";
         read answer
         BinsPtGamma=$answer
@@ -1050,8 +1050,8 @@ function GiveBinningpPbDirGamma()
         echo "You have chosen " $answer " pt bins for pi0 in direct photon binning";
     else
         correctPi0=1
-    fi    
-    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then 
+    fi
+    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
         echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
         read answer
         BinsPtEta=$answer
@@ -1064,7 +1064,7 @@ function GiveBinningpPbDirGamma()
 
 function ExtractSignal()
 {
-    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,$useTHnSparse\)  
+    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,$useTHnSparse\)
 }
 
 function ExtractSignalGamma()
@@ -1095,20 +1095,20 @@ function CorrectSignalGammaV2()
     root -x -l -b -q TaskV1/CorrectGammaV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\)
 }
 
-function CreateFinalResults() 
+function CreateFinalResults()
 {
-    if [ $mode != 2 ] && [ $mode != 4 ]; then 
+    if [ $mode != 2 ] && [ $mode != 4 ] && [ $mode != 12 ] && [ $mode != 13 ]; then
         root -x -l -b -q TaskV1/ProduceFinalResultsV2.C\+\($1,\"\"\,\"kTRUE\"\,$AddPileUpCorr\,$mode\)
-    fi    
+    fi
 }
 
-function ProduceFinalResultspPb() 
+function ProduceFinalResultspPb()
 {
     root -x -l -b -q TaskV1/ProduceFinalResultspPb.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,kFALSE\)
-    
+
 }
 
-function CreateGammaFinalResults() 
+function CreateGammaFinalResults()
 {
     root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\,\"$ESTIMATEPILEUP\"\)
 }
@@ -1119,27 +1119,27 @@ function CreateGammaFinalResultsV3()
 }
 
 
-function Usage() 
+function Usage()
 {
     echo -e "
-This Script is provided by the Gamma Conversion Group of ALICE 
-the main developers are 
+This Script is provided by the Gamma Conversion Group of ALICE
+the main developers are
     Friederike Bock \t friederike.bock@cern.ch
-    Ana Marin \t\t marin@physi.uni-heidelberg.de  
-            
+    Ana Marin \t\t marin@physi.uni-heidelberg.de
+
 If there are any complications with running this script do not hesitate to connect them.
 
 
-How to use this script? 
-$PROGNAME -h  \t\t\t\t\t usage will be displayed 
-$PROGNAME --help \t\t\t\t usage will be displayed 
+How to use this script?
+$PROGNAME -h  \t\t\t\t\t usage will be displayed
+$PROGNAME --help \t\t\t\t usage will be displayed
 $PROGNAME -c data.root suffix \t\t\t Will only correct and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -d data.root suffix \t\t\t Will only fullfil cutstudies and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -m DirectoryOfMergedOutputs suffix \t Automatic merging for LHC10bc and LHC10de for efficiencies will be done \n \t\t\t\t\t\t\t\t\t according to the fraction in Data, be careful files have to be arranged in a certain structure \n
     \t\t\t\t\t\t\t\t DataRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1Data.root
     \t\t\t\t\t\t\t\t MCRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1MC.root
     \t\t\t\t\t\t\t\t MCRootFileBC=DirectoryOfMergedOutputs/mergedBC/GammaConvV1MC.root
-    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n 
+    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n
 $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the final results and \n \t\t\t\t\t\t\t\t\t produce the graphical output in the specified suffix-format.\n
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
@@ -1149,24 +1149,24 @@ $PROGNAME  *-*pi0etaOnly* \t\t\t pi0 in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 
-This script needs as a basis the output from the GammaConversion-Software which is provided with the Aliroot software, both the 'data.root' and the 'MC.root' have to be output files of this. The script then will check which cutnumbers are in these files and will ask you which exactly you want to analyse, furthermore you have to set a standard cut which has to be always the first in the CutLogFile. Because for this cut the systematic errors will be calculated. Not only one analysis will be fullfiled, you can additionally choose to do a Alpha studie or Chi2 of the meson as well which will give you the oportunity to calculate two indepent error due to cut variation. Additionally the CorrectSignal.C will correct the spectrum for all possible contributions and afterwards calculate the systematic error due to yield extraction. All these error will then enter the final results where you will have plots with only statistical errors as well as systematic + static errors. Several data output files are created, and 
-stored in the corresponding cut-directory or the working directory for the cutsstudies file. 
+This script needs as a basis the output from the GammaConversion-Software which is provided with the Aliroot software, both the 'data.root' and the 'MC.root' have to be output files of this. The script then will check which cutnumbers are in these files and will ask you which exactly you want to analyse, furthermore you have to set a standard cut which has to be always the first in the CutLogFile. Because for this cut the systematic errors will be calculated. Not only one analysis will be fullfiled, you can additionally choose to do a Alpha studie or Chi2 of the meson as well which will give you the oportunity to calculate two indepent error due to cut variation. Additionally the CorrectSignal.C will correct the spectrum for all possible contributions and afterwards calculate the systematic error due to yield extraction. All these error will then enter the final results where you will have plots with only statistical errors as well as systematic + static errors. Several data output files are created, and
+stored in the corresponding cut-directory or the working directory for the cutsstudies file.
 
     "
-    exit 
+    exit
 }
 
 if [ "$#" == "0" ]; then
     echo -e "
-$PROGNAME -h  \t\t\t\t\t usage will be displayed 
-$PROGNAME --help \t\t\t\t usage will be displayed 
+$PROGNAME -h  \t\t\t\t\t usage will be displayed
+$PROGNAME --help \t\t\t\t usage will be displayed
 $PROGNAME -c data.root suffix \t\t\t Will only correct and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -d data.root suffix \t\t\t Will only fullfil cutstudies and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -m DirectoryOfMergedOutputs suffix \t Automatic merging for LHC10bc and LHC10de for efficiencies will be done \n \t\t\t\t\t\t\t\t\t according to the fraction in Data, be careful files have to be arranged in a certain structure \n
     \t\t\t\t\t\t\t\t DataRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1Data.root
     \t\t\t\t\t\t\t\t MCRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1MC.root
     \t\t\t\t\t\t\t\t MCRootFileBC=DirectoryOfMergedOutputs/mergedBC/GammaConvV1MC.root
-    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n 
+    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n
 $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the final results and \n \t\t\t\t\t\t\t\t\t produce the graphical output in the specified suffix-format.\n
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
@@ -1251,15 +1251,15 @@ elif [[ "$1" == *-mAddSig2760GeV* ]] ; then
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 elif [[ "$1" == *-mMerged11a* ]] ; then
@@ -1276,16 +1276,16 @@ elif [[ "$1" == *-mMerged11a* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #   exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
         echo "The MC file specified is $MCRootFileGJ"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 elif [[ "$1" == *-mMerged13g* ]] ; then
@@ -1302,18 +1302,18 @@ elif [[ "$1" == *-mMerged13g* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #   exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
         echo "The MC file specified is $MCRootFileGJ"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
-    fi    
+    fi
 elif [[ "$1" == *-mAddSig8TeVA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1326,15 +1326,15 @@ elif [[ "$1" == *-mAddSig8TeVA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 elif [[ "$1" == *-mAddSig8TeVB* ]] ; then
@@ -1349,15 +1349,15 @@ elif [[ "$1" == *-mAddSig8TeVB* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2A* ]] ; then
@@ -1372,17 +1372,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC13d2A* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi    
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2bA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1395,17 +1395,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC13d2bA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi        
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2xA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1418,17 +1418,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC13d2xA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi        
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2B* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1441,17 +1441,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC13d2B* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi        
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2bB* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1464,17 +1464,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC13d2bB* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi            
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2xB* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1487,17 +1487,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC13d2xB* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi            
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC14a1aA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1510,17 +1510,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC14a1aA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC14a1bA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1533,17 +1533,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC14a1bA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC14a1abA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1556,17 +1556,17 @@ elif [[ "$1" == *-mAddSigPbPbLHC14a1abA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                
+    fi
 elif [[ "$1" == *-mAddSigpPbHIJINGA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1579,17 +1579,17 @@ elif [[ "$1" == *-mAddSigpPbHIJINGA* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                    
+    fi
 elif [[ "$1" == *-mAddSigpPbHIJINGB* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1602,17 +1602,17 @@ elif [[ "$1" == *-mAddSigpPbHIJINGB* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                        
+    fi
 elif [[ "$1" == *-mAddSigpPbHIJINGC* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1625,17 +1625,17 @@ elif [[ "$1" == *-mAddSigpPbHIJINGC* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                        
+    fi
 elif [[ "$1" == *-mAddSig* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -1648,15 +1648,15 @@ elif [[ "$1" == *-mAddSig* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 elif [[ "$1" == *-m* ]] ; then
@@ -1671,15 +1671,15 @@ elif [[ "$1" == *-m* ]] ; then
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 elif [[ "$1" == *-c* ]] ; then
@@ -1708,33 +1708,33 @@ elif [[ "$1" != -* ]] ; then
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
-else 
+else
     DataRootFile=$2
     MCRootFile=$3
     Suffix=$4;
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 fi
@@ -1743,7 +1743,7 @@ fi
 
 PERIODNAME="No"
 
-if [ $ONLYCUTS -eq 1 ]; then 
+if [ $ONLYCUTS -eq 1 ]; then
     correct=0
     while [ $correct -eq 0 ]
     do
@@ -1757,7 +1757,7 @@ if [ $ONLYCUTS -eq 1 ]; then
         correct=1
     fi
     done
-    
+
     correct=0
     while [ $correct -eq 0 ]
     do
@@ -1776,7 +1776,7 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged)"
+  echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged), 12 (DCal-DCal), 13 (PCM-DCal)"
     read answer
     if [ $answer = "0" ]; then
         echo "You are analysing PCM-PCM output";
@@ -1844,6 +1844,22 @@ do
         echo "You are analysing the old output of PCM-PCM";
         mode=9
         correct=1
+    elif [ $answer = "12" ]; then
+        echo "You are analysing DCAL-DCAL output";
+        mode=12
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
+        AdvMesonQA=""#"AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "13" ]; then
+        echo "You are analysing PCM-DCAL output";
+        mode=13
+        NEvtsToy=1e7
+        MinPtToy=0
+        MaxPtToy=70
+        AdvMesonQA=""#"AdvancedMesonQA"
+        correct=1
     else
         echo "Command not found. Please try again.";
     fi
@@ -1863,7 +1879,7 @@ do
         if [ $dataFileOK -eq 1 ] ; then
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
-        else 
+        else
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
         fi
@@ -1946,11 +1962,11 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ] || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
                 AdvMesonQA="AdvancedMesonQA"
             fi
@@ -1966,11 +1982,11 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ] || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
                 AdvMesonQA="AdvancedMesonQA"
             fi
@@ -1978,7 +1994,7 @@ do
             echo "Command not found. Please try again.";
         fi
     elif [ $energy = "2.76TeV" ]; then
-        if [ $mode -eq 10 ] || [ $mode -eq 11 ]; then 
+        if [ $mode -eq 10 ] || [ $mode -eq 11 ]; then
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning2760GeVMerged
                 correctPi0=1
@@ -1988,14 +2004,14 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
-        else 
+        else
 #             echo "No Direct Photon plots will be produced ...";
-            if [ $mode -eq 4 ] ; then
+            if [ $mode -eq 4 ]  || [ $mode -eq 12 ] ; then
                 directphoton="No"
-            else 
+            else
                 directphoton="Gamma"
             fi
             if [ $ONLYRESULTS -eq 0 ]; then
@@ -2007,7 +2023,7 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
@@ -2026,7 +2042,7 @@ do
                     fi
                 fi
             fi
-        fi    
+        fi
     elif [ $energy = "5TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2078,7 +2094,7 @@ do
                     fi
                 fi
             fi
-    
+
     elif [ $energy = "7TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2094,11 +2110,11 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]  || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
                 AdvMesonQA="AdvancedMesonQA"
             fi
@@ -2111,14 +2127,14 @@ do
                 correctEta=1
             fi
             if [ $correctPi0 -eq 0 ]; then
-                correct=0    
+                correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]  || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
                 AdvMesonQA="AdvancedMesonQA"
             fi
@@ -2140,11 +2156,11 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ] || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
                 AdvMesonQA="AdvancedMesonQA"
             fi
@@ -2157,14 +2173,14 @@ do
                 correctEta=1
             fi
             if [ $correctPi0 -eq 0 ]; then
-                correct=0    
+                correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ] || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
                 AdvMesonQA="AdvancedMesonQA"
             fi
@@ -2223,7 +2239,7 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
@@ -2238,15 +2254,15 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
 
-            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then 
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ] || [ $mode = 12 ] || [ $mode = 13 ]; then
                 useTHnSparse=0
-            fi 
+            fi
         fi
-        
+
         correct=0
         while [ $correct -eq 0 ]
         do
@@ -2277,7 +2293,7 @@ do
                 else
                     echo "Command not found. Please try again.";
                 fi
-            fi    
+            fi
         fi
     elif [ $energy = "PbPb_2.76TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
@@ -2294,7 +2310,7 @@ do
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
@@ -2304,16 +2320,16 @@ do
                 GiveBinningHI
                 correctPi0=1
                 correctEta=1
-            else 
+            else
                 correctPi0=1
                 correctEta=1
             fi
-            
+
             if [ $correctPi0 -eq 0 ]; then
                 correct=0
             elif [ $correctEta -eq 0 ]; then
                 correct=0
-            else 
+            else
                 correct=1
             fi
         else
@@ -2333,7 +2349,7 @@ do
                 else
                     echo "Command not found. Please try again.";
                 fi
-            fi    
+            fi
         fi
    elif [ $energy = "PbPb_5.02TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
@@ -2395,7 +2411,7 @@ do
     fi
 done
 
-if [ $mode -eq 0 ] || [ $mode -eq 9 ]; then 
+if [ $mode -eq 0 ] || [ $mode -eq 9 ]; then
     correct=0
     while [ $correct -eq 0 ]
     do
@@ -2414,11 +2430,11 @@ if [ $mode -eq 0 ] || [ $mode -eq 9 ]; then
             echo "Command not found. Please try again.";
         fi
     done
-fi 
+fi
 
 echo "mode has been chosen: $mode "
 
-if [ $mode -lt 10 ]; then 
+if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
     echo "I went into standard modes";
     if [ $ONLYRESULTS = 0 ] ; then
         if [ $ONLYCORRECTION -eq 0 ];  then
@@ -2436,15 +2452,15 @@ if [ $mode -lt 10 ]; then
                     crystal=CrystalBall
                 elif [ $answer = "Gaussian" ] || [ $answer = "G" ] || [ $answer = "g" ]; then
                     echo "Gaussian chosen ...";
-                    correct=1    
+                    correct=1
                     crystal=Gaussian
                 else
                     echo "Command not found. Please try again.";
                 fi
             done
         fi
-        
-    #    echo "Hauptroutine stimmt" 
+
+    #    echo "Hauptroutine stimmt"
         correct=0
         while [ $correct -eq 0 ]
         do
@@ -2475,7 +2491,7 @@ if [ $mode -lt 10 ]; then
                 mkdir $cutSelection/$energy
             fi
 
-            if [ $ONLYCUTS -eq 0 ]; then 
+            if [ $ONLYCUTS -eq 0 ]; then
                 if [ -d $cutSelection/$energy/$Suffix ]; then
                     echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
                 else
@@ -2496,30 +2512,30 @@ if [ $mode -lt 10 ]; then
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then
                         optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                        if [ -f $DataRootFile ]; then 
+                        if [ -f $DataRootFile ]; then
                             ExtractSignal $optionsPi0Data
                         fi
-                        Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`             
-                        if [ $MCFILE -eq 1 ]; then 
-                            optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE 
+                        Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
+                        if [ $MCFILE -eq 1 ]; then
+                            optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                             ExtractSignal $optionsPi0MC
                             Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
                             Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
                             if [ $MERGINGMC -eq 1 ]; then
                                 if [ $addedSig -eq 1 ]; then
-                                    optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kTRUE    
+                                    optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kTRUE
                                     ExtractSignal $optionsPi0MC2
                                     Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
                                     Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosAddSig_*.root`
                                     root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\)
                                 elif [ $addedSig -eq 2 ]; then
-                                    optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE               
+                                    optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                                     ExtractSignal $optionsPi0MC2
                                     Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
                                     Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
                                     root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\,$minPtMergePi0\)
 
-                                else 
+                                else
                                     optionsPi0MCBC=\"Pi0\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                                     echo $optionsPi0MCBC
                                     ExtractSignal $optionsPi0MCBC
@@ -2531,37 +2547,37 @@ if [ $mode -lt 10 ]; then
                                     root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0\",\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$Pi0MCcorrectionBCFILE\",\"$Pi0MCcorrectionDFILE\"\)
                                 fi
                             fi
-                            
+
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
-                        fi    
+                        fi
                     fi
                     if [ $DoGamma -eq 1 ]; then
                         optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0
                         if [ $NEWGammaMacros == 0 ]; then
                             ExtractSignalGamma $optionsPi0Data
-                        else 
+                        else
                             optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma
                             ExtractSignalGammaV2 $optionsGammaData
                         fi
-                        if [ $MCFILE -eq 1 ]; then 
-                            optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0 
+                        if [ $MCFILE -eq 1 ]; then
+                            optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0
                             if [ $NEWGammaMacros == 0 ]; then
                                 ExtractSignalGamma $optionsPi0MC
-                            else 
-                                optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma 
+                            else
+                                optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma
                                 ExtractSignalGammaV2 $optionsGammaMC
                             fi
-                        fi    
+                        fi
                     fi
-                    
+
                     if [ $DoPi0InEtaBinning -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then 
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)               
-                        fi 
+                        if [ -f $DataRootFile ]; then
+                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        fi
                         Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_$cutSelection.root`
-                        if [ $MCFILE -eq 1 ]; then 
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)           
-                            Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`   
+                        if [ $MCFILE -eq 1 ]; then
+                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                            Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
                             Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
                             if [ $MERGINGMC -eq 1 ]; then
                                 if [ $addedSig -eq 1 ]; then
@@ -2575,28 +2591,28 @@ if [ $mode -lt 10 ]; then
                                     Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
                                     root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\,$minPtMergePi0\)
 
-                                else 
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)          
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)          
+                                else
+                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                                     Pi0EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosBC_*.root`
                                     Pi0EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosD_*.root`
                                     root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0EtaBinning\",\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrectionFILE\"\,\"$Pi0EtaMCcorrectionBCFILE\",\"$Pi0EtaMCcorrectionDFILE\"\)
                                 fi
                             fi
-                            
+
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0EtadataRAWFILE\"\,\"$Pi0EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
                         fi
-                    fi    
+                    fi
                     if [ $DoEta -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then 
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)               
+                        if [ -f $DataRootFile ]; then
+                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                         fi
-                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection.root`        
-                        if [ $MCFILE -eq 1 ]; then 
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)               
+                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                        if [ $MCFILE -eq 1 ]; then
+                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                             EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
                             EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
-                            
+
                             if [ $MERGINGMC -eq 1 ]; then
                                 if [ $addedSig -eq 1 ]; then
                                     root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
@@ -2607,26 +2623,26 @@ if [ $mode -lt 10 ]; then
                                     root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                                     EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
                                     EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)    
-                                else 
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)               
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)               
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)
+                                else
+                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                                     EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosBC_*.root`
                                     EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosD_*.root`
-                                
+
                                     root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Eta\",\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrectionFILE\"\,\"$EtaMCcorrectionBCFILE\",\"$EtaMCcorrectionDFILE\"\)
                                 fi
                             fi
                             root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
                         fi
-                    fi 
+                    fi
                 fi
-                
-                Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`             
+
+                Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
                 Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
                 Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
                 Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`   
+                Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
                 Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
                 EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
                 EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
@@ -2634,13 +2650,13 @@ if [ $mode -lt 10 ]; then
 
                 if [ $DoPi0 -eq 1 ]; then
                     if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton 
-                    else 
+                        CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton
+                    else
                         PARTLY=1
                     fi
                     if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton 
-                    else 
+                        CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton
+                    else
                         PARTLY=1
                     fi
                 fi
@@ -2649,19 +2665,19 @@ if [ $mode -lt 10 ]; then
                     if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
                         if [ $NEWGammaMacros == 0 ]; then
                             CorrectSignalGamma $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
-                        else 
+                        else
                             CorrectSignalGammaV2 $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
                         fi
-                    else 
+                    else
                         PARTLY=1
                     fi
                     if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
                         if [ $NEWGammaMacros == 0 ]; then
                             CorrectSignalGamma $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE
-                        else 
+                        else
                             CorrectSignalGammaV2 $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE
                         fi
-                    else 
+                    else
                         PARTLY=1
                     fi
                     Pi0dataCorr=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
@@ -2683,27 +2699,27 @@ if [ $mode -lt 10 ]; then
     #                CreateGammaFinalResults $GammaPi0MCCorr $Pi0MCCorr $cutSelection $Suffix Pi0 kTRUE;
                 fi
 
-                if [ $DoPi0InEtaBinning -eq 1 ]; then    
+                if [ $DoPi0InEtaBinning -eq 1 ]; then
                     if [ -f $Pi0EtadataRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
-                        CorrectSignal $Pi0EtadataRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kFALSE $ESTIMATEPILEUP $directphoton 
-                    else 
+                        CorrectSignal $Pi0EtadataRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kFALSE $ESTIMATEPILEUP $directphoton
+                    else
                             PARTLY=1
                     fi
                     if [ -f $Pi0EtaMCRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
-                        CorrectSignal $Pi0EtaMCRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kTRUE $ESTIMATEPILEUP $directphoton 
-                    else 
+                        CorrectSignal $Pi0EtaMCRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kTRUE $ESTIMATEPILEUP $directphoton
+                    else
                             PARTLY=1
                     fi
                 fi
-                if [ $DoEta -eq 1 ]; then    
+                if [ $DoEta -eq 1 ]; then
                     if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                        CorrectSignal $EtadataRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kFALSE $ESTIMATEPILEUP $directphoton 
-                    else 
+                        CorrectSignal $EtadataRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kFALSE $ESTIMATEPILEUP $directphoton
+                    else
                             PARTLY=1
                     fi
                     if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                            CorrectSignal $EtaMCRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kTRUE $ESTIMATEPILEUP $directphoton 
-                    else 
+                            CorrectSignal $EtaMCRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kTRUE $ESTIMATEPILEUP $directphoton
+                    else
                             PARTLY=1
                     fi
 
@@ -2711,7 +2727,7 @@ if [ $mode -lt 10 ]; then
             fi
             NORMALCUTS=`expr $NORMALCUTS + 1`
         done
-        
+
         if [ $NEWGammaMacros == 1 ]; then
             if [ $DoGamma == 1 ]; then
                 root -x -q -l -b TaskV1/GammaCutStudiesV3.C\+\(\"CutSelection.log\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,\"$Suffix\"\,$mode\)
@@ -2730,7 +2746,7 @@ if [ $mode -lt 10 ]; then
             root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
             root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
         fi
-    fi        
+    fi
 else
     if [ $ONLYRESULTS -eq 0 ]; then
         correct=0
@@ -2762,100 +2778,100 @@ else
                 mkdir $cutSelection/$energy
             fi
 
-            if [ $ONLYCUTS -eq 0 ]; then 
+            if [ $ONLYCUTS -eq 0 ]; then
                 if [ -d $cutSelection/$energy/$Suffix ]; then
                     echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
                 else
                     mkdir $cutSelection/$energy/$Suffix
                 fi
 
-                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then 
+                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
                     rm ToyMCOutputs.txt
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                     root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToyLambda\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 fi
-                
-                if [ $ONLYCORRECTION -eq 0 ]; then            
+
+                if [ $ONLYCORRECTION -eq 0 ]; then
                     echo "CutSelection is $cutSelection";
                     if [ $DoPi0 -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then 
+                        if [ -f $DataRootFile ]; then
                             root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
                         fi
-                        Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_*.root`             
-                        if [ $MCFILE -eq 1 ]; then 
+                        Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_*.root`
+                        if [ $MCFILE -eq 1 ]; then
                             root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
                             Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
                             Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
-                            if [ $MERGINGMC -eq 1 ]; then 
+                            if [ $MERGINGMC -eq 1 ]; then
                                 root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
                                 Pi0MCcorrectionFILEJJG=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJGammaTrigg_*.root`
                                 root -b -x -q -l TaskV1/MergeCorrFactorsJJandJJGammaTrigMergedCluster.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJ_$cutSelection.root\"\,\"$Pi0MCcorrectionFILEJJG\"\)
-                                
+
                             fi
                             echo $Pi0dataRAWFILE
                             echo $Pi0MCRAWFILE
                             echo $cutSelection
                             root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
-                        fi    
+                        fi
                     fi
-                    
+
                     if [ $DoEta -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then 
+                        if [ -f $DataRootFile ]; then
                             root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
                         fi
-                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_*.root`        
-                        if [ $MCFILE -eq 1 ]; then 
+                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_*.root`
+                        if [ $MCFILE -eq 1 ]; then
                             root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
                             EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
                             EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
-                            if [ $MERGINGMC -eq 1 ]; then 
+                            if [ $MERGINGMC -eq 1 ]; then
                                 root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
                             fi
                             root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
                         fi
-                    fi 
+                    fi
                 fi
-                
+
                 if [ $DoPi0 -eq 1 ]; then
-                    Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_$cutSelection*.root`             
+                    Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_$cutSelection*.root`
                     Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
                     Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
-                fi    
+                fi
                 if [ $DoEta -eq 1 ]; then
                     EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_$cutSelection*.root`
                     EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
                     EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
                 fi
-                
+
                 if [ $DoPi0 -eq 1 ]; then
                     if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
                           root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else 
+                    else
                         PARTLY=1
                     fi
                     if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
                         root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0MCRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else 
+                    else
                         PARTLY=1
                     fi
                 fi
-                if [ $DoEta -eq 1 ]; then    
+                if [ $DoEta -eq 1 ]; then
                     if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
                         root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else 
+                    else
                             PARTLY=1
                     fi
                     if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
                         root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else 
+                    else
                             PARTLY=1
                     fi
                 fi
             fi
             NORMALCUTS=`expr $NORMALCUTS + 1`
         done
-        
+
         if [ $DoPi0 -eq 1 ]; then
             root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
             root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
@@ -2864,7 +2880,7 @@ else
             root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
             root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
         fi
-    fi        
+    fi
 fi
 
 if [ $mode = 10 ] || [ $mode = 11 ]; then
@@ -2877,39 +2893,39 @@ fi
 #         Pi0MCCorr=`ls $standardCutMeson/$energy/Pi0_MC_GammaConvV1Correction_*.root`
 #         GammaPi0dataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
 #         GammaPi0MCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
-# 
+#
 #         if [ $DoPi0InEtaBinning -eq 1 ]; then
 #             Pi0EtadataCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_data_GammaConvV1Correction_*.root`
 #             Pi0EtaMCCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
 #             GammaPi0EtadataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_data_GammaConvV1Correction_*.root`
 #             GammaPi0EtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
 #         fi
-#         if [ $DoEta -eq 1 ]; then    
+#         if [ $DoEta -eq 1 ]; then
 #             EtadataCorr=`ls $standardCutMeson/$energy/Eta_data_GammaConvV1Correction_*.root`
 #             EtaMCCorr=`ls $standardCutMeson/$energy/Eta_MC_GammaConvV1Correction_*.root`
 #             GammaEtadataCorr=`ls $standardCutGamma/$energy/Gamma_Eta_data_GammaConvV1Correction_*.root`
 #             GammaEtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Eta_MC_GammaConvV1Correction_*.root`
 #         fi
-#         
+#
 #         CallPi0Data=\"$Pi0dataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
 #         CallPi0MC=\"$Pi0MCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
 #         CallPi0EtaData=\"$Pi0EtadataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
 #         CallPi0EtaMC=\"$Pi0EtaMCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-# 
+#
 #         if [ $ONLYCUTS -eq 0 ]; then
 #             if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtadataCorr ] && [ -f $Pi0dataCorr ] && [ -f $SysErrFiledata ]; then
 #                 CreateFinalResults $CallPi0Data ;
 #                 if [ $DoGamma -eq 1 ]; then
-#                     if [ $NEWGammaMacros == 0 ]; then 
+#                     if [ $NEWGammaMacros == 0 ]; then
 #                         CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $standardCutMeson $Suffix Pi0 kFALSE;
-#                     fi    
-#                 fi 
-#             else 
+#                     fi
+#                 fi
+#             else
 #                 PARTLY=1
 #             fi
-# 
-#             echo "have done this" 
-# 
+#
+#             echo "have done this"
+#
 #             if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtaMCCorr ] && [ -f $Pi0MCCorr ] && [ -f $SysErrFileMC ]; then
 #                 CreateFinalResults $CallPi0MC
 #             else
@@ -2918,15 +2934,15 @@ fi
 #             if [ $DoPi0InEtaBinning -eq 1 ] && [ $DoEta -eq 1 ]; then
 #                 if [ -f $EtadataCorr ] && [ -f $Pi0EtadataCorr ] && [ -f $SysErrFiledata ] ; then
 #                     CreateFinalResults $CallPi0EtaData
-#                 else 
+#                 else
 #                     PARTLY=1
-#                 fi    
+#                 fi
 #                 if [ -f $EtaMCCorr ] && [ -f $Pi0EtaMCCorr ] && [ -f $SysErrFileMC ]; then
 #                     CreateFinalResults $CallPi0EtaMC
-#                 else 
+#                 else
 #                     PARTLY=1
 #                 fi
 #             fi
-#         fi    
+#         fi
 #     fi
 # fi
