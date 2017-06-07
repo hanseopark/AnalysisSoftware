@@ -557,7 +557,7 @@
             while (!(TMath::Abs(binningA[0]- binningB[startingBin]) < decisionBoundary) && startingBin< nBinsB){
                 cout << "deviation to first bin in A for startBin: "<< startingBin << "\t" <<TMath::Abs(binningA[0]- binningB[startingBin]) << endl;
                 startingBin++;
-            } 
+            }
             Int_t check2 = 0;
             while (startingBin == nBinsB){
                 cout << "Failed to evalute starting point in attempt " << check2    << endl;
@@ -579,7 +579,7 @@
             }
             cout << endl;
             cout << "Binning B starts earlier, combined binning will start at " << startingBin << " with " << binningB[startingBin] << endl;
-            
+
             Int_t c                             = startingBin+1;
             Int_t startBinNewBins               = 1;
             Int_t binsToBeMergedB               = 1;
@@ -615,7 +615,7 @@
                 cout << "exiting loop " << binningA[i] << "\t" << binningB[c] << "\t bins needed to merged A :"<<nBinsToBeCombinedA[startBinNewBins-1] <<" B :"<<nBinsToBeCombinedB[startBinNewBins-1] <<endl;
                 startBinNewBins++;
                 c++;
-            }            
+            }
             return startBinNewBins;
 
         } else {
@@ -631,7 +631,7 @@
             cout << endl;
 
             cout << "Both start at the same value " << binningA[0] << endl;
-            
+
             Int_t c                             = 1;
             Int_t startBinNewBins               = 1;
             Int_t binsToBeMergedB               = 1;
@@ -667,20 +667,28 @@
                  cout << "exiting loop " << binningA[i] << "\t" << binningB[c] << "\t bins needed to merged A :"<<nBinsToBeCombinedA[startBinNewBins-1] <<" B :"<<nBinsToBeCombinedB[startBinNewBins-1] <<endl;
                 startBinNewBins++;
                 c++;
-            }            
+            }
             return startBinNewBins;
         }
         return 0;
         if(returnStr){}
     }
 
-    Int_t FindFirstCommonBin(Double_t* vectorNewBinning, Double_t* oldBinning, Double_t decisionBoundary = 0.0000001){
+    Int_t FindFirstCommonBin(Double_t* vectorNewBinning, Double_t* oldBinning, Int_t commonBin = 0, Double_t decisionBoundary = 0.0000001){
         Int_t startingBin   = 0;
         //Finding startBin
         
-        while (!(TMath::Abs(vectorNewBinning[0] - oldBinning[startingBin])<decisionBoundary)){ 
+        while (startingBin<commonBin && !(TMath::Abs(vectorNewBinning[0] - oldBinning[startingBin])<decisionBoundary)){
             startingBin++;
             cout << startingBin << "\t" <<!(TMath::Abs(vectorNewBinning[0] - oldBinning[startingBin])<decisionBoundary) << endl;
+        }
+        if(startingBin>=commonBin){
+          startingBin = 0;
+          while (startingBin<commonBin && !(vectorNewBinning[0] - oldBinning[startingBin]<decisionBoundary)){
+              startingBin++;
+              cout << startingBin << "\t" <<!(vectorNewBinning[0] - oldBinning[startingBin]<decisionBoundary) << endl;
+          }
+          startingBin--;
         }
         return startingBin;
     }
@@ -699,8 +707,8 @@
         Int_t validBinsOldStat          = GetBinning(Obj_DummyStat, binningOldStat);
         Int_t validBinsOldSys           = GetBinning(Obj_DummySyst, binningOldSyst);  
     
-        Int_t firstBinStat              = FindFirstCommonBin(vectorNewBinning, binningOldStat);
-        Int_t firstBinSyst              = FindFirstCommonBin(vectorNewBinning, binningOldSyst);
+        Int_t firstBinStat              = FindFirstCommonBin(vectorNewBinning, binningOldStat,nCommonBins);
+        Int_t firstBinSyst              = FindFirstCommonBin(vectorNewBinning, binningOldSyst,nCommonBins);
         
         cout << "FirstBin stat " << firstBinStat<< "\t" << binningOldStat[firstBinStat]    << endl;
         cout << "FirstBin sys " << firstBinSyst    << "\t" << binningOldSyst[firstBinSyst] << endl;
