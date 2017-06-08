@@ -96,7 +96,7 @@ void  CalculateGammaToPi0V2(    TString nameFileGamma   = "",
     
 	TString centralityCutNumberLow              = fEventCutSelection(GetEventCentralityMinCutPosition(),1);
     //TString centralityCutNumberHigh             = fEventCutSelection(GetEventCentralityMaxCutPosition(),1);
-	Int_t centCutNumberI                        = centralityCutNumberLow.Atoi();
+    Int_t centCutNumberI                        = CutNumberToInteger(centralityCutNumberLow);
     //Int_t centCutNumberBI                       = centralityCutNumberHigh.Atoi();
 
 	TString extraSignals(fEventCutSelection(GetEventRejectExtraSignalsCutPosition(),1));

@@ -225,10 +225,10 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
         // put proper cutvariation labeling for plots
         if (cutVariationName.Contains("SpecialTrigg")){
             fTrigger                                            = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-            cutStringsName[i]                                   = AnalyseSpecialTriggerCut(fTrigger.Atoi(), optionPeriod);      
+            cutStringsName[i]                                   = AnalyseSpecialTriggerCut(CutNumberToInteger(fTrigger), optionPeriod);
         } else if (cutVariationName.Contains("Rapidity")){
             TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
-            cutStringsName[i]                                   = AnalyseRapidityMesonCut(fRapidityCut.Atoi());      
+            cutStringsName[i]                                   = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
         } else if (cutVariationName.Contains("MesonAlpha")){
             TString fAlphaCut                                   = fMesonCutSelection(GetMesonAlphaCutPosition(),1);
             cutStringsName[i]                                   = fAlphaCut;
@@ -240,33 +240,33 @@ void CutStudiesOverviewMerged(  TString CombineCutsName     = "CombineCuts.dat",
           cutStringsName[i]                                     = fMassMassCut;
         } else if (cutVariationName.Contains("DiffRapWindow")){
             TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
-            cutStringsName[i]                                   = AnalyseRapidityMesonCutpPb(fRapidityCut.Atoi());      
+            cutStringsName[i]                                   = AnalyseRapidityMesonCutpPb(CutNumberToInteger(fRapidityCut));
         } else if (cutVariationName.Contains("ClusterTrackMatchingCalo")){    
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
             TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
-            cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(fTrackMatching.Atoi(), fClusterType.Atoi());
+            cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
         } else if (cutVariationName.Contains("ClusterMaterialTRD")){    
             TString fMinPhi                                     = fClusterCutSelection(GetClusterPhiMinCutPosition(fClusterCutSelection),1);
             TString fMaxPhi                                     = fClusterCutSelection(GetClusterPhiMaxCutPosition(fClusterCutSelection),1);
-            cutStringsName[i]                                   = AnalyseAcceptanceCutPhiCluster(fMinPhi.Atoi(), fMaxPhi.Atoi());
+            cutStringsName[i]                                   = AnalyseAcceptanceCutPhiCluster(CutNumberToInteger(fMinPhi), CutNumberToInteger(fMaxPhi));
         } else if (cutVariationName.Contains("ClusterM02")){    
             TString fMinM02Cut                                  = fClusterMergedCutSelection(GetClusterMinM02CutPosition(fClusterMergedCutSelection),1);
             TString fMaxM02Cut                                  = fClusterMergedCutSelection(GetClusterMaxM02CutPosition(fClusterMergedCutSelection),1);
-            cutStringsName[i]                                   = AnalyseMergedM02Cut(fMinM02Cut.Atoi(),fMaxM02Cut.Atoi());
+            cutStringsName[i]                                   = AnalyseMergedM02Cut(CutNumberToInteger(fMinM02Cut),CutNumberToInteger(fMaxM02Cut));
 //             AnalyseM02Cut(fMinM02Cut.Atoi(), fMaxM02Cut.Atoi());
         } else if (cutVariationName.Contains("ClusterNCells")){    
             TString fNCellsCut                                  = fClusterCutSelection(GetClusterMinNCellsCutPosition(fClusterCutSelection),1);
-            cutStringsName[i]                                   = AnalyseNCellsCut(fNCellsCut.Atoi());
+            cutStringsName[i]                                   = AnalyseNCellsCut(CutNumberToInteger(fNCellsCut));
         } else if (cutVariationName.Contains("ClusterMinEnergy")){    
             TString fMinEnergyCut                               = fClusterMergedCutSelection(GetClusterMinEnergyCutPosition(fClusterMergedCutSelection),1);
             cout << fMinEnergyCut << "\t" << GetClusterMinEnergyCutPosition(fClusterMergedCutSelection) << "\t"<< fClusterCutSelection.Length()<<endl;
-            cutStringsName[i]                                   = AnalyseMinEnergyMergedCut(fMinEnergyCut.Atoi());
+            cutStringsName[i]                                   = AnalyseMinEnergyMergedCut(CutNumberToInteger(fMinEnergyCut));
         } else if (cutVariationName.Contains("ClusterTiming")){    
             TString fTimingCut                                  = fClusterCutSelection(GetClusterTimingCutPosition(fClusterCutSelection),1);
-            cutStringsName[i]                                   = AnalyseClusterTimingCut(fTimingCut.Atoi());
+            cutStringsName[i]                                   = AnalyseClusterTimingCut(CutNumberToInteger(fTimingCut));
         } else if (cutVariationName.Contains("ClusterNonLinearity")){
           TString fClusterNonLinearity                          = fClusterCutSelection(GetClusterNonLinearityCutPosition(fClusterCutSelection),2);
-          cutStringsName[i]                                     = AnalyseClusterNonLinearityCut(fClusterNonLinearity.Atoi());
+          cutStringsName[i]                                     = AnalyseClusterNonLinearityCut(CutNumberToInteger(fClusterNonLinearity));
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }

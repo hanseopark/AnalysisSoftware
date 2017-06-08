@@ -312,38 +312,38 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
       else if (cutVariationName.Contains("V0Reader")){
          TString fV0Reader = fGammaCutSelection(0,1);
-         cutStringsName[i] = AnalyseV0ReaderCut(fV0Reader.Atoi());      
+         cutStringsName[i] = AnalyseV0ReaderCut(CutNumberToInteger(fV0Reader));
       } else if (cutVariationName.Contains("Eta")){
 	 TString fEtaCut = fGammaCutSelection(1,1);
-         cutStringsName[i] = AnalyseEtaCut(fEtaCut.Atoi());
+         cutStringsName[i] = AnalyseEtaCut(CutNumberToInteger(fEtaCut));
       } else if (cutVariationName.Contains("RCut")){
          TString fRCut = fGammaCutSelection(2,1);
-         cutStringsName[i] = AnalyseRCut(fRCut.Atoi());
+         cutStringsName[i] = AnalyseRCut(CutNumberToInteger(fRCut));
       } else if (cutVariationName.Contains("SinglePt")){
          TString fSinglePtCut = fGammaCutSelection(3,1);
-         cutStringsName[i] = AnalyseSinglePtCut(fSinglePtCut.Atoi());
+         cutStringsName[i] = AnalyseSinglePtCut(CutNumberToInteger(fSinglePtCut));
       } else if (cutVariationName.Contains("Cluster")){
          TString fClusterCut = fGammaCutSelection(4,1);
-         cutStringsName[i] = AnalyseTPCClusterCut(fClusterCut.Atoi());
+         cutStringsName[i] = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
          cout << i << "\t" << fClusterCut.Data() << "\t" << cutStringsName[i].Data()<< endl;
       } else if (cutVariationName.Contains("dEdxE")){	 
          TString fdEdxCut = fGammaCutSelection(5,1);
-         cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(fdEdxCut.Atoi());
+         cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
       } else if (cutVariationName.Contains("dEdxPi")){    
          TString fdEdxCut = fGammaCutSelection(6,3);
          cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());      
       } else if (cutVariationName.Contains("Qt")){
          TString fQtCut = fGammaCutSelection(11,1);
-         cutStringsName[i] = AnalyseQtMaxCut(fQtCut.Atoi());
+         cutStringsName[i] = AnalyseQtMaxCut(CutNumberToInteger(fQtCut));
       } else if (cutVariationName.Contains("Chi2")){
          TString fChi2Cut = fGammaCutSelection(12,1);
-         cutStringsName[i] = AnalyseChi2GammaCut(fChi2Cut.Atoi());
+         cutStringsName[i] = AnalyseChi2GammaCut(CutNumberToInteger(fChi2Cut));
       } else if (cutVariationName.Contains("Rapidity")){
          TString fRapidityCut = fMesonCutSelection(4,1);
-         cutStringsName[i] = AnalyseRapidityMesonCut(fRapidityCut.Atoi());      
+         cutStringsName[i] = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
       } else if (cutVariationName.Contains("Alpha")){
          TString fAlphaCut = fMesonCutSelection(6,1);
-         cutStringsName[i] = AnalyseAlphaMesonCut(fAlphaCut.Atoi());
+         cutStringsName[i] = AnalyseAlphaMesonCut(CutNumberToInteger(fAlphaCut));
 	 
       } else if (cutVariationName.Contains("PsiPairDelthaPhi") ){
 	
@@ -351,7 +351,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 	 
 	 cout<<"String: "<< fElectronCutSelection.Data() <<" Code: "<<fPsiPairDelthaPhi.Data()<<endl;
 	 
-	 cutStringsName[i] = AnalysePsiPairDelthaPhiCut( fPsiPairDelthaPhi.Atoi() );
+     cutStringsName[i] = AnalysePsiPairDelthaPhiCut( CutNumberToInteger(fPsiPairDelthaPhi) );
 	 
       } else {
          cutStringsName[i] = cutNumberAdv[i].Data();

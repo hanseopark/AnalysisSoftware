@@ -134,7 +134,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
 
     TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
     cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
-    if( fEventCutSelectionPileUpRejection.Atoi() > 1  && optionMC.CompareTo("kTRUE") == 0){
+    if( CutNumberToInteger(fEventCutSelectionPileUpRejection) > 1  && optionMC.CompareTo("kTRUE") == 0){
       cout << "changing PileUpCut for MC" << endl;
       cout << fEventCutSelection.Data() << endl;
       fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");
@@ -190,7 +190,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         
         // intercept dEdx cut
         TString dEdxCut( fGammaCutSelection(9,1) );
-        if (dEdxCut.Atoi() != 0) {
+        if (CutNumberToInteger(dEdxCut) != 0) {
             cout << "Data driven purity with kappa cut requested but usual dEdx cut given, returning." << endl;
             return;
         }
@@ -201,11 +201,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
         
         // check for kappa cut and load corresponding purity histo
         TString kappaCut( fGammaCutSelection(8,1) );
-        if (kappaCut.Atoi() == 3) {
+        if (CutNumberToInteger(kappaCut) == 3) {
             namePurityHistogram                                                 = "hSignalPurity1";
-        } else if (kappaCut.Atoi() == 5) {
+        } else if (CutNumberToInteger(kappaCut) == 5) {
             namePurityHistogram                                                 = "hSignalPurity2";
-        } else if (kappaCut.Atoi() == 6) {
+        } else if (CutNumberToInteger(kappaCut) == 6) {
             namePurityHistogram                                                 = "hSignalPurity3";
         } else {
             cout << "Kappa cut not recognized, not implemented yet." << endl;

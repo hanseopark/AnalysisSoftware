@@ -105,6 +105,15 @@
     Double_t tpPb5023GeV           = 0.0983e3*(1/recalcBarn);
     Double_t tpPbErr5023GeV        = 0.0035e3*(1/recalcBarn);
 
+    // basic function to convert cutNumber to integere
+    Int_t CutNumberToInteger(TString cutNumber){
+      char tmpChar = cutNumber(0);
+      Int_t tmpInt = tmpChar - '0' - 39;
+
+      if(tmpInt >= 10 && tmpInt <= 35) return tmpInt;
+      else return cutNumber.Atoi();
+    }
+
     //************************************************************************************
     //********************* Separate cut numbers, old version ****************************
     //************************************************************************************
@@ -209,6 +218,16 @@
             eventCutNumber      = objstrEvent->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
+
+            //temporary fix for train outputs from vAN20170525 to vAN20170601 for ConversionMesonCuts
+            if(mesonCutNumber.Length()==17){
+              TString tempMesonCutNumber = mesonCutNumber;
+              tempMesonCutNumber.Remove(0,14);
+              tempMesonCutNumber.Chop();
+              Int_t tmpIntMesonCutNumber = tempMesonCutNumber.Atoi();
+              char tmpChar = tmpIntMesonCutNumber+39+'0';
+              mesonCutNumber.Replace(14,2,tmpChar);
+            }
         }  else if (type == 5){ //PHOS-PHOS
             objstrEvent         = (TObjString*)arr->At(0);
             objstrCluster       = (TObjString*)arr->At(1);
@@ -1125,8 +1144,8 @@
         TString etaMinCutNumber(caloCutNumber(GetClusterEtaMinCutPosition(caloCutNumber),1));
         TString etaMaxCutNumber(caloCutNumber(GetClusterEtaMaxCutPosition(caloCutNumber),1));
     
-        Float_t minEtaCut   = AnalyseClusterMinEtaCut(etaMinCutNumber.Atoi()); 
-        Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(etaMaxCutNumber.Atoi());
+        Float_t minEtaCut   = AnalyseClusterMinEtaCut(CutNumberToInteger(etaMinCutNumber));
+        Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(CutNumberToInteger(etaMaxCutNumber));
         
         
         return Form("%.2f < #gamma_{calo} < %.2f", minEtaCut, maxEtaCut);
@@ -1141,8 +1160,8 @@
         TString etaMinCutNumber(caloCutNumber(GetClusterEtaMinCutPosition(caloCutNumber),1));
         TString etaMaxCutNumber(caloCutNumber(GetClusterEtaMaxCutPosition(caloCutNumber),1));
     
-        Float_t minEtaCut   = AnalyseClusterMinEtaCut(etaMinCutNumber.Atoi()); 
-        Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(etaMaxCutNumber.Atoi());
+        Float_t minEtaCut   = AnalyseClusterMinEtaCut(CutNumberToInteger(etaMinCutNumber));
+        Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(CutNumberToInteger(etaMaxCutNumber));
         Float_t deltaEtaCut = TMath::Abs(minEtaCut) + TMath::Abs(maxEtaCut);
         
         return deltaEtaCut;
@@ -1156,8 +1175,8 @@
         TString phiMinCutNumber(caloCutNumber(GetClusterPhiMinCutPosition(caloCutNumber),1));
         TString phiMaxCutNumber(caloCutNumber(GetClusterPhiMaxCutPosition(caloCutNumber),1));
     
-        Float_t minPhiCut   = AnalyseClusterMinPhiCut(phiMinCutNumber.Atoi()); 
-        Float_t maxPhiCut   = AnalyseClusterMaxPhiCut(phiMaxCutNumber.Atoi());
+        Float_t minPhiCut   = AnalyseClusterMinPhiCut(CutNumberToInteger(phiMinCutNumber));
+        Float_t maxPhiCut   = AnalyseClusterMaxPhiCut(CutNumberToInteger(phiMaxCutNumber));
         Float_t deltaPhiCut = maxPhiCut - minPhiCut; 
         if ( minPhiCut == -10000 && maxPhiCut == 10000 )
             deltaPhiCut     = 2*TMath::Pi();
@@ -1826,21 +1845,21 @@
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-100%"; 
             } else if( centralityCutNumberEnd.CompareTo("0")!=0){
-                return Form("%i-%i%s", centralityCutNumberStart.Atoi()*10,centralityCutNumberEnd.Atoi()*10,"%");
+                return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
             } else {
-                return Form("%i-%i%s", centralityCutNumberStart.Atoi()*10,centralityCutNumberEnd.Atoi()*10,"%");
+                return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-45%"; 
             } else {
-                return Form("%i-%i%s", centralityCutNumberStart.Atoi()*5,centralityCutNumberEnd.Atoi()*5,"%");
+                return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5,"%");
             }
         } else if (ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("7") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "45-95%"; 
             } else {
-                return Form("%i-%i%s",45+centralityCutNumberStart.Atoi()*5,45+centralityCutNumberEnd.Atoi()*5,"%");
+                return Form("%i-%i%s",45+CutNumberToInteger(centralityCutNumberStart)*5,45+CutNumberToInteger(centralityCutNumberEnd)*5,"%");
             }
         } else return "";
     }	
@@ -1858,19 +1877,19 @@
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-100"; 
             } else {
-                return Form("%i-%i", centralityCutNumberStart.Atoi()*10,centralityCutNumberEnd.Atoi()*10);
+                return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-45"; 
             } else {
-                return Form("%i-%i", centralityCutNumberStart.Atoi()*5,centralityCutNumberEnd.Atoi()*5);
+                return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
             }
         } else if (ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("7") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "45-95"; 
             } else {
-                return Form("%i-%i",45+centralityCutNumberStart.Atoi()*5,45+centralityCutNumberEnd.Atoi()*5);
+                return Form("%i-%i",45+CutNumberToInteger(centralityCutNumberStart)*5,45+CutNumberToInteger(centralityCutNumberEnd)*5);
             }
         } else return ""; 
     }  
@@ -1889,9 +1908,9 @@
                 return "00100"; 
             } else {
                 if (centralityCutNumberStart.CompareTo("0") == 0){
-                    return Form("00%i", centralityCutNumberEnd.Atoi()*10);
+                    return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*10);
                 } else {	
-                    return Form("%i%i", centralityCutNumberStart.Atoi()*10,centralityCutNumberEnd.Atoi()*10);
+                    return Form("%i%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
                 }	
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
@@ -1899,16 +1918,16 @@
                 return "0045"; 
             } else {
                 if (centralityCutNumberStart.CompareTo("0") == 0){
-                    return Form("00%i", centralityCutNumberEnd.Atoi()*5);
+                    return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*5);
                 } else {
-                    return Form("%i%i", centralityCutNumberStart.Atoi()*5,centralityCutNumberEnd.Atoi()*5);
+                    return Form("%i%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
                 }	
             }
         } else if (ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("7") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "4595"; 
             } else {
-                return Form("%i%i",45+centralityCutNumberStart.Atoi()*5,45+centralityCutNumberEnd.Atoi()*5);
+                return Form("%i%i",45+CutNumberToInteger(centralityCutNumberStart)*5,45+CutNumberToInteger(centralityCutNumberEnd)*5);
             }
         } else return ""; 
     }  
@@ -1976,7 +1995,7 @@
     TString AnalyseTPCdEdxCutPionLine(TString sPionCut){
         cout << sPionCut << endl;
         TString sPidedxSigmaCut                 = sPionCut(0,1);
-        Int_t pidedxSigmaCut                    = sPidedxSigmaCut.Atoi();
+        Int_t pidedxSigmaCut                    = CutNumberToInteger(sPidedxSigmaCut);
         cout << "pidedxSigmaCut: " << pidedxSigmaCut << endl;
         Double_t fPIDnSigmaAbovePionLine        = 0;
         Double_t fPIDnSigmaAbovePionLineHighPt  = 0;
@@ -2026,7 +2045,7 @@
         }
 
         TString sPiMomdedxSigmaCut              = sPionCut(1,1);
-        Int_t piMomdedxSigmaCut                 = sPiMomdedxSigmaCut.Atoi();
+        Int_t piMomdedxSigmaCut                 = CutNumberToInteger(sPiMomdedxSigmaCut);
         Double_t fPIDMinPnSigmaAbovePionLine    = 0;
         cout << "piMomdedxSigmaCut: " << piMomdedxSigmaCut << endl;
         switch(piMomdedxSigmaCut){
@@ -2062,7 +2081,7 @@
         }
 
         TString sPiMaxMomdedxSigmaCut           = sPionCut(2,1);
-        Int_t piMaxMomdedxSigmaCut              = sPiMaxMomdedxSigmaCut.Atoi();
+        Int_t piMaxMomdedxSigmaCut              = CutNumberToInteger(sPiMaxMomdedxSigmaCut);
         Double_t fPIDMaxPnSigmaAbovePionLine    = 0;
         cout << "piMaxMomdedxSigmaCut: " << piMaxMomdedxSigmaCut << endl;
         switch(piMaxMomdedxSigmaCut){
@@ -2788,7 +2807,7 @@
             
         Double_t fMinPhiCut     = 0;
         Double_t fMaxPhiCut     = 2* TMath::Pi();
-        switch(minPhiCutNumber.Atoi()) {
+        switch(CutNumberToInteger(minPhiCutNumber)) {
             case 0:
                 fMinPhiCut = 0; //no cut on phi
                 break;
@@ -2819,7 +2838,7 @@
                 break;
         }	
 
-        switch (maxPhiCutNumber.Atoi()) {
+        switch (CutNumberToInteger(maxPhiCutNumber)) {
             case 0:
                 fMaxPhiCut = 2* TMath::Pi(); //no cut
                 break;
@@ -3040,7 +3059,7 @@
     //************************************************************************************
     Double_t ReturnMinClusterEnergy(TString clusterCutSelection){
         TString minEnergyCutNumber(clusterCutSelection(GetClusterMinEnergyCutPosition(clusterCutSelection),1));
-        Int_t minEnergyCut          = minEnergyCutNumber.Atoi();
+        Int_t minEnergyCut          = CutNumberToInteger(minEnergyCutNumber);
         switch(minEnergyCut){
             case 0: 
                 return 0;
@@ -3082,7 +3101,7 @@
     //************************************************************************************
     Double_t ReturnMinNCells(TString clusterCutSelection){
         TString nCellsCutNumber(clusterCutSelection(GetClusterMinNCellsCutPosition(clusterCutSelection),1));
-        return nCellsCutNumber.Atoi();
+        return CutNumberToInteger(nCellsCutNumber);
     }
 
     //************************************************************************************
@@ -3422,7 +3441,7 @@
     //************************************************************************************
     Int_t ReturnClusterNLM( TString clusterCutString){
         TString nCellsCutNumber(clusterCutString(GetClusterNLMCutPosition(clusterCutString),1));
-        return nCellsCutNumber.Atoi();
+        return CutNumberToInteger(nCellsCutNumber);
     }
         
     //************************************************************************************
@@ -3484,7 +3503,7 @@
     //************************************************************************************
     TString AnalyseBackgroundScheme(TString sBackgroundScheme){
         TString sBackgroundSchemeB      = sBackgroundScheme(0,1);
-        Int_t BackgroundScheme          = sBackgroundSchemeB.Atoi();
+        Int_t BackgroundScheme          = CutNumberToInteger(sBackgroundSchemeB);
         TString bGScheme                = "";
         cout << "BackgroundScheme: " << BackgroundScheme << endl;
         
@@ -3522,7 +3541,7 @@
         }
         
         TString sNumberOfBGEvents       = sBackgroundScheme(1,1);
-        Int_t NumberOfBGEvents          = sNumberOfBGEvents.Atoi();
+        Int_t NumberOfBGEvents          = CutNumberToInteger(sNumberOfBGEvents);
         Int_t fNumberOfBGEvents         = 0;
         cout << "NumberOfBGEvents: " << NumberOfBGEvents << endl;
 
@@ -3556,7 +3575,7 @@
         }
 
         TString sDegreesForRotationMethod   = sBackgroundScheme(1,2);
-        Int_t DegreesForRotationMethod      = sDegreesForRotationMethod.Atoi();
+        Int_t DegreesForRotationMethod      = CutNumberToInteger(sDegreesForRotationMethod);
         Int_t fnDegreeRotationPMForBG       = 0;
         cout << "DegreesForRotationMethod: " << DegreesForRotationMethod << endl;
         

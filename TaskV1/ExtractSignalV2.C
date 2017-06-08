@@ -152,7 +152,7 @@ void ExtractSignalV2(   TString meson                   = "",
 
     TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
     cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
-    if( fEventCutSelectionPileUpRejection.Atoi() > 1  && optionMC.CompareTo("kTRUE") == 0){
+    if( CutNumberToInteger(fEventCutSelectionPileUpRejection) > 1  && optionMC.CompareTo("kTRUE") == 0){
       cout << "changing PileUpCut for MC" << endl;
       cout << fEventCutSelection.Data() << endl;
       fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");

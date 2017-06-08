@@ -241,8 +241,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         deltaPhiCalo                                            = ReturnDeltaPhiCalo(fClusterCutSelection);
         TString phiMinCut(fClusterCutSelection(                 GetClusterPhiMinCutPosition(fClusterCutSelection),1));
         TString phiMaxCut(fClusterCutSelection(                 GetClusterPhiMaxCutPosition(fClusterCutSelection),1));
-        minPhiCalo                                              = AnalyseClusterMinPhiCut(phiMinCut.Atoi());
-        maxPhiCalo                                              = AnalyseClusterMaxPhiCut(phiMaxCut.Atoi());
+        minPhiCalo                                              = AnalyseClusterMinPhiCut(CutNumberToInteger(phiMinCut));
+        maxPhiCalo                                              = AnalyseClusterMaxPhiCut(CutNumberToInteger(phiMaxCut));
     }
     
     cout << "========================================"  << endl;

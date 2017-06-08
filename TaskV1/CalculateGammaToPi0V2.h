@@ -276,12 +276,12 @@ void FindCocktailFile(TString eventCutSelection, TString gammaCutSelection, TStr
    TString extraSignals(eventCutSelection(GetEventRejectExtraSignalsCutPosition(),1));
    
    Int_t FinderType                 = 0;
-   FinderType                       = finderType.Atoi();
+   FinderType                       = CutNumberToInteger(finderType);
    
    TString centralityCutNumberLow   = eventCutSelection(GetEventCentralityMinCutPosition(),1);
    TString centralityCutNumberHigh  = eventCutSelection(GetEventCentralityMaxCutPosition(),1);
-   Int_t centCutNumberI             = centralityCutNumberLow.Atoi();
-   Int_t centCutNumberBI            = centralityCutNumberHigh.Atoi();
+   Int_t centCutNumberI             = CutNumberToInteger(centralityCutNumberLow);
+   Int_t centCutNumberBI            = CutNumberToInteger(centralityCutNumberHigh);
 
    if(!option.CompareTo("PbPb_2.76TeV")){    
       if(!centrality.CompareTo("0-5%")){
