@@ -100,6 +100,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TString fileName2760GeV                     = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_12_15_FrediV2Clusterizer.root";
     TString fileName7TeV                        = "ExternalInput/CombinedResultsPaperPP7TeV_2017_04_20.root";
+    TString fileName7TeVpub                     = "FinalResults/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014.root";
 
     TString fileNamePCMMB                       = "ExternalInput/PCM/8TeV/8TeV_data_PCMResults_InvMassBins.root";
 
@@ -1019,10 +1020,21 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TFile* fileChargedIdentified                   = new TFile(fileNameChargedPionPP.Data());
     TH1F* histoChPion2760GeVStat                   = (TH1F*) fileChargedIdentified->Get("histoChargedPionSpecPubStat2760GeV");
     TH1F* histoChPion2760GeVSys                    = (TH1F*) fileChargedIdentified->Get("histoChargedPionSpecPubSyst2760GeV");
+    histoChPion2760GeVStat->Scale(xSection2760GeVINEL);
+    histoChPion2760GeVSys->Scale(xSection2760GeVINEL);
+    TH1F* histoChPion2760GeV              = new TH1F(*histoChPion2760GeVStat);
+    for (Int_t i = 0; i<histoChPion2760GeV->GetNbinsX(); i++){
+        histoChPion2760GeV->SetBinError(i, TMath::Sqrt(TMath::Power(histoChPion2760GeVStat->GetBinError(i),2)+TMath::Power(histoChPion2760GeVSys->GetBinError(i),2)));
+    }
 
     TH1F* histoChPion7TeVStat                      = (TH1F*) fileChargedIdentified->Get("histoChargedPionSpecPubStat7TeV");
     TH1F* histoChPion7TeVSys                       = (TH1F*) fileChargedIdentified->Get("histoChargedPionSpecPubSyst7TeV");
-
+    histoChPion7TeVStat->Scale(xSection7TeVINEL*1e12);
+    histoChPion7TeVSys->Scale(xSection7TeVINEL*1e12);
+    TH1F* histoChPion7TeV              = new TH1F(*histoChPion7TeVStat);
+    for (Int_t i = 0; i<histoChPion2760GeV->GetNbinsX(); i++){
+        histoChPion7TeV->SetBinError(i,TMath::Sqrt(TMath::Power(histoChPion7TeVStat->GetBinError(i),2)+TMath::Power(histoChPion7TeVSys->GetBinError(i),2)));
+    }
 
     TFile* fileEtaToPi                              = new TFile(fileNameEtaToPi0.Data());
     TGraphErrors *eta2pi0_NA27_275GeV               = (TGraphErrors*)fileEtaToPi->Get("Aguilar400GeV");
@@ -1136,6 +1148,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
          graph7TeVPi0->GetEYlow()[i] = TMath::Sqrt(TMath::Power(graph7TeVPi0Stat->GetEYlow()[i],2)+TMath::Power(graph7TeVPi0Sys->GetEYlow()[i],2));
          graph7TeVPi0->GetEYhigh()[i] = TMath::Sqrt(TMath::Power(graph7TeVPi0Stat->GetEYhigh()[i],2)+TMath::Power(graph7TeVPi0Sys->GetEYhigh()[i],2));
      }
+
+//     TFile* file7TeVpub                              = new TFile(fileName7TeVpub.Data());
+//     TGraphAsymmErrors* graph7TeVPi0StatPub          = (TGraphAsymmErrors*) file7TeVpub->Get("graphInvCrossSectionPi0Comb7TeVStatErr");
+//     TGraphAsymmErrors* graph7TeVPi0SysPub           = (TGraphAsymmErrors*) file7TeVpub->Get("graphInvCrossSectionPi0Comb7TeVSysErr");
+
      TF1* fit7TeVPi0TCM                           = (TF1*) file7TeV->Get("Pi07TeV/TwoComponentModelFitPi0");
      fit7TeVPi0TCM->SetName("fit7TeVPi0TCM");
      TF1* fit7TeVPi0Tsallis                           = (TF1*) file7TeV->Get("Pi07TeV/TsallisFitPi0");
@@ -6617,11 +6634,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histoRatioEnergiesRa->GetXaxis()->SetNoExponent(kTRUE);
     histoRatioEnergiesRa->DrawCopy();
 
-
-    ratioOfEnergiesToPythia->DrawCopy("p,same");
-    ratioOfEnergiesToPythia2->DrawCopy("p,same");
-    ratioOfEnergiesToPythia3->DrawCopy("p,same");
-
         Bool_t doMaterialError = kFALSE;
 
         TGraphErrors* graphRatioBinByBin7000_2760AStat = NULL;
@@ -6750,6 +6762,29 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                                                                                                             &graphRatioBinByBin8000_7000AStat, &graphRatioBinByBin8000_7000ASys,
                                                                                                             &graphRatioBinByBin8000_7000BStat, &graphRatioBinByBin8000_7000BSys )    ;
 
+        TBox* box = new TBox(0.3 ,1. , 0.8, 1.2);
+        box->SetLineColor(kBlue-6);
+        box->SetFillColorAlpha(kBlue-6,0.1);
+        box->Draw();
+
+        TBox* box2 = new TBox(0.3 ,1.4 , 0.8, 1.6);
+        box2->SetLineColor(kGreen-6);
+        box2->SetFillColorAlpha(kGreen-6,0.1);
+        box2->Draw();
+
+        TBox* box3 = new TBox(0.3 ,1.5 , 0.8, 1.7);
+        box3->SetLineColor(kRed-6);
+        box3->SetFillColorAlpha(kRed-6,0.1);
+        box3->Draw();
+
+        DrawGammaLines(0.3, 0.8 , 1.5, 1.5,2, kGreen+2);
+        DrawGammaLines(0.3, 0.8 , 1.1, 1.1,2, kBlue+2);
+        DrawGammaLines(0.3, 0.8 , 1.6, 1.6,2, kRed+2);
+
+        ratioOfEnergiesToPythia->DrawCopy("p,same");
+        ratioOfEnergiesToPythia2->DrawCopy("p,same");
+        ratioOfEnergiesToPythia3->DrawCopy("p,same");
+
         graphRatioBinByBin7000_2760->SetMarkerStyle(20);
         graphRatioBinByBin7000_2760->SetMarkerColor(kGreen+2);
         graphRatioBinByBin7000_2760->SetLineColor(kGreen+2);
@@ -6807,6 +6842,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         histoRatioEnergiesRa->GetXaxis()->SetRangeUser(0.3,3.);
         histoRatioEnergiesRa->GetYaxis()->SetRangeUser(0.5,4.4);
         histoRatioEnergiesRa->DrawCopy();
+
+        box->Draw();
+        box2->Draw();
+        box3->Draw();
+        DrawGammaLines(0.3, 0.8 , 1.1, 1.1,2, kBlue+2);
+        DrawGammaLines(0.3, 0.8 , 1.5, 1.5,2, kGreen+2);
+        DrawGammaLines(0.3, 0.8 , 1.6, 1.6,2, kRed+2);
 
         ratioOfEnergiesToPythia->DrawCopy("p,same");
         ratioOfEnergiesToPythia2->DrawCopy("p,same");
@@ -7215,6 +7257,57 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/MC_diffEnergy_ratio_zoom.%s",outputDir.Data(), suffix.Data()));
+
+    // **********************************************************************************************************************
+    // **************************Fit ATLAS charged particles and plot ratio to fit ******************************************
+    // **********************************************************************************************************************
+
+    Double_t paramGraphChPi[3]              = {5e11, 6., 0.13};
+    TF1* fitInvXSectionChPion7TeV           = FitObject("l","fitInvCrossSectionChPion7TeV","ChargedPi",histoChPion7TeV,0.1,20.,paramGraphChPi,"QNRMEX0+");
+
+    Double_t paramGraphChPi2[3]              = {5e11, 6., 0.13};
+    TF1* fitInvXSectionChPion2760GeV           = FitObject("l","fitInvCrossSectionChPion2760GeV","ChargedPi",histoChPion2760GeV,0.1,20.,paramGraphChPi2,"QNRMEX0+");
+
+//    Double_t paramChPion[5]  = { 5e11,0.1,
+//                                             5e10,0.6,3.0};
+//    TF1* fitInvXSectionChPion7TeV    = FitObject("tcm","fitTCMInvCrossSectionChPion7TeV","ChargedPi",histoChPion7TeV,0.1,20. ,paramChPion,"QNRMEX0+","", kFALSE);
+
+//    Double_t paramChPion2[5]  = { 5e11,0.1,
+//                                             5e10,0.6,3.0};
+//    TF1* fitInvXSectionChPion2760GeV    = FitObject("tcm","fitTCMInvCrossSectionChPion2760GeV","ChargedPi",histoChPion2760GeV,0.1,20. ,paramChPion2,"QNRMEX0+","", kFALSE);
+
+    cout << "fit charged pions 7 TeV:" << endl;
+    cout << WriteParameterToFile(fitInvXSectionChPion7TeV) << endl;
+    cout << "fit charged pions 2760 GeV:" << endl;
+    cout << WriteParameterToFile(fitInvXSectionChPion2760GeV) << endl;
+
+    canvasDummyATLAS->cd();
+
+    TH2F* histo2DDummyALICE;
+    histo2DDummyALICE               = new TH2F("histo2DDummyALICE","histo2DDummyALICE",1000,0.01,20.,1000,1,8e11);
+    SetStyleHistoTH2ForGraphs(histo2DDummyALICE, "", 0.032,0.04, 0.04,0.04, 0.8,1.55);
+    histo2DDummyALICE->DrawCopy();
+
+    histoChPion7TeVStat->Draw("psame");
+    histoChPion2760GeVStat->Draw("psame");
+
+    fitInvXSectionChPion7TeV->SetLineColor(kRed+2);
+    fitInvXSectionChPion7TeV->Draw("same");
+
+    fitInvXSectionChPion2760GeV->SetLineColor(kBlue+2);
+    fitInvXSectionChPion2760GeV->Draw("same");
+
+    cout << "Integration 7 TeV: 0-20GeV/c (" << fitInvXSectionChPion7TeV->Integral(0.,20.) << "), 0.4-20GeV/c (" << fitInvXSectionChPion7TeV->Integral(0.4,20.) <<") - ratio: " << fitInvXSectionChPion7TeV->Integral(0.,20.)/fitInvXSectionChPion7TeV->Integral(0.4,20.) << endl;
+    cout << "Integration 2.76 TeV: 0-20GeV/c (" << fitInvXSectionChPion2760GeV->Integral(0.,20.) << "), 0.4-20GeV/c (" << fitInvXSectionChPion2760GeV->Integral(0.4,20.) <<") - ratio: " << fitInvXSectionChPion2760GeV->Integral(0.,20.)/fitInvXSectionChPion2760GeV->Integral(0.4,20.) << endl;
+
+    cout << "Integration 7 TeV: 0.1-20GeV/c (" << fitInvXSectionChPion7TeV->Integral(0.1,20.) << "), 0.4-20GeV/c (" << fitInvXSectionChPion7TeV->Integral(0.4,20.) <<") - ratio: " << fitInvXSectionChPion7TeV->Integral(0.1,20.)/fitInvXSectionChPion7TeV->Integral(0.4,20.) << endl;
+    cout << "Integration 2.76 TeV: 0.1-20GeV/c (" << fitInvXSectionChPion2760GeV->Integral(0.1,20.) << "), 0.4-20GeV/c (" << fitInvXSectionChPion2760GeV->Integral(0.4,20.) <<") - ratio: " << fitInvXSectionChPion2760GeV->Integral(0.1,20.)/fitInvXSectionChPion2760GeV->Integral(0.4,20.) << endl;
+
+    cout << "Integration Histo 7 TeV: 0.1-20GeV/c (" << histoChPion7TeV->Integral(histoChPion7TeV->FindBin(0.11),histoChPion7TeV->FindBin(19.9)) << "), 0.4-20GeV/c (" << histoChPion7TeV->Integral(histoChPion7TeV->FindBin(0.41),histoChPion7TeV->FindBin(19.9)) <<") - ratio: " << histoChPion7TeV->Integral(histoChPion7TeV->FindBin(0.11),histoChPion7TeV->FindBin(19.9))/histoChPion7TeV->Integral(histoChPion7TeV->FindBin(0.41),histoChPion7TeV->FindBin(19.9)) << endl;
+    cout << "Integration Histo 2.76 TeV: 0.1-20GeV/c (" << histoChPion2760GeV->Integral(histoChPion2760GeV->FindBin(0.11),histoChPion2760GeV->FindBin(19.9)) << "), 0.4-20GeV/c (" << histoChPion2760GeV->Integral(histoChPion2760GeV->FindBin(0.41),histoChPion2760GeV->FindBin(19.9)) <<") - ratio: " << histoChPion2760GeV->Integral(histoChPion2760GeV->FindBin(0.11),histoChPion2760GeV->FindBin(19.9))/histoChPion2760GeV->Integral(histoChPion2760GeV->FindBin(0.41),histoChPion2760GeV->FindBin(19.9)) << endl;
+
+    canvasDummyATLAS->Update();
+    canvasDummyATLAS->Print(Form("%s/ChPion_ComparisonWithFit.%s",outputDir.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // **************************Plot example invariant mass bins ***********************************************************
