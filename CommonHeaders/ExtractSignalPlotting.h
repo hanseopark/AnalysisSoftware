@@ -986,6 +986,8 @@
                                 TH1D** fHistoMappingTrueAllBackNormInvMassPtBinPlot,
                                 TH1D** fHistoMappingTrueGGBackNormInvMassPtBinPlot,
                                 TH1D** fHistoMappingTrueContBackNormInvMassPtBinPlot,
+                                TH1D** fHistoMappingTrueMesonContainedInvMassPtBins,
+                                TH1D** fHistoMappingTrueAsymEClusInvMassPtBins,
                                 TString namePlot,
                                 TString nameCanvas,
                                 TString namePad,
@@ -1090,7 +1092,7 @@
                 events->SetTextSize(textHeight);
                 events->Draw();
 
-                TLegend* legendData     = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+3.)*differenceText);
+                TLegend* legendData     = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+5.)*differenceText);
                 legendData->SetTextSize(textHeight);
                 legendData->SetTextFont(62);
                 legendData->SetFillColor(0);
@@ -1117,6 +1119,17 @@
                 fHistoMappingTrueContBackNormInvMassPtBinPlot[iPt]->SetLineWidth(5*linesize);
                 legendData->AddEntry(fHistoMappingTrueContBackNormInvMassPtBinPlot[iPt],"true mixed cont","l");
                 legendData->Draw();
+
+                if(fHistoMappingTrueMesonContainedInvMassPtBins[iPt]){
+                  fHistoMappingTrueMesonContainedInvMassPtBins[iPt]->SetLineWidth(5*linesize);
+                  legendData->AddEntry(fHistoMappingTrueMesonContainedInvMassPtBins[iPt],"true full meson contained","l");
+                  legendData->Draw();
+                }
+                if(fHistoMappingTrueAsymEClusInvMassPtBins[iPt]){
+                  fHistoMappingTrueAsymEClusInvMassPtBins[iPt]->SetLineWidth(5*linesize);
+                  legendData->AddEntry(fHistoMappingTrueAsymEClusInvMassPtBins[iPt],"true asym E_clus cont","l");
+                  legendData->Draw();
+                }
             } else {
 
                 padDataSpectra->cd(place);
@@ -1212,6 +1225,18 @@
                                 titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],4);
+                if(fHistoMappingTrueMesonContainedInvMassPtBins[iPt]){
+                  DrawGammaHisto( fHistoMappingTrueMesonContainedInvMassPtBins[iPt],
+                                  titlePt,
+                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  fPlottingRangeMeson[0],fPlottingRangeMeson[1],5);
+                }
+                if(fHistoMappingTrueAsymEClusInvMassPtBins[iPt]){
+                  DrawGammaHisto( fHistoMappingTrueAsymEClusInvMassPtBins[iPt],
+                                  titlePt,
+                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  fPlottingRangeMeson[0],fPlottingRangeMeson[1],6);
+                }
     //             cout << "here" << endl;
             }
         }

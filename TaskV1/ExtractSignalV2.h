@@ -104,6 +104,8 @@ TString     ObjectNameMCEtaWOWeights                                    = "";
 TString     ObjectNameMCEtaWOEvtWeights                                 = "";
 TString     ObjectNameTrueGGBck                                         = "";
 TString     ObjectNameTrueContBck                                       = "";
+TString     ObjectNameTrueBckFullMesonContained                         = "";
+TString     ObjectNameTrueBckAsymEClus                                  = "";
 TString     ObjectNameTrueAllBck                                        = "";
 TString     ObjectNameTrueCaloPhoton                                    = "";
 TString     ObjectNameTrueCaloConvPhoton                                = "";
@@ -129,6 +131,8 @@ TString     fNameHistoTrue                                              = "";
 TString     fNameHistoTrueGGBck                                         = "";
 TString     fNameHistoTrueContBck                                       = "";
 TString     fNameHistoTrueAllBck                                        = "";
+TString     fNameHistoTrueMesonContained                                = "";
+TString     fNameHistoTrueAsymEClus                                     = "";
 TString     fNameHistoTrueSec                                           = "";
 TString     fNameHistoEffi                                              = "";
 TString     fNameHistoFrac                                              = "";
@@ -188,6 +192,8 @@ void FillMassMCTrueUnweightedMesonHistosArray(TH2D*);                           
 void FillMassMCTrueGGBckHistosArray(TH2D*);                                                                 // Fill invariant mass histograms for validated gamma gamma BG
 void FillMassMCTrueContBckHistosArray(TH2D*);                                                               // Fill invariant mass histograms for validated contamination
 void FillMassMCTrueAllBckHistosArray(TH2D*);                                                                // Fill invariant mass histograms for validated BG
+void FillMassMCTrueFullMesonContainedHistosArray(TH2D*);                                                    // Fill invariant mass histograms for validated fully contained mesons in one cluster
+void FillMassMCTrueAsymEClusHistosArray(TH2D*);                                                             // Fill invariant mass histograms for validated asym Eclusters
 void FillMassMCTrueSecMesonHistosArray(TH2D**);                                                             // Fill invariant mass histograms for validated secondaries
 TH1D* CalculateSecondaryFractions(TH1D* histoRawYield, TH1D* histoRawYieldSec, TString nameHistoFrac);      // Calculate fraction of secondaries
 void CreatePtHistos();                                                                                      // Creat pt dependent histograms
@@ -241,6 +247,8 @@ TH2D*       fHistoTrueMesonInvMassVSPtUnweighted                        = NULL;
 TProfile2D* fProfileTrueMesonInvMassVSPtWeights                         = NULL;
 TH2D*       fHistoTrueMesonInvMassVSPtSec                               = NULL;
 TH2D*       fHistoTrueGGBckInvMassVSPt                                  = NULL;
+TH2D*       fHistoTrueFullMesonContainedInvMassVSPt                     = NULL;
+TH2D*       fHistoTrueAsymEClusInvMassVSPt                              = NULL;
 TH2D*       fHistoTrueContBckInvMassVSPt                                = NULL;
 TH2D*       fHistoTrueAllBckInvMassVSPt                                 = NULL;
 TH2D*       fHistoTrueSecMesonInvMassVSPt[4]                            = { NULL, NULL, NULL, NULL };
@@ -306,6 +314,8 @@ TH1D**      fHistoMappingTrueMesonInvMassPtUnweightedBins               = NULL;
 TH1D**      fHistoMappingTrueGGBckInvMassPtBins                         = NULL;   
 TH1D**      fHistoMappingTrueContBckInvMassPtBins                       = NULL;    
 TH1D**      fHistoMappingTrueAllBckInvMassPtBins                        = NULL;    
+TH1D**      fHistoMappingTrueMesonContainedInvMassPtBins                = NULL;
+TH1D**      fHistoMappingTrueAsymEClusInvMassPtBins                     = NULL;
 TH1D**      fHistoMappingTrueSecMesonInvMassPtBins[4]                   = {NULL, NULL, NULL, NULL};    
 TH1D**      fHistoMappingGGInvMassPtBin                                 = NULL;    
 TH1D**      fHistoMappingBackInvMassPtBin                               = NULL;

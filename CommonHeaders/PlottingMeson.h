@@ -108,6 +108,20 @@
               histo1->SetMarkerStyle(24);
               histo1->SetLineWidth(1);
               histo1->DrawCopy("hist,same");
+            }else if (bck == 5){
+              histo1->SetLineStyle(1);
+              histo1->SetLineColor(kCyan+3);
+              histo1->SetMarkerColor(kCyan+3);
+              histo1->SetMarkerStyle(24);
+              histo1->SetLineWidth(1);
+              histo1->DrawCopy("hist,same");
+            }else if (bck == 6){
+              histo1->SetLineStyle(1);
+              histo1->SetLineColor(kGreen+1);
+              histo1->SetMarkerColor(kGreen+1);
+              histo1->SetMarkerStyle(24);
+              histo1->SetLineWidth(1);
+              histo1->DrawCopy("hist,same");
             }else if (bck == -1){
               histo1->SetLineStyle(1);
               histo1->SetLineColor(11);

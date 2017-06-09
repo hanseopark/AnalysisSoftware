@@ -480,16 +480,17 @@ void ExtractSignalV2(   TString meson                   = "",
                 FillMassMCTrueMesonCaloMergedClusterHistosArray(fHistoTrueMesonMergedClusterInvMassVSPt);
                 fHistoTrueMesonMergedClusterPartConvInvMassVSPt     = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloMergedPartConv.Data());
                 FillMassMCTrueMesonCaloMergedClusterPartConvHistosArray(fHistoTrueMesonMergedClusterPartConvInvMassVSPt);
-            } else {
-                fHistoTrueContBckInvMassVSPt                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueContBck.Data());
-                FillMassMCTrueContBckHistosArray(fHistoTrueContBckInvMassVSPt);
-                fHistoTrueGGBckInvMassVSPt                          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueGGBck.Data());
-                FillMassMCTrueGGBckHistosArray(fHistoTrueGGBckInvMassVSPt);
-                fHistoTrueAllBckInvMassVSPt                         = (TH2D*)fHistoTrueGGBckInvMassVSPt->Clone(ObjectNameTrueAllBck.Data());
-                fHistoTrueAllBckInvMassVSPt->Sumw2();
-                fHistoTrueAllBckInvMassVSPt->Add(fHistoTrueContBckInvMassVSPt);
-                FillMassMCTrueAllBckHistosArray(fHistoTrueAllBckInvMassVSPt);
             }
+//            else {
+//                fHistoTrueContBckInvMassVSPt                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueContBck.Data());
+//                FillMassMCTrueContBckHistosArray(fHistoTrueContBckInvMassVSPt);
+//                fHistoTrueGGBckInvMassVSPt                          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueGGBck.Data());
+//                FillMassMCTrueGGBckHistosArray(fHistoTrueGGBckInvMassVSPt);
+//                fHistoTrueAllBckInvMassVSPt                         = (TH2D*)fHistoTrueGGBckInvMassVSPt->Clone(ObjectNameTrueAllBck.Data());
+//                fHistoTrueAllBckInvMassVSPt->Sumw2();
+//                fHistoTrueAllBckInvMassVSPt->Add(fHistoTrueContBckInvMassVSPt);
+//                FillMassMCTrueAllBckHistosArray(fHistoTrueAllBckInvMassVSPt);
+//            }
             fHistoYieldK0sWithPi0DaughterRec                        = (TH1D*)TrueConversionContainer->FindObject(ObjectNameK0sRecPi0.Data());
             if(fHistoYieldK0sWithPi0DaughterRec) fHistoYieldK0sWithPi0DaughterRec->Sumw2();
             fHistoYieldLambdaWithPi0DaughterRec                     = (TH1D*)TrueConversionContainer->FindObject(ObjectNameLambdaRecPi0.Data());
@@ -506,6 +507,10 @@ void ExtractSignalV2(   TString meson                   = "",
           fHistoTrueAllBckInvMassVSPt->Sumw2();
           fHistoTrueAllBckInvMassVSPt->Add(fHistoTrueContBckInvMassVSPt);
           FillMassMCTrueAllBckHistosArray(fHistoTrueAllBckInvMassVSPt);
+          fHistoTrueFullMesonContainedInvMassVSPt      = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueBckFullMesonContained.Data());
+          fHistoTrueAsymEClusInvMassVSPt               = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueBckAsymEClus.Data());
+          if(fHistoTrueFullMesonContainedInvMassVSPt) FillMassMCTrueFullMesonContainedHistosArray(fHistoTrueFullMesonContainedInvMassVSPt);
+          if(fHistoTrueAsymEClusInvMassVSPt) FillMassMCTrueAsymEClusHistosArray(fHistoTrueAsymEClusInvMassVSPt);
         }
 
     
@@ -1670,7 +1675,7 @@ void ExtractSignalV2(   TString meson                   = "",
           namePad         = "MesonWithBckAndTrueBckPad";
           cout << nameMeson.Data() << endl;
 
-          PlotInvMassInPtBins( fHistoMappingBackNormAndRemainingBGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, fHistoMappingTrueAllBckInvMassPtBins, fHistoMappingTrueGGBckInvMassPtBins, fHistoMappingTrueContBckInvMassPtBins, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
+          PlotInvMassInPtBins( fHistoMappingBackNormAndRemainingBGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, fHistoMappingTrueAllBckInvMassPtBins, fHistoMappingTrueGGBckInvMassPtBins, fHistoMappingTrueContBckInvMassPtBins, fHistoMappingTrueMesonContainedInvMassPtBins, fHistoMappingTrueAsymEClusInvMassPtBins, nameMeson, nameCanvas, namePad,  fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin,
                               fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
         }
     }
@@ -2855,6 +2860,8 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
     fHistoMappingTrueMesonInvMassPtUnweightedBins                   = new TH1D*[fNBinsPt];    
     fHistoMappingTrueGGBckInvMassPtBins                             = new TH1D*[fNBinsPt];    
     fHistoMappingTrueContBckInvMassPtBins                           = new TH1D*[fNBinsPt];    
+    fHistoMappingTrueMesonContainedInvMassPtBins                    = new TH1D*[fNBinsPt];
+    fHistoMappingTrueAsymEClusInvMassPtBins                         = new TH1D*[fNBinsPt];
     fHistoMappingTrueAllBckInvMassPtBins                            = new TH1D*[fNBinsPt];    
     for (Int_t i = 0; i < 4; i++){
         fHistoMappingTrueSecMesonInvMassPtBins[i]                   = new TH1D*[fNBinsPt];    
@@ -2931,6 +2938,8 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fHistoMappingTrueMesonInvMassPtReweightedBins[i]                    = NULL;
         fHistoMappingTrueMesonInvMassPtUnweightedBins[i]                    = NULL;
         fHistoMappingTrueGGBckInvMassPtBins[i]                              = NULL;
+        fHistoMappingTrueMesonContainedInvMassPtBins[i]                     = NULL;
+        fHistoMappingTrueAsymEClusInvMassPtBins[i]                          = NULL;
         fHistoMappingTrueContBckInvMassPtBins[i]                            = NULL;
         fHistoMappingTrueAllBckInvMassPtBins[i]                             = NULL;
         for (Int_t j = 0; j < 4; j++ ){
@@ -3034,6 +3043,8 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     // reconstructed validated histograms additional conversions
     ObjectNameTrueGGBck                 = "ESD_TrueBckGG_InvMass_Pt";
     ObjectNameTrueContBck               = "ESD_TrueBckCont_InvMass_Pt";
+    ObjectNameTrueBckFullMesonContained = "ESD_TrueBckFullMesonContained_InvMass_Pt";
+    ObjectNameTrueBckAsymEClus          = "ESD_TrueBckAsymEClus_InvMass_Pt";
     ObjectNameTrueAllBck                = "ESD_TrueAllCont_InvMass_Pt";
     
     // reconstructed validated histograms additional calorimeters
@@ -3535,6 +3546,36 @@ void FillMassMCTrueAllBckHistosArray(TH2D* fHistoTrueAllBckInvMassVSPtFill) {
         fHistoMappingTrueAllBckInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueAllBckInvMassVSPtFill, fNameHistoTrueAllBck, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
         fHistoMappingTrueAllBckInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueAllBckInvMassPtBins[iPt]->SetLineColor(2);
+    }
+}
+
+//****************************************************************************
+//******* Fill array of invariant mass histograms in pT slices ***************
+//******* validated BG *******************************************************
+//****************************************************************************
+void FillMassMCTrueFullMesonContainedHistosArray(TH2D* fHistoTrueFullMesonContainedInvMassVSPtFill) {
+    fHistoTrueFullMesonContainedInvMassVSPtFill->Sumw2();
+    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+        fNameHistoTrueMesonContained = Form("Mapping_TrueFullMesonContained_InvMass_in_Pt_Bin%02d", iPt);
+        CheckForNULLForPointer(fHistoMappingTrueMesonContainedInvMassPtBins[iPt]);
+        fHistoMappingTrueMesonContainedInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueFullMesonContainedInvMassVSPtFill, fNameHistoTrueMesonContained, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
+        fHistoMappingTrueMesonContainedInvMassPtBins[iPt]->SetLineWidth(1);
+        fHistoMappingTrueMesonContainedInvMassPtBins[iPt]->SetLineColor(2);
+    }
+}
+
+//****************************************************************************
+//******* Fill array of invariant mass histograms in pT slices ***************
+//******* validated BG *******************************************************
+//****************************************************************************
+void FillMassMCTrueAsymEClusHistosArray(TH2D* fHistoTrueAsymEClusInvMassVSPtFill) {
+    fHistoTrueAsymEClusInvMassVSPtFill->Sumw2();
+    for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+        fNameHistoTrueAsymEClus = Form("Mapping_TrueAsymEClus_InvMass_in_Pt_Bin%02d", iPt);
+        CheckForNULLForPointer(fHistoMappingTrueAsymEClusInvMassPtBins[iPt]);
+        fHistoMappingTrueAsymEClusInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueAsymEClusInvMassVSPtFill, fNameHistoTrueAsymEClus, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
+        fHistoMappingTrueAsymEClusInvMassPtBins[iPt]->SetLineWidth(1);
+        fHistoMappingTrueAsymEClusInvMassPtBins[iPt]->SetLineColor(2);
     }
 }
 
@@ -5695,6 +5736,8 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
             if(fMode == 4 || fMode == 5){
               if(fHistoMappingTrueGGBckInvMassPtBins[ii]!=0x00 && fHistoMappingTrueContBckInvMassPtBins[ii]!=0x00 && fHistoMappingTrueAllBckInvMassPtBins[ii]!=0x00){
                 fHistoMappingTrueGGBckInvMassPtBins[ii]->Write();
+                if(fHistoMappingTrueMesonContainedInvMassPtBins[ii]!=0x00)fHistoMappingTrueMesonContainedInvMassPtBins[ii]->Write();
+                if(fHistoMappingTrueAsymEClusInvMassPtBins[ii]!=0x00)fHistoMappingTrueAsymEClusInvMassPtBins[ii]->Write();
                 fHistoMappingTrueContBckInvMassPtBins[ii]->Write();
                 fHistoMappingTrueAllBckInvMassPtBins[ii]->Write();
               }
@@ -6171,6 +6214,8 @@ void Delete(){
     if (fHistoMappingTrueGGBckInvMassPtBins)                    delete fHistoMappingTrueGGBckInvMassPtBins;
     if (fHistoMappingTrueContBckInvMassPtBins)                  delete fHistoMappingTrueContBckInvMassPtBins;
     if (fHistoMappingTrueAllBckInvMassPtBins)                   delete fHistoMappingTrueAllBckInvMassPtBins;
+    if (fHistoMappingTrueMesonContainedInvMassPtBins)           delete fHistoMappingTrueMesonContainedInvMassPtBins;
+    if (fHistoMappingTrueAsymEClusInvMassPtBins)                delete fHistoMappingTrueAsymEClusInvMassPtBins;
     if (fHistoMappingGGInvMassPtBin)                            delete fHistoMappingGGInvMassPtBin;
     if (fHistoMappingBackNormAndRemainingBGInvMassPtBin)        delete fHistoMappingBackNormAndRemainingBGInvMassPtBin;
     if (fHistoMappingBackInvMassPtBin)                          delete fHistoMappingBackInvMassPtBin;
