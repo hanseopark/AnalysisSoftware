@@ -656,6 +656,7 @@
                                     Bool_t isVsPtConv                       = kFALSE
                                 ){
 
+        cout << "MC single bin plotting " << endl;
         cout << "Trigger set: " << triggerSet << endl;
         TString triggerStr2             = ReturnTriggerName(triggerSet);
         TString triggerStr              = Form("%s triggered", triggerStr2.Data());

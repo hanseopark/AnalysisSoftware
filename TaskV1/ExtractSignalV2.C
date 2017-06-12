@@ -1589,6 +1589,7 @@ void ExtractSignalV2(   TString meson                   = "",
         }
         
         if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+
             nameMesonTrue       = Form("%s_TrueMesonCaloPhoton%s", plotPrefix.Data(), plotSuffix.Data());
             nameCanvasTrue      = "TrueMesonCaloPhotonCanvasFitted";
             namePadTrue         = "TrueMesonCaloPhotonPadFitted";
@@ -1661,7 +1662,7 @@ void ExtractSignalV2(   TString meson                   = "",
                                                             fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins, NULL, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassPlotRange, fdate,
                                                             fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem,
                                                             fMode);
-            TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
+            TString triggerInt  = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
             PlotExampleInvMassBinsMC(fHistoMappingTrueFullMesonInvMassPtBins[fExampleBin], fHistoMappingTrueMesonCaloPhotonInvMassPtBins[fExampleBin],  NULL,
                                     fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[fExampleBin], NULL, fExampleBin,
                                     outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,

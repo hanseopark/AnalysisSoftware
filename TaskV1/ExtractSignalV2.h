@@ -1018,7 +1018,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fBGFitRangeLeft[1] = 0.46;
         } else if (mode == 4 ) {
             fBGFitRange[0]                  = 0.67;
-            fBGFitRange[1]                  = 0.799;
+            fBGFitRange[1]                  = 0.79;
             fBGFitRangeLeft[0]              = 0.34;
             fBGFitRangeLeft[1]              = 0.44;
             if( fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 )
