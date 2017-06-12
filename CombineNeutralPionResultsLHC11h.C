@@ -3002,7 +3002,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         TGraphAsymmErrors* graphChargedRatioKaonToPion0510      = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPion0510");
         TGraphAsymmErrors* graphChargedRatioKaonToPionSys0510   = (TGraphAsymmErrors*)directoryChargedPbPb->Get("graphChargedRatioKaonToPionSys0510");
 
-
         canvasEtatoPi0combo->cd();
             histo2DEtatoPi0combo->Draw("copy");
             histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
@@ -3024,6 +3023,24 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
             legendChargedRatio0010->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0010,Form("#eta/#pi^{0},   %s",cent0010.Data()),"fp");
             legendChargedRatio0010->AddEntry(graphChargedRatioKaonToPionSys0010,Form("K^{#pm}/#pi^{#pm}, %s",cent0010.Data()),"fp");
             legendChargedRatio0010->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendChargedRatio0010->Draw();
+
+            if(thesisPlotting) thesisLabel3->Draw();
+            graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
+            graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
+            
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_withKaonsToPions_0010.%s",outputDir.Data(),suffix.Data()));
+
+        canvasEtatoPi0combo->cd();
+            histo2DEtatoPi0combo->Draw("copy");
+            histo2DEtatoPi0combo->GetYaxis()->SetTitleOffset(1.1);
+            histo2DEtatoPi0combo->GetYaxis()->SetTitle("Particle ratio");
+
+            DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPion0010, 24,markerSizeComb, colorCharged, colorCharged);
+            DrawGammaSetMarkerTGraphAsym(graphChargedRatioKaonToPionSys0010,24,markerSizeComb, colorCharged, colorCharged, 1, kTRUE);
+            graphChargedRatioKaonToPionSys0010->Draw("2same");
+            graphChargedRatioKaonToPion0010->Draw("p,same");
+
             legendChargedRatio0010->Draw();
 
             if(thesisPlotting) thesisLabel3->Draw();

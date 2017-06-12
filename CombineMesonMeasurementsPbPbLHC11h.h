@@ -59,9 +59,13 @@ TGraphErrors*   graphPHENIX62GeVPi0RAA_0020;
 TGraphErrors*   graphPHENIX62GeVPi0RAA_2040;
 TGraphErrors*   graphPHENIX62GeVPi0RAA_4060;
 TGraphErrors*   graphPHENIX62GeVPi0RAA_6080;
+TGraphErrors*   graphPHENIX200GeVEtaToPi0Ratio_0020;
+TGraphErrors*   graphPHENIX200GeVEtaToPi0Ratio_2060;
+TGraphErrors*   graphPHENIX200GeVEtaRAA_0020;
+TGraphErrors*   graphPHENIX200GeVEtaRAA_2060;
 TGraphErrors*   graphPHENIX200GeVEtaRAA_0010;
 TGraphErrors*   graphPHENIX200GeVEtaRAA_2040;
-TGraphErrors*   graphPHENIX200GeVEtaRAA_2060;
+TGraphErrors*   graphPHENIX200GeVEtaHighPtRAA_2060;
 TGraphErrors*   graphWA98_17_3GeVPi0RAA_0013;
 
 
@@ -472,9 +476,9 @@ Color_t  colorEMCALMCMass            = kGreen-6;
 
 //___________________________________ Labels definition _____________________________________________
 TString collisionSystem2760GeV      = "Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-TString collisionSystemPbPb0010     = "0#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
-TString collisionSystemPbPb2040     = "20#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
-TString collisionSystemPbPb2050     = "20#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{s_{_{NN}}} = 2.76 TeV";
+TString collisionSystemPbPb0010     = "0#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+TString collisionSystemPbPb2040     = "20#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+TString collisionSystemPbPb2050     = "20#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
 
 TString collisionSystemPP2760GeV    = "pp, #sqrt{#it{s}} = 2.76 TeV";
 TString collisionSystemPP7TeV       = "pp, #sqrt{#it{s}} = 7 TeV";
