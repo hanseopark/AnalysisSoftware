@@ -447,6 +447,50 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TH1D* histoTruePi0OneGammaM02   [MaxNumberOfFiles];
     TH1D* histoTruePi0OneElectronM02[MaxNumberOfFiles];
 
+    // check if fit file for binshifting has to be adjusted for every energy
+    TF1* fitBinShiftPi0TCM                          = 0x0;
+    TF1* fitBinShiftPi0                             = 0x0;
+    TF1* fitBinShiftEtaTCM                          = 0x0;
+    TF1* fitBinShiftEta                             = 0x0;
+    Bool_t doBinShiftForEtaToPi0                    = kFALSE;
+    TString addNameBinshift                         = "";
+    if (nameFileFitsShift.CompareTo("") != 0){
+        doBinShiftForEtaToPi0                       = kTRUE;   
+        addNameBinshift                             = "YShifted";
+    }
+
+    if (doBinShiftForEtaToPi0){
+        TFile *fileFitsBinShift                         = new TFile(nameFileFitsShift);
+        fitBinShiftPi0                                  = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
+        if(!fitBinShiftPi0 || optionEnergy.CompareTo("7TeV")==0){ 
+            fitBinShiftPi0                              = (TF1*)fileFitsBinShift->Get("Pi07TeV/Fits/fitBinShiftingPi0"); 
+            if(!fitBinShiftPi0) fitBinShiftPi0          = (TF1*)fileFitsBinShift->Get("Pi07TeV/TsallisFitPi0");
+            fitBinShiftPi0TCM                           = (TF1*)fileFitsBinShift->Get("Pi07TeV/Fits/fitBinShiftingPi0"); 
+            if(!fitBinShiftPi0TCM) fitBinShiftPi0TCM    = (TF1*)fileFitsBinShift->Get("Pi07TeV/TwoComponentModelFitPi0");
+        } 
+        fitBinShiftEta                                  = (TF1*)fileFitsBinShift->Get("TsallisFitEta"); 
+        if(!fitBinShiftEta || optionEnergy.CompareTo("7TeV")==0){ 
+            fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("Eta7TeV/Fits/fitBinShiftingEta"); 
+            if(!fitBinShiftEta) fitBinShiftEta          = (TF1*)fileFitsBinShift->Get("Eta7TeV/TsallisFitEta");
+            fitBinShiftEtaTCM                           = (TF1*)fileFitsBinShift->Get("Eta7TeV/Fits/fitBinShiftingEta"); 
+            if(!fitBinShiftEtaTCM) fitBinShiftEtaTCM    = (TF1*)fileFitsBinShift->Get("Eta7TeV/TwoComponentModelFitEta");
+        }
+        if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0){
+            fitBinShiftPi0                              = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
+            fitBinShiftPi0TCM                           = (TF1*)fileFitsBinShift->Get("Pi08TeV/TwoComponentModelFitPi0");
+        }
+        if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0){
+            fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
+            fitBinShiftEtaTCM                           = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
+        }
+        if( optionEnergy.CompareTo("pPb_5.023TeV")==0){
+            fitBinShiftPi0                              = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
+            fitBinShiftPi0TCM                           = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
+            fitBinShiftEta                              = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitEta");
+        }
+        cout << fitBinShiftPi0 << " - " << fitBinShiftEta << endl;
+        cout << "fits for shifting found " << endl;
+    }
     
     for (Int_t i=0; i< nrOfTrigToBeComb; i++){
         // Define CutSelections
@@ -3153,8 +3197,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               TF1 *fitPi0RelMassDiff = new TF1("fitPi0RelMassDiff","[0]",0.,maxPtGlobalPi0);
               fitPi0RelMassDiff->SetParameter(0,0.);
               graphMassRelDifferencePi0DatavsMC->Fit(fitPi0RelMassDiff,"QNRMEX0+","",0.,maxPtGlobalPi0);
-              fitPi0RelMassDiff->SetLineColor(kRed);
-              fitPi0RelMassDiff->SetLineWidth(0.5);
+              DrawGammaSetMarkerTF1( fitPi0RelMassDiff, 1, 0.5, kRed); 
               fitPi0RelMassDiff->Draw("same");
 
               TLegend* legendPi0RelMassDiff = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*1), 0.035, 2, "", 42, 0.15);
@@ -3433,9 +3476,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     legendScaled->AddEntry(graphCorrectedYieldWeightedAveragePi0Stat,"Final","p");
     legendScaled->Draw();
     
-    fitInvYieldPi0->SetLineColor(kGray+2);
-    fitInvYieldPi0->SetLineStyle(7);
-    fitInvYieldPi0->SetLineWidth(2);
+    DrawGammaSetMarkerTF1( fitInvYieldPi0, 7, 2, kGray+2); 
     fitInvYieldPi0->Draw("same");
 
     labelEnergyUnscaled->Draw();
@@ -3465,6 +3506,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     canvasCorrScaled->Update();
     canvasCorrScaled->SaveAs(Form("%s/Pi0_%s_CorrectedYieldFinal.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
 
+    if (fitBinShiftPi0TCM){
+        DrawGammaSetMarkerTF1( fitBinShiftPi0TCM, 9, 2, kRed+2); 
+        fitBinShiftPi0TCM->Draw("same");
+        canvasCorrScaled->Update();
+        canvasCorrScaled->SaveAs(Form("%s/Pi0_%s_CorrectedYieldFinalWithBinShiftFit.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+    }
+    
+    
+    histo2DInvYieldScaled->DrawCopy(); 
+    graphCorrectedYieldWeightedAveragePi0Sys->Draw("p,E2,same");
+    graphCorrectedYieldWeightedAveragePi0Stat->Draw("p,E,same");
+    
+    fitInvYieldPi0->Draw("same");
+        
     DrawGammaSetMarker(histoMCInputPi0[0],  0, 0, kBlue+2, kBlue+2);    
     histoMCInputPi0[0]->Draw("same,hist,c");
     
@@ -3636,8 +3691,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TFile* fileCorrectedPi0EtaBin       [MaxNumberOfFiles];
     Bool_t foundPi0EtaBinFile           [MaxNumberOfFiles];
     Bool_t doEtaToPi0                                               = kFALSE;
-    Bool_t doBinShiftForEtaToPi0                                    = kFALSE;
-    TString addNameBinshift                                         = "";
     
     TString FileNameUnCorrectedEta      [MaxNumberOfFiles];
     TFile* fileUnCorrectedEta           [MaxNumberOfFiles];
@@ -3663,8 +3716,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     TH1D* histoCorrectedYieldPi0EtaBinBinShift[MaxNumberOfFiles];
     TH1D* histoCorrectedYieldEtaBinShift[MaxNumberOfFiles];
-    TF1* fitBinShiftPi0TCM                      = 0x0;
-    TF1* fitBinShiftEtaTCM                      = 0x0;
     
     // create pointers for weighted graphs and supporting figutes
     TGraphAsymmErrors* graphCorrectedYieldWeightedAverageEtaStat    = NULL;
@@ -3862,11 +3913,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }    
 
             if (foundPi0EtaBinFile[i]){
-                // check if fit file for binshifting has been given currently only working for 2.76TeV
-                if (nameFileFitsShift.CompareTo("") != 0){
-                     doBinShiftForEtaToPi0                  = kTRUE;   
-                     addNameBinshift                        = "YShifted";
-                }
 
                 if (! doBinShiftForEtaToPi0){
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
@@ -3880,34 +3926,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                       histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBin[i],1.,1.,"");
                     }
                 } else {
-                    TFile *fileFitsBinShift                     = new TFile(nameFileFitsShift);
-                    TF1* fitBinShiftPi0                         = (TF1*)fileFitsBinShift->Get("TsallisFitPi0");
-                    if(!fitBinShiftPi0 || optionEnergy.CompareTo("7TeV")==0){ 
-                      fitBinShiftPi0                            = (TF1*)fileFitsBinShift->Get("Pi07TeV/Fits/fitBinShiftingPi0"); 
-                      if(!fitBinShiftPi0) fitBinShiftPi0        = (TF1*)fileFitsBinShift->Get("Pi07TeV/TsallisFitPi0");
-                      fitBinShiftPi0TCM                         = (TF1*)fileFitsBinShift->Get("Pi07TeV/Fits/fitBinShiftingPi0"); 
-                      if(!fitBinShiftPi0TCM) fitBinShiftPi0TCM  = (TF1*)fileFitsBinShift->Get("Pi07TeV/TwoComponentModelFitPi0");
-                    } 
-                    TF1* fitBinShiftEta                         = (TF1*)fileFitsBinShift->Get("TsallisFitEta"); 
-                    if(!fitBinShiftEta || optionEnergy.CompareTo("7TeV")==0){ 
-                      fitBinShiftEta                            = (TF1*)fileFitsBinShift->Get("Eta7TeV/Fits/fitBinShiftingEta"); 
-                      if(!fitBinShiftEta) fitBinShiftEta        = (TF1*)fileFitsBinShift->Get("Eta7TeV/TsallisFitEta");
-                      fitBinShiftEtaTCM                         = (TF1*)fileFitsBinShift->Get("Eta7TeV/Fits/fitBinShiftingEta"); 
-                      if(!fitBinShiftEtaTCM) fitBinShiftEtaTCM  = (TF1*)fileFitsBinShift->Get("Eta7TeV/TwoComponentModelFitEta");
-                    }
-                    if(!fitBinShiftPi0 || optionEnergy.CompareTo("8TeV")==0){
-                      fitBinShiftPi0                            = (TF1*)fileFitsBinShift->Get("Pi08TeV/TsallisFitPi0");
-                      fitBinShiftPi0TCM                         = (TF1*)fileFitsBinShift->Get("Pi08TeV/TwoComponentModelFitPi0");
-                    }
-                    if(!fitBinShiftEta || optionEnergy.CompareTo("8TeV")==0){
-                      fitBinShiftEta                            = (TF1*)fileFitsBinShift->Get("Eta8TeV/TsallisFitEta");
-                      fitBinShiftEtaTCM                         = (TF1*)fileFitsBinShift->Get("Eta8TeV/TwoComponentModelFitEta");
-                    }
-                    if( optionEnergy.CompareTo("pPb_5.023TeV")==0){
-                       fitBinShiftPi0                           = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
-                       fitBinShiftPi0TCM                        = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitPi0");
-                       fitBinShiftEta                           = (TF1*)fileFitsBinShift->Get("TwoComponentModelFitEta");
-                    }
                     cout << fitBinShiftPi0 << " - " << fitBinShiftEta << endl;
                     histoCorrectedYieldPi0EtaBin[i]             = (TH1D*)fileCorrectedPi0EtaBin[i]->Get(nameCorrectedYield.Data());
                     histoCorrectedYieldPi0EtaBin[i]->SetName(Form("CorrectedYieldPi0EtaBin_%s",cutNumber[i].Data()));
@@ -3927,6 +3945,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                       histoEtaToPi0[i]->Divide(histoEtaToPi0[i],histoCorrectedYieldPi0EtaBinBinShift[i],1.,1.,"");
                     }
                 }    
+            } else {
+                doBinShiftForEtaToPi0   = kFALSE;
             }
             
             //Scale spectrum to MBOR
@@ -5701,10 +5721,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         graphCorrectedYieldWeightedAverageEtaStat->Draw("p,E,same");
         legendScaled->AddEntry(graphCorrectedYieldWeightedAverageEtaStat,"Final","p");
         legendScaled->Draw();
-        
-        fitInvYieldEta->SetLineColor(kGray+2);
-        fitInvYieldEta->SetLineStyle(7);
-        fitInvYieldEta->SetLineWidth(2);
+        DrawGammaSetMarkerTF1( fitInvYieldEta, 7, 2, kGray+2); 
         fitInvYieldEta->Draw("same");
 
         labelEnergyUnscaled->Draw();
