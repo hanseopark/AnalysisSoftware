@@ -977,9 +977,12 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
         NewName                     = Spectrum->GetName();
     
     Double_t newBinContent          = 0.;
+    Double_t newBinError            = 0.;
     for (Int_t i=1; i<Spectrum->GetNbinsX()+1; i++) {
         newBinContent               = Spectrum->GetBinContent(i) * Spectrum->GetBinWidth(i);
-        Spectrum->SetBinContent(i, newBinContent);
+        newBinError                 = Spectrum->GetBinError(i) * Spectrum->GetBinWidth(i);
+        Spectrum->SetBinContent(i,  newBinContent);
+        Spectrum->SetBinError(i,    newBinError);
     }
 
     Int_t       nBins               = SpectrumForBinning->GetNbinsX();
