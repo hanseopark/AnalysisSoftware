@@ -3191,7 +3191,7 @@ Bool_t LoadSecondaryPionsFromCocktailFile(TString cutSelection, TString optionEn
        }
        
        // neutral pions from resonance decays
-       for (Int_t j = 0; j < 8; j++) {
+       for (Int_t j = 0; j < 15; j++) {
            cout << "trying to find " << Form("Pi0_From_%s_Pt_OrBin", nameResonanceFeedDownContributionsCocktail[j].Data()) << endl;
            
            fHistoYieldExternResonanceFeedDownInput[j]           = (TH1D*)fFileCocktailInput->Get(Form("Pi0_From_%s_Pt_OrBin", nameResonanceFeedDownContributionsCocktail[j].Data()));
@@ -5764,7 +5764,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         }
 
         cout << "Writing input for pi0 resonance feed down correction" << endl;
-        for (Int_t j = 0; j < 8; j++){
+        for (Int_t j = 0; j < 15; j++){
             if (fHistoYieldExternResonanceFeedDownInput[j])        fHistoYieldExternResonanceFeedDownInput[j]->Write();
             if (fHistoYieldExternResonanceFeedDownInputReb[j])     fHistoYieldExternResonanceFeedDownInputReb[j]->Write();
         }

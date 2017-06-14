@@ -175,7 +175,7 @@ void CorrectYieldInclResonanceFeedDown(TH1D* histoCorrectedYield, TH1D** histoRa
         }
     }
     
-    // scale with 1/ (Delta rapidiy)
+    // scale with 1/(Delta rapidiy)
     histoCorrectedYield->Scale(1./deltaRapid);
     
     // scale with 1/(2 pi)
@@ -187,6 +187,7 @@ void CorrectYieldInclResonanceFeedDown(TH1D* histoCorrectedYield, TH1D** histoRa
         histoCorrectedYield->SetBinContent(i,newBinContent);
         histoCorrectedYield->SetBinError(i,newBinError);
     }
+
     // scale with 1/ BR
     if (nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
         histoCorrectedYield->Scale(1./0.98798);
@@ -364,8 +365,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // Naming conventions
     TString nameSecMeson[4]                         = {"K0S", "Lambda", "K0L", "Rest"};
     TString nameSecMesonPlot[4]                     = {"K_{s}^{0}", "#Lambda", "K_{l}^{0}", "Rest"};
-    TString nameResMeson[8]                         = {"Eta", "Rho0", "EtaPrime", "Omega", "Phi", "Delta0", "Delta+", "JPsi"};
-    TString nameResMesonPlot[8]                     = {"#eta", "#rho^{0}", "#eta'", "#omega", "#phi", "#Delta^{0}", "#Delta^{+}", "J/#psi"};
+    TString nameResMeson[15]                        = {"Eta", "Rho0", "EtaPrime", "Omega", "Rho+", "Rho-", "Phi", "JPsi", "Delta0", "Delta+", "K+", "K-",
+                                                        "Omega+", "Omega-", "K*(892)0"};
+    TString nameResMesonPlot[15]                    = {"#eta", "#rho^{0}", "#eta'", "#omega", "#rho^{+}", "#rho^{-}", "#phi", "J/#psi", "#Delta^{0}", "#Delta^{+}",
+                                                        "K^{+}", "K^{-}", "#Omega^{+}", "#Omega^{-}", "K^{*}(892)^{0}"};
     TString nameIntRange[6]                         = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
     TString nameIntRangePlot[6]                     = {"right/ normal int", "right/wide int", "right/narrow int", "left/ normal int", "left/wide int", "left/narrow int"};
     TString nameIntBckResult[3]                     = {"pol2_normal","exp_normal","exp2_normal"};
@@ -390,9 +393,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Color_t colorSecFromToy[3]                      = {kRed-2, kOrange+1, kCyan-2};
     Style_t markerStyleSecFromToy[3]                = {20, 33, 29};
     Size_t markerSizeSecFromToy[3]                  = {1.7, 2, 2.2};
-    Style_t markerStyleFeedDown[8]                  = {20, 25, 34, 27, 24, 21, 28, 33};
-    Size_t  markerSizeFeedDown[8]                   = {1.7, 1.7, 2.2, 2.2, 1.7, 1.7, 2.2, 2.2};
-    Color_t colorFeedDown[8]                        = {kRed-2, kOrange+1, kCyan-2, kBlue-2, kRed-2, kOrange+1, kCyan-2, kBlue-2};
+    Style_t markerStyleFeedDown[15]                 = {20, 25, 34, 27, 24, 21, 28, 33,20, 25, 34, 27, 24, 21, 28};
+    Size_t  markerSizeFeedDown[15]                  = {1.7, 1.7, 2.2, 2.2, 1.7, 1.7, 2.2, 2.2,1.7, 1.7, 2.2, 2.2, 1.7, 1.7, 2.2};
+    Color_t colorFeedDown[15]                       = {kRed-2, kOrange+1, kCyan-2, kBlue-2, kRed-2, kOrange+1, kCyan-2, kBlue-2,
+                                                        kRed+2, kOrange-1, kCyan+2, kBlue+2, kRed+2, kOrange-1, kCyan+2};
     
 
     // set correct meson mass
@@ -979,18 +983,18 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                                         { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL} };
     TH1D* histoRatioYieldSecMesonFromExtInput[6][3] = { { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL},
                                                         { NULL, NULL, NULL}, { NULL, NULL, NULL}, { NULL, NULL, NULL} };
-    TH1D* histoYieldResonanceFeedDownPi0FromExternalInput[6][8] = { {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}  };
-    TH1D* histoRatioYieldResonanceFeedDownPi0FromExternalInput[6][8] = {    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}  };
+    TH1D* histoYieldResonanceFeedDownPi0FromExternalInput[6][15] = {{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                    {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}  };
+    TH1D* histoRatioYieldResonanceFeedDownPi0FromExternalInput[6][15] = {   {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                                            {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}  };
     TH1D* histoYieldTrueGGFracMeson[3]              = { NULL, NULL, NULL };
     TH1D* histoYieldGGMeson[6]                      = { NULL, NULL, NULL, NULL, NULL, NULL };
     Bool_t haveSec[4]                               = { kTRUE, kTRUE, kTRUE, kTRUE };
@@ -1145,7 +1149,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
             
             // resonance feed down contributions
-            for (Int_t j = 0; j < 8; j++) {
+            for (Int_t j = 0; j < 15; j++) {
                 if (histoExternalInputFeedDownPi0[j]) {
                     histoYieldResonanceFeedDownPi0FromExternalInput[k][j] = (TH1D*)histoExternalInputFeedDownPi0[j]->Clone(Form("ResonanceFeedDownYieldFrom%sMeson%sFrom%s", nameSecMeson[j].Data(), nameIntRange[k].Data(),strExternalInputName.Data()));
                     histoYieldResonanceFeedDownPi0FromExternalInput[k][j]->Sumw2();
@@ -3303,7 +3307,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         canvasFeedDownYield->SetLogy(1);
         
         nColumnsSec                 = 2;
-        nSecPlot                    = 4;
+        nSecPlot                    = 8;
         
         TLegend* legendFeedDownYield  = GetAndSetLegend2(0.65,0.93-(nSecPlot+1)*0.035,0.93,0.93, 0.035, nColumnsSec, "", 42, 0.12);
         
@@ -3321,10 +3325,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         legendFeedDownYield->AddEntry(histoUnCorrectedYieldDrawing,"RAW yield");
         legendFeedDownYield->AddEntry((TObject*)0,"","");
         
-        for (Int_t j = 0; j < 8; j++){
+        for (Int_t j = 0; j < 15; j++){
             if (histoYieldResonanceFeedDownPi0FromExternalInput[0][j] && histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->GetEntries()) {
                 histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->Multiply(histoAcceptance);
-                histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->Multiply(histoTrueEffiPt[0]);
+                histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->Multiply(histoTrueEffiPt[0]);  // THIS DOESN'T WORK, NEEDS ADJUSTED EFFICIENCY!
                 DrawGammaSetMarker(histoYieldResonanceFeedDownPi0FromExternalInput[0][j],  markerStyleFeedDown[j] , markerSizeFeedDown[j], colorFeedDown[j], colorFeedDown[j]);
                 histoYieldResonanceFeedDownPi0FromExternalInput[0][j]->DrawCopy("same,e1");
                 legendFeedDownYield->AddEntry(histoYieldResonanceFeedDownPi0FromExternalInput[0][j],Form("#pi^{0} from %s",nameResMesonPlot[j].Data()),"p");
