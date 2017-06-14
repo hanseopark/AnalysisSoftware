@@ -965,9 +965,9 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 
     TString train = "Legotrain-vAN-20170601-8TeV-EMCal_openAngleStudies";
     Int_t trainRuns[nSets] = {
-                              2097,2098,2099,2100,2101,2105,2107,
-                              2098,2099,2100,2101,2105,2107,
-                              2099,2100,2101,2105,2107
+                              2097,2098,2099,2100,2101,2108,2109,
+                              2098,2099,2100,2101,2108,2109,
+                              2099,2100,2101,2108,2109
                              };
 
     TString runlist[nSets] = {
@@ -976,10 +976,10 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
                               "merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11","merge_runlist_11"
                              };
 
-    const Int_t nFiles = 4;
+    const Int_t nFiles = 5;
     TString Files[nFiles] = {
       //"GammaCalo_99","GammaCalo_101", "GammaCalo_700", "GammaCalo_107", "GammaCalo_126","GammaCalo_136", "GammaCalo_146", "GammaCalo_156"
-      "GammaConvCalo_101", "GammaConvCalo_700", "GammaConvV1_23", "GammaConvV1_24"
+      "GammaConvCalo_101", "GammaCalo_114","GammaCalo_115", "GammaCalo_116", "GammaCalo_117"
                             };
 
     const Int_t nMerge = 3;

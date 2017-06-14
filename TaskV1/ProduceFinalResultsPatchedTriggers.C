@@ -3452,6 +3452,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     // two component model fit
     Double_t paramTCM[5] = {graphCorrectedYieldWeightedAveragePi0Stat->GetY()[0],0.3,graphCorrectedYieldWeightedAveragePi0Stat->GetY()[0]/factorPi0,0.8,3};
+    if(mode == 4 && optionEnergy.CompareTo("8TeV")==0){
+      paramTCM[0]=0.008; paramTCM[1]=0.65; paramTCM[2]=1.72; paramTCM[3]=0.47; paramTCM[4]=2.93;
+    }
     TF1* fitInvYieldPi0 = FitObject("tcm","fitInvYieldPi0","Pi0",graphCorrectedYieldWeightedAveragePi0Stat,minPtGlobalPi0,maxPtGlobalPi0,paramTCM,"QNRMEX0+");
 
     // Tsallis fit

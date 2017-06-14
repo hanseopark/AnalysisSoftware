@@ -4067,12 +4067,12 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*400./100.;
                   TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]==13.){
+                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]==13. && fPrefix.CompareTo("Pi0EtaBinning")){
                     fMesonFitRange[0] = 0.08;
                     fMesonFitRange[1] = 0.25;
-                  }else if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=14.){
+                  }else if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=14. && fPrefix.CompareTo("Pi0EtaBinning")){
                     fMesonFitRange[0] = 0.08;
-                    fMesonFitRange[1] = 0.28;
+                    fMesonFitRange[1] = 0.29;
                   }
                 }
             }
@@ -4276,9 +4276,9 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*400./100.;
                   TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13.){
+                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13. && fPrefix.CompareTo("Pi0EtaBinning")){
                     fMesonFitRange[0] = 0.08;
-                    fMesonFitRange[1] = 0.28;
+                    fMesonFitRange[1] = 0.29;
                   }
                 }
             }
@@ -4458,9 +4458,9 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*400./100.;
                   TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13.){
+                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13. && fPrefix.CompareTo("Pi0EtaBinning")){
                     fMesonFitRange[0] = 0.08;
-                    fMesonFitRange[1] = 0.28;
+                    fMesonFitRange[1] = 0.29;
                   }
                 }
             }
@@ -4640,9 +4640,9 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                   mesonAmplitudeMin = mesonAmplitude*90./100.;
                   mesonAmplitudeMax = mesonAmplitude*400./100.;
                   TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13.){
+                  if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13. && fPrefix.CompareTo("Pi0EtaBinning")){
                     fMesonFitRange[0] = 0.08;
-                    fMesonFitRange[1] = 0.28;
+                    fMesonFitRange[1] = 0.29;
                   }
                 }
             }
@@ -4776,9 +4776,9 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
               mesonAmplitudeMin = mesonAmplitude*90./100.;
               mesonAmplitudeMax = mesonAmplitude*400./100.;
               TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-              if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13.){
+              if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13. && fPrefix.CompareTo("Pi0EtaBinning")){
                 fMesonFitRange[0] = 0.08;
-                fMesonFitRange[1] = 0.28;
+                fMesonFitRange[1] = 0.29;
               }
             }
         }
