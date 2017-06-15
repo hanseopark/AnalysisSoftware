@@ -158,17 +158,19 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 
     
  
-  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_03_15.root";
-  TString fileNameRpPbCombined                = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2017_03_15.root";
-  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_03_15.root";
-  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2017_03_15.root";
-  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2017_03_15.root";
-  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2017_03_15.root";
-  TString fileNameRpPbPCMEMCal                = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM-EMCal_2017_03_15.root";
+  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_06_14.root";
+  TString fileNameRpPbCombined                = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2017_06_14.root";
+  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_06_14.root";
+  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2017_06_14.root";
+  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2017_06_14.root";
+  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2017_06_14.root";
+  TString fileNameRpPbPCMEMCal                = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM-EMCal_2017_06_14.root";
   //File to load the correlation factors
   //TString corrFactorsFileName 		      = "ExternalInputpPb/InputRpPb/CorrelationFactors/RpPb_5.023TeV_2016_09_27.root";
   //TString corrFactorsFileName                 = "eps/2017_02_14/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
-  TString corrFactorsFileName                 = "eps/2017_04_05/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+  //TString corrFactorsFileName                 = "eps/2017_04_05/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+  
+   TString corrFactorsFileName                 = "eps/2017_06_07/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
   
   
   TFile* fileNeutralPionRpPb                           	= new TFile(fileNameRpPb.Data());
@@ -344,7 +346,9 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   // ********************************* Combine spectra ************************************
   // **************************************************************************************
     
-  TString fileNameOutputWeightingOld                = Form("%s/WeightingOld.dat",outputDir.Data());
+  TString fileNameOutputWeightingOld                = Form("%s/WeightingRpPb.dat",outputDir.Data());
+  
+  
 
   statErrorCollection[0]          = (TH1D*)histoPCMYieldPi0pPb->Clone("statErrPCMPi0");
   statErrorCollection[1]          = (TH1D*)histoPHOSYieldPi0pPb->Clone("statErrPHOSPi0");
@@ -373,7 +377,8 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TGraphAsymmErrors* graphCombPi0InvCrossSectionStatpPb5023GeV= NULL;
   TGraphAsymmErrors* graphCombPi0InvCrossSectionSyspPb5023GeV = NULL;
   
-  
+  cout<<"\n\n */////////////////Combination of Pi0 RpPb  begins here**//////////////"<<endl;
+ 
     
   TGraphAsymmErrors* graphCombPi0InvCrossSectionTotpPb5023GeV = CombinePtPointsSpectraFullCorrMat(   statErrorCollection,    sysErrorCollection,     
 												      pTLimits, Ntotal,
@@ -381,6 +386,8 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 												      graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
 												      fileNameOutputWeightingOld,"pPb_5.023GeV_RpPb","Pi0",kFALSE,sysErrorPPReference,corrFactorsFileName.Data()
 												      ); 
+  cout<<"\n\n */////////////////Combination of Pi0 RpPb  ends here**//////////////"<<endl;
+ 
   graphCombPi0InvCrossSectionStatpPb5023GeV->Print();
 
   if (IsNSD){

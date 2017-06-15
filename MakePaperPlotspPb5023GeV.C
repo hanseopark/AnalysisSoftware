@@ -66,12 +66,14 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   //input files
 							        //PaperPlots_Tsallis_2017_02_09.root
-  TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_04_06.root";
-  TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_04_06.root";
+  TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_06_14.root";
+  TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_06_14.root";
   TString fileNamePeaks                  = "InputMakePaperPlots/PaperPlotsPeaks_2016_11_28.root";
   TString fileNameEPOS3                  = "InputMakePaperPlots/pi0_eta_EPOS3.root";
   TString fileNameTAPS                   = "InputMakePaperPlots/TAPS_eta2pi0.root";
-  TString fileNameCGC			 = "InputMakePaperPlots/TheoryGraphsCGCPi0.root";
+ // TString fileNameCGC			 = "InputMakePaperPlots/TheoryGraphsCGCPi0.root";
+  TString fileNameCGC			 = "ExternalInputpPb/Theory/CGC/TheoryGraphsCGCPi0.root";
+ 
   TString fileNameTheory                 = "ExternalInputpPb/Theory/TheoryCompilationPPb.root";
    
   
@@ -124,6 +126,10 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   }
   
   
+   
+  Double_t pi0PtMin =  0.6;
+  Double_t pi0PtMax = 20.0;
+  
   
 
   TF1* FitCombPi0                      = (TF1*)filepPbSpectra->Get("FitCombPi0");
@@ -168,10 +174,10 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
     TH1D* histoRatioPi0DPMJetToFit                      = (TH1D*) histoDPMJetPi0->Clone("histoRatioPi0DPMJetToFit"); 
     histoRatioPi0DPMJetToFit                            = CalculateHistoRatioToFit (histoRatioPi0DPMJetToFit, FitCombPi0); 
-    histoRatioPi0DPMJetToFit->GetXaxis()->SetRangeUser(0.3, 20);
+    histoRatioPi0DPMJetToFit->GetXaxis()->SetRangeUser(pi0PtMin,pi0PtMax);
     TH1D* histoRatioPi0HIJINGToFit                      = (TH1D*) histoHIJINGPi0->Clone("histoRatioPi0HIJINGToFit"); 
     histoRatioPi0HIJINGToFit                            = CalculateHistoRatioToFit (histoRatioPi0HIJINGToFit, FitCombPi0); 
-    histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(0.3, 20);
+    histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(pi0PtMin,pi0PtMax);
     
     TH1D* histoRatioEtaDPMJetToFit                      = (TH1D*) histoDPMJetEta->Clone("histoRatioEtaDPMJetToFit"); 
     histoRatioEtaDPMJetToFit                            = CalculateHistoRatioToFit (histoRatioEtaDPMJetToFit, FitCombEta); 
@@ -338,6 +344,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
  
  //read McGill data
  
+ 
 
   TGraphErrors* graphErrMcGillTheoryPion_p_hydro 	= (TGraphErrors*)directoryTheoryCompilation->Get("graphPi0SpecMcGill5023GeV");
   graphErrMcGillTheoryPion_p_hydro->Print();
@@ -431,14 +438,18 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   
   Color_t  colorMcGill	        = kPink + 2;
+  Color_t  colorMcGillline      = kPink + 3;
+  
   Color_t  colorEPOS            = kAzure+7;
+  Color_t  colorEPOSline        = kAzure+8;
   Color_t  colorEPOSPi0         = kAzure+7;
   Color_t  colorEPOSEta		= kAzure+7;
   
   Color_t  colorMcGillPi0	= kPink + 2;
   Color_t  colorMcGillEta	= kPink + 2; //-6
   
-  Color_t  colorIlkka           = 41;
+  Color_t  colorIlkka           = kYellow - 7;//41;
+  Color_t  colorIlkkaline       = kYellow + 1;
   Color_t  colorIlkkaPi0	= kYellow - 7;//41;
   Color_t  colorEtaPi07TeV	= kBlue - 3;
   
@@ -447,8 +458,15 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Style_t  styleLineCGC			      = 1;
   Style_t  styleLineEPOS3		      = 1;
   Style_t  styleLineMcGill		      = 1;
-  Style_t  styleLineIlkka		      = 1;
+  Style_t  styleLineIlkka		      = 3;
+  Style_t  styleLineIlkkaRatio                = 3;
+  Style_t  styleLineTsallis                   = 1;
   
+  Int_t     lineWidthMcGill  = 2;
+  Int_t     lineWidthIlkka   = 2;
+  Int_t     lineWidthEPOS3   = 2;
+  Int_t     lineWidthTsallis = 2;
+
   
   Style_t markerStylePi0	= 20;
   Style_t markerStyleEta	= 21;
@@ -490,9 +508,9 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   hist1 = new TH2F("hist1","hist1",1000,0.3,30.,1000,1.2e-9,50 );
   SetStyleHistoTH2ForGraphs(hist1, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.04,0.05, 0.045,0.045, 0.7,1.8, 512, 510);
   hist1->DrawCopy(); 
-  FitCombPi0->SetLineWidth(2);  
+  FitCombPi0->SetLineWidth(lineWidthTsallis);  
   if (!EPOS)  FitCombPi0->Draw("same"); 
-  FitCombEta->SetLineWidth(2);  
+  FitCombEta->SetLineWidth(lineWidthTsallis);  
    if (!EPOS) FitCombEta->Draw("same");
   // DrawGammaSetMarker(Pi0EPOS,8,1,kRed+2,kRed+2 );
   // DrawGammaSetMarker(EtaEPOS,8,1,kCyan,kCyan ); 
@@ -640,17 +658,18 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    line1->Draw("same");
 
    if (EPOS){
-     RatioEPOSFitPi0->SetLineWidth(2);
-     //   RatioEPOSFitPi0->SetLineStyle(2); 
-     RatioEPOSFitPi0->SetLineColor(kAzure+7);
-     RatioEPOSFitPi0->SetFillColor(kAzure+7);
-        RatioEPOSFitEta->SetLineWidth(2);
-	//	  RatioEPOSFitEta->SetLineStyle(2);
-     RatioEPOSFitEta->SetLineColor(kGreen-3);
-     RatioEPOSFitEta->SetFillColor(kGreen-3);
+       
+       
+     RatioEPOSFitPi0->SetLineWidth(lineWidthEPOS3);
+     RatioEPOSFitPi0->SetLineStyle(styleLineEPOS3);
+     RatioEPOSFitPi0->SetLineColor(colorEPOSline);
+     RatioEPOSFitPi0->SetFillColor(colorEPOS);
      
-     RatioEPOSFitEta->SetLineColor(kAzure+7);
-     RatioEPOSFitEta->SetFillColor(kAzure+7);
+     
+     RatioEPOSFitEta->SetLineWidth(lineWidthEPOS3);
+     RatioEPOSFitEta->SetLineStyle(styleLineEPOS3);
+     RatioEPOSFitEta->SetLineColor(colorEPOSline);
+     RatioEPOSFitEta->SetFillColor(colorEPOS);
      
      RatioEPOSFitPi0->Draw("C3same");
      RatioEPOSFitEta->Draw("C3same");
@@ -863,11 +882,15 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   SetStyleHistoTH2ForGraphs(hist4, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY, TitleOffsetX,TitleOffsetY, 512, 508);
   hist4->DrawCopy(); 
   if (EPOS){
+      
     graphEtaPi0EPOS->SetLineColor(kGreen+1);
     graphEtaPi0EPOS->SetFillColor(kGreen+1);
     //  graphEtaPi0EPOS->SetLineStyle(2);
     graphEtaPi0EPOS->SetLineWidth(2);
     graphEtaPi0EPOS->Draw("C3same");
+    
+    
+    
   }      
   
  // if (!EPOS || (EPOS && TAPS)) mTScaling->Draw("same"); TEMP
@@ -933,16 +956,19 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   hist4a->GetXaxis()->SetLabelOffset(LabelOffsetLog); 
   hist4a->DrawCopy(); 
   
-  graphMcGillEtaToPi0->SetLineColor(colorMcGill);
+   graphMcGillEtaToPi0->SetLineStyle(styleLineMcGill);
+   graphMcGillEtaToPi0->SetLineColor(colorMcGillline);
    graphMcGillEtaToPi0->SetFillColor(colorMcGill);
-   graphMcGillEtaToPi0->SetLineWidth(3);
+   graphMcGillEtaToPi0->SetLineWidth(lineWidthMcGill);
    graphMcGillEtaToPi0->Draw("C3same");
+   graphMcGillEtaToPi0->Draw("lXZsame");
 
    if (EPOS){
-    graphEtaPi0EPOS->SetLineColor(colorEPOS);
+    graphEtaPi0EPOS->SetLineColor(colorEPOSline);
     graphEtaPi0EPOS->SetFillColor(colorEPOS);
     graphEtaPi0EPOS->SetLineWidth(3);
     graphEtaPi0EPOS->Draw("C3same");
+    graphEtaPi0EPOS->Draw("lXZsame");
   }  
   
    if (!EPOS || (EPOS && TAPS)) mTScaling->Draw("same"); //NOTE TEMP
@@ -1007,8 +1033,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   if (!EPOS || (EPOS && TAPS)){ 
     leg4a->AddEntry(mTScaling,"#eta from #it{m}_{T} scaled #pi^{0}","pl"); 
   }
-  if (EPOS) leg4a->AddEntry(graphEtaPi0EPOS,"EPOS3","l");
-   leg4a->AddEntry(graphMcGillEtaToPi0,"VISHNU","l");
+  if (EPOS) leg4a->AddEntry(graphEtaPi0EPOS,"EPOS3","fl");
+   leg4a->AddEntry(graphMcGillEtaToPi0,"VISHNU","fl");
   if( HIJINGPi0){
     leg4a->AddEntry(histoHIJINGEtaToPi0,"HIJING","l"); 
   }
@@ -1335,7 +1361,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   DrawGammaCanvasSettings( c5aa, CMarginL, CMarginR,CMarginT ,CMarginB);
 
   TH2F * hist5aa;
-  hist5aa = new TH2F("hist5aa","hist5aa",1000,0.,22.,1000,0.50,1.5   );
+  hist5aa = new TH2F("hist5aa","hist5aa",1000,0.,22.,1000,0.37,1.5   );
   SetStyleHistoTH2ForGraphs(hist5aa, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
   hist5aa->DrawCopy(); 
   
@@ -1351,10 +1377,13 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   leg5abcde->Draw("same");
  
  
-     
-  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetFillColor(kYellow-7);
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetLineWidth(lineWidthIlkka+1);   
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetFillColor(colorIlkka);
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetLineColor(colorIlkkaline);
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetLineStyle(styleLineIlkka);
   graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetFillStyle(1001);
   graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("same,E3");
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("lXYsame");
   
   CGC->SetMarkerSize(0.65);
   CGC->Draw("same,p");
@@ -1380,7 +1409,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   leg5abc->SetLineColor(0);
   leg5abc->SetTextFont(Font);
   leg5abc->SetTextSize(TextSizeRpA);
-  leg5abc->AddEntry(graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14,"NLO pQCD","ef");
+  leg5abc->AddEntry(graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14,"NLO pQCD","lf");
   leg5abc->AddEntry(CGC,"CGC","p");
   //leg5abc->AddEntry((TObject*)0,"JHEP 1207 (2012) 073","");
   leg5abc->Draw("same");
@@ -1933,21 +1962,24 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	
  
   
-  FitCombPi0->SetLineWidth(2);  
-  FitCombEtaScaled->SetLineWidth(2);  
+  FitCombPi0->SetLineWidth(lineWidthTsallis);  
+  FitCombEtaScaled->SetLineWidth(lineWidthTsallis);  
   FitCombPi0->SetLineColor(kBlack);  
   FitCombEtaScaled->SetLineColor(kBlack);
-  FitCombPi0->SetLineStyle(3);  
-  FitCombEtaScaled->SetLineStyle(3);
+  FitCombPi0->SetLineStyle(styleLineTsallis);  
+  FitCombEtaScaled->SetLineStyle(styleLineTsallis);
   
-   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetLineWidth(3);
+   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetLineWidth(lineWidthIlkka);
    graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetLineStyle(styleLineIlkka);
-   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetLineColor(colorIlkkaPi0);
-   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetFillColor(colorIlkkaPi0);
+   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetLineColor(colorIlkkaline);
+   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->SetFillColor(colorIlkka);
+   
+   TGraphAsymmErrors* graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_Noerr = (TGraphAsymmErrors*)graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->Clone();
    
    //raphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetFillColor(kYellow-7);
   //graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->SetFillStyle(1001);
    graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->Draw("c3same");
+   graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_Noerr->Draw("lZXsame");
    
    
   FitCombPi0->Draw("lsame"); 
@@ -1955,46 +1987,74 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
  
  
   if (EPOS){
-      while(graphPi0EPOS->GetX()[0] < 0.3)
+      while(graphPi0EPOS->GetX()[0] < pi0PtMin)
           graphPi0EPOS->RemovePoint(0); 
-    graphPi0EPOS->SetLineWidth(3);
+    graphPi0EPOS->SetLineWidth(2);
     graphPi0EPOS->SetLineStyle(styleLineEPOS3);
-    graphPi0EPOS->SetLineColor(colorEPOSPi0);
-    graphPi0EPOS->SetFillColor(colorEPOSPi0);
+    graphPi0EPOS->SetLineColor(colorEPOSline);
+    graphPi0EPOS->SetFillColor(colorEPOS);
+    
+    TGraphAsymmErrors* graphPi0EPOSNoErr = (TGraphAsymmErrors*)graphPi0EPOS->Clone();
+    
+    
+    
+    
    
      while(graphEtaEPOSScaled->GetX()[0] < 0.7)
           graphEtaEPOSScaled->RemovePoint(0); 
-    graphEtaEPOSScaled->SetLineWidth(3);
+    graphEtaEPOSScaled->SetLineWidth(2);
     graphEtaEPOSScaled->SetLineStyle(styleLineEPOS3);
-    graphEtaEPOSScaled->SetLineColor(colorEPOSEta);
-    graphEtaEPOSScaled->SetFillColor(colorEPOSEta);
+    graphEtaEPOSScaled->SetLineColor(colorEPOSline);
+    graphEtaEPOSScaled->SetFillColor(colorEPOS);
+    
+    TGraphAsymmErrors* graphEtaEPOSScaledNoErr = (TGraphAsymmErrors*)graphEtaEPOSScaled->Clone();
+    
     
     
     graphPi0EPOS->Draw("C3same"); //C
-    graphEtaEPOSScaled->Draw("C3same");
+    graphPi0EPOSNoErr->Draw("lZXsame");
     
-    while(graphErrMcGillTheoryPion_p_hydro->GetX()[0] < 0.3)
-          graphErrMcGillTheoryPion_p_hydro->RemovePoint(0);   
+    graphEtaEPOSScaled->Draw("C3same");
+    graphEtaEPOSScaledNoErr->Draw("lZXsame");
+    
+    
+    while(graphErrMcGillTheoryPion_p_hydro->GetX()[0] < pi0PtMin)
+          graphErrMcGillTheoryPion_p_hydro->RemovePoint(0);  
+    
     graphErrMcGillTheoryPion_p_hydro->SetLineWidth(3);
     graphErrMcGillTheoryPion_p_hydro->SetLineStyle(styleLineMcGill);
-    graphErrMcGillTheoryPion_p_hydro->SetLineColor(colorMcGillPi0);
-    graphErrMcGillTheoryPion_p_hydro->SetFillColor(colorMcGillPi0);
+    graphErrMcGillTheoryPion_p_hydro->SetLineColor(colorMcGillline);
+    graphErrMcGillTheoryPion_p_hydro->SetFillColor(colorMcGill);
+    
+    TGraphAsymmErrors* graphErrMcGillTheoryPion_p_hydroNoErr = (TGraphAsymmErrors*)graphErrMcGillTheoryPion_p_hydro->Clone();
+    
     graphErrMcGillTheoryPion_p_hydro->Draw("C3same");
+    graphErrMcGillTheoryPion_p_hydroNoErr->Draw("lXYsame");
     
    while(graphErrMcGillTheoryEta_p_hydroScaled->GetX()[0] < 0.7)
           graphErrMcGillTheoryEta_p_hydroScaled->RemovePoint(0);   
     graphErrMcGillTheoryEta_p_hydroScaled->SetLineWidth(3);
     graphErrMcGillTheoryEta_p_hydroScaled->SetLineStyle(styleLineMcGill);
-    graphErrMcGillTheoryEta_p_hydroScaled->SetLineColor(colorMcGillEta);
-    graphErrMcGillTheoryEta_p_hydroScaled->SetFillColor(colorMcGillEta);
+    graphErrMcGillTheoryEta_p_hydroScaled->SetLineColor(colorMcGillline);
+    graphErrMcGillTheoryEta_p_hydroScaled->SetFillColor(colorMcGill);
+   
+   
+    TGraphAsymmErrors* graphErrMcGillTheoryEta_p_hydroScaledNoErr = (TGraphAsymmErrors*)graphErrMcGillTheoryEta_p_hydroScaled->Clone();
+   
     graphErrMcGillTheoryEta_p_hydroScaled->Draw("c3same");
+    graphErrMcGillTheoryEta_p_hydroScaledNoErr->Draw("lZXsame");
+   
+   
+   
+   
+   
         
     
   }
   
   
   if( CGCPi0 ) {
-    while(graphAsymmErrCGCTheoryPi0y0pA5020->GetX()[0] < 0.3)
+    while(graphAsymmErrCGCTheoryPi0y0pA5020->GetX()[0] < pi0PtMin)
           graphAsymmErrCGCTheoryPi0y0pA5020->RemovePoint(0);  
     graphAsymmErrCGCTheoryPi0y0pA5020->SetLineWidth(3);
     graphAsymmErrCGCTheoryPi0y0pA5020->SetLineStyle(styleLineCGC);
@@ -2005,7 +2065,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   if( HIJINGPi0 ){
     SetStyleHisto(histoHIJINGPi0, 3, styleLineHIJING, colorHIJINGPi0);          
-    histoHIJINGPi0->GetXaxis()->SetRangeUser(0.3,20);
+    histoHIJINGPi0->GetXaxis()->SetRangeUser(pi0PtMin,pi0PtMax);
     histoHIJINGPi0->Draw("same,hist,l");
     
     SetStyleHisto(histoHIJINGEtaScaled, 3, styleLineHIJING, colorHIJINGEta);    
@@ -2019,7 +2079,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   if( DPMJetPi0 ){
     
    SetStyleHisto(histoDPMJetPi0, 3, styleLineDPMJet, colorDPMJetPi0);      
-   histoDPMJetPi0->GetXaxis()->SetRangeUser(0.3,20);
+   histoDPMJetPi0->GetXaxis()->SetRangeUser(pi0PtMin,pi0PtMax);
    histoDPMJetPi0->Draw("same,hist,l"); 
    
    SetStyleHisto(histoDPMJetEtaScaled, 3, styleLineDPMJet, colorDPMJetEta);     
@@ -2056,12 +2116,12 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->SetTextFont(Font);
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->SetTextSize(TextSize-0.015);
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(CombPi0Syst,"#pi^{0}","pef");
-  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphPi0EPOS,"EPOS3","l");
-  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphErrMcGillTheoryPion_p_hydro,"VISHNU","l");
+  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphPi0EPOS,"EPOS3","fl");
+  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphErrMcGillTheoryPion_p_hydro,"VISHNU","fl");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(histoDPMJetPi0,"DPMJet","l");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(histoHIJINGPi0,"HIJING","l");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphAsymmErrCGCTheoryPi0y0pA5020,"CGC MV^{#gamma}","l");
-  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err,"NLO pQCD","l");
+  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err,"NLO pQCD","fl");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->AddEntry(FitCombPi0,"Tsallis fit","l");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->Draw();
   
@@ -2072,8 +2132,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->SetTextFont(Font);
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->SetTextSize(TextSize-0.015); 
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(CombEtaScaledSyst,"#eta #times 10^{-1}","pef");
-  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(graphEtaEPOSScaled,"EPOS3","l");
-  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(graphErrMcGillTheoryEta_p_hydroScaled,"VISHNU","l");
+  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(graphEtaEPOSScaled,"EPOS3","fl");
+  legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(graphErrMcGillTheoryEta_p_hydroScaled,"VISHNU","fl");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(histoDPMJetEtaScaled,"DPMJet","l");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(histoHIJINGEtaScaled,"HIJING","l");
   legendInvYieldTSallisTheoryOnlyPi0AndEtaSpectrav2->AddEntry(FitCombPi0,"Tsallis fit","l");
@@ -2129,7 +2189,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
  
  
   if (EPOS){
-    graphPi0EPOS->SetLineWidth(3);
+    graphPi0EPOS->SetLineWidth(lineWidthEPOS3);
     //graphEtaEPOS->SetLineWidth(3);
     //graphEtaEPOS->SetLineColor(kGreen+3);
     //graphEtaEPOS->SetFillColor(kGreen+3);
@@ -2312,17 +2372,6 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
 	
    //*************** first Column **********************************************************
    TLatex *textFitTsallisSpectrumOnlyRatioPi0 = new TLatex(columnsTheoryLegendPrelAndFinalOnlyRatio[0],rowsTheoryLegendPrelAndFinalOnlyRatioPi0[3],"Tsallis fit");
@@ -2413,47 +2462,60 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	DrawGammaLines(0., 40.,1., 1.,2.0,kRed+2,2);
 	
 	RatioIlkkaFitPi0scaleerr->SetLineWidth(3);
-	RatioIlkkaFitPi0scaleerr->SetLineColor(colorIlkkaPi0);
-	RatioIlkkaFitPi0scaleerr->SetFillColor(colorIlkkaPi0);
+        RatioIlkkaFitPi0scaleerr->SetLineStyle(styleLineIlkkaRatio);
+        RatioIlkkaFitPi0scaleerr->SetFillColor(colorIlkkaPi0);
+	RatioIlkkaFitPi0scaleerr->SetLineColor(colorIlkkaline);
 	RatioIlkkaFitPi0scaleerr->Draw("C3same");
 	
 	
 	RatioIlkkaFitPi0NoErr->SetLineWidth(3);
-	RatioIlkkaFitPi0NoErr->SetLineColor(41);
-	RatioIlkkaFitPi0NoErr->SetFillColor(41);
-	//RatioIlkkaFitPi0NoErr->Draw("lE2same");
+        RatioIlkkaFitPi0NoErr->SetLineStyle(styleLineIlkkaRatio);
+	RatioIlkkaFitPi0NoErr->SetLineColor(colorIlkkaline);
+	RatioIlkkaFitPi0NoErr->SetFillColor(colorIlkkaPi0);
+	RatioIlkkaFitPi0NoErr->Draw("lEsame");
 	
 	if (EPOS){
-	  while(RatioEPOSFitPi0->GetX()[0] < 0.3)
-          RatioEPOSFitPi0->RemovePoint(0);   
+	  while(RatioEPOSFitPi0->GetX()[0] < pi0PtMin)
+          RatioEPOSFitPi0->RemovePoint(0); 
+          
+          //TGraphAsymmErrors* RatioEPOSFitPi0NoErr = (TGraphAsymmErrors*)RatioEPOSFitPi0->Clone();
 	  RatioEPOSFitPi0->Draw("C3same");
+          RatioEPOSFitPi0->Draw("lZXsame");
+          //cout<<"EPOS3"<<endl;
+         // RatioEPOSFitPi0->Print();
+          //RatioEPOSFitPi0NoErr->Draw("lZXsame");
 	}
   
 	if( CGCPi0){
-	  while(RatioCGCFitPi0->GetX()[0] < 0.3)
+	  while(RatioCGCFitPi0->GetX()[0] < pi0PtMin)
 	    RatioCGCFitPi0->RemovePoint(0); 
 	    RatioCGCFitPi0->Draw("C3same");
+            
 	}
 	
 	
-	RatioMcGillFitPi0->SetLineWidth(2);
-	RatioMcGillFitPi0->SetLineColor(colorMcGill);
+	RatioMcGillFitPi0->SetLineWidth(lineWidthMcGill);
+        RatioMcGillFitPi0->SetLineStyle(styleLineMcGill);
+	RatioMcGillFitPi0->SetLineColor(colorMcGillline);
 	RatioMcGillFitPi0->SetFillColor(colorMcGill);
-	 while(RatioMcGillFitPi0->GetX()[0] < 0.3)
-          RatioMcGillFitPi0->RemovePoint(0);   
-	  RatioMcGillFitPi0->Draw("C3same");
+	 while(RatioMcGillFitPi0->GetX()[0] < pi0PtMin)
+          RatioMcGillFitPi0->RemovePoint(0);
+         
+        //TGraphAsymmErrors* RatioMcGillFitPi0NoErr = (TGraphAsymmErrors*) RatioMcGillFitPi0->Clone();
+        RatioMcGillFitPi0->Draw("C3same");
+        RatioMcGillFitPi0->Draw("lZXsame");
+        //RatioMcGillFitPi0NoErr->Draw("lZXsame");
 	
-	
-	
+		
 	if( HIJINGPi0 ){
            SetStyleHisto(histoRatioPi0HIJINGToFit,3, styleLineHIJING, colorHIJING );  
-	   histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(0.3,20.0);
+	   histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(pi0PtMin,pi0PtMax);
            histoRatioPi0HIJINGToFit->Draw("same,hist,l");  
 	}
 
 	if( DPMJetPi0 ){
 	   SetStyleHisto(histoRatioPi0DPMJetToFit,3, styleLineDPMJet, colorDPMJet );  
-	   histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(0.3,20.0);
+	   histoRatioPi0HIJINGToFit->GetXaxis()->SetRangeUser(pi0PtMin,pi0PtMax);
 	   histoRatioPi0DPMJetToFit->Draw("same,hist,l");  
 	}
   
@@ -2473,18 +2535,17 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
 	TLegend* legendInvYieldTSallisTheoryOnlyRatioPi01;
 	legendInvYieldTSallisTheoryOnlyRatioPi01   = new TLegend(0.18,0.63,0.38,0.93); 
-	//legendInvYieldTSallisTheoryOnlyRatioPi01-> SetNColumns(2);
 	legendInvYieldTSallisTheoryOnlyRatioPi01->SetFillColor(0);
 	legendInvYieldTSallisTheoryOnlyRatioPi01->SetFillStyle(0);
 	legendInvYieldTSallisTheoryOnlyRatioPi01->SetLineColor(0);
 	legendInvYieldTSallisTheoryOnlyRatioPi01->SetTextFont(Font);
 	legendInvYieldTSallisTheoryOnlyRatioPi01->SetTextSize(TextSize+0.035);
-	//legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioEPOSFitPi0,"EPOS3","l");
 	legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioTsallisCombPi0Syst,"#pi^{0}","pef");
        
  	legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioCGCFitPi0,"CGC MV^{#gamma}","l");
 	//legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioIlkkaFitPi0NoErr,"NLO pQCD","l");
-	legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioIlkkaFitPi0scaleerr,"NLO pQCD","l");
+	//legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioIlkkaFitPi0scaleerr,"NLO pQCD","efl");
+        legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioIlkkaFitPi0NoErr,"NL0 pQCD","fl");
 	//legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(RatioMcGillFitPi0,"C. Shen et al.","l");
 	
 	//legendInvYieldTSallisTheoryOnlyRatioPi01->AddEntry(histoRatioPi0HIJINGToFit,"HIJING","l");
@@ -2528,7 +2589,10 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	  while(RatioEPOSFitEta->GetX()[0] < 0.7)
           RatioEPOSFitEta->RemovePoint(0);   
 	  
-	 RatioEPOSFitEta->Draw("C3same"); 
+          TGraphAsymmErrors* RatioEPOSFitEtaNoErr = (TGraphAsymmErrors*)RatioEPOSFitEta->Clone();
+           
+	  RatioEPOSFitEta->Draw("C3same"); 
+          RatioEPOSFitEtaNoErr->Draw("lZXsame");
 	
       	 
 	 
@@ -2548,13 +2612,18 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	}
 	
 	
-	RatioMcGillFitEta->SetLineWidth(2);
-	RatioMcGillFitEta->SetLineColor(colorMcGill);
+	RatioMcGillFitEta->SetLineWidth(lineWidthMcGill);
+        RatioMcGillFitEta->SetLineStyle(styleLineMcGill);
+	RatioMcGillFitEta->SetLineColor(colorMcGillline);
 	RatioMcGillFitEta->SetFillColor(colorMcGill);
 	 while(RatioMcGillFitEta->GetX()[0] < 0.7)
           RatioMcGillFitEta->RemovePoint(0);   
 	  
 	RatioMcGillFitEta->Draw("C3same");
+        
+        TGraphAsymmErrors* RatioMcGillFitEtaNoErr = (TGraphAsymmErrors*) RatioMcGillFitEta->Clone();
+        RatioMcGillFitEta->Draw("C3same");
+        RatioMcGillFitEtaNoErr->Draw("lZXsame");
 	
   
   
@@ -2570,8 +2639,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	legendInvYieldTSallisTheoryOnlyRatioEta->SetTextSize((TextSize+0.035)*0.82);
 	//legendInvYieldTSallisTheoryOnlyRatioEta-> SetNColumns(2);
 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioTsallisCombEtaSyst,"#eta","pef");
- 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioEPOSFitPi0,"EPOS3","l");
- 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioMcGillFitPi0,"VISHNU","l");
+ 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioEPOSFitPi0,"EPOS3","fl");
+ 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioMcGillFitPi0,"VISHNU","fl");
 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(histoRatioPi0HIJINGToFit,"HIJING","l");
 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(histoRatioPi0DPMJetToFit,"DPMJet","l");
 	
