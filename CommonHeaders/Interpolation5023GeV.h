@@ -368,6 +368,37 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
             (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0],parameters[1],parameters[2]); // standard 
 	    (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
 	   
+   } else if ( FitType.BeginsWith("tcm") || FitType.BeginsWith("tcm") ){
+            
+            FitToSpectrum = FitObject("tcm","fitInvCrossSectionPi0","Pi0");
+            FitToSpectrum->SetRange(minPt,maxPt);
+            FitToSpectrum->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
+            //FitToSpectrum->FixParameter(1,parameters[1]);
+            //FitToSpectrum->FixParameter(2,parameters[2]);
+            //FitToSpectrum->FixParameter(4,parameters[4]);
+	    spectrumStatErr->Fit(FitToSpectrum,"SQNRME+","",minPt,maxPt);  //One time
+            (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
+  
+	    
+	    //To compute systematic errors
+	    (*FitToSpectrumYShiftedUp) = FitObject("tcm","fitInvCrossSectionPi0YShiftedUp","Pi0");
+            (*FitToSpectrumYShiftedUp)->SetRange(minPt,maxPt);
+            (*FitToSpectrumYShiftedUp)->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
+            //(*FitToSpectrumYShiftedUp)->FixParameter(0,parameters[0]);
+            //(*FitToSpectrumYShiftedUp)->FixParameter(3,parameters[3]);
+            //(*FitToSpectrumYShiftedUp)->FixParameter(4,parameters[4]);
+	    (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SQNRME+","",minPt,maxPt);  //One time
+	    
+	    //To compute systematic errors
+	    
+	    (*FitToSpectrumYShiftedDown) = FitObject("tcm","fitInvCrossSectionPi0YShiftedDown","Pi0");
+            (*FitToSpectrumYShiftedDown)->SetRange(minPt,maxPt);
+            (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); //standard
+            //(*FitToSpectrumYShiftedDown)->FixParameter(0,parameters[0]);
+            //(*FitToSpectrumYShiftedDown)->FixParameter(3,parameters[3]);
+            //(*FitToSpectrumYShiftedDown)->FixParameter(4,parameters[4]);
+	    (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
+       
    }
    
     (*newSpectrumStatErr) = new TGraphAsymmErrors(nNewPoints);
