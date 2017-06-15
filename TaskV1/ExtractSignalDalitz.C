@@ -52,7 +52,7 @@ void ExtractSignalDalitz(   TString meson               = "",
                             TString file                = "", 
                             TString cutSelection        = "", 
                             TString fSuffix             = "", 
-                            TString isMC                = "", 
+                            TString optionMC            = "", 
                             TString option              = "", 
                             TString crystal             = "", 
                             TString optionUseMinBiasEff = "",
@@ -143,7 +143,7 @@ void ExtractSignalDalitz(   TString meson               = "",
       cout << fCutSelectionRead.Data() << endl;
     }
     
-    if( optionUseMinBiasEff.CompareTo("MinBiasEffOnly") == 0 && isMC.CompareTo("kTRUE") == 0 ){
+    if( optionUseMinBiasEff.CompareTo("MinBiasEffOnly") == 0 && optionMC.CompareTo("kTRUE") == 0 ){
         cout << "calculating MinBias Eff" << endl;
         cout << fEventCutSelection.Data() << endl;
         fEventCutSelection.Replace(1,2,"00");
@@ -204,7 +204,7 @@ void ExtractSignalDalitz(   TString meson               = "",
     }
 
     //***************************** Specification Data/MC ************************************************************
-    if(isMC.CompareTo("kTRUE") == 0){
+    if(optionMC.CompareTo("kTRUE") == 0){
         fIsMC = 1;
         fPrefix2 = "MC";
     } else {
