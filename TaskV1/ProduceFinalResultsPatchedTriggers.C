@@ -152,16 +152,18 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Int_t nRealTriggers             = 0;
     while (binningPi0[maxNAllowedPi0] < maxPtGlobalPi0 ) maxNAllowedPi0++;
     for (Int_t i= 0; i< maxNAllowedPi0+1; i++){
-        cout << binningPi0[i] << endl;
+        cout << binningPi0[i] << ", ";
     }
+    cout << endl;
     
     Double_t binningEta[100];
     Int_t maxNBinsEta               = GetBinning( binningEta, "Eta", optionEnergy, mode );
     Int_t maxNAllowedEta            = 0;
     while (binningEta[maxNAllowedEta] < maxPtGlobalEta ) maxNAllowedEta++;
     for (Int_t i= 0; i< maxNAllowedEta+1; i++){
-        cout << binningEta[i] << endl;
+        cout << binningEta[i] << ", ";
     }
+    cout << endl;
     
     Double_t maxPtGlobalCluster     = 25;
     if (optionEnergy.CompareTo("2.76TeV")==0){
@@ -208,7 +210,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
     TString nameEfficiency                              = "TrueMesonEffiPt";
-    TString nameSecFK0sEfficiency                       = "TrueSecFromK0SEffiPt";
     TString nameAcceptance                              = "fMCMesonAccepPt";
     TString nameAcceptanceWOEvtWeights                  = "fMCMesonAccepPtWOEvtWeights";
     TString nameMassMC                                  = "histoTrueMassMeson";
@@ -227,8 +228,30 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         nameEfficiency                                  = "PrimaryMesonEfficiency";
         nameAcceptance                                  = "fHistoMCAcceptancePt";
         nameMCYield                                     = "MCYield_Meson_oldBin";
-        nameSecFK0sEfficiency                           = "TrueMesonEffiSecFromK0SPt";
     }
+
+    //***************************************************************************************************************
+    //********************************** settings for secondary pion corrs ******************************************
+                                                        //    0      1     2        3     4       5     6     7     8     9     10    11    12    2
+    Double_t maxYEffSecCorr[4][14]                      = { { 0.080, 0.3 , 0.03000, 0.04, 0.0600, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04}, 
+                                                            { 0.001, 0.3 , 0.00010, 0.04, 0.0050, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04}, 
+                                                            { 0.001, 0.3 , 0.00006, 0.04, 0.0003, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04}, 
+                                                            { 0.030, 0.3 , 0.01800, 0.04, 0.0300, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04} };
+    Color_t colorSec[4]                                 = {kRed+2, kCyan+2, 807, kBlue};
+    Style_t markerStyleSec[4]                           = {21, 33, 30, 28};
+    Size_t markerSizeSec[4]                             = {1.5, 1.75, 2., 1.5};
+
+    TString nameSecPi0PartRead[4]                       = {"K0S", "K0L", "Lambda", "Rest"};
+    TString nameSecPi0PartLabel[4]                      = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
+    TString nameSecEfficiency[4]                        = {"TrueSecFromK0SEffiPt", "TrueSecFromK0LEffiPt", "TrueSecFromLambdaEffiPt", "TrueSecFromRestEffiPt"};
+    if (mode == 10){
+        nameSecEfficiency[0]                            = "TrueMesonEffiSecFromK0SPt";
+        nameSecEfficiency[1]                            = "TrueMesonEffiSecFromK0LPt";
+        nameSecEfficiency[2]                            = "TrueMesonEffiSecFromLambdaPt";
+        nameSecEfficiency[3]                            = "TrueMesonEffiSecFromRestPt";
+    }
+    //***************************************************************************************************************
+
     
     TString cutNumber       [MaxNumberOfFiles];
     TString triggerName     [MaxNumberOfFiles];
@@ -430,10 +453,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TF1*    fitInvMassSig           [MaxNumberOfFiles];
 
     // sec corr histos
-    TH1D*   histoSecEffiPi0FromK0s  [MaxNumberOfFiles];
-    TH1D*   histoEffectCorrPi0FromK0s[MaxNumberOfFiles];
-    Bool_t hasSecEffi                                       = kFALSE;
-    Bool_t hasSecCorrFac                                    = kFALSE;
+    TH1D*   histoSecEffiPi0FromX  [4][MaxNumberOfFiles];
+    TH1D*   histoEffectCorrPi0FromX[4][MaxNumberOfFiles];
+    Bool_t hasSecEffi[4]                                    = {kFALSE, kFALSE, kFALSE, kFALSE};
+    Bool_t hasSecCorrFac[4]                                 = {kFALSE, kFALSE, kFALSE, kFALSE};
  
     TH1D* histoDataM02              [MaxNumberOfFiles];
     TH1D* histoMCrecM02             [MaxNumberOfFiles];
@@ -546,19 +569,23 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         histoAcceptancePi0[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
         histoAcceptancePi0WOEvtWeights[i]                   = (TH1D*)fileCorrectedPi0[i]->Get(nameAcceptanceWOEvtWeights.Data());
         
-        histoEffectCorrPi0FromK0s[i]                        = NULL;
-        histoEffectCorrPi0FromK0s[i]                        = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonFromCocktailToRaw");
-        if (!histoEffectCorrPi0FromK0s[i])
-          histoEffectCorrPi0FromK0s[i]                      = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonFromToyToRaw");
+        for (Int_t k = 0; k < 4; k++){
+            histoEffectCorrPi0FromX[k][i]                   = NULL;
+            histoEffectCorrPi0FromX[k][i]                   = (TH1D*)fileCorrectedPi0[i]->Get(Form("RatioSecYieldFrom%sMesonFromCocktailToRaw",nameSecPi0PartRead[k].Data()));
+            if (!histoEffectCorrPi0FromX[k][i])
+            histoEffectCorrPi0FromX[k][i]                   = (TH1D*)fileCorrectedPi0[i]->Get(Form("RatioSecYieldFrom%sMesonFromToyToRaw",nameSecPi0PartRead[k].Data()));
+            if (!histoEffectCorrPi0FromX[k][i])
+            histoEffectCorrPi0FromX[k][i]                   = (TH1D*)fileCorrectedPi0[i]->Get(Form("RatioSecYieldFrom%sMesonToRaw",nameSecPi0PartRead[k].Data()));
 
-        if (!histoEffectCorrPi0FromK0s[i] || isMC.CompareTo("MC") == 0 )
-            histoEffectCorrPi0FromK0s[i]                    = (TH1D*)fileCorrectedPi0[i]->Get("RatioSecYieldFromK0SMesonToRaw");
-        if (histoEffectCorrPi0FromK0s[i])
-            hasSecCorrFac                                   = kTRUE;
-        histoSecEffiPi0FromK0s[i]                           = NULL;
-        histoSecEffiPi0FromK0s[i]                           = (TH1D*)fileCorrectedPi0[i]->Get(nameSecFK0sEfficiency.Data());
-        if (histoSecEffiPi0FromK0s[i])
-            hasSecEffi                                      = kTRUE;
+            if (!histoEffectCorrPi0FromX[k][i] || isMC.CompareTo("MC") == 0 )
+                histoEffectCorrPi0FromX[k][i]               = (TH1D*)fileCorrectedPi0[i]->Get(Form("RatioSecYieldFrom%sMesonToRaw",nameSecPi0PartRead[k].Data()));
+            if (histoEffectCorrPi0FromX[k][i])
+                hasSecCorrFac[k]                            = kTRUE;
+            histoSecEffiPi0FromX[k][i]                      = NULL;
+            histoSecEffiPi0FromX[k][i]                      = (TH1D*)fileCorrectedPi0[i]->Get(nameSecEfficiency[k].Data());
+            if (histoSecEffiPi0FromX[k][i])
+                hasSecEffi[k]                               = kTRUE;
+        }
         
         if(histoAcceptancePi0WOEvtWeights[i]) histoAcceptancePi0WOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
         if (mode == 10){
@@ -1420,93 +1447,98 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     canvasEffi->Update();
     canvasEffi->SaveAs(Form("%s/Pi0_Efficiency.%s",outputDir.Data(),suffix.Data()));
 
-    if (hasSecEffi){
-        canvasEffi->cd();
-        Double_t minEffiSecPi0      = minEffiPi0;
-        Double_t maxEffiSecPi0      = maxEffiPi0;
-        if (mode == 10){
-            maxEffiSecPi0           = 10*maxEffiPi0;
-            minEffiSecPi0           = 5*minEffiPi0;
-        }    
-        TH2F * histo2DEffiSecPi0;
-        histo2DEffiSecPi0 = new TH2F("histo2DEffiSecPi0","histo2DEffiSecPi0",1000,0., maxPtGlobalPi0,10000,minEffiSecPi0, maxEffiSecPi0);
-        SetStyleHistoTH2ForGraphs(histo2DEffiSecPi0, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{sec #pi^{0} from K^{0}_{s}}",
-                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
-        histo2DEffiSecPi0->DrawCopy(); 
-    
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (histoSecEffiPi0FromK0s[i]){
-                DrawGammaSetMarker(histoSecEffiPi0FromK0s[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoSecEffiPi0FromK0s[i]->DrawCopy("e1,same"); 
-            }    
-        }
-        legendEffiPi0->Draw();
+    TH2F* histo2DEffiSecPi0[4]          = { NULL, NULL, NULL, NULL};
+    TH2F* histo2DEffectiveSecCorr[4]    = { NULL, NULL, NULL, NULL};
+    Double_t minEffiSecPi0              = minEffiPi0;
+    Double_t maxEffiSecPi0              = maxEffiPi0;
+    if (mode == 0){
+        maxEffiSecPi0                   = maxEffiPi0/2;
+        minEffiSecPi0                   = minEffiPi0/100;
+    } else if (mode == 4){
+        maxEffiSecPi0                   = 10*maxEffiPi0;
+        minEffiSecPi0                   = 5*minEffiPi0;
+    } else if (mode == 10){
+        maxEffiSecPi0                   = 10*maxEffiPi0;
+        minEffiSecPi0                   = 5*minEffiPi0;
+    }
 
-        labelEnergyEffi->Draw();
-        labelPi0Effi->Draw();
-        labelDetProcEffi->Draw();
-
-        canvasEffi->Update();
-        canvasEffi->SaveAs(Form("%s/Pi0_SecEfficiencyFromK0s.%s",outputDir.Data(),suffix.Data()));        
-    }    
-
-    if (hasSecCorrFac){
-        canvasEffi->cd();
-        canvasEffi->SetLogy(0);
-        canvasEffi->SetLeftMargin(0.1);
-        canvasEffi->SetTopMargin(0.04);
-        Double_t minXLegendEffecSec = 0.62;
-        Int_t nColumnsEffecSec      = 2; 
-        if (nrOfTrigToBeComb > 6){
-            minXLegendEffecSec = 0.4;
-            nColumnsEffecSec   = 3; 
-        }
-        Double_t maxYEffSecCorr     = 0.3;
-        if (mode == 2)
-            maxYEffSecCorr          = 0.04;
-        else if (mode == 4)
-            maxYEffSecCorr          = 0.12;
-        else if (mode == 10)
-            maxYEffSecCorr          = 0.15;
+    for (Int_t k = 0; k< 4; k++){
+        if (hasSecEffi[k]){
+            canvasEffi->cd();
+            histo2DEffiSecPi0[k] = new TH2F(Form("histo2DEffiSecPi0%s",nameSecPi0PartRead[k].Data()),Form("histo2DEffiSecPi0%s",nameSecPi0PartRead[k].Data()), 
+                                            1000, 0., maxPtGlobalPi0,10000,minEffiSecPi0, maxEffiSecPi0);
+            SetStyleHistoTH2ForGraphs(histo2DEffiSecPi0[k], "#it{p}_{T} (GeV/#it{c})",Form("#it{#varepsilon}_{sec #pi^{0} from %s}",nameSecPi0PartLabel[k].Data()),
+                                        0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
+            histo2DEffiSecPi0[k]->DrawCopy(); 
         
-        Double_t maxYLegendEffecSec = 0.84-0.025;
-        Double_t minYLegendEffecSec = maxYLegendEffecSec-(1.05*nrOfTrigToBeComb/nColumnsEffecSec*0.85*textSizeSpectra);
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if (histoSecEffiPi0FromX[k][i]){
+                    DrawGammaSetMarker(histoSecEffiPi0FromX[k][i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoSecEffiPi0FromX[k][i]->DrawCopy("e1,same"); 
+                }    
+            }
+            legendEffiPi0->Draw();
 
-        TH2F * histo2DEffectiveSecCorr;
-        histo2DEffectiveSecCorr = new TH2F("histo2DEffectiveSecCorr","histo2DEffectiveSecCorr",1000,0., maxPtGlobalPi0,10000,0, maxYEffSecCorr);
-        SetStyleHistoTH2ForGraphs(histo2DEffectiveSecCorr, "#it{p}_{T} (GeV/#it{c})","r_{sec #pi^{0} from K^{0}_{s}}",
-                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.17);
-        histo2DEffectiveSecCorr->DrawCopy(); 
+            labelEnergyEffi->Draw();
+            labelPi0Effi->Draw();
+            labelDetProcEffi->Draw();
 
-        TLegend* legendEffectSec = GetAndSetLegend2(minXLegendEffecSec, minYLegendEffecSec, 0.95, maxYLegendEffecSec ,28, nColumnsEffecSec);
-        for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
-            if (histoEffectCorrPi0FromK0s[i]){
-                DrawGammaSetMarker(histoEffectCorrPi0FromK0s[i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
-                histoEffectCorrPi0FromK0s[i]->DrawCopy("e1,same"); 
-                legendEffectSec->AddEntry(histoEffectCorrPi0FromK0s[i],triggerNameLabel[i].Data(),"p"); 
-            }    
-        }
-        legendEffectSec->Draw();
+            canvasEffi->Update();
+            canvasEffi->SaveAs(Form("%s/Pi0_SecEfficiencyFrom%s.%s",outputDir.Data(), nameSecPi0PartRead[k].Data(), suffix.Data()));        
+        }    
+        if (hasSecCorrFac[k]){
+            canvasEffi->cd();
+            canvasEffi->SetLogy(0);
+            canvasEffi->SetLeftMargin(0.1);
+            canvasEffi->SetTopMargin(0.04);
+            Double_t minXLegendEffecSec = 0.62;
+            Int_t nColumnsEffecSec      = 2; 
+            if (nrOfTrigToBeComb > 6){
+                minXLegendEffecSec = 0.4;
+                nColumnsEffecSec   = 3; 
+            }
+            
+            Double_t maxYLegendEffecSec = 0.84-0.025;
+            Double_t minYLegendEffecSec = maxYLegendEffecSec-(1.05*nrOfTrigToBeComb/nColumnsEffecSec*0.85*textSizeSpectra);
 
-        TLatex *labelEnergyEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-        SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4);
-        labelEnergyEffSec->Draw();
+            histo2DEffectiveSecCorr[k] = new TH2F(Form("histo2DEffectiveSecCorr%s",nameSecPi0PartRead[k].Data()), Form("histo2DEffectiveSecCorr%s",nameSecPi0PartRead[k].Data()), 
+                                                  1000,0., maxPtGlobalPi0,10000,0, maxYEffSecCorr[k][mode]);
+            SetStyleHistoTH2ForGraphs(histo2DEffectiveSecCorr[k], "#it{p}_{T} (GeV/#it{c})",Form("r_{sec #pi^{0} from %s}", nameSecPi0PartLabel[k].Data()),
+                                        0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.19);
+            histo2DEffectiveSecCorr[k]->DrawCopy(); 
 
-        TLatex *labelPi0EffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4);
-        labelPi0EffSec->Draw();
+            TLegend* legendEffectSec = GetAndSetLegend2(minXLegendEffecSec, minYLegendEffecSec, 0.95, maxYLegendEffecSec ,28, nColumnsEffecSec);
+            for (Int_t i = 0; i< nrOfTrigToBeComb; i++){
+                if (histoEffectCorrPi0FromX[k][i]){
+                    DrawGammaSetMarker(histoEffectCorrPi0FromX[k][i], markerTrigg[i], sizeTrigg[i], colorTrigg[i], colorTrigg[i]);
+                    histoEffectCorrPi0FromX[k][i]->DrawCopy("e1,same"); 
+                    legendEffectSec->AddEntry(histoEffectCorrPi0FromX[k][i],triggerNameLabel[i].Data(),"p"); 
+                }    
+            }
+            legendEffectSec->Draw();
 
-        TLatex *labelDetProcEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02,detectionProcess.Data());
-        SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4);
-        labelDetProcEffSec->Draw();
+            TLatex *labelEnergyEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4);
+            labelEnergyEffSec->Draw();
 
-        canvasEffi->Update();
-        canvasEffi->SaveAs(Form("%s/Pi0_EffectiveSecCorrFromK0s.%s",outputDir.Data(),suffix.Data()));        
-        canvasEffi->SetLogy(1);
-        canvasEffi->SetLeftMargin(0.09);
-        canvasEffi->SetTopMargin(0.015);
-    }    
-    
+            TLatex *labelPi0EffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4);
+            labelPi0EffSec->Draw();
+
+            TLatex *labelDetProcEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4);
+            labelDetProcEffSec->Draw();
+
+            canvasEffi->Update();
+            canvasEffi->SaveAs(Form("%s/Pi0_EffectiveSecCorrFrom%s.%s",outputDir.Data(), nameSecPi0PartRead[k].Data(), suffix.Data()));        
+            canvasEffi->SetLogy(1);
+            canvasEffi->SetLeftMargin(0.09);
+            canvasEffi->SetTopMargin(0.015);
+            delete labelEnergyEffSec;
+            delete labelPi0EffSec;
+            delete labelDetProcEffSec;
+        }    
+    }
     //***************************************************************************************************************
     //************************************ Plotting trigger efficiencies Pi0 ****************************************
     //***************************************************************************************************************
@@ -2070,6 +2102,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TGraphAsymmErrors* graphOrderedEffTimesAccPi0           [MaxNumberOfFiles];
     TGraphAsymmErrors* graphPurityPi0                       [MaxNumberOfFiles];
     TGraphAsymmErrors* graphOrderedPurityPi0                [MaxNumberOfFiles];
+    TGraphAsymmErrors* graphEffectSecCorrPi0                [4][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphEfficiencySecPi0                [4][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedEffectSecCorrPi0         [4][MaxNumberOfFiles];
+    TGraphAsymmErrors* graphOrderedEfficiencySecPi0         [4][MaxNumberOfFiles];
     
     Int_t nRelSysErrPi0Sources          = 0;
     TGraphAsymmErrors* graphRelSysErrPi0Source              [30][MaxNumberOfFiles];
@@ -2117,6 +2153,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         graphOrderedEfficiencyPi0[j]    = NULL;
         graphOrderedEffTimesAccPi0[j]   = NULL;
         graphOrderedPurityPi0[j]        = NULL;
+        for (Int_t k = 0; k< 4; k++){
+            graphOrderedEfficiencySecPi0[k][j]  = NULL;
+            graphOrderedEffectSecCorrPi0[k][j]  = NULL;
+        }
     }    
     
     
@@ -2219,6 +2259,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             graphPurityPi0[i]                   = new TGraphAsymmErrors(histoPurityPi0[i]);
         }    
         graphAcceptancePi0[i]                   = new TGraphAsymmErrors(histoAcceptancePi0[i]);
+        for (Int_t k = 0; k< 4; k++){
+            if (hasSecCorrFac[k]){
+                graphEffectSecCorrPi0[k][i]     = new TGraphAsymmErrors(histoEffectCorrPi0FromX[k][i]);
+            } else {
+                graphEffectSecCorrPi0[k][i]     = NULL;
+            }    
+            if (hasSecEffi[k]){
+                graphEfficiencySecPi0[k][i]     = new TGraphAsymmErrors(histoSecEffiPi0FromX[k][i]);
+            } else {
+                graphEfficiencySecPi0[k][i]     = NULL;
+            }    
+        }     
+        
         if ( triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1")){
             graphEfficiencyPi0[i]               = new TGraphAsymmErrors(histoEfficiencyPi0[i]);
         } else if (mode == 10) {
@@ -2252,6 +2305,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }    
             graphAcceptancePi0[i]->RemovePoint(0);
             graphEffTimesAccPi0[i]->RemovePoint(0);
+            for (Int_t k = 0; k< 4; k++){
+                if (graphEffectSecCorrPi0[k][i])graphEffectSecCorrPi0[k][i]->RemovePoint(0);
+                if (graphEfficiencySecPi0[k][i])graphEfficiencySecPi0[k][i]->RemovePoint(0);
+            }
             if (enableTriggerEffPi0[i] || (triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1"))){
                 graphEfficiencyPi0[i]->RemovePoint(0);
             } else if (mode == 10) {
@@ -2273,6 +2330,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             graphsCorrectedYieldRemoved0Pi0[i]  = NULL; 
             graphsCorrectedYieldSysShrunkPi0[i] = NULL; 
             graphsCorrectedYieldSysRemoved0Pi0[i]   = NULL; 
+            for (Int_t k = 0; k< 4; k++){
+                graphEffectSecCorrPi0[k][i]         = NULL;
+                graphEfficiencySecPi0[k][i]         = NULL;
+            }    
             sysAvailPi0[i]          = kFALSE;
             for (Int_t f = 1; f < histoCorrectedYieldPi0ScaledMasked[i]->GetNbinsX()+1; f++ ){
                 histoCorrectedYieldPi0ScaledMasked[i]->SetBinContent(f,0.);
@@ -2299,6 +2360,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }    
                 graphAcceptancePi0[i]->RemovePoint(graphAcceptancePi0[i]->GetN()-1);
                 graphEffTimesAccPi0[i]->RemovePoint(graphEffTimesAccPi0[i]->GetN()-1);
+                for (Int_t k = 0; k< 4; k++){
+                    if (graphEffectSecCorrPi0[k][i])graphEffectSecCorrPi0[k][i]->RemovePoint(graphEffectSecCorrPi0[k][i]->GetN()-1);
+                    if (graphEfficiencySecPi0[k][i])graphEfficiencySecPi0[k][i]->RemovePoint(graphEfficiencySecPi0[k][i]->GetN()-1);
+                }
                 if (enableTriggerEffPi0[i] || (triggerName[i].Contains("INT7") || triggerName[i].Contains("MB") || triggerName[i].Contains("INT1"))){
                     graphEfficiencyPi0[i]->RemovePoint(graphEfficiencyPi0[i]->GetN()-1);
                 } else if ( mode == 10) {
@@ -2317,6 +2382,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             graphAcceptancePi0[i]       = NULL;
             graphEffTimesAccPi0[i]      = NULL;
             graphEfficiencyPi0[i]       = NULL;
+            for (Int_t k = 0; k< 4; k++){
+                graphEffectSecCorrPi0[k][i] = NULL;
+                graphEfficiencySecPi0[k][i] = NULL;            
+            }    
             if (mode == 10){
                 graphPurityPi0[i]       = NULL;
             }    
@@ -2389,6 +2458,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
       
         cout << "step 3" << endl;
+        cout << "range to be accepted: " << ptFromSpecPi0[i][0] << "\t-\t" << ptFromSpecPi0[i][1] << endl;
         // remove points at beginning according to ranges set for individual triggers
         while(graphsCorrectedYieldShrunkPi0[i]->GetX()[0] < ptFromSpecPi0[i][0])
             graphsCorrectedYieldShrunkPi0[i]->RemovePoint(0);
@@ -2458,6 +2528,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 graphOrderedEffTimesAccPi0[nCorrOrder]      = graphEffTimesAccPi0[i];
             if (graphPurityPi0[i])
                 graphOrderedPurityPi0[nCorrOrder]           = graphPurityPi0[i];
+            for (Int_t k = 0; k<4; k++){
+                if (graphEffectSecCorrPi0[k][i])
+                    graphOrderedEffectSecCorrPi0[k][nCorrOrder] = graphEffectSecCorrPi0[k][i];
+                if (graphEfficiencySecPi0[k][i])
+                    graphOrderedEfficiencySecPi0[k][nCorrOrder] = graphEfficiencySecPi0[k][i];
+            }
+
             if (sysAvailSinglePi0[i]){
                 for (Int_t k = 0; k < nRelSysErrPi0Sources; k++ ){
                     if (graphRelSysErrPi0Source[k][i])
@@ -2488,6 +2565,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TGraphAsymmErrors* graphEffTimesAccPi0Weighted                  = NULL;
     TGraphAsymmErrors* graphPurityPi0Weighted                       = NULL;
     TGraphAsymmErrors* graphRelSysErrPi0SourceWeighted[30];
+    TGraphAsymmErrors* graphEffectSecCorrPi0Weighted[4]             = {NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphEfficiencySecPi0Weighted[4]             = {NULL, NULL, NULL, NULL};
+    
     for (Int_t k = 0; k < 30; k++){
         graphRelSysErrPi0SourceWeighted[k]                          = NULL;
     }    
@@ -2857,7 +2937,33 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             cout << "Aborted in CalculateWeightedQuantity" << endl;
             return;
         }
-
+        
+        
+        for (Int_t k = 0; k< 4; k++){
+            if (hasSecCorrFac[k]){
+                graphEffectSecCorrPi0Weighted[k]        = CalculateWeightedQuantity(    graphOrderedEffectSecCorrPi0[k], 
+                                                                                        graphWeightsPi0,
+                                                                                        binningPi0,  maxNAllowedPi0,
+                                                                                        MaxNumberOfFiles
+                                                                                    );
+                if (!graphEffectSecCorrPi0Weighted[k]){
+                    cout << "Aborted in CalculateWeightedQuantity for effective sec cor " << k << endl;
+                    return;
+                }
+            }
+            if (hasSecEffi[k]){
+                graphEffectSecCorrPi0Weighted[k]        = CalculateWeightedQuantity(    graphOrderedEfficiencySecPi0[k], 
+                                                                                        graphWeightsPi0,
+                                                                                        binningPi0,  maxNAllowedPi0,
+                                                                                        MaxNumberOfFiles
+                                                                                    );
+                if (!graphEffectSecCorrPi0Weighted[k]){
+                    cout << "Aborted in CalculateWeightedQuantity for sec effi " << k << endl;
+                    return;
+                }
+            }
+        }
+        
         cout << "weighting Pi0 efficiency" << endl;
         graphEfficiencyPi0Weighted                      = CalculateWeightedQuantity(    graphOrderedEfficiencyPi0, 
                                                                                         graphWeightsPi0,
@@ -2936,6 +3042,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         else 
             cout << "I don't have a weighted Pi0 acceptance x efficiency graph" << endl;
 
+        for (Int_t k = 0; k< 4; k++){
+            if (graphEffectSecCorrPi0Weighted[k])
+                while (graphEffectSecCorrPi0Weighted[k]->GetY()[0] == -10000)    graphEffectSecCorrPi0Weighted[k]->RemovePoint(0);
+            else 
+                cout << "I don't have a weighted Pi0 effective sec corr graph for "<< k << endl;
+               if (graphEfficiencySecPi0Weighted[k])
+                while (graphEfficiencySecPi0Weighted[k]->GetY()[0] == -10000)    graphEfficiencySecPi0Weighted[k]->RemovePoint(0);
+            else 
+                cout << "I don't have a weighted sec Pi0 efficiency  graph for "<< k << endl;
+        }
         
         //  **********************************************************************************************************************
         //  **************************************** Combine+write detailed Systematics ******************************************
@@ -3053,6 +3169,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         graphAcceptancePi0Weighted                      = graphAcceptancePi0[0];
         graphEfficiencyPi0Weighted                      = graphEfficiencyPi0[0];
         graphEffTimesAccPi0Weighted                     = graphEffTimesAccPi0[0];
+        
+        for (Int_t k = 0; k<4; k++){
+            if (graphEffectSecCorrPi0[k][0]) graphEffectSecCorrPi0Weighted[k]  = graphEffectSecCorrPi0[k][0];
+            if (graphEfficiencySecPi0[k][0]) graphEfficiencySecPi0Weighted[k]  = graphEfficiencySecPi0[k][0];
+        }
         
         if (mode == 10){
             graphPurityPi0Weighted                      = graphPurityPi0[0];            
@@ -3332,7 +3453,140 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/Pi0_EfficiencyW0TriggEff_Weighted.%s",outputDir.Data(),suffix.Data()));
     }
-//     if (!enableEta) delete canvasEffi;
+
+    //***************************************************************************************************************
+    //***************************** Secondary corr factors weighted all separate ************************************
+    //***************************************************************************************************************        
+    for (Int_t k = 0; k< 4; k++ ){
+        if (graphEfficiencySecPi0Weighted[k]){
+            canvasEffi->cd();
+            histo2DEffiSecPi0[k]->DrawCopy(); 
+        
+            DrawGammaSetMarkerTGraphAsym(graphEfficiencySecPi0Weighted[k], 20, 1, kGray+2, kGray+2);
+            graphEfficiencySecPi0Weighted[k]->Draw("p,e1,same");                 
+
+            labelEnergyWidth->Draw();
+            labelPi0Width->Draw();
+            labelDetProcWidth->Draw();
+
+            canvasEffi->Update();
+            canvasEffi->SaveAs(Form("%s/Pi0_SecEfficiencyFrom%s_Weighted.%s",outputDir.Data(), nameSecPi0PartRead[k].Data(), suffix.Data()));                    
+        }
+        if (graphEffectSecCorrPi0Weighted[k]){
+            canvasEffi->cd();
+            canvasEffi->SetLogy(0);
+            canvasEffi->SetLeftMargin(0.1);
+            canvasEffi->SetTopMargin(0.04);
+            histo2DEffectiveSecCorr[k]->DrawCopy(); 
+
+            DrawGammaSetMarkerTGraphAsym(graphEffectSecCorrPi0Weighted[k], 20, 1, kGray+2, kGray+2);
+            graphEffectSecCorrPi0Weighted[k]->Draw("p,e1,same");                 
+            
+            TLatex *labelEnergyEffSec = new TLatex(0.95, 0.93-(0.98*textSizeSpectra*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
+            labelEnergyEffSec->Draw();
+
+            TLatex *labelPi0EffSec = new TLatex(0.95,  0.93-(2*textSizeSpectra*0.85),"#pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
+            labelPi0EffSec->Draw();
+
+            TLatex *labelDetProcEffSec = new TLatex(0.95, 0.93-(3*textSizeSpectra*0.85),detectionProcess.Data());
+            SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4, 1, 42, kTRUE, 31);
+            labelDetProcEffSec->Draw();
+
+            canvasEffi->Update();
+            canvasEffi->SaveAs(Form("%s/Pi0_EffectiveSecCorrFrom%s_Weighted.%s",outputDir.Data(), nameSecPi0PartRead[k].Data(), suffix.Data()));        
+            canvasEffi->SetLogy(1);
+            canvasEffi->SetLeftMargin(0.09);
+            canvasEffi->SetTopMargin(0.015);
+            delete labelEnergyEffSec;
+            delete labelPi0EffSec;
+            delete labelDetProcEffSec;
+        } 
+        
+    }
+    //***************************************************************************************************************
+    //***************************** Secondary corr factors weighted all separate ************************************
+    //***************************************************************************************************************        
+    Int_t nSecEffis = 0;
+    Int_t nSecCorrs = 0;
+    for (Int_t k = 0; k<4; k++){
+        if (hasSecEffi[k]) nSecEffis++;
+        if (hasSecCorrFac[k]) nSecCorrs++;
+    }
+    if (nSecEffis > 0){
+        canvasEffi->cd();
+        TH2F* histo2DEffiSecPi02 = new TH2F("histo2DEffiSecPi0","histo2DEffiSecPi0", 1000, 0., maxPtGlobalPi0,10000,minEffiSecPi0, maxEffiSecPi0);
+        SetStyleHistoTH2ForGraphs(histo2DEffiSecPi02, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{sec #pi^{0} from X}",
+                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.1);
+        histo2DEffiSecPi02->DrawCopy(); 
+    
+        TLegend* legendSecPi0EffAll = GetAndSetLegend2(0.15, 0.94-(Int_t((nSecEffis+1)/2)*0.85*textSizeSpectra), 0.50, 0.94,32,2,"",43,0.2);
+        for (Int_t k = 0; k < 4; k++){
+            if (graphEfficiencySecPi0Weighted[k]){
+                DrawGammaSetMarkerTGraphAsym(graphEfficiencySecPi0Weighted[k], markerStyleSec[k], markerSizeSec[k], colorSec[k], colorSec[k]);
+                graphEfficiencySecPi0Weighted[k]->Draw("p,e1,same");                 
+                legendSecPi0EffAll->AddEntry(graphEfficiencySecPi0Weighted[k], Form("X = %s",nameSecPi0PartLabel[k].Data()), "p");
+            }
+        }
+        legendSecPi0EffAll->Draw();
+        TLatex *labelEnergyEffSec = new TLatex(0.95, 0.95-(0.98*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
+        labelEnergyEffSec->Draw();
+
+        TLatex *labelPi0EffSec = new TLatex(0.95,  0.95-(2*textSizeSpectra*0.85),"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
+        labelPi0EffSec->Draw();
+
+        TLatex *labelDetProcEffSec = new TLatex(0.95, 0.95-(3*textSizeSpectra*0.85),detectionProcess.Data());
+        SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4, 1, 42, kTRUE, 31);
+        labelDetProcEffSec->Draw();
+
+        canvasEffi->Update();
+        canvasEffi->SaveAs(Form("%s/Pi0_SecEfficiency_Weighted.%s",outputDir.Data(), suffix.Data()));                    
+    }
+
+    if (nSecCorrs >0){
+        canvasEffi->cd();
+        canvasEffi->SetLogy(0);
+        canvasEffi->SetLeftMargin(0.1);
+        canvasEffi->SetTopMargin(0.04);
+        TH2F* histo2DEffectiveSecCorr2 = new TH2F("histo2DEffectiveSecCorr","histo2DEffectiveSecCorr", 1000,0., maxPtGlobalPi0,10000,0, maxYEffSecCorr[0][mode]*1.1);
+        SetStyleHistoTH2ForGraphs(histo2DEffectiveSecCorr2, "#it{p}_{T} (GeV/#it{c})","r_{sec #pi^{0} from X}",
+                                    0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.19);
+        histo2DEffectiveSecCorr2->DrawCopy(); 
+
+        TLegend* legendSecEffectCorr = GetAndSetLegend2(0.15, 0.92-(Int_t((nSecCorrs+1)/2)*0.85*textSizeSpectra), 0.50, 0.92,32,2,"",43,0.2);
+        for (Int_t k = 0; k < 4; k++){
+            if (graphEffectSecCorrPi0Weighted[k]){
+                DrawGammaSetMarkerTGraphAsym(graphEffectSecCorrPi0Weighted[k], markerStyleSec[k], markerSizeSec[k], colorSec[k], colorSec[k]);
+                graphEffectSecCorrPi0Weighted[k]->Draw("p,e1,same");                 
+                legendSecEffectCorr->AddEntry(graphEffectSecCorrPi0Weighted[k], Form("X = %s",nameSecPi0PartLabel[k].Data()), "p");
+            }
+        }
+        legendSecEffectCorr->Draw();    
+            
+        TLatex *labelEnergyEffSec = new TLatex(0.95, 0.93-(0.98*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
+        labelEnergyEffSec->Draw();
+
+        TLatex *labelPi0EffSec = new TLatex(0.95,  0.93-(2*textSizeSpectra*0.85),"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4,1, 42, kTRUE, 31);
+        labelPi0EffSec->Draw();
+
+        TLatex *labelDetProcEffSec = new TLatex(0.95, 0.93-(3*textSizeSpectra*0.85),detectionProcess.Data());
+        SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4, 1, 42, kTRUE, 31);
+        labelDetProcEffSec->Draw();
+
+        canvasEffi->Update();
+        canvasEffi->SaveAs(Form("%s/Pi0_EffectiveSecCorr_Weighted.%s",outputDir.Data(), suffix.Data()));        
+        canvasEffi->SetLogy(1);
+        canvasEffi->SetLeftMargin(0.09);
+        canvasEffi->SetTopMargin(0.015);
+        delete labelEnergyEffSec;
+        delete labelPi0EffSec;
+        delete labelDetProcEffSec;
+    } 
 
     //***************************************************************************************************************
     //***************************************** Purity weighted *****************************************************
@@ -6975,6 +7229,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (graphWidthPi0DataWeighted)                  graphWidthPi0DataWeighted->Write("Pi0_Width_data", TObject::kOverwrite);
             if (graphWidthPi0MCWeighted)                    graphWidthPi0MCWeighted->Write("Pi0_Width_MC", TObject::kOverwrite);            
         }
+        for (Int_t k = 0; k< 4; k++){
+            if (graphEffectSecCorrPi0Weighted[k])       graphEffectSecCorrPi0Weighted[k]->Write(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0PartRead[k].Data()), TObject::kOverwrite);
+            if (graphEfficiencySecPi0Weighted[k])       graphEfficiencySecPi0Weighted[k]->Write(Form("SecondaryPi0EfficiencyFrom%s",nameSecPi0PartRead[k].Data()), TObject::kOverwrite);
+        }
+        
         if (sysAvailSinglePi0[0]){
             for (Int_t k = 0; k< nRelSysErrPi0Sources ; k++ ){
                 if (graphRelSysErrPi0SourceWeighted[k]) graphRelSysErrPi0SourceWeighted[k]->Write(graphRelSysErrPi0SourceWeighted[k]->GetName(), TObject::kOverwrite);
@@ -7003,6 +7262,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (enableTriggerEffPi0[i]){
                 if (histoTriggerEffPi0[i])              histoTriggerEffPi0[i]->Write(Form("TriggerEfficiencyPi0_%s",triggerName[i].Data()),TObject::kOverwrite);
                 if (histoEffBasePi0[i])                 histoEffBasePi0[i]->Write(Form("EfficiencyBasePi0_%s",triggerName[i].Data()),TObject::kOverwrite);
+            }
+            for (Int_t k = 0; k< 4; k++){
+                if (histoEffectCorrPi0FromX[k][i])      histoEffectCorrPi0FromX[k][i]->Write(Form("EffectiveSecondaryPi0CorrFrom%s_%s",nameSecPi0PartRead[k].Data(),triggerName[i].Data()), TObject::kOverwrite);
+                if (histoSecEffiPi0FromX[k][i])         histoSecEffiPi0FromX[k][i]->Write(Form("SecondaryPi0EfficiencyFrom%s_%s",nameSecPi0PartRead[k].Data(),triggerName[i].Data()), TObject::kOverwrite);
             }
             if (mode == 10){
                 if (histoPurityPi0[i])                  histoPurityPi0[i]->Write(Form("PurityPi0_%s",  triggerName[i].Data()),TObject::kOverwrite);

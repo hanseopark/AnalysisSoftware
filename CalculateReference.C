@@ -59,7 +59,7 @@ TF1* DoFitWithTsallis(TGraph* graph, TString name, TString particle, Double_t p0
 TF1* DoFitWithTCM(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2, Double_t p3, Double_t p4 );
 void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TF1** fPowerlawMC, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot);
 void PlotInterpolationSinglePtBin(TGraphErrors* gPtvSqrts,TGraphErrors* gPtvsEnergies, TF1* fPowerlaw, TF1* fPowerlawMC, TGraphAsymmErrors* gRpPb, Int_t ptBin, TString namePlot);
-void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TString method, TString thesisPlotLabel, TString namePlot);
+void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TSpline* splineMC, TString method, TString thesisPlotLabel, TString namePlot);
 void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* graph, TGraphAsymmErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
 void PlotWithFit(TCanvas *canvas, TH2F* hist, TH2F* hist2, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
 void PlotGraphsOfAllEnergies( TCanvas* canvas, TH2F* hist, Int_t nDataSets, TGraphAsymmErrors** graphs, TF1** fits, TString* energies, TString name, TString outputDir, TString suffix );
@@ -142,7 +142,7 @@ void CalculateReference (   TString configFile                  = "",
     TString outputDir       = Form("%s/%s/CalculateReference",suffix.Data(),dateForOutput.Data());
     TString outputDirPlots  = Form("%s/%s/CalculateReference/%s",suffix.Data(), dateForOutput.Data(), modeName.Data());
     gSystem->Exec("mkdir -p "+outputDirPlots);
-    Int_t exampleBin        = 5; 
+    Int_t exampleBin        = 7; 
     Double_t dummyScaleFac  = 1;
     
     //*************************************************************************************************
@@ -375,6 +375,7 @@ void CalculateReference (   TString configFile                  = "",
                     haveMC[i]           = kTRUE;
                     graphMC[i]          = new TGraphAsymmErrors(histMC[i]);
                     while (graphMC[i]->GetX()[graphMC[i]->GetN()-1] > 30) graphMC[i]->RemovePoint(graphMC[i]->GetN()-1);
+                    while (graphMC[i]->GetX()[0] < 0.1) graphMC[i]->RemovePoint(0);
                     fitCombMC[i]        = DoFitWithTsallis(graphMC[i],Form("fitCombMC_%d",i),meson.Data(), graphMC[i]->GetY()[0],7.,0.2);
                 }
             }
@@ -651,6 +652,7 @@ void CalculateReference (   TString configFile                  = "",
                     haveMC[nDataSets]           = kTRUE;
                     graphMC[nDataSets]          = new TGraphAsymmErrors(histMC[nDataSets]);
                     while (graphMC[nDataSets]->GetX()[graphMC[nDataSets]->GetN()-1] > 30) graphMC[nDataSets]->RemovePoint(graphMC[nDataSets]->GetN()-1);
+                    while (graphMC[nDataSets]->GetX()[0] < 0.1) graphMC[nDataSets]->RemovePoint(0);
                     fitCombMC[nDataSets]        = DoFitWithTsallis(graphMC[nDataSets],Form("fitCombMC_%d",nDataSets),meson.Data(), graphMC[nDataSets]->GetY()[0],7.,0.2);
                     energyIndName[nDataSets]    = finalEnergy;
                     energyInd[nDataSets]        = energy;
@@ -658,7 +660,7 @@ void CalculateReference (   TString configFile                  = "",
             }
         }
     }    
-
+    
     //*************************************************************************************************
     //*************************** extrapolate spectra stat errors only ********************************
     //*************************************************************************************************
@@ -717,7 +719,7 @@ void CalculateReference (   TString configFile                  = "",
         PlotInterpolationPtBins(graphPtvsSqrts, gPtvsEnergiesSystem, fPowerlawSystem, fPowerlawSystemSystMC, graphFinalEnergyComb1, columns, rows, Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
         PlotInterpolationSinglePtBin(graphPtvsSqrts[exampleBin], gPtvsEnergiesSystem[exampleBin], fPowerlawSystem[exampleBin], fPowerlawSystemSystMC[exampleBin], graphFinalEnergyComb1, exampleBin, Form("%s/%s_%s_CombUnCorr_Pt_vs_Sqrts_SinglePtBin.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
         
-    }else{
+    } else {
         cout << "ERROR: NULL pointer - returning..." << endl;
         cout << graphAlpha << endl;
         cout << graphPtvsSqrts << endl;
@@ -830,7 +832,7 @@ void CalculateReference (   TString configFile                  = "",
     
     // plot alpha with proper errors
     if (graphAlphaStat && graphAlphaSyst){
-        PlotAlphavsPt(graphAlphaStat, graphAlphaSyst, graphAlphaMC, "pp", Form("%s, %s",mesonString.Data(), detProcess.Data()), Form("%s/%s_%s_Alpha_vs_Pt.%s", outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+        PlotAlphavsPt(graphAlphaStat, graphAlphaSyst, graphAlphaMC, splineAlphaMC, "pp", Form("%s, %s",mesonString.Data(), detProcess.Data()), Form("%s/%s_%s_Alpha_vs_Pt.%s", outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
     }    
 
     TF1* fitFinal                       = DoFitWithTsallis(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7,0.2); 
@@ -1065,7 +1067,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
     TF1** fPowerlawFits             = new TF1*[graphs[0]->GetN()];
     TF1** fPowerlawFitsMC           = new TF1*[graphs[0]->GetN()];
 
-    for(Int_t i = 0; i < graphs[0]->GetN(); i++){
+    for(Int_t i = 0; i < graphs[0]->GetN(); i++){        
         // check if graph are in same binning?
         Bool_t isSameBinning = kTRUE;
         for (Int_t j = 0; j<nDataPoints-1; j++){
@@ -1152,18 +1154,14 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
         }
                 
         TF1 *fPowerlaw = new TF1("fPowerlaw","[0]*x^([1])", 0,20000);
-        if(i==0){
-            fPowerlaw->SetParameter(0, 0.005);
-            fPowerlaw->SetParameter(1, 0.13);
-        }else{
-            fPowerlaw->SetParameter(0, 0.1);
-            fPowerlaw->SetParameter(1, 2.0);
-        }
+        fPowerlaw->SetParameter(0, 0.1);
+        fPowerlaw->SetParameter(1, 2.0);
+        fPowerlaw->SetParLimits(1, 0, 100);
 
         for(Int_t l = 0; l < 10; l++) gToFit->Fit(fPowerlaw,"Q");
-        fPowerlaw->FixParameter(1,pseudoExpAlpha->GetBinContent(1));
         Double_t alpha      = fPowerlaw->GetParameter(1);
         Double_t alphaE     = TMath::Sqrt(fPowerlaw->GetParError(1)*fPowerlaw->GetParError(1)+pseudoExpAlpha->GetBinError(1)*pseudoExpAlpha->GetBinError(1));
+        fPowerlaw->FixParameter(1,pseudoExpAlpha->GetBinContent(1));
         gToFit->Fit(fPowerlaw,"Q");
         
         cout << "pT: ";
@@ -1422,7 +1420,7 @@ void PlotInterpolationSinglePtBin( TGraphErrors* gPtvSqrts,
 
 
 //________________________________________________________________________________________________________________________
-void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TString method, TString thesisPlotLabel, TString namePlot){
+void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TSpline* splineMC, TString method, TString thesisPlotLabel, TString namePlot){
 
     TCanvas * canvasAlphavsPt     = new TCanvas("AlphavsPt","",1400,900);  // gives the page size
     DrawGammaCanvasSettings( canvasAlphavsPt,  0.08, 0.02, 0.03, 0.09);
@@ -1440,6 +1438,10 @@ void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors*
 //         gAlphaMC->SetFillStyle(3144);
         gAlphaMC->Draw("same,3");
     }
+    if (splineMC){
+        splineMC->SetLineColor(kRed+2);
+        splineMC->Draw("same");
+    }    
     gAlpha->Draw("same,p");
     
     TLatex *labelThesis = new TLatex(0.13,0.90,thesisPlotLabel.Data());

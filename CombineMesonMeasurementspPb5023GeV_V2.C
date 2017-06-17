@@ -949,7 +949,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // ************************** Loading theory calculations ************************************************
     // *******************************************************************************************************        
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
-        TDirectory* directoryMB                             = (TDirectory*) fileCocktail->Get("pPb_5.023TeV");
+        TDirectory* directoryMB                             = (TDirectory*) fileTheoryCompilation->Get("pPb_5.023TeV");
         TH1F* histoDPMJetPi0                                = (TH1F*) directoryMB->Get("histoPi0SpecDPMJet5023GeV_Reb");
         TH1F* histoDPMJetEta                                = (TH1F*) directoryMB->Get("histoEtaSpecDPMJet5023GeV_Reb");
         TH1F* histoDPMJetEtaToPi0                           = (TH1F*) directoryMB->Get("histoEtaToPi0DPMJet5023GeV");
@@ -1030,7 +1030,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     Int_t offSetPi0Shifting[11]     = { 0,  6,  8,  0,  5,
                                         3,  0,  0,  0,  21,
                                         0 };
-    Int_t nComBinsPi0Shifting[11]   = { 29, 31, 30, 0,  31,
+    Int_t nComBinsPi0Shifting[11]   = { 30, 31, 30, 0,  31,
                                         17,  0,  0,  0,  0,
                                         0 };
                                         
@@ -2120,13 +2120,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     Int_t offSetsEta[11]            = { 0,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0, 
                                         0};
-    Int_t offSetsEtaSys[11]         = { 3,  0,  8,  0,  5,
+    Int_t offSetsEtaSys[11]         = { 3,  0,  7,  0,  5,
                                         0,  0,  0,  0,  0,
                                         0};
-    Int_t offSetEtaShifting[11]     = { 0,  0,  5,  0,  2,
+    Int_t offSetEtaShifting[11]     = { 0,  0,  4,  0,  2,
                                         0,  0,  0,  0,  0,
                                         0};
-    Int_t nComBinsEtaShifting[11]   = { 13,  0,  16,  0,  15,
+    Int_t nComBinsEtaShifting[11]   = { 13,  0,  17,  0,  15,
                                         0,  0,  0,  0,  0,
                                         0};                                        
     
@@ -3141,7 +3141,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     Int_t offSetsEtaToPi0[11]           = { 0,  0,  0,  0,  0,
                                             0,  0,  0,  0,  0, 
                                             0};
-    Int_t offSetsEtaToPi0Sys[11]        = { 3,  0,  8,  0,  5,
+    Int_t offSetsEtaToPi0Sys[11]        = { 3,  0,  7,  0,  5,
                                             0,  0,  0,  0,  0,
                                             0};
 
