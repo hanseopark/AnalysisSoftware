@@ -168,6 +168,9 @@ void PrepareSecondaries(    TString     meson                       = "",
     
     //***************************** read cocktail settings **********************************************************
     histMtScalingFactors                                        = (TH1F*)cocktailSettingsList->FindObject("histoMtScaleFactor");
+    // initialize mt scaling factors
+    for (Int_t i=0; i<nMotherParticles; i++) mtScaleFactor[i]   = -9999.;
+    // read in mt scaling factors
     TString tempBinLabel                                        = "";
     for (Int_t i=1; i<histMtScalingFactors->GetNbinsX()+1; i++) {
         tempBinLabel                                            = (TString)histMtScalingFactors->GetXaxis()->GetBinLabel(i);
@@ -212,7 +215,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             ptGenMax                                            = (((TObjString*)arr->At(1))->GetString()).Atof();
         }
     }
-    
+
     cocktailInputParametrizationPi0                             = (TF1*)cocktailSettingsList->FindObject("111_pt");
     cocktailInputParametrizations                               = new TF1*[nMotherParticles];
     cocktailInputParametrizationsMtScaled                       = new TF1*[nMotherParticles];
@@ -228,17 +231,19 @@ void PrepareSecondaries(    TString     meson                       = "",
         else {
             if (cocktailInputParametrizationPi0) {
                 cocktailInputParametrizationsMtScaled[i]        = (TF1*)MtScaledParam(cocktailInputParametrizationPi0, motherParticlesPDG[i].Atoi(), 111, mtScaleFactor[i], kFALSE, kTRUE);
-                cocktailInputParametrizationsMtScaled[i]->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
+                if (cocktailInputParametrizationsMtScaled[i])
+                    cocktailInputParametrizationsMtScaled[i]->SetName(Form("%s_pt_mtScaled", motherParticlesPDG[i].Data()));
             } else
                 cocktailInputParametrizationsMtScaled[i]        = NULL;
         }
     }
-    
+
     for (Int_t i=0; i<nMotherParticles; i++) {
         for (Int_t j=0; j<18; j++) {
             decayChannelsBR[i][j]                               = 0.;
         }
     }
+
     histoDecayChannelsBR                                        = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticles; i++) {
         if (!hasMother[i]) continue;

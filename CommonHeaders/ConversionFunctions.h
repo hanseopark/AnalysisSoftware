@@ -294,8 +294,7 @@
     //************************** Routine to calculate mt scaled params **************************************************
     TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_t scaleFactor, Bool_t isInvYield = kTRUE, Bool_t doAdditionalScaling = kFALSE) {
 
-        if (!param || particlePDG==0 || particleBasePDG==0 || !scaleFactor)
-            return NULL;
+        if (!param || particlePDG==0 || particleBasePDG==0 || !scaleFactor || scaleFactor<0) return NULL;
 
         Double_t mass                   = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
         Double_t massBase               = TDatabasePDG::Instance()->GetParticle(particleBasePDG)->Mass();
