@@ -860,8 +860,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         // Set Meson fit range
         if (mode == 0){
             if( fEnergyFlag.Contains("PbPb")){    
-                fMesonFitRange[0]       = 0.05;
-                fMesonFitRange[1]       = 0.25;
+                fMesonFitRange[0]       = 0.07; //0.07 -> 0.05
+                fMesonFitRange[1]       = 0.25; //0.22 -> 0.25
             } else if( fEnergyFlag.Contains("pPb")){    
                 fMesonFitRange[0]       = 0.03;
                 fMesonFitRange[1]       = 0.25;
@@ -1053,8 +1053,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         
         // Initialize default Plot default integration ranges
         if (mode == 0){
-            fMesonIntDeltaRange[0]          = -0.036;
-            fMesonIntDeltaRange[1]          = 0.018;
+            fMesonIntDeltaRange[0]          = -0.048;
+            fMesonIntDeltaRange[1]          = 0.022;
             fMesonIntDeltaRangeWide[0]      = -0.068;
             fMesonIntDeltaRangeWide[1]      = 0.032;
             fMesonIntDeltaRangeNarrow[0]    = -0.033;
