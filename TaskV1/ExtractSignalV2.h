@@ -1053,8 +1053,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         
         // Initialize default Plot default integration ranges
         if (mode == 0){
-            fMesonIntDeltaRange[0]          = -0.048;
-            fMesonIntDeltaRange[1]          = 0.022;
+            fMesonIntDeltaRange[0]          = -0.036;
+            fMesonIntDeltaRange[1]          = 0.018;
             fMesonIntDeltaRangeWide[0]      = -0.068;
             fMesonIntDeltaRangeWide[1]      = 0.032;
             fMesonIntDeltaRangeNarrow[0]    = -0.033;
