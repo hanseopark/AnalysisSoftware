@@ -481,7 +481,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // read cocktail input if available
     TString strExternalInputName                            = "";
     TH1D* histoExternalInputSecPi0[3]                       = {NULL, NULL, NULL};
-    TH1D* histoExternalInputFeedDownPi0[8]                  = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D* histoExternalInputFeedDownPi0[15]                  = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     Bool_t foundCocktailInput                               = kFALSE;
     if (!kIsMC){
         for (Int_t j = 0; j < 3; j++){
@@ -494,7 +494,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
         
         // contribution from resonance feed down
-        for (Int_t j = 0; j < 8; j++) {
+        for (Int_t j = 0; j < 15; j++) {
             histoExternalInputFeedDownPi0[j]                = (TH1D*)fileUncorrected.Get(Form("histoResonanceFeedDownPi0YieldFrom%s_FromCocktail",nameResMeson[j].Data()));
         }
     }
