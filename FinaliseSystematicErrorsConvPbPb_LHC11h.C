@@ -1265,7 +1265,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 		errorMassResolution = 0.;
 	} else {
 		errorMaterial = 4.50;
-		errorMassResolution = 1.5; // was 1.2;
+		errorMassResolution = 1.4; // was 1.2;
 	}
 	
 	if(smooth){	

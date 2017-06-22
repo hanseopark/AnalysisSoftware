@@ -144,15 +144,15 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 
     
     if (centralityString.CompareTo("0-10%") == 0 ){
-        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2017_06_21.dat", textMeson.Data());
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2017_06_22.dat", textMeson.Data());
     } else if (centralityString.CompareTo("0-5%") == 0){
-        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2017_06_21.dat", textMeson.Data());
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2017_06_22.dat", textMeson.Data());
     } else if (centralityString.CompareTo("5-10%") == 0){
-        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2017_06_21.dat", textMeson.Data());
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2017_06_22.dat", textMeson.Data());
     } else if (centralityString.CompareTo("20-40%") == 0){
-        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2017_06_21.dat", textMeson.Data());
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2017_06_22.dat", textMeson.Data());
     }else if (centralityString.CompareTo("20-50%") == 0){
-        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2017_06_21.dat", textMeson.Data());
+        fileNameSysErr = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2017_06_22.dat", textMeson.Data());
     } else {
         fileNameSysErr = Form("DummySystFile.dat"); 
     }
@@ -961,30 +961,30 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
         
         TString fileNameSysErrPi0EtaBinning;
         if (centralityString.CompareTo("0-10%") == 0 ){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0010_2017_06_21.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0010_2017_06_22.dat";
         } else if (centralityString.CompareTo("0-5%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0005_2017_06_21.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0005_2017_06_22.dat";
         } else if (centralityString.CompareTo("5-10%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0510_2017_06_21.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV0510_2017_06_22.dat";
         } else if (centralityString.CompareTo("20-40%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2040_2017_06_21.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2040_2017_06_22.dat";
         }else if (centralityString.CompareTo("20-50%") == 0){
-            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2050_2017_06_21.dat";
+            fileNameSysErrPi0EtaBinning = "SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_EtaToPi0_PbPb_2.76TeV2050_2017_06_22.dat";
         } else {
             fileNameSysErrPi0EtaBinning = "DummySystFileEta.dat"; 
         }
 
         TString fileNameSysErrPi0EtaBinningFromEta;
         if (centralityString.CompareTo("0-10%") == 0 ){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2017_06_21.dat", textMeson.Data());
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV0010_2017_06_22.dat", textMeson.Data());
         } else if (centralityString.CompareTo("0-5%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2017_06_21.dat", textMeson.Data());
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV0005_2017_06_22.dat", textMeson.Data());
         } else if (centralityString.CompareTo("5-10%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2017_06_21.dat", textMeson.Data());
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV0510_2017_06_22.dat", textMeson.Data());
         } else if (centralityString.CompareTo("20-40%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2017_06_21.dat", textMeson.Data());
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV2040_2017_06_22.dat", textMeson.Data());
             }else if (centralityString.CompareTo("20-50%") == 0){
-            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_21/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2017_06_21.dat", textMeson.Data());
+            fileNameSysErrPi0EtaBinningFromEta = Form("SystematicErrorsCalculatedGammaPbPb_LHC11h_2017_06_22/SystematicErrorAveraged_%s_PbPb_2.76TeV2050_2017_06_22.dat", textMeson.Data());
         } else {
             fileNameSysErrPi0EtaBinningFromEta = Form("DummySystFileEta.dat"); 
         }
