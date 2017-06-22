@@ -4478,7 +4478,7 @@
             return kYellow+2;
         if ( variationName.CompareTo("Qt") == 0 )
             return kOrange+2;
-        if ( variationName.CompareTo("Alpha") == 0 )
+        if ( variationName.CompareTo("Alpha") == 0 || variationName.CompareTo("Asym") == 0)
             return kBlue+2;
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return kCyan-2;
@@ -4506,7 +4506,7 @@
             return kPink-6;
         if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )
             return 860;
-        if ( variationName.CompareTo("ClusterTime") == 0 )
+        if ( variationName.CompareTo("ClusterTime") == 0 || variationName.CompareTo("TOF") == 0)
             return kBlue-4;
         if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
             return kRed-4;
@@ -4566,7 +4566,7 @@
             return 25;
         if ( variationName.CompareTo("Qt") == 0 )
             return 26;
-        if ( variationName.CompareTo("Alpha") == 0 )
+        if ( variationName.CompareTo("Alpha") == 0 ||  variationName.CompareTo("Asym") == 0)
             return 27;
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return 28;
@@ -4584,7 +4584,7 @@
             return 32;
         if ( variationName.CompareTo("ClusterM02") == 0 )
             return 33;
-        if ( variationName.CompareTo("CellTiming") == 0 )
+        if ( variationName.CompareTo("CellTiming") == 0 || variationName.CompareTo("TOF") == 0)
             return 24;
         if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )
             return 21;
@@ -4654,8 +4654,12 @@
             return "2D q_{T}";
         if ( variationName.CompareTo("Alpha") == 0 )
             return "#alpha meson";
+        if ( variationName.CompareTo("Asym") == 0 )
+            return "Asymmetry";
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return "#varphi_{conv}";
+        if ( variationName.CompareTo("TOF") == 0 )
+            return "TOF";
         if ( variationName.CompareTo("DoubleCount") == 0)
             return "double count";    
         if ( variationName.CompareTo("ClusterMinEnergy") == 0 )

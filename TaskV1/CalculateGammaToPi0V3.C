@@ -89,7 +89,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                             ){
     // switch systematics on/off
     Bool_t doSysErr                             = kFALSE;
-    if ((!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("pPb_5.023TeV") ) && mode == 0) //
+    if ((!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("pPb_5.023TeV") || 
+        !fEnergy.CompareTo("PbPb_2.76TeV") ) && mode == 0) //
         doSysErr                                = kTRUE;
     
     // Setting the general style
@@ -180,6 +181,10 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_pPb5TeV_2017_04_11.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_pPb5TeV_2017_04_11.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_pPb5TeV_2017_04_11.dat";
+    } else if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_06_21/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_06_21.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_06_21/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_06_21.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_06_21/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_06_21.dat";
     } else {
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";

@@ -954,8 +954,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     if (haveOutputGammaToPi0){
         canvasPi0Spectrum->SaveAs(Form("%s/Pi0Spectra_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
         canvasPi0SpectrumRatio->SaveAs(Form("%s/Pi0SpectraRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
-        canvasPi0SpectrumFit->SaveAs(Form("%s/Pi0SpectraFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
-        canvasPi0SpectrumFitRatio->SaveAs(Form("%s/Pi0SpectraFitRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+//         canvasPi0SpectrumFit->SaveAs(Form("%s/Pi0SpectraFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
+//         canvasPi0SpectrumFitRatio->SaveAs(Form("%s/Pi0SpectraFitRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
         canvasIncGammaToPi0Ratio->SaveAs(Form("%s/InclusiveRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
         canvasIncGammaToPi0RatioRatio->SaveAs(Form("%s/InclusiveRatiosRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
         canvasIncGammaToPi0RatioFit->SaveAs(Form("%s/InclusiveRatiosFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
