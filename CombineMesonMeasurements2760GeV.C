@@ -174,6 +174,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                                                     "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "mEMC",
                                                     "PCMOtherDataset"};
     TString  nameTrigger[6]                     = {"INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1"};
+    TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
+    TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
+    Double_t maxSecCorr[4]                      = { 0.15, 0.0020, 0.00035, 0.045};
+
     
     Color_t  colorDet[11];
     Color_t  colorDetMC[11];
@@ -216,7 +220,17 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         markerSizeDetMC[i]                      = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE)*2;
     }    
     
+    Bool_t haveEffSecCorr[4][11]                    = { {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE}, 
+                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
+                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
+                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE} };
+    TGraphAsymmErrors* graphPi0EffSecCorrFromX[4][11]   = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
 
+    
+    
     //************************** Read data for PCM **************************************************
     TFile* filePCM                                  = NULL;
     TDirectory* directoryPCMPi0                     = NULL;
@@ -346,7 +360,24 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
             cout << "Pi0 sys PCM" << endl;
             graphPCMPi0InvXSectionSys->Print();
             graphPCMPi0AccTimesEff                      = (TGraphAsymmErrors*)directoryPCMPi0->Get("EffTimesAccPi0");
+            for (Int_t k = 0; k < 4; k++){
+                graphPi0EffSecCorrFromX[k][0]           = (TGraphAsymmErrors*)directoryPCMPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+                if (graphPi0EffSecCorrFromX[k][0]){
+                    cout << nameSecPi0SourceRead[k].Data() << endl;
+                    graphPi0EffSecCorrFromX[k][0]->Print();
+                    Int_t nAboveZero                    = 0;
+                    for (Int_t i = 0; i< graphPi0EffSecCorrFromX[k][0]->GetN(); i++){
+                        if(graphPi0EffSecCorrFromX[k][0]->GetY()[i] > 0) nAboveZero++;
+                    }
+                    if (nAboveZero>0){
+                        haveEffSecCorr[k][0]            = kTRUE;
+                    } else {
+                        graphPi0EffSecCorrFromX[k][0]   = NULL;   
+                    }    
+                }
+            }    
 
+            
         directoryPCMEta                                 = (TDirectory*)filePCM->Get("Eta2.76TeV"); 
             graphPCMEtaMass                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_data");
             graphPCMEtaMass                             = ScaleGraph(graphPCMEtaMass, 1000.);
@@ -401,7 +432,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         cout << "Pi0 sys PCM-EMC" << endl;
         graphPCMEMCALPi0InvXSectionSys->Print();
         TGraphAsymmErrors* graphPCMEMCALPi0AccTimesEff      = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("EffTimesAccPi0");
+        for (Int_t k = 0; k < 4; k++){
+            graphPi0EffSecCorrFromX[k][4]                   = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+            if (graphPi0EffSecCorrFromX[k][4]){
+                haveEffSecCorr[k][4]                        = kTRUE;
+            }
+        }    
 
+        
         TH1D* histoPi0InvMassSigPlusBGPCMEMCAL[6];
         TH1D* histoPi0InvMassSigPCMEMCAL[6];
         TH1D* histoPi0InvMassSigRemBGSubPCMEMCAL[6];
@@ -584,7 +622,14 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TGraphAsymmErrors* graphEMCALPi0InvXSectionSys      = (TGraphAsymmErrors*)directoryEMCALPi0->Get("InvCrossSectionPi0Sys");
         cout << "Pi0 sys EMC-EMC" << endl;
         graphEMCALPi0InvXSectionSys->Print();
+        for (Int_t k = 0; k < 4; k++){
+            graphPi0EffSecCorrFromX[k][2]                   = (TGraphAsymmErrors*)directoryEMCALPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+            if (graphPi0EffSecCorrFromX[k][2]){
+                haveEffSecCorr[k][2]                        = kTRUE;
+            }
+        }    
 
+        
         TH1D* histoPi0InvMassSigPlusBGEMCAL[6];
         TH1D* histoPi0InvMassSigEMCAL[6];
         TH1D* histoPi0InvMassSigRemBGSubEMCAL[6];
@@ -785,6 +830,12 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
             graphEMCALMergedPi0InvXSectionStat              = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("graphInvCrossSectionPi0");
             graphEMCALMergedPi0InvXSectionSys               = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get("InvCrossSectionPi0Sys");
             if (graphEMCALMergedPi0AccTimesEffDivPur->GetX()[0] < 16 ) graphEMCALMergedPi0AccTimesEffDivPur->RemovePoint(0);
+            for (Int_t k = 0; k < 4; k++){
+                graphPi0EffSecCorrFromX[k][9]               = (TGraphAsymmErrors*)directoryEMCALmergedPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+                if (graphPi0EffSecCorrFromX[k][9]){
+                    haveEffSecCorr[k][9]                    = kTRUE;
+                }
+            }    
             
             if (flagMerged == 1 || flagMerged == 4){
                 cout << "EMCAL merged stat" << endl;
@@ -820,7 +871,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
                 }
                 graphEMCALMergedPi0InvXSectionSys->Print();
             }    
-        }    
+        }
+        
         TH1D* histoDataM02[6];
         TH1D* histoMCrecM02[6];
         TH1D* histoTruePi0M02[6];
@@ -3923,6 +3975,62 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         
     canvasTriggerEff->Update();
     canvasTriggerEff->Print(Form("%s/Eta_TriggerEff.%s",outputDir.Data(),suffix.Data()));
+    
+    
+    // **********************************************************************************************************************
+    // ******************************** effective secondary correction drawing for different methods ************************
+    // **********************************************************************************************************************    
+    TCanvas* canvasEffectiveSecCorr       = new TCanvas("canvasEffectiveSecCorr", "", 200, 10, 1200, 1100);  // gives the page size
+    DrawGammaCanvasSettings( canvasEffectiveSecCorr,  0.1, 0.01, 0.04, 0.095);
+    canvasEffectiveSecCorr->SetLogx(1);
+    
+        TH1F * histo1DEffSecCorr;
+        histo1DEffSecCorr                = new TH1F("histo1DEffSecCorr", "histo1DEffSecCorr",1000, 0.23,  31);
+        SetStyleHistoTH1ForGraphs( histo1DEffSecCorr, "#it{p}_{T} (GeV/#it{c})","R_{K^{0}_{s}}",
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
+        histo1DEffSecCorr->GetYaxis()->SetRangeUser(0, 10 );
+        histo1DEffSecCorr->GetXaxis()->SetLabelOffset(-0.01);
+        histo1DEffSecCorr->GetXaxis()->SetMoreLogLabels(kTRUE);
+
+        for (Int_t k = 0; k < 4; k++){
+            Bool_t plotCorr     = kFALSE;
+            Int_t nCorrAvail    = 0;
+            for (Int_t i = 0; i < 11; i++){
+                if (haveEffSecCorr[k][i]){
+                    nCorrAvail++;
+                    plotCorr    = kTRUE;
+                }
+            }
+            TLegend* legendEffSecCorrPi0           = GetAndSetLegend2(0.65, 0.925-(nCorrAvail*textSizeLabelsRel), 0.93, 0.925,textSizeLabelsPixel);
+            if (plotCorr){
+                histo1DEffSecCorr->GetYaxis()->SetTitle(Form("R_{%s}",nameSecPi0SourceLabel[k].Data()));
+                histo1DEffSecCorr->GetYaxis()->SetRangeUser(0, maxSecCorr[k]);
+                histo1DEffSecCorr->DrawCopy(); 
+                for (Int_t i = 0; i < 11; i++){
+                    if (haveEffSecCorr[k][i]){
+                        DrawGammaSetMarkerTGraphAsym(graphPi0EffSecCorrFromX[k][i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+                        graphPi0EffSecCorrFromX[k][i]->Draw("p,same,z");
+                        legendEffSecCorrPi0->AddEntry(graphPi0EffSecCorrFromX[k][i],nameMeasGlobalLabel[i],"p");
+                    }
+                }    
+                legendEffSecCorrPi0->Draw();
+                TLatex *labelPerfSecCorr               = new TLatex(0.15,0.90,"ALICE performance");
+                SetStyleTLatex( labelPerfSecCorr, textSizeLabelsRel,4);
+                labelPerfSecCorr->Draw();
+                TLatex *labelEnergySecCorr             = new TLatex(0.15,0.85,collisionSystem2760GeV.Data());
+                SetStyleTLatex( labelEnergySecCorr, textSizeLabelsRel,4);
+                labelEnergySecCorr->Draw();
+                TLatex *labelDetSysSecCorrPi0          = new TLatex(0.15,0.80,"#pi^{0} #rightarrow #gamma#gamma");
+                SetStyleTLatex( labelDetSysSecCorrPi0, textSizeLabelsRel,4);
+                labelDetSysSecCorrPi0->Draw();
+
+                canvasEffectiveSecCorr->Update();
+                canvasEffectiveSecCorr->Print(Form("%s/Pi0_EffectiveSecCorr_%s.%s",outputDir.Data(), nameSecPi0SourceRead[k].Data() , suffix.Data()));
+            }    
+        }    
+
+    delete canvasEffectiveSecCorr;
+
     
     // **********************************************************************************************************************
     // ******************************************* Comparison to theory calculations Pi0 ************************************
