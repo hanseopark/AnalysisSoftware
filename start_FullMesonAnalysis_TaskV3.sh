@@ -1635,7 +1635,31 @@ elif [[ "$1" == *-mAddSigpPbHIJINGC* ]] ; then
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
         PARTLY=1
         MCFILE=0
+    fi                        
+elif [[ "$1" == *-mAddSigpPb* ]] ; then
+    MERGINGMC=1
+    Suffix=$5
+    DataRootFile=$2
+    MCRootFile=$3
+    MCRootFileAddSig=$3
+    MCRootFileAddSigEta=$4
+    addedSig=1
+    if [ -f $DataRootFile ]; then
+        echo "The data file specified is $DataRootFile"
+        dataFileOK=1
+    else 
+        echo "No data file specified, analysis can not be fullfiled."
+    #  exit
     fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+        echo "The MC file specified is $MCRootFileAddSig"
+        echo "The MC file specified is $MCRootFileAddSigEta"
+    else 
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1 
+        MCFILE=0
+    fi                    
 elif [[ "$1" == *-mAddSig* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2

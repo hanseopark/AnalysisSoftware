@@ -10,11 +10,11 @@
 # This script has to be run with "bash"
 
 # switches to enable/disable certain procedures
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
-SINGLERUN=0
-SEPARATEON=0
-MERGEONSINGLEData=0
+SINGLERUN=1
+SEPARATEON=1
+MERGEONSINGLEData=1
 MERGEONSINGLEMC=0
 CLEANUP=1
 CLEANUPMAYOR=$2
@@ -286,14 +286,17 @@ TRAINDIR=Legotrain-vAN20170525FF-newDefaultPlusSys
 # LHC13b2_efix_p4MC="964";
 # LHC13e7MC="965";
 # LHC13e7MC="966";
-LHC13bData="639"; #pass 3 
-LHC13cData="636"; #pass 2
+# LHC13bData="639"; #pass 3 
+# LHC13cData="636"; #pass 2
 # LHC13b2_efix_p1MC="967"; 
 # LHC13b2_efix_p2MC="968"; 
 # LHC13b2_efix_p3MC="969"; 
 # LHC13b2_efix_p4MC="970";
 # LHC13e7MC="971";
 # LHC13e7MC="972";
+LHC13bData="647"; #pass 3 
+LHC13cData="648"; #pass 2
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

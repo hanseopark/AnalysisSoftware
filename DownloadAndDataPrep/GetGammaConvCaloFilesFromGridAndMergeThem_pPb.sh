@@ -497,10 +497,10 @@ TRAINDIR=Legotrain-vAN20170525FF-newDefaultPlusSys
 # LHC13b2_efix_p2MC="974"; 
 # LHC13b2_efix_p3MC="975"; 
 # LHC13b2_efix_p4MC="976";
-LHC13b2_efix_p1MC="983"; 
-LHC13b2_efix_p2MC="984"; 
-LHC13b2_efix_p3MC="985"; 
-LHC13b2_efix_p4MC="986";
+# LHC13b2_efix_p1MC="983"; 
+# LHC13b2_efix_p2MC="984"; 
+# LHC13b2_efix_p3MC="985"; 
+# LHC13b2_efix_p4MC="986";
 # LHC13b2_efix_p1MC="987"; 
 # LHC13b2_efix_p2MC="988"; 
 # LHC13b2_efix_p3MC="989"; 
@@ -514,6 +514,12 @@ LHC13b2_efix_p4MC="986";
 # LHC13b2_efix_p3MC="997"; 
 # LHC13b2_efix_p4MC="998";
 
+# LHC13b2_efix_p1MC="1001"; 
+# LHC13b2_efix_p2MC="1002"; 
+# LHC13b2_efix_p3MC="1003"; 
+# LHC13b2_efix_p4MC="1004";
+LHC13bData="647"; #pass 3 
+LHC13cData="648"; #pass 2
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
