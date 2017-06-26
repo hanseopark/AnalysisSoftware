@@ -1,2 +1,6 @@
 *.d
 *.so
+*.creator
+*.config
+*.files
+*.includes
