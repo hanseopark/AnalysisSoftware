@@ -3985,7 +3985,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     canvasEffectiveSecCorr->SetLogx(1);
     
         TH1F * histo1DEffSecCorr;
-        histo1DEffSecCorr                = new TH1F("histo1DEffSecCorr", "histo1DEffSecCorr",1000, 0.23,  31);
+        histo1DEffSecCorr                = new TH1F("histo1DEffSecCorr", "histo1DEffSecCorr",1000, 0.23, 70.);
         SetStyleHistoTH1ForGraphs( histo1DEffSecCorr, "#it{p}_{T} (GeV/#it{c})","R_{K^{0}_{s}}",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
         histo1DEffSecCorr->GetYaxis()->SetRangeUser(0, 10 );
