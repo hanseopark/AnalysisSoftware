@@ -103,8 +103,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TString nameFileChargedPionKaonSpectra = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Kaon_08052014.root";
     TString nameFileChargedPionKaonRAA = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
     TString nameFileOtherExp = "ExternalInputPbPb/OtherExperiments/DataCompilationFromOtherEnergiesPbPbPi0andEta.root";
-    TString nameFileCocktailParamInput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV_20April2017.root";
-    TString nameFileCocktailOutput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV_20April2017.root";
+    TString nameFileCocktailParamInput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV_6June2017.root";
+    TString nameFileCocktailOutput = "/home/admin1/leardini/newSoftware/cocktail_input/CocktailInputPbPb_Param_PbPb_2.76TeV_6June2017.root";
 
 	TString outputDir = Form("%s/%s/NeutralMesonsPCMResults",suffix.Data(),dateForOutput.Data());
 	gSystem->Exec("mkdir -p "+outputDir);
@@ -288,6 +288,136 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TString nameSecMeson[4]                         = {"K0S", "Lambda", "K0L", "Rest"};
     TString nameSecMesonPlot[4]                     = {"K_{s}^{0}", "#Lambda", "K_{l}^{0}", "Rest"};
 
+	
+    //PP PCM only
+//     TFile* fileNeutralPionDataPP = new TFile(nameFilePP.Data());
+// 	TDirectory* directoryPi07TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Pi07TeV");
+// 	TH1D* histoAccPi07TeV =             (TH1D*)directoryPi07TeV->Get("AcceptancePi0");
+// 	TH1D* histoTrueEffPtPi07TeV =       (TH1D*)directoryPi07TeV->Get("EfficiencyPi0");
+// 	TH1D* histoRawYieldPi07TeV =        (TH1D*)directoryPi07TeV->Get("RAWYieldPerEventsPi0");
+// 	TDirectory* directoryEta7TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Eta7TeV");
+// 	TH1D* histoCorrectedYieldEta7TeV = (TH1D*)directoryEta7TeV->Get("CorrectedYieldEta");
+// 	TGraphAsymmErrors* graphCorrectedYieldSysEta7TeV =   (TGraphAsymmErrors*)directoryEta7TeV->Get("EtaSystError");
+// 	TH1D* histoAccEta7TeV =             (TH1D*)directoryEta7TeV->Get("AcceptanceEta");
+// 	TH1D* histoTrueEffPtEta7TeV =       (TH1D*)directoryEta7TeV->Get("EfficiencyEta");
+// 	TH1D* histoRawYieldEta7TeV =        (TH1D*)directoryEta7TeV->Get("RAWYieldPerEventsEta");
+// 	TH1D* histoEtaMassData7TeV =        (TH1D*)directoryEta7TeV->Get("MassEta");
+// 	TH1D* histoEtaWidthData7TeV =       (TH1D*)directoryEta7TeV->Get("FWHMEtaMeV");
+// 	TH1D* histoEtaMassMC7TeV =          (TH1D*)directoryEta7TeV->Get("TrueMassEta");
+// 	TH1D* histoEtaWidthMC7TeV =         (TH1D*)directoryEta7TeV->Get("TrueFWHMEtaMeV");
+// 	TH1D* histoRatioEtaPi07TeV=        (TH1D*)directoryEta7TeV->Get("EtatoPi0RatioConversion");
+// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr7TeV=             (TGraphAsymmErrors*)directoryEta7TeV->Get("EtatoPi0RatioConversionSys");
+//
+// 	histoEtaMassData7TeV->Scale(1000.);
+// 	histoEtaMassMC7TeV->Scale(1000.);
+// 	histoEtaMassData7TeV->SetBinContent(histoEtaMassData7TeV->GetNbinsX(),0);
+// 	histoEtaMassMC7TeV->SetBinContent(histoEtaMassMC7TeV->GetNbinsX(),0);
+// 	histoEtaWidthData7TeV->SetBinContent(histoEtaWidthData7TeV->GetNbinsX(),10000.);
+// 	histoEtaWidthMC7TeV->SetBinContent(histoEtaWidthMC7TeV->GetNbinsX(),10000.);
+//
+// 	TDirectory* directoryPi0900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Pi0900GeV");
+// 	TH1D* histoAccPi0900GeV =           (TH1D*)directoryPi0900GeV->Get("AcceptancePi0");
+// 	TH1D* histoTrueEffPtPi0900GeV =  (TH1D*)directoryPi0900GeV->Get("EfficiencyPi0");
+// 	TH1D* histoRawYieldPi0900GeV =      (TH1D*)directoryPi0900GeV->Get("RAWYieldPerEventsPi0");
+// 	TDirectory* directoryEta900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Eta900GeV");
+// 	TH1D* histoCorrectedYieldEta900GeV =     (TH1D*)directoryEta900GeV->Get("CorrectedYieldEta");
+// 	TGraphAsymmErrors* graphCorrectedYieldSysEta900GeV =  (TGraphAsymmErrors*)directoryEta900GeV->Get("EtaSystError");
+// 	TH1D* histoAccEta900GeV =           (TH1D*)directoryEta900GeV->Get("AcceptanceEta");
+// 	TH1D* histoTrueEffPtEta900GeV =  (TH1D*)directoryEta900GeV->Get("EfficiencyEta");
+// 	TH1D* histoRawYieldEta900GeV =      (TH1D*)directoryEta900GeV->Get("RAWYieldPerEventsEta");
+// 	TH1D* histoRatioEtaPi0900GeV=      (TH1D*)directoryEta900GeV->Get("EtatoPi0RatioConversion");
+// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr900GeV=           (TGraphAsymmErrors*)directoryEta900GeV->Get("EtatoPi0RatioConversionSys");
+	
+// 	TDirectory* directoryPi02760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Pi02.76TeV");
+// 	TH1D* histoAccPi02760GeV =          (TH1D*)directoryPi02760GeV->Get("AcceptancePi0");
+// 	TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)directoryPi02760GeV->Get("EfficiencyPi0");
+// 	TH1D* histoRawYieldPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("RAWYieldPerEventsPi0");
+// 	TH1D* graphInvSectionPCMPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("CorrectedYieldPi0");
+// 	TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeV = (TGraphAsymmErrors*)directoryPi02760GeV->Get("Pi0SystError");
+// 	TDirectory* directoryEta2760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Eta2.76TeV");
+// 	TH1D* histoAccEta2760GeV =          (TH1D*)directoryEta2760GeV->Get("AcceptanceEta");
+// 	TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)directoryEta2760GeV->Get("EfficiencyEta");
+// 	TH1D* graphInvSectionPCMEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("CorrectedYieldEta");
+// 	TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV = (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtaSystError");
+// 	TH1D* histoRawYieldEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("RAWYieldPerEventsEta");
+// 	TH1D* histoRatioEtaPi02760GeV=     (TH1D*)directoryEta2760GeV->Get("EtatoPi0RatioConversion");
+// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr2760GeV=          (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtatoPi0RatioConversionSys");
+//
+// 	TH1D* histoEtaPCMMassData2760GeV =     (TH1D*)directoryEta2760GeV->Get("MassEta");
+// 	TH1D* histoEtaPCMWidthData2760GeV =    (TH1D*)directoryEta2760GeV->Get("FWHMEtaMeV");
+// 	TH1D* histoEtaPCMMassMC2760GeV =       (TH1D*)directoryEta2760GeV->Get("TrueMassEta");
+// 	TH1D* histoEtaPCMWidthMC2760GeV =      (TH1D*)directoryEta2760GeV->Get("TrueFWHMEtaMeV");
+// 	histoEtaPCMMassData2760GeV->Scale(1000.);
+// 	histoEtaPCMMassMC2760GeV->Scale(1000.);
+// 	histoEtaPCMMassData2760GeV->SetBinContent(histoEtaPCMMassData2760GeV->GetNbinsX(),0);
+// 	histoEtaPCMMassMC2760GeV->SetBinContent(histoEtaPCMMassMC2760GeV->GetNbinsX(),0);
+// 	histoEtaPCMWidthData2760GeV->SetBinContent(histoEtaPCMWidthData2760GeV->GetNbinsX(),10000.);
+// 	histoEtaPCMWidthMC2760GeV->SetBinContent(histoEtaPCMWidthMC2760GeV->GetNbinsX(),10000.);
+//
+// 	TH1D* histoPi0PCMMassData2760GeV =      (TH1D*)directoryPi02760GeV->Get("MassPi0");
+// 	TH1D* histoPi0PCMWidthData2760GeV =     (TH1D*)directoryPi02760GeV->Get("FWHMPi0MeV");
+// 	TH1D* histoPi0PCMMassMC2760GeV =        (TH1D*)directoryPi02760GeV->Get("TrueMassPi0");
+// 	TH1D* histoPi0PCMWidthMC2760GeV =          (TH1D*)directoryPi02760GeV->Get("TrueFWHMPi0MeV");
+// 	histoPi0PCMMassData2760GeV->Scale(1000.);
+// 	histoPi0PCMMassMC2760GeV->Scale(1000.);
+// 	histoPi0PCMMassData2760GeV->SetBinContent(histoPi0PCMMassData2760GeV->GetNbinsX(),0);
+// 	histoPi0PCMMassMC2760GeV->SetBinContent(histoPi0PCMMassMC2760GeV->GetNbinsX(),0);
+// 	histoPi0PCMWidthData2760GeV->SetBinContent(histoPi0PCMWidthData2760GeV->GetNbinsX(),10000.);
+// 	histoPi0PCMWidthMC2760GeV->SetBinContent(histoPi0PCMWidthMC2760GeV->GetNbinsX(),10000.);
+
+// 	TFile*   fileCocktail =                new TFile("CocktailInput/cocktail_allCentpluspp.root");
+// 	TDirectory* directoryCocktailpp2760GeV =           (TDirectory*)fileCocktail->Get("cocktail_pp_2760GeV_qcd");
+// 	TH1D* histoEtaFromCocktailpp2760GeV = (TH1D*)directoryCocktailpp2760GeV->Get("ptEta");
+// 	TDirectory* directoryCocktail0010 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0010_qcd");
+// 	TH1D* histoEtaFromCocktail0010 = (TH1D*)directoryCocktail0010->Get("ptEta");
+// 	TDirectory* directoryCocktail0510 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0510_qcd");
+// 	TH1D* histoEtaFromCocktail0510 = (TH1D*)directoryCocktail0510->Get("ptEta");
+// 	TDirectory* directoryCocktail1020 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_1020_qcd");
+// 	TH1D* histoEtaFromCocktail1020 = (TH1D*)directoryCocktail1020->Get("ptEta");
+// 	TDirectory* directoryCocktail2040 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_2040_qcd");
+// 	TH1D* histoEtaFromCocktail2040 = (TH1D*)directoryCocktail2040->Get("ptEta");
+// 	TDirectory* directoryCocktail4060 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_4060_qcd");
+// 	TH1D* histoEtaFromCocktail4060 = (TH1D*)directoryCocktail4060->Get("ptEta");
+// 	TDirectory* directoryCocktail6080 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_6080_qcd");
+// 	TH1D* histoEtaFromCocktail6080 = (TH1D*)directoryCocktail6080->Get("ptEta");
+// 	cout << "here 7TeV" << endl;
+	
+	TFile* fileConversionsPP = new TFile(nameFilePP.Data());
+	cout << "Pi0 in pp 2.76TeV" << endl;
+    TDirectory *folderConversionsPi0PP = (TDirectory*)fileConversionsPP->Get("Pi02.76TeV");
+    TF1* fitInvCrossSectionPi0Comb2760GeV = (TF1*)folderConversionsPi0PP->Get("TsallisFitPi0");
+    fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMPi02760GeV=       (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
+    graphInvSectionPCMPi02760GeV = ScaleGraph(graphInvSectionPCMPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeV=        (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
+    graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+
+    TDirectory *folderConversionsPi0PPSupporting = (TDirectory*)folderConversionsPi0PP->Get("Supporting");
+    TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0CorrectionFactorPCM");
+    TH1D* histoPi0PCMMassData2760GeV =     (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0MassDataPCM");
+    TH1D* histoPi0PCMWidthData2760GeV =    (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0WidthDataPCM");
+    TH1D* histoPi0PCMMassMC2760GeV =       (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0MassMCPCM");
+    TH1D* histoPi0PCMWidthMC2760GeV =      (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0WidthMCPCM");
+    histoPi0PCMMassData2760GeV->Scale(1000.);
+    histoPi0PCMMassMC2760GeV->Scale(1000.);
+
+    cout << "Eta in pp 2.76TeV" << endl;
+    TDirectory *folderConversionsEtaPP = (TDirectory*)fileConversionsPP->Get("Eta2.76TeV");
+    TF1* fitInvCrossSectionEtaComb2760GeV = (TF1*)folderConversionsEtaPP->Get("TsallisFitEta");
+    fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMEta2760GeV=       (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVStatErr");
+    graphInvSectionPCMEta2760GeV = ScaleGraph(graphInvSectionPCMEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+    TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV=        (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr");
+    graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
+
+    TDirectory *folderConversionsEtaPPSupporting = (TDirectory*)folderConversionsEtaPP->Get("Supporting");
+    TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)folderConversionsEtaPPSupporting->Get("EtaCorrectionFactorPCM");
+    TH1D* histoEtaPCMMassData2760GeV =     (TH1D*)folderConversionsEtaPPSupporting->Get("EtaMassDataPCM");
+    TH1D* histoEtaPCMWidthData2760GeV =    (TH1D*)folderConversionsEtaPPSupporting->Get("EtaWidthDataPCM");
+    TH1D* histoEtaPCMMassMC2760GeV =       (TH1D*)folderConversionsEtaPPSupporting->Get("EtaMassMCPCM");
+    TH1D* histoEtaPCMWidthMC2760GeV =      (TH1D*)folderConversionsEtaPPSupporting->Get("EtaWidthMCPCM");
+    histoEtaPCMMassData2760GeV->Scale(1000.);
+    histoEtaPCMMassMC2760GeV->Scale(1000.);
 
     //PbPb PCM only - 2011 data
     TFile*   filePCMPbPbLHC11h = new TFile(nameFilePbPbLHC11h.Data());
@@ -570,71 +700,172 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TFile *fileCocktail = new TFile(nameFileCocktailParamInput.Data());
     TList *folder0005 = (TList*)fileCocktail->Get("PbPb_2.76TeV_0005");
         TF1* paramPi0PCM0005 = (TF1*)folder0005->FindObject("NPionPCMStat_Fit");
+        TF1* paramPi0Comb0005 = (TF1*)folder0005->FindObject("NPionCombStat_Fit");
         TF1* paramEtaPCM0005 = (TF1*)folder0005->FindObject("EtaPCMStat_Fit");
         TF1* paramEtaToPi0RatioPCM0005 = (TF1*)folder0005->FindObject("EtaToNPionPCMStat_Fit");
 
-        TF1 *mTScaledEtaFromPi0PbPb2760GeV_0005 = (TF1*)MtScaledParam(paramPi0PCM0005, 221, 0.476);
-        TF1* etapi0RatioFromMtScalingPbPb2760GeV_0005  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_0005, paramPi0PCM0005, "etapi0RatioFromMtScalingPbPb2760GeV_0005");
-        TF1* etapi0RatioFromParamPbPb2760GeV_0005  = DivideTF1(paramEtaPCM0005, paramPi0PCM0005, "etapi0RatioFromParamPbPb2760GeV_0005");
-        
-        TH1D* histoetatopi0ParamToRatio_0005 = (TH1D*)paramEtaToPi0RatioPCM0005->GetHistogram();
-        TH1D* histoetatopi0FromMtScaling_0005 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_0005->GetHistogram();
-        TH1D* histoetatopi0FromRatioParams_0005 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_0005->GetHistogram();
+        TF1 *mTScaledEtaFromPi0PCMPbPb2760GeV_0005 = (TF1*)MtScaledParam(paramPi0PCM0005, 221, 0.476);
+        TF1 *mTScaledEtaFromPi0CombPbPb2760GeV_0005 = (TF1*)MtScaledParam(paramPi0Comb0005, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPCMPbPb2760GeV_0005  = DivideTF1(mTScaledEtaFromPi0PCMPbPb2760GeV_0005, paramPi0PCM0005, "etapi0RatioFromMtScalingPCMPbPb2760GeV_0005");
+        TF1* etapi0RatioFromMtScalingCombPbPb2760GeV_0005  = DivideTF1(mTScaledEtaFromPi0CombPbPb2760GeV_0005, paramPi0Comb0005, "etapi0RatioFromMtScalingCombPbPb2760GeV_0005");
+        TF1* etapi0RatioFromParamPCMPbPb2760GeV_0005  = DivideTF1(paramEtaPCM0005, paramPi0PCM0005, "etapi0RatioFromParamPCMPbPb2760GeV_0005");
+        TF1* etapi0RatioFromParamCombPbPb2760GeV_0005  = DivideTF1(paramEtaPCM0005, paramPi0Comb0005, "etapi0RatioFromParamCombPbPb2760GeV_0005");
 
+        paramEtaToPi0RatioPCM0005->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM0005->SetLineStyle(2);
+        paramEtaToPi0RatioPCM0005->SetLineWidth(2);
+        
+        etapi0RatioFromParamPCMPbPb2760GeV_0005->SetLineColor(kBlue+1);
+        etapi0RatioFromParamPCMPbPb2760GeV_0005->SetLineStyle(5);
+        etapi0RatioFromParamPCMPbPb2760GeV_0005->SetLineWidth(2);
+        etapi0RatioFromParamCombPbPb2760GeV_0005->SetLineColor(kAzure+2);
+        etapi0RatioFromParamCombPbPb2760GeV_0005->SetLineStyle(5);
+        etapi0RatioFromParamCombPbPb2760GeV_0005->SetLineWidth(2);
+        
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0005->SetLineColor(kGreen+4);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0005->SetLineStyle(3);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0005->SetLineWidth(2);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0005->SetLineColor(kSpring-6);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0005->SetLineStyle(3);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0005->SetLineWidth(2);
+        
     TList *folder0510 = (TList*)fileCocktail->Get("PbPb_2.76TeV_0510");
-        TF1* paramPi0PCM0510 = (TF1*)folder0510->FindObject("NPionCombStat_Fit");
+        TF1* paramPi0PCM0510 = (TF1*)folder0510->FindObject("NPionPCMStat_Fit");
+        TF1* paramPi0Comb0510 = (TF1*)folder0510->FindObject("NPionCombStat_Fit");
         TF1* paramEtaPCM0510 = (TF1*)folder0510->FindObject("EtaPCMStat_Fit");
         TF1* paramEtaToPi0RatioPCM0510 = (TF1*)folder0510->FindObject("EtaToNPionPCMStat_Fit");
 
-        TF1 *mTScaledEtaFromPi0PbPb2760GeV_0510 = (TF1*)MtScaledParam(paramPi0PCM0510, 221, 0.476);
-        TF1* etapi0RatioFromMtScalingPbPb2760GeV_0510  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_0510, paramPi0PCM0510, "etapi0RatioFromMtScalingPbPb2760GeV_0510");
-        TF1* etapi0RatioFromParamPbPb2760GeV_0510  = DivideTF1(paramEtaPCM0510, paramPi0PCM0510, "etapi0RatioFromParamPbPb2760GeV_0510");
+        TF1 *mTScaledEtaFromPi0PCMPbPb2760GeV_0510 = (TF1*)MtScaledParam(paramPi0PCM0510, 221, 0.476);
+        TF1 *mTScaledEtaFromPi0CombPbPb2760GeV_0510 = (TF1*)MtScaledParam(paramPi0Comb0510, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPCMPbPb2760GeV_0510  = DivideTF1(mTScaledEtaFromPi0PCMPbPb2760GeV_0510, paramPi0PCM0510, "etapi0RatioFromMtScalingPCMPbPb2760GeV_0510");
+        TF1* etapi0RatioFromMtScalingCombPbPb2760GeV_0510  = DivideTF1(mTScaledEtaFromPi0CombPbPb2760GeV_0510, paramPi0Comb0510, "etapi0RatioFromMtScalingCombPbPb2760GeV_0510");
+        TF1* etapi0RatioFromParamPCMPbPb2760GeV_0510  = DivideTF1(paramEtaPCM0510, paramPi0PCM0510, "etapi0RatioFromParamPCMPbPb2760GeV_0510");
+        TF1* etapi0RatioFromParamCombPbPb2760GeV_0510  = DivideTF1(paramEtaPCM0510, paramPi0Comb0510, "etapi0RatioFromParamCombPbPb2760GeV_0510");
+                    
+        paramEtaToPi0RatioPCM0510->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM0510->SetLineStyle(2);
+        paramEtaToPi0RatioPCM0510->SetLineWidth(2);
         
-        TH1D* histoetatopi0ParamToRatio_0510 = (TH1D*)paramEtaToPi0RatioPCM0510->GetHistogram();
-        TH1D* histoetatopi0FromMtScaling_0510 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_0510->GetHistogram();
-        TH1D* histoetatopi0FromRatioParams_0510 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_0510->GetHistogram();
+        etapi0RatioFromParamPCMPbPb2760GeV_0510->SetLineColor(kBlue+1);
+        etapi0RatioFromParamPCMPbPb2760GeV_0510->SetLineStyle(5);
+        etapi0RatioFromParamPCMPbPb2760GeV_0510->SetLineWidth(2);
+        etapi0RatioFromParamCombPbPb2760GeV_0510->SetLineColor(kAzure+2);
+        etapi0RatioFromParamCombPbPb2760GeV_0510->SetLineStyle(5);
+        etapi0RatioFromParamCombPbPb2760GeV_0510->SetLineWidth(2);
         
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0510->SetLineColor(kGreen+4);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0510->SetLineStyle(3);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0510->SetLineWidth(2);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0510->SetLineColor(kSpring-6);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0510->SetLineStyle(3);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0510->SetLineWidth(2);
+
     TList *folder0010 = (TList*)fileCocktail->Get("PbPb_2.76TeV_0010");
         TF1* paramPi0PCM0010 = (TF1*)folder0010->FindObject("NPionPCMStat_Fit");
-        TF1* paramEtaPCM0010 = (TF1*)folder0010->FindObject("EtaCombStat_Fit");
+        TF1* paramPi0Comb0010 = (TF1*)folder0010->FindObject("NPionCombStat_Fit");
+        TF1* paramEtaPCM0010 = (TF1*)folder0010->FindObject("EtaPCMStat_Fit");
+        TF1* paramEtaComb0010 = (TF1*)folder0010->FindObject("EtaCombStat_Fit");
         TF1* paramEtaToPi0RatioPCM0010 = (TF1*)folder0010->FindObject("EtaToNPionPCMStat_Fit");
-        TF1* paramCombEtaToPi0RatioPCM0010 = (TF1*)folder0010->FindObject("EtaToNPionCombStat_Fit");
+        TF1* paramEtaToPi0RatioComb0010 = (TF1*)folder0010->FindObject("EtaToNPionCombStat_Fit");
 
-        TF1 *mTScaledEtaFromPi0PbPb2760GeV_0010 = (TF1*)MtScaledParam(paramPi0PCM0010, 221, 0.476);
-        TF1* etapi0RatioFromMtScalingPbPb2760GeV_0010  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_0010, paramPi0PCM0010, "etapi0RatioFromMtScalingPbPb2760GeV_0010");
-        TF1* etapi0RatioFromParamPbPb2760GeV_0010  = DivideTF1(paramEtaPCM0010, paramPi0PCM0010, "etapi0RatioFromParamPbPb2760GeV_0010");
+        TF1 *mTScaledEtaFromPi0PCMPbPb2760GeV_0010 = (TF1*)MtScaledParam(paramPi0PCM0010, 221, 0.476);
+        mTScaledEtaFromPi0PCMPbPb2760GeV_0010->SetLineColor(kGreen+4);
+        mTScaledEtaFromPi0PCMPbPb2760GeV_0010->SetLineStyle(3);
+        TF1 *mTScaledEtaFromPi0CombPbPb2760GeV_0010 = (TF1*)MtScaledParam(paramPi0Comb0010, 221, 0.476);
+        mTScaledEtaFromPi0CombPbPb2760GeV_0010->SetLineColor(kSpring-6);
+        mTScaledEtaFromPi0CombPbPb2760GeV_0010->SetLineStyle(3);
+        TF1* etapi0RatioFromMtScalingPCMPbPb2760GeV_0010  = DivideTF1(mTScaledEtaFromPi0PCMPbPb2760GeV_0010, paramPi0PCM0010, "etapi0RatioFromMtScalingPCMPbPb2760GeV_0010");
+        TF1* etapi0RatioFromMtScalingCombPbPb2760GeV_0010  = DivideTF1(mTScaledEtaFromPi0CombPbPb2760GeV_0010, paramPi0Comb0010, "etapi0RatioFromMtScalingCombPbPb2760GeV_0010");
+        TF1* etapi0RatioFromParamPCMPbPb2760GeV_0010  = DivideTF1(paramEtaPCM0010, paramPi0PCM0010, "etapi0RatioFromParamPCMPbPb2760GeV_0010");
+        TF1* etapi0RatioFromParamCombPbPb2760GeV_0010  = DivideTF1(paramEtaComb0010, paramPi0Comb0010, "etapi0RatioFromParamCombPbPb2760GeV_0010");
+                
+        paramEtaToPi0RatioPCM0010->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM0010->SetLineStyle(2);
+        paramEtaToPi0RatioPCM0010->SetLineWidth(2);
+        paramEtaToPi0RatioComb0010->SetLineColor(kRed-4);
+        paramEtaToPi0RatioComb0010->SetLineStyle(2);
+        paramEtaToPi0RatioComb0010->SetLineWidth(2);
         
-        TH1D* histoetatopi0ParamToRatio_0010 = (TH1D*)paramEtaToPi0RatioPCM0010->GetHistogram();
-        TH1D* histoetatopi0FromMtScaling_0010 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_0010->GetHistogram();
-        TH1D* histoetatopi0FromRatioParams_0010 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_0010->GetHistogram();
+        etapi0RatioFromParamPCMPbPb2760GeV_0010->SetLineColor(kBlue+1);
+        etapi0RatioFromParamPCMPbPb2760GeV_0010->SetLineStyle(5);
+        etapi0RatioFromParamPCMPbPb2760GeV_0010->SetLineWidth(2);
+        etapi0RatioFromParamCombPbPb2760GeV_0010->SetLineColor(kAzure+2);
+        etapi0RatioFromParamCombPbPb2760GeV_0010->SetLineStyle(5);
+        etapi0RatioFromParamCombPbPb2760GeV_0010->SetLineWidth(2);
         
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0010->SetLineColor(kGreen+4);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0010->SetLineStyle(3);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0010->SetLineWidth(2);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0010->SetLineColor(kSpring-6);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0010->SetLineStyle(3);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0010->SetLineWidth(2);
         
     TList *folder2040 = (TList*)fileCocktail->Get("PbPb_2.76TeV_2040");
-        TF1* paramPi0PCM2040 = (TF1*)folder2040->FindObject("NPionCombStat_Fit");
+        TF1* paramPi0PCM2040 = (TF1*)folder2040->FindObject("NPionPCMStat_Fit");
+        TF1* paramPi0Comb2040 = (TF1*)folder2040->FindObject("NPionCombStat_Fit");
         TF1* paramEtaPCM2040 = (TF1*)folder2040->FindObject("EtaPCMStat_Fit");
         TF1* paramEtaToPi0RatioPCM2040 = (TF1*)folder2040->FindObject("EtaToNPionPCMStat_Fit");
 
-        TF1 *mTScaledEtaFromPi0PbPb2760GeV_2040 = (TF1*)MtScaledParam(paramPi0PCM2040, 221, 0.476);
-        TF1* etapi0RatioFromMtScalingPbPb2760GeV_2040  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_2040, paramPi0PCM2040, "etapi0RatioFromMtScalingPbPb2760GeV_2040");
-        TF1* etapi0RatioFromParamPbPb2760GeV_2040  = DivideTF1(paramEtaPCM2040, paramPi0PCM2040, "etapi0RatioFromParamPbPb2760GeV_2040");
+        TF1 *mTScaledEtaFromPi0PCMPbPb2760GeV_2040 = (TF1*)MtScaledParam(paramPi0PCM2040, 221, 0.476);
+        TF1 *mTScaledEtaFromPi0CombPbPb2760GeV_2040 = (TF1*)MtScaledParam(paramPi0Comb2040, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPCMPbPb2760GeV_2040  = DivideTF1(mTScaledEtaFromPi0PCMPbPb2760GeV_2040, paramPi0PCM2040, "etapi0RatioFromMtScalingPCMPbPb2760GeV_2040");
+        TF1* etapi0RatioFromMtScalingCombPbPb2760GeV_2040  = DivideTF1(mTScaledEtaFromPi0CombPbPb2760GeV_2040, paramPi0Comb2040, "etapi0RatioFromMtScalingCombPbPb2760GeV_2040");
+        TF1* etapi0RatioFromParamPCMPbPb2760GeV_2040  = DivideTF1(paramEtaPCM2040, paramPi0PCM2040, "etapi0RatioFromParamPCMPbPb2760GeV_2040");
+        TF1* etapi0RatioFromParamCombPbPb2760GeV_2040  = DivideTF1(paramEtaPCM2040, paramPi0Comb2040, "etapi0RatioFromParamCombPbPb2760GeV_2040");
         
-        TH1D* histoetatopi0ParamToRatio_2040 = (TH1D*)paramEtaToPi0RatioPCM2040->GetHistogram();
-        TH1D* histoetatopi0FromMtScaling_2040 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_2040->GetHistogram();
-        TH1D* histoetatopi0FromRatioParams_2040 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_2040->GetHistogram();
+        paramEtaToPi0RatioPCM2040->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM2040->SetLineStyle(2);
+        paramEtaToPi0RatioPCM2040->SetLineWidth(2);
+        
+        etapi0RatioFromParamPCMPbPb2760GeV_2040->SetLineColor(kBlue+1);
+        etapi0RatioFromParamPCMPbPb2760GeV_2040->SetLineStyle(5);
+        etapi0RatioFromParamPCMPbPb2760GeV_2040->SetLineWidth(2);
+        etapi0RatioFromParamCombPbPb2760GeV_2040->SetLineColor(kAzure+2);
+        etapi0RatioFromParamCombPbPb2760GeV_2040->SetLineStyle(5);
+        etapi0RatioFromParamCombPbPb2760GeV_2040->SetLineWidth(2);
+        
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2040->SetLineColor(kGreen+4);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2040->SetLineStyle(3);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2040->SetLineWidth(2);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2040->SetLineColor(kSpring-6);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2040->SetLineStyle(3);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2040->SetLineWidth(2);
 
     TList *folder2050 = (TList*)fileCocktail->Get("PbPb_2.76TeV_2050");
-        TF1* paramPi0PCM2050 = (TF1*)folder2050->FindObject("NPionCombStat_Fit");
-        TF1* paramEtaPCM2050 = (TF1*)folder2050->FindObject("EtaCombStat_Fit");
+        TF1* paramPi0PCM2050 = (TF1*)folder2050->FindObject("NPionPCMStat_Fit");
+        TF1* paramPi0Comb2050 = (TF1*)folder2050->FindObject("NPionCombStat_Fit");
+        TF1* paramEtaPCM2050 = (TF1*)folder2050->FindObject("EtaPCMStat_Fit");
+        TF1* paramEtaComb2050 = (TF1*)folder2050->FindObject("EtaCombStat_Fit");
         TF1* paramEtaToPi0RatioPCM2050 = (TF1*)folder2050->FindObject("EtaToNPionPCMStat_Fit");
-        TF1* paramCombEtaToPi0RatioPCM2050 = (TF1*)folder2050->FindObject("EtaToNPionCombStat_Fit");
+        TF1* paramEtaToPi0RatioComb2050 = (TF1*)folder2050->FindObject("EtaToNPionCombStat_Fit");
 
-        TF1 *mTScaledEtaFromPi0PbPb2760GeV_2050 = (TF1*)MtScaledParam(paramPi0PCM2050, 221, 0.476);
-        TF1* etapi0RatioFromMtScalingPbPb2760GeV_2050  = DivideTF1(mTScaledEtaFromPi0PbPb2760GeV_2050, paramPi0PCM2050, "etapi0RatioFromMtScalingPbPb2760GeV_2050");
-        TF1* etapi0RatioFromParamPbPb2760GeV_2050  = DivideTF1(paramEtaPCM2050, paramPi0PCM2050, "etapi0RatioFromParamPbPb2760GeV_2050");
+        TF1 *mTScaledEtaFromPi0PCMPbPb2760GeV_2050 = (TF1*)MtScaledParam(paramPi0PCM2050, 221, 0.476);
+        TF1 *mTScaledEtaFromPi0CombPbPb2760GeV_2050 = (TF1*)MtScaledParam(paramPi0Comb2050, 221, 0.476);
+        TF1* etapi0RatioFromMtScalingPCMPbPb2760GeV_2050  = DivideTF1(mTScaledEtaFromPi0PCMPbPb2760GeV_2050, paramPi0PCM2050, "etapi0RatioFromMtScalingPCMPbPb2760GeV_2050");
+        TF1* etapi0RatioFromMtScalingCombPbPb2760GeV_2050  = DivideTF1(mTScaledEtaFromPi0CombPbPb2760GeV_2050, paramPi0Comb2050, "etapi0RatioFromMtScalingCombPbPb2760GeV_2050");
+        TF1* etapi0RatioFromParamPCMPbPb2760GeV_2050  = DivideTF1(paramEtaPCM2050, paramPi0PCM2050, "etapi0RatioFromParamPCMPbPb2760GeV_2050");
+        TF1* etapi0RatioFromParamCombPbPb2760GeV_2050  = DivideTF1(paramEtaComb2050, paramPi0Comb2050, "etapi0RatioFromParamCombPbPb2760GeV_2050");
         
-        TH1D* histoetatopi0ParamToRatio_2050 = (TH1D*)paramEtaToPi0RatioPCM2050->GetHistogram();
-        TH1D* histoetatopi0FromMtScaling_2050 = (TH1D*)etapi0RatioFromMtScalingPbPb2760GeV_2050->GetHistogram();
-        TH1D* histoetatopi0FromRatioParams_2050 = (TH1D*)etapi0RatioFromParamPbPb2760GeV_2050->GetHistogram();
+        paramEtaToPi0RatioPCM2050->SetLineColor(kRed+2);
+        paramEtaToPi0RatioPCM2050->SetLineStyle(2);
+        paramEtaToPi0RatioPCM2050->SetLineWidth(2);
+        paramEtaToPi0RatioComb2050->SetLineColor(kRed-4);
+        paramEtaToPi0RatioComb2050->SetLineStyle(2);
+        paramEtaToPi0RatioComb2050->SetLineWidth(2);
+        
+        etapi0RatioFromParamPCMPbPb2760GeV_2050->SetLineColor(kBlue+1);
+        etapi0RatioFromParamPCMPbPb2760GeV_2050->SetLineStyle(5);
+        etapi0RatioFromParamPCMPbPb2760GeV_2050->SetLineWidth(2);
+        etapi0RatioFromParamCombPbPb2760GeV_2050->SetLineColor(kAzure+2);
+        etapi0RatioFromParamCombPbPb2760GeV_2050->SetLineStyle(5);
+        etapi0RatioFromParamCombPbPb2760GeV_2050->SetLineWidth(2);
+        
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2050->SetLineColor(kGreen+4);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2050->SetLineStyle(3);
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2050->SetLineWidth(2);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2050->SetLineColor(kSpring-6);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2050->SetLineStyle(3);
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2050->SetLineWidth(2);
 
         
     TString fileNamePP2760GeVpublished      = "ExternalInputPbPb/NeutralMesonspp276GeVReference/CombinedResultsPaperPP2760GeV_2017_01_26_FrediV2Clusterizer.root";
@@ -807,136 +1038,6 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	Double_t normErr2040 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2040/tAA2040),2)+pow((commonCentralityErr2040/100),2),0.5);
 	Double_t normErr2050 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2040/tAA2040),2)+pow((commonCentralityErr2040/100),2),0.5);
 	
-	
-    //PP PCM only
-//     TFile* fileNeutralPionDataPP = new TFile(nameFilePP.Data());
-// 	TDirectory* directoryPi07TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Pi07TeV");
-// 	TH1D* histoAccPi07TeV =             (TH1D*)directoryPi07TeV->Get("AcceptancePi0");
-// 	TH1D* histoTrueEffPtPi07TeV =       (TH1D*)directoryPi07TeV->Get("EfficiencyPi0");
-// 	TH1D* histoRawYieldPi07TeV =        (TH1D*)directoryPi07TeV->Get("RAWYieldPerEventsPi0");
-// 	TDirectory* directoryEta7TeV =      (TDirectory*)fileNeutralPionDataPP->Get("Eta7TeV");
-// 	TH1D* histoCorrectedYieldEta7TeV = (TH1D*)directoryEta7TeV->Get("CorrectedYieldEta");
-// 	TGraphAsymmErrors* graphCorrectedYieldSysEta7TeV =   (TGraphAsymmErrors*)directoryEta7TeV->Get("EtaSystError");
-// 	TH1D* histoAccEta7TeV =             (TH1D*)directoryEta7TeV->Get("AcceptanceEta");
-// 	TH1D* histoTrueEffPtEta7TeV =       (TH1D*)directoryEta7TeV->Get("EfficiencyEta");
-// 	TH1D* histoRawYieldEta7TeV =        (TH1D*)directoryEta7TeV->Get("RAWYieldPerEventsEta");
-// 	TH1D* histoEtaMassData7TeV =        (TH1D*)directoryEta7TeV->Get("MassEta");
-// 	TH1D* histoEtaWidthData7TeV =       (TH1D*)directoryEta7TeV->Get("FWHMEtaMeV");
-// 	TH1D* histoEtaMassMC7TeV =          (TH1D*)directoryEta7TeV->Get("TrueMassEta");
-// 	TH1D* histoEtaWidthMC7TeV =         (TH1D*)directoryEta7TeV->Get("TrueFWHMEtaMeV");
-// 	TH1D* histoRatioEtaPi07TeV=        (TH1D*)directoryEta7TeV->Get("EtatoPi0RatioConversion");
-// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr7TeV=             (TGraphAsymmErrors*)directoryEta7TeV->Get("EtatoPi0RatioConversionSys");
-//
-// 	histoEtaMassData7TeV->Scale(1000.);
-// 	histoEtaMassMC7TeV->Scale(1000.);
-// 	histoEtaMassData7TeV->SetBinContent(histoEtaMassData7TeV->GetNbinsX(),0);
-// 	histoEtaMassMC7TeV->SetBinContent(histoEtaMassMC7TeV->GetNbinsX(),0);
-// 	histoEtaWidthData7TeV->SetBinContent(histoEtaWidthData7TeV->GetNbinsX(),10000.);
-// 	histoEtaWidthMC7TeV->SetBinContent(histoEtaWidthMC7TeV->GetNbinsX(),10000.);
-//
-// 	TDirectory* directoryPi0900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Pi0900GeV");
-// 	TH1D* histoAccPi0900GeV =           (TH1D*)directoryPi0900GeV->Get("AcceptancePi0");
-// 	TH1D* histoTrueEffPtPi0900GeV =  (TH1D*)directoryPi0900GeV->Get("EfficiencyPi0");
-// 	TH1D* histoRawYieldPi0900GeV =      (TH1D*)directoryPi0900GeV->Get("RAWYieldPerEventsPi0");
-// 	TDirectory* directoryEta900GeV =    (TDirectory*)fileNeutralPionDataPP->Get("Eta900GeV");
-// 	TH1D* histoCorrectedYieldEta900GeV =     (TH1D*)directoryEta900GeV->Get("CorrectedYieldEta");
-// 	TGraphAsymmErrors* graphCorrectedYieldSysEta900GeV =  (TGraphAsymmErrors*)directoryEta900GeV->Get("EtaSystError");
-// 	TH1D* histoAccEta900GeV =           (TH1D*)directoryEta900GeV->Get("AcceptanceEta");
-// 	TH1D* histoTrueEffPtEta900GeV =  (TH1D*)directoryEta900GeV->Get("EfficiencyEta");
-// 	TH1D* histoRawYieldEta900GeV =      (TH1D*)directoryEta900GeV->Get("RAWYieldPerEventsEta");
-// 	TH1D* histoRatioEtaPi0900GeV=      (TH1D*)directoryEta900GeV->Get("EtatoPi0RatioConversion");
-// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr900GeV=           (TGraphAsymmErrors*)directoryEta900GeV->Get("EtatoPi0RatioConversionSys");
-	
-// 	TDirectory* directoryPi02760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Pi02.76TeV");
-// 	TH1D* histoAccPi02760GeV =          (TH1D*)directoryPi02760GeV->Get("AcceptancePi0");
-// 	TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)directoryPi02760GeV->Get("EfficiencyPi0");
-// 	TH1D* histoRawYieldPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("RAWYieldPerEventsPi0");
-// 	TH1D* graphInvSectionPCMPi02760GeV =  (TH1D*)directoryPi02760GeV->Get("CorrectedYieldPi0");
-// 	TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeV = (TGraphAsymmErrors*)directoryPi02760GeV->Get("Pi0SystError");
-// 	TDirectory* directoryEta2760GeV =   (TDirectory*)fileNeutralPionDataPP->Get("Eta2.76TeV");
-// 	TH1D* histoAccEta2760GeV =          (TH1D*)directoryEta2760GeV->Get("AcceptanceEta");
-// 	TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)directoryEta2760GeV->Get("EfficiencyEta");
-// 	TH1D* graphInvSectionPCMEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("CorrectedYieldEta");
-// 	TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV = (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtaSystError");
-// 	TH1D* histoRawYieldEta2760GeV =  (TH1D*)directoryEta2760GeV->Get("RAWYieldPerEventsEta");
-// 	TH1D* histoRatioEtaPi02760GeV=     (TH1D*)directoryEta2760GeV->Get("EtatoPi0RatioConversion");
-// 	TGraphAsymmErrors* graphRatioEtaPi0SystErr2760GeV=          (TGraphAsymmErrors*)directoryEta2760GeV->Get("EtatoPi0RatioConversionSys");
-//
-// 	TH1D* histoEtaPCMMassData2760GeV =     (TH1D*)directoryEta2760GeV->Get("MassEta");
-// 	TH1D* histoEtaPCMWidthData2760GeV =    (TH1D*)directoryEta2760GeV->Get("FWHMEtaMeV");
-// 	TH1D* histoEtaPCMMassMC2760GeV =       (TH1D*)directoryEta2760GeV->Get("TrueMassEta");
-// 	TH1D* histoEtaPCMWidthMC2760GeV =      (TH1D*)directoryEta2760GeV->Get("TrueFWHMEtaMeV");
-// 	histoEtaPCMMassData2760GeV->Scale(1000.);
-// 	histoEtaPCMMassMC2760GeV->Scale(1000.);
-// 	histoEtaPCMMassData2760GeV->SetBinContent(histoEtaPCMMassData2760GeV->GetNbinsX(),0);
-// 	histoEtaPCMMassMC2760GeV->SetBinContent(histoEtaPCMMassMC2760GeV->GetNbinsX(),0);
-// 	histoEtaPCMWidthData2760GeV->SetBinContent(histoEtaPCMWidthData2760GeV->GetNbinsX(),10000.);
-// 	histoEtaPCMWidthMC2760GeV->SetBinContent(histoEtaPCMWidthMC2760GeV->GetNbinsX(),10000.);
-//
-// 	TH1D* histoPi0PCMMassData2760GeV =      (TH1D*)directoryPi02760GeV->Get("MassPi0");
-// 	TH1D* histoPi0PCMWidthData2760GeV =     (TH1D*)directoryPi02760GeV->Get("FWHMPi0MeV");
-// 	TH1D* histoPi0PCMMassMC2760GeV =        (TH1D*)directoryPi02760GeV->Get("TrueMassPi0");
-// 	TH1D* histoPi0PCMWidthMC2760GeV =          (TH1D*)directoryPi02760GeV->Get("TrueFWHMPi0MeV");
-// 	histoPi0PCMMassData2760GeV->Scale(1000.);
-// 	histoPi0PCMMassMC2760GeV->Scale(1000.);
-// 	histoPi0PCMMassData2760GeV->SetBinContent(histoPi0PCMMassData2760GeV->GetNbinsX(),0);
-// 	histoPi0PCMMassMC2760GeV->SetBinContent(histoPi0PCMMassMC2760GeV->GetNbinsX(),0);
-// 	histoPi0PCMWidthData2760GeV->SetBinContent(histoPi0PCMWidthData2760GeV->GetNbinsX(),10000.);
-// 	histoPi0PCMWidthMC2760GeV->SetBinContent(histoPi0PCMWidthMC2760GeV->GetNbinsX(),10000.);
-
-// 	TFile*   fileCocktail =                new TFile("CocktailInput/cocktail_allCentpluspp.root");
-// 	TDirectory* directoryCocktailpp2760GeV =           (TDirectory*)fileCocktail->Get("cocktail_pp_2760GeV_qcd");
-// 	TH1D* histoEtaFromCocktailpp2760GeV = (TH1D*)directoryCocktailpp2760GeV->Get("ptEta");
-// 	TDirectory* directoryCocktail0010 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0010_qcd");
-// 	TH1D* histoEtaFromCocktail0010 = (TH1D*)directoryCocktail0010->Get("ptEta");
-// 	TDirectory* directoryCocktail0510 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_0510_qcd");
-// 	TH1D* histoEtaFromCocktail0510 = (TH1D*)directoryCocktail0510->Get("ptEta");
-// 	TDirectory* directoryCocktail1020 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_1020_qcd");
-// 	TH1D* histoEtaFromCocktail1020 = (TH1D*)directoryCocktail1020->Get("ptEta");
-// 	TDirectory* directoryCocktail2040 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_2040_qcd");
-// 	TH1D* histoEtaFromCocktail2040 = (TH1D*)directoryCocktail2040->Get("ptEta");
-// 	TDirectory* directoryCocktail4060 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_4060_qcd");
-// 	TH1D* histoEtaFromCocktail4060 = (TH1D*)directoryCocktail4060->Get("ptEta");
-// 	TDirectory* directoryCocktail6080 =             (TDirectory*)fileCocktail->Get("cocktail_PbPb_6080_qcd");
-// 	TH1D* histoEtaFromCocktail6080 = (TH1D*)directoryCocktail6080->Get("ptEta");
-// 	cout << "here 7TeV" << endl;
-	
-	TFile* fileConversionsPP = new TFile(nameFilePP.Data());
-	cout << "Pi0 in pp 2.76TeV" << endl;
-    TDirectory *folderConversionsPi0PP = (TDirectory*)fileConversionsPP->Get("Pi02.76TeV");
-    TF1* fitInvCrossSectionPi0Comb2760GeV = (TF1*)folderConversionsPi0PP->Get("TsallisFitPi0");
-    fitInvCrossSectionPi0Comb2760GeV->SetParameter(0, fitInvCrossSectionPi0Comb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMPi02760GeV=       (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
-    graphInvSectionPCMPi02760GeV = ScaleGraph(graphInvSectionPCMPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMSysPi02760GeV=        (TGraphAsymmErrors*)folderConversionsPi0PP->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
-    graphInvSectionPCMSysPi02760GeV = ScaleGraph(graphInvSectionPCMSysPi02760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-
-    TDirectory *folderConversionsPi0PPSupporting = (TDirectory*)folderConversionsPi0PP->Get("Supporting");
-    TH1D* histoTrueEffPtPi02760GeV =    (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0CorrectionFactorPCM");
-    TH1D* histoPi0PCMMassData2760GeV =     (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0MassDataPCM");
-    TH1D* histoPi0PCMWidthData2760GeV =    (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0WidthDataPCM");
-    TH1D* histoPi0PCMMassMC2760GeV =       (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0MassMCPCM");
-    TH1D* histoPi0PCMWidthMC2760GeV =      (TH1D*)folderConversionsPi0PPSupporting->Get("Pi0WidthMCPCM");
-    histoPi0PCMMassData2760GeV->Scale(1000.);
-    histoPi0PCMMassMC2760GeV->Scale(1000.);
-
-    cout << "Eta in pp 2.76TeV" << endl;
-    TDirectory *folderConversionsEtaPP = (TDirectory*)fileConversionsPP->Get("Eta2.76TeV");
-    TF1* fitInvCrossSectionEtaComb2760GeV = (TF1*)folderConversionsEtaPP->Get("TsallisFitEta");
-    fitInvCrossSectionEtaComb2760GeV->SetParameter(0, fitInvCrossSectionEtaComb2760GeV->GetParameter(0)*1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMEta2760GeV=       (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVStatErr");
-    graphInvSectionPCMEta2760GeV = ScaleGraph(graphInvSectionPCMEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-    TGraphAsymmErrors* graphInvSectionPCMSysEta2760GeV=        (TGraphAsymmErrors*)folderConversionsEtaPP->Get("graphInvCrossSectionEtaPCM2760GeVSysErr");
-    graphInvSectionPCMSysEta2760GeV = ScaleGraph(graphInvSectionPCMSysEta2760GeV,1./(xSection2760GeVpp*recalcBarn)*factorToInel);
-
-    TDirectory *folderConversionsEtaPPSupporting = (TDirectory*)folderConversionsEtaPP->Get("Supporting");
-    TH1D* histoTrueEffPtEta2760GeV =    (TH1D*)folderConversionsEtaPPSupporting->Get("EtaCorrectionFactorPCM");
-    TH1D* histoEtaPCMMassData2760GeV =     (TH1D*)folderConversionsEtaPPSupporting->Get("EtaMassDataPCM");
-    TH1D* histoEtaPCMWidthData2760GeV =    (TH1D*)folderConversionsEtaPPSupporting->Get("EtaWidthDataPCM");
-    TH1D* histoEtaPCMMassMC2760GeV =       (TH1D*)folderConversionsEtaPPSupporting->Get("EtaMassMCPCM");
-    TH1D* histoEtaPCMWidthMC2760GeV =      (TH1D*)folderConversionsEtaPPSupporting->Get("EtaWidthMCPCM");
-    histoEtaPCMMassData2760GeV->Scale(1000.);
-    histoEtaPCMMassMC2760GeV->Scale(1000.);
 
 		
 	Width_t  widthLinesBoxes            = 1.4;
@@ -2430,6 +2531,55 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	delete canvas6PartEtaMassWidthLHC11h;*/
 
 
+	TCanvas* canvasParams = new TCanvas("canvasParams","",200,10,1350,1350*1.15); // gives the page size
+	DrawGammaCanvasSettings( canvasParams,  0.16, 0.02, 0.02, 0.09);
+	canvasParams->SetLogy();
+	canvasParams->SetLogx();
+    TH2F *histo2DInvYield = new TH2F("histo2DInvYield","histo2DInvYield",11000,0.1,30,1000,1e-9,1e4);
+    SetStyleHistoTH2ForGraphs(histo2DInvYield, "#it{p}_{T} (GeV/#it{c})","",textSize,0.04, textSize,0.04, 1.,1.6);
+//     histo2DInvYield->GetXaxis()->SetMoreLogLabels();
+    histo2DInvYield->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DInvYield->Draw("copy");
+
+    paramEtaComb0010->Draw("c,same,histo");
+    paramEtaComb2050->Draw("c,same,histo");
+    paramEtaPCM0005->Draw("c,same,histo");
+    paramEtaPCM0010->Draw("c,same,histo");
+    paramEtaPCM0510->Draw("c,same,histo");
+    paramEtaPCM2040->Draw("c,same,histo");
+    paramEtaPCM2050->Draw("c,same,histo");
+    mTScaledEtaFromPi0PCMPbPb2760GeV_0510->Draw("c,same,histo");
+    mTScaledEtaFromPi0CombPbPb2760GeV_0510->Draw("c,same,histo");
+    mTScaledEtaFromPi0PCMPbPb2760GeV_0005->Draw("c,same,histo");
+    mTScaledEtaFromPi0CombPbPb2760GeV_0005->Draw("c,same,histo");
+    mTScaledEtaFromPi0PCMPbPb2760GeV_0010->Draw("c,same,histo");
+    mTScaledEtaFromPi0CombPbPb2760GeV_0010->Draw("c,same,histo");
+    mTScaledEtaFromPi0PCMPbPb2760GeV_2040->Draw("c,same,histo");
+    mTScaledEtaFromPi0CombPbPb2760GeV_2040->Draw("c,same,histo");
+    mTScaledEtaFromPi0PCMPbPb2760GeV_2050->Draw("c,same,histo");
+    mTScaledEtaFromPi0CombPbPb2760GeV_2050->Draw("c,same,histo");
+
+    canvasParams->SaveAs(Form("%s/ParametrizationsEta.%s",outputDir.Data(),suffix.Data()));
+    
+    histo2DInvYield->Draw("copy");
+
+
+    paramPi0Comb0010->Draw("c,same,histo");
+    paramPi0Comb0005->Draw("c,same,histo");
+    paramPi0Comb0510->Draw("c,same,histo");
+    paramPi0Comb2040->Draw("c,same,histo");
+    paramPi0Comb2050->Draw("c,same,histo");
+    paramPi0PCM0005->Draw("c,same,histo");
+    paramPi0PCM0010->Draw("c,same,histo");
+    paramPi0PCM0510->Draw("c,same,histo");
+    paramPi0PCM2040->Draw("c,same,histo");
+    paramPi0PCM2050->Draw("c,same,histo");
+    mTScaledEtaFromPi0PCMPbPb2760GeV_0010->Draw("c,same,histo");
+    mTScaledEtaFromPi0CombPbPb2760GeV_0010->Draw("c,same,histo");
+    
+    canvasParams->SaveAs(Form("%s/ParametrizationsPi0.%s",outputDir.Data(),suffix.Data()));
+
+    
     gStyle->SetErrorX(0.);
     gStyle->SetEndErrorSize(0); //or Z option
 	
@@ -2471,6 +2621,11 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	DrawGammaSetMarkerTGraphAsym(graphPCMEtaCorrectedSpecSysPbPbLHC11h2050, markerStylePbPb2040,markerSizePbPb2040, colorCombPbPb2040 , colorCombPbPb2040, widthLinesBoxes, kTRUE);
 	graphPCMEtaCorrectedSpecSysPbPbLHC11h2050->Draw("E2same");
 
+//     paramEtaComb0010->Draw("c,same,histo");
+//     paramEtaPCM0010->Draw("c,same,histo");
+//     mTScaledEtaFromPi0PCMPbPb2760GeV_0010->Draw("c,same,histo");
+//     mTScaledEtaFromPi0CombPbPb2760GeV_0010->Draw("c,same,histo");
+    
 	TLegend* legendEtaSpectra = new TLegend(0.2,0.14,0.6,0.28);// with PP points 0.2,0.12,0.8,0.3);
 	legendEtaSpectra->SetFillColor(0);
 	legendEtaSpectra->SetLineColor(0);
@@ -2550,7 +2705,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 	histoPCMPi0CorrectedSpecPbPbLHC11h2050->Draw("p,same");
 	DrawGammaSetMarkerTGraphAsym(graphPCMPi0CorrectedSpecSysPbPbLHC11h2050, markerStylePbPb2040,markerSizePbPb2040, colorCombPbPb2040 , colorCombPbPb2040, widthLinesBoxes, kTRUE);
 	graphPCMPi0CorrectedSpecSysPbPbLHC11h2050->Draw("E2same");
-
+    
+//     paramPi0Comb0010->Draw("c,same,histo");
+//     paramPi0PCM0010->Draw("c,same,histo");
+    
 	TLatex *labelSpectraPi0LabelPbPb = new TLatex(0.6,0.89,"#pi^{0} #rightarrow #gamma #gamma #rightarrow e^{+}e^{-} e^{+}e^{-}");
 	SetStyleTLatex( labelSpectraPi0LabelPbPb, 0.035  ,4);
 	labelSpectraPi0LabelPbPb->Draw();
@@ -2720,54 +2878,33 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
         graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
         graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
-
-        paramEtaToPi0RatioPCM0010->SetLineColor(kRed+2);
-        paramEtaToPi0RatioPCM0010->SetLineStyle(2);
-        paramEtaToPi0RatioPCM0010->SetLineWidth(2);
-        paramEtaToPi0RatioPCM0010->Draw("c,histo,same");
-
-        paramCombEtaToPi0RatioPCM0010->SetLineColor(kMagenta+2);
-        paramCombEtaToPi0RatioPCM0010->SetLineStyle(4);
-        paramCombEtaToPi0RatioPCM0010->SetLineWidth(2);
-        paramCombEtaToPi0RatioPCM0010->Draw("c,histo,same");
         
-        etapi0RatioFromMtScalingPbPb2760GeV_0010->SetLineColor(kBlue+1);
-        etapi0RatioFromMtScalingPbPb2760GeV_0010->SetLineStyle(3);
-        etapi0RatioFromMtScalingPbPb2760GeV_0010->SetLineWidth(2);
-        //         etapi0RatioFromMtScalingPbPb2760GeV_0010->GetXaxis()->SetRangeUser(1,11);
-        etapi0RatioFromMtScalingPbPb2760GeV_0010->Draw("c,histo,same");
-
-        etapi0RatioFromParamPbPb2760GeV_0010->SetLineColor(kGreen+2);
-        etapi0RatioFromParamPbPb2760GeV_0010->SetLineStyle(5);
-        etapi0RatioFromParamPbPb2760GeV_0010->SetLineWidth(2);
-        //         etapi0RatioFromParamPbPb2760GeV_0010->GetXaxis()->SetRangeUser(0.8,11);
-        etapi0RatioFromParamPbPb2760GeV_0010->Draw("c,histo,same");
+        paramEtaToPi0RatioPCM0010->Draw("c,histo,same");
+        paramEtaToPi0RatioComb0010->Draw("c,histo,same");
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0010->Draw("c,histo,same");
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0010->Draw("c,histo,same");
+        etapi0RatioFromParamPCMPbPb2760GeV_0010->Draw("c,histo,same");
+        etapi0RatioFromParamCombPbPb2760GeV_0010->Draw("c,histo,same");
 
         if(thesisPlotting) thesisLabel3->Draw();
 
-        TLegend* legendEtatoPi0_withParam = new TLegend(0.12,0.67,0.53,0.89);
+        TLegend* legendEtatoPi0_withParam = new TLegend(0.12,0.67,0.8,0.89);
         legendEtatoPi0_withParam->SetFillColor(0);
         legendEtatoPi0_withParam->SetLineColor(0);
         legendEtatoPi0_withParam->SetTextFont(42);
         legendEtatoPi0_withParam->SetTextSize(textSize);
         legendEtatoPi0_withParam->SetMargin(0.17);
+        legendEtatoPi0_withParam->SetNColumns(2);
         legendEtatoPi0_withParam->SetHeader(collisionSystemPbPb.Data());
         legendEtatoPi0_withParam->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0010," 0#font[122]{-}10%","pf");//collisionSystemPbPb0010.Data(),"pf");
-        legendEtatoPi0_withParam->AddEntry(paramEtaToPi0RatioPCM0010,"param to PCM ratio","l");
-        legendEtatoPi0_withParam->AddEntry(paramCombEtaToPi0RatioPCM0010,"param to combined PCM-EMCal ratio","l");
-        legendEtatoPi0_withParam->AddEntry(etapi0RatioFromParamPbPb2760GeV_0010,"Comb #eta/PCM #pi^{0} spectra param","l");
-        legendEtatoPi0_withParam->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_0010,"m_{T}-scaled #eta from PCM #pi^{0} param","l");
+        legendEtatoPi0_withParam->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam->AddEntry(paramEtaToPi0RatioPCM0010,"PCM","l");
+        legendEtatoPi0_withParam->AddEntry(paramEtaToPi0RatioComb0010,"Comb","l");
+        legendEtatoPi0_withParam->AddEntry(etapi0RatioFromParamPCMPbPb2760GeV_0010,"PCM spectra","l");
+        legendEtatoPi0_withParam->AddEntry(etapi0RatioFromParamCombPbPb2760GeV_0010,"Comb spectra","l");
+        legendEtatoPi0_withParam->AddEntry(etapi0RatioFromMtScalingPCMPbPb2760GeV_0010,"m_{T}-scaled PCM","l");
+        legendEtatoPi0_withParam->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_0010,"m_{T}-scaled Comb","l");
         legendEtatoPi0_withParam->Draw();
-
-        TLegend* legendEtatoPi0combo_withParam = new TLegend(0.55,0.15,0.95,0.26);
-        legendEtatoPi0combo_withParam->SetFillColor(0);
-        legendEtatoPi0combo_withParam->SetLineColor(0);
-        legendEtatoPi0combo_withParam->SetTextFont(42);
-        legendEtatoPi0combo_withParam->SetTextSize(textSize);
-        legendEtatoPi0combo_withParam->SetMargin(0.17);
-        legendEtatoPi0combo_withParam->SetHeader(collisionSystemPP2760GeV.Data());
-        legendEtatoPi0combo_withParam->AddEntry(graphRatioEtaToPi0PCM2760GeVSysErr,"arXiv: 1702.00917","fp");
-        //         legendEtatoPi0combo_withParam->Draw();
 
     canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithParam_0010.%s",outputDir.Data(),suffix.Data()));
 
@@ -2777,34 +2914,45 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         graphPCMEtaToPi0RatioSysErrPbPb0005->Draw("E2same");
         graphPCMEtaToPi0RatioPbPb0005->Draw("p,same");
 
-        paramEtaToPi0RatioPCM0005->SetLineColor(kRed+2);
-        paramEtaToPi0RatioPCM0005->SetLineStyle(2);
-        paramEtaToPi0RatioPCM0005->SetLineWidth(2);
+//         paramEtaToPi0RatioPCM0005->SetLineColor(kRed+2);
+//         paramEtaToPi0RatioPCM0005->SetLineStyle(2);
+//         paramEtaToPi0RatioPCM0005->SetLineWidth(2);
+//         paramEtaToPi0RatioPCM0005->Draw("c,histo,same");
+//         
+//         etapi0RatioFromMtScalingPbPb2760GeV_0005->SetLineColor(kBlue+1);
+//         etapi0RatioFromMtScalingPbPb2760GeV_0005->SetLineStyle(3);
+//         etapi0RatioFromMtScalingPbPb2760GeV_0005->SetLineWidth(2);
+//         etapi0RatioFromMtScalingPbPb2760GeV_0005->Draw("c,histo,same");
+// 
+//         etapi0RatioFromParamPbPb2760GeV_0005->SetLineColor(kGreen+2);
+//         etapi0RatioFromParamPbPb2760GeV_0005->SetLineStyle(5);
+//         etapi0RatioFromParamPbPb2760GeV_0005->SetLineWidth(2);
+//         etapi0RatioFromParamPbPb2760GeV_0005->Draw("c,histo,same");
+
         paramEtaToPi0RatioPCM0005->Draw("c,histo,same");
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0005->Draw("c,histo,same");
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0005->Draw("c,histo,same");
+        etapi0RatioFromParamPCMPbPb2760GeV_0005->Draw("c,histo,same");
+        etapi0RatioFromParamCombPbPb2760GeV_0005->Draw("c,histo,same");
         
-        etapi0RatioFromMtScalingPbPb2760GeV_0005->SetLineColor(kBlue+1);
-        etapi0RatioFromMtScalingPbPb2760GeV_0005->SetLineStyle(3);
-        etapi0RatioFromMtScalingPbPb2760GeV_0005->SetLineWidth(2);
-        etapi0RatioFromMtScalingPbPb2760GeV_0005->Draw("c,histo,same");
-
-        etapi0RatioFromParamPbPb2760GeV_0005->SetLineColor(kGreen+2);
-        etapi0RatioFromParamPbPb2760GeV_0005->SetLineStyle(5);
-        etapi0RatioFromParamPbPb2760GeV_0005->SetLineWidth(2);
-        etapi0RatioFromParamPbPb2760GeV_0005->Draw("c,histo,same");
-
         if(thesisPlotting) thesisLabel3->Draw();
 
-        TLegend* legendEtatoPi0_withParam0005 = new TLegend(0.12,0.67,0.53,0.89);
+        TLegend* legendEtatoPi0_withParam0005 = new TLegend(0.12,0.67,0.8,0.89);
         legendEtatoPi0_withParam0005->SetFillColor(0);
         legendEtatoPi0_withParam0005->SetLineColor(0);
         legendEtatoPi0_withParam0005->SetTextFont(42);
         legendEtatoPi0_withParam0005->SetTextSize(textSize);
         legendEtatoPi0_withParam0005->SetMargin(0.17);
         legendEtatoPi0_withParam0005->SetHeader(collisionSystemPbPb.Data());
+        legendEtatoPi0_withParam0005->SetNColumns(2);
         legendEtatoPi0_withParam0005->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0005,"0#font[122]{-}5%","pf");//collisionSystemPbPb0005.Data(),"pf");
-        legendEtatoPi0_withParam0005->AddEntry(paramEtaToPi0RatioPCM0005,"param to ratio","l");
-        legendEtatoPi0_withParam0005->AddEntry(etapi0RatioFromParamPbPb2760GeV_0005,"Spectra param","l");
-        legendEtatoPi0_withParam0005->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_0005,"m_{T}-scaled #eta from #pi^{0} param","l");
+        legendEtatoPi0_withParam0005->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam0005->AddEntry(paramEtaToPi0RatioPCM0005,"PCM","l");
+        legendEtatoPi0_withParam0005->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam0005->AddEntry(etapi0RatioFromParamPCMPbPb2760GeV_0005,"PCM spectra","l");
+        legendEtatoPi0_withParam0005->AddEntry(etapi0RatioFromParamCombPbPb2760GeV_0005,"Comb spectra","l");
+        legendEtatoPi0_withParam0005->AddEntry(etapi0RatioFromMtScalingPCMPbPb2760GeV_0005,"m_{T}-scaled PCM","l");
+        legendEtatoPi0_withParam0005->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_0005,"m_{T}-scaled Comb","l");
         legendEtatoPi0_withParam0005->Draw();
 
     canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithParam_0005.%s",outputDir.Data(),suffix.Data()));
@@ -2815,34 +2963,30 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         graphPCMEtaToPi0RatioSysErrPbPb0510->Draw("E2same");
         graphPCMEtaToPi0RatioPbPb0510->Draw("p,same");
 
-        paramEtaToPi0RatioPCM0510->SetLineColor(kRed+2);
-        paramEtaToPi0RatioPCM0510->SetLineStyle(2);
-        paramEtaToPi0RatioPCM0510->SetLineWidth(2);
         paramEtaToPi0RatioPCM0510->Draw("c,histo,same");
-
-        etapi0RatioFromMtScalingPbPb2760GeV_0510->SetLineColor(kBlue+1);
-        etapi0RatioFromMtScalingPbPb2760GeV_0510->SetLineStyle(3);
-        etapi0RatioFromMtScalingPbPb2760GeV_0510->SetLineWidth(2);
-        etapi0RatioFromMtScalingPbPb2760GeV_0510->Draw("c,histo,same");
-
-        etapi0RatioFromParamPbPb2760GeV_0510->SetLineColor(kGreen+2);
-        etapi0RatioFromParamPbPb2760GeV_0510->SetLineStyle(5);
-        etapi0RatioFromParamPbPb2760GeV_0510->SetLineWidth(2);
-        etapi0RatioFromParamPbPb2760GeV_0510->Draw("c,histo,same");
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_0510->Draw("c,histo,same");
+        etapi0RatioFromMtScalingCombPbPb2760GeV_0510->Draw("c,histo,same");
+        etapi0RatioFromParamPCMPbPb2760GeV_0510->Draw("c,histo,same");
+        etapi0RatioFromParamCombPbPb2760GeV_0510->Draw("c,histo,same");
 
         if(thesisPlotting) thesisLabel3->Draw();
 
-        TLegend* legendEtatoPi0_withParam0510 = new TLegend(0.12,0.67,0.53,0.89);
+        TLegend* legendEtatoPi0_withParam0510 = new TLegend(0.12,0.67,0.8,0.89);
         legendEtatoPi0_withParam0510->SetFillColor(0);
         legendEtatoPi0_withParam0510->SetLineColor(0);
         legendEtatoPi0_withParam0510->SetTextFont(42);
         legendEtatoPi0_withParam0510->SetTextSize(textSize);
         legendEtatoPi0_withParam0510->SetMargin(0.17);
         legendEtatoPi0_withParam0510->SetHeader(collisionSystemPbPb.Data());
+        legendEtatoPi0_withParam0510->SetNColumns(2);
         legendEtatoPi0_withParam0510->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb0510,"5#font[122]{-}10%","pf");//collisionSystemPbPb0510.Data(),"pf");
-        legendEtatoPi0_withParam0510->AddEntry(paramEtaToPi0RatioPCM0510,"param to ratio","l");
-        legendEtatoPi0_withParam0510->AddEntry(etapi0RatioFromParamPbPb2760GeV_0510,"Spectra param","l");
-        legendEtatoPi0_withParam0510->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_0510,"m_{T}-scaled #eta from #pi^{0} param","l");
+        legendEtatoPi0_withParam0510->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam0510->AddEntry(paramEtaToPi0RatioPCM0510,"PCM","l");
+        legendEtatoPi0_withParam0510->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam0510->AddEntry(etapi0RatioFromParamPCMPbPb2760GeV_0510,"PCM spectra","l");
+        legendEtatoPi0_withParam0510->AddEntry(etapi0RatioFromParamCombPbPb2760GeV_0510,"Comb spectra","l");
+        legendEtatoPi0_withParam0510->AddEntry(etapi0RatioFromMtScalingPCMPbPb2760GeV_0510,"m_{T}-scaled PCM","l");
+        legendEtatoPi0_withParam0510->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_0510,"m_{T}-scaled Comb","l");
         legendEtatoPi0_withParam0510->Draw();
 
     canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithParam_0510.%s",outputDir.Data(),suffix.Data()));
@@ -2853,34 +2997,30 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         graphPCMEtaToPi0RatioSysErrPbPb2040->Draw("E2same");
         graphPCMEtaToPi0RatioPbPb2040->Draw("p,same");
 
-        paramEtaToPi0RatioPCM2040->SetLineColor(kRed+2);
-        paramEtaToPi0RatioPCM2040->SetLineStyle(2);
-        paramEtaToPi0RatioPCM2040->SetLineWidth(2);
         paramEtaToPi0RatioPCM2040->Draw("c,histo,same");
-
-        etapi0RatioFromMtScalingPbPb2760GeV_2040->SetLineColor(kBlue+1);
-        etapi0RatioFromMtScalingPbPb2760GeV_2040->SetLineStyle(3);
-        etapi0RatioFromMtScalingPbPb2760GeV_2040->SetLineWidth(2);
-        etapi0RatioFromMtScalingPbPb2760GeV_2040->Draw("c,histo,same");
-
-        etapi0RatioFromParamPbPb2760GeV_2040->SetLineColor(kGreen+2);
-        etapi0RatioFromParamPbPb2760GeV_2040->SetLineStyle(5);
-        etapi0RatioFromParamPbPb2760GeV_2040->SetLineWidth(2);
-        etapi0RatioFromParamPbPb2760GeV_2040->Draw("c,histo,same");
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2040->Draw("c,histo,same");
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2040->Draw("c,histo,same");
+        etapi0RatioFromParamPCMPbPb2760GeV_2040->Draw("c,histo,same");
+        etapi0RatioFromParamCombPbPb2760GeV_2040->Draw("c,histo,same");
 
         if(thesisPlotting) thesisLabel3->Draw();
 
-        TLegend* legendEtatoPi0_withParam2040 = new TLegend(0.12,0.67,0.53,0.89);
+        TLegend* legendEtatoPi0_withParam2040 = new TLegend(0.12,0.67,0.8,0.89);
         legendEtatoPi0_withParam2040->SetFillColor(0);
         legendEtatoPi0_withParam2040->SetLineColor(0);
         legendEtatoPi0_withParam2040->SetTextFont(42);
         legendEtatoPi0_withParam2040->SetTextSize(textSize);
         legendEtatoPi0_withParam2040->SetMargin(0.17);
         legendEtatoPi0_withParam2040->SetHeader(collisionSystemPbPb.Data());
+        legendEtatoPi0_withParam2040->SetNColumns(2);
         legendEtatoPi0_withParam2040->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2040,"20#font[122]{-}40%","pf");//collisionSystemPbPb2040.Data(),"pf");
-        legendEtatoPi0_withParam2040->AddEntry(paramEtaToPi0RatioPCM2040,"param to ratio","l");
-        legendEtatoPi0_withParam2040->AddEntry(etapi0RatioFromParamPbPb2760GeV_2040,"Spectra param","l");
-        legendEtatoPi0_withParam2040->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_2040,"m_{T}-scaled #eta from #pi^{0} param","l");
+        legendEtatoPi0_withParam2040->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam2040->AddEntry(paramEtaToPi0RatioPCM2040,"PCM","l");
+        legendEtatoPi0_withParam2040->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam2040->AddEntry(etapi0RatioFromParamPCMPbPb2760GeV_2040,"PCM spectra","l");
+        legendEtatoPi0_withParam2040->AddEntry(etapi0RatioFromParamCombPbPb2760GeV_2040,"Comb spectra","l");
+        legendEtatoPi0_withParam2040->AddEntry(etapi0RatioFromMtScalingPCMPbPb2760GeV_2040,"m_{T}-scaled PCM","l");
+        legendEtatoPi0_withParam2040->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_2040,"m_{T}-scaled Comb","l");
         legendEtatoPi0_withParam2040->Draw();
 
     canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioPbPb2760GeV_WithParam_2040.%s",outputDir.Data(),suffix.Data()));
@@ -2891,42 +3031,31 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
         graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
 
-        paramEtaToPi0RatioPCM2050->SetLineColor(kRed+2);
-        paramEtaToPi0RatioPCM2050->SetLineStyle(2);
-        paramEtaToPi0RatioPCM2050->SetLineWidth(2);
         paramEtaToPi0RatioPCM2050->Draw("c,histo,same");
-
-        paramCombEtaToPi0RatioPCM2050->SetLineColor(kMagenta+2);
-        paramCombEtaToPi0RatioPCM2050->SetLineStyle(4);
-        paramCombEtaToPi0RatioPCM2050->SetLineWidth(2);
-        paramCombEtaToPi0RatioPCM2050->Draw("c,histo,same");
-        
-        etapi0RatioFromMtScalingPbPb2760GeV_2050->SetLineColor(kBlue+1);
-        etapi0RatioFromMtScalingPbPb2760GeV_2050->SetLineStyle(3);
-        etapi0RatioFromMtScalingPbPb2760GeV_2050->SetLineWidth(2);
-        //         etapi0RatioFromMtScalingPbPb2760GeV_2050->GetXaxis()->SetRangeUser(1,11);
-        etapi0RatioFromMtScalingPbPb2760GeV_2050->Draw("c,histo,same");
-
-        etapi0RatioFromParamPbPb2760GeV_2050->SetLineColor(kGreen+2);
-        etapi0RatioFromParamPbPb2760GeV_2050->SetLineStyle(5);
-        etapi0RatioFromParamPbPb2760GeV_2050->SetLineWidth(2);
-        //         etapi0RatioFromParamPbPb2760GeV_2050->GetXaxis()->SetRangeUser(0.8,11);
-        etapi0RatioFromParamPbPb2760GeV_2050->Draw("c,histo,same");
+        paramEtaToPi0RatioComb2050->Draw("c,histo,same");
+        etapi0RatioFromMtScalingPCMPbPb2760GeV_2050->Draw("c,histo,same");
+        etapi0RatioFromMtScalingCombPbPb2760GeV_2050->Draw("c,histo,same");
+        etapi0RatioFromParamPCMPbPb2760GeV_2050->Draw("c,histo,same");
+        etapi0RatioFromParamCombPbPb2760GeV_2050->Draw("c,histo,same");
 
         if(thesisPlotting) thesisLabel3->Draw();
 
-        TLegend* legendEtatoPi0_withParam2 = new TLegend(0.12,0.67,0.53,0.89);
+        TLegend* legendEtatoPi0_withParam2 = new TLegend(0.12,0.67,0.8,0.89);
         legendEtatoPi0_withParam2->SetFillColor(0);
         legendEtatoPi0_withParam2->SetLineColor(0);
         legendEtatoPi0_withParam2->SetTextFont(42);
         legendEtatoPi0_withParam2->SetTextSize(textSize);
         legendEtatoPi0_withParam2->SetMargin(0.17);
         legendEtatoPi0_withParam2->SetHeader(collisionSystemPbPb.Data());
+        legendEtatoPi0_withParam2->SetNColumns(2);
         legendEtatoPi0_withParam2->AddEntry(graphPCMEtaToPi0RatioSysErrPbPb2050,"20#font[122]{-}50%","pf");//collisionSystemPbPb2050.Data(),"pf");
-        legendEtatoPi0_withParam2->AddEntry(paramEtaToPi0RatioPCM2050,"param to ratio","l");
-        legendEtatoPi0_withParam2->AddEntry(paramCombEtaToPi0RatioPCM2050,"param to combined PCM-EMCal ratio","l");
-        legendEtatoPi0_withParam2->AddEntry(etapi0RatioFromParamPbPb2760GeV_2050,"Spectra param","l");
-        legendEtatoPi0_withParam2->AddEntry(etapi0RatioFromMtScalingPbPb2760GeV_2050,"m_{T}-scaled #eta from #pi^{0} param","l");
+        legendEtatoPi0_withParam2->AddEntry((TObject*)0,"","");
+        legendEtatoPi0_withParam2->AddEntry(paramEtaToPi0RatioPCM2050,"PCM","l");
+        legendEtatoPi0_withParam2->AddEntry(paramEtaToPi0RatioComb2050,"Comb","l");
+        legendEtatoPi0_withParam2->AddEntry(etapi0RatioFromParamPCMPbPb2760GeV_2050,"PCM spectra","l");
+        legendEtatoPi0_withParam2->AddEntry(etapi0RatioFromParamCombPbPb2760GeV_2050,"Comb spectra","l");
+        legendEtatoPi0_withParam2->AddEntry(etapi0RatioFromMtScalingPCMPbPb2760GeV_2050,"m_{T}-scaled PCM","l");
+        legendEtatoPi0_withParam2->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_2050,"m_{T}-scaled Comb","l");
         legendEtatoPi0_withParam2->Draw();
 
 //         TLegend* legendEtatoPi0combo_withParam = new TLegend(0.55,0.15,0.95,0.26);

@@ -1209,7 +1209,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         histo2DRelSysErrLHC11h->Draw("copy");
 
         if(meson.CompareTo("Pi0")==0 && PaperPi0){
-          while(sysErrorRelCollectionLHC11h_2050[availableMeasLHC11h_2050[0]]->GetX()[0] < 0.8 /*1.*/){
+          while(sysErrorRelCollectionLHC11h_2050[availableMeasLHC11h_2050[0]]->GetX()[0] < /* 0.8 */ 1.){
             sysErrorRelCollectionLHC11h_2050[availableMeasLHC11h_2050[0]]->RemovePoint(0);
           }
         }
@@ -1611,7 +1611,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     histo2DRelTotErr->Draw("copy");
 
         if(meson.CompareTo("Pi0")==0 && PaperPi0){
-          while(graphCombInvYieldsRelTot_0010->GetX()[0] < 0.8 /*1.*/){
+          while(graphCombInvYieldsRelTot_0010->GetX()[0] < /* 0.8 */ 1.){
             graphCombInvYieldsRelTot_0010->RemovePoint(0);
             graphCombInvYieldsRelStat_0010->RemovePoint(0);
             graphCombInvYieldsRelSys_0010->RemovePoint(0);
@@ -1645,7 +1645,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
       histo2DRelTotErr->Draw("copy");
 
         if(meson.CompareTo("Pi0")==0 && PaperPi0){
-          while(graphCombInvYieldsRelTot_2050->GetX()[0] < 0.8 /*1.*/){
+          while(graphCombInvYieldsRelTot_2050->GetX()[0] < /* 0.8 */ 1.){
             graphCombInvYieldsRelTot_2050->RemovePoint(0);
             graphCombInvYieldsRelStat_2050->RemovePoint(0);
             graphCombInvYieldsRelSys_2050->RemovePoint(0);
@@ -1672,7 +1672,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     //************************************* Calculating bin shifted spectra & fitting **************************************//
     //**********************************************************************************************************************//
     if(meson.CompareTo("Pi0")==0 && PaperPi0){
-        while(graphCombInvYieldTotPbPb2760GeV_0010->GetX()[0] < 0.8 /*1.*/){
+        while(graphCombInvYieldTotPbPb2760GeV_0010->GetX()[0] < /* 0.8 */ 1.){
           graphCombInvYieldTotPbPb2760GeV_0010->RemovePoint(0);
           graphCombInvYieldStatPbPb2760GeV_0010->RemovePoint(0);
           graphCombInvYieldSysPbPb2760GeV_0010->RemovePoint(0);
@@ -1749,28 +1749,28 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     }
 
     if(meson.CompareTo("Pi0")==0 && PaperPi0){
-        while(graphPCMPi0InvYieldStatPbPb2760GeV_0010->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldStatPbPb2760GeV_0010->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldSysPbPb2760GeV_0010->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldSysPbPb2760GeV_0010->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldSysWOMat2760GeV_0010->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldSysWOMat2760GeV_0010->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldSysWOMat2760GeV_0010->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldStatPbPb2760GeV_2050->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldStatPbPb2760GeV_2050->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldStatPbPb2760GeV_2050->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldSysPbPb2760GeV_2050->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldSysPbPb2760GeV_2050->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldSysPbPb2760GeV_2050->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldSysWOMat2760GeV_2050->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldSysWOMat2760GeV_2050->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldSysWOMat2760GeV_2050->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldStatPbPb2760GeV_2040->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldStatPbPb2760GeV_2040->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldStatPbPb2760GeV_2040->RemovePoint(0);
 
-        while(graphPCMPi0InvYieldSysPbPb2760GeV_0010->GetX()[0] < 0.8 /*1.*/)
+        while(graphPCMPi0InvYieldSysPbPb2760GeV_0010->GetX()[0] < /* 0.8 */ 1.)
           graphPCMPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(0);
 
     }
@@ -1921,7 +1921,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
     }
 
-    if(PaperPi0) minfitPt = 0.8/*1.0*/;
+    if(PaperPi0) minfitPt = /*0.8*/1.0;
     else minfitPt = 0.4;
 
     // Calculating binshifts
@@ -1958,9 +1958,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
         Int_t binsPi0PCM,binsPi0PHOS,binsPi0EMCal;
         if(PaperPi0){
-          binsPi0PCM = 18/*17*/;
-          binsPi0PHOS = 1/*0*/;
-          binsPi0EMCal = 12/*11*/;
+          binsPi0PCM = /*18*/17;
+          binsPi0PHOS = /*1*/0;
+          binsPi0EMCal = /*12*/11;
         } else {
           binsPi0PCM = 19;
           binsPi0PHOS = 3;
@@ -2489,21 +2489,22 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     }
 
     Double_t limitPar = kTRUE;
+    TString fitOpt = "QNRMEX0+";
     if(meson.CompareTo("Pi0")==0){
 
         //Bylinkin fit ---------------------------------------
         Double_t parampart1TCM_0010[2] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3};
-        fitLowPtBylinkin_0010 = FitObject("Lowtcm","Lowtcm0010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.,6.,parampart1TCM_0010,"QNRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitLowPtBylinkin_0010,"QNRMEX0+","",0.8,2.);
+        fitLowPtBylinkin_0010 = FitObject("Lowtcm","Lowtcm0010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.,6.,parampart1TCM_0010,fitOpt,"",limitPar);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitLowPtBylinkin_0010,fitOpt,"",0.8,2.);
         Double_t parampart2TCM_0010[3] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
         cout << WriteParameterToFile(fitLowPtBylinkin_0010)<< endl << endl;
-        fitHighPtBylinkin_0010 = FitObject("Hightcm","Hightcm0010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.,30.,parampart2TCM_0010,"QNRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitHighPtBylinkin_0010,"QNRMEX0+","",1.,20.);
+        fitHighPtBylinkin_0010 = FitObject("Hightcm","Hightcm0010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.,30.,parampart2TCM_0010,fitOpt,"",limitPar);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitHighPtBylinkin_0010,fitOpt,"",1.,20.);
         cout << WriteParameterToFile(fitHighPtBylinkin_0010)<< endl << endl;
 
         Double_t paramTCM_0010[5] = {fitLowPtBylinkin_0010->GetParameter(0),fitLowPtBylinkin_0010->GetParameter(1),fitHighPtBylinkin_0010->GetParameter(0),fitHighPtBylinkin_0010->GetParameter(1),fitHighPtBylinkin_0010->GetParameter(2)};
 //         Double_t paramTCM_0010[5] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
-        fitBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("tcm","BylinkinFitToYieldsPi00010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramTCM_0010,"QNRMEX0+","",limitPar);
+        fitBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("tcm","BylinkinFitToYieldsPi00010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramTCM_0010,fitOpt,"",limitPar);
         graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitBylinkinPbPb2760GeVPtLHC11h_0010,"NRMEX0+","",minfitPt,20.);
         cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_0010)<< endl << endl;
 
@@ -2511,36 +2512,36 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         mTScaledEtaFromPi0 = (TF1*)MtScaledParam(fitBylinkinPbPb2760GeVPtLHC11h_0010, 221, 0.48);
 
 //         Double_t paramNormTCM_0010[5] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
-//         fitNormBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("ntcm","NormBylinkinFitToYieldsPi00010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramTCM_0010,"QNRMEX0+","",limitPar);
+//         fitNormBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("ntcm","NormBylinkinFitToYieldsPi00010","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramTCM_0010,fitOpt,"",limitPar);
 //         graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitNormBylinkinPbPb2760GeVPtLHC11h_0010,"NRMEX0+","",minfitPt,20.);
 //         cout << WriteParameterToFile(fitNormBylinkinPbPb2760GeVPtLHC11h_0010)<< endl << endl;
 
         Double_t parampart1TCM_2050[2] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[0],0.3};
-        fitLowPtBylinkin_2050 = FitObject("Lowtcm","Lowtcm2050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.,6.,parampart1TCM_2050,"QNRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitLowPtBylinkin_2050,"QNRMEX0+","",0.8,2.);
+        fitLowPtBylinkin_2050 = FitObject("Lowtcm","Lowtcm2050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.,6.,parampart1TCM_2050,fitOpt,"",limitPar);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitLowPtBylinkin_2050,fitOpt,"",0.8,2.);
 //         cout << WriteParameterToFile(fitLowPtBylinkin_2050)<< endl << endl;
         Double_t parampart2TCM_2050[3] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[3],0.3,8};
-        fitHighPtBylinkin_2050 = FitObject("Hightcm","Hightcm2050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.,30.,parampart2TCM_2050,"QNRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitHighPtBylinkin_2050,"QNRMEX0+","",1.,20.);
+        fitHighPtBylinkin_2050 = FitObject("Hightcm","Hightcm2050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.,30.,parampart2TCM_2050,fitOpt,"",limitPar);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitHighPtBylinkin_2050,fitOpt,"",1.,20.);
 //         cout << WriteParameterToFile(fitHighPtBylinkin_2050)<< endl << endl;
 
         Double_t paramTCM_2050[5] = {fitLowPtBylinkin_2050->GetParameter(0),fitLowPtBylinkin_2050->GetParameter(1),fitHighPtBylinkin_2050->GetParameter(0),fitHighPtBylinkin_2050->GetParameter(1),fitHighPtBylinkin_2050->GetParameter(2)};
 //         Double_t paramTCM_2050[5] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_2050->GetY()[3],0.3,8};
-        fitBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("tcm","BylinkinFitToYieldsPi02050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramTCM_2050,"QNRMEX0+","",limitPar);
+        fitBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("tcm","BylinkinFitToYieldsPi02050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramTCM_2050,fitOpt,"",limitPar);
         graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitBylinkinPbPb2760GeVPtLHC11h_2050,"NRMEX0+","",minfitPt,20.);
         cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_2050)<< endl << endl;
 
 //         Double_t paramNormTCM_2050[5] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_2050->GetY()[3],0.3,8};
-//         fitNormBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("ntcm","NormBylinkinFitToYieldsPi02050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramTCM_2050,"QNRMEX0+","",limitPar);
+//         fitNormBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("ntcm","NormBylinkinFitToYieldsPi02050","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramTCM_2050,fitOpt,"",limitPar);
 //         graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitNormBylinkinPbPb2760GeVPtLHC11h_2050,"NRMEX0+","",minfitPt,20.);
 //         cout << WriteParameterToFile(fitNormBylinkinPbPb2760GeVPtLHC11h_2050)<< endl << endl;
 
         //QCD fit ---------------------------------------
-        fitQCDInvYieldPbPb2760GeV_0010 = FitObject("qcd","fitQCD","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,NULL,"QNRMEX0+");
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitQCDInvYieldPbPb2760GeV_0010,"QNRMEX0+","",minfitPt,20.);
+        fitQCDInvYieldPbPb2760GeV_0010 = FitObject("qcd","fitQCD","Pi0",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,NULL,fitOpt);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitQCDInvYieldPbPb2760GeV_0010,fitOpt,"",minfitPt,20.);
 //         cout << WriteParameterToFile(fitQCDInvYieldPbPb2760GeV_0010)<< endl << endl;
-        fitQCDInvYieldPbPb2760GeV_2050 = FitObject("qcd","fitQCD","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,NULL,"QNRMEX0+");
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitQCDInvYieldPbPb2760GeV_2050,"QNRMEX0+","",minfitPt,20.);
+        fitQCDInvYieldPbPb2760GeV_2050 = FitObject("qcd","fitQCD","Pi0",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,NULL,fitOpt);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitQCDInvYieldPbPb2760GeV_2050,fitOpt,"",minfitPt,20.);
 //         cout << WriteParameterToFile(fitQCDInvYieldPbPb2760GeV_2050)<< endl << endl;
 
 
@@ -2549,50 +2550,50 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         //Bylinkin fit ---------------------------------------
         Double_t parampart1TCM_0010[2] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3};
         fitLowPtBylinkin_0010 = FitObject("Lowtcm","Lowtcm","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.,6.,parampart1TCM_0010,"NRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitLowPtBylinkin_0010,"QNRMEX0+","",0.8,2.);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitLowPtBylinkin_0010,fitOpt,"",0.8,2.);
         cout << WriteParameterToFile(fitLowPtBylinkin_0010)<< endl << endl;
         Double_t parampart2TCM_0010[3] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
         fitHighPtBylinkin_0010 = FitObject("Hightcm","Hightcm","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.,30.,parampart2TCM_0010,"NRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitHighPtBylinkin_0010,"QNRMEX0+","",1.,20.);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitHighPtBylinkin_0010,fitOpt,"",1.,20.);
         cout << WriteParameterToFile(fitHighPtBylinkin_0010)<< endl << endl;
 
         Double_t paramTCM_0010[5] = {fitLowPtBylinkin_0010->GetParameter(0),fitLowPtBylinkin_0010->GetParameter(1),fitHighPtBylinkin_0010->GetParameter(0),fitHighPtBylinkin_0010->GetParameter(1),fitHighPtBylinkin_0010->GetParameter(2)};
 //         Double_t paramTCM_0010[5] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
         fitBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("tcm","BylinkinFitToYieldsEta0010","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramTCM_0010,"NRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitBylinkinPbPb2760GeVPtLHC11h_0010,"QNRMEX0+","",1.,20.);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitBylinkinPbPb2760GeVPtLHC11h_0010,fitOpt,"",1.,20.);
         cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_0010)<< endl << endl;
 
 //         Double_t paramNormTCM_0010[5] = {graphCombInvYieldTotPbPb2760GeV_0010->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_0010->GetY()[3],0.3,8};
-//         fitNormBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("ntcm","NormBylinkinFitToYieldsEta0010","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramNormTCM_0010,"QNRMEX0+","",limitPar);
+//         fitNormBylinkinPbPb2760GeVPtLHC11h_0010 = FitObject("ntcm","NormBylinkinFitToYieldsEta0010","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,paramNormTCM_0010,fitOpt,"",limitPar);
 //         graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitNormBylinkinPbPb2760GeVPtLHC11h_0010,"NRMEX0+","",minfitPt,20.);
 //         cout << WriteParameterToFile(fitNormBylinkinPbPb2760GeVPtLHC11h_0010)<< endl << endl;
 
         Double_t parampart1TCM_2050[2] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[0],0.3};
         fitLowPtBylinkin_2050 = FitObject("Lowtcm","Lowtcm","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.,6.,parampart1TCM_2050,"NRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitLowPtBylinkin_2050,"QNRMEX0+","",0.8,2.);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitLowPtBylinkin_2050,fitOpt,"",0.8,2.);
         cout << WriteParameterToFile(fitLowPtBylinkin_2050)<< endl << endl;
         Double_t parampart2TCM_2050[3] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[3],0.3,8};
         fitHighPtBylinkin_2050 = FitObject("Hightcm","Hightcm","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.,30.,parampart2TCM_2050,"NRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitHighPtBylinkin_2050,"QNRMEX0+","",1.,20.);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitHighPtBylinkin_2050,fitOpt,"",1.,20.);
         cout << WriteParameterToFile(fitHighPtBylinkin_2050)<< endl << endl;
 
         Double_t paramTCM_2050[5] = {fitLowPtBylinkin_2050->GetParameter(0),fitLowPtBylinkin_2050->GetParameter(1),fitHighPtBylinkin_2050->GetParameter(0),fitHighPtBylinkin_2050->GetParameter(1),fitHighPtBylinkin_2050->GetParameter(2)};
 //         Double_t paramTCM_2050[5] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_2050->GetY()[3],0.3,8};
         fitBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("tcm","BylinkinFitToYieldsEta2050","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramTCM_2050,"NRMEX0+","",limitPar);
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitBylinkinPbPb2760GeVPtLHC11h_2050,"QNRMEX0+","",1.,20.);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitBylinkinPbPb2760GeVPtLHC11h_2050,fitOpt,"",1.,20.);
         cout << WriteParameterToFile(fitBylinkinPbPb2760GeVPtLHC11h_2050)<< endl << endl;
 
 //         Double_t paramNormTCM_2050[5] = {graphCombInvYieldTotPbPb2760GeV_2050->GetY()[0],0.3,graphCombInvYieldTotPbPb2760GeV_2050->GetY()[3],0.3,8};
-//         fitNormBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("ntcm","NormBylinkinFitToYieldsEta2050","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramNormTCM_2050,"QNRMEX0+","",limitPar);
+//         fitNormBylinkinPbPb2760GeVPtLHC11h_2050 = FitObject("ntcm","NormBylinkinFitToYieldsEta2050","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,paramNormTCM_2050,fitOpt,"",limitPar);
 //         graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitNormBylinkinPbPb2760GeVPtLHC11h_2050,"NRMEX0+","",minfitPt,20.);
 //         cout << WriteParameterToFile(fitNormBylinkinPbPb2760GeVPtLHC11h_2050)<< endl << endl;
 
         //QCD fit ---------------------------------------
-        fitQCDInvYieldPbPb2760GeV_0010 = FitObject("qcd","fitQCD","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,NULL,"QNRMEX0+");
-        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitQCDInvYieldPbPb2760GeV_0010,"QNRMEX0+","",1,20.);
+        fitQCDInvYieldPbPb2760GeV_0010 = FitObject("qcd","fitQCD","Eta",graphCombInvYieldTotPbPb2760GeV_0010,0.9,21.,NULL,fitOpt);
+        graphCombInvYieldTotPbPb2760GeV_0010->Fit(fitQCDInvYieldPbPb2760GeV_0010,fitOpt,"",1,20.);
 //         cout << WriteParameterToFile(fitQCDInvYieldPbPb2760GeV_0010)<< endl << endl;
-        fitQCDInvYieldPbPb2760GeV_2050 = FitObject("qcd","fitQCD","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,NULL,"QNRMEX0+");
-        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitQCDInvYieldPbPb2760GeV_2050,"QNRMEX0+","",1,20.);
+        fitQCDInvYieldPbPb2760GeV_2050 = FitObject("qcd","fitQCD","Eta",graphCombInvYieldTotPbPb2760GeV_2050,0.9,21.,NULL,fitOpt);
+        graphCombInvYieldTotPbPb2760GeV_2050->Fit(fitQCDInvYieldPbPb2760GeV_2050,fitOpt,"",1,20.);
 //         cout << WriteParameterToFile(fitQCDInvYieldPbPb2760GeV_2050)<< endl << endl;
 
     }
@@ -5341,7 +5342,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                                                                                                   graphCombRAAStatPbPb2760GeV_2050, graphCombRAASysPbPb2760GeV_2050,
                                                                                                     Form("%s/2050LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()));
         if(PaperPi0){
-          while(graphCombRAATotPbPb2760GeV_0010->GetX()[0] < 0.8 /*1.*/  /* || graphCombRAATotPbPb2760GeV_0010->GetY()[0] < 1e-14*/){
+          while(graphCombRAATotPbPb2760GeV_0010->GetX()[0] < /* 0.8 */ 1.  /* || graphCombRAATotPbPb2760GeV_0010->GetY()[0] < 1e-14*/){
 
             graphCombRAATotPbPb2760GeV_0010->RemovePoint(0);
             graphCombRAAStatPbPb2760GeV_0010->RemovePoint(0);
