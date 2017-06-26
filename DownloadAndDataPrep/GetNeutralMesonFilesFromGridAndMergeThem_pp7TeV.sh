@@ -7,9 +7,9 @@
 NSlashes=9
 NSlashes2=8
 if [ $1 = "fbock" ]; then 
-	BASEDIR=/home/fbock/Photon/Grid/OutputLegoTrains/pp7TeV
-	NSlashes=10
-	NSlashes2=9
+    BASEDIR=/mnt/additionalStorage/OutputLegoTrains/pp
+    NSlashes=8
+    NSlashes2=7
 elif [ $1 = "dmuhlhei" ]; then
 	BASEDIR=~/data/work/Grid
 fi
@@ -28,19 +28,31 @@ fi
 #LHC14j4e=1268_20151027-1531;
 #LHC14j4f=1269_20151027-1531;
 
-TRAINDIR=Legotrain-vAN-20151123-NeutralMeson7TeV_Calo
-N=2;
-LHC10bData=1102_20151123-1746;
-LHC10cData=1103_20151123-1745;
-LHC10dData=1104_20151123-1745;
-LHC10eData=1105_20151123-1745;
-LHC10fData=1106_20151123-1745;
-LHC14j4b=1326_20151123-1744;
-LHC14j4c=1327_20151123-1745;
-LHC14j4d=1328_20151123-1745;
-LHC14j4e=1329_20151123-1745;
-LHC14j4f=1330_20151123-1745;
+# TRAINDIR=Legotrain-vAN-20151123-NeutralMeson7TeV_Calo
+# N=2;
+# LHC10bData=1102_20151123-1746;
+# LHC10cData=1103_20151123-1745;
+# LHC10dData=1104_20151123-1745;
+# LHC10eData=1105_20151123-1745;
+# LHC10fData=1106_20151123-1745;
+# LHC14j4b=1326_20151123-1744;
+# LHC14j4c=1327_20151123-1745;
+# LHC14j4d=1328_20151123-1745;
+# LHC14j4e=1329_20151123-1745;
+# LHC14j4f=1330_20151123-1745;
 
+TRAINDIR=Legotrain-vAN-20170315-NeutralMeson7TeV
+N=0;
+LHC10bData=2032_20170316-1713; 
+LHC10cData=2033_20170316-1711;
+LHC10dData=2034_20170316-1712;
+LHC10eData=2035_20170316-1712;
+LHC10fData=2036_20170316-1712;
+LHC14j4b=2803_20170316-1755;
+LHC14j4c=2804_20170316-1755;
+LHC14j4d=2805_20170316-1755;
+LHC14j4e=2806_20170316-1755;
+LHC14j4f=2807_20170316-1755;
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 OUTPUTDIR_LHC10b=$BASEDIR/$TRAINDIR/GA_pp-$LHC10bData
@@ -66,16 +78,16 @@ mkdir -p $OUTPUTDIR_LHC14j4e
 mkdir -p $OUTPUTDIR_LHC14j4f
 
 # get files from grid
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10bData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10b/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10cData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10c/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10dData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10d/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10eData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10e/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10fData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10f/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4b/merge/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4b/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4c/merge/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4c/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4d/merge/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4d/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4e/merge/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4e/
-alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4f/merge/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4f/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10bData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10b/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10cData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10c/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10dData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10d/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10eData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10e/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/$LHC10fData/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC10f/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4b/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4b/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4c/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4c/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4d/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4d/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4e/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4e/
+# alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/$LHC14j4f/merge_runlist_1/GammaConvNeutralMesonPiPlPiMiPiZero* file:$OUTPUTDIR_LHC14j4f/
 	
 	# Merge data files
 	rm $OUTPUTDIR/GammaConvNeutralMesonPiPlPiMiPiZero_${N}_*.root
