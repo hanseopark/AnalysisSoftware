@@ -339,9 +339,13 @@ void ProduceTheoryGraphsPPb(){
     TFile* fileDPMJet               = new TFile("ExternalInputpPb/Theory/MCInputCompilationLHC13b2_efix_pPb5TeV_2.root");
     TH1D* histoPi0DPMJet            = (TH1D*)fileDPMJet->Get("MC_Pi0_Pt");
     TH1D* histoPi0DPMJetReb         = (TH1D*)fileDPMJet->Get("MC_Pi0_Pt_Rebinned");
+    TH1D* histoPiChDPMJet           = (TH1D*)fileDPMJet->Get("MC_PiCh_All_Pt");
+    TH1D* histoKChDPMJet            = (TH1D*)fileDPMJet->Get("MC_KCh_All_Pt");
     TH1D* histoEtaDPMJet            = (TH1D*)fileDPMJet->Get("MC_Eta_Pt");
     TH1D* histoEtaDPMJetReb         = (TH1D*)fileDPMJet->Get("MC_Eta_Pt_Rebinned");
     TH1D* histoEtaToPi0DPMJet       = (TH1D*)fileDPMJet->Get("MCEtaToPi0");
+    TH1D* histoPi0ToPiCHDPMJet      = (TH1D*)fileDPMJet->Get("MCPi0ToPiCh");
+    TH1D* histoEtaToKCHDPMJet       = (TH1D*)fileDPMJet->Get("MCEtaToKCh");
     
     //**************************************************************************************************
     //********************** HIJING MC spectra and ratio ***********************************************
@@ -350,9 +354,13 @@ void ProduceTheoryGraphsPPb(){
     TFile* fileHIJING               = new TFile("ExternalInputpPb/Theory/MCInputCompilationLHC13e7_pPb5TeV_2.root");
     TH1D* histoPi0HIJING            = (TH1D*)fileHIJING->Get("MC_Pi0_Pt");
     TH1D* histoPi0HIJINGReb         = (TH1D*)fileHIJING->Get("MC_Pi0_Pt_Rebinned");
+    TH1D* histoPiChHIJING           = (TH1D*)fileHIJING->Get("MC_PiCh_All_Pt");
+    TH1D* histoKChHIJING            = (TH1D*)fileHIJING->Get("MC_KCh_All_Pt");
     TH1D* histoEtaHIJING            = (TH1D*)fileHIJING->Get("MC_Eta_Pt");
     TH1D* histoEtaHIJINGReb         = (TH1D*)fileHIJING->Get("MC_Eta_Pt_Rebinned");
     TH1D* histoEtaToPi0HIJING       = (TH1D*)fileHIJING->Get("MCEtaToPi0");
+    TH1D* histoEtaToKCHHIJING       = (TH1D*)fileHIJING->Get("MCEtaToKCh");
+    TH1D* histoPi0ToPiCHHIJING      = (TH1D*)fileHIJING->Get("MCPi0ToPiCh");
     
     //**************************************************************************************************
     //****************************** extracting McGill predictions**************************************
@@ -810,15 +818,23 @@ void ProduceTheoryGraphsPPb(){
             // pi0, eta, eta/pi0 DPMJet
             histoPi0DPMJet->Write("histoPi0SpecDPMJet5023GeV", TObject::kOverwrite);
             histoEtaDPMJet->Write("histoEtaSpecDPMJet5023GeV", TObject::kOverwrite);
+            histoPiChDPMJet->Write("histoPiChSpecDPMJet5023GeV", TObject::kOverwrite);
+            histoKChDPMJet->Write("histoKChSpecDPMJet5023GeV", TObject::kOverwrite);
             histoPi0DPMJetReb->Write("histoPi0SpecDPMJet5023GeV_Reb", TObject::kOverwrite);
             histoEtaDPMJetReb->Write("histoEtaSpecDPMJet5023GeV_Reb", TObject::kOverwrite);
             histoEtaToPi0DPMJet->Write("histoEtaToPi0DPMJet5023GeV", TObject::kOverwrite);
+            histoEtaToKCHDPMJet->Write("histoEtaToKChDPMJet5023GeV", TObject::kOverwrite);
+            histoPi0ToPiCHDPMJet->Write("histoPi0ToPiChDPMJet5023GeV", TObject::kOverwrite);
             // pi0, eta, eta/pi0 HIJING
             histoPi0HIJING->Write("histoPi0SpecHIJING5023GeV", TObject::kOverwrite);
             histoEtaHIJING->Write("histoEtaSpecHIJING5023GeV", TObject::kOverwrite);
+            histoPiChHIJING->Write("histoPiChSpecHIJING5023GeV", TObject::kOverwrite);
+            histoKChHIJING->Write("histoKChSpecHIJING5023GeV", TObject::kOverwrite);
             histoPi0HIJINGReb->Write("histoPi0SpecHIJING5023GeV_Reb", TObject::kOverwrite);
             histoEtaHIJINGReb->Write("histoEtaSpecHIJING5023GeV_Reb", TObject::kOverwrite);
             histoEtaToPi0HIJING->Write("histoEtaToPi0HIJING5023GeV", TObject::kOverwrite);
+            histoEtaToKCHHIJING->Write("histoEtaToKChHIJING5023GeV", TObject::kOverwrite);
+            histoPi0ToPiCHHIJING->Write("histoPi0ToPiChHIJING5023GeV", TObject::kOverwrite);
             // pi0, eta, eta/pi0 McGill Hydro
             graphEtaSpecMcGill->Write("graphEtaSpecMcGill5023GeV", TObject::kOverwrite);
             graphPi0SpecMcGill->Write("graphPi0SpecMcGill5023GeV", TObject::kOverwrite);

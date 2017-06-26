@@ -395,6 +395,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     }
     
     TH1D* fHistoRatioMCPi0DivPi         = NULL;
+    TH1D* fHistoRatioMCEtaDivK          = NULL;
     TH1D* fHistoRatioMCK0sDivK          = NULL;
     TH1D* fHistoRatioMCK0lDivK          = NULL;
     TH1D* fHistoRatioMCKDivPi           = NULL;
@@ -411,7 +412,7 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
     
     // build ratio eta/pi^0
     if (fHistoMCPi0Pt && fHistoMCEtaPt){
-        fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCPi0DivPi");
+        fHistoRatioMCEtaDivPi0 = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivPi0");
         fHistoRatioMCEtaDivPi0->Divide(fHistoRatioMCEtaDivPi0,fHistoMCPi0PtRebinned);
 
         Double_t maxPtForFit    = 5;
@@ -449,6 +450,27 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         labelGeneratorRatio->Draw();
         
         canvasRatio->SaveAs(Form("%s/EtaToPi0_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));    
+    }
+    
+    // build ratio eta/pi^0
+    if (fHistoMCKPt && fHistoMCEtaPt){
+        cout << "eta/Kch" << endl;
+        fHistoRatioMCEtaDivK = (TH1D*)fHistoMCEtaPtRebinned->Clone("fHistoRatioMCEtaDivKCh");
+        fHistoRatioMCEtaDivK->Divide(fHistoRatioMCEtaDivK,fHistoMCKPtRebinned);
+        
+        DrawAutoGammaMesonHistos(   fHistoRatioMCEtaDivK, 
+                            "", "#it{p}_{T} (GeV/#it{c})", "#eta/ K^{#pm}", 
+                            kFALSE, 10, 1e-10, kFALSE,
+                            kFALSE, 0., 1.1, 
+                            kTRUE, minPt, maxPt);
+        fHistoRatioMCEtaDivK->GetYaxis()->SetTitleOffset(1.2);
+        DrawGammaSetMarker(fHistoRatioMCEtaDivK, 20, 1.5, kAzure-6, kAzure-6);
+        fHistoRatioMCEtaDivK->DrawClone("pe");
+        
+        labelEnergyRatio->Draw();
+        labelGeneratorRatio->Draw();
+        
+        canvasRatio->SaveAs(Form("%s/EtaToKCh_MC_%s_%s.%s",outputDir.Data(), optionPeriod.Data(), fCollisionSystenWrite.Data(), suffix.Data()));    
     }
 
     
@@ -849,6 +871,8 @@ void ExtractMCInputSpectraFromFile( TString file                    = "",
         if (fHistoRatioMCEtaDivPi0)                 fHistoRatioMCEtaDivPi0->Write("MCEtaToPi0");
         if (fHistoRatioMCK0sDivPi0)                 fHistoRatioMCK0sDivPi0->Write("MCK0sToPi0");
         if (fHistoRatioMCKDivPi)                    fHistoRatioMCKDivPi->Write("MCKToPi");
+        if (fHistoRatioMCPi0DivPi)                  fHistoRatioMCPi0DivPi->Write("MCPi0ToPiCh");
+        if (fHistoRatioMCEtaDivK)                   fHistoRatioMCEtaDivK->Write("MCEtaToKCh");
         
         if (fHistoMCLambdaPt)                       fHistoMCLambdaPt->Write();
         if (fHistoMCLambdaPtYield)                  fHistoMCLambdaPtYield->Write(Form("MCYield_Lambda_Pt_%1.2f",deltaRapid/2.));

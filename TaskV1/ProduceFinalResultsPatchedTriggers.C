@@ -232,11 +232,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     //***************************************************************************************************************
     //********************************** settings for secondary pion corrs ******************************************
-                                                        //    0      1     2        3     4       5     6     7     8     9     10    11    12    2
-    Double_t maxYEffSecCorr[4][14]                      = { { 0.080, 0.3 , 0.03000, 0.04, 0.0600, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04}, 
-                                                            { 0.001, 0.3 , 0.00010, 0.04, 0.0050, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04}, 
-                                                            { 0.001, 0.3 , 0.00006, 0.04, 0.0003, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04}, 
-                                                            { 0.030, 0.3 , 0.01800, 0.04, 0.0300, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15, 0.15, 0.12, 0.04} };
+                                                        //    0      1     2        3     4       5     6     7     8     9     10      11    12    2
+    Double_t maxYEffSecCorr[4][14]                      = { { 0.080, 0.3 , 0.03000, 0.04, 0.0600, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.15,   0.15, 0.12, 0.04}, 
+                                                            { 0.001, 0.3 , 0.00010, 0.04, 0.0050, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.002,  0.15, 0.12, 0.04}, 
+                                                            { 0.001, 0.3 , 0.00006, 0.04, 0.0003, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.000003,  0.15, 0.12, 0.04}, 
+                                                            { 0.030, 0.3 , 0.01800, 0.04, 0.0300, 0.12, 0.3 , 0.3 , 0.3 , 0.3 , 0.06,   0.15, 0.12, 0.04} };
     Color_t colorSec[4]                                 = {kRed+2, kCyan+2, 807, kBlue};
     Style_t markerStyleSec[4]                           = {21, 33, 30, 28};
     Size_t markerSizeSec[4]                             = {1.5, 1.75, 2., 1.5};
@@ -2940,6 +2940,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         
         
         for (Int_t k = 0; k< 4; k++){
+            cout << "calculating effective sec corr: " << k << endl;
             if (hasSecCorrFac[k]){
                 graphEffectSecCorrPi0Weighted[k]        = CalculateWeightedQuantity(    graphOrderedEffectSecCorrPi0[k], 
                                                                                         graphWeightsPi0,
@@ -2951,8 +2952,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     return;
                 }
             }
+//             return;
+            cout << "calculating effieciency sec pi0: " << k << endl;
             if (hasSecEffi[k]){
-                graphEffectSecCorrPi0Weighted[k]        = CalculateWeightedQuantity(    graphOrderedEfficiencySecPi0[k], 
+                graphEfficiencySecPi0Weighted[k]        = CalculateWeightedQuantity(    graphOrderedEfficiencySecPi0[k], 
                                                                                         graphWeightsPi0,
                                                                                         binningPi0,  maxNAllowedPi0,
                                                                                         MaxNumberOfFiles
@@ -2963,6 +2966,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }
             }
         }
+        
         
         cout << "weighting Pi0 efficiency" << endl;
         graphEfficiencyPi0Weighted                      = CalculateWeightedQuantity(    graphOrderedEfficiencyPi0, 
@@ -3465,12 +3469,27 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             DrawGammaSetMarkerTGraphAsym(graphEfficiencySecPi0Weighted[k], 20, 1, kGray+2, kGray+2);
             graphEfficiencySecPi0Weighted[k]->Draw("p,e1,same");                 
 
-            labelEnergyWidth->Draw();
-            labelPi0Width->Draw();
-            labelDetProcWidth->Draw();
+            
+            TLatex* labelEnergySecEff    = new TLatex(0.14, 0.84+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergySecEff, 0.85*textSizeSpectra,4);
+        
+            TLatex* labelPi0SecEff       = new TLatex(0.14, 0.84+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelPi0SecEff, 0.85*textSizeSpectra,4);
+        
+            TLatex* labelDetProcSecEff   = new TLatex(0.14, 0.84,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcSecEff, 0.85*textSizeSpectra,4);
+        
+            
+            labelEnergySecEff->Draw();
+            labelPi0SecEff->Draw();
+            labelDetProcSecEff->Draw();
 
+            
             canvasEffi->Update();
             canvasEffi->SaveAs(Form("%s/Pi0_SecEfficiencyFrom%s_Weighted.%s",outputDir.Data(), nameSecPi0PartRead[k].Data(), suffix.Data()));                    
+            delete labelEnergySecEff;
+            delete labelPi0SecEff;
+            delete labelDetProcSecEff;
         }
         if (graphEffectSecCorrPi0Weighted[k]){
             canvasEffi->cd();
