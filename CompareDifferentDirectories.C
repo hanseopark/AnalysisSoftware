@@ -1,10 +1,10 @@
 //**************************************************************************************************
-//**************************** CompareDifferentDirectories *****************************
+//**************************** CompareDifferentDirectories *****************************************
 //**************************************************************************************************
 
 /***************************************************************************************************
- ****** 	provided by PCM Group, PWGGA, 							*****
- ******		Friederike Bock, friederike.bock@cern.ch					*****
+ ******                         provided by PCM Group, PWGGA,                                  *****
+ ******                         Friederike Bock, friederike.bock@cern.ch                       *****
  ****************************************************************************************************/
 
 #include <Riostream.h>
@@ -51,7 +51,7 @@
 struct SysErrorConversion {
    Double_t value;
    Double_t error;
-   //	TString name;
+   //   TString name;
 };
 
 void CompareDifferentDirectories(   TString FolderList              = "", 
@@ -66,9 +66,9 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                                 ){
 
     // Initialize arrays
-    TString 	fileDirectory[50];
-    TString 	cutNumber[50];
-    TString 	cutStringsName[50];
+    TString fileDirectory[50];
+    TString cutNumber[50];
+    TString cutStringsName[50];
     
     // prepare nice plotting algorithms
     StyleSettingsThesis();

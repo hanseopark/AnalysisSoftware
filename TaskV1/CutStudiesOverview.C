@@ -566,8 +566,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         legendRawMeson->Draw();
         // Labeling of plot
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
-                                                
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+    
         padRawYieldRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -641,7 +641,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         legendSpecRawTrigger->Draw();
         // labeling of the plot
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
         
         canvasRawYieldsTrigg->Update();
         canvasRawYieldsTrigg->SaveAs(Form("%s/%s_%s_TriggerYieldSpectra.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
@@ -684,7 +684,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         // labeling
         legendRatioRaw->Draw();
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
         
         canvasRatioRawYields->Update();
         canvasRatioRawYields->SaveAs(Form("%s/%s_%s_TriggerYieldRatio.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
@@ -738,7 +738,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         legendWidth->Draw();
         // Labeling of plot
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
         padWidthRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -817,7 +817,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         legendSB->Draw();
         // Labeling of plot
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);    
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
             
         padSBRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -899,7 +899,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             
         }
         legendSBNarrow->Draw();
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
             
         padSBNarrowRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -982,7 +982,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             
         }
         legendSignNarrow->Draw();
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);    
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
             
         padSignNarrowRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -1066,7 +1066,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         legendSign->Draw();
         // Labeling of plot
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);    
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
             
         padSignRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -1152,7 +1152,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
             legendRawCluster->Draw();
             // Labeling of plot
-            PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod); 
+            PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                 
             padRawClusterPtRatios->cd();
             for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -1218,7 +1218,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
             legendSpecRawClusterTrigger->Draw();
             // labeling of the plot
-            PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod);
+            PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
             
             canvasRawClusterPtTrigg->Update();
             canvasRawClusterPtTrigg->SaveAs(Form("%s/%s_TriggerYieldCluster.%s",outputDir.Data(),prefix2.Data(),suffix.Data()));
@@ -1261,7 +1261,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
             // labeling
             legendRatioRawClusterTrigger->Draw();
-            PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod);
+            PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
             canvasRatioRawClusterPt->Update();
             canvasRatioRawClusterPt->SaveAs(Form("%s/%s_TriggerYieldClusterRatio.%s",outputDir.Data(),prefix2.Data(),suffix.Data()));
@@ -1318,7 +1318,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         legendCorrectedYieldMeson->Draw();
 
         // labeling the plot
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
         
         // plot ratio of corrected yields in lower panel    
         padCorrectedYieldRatios->cd();
@@ -1425,7 +1425,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         legendEffiMeson->Draw();
     
         // Efficiency plot labeling
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.2, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.2, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                 
         // Draw ratio of efficiencies in lower panel
         padTrueEffiRatios->cd();
@@ -1526,7 +1526,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         legendAcceptMeson->Draw();
     
         // Acceptance plot labeling
-        PutProcessLabelAndEnergyOnPlot( 0.55, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                 
         // Draw ratio of efficiencies in lower panel
         padAcceptanceRatios->cd();
@@ -1616,7 +1616,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             DrawGammaLines(0., maxPt,0.98, 0.98,0.1,kGray+1, 7);
             
             // MassRatio plot labeling
-            PutProcessLabelAndEnergyOnPlot( 0.55, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+            PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                     
             // Draw ratio of efficiencies in lower panel
             padMassRatioRatios->cd();
@@ -1700,7 +1700,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             DrawGammaLines(0., maxPt,0.35, 0.35 ,0.1,kGray+1, 7);
             
             // EtaToPi0 plot labeling
-            PutProcessLabelAndEnergyOnPlot( 0.55, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod);
+            PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                     
             // Draw ratio of efficiencies in lower panel
             padEtaToPi0Ratios->cd();
@@ -2355,7 +2355,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 legendCorrectedYieldGamma->Draw();
 
                 // labeling of plot
-                PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod);
+                PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                     
                 // plot ratios of corrected gammas    
                 padCorrectedYieldGammaRatios->cd();
@@ -2430,7 +2430,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 legendRawYieldGamma->Draw();
                 
                 // labeling  
-                PutProcessLabelAndEnergyOnPlot( 0.55, 0.95, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod);
+                PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
                 // draw ratios in lower panel    
                 padRawYieldGammaRatios->cd();
@@ -2502,7 +2502,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 }
                 legendEffiGamma->Draw();
                 // labeling
-                PutProcessLabelAndEnergyOnPlot( 0.55, 0.2, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod);
+                PutProcessLabelAndEnergyOnPlot( 0.94, 0.2, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
                     
                 // draw ratio of photon efficiencies in lower panel    
                 padEffiGammaRatios->cd();

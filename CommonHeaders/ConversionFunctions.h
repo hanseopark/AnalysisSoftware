@@ -3036,7 +3036,8 @@
         
         if (fileNameSysPPb.CompareTo("") != 0 && fileNameSysPP.CompareTo("") != 0){
             cout << "fileNames correctly set" << endl;
-            
+            cout << "pPb: " << fileNameSysPPb.Data() << endl;
+            cout << "pp: " << fileNameSysPP.Data() << endl;
             ifstream fileSysErrDetailedPPb;
             fileSysErrDetailedPPb.open(fileNameSysPPb,ios_base::in);
             
@@ -3050,7 +3051,6 @@
             vector<Bool_t>enablePPbSys;    
             // read detailed file pPb
             if (haveDetailedSyspPb){
-                cout << fileNameSysPPb.Data() << endl;
                 Int_t iPtBin                = 0;
                 Bool_t isFirstLine          = kTRUE;
                 string line;
@@ -3115,7 +3115,7 @@
             // possibly 100 pt bins
             vector<Double_t>* ptSysSplitPP     = new vector<Double_t>[100];  
             vector<Bool_t>enablePPSys;    
-            // read detailed file pPb
+            // read detailed file pp
             if (haveDetailedSysPP){
                 cout << fileNameSysPP.Data() << endl;
                 Int_t iPtBin                = 0;
@@ -3173,43 +3173,51 @@
             cout << fileNameSysOut << endl;
             SysErrDatAverOut.open(fileNameSysOut, ios::out);
             
-            SysErrDatAverOut << nameSysPPb.at(0) << "\t" ;
-            for (Int_t k = 1; k < nSysAvailSinglePPb; k++){
-                if (enablePPbSys.at(k)) {
-                    SysErrDatAverOut << nameSysPPb.at(k) << "\t" ;
-                }
-            }    
-            for (Int_t k = 1; k < nSysAvailSinglePP; k++){
-                if (enablePPSys.at(k)) {
-                    SysErrDatAverOut << nameSysPP.at(k) << "\t" ;
-                }    
-            }
-            SysErrDatAverOut << endl;
-                
-            for (Int_t iPt = 0; iPt < nBinsSysPtPPb; iPt++){
-                Double_t uncorr     = 0;
-                if ((Double_t)ptSysSplitPPb[iPt].at(0) != (Double_t)ptSysSplitPP[iPt].at(0))
-                    cout << "BINNING external sources out of sync" << "\t" << (Double_t)ptSysSplitPPb[iPt].at(0) << "\t"<< (Double_t)ptSysSplitPP[iPt].at(0) << endl;
-                
-                ptSysExternal.push_back((Double_t)ptSysSplitPPb[iPt].at(0));
-                SysErrDatAverOut << (Double_t)ptSysSplitPPb[iPt].at(0) << "\t";
+            if (haveDetailedSyspPb && haveDetailedSysPP){
+                SysErrDatAverOut << nameSysPPb.at(0) << "\t" ;
                 for (Int_t k = 1; k < nSysAvailSinglePPb; k++){
                     if (enablePPbSys.at(k)) {
-                        uncorr          = uncorr + (Double_t)ptSysSplitPPb[iPt].at(k)*(Double_t)ptSysSplitPPb[iPt].at(k);
-                        SysErrDatAverOut << ptSysSplitPPb[iPt].at(k) << "\t" ;
-                    }    
-                }   
+                        SysErrDatAverOut << nameSysPPb.at(k) << "\t" ;
+                    }
+                }    
                 for (Int_t k = 1; k < nSysAvailSinglePP; k++){
                     if (enablePPSys.at(k)) {
-                        uncorr          = uncorr + (Double_t)ptSysSplitPP[iPt].at(k)*(Double_t)ptSysSplitPP[iPt].at(k);
-                        SysErrDatAverOut << ptSysSplitPP[iPt].at(k) << "\t" ;
+                        SysErrDatAverOut << nameSysPP.at(k) << "\t" ;
                     }    
-                }   
-                uncorr              = TMath::Sqrt(uncorr);
-                unCorrSys.push_back(uncorr);
-                SysErrDatAverOut << uncorr << endl;
-            }
-            SysErrDatAverOut.close();
+                }
+                SysErrDatAverOut << endl;
+                    
+                for (Int_t iPt = 0; iPt < nBinsSysPtPPb; iPt++){
+                    Double_t uncorr     = 0;
+                    if ((Double_t)ptSysSplitPPb[iPt].at(0) != (Double_t)ptSysSplitPP[iPt].at(0))
+                        cout << "BINNING external sources out of sync" << "\t" << (Double_t)ptSysSplitPPb[iPt].at(0) << "\t"<< (Double_t)ptSysSplitPP[iPt].at(0) << endl;
+                    
+                    ptSysExternal.push_back((Double_t)ptSysSplitPPb[iPt].at(0));
+                    SysErrDatAverOut << (Double_t)ptSysSplitPPb[iPt].at(0) << "\t";
+                    for (Int_t k = 1; k < nSysAvailSinglePPb; k++){
+                        if (enablePPbSys.at(k)) {
+                            uncorr          = uncorr + (Double_t)ptSysSplitPPb[iPt].at(k)*(Double_t)ptSysSplitPPb[iPt].at(k);
+                            SysErrDatAverOut << ptSysSplitPPb[iPt].at(k) << "\t" ;
+                        }    
+                    }   
+                    for (Int_t k = 1; k < nSysAvailSinglePP; k++){
+                        if (enablePPSys.at(k)) {
+                            uncorr          = uncorr + (Double_t)ptSysSplitPP[iPt].at(k)*(Double_t)ptSysSplitPP[iPt].at(k);
+                            SysErrDatAverOut << ptSysSplitPP[iPt].at(k) << "\t" ;
+                        }    
+                    }   
+                    uncorr              = TMath::Sqrt(uncorr);
+                    unCorrSys.push_back(uncorr);
+                    SysErrDatAverOut << uncorr << endl;
+                }
+                SysErrDatAverOut.close();
+            } else {
+                cout << "****************************************************************" << endl;
+                cout << "****************************************************************" << endl;
+                cout << "WARNING: at least one of the single error files wasn't available" << endl;
+                cout << "****************************************************************" << endl;
+                cout << "****************************************************************" << endl;
+            }    
         }    
             
         for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){

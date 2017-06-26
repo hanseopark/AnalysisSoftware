@@ -4480,6 +4480,8 @@
             return kOrange+2;
         if ( variationName.CompareTo("Alpha") == 0 || variationName.CompareTo("Asym") == 0)
             return kBlue+2;
+        if ( variationName.CompareTo("Rapidity") == 0 )
+            return kPink-3;
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return kCyan-2;
         if ( variationName.CompareTo("DoubleCount") == 0)
@@ -4568,6 +4570,8 @@
             return 26;
         if ( variationName.CompareTo("Alpha") == 0 ||  variationName.CompareTo("Asym") == 0)
             return 27;
+        if ( variationName.CompareTo("Rapidity") == 0 )
+            return 26;
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return 28;
         if ( variationName.CompareTo("DoubleCount") == 0)
@@ -4656,6 +4660,8 @@
             return "#alpha meson";
         if ( variationName.CompareTo("Asym") == 0 )
             return "Asymmetry";
+        if ( variationName.CompareTo("Rapidity") == 0 )
+            return "rapidity";
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return "#varphi_{conv}";
         if ( variationName.CompareTo("TOF") == 0 )
