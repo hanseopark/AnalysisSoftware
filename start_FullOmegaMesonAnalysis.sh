@@ -30,7 +30,7 @@ dataFileOK=0
 
 function GiveBinning7TeV()
 {
-    echo "How many p_T bins do you want to use for Pi0? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
+    echo "How many p_T bins do you want to use for Omega? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
     read answer
     BinsPtPi0=$answer
     correctPi0=1
@@ -53,7 +53,8 @@ function GiveBinningpPb()
 
 function ExtractSignal()
 {
-    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)  
+    root -l -b -q -x TaskOmega/TaskV1/ExtractSignalPiPlPiMiPiZero.C\+\+\($1\)
+    #root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)
 }
 
 function CorrectSignal()
@@ -75,7 +76,8 @@ function Usage()
 This Script is provided by the Gamma Conversion Group of ALICE 
 the main developers are 
     Friederike Bock \t friederike.bock@cern.ch
-    Ana Marin \t\t marin@physi.uni-heidelberg.de  
+    Ana Marin \t\t marin@physi.uni-heidelberg.de
+    Florian Jonas \t florian.jonas@cern.ch
             
 If there are any complications with running this script do not hesitate to connect them.
 
@@ -149,6 +151,7 @@ elif [[ "$1" == *-r* ]] ; then
     ONLYCORRECTION=1
     ONLYRESULTS=1
     DataRootFile=$2
+    echo $DataRootFile #DEBUG
     Suffix=$3;
 elif [[ "$1" != -* ]] ; then
     DataRootFile=$1
@@ -169,9 +172,9 @@ elif [[ "$1" != -* ]] ; then
         MCFILE=0
     fi
 else 
-    DataRootFile=$2
-    MCRootFile=$3
-    Suffix=$4;
+    DataRootFile=$1
+    MCRootFile=$2
+    Suffix=$3;
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
@@ -227,12 +230,12 @@ do
     read answer
     if [ $answer = "0" ]; then
         echo "You are analysing PCM-PCM output";
-        mode=0
+        mode=40 #only this edited so far
         correct=1
     elif [ $answer = "1" ]; then
         echo "You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
         mode=1
-#        AdvMesonQA="AdvancedMesonQA"
+#        AdvMesonQAq="AdvancedMesonQA"
         correct=0
     elif [ $answer = "2" ]; then
         echo "You are analysing PCM-EMCAL output";
@@ -274,6 +277,7 @@ do
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
         else 
+            echo $DataRootFile #DEBUGGING
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
         fi
@@ -483,17 +487,17 @@ if [ $ONLYRESULTS = 0 ] ; then
 
             if [ $ONLYCORRECTION -eq 0 ]; then
                 echo "CutSelection is $cutSelection";
-                optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                optionsPi0Data=\"Omega\"\,\"$DataRootFile\"\,"GammaConvNeutralMesonPiPlPiMiPiZero_0_9",\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                 if [ -f $DataRootFile ]; then 
                     ExtractSignal $optionsPi0Data
                 fi
                 Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`             
                 if [ $MCFILE -eq 1 ]; then 
-                    optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE 
+                    optionsPi0MC=\"Omega\"\,"GammaConvNeutralMesonPiPlPiMiPiZero_0_9",\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                     ExtractSignal $optionsPi0MC
                     Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
                     Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`              
-                    root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
+                    #root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
                 fi    
             fi
             
@@ -502,12 +506,12 @@ if [ $ONLYRESULTS = 0 ] ; then
             Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
 
             if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton 
+                #CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton
             else 
                 PARTLY=1
             fi
             if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton 
+                #CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton
             else 
                 PARTLY=1
             fi
@@ -515,7 +519,7 @@ if [ $ONLYRESULTS = 0 ] ; then
         fi
         NORMALCUTS=`expr $NORMALCUTS + 1`
     done
-    
-    root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-    root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+
+    #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+    #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
 fi        

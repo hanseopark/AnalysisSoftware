@@ -4296,7 +4296,7 @@
         if (mode == 9 || mode == 0) 
             nominalMainDir         = "GammaConvV1";
         else if( mode == 1 )
-            nominalMainDir        = "GammaConvDalitzV1";
+            nominalMainDir         = "GammaConvDalitzV1";
         else if (mode == 2 || mode == 3 || mode == 13) 
             nominalMainDir         = "GammaConvCalo";
         else if (mode == 4 || mode == 12 || mode == 5) 
@@ -4307,7 +4307,8 @@
             nominalMainDir         = "GammaCaloMerged";
         else if (mode == 30 ) 
             nominalMainDir         = "GammaConvV1";
-
+        else if (mode == 40)
+            nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
         TObjArray *arr;
         arr             = mainDir.Tokenize("_");
         TString start   = ((TObjString*)arr->At(0))->GetString();;
@@ -4325,7 +4326,7 @@
         if (mode == 9 || mode == 0) 
             nominalMainDir         = "GammaConvV1";
         else if( mode == 1 )
-            nominalMainDir        = "GammaConvDalitzV1";
+            nominalMainDir         = "GammaConvDalitzV1";
         else if (mode == 2 || mode == 3 || mode == 13) 
             nominalMainDir         = "GammaConvCalo";
         else if (mode == 4 || mode == 12 || mode == 5) 
@@ -4336,7 +4337,8 @@
             nominalMainDir         = "GammaCaloMerged";
         else if (mode == 30 ) 
             nominalMainDir         = "GammaConvV1";
-
+        else if (mode == 40 )
+            nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
         return nominalMainDir;
     }
 

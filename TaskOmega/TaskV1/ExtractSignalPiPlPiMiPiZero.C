@@ -45,7 +45,8 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
-#include "../CommonHeaders/ConversionFunctions.h"
+#include "../../CommonHeaders/ConversionFunctions.h" // changed to standard CommonHeaders
+#include "../../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "THnSparse.h"
 
 Double_t FunctionBGExclusion(Double_t *x, Double_t *par)
@@ -682,7 +683,7 @@ void ProcessEMLeftRight(TH1D* fFgr, TH1D* fBck, Double_t * fBGFitRangeEMLeft, Do
 }
                                                                
 // Main Function
-void ExtractSignalPiPlPiMiPiZero(TString meson="", TString subDir="", TString file="", TString cutSelection="", TString Suffix="", TString optionMC="", TString optionEnergy="", TString optionCrystalBall="", TString directphotonPlots="", TString optionUseMinBiasEff="", TString optionPeriod="", TString optionAdvancedMesonQA="",Int_t numberOfBins = 30, Bool_t addSig = kFALSE, Bool_t makeQAplots = kTRUE){
+void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutSelection="", TString Suffix="", TString optionMC="", TString optionEnergy="", TString optionCrystalBall="", TString directphotonPlots="", TString optionUseMinBiasEff="", TString optionPeriod="", TString optionAdvancedMesonQA="",Int_t numberOfBins = 30, Bool_t addSig = kFALSE, Bool_t makeQAplots = kTRUE){
 	gROOT->Reset();
 
 	// mode:	0 // new output PCM-PCM
@@ -711,6 +712,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString subDir="", TString fi
 	//Int_t fMode = -1;
 	fMode = ReturnSeparatedCutNumberPiPlPiMiPiZero(cutSelection,fTypeCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fPionCutSelection, fNeutralPionCutSelection, fMesonCutSelection);
 	Int_t mode = fMode;
+
 	
 	cout << "\t MODE = " << mode << endl;
 	
@@ -834,17 +836,23 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString subDir="", TString fi
 	const char* fFileErrLogDatname = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat",cutSelection.Data(),fEnergyFlag.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelectionRead.Data());
 	fFileErrLog.open(fFileErrLogDatname, ios::out);
 
-	TFile f(file.Data());
+    TFile* f = new TFile(file.Data());
 	
 	TString nameMainDir = "";
 	//if (mode == 9 || mode == 0) {nameMainDir = "GammaConvNeutralMesonPiPlPiMiPiZero_0_9";}
 	//else if (mode == 2 || mode == 3) nameMainDir = "GammaConvCalo";
 	
-	nameMainDir = subDir;
-	
+    //detect subdir
+    nameMainDir     = AutoDetectMainTList(40 , f); // TODO: Change 40 to mode if modes are changed in ConversionFunctions correctly
+    if(nameMainDir.CompareTo("")!=0){
+        cout << "Succesfully detected " << nameMainDir <<" as MainDir!" << endl;
+    } else{
+        printf("ERROR: MainDir not found!");
+        return;
+    }
 	//if (mode == 6) nameMainDir = "GammaConvNeutralMesonPiPlPiMiPiZero_1";
 	
-	TList *TopDir =(TList*)f.Get(nameMainDir.Data());
+    TList *TopDir =(TList*)f->Get(nameMainDir.Data());
 	if(TopDir == NULL){
 		cout<<"ERROR: TopDir not Found"<<endl;
 		return;

@@ -293,6 +293,98 @@
         return;
     }
 
+    //*****************************************************************************************
+    //********************* Separate cut numbers, PiPlPiMiPiZero ******************************
+    //** separates the possible combinations according to the mode into the respective       **
+    //** typeCutNumber, eventCutNumber, gammaCutNumber (PCM), clusterCutNumber (EMCal/PHOS), **
+    //** pionCutNumber, neutralPionCutNumber and mesonCutNumber                              **
+    //*****************************************************************************************
+    Int_t ReturnSeparatedCutNumberPiPlPiMiPiZero(TString cutSel,
+                                                 TString& typeCutNumber,
+                                                 TString& eventCutNumber,
+                                                 TString& gammaCutNumber,
+                                                 TString& clusterCutNumber,
+                                                 TString& pionCutNumber,
+                                                 TString& neutralPionCutNumber,
+                                                 TString& mesonCutNumber){
+
+        TObjArray *arr;
+        arr = cutSel.Tokenize("_");
+        TObjString* objstrType;
+        TObjString* objstrEvent;
+        TObjString* objstrGamma;
+        TObjString* objstrCluster;
+        TObjString* objstrPion;
+        TObjString* objstrNeutralPion;
+        TObjString* objstrMeson;
+        Int_t mode = -1;
+        objstrType  = (TObjString*)arr->At(0);
+        typeCutNumber  = objstrType->GetString();
+
+        if (typeCutNumber.CompareTo("0") == 0){ // PCM-PCM
+            objstrType  = (TObjString*)arr->At(0);
+            objstrEvent = (TObjString*)arr->At(1);
+            objstrGamma = (TObjString*)arr->At(2);
+            objstrPion = (TObjString*)arr->At(3);
+            objstrNeutralPion = (TObjString*)arr->At(4);
+            objstrMeson = (TObjString*)arr->At(5);
+
+            typeCutNumber  = objstrType->GetString();
+            eventCutNumber= objstrEvent->GetString();
+            gammaCutNumber= objstrGamma->GetString();
+            pionCutNumber = objstrPion->GetString();
+            neutralPionCutNumber = objstrNeutralPion->GetString();
+            mesonCutNumber = objstrMeson->GetString();
+            mode = 0;
+        } else {
+        if (typeCutNumber.CompareTo("1") == 0)//PCM-calo
+        {
+            objstrType  = (TObjString*)arr->At(0);
+            objstrEvent = (TObjString*)arr->At(1);
+            objstrGamma = (TObjString*)arr->At(2);
+            objstrCluster = (TObjString*)arr->At(3);
+            objstrPion = (TObjString*)arr->At(4);
+            objstrNeutralPion = (TObjString*)arr->At(5);
+            objstrMeson = (TObjString*)arr->At(6);
+
+            typeCutNumber  = objstrType->GetString();
+            eventCutNumber= objstrEvent->GetString();
+            gammaCutNumber= objstrGamma->GetString();
+            clusterCutNumber = objstrCluster->GetString();
+            pionCutNumber = objstrPion->GetString();
+            neutralPionCutNumber = objstrNeutralPion->GetString();
+            mesonCutNumber = objstrMeson->GetString();
+
+            TString firstLetter(clusterCutNumber(0,1));
+            if (firstLetter.CompareTo("1") == 0) mode = 2; else mode = 3;
+        }
+        else
+        if (typeCutNumber.CompareTo("2") == 0)//calo-calo
+        {
+            objstrType  = (TObjString*)arr->At(0);
+            objstrEvent = (TObjString*)arr->At(1);
+            objstrCluster = (TObjString*)arr->At(2);
+            objstrPion = (TObjString*)arr->At(3);
+            objstrNeutralPion = (TObjString*)arr->At(4);
+            objstrMeson = (TObjString*)arr->At(5);
+
+            typeCutNumber  = objstrType->GetString();
+            eventCutNumber= objstrEvent->GetString();
+            clusterCutNumber = objstrCluster->GetString();
+            pionCutNumber = objstrPion->GetString();
+            neutralPionCutNumber = objstrNeutralPion->GetString();
+            mesonCutNumber = objstrMeson->GetString();
+
+            TString firstLetter(clusterCutNumber(0,1));
+            if (firstLetter.CompareTo("1") == 0) mode = 4; else mode = 5;
+        }
+
+        }
+
+        cout << cutSel.Data() << "\t" << typeCutNumber.Data() << "\t" << eventCutNumber.Data() << "\t" << gammaCutNumber.Data() << "\t" <<  clusterCutNumber.Data() << "\t" <<pionCutNumber.Data() << "\t" <<neutralPionCutNumber.Data() << "\t" << mesonCutNumber.Data() << endl;
+        return mode;
+    }
+
     //************************************************************************************
     //********************* get number of events for PCM/calo analysis *******************
     //************************************************************************************
@@ -457,6 +549,8 @@
             return "#eta";
         } else if(mesonName.CompareTo("EtaPrim") == 0)  {
             return "#eta'";
+        } else if(mesonName.CompareTo("Omega") == 0)  {
+            return "#omega";
         } else {
             cout << "No correct meson has been selected" << endl;
             return "";
