@@ -2053,7 +2053,7 @@ void CalculatePileUpBackground(Bool_t doMC){
         }
         
         // draw fractions per category
-        DrawFractionPerCat(fESDGammaRatioCatToCombinedPtDCAzBins, fOutputDir, fPrefix, fPrefix2, fCutSelection, fSuffix);
+        DrawFractionPerCat(fESDGammaRatioCatToCombinedPtDCAzBins, fOutputDir, fPrefix2, fCutSelection, fSuffix, fCollisionSystem);
         
         // calculate ratio with/without pileup
         Double_t binContent, binError;

@@ -4,15 +4,15 @@ Double_t fHoleRadius = 2.;
 Double_t AsymmGaus(Double_t *x, Double_t *par);
 Double_t GausWithHole(Double_t *x, Double_t *par);
 void InitializeIntRange(TString setPi0);
-void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category);
-void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category);
-void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy);
-void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy);
+void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
+void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
+void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy);
+void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy);
 
-void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy);
+void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy);
 
-void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category);
-void PlotInvMassPtBin(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy);
+void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
+void PlotInvMassPtBin(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy);
 
 
 void DrawGammaDCAHisto( TH1* ,

@@ -5380,22 +5380,33 @@
     //**************************************************************************************************
     //************* Routine to produce fraction per category vs pt plots  ******************************
     //**************************************************************************************************
-    void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TString fPrefix2, TString fCutSelection, TString fSuffix) {
+    void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TString fCutSelection, TString fSuffix, TString fEnergy) {
         
-        TCanvas *canvas             = GetAndSetCanvas("canvas");
-        Color_t markerColor[3]      = {kBlack, kRed, kBlue};
+        TCanvas* canvas 	= new TCanvas("canvasCorrFrac","",200,10,1350,900);  // gives the page size
+        DrawGammaCanvasSettings( canvas, 0.08, 0.02, 0.02, 0.09);
         
-        TLegend* legend             = GetAndSetLegend(0.7,0.75,3,1);
+        Color_t markerColor[3]      = {kRed+2, 800, kBlue+1};
+        Style_t markerStyle[3]      = {20, 21, 24};
+        
+        TLegend* legend             = GetAndSetLegend2(0.75,0.94-3*1.1*0.04, 0.93,0.94, 0.04, 1, "", 42, 0.25);
         for (Int_t i=0; i<3; i++) {
-            SetHistogramm(frac[i],"#it{p}_{T} (GeV/#it{c})","#gamma_{cat i} / #gamma_{all cat}",0.0,1.0);
-            DrawGammaSetMarker(frac[i], 20, 1.0, markerColor[i], markerColor[i]);
+            SetHistogramm(frac[i],"#it{p}_{T} (GeV/#it{c})","N_{#gamma per cat} / N_{#gamma}",0.0,1.0,1,0.9);
+            DrawGammaSetMarker(frac[i], markerStyle[i], 1.0, markerColor[i], markerColor[i]);
             frac[i]->Draw("same");
-            legend->AddEntry(frac[i],Form("#gamma_{cat %i} / #gamma_{all cat}", i+1),"lp");
+            legend->AddEntry(frac[i],Form("Category %i", i+1),"p");
         }
         DrawGammaLines(0., frac[0]->GetXaxis()->GetBinUpEdge(frac[0]->GetNbinsX()), 1., 1., 0.5, kBlack);
         legend->Draw("same");
         
-        canvas->Print(Form("%s/%s_%s_ESD_FractionPerCategory_%s.%s",fOutputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fCutSelection.Data(),fSuffix.Data()));
+        TLatex *labelEnergy = new TLatex(0.12,0.9,fEnergy.Data());
+        SetStyleTLatex( labelEnergy, 0.04,4);
+        labelEnergy->Draw();
+        TLatex *labelMeson = new TLatex(0.12,0.86, "#gamma candidates");
+        SetStyleTLatex( labelMeson, 0.04,4);
+        labelMeson->Draw();
+
+        
+        canvas->Print(Form("%s/%s_FractionPerCategory_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
         delete legend;
         delete canvas;
     }

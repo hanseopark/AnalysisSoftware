@@ -5738,7 +5738,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             if(graphPHOSPi0AccTimesEff)graphPHOSPi0AccTimesEff->Write("Pi0CorrectionFactorPHOS");
             graphEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorEMCAL");
             graphPCMEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorPCMEMCAL");
-            graphPCMEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorDalitz");
+            graphDalitzPi0AccTimesEff->Write("Pi0CorrectionFactorDalitz");
             
             graphPCMPi0Mass->Write("Pi0MassDataPCM");
             graphPCMPi0MassMC->Write("Pi0MassMCPCM");

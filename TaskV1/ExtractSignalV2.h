@@ -1203,7 +1203,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonWidthRange[1]             = 0.070;
             fMesonLambdaTailRange[0]        = 0.001;
             fMesonLambdaTailRange[1]        = 0.025;
-            if (fEnergyFlag.CompareTo("2.76TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0){
+            if (fEnergyFlag.CompareTo("2.76TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
                 fMesonLambdaTail            = 0.025;
                 fMesonLambdaTailRange[0]    = 0.025;
                 fMesonLambdaTailRange[1]    = 0.025;

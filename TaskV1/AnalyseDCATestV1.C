@@ -91,9 +91,14 @@ void AnalyseDCATestV1(  TString meson           ="",
         intermediate                        = "";
     } else {
         fTextCent                           = Form("%s central", intermediate.Data());
+        if (intermediate.CompareTo("0-100%") == 0)
+            intermediate                    = "";
     }
+    
     // Set energy
     fEnergyText                             = ReturnFullCollisionsSystem(optionEnergy);
+    if (intermediate.CompareTo("") != 0 )
+        fEnergyText                         = Form("%s %s", intermediate.Data(), fEnergyText.Data());
     if (optionPeriod.CompareTo("") != 0){
         fEnergyText                         = Form("%s, %s", fEnergyText.Data(), optionPeriod.Data());
     }
@@ -758,52 +763,52 @@ void AnalyseDCATestV1(  TString meson           ="",
 
 
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 1, suffix.Data()),
-                                        "canvas_cat1", "pad_cat1", fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 1);
+                                        "canvas_cat1", "pad_cat1", fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 2, suffix.Data()),
-                                        "canvas_cat2", "pad_cat2", fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 2);
+                                        "canvas_cat2", "pad_cat2", fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 2);
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 3, suffix.Data()),
-                                        "canvas_cat3", "pad_cat3",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 3);
+                                        "canvas_cat3", "pad_cat3",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 3);
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 4, suffix.Data()),
-                                        "canvas_cat4", "pad_cat4",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 4);
+                                        "canvas_cat4", "pad_cat4",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 4);
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 5, suffix.Data()),
-                                        "canvas_cat5", "pad_cat5",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 5);
+                                        "canvas_cat5", "pad_cat5",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 5);
     PlotDCADistPtBinWithFitAndEstimateCat(Form("%s/%s_%s_DCAProjections_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 6, suffix.Data()),
-                                        "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 6);
+                                        "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 6);
     PlotDCADistPtBinWithFitAndEstimate(Form("%s/%s_%s_DCAProjections_AllCat.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
-                                    "canvas_Allcat", "pad_Allcat",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate);
+                                    "canvas_Allcat", "pad_Allcat",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate);
     PlotDCADistPtBinWithFitAndEstimateGoodCat(Form("%s/%s_%s_DCAProjections_GoodCat.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
-                                            "canvas_Allcat", "pad_Allcat",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate);
+                                            "canvas_Allcat", "pad_Allcat",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate);
 
     PlotInvMassPtBinCat(Form("%s/%s_%s_InvMass_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 1, suffix.Data()),
-                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 1);
+                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
     PlotInvMassPtBinCat(Form("%s/%s_%s_InvMass_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 2, suffix.Data()),
-                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 2);
+                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 2);
     PlotInvMassPtBinCat(Form("%s/%s_%s_InvMass_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 3, suffix.Data()),
-                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 3);
+                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 3);
     PlotInvMassPtBinCat(Form("%s/%s_%s_InvMass_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 4, suffix.Data()),
-                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 4);
+                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 4);
     PlotInvMassPtBinCat(Form("%s/%s_%s_InvMass_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 5, suffix.Data()),
-                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 5);
+                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 5);
     PlotInvMassPtBinCat(Form("%s/%s_%s_InvMass_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 6, suffix.Data()),
-                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 6);
+                        "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 6);
     PlotInvMassPtBin(Form("%s/%s_%s_InvMass.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
-                    "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate);
+                    "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate);
 
     if (kMC){
         PlotDCADistPtBinWithMCSplitCat(Form("%s/%s_%s_DCAProjectionsWithMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 1, suffix.Data()),
-                                    "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 1);
+                                    "canvas_cat1", "pad_cat1",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
         PlotDCADistPtBinWithMCSplitCat(Form("%s/%s_%s_DCAProjectionsWithMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 2, suffix.Data()),
-                                    "canvas_cat2", "pad_cat2",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 2);
+                                    "canvas_cat2", "pad_cat2",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 2);
         PlotDCADistPtBinWithMCSplitCat(Form("%s/%s_%s_DCAProjectionsWithMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 3, suffix.Data()),
-                                    "canvas_cat3", "pad_cat3",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 3);
+                                    "canvas_cat3", "pad_cat3",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 3);
         PlotDCADistPtBinWithMCSplitCat(Form("%s/%s_%s_DCAProjectionsWithMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 4, suffix.Data()),
-                                    "canvas_cat4", "pad_cat4",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 4);
+                                    "canvas_cat4", "pad_cat4",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 4);
         PlotDCADistPtBinWithMCSplitCat(Form("%s/%s_%s_DCAProjectionsWithMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 5, suffix.Data()),
-                                    "canvas_cat5", "pad_cat5",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 5);
+                                    "canvas_cat5", "pad_cat5",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 5);
         PlotDCADistPtBinWithMCSplitCat(Form("%s/%s_%s_DCAProjectionsWithMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), 6, suffix.Data()),
-                                    "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate , 6);
+                                    "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 6);
         PlotDCADistPtBinWithMCSplit(Form("%s/%s_%s_DCAProjectionsWithMC_AllCat.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
-                                    "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fTextCent, fdate );
+                                    "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate );
     }
 
     TH1D* fHistFracIntHistBGvsPt                [3][6] ;
@@ -912,7 +917,7 @@ void AnalyseDCATestV1(  TString meson           ="",
         }
         legendFracIntHistBG->Draw();
 
-        TLatex *labelEnergy = new TLatex(0.11,0.9,Form("%s %s",intermediate.Data(),fEnergyText.Data()));
+        TLatex *labelEnergy = new TLatex(0.12,0.9,fEnergyText.Data());
         SetStyleTLatex( labelEnergy, 0.04,4);
         labelEnergy->Draw();
     canvasCorrFrac->Update();
@@ -1018,20 +1023,20 @@ void AnalyseDCATestV1(  TString meson           ="",
         fHistFracCatvsPt[0]->GetYaxis()->SetTitleOffset(0.8);
         fHistFracCatvsPt[0]->DrawCopy("p,e1");
 
-        TLegend* legendFractionCat = new TLegend(0.65,0.7,0.85,0.95);
-        legendFractionCat->SetTextSize(0.04);
-        legendFractionCat->SetFillColor(0);
-        legendFractionCat->SetLineColor(0);
+        TLegend* legendFractionCat = GetAndSetLegend2(0.75,0.94-6*1.1*0.04, 0.93,0.94, 0.04, 1, "", 42, 0.25);
         legendFractionCat->AddEntry(fHistFracCatvsPt[0],"Category 1","p");
-
-
         for (Int_t i = 1; i< 6; i++){
             DrawGammaSetMarker(fHistFracCatvsPt[i], styleCat[i], 1., colorCat[i], colorCat[i]);
             fHistFracCatvsPt[i]->DrawCopy("same,p,e1");
             legendFractionCat->AddEntry(fHistFracCatvsPt[i],Form("Category %i",i+1),"p");
         }
+
         legendFractionCat->Draw();
+        TLatex *labelMeson = new TLatex(0.12,0.86, Form("%s candidates", fMesonType.Data()));
+        SetStyleTLatex( labelMeson, 0.04,4);
+        labelMeson->Draw();
         labelEnergy->Draw();
+        
     canvasCorrFrac->Update();
     canvasCorrFrac->SaveAs(Form("%s/%s_%s_FractionPerCatVsPt.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()));
 
@@ -1424,7 +1429,7 @@ void InitializeIntRange(TString setPi0){
 //______________________________ DCAz photon under Meson Peak together with Fit and Histo estimate of BG __________________________________
 void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas, TString namePad,
                                         Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                                        Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category){
+                                        Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy, Int_t category){
     TCanvas *canvasDataFit 			= new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
@@ -1466,7 +1471,7 @@ void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas,
             Double_t differenceText = textHeight*1.25;
 
             TLatex *alice 			= new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",textAlice.c_str()));
-            TLatex *energy 			= new TLatex(startTextX,(startTextY-differenceText),Form("%s %s",textCent.Data(),fEnergyText.Data()));
+            TLatex *energy 			= new TLatex(startTextX,(startTextY-differenceText),Form("%s", fEnergyText.Data()));
             TLatex *events 			= new TLatex(startTextX,startTextY,Form("%s: %2.1e events",textEvents.c_str(), fNEvents));
             TLatex *latexDate 		= new TLatex(startTextX,startTextY+differenceText,dateDummy.Data());
             TLatex *latexCategory 	= new TLatex(startTextX,startTextY-(3*differenceText),Form("Meson Category %i",category));
@@ -1568,7 +1573,7 @@ void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas,
 
 void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,
                         Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                        Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category){
+                        Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category){
     TCanvas *canvasDataFit 			= new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
@@ -1610,7 +1615,7 @@ void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,
             Double_t differenceText = textHeight*1.25;
 
             TLatex *alice 			= new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",textAlice.c_str()));
-            TLatex *energy 			= new TLatex(startTextX,(startTextY-differenceText),Form("%s %s",textCent.Data(),fEnergyText.Data()));
+            TLatex *energy 			= new TLatex(startTextX,(startTextY-differenceText),Form("%s",fEnergyText.Data()));
             TLatex *events 			= new TLatex(startTextX,startTextY,Form("%s: %2.1e events",textEvents.c_str(), fNEvents));
             TLatex *latexDate 		= new TLatex(startTextX,startTextY+differenceText,dateDummy.Data());
             TLatex *latexCategory 	= new TLatex(startTextX,startTextY-(3*differenceText),Form("Meson Category %i",category));
@@ -1666,7 +1671,7 @@ void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,
 //______________________________ DCAz photon under Meson Peak together with Fit and Histo estimate of BG __________________________________
 void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TString namePad,
                                     Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                                    Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy, Int_t category){
+                                    Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy, Int_t category){
     TCanvas *canvasDataFit 			= new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
@@ -1708,7 +1713,7 @@ void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TStrin
             Double_t differenceText = textHeight*1.25;
 
             TLatex *alice 			= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s", textAlice.c_str()));
-            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s %s", textCent.Data(), fEnergyText.Data()));
+            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s", fEnergyText.Data()));
             TLatex *events 			= new TLatex(startTextX, startTextY, Form("%s: %2.1e events", textEvents.c_str(), fNEvents));
             TLatex *latexDate 		= new TLatex(startTextX, startTextY+differenceText, dateDummy.Data());
             TLatex *latexCategory 	= new TLatex(startTextX, startTextY-(3*differenceText), Form("Meson Category %i", category));
@@ -1841,7 +1846,7 @@ void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TStrin
 //______________________________ DCAz photon under Meson Peak together with Fit and Histo estimate of BG __________________________________
 void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,
                                         Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                                        Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy){
+                                        Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy){
     TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
@@ -1883,7 +1888,7 @@ void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TS
             Double_t differenceText = textHeight*1.25;
 
             TLatex *alice 			= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s", textAlice.c_str()));
-            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s %s", textCent.Data(), fEnergyText.Data()));
+            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s", fEnergyText.Data()));
             TLatex *events 			= new TLatex(startTextX, startTextY, Form("%s: %2.1e events", textEvents.c_str(), fNEvents));
             TLatex *latexDate 		= new TLatex(startTextX, startTextY+differenceText, dateDummy.Data());
             TLatex *latexCategory 	= new TLatex(startTextX, startTextY-(3*differenceText), Form("All Meson Categories"));
@@ -1976,7 +1981,7 @@ void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TS
 //______________________________ DCAz photon under Meson Peak together with Fit and Histo estimate of BG __________________________________
 void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCanvas, TString namePad,
                                             Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                                            Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy){
+                                            Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy){
     TCanvas *canvasDataFit 			= new TCanvas(nameCanvas.Data(), "", 2800, 1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
@@ -2018,7 +2023,7 @@ void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCan
             Double_t differenceText = textHeight*1.25;
 
             TLatex *alice 			= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s",textAlice.c_str()));
-            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s %s",textCent.Data(), fEnergyText.Data()));
+            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s", fEnergyText.Data()));
             TLatex *events 			= new TLatex(startTextX, startTextY, Form("%s: %2.1e events", textEvents.c_str(), fNEvents));
             TLatex *latexDate 		= new TLatex(startTextX, startTextY+differenceText, dateDummy.Data());
             TLatex *latexCategory 	= new TLatex(startTextX, startTextY-(3*differenceText), Form("Meson Categories 4+5+6"));
@@ -2085,7 +2090,7 @@ void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCan
 
 void PlotInvMassPtBin(TString namePlot, TString nameCanvas, TString namePad,
                     Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                    Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy){
+                    Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy){
     TCanvas *canvasDataFit 		= new TCanvas(nameCanvas.Data(), "", 2800, 1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
     canvasDataFit->SetBottomMargin(0.0);
@@ -2126,7 +2131,7 @@ void PlotInvMassPtBin(TString namePlot, TString nameCanvas, TString namePad,
             Double_t differenceText 		= textHeight*1.25;
 
             TLatex *alice                 	= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s",textAlice.c_str()));
-            TLatex *energy                 	= new TLatex(startTextX, (startTextY-differenceText), Form("%s %s",textCent.Data(), fEnergyText.Data()));
+            TLatex *energy                 	= new TLatex(startTextX, (startTextY-differenceText), Form("%s", fEnergyText.Data()));
             TLatex *events                 	= new TLatex(startTextX, startTextY, Form("%s: %2.1e events", textEvents.c_str(), fNEvents));
             TLatex *latexDate                 = new TLatex(startTextX, startTextY+differenceText, dateDummy.Data());
             TLatex *latexCategory 			= new TLatex(startTextX, startTextY-(3*differenceText), Form("All Meson Categories"));
@@ -2184,7 +2189,7 @@ void PlotInvMassPtBin(TString namePlot, TString nameCanvas, TString namePad,
 //______________________________ DCAz photon under Meson Peak together with Fit and Histo estimate of BG __________________________________
 void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString namePad,
                                 Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
-                                Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString textCent, TString dateDummy){
+                                Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy){
 
     TCanvas *canvasDataFit 			= new TCanvas(nameCanvas.Data(), "", 2800, 1800);  // gives the page size
     canvasDataFit->SetTopMargin(0.0);
@@ -2227,7 +2232,7 @@ void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString n
             Double_t differenceText = textHeight*1.25;
 
             TLatex *alice 			= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s",textAlice.c_str()));
-            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s %s",textCent.Data(),fEnergyText.Data()));
+            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s",fEnergyText.Data()));
             TLatex *events 			= new TLatex(startTextX, startTextY, Form("%s: %2.1e events",textEvents.c_str(), fNEvents));
             TLatex *latexDate 		= new TLatex(startTextX, startTextY+differenceText, dateDummy.Data());
 
