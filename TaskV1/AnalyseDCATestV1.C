@@ -1101,6 +1101,53 @@ void AnalyseDCATestV1(  TString meson           ="",
     }
 
 
+
+    for (Int_t j = fStartPtBin; j < fNBinsPt; j++){
+        Double_t textSizeLabelsPixel            = 55;
+        Double_t textSizeLabelsRel              = 55./1200;
+
+        TCanvas* canvasDCACatCompare            = new TCanvas("canvasDCACatCompare", "", 200, 10, 1200, 1100);
+        DrawGammaCanvasSettings( canvasDCACatCompare,  0.1, 0.01, 0.015, 0.095);
+        canvasDCACatCompare->SetLogy(1);
+
+        TH2F * histoDCACatCompareDummy;
+            histoDCACatCompareDummy             = new TH2F("histoDCACatCompareDummy", "histoDCACatCompareDummy",1000, -4.99,  4.99, 1000, 5e-5, 2 );
+        SetStyleHistoTH2ForGraphs( histoDCACatCompareDummy, "DCA#it{z} (cm)", "normalized counts",
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.06);
+        histoDCACatCompareDummy->GetYaxis()->SetLabelOffset(0.001);
+        histoDCACatCompareDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+        histoDCACatCompareDummy->DrawCopy();
+
+        Style_t markerstylesPlot[6]             ={20,20,20,20,20,20};
+        Size_t markersizePlot[6]                ={1.5,1.5,1.5,1.5,1.5,1.5};
+        Color_t colorDataPlot[6]                ={kBlack,kGray+2,kCyan-3,kBlue-3,kRed-2,kRed+2};
+        TLegend* legendDCACatCompare            = GetAndSetLegend2(0.14, 0.71-1*textSizeLabelsRel, 0.35, 0.71+(5*textSizeLabelsRel),0.8*textSizeLabelsPixel);
+
+        for (Int_t i = 0; i < 6 ; i++){
+            if(fHistDCAZUnderMeson_MesonPt[i][j]){
+                TH1D* fHistDCAZUnderMeson_Visual_Cat =  (TH1D*)fHistDCAZUnderMeson_MesonPt[i][j]->Clone("fHistDCAZUnderMeson_Visual_Cat");
+                fHistDCAZUnderMeson_Visual_Cat->Sumw2();
+                fHistDCAZUnderMeson_Visual_Cat->Scale(1./fHistDCAZUnderMeson_Visual_Cat->GetEntries());
+                DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_Cat, markerstylesPlot[i], markersizePlot[i], colorDataPlot[i] , colorDataPlot[i]);
+                fHistDCAZUnderMeson_Visual_Cat->Draw("p,same,e");
+                legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_Cat,Form("category %d",i),"p");
+            }
+        }
+
+            TLatex *labelPtBin                  = new TLatex(0.95,0.9,Form("%1.2f < p_{T} < %1.2f (GeV/#it{c})", fBinsPt[j], fBinsPt[j+1]));
+            SetStyleTLatex( labelPtBin, 0.04,4);
+            labelPtBin->SetTextAlign(31);
+            labelPtBin->Draw();
+            TLatex *labelEnergy                 = new TLatex(0.95,0.84,fEnergyText.Data());
+            SetStyleTLatex( labelEnergy, 0.04,4);
+            labelEnergy->SetTextAlign(31);
+            labelEnergy->Draw();            legendDCACatCompare->Draw();
+        canvasDCACatCompare->Update();
+        canvasDCACatCompare->SaveAs(Form("%s/%s_%s_DCAzCategoryComp_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), j,suffix.Data()));
+        delete canvasDCACatCompare;
+    }
+
+
     if (kMC){
         TCanvas* canvasDCAMCComponents = new TCanvas("canvasDCAMCComponents","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasDCAMCComponents, 0.08, 0.02, 0.02, 0.09);
