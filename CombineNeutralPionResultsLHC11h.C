@@ -85,7 +85,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
                                      TString nameFilePbPbLHC11h = "data_PCMResults_PbPb_2.76TeV",
                                      Bool_t runDrawReweighted = kTRUE,
                                      Bool_t runPPplotting = kFALSE,
-                                     TString thisthesis=""//"ALICE work in progress" //thisthesis.Data()
+                                     TString thisthesis="This thesis"//"ALICE work in progress" //thisthesis.Data()
 //                                      Bool_t thesisPlotting = kFALSE
 
 ){
@@ -4249,6 +4249,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 
 
 
+    TLatex *thesisLabelMC = new TLatex(0.66,0.92,thisthesis.Data());
+    SetStyleTLatex( thesisLabelMC, textSize,4);
 
 
 	TString  nameFinalResDat = Form("%s/FitResultsMC.dat",outputDir.Data());
@@ -4282,15 +4284,18 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		canvasSpectraMC->cd();
 		histo2DSpectraMC->DrawCopy(); 
 
-		histoMCYieldPi0PtPbPbLHC11h0010->SetMarkerStyle(markerStylePbPb6080MC);
-		histoMCYieldPi0PtPbPbLHC11h0010->Draw("hist,pe1,same");
+// 		histoMCYieldPi0PtPbPbLHC11h0010->SetMarkerStyle(markerStylePbPb6080MC);
+// 		histoMCYieldPi0PtPbPbLHC11h0010->Draw("hist,pe1,same");
 		
 		histoPCMPi0CorrectedSpecPbPbLHC11h0010->Draw("hist,pe1,same");
 		
 		fitYieldDataQCDPi0PbPbLHC11h0010 = FitObject("qcd","fitYieldDataQCDPi0PbPbLHC11h0010","Pi0",histoPCMPi0CorrectedSpecPbPbLHC11h0010,0.4,14,NULL,"QNRME+");
-		DrawGammaSetMarkerTF1(fitYieldDataQCDPi0PbPbLHC11h0010, 1, 1.5, colorCombPbPb6080);
+		DrawGammaSetMarkerTF1(fitYieldDataQCDPi0PbPbLHC11h0010, 1, 1.5, colorCombPbPb0010);
         fitYieldDataQCDPi0PbPbLHC11h0010->SetLineWidth(2);
 		fitYieldDataQCDPi0PbPbLHC11h0010->Draw("same");
+        
+        histoMCYieldPi0PtPbPbLHC11hWOWeights0010->SetMarkerStyle(markerStylePbPb6080MC);
+		histoMCYieldPi0PtPbPbLHC11hWOWeights0010->Draw("hist,pe1,same");
 		
 		forOutput= WriteParameterToFile(fitYieldDataQCDPi0PbPbLHC11h0010);
 		fileFinalResults<< forOutput.Data()<< endl;  
@@ -4299,12 +4304,16 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendYieldandFit0010->SetFillColor(0);
         legendYieldandFit0010->SetLineColor(0);
         legendYieldandFit0010->SetTextSize(0.035);
+        legendYieldandFit0010->SetTextFont(42);
         legendYieldandFit0010->SetMargin(0.2);
         legendYieldandFit0010->AddEntry(histoPCMPi0CorrectedSpecPbPbLHC11h0010,"Data","p");
-        legendYieldandFit0010->AddEntry(histoMCYieldPi0PtPbPbLHC11h0010,"MC yield","p");
+//         legendYieldandFit0010->AddEntry(histoMCYieldPi0PtPbPbLHC11h0010,"MC yield","p");
+        legendYieldandFit0010->AddEntry(histoMCYieldPi0PtPbPbLHC11hWOWeights0010,"MC input","p");
         legendYieldandFit0010->AddEntry(fitYieldDataQCDPi0PbPbLHC11h0010,"QCD fit to data","l");
         legendYieldandFit0010->Draw();
         
+        if(thesisPlotting)thesisLabelMC->Draw();
+            
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Pi0_MCInputSpectraFittedPbPbLHC11h0010.%s",outputDir.Data(),suffix.Data()));
 
@@ -4350,6 +4359,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		SetStyleTLatex( labelRatioMCData0010, 0.04,4);
 		labelRatioMCData0010->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
+        if(thesisPlotting)thesisLabelMC->Draw();
+
 		
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Pi0_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0010.%s",outputDir.Data(),suffix.Data()));
@@ -4375,6 +4386,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		forOutput= WriteParameterToFile(fitYieldDataQCDPi0PbPbLHC11h0005);
 		fileFinalResults<< forOutput.Data()<< endl;  
 		
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Pi0_MCInputSpectraFittedPbPbLHC11h0005.%s",outputDir.Data(),suffix.Data()));
 
@@ -4394,6 +4406,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 				kTRUE, 0., 13.5);
 		histoRatioDatatoFitQCDPbPbLHC11h0005->Draw("same,e,p");  
 
+        
 		DrawGammaSetMarker(histoRatioMCtoDataFitQCDPbPbLHC11h0005, markerStylePbPb0005,markerSizePbPb0005, colorCombPbPb0005 , colorCombPbPb0005);
 		histoRatioMCtoDataFitQCDPbPbLHC11h0005->Draw("same,e,p"); 
 		
@@ -4414,6 +4427,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		labelRatioMCData0005->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
 		
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Pi0_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0005.%s",outputDir.Data(),suffix.Data()));
 	}
@@ -4439,6 +4453,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		forOutput= WriteParameterToFile(fitYieldDataQCDPi0PbPbLHC11h0510);
 		fileFinalResults<< forOutput.Data()<< endl;  
 
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Pi0_MCInputSpectraFittedPbPbLHC11h0510.%s",outputDir.Data(),suffix.Data()));
 
@@ -4476,6 +4491,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		SetStyleTLatex( labelRatioMCData0510, 0.04,4);
 		labelRatioMCData0510->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
+        if(thesisPlotting)thesisLabelMC->Draw();
 		
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Pi0_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0510.%s",outputDir.Data(),suffix.Data()));
@@ -4512,6 +4528,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendYieldandFit2040->AddEntry(histoMCYieldPi0PtPbPbLHC11h2040,"MC yield","p");
         legendYieldandFit2040->AddEntry(fitYieldDataQCDPi0PbPbLHC11h2040,"QCD fit to data","l");
         legendYieldandFit2040->Draw();
+        
+        if(thesisPlotting)thesisLabelMC->Draw();
 
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Pi0_MCInputSpectraFittedPbPbLHC11h2040.%s",outputDir.Data(),suffix.Data()));
@@ -4550,6 +4568,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		SetStyleTLatex( labelRatioMCData2040, 0.04,4);
 		labelRatioMCData2040->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
+        if(thesisPlotting)thesisLabelMC->Draw();
 
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Pi0_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb2040.%s",outputDir.Data(),suffix.Data()));
@@ -4563,8 +4582,8 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		canvasSpectraMC->cd();
 		histo2DSpectraMC->DrawCopy(); 
 
-		histoMCYieldPi0PtPbPbLHC11h2050->SetMarkerStyle(markerStylePbPb6080MC);
-		histoMCYieldPi0PtPbPbLHC11h2050->Draw("hist,pe1,same");
+// 		histoMCYieldPi0PtPbPbLHC11h2050->SetMarkerStyle(markerStylePbPb6080MC);
+// 		histoMCYieldPi0PtPbPbLHC11h2050->Draw("hist,pe1,same");
 
 		histoPCMPi0CorrectedSpecPbPbLHC11h2050->Draw("hist,pe1,same");
 
@@ -4572,6 +4591,9 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		DrawGammaSetMarkerTF1(fitYieldDataQCDPi0PbPbLHC11h2050, 1, 1.5, colorCombPbPb6080);
         fitYieldDataQCDPi0PbPbLHC11h2050->SetLineWidth(2);
 		fitYieldDataQCDPi0PbPbLHC11h2050->Draw("same");
+        
+        histoMCYieldPi0PtPbPbLHC11hWOWeights2050->SetMarkerStyle(markerStylePbPb6080MC);
+		histoMCYieldPi0PtPbPbLHC11hWOWeights2050->Draw("hist,pe1,same");
 
 		forOutput= WriteParameterToFile(fitYieldDataQCDPi0PbPbLHC11h2050);
 		fileFinalResults<< forOutput.Data()<< endl;          
@@ -4580,12 +4602,15 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendYieldandFit2050->SetFillColor(0);
         legendYieldandFit2050->SetLineColor(0);
         legendYieldandFit2050->SetTextSize(0.035);
+        legendYieldandFit2050->SetTextFont(42);
         legendYieldandFit2050->SetMargin(0.2);
         legendYieldandFit2050->AddEntry(histoPCMPi0CorrectedSpecPbPbLHC11h2050,"Data","p");
-        legendYieldandFit2050->AddEntry(histoMCYieldPi0PtPbPbLHC11h2050,"MC yield","p");
+//         legendYieldandFit2050->AddEntry(histoMCYieldPi0PtPbPbLHC11h2050,"MC yield","p");
+        legendYieldandFit2050->AddEntry(histoMCYieldPi0PtPbPbLHC11hWOWeights2050,"MC input","p");
         legendYieldandFit2050->AddEntry(fitYieldDataQCDPi0PbPbLHC11h2050,"QCD fit to data","l");
         legendYieldandFit2050->Draw();
 
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Pi0_MCInputSpectraFittedPbPbLHC11h2050.%s",outputDir.Data(),suffix.Data()));
 
@@ -4629,6 +4654,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		labelRatioMCData2050->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
 		
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Pi0_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb2050.%s",outputDir.Data(),suffix.Data()));
 	}
@@ -4642,11 +4668,9 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		canvasSpectraMC->cd();
 		histo2DSpectraMC->DrawCopy(); 
 
-		histoMCYieldEtaPtPbPbLHC11h0010->SetMarkerStyle(markerStylePbPb6080MC);
-		histoMCYieldEtaPtPbPbLHC11h0010->Draw("hist,pe1,same");
+// 		histoMCYieldEtaPtPbPbLHC11h0010->SetMarkerStyle(markerStylePbPb6080MC);
+// 		histoMCYieldEtaPtPbPbLHC11h0010->Draw("hist,pe1,same");
 
-		histoMCYieldEtaPtPbPbLHC11hAddedSig0010->SetMarkerStyle(markerStylePbPb4060MC);
-		histoMCYieldEtaPtPbPbLHC11hAddedSig0010->Draw("hist,pe1,same");
 
 		histoPCMEtaCorrectedSpecPbPbLHC11h0010->Draw("hist,pe1,same");
 		
@@ -4654,6 +4678,9 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		DrawGammaSetMarkerTF1(fitYieldDataQCDEtaPbPbLHC11h0010, 1, 1.5, colorCombPbPb0010);
 		fitYieldDataQCDEtaPbPbLHC11h0010->SetLineWidth(2);
 		fitYieldDataQCDEtaPbPbLHC11h0010->Draw("same");
+        
+        histoMCYieldEtaPtPbPbLHC11hWOWeights0010->SetMarkerStyle(markerStylePbPb6080MC);
+		histoMCYieldEtaPtPbPbLHC11hWOWeights0010->Draw("hist,pe1,same");
 		
 		forOutput= WriteParameterToFile(fitYieldDataQCDEtaPbPbLHC11h0010);
 		fileFinalResults<< forOutput.Data()<< endl;  
@@ -4662,12 +4689,14 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendEtaYieldandFit0010->SetFillColor(0);
         legendEtaYieldandFit0010->SetLineColor(0);
         legendEtaYieldandFit0010->SetTextSize(0.035);
+        legendEtaYieldandFit0010->SetTextFont(42);
         legendEtaYieldandFit0010->SetMargin(0.2);
         legendEtaYieldandFit0010->AddEntry(histoPCMEtaCorrectedSpecPbPbLHC11h0010,"Data","p");
-        legendEtaYieldandFit0010->AddEntry(histoMCYieldEtaPtPbPbLHC11hAddedSig0010,"MC yield","p");
+//         legendEtaYieldandFit0010->AddEntry(histoMCYieldEtaPtPbPbLHC11h0010,"MC yield","p");
+        legendEtaYieldandFit0010->AddEntry(histoMCYieldEtaPtPbPbLHC11hWOWeights0010,"MC input","p");
         legendEtaYieldandFit0010->AddEntry(fitYieldDataQCDEtaPbPbLHC11h0010,"QCD fit to data","l");
         legendEtaYieldandFit0010->Draw();
-
+        if(thesisPlotting)thesisLabelMC->Draw();
 		
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Eta_MCInputSpectraFittedPbPbLHC11h0010.%s",outputDir.Data(),suffix.Data()));
@@ -4711,7 +4740,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		SetStyleTLatex( labelRatioMCData0010, 0.04,4);
 		labelRatioMCData0010->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
-		
+		if(thesisPlotting)thesisLabelMC->Draw();
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Eta_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0010.%s",outputDir.Data(),suffix.Data()));
 	}
@@ -4737,6 +4766,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		forOutput= WriteParameterToFile(fitYieldDataQCDEtaPbPbLHC11h0005);
 		fileFinalResults<< forOutput.Data()<< endl;
 
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Eta_MCInputSpectraFittedPbPbLHC11h0005.%s",outputDir.Data(),suffix.Data()));
 
@@ -4774,6 +4804,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		labelRatioMCData0005->Draw();
 		DrawGammaLines(0., 30.,1., 1.,0.1);
 
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Eta_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0005.%s",outputDir.Data(),suffix.Data()));
 	}
@@ -4799,6 +4830,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		forOutput= WriteParameterToFile(fitYieldDataQCDEtaPbPbLHC11h0510);
 		fileFinalResults<< forOutput.Data()<< endl;  
 		
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Eta_MCInputSpectraFittedPbPbLHC11h0510.%s",outputDir.Data(),suffix.Data()));
 
@@ -4837,6 +4869,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		
 		DrawGammaLines(0., 30.,1., 1.,0.1);
 		
+        if(thesisPlotting)thesisLabelMC->Draw();
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Eta_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb0510.%s",outputDir.Data(),suffix.Data()));
 	}
@@ -4861,7 +4894,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		
 		forOutput= WriteParameterToFile(fitYieldDataQCDEtaPbPbLHC11h2040);
 		fileFinalResults<< forOutput.Data()<< endl;  
-		
+		if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Eta_MCInputSpectraFittedPbPbLHC11h2040.%s",outputDir.Data(),suffix.Data()));
 
@@ -4899,6 +4932,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		labelRatioMCData2040->Draw();
 
 		DrawGammaLines(0., 30.,1., 1.,0.1);
+        if(thesisPlotting)thesisLabelMC->Draw();
 		
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Eta_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb2040.%s",outputDir.Data(),suffix.Data()));
@@ -4913,17 +4947,21 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		canvasSpectraMC->cd();
 		histo2DSpectraMC->DrawCopy(); 
 
-		histoMCYieldEtaPtPbPbLHC11h2050->SetMarkerStyle(markerStylePbPb6080MC);
-		histoMCYieldEtaPtPbPbLHC11h2050->Draw("hist,pe1,same");
+// 		histoMCYieldEtaPtPbPbLHC11h2050->SetMarkerStyle(markerStylePbPb6080MC);
+// 		histoMCYieldEtaPtPbPbLHC11h2050->Draw("hist,pe1,same");
 		
-		histoMCYieldEtaPtPbPbLHC11hAddedSig2050->SetMarkerStyle(markerStylePbPb4060MC);
-		histoMCYieldEtaPtPbPbLHC11hAddedSig2050->Draw("hist,pe1,same");
+// 		histoMCYieldEtaPtPbPbLHC11hAddedSig2050->SetMarkerStyle(markerStylePbPb4060MC);
+// 		histoMCYieldEtaPtPbPbLHC11hAddedSig2050->Draw("hist,pe1,same");
 
 		histoPCMEtaCorrectedSpecPbPbLHC11h2050->Draw("hist,pe1,same");
 		
 		fitYieldDataQCDEtaPbPbLHC11h2050 = FitObject("l","fitYieldDataQCDEtaPbPbLHC11h2050","Eta",histoPCMEtaCorrectedSpecPbPbLHC11h2050,1.,10,NULL,"QNRME+");
 		DrawGammaSetMarkerTF1(fitYieldDataQCDEtaPbPbLHC11h2050, 1, 1.5, colorCombPbPb6080);
+        fitYieldDataQCDEtaPbPbLHC11h2050->SetLineWidth(2);
 		fitYieldDataQCDEtaPbPbLHC11h2050->Draw("same");
+        
+        histoMCYieldEtaPtPbPbLHC11hWOWeights2050->SetMarkerStyle(markerStylePbPb6080MC);
+		histoMCYieldEtaPtPbPbLHC11hWOWeights2050->Draw("hist,pe1,same");
 		
 		forOutput= WriteParameterToFile(fitYieldDataQCDEtaPbPbLHC11h2050);
 		fileFinalResults<< forOutput.Data()<< endl;  
@@ -4932,12 +4970,14 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
         legendEtaYieldandFit2050->SetFillColor(0);
         legendEtaYieldandFit2050->SetLineColor(0);
         legendEtaYieldandFit2050->SetTextSize(0.035);
+        legendEtaYieldandFit2050->SetTextFont(42);
         legendEtaYieldandFit2050->SetMargin(0.2);
         legendEtaYieldandFit2050->AddEntry(histoPCMEtaCorrectedSpecPbPbLHC11h2050,"Data","p");
-        legendEtaYieldandFit2050->AddEntry(histoMCYieldEtaPtPbPbLHC11hAddedSig2050,"MC yield","p");
+//         legendEtaYieldandFit2050->AddEntry(histoMCYieldEtaPtPbPbLHC11h2050,"MC yield","p");
+        legendEtaYieldandFit2050->AddEntry(histoMCYieldEtaPtPbPbLHC11hWOWeights2050,"MC input","p");
         legendEtaYieldandFit2050->AddEntry(fitYieldDataQCDEtaPbPbLHC11h2050,"QCD fit to data","l");
         legendEtaYieldandFit2050->Draw();
-		
+		if(thesisPlotting)thesisLabelMC->Draw();
 		canvasSpectraMC->Update();
 		canvasSpectraMC->Print(Form("%s/Eta_MCInputSpectraFittedPbPbLHC11h2050.%s",outputDir.Data(),suffix.Data()));
 
@@ -4980,6 +5020,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
 		labelRatioMCData2050->Draw();
 
 		DrawGammaLines(0., 30.,1., 1.,0.1);
+        if(thesisPlotting)thesisLabelMC->Draw();
 
 		canvasFraction2->Update();
 		canvasFraction2->SaveAs(Form("%s/Eta_Ratio_MCLHC11h_To_DataFitLHC11h_PbPb2050.%s",outputDir.Data(),suffix.Data()));

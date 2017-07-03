@@ -223,10 +223,10 @@ function GiveBinningDirectPhotonHI()
     DoEta=0;
     DoPi0InEtaBinning=0;
 
-    echo "How many p_T bins do you want to use for the Pi0? 14(6GeV), 17(8GeV), 18(11GeV) 19 (20GeV), 20(14GeV)";
+    echo "How many p_T bins do you want to use for the Pi0? 14(6GeV), 15(14GeV), 16(14GeV), 17(14GeV), 18(11GeV), 19 (20GeV)";
     read answer
     if [ $answer = 17 ]; then
-        echo "17 Bins --> Max p_T = 8 GeV ...";
+        echo "17 Bins --> Max p_T = 14 GeV ...";
         correctPi0=1
         BinsPtPi0=17
     elif [ $answer = 18 ]; then
@@ -237,10 +237,14 @@ function GiveBinningDirectPhotonHI()
         echo "19 Bins --> Max p_T = 20 GeV ...";
         correctPi0=1
         BinsPtPi0=18
-    elif [ $answer = 20 ]; then
-        echo "18 Bins --> Max p_T = 14 GeV ...";
+    elif [ $answer = 16 ]; then
+        echo "16 Bins --> Max p_T = 14 GeV ...";
         correctPi0=1
-        BinsPtPi0=17
+        BinsPtPi0=16
+    elif [ $answer = 15 ]; then
+        echo "15 Bins --> Max p_T = 14 GeV ...";
+        correctPi0=1
+        BinsPtPi0=15
     elif [ $answer = 14 ]; then
         echo "14 Bins --> Max p_T = 6 GeV ...";
         correctPi0=1
@@ -2576,11 +2580,11 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                         fi
                     fi
                     if [ $DoGamma -eq 1 ]; then
-                        optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0
+                        optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0\,kFALSE
                         if [ $NEWGammaMacros == 0 ]; then
                             ExtractSignalGamma $optionsPi0Data
                         else
-                            optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma
+                            optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
                             ExtractSignalGammaV2 $optionsGammaData
                         fi
                         if [ $MCFILE -eq 1 ]; then
@@ -2588,8 +2592,15 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                             if [ $NEWGammaMacros == 0 ]; then
                                 ExtractSignalGamma $optionsPi0MC
                             else
-                                optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma
+                                optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
                                 ExtractSignalGammaV2 $optionsGammaMC
+                                if [ $MERGINGMC -eq 1 ]; then
+                                    if [ $addedSig -eq 1 ]; then
+                                        optionsGammaMC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"AddSig\"\,$BinsPtGamma\,kTRUE\,$mode
+                                        ExtractSignalGammaV2 $optionsGammaMC2
+                                    fi
+                                fi
+
                             fi
                         fi
                     fi

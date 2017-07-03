@@ -117,6 +117,9 @@
     //***********************************************************************************************
     //****************** variable setting for the different error graphs ****************************
     //***********************************************************************************************
+    Double_t ptSysPi0Fit[50];
+    Double_t ptSysPi0[50];
+
     ifstream fileSysErrGamma;
     Int_t nPointsGamma                                          = 0;
     Double_t ptSysGamma[50];
@@ -129,6 +132,7 @@
 
     ifstream fileSysErrInclRatio;
     Int_t nPointsInclRatio                                      = 0;
+    Double_t ptSysInclRatioFit[50];
     Double_t ptSysInclRatio[50];
     Double_t relSystErrorInclRatioUp[50];
     Double_t relSystErrorInclRatioDown[50];
@@ -139,6 +143,7 @@
 
     ifstream fileSysErrDoubleRatio;
     Int_t nPointsDoubleRatio                                    = 0;
+    Double_t ptSysDoubleRatioFit[50];
     Double_t ptSysDoubleRatio[50];
     Double_t relSystErrorDoubleRatioUp[50];
     Double_t relSystErrorDoubleRatioDown[50];

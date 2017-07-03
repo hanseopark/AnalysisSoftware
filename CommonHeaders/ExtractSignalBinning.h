@@ -791,22 +791,31 @@
                                                             2,   2,   2,   2,   2,   2,   4,   4,   4,   5,
                                                             5,   8,   8,   8,   10,  10 };
     Double_t fBinsEtaPbPb2760GeVPtLHC11h[17]        = { 0.0, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0 ,3.5, 4.0,
-                                                        5.0, 6.0, 8.0, 10, 12., 15., 19.};
-    Int_t fBinsEtaPbPb2760GeVPtRebinLHC11h[16]      = { 10, 8, 8, 4, 4, 4, 5, 5, 8, 8,
-                                                        8, 8, 10, 10, 10, 10};
+                                                        5.0, 6.0, 8.0, 10,  12., 15., 19.};
+    Int_t fBinsEtaPbPb2760GeVPtRebinLHC11h[16]      = {     10,  8,   8,   4,   4,   4,   5,  5,    8,   8,
+                                                            8,   8,   10,  10,  10, 10};
     Double_t fBinsEtaPbPb2760GeVPtLHC11hLessBins[13]= { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.,
                                                         12.0, 15.0, 19.0};
     Int_t fBinsEtaPbPb2760GeVPtRebinLHC11hLessBins[14] = {    10,   8,   5,   5,   5,   5,   5,   8, 10, 10,
                                                         10, 10, 10, 10};
-    Double_t fBinsDirGammaPbPb2760GeVPtLHC11h[23]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
-                                                        3.5, 4.,  5.,  6.,  8.,  10., 12., 14., 16., 18.,
-                                                        20., 25., 30.};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebin[22] = {    2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
-                                                           2,   2,   4,   4,   4,   4,   8,   8,   8,   8,
-                                                           10,  10 };
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[22] = {    2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
-                                                           2,   2,   4,   4,   4,   5,   5,   8,   8,   8,
-                                                           10,  10 };
+    Double_t fBinsDirGammaPbPb2760GeVPtLHC11h[18]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
+                                                        3.5, 4.,  5.,  6.,  8.,  10., 12., 14.};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebin[17] = {2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   4,   8};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[17] = {2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   5,   5};
+    Double_t fBinsDirGammaPbPb2760GeVPtLHC11hVar1[17]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
+                                                        3.5, 4.,  5.,  6.,  8.,  12., 14.};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar1[16] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   4,   8};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar1[16] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   5,   5 };
+    Double_t fBinsDirGammaPbPb2760GeVPtLHC11hVar2[16]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.3, 2.6, 3.,
+                                                            3.5, 4.,  5.,  6.,  8.,  10., 14.};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[15] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   4};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[15] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   5};
     Double_t fBinsPi0PbPb2760GeVPtDCALHC11h[16]     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 3.0, 4.0, 6.0, 12.};
     Double_t fBinsEtaPbPb2760GeVPtDCALHC11h[14]     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0,
@@ -2299,17 +2308,17 @@
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 0;
                     fColumn         = 4;
-                    fRow            = 5;
+                    fRow            = 4;
 
                     if (fNBinsPt > 21) {
                         cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
                         fNBinsPt    = 21;
                     }
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPtLHC11h[i];
+                        fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPtLHC11hVar2[i];
                         if (i < fNBinsPt+1){
-                            if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[i];
-                            else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebin[i];
+                            if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[i];
+                            else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[i];
                         } 
                     }
     //                 if (fNBinsPt > 21) {

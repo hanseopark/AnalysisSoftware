@@ -158,18 +158,19 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         histoIncRatioPurityTrueEff[k]->Divide(histoIncRatioPurityTrueEff[k],histoCorrectedPi0Yield[k],1,1,"");
     }
         
-    fileStatErrorCheck << histoGammaSpecCorrPurity->GetName() << endl;
+    fileStatErrorCheck << "GammaSpectra " << histoGammaSpecCorrPurity->GetName() << endl;
     for (Int_t i=1; i<=histoGammaSpecCorrPurity->GetNbinsX(); i++){
-        fileStatErrorCheck << histoGammaSpecCorrPurity->GetBinCenter(i) << "\t" << histoGammaSpecCorrPurity->GetBinContent(i)<< "\t" << histoGammaSpecCorrPurity->GetBinError(i) << endl;
+        fileStatErrorCheck << histoGammaSpecCorrPurity->GetBinCenter(i) << "\t" << histoGammaSpecCorrPurity->GetBinContent(i) << "\t" << histoGammaSpecCorrPurity->GetBinError(i) << "\t" << histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i) << endl;
     }        
-    fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetName() << endl;
+    fileStatErrorCheck << "Pi0Spectra " << histoCorrectedPi0Yield[0]->GetName() << endl;
     for (Int_t i=1; i<=histoCorrectedPi0Yield[0]->GetNbinsX(); i++){        
-        fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)<< endl << endl;
+        fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i) << endl;
     }
-    fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetName() << endl;
+    fileStatErrorCheck << "IncRatio " << histoIncRatioPurityTrueEff[0]->GetName() << endl;
     for (Int_t i=1; i<=histoIncRatioPurityTrueEff[0]->GetNbinsX(); i++){        
-        fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)<< endl << endl;        
+        fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)/histoIncRatioPurityTrueEff[0]->GetBinContent(i) << endl;   
     }
+    fileStatErrorCheck << endl;
         
     histoMCIncRatio                             = (TH1D*) histoGammaSpecMCAll->Clone("MC_IncRatio");
     histoMCIncRatio->Divide(histoGammaSpecMCAll,histoMCYieldMeson,1,1,"");
@@ -199,9 +200,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_pPb5TeV_2017_04_11.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_pPb5TeV_2017_04_11.dat";
     } else if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_06_23/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_06_23.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_06_23/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_06_23.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_06_23/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_06_23.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_06_30.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_06_30.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_06_30.dat";
     } else {
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
@@ -875,26 +876,16 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         delete canvasMesonSpectra;
     }
 
-    fileStatErrorCheck << cocktailPi0->GetName() << endl;
+    fileStatErrorCheck << "Pi0Cocktail " << cocktailPi0->GetName() << endl;
     for (Int_t i=1; i<=cocktailPi0->GetNbinsX(); i++){
-        fileStatErrorCheck << cocktailPi0->GetBinCenter(i) << "\t" << cocktailPi0->GetBinContent(i)<< "\t" << cocktailPi0->GetBinError(i)<< endl << endl;
+        fileStatErrorCheck << cocktailPi0->GetBinCenter(i) << "\t" << cocktailPi0->GetBinContent(i)<< "\t" << cocktailPi0->GetBinError(i) << "\t" << cocktailPi0->GetBinError(i)/cocktailPi0->GetBinContent(i) << endl;   
     }
-    fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetName() << endl;
+    fileStatErrorCheck << "Pi0Spectra " << histoCorrectedPi0Yield[0]->GetName() << endl;
     for (Int_t i=1; i<=histoCorrectedPi0Yield[0]->GetNbinsX(); i++){
-        fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)<< endl << endl;
+        fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i) << endl;   
     }
-    if (haveEta){
-        fileStatErrorCheck << cocktailEta->GetName() << endl;
-        for (Int_t i=1; i<=cocktailPi0->GetNbinsX(); i++){
-                fileStatErrorCheck << cocktailEta->GetBinCenter(i) << "\t" << cocktailEta->GetBinContent(i)<< "\t" << cocktailEta->GetBinError(i)<< endl << endl;
-        }
-        if(cocktailEta ){
-            fileStatErrorCheck << histoCorrectedEtaYield->GetName() << endl;
-            for (Int_t i=1; i<=cocktailPi0->GetNbinsX(); i++){
-                fileStatErrorCheck << histoCorrectedEtaYield->GetBinCenter(i) << "\t" << histoCorrectedEtaYield->GetBinContent(i)<< "\t" << histoCorrectedEtaYield->GetBinError(i)<< endl << endl;
-            }
-        }
-    }
+    fileStatErrorCheck << endl;
+
     
     
     
@@ -1037,18 +1028,19 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatio.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
         delete canvasDoubleRatio;
 
-        fileStatErrorCheck << histoDoubleRatioTrueEffPurity[0]->GetName() << endl;
+        fileStatErrorCheck << "RGamma " << histoDoubleRatioTrueEffPurity[0]->GetName() << endl;
         for (Int_t i=1; i<=histoDoubleRatioTrueEffPurity[0]->GetNbinsX(); i++){
-            fileStatErrorCheck << histoDoubleRatioTrueEffPurity[0]->GetBinCenter(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinContent(i)<< "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i)<< endl << endl;
+            fileStatErrorCheck << histoDoubleRatioTrueEffPurity[0]->GetBinCenter(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinContent(i)<< "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i)/histoDoubleRatioTrueEffPurity[0]->GetBinContent(i) << endl;   
         }        
-        fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetName() << endl;
+        fileStatErrorCheck << "IncRatio " << histoIncRatioPurityTrueEff[0]->GetName() << endl;
         for (Int_t i=1; i<=histoIncRatioPurityTrueEff[0]->GetNbinsX(); i++){        
-            fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)<< endl << endl;        
+            fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)/histoIncRatioPurityTrueEff[0]->GetBinContent(i) << endl;   
         }
-        fileStatErrorCheck << cocktailAllGammaPi0->GetName() << endl;
+        fileStatErrorCheck << "GammaPi0Cocktail " << cocktailAllGammaPi0->GetName() << endl;
         for (Int_t i=1; i<=cocktailAllGammaPi0->GetNbinsX(); i++){        
-            fileStatErrorCheck << cocktailAllGammaPi0->GetBinCenter(i) << "\t" << cocktailAllGammaPi0->GetBinContent(i)<< "\t" << cocktailAllGammaPi0->GetBinError(i)<< endl << endl;        
+            fileStatErrorCheck << cocktailAllGammaPi0->GetBinCenter(i) << "\t" << cocktailAllGammaPi0->GetBinContent(i)<< "\t" << cocktailAllGammaPi0->GetBinError(i)  << "\t" << cocktailAllGammaPi0->GetBinError(i)/cocktailAllGammaPi0->GetBinContent(i) << endl;   
         }
+        fileStatErrorCheck << endl;
         
         // do theory comparisons
         if (doNLOComparison){
