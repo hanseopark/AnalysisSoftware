@@ -1063,7 +1063,7 @@
                             break;
                         case 81:
                         case 82:
-                            return 34;      // EGA triggers
+                            return 35;      // EGA triggers
                             break;
                         default:
                             return 13;
