@@ -4307,7 +4307,7 @@
             nominalMainDir         = "GammaCaloMerged";
         else if (mode == 30 ) 
             nominalMainDir         = "GammaConvV1";
-        else if (mode == 40)
+        else if (mode == 40 || mode == 41 || mode == 44)
             nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
         TObjArray *arr;
         arr             = mainDir.Tokenize("_");
@@ -4337,7 +4337,7 @@
             nominalMainDir         = "GammaCaloMerged";
         else if (mode == 30 ) 
             nominalMainDir         = "GammaConvV1";
-        else if (mode == 40 )
+        else if (mode == 40 || mode == 41 || mode == 44)
             nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
         return nominalMainDir;
     }

@@ -32,21 +32,21 @@ function GiveBinning7TeV()
 {
     echo "How many p_T bins do you want to use for Omega? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
     read answer
-    BinsPtPi0=$answer
-    correctPi0=1
-    echo "You have chosen " $answer " pt bins for pi0";
+    BinsPtOmega=$answer
+    correctOmega=1
+    echo "You have chosen " $answer " pt bins for Omega";
         
 }
 
 
 function GiveBinningpPb()
 {
-    echo "How many p_T bins do you want to use for Pi0?  27 (7 GeV), 28 (8 GeV), 29 (10 GeV), 30 (12 GeV), 31 (14 GeV), for Calo measurements also 32 (16 GeV), 33 (18 GeV), 34 (20 GeV), 35 (22 GeV), 36 (26 GeV), 37 (30 GeV)";
+    echo "How many p_T bins do you want to use for Omega?  27 (7 GeV), 28 (8 GeV), 29 (10 GeV), 30 (12 GeV), 31 (14 GeV), for Calo measurements also 32 (16 GeV), 33 (18 GeV), 34 (20 GeV), 35 (22 GeV), 36 (26 GeV), 37 (30 GeV)";
     echo "for calo triggers bins reach to 46."
     read answer
-    BinsPtPi0=$answer
-    correctPi0=1
-    echo "You have chosen " $answer " pt bins for pi0";
+    BinsPtOmega=$answer
+    correctOmega=1
+    echo "You have chosen " $answer " pt bins for Omega";
     
 }
 
@@ -96,8 +96,8 @@ $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the fin
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
 $PROGNAME  *-*gammaOnly* \t\t\t gamma calculation only\n
-$PROGNAME  *-*pi0Only* \t\t\t\t pi0 calculation only\n
-$PROGNAME  *-*pi0etaOnly* \t\t\t pi0 in eta binnin calculation only\n
+$PROGNAME  *-*OmegaOnly* \t\t\t\t Omega calculation only\n
+$PROGNAME  *-*OmegaetaOnly* \t\t\t Omega in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 
@@ -123,8 +123,8 @@ $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the fin
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
 $PROGNAME  *-*gammaOnly* \t\t\t gamma calculation only\n
-$PROGNAME  *-*pi0Only* \t\t\t\t pi0 calculation only\n
-$PROGNAME  *-*pi0etaOnly* \t\t\t pi0 in eta binnin calculation only\n
+$PROGNAME  *-*OmegaOnly* \t\t\t\t Omega calculation only\n
+$PROGNAME  *-*OmegaetaOnly* \t\t\t Omega in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 "
@@ -226,35 +226,60 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS)"
+    echo "Which mode are you running? 40 (PCM-PCM *), 41 (PCM-EMCAL *), 42 (PCM-PHOS), 43 (PCM-DCAL), 44 (EMCAL-EMCAL *), 45 (PHOS-PHOS), 46 (DCAL-DCAL), 47 (PCM-DALITZ), 48 (EMCAL-DALITZ), 49 (PHOS-DALITZ), 50 (DCAL-DALITZ)"
     read answer
-    if [ $answer = "0" ]; then
+    if [ $answer = "40" ]; then
         echo "You are analysing PCM-PCM output";
-        mode=40 #only this edited so far
+        mode=40
         correct=1
-    elif [ $answer = "1" ]; then
-        echo "You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
-        mode=1
-#        AdvMesonQAq="AdvancedMesonQA"
-        correct=0
-    elif [ $answer = "2" ]; then
-        echo "You are analysing PCM-EMCAL output";
-        mode=2
-#        AdvMesonQA="AdvancedMesonQA"
-        correct=1
-    elif [ $answer = "3" ]; then
-        echo "You are analysing PCM-PHOS output";
-        mode=3
-        AdvMesonQA="AdvancedMesonQA"
-        correct=1
-    elif [ $answer = "4" ]; then
+    elif [ $answer = "41" ]; then
+         echo "You are analysing PCM-EMCAL output";
+         mode=41
+         #AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "42" ]; then
+         echo "You are analysing PCM-PHOS output";
+         mode=42
+         AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "43" ]; then
+         echo "You are analysing PCM-DCAL output";
+         mode=43
+         #AdvMesonQA="AdvancedMesonQA"
+         correct=1
+    elif [ $answer = "44" ]; then
         echo "You are analysing EMCAL-EMCAL output";
-        mode=4
+        mode=44
         AdvMesonQA="AdvancedMesonQA"
         correct=1
-    elif [ $answer = "5" ]; then
+    elif [ $answer = "45" ]; then
         echo "You are analysing PHOS-PHOS output";
-        mode=5
+        mode=45
+        AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "46" ]; then
+        echo "You are analysing DCAL-DCAL output";
+        mode=46
+        AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "47" ]; then
+        echo "You are analysing PCM-DALITZ output";
+        mode=47
+        AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "48" ]; then
+        echo "You are analysing EMCAL-DALITZ output";
+        mode=48
+        AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "49" ]; then
+        echo "You are analysing PHOS-DALITZ output";
+        mode=49
+        AdvMesonQA="AdvancedMesonQA"
+        correct=1
+    elif [ $answer = "47" ]; then
+        echo "You are analysing DCAL-DALITZ output";
+        mode=50
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     else
@@ -289,26 +314,26 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV), PbPb_5.02TeV (PbPb@5.02TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
     elif [ $answer = "8TeV" ] || [ $answer = "8" ]; then
         energy="8TeV";
-    elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
-        energy="13TeV";
-    elif [ $answer = "13TeVLowB" ]; then
-        energy="13TeVLowB";
+    #elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
+    #    energy="13TeV";
+    #elif [ $answer = "13TeVLowB" ]; then
+    #    energy="13TeVLowB";
     elif [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
         energy="900GeV";
     elif [ $answer = "2.76TeV" ] || [ $answer = "2" ] || [ $answer = "2.76" ]; then
         energy="2.76TeV";
     elif [ $answer = "PbPb_2.76TeV" ] || [ $answer = "PbPb_2.76" ] || [ $answer = "PbPb2" ] || [ $answer = "Pb2" ]; then
         energy="PbPb_2.76TeV";
-    elif [ $answer = "5TeV" ] || [ $answer = "5.02TeV" ] || [ $answer = "5" ] || [ $answer = "5.02" ]; then
-        energy="5TeV";
-    elif [ $answer = "PbPb_5.02TeV" ] || [ $answer = "PbPb_5.02" ] || [ $answer = "PbPb5" ] || [ $answer = "Pb5" ]; then
-        energy="PbPb_5.02TeV";
+    #elif [ $answer = "5TeV" ] || [ $answer = "5.02TeV" ] || [ $answer = "5" ] || [ $answer = "5.02" ]; then
+    #    energy="5TeV";
+    #elif [ $answer = "PbPb_5.02TeV" ] || [ $answer = "PbPb_5.02" ] || [ $answer = "PbPb5" ] || [ $answer = "Pb5" ]; then
+    #    energy="PbPb_5.02TeV";
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
     fi
@@ -318,9 +343,9 @@ do
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning900GeV
         else 
-            correctPi0=1
+            correctOmega=1
         fi
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0
         else 
             correct=1
@@ -332,32 +357,32 @@ do
         if [ $ONLYRESULTS -eq 0 ]; then
             GiveBinning2760GeV
         else 
-            correctPi0=1
+            correctOmega=1
         fi
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0
         else 
             correct=1
         fi
-    elif [ $energy = "5TeV" ] ; then
-        if [ $ONLYCORRECTION -eq 0 ]; then
-            GiveBinning5TeV
-        else 
-            correctPi0=1
-        fi
-        if [ $correctPi0 -eq 0 ]; then
-            correct=0
-        else
-            correct=1
-        fi
+    #elif [ $energy = "5TeV" ] ; then
+    #    if [ $ONLYCORRECTION -eq 0 ]; then
+    #        GiveBinning5TeV
+    #    else
+    #        correctOmega=1
+    #    fi
+    #    if [ $correctOmega -eq 0 ]; then
+    #        correct=0
+    #    else
+    #        correct=1
+    #    fi
     
     elif [ $energy = "7TeV" ] ; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning7TeV
         else 
-            correctPi0=1
+            correctOmega=1
         fi
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0    
         else 
             correct=1
@@ -370,9 +395,9 @@ do
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning8TeV
         else 
-            correctPi0=1
+            correctOmega=1
         fi
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0    
         else 
             correct=1
@@ -381,22 +406,22 @@ do
         if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
             AdvMesonQA="AdvancedMesonQA"
         fi
-    elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
-        if [ $ONLYCORRECTION -eq 0 ]; then
-            GiveBinning13TeV
-        fi
-        if [ $correctPi0 -eq 0 ]; then
-            correct=0
-        else
-            correct=1
-        fi
+    #elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
+    #    if [ $ONLYCORRECTION -eq 0 ]; then
+    #        GiveBinning13TeV
+    #    fi
+    #    if [ $correctOmega -eq 0 ]; then
+    #        correct=0
+    #    else
+    #        correct=1
+    #    fi
     elif [ $energy = "pPb_5.023TeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinningpPb
         else 
-            correctPi0=1
+            correctOmega=1
         fi
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0
         else 
             correct=1
@@ -406,26 +431,28 @@ do
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinningHI
         else 
-            correctPi0=1
+            correctOmega=1
         fi        
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0
         else 
             correct=1
         fi
+
    elif [ $energy = "PbPb_5.02TeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinningHI5020GeV
-        else 
-            correctPi0=1
+        else
+            correctOmega=1
         fi
 
-        if [ $correctPi0 -eq 0 ]; then
+        if [ $correctOmega -eq 0 ]; then
             correct=0
         else
             correct=1
         fi
-    fi
+     fi
+
 done
 
 echo "mode has been chosen: $mode "
@@ -487,31 +514,33 @@ if [ $ONLYRESULTS = 0 ] ; then
 
             if [ $ONLYCORRECTION -eq 0 ]; then
                 echo "CutSelection is $cutSelection";
-                optionsPi0Data=\"Omega\"\,\"$DataRootFile\"\,"GammaConvNeutralMesonPiPlPiMiPiZero_0_9",\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
                 if [ -f $DataRootFile ]; then 
-                    ExtractSignal $optionsPi0Data
+                    ExtractSignal $optionsOmegaData
                 fi
-                Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`             
+                OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
                 if [ $MCFILE -eq 1 ]; then 
-                    optionsPi0MC=\"Omega\"\,"GammaConvNeutralMesonPiPlPiMiPiZero_0_9",\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                    ExtractSignal $optionsPi0MC
-                    Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
-                    Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`              
-                    #root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
+                    optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+                    ExtractSignal $optionsOmegaMC
+                    OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
+                    OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+                    #root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$OmegadataRAWFILE\"\,\"$OmegaMCRAWFILE\"\,\"$cutSelection\"\,\"Omega\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtOmega\,$mode\)
                 fi    
             fi
             
-            Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`             
-            Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-            Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
+            OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_$cutSelection.root`
+            OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
+            OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
 
-            if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                #CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton
+            if [ -f $OmegadataRAWFILE ] && [ -f $OmegaMCcorrectionFILE ]; then
+                echo "test"
+                #CorrectSignal $OmegadataRAWFILE $OmegaMCcorrectionFILE $cutSelection $Suffix Omega kFALSE $ESTIMATEPILEUP $directphoton
             else 
                 PARTLY=1
             fi
-            if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                #CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton
+            if [ -f $OmegaMCRAWFILE ] && [ -f $OmegaMCcorrectionFILE ]; then
+                #CorrectSignal $OmegaMCRAWFILE $OmegaMCcorrectionFILE $cutSelection $Suffix Omega kTRUE $ESTIMATEPILEUP $directphoton
+                echo "test"
             else 
                 PARTLY=1
             fi
@@ -520,6 +549,6 @@ if [ $ONLYRESULTS = 0 ] ; then
         NORMALCUTS=`expr $NORMALCUTS + 1`
     done
 
-    #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-    #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+    #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+    #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
 fi        

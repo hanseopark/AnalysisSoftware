@@ -44,6 +44,13 @@ Double_t fBinsEta7TeVPt[9] = 					{0.1, 2.5,3,3.5,
 Int_t fBinsEta7TeVPtRebin[8] = 					{2, 10,  10,10,
 												10,10, 10,10};
 
+Double_t fBinsOmega7TevPt[12] = 					{0.1, 2.5,3,3.5,
+
+                                                 4.0,4.5,5.0, 6.0, 7.0,8.0,10.,15.};
+
+Int_t fBinsOmega7TevPtRebin[11] = 					{2, 10,  10,10,
+                                                10,10, 10,10,10,10,10};
+
 Int_t fBinsPi0EtaBinning7TeVPtRebin[12] = 		{8, 1, 1, 1, 1, 
 												1, 1, 2, 2, 2, 
 												20, 4};

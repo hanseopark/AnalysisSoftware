@@ -27,7 +27,7 @@
 #include "TLegend.h"
 #include "TDatabasePDG.h"
 #include "TMinuit.h"
-#include "../CommonHeaders/PlottingMeson.h"
+#include "../../CommonHeaders/PlottingMeson.h"
 #include "TLatex.h"
 #include "TASImage.h"
 #include "TMath.h"
@@ -39,14 +39,14 @@
 #include "TMarker.h"
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
-#include "../CommonHeaders/PlottingGammaConversionHistos.h"
-#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "ExtractSignalPiPlPiMiPiZero.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
-#include "../CommonHeaders/ExtractSignalPlotting.h"
-#include "../CommonHeaders/FittingGammaConversion.h"
+#include "../../CommonHeaders/FittingGammaConversion.h"
 #include "../../CommonHeaders/ConversionFunctions.h" // changed to standard CommonHeaders
 #include "../../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../../CommonHeaders/ExtractSignalPlotting.h"
 #include "THnSparse.h"
 
 Double_t FunctionBGExclusion(Double_t *x, Double_t *par)
@@ -142,12 +142,12 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(histo_ESD_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Pt", "p_{T,#gamma}", "Events",suffix,0,1,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = -2.0; RangeX[1] = 2.0;
 	RangeY[0] = 0.1; RangeY[1] = 2.0e5;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(histo_ESD_ConvGamma_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_ConvGamma_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Eta", "#eta_{#gamma}", "Events",suffix,0,0,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = 0.; RangeX[1] = 24.9;
@@ -293,7 +293,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 		histoPtWidths -> SetBinError(i, 0.);
 	}
 	
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	{
 		histoTemp = (TH1D*)ESD_TrueConvGamma_Pt->Clone("histoTemp");
 		histoTemp->Sumw2();
@@ -322,7 +322,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	
 	RangeX[0] = 0.; RangeX[1] = 12.;
 	RangeY[0] = 0.; RangeY[1] = 0.2;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	{
 		histoTemp = (TH1D*)ESD_TrueConvGammaFromNeutralMeson_Pt->Clone("histoTemp");
 		histoTemp->Sumw2();
@@ -376,7 +376,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(MC_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_ConvGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
@@ -420,12 +420,12 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	{
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(ESD_TrueConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueConvGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(ESD_TrueConvGammaFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueConvGammaFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueConvGammaFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
@@ -528,12 +528,12 @@ void CreateQAHistosData(TString cutSelection, TString suffix, TString energy, TL
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(histo_ESD_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Pt", "p_{T,#gamma}", "Events",suffix,0,1,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = -2.0; RangeX[1] = 2.0;
 	RangeY[0] = 0.1; RangeY[1] = 2.0e5;
-	if (fMode!=4 && fMode!=5)
+    if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
 	PlotSingle1DHistogram(histo_ESD_ConvGamma_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_ConvGamma_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Eta", "#eta_{#gamma}", "Events",suffix,0,0,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = 0.; RangeX[1] = 24.9;
@@ -683,16 +683,45 @@ void ProcessEMLeftRight(TH1D* fFgr, TH1D* fBck, Double_t * fBGFitRangeEMLeft, Do
 }
                                                                
 // Main Function
-void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutSelection="", TString Suffix="", TString optionMC="", TString optionEnergy="", TString optionCrystalBall="", TString directphotonPlots="", TString optionUseMinBiasEff="", TString optionPeriod="", TString optionAdvancedMesonQA="",Int_t numberOfBins = 30, Bool_t addSig = kFALSE, Bool_t makeQAplots = kTRUE){
+void ExtractSignalPiPlPiMiPiZero(TString meson                  = "",
+                                 TString file                   = "",
+                                 TString cutSelection           = "",
+                                 TString Suffix                 = "",
+                                 TString optionMC               = "",
+                                 TString optionEnergy           = "",
+                                 TString optionCrystalBall      = "",
+                                 TString directphotonPlots      = "",
+                                 TString optionUseMinBiasEff    = "",
+                                 TString optionPeriod           = "",
+                                 TString optionAdvancedMesonQA  = "",
+                                 Int_t numberOfBins             = 30,
+                                 Bool_t addSig                  = kFALSE,
+                                 Int_t UsrMode                  = 40,      // Mode given by user
+                                 Bool_t makeQAplots             = kTRUE){
 	gROOT->Reset();
 
-	// mode:	0 // new output PCM-PCM
-	//			1 // new output PCM dalitz
-	//			2 // new output PCM-EMCAL
-	//			3 // new output PCM-PHOS
-	//			4 // new output EMCAL-EMCAL
-	//			5 // new output PHOS-PHOS
-	//			9 // old output PCM-PCM
+    //----------- OLD LABELING ---------------
+    // mode:	0 // new output PCM-PCM     -> now 40
+    //			1 // new output PCM dalitz  -> now 47
+    //			2 // new output PCM-EMCAL   -> now 41
+    //			3 // new output PCM-PHOS    -> now 42
+    //			4 // new output EMCAL-EMCAL -> now 44
+    //			5 // new output PHOS-PHOS   -> now 45
+    //			9 // old output PCM-PCM     -> removed
+
+    //------------NEW LABELING ---------------
+    // mode:	40 // new output PCM-PCM
+    //			41 // new output PCM EMCAL
+    //			42 // new output PCM-PHOS
+    //			43 // new output PCM-DCAL
+    //			44 // new output EMCAL-EMCAL
+    //			45 // new output PHOS-PHOS
+    //			46 // old output DCAL-DCAL
+    //      	47 // new output PCM-DALITZ
+    //			48 // new output EMCAL-DALITZ
+    //			49 // new output PHOS-DALITZ
+    //			50 // new output DCAL-DALITZ
+
 	
 	if(directphotonPlots){}
    
@@ -709,9 +738,13 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 	fCutSelection = cutSelection;
 	TString fCutSelectionRead = cutSelection;
 	
-	//Int_t fMode = -1;
+    //Int_t fMode = -1;
 	fMode = ReturnSeparatedCutNumberPiPlPiMiPiZero(cutSelection,fTypeCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fPionCutSelection, fNeutralPionCutSelection, fMesonCutSelection);
-	Int_t mode = fMode;
+    if(fMode!=UsrMode){
+        cout << "ERROR: Chosen mode is not identical to mode extracted from cutstring! " << endl;
+        return;
+    } // check if extracted mode from cutnumber is the same mode given by user
+    Int_t mode = fMode;
 
 	
 	cout << "\t MODE = " << mode << endl;
@@ -728,7 +761,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 		fGammaCutSelectionRead = fGammaCutSelection;
 		fMesonCutSelectionRead = fMesonCutSelection;
 		if (mode==9)fCutSelectionRead = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-		else if (mode==0) fCutSelectionRead = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        else if (mode==0) fCutSelectionRead = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
 		cout << fCutSelectionRead.Data() << endl;
 	}
 	if(optionUseMinBiasEff.CompareTo("MinBiasEffOnly")==0 && optionMC.CompareTo("kTRUE") == 0){
@@ -740,7 +773,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 		fMesonCutSelectionRead = fMesonCutSelection;      
 		cout << fGammaCutSelection.Data() << endl;
 		if (mode==9)fCutSelectionRead = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-		else if (mode==0)fCutSelectionRead = Form("%s_%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        else if (mode==0)fCutSelectionRead = Form("%s_%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
 		cout << fCutSelectionRead.Data() << endl;
 	}
 	
@@ -748,7 +781,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 	StyleSettingsThesis();
 	SetPlotStyle();
 		
-	fEnergyFlag = optionEnergy;
+    fEnergyFlag = optionEnergy;
 	fPrefix=meson;
 
 	fPeriodFlag = optionPeriod;
@@ -981,7 +1014,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 		FillMassMCTrueReweightedMesonHistosArray(fHistoTrueMesonInvMassVSPtReweighted);
 		cout << "here" << endl;
 		if (fAdvancedMesonQA) {
-			if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
+            if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
 				fHistoTrueMesonCaloPhotonInvMassVSPt = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloPhoton.Data());
 				FillMassMCTrueMesonCaloPhotonHistosArray(fHistoTrueMesonCaloPhotonInvMassVSPt);
 				fHistoTrueMesonCaloConvPhotonInvMassVSPt = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloConvPhoton.Data());
@@ -1416,7 +1449,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 				}
 			}
 
-			if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+            if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45)){
 				if (fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]->GetEntries() !=0){
 					FitTrueInvMassInPtBins(fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt], fMesonIntRange,iPt,kFALSE);
 					fFitTrueSignalCaloPhotonInvMassPtBin[iPt] = fFitReco;
@@ -2070,8 +2103,10 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 	namePadSub= "MesonPadSubtractedLeft";
 	PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassLeftPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
 
-	PlotExampleInvMassBins(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin] , fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel);
-		
+    //PlotExampleInvMassBins(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin] , fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2, fThesis, fCollisionSystem, fBinsPt, fDecayChannel);
+    PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],
+                        fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
 	// if(fEnergyFlag.CompareTo("PbPb_2.76TeV") != 0 && fEnergyFlag.CompareTo("900GeV") != 0 && fEnergyFlag.CompareTo("2.76TeV") != 0 ){
 	// 	if(fPrefix.CompareTo("Pi0") == 0 ) {
 	// 		nameMesonSub= Form("%s/%s_%s_MesonFittedPeakPos%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(),fCutSelection.Data(), Suffix.Data());
@@ -2091,7 +2126,7 @@ void ExtractSignalPiPlPiMiPiZero(TString meson="", TString file="", TString cutS
 		namePadTrue= "TrueMesonPadSec";
 		PlotInvMassSecondaryInPtBins( fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueSecMesonInvMassPtBins, fHistoMappingTrueSecFromK0SMesonInvMassPtBins, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
 		*/
-		if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+        if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45)){
 			nameMesonTrue= Form("%s/%s_%s_TrueMesonCaloPhoton%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
 			nameCanvasTrue= "TrueMesonCaloPhotonCanvasFitted";
 			namePadTrue= "TrueMesonCaloPhotonPadFitted";
@@ -3131,7 +3166,7 @@ void CreatePtHistos(){
 	fHistoTrueFWHMMesonReweighted =      new TH1D("histoTrueFWHMMesonReweighted","",fNBinsPt,fBinsPt);
 	fHistoTrueSignMeson = 		new TH1D("histoTrueSignMeson","",fNBinsPt,fBinsPt);
 	fHistoTrueSBMeson = 		new TH1D("histoTrueSBMeson","",fNBinsPt,fBinsPt);
-	if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+    if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45)){
 		fHistoTrueMassMesonCaloConvPhoton = 		new TH1D("histoTrueMassMesonCaloConvPhoton","",fNBinsPt,fBinsPt);
 		fHistoTrueMassMesonCaloElectron = 		new TH1D("histoTrueMassMesonCaloConvElectron","",fNBinsPt,fBinsPt);
 		fHistoTrueMassMesonCaloEMNonLeading = 		new TH1D("histoTrueMassMesonCaloEMNonLeading","",fNBinsPt,fBinsPt);
@@ -3227,7 +3262,7 @@ void FillPtHistos()
 			fHistoTrueSBMeson->SetBinContent(iPt,fMesonTrueSB[iPt-1]);
 			fHistoTrueSBMeson->SetBinError(iPt,fMesonTrueSBError[iPt-1]);
 			
-			if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+            if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45)){
 				fHistoTrueMassMesonCaloConvPhoton->SetBinContent(iPt,fMesonTrueMassCaloConvPhoton[iPt-1]);
 				fHistoTrueMassMesonCaloConvPhoton->SetBinError(iPt,fMesonTrueMassErrorCaloConvPhoton[iPt-1]);
 				fHistoTrueMassMesonCaloElectron->SetBinContent(iPt,fMesonTrueMassCaloElectron[iPt-1]);
@@ -3391,7 +3426,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
 	} else {
 		mesonAmplitudeMin = mesonAmplitude*50./100.;
 		mesonAmplitudeMax = mesonAmplitude*120./100.;
-		if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
+        if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
 			mesonAmplitudeMin = mesonAmplitude*10./100.;
 		}	
 	}
@@ -3498,7 +3533,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 	Double_t mesonAmplitudeMax;
 	mesonAmplitudeMin = mesonAmplitude*95./100.;
 	mesonAmplitudeMax = mesonAmplitude*130./100.;
-	if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
+    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
 		mesonAmplitudeMin = mesonAmplitude*20./100.;
 	}
 	fFitReco = NULL;
@@ -4109,7 +4144,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
 			fHistoMappingTrueMesonInvMassPtBins[ii]->Write();
 			fHistoMappingTrueMesonInvMassPtReweightedBins[ii]->Write();
 			if (fAdvancedMesonQA){
-				if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
+                if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
 					if (fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[ii])fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[ii]->Write();
 					if (fHistoMappingTrueMesonCaloElectronInvMassPtBins[ii])fHistoMappingTrueMesonCaloElectronInvMassPtBins[ii]->Write();
 					if (fHistoMappingTrueMesonCaloPhotonInvMassPtBins[ii])fHistoMappingTrueMesonCaloPhotonInvMassPtBins[ii]->Write();
@@ -4183,7 +4218,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3)
 	fHistoTrueMassMesonReweighted->Write();
 	fHistoTrueFWHMMeson->Write();
 	fHistoTrueFWHMMesonReweighted->Write();
-	if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5)){
+    if (fAdvancedMesonQA && (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45)){
 		if (fHistoTrueMassMesonCaloPhoton) fHistoTrueMassMesonCaloPhoton->Write();
 		if (fHistoTrueMassMesonCaloElectron) fHistoTrueMassMesonCaloElectron->Write();
 		if (fHistoTrueMassMesonCaloConvPhoton) fHistoTrueMassMesonCaloConvPhoton->Write();
@@ -4250,7 +4285,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 		fNRebin = 		new Int_t[19];
 
 		if (fEnergyFlag.CompareTo("7TeV") == 0) {
-			fStartPtBin=	1;
+            fStartPtBin=	1;
 			fColumn = 	5;
 			fRow = 		3;
 			
@@ -4262,7 +4297,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fBinsPt[i] = fBinsEta7TeVPt[i];
 				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta7TeVPtRebin[i];
 			}
-			fExampleBin = 8;
+            fExampleBin = 5;
 		} else if (fEnergyFlag.CompareTo("8TeV") == 0) {
 			fStartPtBin=	1;
 			fColumn = 	5;
@@ -4354,7 +4389,8 @@ void Initialize(TString setPi0, Int_t numberOfBins){
             fBGFitRange = 		new Double_t[2]; 	fBGFitRange[0]=	0.58; 	fBGFitRange[1]=	0.7; //eta 0.9
             fBGFitRangeLeft = 	new Double_t[2]; 	fBGFitRangeLeft[0]=	0.45; 	fBGFitRangeLeft[1]=	0.52;  // eta 09
 		fMesonPlotRange = 	new Double_t[2]; 	fMesonPlotRange[0]=	0.53; 	fMesonPlotRange[1]=	0.560;
-		fMesonIntRange = 	new Double_t[2]; 	fMesonIntRange[0] = 0.50; 	fMesonIntRange[1]=	0.57;
+
+        fMesonIntRange = 	new Double_t[2]; 	fMesonIntRange[0] = 0.50; 	fMesonIntRange[1]=	0.57;
 		fMesonIntRangeWide = new Double_t[2]; 	fMesonIntRangeWide[0]=0.53; 	fMesonIntRangeWide[1]=0.58;
 		fMesonIntRangeNarrow = new Double_t[2]; fMesonIntRangeNarrow[0]=0.515; fMesonIntRangeNarrow[1]=0.56;
         fMesonMassRange = 	new Double_t[2]; 	fMesonMassRange[0]=	0.45; 	fMesonMassRange[1]=	0.7;
@@ -4373,7 +4409,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 		fMidPt = 							new Double_t[2]; fMidPt[0] = 1.5; fMidPt[1] = 2.5;
 		
 		
-		if ((fMode == 2) || (fMode == 3)){
+        if ((fMode == 2) || (fMode == 3)){
 			fPeakRange[0]=	0.52; 	fPeakRange[1]=	0.57; //eta 0.9
 			fFitRange[0]=	0.4; 	fFitRange[1]=	0.7; //eta 0.9
 			fBGFitRange[0]=	0.6; 	fBGFitRange[1]=	0.65; //eta 0.9
@@ -4405,26 +4441,38 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 		fNRebin = 		new Int_t[19];
 
 		if (fEnergyFlag.CompareTo("7TeV") == 0) {
-			fStartPtBin=	1;
-            fColumn = 	4;
-            fRow = 		2;
-			
-			if (fNBinsPt > 15) {
-				cout << "You have chosen to have more than 15 bins for Eta, this is not possible, it will be reduced to 12" << endl;
-				fNBinsPt = 15;
+            fStartPtBin     = 1;
+            fColumn         = 5;
+            fRow            = 3;
+            if (fNBinsPt > 12) {
+                cout << "You have chosen to have more than 15 bins for Omega, this is not possible, it will be reduced to 12" << endl;
+                fNBinsPt = 12;
 			}
 			for (Int_t i = 0; i < fNBinsPt+2; i++) {
-				fBinsPt[i] = fBinsEta7TeVPt[i];
-				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta7TeVPtRebin[i];
+                fBinsPt[i] = fBinsOmega7TevPt[i];
+                if (i < fNBinsPt+1) fNRebin[i] = fBinsOmega7TevPtRebin[i];
 			}
-            fExampleBin = 1;
+
+            if(fMode == 40){
+                fScaleFac = 2.;
+                fExampleBin = 2;
+            } else if(fMode == 41){
+                fScaleFac = 2.;
+                fExampleBin = 4;
+            } else if(fMode == 44){
+                fScaleFac = 1.;
+                fExampleBin = 10;
+            } else{
+                fScaleFac = 1.;
+                fExampleBin = 2;
+            }
 		} else if (fEnergyFlag.CompareTo("8TeV") == 0) {
 			fStartPtBin=	1;
 			fColumn = 	5;
 			fRow = 		3;
 			
 			if (fNBinsPt > 15) {
-				cout << "You have chosen to have more than 15 bins for Eta, this is not possible, it will be reduced to 12" << endl;
+                cout << "You have chosen to have more than 15 bins for Omega, this is not possible, it will be reduced to 12" << endl;
 				fNBinsPt = 15;
 			}
 			for (Int_t i = 0; i < fNBinsPt+2; i++) {
@@ -4438,7 +4486,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 			fRow = 		3;
 
 			if (fNBinsPt > 7) {
-				cout << "You have chosen to have more than 7 bins for Eta, this is not possible, it will be reduced to 7" << endl;
+                cout << "You have chosen to have more than 7 bins for Omega, this is not possible, it will be reduced to 7" << endl;
 				fNBinsPt = 7;
 			}
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
@@ -4452,7 +4500,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 			fRow = 		2;
 
 			if (fNBinsPt > 3) {
-				cout << "You have chosen to have more than 3 bins for Eta, this is not possible, it will be reduced to 3" << endl;
+                cout << "You have chosen to have more than 3 bins for Omega, this is not possible, it will be reduced to 3" << endl;
 				fNBinsPt = 3;
 			}
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
@@ -4487,7 +4535,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fNBinsPt = 7;
 			}
 			
-			if (fMode == 4)
+            if (fMode == 44)
 			{
 				fStartPtBin=   3;
 				fColumn =   3;
@@ -4514,16 +4562,21 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 		fMesonFitRange = 	new Double_t[2]; 	fMesonFitRange[0]=	0.55; 	fMesonFitRange[1]=	0.85;
 		*/
 		
-              fPeakRange =          new Double_t[2];    fPeakRange[0]=	0.75;       fPeakRange[1]=	0.81; //eta 0.9
-              fFitRange =           new Double_t[2];    fFitRange[0]=	0.615;      fFitRange[1]=	0.89; //eta 0.9
-              fBGFitRange = 		new Double_t[2]; 	fBGFitRange[0]=	0.82;       fBGFitRange[1]=	0.89; //eta 0.9
-              fBGFitRangeLeft = 	new Double_t[2]; 	fBGFitRangeLeft[0]=	0.615; 	fBGFitRangeLeft[1]=	0.69;  // eta 09
-              fMesonPlotRange = 	new Double_t[2]; 	fMesonPlotRange[0]=	0.75; 	fMesonPlotRange[1]=	0.79;
-              fMesonIntRange =      new Double_t[2]; 	fMesonIntRange[0] = 0.74; 	fMesonIntRange[1]=	0.83;
-              fMesonIntRangeWide =  new Double_t[2]; 	fMesonIntRangeWide[0]=0.72; 	fMesonIntRangeWide[1]=0.83;
-              fMesonIntRangeNarrow =new Double_t[2];    fMesonIntRangeNarrow[0]=0.75; fMesonIntRangeNarrow[1]=0.81;
-              fMesonMassRange = 	new Double_t[2]; 	fMesonMassRange[0]=	0.65; 	fMesonMassRange[1]=	0.89;
-              fMesonFitRange =      new Double_t[2]; 	fMesonFitRange[0]=	0.65; 	fMesonFitRange[1]=	0.85; //0.55, 0.9
+              fPeakRange =               new Double_t[2];    fPeakRange[0]=	0.75;       fPeakRange[1]=	0.81; //eta 0.9
+              fFitRange =                new Double_t[2];    fFitRange[0]=	0.615;      fFitRange[1]=	0.89; //eta 0.9
+              fBGFitRange =              new Double_t[2]; 	fBGFitRange[0]=	0.82;       fBGFitRange[1]=	0.89; //eta 0.9
+              fBGFitRangeLeft =          new Double_t[2]; 	fBGFitRangeLeft[0]=	0.615; 	fBGFitRangeLeft[1]=	0.69;  // eta 09
+              fMesonPlotRange =          new Double_t[2]; 	fMesonPlotRange[0]=	0.75; 	fMesonPlotRange[1]=	0.79;
+              // Added because of change of how integration ranges are stored (dirty fix)
+              fMesonIntDeltaRange =      new Double_t[2];    fMesonIntDeltaRange[0]=-0.04;fMesonIntDeltaRange[1]= 0.05;
+              fMesonIntDeltaRangeWide =  new Double_t[2];    fMesonIntDeltaRangeWide[0]=-0.06;fMesonIntDeltaRangeWide[1]= 0.05;
+              fMesonIntDeltaRangeNarrow =new Double_t[2];    fMesonIntDeltaRangeNarrow[0]=-0.03;fMesonIntDeltaRangeNarrow[1]= 0.03;
+              // end
+              fMesonIntRange =           new Double_t[2]; 	fMesonIntRange[0] = 0.74; 	fMesonIntRange[1]=	0.83;
+              fMesonIntRangeWide =       new Double_t[2]; 	fMesonIntRangeWide[0]=0.72; 	fMesonIntRangeWide[1]=0.83;
+              fMesonIntRangeNarrow =     new Double_t[2];    fMesonIntRangeNarrow[0]=0.75; fMesonIntRangeNarrow[1]=0.81;
+              fMesonMassRange =          new Double_t[2]; 	fMesonMassRange[0]=	0.65; 	fMesonMassRange[1]=	0.89;
+              fMesonFitRange =           new Double_t[2]; 	fMesonFitRange[0]=	0.65; 	fMesonFitRange[1]=	0.85; //0.55, 0.9
 		
 		//		fMesonFitRangeWithoutPeak = new Double_t[2]; fMesonFitRangeWithoutPeak[0] = 0.4; fMesonFitRangeWithoutPeak[0] = 0.7;
         fMesonId=			223;
@@ -4537,7 +4590,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 		fMesonWidthRange = 	new Double_t[2]; 	 fMesonWidthRange[0]=0.005;     fMesonWidthRange[1]=0.02;
 		fMesonLambdaTailRange = new Double_t[2]; fMesonLambdaTailRange[0]=0.004; fMesonLambdaTailRange[1]=0.01;
 		fMidPt = 							new Double_t[2]; fMidPt[0] = 1.5; fMidPt[1] = 2.5;
-		if ((fMode == 2) || (fMode == 3)){
+        if ((fMode == 41) || (fMode == 42)){
 			fPeakRange[0]=	0.75; 	fPeakRange[1]=	0.81; //eta 0.9
 			fFitRange[0]=	0.55; 	fFitRange[1]=	0.89; //eta 0.9
 			fBGFitRange[0]=	0.83; 	fBGFitRange[1]=	0.89; //eta 0.9
@@ -4549,7 +4602,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 			fMesonLambdaTailRange[0]=0.004; fMesonLambdaTailRange[1]=0.01;
 		}
 		
-		if ((fMode == 4) || (fMode == 5)){
+        if ((fMode == 44) || (fMode == 45)){
 			fPeakRange[0]=	0.75; 	fPeakRange[1]=	0.81; //eta 0.9
 			fFitRange[0]=	0.55; 	fFitRange[1]=	0.89; //eta 0.9
 			fBGFitRange[0]=	0.83; 	fBGFitRange[1]=	0.89; //eta 0.9

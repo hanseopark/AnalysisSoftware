@@ -335,8 +335,46 @@
             pionCutNumber = objstrPion->GetString();
             neutralPionCutNumber = objstrNeutralPion->GetString();
             mesonCutNumber = objstrMeson->GetString();
-            mode = 0;
-        } else {
+
+            mode = 40;
+        } else if (typeCutNumber.CompareTo("1") == 0){ //PCM-calo
+            objstrType  = (TObjString*)arr->At(0);
+            objstrEvent = (TObjString*)arr->At(1);
+            objstrGamma = (TObjString*)arr->At(2);
+            objstrCluster = (TObjString*)arr->At(3);
+            objstrPion = (TObjString*)arr->At(4);
+            objstrNeutralPion = (TObjString*)arr->At(5);
+            objstrMeson = (TObjString*)arr->At(6);
+
+            typeCutNumber  = objstrType->GetString();
+            eventCutNumber= objstrEvent->GetString();
+            gammaCutNumber= objstrGamma->GetString();
+            clusterCutNumber = objstrCluster->GetString();
+            pionCutNumber = objstrPion->GetString();
+            neutralPionCutNumber = objstrNeutralPion->GetString();
+            mesonCutNumber = objstrMeson->GetString();
+
+            mode = 41;
+        }  else if (typeCutNumber.CompareTo("2") == 0){ //EMCAL-EMCAL
+            objstrType  = (TObjString*)arr->At(0);
+            objstrEvent = (TObjString*)arr->At(1);
+            objstrCluster = (TObjString*)arr->At(2);
+            objstrPion = (TObjString*)arr->At(3);
+            objstrNeutralPion = (TObjString*)arr->At(4);
+            objstrMeson = (TObjString*)arr->At(5);
+
+            typeCutNumber  = objstrType->GetString();
+            eventCutNumber= objstrEvent->GetString();
+            clusterCutNumber = objstrCluster->GetString();
+            pionCutNumber = objstrPion->GetString();
+            neutralPionCutNumber = objstrNeutralPion->GetString();
+            mesonCutNumber = objstrMeson->GetString();
+
+            mode = 44;
+        }
+
+        /*
+       else {
         if (typeCutNumber.CompareTo("1") == 0)//PCM-calo
         {
             objstrType  = (TObjString*)arr->At(0);
@@ -377,9 +415,8 @@
 
             TString firstLetter(clusterCutNumber(0,1));
             if (firstLetter.CompareTo("1") == 0) mode = 4; else mode = 5;
-        }
+        } */
 
-        }
 
         cout << cutSel.Data() << "\t" << typeCutNumber.Data() << "\t" << eventCutNumber.Data() << "\t" << gammaCutNumber.Data() << "\t" <<  clusterCutNumber.Data() << "\t" <<pionCutNumber.Data() << "\t" <<neutralPionCutNumber.Data() << "\t" << mesonCutNumber.Data() << endl;
         return mode;
@@ -533,11 +570,89 @@
                 return "mPHOS";
             case 20:
                 return "Comb";
+            // Cases added for omega analysis
+            case 40:
+                return "#pi^{0} rec w/ PCM";
+            case 41:
+                return "#pi^{0} rec w/ PCM-EMC";
+            case 42:
+                return "#pi^{0} rec w/ PCM, PHOS";
+            case 43:
+                return "#pi^{0} rec w/ PCM, DCAL";
+            case 44:
+                return "#pi^{0} rec w/ EMC";
+            case 45:
+                return "#pi^{0} rec w/ PHOS, PHOS";
+            case 46:
+                return "#pi^{0} rec w/ DCAL, DCAL";
+            case 47:
+                return "#pi^{0} rec w/ PCM, DALITZ";
+            case 48:
+                return "#pi^{0} rec w/ EMCAL, DALITZ";
+            case 49:
+                return "#pi^{0} rec w/ PHOS, DALITZ";
+            case 50:
+                return "#pi^{0} rec w/ DCAL, DALITZ";
             default:
                 return "not known";
         }
     }
 
+    //************************************************************************************
+    //**** Decodes from the mode the respective reco process and return correct label.****
+    //**** This method is used for filename text.                                     ****
+    //************************************************************************************
+    TString ReturnTextReconstructionProcessWrite(Int_t mode){
+        switch (mode){
+            case 0:
+                return "PCM";
+            case 1:
+                return "PCM-Dal";
+            case 2:
+                return "PCM-EMC";
+            case 3:
+                return "PCM-PHOS";
+            case 4:
+                return "EMC";
+            case 5:
+                return "PHOS";
+            case 6:
+                return "EMC-Dal";
+            case 7:
+                return "PHOS-Dal";
+            case 10:
+                return "mEMC";
+            case 11:
+                return "mPHOS";
+            case 20:
+                return "Comb";
+            // Cases added for omega analysis
+            case 40:
+                return "Pi0PCM";
+            case 41:
+                return "Pi0PCM-EMC";
+            case 42:
+                return "Pi0PCM-PHOS";
+            case 43:
+                return "Pi0PCM-DCAL";
+            case 44:
+                return "Pi0EMC";
+            case 45:
+                return "Pi0PHOS";
+            case 46:
+                return "Pi0DCAL";
+            case 47:
+                return "Pi0PCM-Dal";
+            case 48:
+                return "Pi0EMC-Dal";
+            case 49:
+                return "Pi0PHOS-Dal";
+            case 50:
+                return "Pi0DCAL-Dal";
+            default:
+                return "not known";
+        }
+    }
 
     //************************************************************************************
     //************************ return latex writing of meson name ************************

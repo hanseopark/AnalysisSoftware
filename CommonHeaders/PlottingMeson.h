@@ -144,7 +144,49 @@
             }
         }
     }
+    // BEGIN of functions found in PlottingMeson.h of TaskOmega
+    void DrawSingleHisto( TH1* histo1, TString Title, TString XTitle, TString YTitle, Bool_t is2D) {
 
+        histo1->SetTitle("");
+
+        if(XTitle.Length() > 0){
+            histo1->SetXTitle(XTitle.Data());
+        }
+        if(YTitle.Length() > 0){
+            histo1->SetYTitle(YTitle.Data());
+        }
+        //cout<<"HERE??"<<endl;
+        histo1->GetYaxis()->SetLabelSize(0.02);
+        histo1->GetYaxis()->SetTitleSize(0.025);
+        histo1->GetYaxis()->SetDecimals();
+        histo1->GetYaxis()->SetTitleOffset(0.5);
+        histo1->GetXaxis()->SetTitleSize(0.025);
+        histo1->GetXaxis()->SetLabelSize(0.02);
+        histo1->SetMarkerStyle(20);
+        histo1->SetMarkerColor(1);
+        histo1->SetLineColor(37);
+        histo1->SetLineWidth(1);
+        histo1->SetMarkerSize(0.2);
+        histo1->SetTitleOffset(1.2,"xy");
+        histo1->SetTitleSize(0.05,"xy");
+        histo1->GetYaxis()->SetLabelSize(0.05);
+        histo1->GetXaxis()->SetLabelSize(0.05);
+
+        if (is2D)
+        histo1->DrawCopy("colz");
+        else
+        histo1->DrawCopy("e,hist");
+        /*
+        if(Title.Length() > 0){
+            histo1->SetTitle("");
+            TLatex *alice = new TLatex(0.1,0.95,Form("%s",Title.Data())); // Bo: this was
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(0.062);
+            alice->Draw();
+        }*/
+    }
+    // END of functions found in PlottingMeson.h of TaskOmega
 
     void DrawGammaHistoColored(     TH1* histo1,
                                     TString Title, 

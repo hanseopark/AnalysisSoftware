@@ -15,7 +15,7 @@ struct AliConvDataObject {
 	Double_t errorYSystLow;
 	Double_t errorYSystHigh;
 	Double_t errorYTotLow;
-	Double_t errorYTotHigh;
+    Double_t errorYTotHigh;
 };
 
 //********************* global Variables *********************************************************************
@@ -5012,6 +5012,29 @@ TString ReturnTextReconstructionProcess(Int_t mode){
 			return "EMCAL, EMCAL";
 		case 5: 
 			return "PHOS, PHOS";
+        // Cases added for omega analysis
+        case 40:
+            return "PCM, PCM";
+        case 41:
+            return "PCM, EMCAL";
+        case 42:
+            return "PCM, PHOS";
+        case 43:
+            return "PCM, DCAL";
+        case 44:
+            return "EMCAL, EMCAL";
+        case 45:
+            return "PHOS, PHOS";
+        case 46:
+            return "DCAL, DCAL";
+        case 47:
+            return "PCM, DALITZ";
+        case 48:
+            return "EMCAL, DALITZ";
+        case 49:
+            return "PHOS, DALITZ";
+        case 50:
+            return "DCAL, DALITZ";
 		default:
 			return "not known";
 	}
@@ -5033,6 +5056,29 @@ TString ReturnFullTextReconstructionProcess(Int_t mode){
 			return "#gamma's rec. with EMCAL, EMCAL";
 		case 5: 
 			return "#gamma's rec. with PHOS, PHOS";
+        // Cases added for omega analysis
+        case 40:
+            return "#gamma's rec. with PCM, PCM";
+        case 41:
+            return "#gamma's rec. with PCM, EMCAL";
+        case 42:
+            return "#gamma's rec. with PCM, PHOS";
+        case 43:
+            return "PCM #gamma's rec. with, DCAL";
+        case 44:
+            return "#gamma's rec. with EMCAL, EMCAL";
+        case 45:
+            return "#gamma's rec. with PHOS, PHOS";
+        case 46:
+            return "#gamma's rec. with DCAL, DCAL";
+        case 47:
+            return "#gamma's rec. with PCM, DALITZ";
+        case 48:
+            return "#gamma's rec. with EMCAL, DALITZ";
+        case 49:
+            return "#gamma's rec. with PHOS, DALITZ";
+        case 50:
+            return "#gamma's rec. with DCAL, DALITZ";
 		default:
 			return "not known";
 	}

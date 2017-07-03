@@ -229,6 +229,11 @@ Int_t 	fNRebinGlobal = 									2;
 Double_t 	*fBGFitRangeLeft = 								NULL;
 Double_t 	*fMesonPlotRange = 								NULL;
 
+// Added because of change of how integration ranges are stored
+Double_t    *fMesonIntDeltaRange =                          NULL;
+Double_t    *fMesonIntDeltaRangeWide =                          NULL;
+Double_t    *fMesonIntDeltaRangeNarrow =                          NULL;
+//
 Double_t 	*fMesonIntRangeWide = 							NULL;
 Double_t 	*fMesonIntRangeNarrow = 						NULL;
 Double_t 	*fMesonCurIntRange = 							NULL;
@@ -376,6 +381,8 @@ Double_t* fMesonYieldsCorResidualBckFuncLeftNarrow=			NULL;
 Double_t* fMesonYieldsLeftPerEventNarrow=					NULL;
 Double_t* fMesonSBLeftNarrow=								NULL;
 Double_t* fMesonSignLeftNarrow=								NULL;
+
+Double_t fScaleFac  =                                         1.;
 
 // Wide Integration Window
 Double_t* fGGYieldsWide=									NULL;
