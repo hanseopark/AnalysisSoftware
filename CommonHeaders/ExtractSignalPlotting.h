@@ -233,6 +233,237 @@
         canvasLonelyBin2->Print(Form("%s/%s_%s_InvMassDistributionSubtracted_PtBin_%i.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(),exampleBin,suffix.Data()));
     }
 
+    /* ---------------------------------------------------------------------------------------------
+     * BEGINNING of plotting functions found in old ExtractSignalPlotting.h header in TaskOmega
+    */
+
+    //________________________________ Plotting Single 1D Histogram ____________________________________________
+    void PlotSingle1DHistogram(TH1D* histo, TString namePlot, TString nameCanvas, TString XaxisName, TString YaxisName, TString suffix, Int_t XaxisScale, Int_t YaxisScale, Double_t* RangeX, Double_t* RangeY,TString addText, Double_t xPosLine1 = 0., Double_t xPosLine2 = 0.){
+        TCanvas * canvas = new TCanvas(nameCanvas.Data(),"",1400,800);  // gives the page size
+        canvas->SetTopMargin(0.08);
+        canvas->SetBottomMargin(0.13);
+        canvas->SetRightMargin(0.04);
+        canvas->SetLeftMargin(0.12);
+
+
+        canvas->SetLogx(XaxisScale);
+        canvas->SetLogy(YaxisScale);
+
+        histo->GetXaxis()->SetRangeUser(RangeX[0], RangeX[1]);
+        histo->GetYaxis()->SetRangeUser(RangeY[0], RangeY[1]);
+
+        DrawSingleHisto(histo, nameCanvas, XaxisName, YaxisName, kFALSE);
+        TLine *line1,*line2;
+        line1 = new TLine(xPosLine1,RangeY[0],xPosLine1,RangeY[1]);
+        line2 = new TLine(xPosLine2,RangeY[0],xPosLine2,RangeY[1]);
+
+        if (xPosLine1!=0. && xPosLine2!=0.)
+        {
+            line1->SetLineWidth(2);
+            line1->SetLineColor(2);
+            line1->Draw();
+
+            line2->SetLineWidth(2);
+            line2->SetLineColor(2);
+            line2->Draw();
+        }
+
+        DrawAliceLogoOmega(0.7,0.85,0.1,0.05,1400,800,histo->GetEntries(),addText);
+
+        canvas->Update();
+
+        canvas->Print(namePlot.Data(),suffix.Data());
+        delete canvas;
+        delete line1;
+        delete line2;
+    }
+
+    void PlotSingle2DHistogram(TH2D* histo, TString namePlot, TString nameCanvas, TString XaxisName, TString YaxisName, TString suffix, Int_t XaxisScale, Int_t YaxisScale, Int_t ZaxisScale, Double_t* RangeX, Double_t* RangeY,TString addText, Double_t xPosLine1 = 0., Double_t xPosLine2 = 0.){
+        TCanvas * canvas = new TCanvas(nameCanvas.Data(),"",1600,800);  // gives the page size
+        canvas->SetTopMargin(0.08);
+        canvas->SetBottomMargin(0.13);
+        canvas->SetRightMargin(0.1);
+        canvas->SetLeftMargin(0.12);
+
+
+        canvas->SetLogx(XaxisScale);
+        canvas->SetLogy(YaxisScale);
+        canvas->SetLogz(ZaxisScale);
+
+        histo->GetXaxis()->SetRangeUser(RangeX[0], RangeX[1]);
+        histo->GetYaxis()->SetRangeUser(RangeY[0], RangeY[1]);
+
+        DrawSingleHisto(histo, nameCanvas, XaxisName, YaxisName, kTRUE);
+        TLine *line1,*line2;
+        line1 = new TLine(xPosLine1,RangeY[0],xPosLine1,RangeY[1]);
+        line2 = new TLine(xPosLine2,RangeY[0],xPosLine2,RangeY[1]);
+
+        if (xPosLine1!=0. && xPosLine2!=0.)
+        {
+            line1->SetLineWidth(2);
+            line1->SetLineColor(2);
+            line1->Draw();
+
+            line2->SetLineWidth(2);
+            line2->SetLineColor(2);
+            line2->Draw();
+        }
+
+        DrawAliceLogoOmega(0.2,0.85,0.1,0.05,1400,800,histo->GetEntries(),addText);
+
+        canvas->Update();
+
+        canvas->Print(namePlot.Data(),suffix.Data());
+        delete canvas;
+    }
+
+    void PlotWithFitSubtractedInvMassSinglePtBinOmega(TH1D * fHistoMappingSignalInvMassPtBinPlot, TF1 * fFitSignalInvMassPtBinPlot, TString namePlot, TString nameCanvas,  Double_t* fPlottingRangeMeson, Bool_t fMonteCarloInfo, TString decayChannel, TString PTstring) {
+        TCanvas *canvasDataFit = new TCanvas(nameCanvas.Data(),"",1400,800);  // gives the page size
+        canvasDataFit->SetTopMargin(0.08);
+        canvasDataFit->SetBottomMargin(0.13);
+        canvasDataFit->SetRightMargin(0.04);
+        canvasDataFit->SetLeftMargin(0.12);
+        fHistoMappingSignalInvMassPtBinPlot->SetAxisRange(fPlottingRangeMeson[0],fPlottingRangeMeson[1]);
+    // 	cout<<"Maximum::"<<fHistoMappingSignalInvMassPtBinPlot->GetMaximum()<<endl;
+        DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot,
+                        PTstring.Data(),
+                        Form("M_{%s} (GeV/c^{2})",decayChannel.Data()), Form("dN_{%s}/dM_{%s}",decayChannel.Data(), decayChannel.Data()),
+                        fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+        if (fFitSignalInvMassPtBinPlot!=0x00){
+            fFitSignalInvMassPtBinPlot->SetLineColor(kCyan+3);
+            fFitSignalInvMassPtBinPlot->SetLineWidth(0.7);
+            fFitSignalInvMassPtBinPlot->DrawCopy("same");
+        }
+        DrawAliceLogoOmega(0.2,0.85,0.1,0.05,1400,800,fHistoMappingSignalInvMassPtBinPlot->GetEntries(),PTstring);
+        canvasDataFit->Print(namePlot.Data());
+        delete canvasDataFit;
+
+            if(fMonteCarloInfo)fMonteCarloInfo=kFALSE;
+    }
+
+    //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
+    void PlotMultipleSlicesOf2DHisto(TH2D* histo2D, TString namePlot, TString nameCanvas, TString namePad, Double_t* fPlottingRangeMeson, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, Double_t* RebinFactorsPtSlice, TString fDecayChannel, TString decayChannel,  TString fDetectionChannel, TString fEnergy){
+
+        TH1D *histo[fNumberPtBins];
+        TH1D *emptyhisto = new TH1D("empty", "empty", 1, fPlottingRangeMeson[0], fPlottingRangeMeson[1]);
+        emptyhisto->SetBinContent(1,0.);
+        TGaxis::SetMaxDigits(3);
+
+        TCanvas * canvasDataSpectra = new TCanvas(nameCanvas.Data(),"",1400,800);  // gives the page size
+        canvasDataSpectra->SetTopMargin(0.02);
+        canvasDataSpectra->SetBottomMargin(0.02);
+        canvasDataSpectra->SetRightMargin(0.02);
+        canvasDataSpectra->SetLeftMargin(0.02);
+
+        TPad * padDataSpectra = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+        padDataSpectra->SetFillColor(0);
+        padDataSpectra->GetFrame()->SetFillColor(0);
+        padDataSpectra->SetBorderMode(0);
+        padDataSpectra->SetLogy(0);
+        padDataSpectra->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+        padDataSpectra->Draw();
+
+        cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+        cout << fMesonType.Data() << endl;
+        Int_t place = 0;
+        for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+            cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+            Double_t startPt = fRangeBinsPt[iPt];
+            Double_t endPt = fRangeBinsPt[iPt+1];
+
+            TString Name = Form("histo_%i",iPt);
+            Double_t startBinIn2DHisto = histo2D->GetYaxis()->FindBin(startPt);
+            Double_t endBinIn2DHisto = histo2D->GetYaxis()->FindBin(endPt);
+
+            histo[iPt] = histo2D->ProjectionX(Name,startBinIn2DHisto,endBinIn2DHisto,"");
+            histo[iPt]->Rebin(RebinFactorsPtSlice[iPt]);
+
+            place = place + 1;						//give the right place in the page
+            if (place == fColumnPlot){
+                iPt--;
+                padDataSpectra->cd(place);
+
+                TString textAlice = "ALICE performance";
+                TString textEvents;
+                //if(fMonteCarloInfo){textEvents = "MC";} else
+                textEvents = "Data";
+                Double_t nPixels = 13;
+                Double_t textHeight = 0.08;
+                if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                    textHeight = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+                } else {
+                    textHeight = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+                }
+
+                Double_t startTextX = 0.15;
+                Double_t startTextY = 0.8;
+                Double_t differenceText = textHeight*1.25;
+
+                TLatex *alice = 		new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+                TLatex *latexDate = 	new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+                TLatex *energy = 		new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
+                TLatex *process = 		new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+                TLatex *detprocess = 	new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionChannel);
+                TLatex *events = 		new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+
+                alice->SetNDC();
+                alice->SetTextColor(1);
+                alice->SetTextSize(textHeight*1.3);
+                alice->Draw();
+
+                latexDate->SetNDC();
+                latexDate->SetTextColor(1);
+                latexDate->SetTextSize(textHeight);
+                latexDate->Draw();
+
+                energy->SetNDC();
+                energy->SetTextColor(1);
+                energy->SetTextSize(textHeight);
+                energy->Draw();
+
+                process->SetNDC();
+                process->SetTextColor(1);
+                process->SetTextSize(textHeight);
+                process->Draw();
+
+                detprocess->SetNDC();
+                detprocess->SetTextColor(1);
+                detprocess->SetTextSize(textHeight);
+                detprocess->Draw();
+
+                /*events->SetNDC();
+                events->SetTextColor(1);
+                events->SetTextSize(textHeight);
+                events->Draw();*/
+            } else {
+
+                padDataSpectra->cd(place);
+                padDataSpectra->cd(place)->SetTopMargin(0.12);
+                padDataSpectra->cd(place)->SetBottomMargin(0.15);
+                padDataSpectra->cd(place)->SetRightMargin(0.02);
+                padDataSpectra->cd(place)->SetLeftMargin(0.15);
+
+                DrawGammaHisto( histo[iPt],
+                            Form("%3.2f GeV/c < p_{T} < %3.2f GeV/c",startPt,endPt),
+                                Form("M_{%s} (GeV/c^{2})",decayChannel.Data()), Form("dN_{%s}/dM_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+                DrawGammaHisto( emptyhisto,
+                    Form("%3.2f GeV/c < p_{T} < %3.2f GeV/c",startPt,endPt),
+                    Form("M_{%s} (GeV/c^{2})",decayChannel.Data()), Form("dN_{%s}/dM_{%s}",decayChannel.Data(), decayChannel.Data()),
+                    fPlottingRangeMeson[0],fPlottingRangeMeson[1],3);
+            }
+        }
+        canvasDataSpectra->Print(namePlot.Data());
+        delete padDataSpectra;
+        delete canvasDataSpectra;
+        delete emptyhisto;
+        for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++) {delete histo[iPt];}
+    }
+
+    /* ---------------------------------------------------------------------------------------------
+     * END of plotting functions found in old ExtractSignalPlotting.h header in TaskOmega
+    */
+
     //_______________________ Plotting Invariant mass with BG and subtraction in a single p_t bin __________________________________
     void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG, 
                                     TH1D* histoInvMassSubtracted, 
@@ -264,9 +495,10 @@
         TString triggerStr2             = ReturnTriggerName(triggerSet,fCollisionSystemDummy);
         TString triggerStr              = Form("%s triggered", triggerStr2.Data());
         TString methodStr               = ReturnTextReconstructionProcess(detMode);
+        TString methodStrOut            = ReturnTextReconstructionProcessWrite(detMode);
         if (addSig)
-            methodStr                   = methodStr+"AddSig";
-        
+            methodStrOut                = methodStrOut+"AddSig";
+
         TH1D* histoPi0InvMassSigPlusBG;
         TH1D* histoPi0InvMassSig;
         TH1D* histoPi0InvMassSigRemBG;
@@ -317,8 +549,20 @@
                 histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
                 histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
             }
-        } else {
+        } else if(fMesonType.CompareTo("Eta") == 0){
             for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.70)+1; j++){
+                Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
+                Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
+                Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+                Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+                pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+                +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
+                (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+                histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
+                histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
+            }
+         } else { //omega
+            for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.645); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.9)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
                 Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
@@ -385,8 +629,14 @@
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
-        } else {
+        } else if(fMesonType.CompareTo("Eta") == 0){
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else { // omega
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
@@ -402,10 +652,14 @@
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             fitPi0InvMassSig->SetRange(0,0.255);
             fitPi0InvMassSigRemBG->SetRange(0,0.255);
-        } else {
+        } else if(fMesonType.CompareTo("Eta") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             fitPi0InvMassSig->SetRange(0.35,0.695);
             fitPi0InvMassSigRemBG->SetRange(0.35,0.695);
+        } else { // omega
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+            fitPi0InvMassSig->SetRange(0.645,0.89);
+            fitPi0InvMassSigRemBG->SetRange(0.645,0.89);
         }
         // Set fit colors
         fitPi0InvMassSig->SetNpx(10000);
@@ -491,7 +745,7 @@
         legendInvMass->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
 
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
 
         canvasInvMassSamplePlot->cd();
 
@@ -531,7 +785,7 @@
         DrawGammaLines(normalUp, normalUp, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
         histo1DInvMassDummy->Draw("AXIS,same");
         
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(), suffix.Data()));
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
         
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->Draw();
@@ -579,7 +833,7 @@
         legendInvMass2->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
 
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(),  suffix.Data()));
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
 
         // Plot Invariant mass sample bin with linear BG in Signal
         canvasInvMassSamplePlot->cd();
@@ -625,7 +879,7 @@
         legendInvMass3->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
         
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStr.Data(), triggerStr2.Data(),  suffix.Data()));
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
         
     }
 
