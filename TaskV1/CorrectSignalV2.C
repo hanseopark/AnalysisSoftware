@@ -570,6 +570,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }    
                 modifiedSecAcc[j]                   = kTRUE;
             }    
+            // for EMCal, 8 TeV, EMC7+EGA triggers set K0s acc to prim acceptance
+            if( optionEnergy.CompareTo("8TeV") == 0 && mode == 4 && j == 0 && triggerRejection>2.){
+              histoSecAcceptance[j]                 = (TH1D*) histoAcceptance->Clone(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
+              modifiedSecAcc[j]                     = kTRUE;
+            }
             if (( mode == 2 || mode == 13 ) &&  j < 3 && kCollisionSystem == 2){
                 histoSecAcceptance[j]               = (TH1D*)histoAcceptance->Clone(Form("fMCSecPi0From%sAccepPt_mod",nameSecMeson[j].Data()));
                 if (j == 1)
@@ -624,6 +629,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
                     Double_t minPtSecFitConst   = 2.5;
                     if (kCollisionSystem ==2 && (mode == 2 || mode == 13)) minPtSecFitConst        = 4.0;
+                    if (optionEnergy.CompareTo("8TeV") == 0 && mode == 2)  minPtSecFitConst        = 6.0;
                     histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst,"QNRME+","",minPtSecFitConst,maxPtMeson);
                     
                     fithistoRatioSecEffDivTrueEff[k][j] = new TF1(Form("fitexpEffi%s_%s",nameSecMeson[j].Data(),nameIntRange[k].Data()),"[0]/pow(x,[1])+[2]");
@@ -714,6 +720,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.5);
+                          } else if(optionEnergy.CompareTo("8TeV") == 0){
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            if(triggerRejection<2.) histoSecTrueEffi[k][j]->Scale(0.5);
+                            else histoSecTrueEffi[k][j]->Scale(1.0);
                           }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
@@ -728,9 +739,15 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(1.0);
                         } else if ( j == 3 ){
+                          if(optionEnergy.CompareTo("8TeV") == 0){
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            histoSecTrueEffi[k][j]->Scale(0.9);
+                          }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
                             histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
+                          }
                         }
                     } else if (mode == 2 || mode == 13 ) {
                         modifiedSecTrueEffi[k][j]   = kTRUE;
@@ -739,6 +756,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.5);
+                          } else if(optionEnergy.CompareTo("8TeV") == 0 && triggerRejection>2.){
+                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
+                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
+                            histoSecTrueEffi[k][j]->Scale(0.2);
                           }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
@@ -2414,9 +2435,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             canvasAcceptance->cd();
             
             TLegend* legendAccSec = GetAndSetLegend2(0.45, 0.12, 0.65, 0.12+(nAccHistSec+1)*0.03, 28);
+            legendAccSec->AddEntry(histoAcceptance,"prim.");
             histoAcceptance->GetYaxis()->SetRangeUser(rangeAcc[0], rangeAcc[1]*1.5);
             histoAcceptance->DrawCopy("e1");
-            legendAccSec->AddEntry(histoAcceptance,"prim.");
             for (Int_t j = 0; j < 4; j++){
                 if (histoSecAcceptance[j]){
                     DrawGammaSetMarker(histoSecAcceptance[j], markerStyleSec[j] , markerSizeSec[j], colorSec[j], colorSec[j]);  
@@ -2429,6 +2450,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }    
             
             }
+            histoAcceptance->DrawCopy("e1,same");
             legendAccSec->Draw();
             PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
             
