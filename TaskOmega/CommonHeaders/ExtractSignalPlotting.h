@@ -93,30 +93,6 @@ void PlotSingle2DHistogram(TH2D* histo, TString namePlot, TString nameCanvas, TS
 	delete canvas;
 }
 
-void PlotWithFitSubtractedInvMassSinglePtBinOmega(TH1D * fHistoMappingSignalInvMassPtBinPlot, TF1 * fFitSignalInvMassPtBinPlot, TString namePlot, TString nameCanvas,  Double_t* fPlottingRangeMeson, Bool_t fMonteCarloInfo, TString decayChannel, TString PTstring) {
-    TCanvas *canvasDataFit = new TCanvas(nameCanvas.Data(),"",1400,800);  // gives the page size
-	canvasDataFit->SetTopMargin(0.08);
-	canvasDataFit->SetBottomMargin(0.13);
-	canvasDataFit->SetRightMargin(0.04);
-	canvasDataFit->SetLeftMargin(0.12);
-	fHistoMappingSignalInvMassPtBinPlot->SetAxisRange(fPlottingRangeMeson[0],fPlottingRangeMeson[1]);
-// 	cout<<"Maximum::"<<fHistoMappingSignalInvMassPtBinPlot->GetMaximum()<<endl;
-	DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot,
-					PTstring.Data(),
-					Form("M_{%s} (GeV/c^{2})",decayChannel.Data()), Form("dN_{%s}/dM_{%s}",decayChannel.Data(), decayChannel.Data()),
-					fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
-	if (fFitSignalInvMassPtBinPlot!=0x00){
-		fFitSignalInvMassPtBinPlot->SetLineColor(kCyan+3);
-		fFitSignalInvMassPtBinPlot->SetLineWidth(0.7);
-		fFitSignalInvMassPtBinPlot->DrawCopy("same");
-	}
-    DrawAliceLogoOmega(0.2,0.85,0.1,0.05,1400,800,fHistoMappingSignalInvMassPtBinPlot->GetEntries(),PTstring);
-	canvasDataFit->Print(namePlot.Data());
-	delete canvasDataFit;
-
-        if(fMonteCarloInfo)fMonteCarloInfo=kFALSE; 
-}
-
 //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
 void PlotMultipleSlicesOf2DHisto(TH2D* histo2D, TString namePlot, TString nameCanvas, TString namePad, Double_t* fPlottingRangeMeson, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, Double_t* RebinFactorsPtSlice, TString fDecayChannel, TString decayChannel,  TString fDetectionChannel, TString fEnergy){
 	

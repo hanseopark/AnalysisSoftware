@@ -354,8 +354,18 @@
             neutralPionCutNumber = objstrNeutralPion->GetString();
             mesonCutNumber = objstrMeson->GetString();
 
-            mode = 41;
-        }  else if (typeCutNumber.CompareTo("2") == 0){ //EMCAL-EMCAL
+            // Check wich calo was used
+            TString firstLetter(clusterCutNumber(0,1));
+            if (firstLetter.CompareTo("1") == 0){        // EMCAL was used as calo
+                mode = 41;
+            } else if (firstLetter.CompareTo("2") == 0){ // PHOS was used as calo
+                mode = 42;
+            } else if (firstLetter.CompareTo("3") == 0){ // DCAL was used as calo
+                mode = 43;
+            } else {
+                mode = 41;
+            }
+        }  else if (typeCutNumber.CompareTo("2") == 0){ // CALO-CALO
             objstrType  = (TObjString*)arr->At(0);
             objstrEvent = (TObjString*)arr->At(1);
             objstrCluster = (TObjString*)arr->At(2);
@@ -370,53 +380,18 @@
             neutralPionCutNumber = objstrNeutralPion->GetString();
             mesonCutNumber = objstrMeson->GetString();
 
-            mode = 44;
-        }
-
-        /*
-       else {
-        if (typeCutNumber.CompareTo("1") == 0)//PCM-calo
-        {
-            objstrType  = (TObjString*)arr->At(0);
-            objstrEvent = (TObjString*)arr->At(1);
-            objstrGamma = (TObjString*)arr->At(2);
-            objstrCluster = (TObjString*)arr->At(3);
-            objstrPion = (TObjString*)arr->At(4);
-            objstrNeutralPion = (TObjString*)arr->At(5);
-            objstrMeson = (TObjString*)arr->At(6);
-
-            typeCutNumber  = objstrType->GetString();
-            eventCutNumber= objstrEvent->GetString();
-            gammaCutNumber= objstrGamma->GetString();
-            clusterCutNumber = objstrCluster->GetString();
-            pionCutNumber = objstrPion->GetString();
-            neutralPionCutNumber = objstrNeutralPion->GetString();
-            mesonCutNumber = objstrMeson->GetString();
-
+            // Check wich calo was used
             TString firstLetter(clusterCutNumber(0,1));
-            if (firstLetter.CompareTo("1") == 0) mode = 2; else mode = 3;
+            if (firstLetter.CompareTo("1") == 0){        // EMCAL was used as calo
+                mode = 44;
+            } else if (firstLetter.CompareTo("2") == 0){ // PHOS was used as calo
+                mode = 45;
+            } else if (firstLetter.CompareTo("3") == 0){ // DCAL was used as calo
+                mode = 46;
+            } else {
+                mode = 44;
+            }
         }
-        else
-        if (typeCutNumber.CompareTo("2") == 0)//calo-calo
-        {
-            objstrType  = (TObjString*)arr->At(0);
-            objstrEvent = (TObjString*)arr->At(1);
-            objstrCluster = (TObjString*)arr->At(2);
-            objstrPion = (TObjString*)arr->At(3);
-            objstrNeutralPion = (TObjString*)arr->At(4);
-            objstrMeson = (TObjString*)arr->At(5);
-
-            typeCutNumber  = objstrType->GetString();
-            eventCutNumber= objstrEvent->GetString();
-            clusterCutNumber = objstrCluster->GetString();
-            pionCutNumber = objstrPion->GetString();
-            neutralPionCutNumber = objstrNeutralPion->GetString();
-            mesonCutNumber = objstrMeson->GetString();
-
-            TString firstLetter(clusterCutNumber(0,1));
-            if (firstLetter.CompareTo("1") == 0) mode = 4; else mode = 5;
-        } */
-
 
         cout << cutSel.Data() << "\t" << typeCutNumber.Data() << "\t" << eventCutNumber.Data() << "\t" << gammaCutNumber.Data() << "\t" <<  clusterCutNumber.Data() << "\t" <<pionCutNumber.Data() << "\t" <<neutralPionCutNumber.Data() << "\t" << mesonCutNumber.Data() << endl;
         return mode;

@@ -155,7 +155,7 @@
         if(YTitle.Length() > 0){
             histo1->SetYTitle(YTitle.Data());
         }
-        //cout<<"HERE??"<<endl;
+
         histo1->GetYaxis()->SetLabelSize(0.02);
         histo1->GetYaxis()->SetTitleSize(0.025);
         histo1->GetYaxis()->SetDecimals();
@@ -176,15 +176,6 @@
         histo1->DrawCopy("colz");
         else
         histo1->DrawCopy("e,hist");
-        /*
-        if(Title.Length() > 0){
-            histo1->SetTitle("");
-            TLatex *alice = new TLatex(0.1,0.95,Form("%s",Title.Data())); // Bo: this was
-            alice->SetNDC();
-            alice->SetTextColor(1);
-            alice->SetTextSize(0.062);
-            alice->Draw();
-        }*/
     }
     // END of functions found in PlottingMeson.h of TaskOmega
 

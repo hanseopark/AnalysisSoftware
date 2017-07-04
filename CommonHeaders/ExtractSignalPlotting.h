@@ -238,7 +238,7 @@
     */
 
     //________________________________ Plotting Single 1D Histogram ____________________________________________
-    void PlotSingle1DHistogram(TH1D* histo, TString namePlot, TString nameCanvas, TString XaxisName, TString YaxisName, TString suffix, Int_t XaxisScale, Int_t YaxisScale, Double_t* RangeX, Double_t* RangeY,TString addText, Double_t xPosLine1 = 0., Double_t xPosLine2 = 0.){
+    void PlotSingle1DHistogramOmega(TH1D* histo, TString namePlot, TString nameCanvas, TString XaxisName, TString YaxisName, TString suffix, Int_t XaxisScale, Int_t YaxisScale, Double_t* RangeX, Double_t* RangeY,TString addText, Double_t xPosLine1 = 0., Double_t xPosLine2 = 0.){
         TCanvas * canvas = new TCanvas(nameCanvas.Data(),"",1400,800);  // gives the page size
         canvas->SetTopMargin(0.08);
         canvas->SetBottomMargin(0.13);
@@ -278,7 +278,7 @@
         delete line2;
     }
 
-    void PlotSingle2DHistogram(TH2D* histo, TString namePlot, TString nameCanvas, TString XaxisName, TString YaxisName, TString suffix, Int_t XaxisScale, Int_t YaxisScale, Int_t ZaxisScale, Double_t* RangeX, Double_t* RangeY,TString addText, Double_t xPosLine1 = 0., Double_t xPosLine2 = 0.){
+    void PlotSingle2DHistogramOmega(TH2D* histo, TString namePlot, TString nameCanvas, TString XaxisName, TString YaxisName, TString suffix, Int_t XaxisScale, Int_t YaxisScale, Int_t ZaxisScale, Double_t* RangeX, Double_t* RangeY,TString addText, Double_t xPosLine1 = 0., Double_t xPosLine2 = 0.){
         TCanvas * canvas = new TCanvas(nameCanvas.Data(),"",1600,800);  // gives the page size
         canvas->SetTopMargin(0.08);
         canvas->SetBottomMargin(0.13);
@@ -317,32 +317,9 @@
         delete canvas;
     }
 
-    void PlotWithFitSubtractedInvMassSinglePtBinOmega(TH1D * fHistoMappingSignalInvMassPtBinPlot, TF1 * fFitSignalInvMassPtBinPlot, TString namePlot, TString nameCanvas,  Double_t* fPlottingRangeMeson, Bool_t fMonteCarloInfo, TString decayChannel, TString PTstring) {
-        TCanvas *canvasDataFit = new TCanvas(nameCanvas.Data(),"",1400,800);  // gives the page size
-        canvasDataFit->SetTopMargin(0.08);
-        canvasDataFit->SetBottomMargin(0.13);
-        canvasDataFit->SetRightMargin(0.04);
-        canvasDataFit->SetLeftMargin(0.12);
-        fHistoMappingSignalInvMassPtBinPlot->SetAxisRange(fPlottingRangeMeson[0],fPlottingRangeMeson[1]);
-    // 	cout<<"Maximum::"<<fHistoMappingSignalInvMassPtBinPlot->GetMaximum()<<endl;
-        DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot,
-                        PTstring.Data(),
-                        Form("M_{%s} (GeV/c^{2})",decayChannel.Data()), Form("dN_{%s}/dM_{%s}",decayChannel.Data(), decayChannel.Data()),
-                        fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
-        if (fFitSignalInvMassPtBinPlot!=0x00){
-            fFitSignalInvMassPtBinPlot->SetLineColor(kCyan+3);
-            fFitSignalInvMassPtBinPlot->SetLineWidth(0.7);
-            fFitSignalInvMassPtBinPlot->DrawCopy("same");
-        }
-        DrawAliceLogoOmega(0.2,0.85,0.1,0.05,1400,800,fHistoMappingSignalInvMassPtBinPlot->GetEntries(),PTstring);
-        canvasDataFit->Print(namePlot.Data());
-        delete canvasDataFit;
-
-            if(fMonteCarloInfo)fMonteCarloInfo=kFALSE;
-    }
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotMultipleSlicesOf2DHisto(TH2D* histo2D, TString namePlot, TString nameCanvas, TString namePad, Double_t* fPlottingRangeMeson, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, Double_t* RebinFactorsPtSlice, TString fDecayChannel, TString decayChannel,  TString fDetectionChannel, TString fEnergy){
+    void PlotMultipleSlicesOf2DHistoOmega(TH2D* histo2D, TString namePlot, TString nameCanvas, TString namePad, Double_t* fPlottingRangeMeson, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, Double_t* RebinFactorsPtSlice, TString fDecayChannel, TString decayChannel,  TString fDetectionChannel, TString fEnergy){
 
         TH1D *histo[fNumberPtBins];
         TH1D *emptyhisto = new TH1D("empty", "empty", 1, fPlottingRangeMeson[0], fPlottingRangeMeson[1]);
@@ -431,10 +408,6 @@
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
 
-                /*events->SetNDC();
-                events->SetTextColor(1);
-                events->SetTextSize(textHeight);
-                events->Draw();*/
             } else {
 
                 padDataSpectra->cd(place);
@@ -498,7 +471,6 @@
         TString methodStrOut            = ReturnTextReconstructionProcessWrite(detMode);
         if (addSig)
             methodStrOut                = methodStrOut+"AddSig";
-
         TH1D* histoPi0InvMassSigPlusBG;
         TH1D* histoPi0InvMassSig;
         TH1D* histoPi0InvMassSigRemBG;
@@ -2025,6 +1997,7 @@
                                             TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
                                             Bool_t isVsPtConv            = kFALSE
                                             ){
+
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         canvasDataFit->SetTopMargin(0.00);
         canvasDataFit->SetBottomMargin(0.00);
@@ -2047,7 +2020,6 @@
         for(Int_t iPt = fStartBinPtRange; iPt < fNumberPtBins; iPt++){
             Double_t startPt            = fRangeBinsPt[iPt];
             Double_t endPt              = fRangeBinsPt[iPt+1];
-
             place                       = place + 1; //give the right place in the page
             if (place == fColumnPlot){
                 iPt--;
@@ -2167,7 +2139,7 @@
                 if (remaining > 0) padDataFit->cd(place)->SetLeftMargin(0.15);
                 else padDataFit->cd(place)->SetLeftMargin(0.25);
 
-    //             cout << startPt << "-" << endPt <<endl;
+
 
                 if (labelData) {
                     TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
@@ -2182,13 +2154,16 @@
                                     Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                     if (fHistoMappingSignalInvMassPtBinPlot[iPt]!=0x00){
+
                             TString nameOfPlot = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetName();
                             Double_t mass = fMesonMass[iPt];
                             if (nameOfPlot.Contains("Left")) 
                                 mass                        = fMesonMassLeft[iPt];
                             if (nameOfPlot.Contains("True")) 
                                 mass                        = fMesonTrueMass[iPt];
+
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
+
                             Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
                             Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];
                             Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
@@ -2339,6 +2314,7 @@
         canvasDataFit->Print(namePlot.Data());
         delete padDataFit;
         delete canvasDataFit;
+
     }
 
     //____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________

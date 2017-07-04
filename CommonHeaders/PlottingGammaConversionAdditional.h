@@ -166,20 +166,10 @@
     // Function added from old PlottingGammaConversionAdditional.h of TaskOmega
     void DrawAliceLogoOmega(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Double_t xLengthCanvas, Double_t yLengthCanvas,Double_t entries,TString addText){
 
-
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-
-        /*Float_t dataStartY = startY - textHeight * 1.1;
-        TLatex *data = new TLatex((startX-0.011),dataStartY,Form("Entries: %1.2e",entries)); // Bo: this was modified
-        data->SetNDC();
-        data->SetTextColor(1);
-        data->SetTextFont(62);
-        data->SetTextSize(textHeight);
-        data->SetLineWidth(2);
-        data->Draw("same");*/
 
         Float_t addTextStartY = startY - textHeight * 3.1;
         TLatex *addTextObj = new TLatex((startX-0.011),addTextStartY,addText.Data()); // Bo: this was modified
@@ -189,21 +179,6 @@
         addTextObj->SetTextSize(textHeight);
         addTextObj->SetLineWidth(2);
         addTextObj->Draw("same");
-
-        /*TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startX,startY,totalXLogo,totalYLogo);
-        //  myPadLogo->SetFillColor(2); // color to first figure out where is the pad then comment !
-        myPadLogo->SetBorderMode(0);
-        myPadLogo->SetBorderSize(2);
-        myPadLogo->SetFrameBorderMode(0);
-        myPadLogo->SetLeftMargin(0.0);
-        myPadLogo->SetTopMargin(0.0);
-        myPadLogo->SetBottomMargin(0.0);
-        myPadLogo->SetRightMargin(0.0);
-        TASImage *myAliceLogo = new TASImage("ALICE_logo.eps");
-        myPadLogo->Draw();  // to take out for not using a logo.
-        myPadLogo->cd();
-        myAliceLogo->Draw("same");*/
-
     }
 
     void DrawAliceLogoPi0WithPHOSOnlyPerformance(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,

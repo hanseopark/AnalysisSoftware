@@ -134,119 +134,119 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	//1D histos export
 	RangeX[0] = 0.; RangeX[1] = 8.;
 	RangeY[0] = 0.1; RangeY[1] = 1.2e8;
-	PlotSingle1DHistogram(histo_NEvents,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/NEvents.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"NEvents", " ", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_NEvents,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/NEvents.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"NEvents", " ", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 110.;
 	RangeY[0] = 0.1; RangeY[1] = 4e6;
-	PlotSingle1DHistogram(histo_GoodESDTracks,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/GoodESDTracks.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"GoodESDTracks", "Number of tracks", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_GoodESDTracks,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/GoodESDTracks.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"GoodESDTracks", "Number of tracks", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(histo_ESD_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Pt", "p_{T,#gamma}", "Events",suffix,0,1,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
+    PlotSingle1DHistogramOmega(histo_ESD_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Pt", "p_{T,#gamma}", "Events",suffix,0,1,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = -2.0; RangeX[1] = 2.0;
 	RangeY[0] = 0.1; RangeY[1] = 2.0e5;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(histo_ESD_ConvGamma_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_ConvGamma_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Eta", "#eta_{#gamma}", "Events",suffix,0,0,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
+    PlotSingle1DHistogramOmega(histo_ESD_ConvGamma_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_ConvGamma_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Eta", "#eta_{#gamma}", "Events",suffix,0,0,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = 0.; RangeX[1] = 24.9;
 	RangeY[0] = 0.1; RangeY[1] = 8.0e7;
-	PlotSingle1DHistogram(histo_PrimaryNegPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryNegPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Pt", "p_{T,#pi^{-}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryNegPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryNegPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Pt", "p_{T,#pi^{-}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 24.9;
 	RangeY[0] = 0.1; RangeY[1] = 8.0e7;
-	PlotSingle1DHistogram(histo_PrimaryPosPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryPosPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Pt", "p_{T,#pi^{+}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryPosPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryPosPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Pt", "p_{T,#pi^{+}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 2.*TMath::Pi();
 	RangeY[0] = 3.0e6; RangeY[1] = 5.0e6;
-	PlotSingle1DHistogram(histo_PrimaryNegPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryNegPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Phi", "#varphi_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryNegPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryNegPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Phi", "#varphi_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 2.*TMath::Pi();
 	RangeY[0] = 3.0e6; RangeY[1] = 5.0e6;
-	PlotSingle1DHistogram(histo_PrimaryPosPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryPosPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Phi", "#varphi_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryPosPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryPosPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Phi", "#varphi_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = -1.5; RangeX[1] = 1.5;
 	RangeY[0] = 0.; RangeY[1] = 1.e8;
-	PlotSingle1DHistogram(histo_PrimaryNegPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryNegPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Eta", "#eta_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryNegPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryNegPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Eta", "#eta_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = -1.5; RangeX[1] = 1.5;
 	RangeY[0] = 0.; RangeY[1] = 1.e8;
-	PlotSingle1DHistogram(histo_PrimaryPosPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryPosPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Eta", "#eta_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryPosPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/PrimaryPosPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Eta", "#eta_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
 
 	//2D histos export
 	RangeX[0] = 0.; RangeX[1] = 1.;
 	RangeY[0] = 0.001; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryNegPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryNegPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryNegPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{-} clusters");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryNegPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryNegPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryNegPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{-} clusters");
 
 	RangeX[0] = 0.; RangeX[1] = 1.;
 	RangeY[0] = 0.001; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPosPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPosPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPosPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{+}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+} clusters");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPosPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPosPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPosPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{+}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+} clusters");
 	
 	RangeX[0] = -4.; RangeX[1] = 4.;
 	RangeY[0] = 0.; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_DCAxy,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_DCAxy.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAxy", "DCA_{xy} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_DCAxy,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_DCAxy.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAxy", "DCA_{xy} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 
 	RangeX[0] = -4.; RangeX[1] = 4.;
 	RangeY[0] = 0.; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_DCAz,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_DCAz.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAz", "DCA_{z} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_DCAz,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_DCAz.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAz", "DCA_{z} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 
 	RangeX[0] = 0.01; RangeX[1] = 100.;
 	RangeY[0] = -10; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_TPCdEdx,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_TPCdEdx.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdx", "p [GeV/c]", "#sigma_{TPC,#pi} [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_TPCdEdx,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_TPCdEdx.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdx", "p [GeV/c]", "#sigma_{TPC,#pi} [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
 
 	RangeX[0] = 0.01; RangeX[1] = 100.;
 	RangeY[0] = 0.; RangeY[1] = 170.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_TPCdEdxSignal,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_TPCdEdxSignal.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdxSignal", "p [GeV/c]", "dE/dx [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_TPCdEdxSignal,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PrimaryPions_TPCdEdxSignal.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdxSignal", "p [GeV/c]", "dE/dx [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
 
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.; RangeY[1] = 20.;
-	PlotSingle2DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+}#pi^{-} pair inv. mass");
+    PlotSingle2DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+}#pi^{-} pair inv. mass");
 
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.; RangeY[1] = 20.;
-    PlotSingle2DHistogram(histo_ESD_GammaGamma_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
 	RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Mother_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Mother_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Mother_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Signal+Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Mother_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Mother_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Mother_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Signal+Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
 	RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_1_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_1_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_1_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_1_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_1_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_1_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
     RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_2_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_2_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_2_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_2_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_2_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_2_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
     RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_3_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_3_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_3_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_3_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_3_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_3_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
     RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_4_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_4_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_4_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_4_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_Background_4_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_4_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
 
 	//slices
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.; RangeY[1] = 6.0e6;
 	//rho
-	PlotSingle1DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice1",4,4,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice1", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.3,0.4) GeV/c");
-	PlotSingle1DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice2",5,5,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice2", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.4,0.5) GeV/c");
-	PlotSingle1DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice3",6,6,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice3", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.5,0.6) GeV/c");
+    PlotSingle1DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice1",4,4,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice1", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.3,0.4) GeV/c");
+    PlotSingle1DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice2",5,5,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice2", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.4,0.5) GeV/c");
+    PlotSingle1DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice3",6,6,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice3", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.5,0.6) GeV/c");
 	
 	RangeX[0] = 0.0; RangeX[1] = 0.45;
 	RangeY[0] = 0.; RangeY[1] = 3.0e3;
 	//pi0
-	PlotSingle1DHistogram(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice1",7,7,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice1", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.6,0.7) GeV/c",0.08,0.145);
-	PlotSingle1DHistogram(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice2",8,8,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice2", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.7,0.8) GeV/c",0.08,0.145);
-	PlotSingle1DHistogram(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice3",9,9,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice3", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.8,0.9) GeV/c",0.08,0.145);
+    PlotSingle1DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice1",7,7,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice1", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.6,0.7) GeV/c",0.08,0.145);
+    PlotSingle1DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice2",8,8,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice2", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.7,0.8) GeV/c",0.08,0.145);
+    PlotSingle1DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice3",9,9,""),Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_GammaGamma_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice3", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.8,0.9) GeV/c",0.08,0.145);
 	
 	Double_t SlicesPt[17] = {0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0, 4., 6., 8., 10.0};
 	Double_t RebinFactorsPtSlice[16] = {10, 8, 8, 5, 5, 5, 4, 4, 4, 4, 4, 5, 5, 8, 8, 10};
 	Double_t MesonMassRange[2] = {0.0, 1.5};
-	PlotMultipleSlicesOf2DHisto(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPt_Slices.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()), "ESD_PiPlusPiNeg_InvMassPt_Slices", "Pad", MesonMassRange, fdate.Data(), "omega", 4, 5, 1, 16, SlicesPt, RebinFactorsPtSlice, "#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}", "#pi^{+}#pi^{-}",  "#pi^{+}#pi^{-}", energy);
+    PlotMultipleSlicesOf2DHistoOmega(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_PiPlusPiNeg_InvMassPt_Slices.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()), "ESD_PiPlusPiNeg_InvMassPt_Slices", "Pad", MesonMassRange, fdate.Data(), "omega", 4, 5, 1, 16, SlicesPt, RebinFactorsPtSlice, "#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}", "#pi^{+}#pi^{-}",  "#pi^{+}#pi^{-}", energy);
 	}
 
 	//loading from MCContainer and TrueConversionContainer
@@ -301,7 +301,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 		*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 		histoTemp -> Divide(histoPtWidths);
 		histoTemp -> Scale(ESD_TrueConvGamma_Pt->GetBinWidth(1));
-		PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_Photons.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_Photons", "p_{T}", "Purity of #gamma's",suffix,0,0,RangeX,RangeY,"");
+        PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_Photons.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_Photons", "p_{T}", "Purity of #gamma's",suffix,0,0,RangeX,RangeY,"");
 	}
 	
 	histoTemp = (TH1D*)ESD_TruePosPion_Pt->Clone("histoTemp");
@@ -310,7 +310,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 	histoTemp -> Divide(histoPtWidths);
 	histoTemp -> Scale(ESD_TruePosPion_Pt->GetBinWidth(1));
-	PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_PosPions.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_PosPions", "p_{T}", "Purity of #pi^{+}'s",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_PosPions.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_PosPions", "p_{T}", "Purity of #pi^{+}'s",suffix,0,0,RangeX,RangeY,"");
 	
 	histoTemp = (TH1D*)ESD_TrueNegPion_Pt->Clone("histoTemp");
 	histoTemp->Sumw2();
@@ -318,7 +318,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 	histoTemp -> Divide(histoPtWidths);
 	histoTemp -> Scale(ESD_TrueNegPion_Pt->GetBinWidth(1));
-	PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_NegPions.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_NegPions", "p_{T}", "Purity of #pi^{-}'s",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_NegPions.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_NegPions", "p_{T}", "Purity of #pi^{-}'s",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 12.;
 	RangeY[0] = 0.; RangeY[1] = 0.2;
@@ -330,7 +330,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 		*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 		histoTemp -> Divide(histoPtWidths);
 		histoTemp -> Scale(ESD_TrueConvGammaFromNeutralMeson_Pt->GetBinWidth(1));
-		PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_HowManyPhotonsFromNeutralMeson.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_HowManyPhotonsFromNeutralMeson", "p_{T}", "(true #gamma's from NM)/(true #gamma's)",suffix,0,0,RangeX,RangeY,"");
+        PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_HowManyPhotonsFromNeutralMeson.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_HowManyPhotonsFromNeutralMeson", "p_{T}", "(true #gamma's from NM)/(true #gamma's)",suffix,0,0,RangeX,RangeY,"");
 	}
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.; RangeY[1] = 1.2;
@@ -342,7 +342,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 	histoTemp -> Divide(histoPtWidths);
 	histoTemp -> Scale(binWidth);
-	PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_NeutralPions.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_NeutralPions", "p_{T}", "Purity of #pi^{0}'s",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_NeutralPions.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_NeutralPions", "p_{T}", "Purity of #pi^{0}'s",suffix,0,0,RangeX,RangeY,"");
 	delete histoTemp;
 	
 	RangeX[0] = 0.; RangeX[1] = 2.0;
@@ -353,7 +353,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 	histoTemp -> Divide(histoPtWidths);
 	histoTemp -> Scale(binWidth);
-	PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_HowManyNeutralPionsFromEta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_HowManyNeutralPionsFromEta", "p_{T}", "(true #pi^{0}'s from #eta)/(true #pi^{0}'s)",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_HowManyNeutralPionsFromEta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_HowManyNeutralPionsFromEta", "p_{T}", "(true #pi^{0}'s from #eta)/(true #pi^{0}'s)",suffix,0,0,RangeX,RangeY,"");
 	delete histoTemp;
 	
 	RangeX[0] = 0.; RangeX[1] = 7.;
@@ -364,7 +364,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	*histoTemp = *((TH1D*)histoTemp->Rebin(NumberOfPtSlices, "histoTemp1", PtSlicesRanges));
 	histoTemp -> Divide(histoPtWidths);
 	histoTemp -> Scale(binWidth);
-	PlotSingle1DHistogram(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_HowManyNeutralPionsFromOmega.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_HowManyNeutralPionsFromOmega", "p_{T}", "(true #pi^{0}'s from #omega)/(true #pi^{0}'s)",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histoTemp,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/Purity_HowManyNeutralPionsFromOmega.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"Purity_HowManyNeutralPionsFromOmega", "p_{T}", "(true #pi^{0}'s from #omega)/(true #pi^{0}'s)",suffix,0,0,RangeX,RangeY,"");
 	delete histoTemp;
 	}
 	
@@ -372,48 +372,48 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	{
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e9;
-	PlotSingle1DHistogram(MC_AllGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_AllGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_AllGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_AllGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_AllGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_AllGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(MC_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_ConvGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_ConvGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e9;
-	PlotSingle1DHistogram(MC_AllPosPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_AllPosPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_AllPosPions_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_AllPosPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_AllPosPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_AllPosPions_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e9;
-	PlotSingle1DHistogram(MC_AllNegPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_AllNegPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_AllNegPions_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_AllNegPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_AllNegPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_AllNegPions_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
-	PlotSingle1DHistogram(MC_GammaFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_GammaFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_GammaFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_GammaFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_GammaFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_GammaFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(MC_PosPionsFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_PosPionsFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_PosPionsFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_PosPionsFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_PosPionsFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_PosPionsFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(MC_NegPionsFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_NegPionsFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_NegPionsFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_NegPionsFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_NegPionsFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_NegPionsFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
-	PlotSingle1DHistogram(MC_Eta_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_Eta_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_Eta_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_Eta_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_Eta_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_Eta_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
-	PlotSingle1DHistogram(MC_EtaInAcc_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_EtaInAcc_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_EtaInAcc_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_EtaInAcc_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_EtaInAcc_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_EtaInAcc_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(MC_Omega_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_Omega_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_Omega_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_Omega_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_Omega_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_Omega_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(MC_OmegaInAcc_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_OmegaInAcc_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_OmegaInAcc_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(MC_OmegaInAcc_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/MC_OmegaInAcc_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"MC_OmegaInAcc_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	}
 
 	//now comes ploting of the True folder
@@ -421,61 +421,61 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(ESD_TrueConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueConvGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(ESD_TrueConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueConvGamma_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e7;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(ESD_TrueConvGammaFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueConvGammaFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueConvGammaFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(ESD_TrueConvGammaFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueConvGammaFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueConvGammaFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(ESD_TruePosPion_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePosPion_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePosPion_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(ESD_TruePosPion_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePosPion_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePosPion_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(ESD_TrueNegPion_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueNegPion_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueNegPion_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(ESD_TrueNegPion_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueNegPion_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueNegPion_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(ESD_TruePosPionFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePosPionFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePosPionFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(ESD_TruePosPionFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePosPionFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePosPionFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(ESD_TrueNegPionFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueNegPionFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueNegPionFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(ESD_TrueNegPionFromNeutralMeson_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueNegPionFromNeutralMeson_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueNegPionFromNeutralMeson_Pt", "p_{T} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	//2D
     RangeX[0] = 0.4; RangeX[1] = 0.9;
 	RangeY[0] = 0.0; RangeY[1] = 25.;
-	PlotSingle2DHistogram(ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}#pi^{0}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherPiPlPiMiPiZero_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}#pi^{0}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 0.45;
 	RangeY[0] = 0.0; RangeY[1] = 25.;
-	PlotSingle2DHistogram(ESD_TrueMotherGG_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherGG_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherGG_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T,#gamma#gamma} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TrueMotherGG_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherGG_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherGG_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T,#gamma#gamma} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 0.45;
 	RangeY[0] = 0.0; RangeY[1] = 25.;
-	PlotSingle2DHistogram(ESD_TrueMotherGGFromEta_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherGGFromEta_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherGGFromEta_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T,#gamma#gamma} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TrueMotherGGFromEta_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherGGFromEta_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherGGFromEta_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T,#gamma#gamma} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 0.45;
 	RangeY[0] = 0.0; RangeY[1] = 25.;
-	PlotSingle2DHistogram(ESD_TrueMotherGGFromOmega_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherGGFromOmega_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherGGFromOmega_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T,#gamma#gamma} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TrueMotherGGFromOmega_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TrueMotherGGFromOmega_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TrueMotherGGFromOmega_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T,#gamma#gamma} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.0; RangeY[1] = 20.;
-	PlotSingle2DHistogram(ESD_TruePiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNeg_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNeg_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TruePiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNeg_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNeg_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.0; RangeY[1] = 20.;
-	PlotSingle2DHistogram(ESD_TruePiPlusPiNegFromSameMother_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNegFromSameMother_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNegFromSameMother_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TruePiPlusPiNegFromSameMother_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNegFromSameMother_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNegFromSameMother_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.0; RangeY[1] = 20.;
-	PlotSingle2DHistogram(ESD_TruePiPlusPiNegFromEta_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNegFromEta_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNegFromEta_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TruePiPlusPiNegFromEta_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNegFromEta_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNegFromEta_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.0; RangeY[1] = 20.;
-	PlotSingle2DHistogram(ESD_TruePiPlusPiNegFromOmega_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNegFromOmega_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNegFromOmega_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(ESD_TruePiPlusPiNegFromOmega_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/ESD_TruePiPlusPiNegFromOmega_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_TruePiPlusPiNegFromOmega_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T,#pi^{+}#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 	
 	}
 }
@@ -520,118 +520,118 @@ void CreateQAHistosData(TString cutSelection, TString suffix, TString energy, TL
 	//1D histos export
 	RangeX[0] = 0.; RangeX[1] = 8.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
-	PlotSingle1DHistogram(histo_NEvents,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/NEvents.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"NEvents", " ", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_NEvents,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/NEvents.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"NEvents", " ", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 110.;
 	RangeY[0] = 0.1; RangeY[1] = 4e6;
-	PlotSingle1DHistogram(histo_GoodESDTracks,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/GoodESDTracks.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"GoodESDTracks", "Number of tracks", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_GoodESDTracks,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/GoodESDTracks.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"GoodESDTracks", "Number of tracks", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 25.;
 	RangeY[0] = 0.1; RangeY[1] = 1e8;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(histo_ESD_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Pt", "p_{T,#gamma}", "Events",suffix,0,1,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
+    PlotSingle1DHistogramOmega(histo_ESD_ConvGamma_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_ConvGamma_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Pt", "p_{T,#gamma}", "Events",suffix,0,1,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = -2.0; RangeX[1] = 2.0;
 	RangeY[0] = 0.1; RangeY[1] = 2.0e5;
     if (fMode!=4 && fMode!=5 && fMode!=44 && fMode!=45)
-	PlotSingle1DHistogram(histo_ESD_ConvGamma_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_ConvGamma_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Eta", "#eta_{#gamma}", "Events",suffix,0,0,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
+    PlotSingle1DHistogramOmega(histo_ESD_ConvGamma_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_ConvGamma_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_ConvGamma_Eta", "#eta_{#gamma}", "Events",suffix,0,0,RangeX,RangeY,"#pi^{0}#rightarrow#gamma#gamma#rightarrow e^{+}e^{-}e^{+}e^{-}");
 	
 	RangeX[0] = 0.; RangeX[1] = 24.9;
 	RangeY[0] = 0.1; RangeY[1] = 8.0e7;
-	PlotSingle1DHistogram(histo_PrimaryNegPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryNegPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Pt", "p_{T,#pi^{-}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryNegPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryNegPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Pt", "p_{T,#pi^{-}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 24.9;
 	RangeY[0] = 0.1; RangeY[1] = 8.0e7;
-	PlotSingle1DHistogram(histo_PrimaryPosPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryPosPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Pt", "p_{T,#pi^{+}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryPosPions_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryPosPions_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Pt", "p_{T,#pi^{+}} [GeV/c]", "Events",suffix,0,1,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 2.*TMath::Pi();
 	RangeY[0] = 3.0e6; RangeY[1] = 4.5e6;
-	PlotSingle1DHistogram(histo_PrimaryNegPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryNegPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Phi", "#varphi_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryNegPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryNegPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Phi", "#varphi_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = 0.; RangeX[1] = 2.*TMath::Pi();
 	RangeY[0] = 3.0e6; RangeY[1] = 4.5e6;
-	PlotSingle1DHistogram(histo_PrimaryPosPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryPosPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Phi", "#varphi_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryPosPions_Phi,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryPosPions_Phi.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Phi", "#varphi_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = -1.5; RangeX[1] = 1.5;
 	RangeY[0] = 0.; RangeY[1] = 1.3e6;
-	PlotSingle1DHistogram(histo_PrimaryNegPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryNegPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Eta", "#eta_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryNegPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryNegPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryNegPions_Eta", "#eta_{#pi^{-}}", "Events",suffix,0,0,RangeX,RangeY,"");
 	
 	RangeX[0] = -1.5; RangeX[1] = 1.5;
 	RangeY[0] = 0.; RangeY[1] = 1.3e6;
-	PlotSingle1DHistogram(histo_PrimaryPosPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryPosPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Eta", "#eta_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
+    PlotSingle1DHistogramOmega(histo_PrimaryPosPions_Eta,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/PrimaryPosPions_Eta.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"PrimaryPosPions_Eta", "#eta_{#pi^{+}}", "Events",suffix,0,0,RangeX,RangeY,"");
 
 	//2D histos export
 	RangeX[0] = 0.; RangeX[1] = 1.;
 	RangeY[0] = 0.001; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryNegPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryNegPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryNegPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{-} clusters");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryNegPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryNegPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryNegPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{-}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{-} clusters");
 
 	RangeX[0] = 0.; RangeX[1] = 1.;
 	RangeY[0] = 0.001; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPosPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPosPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPosPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{+}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+} clusters");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPosPions_ClsTPC,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPosPions_ClsTPC.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPosPions_ClsTPC", "TPC/findable clusters", "p_{T,#pi^{+}} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+} clusters");
 	
 	RangeX[0] = -4.; RangeX[1] = 4.;
 	RangeY[0] = 0.; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_DCAxy,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_DCAxy.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAxy", "DCA_{xy} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_DCAxy,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_DCAxy.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAxy", "DCA_{xy} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 
 	RangeX[0] = -4.; RangeX[1] = 4.;
 	RangeY[0] = 0.; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_DCAz,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_DCAz.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAz", "DCA_{z} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_DCAz,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_DCAz.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_DCAz", "DCA_{z} [cm]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 
 	RangeX[0] = 0.01; RangeX[1] = 100.;
 	RangeY[0] = -10; RangeY[1] = 10.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_TPCdEdx,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_TPCdEdx.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdx", "p [GeV/c]", "#sigma_{TPC,#pi} [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_TPCdEdx,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_TPCdEdx.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdx", "p [GeV/c]", "#sigma_{TPC,#pi} [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
 
 	RangeX[0] = 0.01; RangeX[1] = 100.;
 	RangeY[0] = 0.; RangeY[1] = 170.;
-	PlotSingle2DHistogram(histo_ESD_PrimaryPions_TPCdEdxSignal,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_TPCdEdxSignal.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdxSignal", "p [GeV/c]", "dE/dx [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
+    PlotSingle2DHistogramOmega(histo_ESD_PrimaryPions_TPCdEdxSignal,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PrimaryPions_TPCdEdxSignal.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PrimaryPions_TPCdEdxSignal", "p [GeV/c]", "dE/dx [arb. u.]",suffix,1,0,1,RangeX,RangeY,"Pion candidates");
 
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.; RangeY[1] = 20.;
-	PlotSingle2DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+}#pi^{-} pair inv. mass");
+    PlotSingle2DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPt", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#pi^{+}#pi^{-} pair inv. mass");
 
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.; RangeY[1] = 20.;
-    PlotSingle2DHistogram(histo_ESD_GammaGamma_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
+    PlotSingle2DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMass_Pt", "M_{#gamma#gamma} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
 	RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Mother_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Mother_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Mother_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Signal+Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Mother_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Mother_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Mother_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Signal+Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
 	RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_1_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_1_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_1_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_1_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_1_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_1_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
     RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_2_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_2_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_2_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_2_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_2_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_2_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
     RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_3_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_3_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_3_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_3_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_3_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_3_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     RangeX[0] = 0.4; RangeX[1] = 0.9;
     RangeY[0] = 0.; RangeY[1] = 25.;
-    PlotSingle2DHistogram(histo_ESD_Background_4_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_4_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_4_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
+    PlotSingle2DHistogramOmega(histo_ESD_Background_4_InvMass_Pt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_Background_4_InvMass_Pt.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_Background_4_InvMass_Pt", "M_{#pi^{+}#pi^{-}#pi^{0}} [GeV/c^{2}]", "p_{T} [GeV/c]",suffix,0,0,1,RangeX,RangeY,"#splitline{Background}{pp @ 7TeV}");
 
     //slices
 	RangeX[0] = 0.0; RangeX[1] = 2.;
 	RangeY[0] = 0.; RangeY[1] = 4.0e4;
 	//rho
-	PlotSingle1DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice1",4,4,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice1", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.3,0.4) GeV/c");
-	PlotSingle1DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice2",5,5,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice2", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.4,0.5) GeV/c");
-	PlotSingle1DHistogram(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice3",6,6,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice3", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.5,0.6) GeV/c");
+    PlotSingle1DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice1",4,4,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice1", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.3,0.4) GeV/c");
+    PlotSingle1DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice2",5,5,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice2", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.4,0.5) GeV/c");
+    PlotSingle1DHistogramOmega(histo_ESD_PiPlusPiNeg_InvMassPt->ProjectionX("ESD_PiPlusPiNeg_InvMassPtSlice3",6,6,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_PiPlusPiNeg_InvMassPtSlice3", "M_{#pi^{+}#pi^{-}} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.5,0.6) GeV/c");
 	
 	RangeX[0] = 0.0; RangeX[1] = 0.45;
 	RangeY[0] = 0.; RangeY[1] = 3.0e3;
 	//pi0
-	PlotSingle1DHistogram(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice1",7,7,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice1", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.6,0.7) GeV/c",0.08,0.145);
-	PlotSingle1DHistogram(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice2",8,8,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice2", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.7,0.8) GeV/c",0.08,0.145);
-	PlotSingle1DHistogram(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice3",9,9,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice3", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.8,0.9) GeV/c",0.08,0.145);
+    PlotSingle1DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice1",7,7,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMassPtSlice1.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice1", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.6,0.7) GeV/c",0.08,0.145);
+    PlotSingle1DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice2",8,8,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMassPtSlice2.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice2", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.7,0.8) GeV/c",0.08,0.145);
+    PlotSingle1DHistogramOmega(histo_ESD_GammaGamma_InvMass_Pt->ProjectionX("ESD_GammaGamma_InvMassPtSlice3",9,9,""),Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_GammaGamma_InvMassPtSlice3.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"ESD_GammaGamma_InvMassPtSlice3", "M_{#gamma#gamma} [GeV/c^{2}]", "Events",suffix,0,0,RangeX,RangeY,"p_{T}: (0.8,0.9) GeV/c",0.08,0.145);
 	
 	Double_t SlicesPt[17] = {0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0, 4., 6., 8., 10.0};
 	Double_t RebinFactorsPtSlice[16] = {10, 8, 8, 5, 5, 5, 4, 4, 4, 4, 4, 5, 5, 8, 8, 10};
 	Double_t MesonMassRange[2] = {0.0, 1.5};
-	PlotMultipleSlicesOf2DHisto(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPt_Slices.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()), "ESD_PiPlusPiNeg_InvMassPt_Slices", "Pad", MesonMassRange, fdate.Data(), "omega", 4, 5, 1, 16, SlicesPt, RebinFactorsPtSlice, "#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}", "#pi^{+}#pi^{-}",  "#pi^{+}#pi^{-}", energy);
+    PlotMultipleSlicesOf2DHistoOmega(histo_ESD_PiPlusPiNeg_InvMassPt,Form("%s/%s/%s/ExtractSignal/Plots_Data_QA/ESD_PiPlusPiNeg_InvMassPt_Slices.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()), "ESD_PiPlusPiNeg_InvMassPt_Slices", "Pad", MesonMassRange, fdate.Data(), "omega", 4, 5, 1, 16, SlicesPt, RebinFactorsPtSlice, "#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}", "#pi^{+}#pi^{-}",  "#pi^{+}#pi^{-}", energy);
 	
 }
 
@@ -699,15 +699,6 @@ void ExtractSignalPiPlPiMiPiZero(TString meson                  = "",
                                  Int_t UsrMode                  = 40,      // Mode given by user
                                  Bool_t makeQAplots             = kTRUE){
 	gROOT->Reset();
-
-    //----------- OLD LABELING ---------------
-    // mode:	0 // new output PCM-PCM     -> now 40
-    //			1 // new output PCM dalitz  -> now 47
-    //			2 // new output PCM-EMCAL   -> now 41
-    //			3 // new output PCM-PHOS    -> now 42
-    //			4 // new output EMCAL-EMCAL -> now 44
-    //			5 // new output PHOS-PHOS   -> now 45
-    //			9 // old output PCM-PCM     -> removed
 
     //------------NEW LABELING ---------------
     // mode:	40 // new output PCM-PCM
@@ -2072,13 +2063,13 @@ void ExtractSignalPiPlPiMiPiZero(TString meson                  = "",
 		{
 			Double_t ptFromPlot = fBinsOmegapPbPt[bintoplot];
 			Double_t ptToPlot = fBinsOmegapPbPt[bintoplot+1];
-			PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[bintoplot], fFitSignalInvMassBackFitPtBin[bintoplot], Form("%s/%s/%s/ExtractSignal/OmegaPlotSinglePtSignal_%i.%s",cutSelection.Data(),optionEnergy.Data(),Suffix.Data(),bintoplot,Suffix.Data()), Form("OmegaPlotSinglePtSignal_%i",bintoplot), fMesonMassRange, kFALSE, "#omega #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",ptFromPlot,ptToPlot));
+            // PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[bintoplot], fFitSignalInvMassBackFitPtBin[bintoplot], Form("%s/%s/%s/ExtractSignal/OmegaPlotSinglePtSignal_%i.%s",cutSelection.Data(),optionEnergy.Data(),Suffix.Data(),bintoplot,Suffix.Data()), Form("OmegaPlotSinglePtSignal_%i",bintoplot), fMesonMassRange, kFALSE, "#omega #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",ptFromPlot,ptToPlot));
 		}
 		if (meson.CompareTo("Eta")==0)
 		{
 			Double_t ptFromPlot = fBinsEtapPbPt[bintoplot];
 			Double_t ptToPlot = fBinsEtapPbPt[bintoplot+1];
-			PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[bintoplot], fFitSignalInvMassBackFitPtBin[bintoplot], Form("%s/%s/%s/ExtractSignal/EtaPlotSinglePtSignal_%i.%s",cutSelection.Data(),optionEnergy.Data(),Suffix.Data(),bintoplot,Suffix.Data()), Form("EtaPlotSinglePtSignal_%i",bintoplot), fMesonMassRange, kFALSE, "#eta #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",ptFromPlot,ptToPlot));
+            // PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[bintoplot], fFitSignalInvMassBackFitPtBin[bintoplot], Form("%s/%s/%s/ExtractSignal/EtaPlotSinglePtSignal_%i.%s",cutSelection.Data(),optionEnergy.Data(),Suffix.Data(),bintoplot,Suffix.Data()), Form("EtaPlotSinglePtSignal_%i",bintoplot), fMesonMassRange, kFALSE, "#eta #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",ptFromPlot,ptToPlot));
 		}
 		
 	}
@@ -2367,9 +2358,9 @@ void ProcessBckFitSubtraction(TH1D *fGammaGamma, Int_t i, Double_t * fPeakRangeD
    fHistoMappingGGInvMassBackFitPtBin[i]->Sumw2();
    
    if (meson.CompareTo("Omega")==0)
-   PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[i], fBackgroundFitPol[i], Form("%s/%s/%s/ExtractSignal/OmegaPlotSinglePt_%i.%s",cutSelection.Data(),energy.Data(),suffix.Data(),i,suffix.Data()), Form("OmegaPlotSinglePt_%i",i), fFitRangeDummy, kFALSE, "#omega #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",fBinsOmegapPbPt[i],fBinsOmegapPbPt[i+1]));
+   // PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[i], fBackgroundFitPol[i], Form("%s/%s/%s/ExtractSignal/OmegaPlotSinglePt_%i.%s",cutSelection.Data(),energy.Data(),suffix.Data(),i,suffix.Data()), Form("OmegaPlotSinglePt_%i",i), fFitRangeDummy, kFALSE, "#omega #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",fBinsOmegapPbPt[i],fBinsOmegapPbPt[i+1]));
    if (meson.CompareTo("Eta")==0)
-   PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[i], fBackgroundFitPol[i], Form("%s/%s/%s/ExtractSignal/EtaPlotSinglePt_%i.%s",cutSelection.Data(),energy.Data(),suffix.Data(),i,suffix.Data()), Form("EtaPlotSinglePt_%i",i), fFitRangeDummy, kFALSE, "#eta #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",fBinsEtapPbPt[i],fBinsEtapPbPt[i+1]));
+   // PlotWithFitSubtractedInvMassSinglePtBinOmega( fHistoMappingGGInvMassBackFitPtBin[i], fBackgroundFitPol[i], Form("%s/%s/%s/ExtractSignal/EtaPlotSinglePt_%i.%s",cutSelection.Data(),energy.Data(),suffix.Data(),i,suffix.Data()), Form("EtaPlotSinglePt_%i",i), fFitRangeDummy, kFALSE, "#eta #rightarrow #pi^{+} #pi^{-} #pi^{0}",Form("p_{T}: (%.1lf,%.1lf) GeV/c",fBinsEtapPbPt[i],fBinsEtapPbPt[i+1]));
    
    //cout<<"fHistoMappingGGInvMassBackFitPtBin Nbins = "<<fHistoMappingGGInvMassBackFitPtBin[i]->GetNbinsX()<<endl;
    //cout<<"fHistoMappingGGInvMassBackFitWithoutSignalPtBin Nbins = "<<fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetNbinsX()<<endl;
@@ -4297,7 +4288,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fBinsPt[i] = fBinsEta7TeVPt[i];
 				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta7TeVPtRebin[i];
 			}
-            fExampleBin = 5;
+            fExampleBin = 2;
 		} else if (fEnergyFlag.CompareTo("8TeV") == 0) {
 			fStartPtBin=	1;
 			fColumn = 	5;
@@ -4314,7 +4305,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 			fExampleBin = 2;
 		} else if (fEnergyFlag.CompareTo("2.76TeV") == 0) {
 			fStartPtBin=	1;
-			fColumn = 	3;
+            fColumn = 	4;
 			fRow = 		3;
 
 			if (fNBinsPt > 7) {
@@ -4325,7 +4316,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fBinsPt[i] = fBinsEta2760GeVPt[i];
 				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta2760GeVPtRebin[i];
 			}
-			fExampleBin = 4;
+            fExampleBin = 5;
 		} else if (fEnergyFlag.CompareTo("900GeV") == 0) {
 			fStartPtBin=	1;
 			fColumn = 	2;
@@ -4389,6 +4380,12 @@ void Initialize(TString setPi0, Int_t numberOfBins){
             fBGFitRange = 		new Double_t[2]; 	fBGFitRange[0]=	0.58; 	fBGFitRange[1]=	0.7; //eta 0.9
             fBGFitRangeLeft = 	new Double_t[2]; 	fBGFitRangeLeft[0]=	0.45; 	fBGFitRangeLeft[1]=	0.52;  // eta 09
 		fMesonPlotRange = 	new Double_t[2]; 	fMesonPlotRange[0]=	0.53; 	fMesonPlotRange[1]=	0.560;
+
+        // Added because of change of how integration ranges are stored
+        fMesonIntDeltaRange =      new Double_t[2];    fMesonIntDeltaRange[0]=-0.04;fMesonIntDeltaRange[1]= 0.03;
+        fMesonIntDeltaRangeWide =  new Double_t[2];    fMesonIntDeltaRangeWide[0]=-0.01;fMesonIntDeltaRangeWide[1]= 0.05;
+        fMesonIntDeltaRangeNarrow =new Double_t[2];    fMesonIntDeltaRangeNarrow[0]=-0.015;fMesonIntDeltaRangeNarrow[1]= 0.03;
+        // end
 
         fMesonIntRange = 	new Double_t[2]; 	fMesonIntRange[0] = 0.50; 	fMesonIntRange[1]=	0.57;
 		fMesonIntRangeWide = new Double_t[2]; 	fMesonIntRangeWide[0]=0.53; 	fMesonIntRangeWide[1]=0.58;

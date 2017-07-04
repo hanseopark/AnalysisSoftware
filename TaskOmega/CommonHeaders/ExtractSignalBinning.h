@@ -37,12 +37,12 @@ Int_t fBinsPi07TeVPtRebin[32] =					{2, 2, 1, 1, 1,
 												1, 1, 2, 2, 2,
 												2, 4, 4, 4, 5,
 												5, 5};
-Double_t fBinsEta7TeVPt[9] = 					{0.1, 2.5,3,3.5,
+Double_t fBinsEta7TeVPt[11] = 					{0.1, 2.5,3,3.5,
 
-												 4.0,4.5,5.0, 6.0, 10};
+                                                 4.0,4.5,5.0, 6.0, 10.,12.,15.};
 
-Int_t fBinsEta7TeVPtRebin[8] = 					{2, 10,  10,10,
-												10,10, 10,10};
+Int_t fBinsEta7TeVPtRebin[10] = 					{2, 10,  10,10,
+                                                10,10, 10,10,10,10};
 
 Double_t fBinsOmega7TevPt[12] = 					{0.1, 2.5,3,3.5,
 
