@@ -798,23 +798,17 @@
                                                         12.0, 15.0, 19.0};
     Int_t fBinsEtaPbPb2760GeVPtRebinLHC11hLessBins[14] = {    10,   8,   5,   5,   5,   5,   5,   8, 10, 10,
                                                         10, 10, 10, 10};
-    Double_t fBinsDirGammaPbPb2760GeVPtLHC11h[18]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
+    Double_t fBinsDirGammaPbPb2760GeVPtLHC11h[21]   = { 0.0, 0.4, 0.8, 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
                                                         3.5, 4.,  5.,  6.,  8.,  10., 12., 14.};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebin[17] = {2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebin[20] = {2, 2, 2, 2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   4,   8};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[17] = {2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[20] = {2, 2, 2, 2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   5,   5};
-    Double_t fBinsDirGammaPbPb2760GeVPtLHC11hVar1[17]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
-                                                        3.5, 4.,  5.,  6.,  8.,  12., 14.};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar1[16] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
-                                                           2,   2,   4,   4,   4,   4,   8};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar1[16] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
-                                                           2,   2,   4,   4,   4,   5,   5 };
-    Double_t fBinsDirGammaPbPb2760GeVPtLHC11hVar2[16]   = { 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.3, 2.6, 3.,
+    Double_t fBinsDirGammaPbPb2760GeVPtLHC11hVar2[19]   = {0.0, 0.4, 0.8, 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.3, 2.6, 3.,
                                                             3.5, 4.,  5.,  6.,  8.,  10., 14.};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[15] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[18] = {2, 2, 2, 2,   2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   4};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[15] = {2,    2,   2,  2,  2,    2,   2,   2,  2,
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[18] = {2, 2, 2, 2,    2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   5};
     Double_t fBinsPi0PbPb2760GeVPtDCALHC11h[16]     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 3.0, 4.0, 6.0, 12.};
@@ -2306,7 +2300,7 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("PbPb_2.76TeV") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
-                    fStartPtBin     = 0;
+                    fStartPtBin     = 3;
                     fColumn         = 4;
                     fRow            = 4;
 

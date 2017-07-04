@@ -223,14 +223,14 @@ function GiveBinningDirectPhotonHI()
     DoEta=0;
     DoPi0InEtaBinning=0;
 
-    echo "How many p_T bins do you want to use for the Pi0? 14(6GeV), 15(14GeV), 16(14GeV), 17(14GeV), 18(11GeV), 19 (20GeV)";
+    echo "How many p_T bins do you want to use for the Pi0? 14(6GeV), 17(14GeV), 18(14GeV), 18(11GeV), 19 (20GeV)";
     read answer
     if [ $answer = 17 ]; then
         echo "17 Bins --> Max p_T = 14 GeV ...";
         correctPi0=1
         BinsPtPi0=17
     elif [ $answer = 18 ]; then
-        echo "18 Bins --> Max p_T = 11 GeV ...";
+        echo "18 Bins --> Max p_T = 14 GeV ...";
         correctPi0=1
         BinsPtPi0=18
     elif [ $answer = 19 ]; then
@@ -1556,6 +1556,50 @@ elif [[ "$1" == *-mAddSigPbPbLHC14a1abA* ]] ; then
     MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1a_LHC14a1b_MC_A.root
     MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1a_LHC14a1b_MC_Pi0_A.root
     MCRootFileAddSigEta=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1a_LHC14a1b_MC_Eta_A.root
+    addedSig=1
+    if [ -f $DataRootFile ]; then
+        echo "The data file specified is $DataRootFile"
+        dataFileOK=1
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+    #  exit
+    fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+    else
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1
+        MCFILE=0
+    fi
+elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1aA* ]] ; then
+    MERGINGMC=1
+    DIRECTORY=$2
+    Suffix=$3
+    DataRootFile=$DIRECTORY/mergedMinBias/GammaConvV1Data_A.root
+    MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1a_MC_A.root
+    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1a_MC_Pi0_A.root
+    addedSig=1
+    if [ -f $DataRootFile ]; then
+        echo "The data file specified is $DataRootFile"
+        dataFileOK=1
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+    #  exit
+    fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+    else
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1
+        MCFILE=0
+    fi
+elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1bB* ]] ; then
+    MERGINGMC=1
+    DIRECTORY=$2
+    Suffix=$3
+    DataRootFile=$DIRECTORY/mergedMinBias/GammaConvV1Data_B.root
+    MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1b_MC_B.root
+    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1b_MC_Pi0_B.root
     addedSig=1
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"

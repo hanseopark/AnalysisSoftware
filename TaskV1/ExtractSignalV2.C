@@ -99,20 +99,37 @@ void ExtractSignalV2(   TString meson                   = "",
     TString fGammaCutSelectionRead  = fGammaCutSelection.Data();
     TString fMesonCutSelectionRead  = fMesonCutSelection.Data();
     if (addSig) {
-        cout << "running added Signal" << endl;
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelectionRead      = fEventCutSelection;
-        fGammaCutSelectionRead      = fGammaCutSelection;
-        fMesonCutSelectionRead      = fMesonCutSelection;
-        if (mode==9)
-            fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-        else if (mode==0) 
-            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-        if (mode==2 || mode==3)
-            fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-        cout << fCutSelectionRead.Data() << endl;
+        if(directphotonPlots.CompareTo("directPhoton")==0){
+            cout << "running added Signal for photons" << endl;
+            cout << fEventCutSelection.Data() << endl;
+            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"3");
+            cout << fEventCutSelection.Data() << endl;
+            fEventCutSelectionRead      = fEventCutSelection;
+            fGammaCutSelectionRead      = fGammaCutSelection;
+            fMesonCutSelectionRead      = fMesonCutSelection;
+            if (mode==9)
+                fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            else if (mode==0) 
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            if (mode==2 || mode==3)
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            cout << fCutSelectionRead.Data() << endl;
+        } else {
+            cout << "running added Signal" << endl;
+            cout << fEventCutSelection.Data() << endl;
+            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
+            cout << fEventCutSelection.Data() << endl;
+            fEventCutSelectionRead      = fEventCutSelection;
+            fGammaCutSelectionRead      = fGammaCutSelection;
+            fMesonCutSelectionRead      = fMesonCutSelection;
+            if (mode==9)
+                fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            else if (mode==0) 
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            if (mode==2 || mode==3)
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            cout << fCutSelectionRead.Data() << endl;
+        }   
     }
     
     if(optionUseMinBiasEff.CompareTo("MinBiasEffOnly")==0 && optionMC.CompareTo("kTRUE") == 0){

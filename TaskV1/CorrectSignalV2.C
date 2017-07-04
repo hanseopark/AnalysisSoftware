@@ -619,7 +619,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 TF1*  fitConst                      = new TF1("fitConst","[0]");
                 fitConst->SetLineColor(colorSec[j]);
                 histoRatioSecEffDivTrueEff[k][j]->Fit(fitConst);
-                cout << fitConst->GetParameter(0) << "\t +-" << fitConst->GetParError(0) << endl;
+                cout << "const fit  for " << nameSecMeson[j].Data() << " "<< fitConst->GetParameter(0) << "\t +-" << fitConst->GetParError(0) << endl;
 
                 if((j==0) && (foundCocktailInput || foundToyMCInput)){
                     Double_t minPtSecFitConst   = 2.5;

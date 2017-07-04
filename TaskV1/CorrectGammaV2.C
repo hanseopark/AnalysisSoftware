@@ -284,7 +284,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
     //******************* Determine max Pt *****************************************************
     Double_t                maxPtGamma                              = 0.;
-    if (isPCM && !isCalo)   maxPtGamma                              = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
+    Double_t                minPtGamma                              = 0.;
+    if (isPCM && !isCalo){
+        maxPtGamma                              = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
+        if(energy.Contains("PbPb"))
+            minPtGamma                          = histoESDConvGammaPt->GetXaxis()->GetBinLowEdge(1);
+    }
     if (isCalo && !isPCM)   maxPtGamma                              = histoESDCaloGammaPt->GetXaxis()->GetBinUpEdge(histoESDCaloGammaPt->GetNbinsX());
     
     //******************* Primary gamma correction factors (PCM and Calo) **********************
@@ -550,6 +555,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtFitSec[2]                                              = 2.4;
 
         doConstFitSec[1]                                            = kFALSE;
+    } else if (energy.Contains("PbPb_2.76TeV")) {
+        doConstFitSec[0]                                            = kFALSE;
+
+        maxPtFitSec[0]                                              = 5.;
+        maxPtFitSec[1]                                              = 6.;
+        maxPtFitSec[2]                                              = 2.4;
     }
 
     if ( hasCocktailInput && (isPCM || isCalo) ) {        
@@ -745,6 +756,21 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH1D* histoGammaSecondaryFromXConvProb_MCPt_OrBin_Unscaled[3]   = { NULL, NULL, NULL };
     TH1D* ratioGammaConvProbMCPt[3]                                 = { NULL, NULL, NULL };
     
+    if (energy.Contains("PbPb_2.76TeV")) {
+        if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) {
+            minPtFitSec[0]                                              = 1.8;
+            maxPtFitSec[0]                                              = 50.;
+            minPtFitSec[1]                                              = 1.5;
+            minPtFitSec[2]                                              = 1.2;
+            maxPtFitSec[2]                                              = 3.;
+        } else {
+            maxPtFitSec[0]                                              = 50.;
+            maxPtFitSec[1]                                              = 50.;
+            maxPtFitSec[2]                                              = 50.;
+        }
+
+    }
+
     if ( hasCocktailInput && isPCM ) {
         TF1* power                                                  = new TF1("power", "[0]/TMath::Power((x-[1]), [2])", 0, 50);
         for (Int_t k = 0; k < 3; k++) {
@@ -1194,7 +1220,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp, 24, 2.0, kBlack, kBlack);
 
         histoPileUpCorrectionFactor_PtTemp->Draw("e1");
-        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        DrawGammaLines(minPtGamma, maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
         histoPileUpCorrectionFactor_PtTemp->Draw("e1,same");
         
         if (includeHistoPileUpCorrectionFactorMC_Pt && !isRunMC) {
@@ -1222,7 +1248,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoRatioWithWithoutPileUpFit->SetLineWidth(2);
 
         histoRatioWithWithoutPileUp->Draw("e1");
-        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        DrawGammaLines(minPtGamma, maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
         histoRatioWithWithoutPileUp->Draw("e1,same");
         histoRatioWithWithoutPileUpFit->Draw("same");
         
@@ -1247,7 +1273,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaSetMarker(histoPileUpCorrectionFactorMC_Pt,        28, 2.5, kOrange+2, kOrange+2);
 
         histoPileUpCorrectionFactor_PtTemp->Draw("e1");
-        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        DrawGammaLines(minPtGamma, maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
         histoPileUpCorrectionFactor_PtTemp->Draw("e1,same");
         histoPileUpCorrectionFactor_Pt->Draw("e1,same");
         histoPileUpCorrectionFactorNoFit_Pt->Draw("e1,same");
@@ -1333,7 +1359,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             // plotting MC unscaled secondaries
             if (isPCM ) {
                 if (histoGammaTrueSecConvGammaFromX_Pt[k]){
-                    SetHistogramm(histoGammaTrueSecConvGammaFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev.}} #frac{d#it{N}}{d#it{p}_{T}} (#it{c}/GeV)",1e-10,1e-1,1.0,1.6);
+                    SetHistogramm(histoGammaTrueSecConvGammaFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev.}} #frac{d#it{N}}{d#it{p}_{T}} (#it{c}/GeV)",histoGammaTrueSecConvGammaFromX_Pt[k]->GetMinimum(0)/1000.,histoGammaTrueSecConvGammaFromX_Pt[k]->GetMaximum()*10.,1.0,1.6);
                     DrawGammaSetMarker(histoGammaTrueSecConvGammaFromX_Pt[k], markerStyleSecWithToy[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     histoGammaTrueSecConvGammaFromX_Pt[k]->Draw("same");
                     legendSecSpec->AddEntry(histoGammaTrueSecConvGammaFromX_Pt[k], "MC     ","pl");
@@ -1393,6 +1419,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //**********************************************************************************
     TCanvas* canvasSecFrac = new TCanvas("canvasSecFrac","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasSecFrac, 0.072, 0.02, 0.035, 0.09);
+
         Int_t nColumnsSec                   = 1;
         Double_t startXSecLegend            = 0.65;
         Int_t nRowsSec                      = 4;
@@ -1406,7 +1433,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         if (!hasCocktailInput) {
             for (Int_t k = 0; k < 4; k++){
                 if (histoFracAllGammaToSecFromX_Pt[k]){ 
-                    SetHistogramm(histoFracAllGammaToSecFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", -99., -99., 1.0, 0.9);
+                    SetHistogramm(histoFracAllGammaToSecFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", -99. ,-99., 1.0, 0.9);
                     DrawGammaSetMarker(histoFracAllGammaToSecFromX_Pt[k], markerStyleSec[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     histoFracAllGammaToSecFromX_Pt[k]->Draw("same");
                     legendSecFrac->AddEntry(histoFracAllGammaToSecFromX_Pt[k],Form("#gamma from %s", nameLabelSecondaries[k].Data()),"pl");
@@ -1497,7 +1524,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         
         histoGammaTruePurity_Pt->Draw();
         DrawGammaSetMarker(histoGammaTruePurity_Pt, 24, 1.5, 1, 1);
-        DrawGammaLines(0., maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
+        DrawGammaLines(minPtGamma, maxPtGamma,1.0, 1.0, 1, kGray+2, 2);
         histoGammaTruePurity_Pt->Draw("same");
         
         PutProcessLabelAndEnergyOnPlot( 0.18, 0.85, 0.035, cent, detectionProcess, "", 42, 0.03);
@@ -1520,7 +1547,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             Double_t parameterProb[1];
             fConv->GetParameters(parameterProb);
 
-            DrawGammaLines(0., maxPtGamma,parameterProb[0], parameterProb[0], 1, kGray+2, 2);
+            DrawGammaLines(minPtGamma, maxPtGamma,parameterProb[0], parameterProb[0], 1, kGray+2, 2);
             histoGammaConvProb_MCPt->Draw("same");
 
             PutProcessLabelAndEnergyOnPlot( 0.95, 0.23, 0.035, cent, detectionProcess, "", 42, 0.03,"", 1, 1.25,31);
@@ -1998,9 +2025,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         histoRatioTemp[0]->Draw("e1");
 
-        DrawGammaLines(0., maxPtGamma, 0.8, 0.8, 1,kGray+2,2);
-        DrawGammaLines(0., maxPtGamma, 1.0, 1.0, 1,kGray+2,2);
-        DrawGammaLines(0., maxPtGamma, 1.2, 1.2, 1,kGray+2,2);
+        DrawGammaLines(minPtGamma, maxPtGamma, 0.8, 0.8, 1,kGray+2,2);
+        DrawGammaLines(minPtGamma, maxPtGamma, 1.0, 1.0, 1,kGray+2,2);
+        DrawGammaLines(minPtGamma, maxPtGamma, 1.2, 1.2, 1,kGray+2,2);
 
         histoRatioTemp[0]->Draw("e1,same");
         histoRatioTemp[1]->Draw("e1,same");
@@ -2042,7 +2069,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         histoGammaCaloResolCorrEff_Pt->DrawCopy("e1");
 
-        DrawGammaLines(0., maxPtGamma,1, 1,0.5,kGray+2,2);
+        DrawGammaLines(minPtGamma, maxPtGamma,1, 1,0.5,kGray+2,2);
 
         canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     }
@@ -2094,9 +2121,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaSetMarker(histoGammaResolCorrUnfold_BinByBin_Pt,   21, 1.0, kGray+2, kGray+2);
         DrawGammaSetMarker(histoGammaResolCorrEff_Pt,               24, 1.5, kRed+2, kRed+2);
 
-        DrawGammaLines(0., maxPtGamma,1, 1,1, kGray);
-        DrawGammaLines(0., maxPtGamma,0.8, 0.8,1, kGray, 7);
-        DrawGammaLines(0., maxPtGamma,1.2, 1.2,1, kGray, 7);
+        DrawGammaLines(minPtGamma, maxPtGamma,1, 1,1, kGray);
+        DrawGammaLines(minPtGamma, maxPtGamma,0.8, 0.8,1, kGray, 7);
+        DrawGammaLines(minPtGamma, maxPtGamma,1.2, 1.2,1, kGray, 7);
         
         histoGammaResolCorrUnfold_BinByBin_Pt->DrawCopy("same");
         histoGammaResolCorrUnfold_Pt->DrawCopy("same");
@@ -2671,7 +2698,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         DrawGammaSetMarker(histoRatioGammaLegacyCorrVsUnfold, 24, 1.0, kAzure+7,  kAzure+7);
         histoRatioGammaLegacyCorrVsUnfold->DrawCopy("");
         
-        DrawGammaLines(0., maxPtGamma,1, 1,0.5);
+        DrawGammaLines(minPtGamma, maxPtGamma,1, 1,0.5);
     
     canvaskGammaSpecAlternateCorrMethods->SaveAs(Form("%s/%s_%s_GammaSpectraComparison_%s.%s",outputDir.Data(),textPi0New.Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));
     delete canvaskGammaSpecAlternateCorrMethods;
