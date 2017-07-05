@@ -166,6 +166,9 @@ void CompareDifferentDirectories(   TString FolderList              = "",
     TH1D *histoRatioClusterE[ConstNumberOfCuts];
     
     Double_t maxPt	= 0;
+
+    Bool_t readCorrectedFile[ConstNumberOfCuts];
+    Bool_t plotOnlyUncorrectedOutput = kFALSE;
     for (Int_t i=0; i< NumberOfCuts; i++){
         
         // Decode individual cutnumber
@@ -181,7 +184,10 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         FileNameCorrected[i] = Form("%s%s/%s/%s_%s_GammaConvV1Correction_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
         cout<< FileNameCorrected[i] << endl;
         Cutcorrfile[i] = new TFile(FileNameCorrected[i]);	
-        if (Cutcorrfile[i]->IsZombie()) return;
+        if (Cutcorrfile[i]->IsZombie()){
+          readCorrectedFile[i] = kFALSE;
+          plotOnlyUncorrectedOutput = kTRUE;
+        }else readCorrectedFile[i] = kTRUE;
         // read file without corrections
         FileNameUnCorrected[i] = Form("%s%s/%s/%s_%s_GammaConvV1WithoutCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
         cout<< FileNameUnCorrected[i] << endl;
@@ -199,12 +205,14 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         }	
         
         // Read histograms and rename them from the original files for each cut
-        histoCorrectedYieldCut[i]   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
-        histoCorrectedYieldCut[i]->SetName(Form("%s_%s",nameCorrectedYield.Data(),cutStringsName[i].Data()));
-        histoTrueEffiCut[i]         = (TH1D*)Cutcorrfile[i]->Get(nameEfficiency.Data());
-        histoTrueEffiCut[i]->SetName(Form("%s_%s",nameEfficiency.Data(), cutStringsName[i].Data()));
-        histoAcceptanceCut[i]       =(TH1D*)Cutcorrfile[i]->Get("fMCMesonAccepPt");
-        histoAcceptanceCut[i]->SetName(Form("AcceptPt_%s", cutStringsName[i].Data()));
+        if(readCorrectedFile[i]){
+          histoCorrectedYieldCut[i]   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
+          histoCorrectedYieldCut[i]->SetName(Form("%s_%s",nameCorrectedYield.Data(),cutStringsName[i].Data()));
+          histoTrueEffiCut[i]         = (TH1D*)Cutcorrfile[i]->Get(nameEfficiency.Data());
+          histoTrueEffiCut[i]->SetName(Form("%s_%s",nameEfficiency.Data(), cutStringsName[i].Data()));
+          histoAcceptanceCut[i]       =(TH1D*)Cutcorrfile[i]->Get("fMCMesonAccepPt");
+          histoAcceptanceCut[i]->SetName(Form("AcceptPt_%s", cutStringsName[i].Data()));
+        }
         histoRawYieldCut[i]         = (TH1D*)Cutuncorrfile[i]->Get("histoYieldMesonPerEvent");
         histoRawYieldCut[i]->SetName(Form("histoYieldMesonPerEvent_%s",cutStringsName[i].Data()));
         histoMassCut[i]             = (TH1D*)Cutuncorrfile[i]->Get("histoMassGaussianMeson");
@@ -218,15 +226,17 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         else isClusterE = kFALSE;
         
         // Calculate ratios for comparisons
-        histoRatioCorrectedYieldCut[i] = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s",cutStringsName[i].Data()));
-        histoRatioCorrectedYieldCut[i]->Divide(histoRatioCorrectedYieldCut[i],histoCorrectedYieldCut[0],1.,1.,"B");
-        if (i > 0){
-            maxPt= histoCorrectedYieldCut[i]->GetBinCenter(histoCorrectedYieldCut[i]->GetNbinsX()) + 0.5* histoCorrectedYieldCut[i]->GetBinWidth(histoCorrectedYieldCut[i]->GetNbinsX());
+        if(readCorrectedFile[i]){
+          histoRatioCorrectedYieldCut[i] = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s",cutStringsName[i].Data()));
+          histoRatioCorrectedYieldCut[i]->Divide(histoRatioCorrectedYieldCut[i],histoCorrectedYieldCut[0],1.,1.,"B");
+          if (i > 0){
+              maxPt= histoCorrectedYieldCut[i]->GetBinCenter(histoCorrectedYieldCut[i]->GetNbinsX()) + 0.5* histoCorrectedYieldCut[i]->GetBinWidth(histoCorrectedYieldCut[i]->GetNbinsX());
+          }
+          histoRatioTrueEffiCut[i]    = (TH1D*) histoTrueEffiCut[i]->Clone(Form("histoRatioTrueEffiCut_%s",cutStringsName[i].Data()));
+          histoRatioTrueEffiCut[i]->Divide(histoRatioTrueEffiCut[i],histoTrueEffiCut[0],1.,1.,"B");
+          histoRatioAcceptanceCut[i]  = (TH1D*) histoAcceptanceCut[i]->Clone(Form("histoRatioAcceptanceCut_%s",cutStringsName[i].Data()));
+          histoRatioAcceptanceCut[i]->Divide(histoRatioAcceptanceCut[i],histoAcceptanceCut[0],1.,1.,"B");
         }
-        histoRatioTrueEffiCut[i]    = (TH1D*) histoTrueEffiCut[i]->Clone(Form("histoRatioTrueEffiCut_%s",cutStringsName[i].Data()));
-        histoRatioTrueEffiCut[i]->Divide(histoRatioTrueEffiCut[i],histoTrueEffiCut[0],1.,1.,"B");
-        histoRatioAcceptanceCut[i]  = (TH1D*) histoAcceptanceCut[i]->Clone(Form("histoRatioAcceptanceCut_%s",cutStringsName[i].Data()));
-        histoRatioAcceptanceCut[i]->Divide(histoRatioAcceptanceCut[i],histoAcceptanceCut[0],1.,1.,"B");
 
         histoRatioRawYieldCut[i]    = (TH1D*) histoRawYieldCut[i]->Clone(Form("histoRatioRawYieldCut_%s",cutStringsName[i].Data()));
         histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"B");
@@ -353,303 +363,308 @@ void CompareDifferentDirectories(   TString FolderList              = "",
     //******************* Compare Corrected Yields ********************************************
     //*****************************************************************************************
     // Define canvas
-    TCanvas* canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);  
-    DrawGammaCanvasSettings( canvasCorrectedYieldMeson,  0.13, 0.02, 0.02, 0.09);
-    // Define upper panel
-    TPad* padCorrectedYield = new TPad("padCorrectedYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
-    DrawGammaPadSettings( padCorrectedYield, 0.12, 0.02, 0.02, 0.);
-    padCorrectedYield->SetLogy(1);
-    padCorrectedYield->Draw();
-    // Define lower panel
-    TPad* padCorrectedYieldRatios = new TPad("padCorrectedYieldRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
-    DrawGammaPadSettings( padCorrectedYieldRatios, 0.12, 0.02, 0.0, 0.2);
-    padCorrectedYieldRatios->SetLogy(0);
-    padCorrectedYieldRatios->Draw();
+    if(!plotOnlyUncorrectedOutput){
+      TCanvas* canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);
+      DrawGammaCanvasSettings( canvasCorrectedYieldMeson,  0.13, 0.02, 0.02, 0.09);
+      // Define upper panel
+      TPad* padCorrectedYield = new TPad("padCorrectedYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
+      DrawGammaPadSettings( padCorrectedYield, 0.12, 0.02, 0.02, 0.);
+      padCorrectedYield->SetLogy(1);
+      padCorrectedYield->Draw();
+      // Define lower panel
+      TPad* padCorrectedYieldRatios = new TPad("padCorrectedYieldRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
+      DrawGammaPadSettings( padCorrectedYieldRatios, 0.12, 0.02, 0.0, 0.2);
+      padCorrectedYieldRatios->SetLogy(0);
+      padCorrectedYieldRatios->Draw();
 
-    // Plot corrected yield in upper panel
-    padCorrectedYield->cd();			
-        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032); 
+      // Plot corrected yield in upper panel
+      padCorrectedYield->cd();
+          TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
+          for(Int_t i = 0; i< NumberOfCuts; i++){
+              if(i == 0){
+                  DrawAutoGammaMesonHistos( histoCorrectedYieldCut[i],
+                                          "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)",
+                                          kTRUE, 5., 5e-10,kTRUE,
+                                          kFALSE, 0.0, 0.030,
+                                          kFALSE, 0., 10.);
+                  DrawGammaSetMarker(histoCorrectedYieldCut[i], 20, 1., color[0], color[0]);
+                  histoCorrectedYieldCut[i]->DrawCopy("e1,p");
+                  legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[i], Form("standard: %s",cutStringsName[i].Data()));
+              }
+              else{
+                  if(i<20){
+                      DrawGammaSetMarker(histoCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
+                  } else {
+                      DrawGammaSetMarker(histoCorrectedYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                  }
+                  histoCorrectedYieldCut[i]->DrawCopy("same,e1,p");
+                  legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[i], cutStringsName[i].Data());
+              }
+
+          }
+          legendCorrectedYieldMeson->Draw();
+          // Labeling of plot
+          TLatex *labelCollisionSystem3 = new TLatex(0.55,0.91,collisionSystem.Data());
+          SetStyleTLatex( labelCollisionSystem3, 0.038,4);
+          labelCollisionSystem3->Draw();
+          if (optionPeriod.CompareTo("No") != 0){
+              TLatex *labelPeriod = new TLatex(0.55,0.86,optionPeriod.Data());
+              SetStyleTLatex( labelPeriod, 0.038,4);
+              labelPeriod->Draw();
+          }
+          if (labelDetProcess) labelDetProcess->Draw();
+          // plot ratio of corrected yields in lower panel
+          padCorrectedYieldRatios->cd();
+          for(Int_t i = 0; i< NumberOfCuts; i++){
+              if(i==0){
+                  // Set ratio min and max
+                  Double_t minYRatio = 0.45;
+                  Double_t maxYRatio = 1.55;
+                  if (mode != 0 && mode!= 1 ){
+                      minYRatio = 0.75;
+                      maxYRatio = 1.55;
+                  }
+                  if (cutVariationName.Contains("LHC12NL") || cutVariationName.Contains("LHC12-MultWeight")){
+                      minYRatio = 0.81;
+                      maxYRatio = 1.19;
+                  }
+                  SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                  DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
+                  histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                  histoRatioCorrectedYieldCut[i]->DrawCopy("p,e1");
+              }
+              else{
+                  if(i<20){
+                      DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
+                  } else {
+                      DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                  }
+                  histoRatioCorrectedYieldCut[i]->DrawCopy("same,e1,p");
+              }
+          }
+          DrawGammaLines(0., maxPt,1., 1.,0.1);
+
+      canvasCorrectedYieldMeson->Update();
+      canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield.%s",outputDir.Data(), meson.Data(),prefix2.Data(),suffix.Data()));
+      delete canvasCorrectedYieldMeson;
+    }
+        
+    //**************************************************************************************
+    //********************* Plotting Efficiency *********************************************
+    //**************************************************************************************
+    TLatex *labelCollisionSystem4 = new TLatex(0.55,0.10,collisionSystem.Data());
+    SetStyleTLatex( labelCollisionSystem4, 0.038,4);
+    TLatex* labelDetProcess2 = NULL;
+    // Define canvas
+    if(!plotOnlyUncorrectedOutput){
+      TCanvas* canvasTrueEffiMeson = new TCanvas("canvasTrueEffiMeson","",1350,1500);  // gives the page size
+      DrawGammaCanvasSettings( canvasTrueEffiMeson,  0.13, 0.02, 0.02, 0.09);
+      // Define upper panel
+      TPad* padTrueEffi = new TPad("padTrueEffi", "", 0., 0.25, 1., 1.,-1, -1, -2);
+      DrawGammaPadSettings( padTrueEffi, 0.12, 0.02, 0.04, 0.);
+      padTrueEffi->Draw();
+      // Define lower panel
+      TPad* padTrueEffiRatios = new TPad("padTrueEffiRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+      DrawGammaPadSettings( padTrueEffiRatios, 0.12, 0.02, 0.0, 0.2);
+      padTrueEffiRatios->Draw();
+
+        // draw efficiency in upper panel
+        padTrueEffi->cd();
+  //       if (mode == 2 || mode == 3 ) padTrueEffi->SetLogy(1);
+  //       else padTrueEffi->SetLogy(0);
+
+        TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.93-0.03*NumberOfCuts,0.3,0.93, 1500*0.75*0.032);
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
-                DrawAutoGammaMesonHistos( histoCorrectedYieldCut[i],
-                                        "", "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)",
-                                        kTRUE, 5., 5e-10,kTRUE,
-                                        kFALSE, 0.0, 0.030,
+                DrawGammaSetMarker(histoTrueEffiCut[i], 20, 1., color[0], color[0]);
+                DrawAutoGammaMesonHistos( histoTrueEffiCut[i],
+                                        "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{%s}",textMeson.Data()),
+                                        kTRUE, 5., 10e-10,kFALSE,
+                                        kTRUE, -0.1, 0.00030,
                                         kFALSE, 0., 10.);
-                DrawGammaSetMarker(histoCorrectedYieldCut[i], 20, 1., color[0], color[0]);
-                histoCorrectedYieldCut[i]->DrawCopy("e1,p");
-                legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[i], Form("standard: %s",cutStringsName[i].Data()));
-            }
-            else{
+                if (mode == 9 || mode == 0 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
+  //               if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(1.e-7,2);
+                if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.07);
+                if (mode == 4 || mode == 5 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.7);
+                histoTrueEffiCut[i]->DrawCopy("e1,p");
+                legendEffiMeson->AddEntry(histoTrueEffiCut[i],Form("standard: %s",cutStringsName[i].Data()));
+            } else {
                 if(i<20){
-                    DrawGammaSetMarker(histoCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
+                    DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
                 } else {
-                    DrawGammaSetMarker(histoCorrectedYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                    DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i-20],color[i-20]);
                 }
-                histoCorrectedYieldCut[i]->DrawCopy("same,e1,p");
-                legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[i], cutStringsName[i].Data());
+                histoTrueEffiCut[i]->DrawCopy("same,e1,p");
+                legendEffiMeson->AddEntry(histoTrueEffiCut[i],cutStringsName[i].Data());
             }
-            
         }
-        legendCorrectedYieldMeson->Draw();
-        // Labeling of plot		
-        TLatex *labelCollisionSystem3 = new TLatex(0.55,0.91,collisionSystem.Data());
-        SetStyleTLatex( labelCollisionSystem3, 0.038,4);
-        labelCollisionSystem3->Draw();
+        legendEffiMeson->Draw();
+
+        // Efficiency plot labeling
+        labelCollisionSystem4->Draw();
         if (optionPeriod.CompareTo("No") != 0){
-            TLatex *labelPeriod = new TLatex(0.55,0.86,optionPeriod.Data());
+            TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
             SetStyleTLatex( labelPeriod, 0.038,4);
             labelPeriod->Draw();
-        }	   
-        if (labelDetProcess) labelDetProcess->Draw();	
-        // plot ratio of corrected yields in lower panel	
-        padCorrectedYieldRatios->cd();
+            if (detProcess.CompareTo("")!= 0){
+                labelDetProcess2 = new TLatex(0.55,0.86,detProcess.Data());
+                SetStyleTLatex( labelDetProcess2, 0.038,4);
+                labelDetProcess2->Draw();
+            }
+        } else {
+            if (detProcess.CompareTo("")!= 0){
+                labelDetProcess2 = new TLatex(0.55,0.05,detProcess.Data());
+                SetStyleTLatex( labelDetProcess2, 0.038,4);
+                labelDetProcess2->Draw();
+            }
+        }
+
+        // Draw ratio of efficiencies in lower panel
+        padTrueEffiRatios->cd();
+        if( optionEnergy.Contains("Pb") ) padTrueEffiRatios->SetLogy(0);
+        else padTrueEffiRatios->SetLogy(0);
+
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
-                // Set ratio min and max
                 Double_t minYRatio = 0.45;
                 Double_t maxYRatio = 1.55;
-                if (mode != 0 && mode!= 1 ){
-                    minYRatio = 0.75;
-                    maxYRatio = 1.55;
+                if (cutVariationName.Contains("Weighting")){
+                      minYRatio = 0.75;
+                      maxYRatio = 1.25;
                 }
                 if (cutVariationName.Contains("LHC12NL") || cutVariationName.Contains("LHC12-MultWeight")){
                     minYRatio = 0.81;
                     maxYRatio = 1.19;
                 }
-                SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
-                DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
-                histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-                histoRatioCorrectedYieldCut[i]->DrawCopy("p,e1");
-            }
-            else{
+                SetStyleHistoTH1ForGraphs(histoRatioTrueEffiCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20, 1.,color[0],color[0]);
+                histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                histoRatioTrueEffiCut[i]->DrawCopy("p,e1");
+            } else{
                 if(i<20){
-                    DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
+                    DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
                 } else {
-                    DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                    DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20+i, 1.,color[i-20],color[i-20]);
                 }
-                histoRatioCorrectedYieldCut[i]->DrawCopy("same,e1,p");
+                histoRatioTrueEffiCut[i]->DrawCopy("same,e1,p");
+            }
+            DrawGammaLines(0., maxPt,1., 1.,0.1);
+            DrawGammaLines(0., maxPt, 1.1, 1.1, 0.1, kGray+1, 7);
+            DrawGammaLines(0., maxPt, 0.9, 0.9, 0.1, kGray+1, 7);
+            if (cutVariationName.Contains("Weighting")){
+              DrawGammaLines(0., maxPt, 1.05, 1.05, 0.1, kGray+1, 9);
+              DrawGammaLines(0., maxPt, 0.95, 0.95, 0.1, kGray+1, 9);
             }
         }
-        DrawGammaLines(0., maxPt,1., 1.,0.1);
 
-    canvasCorrectedYieldMeson->Update();
-    canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield.%s",outputDir.Data(), meson.Data(),prefix2.Data(),suffix.Data()));
-    delete canvasCorrectedYieldMeson;
-
-        
-    //**************************************************************************************
-    //********************* Plotting Efficiency *********************************************
-    //**************************************************************************************
-    // Define canvas
-    TCanvas* canvasTrueEffiMeson = new TCanvas("canvasTrueEffiMeson","",1350,1500);  // gives the page size
-    DrawGammaCanvasSettings( canvasTrueEffiMeson,  0.13, 0.02, 0.02, 0.09);
-    // Define upper panel
-    TPad* padTrueEffi = new TPad("padTrueEffi", "", 0., 0.25, 1., 1.,-1, -1, -2);
-    DrawGammaPadSettings( padTrueEffi, 0.12, 0.02, 0.04, 0.);
-    padTrueEffi->Draw();
-    // Define lower panel
-    TPad* padTrueEffiRatios = new TPad("padTrueEffiRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-    DrawGammaPadSettings( padTrueEffiRatios, 0.12, 0.02, 0.0, 0.2);
-    padTrueEffiRatios->Draw();
-
-      // draw efficiency in upper panel
-      padTrueEffi->cd();
-//       if (mode == 2 || mode == 3 ) padTrueEffi->SetLogy(1);
-//       else padTrueEffi->SetLogy(0);
-
-      TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.93-0.03*NumberOfCuts,0.3,0.93, 1500*0.75*0.032); 
-      for(Int_t i = 0; i< NumberOfCuts; i++){
-          if(i == 0){
-              DrawGammaSetMarker(histoTrueEffiCut[i], 20, 1., color[0], color[0]);
-              DrawAutoGammaMesonHistos( histoTrueEffiCut[i],
-                                      "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{%s}",textMeson.Data()),
-                                      kTRUE, 5., 10e-10,kFALSE,
-                                      kTRUE, -0.1, 0.00030,
-                                      kFALSE, 0., 10.);
-              if (mode == 9 || mode == 0 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
-//               if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(1.e-7,2);
-              if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.07); 
-              if (mode == 4 || mode == 5 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.7); 
-              histoTrueEffiCut[i]->DrawCopy("e1,p");
-              legendEffiMeson->AddEntry(histoTrueEffiCut[i],Form("standard: %s",cutStringsName[i].Data()));
-          } else {			
-              if(i<20){
-                  DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
-              } else {
-                  DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i-20],color[i-20]);
-              }
-              histoTrueEffiCut[i]->DrawCopy("same,e1,p");
-              legendEffiMeson->AddEntry(histoTrueEffiCut[i],cutStringsName[i].Data());
-          }
-      }
-      legendEffiMeson->Draw();
-      
-      // Efficiency plot labeling
-      TLatex *labelCollisionSystem4 = new TLatex(0.55,0.10,collisionSystem.Data());
-      SetStyleTLatex( labelCollisionSystem4, 0.038,4);
-      labelCollisionSystem4->Draw();		
-      TLatex* labelDetProcess2 = NULL;
-      if (optionPeriod.CompareTo("No") != 0){
-          TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
-          SetStyleTLatex( labelPeriod, 0.038,4);
-          labelPeriod->Draw();
-          if (detProcess.CompareTo("")!= 0){
-              labelDetProcess2 = new TLatex(0.55,0.86,detProcess.Data());
-              SetStyleTLatex( labelDetProcess2, 0.038,4);
-              labelDetProcess2->Draw();			
-          }
-      } else {   
-          if (detProcess.CompareTo("")!= 0){
-              labelDetProcess2 = new TLatex(0.55,0.05,detProcess.Data());
-              SetStyleTLatex( labelDetProcess2, 0.038,4);
-              labelDetProcess2->Draw();			
-          }
-      }	   
-      
-      // Draw ratio of efficiencies in lower panel
-      padTrueEffiRatios->cd();
-      if( optionEnergy.Contains("Pb") ) padTrueEffiRatios->SetLogy(0);
-      else padTrueEffiRatios->SetLogy(0);
-
-      for(Int_t i = 0; i< NumberOfCuts; i++){
-          if(i==0){
-              Double_t minYRatio = 0.45;
-              Double_t maxYRatio = 1.55;
-              if (cutVariationName.Contains("Weighting")){
-                    minYRatio = 0.75;
-                    maxYRatio = 1.25;
-              }
-              if (cutVariationName.Contains("LHC12NL") || cutVariationName.Contains("LHC12-MultWeight")){
-                  minYRatio = 0.81;
-                  maxYRatio = 1.19;
-              }
-              SetStyleHistoTH1ForGraphs(histoRatioTrueEffiCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
-              DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20, 1.,color[0],color[0]);
-              histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-              histoRatioTrueEffiCut[i]->DrawCopy("p,e1");
-          } else{
-              if(i<20){
-                  DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
-              } else {
-                  DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20+i, 1.,color[i-20],color[i-20]);
-              }
-              histoRatioTrueEffiCut[i]->DrawCopy("same,e1,p");
-          }
-          DrawGammaLines(0., maxPt,1., 1.,0.1);
-          DrawGammaLines(0., maxPt, 1.1, 1.1, 0.1, kGray+1, 7);
-          DrawGammaLines(0., maxPt, 0.9, 0.9, 0.1, kGray+1, 7);
-          if (cutVariationName.Contains("Weighting")){              
-            DrawGammaLines(0., maxPt, 1.05, 1.05, 0.1, kGray+1, 9);
-            DrawGammaLines(0., maxPt, 0.95, 0.95, 0.1, kGray+1, 9);
-          }    
-      }
-      
-    canvasTrueEffiMeson->Update();
-    canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
-    delete canvasTrueEffiMeson;
+      canvasTrueEffiMeson->Update();
+      canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+      delete canvasTrueEffiMeson;
+    }
 
     //**************************************************************************************
     //********************* Plotting Acceptance *********************************************
     //**************************************************************************************
     // Define canvas
-    TCanvas* canvasAcceptanceMeson = new TCanvas("canvasAcceptanceMeson","",1350,1500);  // gives the page size
-    DrawGammaCanvasSettings( canvasAcceptanceMeson,  0.13, 0.02, 0.02, 0.09);
-    // Define upper panel
-    TPad* padAcceptance = new TPad("padAcceptance", "", 0., 0.25, 1., 1.,-1, -1, -2);
-    DrawGammaPadSettings( padAcceptance, 0.12, 0.02, 0.04, 0.);
-    padAcceptance->Draw();
-    // Define lower panel
-    TPad* padAcceptanceRatios = new TPad("padAcceptanceRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
-    DrawGammaPadSettings( padAcceptanceRatios, 0.12, 0.02, 0.0, 0.2);
-    padAcceptanceRatios->Draw();
+    if(!plotOnlyUncorrectedOutput){
+      TCanvas* canvasAcceptanceMeson = new TCanvas("canvasAcceptanceMeson","",1350,1500);  // gives the page size
+      DrawGammaCanvasSettings( canvasAcceptanceMeson,  0.13, 0.02, 0.02, 0.09);
+      // Define upper panel
+      TPad* padAcceptance = new TPad("padAcceptance", "", 0., 0.25, 1., 1.,-1, -1, -2);
+      DrawGammaPadSettings( padAcceptance, 0.12, 0.02, 0.04, 0.);
+      padAcceptance->Draw();
+      // Define lower panel
+      TPad* padAcceptanceRatios = new TPad("padAcceptanceRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+      DrawGammaPadSettings( padAcceptanceRatios, 0.12, 0.02, 0.0, 0.2);
+      padAcceptanceRatios->Draw();
 
-      // draw efficiency in upper panel
-      padAcceptance->cd();
-//       if (mode == 2 || mode == 3 ) padAcceptance->SetLogy(1);
-//       else padAcceptance->SetLogy(0);
+        // draw efficiency in upper panel
+        padAcceptance->cd();
+  //       if (mode == 2 || mode == 3 ) padAcceptance->SetLogy(1);
+  //       else padAcceptance->SetLogy(0);
 
-      Double_t minAccept = 1;
-      for (Int_t j = 1; j < histoAcceptanceCut[0]->GetNbinsX()+1; j++){
-          if (histoAcceptanceCut[0]->GetBinContent(j) > 0){
-            if (histoAcceptanceCut[0]->GetBinContent(j) < minAccept) minAccept = histoAcceptanceCut[0]->GetBinContent(j);
-          }  
-      }  
-      
-      TLegend* legendAcceptance = GetAndSetLegend2(0.55, 0.93-(1.1*NumberOfCuts*0.038), 0.95, 0.93,38);
-      for(Int_t i = 0; i< NumberOfCuts; i++){
-          if(i == 0){
-              DrawGammaSetMarker(histoAcceptanceCut[i], 20, 1., color[0], color[0]);
-              DrawAutoGammaMesonHistos( histoAcceptanceCut[i],
-                                      "", "#it{p}_{T} (GeV/#it{c})", Form("A_{%s}",textMeson.Data()),
-                                      kTRUE, 1.2, minAccept/1.5, kFALSE,
-                                      kFALSE, -0.1, 0.00030,
-                                      kFALSE, 0., 10.);
-//               if (mode == 9 || mode == 0 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
-//               if (mode == 2 || mode == 3 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(1.e-7,2);
-              histoAcceptanceCut[i]->DrawCopy("e1,p");
-              legendAcceptance->AddEntry(histoAcceptanceCut[i],Form("standard: %s",cutStringsName[i].Data()));
-          } else {          
-              if(i<20){
-                  DrawGammaSetMarker(histoAcceptanceCut[i], 20+i, 1.,color[i],color[i]);
-              } else {
-                  DrawGammaSetMarker(histoAcceptanceCut[i], 20+i, 1.,color[i-20],color[i-20]);
-              }
-              histoAcceptanceCut[i]->DrawCopy("same,e1,p");
-              legendAcceptance->AddEntry(histoAcceptanceCut[i],cutStringsName[i].Data());
-          }
-      }
-      legendAcceptance->Draw();
-      
-      // Efficiency plot labeling
-      TLatex *labelCollisionSystem5 = new TLatex(0.55,0.10,collisionSystem.Data());
-      SetStyleTLatex( labelCollisionSystem5, 0.038,4);
-      labelCollisionSystem5->Draw();        
-      TLatex* labelDetProcess3 = NULL;
-      if (optionPeriod.CompareTo("No") != 0){
-          TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
-          SetStyleTLatex( labelPeriod, 0.038,4);
-          labelPeriod->Draw();
-          if (detProcess.CompareTo("")!= 0){
-              labelDetProcess3 = new TLatex(0.55,0.86,detProcess.Data());
-              SetStyleTLatex( labelDetProcess3, 0.038,4);
-              labelDetProcess3->Draw();         
-          }
-      } else {   
-          if (detProcess.CompareTo("")!= 0){
-              labelDetProcess3 = new TLatex(0.55,0.05,detProcess.Data());
-              SetStyleTLatex( labelDetProcess3, 0.038,4);
-              labelDetProcess3->Draw();         
-          }
-      }    
-      
-      // Draw ratio of efficiencies in lower panel
-      padAcceptanceRatios->cd();
-      if( optionEnergy.Contains("Pb") ) padAcceptanceRatios->SetLogy(0);
-      else padAcceptanceRatios->SetLogy(0);
+        Double_t minAccept = 1;
+        for (Int_t j = 1; j < histoAcceptanceCut[0]->GetNbinsX()+1; j++){
+            if (histoAcceptanceCut[0]->GetBinContent(j) > 0){
+              if (histoAcceptanceCut[0]->GetBinContent(j) < minAccept) minAccept = histoAcceptanceCut[0]->GetBinContent(j);
+            }
+        }
 
-      for(Int_t i = 0; i< NumberOfCuts; i++){
-          if(i==0){
-              Double_t minYRatio = 0.85;
-              Double_t maxYRatio = 1.15;
-              SetStyleHistoTH1ForGraphs(histoRatioAcceptanceCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
-              DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20, 1.,color[0],color[0]);
-              histoRatioAcceptanceCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-              histoRatioAcceptanceCut[i]->DrawCopy("p,e1");
-          } else{
-              if(i<20){
-                  DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20+i, 1.,color[i],color[i]);
-              } else {
-                  DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20+i, 1.,color[i-20],color[i-20]);
-              }
-              histoRatioAcceptanceCut[i]->DrawCopy("same,e1,p");
-          }
-          DrawGammaLines(0., maxPt,1., 1.,0.1);
-      }
-      
-    canvasAcceptanceMeson->Update();
-    canvasAcceptanceMeson->SaveAs(Form("%s/%s_%s_Acceptance.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
-    delete canvasAcceptanceMeson;
+        TLegend* legendAcceptance = GetAndSetLegend2(0.55, 0.93-(1.1*NumberOfCuts*0.038), 0.95, 0.93,38);
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i == 0){
+                DrawGammaSetMarker(histoAcceptanceCut[i], 20, 1., color[0], color[0]);
+                DrawAutoGammaMesonHistos( histoAcceptanceCut[i],
+                                        "", "#it{p}_{T} (GeV/#it{c})", Form("A_{%s}",textMeson.Data()),
+                                        kTRUE, 1.2, minAccept/1.5, kFALSE,
+                                        kFALSE, -0.1, 0.00030,
+                                        kFALSE, 0., 10.);
+  //               if (mode == 9 || mode == 0 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
+  //               if (mode == 2 || mode == 3 )histoAcceptanceCut[i]->GetYaxis()->SetRangeUser(1.e-7,2);
+                histoAcceptanceCut[i]->DrawCopy("e1,p");
+                legendAcceptance->AddEntry(histoAcceptanceCut[i],Form("standard: %s",cutStringsName[i].Data()));
+            } else {
+                if(i<20){
+                    DrawGammaSetMarker(histoAcceptanceCut[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoAcceptanceCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoAcceptanceCut[i]->DrawCopy("same,e1,p");
+                legendAcceptance->AddEntry(histoAcceptanceCut[i],cutStringsName[i].Data());
+            }
+        }
+        legendAcceptance->Draw();
+
+        // Efficiency plot labeling
+        TLatex *labelCollisionSystem5 = new TLatex(0.55,0.10,collisionSystem.Data());
+        SetStyleTLatex( labelCollisionSystem5, 0.038,4);
+        labelCollisionSystem5->Draw();
+        TLatex* labelDetProcess3 = NULL;
+        if (optionPeriod.CompareTo("No") != 0){
+            TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
+            SetStyleTLatex( labelPeriod, 0.038,4);
+            labelPeriod->Draw();
+            if (detProcess.CompareTo("")!= 0){
+                labelDetProcess3 = new TLatex(0.55,0.86,detProcess.Data());
+                SetStyleTLatex( labelDetProcess3, 0.038,4);
+                labelDetProcess3->Draw();
+            }
+        } else {
+            if (detProcess.CompareTo("")!= 0){
+                labelDetProcess3 = new TLatex(0.55,0.05,detProcess.Data());
+                SetStyleTLatex( labelDetProcess3, 0.038,4);
+                labelDetProcess3->Draw();
+            }
+        }
+
+        // Draw ratio of efficiencies in lower panel
+        padAcceptanceRatios->cd();
+        if( optionEnergy.Contains("Pb") ) padAcceptanceRatios->SetLogy(0);
+        else padAcceptanceRatios->SetLogy(0);
+
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i==0){
+                Double_t minYRatio = 0.85;
+                Double_t maxYRatio = 1.15;
+                SetStyleHistoTH1ForGraphs(histoRatioAcceptanceCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20, 1.,color[0],color[0]);
+                histoRatioAcceptanceCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                histoRatioAcceptanceCut[i]->DrawCopy("p,e1");
+            } else{
+                if(i<20){
+                    DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoRatioAcceptanceCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoRatioAcceptanceCut[i]->DrawCopy("same,e1,p");
+            }
+            DrawGammaLines(0., maxPt,1., 1.,0.1);
+        }
+
+      canvasAcceptanceMeson->Update();
+      canvasAcceptanceMeson->SaveAs(Form("%s/%s_%s_Acceptance.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+      delete canvasAcceptanceMeson;
+    }
     
     //**************************************************************************************
     //********************* Plotting Mass **************************************************
@@ -912,7 +927,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
             if(i == 0){
               DrawGammaSetMarker(histoClusterE[i], 20, 1., color[0], color[0]);
               DrawAutoGammaMesonHistos( histoClusterE[i],
-                                        "", "#it{p}_{T} (GeV/#it{c})", "cluster E (GeV)",
+                                        "", "cluster E (GeV)", "N_{cluster}/#it{N}_{ev}",
                                         kTRUE, 10., 1e-10, kTRUE,
                                         kFALSE, 0.0, 0.030,
                                         kFALSE, 0., 10.);
@@ -936,7 +951,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
               // Set ratio min and max
               Double_t minYRatio = 0.45;
               Double_t maxYRatio = 1.55; //qui
-              SetStyleHistoTH1ForGraphs(histoRatioClusterE[i], "#it{p}_{T} (GeV/#it{c})", "cluster E (GeV)", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+              SetStyleHistoTH1ForGraphs(histoRatioClusterE[i], "cluster E (GeV)", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
               DrawGammaSetMarker(histoRatioClusterE[i], 20, 1.,color[0],color[0]);
               histoRatioClusterE[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
               histoRatioClusterE[i]->DrawCopy("p,e1");
@@ -960,6 +975,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
   //*************************************************************************************************
   //******************** Output of the systematic Error due to Signal extraction for Pi0 ************
   //*************************************************************************************************
+  if(!plotOnlyUncorrectedOutput){
     // Determine number of bins
     Int_t NBinsPt = histoCorrectedYieldCut[0]->GetNbinsX();
     const Int_t NBinstPtConst = NBinsPt+1;
@@ -1123,5 +1139,5 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_%s",meson.Data(),cutVariationName.Data()),TObject::kOverwrite);
     SystematicErrorFile->Write();
     SystematicErrorFile->Close();
-
+  }
 }

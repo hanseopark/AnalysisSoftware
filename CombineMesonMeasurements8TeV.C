@@ -175,7 +175,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0 trigger", "EMC-L1 trigger"};
     TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
     TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
-    Double_t maxSecCorr[4]                      = { 0.15, 0.0020, 0.00035, 0.045};
+    Double_t maxSecCorr[4]                      = { 0.05, 0.009, 0.00017, 0.035};
     
     Color_t  colorDet[11];
     Color_t  colorDetMC[11];

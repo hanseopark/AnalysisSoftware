@@ -716,15 +716,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     if (mode == 4 || mode == 12 ){
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         if (j == 0 ){
-                          if(optionEnergy.CompareTo("900GeV") == 0){
+                          if(optionEnergy.CompareTo("900GeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
                             histoSecTrueEffi[k][j]->Scale(0.5);
-                          } else if(optionEnergy.CompareTo("8TeV") == 0){
-                            histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
-                            cout << Form("SECONDARIES: Fixed %s ",nameSecMeson[j].Data()) << "efficiency" << endl;
-                            if(triggerRejection<2.) histoSecTrueEffi[k][j]->Scale(0.5);
-                            else histoSecTrueEffi[k][j]->Scale(1.0);
                           }else{
                             histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                             cout << Form("SECONDARIES: Calculated the %s ",nameSecMeson[j].Data()) << "efficiency from the fit" << endl;
