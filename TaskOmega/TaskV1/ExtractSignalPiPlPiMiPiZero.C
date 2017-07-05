@@ -135,7 +135,7 @@ void CreateQAHistosMC(TString cutSelection, TString suffix, TString energy, TLis
 	RangeX[0] = 0.; RangeX[1] = 8.;
 	RangeY[0] = 0.1; RangeY[1] = 1.2e8;
     PlotSingle1DHistogramOmega(histo_NEvents,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/NEvents.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"NEvents", " ", "Events",suffix,0,0,RangeX,RangeY,"");
-	
+
 	RangeX[0] = 0.; RangeX[1] = 110.;
 	RangeY[0] = 0.1; RangeY[1] = 4e6;
     PlotSingle1DHistogramOmega(histo_GoodESDTracks,Form("%s/%s/%s/ExtractSignal/Plots_MC_QA/GoodESDTracks.%s",cutSelection.Data(),energy.Data(),suffix.Data(),suffix.Data()),"GoodESDTracks", "Number of tracks", "Events",suffix,0,0,RangeX,RangeY,"");
@@ -4473,8 +4473,8 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fNBinsPt = 15;
 			}
 			for (Int_t i = 0; i < fNBinsPt+2; i++) {
-				fBinsPt[i] = fBinsEta8TeVPt[i];
-				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta8TeVPtRebin[i];
+                fBinsPt[i] = fBinsOmega8TeVPt[i];
+                if (i < fNBinsPt+1) fNRebin[i] = fBinsOmega8TeVPtRebin[i];
 			}
 			fExampleBin = 2;
 		} else if (fEnergyFlag.CompareTo("2.76TeV") == 0) {
@@ -4487,8 +4487,8 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fNBinsPt = 7;
 			}
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
-				fBinsPt[i] = fBinsEta2760GeVPt[i];
-				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta2760GeVPtRebin[i];
+                fBinsPt[i] = fBinsOmega2760GeVPt[i];
+                if (i < fNBinsPt+1) fNRebin[i] = fBinsOmega2760GeVPtRebin[i];
 			}
 			fExampleBin = 4;
 		} else if (fEnergyFlag.CompareTo("900GeV") == 0) {
@@ -4501,8 +4501,8 @@ void Initialize(TString setPi0, Int_t numberOfBins){
 				fNBinsPt = 3;
 			}
 			for (Int_t i = 0; i < fNBinsPt+1; i++) {
-				fBinsPt[i] = fBinsEta900GeVPt[i];
-				if (i < fNBinsPt+1) fNRebin[i] = fBinsEta900GeVPtRebin[i];
+                fBinsPt[i] = fBinsOmega900GeVPt[i];
+                if (i < fNBinsPt+1) fNRebin[i] = fBinsOmega900GeVPtRebin[i];
 			}
 			fExampleBin = 2;
 		} else if( fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) { 

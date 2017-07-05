@@ -95,6 +95,12 @@ Double_t fBinsEta8TeVPt[15] = 					{0.0, 0.4, 0.7, 1.0, 1.4,
 Int_t fBinsEta8TeVPtRebin[14] = 				{8, 5, 5, 4, 4,
 												4, 4, 5, 5, 5, 
 												5, 5, 5, 5};
+Double_t fBinsOmega8TeVPt[15] = 					{0.0, 0.4, 0.7, 1.0, 1.4,
+                                                1.8, 2.2, 2.6, 3.0, 3.5,
+                                                4.0, 6.0, 8.0, 12.0, 16.0};
+Int_t fBinsOmega8TeVPtRebin[14] = 				{8, 5, 5, 4, 4,
+                                                4, 4, 5, 5, 5,
+                                                5, 5, 5, 5};
 Int_t fBinsPi0EtaBinning8TeVPtRebin[12] = 		{8, 1, 1, 1, 1, 
 												1, 1, 2, 2, 2, 
 												2, 4};
@@ -108,6 +114,8 @@ Int_t fBinsPi0900GeVPtRebin[11] = 				{4, 2, 2, 2, 2,
 												4};
 Double_t fBinsEta900GeVPt[4] = 					{0., 0.9, 1.8, 3.0};
 Int_t fBinsEta900GeVPtRebin[4] = 				{8, 5, 5};
+Double_t fBinsOmega900GeVPt[4] = 					{0., 0.9, 1.8, 3.0};
+Int_t fBinsOmega900GeVPtRebin[4] = 				{8, 5, 5};
 Int_t fBinsPi0EtaBinning900GeVPtRebin[4] =	 	{8, 4, 4};
 Double_t fBinsPi0900GeVDirectPhotonPt[8] = 		{0.0, 0.6, 0.8, 1.0, 1.3, 
 												2.0, 3.0, 4.5};
@@ -140,6 +148,11 @@ Double_t fBinsEta2760GeVPtDCA[16] =				{0., 0.4, 0.6, 0.8, 1.0,
 												20.0 };
 Int_t fBinsEta2760GeVPtRebin[7] = 				{8, 8, 5, 5, 5, 
 												5, 8};
+
+Double_t fBinsOmega2760GeVPt[8] = 				{0., 0.5, 1.0, 1.5, 2.0,
+                                                2.5, 4.0, 6.0};
+Int_t fBinsOmega2760GeVPtRebin[7] = 				{8, 8, 5, 5, 5,
+                                                5, 8};
 Int_t fBinsPi0EtaBinning2760GeVPtRebin[9] = 	{8, 2, 2, 2, 2, 
 												2, 2, 4, 4};
 Double_t fBinsPi02760GeVDirectPhotonPt[16] = 	{0.0, 0.3, 0.6, 0.8, 1.0, 
@@ -185,6 +198,7 @@ Int_t fBinsPi0HIPeripheralPtRebin[15] = 	  	{10, 4, 4, 4, 4,
 												4, 4, 4, 4, 4,
 												4, 4, 8, 8, 8};
 Double_t fBinsEtaHIPt[5] = 						{0.0, 1.5, 2.0, 4.0, 7.0};
+Double_t fBinsOmegaHIPt[5] = 						{0.0, 1.5, 2.0, 4.0, 7.0};
 Double_t fBinsEtaHIPtLHC11h[13] =				{0.0, 0.8, 1.0, 1.4, 1.8,
 												2.2, 2.6, 3.0 ,3.5, 4.,
 												6.0, 8.0, 25.};
@@ -193,6 +207,7 @@ Double_t fBinsEtaHIPtLHC11h[13] =				{0.0, 0.8, 1.0, 1.4, 1.8,
 // 												15};
 
 Int_t fBinsEtaHIPtRebin[4] = 					{10, 8, 5, 5};
+Int_t fBinsOmegaHIPtRebin[4] = 					{10, 8, 5, 5};
 Int_t fBinsEtaHIPtRebinLHC11h[12] =      		{10, 8, 4, 4, 4,
 												4, 5, 5, 5, 5,
 												8, 10};
