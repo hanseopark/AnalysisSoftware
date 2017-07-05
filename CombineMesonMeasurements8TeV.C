@@ -175,7 +175,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0 trigger", "EMC-L1 trigger"};
     TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
     TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
-    Double_t maxSecCorr[4]                      = { 0.05, 0.009, 0.00017, 0.035};
+    Double_t maxSecCorr[4]                      = { 0.05, 0.009, 0.00019, 0.04};
     
     Color_t  colorDet[11];
     Color_t  colorDetMC[11];
@@ -3083,7 +3083,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
     
-    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[1],0.25,graphCombEtaInvXSectionTotA->GetY()[1],0.75,3.};
+    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[2],0.2,graphCombEtaInvXSectionTotA->GetY()[3],0.75,3.};
      //Double_t paramTCMEta[5]  = {5E7,0.2,4E9,0.5,3.03};
     // Two component model by Bylinkin
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);
@@ -5921,7 +5921,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
     eta2pi0MtScaledTCM->SetLineWidth(2.);
 
-    Double_t eta2Pi0Const = 0.461658;
+    Double_t eta2Pi0Const = 0.45425;
     Double_t mPi0 = 0.134977;
     Double_t mEta = 0.547853;
     for (Int_t i=1; i<=eta2pi0MtScaled->GetNbinsX(); i++) {
