@@ -39,17 +39,16 @@
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
-//#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
-#include "AnalyseDCATest.h"
+#include "AnalyseDCADist.h"
 #include "THnSparse.h"
 #include "TTree.h"
 
 
 
 // Main Function
-void AnalyseDCATestV1(  TString meson           ="",
+void AnalyseDCADist(    TString meson           ="",
                         TString fileData        ="",
                         TString fileData2       ="" ,
                         TString cutSelection    ="",
@@ -59,7 +58,7 @@ void AnalyseDCATestV1(  TString meson           ="",
                         Bool_t kMC              = kFALSE,
                         Int_t numberOfBins      = 10,
                         Int_t mode              = 9
-                     ) {
+                    ) {
 
     gROOT->Reset();
 
@@ -94,7 +93,7 @@ void AnalyseDCATestV1(  TString meson           ="",
         if (intermediate.CompareTo("0-100%") == 0)
             intermediate                    = "";
     }
-    
+
     // Set energy
     fEnergyText                             = ReturnFullCollisionsSystem(optionEnergy);
     if (intermediate.CompareTo("") != 0 )
@@ -116,7 +115,7 @@ void AnalyseDCATestV1(  TString meson           ="",
         doFitEstimate                       = kFALSE;
     else if ( optionPeriod.CompareTo("") != 0 || meson.Contains("Eta"))
         doFitEstimate                       = kFALSE;
-    
+
     // Set DCAz cut string
     TString fDCAZCut                        = fGammaCutSelection(GetPhotonDcaZPrimVtxCutPosition(fGammaCutSelection), 1);
     fMaxDcaZPhoton                          = AnalyseDCAZPhotonCutValue(fDCAZCut.Atoi());
@@ -131,7 +130,7 @@ void AnalyseDCATestV1(  TString meson           ="",
     fdate                                   = ReturnDateString();
 
     // Set Output directory
-    TString outputDir                       = Form("%s/%s/%s/%s/AnalyseDCATests", cutSelection.Data(), optionEnergy.Data(), optionPeriod.Data(), suffix.Data());
+    TString outputDir                       = Form("%s/%s/%s/%s/AnalyseDCADist", cutSelection.Data(), optionEnergy.Data(), optionPeriod.Data(), suffix.Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
 
@@ -203,10 +202,10 @@ void AnalyseDCATestV1(  TString meson           ="",
     Int_t numberMesonGarbage            [6][fNBinsPt];
     Double_t intTotal                   [6][fNBinsPt];
     Double_t intErrTotal                [6][fNBinsPt];
-    Double_t intBGHist                  [3][6][fNBinsPt];
-    Double_t intErrBGHist               [3][6][fNBinsPt];
-    Double_t fractionIntHist            [3][6][fNBinsPt];
-    Double_t fractionErrIntHist         [3][6][fNBinsPt];
+    Double_t intBGHist                  [5][6][fNBinsPt];
+    Double_t intErrBGHist               [5][6][fNBinsPt];
+    Double_t fractionIntHist            [5][6][fNBinsPt];
+    Double_t fractionErrIntHist         [5][6][fNBinsPt];
 
     Double_t intTotal_AllCat            [fNBinsPt];
     Double_t intErrTotal_AllCat         [fNBinsPt];
@@ -408,8 +407,6 @@ void AnalyseDCATestV1(  TString meson           ="",
             if (quality == i+1){
                 for (Int_t j = fStartPtBin; j < fNBinsPt ; j++){
                     if ( pt > fBinsPt[j] && pt <= fBinsPt[j+1] ){
-    //                      fHistDCAZUnderMeson_MesonPt[i][j]->Fill(dcaZMin);
-    //                      fHistDCAZUnderMeson_MesonPt[i][j]->Fill(dcaZMax);
                         fHistInvMass_MesonPt[i][j]->Fill(invMass);
                         fHistInvMass_MesonPt_AllCat[j]->Fill(invMass);
                         fHistDCAZUnderMeson_MesonPt_AllCat[j]->Fill(dcaZMin);
@@ -531,7 +528,7 @@ void AnalyseDCATestV1(  TString meson           ="",
     }
 
     fHoleRadius                                 = 1.5;
-    TF1* fitWithHole                 			= new TF1("fitWithHole", GausWithHole, -fMaxDcaZPhoton, fMaxDcaZPhoton, 3);
+    TF1* fitWithHole                            = new TF1("fitWithHole", GausWithHole, -fMaxDcaZPhoton, fMaxDcaZPhoton, 3);
     fitWithHole->SetParameter(0,0.001);
     fitWithHole->SetParameter(1,0);
     fitWithHole->SetParameter(2,3);
@@ -550,7 +547,7 @@ void AnalyseDCATestV1(  TString meson           ="",
             if (i == 0){
                 if (doFitEstimate){
                     fitWithHole->SetParameter(0,fHistDCAZUnderMeson_MesonPt_AllCat[j]->GetMaximum()/1e2);
-                    if (i == 0) fHoleRadius 		= 1.5;
+                    if (i == 0) fHoleRadius         = 1.5;
                     else fHoleRadius = 2;
                     fHistDCAZUnderMeson_MesonPt_AllCat[j]->Fit(fitWithHole,"RME0WLQ");
                     fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[j] 	= new TF1(Form("fFitDCAZUnderMesonBGEstimateAllCat_MesonPt_%3.2f-%3.2f", fBinsPt[j], fBinsPt[j+1]), "gaus",
@@ -621,16 +618,22 @@ void AnalyseDCATestV1(  TString meson           ="",
 
 
             intTotal[i][j]                  = fHistDCAZUnderMeson_MesonPt[i][j]->IntegralAndError(fHistDCAZUnderMeson_MesonPt[i][j]->FindBin(-fMaxDcaZPhoton),fHistDCAZUnderMeson_MesonPt[i][j]->FindBin(fMaxDcaZPhoton),intErrTotal[i][j],"width");
-            for (Int_t k = 0; k < 3; k ++){
+            for (Int_t k = 0; k < 5; k ++){
                 if ( k == 0){
-                    if (i == 1) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+2,optionBGSmoothingStandard.Data());
+                    if (i > 0) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+2,optionBGSmoothingStandard.Data());
                     else fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]         = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit,optionBGSmoothingStandard.Data());
                 } else if (k == 1){
-                    if (i == 1) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+2,optionBGSmoothingVar2.Data());
+                    if (i > 0) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+2,optionBGSmoothingVar2.Data());
                     else fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]         = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit,optionBGSmoothingVar2.Data());
                 } else if (k == 2){
-                    if (i == 1) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+2,optionBGSmoothingVar1.Data());
+                    if (i > 0) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+2,optionBGSmoothingVar1.Data());
                     else fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]         = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit,optionBGSmoothingVar1.Data());
+                } else if (k == 3){
+                    if (i > 0) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+1+2,optionBGSmoothingStandard.Data());
+                    else fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]         = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit+1,optionBGSmoothingStandard.Data());
+                } else if (k == 4){
+                    if (i > 0) fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]  = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit-1+2,optionBGSmoothingStandard.Data());
+                    else fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]         = (TH1F*)fHistDCAZUnderMeson_MesonPt[i][j]->ShowBackground(nIterBGFit-1,optionBGSmoothingStandard.Data());
                 }
                 fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]->SetName(Form("fHistDCAZUnderMesonBGEstimateCat_%i_MesonPt_%3.2f-%3.2f",i+1, fBinsPt[j], fBinsPt[j+1]));
                 intBGHist[k][i][j]              = fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]->IntegralAndError(fHistDCAZUnderMesonBGEstimate_MesonPt[k][i][j]->FindBin(-fMaxDcaZPhoton),
@@ -811,18 +814,18 @@ void AnalyseDCATestV1(  TString meson           ="",
                                     "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate );
     }
 
-    TH1D* fHistFracIntHistBGvsPt                [3][6] ;
-    TH1D* fHistFracIntHistBGFittedvsPt			[3][6] ;
-    TH1D* fHistFracCatvsPt                		[6] ;
-    TH1D* fHistCorrectionFactorsHistCat			[3][6];
-    TH1D* fHistCorrectionFactorsHistCatFitted	[6];
-    TH1D* fHistCorrectionFactorsFitAllCat		= new TH1D(Form("fHistCorrectionFactorsFitAllCat_vsPt"),"",fNBinsPt,fBinsPt);
-    TH1D* fHistCorrectionFactorsHistAllCat		= new TH1D(Form("fHistCorrectionFactorsHistAllCat_vsPt"),"",fNBinsPt,fBinsPt);
+    TH1D* fHistFracIntHistBGvsPt                [5][6] ;
+    TH1D* fHistFracIntHistBGFittedvsPt          [5][6] ;
+    TH1D* fHistFracCatvsPt                      [6] ;
+    TH1D* fHistCorrectionFactorsHistCat         [5][6];
+    TH1D* fHistCorrectionFactorsHistCatFitted   [6];
+    TH1D* fHistCorrectionFactorsFitAllCat       = new TH1D(Form("fHistCorrectionFactorsFitAllCat_vsPt"),"",fNBinsPt,fBinsPt);
+    TH1D* fHistCorrectionFactorsHistAllCat      = new TH1D(Form("fHistCorrectionFactorsHistAllCat_vsPt"),"",fNBinsPt,fBinsPt);
     for (Int_t i = 0; i< 6; i++){
-        fHistFracCatvsPt[i]                		= new TH1D(Form("fHistFracCat_%i_vsPt",i+1),"",fNBinsPt,fBinsPt);
-        for (Int_t k = 0; k < 3; k++){
-            fHistFracIntHistBGvsPt[k][i]=  new TH1D(Form("fHistFracIntHistBGvsPt_Cat_%i_Variant_%i",i+1,k+1),"",fNBinsPt,fBinsPt);
-            fHistFracIntHistBGFittedvsPt[k][i]	= new TH1D(Form("fHistFracIntHistBGFittedvsPt_Cat_%i_Variant_%i",i+1,k+1),"",fNBinsPt,fBinsPt);
+        fHistFracCatvsPt[i]                     = new TH1D(Form("fHistFracCat_%i_vsPt",i+1),"",fNBinsPt,fBinsPt);
+        for (Int_t k = 0; k < 5; k++){
+            fHistFracIntHistBGvsPt[k][i]        = new TH1D(Form("fHistFracIntHistBGvsPt_Cat_%i_Variant_%i",i+1,k+1),"",fNBinsPt,fBinsPt);
+            fHistFracIntHistBGFittedvsPt[k][i]  = new TH1D(Form("fHistFracIntHistBGFittedvsPt_Cat_%i_Variant_%i",i+1,k+1),"",fNBinsPt,fBinsPt);
         }
         for (Int_t j = fStartPtBin; j < fNBinsPt; j++){
             if (i == 0){
@@ -852,7 +855,7 @@ void AnalyseDCATestV1(  TString meson           ="",
                 fHistFracCatvsPt[i]->SetBinError(j+1,0.);
                 fHistFracCatvsPt[i]->SetBinContent(j+1,0.);
             }
-            for (Int_t k = 0; k < 3; k++){
+            for (Int_t k = 0; k < 5; k++){
                 if (isfinite(fractionIntHist[k][i][j])){
                     fHistFracIntHistBGvsPt[k][i]->SetBinContent(j+1,fractionIntHist[k][i][j]*100);
                 } else {
@@ -867,64 +870,66 @@ void AnalyseDCATestV1(  TString meson           ="",
         }
     }
 
-    Color_t  colorCat[6]    	= { kRed+1, 807, 800, kGreen+2, kCyan+2, kBlue+1};
-    Style_t  styleCat[6]    	= { kFullCircle, kFullSquare, kFullStar, kFullDiamond, kFullCircle, kFullCross};
+    Color_t  colorCat[6]        = { kRed+1, 807, 800, kGreen+2, kCyan+2, kBlue+1};
+    Style_t  styleCat[6]        = { kFullCircle, kFullSquare, kFullStar, kOpenDiamond, kOpenCircle, kOpenCross};
 
-    TF1* fitFracIntHistBGvsPt[6];
-    TCanvas* canvasCorrFrac 	= new TCanvas("canvasCorrFrac","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasCorrFrac, 0.08, 0.02, 0.02, 0.09);
+    TF1* fitFracIntHistBGvsPt[5][6];
+    TCanvas* canvasCorrFrac     = new TCanvas("canvasCorrFrac","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasCorrFrac, 0.06, 0.015, 0.02, 0.09);
 
     canvasCorrFrac->cd();
-        DrawAutoGammaMesonHistos( fHistFracIntHistBGvsPt[0][0],
-                                "", Form("p_{T,%s} (GeV/c)",fMesonType.Data()), "BG/Total (%)",
-                                kFALSE, 2.5,1e-8, kFALSE,
-                                kTRUE, 0, fMaxYFracBGOverIntHist,
-                                kFALSE, 0., 10.);
-        fHistFracIntHistBGvsPt[0][0]->GetYaxis()->SetTitleOffset(0.8);
 
-        TLegend* legendFracIntHistBG = new TLegend(0.65,0.7,0.85,0.95);
-        legendFracIntHistBG->SetTextSize(0.04);
-        legendFracIntHistBG->SetFillColor(0);
-        legendFracIntHistBG->SetLineColor(0);
+        TLegend* legendFracIntHistBG    = GetAndSetLegend2(0.75, 0.95-3*0.04, 0.95, 0.95, 0.04, 1, "", 42, 0.2);
+        TLatex *labelEnergy             = new TLatex(0.12,0.9,fEnergyText.Data());
+        SetStyleTLatex( labelEnergy, 0.04,4);
+        TLatex *labelMeson              = new TLatex(0.12,0.86, Form("%s candidates", fMesonType.Data()));
+        SetStyleTLatex( labelMeson, 0.04,4);
 
-        for (Int_t j = 0; j< 3; j++){
+        for (Int_t k = 0; k< 5; k++){
             for (Int_t i = 0; i< 3; i++){
-                DrawGammaSetMarker(fHistFracIntHistBGvsPt[j][i], styleCat[i], 1., colorCat[i], colorCat[i]);
-                fitFracIntHistBGvsPt[i]                 = new TF1(Form("fitFracIntHistBGvsPt_%i",i),"[0]/pow(x,[1])");
-                fitFracIntHistBGvsPt[i]->SetRange(fBinsPt[fStartPtBin], fBinsPt[fNBinsPt]);
-                TFitResultPtr resultFracIntHistBGvsPt1 	= fHistFracIntHistBGvsPt[j][i]->Fit(fitFracIntHistBGvsPt[i],"SINRME+","",fBinsPt[fStartPtBin],4);
-                fitFracIntHistBGvsPt[i]->SetLineColor(colorCat[i]);
+                if (i == 0){
+                    DrawAutoGammaMesonHistos(   fHistFracIntHistBGvsPt[k][0],
+                                                "", Form("#it{p}_{T,%s} (GeV/#it{c})",fMesonType.Data()), "BG/Total (%)",
+                                                kFALSE, 2.5,1e-8, kFALSE,
+                                                kTRUE, 0, fMaxYFracBGOverIntHist,
+                                                kFALSE, 0., 10.);
+                    fHistFracIntHistBGvsPt[0][0]->GetYaxis()->SetTitleOffset(0.8);
+                }
 
-                for (Int_t k = 2; k < fHistFracIntHistBGFittedvsPt[j][i]->GetNbinsX()+1; k++){
-                    Double_t ptStart                 	= fHistFracIntHistBGFittedvsPt[j][i]->GetXaxis()->GetBinLowEdge(k);
-                    Double_t ptEnd                 		= fHistFracIntHistBGFittedvsPt[j][i]->GetXaxis()->GetBinUpEdge(k);
-                    Double_t binWidth                 	= ptEnd-ptStart;
-                    Double_t bgEstimate                 = (fitFracIntHistBGvsPt[i]->Integral(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams()) / binWidth );
-                    Double_t errorBGEstimate		 	= (fitFracIntHistBGvsPt[i]->IntegralError(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams(),
+                DrawGammaSetMarker(fHistFracIntHistBGvsPt[k][i], styleCat[i], 1., colorCat[i], colorCat[i]);
+                fitFracIntHistBGvsPt[k][i]                 = new TF1(Form("fitFracIntHistBGvsPt_%i_%i",k,i),"[0]/pow(x,[1])");
+                fitFracIntHistBGvsPt[k][i]->SetRange(fBinsPt[fStartPtBin], fBinsPt[fNBinsPt]);
+                TFitResultPtr resultFracIntHistBGvsPt1  = fHistFracIntHistBGvsPt[k][i]->Fit(fitFracIntHistBGvsPt[k][i],"SINRME+","",fBinsPt[fStartPtBin],4);
+                fitFracIntHistBGvsPt[k][i]->SetLineColor(colorCat[i]);
+
+                for (Int_t pt = 2; pt < fHistFracIntHistBGFittedvsPt[k][i]->GetNbinsX()+1; pt++){
+                    Double_t ptStart                    = fHistFracIntHistBGFittedvsPt[k][i]->GetXaxis()->GetBinLowEdge(pt);
+                    Double_t ptEnd                      = fHistFracIntHistBGFittedvsPt[k][i]->GetXaxis()->GetBinUpEdge(pt);
+                    Double_t binWidth                   = ptEnd-ptStart;
+                    Double_t bgEstimate                 = (fitFracIntHistBGvsPt[k][i]->Integral(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams()) / binWidth );
+                    Double_t errorBGEstimate            = (fitFracIntHistBGvsPt[k][i]->IntegralError(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams(),
                                                                                                 resultFracIntHistBGvsPt1->GetCovarianceMatrix().GetMatrixArray() ) / binWidth );
-                    fHistFracIntHistBGFittedvsPt[j][i]->SetBinContent(k, bgEstimate);
-                    fHistFracIntHistBGFittedvsPt[j][i]->SetBinError(k, errorBGEstimate);
+                    fHistFracIntHistBGFittedvsPt[k][i]->SetBinContent(pt, bgEstimate);
+                    fHistFracIntHistBGFittedvsPt[k][i]->SetBinError(pt, errorBGEstimate);
                     if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && ptEnd> 4.) {
-                        fHistFracIntHistBGvsPt[j][i]->SetBinContent(k, bgEstimate);
-                        fHistFracIntHistBGvsPt[j][i]->SetBinError(k, errorBGEstimate);
+                        fHistFracIntHistBGvsPt[k][i]->SetBinContent(pt, bgEstimate);
+                        fHistFracIntHistBGvsPt[k][i]->SetBinError(pt, errorBGEstimate);
                     }
                 }
-                if (i == 0 && j==0)fHistFracIntHistBGvsPt[j][i]->DrawCopy("p,e1");
-                else if (j == 0)fHistFracIntHistBGvsPt[j][i]->DrawCopy("same,p,e1");
-                if (j == 0 && fEnergyFlag.CompareTo("pPb_5.023TeV") != 0 )fitFracIntHistBGvsPt[i]->Draw("same");
-                if (j == 0)legendFracIntHistBG->AddEntry(fHistFracIntHistBGvsPt[j][i],Form("Category %i",i+1),"p");
+                if (i == 0 )fHistFracIntHistBGvsPt[k][i]->DrawCopy("p,e1");
+                else fHistFracIntHistBGvsPt[k][i]->DrawCopy("same,p,e1");
+                fitFracIntHistBGvsPt[k][i]->Draw("same");
+                if (k == 0)legendFracIntHistBG->AddEntry(fHistFracIntHistBGvsPt[k][i],Form("Category %i",i+1),"p");
             }
+            legendFracIntHistBG->Draw();
+            labelEnergy->Draw();
+            labelMeson->Draw();
+            canvasCorrFrac->Update();
+            canvasCorrFrac->SaveAs(Form("%s/%s_%s_FracBGOverIntHist_Method%d.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), k, suffix.Data()));
         }
-        legendFracIntHistBG->Draw();
-
-        TLatex *labelEnergy = new TLatex(0.12,0.9,fEnergyText.Data());
-        SetStyleTLatex( labelEnergy, 0.04,4);
-        labelEnergy->Draw();
-    canvasCorrFrac->Update();
-    canvasCorrFrac->SaveAs(Form("%s/%s_%s_FracBGOverIntHist.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()));
 
     for (Int_t i = 0; i< 6; i++){
-        for (Int_t k = 0; k < 3; k++){
+        for (Int_t k = 0; k < 5; k++){
             fHistCorrectionFactorsHistCat[k][i] = (TH1D*)fHistFracCatvsPt[i]->Clone(Form("fHistCorrectionFactorsHistCat_%i_Variant_%i_vsPt",i+1,k+1));
             fHistCorrectionFactorsHistCat[k][i]->Sumw2();
             fHistCorrectionFactorsHistCat[k][i]->Multiply(fHistFracIntHistBGvsPt[k][i]);
@@ -937,55 +942,54 @@ void AnalyseDCATestV1(  TString meson           ="",
     }
 
 
-    TH1D* fHistCorrectionFactorsHist[3];
-    TH1D* fHistCorrectionFactorsHistFitted 		= new TH1D(Form("fHistCorrectionFactorsHistvsPtFitted"),"",fNBinsPt,fBinsPt);
+    TH1D* fHistCorrectionFactorsHist[5];
+    TH1D* fHistCorrectionFactorsHistFitted      = new TH1D(Form("fHistCorrectionFactorsHistvsPtFitted"),"",fNBinsPt,fBinsPt);
     for (Int_t i = 0; i< 3; i++){
         fHistCorrectionFactorsHistFitted->Add(fHistCorrectionFactorsHistCatFitted[i]);
-        for (Int_t k = 0; k < 3; k++){
+        for (Int_t k = 0; k < 5; k++){
             if (i== 0){
-                fHistCorrectionFactorsHist[k] 	= new TH1D(Form("fHistCorrectionFactorsHistvsPt_%i",k),"",fNBinsPt,fBinsPt);
+                fHistCorrectionFactorsHist[k]   = new TH1D(Form("fHistCorrectionFactorsHistvsPt_%i",k),"",fNBinsPt,fBinsPt);
             }
             fHistCorrectionFactorsHist[k]->Add(fHistCorrectionFactorsHistCat[k][i]);
         }
     }
 
-    Color_t colorMethod[3]                 		= {kRed+2, kGreen+2, kBlue+2};
-    Style_t styleMethod[3]                 		= {21,29,33};
-    TString nameMethod[3]                 		= {"A","C","D"};
+    Color_t colorMethod[5]                  = {kRed+2, kGreen+2, kBlue+2, 807, kViolet+1};
+    Style_t styleMethod[5]                  = {kFullSquare, kFullDiamond, kFullStar, kOpenDiamond, kOpenCross};
+    Size_t sizeMethod[5]                    = {2., 3., 3.5, 3., 2.};
+    TString nameMethod[5]                   = {"A", "C", "D", "A+ite","A-ite" };
+    Int_t nMethods                          = 6;
 
     canvasCorrFrac->cd();
         DrawAutoGammaMesonHistos( fHistCorrectionFactorsHistAllCat,
-                                "", Form("p_{T,%s} (GeV/c)",fMesonType.Data()), "Correction factor (%)",
+                                "", Form("#it{p}_{T,%s} (GeV/#it{c})",fMesonType.Data()), "Correction factor (%)",
                                 kFALSE, 2.,1e-8, kFALSE,
-                                kTRUE, -1, 30,
+                                kTRUE, -1, fMaxYFracBGOverIntHist*0.8,
                                 kFALSE, 0., 10.);
-        DrawGammaSetMarker(fHistCorrectionFactorsHistAllCat, 20, 0.8, kBlack, kBlack);
-        fHistCorrectionFactorsHistAllCat->GetYaxis()->SetTitleOffset(0.8);
+        DrawGammaSetMarker(fHistCorrectionFactorsHistAllCat, 20, 2*0.8, kBlack, kBlack);
+        fHistCorrectionFactorsHistAllCat->GetYaxis()->SetTitleOffset(0.7);
         fHistCorrectionFactorsHistAllCat->DrawCopy("e1,p");
 
         if (doFitEstimate){
-            DrawGammaSetMarker(fHistCorrectionFactorsFitAllCat, 25, 0.8, kCyan+2, kCyan+2);
+            DrawGammaSetMarker(fHistCorrectionFactorsFitAllCat, 25, 2*0.8, kCyan+2, kCyan+2);
             fHistCorrectionFactorsFitAllCat->DrawCopy("same,e1,p");
+            nMethods++;
         }
 
-        TLegend* legendCorrFraction 			= new TLegend(0.5,0.8,0.85,0.95);
-        legendCorrFraction->SetTextSize(0.04);
-        legendCorrFraction->SetFillColor(0);
-        legendCorrFraction->SetLineColor(0);
-
+        TLegend* legendCorrFraction         = GetAndSetLegend2(0.5, 0.95-nMethods*0.04, 0.95, 0.95, 0.04, 1, "", 42, 0.15);
         legendCorrFraction->AddEntry(fHistCorrectionFactorsHistAllCat,"Extraction Method A","p");
         if (doFitEstimate)
             legendCorrFraction->AddEntry(fHistCorrectionFactorsFitAllCat,"Extraction Method B","p");
 
-        for (Int_t k = 0; k < 3 ; k++){
-            DrawGammaSetMarker(fHistCorrectionFactorsHist[k], styleMethod[k], 0.8, colorMethod[k], colorMethod[k]);
+        for (Int_t k = 0; k < 5 ; k++){
+            DrawGammaSetMarker(fHistCorrectionFactorsHist[k], styleMethod[k], sizeMethod[k]*0.8, colorMethod[k], colorMethod[k]);
             fHistCorrectionFactorsHist[k]->DrawCopy("same,e1,p");
             legendCorrFraction->AddEntry(fHistCorrectionFactorsHist[k],Form("Extraction Method %s (sep Cat)",nameMethod[k].Data()),"p");
         }
         legendCorrFraction->Draw();
 
         labelEnergy->Draw();
-
+        labelMeson->Draw();
 
     canvasCorrFrac->Update();
     canvasCorrFrac->SaveAs(Form("%s/%s_%s_CorrectionFactorTotal.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()));
@@ -994,12 +998,8 @@ void AnalyseDCATestV1(  TString meson           ="",
 
         fHistCorrectionFactorsHist[0]->DrawCopy("e1,p");
 
-        TLegend* legendCorrFractionCatHist = new TLegend(0.65,0.7,0.85,0.95);
-        legendCorrFractionCatHist->SetTextSize(0.04);
-        legendCorrFractionCatHist->SetFillColor(0);
-        legendCorrFractionCatHist->SetLineColor(0);
+        TLegend* legendCorrFractionCatHist = GetAndSetLegend2(0.75,0.94-4*1.1*0.04, 0.93,0.94, 0.04, 1, "", 42, 0.25);
         legendCorrFractionCatHist->AddEntry(fHistCorrectionFactorsHist[0],"Total","p");
-
 
         for (Int_t i = 0; i< 3; i++){
             DrawGammaSetMarker(fHistCorrectionFactorsHistCat[0][i], styleCat[i], 0.8, colorCat[i], colorCat[i]);
@@ -1008,6 +1008,8 @@ void AnalyseDCATestV1(  TString meson           ="",
         }
         legendCorrFractionCatHist->Draw();
         labelEnergy->Draw();
+        labelMeson->Draw();
+
     canvasCorrFrac->Update();
     canvasCorrFrac->SaveAs(Form("%s/%s_%s_CorrectionFactorVsCatHist.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()));
 
@@ -1015,15 +1017,15 @@ void AnalyseDCATestV1(  TString meson           ="",
 
     canvasCorrFrac->cd();
         DrawAutoGammaMesonHistos( fHistFracCatvsPt[0],
-                                "", "p_{T,meson} (GeV/c)", "N_{meson per cat}/(N_{meson}) (%)",
+                                "", "#it{p}_{T,meson} (GeV/#it{c})", "#it{N}_{meson per cat}/(#it{N}_{meson}) (%)",
                                 kFALSE, 2.,1e-8, kFALSE,
                                 kTRUE, 0, 100,
                                 kFALSE, 0., 10.);
         DrawGammaSetMarker(fHistFracCatvsPt[0], styleCat[0], 1., colorCat[0], colorCat[0]);
-        fHistFracCatvsPt[0]->GetYaxis()->SetTitleOffset(0.8);
+        fHistFracCatvsPt[0]->GetYaxis()->SetTitleOffset(0.7);
         fHistFracCatvsPt[0]->DrawCopy("p,e1");
 
-        TLegend* legendFractionCat = GetAndSetLegend2(0.75,0.94-6*1.1*0.04, 0.93,0.94, 0.04, 1, "", 42, 0.25);
+        TLegend* legendFractionCat          = GetAndSetLegend2(0.75,0.94-6*1.1*0.04, 0.93,0.94, 0.04, 1, "", 42, 0.25);
         legendFractionCat->AddEntry(fHistFracCatvsPt[0],"Category 1","p");
         for (Int_t i = 1; i< 6; i++){
             DrawGammaSetMarker(fHistFracCatvsPt[i], styleCat[i], 1., colorCat[i], colorCat[i]);
@@ -1032,11 +1034,9 @@ void AnalyseDCATestV1(  TString meson           ="",
         }
 
         legendFractionCat->Draw();
-        TLatex *labelMeson = new TLatex(0.12,0.86, Form("%s candidates", fMesonType.Data()));
-        SetStyleTLatex( labelMeson, 0.04,4);
         labelMeson->Draw();
         labelEnergy->Draw();
-        
+
     canvasCorrFrac->Update();
     canvasCorrFrac->SaveAs(Form("%s/%s_%s_FractionPerCatVsPt.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()));
 
@@ -1075,14 +1075,13 @@ void AnalyseDCATestV1(  TString meson           ="",
                 fHistDCAZUnderMesonBG2_Visual_AllCat->DrawCopy("same,p,e1");
                 }
 
-            TLatex *labelPtBin = new TLatex(0.63,0.9,Form("%1.2f < p_{T} (GeV/c) < %1.2f", fBinsPt[j], fBinsPt[j+1]));
+            TLatex *labelPtBin = new TLatex(0.63,0.9,Form("%1.2f < #it{p}_{T} (GeV/#it{c}) < %1.2f", fBinsPt[j], fBinsPt[j+1]));
             SetStyleTLatex( labelPtBin, 0.04,4);
             TLegend* legendDCADataGGBGComp = new TLegend(0.57,0.73,0.8,0.88);
             legendDCADataGGBGComp->SetTextSize(0.035);
             legendDCADataGGBGComp->SetFillColor(0);
             legendDCADataGGBGComp->SetLineColor(0);
             legendDCADataGGBGComp->SetNColumns(1);
-    //          legendDCADataGGBGComp->AddEntry((TObject*)0, ,"");
             if (fHistDCAZUnderMeson_Visual_AllCat)
                 legendDCADataGGBGComp->AddEntry(fHistDCAZUnderMeson_Visual_AllCat,Form("S + BG, %1.2f < M_{#gamma#gamma} (GeV/c^{2}) < %1.2f ",fMesonIntRange[0], fMesonIntRange[1]),"p");
             if (fHistDCAZUnderMesonBG1_Visual_AllCat)
@@ -1112,15 +1111,13 @@ void AnalyseDCATestV1(  TString meson           ="",
 
         TH2F * histoDCACatCompareDummy;
             histoDCACatCompareDummy             = new TH2F("histoDCACatCompareDummy", "histoDCACatCompareDummy",1000, -4.99,  4.99, 1000, 5e-5, 2 );
-        SetStyleHistoTH2ForGraphs( histoDCACatCompareDummy, "DCA#it{z} (cm)", "normalized counts",
+        SetStyleHistoTH2ForGraphs( histoDCACatCompareDummy, "dca_{#it{z}} (cm)", "normalized counts",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.06);
         histoDCACatCompareDummy->GetYaxis()->SetLabelOffset(0.001);
         histoDCACatCompareDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
         histoDCACatCompareDummy->DrawCopy();
 
-        Style_t markerstylesPlot[6]             ={20,20,20,20,20,20};
-        Size_t markersizePlot[6]                ={1.5,1.5,1.5,1.5,1.5,1.5};
-        Color_t colorDataPlot[6]                ={kBlack,kGray+2,kCyan-3,kBlue-3,kRed-2,kRed+2};
+        Size_t markersizePlot[6]                ={1.5, 1.5, 1.5, 1.5, 1.5, 1.5};
         TLegend* legendDCACatCompare            = GetAndSetLegend2(0.14, 0.71-1*textSizeLabelsRel, 0.35, 0.71+(5*textSizeLabelsRel),0.8*textSizeLabelsPixel);
 
         for (Int_t i = 0; i < 6 ; i++){
@@ -1128,13 +1125,13 @@ void AnalyseDCATestV1(  TString meson           ="",
                 TH1D* fHistDCAZUnderMeson_Visual_Cat =  (TH1D*)fHistDCAZUnderMeson_MesonPt[i][j]->Clone("fHistDCAZUnderMeson_Visual_Cat");
                 fHistDCAZUnderMeson_Visual_Cat->Sumw2();
                 fHistDCAZUnderMeson_Visual_Cat->Scale(1./fHistDCAZUnderMeson_Visual_Cat->GetEntries());
-                DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_Cat, markerstylesPlot[i], markersizePlot[i], colorDataPlot[i] , colorDataPlot[i]);
+                DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_Cat, styleCat[i], markersizePlot[i], colorCat[i] , colorCat[i]);
                 fHistDCAZUnderMeson_Visual_Cat->Draw("p,same,e");
-                legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_Cat,Form("category %d",i),"p");
+                legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_Cat,Form("category %d",i+1),"p");
             }
         }
 
-            TLatex *labelPtBin                  = new TLatex(0.95,0.9,Form("%1.2f < p_{T} < %1.2f (GeV/#it{c})", fBinsPt[j], fBinsPt[j+1]));
+            TLatex *labelPtBin                  = new TLatex(0.95,0.9,Form("%1.2f < #it{p}_{T} < %1.2f (GeV/#it{c})", fBinsPt[j], fBinsPt[j+1]));
             SetStyleTLatex( labelPtBin, 0.04,4);
             labelPtBin->SetTextAlign(31);
             labelPtBin->Draw();
@@ -1343,7 +1340,7 @@ void AnalyseDCATestV1(  TString meson           ="",
     for (Int_t i = 0; i < 6 ; i++){
         if (fHistDCAZUnderMeson_AllPt[i]) fHistDCAZUnderMeson_AllPt[i]->Write();
         if (fHistFracCatvsPt[i]) fHistFracCatvsPt[i]->Write();
-        for (Int_t k = 0; k < 3; k++){
+        for (Int_t k = 0; k < 5; k++){
             if (fHistFracIntHistBGvsPt[k][i]) fHistFracIntHistBGvsPt[k][i]->Write();
             if (fHistCorrectionFactorsHistCat[k][i]) fHistCorrectionFactorsHistCat[k][i]->Write();
         }
@@ -1488,7 +1485,6 @@ void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas,
     padDataFit->GetFrame()->SetFillColor(0);
     padDataFit->SetBorderMode(0);
     padDataFit->Divide(fColumnPlot,fRowPlot,0.0,0.0);
-// 	padDataFit->SetLeftMargin(0.2);
     padDataFit->Draw();
 
     Int_t place                 	= 0;
@@ -1562,6 +1558,10 @@ void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas,
                 legend->AddEntry(fHistDCAZUnderMesonBGEstimate_MesonPt[1][category-1][fStartBinPtRange],"Pileup Estimate Method C","l");
             if (fHistDCAZUnderMesonBGEstimate_MesonPt[2][category-1][fStartBinPtRange])
                 legend->AddEntry(fHistDCAZUnderMesonBGEstimate_MesonPt[2][category-1][fStartBinPtRange],"Pileup Estimate Method D","l");
+            if (fHistDCAZUnderMesonBGEstimate_MesonPt[3][category-1][fStartBinPtRange])
+                legend->AddEntry(fHistDCAZUnderMesonBGEstimate_MesonPt[3][category-1][fStartBinPtRange],"Pileup Estimate Method A + 1 ite.","l");
+            if (fHistDCAZUnderMesonBGEstimate_MesonPt[4][category-1][fStartBinPtRange])
+                legend->AddEntry(fHistDCAZUnderMesonBGEstimate_MesonPt[4][category-1][fStartBinPtRange],"Pileup Estimate Method A - 1 ite.","l");
             legend->Draw();
 
         } else {
@@ -1580,35 +1580,47 @@ void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas,
             if (fEnergyFlag.CompareTo("PbPb_2.76TeV")==0 || fEnergyFlag.CompareTo("pPb_5.023TeV")==0){
                 if (fHistDCAZUnderMeson_MesonPt[category-1][iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt[category-1][iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                     -10, 10, 0, 0.5e5);
                 }
             } else {
                 if (fHistDCAZUnderMeson_MesonPt[category-1][iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt[category-1][iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                     -10, 10, 0, 0.5e4);
                 }
             }
             if (fHistDCAZUnderMesonBGEstimate_MesonPt[0][category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt[0][category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 1, 0.5e4);
             }
             if (fHistDCAZUnderMesonBGEstimate_MesonPt[1][category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt[1][category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 2, 0.5e4);
             }
             if (fHistDCAZUnderMesonBGEstimate_MesonPt[2][category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt[2][category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 3, 0.5e4);
+            }
+            if (fHistDCAZUnderMesonBGEstimate_MesonPt[3][category-1][iPt]){
+                DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt[3][category-1][iPt],
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
+                                -fMaxDcaZPhoton, fMaxDcaZPhoton, 4, 0.5e4);
+            }
+            if (fHistDCAZUnderMesonBGEstimate_MesonPt[4][category-1][iPt]){
+                DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt[4][category-1][iPt],
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
+                                -fMaxDcaZPhoton, fMaxDcaZPhoton, 5, 0.5e4);
             }
         }
     }
@@ -1632,7 +1644,6 @@ void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,
     padDataFit->GetFrame()->SetFillColor(0);
     padDataFit->SetBorderMode(0);
     padDataFit->Divide(fColumnPlot,fRowPlot,0.0,0.0);
-// 	padDataFit->SetLeftMargin(0.2);
     padDataFit->Draw();
 
     Int_t place = 0;
@@ -1704,7 +1715,7 @@ void PlotInvMassPtBinCat(TString namePlot, TString nameCanvas, TString namePad,
 
             if (fHistInvMass_MesonPt[category-1][iPt]){
                 DrawGammaInvMassHisto( fHistInvMass_MesonPt[category-1][iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "M_{#gamma#gamma} (cm)", Form("d(M_{#gamma#gamma}), cat %i", category),
                                     fMesonIntRange[0], fMesonIntRange[1], 0, 0);
             }
@@ -1828,14 +1839,14 @@ void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TStrin
             if (fEnergyFlag.CompareTo("PbPb_2.76TeV")==0 || fEnergyFlag.CompareTo("pPb_5.023TeV")==0){
                 if (fHistDCAZUnderMeson_MesonPt[category-1][iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt[category-1][iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                     -10, 10, 0, 0.5e5);
                 }
             } else {
                 if (fHistDCAZUnderMeson_MesonPt[category-1][iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt[category-1][iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i",category),
                                     -10, 10, 0, 0.5e4);
                 }
@@ -1843,43 +1854,43 @@ void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TStrin
 
             if (fHistDCAZUnderMesonBGEstimate_MesonPt[0][category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt[0][category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 1, 0.5e4);
             }
             if (fHistDCAZTruePrimaryMesonGammaGamma_MesonPt[category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZTruePrimaryMesonGammaGamma_MesonPt[category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 2, 0.5e4);
             }
             if (fHistDCAZTruePrimaryMesonDalitz_MesonPt[category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZTruePrimaryMesonDalitz_MesonPt[category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 3, 0.5e4);
             }
             if (fHistDCAZTrueSecondaryMesonFromK0s_MesonPt[category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZTrueSecondaryMesonFromK0s_MesonPt[category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 4, 0.5e4);
             }
             if (fHistDCAZTrueSecondaryMesonFromSomething_MesonPt[category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZTrueSecondaryMesonFromSomething_MesonPt[category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 5, 0.5e4);
             }
             if (fHistDCAZTrueBackground_MesonPt[category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZTrueBackground_MesonPt[category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 6, 0.5e4);
             }
             if (fHistDCAZGarbage_MesonPt[category-1][iPt]){
                 DrawGammaDCAHisto( fHistDCAZGarbage_MesonPt[category-1][iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), cat %i", category),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 7, 0.5e4);
             }
@@ -1994,21 +2005,21 @@ void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TS
             if (fEnergyFlag.CompareTo("PbPb_2.76TeV")==0 || fEnergyFlag.CompareTo("pPb_5.023TeV")==0){
                 if (fHistDCAZUnderMeson_MesonPt_AllCat[iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt_AllCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), all cat"),
                                     -10, 10, 0, 0.5e5);
                 }
             } else {
                 if (fHistDCAZUnderMeson_MesonPt_AllCat[iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt_AllCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), all cat"),
                                     -10, 10, 0, 0.5e4);
                 }
             }
             if (fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z}), all cat"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 1, 0.5e4);
             }
@@ -2115,14 +2126,14 @@ void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCan
             if (fEnergyFlag.CompareTo("PbPb_2.76TeV")==0 || fEnergyFlag.CompareTo("pPb_5.023TeV")==0){
                 if (fHistDCAZUnderMeson_MesonPt_GoodCat[iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt_GoodCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), all cat"),
                                     -10, 10, 0, 0.5e5);
                 }
             } else {
                 if (fHistDCAZUnderMeson_MesonPt_GoodCat[iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt_GoodCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z}), all cat"),
                                     -10, 10, 0, 0.5e4);
                 }
@@ -2221,7 +2232,7 @@ void PlotInvMassPtBin(TString namePlot, TString nameCanvas, TString namePad,
 
             if (fHistInvMass_MesonPt_AllCat[iPt]){
                 DrawGammaInvMassHisto( fHistInvMass_MesonPt_AllCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "M_{#gamma#gamma} (cm)", Form("d(M_{#gamma#gamma})"),
                                     fMesonIntRange[0], fMesonIntRange[1], 0, 0);
             }
@@ -2310,8 +2321,6 @@ void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString n
             legendMCSplit->SetNColumns(2);
             legendMCSplit->SetMargin(0.1);
             if (fHistDCAZUnderMeson_MesonPt_AllCat[fStartBinPtRange])legendMCSplit->AddEntry(fHistDCAZUnderMeson_MesonPt_AllCat[fStartBinPtRange], "Total","p");
-// 			if (fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[0][fStartBinPtRange])
-//                 legendMCSplit->AddEntry(fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[0][fStartBinPtRange], "BG Estimate","l");
             if (fHistDCAZTruePrimaryMesonGammaGamma_MesonPt_AllCat[fStartBinPtRange])
                 legendMCSplit->AddEntry(fHistDCAZTruePrimaryMesonGammaGamma_MesonPt_AllCat[fStartBinPtRange], Form("Prim. %s",fMesonType.Data()),"l");
             if (fHistDCAZTruePrimaryMesonDalitz_MesonPt_AllCat[fStartBinPtRange])
@@ -2342,58 +2351,52 @@ void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString n
             if (fEnergyFlag.CompareTo("PbPb_2.76TeV")==0 || fEnergyFlag.CompareTo("pPb_5.023TeV")==0){
                 if (fHistDCAZUnderMeson_MesonPt_AllCat[iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt_AllCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                     -10, 10, 0, 0.5e5);
                 }
             } else {
                 if (fHistDCAZUnderMeson_MesonPt_AllCat[iPt]){
                     DrawGammaDCAHisto( fHistDCAZUnderMeson_MesonPt_AllCat[iPt],
-                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                    Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                     "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                     -10, 10, 0, 0.5e4);
                 }
             }
 
-// 			if (fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[0][iPt]){
-//                 DrawGammaDCAHisto( fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[0][iPt],
-//                                    Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
-//                                    "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
-//                                    -fMaxDcaZPhoton, fMaxDcaZPhoton, 1, 0.5e4);
-// 			}
             if (fHistDCAZTruePrimaryMesonGammaGamma_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZTruePrimaryMesonGammaGamma_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c",startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c",startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 2, 0.5e4);
             }
             if (fHistDCAZTruePrimaryMesonDalitz_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZTruePrimaryMesonDalitz_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 3, 0.5e4);
             }
             if (fHistDCAZTrueSecondaryMesonFromK0s_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZTrueSecondaryMesonFromK0s_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 4, 0.5e4);
             }
             if (fHistDCAZTrueSecondaryMesonFromSomething_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZTrueSecondaryMesonFromSomething_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 5, 0.5e4);
             }
             if (fHistDCAZTrueBackground_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZTrueBackground_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 6, 0.5e4);
             }
             if (fHistDCAZGarbage_MesonPt_AllCat[iPt]){
                 DrawGammaDCAHisto( fHistDCAZGarbage_MesonPt_AllCat[iPt],
-                                Form("%3.2f GeV/c < p_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
+                                Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt),
                                 "dca_{z} #gamma (cm)", Form("d(dca_{z})"),
                                 -fMaxDcaZPhoton, fMaxDcaZPhoton, 7, 0.5e4);
             }
@@ -2412,7 +2415,7 @@ void DrawGammaDCAHisto( TH1* histo1,
                         Float_t xMin, Float_t xMax,Int_t bck, Double_t numberOfOrders ) {
 
     histo1->GetXaxis()->SetRangeUser(xMin, xMax);
-    if (bck != 1 || bck != 2){
+    if (bck != 1 || bck != 2 || bck != 3 || bck != 4){
         Double_t yMin = 0;
         Double_t yMax = 0;
         for (Int_t i = histo1->GetXaxis()->FindBin(xMin); i < histo1->GetXaxis()->FindBin(xMax); i++){
@@ -2616,4 +2619,3 @@ void DrawGammaInvMassHisto( TH1* histo1,
         }
     }
 }
-

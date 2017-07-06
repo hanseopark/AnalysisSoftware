@@ -52,7 +52,7 @@ TH1F* fHistDCAZTrueBackground_MesonPt_AllCat[30];
 TH1F* fHistDCAZGarbage_MesonPt_AllCat[30];
 
 
-TH1F* fHistDCAZUnderMesonBGEstimate_MesonPt[3][6][30];
+TH1F* fHistDCAZUnderMesonBGEstimate_MesonPt[5][6][30];
 TH1F* fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[30];
 
 TF1* fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[30];
