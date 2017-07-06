@@ -607,8 +607,8 @@
                                                         1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
                                                         3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,
                                                         12.0, 16.0, 20.0, 24.0, 30.0};
-    Double_t fBinsPi0pPb5TeVPtDCA[13]               = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.4, 1.8, 2.4,
-                                                        4.0, 6.0, 14.0};
+    Double_t fBinsPi0pPb5TeVPtDCA[17]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
+                                                        1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
     Double_t fBinsPi0pPb5TeVCentPt[25]              = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.5, 4.0, 5.0,
                                                         6.0, 8.0, 10.0, 12.0, 14.0};
@@ -670,8 +670,8 @@
 
     Double_t fBinsEtapPb5TeVCentPt[15]              = { 0.,  0.4,  0.6,  0.8,  1.0, 1.2, 1.4,  1.6,  2.0,  2.5,
                                                         3.0, 4.,   6.,   8.,   10};
-    Double_t fBinsEtapPb5TeVPtDCA[13]               = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.4, 1.8, 2.4,
-                                                        4.0, 6.0, 14.0};
+    Double_t fBinsEtapPb5TeVPtDCA[17]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
+                                                        1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
     Int_t fBinsEtapPb5TeVPtRebin[22]                = { 10, 8,  8,  8,  5, 5,  5,  5,  4,  4,
                                                         4,   5,  8,  8,  8, 8,   10, 10, 10, 10,
                                                         10,  10};
@@ -2233,9 +2233,9 @@
                     }
 
                     TString MinBias = eventCutSelection(GetEventCentralityMinCutPosition(),2);
-                    if (fNBinsPt > 12 && isDCA) {
-                        cout << "You have chosen to have more than 12 bins, this is not possible, it will be reduced to 12" << endl;
-                        fNBinsPt    = 12;
+                    if (fNBinsPt > 16 && isDCA) {
+                        cout << "You have chosen to have more than 16 bins, this is not possible, it will be reduced to 16" << endl;
+                        fNBinsPt    = 16;
                     } else if (specialTrigg == 0 && ( modi == 2 || modi == 4 ) && fNBinsPt > 34 ){
                         cout << "You have chosen to have more than 34 bins, this is not possible, it will be reduced to 34 for calo analysis" << endl;
                         fNBinsPt    = 34;
@@ -2292,7 +2292,7 @@
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
-                    nIterBGFit                  = 13;
+                    nIterBGFit                  = 11;
                     fMaxYFracBGOverIntHist      = 20;
                 }
             //*********************************************************************************************
@@ -3092,9 +3092,9 @@
                     fRow            = 3;
                 }
 
-                if (fNBinsPt > 12 && isDCA) {
-                    cout << "You have chosen to have more than 12 DCA bins, this is not possible, it will be reduced to 12" << endl;
-                    fNBinsPt        = 12;
+                if (fNBinsPt > 16 && isDCA) {
+                    cout << "You have chosen to have more than 16 DCA bins, this is not possible, it will be reduced to 16" << endl;
+                    fNBinsPt        = 16;
                 } else if (fNBinsPt > 16 && modi < 2) {
                     cout << "You have chosen to have more than 16 bins, this is not possible, it will be reduced to 16" << endl;
                     fNBinsPt        = 16;
@@ -3137,11 +3137,11 @@
                     } else {
                         // PCM binning
                         if ( modi == 0){
-                          if (isDCA && !setPi0.CompareTo("Eta"))
+                          if (isDCA )
                               fBinsPt[i]      = fBinsEtapPb5TeVPtDCA[i];
                           else
                               fBinsPt[i]      = fBinsEtapPb5TeVPt[i];
-                        // Dalitz binning  
+                        // Dalitz binning
                         } else if (modi == 1){
                             fBinsPt[i]      = fBinsEtapPb5TeVDalitzPt[i];
                         // EMC and PCM-EMC binning
@@ -3149,7 +3149,7 @@
                             fBinsPt[i]      = fBinsEtapPb5TeVEMCPt[i];
                         } else {
                             fBinsPt[i]      = fBinsEtapPb5TeVPt[i];
-                        }  
+                        }
                         // Rebin factors
                         if (i < fNBinsPt+1){
                             if (modi == 0 && !setPi0.CompareTo("Eta"))
@@ -3174,7 +3174,7 @@
                                 fNRebin[i]  = fBinsEtapPb5TeVPHOSPtRebin[i];
                             else if (modi == 5 && !setPi0.CompareTo("Pi0EtaBinning"))
                                 fNRebin[i]  = fBinsPi0EtapPb5TeVPHOSPtRebin[i];
-                            else 
+                            else
                                 fNRebin[i]  = fBinsEtapPb5TeVPtRebin[i];
                         }
                     }
@@ -3184,12 +3184,12 @@
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
-                    nIterBGFit                  = 13;
+                    nIterBGFit                  = 11;
                 } else {
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
-                    nIterBGFit                  = 13;
+                    nIterBGFit                  = 11;
                 }
                 fMaxYFracBGOverIntHist          = 20;
             //*********************************************************************************************

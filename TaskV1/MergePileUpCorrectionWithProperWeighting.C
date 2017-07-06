@@ -45,7 +45,7 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 
 void MergePileUpCorrectionWithProperWeighting(TString fCutSelection, TString mesonType, TString fSuffix, TString fEnergyFlag, TString fMCFlag){
-   
+
    TString nameFilesDCAAna[5] = {  
       Form("%s/%s/%s_%s_GammaConvV1DCATestAnalysedLHC10b.root",fCutSelection.Data(), fEnergyFlag.Data(), mesonType.Data(), fMCFlag.Data()),
       Form("%s/%s/%s_%s_GammaConvV1DCATestAnalysedLHC10c.root",fCutSelection.Data(), fEnergyFlag.Data(), mesonType.Data(), fMCFlag.Data()),
@@ -53,13 +53,13 @@ void MergePileUpCorrectionWithProperWeighting(TString fCutSelection, TString mes
       Form("%s/%s/%s_%s_GammaConvV1DCATestAnalysedLHC10e.root",fCutSelection.Data(), fEnergyFlag.Data(), mesonType.Data(), fMCFlag.Data()),
       Form("%s/%s/%s_%s_GammaConvV1DCATestAnalysed.root",fCutSelection.Data(), fEnergyFlag.Data(), mesonType.Data(), fMCFlag.Data())
    };
-   
-   TString outputDir = Form("%s/%s/%s/AnalyseDCATests",fCutSelection.Data(),fEnergyFlag.Data(),fSuffix.Data());
+
+   TString outputDir = Form("%s/%s/%s/AnalyseDCADist",fCutSelection.Data(),fEnergyFlag.Data(),fSuffix.Data());
    gSystem->Exec("mkdir -p "+outputDir);
-   
+
    Double_t numberEvents[5];
    numberEvents[4] = 0;
-   
+
    for (Int_t nFiles = 0; nFiles < 4; nFiles ++){
       TFile* fileInput = new TFile(nameFilesDCAAna[nFiles]);
       TH1F* fEventQuality = (TH1F*)fileInput->Get("NEvents");

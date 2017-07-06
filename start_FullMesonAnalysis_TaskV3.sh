@@ -2487,7 +2487,7 @@ if [ $mode -eq 0 ] || [ $mode -eq 9 ]; then
     correct=0
     while [ $correct -eq 0 ]
     do
-        echo "Please don't forget to run the TaskV1/AnalyseDCATestV1.C separately to estimate train pileup?";
+        echo "Please don't forget to run the TaskV1/AnalyseDCADist.C separately to estimate train pileup?";
         echo "Do the output of this macro exist already? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
