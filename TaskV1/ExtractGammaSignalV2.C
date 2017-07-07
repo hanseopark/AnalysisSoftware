@@ -2636,10 +2636,10 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
     } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) ) {
-        nIterationsShowBackground[0]                    = 14;
-        nIterationsShowBackground[1]                    = 13;
-        nIterationsShowBackground[2]                    = 15;
-        nIterationsShowBackground[3]                    = 16;
+        nIterationsShowBackground[0]                    = 11;
+        nIterationsShowBackground[1]                    = 12;
+        nIterationsShowBackground[2]                    = 10;
+        nIterationsShowBackground[3]                    = 13;
         optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";

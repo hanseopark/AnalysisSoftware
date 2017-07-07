@@ -1392,7 +1392,7 @@ void AnalyseDCADist(    TString meson           ="",
 
         }
     }
-    for (Int_t k = 0; k < 3; k++){
+    for (Int_t k = 0; k < 5; k++){
         if (fHistCorrectionFactorsHist[k]) fHistCorrectionFactorsHist[k]->Write();
     }
     if (fHistCorrectionFactorsHistFitted) fHistCorrectionFactorsHistFitted->Write();
