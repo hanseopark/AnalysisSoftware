@@ -625,7 +625,14 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     constOffsetEffMCPt[k]                           = 1.75;
                     constOffsetEffRecPt[k]                          = 1.75;
                 }
+            } else if (energy.Contains("PbPb_2.76TeV")) {
+                if (k == 2 && constOffsetEffRecPt[k]>1.2) {
+                    ratioGammaSecEffRecPt[k]->Fit(constantRecPt,"SMNR0E+","", minPtFitSec[k], 1.8);
+                    constOffsetEffRecPt[k]                          = constantRecPt->GetParameter(0);
+                    constOffsetEffMCPt[k]                           = constantRecPt->GetParameter(0);
+                }
             }
+
 
             // rescale secondary efficiencies from primary efficiency
             Double_t tempScaleRecPt                                 = 1.;
@@ -765,6 +772,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxPtFitSec[2]                                              = 3.;
         } else {
             maxPtFitSec[0]                                              = 50.;
+            minPtFitSec[1]                                              = 1.5;
             maxPtFitSec[1]                                              = 50.;
             maxPtFitSec[2]                                              = 50.;
         }
@@ -786,6 +794,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             ratioGammaConvProbMCPt[k]                               = (TH1D*)histoGammaSecondaryFromXConvProb_MCPt[k]->Clone(Form(      "RatioConvProbFrom%sToPrim_MCPt",
                                                                                                                                         nameSecondaries[k].Data()));
             ratioGammaConvProbMCPt[k]->Divide(histoGammaConvProb_MCPt);
+            if (energy.Contains("PbPb_2.76TeV") && k==1) power->FixParameter(2,1);
             ratioGammaConvProbMCPt[k]->Fit(power,"SMNR0E+", "", minPtFitSec[k], maxPtFitSec[k]);
 
             Double_t tempEval                                       = 1.;
@@ -807,6 +816,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->SetBinContent(i, histoGammaConvProb_MCPt_OrBin->GetBinContent(i) * tempEval);
                 histoGammaSecondaryFromXConvProb_MCPt_OrBin[k]->SetBinError(  i, histoGammaConvProb_MCPt_OrBin->GetBinError(i)   * tempEval);
             }
+            if (energy.Contains("PbPb_2.76TeV") && k==1) power->ReleaseParameter(2);
 
             //****************************************************************************************** 
             //************************* plot ratio conversion probabilies ****************************** 
@@ -826,6 +836,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
             canvasSecConvProbRatio->SaveAs(Form("%s/%s_RatioSecConvProbToPrim%sPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameSecondaries[k].Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));        
             delete canvasSecConvProbRatio;
+            
             
             //****************************************************************************************** 
             //*************** plot conversion probabilities for secondaries and fits *******************
@@ -1075,7 +1086,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             }
         } else {
             cout << "ERROR! Pileup correction factor fit failed, no pileup correction will be applied!" << endl;
-            doPileUpCorr                                            = NULL;
+            doPileUpCorr                                            = 0;
         }
     }
 
@@ -1183,7 +1194,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
 
         // secondary spectra pileup corrected
-        if (histoFracAllGammaToSecFromX_PileUp_Pt[k]) {
+        if (histoFracAllGammaToSecFromX_PileUp_Pt[k] && doPileUpCorr) {
             histoSecondaryGammaFromXSpecPileUpPt[k]->Multiply(histoFracAllGammaToSecFromX_PileUp_Pt[k]);
             histoSecondaryGammaFromXSpecPileUpPt[k]->Scale(1./nEvt);
             histoSecondaryGammaFromXSpecPileUpPt[k]->Scale(scaleFactorsSec[k]);
@@ -1420,6 +1431,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TCanvas* canvasSecFrac = new TCanvas("canvasSecFrac","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasSecFrac, 0.072, 0.02, 0.035, 0.09);
 
+        Double_t plotYrange[2]              = {-99.,-99.};
+        if(energy.Contains("PbPb_2.76TeV")){
+            plotYrange[0] = 0.;
+            plotYrange[1] = 35.e-3;
+        }
         Int_t nColumnsSec                   = 1;
         Double_t startXSecLegend            = 0.65;
         Int_t nRowsSec                      = 4;
@@ -1433,7 +1449,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         if (!hasCocktailInput) {
             for (Int_t k = 0; k < 4; k++){
                 if (histoFracAllGammaToSecFromX_Pt[k]){ 
-                    SetHistogramm(histoFracAllGammaToSecFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", -99. ,-99., 1.0, 0.9);
+                    SetHistogramm(histoFracAllGammaToSecFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", plotYrange[0] ,plotYrange[1], 1.0, 0.9);
                     DrawGammaSetMarker(histoFracAllGammaToSecFromX_Pt[k], markerStyleSec[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     histoFracAllGammaToSecFromX_Pt[k]->Draw("same");
                     legendSecFrac->AddEntry(histoFracAllGammaToSecFromX_Pt[k],Form("#gamma from %s", nameLabelSecondaries[k].Data()),"pl");
@@ -1442,8 +1458,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         } else {
             for (Int_t k = 0; k < 4; k++){
                 if (histoFracAllGammaToSecFromX_Cocktail_Pt[k]){ 
-                    SetHistogramm(histoFracAllGammaToSecFromX_Cocktail_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", -99., -99., 1.0, 0.9);
-                    SetHistogramm(histoFracAllGammaToSecFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", -99., -99., 1.0, 0.9);
+                    SetHistogramm(histoFracAllGammaToSecFromX_Cocktail_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", plotYrange[0] ,plotYrange[1], 1.0, 0.9);
+                    SetHistogramm(histoFracAllGammaToSecFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","C_{sec, #gamma}", plotYrange[0] ,plotYrange[1], 1.0, 0.9);
                     DrawGammaSetMarker(histoFracAllGammaToSecFromX_Cocktail_Pt[k], markerStyleSec[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     DrawGammaSetMarker(histoFracAllGammaToSecFromX_Pt[k], markerStyleSecWithToy[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     if (k == 0){

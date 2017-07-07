@@ -810,10 +810,6 @@
                                                            2,   2,   4,   4,   4,   4};
     Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[18] = {2, 2, 2, 2,    2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   5};
-    Double_t fBinsPi0PbPb2760GeVPtDCALHC11h[16]     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-                                                        2.2, 2.4, 3.0, 4.0, 6.0, 12.};
-    Double_t fBinsEtaPbPb2760GeVPtDCALHC11h[14]     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0,
-                                                        4.0, 6.0, 10., 12.};
     Int_t fBinsPi0PbPb2760GeVPtLHC11hPCMEMCRebin[26]= { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4, 5,
                                                         5, 10, 10, 10, 10, 10 };                                                        
@@ -2315,15 +2311,7 @@
                             else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[i];
                         } 
                     }
-    //                 if (fNBinsPt > 21) {
-    //                     cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
-    //                     fNBinsPt    = 21;
-    //                 }
-    //                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
-    //                     fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPt[i];
-    //                     if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtRebin[i];
-    //                 }
-                } else{
+                } else {
                     fStartPtBin     = 1;
                     fColumn         = 5;
                     fRow            = 4;
@@ -2341,9 +2329,9 @@
                         fColumn         = 6;
                         fRow            = 4;
                     } else if (modi == 0){
-                    if (fNBinsPt > 20){
-                            fColumn         = 4;
-                    }
+                        if (fNBinsPt > 20){
+                                fColumn         = 4;
+                        }
                     }
                     if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
                         fRow++;
@@ -2360,13 +2348,10 @@
                         if (isDCA) {
                             if (!centDCA.CompareTo("60-80%") || !centDCA.CompareTo("70-80%") || !centDCA.CompareTo("75-90%") ){
                                 fBinsPt[i]          = fBinsPi0PbPb2760GeVPtDCAPer[i];
-                            } else if ( !periodDCA.CompareTo("LHC11h") || !periodDCA.CompareTo("LHC14a1b") ){
-                                fBinsPt[i]          = fBinsPi0PbPb2760GeVPtDCALHC11h[i];
                             } else {
                                 fBinsPt[i]          = fBinsPi0PbPb2760GeVPtDCA[i];
                             }
-                        } else
-                            fBinsPt[i]  = fBinsPi0PbPb2760GeVPtLHC11h[i];
+                        } else fBinsPt[i]  = fBinsPi0PbPb2760GeVPtLHC11h[i];
                         if (modi == 0){
                             if (i < fNBinsPt+1){
                                 if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsPi0PbPb2760GeVPtLHC11hSemicRebin[i];
@@ -2414,15 +2399,10 @@
                         fMaxYFracBGOverIntHist      = 12;
                     } else if (!centDCA.CompareTo("20-50%")) {
                         nIterBGFit                  = 17;
-                        fMaxYFracBGOverIntHist      = 12;
+                        fMaxYFracBGOverIntHist      = 12; 
                     } else if (!centDCA.CompareTo("20-40%")){
-                        if (!periodDCA.CompareTo("LHC11h")){
-                            nIterBGFit              = 17;
-                            fMaxYFracBGOverIntHist  = 8;
-                        } else {
-                            nIterBGFit              = 19;
-                            fMaxYFracBGOverIntHist  = 8;
-                        }
+                        nIterBGFit              = 17;
+                        fMaxYFracBGOverIntHist  = 8;
                     } else if (!centDCA.CompareTo("20-30%")) {
                         nIterBGFit                  = 18;
                         fMaxYFracBGOverIntHist      = 12;
@@ -3218,17 +3198,12 @@
                     fRow            = 3;
                 }
                 if (isDCA) {
+                    fColumn             = 3;
+                    fRow                = 3;
                     if (!setPi0.CompareTo("Pi0EtaBinning")) {
-                        if ( !periodDCA.CompareTo("LHC11h") || !periodDCA.CompareTo("LHC14a1b") ){
-                            if (fNBinsPt > 10) {
-                                cout << "You have chosen to have more than 10 bins, this is not possible, it will be reduced to 10" << endl;
-                                fNBinsPt            = 10;
-                            }
-                        } else {
-                            if (fNBinsPt > 4) {
-                                cout << "You have chosen to have more than 4 bins, this is not possible, it will be reduced to 4" << endl;
-                                fNBinsPt            = 4;
-                            }
+                        if (fNBinsPt > 10) {
+                            cout << "You have chosen to have more than 10 bins, this is not possible, it will be reduced to 10" << endl;
+                            fNBinsPt            = 10;
                         }
                     } else {
                         if (fNBinsPt > 16) {
@@ -3248,14 +3223,10 @@
                 }
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     if (isDCA){
-                        if ( periodDCA.CompareTo("LHC11h")==0 || periodDCA.CompareTo("LHC14a1b")==0 ){
-                                fBinsPt[i]          = fBinsEtaPbPb2760GeVPtDCALHC11h[i];
+                        if (!setPi0.CompareTo("Pi0EtaBinning")) {
+                            fBinsPt[i]          = fBinsEtaPbPb2760GeVPt[i];
                         } else {
-                            if (!setPi0.CompareTo("Pi0EtaBinning")) {
-                                fBinsPt[i]          = fBinsEtaPbPb2760GeVPt[i];
-                            } else {
-                                fBinsPt[i]          = fBinsEtaPbPb2760GeVPtDCA[i];
-                            }
+                            fBinsPt[i]          = fBinsEtaPbPb2760GeVPtDCA[i];
                         }
                     } else {
                         if (modi == 0)
@@ -3302,7 +3273,7 @@
                     } else if (!centDCA.CompareTo("30-40%")){
                         nIterBGFit                  = 17;
                     } else if (!centDCA.CompareTo("20-50%")){
-                        nIterBGFit                  = 17;
+                        nIterBGFit                  = 16;
                     } else if (!centDCA.CompareTo("20-40%")){
                         nIterBGFit                  = 16;
                     } else if (!centDCA.CompareTo("20-30%")){

@@ -2054,7 +2054,7 @@ void CalculatePileUpBackground(Bool_t doMC){
             // plotting DCAz distributions for rec gamma with estimated BG in pt slices
             TString nameFile                                                = Form("%s/%s_%s_ESD_DCAz_vs_Pt_%s_%s.%s", fOutputDir.Data(), fPrefix.Data(), fPrefix2.Data(), categoryName[catIter].Data(), fCutSelection.Data(), fSuffix.Data());
             PlotDCAzInPtBinsWithBack( fESDGammaPtDCAzBins[catIter], fESDGammaPtDCAzBinsBack[catIter], NULL, nameFile, "CanvasESDDCAz", "PadESDDCAz",
-                                     fDate, fMeson, 1, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
+                                     fDate, fMeson, fStartPtBin, fNBinsPtDummy, fBinsPtDummy, "#gamma --> e^{+}e^{-}", fIsMC, "MinBias");
         }
         
         // calculate fractions per category
@@ -2644,9 +2644,9 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 13;
+        nIterationsShowBackground[0]                    = 14;
         nIterationsShowBackground[1]                    = 13;
-        nIterationsShowBackground[2]                    = 15;
+        nIterationsShowBackground[2]                    = 17;
         nIterationsShowBackground[3]                    = 16;
         optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[1]                         = "nosmoothing";
@@ -3848,7 +3848,7 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
 
         legendComparisonWithWithoutPileUp->Draw();
 
-        canvasComparisonWithWithoutPileUp->Print(Form("%s/%s_PileUpComparisonMCDate_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
+        canvasComparisonWithWithoutPileUp->Print(Form("%s/%s_PileUpComparisonMCData_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
         delete canvasComparisonWithWithoutPileUp;
     }
     

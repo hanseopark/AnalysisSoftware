@@ -70,14 +70,15 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     Int_t nLinesNLOLegends  = 2;
     if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0) 
         nLinesNLOLegends    = 3;
-    Double_t minPt   = 0.2;
+    Double_t minPt   = 0.4;
     Double_t maxPt   = 40.;
     Double_t minYDR  = 0.75;
     Double_t maxYDR  = 2.;
     Double_t minYIR  = 0.;
     Double_t maxYIR  = 2.;
 
-
+    Int_t binOffset = 4;
+    
     //******************************************************* defining output directory *******************************************************
     TString outputDir       = Form("%s/%s/FinalGammaResults_%s_%s", suffix.Data(), dateForOutput.Data(), centralityW0Per.Data(), collisionSystemOutput.Data() );
     gSystem->Exec("mkdir -p "+outputDir);
@@ -123,15 +124,15 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     cocktailFitAllGammaForNLO->SetRange(0,20);
     cout << WriteParameterToFile(cocktailFitAllGammaForNLO)<< endl;   
     
-    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_Gamma_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_06_30.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Gamma_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
 
     // ******************************************************************
     // *********** reading systematic errors for double ratio ***********
@@ -215,7 +216,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     nPointsErrors=0;
     while(!fileSysErrIncRatioPi0Fit.eof() && nPointsErrors < 100){
         fileSysErrIncRatioPi0Fit    >> ptSysInclRatioFit[nPointsErrors]
-                                >> relSystErrorIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorIncRatioPi0FitUp[nPointsErrors] 
+                                    >> relSystErrorIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorIncRatioPi0FitUp[nPointsErrors] 
                                     >> relSystErrorWOMaterialIncRatioPi0FitDown[nPointsErrors]         >> relSystErrorWOMaterialIncRatioPi0FitUp[nPointsErrors];
 //                                     >> relSystErrorAIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorAIncRatioPi0FitUp[nPointsErrors] 
 //                                     >> relSystErrorBIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorBIncRatioPi0FitUp[nPointsErrors] 
@@ -430,41 +431,41 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     // **************************************************************************
     // ***************** Calculate systematic error graphs **********************
     // **************************************************************************
-    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErr     = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystError", relSystErrorDoubleRatioPi0FitDown, relSystErrorDoubleRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrA    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorA", relSystErrorADoubleRatioPi0FitDown, relSystErrorADoubleRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrB    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorB", relSystErrorBDoubleRatioPi0FitDown, relSystErrorBDoubleRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrC    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorC", relSystErrorCDoubleRatioPi0FitDown, relSystErrorCDoubleRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphDoubleRatioSysErr  = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystError", relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphDoubleRatioSysErrA = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorA", relSystErrorADoubleRatioDown, relSystErrorADoubleRatioUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphDoubleRatioSysErrB = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorB", relSystErrorBDoubleRatioDown, relSystErrorBDoubleRatioUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphDoubleRatioSysErrC = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorC", relSystErrorCDoubleRatioDown, relSystErrorCDoubleRatioUp,1, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErr     = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystError", relSystErrorDoubleRatioPi0FitDown, relSystErrorDoubleRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrA    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorA", relSystErrorADoubleRatioPi0FitDown, relSystErrorADoubleRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrB    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorB", relSystErrorBDoubleRatioPi0FitDown, relSystErrorBDoubleRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrC    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorC", relSystErrorCDoubleRatioPi0FitDown, relSystErrorCDoubleRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioSysErr  = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystError", relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphDoubleRatioSysErrA = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorA", relSystErrorADoubleRatioDown, relSystErrorADoubleRatioUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphDoubleRatioSysErrB = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorB", relSystErrorBDoubleRatioDown, relSystErrorBDoubleRatioUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphDoubleRatioSysErrC = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorC", relSystErrorCDoubleRatioDown, relSystErrorCDoubleRatioUp, binOffset, nPointsErrors);    
     
     //************************************************************************
     //******************* Calculate error graph for inclusive ratio **********
     //************************************************************************
-    TGraphAsymmErrors* graphIncRatioFitPi0SysErr      = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystError", relSystErrorIncRatioPi0FitDown, relSystErrorIncRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphIncRatioFitPi0SysErrA     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorA", relSystErrorAIncRatioPi0FitDown, relSystErrorAIncRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphIncRatioFitPi0SysErrB     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorB", relSystErrorBIncRatioPi0FitDown, relSystErrorBIncRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphIncRatioFitPi0SysErrC     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorC", relSystErrorCIncRatioPi0FitDown, relSystErrorCIncRatioPi0FitUp,1, nPointsErrors);    
-    TGraphAsymmErrors* graphIncRatioSysErr  = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystError", relSystErrorIncRatioDown, relSystErrorIncRatioUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncRatioSysErrA = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorA", relSystErrorAIncRatioDown, relSystErrorAIncRatioUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncRatioSysErrB = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorB", relSystErrorBIncRatioDown, relSystErrorBIncRatioUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncRatioSysErrC = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorC", relSystErrorCIncRatioDown, relSystErrorCIncRatioUp,1, nPointsErrors);  
+    TGraphAsymmErrors* graphIncRatioFitPi0SysErr      = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystError", relSystErrorIncRatioPi0FitDown, relSystErrorIncRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncRatioFitPi0SysErrA     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorA", relSystErrorAIncRatioPi0FitDown, relSystErrorAIncRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncRatioFitPi0SysErrB     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorB", relSystErrorBIncRatioPi0FitDown, relSystErrorBIncRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncRatioFitPi0SysErrC     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorC", relSystErrorCIncRatioPi0FitDown, relSystErrorCIncRatioPi0FitUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncRatioSysErr  = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystError", relSystErrorIncRatioDown, relSystErrorIncRatioUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphIncRatioSysErrA = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorA", relSystErrorAIncRatioDown, relSystErrorAIncRatioUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphIncRatioSysErrB = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorB", relSystErrorBIncRatioDown, relSystErrorBIncRatioUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphIncRatioSysErrC = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorC", relSystErrorCIncRatioDown, relSystErrorCIncRatioUp, binOffset, nPointsErrors);  
 
     // **************************************************************************
     // ***************** Calculate systematic error graphs **********************
     // **************************************************************************
-    TGraphAsymmErrors* graphIncGammaSysErr      = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystError", relSystErrorIncGammaDown, relSystErrorIncGammaUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncGammaSysErrA     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorA", relSystErrorAIncGammaDown, relSystErrorAIncGammaUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncGammaSysErrB     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorB", relSystErrorBIncGammaDown, relSystErrorBIncGammaUp,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncGammaSysErrC     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorC", relSystErrorCIncGammaDown, relSystErrorCIncGammaUp, 2,nPointsErrors);    
-    TGraphAsymmErrors* graphIncGammaSysErrW0Mat = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorWOMat", relSystErrorWOMaterialIncGammaDown, relSystErrorWOMaterialIncGammaUp,1, nPointsErrors);    
+    TGraphAsymmErrors* graphIncGammaSysErr      = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystError", relSystErrorIncGammaDown, relSystErrorIncGammaUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphIncGammaSysErrA     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorA", relSystErrorAIncGammaDown, relSystErrorAIncGammaUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphIncGammaSysErrB     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorB", relSystErrorBIncGammaDown, relSystErrorBIncGammaUp, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphIncGammaSysErrC     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorC", relSystErrorCIncGammaDown, relSystErrorCIncGammaUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncGammaSysErrW0Mat = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorWOMat", relSystErrorWOMaterialIncGammaDown, relSystErrorWOMaterialIncGammaUp, binOffset, nPointsErrors);    
 
     //************************************************************************
     //******************* Calculate error graph for pi0 **********************
     //************************************************************************    
-    TGraphAsymmErrors* graphPi0SysErr    = CalculateSysErrFromRelSysHisto( histoPi0Spectrum, "Pi0SystError", relSystErrorPi0Down, relSystErrorPi0Up,1, nPointsErrors);    
-//     TGraphAsymmErrors* graphPi0FitSysErr = CalculateSysErrFromRelSysHisto( histoPi0SpectrumFit, "Pi0FitSystError", relSystErrorPi0FitDown, relSystErrorPi0FitUp,1, nPointsErrors);    
+    TGraphAsymmErrors* graphPi0SysErr    = CalculateSysErrFromRelSysHisto( histoPi0Spectrum, "Pi0SystError", relSystErrorPi0Down, relSystErrorPi0Up, binOffset, nPointsErrors);    
+//     TGraphAsymmErrors* graphPi0FitSysErr = CalculateSysErrFromRelSysHisto( histoPi0SpectrumFit, "Pi0FitSystError", relSystErrorPi0FitDown, relSystErrorPi0FitUp, binOffset, nPointsErrors);    
      
     cout << "*************************************************************************************************************" << endl;
     
@@ -603,7 +604,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     canvasPi0->SetLogy();
     canvasPi0->SetLogx();
 
-    TH2D *dummyPi0 = new TH2D("dummyPi0", "dummyPi0", 120, 0., 16, 1000.,histoPi0Spectrum->GetBinContent(histoPi0Spectrum->GetNbinsX())/100, histoPi0Spectrum->GetBinContent(1)*100);
+    TH2D *dummyPi0 = new TH2D("dummyPi0", "dummyPi0", 120, 0., 16, 1000.,1e-10,1e4);
     SetStyleHistoTH2ForGraphs( dummyPi0, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
     dummyPi0->GetXaxis()->SetLabelOffset(-0.015);
@@ -648,11 +649,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     canvasIncGamma->SetLogx();
 
     TH2D *dummyGamma ;
-    dummyGamma = new TH2D("dummyGamma", "dummyGamma", 120, 0., 16, 1000.,histoIncGamma->GetBinContent(histoIncGamma->GetNbinsX())/100, histoIncGamma->GetBinContent(1)*100);
+    dummyGamma = new TH2D("dummyGamma", "dummyGamma", 120, 0., 16, 1000.,1e-10,1e4);
     SetStyleHistoTH2ForGraphs( dummyGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
     dummyGamma->GetXaxis()->SetLabelOffset(-0.015);
     dummyGamma->GetXaxis()->SetRangeUser(minPt, maxPt);
+    dummyGamma->GetYaxis()->SetRangeUser(1e-6,1e2);
     dummyGamma->DrawCopy();
 
 
@@ -855,11 +857,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     canvasDirGamma->SetLogx();
 
     TH2D *dummyDirGamma ;
-    dummyDirGamma = new TH2D("dummyDirGamma", "dummyDirGamma", 120, 0., 16, 1000., histoIncGamma->GetBinContent(histoIncGamma->GetNbinsX())/100, histoIncGamma->GetBinContent(1)*100);
+    dummyDirGamma = new TH2D("dummyDirGamma", "dummyDirGamma", 120, 0., 16, 1000., 1e-10,1e4);
     SetStyleHistoTH2ForGraphs( dummyDirGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
     dummyDirGamma->GetXaxis()->SetLabelOffset(-0.015);
     dummyDirGamma->GetXaxis()->SetRangeUser(minPt, maxPt);
+    dummyDirGamma->GetYaxis()->SetRangeUser(1e-7,1e1);
     dummyDirGamma->DrawCopy();
 
     graphDirGammaSpectrumSyst->Draw("Z2,same");

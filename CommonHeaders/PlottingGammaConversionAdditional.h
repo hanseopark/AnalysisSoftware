@@ -3626,6 +3626,8 @@
                         return 800;
                     } else if (!centrality.CompareTo("20-40%")){
                         return kGreen+2;
+                    } else if (!centrality.CompareTo("20-50%")){
+                        return kCyan+2;
                     } else if (!centrality.CompareTo("40-60%")){
                         return kCyan+2;
                     } else if (!centrality.CompareTo("60-80%")){
@@ -3648,6 +3650,8 @@
                         return 802;
                     } else if (!centrality.CompareTo("20-40%")){
                         return kGreen+4;
+                    } else if (!centrality.CompareTo("20-50%")){
+                        return kCyan+3;
                     } else if (!centrality.CompareTo("40-60%")){
                         return kCyan+3;
                     } else if (!centrality.CompareTo("60-80%")){
@@ -3666,6 +3670,8 @@
                         return 800-3;
                     } else if (!centrality.CompareTo("20-40%")){
                         return kGreen-5;
+                    } else if (!centrality.CompareTo("20-50%")){
+                        return kCyan-5;
                     } else if (!centrality.CompareTo("40-80%")){
                         return kCyan-5;	
                     }
