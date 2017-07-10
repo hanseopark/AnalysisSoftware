@@ -585,7 +585,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphPCMEMCALEtaInvXSectionSys->Print();        
         TH1D* histoPCMEMCALEtaToPi0Stat                     = (TH1D*)directoryPCMEMCALEta->Get("EtaToPi0YShiftedStatError");
         TGraphAsymmErrors* graphPCMEMCALEtaToPi0Stat        = new TGraphAsymmErrors(histoPCMEMCALEtaToPi0Stat);
-        for(Int_t i=0; i<3; i++) graphPCMEMCALEtaToPi0Stat->RemovePoint(0);
+        for(Int_t i=0; i<2; i++) graphPCMEMCALEtaToPi0Stat->RemovePoint(0);
 
         TGraphAsymmErrors* graphPCMEMCALEtaToPi0Sys         = (TGraphAsymmErrors*)directoryPCMEMCALEta->Get("EtaToPi0YShiftedSystError");
         
@@ -2628,7 +2628,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     Int_t offSetsEta[11]            = { 0,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0, 
                                         0};
-    Int_t offSetsEtaSys[11]         = { 1,  0,  5,  0,  3,
+    Int_t offSetsEtaSys[11]         = { 1,  0,  5,  0,  2,
                                         0,  0,  0,  0,  0,
                                         0};
     Int_t offSetEtaShifting[11]     = { 0,  0,  0,  0,  0,
@@ -3732,7 +3732,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     Int_t offSetsEtaToPi0[11]           = { 0,  0,  0,  0,  0,
                                             0,  0,  0,  0,  0, 
                                             0};
-    Int_t offSetsEtaToPi0Sys[11]        = { 1,  0,  5,  0,  3,
+    Int_t offSetsEtaToPi0Sys[11]        = { 1,  0,  5,  0,  2,
                                             0,  0,  0,  0,  0,
                                             0};
     Int_t offSetEtaToPi0Shifting[11]    = { 0,  0,  0,  0,  0,

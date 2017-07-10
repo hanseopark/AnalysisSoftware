@@ -699,7 +699,7 @@ void ExtractSignalV2(   TString meson                   = "",
                 fMesonChi2[3][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
             else 
                 fMesonChi2[3][iPt]                      = -1;
-            
+
         } else {
             fFileErrLog << "Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormalBin%02d",iPt),kFALSE);
@@ -722,7 +722,7 @@ void ExtractSignalV2(   TString meson                   = "",
         if (fFitSignalInvMassPtBin[iPt] !=0x00){
             fMesonMass[iPt]                 = fFitSignalInvMassPtBin[iPt]->GetParameter(1);
             fMesonMassError[iPt]            = fFitSignalInvMassPtBin[iPt]->GetParError(1);
-            
+
             fMesonLambdaTailpar[iPt]        = fFitSignalInvMassPtBin[iPt]->GetParameter(3);
             fMesonLambdaTailparError[iPt]   = fFitSignalInvMassPtBin[iPt]->GetParError(3);
 
@@ -768,7 +768,7 @@ void ExtractSignalV2(   TString meson                   = "",
             fMesonWidthGaussianError[iPt]   = 0.;
         }
 
-        
+
         if (fCrysFitting == 0){
             for (Int_t k = 0; k < 3; k++){
                 IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRange[k]);
@@ -827,7 +827,7 @@ void ExtractSignalV2(   TString meson                   = "",
                 if (fFitTrueSignalInvMassPtBin[iPt] != 0x00){
                     fMesonTrueMass[iPt]             = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(1);
                     fMesonTrueMassError[iPt]        = fFitTrueSignalInvMassPtBin[iPt]->GetParError(1);
-                    
+
                     fMesonLambdaTailMCpar[iPt]      = fFitTrueSignalInvMassPtBin[iPt]->GetParameter(3);
                     fMesonLambdaTailMCparError[iPt] = fFitTrueSignalInvMassPtBin[iPt]->GetParError(3);
 

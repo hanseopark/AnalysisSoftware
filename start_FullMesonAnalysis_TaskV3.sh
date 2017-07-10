@@ -647,6 +647,18 @@ function GiveBinning8TeV()
             echo "23 Bins --> Max p_T = 14 GeV ...";
             correctEta=1
             BinsPtEta=23
+       elif [ $answer = 24 ]; then
+            echo "24 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=24
+       elif [ $answer = 25 ]; then
+            echo "25 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=25
+       elif [ $answer = 26 ]; then
+            echo "26 Bins --> Max p_T = 14 GeV ...";
+            correctEta=1
+            BinsPtEta=26
        else
             echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0

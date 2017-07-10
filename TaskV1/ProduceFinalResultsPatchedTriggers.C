@@ -4814,11 +4814,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           if(mode == 2){
             offSetsEta[1] = 0; //INT7
             offSetsEta[3] = 0; //EMC7
-            offSetsEta[4] = 2; //EGA
+            offSetsEta[4] = 4; //EGA
           }else if(mode == 4){
             offSetsEta[1] = 0; //INT7
             offSetsEta[3] = 0; //EMC7
-            offSetsEta[4] = 2; //EGA
+            offSetsEta[4] = 4; //EGA
           }
         }
 
@@ -5135,7 +5135,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }            
             }
             if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
-                offSetsEtaSys[4]+=2;
+                offSetsEtaSys[4]+=4;
         }
 
         
@@ -6190,11 +6190,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               if(mode == 2){
                 offSetsEtaToPi0[1] = 0; //INT7
                 offSetsEtaToPi0[3] = 0; //EMC7
-                offSetsEtaToPi0[4] = 2; //EGA
+                offSetsEtaToPi0[4] = 4; //EGA
               }else if(mode == 4){
                 offSetsEtaToPi0[1] = 0; //INT7
                 offSetsEtaToPi0[3] = 0; //EMC7
-                offSetsEtaToPi0[4] = 2; //EGA
+                offSetsEtaToPi0[4] = 4; //EGA
               }
             }
 
@@ -6444,7 +6444,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }            
                 } 
                 if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
-                    offSetsEtaToPi0Sys[4]+=2;
+                    offSetsEtaToPi0Sys[4]+=4;
                     
             }
             
