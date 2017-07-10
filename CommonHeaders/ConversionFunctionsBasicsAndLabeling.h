@@ -477,6 +477,33 @@
             // BinContent 13 - Out of bunch pileup
             if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
             return nEvents;
+        }else if(histo->GetNbinsX()==14){
+            if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)-histo->GetBinContent(13)-histo->GetBinContent(14)==0) return 0;
+            Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
+            Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
+            for (Int_t i = 1; i<15; i++ ){
+                if(doCout) cout << histo->GetBinContent(i) << "\t";
+            }
+            if(doCout) cout << nEventsMB  << endl;
+            for (Int_t i = 1; i<15; i++ ){
+                    if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
+            }
+            if(doCout) cout << "accepted \t" << (Float_t)nEvents/nEventsMB << endl;
+            if(doCout) cout << endl;
+            // BinContent 1 - good events
+            // BinContent 2 - centrality not selected
+            // BinContent 3 - MC corrupt
+            // BinContent 4 - no Trigger Bit
+            // BinContent 5 - Zvertex-position,
+            // BinContent 6 - no Contributors to vtx
+            // BinContent 7 - PileUp
+            // BinContent 8 - no SDD
+            // BinContent 9 - no V0AND
+            // BinContent 12 - SPD cluster vs tracklets
+            // BinContent 13 - Out of bunch pileup
+            // BinContent 14 - Pileup V0M-TPCout
+            if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
+            return nEvents;
         }else{
             cout << "ERROR: GetNEvents, dimension of histogram not known! Returning 0...!" << endl;
             return 0;
@@ -3572,6 +3599,10 @@
                 return "-20 ns < t_{clus} < 30 ns";
             case 9:
                 return "-20 ns < t_{clus} < 25 ns";
+            case 10:
+                return "-12.5 ns < t_{clus} < 13 ns";
+            case 11:
+                return "-130 ns < t_{clus} < 130 ns";
             default:
                 return "no timing cut defined";
         }
