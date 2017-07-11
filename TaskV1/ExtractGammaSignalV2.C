@@ -2620,18 +2620,18 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 13;
-        nIterationsShowBackground[1]                    = 12;
-        nIterationsShowBackground[2]                    = 19;
-        nIterationsShowBackground[3]                    = 20;
+        nIterationsShowBackground[0]                    = 11;
+        nIterationsShowBackground[1]                    = 11;
+        nIterationsShowBackground[2]                    = 16;
+        nIterationsShowBackground[3]                    = 11;
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
     } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 12;
-        nIterationsShowBackground[1]                    = 12;
-        nIterationsShowBackground[2]                    = 19;
-        nIterationsShowBackground[3]                    = 20;
+        nIterationsShowBackground[0]                    = 9;
+        nIterationsShowBackground[1]                    = 9;
+        nIterationsShowBackground[2]                    = 14;
+        nIterationsShowBackground[3]                    = 9;
         optionShowBackground[0]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";

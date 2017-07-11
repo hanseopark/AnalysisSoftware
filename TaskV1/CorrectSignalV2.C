@@ -1418,7 +1418,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (optionEnergy.CompareTo("2.76TeV") == 0) 
         maxFracBG       = 20;
     if (optionEnergy.CompareTo("8TeV") == 0) 
-        maxFracBG       = 25;
+        maxFracBG       = 40;
     if (optionEnergy.Contains("pPb") ) 
         maxFracBG       = 16;
     if (kDCAFileDataExists){
@@ -1530,7 +1530,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawAutoGammaMesonHistos(   histoBGEstimateA,
                                         "", "#it{p}_{T,#eta} (GeV/#it{c})", "Correction factor",
                                         kFALSE, 2.,1e-8, kFALSE,
-                                        kTRUE, 0.8, 1,
+                                        kTRUE, 0.6, 1,
                                         kFALSE, 0., 10.);
         } else {
             if (optionEnergy.Contains("pPb"))

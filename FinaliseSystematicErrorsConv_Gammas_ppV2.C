@@ -354,6 +354,22 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         }
+        if ( graphPosErrors == NULL ){
+            cout << "systematic wasn't contained, setting it to 0" << endl;
+            TString nameGraphPos            = Form("%s_SystErrorRelPos_%s",spectrumName.Data(),nameCutVariationSC[0].Data() );
+            TString nameGraphNeg            = Form("%s_SystErrorRelNeg_%s",spectrumName.Data(),nameCutVariationSC[0].Data() );
+            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+            graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+            for (Int_t k = 0; k< graphPosErrors->GetN(); k++){
+                graphPosErrors->SetPoint(k, graphPosErrors->GetX()[k],0);
+                graphPosErrors->SetPointEYhigh (k, 0);
+                graphPosErrors->SetPointEYlow (k, 0);
+                graphNegErrors->SetPoint(k, graphNegErrors->GetX()[k],0);
+                graphNegErrors->SetPointEYhigh (k, 0);
+                graphNegErrors->SetPointEYlow (k, 0);
+            }    
+        }
         
         // Remove first points depending on chosen offset
         while (graphPosErrors->GetX()[0] < minPt ){

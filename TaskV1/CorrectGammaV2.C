@@ -545,6 +545,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtFitSec[0]                                              = 1.1;
         maxPtFitSec[1]                                              = 1.1;
         maxPtFitSec[2]                                              = 1.1;
+    } else if (!energy.CompareTo("7TeV") && mode == 0) {
+        minPtFitSec[2]                                              = 0.4;
+        maxPtFitSec[2]                                              = 1.6;
+
     } else if (!energy.CompareTo("7TeV") && mode == 4) {
         minPtFitSec[0]                                              = 1.2;
         minPtFitSec[1]                                              = 1.2;
@@ -555,6 +559,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtFitSec[2]                                              = 2.4;
 
         doConstFitSec[1]                                            = kFALSE;
+    } else if (!energy.CompareTo("8TeV") && mode == 0) {
+        minPtFitSec[1]                                              = 1.0;
+        maxPtFitSec[1]                                              = 2.0;
     } else if (energy.Contains("PbPb_2.76TeV")) {
         doConstFitSec[0]                                            = kFALSE;
 

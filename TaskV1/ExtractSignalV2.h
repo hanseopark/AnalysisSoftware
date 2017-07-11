@@ -1046,6 +1046,11 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fBGFitRange[1]                  = 0.79;
             fBGFitRangeLeft[0]              = 0.35;
             fBGFitRangeLeft[1]              = 0.48;
+        } else if ( mode == 0 && !fEnergyFlag.CompareTo("8TeV")) {
+            fBGFitRange[0]          = 0.60; 
+            fBGFitRange[1]          = 0.79; 
+            fBGFitRangeLeft[0]      = 0.35;
+            fBGFitRangeLeft[1]      = 0.48;
         } else {
             fBGFitRange[0]          = 0.58; 
             fBGFitRange[1]          = 0.79; 
@@ -1070,6 +1075,10 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonIntDeltaRangeWide[1]      = 0.032;
             fMesonIntDeltaRangeNarrow[0]    = -0.033;
             fMesonIntDeltaRangeNarrow[1]    = 0.012;
+            if(!fEnergyFlag.CompareTo("8TeV")){
+                fMesonIntDeltaRangeNarrow[0]    = -0.030;
+                fMesonIntDeltaRangeNarrow[1]    = 0.010;
+            }
         } else if (mode == 3) {
             fMesonIntDeltaRange[0]          = -0.080;
             fMesonIntDeltaRange[1]          =  0.040;

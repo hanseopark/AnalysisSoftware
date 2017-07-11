@@ -4473,7 +4473,7 @@
                                     TString mode            = ""
                                 ){    
 
-        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("PileupDCA") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
             return kTeal-5;
         if ( variationName.CompareTo("BG") == 0 )
             return kOrange+5;
@@ -4563,7 +4563,7 @@
                                         TString mode            = ""
                                     ){    
 
-        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("PileupDCA") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
             return 24;
         if ( variationName.CompareTo("BG") == 0 )
             return 28;
@@ -4655,6 +4655,8 @@
             return "pile-up";
         if ( variationName.CompareTo("BG") == 0 )
             return "BG method";
+        if ( variationName.CompareTo("PileupDCA") == 0 )
+            return "Out-of-bunch pile-up";
         if ( variationName.Contains("Periods"))
             return "periods";
         if ( variationName.CompareTo("SPD") == 0 )

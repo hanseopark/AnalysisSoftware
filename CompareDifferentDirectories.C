@@ -62,7 +62,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
                                     Int_t NumberOfCuts              = 1, 
                                     TString optionPeriod            = "No",
                                     Int_t mode                      = 9,
-                                    TString cutVariationName        = "NonLinearity"
+                                    TString cutVariationName        = "NonLinearity",
+                                    Bool_t setFullPathInInputFile   = kFALSE
                                 ){
 
     // Initialize arrays
@@ -181,7 +182,10 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         ReturnSeparatedCutNumberAdvanced(cutNumber[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
         
         // read file with corrections
-        FileNameCorrected[i] = Form("%s%s/%s/%s_%s_GammaConvV1Correction_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        if(setFullPathInInputFile)
+            FileNameCorrected[i] = Form("%s/%s_%s_GammaConvV1Correction_%s.root", fileDirectory[i].Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        else
+            FileNameCorrected[i] = Form("%s%s/%s/%s_%s_GammaConvV1Correction_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
         cout<< FileNameCorrected[i] << endl;
         Cutcorrfile[i] = new TFile(FileNameCorrected[i]);	
         if (Cutcorrfile[i]->IsZombie()){
@@ -189,7 +193,10 @@ void CompareDifferentDirectories(   TString FolderList              = "",
           plotOnlyUncorrectedOutput = kTRUE;
         }else readCorrectedFile[i] = kTRUE;
         // read file without corrections
-        FileNameUnCorrected[i] = Form("%s%s/%s/%s_%s_GammaConvV1WithoutCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        if(setFullPathInInputFile)
+            FileNameUnCorrected[i] = Form("%s/%s_%s_GammaConvV1WithoutCorrection_%s.root", fileDirectory[i].Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
+        else
+            FileNameUnCorrected[i] = Form("%s%s/%s/%s_%s_GammaConvV1WithoutCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
         cout<< FileNameUnCorrected[i] << endl;
         Cutuncorrfile[i] = new TFile(FileNameUnCorrected[i]);
         if (Cutuncorrfile[i]->IsZombie()) return;

@@ -88,6 +88,8 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 "MCSmearing" };
     if(!energy.CompareTo("900GeV"))
         nameCutVariationSCCurrent[10] = "SPD";
+    if(!energy.CompareTo("8TeV"))
+        nameCutVariationSCCurrent[12] = "PileupDCA";
     Color_t color[20];
     Color_t markerStyle[20];
     for (Int_t k =0; k<16; k++ ){
@@ -977,6 +979,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
     Double_t errorsMeanCorrSignalExtraction[nPtBins];	
     Double_t errorsMeanCorrTrackReco[nPtBins];	
     Double_t errorsMeanCorrPhotonReco[nPtBins];	
+    Double_t errorsMeanCorrPileup[nPtBins];
     
     for (Int_t l=0; l< nPtBins; l++){
         //"0 YieldExtraction_pp"
@@ -1015,13 +1018,20 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         // track reconstruction: TPCCluster, Single pT, Eta
         errorsMeanCorrTrackReco[l]          =   TMath::Sqrt(pow(errorsMeanCorr[4][l],2)+    // TPCCluster
                                                             pow(errorsMeanCorr[5][l],2));   // Single pT
+        // pileup
+        if(!energy.CompareTo("8TeV"))
+            errorsMeanCorrPileup[l]         =   TMath::Sqrt(pow(errorsMeanCorr[1][l],2)+ // out of bunch methods
+                                                            pow(errorsMeanCorr[11][l],2)+// SPD
+                                                            pow(errorsMeanCorr[12][l],2));   // DCA out of bunch
 
     }
     TGraphErrors* meanErrorsPID                 = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPID ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsPhotonReco          = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPhotonReco ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsSignalExtraction    = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsTrackReco           = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
-    
+    TGraphErrors* meanErrorsPileup              = NULL;
+    if(!energy.CompareTo("8TeV"))
+        meanErrorsPileup              = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPileup ,ptBinsErr ,errorsMeanErrCorrSummed );
     
     
         // ***************************************************************************************************
@@ -1072,9 +1082,15 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reconstruction","p");
         cout << "here" << endl;
         if (meson.CompareTo("EtaToPi0")){
-            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[1], 25, 1.,color[5],color[5]);
-            meanErrorsCorr[1]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[1],"Pileup Estimate","p");
+            if(!energy.CompareTo("8TeV")) {
+                DrawGammaSetMarkerTGraphErr(meanErrorsPileup, 25, 1.,color[5],color[5]);
+                meanErrorsPileup->Draw("p,csame");
+                legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pileup Estimate","p");
+            }else{
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorr[1], 25, 1.,color[5],color[5]);
+                meanErrorsCorr[1]->Draw("p,csame");
+                legendSummedMeanNew->AddEntry(meanErrorsCorr[1],"Pileup Estimate","p");
+            }
             cout << "here" << endl;
             DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
             graphMaterialError->Draw("p,csame");
