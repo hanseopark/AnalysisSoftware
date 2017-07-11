@@ -277,7 +277,7 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
     TString nameMesonHistoPtOpen        = "ESD_MotherPi0_Pt_OpenAngle";
     if (mode == 10) 
         nameMesonHistoPtOpen            = "ESD_Mother_Pt_OpenAngle";
-    
+
     TH2F* histoPi0RapidityPtData        = (TH2F*) ESDContainerData->FindObject(nameMesonHistoPtY.Data());
     histoPi0RapidityPtData->Sumw2();
     TH1D* histoRecPi0RapidityPtDatapTBins[maxNbins];
@@ -299,16 +299,14 @@ void AnalyseNeutralMesonSignificance(   TString fileNameData    = "myOutput",
         histoRecPi0AlphaPtDatapTBins[i]->Sumw2();
         histoRecPi0AlphaPtDatapTBins[i]->Scale(1./nEventsData);
     }
-    
 
     TH2F* histoPi0OpenPtData            = (TH2F*) ESDContainerData->FindObject(nameMesonHistoPtOpen.Data());
     histoPi0OpenPtData->Sumw2();
-   
+
     histoPi0RapidityPtData->Scale(1./nEventsData);
     histoPi0AlphaPtData->Scale(1./nEventsData);
     histoPi0OpenPtData->Scale(1./nEventsData);
-    
-    
+
     //**********************************************************************************
     //**************************** Read MC file ****************************************
     //**********************************************************************************    
