@@ -501,7 +501,7 @@
                     yErrorLow[i]                = 0;
                 }    
             } else {
-                cout << "ERROR: graphs don't have same binning " << endl;
+                cout << "ERROR: graphs don't have same binning in bin " << i << " with x1 = " << xValue[i] << " and x2 = " << graphB->GetX()[i] << endl;
                 return NULL;
             }    
         }

@@ -1217,7 +1217,7 @@
     //************* Analyzes photon eta cut, returns double for normalization ************
     //************************************************************************************
     Double_t ReturnDeltaEta(TString gammaCutNumber){
-        
+
         TString etaCutNumber(gammaCutNumber(GetPhotonEtaCutPosition(gammaCutNumber),1));
         if (etaCutNumber.CompareTo("0")==0){
             cout << "using eta for gammas of 0.9" << endl;
@@ -1249,7 +1249,10 @@
         } else if (etaCutNumber.CompareTo("9")==0){
             cout << "using eta for gammas of 10" << endl;
             return 20.;
-        }	
+        } else if (etaCutNumber.CompareTo("a")==0){
+            cout << "using eta for gammas of 0.2-0.9" << endl;
+            return 1.4;
+        }
         cout << "Eta Value NOT found!!! using eta for gammas of 0.9" << endl;
         return 1.8;
     }
