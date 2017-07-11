@@ -3961,21 +3961,21 @@ void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_SecondaryYield
       fFileDataLog << "Bin " << i << "\t" << fHistoMCMesonEffiPt->GetBinCenter(i)<< "\t"<< fHistoMCMesonEffiPt->GetBinContent(i) << "\t" << fHistoMCMesonEffiPt->GetBinError(i) <<endl;
    }
    fHistoMCMesonEffiFitPt = (TH1D*)fHistoMCMesonEffiPt->Clone(Form("%s_Fit",nameEfi.Data()));
-//    if (fPrefix.CompareTo("Pi0") == 0 || 
-//        (fPrefix.CompareTo("Eta") == 0 && (fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("2.76TeV") == 0) )|| 
+//    if (fPrefix.CompareTo("Pi0") == 0 ||
+//        (fPrefix.CompareTo("Eta") == 0 && (fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("2.76TeV") == 0) )||
 //        (fPrefix.CompareTo("Pi0EtaBinning") == 0 && (fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("2.76TeV") == 0))){
 //       TCanvas* canvasRecTrueFit = new TCanvas();
 //       canvasRecTrueFit->SetLogy(1);
 //       //   	Double_t paramTest[3] = {24,6.7,-6.5};
 //       TF1* fitPtQCD = FitObject("qcd","fitPtQCD","Pi0",fHistoMCMesonEffiScaledByPt,fBinsPt[fStartPtBin] ,fBinsPt[fNBinsPt], NULL,"NRME+");//,paramTest,"NRME+");
-//       cout << WriteParameterToFile(fitPtQCD)<< endl;	
+//       cout << WriteParameterToFile(fitPtQCD)<< endl;
 //       TFitResultPtr resultQCD = fHistoMCMesonEffiScaledByPt->Fit(fitPtQCD,"SNRME+","",fBinsPt[fStartPtBin] ,fBinsPt[fNBinsPt]);
-// 		
+//
 //       DrawGammaSetMarkerTF1(fitPtQCD, 1, 1.5, kBlue);
 //       fHistoMCMesonEffiScaledByPt->GetYaxis()->SetRangeUser(1e-9,1e2);
 //       fHistoMCMesonEffiScaledByPt->Draw("pe1");
 //       fitPtQCD->Draw("same,l");
-// 	
+//
 //       TH1D* fHistoMCMesonWithinAccepPtScaledByPt = (TH1D*)fHistoMCMesonWithinAccepPt->Clone("ScaledByPtWithinAcceptance");
 //       for (Int_t i = 1; i < fHistoMCMesonWithinAccepPtScaledByPt->GetNbinsX()+1; i++){
 //          // 		fHistoMCMesonWithinAccepPtScaledByPt->SetBinContent(i, fHistoMCMesonWithinAccepPtScaledByPt->GetBinContent(i)/fHistoMCMesonWithinAccepPtScaledByPt->GetBinCenter(i)/fNEvents/2/TMath::Pi());
@@ -3986,17 +3986,17 @@ void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_SecondaryYield
 //       Double_t paramTest2[3] = {1.0e5,7.,0.13};
 //       TF1* fitPtMCWithinAcceptance = FitObject("qcd","fitPtMCWithinAcceptance","Pi0",fHistoMCMesonWithinAccepPtScaledByPt,fBinsPt[fStartPtBin] ,fBinsPt[fNBinsPt],NULL,"NRME+");
 //       TFitResultPtr resultMCWithinAcceptance= fHistoMCMesonWithinAccepPtScaledByPt->Fit(fitPtMCWithinAcceptance,"SQNRME+","",fBinsPt[fStartPtBin] ,fBinsPt[fNBinsPt]);
-// 		
+//
 //       DrawGammaSetMarkerTF1(fitPtMCWithinAcceptance, 1, 1.5, kGray);
 //       fHistoMCMesonWithinAccepPtScaledByPt->SetLineColor(kGray);
 //       fHistoMCMesonWithinAccepPtScaledByPt->SetMarkerColor(kGray);
 //       // // 	fHistoMCMesonWithinAccepPtScaledByPt->GetYaxis()->SetRangeUser(1e-6,100);
 //       fHistoMCMesonWithinAccepPtScaledByPt->Draw("pe1,same");
-//       cout << WriteParameterToFile(fitPtMCWithinAcceptance)<< endl;	
+//       cout << WriteParameterToFile(fitPtMCWithinAcceptance)<< endl;
 //       // 	fitPtMCWithinAcceptance->SetRange(0.,10.);
 //       fitPtMCWithinAcceptance->Draw("same,l");
 //       canvasRecTrueFit->SaveAs(nameCanvas.Data());
-// 		
+//
 //       for (Int_t i = 2; i < fHistoMCMesonEffiFitPt->GetNbinsX()+1; i++){
 //          Double_t ptStart = fHistoMCMesonEffiFitPt->GetXaxis()->GetBinLowEdge(i);
 //          Double_t ptEnd = fHistoMCMesonEffiFitPt->GetXaxis()->GetBinUpEdge(i);
@@ -4005,7 +4005,7 @@ void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_SecondaryYield
 //          Double_t errorIntRec;
 //          intRec = fitPtQCD->Integral(ptStart, ptEnd, resultQCD->GetParams());
 //          errorIntRec = fitPtQCD->IntegralError(ptStart, ptEnd,resultQCD->GetParams(),resultQCD->GetCovarianceMatrix().GetMatrixArray() );
-// 			
+//
 //          Double_t intProd;
 //          Double_t errorIntProd ;
 //          intProd = fitPtMCWithinAcceptance->Integral(ptStart, ptEnd, resultMCWithinAcceptance->GetParams());
@@ -4018,8 +4018,8 @@ void CalculateMesonEfficiency(TH1D* fMC_fMesonYieldsPt, TH1D* fMC_SecondaryYield
 // // 			cout << "Int Rec: " <<intRec << "\t +- "<<errorIntRec/intRec*100 << " \t Int Prod: " << intProd << "\t+- " << errorIntProd/intProd*100 << "\t Effi: "<< intRec/intProd << "\t +-" << errorRatio/(intRec/intProd)*100<<endl;
 //          fHistoMCMesonEffiFitPt->SetBinError(i, errorRatio);
 //       }
-//    }		
-   if (nameCanvas){} 
+//    }
+   if (nameCanvas){}
 }
 
 

@@ -334,6 +334,19 @@
     Int_t fBinsDirGamma7TeVEMCPtRebin[23]           = { 5, 5, 5, 5, 5, 4, 4, 3, 2, 2,
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
+    Double_t fBinsEtaPiPlPiMiPiZero7TeVPt[11] = 					{0.1, 2.5,3,3.5,
+
+                                                     4.0,4.5,5.0, 6.0, 10.,12.,15.};
+
+    Int_t fBinsEtaPiPlPiMiPiZero7TeVPtRebin[10] = 					{2, 10,  10,10,
+                                                    10,10, 10,10,10,10};
+
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPt[12] = 					{0.1, 2.5,3,3.5,
+
+                                                     4.0,4.5,5.0, 6.0, 7.0,8.0,10.,15.};
+
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebin[11] = 					{2, 10,  10,10,
+                                                    10,10, 10,10,10,10,10};
 
     //****************************************************************************************************
     //******************** Pt binning for pp, 8 TeV ******************************************************
@@ -3346,6 +3359,41 @@
                         fNRebin[i]  = fBinsEtaPrim7TeVPtRebin[i];
                 }
             }
+        //*************************************************************************************************
+        //********************************** Binning for Omega ********************************************
+        //*************************************************************************************************
+        } else if (setPi0.CompareTo("Omega") == 0) {
+            fNBinsPt = 		numberOfBins;
+            fBinsPt= 			new Double_t[20];
+            fNRebin = 		new Int_t[19];
+
+            if (fEnergyFlag.CompareTo("7TeV") == 0) {
+                fStartPtBin     = 1;
+                fColumn         = 5;
+                fRow            = 3;
+                if (fNBinsPt > 12) {
+                    cout << "You have chosen to have more than 15 bins for Omega, this is not possible, it will be reduced to 12" << endl;
+                    fNBinsPt = 12;
+                }
+                for (Int_t i = 0; i < fNBinsPt+2; i++) {
+                    fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPt[i];
+                    if (i < fNBinsPt+1) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebin[i];
+                }
+
+                if(fMode == 40){
+                    fScaleFac = 2.;
+                    fExampleBin = 2;
+                } else if(fMode == 41){
+                    fScaleFac = 2.;
+                    fExampleBin = 4;
+                } else if(fMode == 44){
+                    fScaleFac = 1.;
+                    fExampleBin = 10;
+                } else{
+                    fScaleFac = 1.;
+                    fExampleBin = 2;
+                }
+            }
         }
     }
 
@@ -3499,6 +3547,11 @@
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta7TeVPt[i];
                     }
+                } else if ( mode == 40 || mode == 41 || mode == 44){
+                    maxNBins = 10;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEtaPiPlPiMiPiZero7TeVPt[i];
+                    }
                 }
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
@@ -3534,6 +3587,15 @@
                         binning[i] = fBinsEtapPb5TeVEMCPt[i];
                     }
                 }
+            }
+        } else if (meson.Contains("Omega")){
+            if (energy.CompareTo("7TeV") == 0){
+               if( mode == 40 || mode == 41 || mode == 44){ // binning identical for all modes implemented so far
+                   maxNBins = 11;
+                   for(Int_t i = 0; i < maxNBins+1; i++){
+                       binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPt[i];
+                   }
+               }
             }
         }
         return maxNBins;
@@ -3646,6 +3708,12 @@
                     startPtBin     = 3;
                 }
 
+            }
+        } else if (meson.CompareTo("Omega") == 0){
+            if (energy.CompareTo("7TeV") == 0){
+                if (mode == 40 | mode == 41 || mode == 44){
+                    startPtBin     = 1;
+                }
             }
         }
         return startPtBin;
