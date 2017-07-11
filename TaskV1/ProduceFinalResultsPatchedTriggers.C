@@ -5135,7 +5135,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }            
             }
             if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
-                offSetsEtaSys[4]+=4;
+              offSetsEtaSys[1]+=0; //INT7
+              offSetsEtaSys[3]+=0; //EMC7
+              offSetsEtaSys[4]+=4; //EGA
         }
 
         
@@ -6444,8 +6446,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }            
                 } 
                 if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
-                    offSetsEtaToPi0Sys[4]+=4;
-                    
+                  offSetsEtaToPi0Sys[1]+=0; //INT7
+                  offSetsEtaToPi0Sys[3]+=0; //EMC7
+                  offSetsEtaToPi0Sys[4]+=4; //EGA
             }
             
             TString nameWeightsLogFileEtaToPi0                  = Form("%s/weightsEtaToPi0_%s.dat",outputDir.Data(),isMC.Data());

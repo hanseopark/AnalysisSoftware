@@ -465,7 +465,7 @@
                                                         4, 4, 4, 4, 4, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
 
-    Double_t fBinsEtaComb8TeVPt[29]                 = { 0.0, 0.5, 0.8, 1.1, 1.4, 1.7, 2.0, 2.4, 2.8, 3.2, 3.6,
+    Double_t fBinsEtaComb8TeVPt[28]                 = { 0.5, 0.8, 1.1, 1.4, 1.7, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 14.0, 16.0,
                                                         18.0, 20.0, 25.0, 30.0, 35.0, 40.0};
     Double_t fBinsEta8TeVPt[21]                     = { 0.0, 0.5, 0.8, 1.1, 1.4, 1.7, 2.0, 2.4, 2.8, 3.2, 3.6,
@@ -3563,7 +3563,7 @@
                 }
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
-                    maxNBins = 28;
+                    maxNBins = 27;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaComb8TeVPt[i];
                     }

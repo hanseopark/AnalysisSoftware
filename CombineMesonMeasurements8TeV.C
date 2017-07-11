@@ -2625,10 +2625,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
 //     return;
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Eta                    
-    Int_t offSetsEta[11]            = { 0,  0,  0,  0,  0,
+    Int_t offSetsEta[11]            = { -1,  0,  0,  0,  0,
                                         0,  0,  0,  0,  0, 
                                         0};
-    Int_t offSetsEtaSys[11]         = { 1,  0,  5,  0,  2,
+    Int_t offSetsEtaSys[11]         = { 0,  0,  5,  0,  2,
                                         0,  0,  0,  0,  0,
                                         0};
     Int_t offSetEtaShifting[11]     = { 0,  0,  0,  0,  0,
@@ -3729,10 +3729,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     }
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for EtaToPi0                    
-    Int_t offSetsEtaToPi0[11]           = { 0,  0,  0,  0,  0,
+    Int_t offSetsEtaToPi0[11]           = { -1,  0,  0,  0,  0,
                                             0,  0,  0,  0,  0, 
                                             0};
-    Int_t offSetsEtaToPi0Sys[11]        = { 1,  0,  5,  0,  2,
+    Int_t offSetsEtaToPi0Sys[11]        = { 0,  0,  5,  0,  2,
                                             0,  0,  0,  0,  0,
                                             0};
     Int_t offSetEtaToPi0Shifting[11]    = { 0,  0,  0,  0,  0,
