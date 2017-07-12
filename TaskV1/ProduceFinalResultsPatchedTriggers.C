@@ -4814,11 +4814,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           if(mode == 2){
             offSetsEta[1] = 0; //INT7
             offSetsEta[3] = 0; //EMC7
-            offSetsEta[4] = 4; //EGA
+            offSetsEta[4] = 3; //EGA
           }else if(mode == 4){
             offSetsEta[1] = 0; //INT7
             offSetsEta[3] = 0; //EMC7
-            offSetsEta[4] = 4; //EGA
+            offSetsEta[4] = 3; //EGA
           }
         }
 
@@ -5137,7 +5137,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2)) 
               offSetsEtaSys[1]+=0; //INT7
               offSetsEtaSys[3]+=0; //EMC7
-              offSetsEtaSys[4]+=4; //EGA
+              offSetsEtaSys[4]+=3; //EGA
         }
 
         
@@ -6192,11 +6192,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
               if(mode == 2){
                 offSetsEtaToPi0[1] = 0; //INT7
                 offSetsEtaToPi0[3] = 0; //EMC7
-                offSetsEtaToPi0[4] = 4; //EGA
+                offSetsEtaToPi0[4] = 3; //EGA
               }else if(mode == 4){
                 offSetsEtaToPi0[1] = 0; //INT7
                 offSetsEtaToPi0[3] = 0; //EMC7
-                offSetsEtaToPi0[4] = 4; //EGA
+                offSetsEtaToPi0[4] = 3; //EGA
               }
             }
 
@@ -6379,6 +6379,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }
                 }
                 
+                if(optionEnergy.CompareTo("8TeV")==0 && mode == 4) ptFromSpecPi0[i][0]-= 0.5;
                 // remove unused bins at beginning
                 cout << "step 3" << endl;
                 while (graphsEtaToPi0Shrunk[i]->GetX()[0] < ptFromSpecEta[i][0] || graphsEtaToPi0Shrunk[i]->GetX()[0] < ptFromSpecPi0[i][0]) 
@@ -6446,9 +6447,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }            
                 } 
                 if ((triggerName[i].Contains("EG2") || triggerName[i].Contains("EGA")) && optionEnergy.CompareTo("8TeV")==0 && (mode == 4 || mode == 2))
-                  offSetsEtaToPi0Sys[1]+=0; //INT7
-                  offSetsEtaToPi0Sys[3]+=0; //EMC7
-                  offSetsEtaToPi0Sys[4]+=4; //EGA
+                  offSetsEtaToPi0Sys[4]+=3; //EGA
             }
             
             TString nameWeightsLogFileEtaToPi0                  = Form("%s/weightsEtaToPi0_%s.dat",outputDir.Data(),isMC.Data());
