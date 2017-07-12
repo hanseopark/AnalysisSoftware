@@ -7524,7 +7524,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histo2DEtaInvMassDummy->GetYaxis()->SetRangeUser(histoEtaInvMassSigRemBGSubPCM[i]->GetMinimum(),1.1*histoEtaInvMassSigPlusBGPCM[i]->GetMaximum());
                 histo2DEtaInvMassDummy->DrawCopy();
 
-                TLatex *labelInvMassPtRangePCM = new TLatex(0.945,0.9,"#eta: 1.2 GeV/#it{c} < #it{p}_{T} < 1.6 GeV/#it{c}");
+                TLatex *labelInvMassPtRangePCM = new TLatex(0.945,0.9,"#eta: 1.1 GeV/#it{c} < #it{p}_{T} < 1.4 GeV/#it{c}");
 
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGPCM[i]->SetLineWidth(1);
