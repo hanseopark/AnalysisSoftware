@@ -175,7 +175,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0 trigger", "EMC-L1 trigger"};
     TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
     TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
-    Double_t maxSecCorr[4]                      = { 0.05, 0.009, 0.00019, 0.04};
+    Double_t maxSecCorr[4]                      = { 0.05, 0.009, 0.00028, 0.04};
     
     Color_t  colorDet[11];
     Color_t  colorDetMC[11];
@@ -372,6 +372,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphPCMEtaInvXSectionSys->Print();
         TH1D* histoPCMEtaToPi0Stat                     = (TH1D*)directoryPCMEta->Get("EtaToPi0YShiftedStatError");
         TGraphAsymmErrors* graphPCMEtaToPi0Stat        = new TGraphAsymmErrors(histoPCMEtaToPi0Stat);
+        graphPCMEtaToPi0Stat->RemovePoint(graphPCMEtaToPi0Stat->GetN()-1);
         TGraphAsymmErrors* graphPCMEtaToPi0Sys         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaToPi0YShiftedSystError");
 //        TH1D* histoPCMEtaInvXSectionStat                    = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
 //        TGraphAsymmErrors* graphPCMEtaInvXSectionStat       = new TGraphAsymmErrors(histoPCMEtaInvXSectionStat);
@@ -4467,6 +4468,11 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 //        histo2DAllEtaMass->GetXaxis()->SetLabelOffset(-0.015);
         histo2DAllEtaMass->DrawCopy(); 
 
+        DrawGammaSetMarker(histoPCMEtaMass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
+        histoPCMEtaMass->Draw("p,same,e");
+        DrawGammaSetMarker(histoPCMEtaTrueMass, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
+        histoPCMEtaTrueMass->Draw("p,same,e");
+
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
         graphEMCALEtaMass->Draw("p,same,z");
         DrawGammaSetMarkerTGraphAsym(graphEMCALEtaMassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
@@ -4477,11 +4483,6 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         DrawGammaSetMarkerTGraphAsym(graphPCMEMCALEtaMassMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
         graphPCMEMCALEtaMassMC->Draw("p,same,z");
         
-        DrawGammaSetMarker(histoPCMEtaMass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        histoPCMEtaMass->Draw("p,same,e");
-        DrawGammaSetMarker(histoPCMEtaTrueMass, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        histoPCMEtaTrueMass->Draw("p,same,e");
-
         DrawGammaLines(0.33, 50. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.3, kGray);
         
         labelLegendBMass->Draw();
@@ -4915,13 +4916,15 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                     }
                 }
                 legendEffSecCorrPi0->Draw();
-                TLatex *labelPerfSecCorr               = new TLatex(0.15,0.90,"ALICE performance");
+                Double_t xAlign = 0.15;
+                if(k==2) xAlign += 0.05;
+                TLatex *labelPerfSecCorr               = new TLatex(xAlign,0.90,"ALICE performance");
                 SetStyleTLatex( labelPerfSecCorr, textSizeLabelsRel,4);
                 labelPerfSecCorr->Draw();
-                TLatex *labelEnergySecCorr             = new TLatex(0.15,0.85,collisionSystem8TeV.Data());
+                TLatex *labelEnergySecCorr             = new TLatex(xAlign,0.85,collisionSystem8TeV.Data());
                 SetStyleTLatex( labelEnergySecCorr, textSizeLabelsRel,4);
                 labelEnergySecCorr->Draw();
-                TLatex *labelDetSysSecCorrPi0          = new TLatex(0.15,0.80,"#pi^{0} #rightarrow #gamma#gamma");
+                TLatex *labelDetSysSecCorrPi0          = new TLatex(xAlign,0.80,"#pi^{0} #rightarrow #gamma#gamma");
                 SetStyleTLatex( labelDetSysSecCorrPi0, textSizeLabelsRel,4);
                 labelDetSysSecCorrPi0->Draw();
 
@@ -5921,7 +5924,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
     eta2pi0MtScaledTCM->SetLineWidth(2.);
 
-    Double_t eta2Pi0Const = 0.45425;
+    Double_t eta2Pi0Const = 0.454963;
     Double_t mPi0 = 0.134977;
     Double_t mEta = 0.547853;
     for (Int_t i=1; i<=eta2pi0MtScaled->GetNbinsX(); i++) {
@@ -7971,8 +7974,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
     const Int_t nPCMEtaBins = 2;
     Int_t binNEta[nPCMEtaBins] = {3,11};
-    Double_t PCMEtabinLow[nPCMEtaBins]={1.2,5.0};
-    Double_t PCMEtabinHigh[nPCMEtaBins]={1.6,6.0};
+    Double_t PCMEtabinLow[nPCMEtaBins]={1.1,5.0};
+    Double_t PCMEtabinHigh[nPCMEtaBins]={1.4,6.0};
 
     for(Int_t iBin=0; iBin<nPCMEtaBins; iBin++){
       TH1D* histoPCMSignalPlusBGEta                        = (TH1D*)directoryPCMEtaL->Get(Form("Eta_InvMassSigPlusBG_%02i_MB",binNEta[iBin]));
