@@ -489,7 +489,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             fMesonMassBackFitError[iPt]     = fFitSignalInvMassBackFitPtBin[iPt]->GetParError(1);
             fMesonWidthBackFit[iPt]         = fFitSignalInvMassBackFitPtBin[iPt]->GetParameter(2);
             fMesonWidthBackFitError[iPt]    = fFitSignalInvMassBackFitPtBin[iPt]->GetParError(2);
-            fMesonCurIntRangeBackFit[0]     = fMesonIntRange[0] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
+            //fMesonCurIntRangeBackFit[0]     = fMesonIntRange[0] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
             //fMesonCurIntRangeBackFit[1]     = fMesonIntRange[1] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
             fMesonCurIntRangeBackFit[0]     = fMesonMass[iPt] + fMesonIntDeltaRange[0]; // TODO look into this (for now same as fMesonCurIntRange)
             fMesonCurIntRangeBackFit[1]     = fMesonMass[iPt] + fMesonIntDeltaRange[1];
@@ -668,7 +668,8 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 }
                 if(fCrysFitting==0){
                     fFileErrLog << "Using exp fit"<<endl;
-                    FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassLeftPtBin[iPt], intRange, iPt, kFALSE);
+                    cout << "k =" << k << endl;
+                    FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], intRange, iPt, kFALSE);
                     fMesonYieldsResidualBckFunc[k][iPt]         = fIntLinearBck;
                     fMesonYieldsResidualBckFuncError[k+3][iPt]    = fIntLinearBckError;
                 } else {
@@ -1550,8 +1551,14 @@ void FillPtHistos()
 void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary)
 {
 
-    //    cout<<"Start Fitting spectra"<<endl;
-    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassRange[0],fMesonMassRange[1]);
+    cout<<"Start Fitting spectra"<<endl;
+    if(fHistoMappingSignalInvMassPtBinSingle!=0x00){
+        cout << "histo exists" << endl;
+    } else{
+        cout << "hiso DOES NOT exist" << endl;
+    }
+    fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
+    cout << "here" << endl;
     Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin;
     Double_t mesonAmplitudeMax;
@@ -2247,6 +2254,7 @@ void Initialize(TString setPi0, Int_t numberOfBins){
     fBackgroundFitPol = 									new TF1*[fNBinsPt];
     fFitSignalInvMassPtBin = 								new TF1*[fNBinsPt];
     fFitSignalInvMassBackFitPtBin = 						new TF1*[fNBinsPt];
+    fFitSignalPeakPosInvMassLeftPtBin                     = new TF1*[fNBinsPt];
     fFitTrueSignalInvMassPtBin = 							new TF1*[fNBinsPt];
     fFitTrueSignalInvMassPtReweightedBin =					new TF1*[fNBinsPt];
 
