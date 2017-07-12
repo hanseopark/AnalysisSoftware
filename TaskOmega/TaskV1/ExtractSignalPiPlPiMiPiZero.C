@@ -1551,14 +1551,8 @@ void FillPtHistos()
 void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary)
 {
 
-    cout<<"Start Fitting spectra"<<endl;
-    if(fHistoMappingSignalInvMassPtBinSingle!=0x00){
-        cout << "histo exists" << endl;
-    } else{
-        cout << "hiso DOES NOT exist" << endl;
-    }
+//    cout<<"Start Fitting spectra"<<endl;
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
-    cout << "here" << endl;
     Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin;
     Double_t mesonAmplitudeMax;

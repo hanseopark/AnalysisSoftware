@@ -2786,7 +2786,10 @@
                     fStartPtBin     = 2;
                 } else if (modi == 4) {
                     fStartPtBin     = 6;
+                } else if (modi == 40 | modi == 41 || modi == 44){
+                    fStartPtBin     = 1;
                 }
+
 
                 if (fNBinsPt > 18) {
                     cout << "You have chosen to have more than 18 bins for Eta, this is not possible, it will be reduced to 18" << endl;
@@ -2813,6 +2816,10 @@
                         fBinsPt[i]      = fBinsEta7TeVPHOSPt[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i]  = fBinsEta7TeVPHOSPtRebin[i];
+                    } else if(modi == 40 | modi == 41 || modi == 44){
+                        fBinsPt[i]      = fBinsEtaPiPlPiMiPiZero7TeVPt[i];
+                        if (i < fNBinsPt+1)
+                            fNRebin[i]  = fBinsEtaPiPlPiMiPiZero7TeVPtRebin[i];
                     } else {
                         fBinsPt[i]      = fBinsEta7TeVPt[i];
                         if (i < fNBinsPt+1)
@@ -3377,7 +3384,8 @@
                 }
                 for (Int_t i = 0; i < fNBinsPt+2; i++) {
                     fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPt[i];
-                    if (i < fNBinsPt+1) fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebin[i];
+                    if (i < fNBinsPt+1)
+                        fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebin[i];
                 }
 
                 if(fMode == 40){
@@ -3707,7 +3715,10 @@
                 } else if (mode == 20){
                     startPtBin     = 3;
                 }
-
+            } else if (energy.CompareTo("7TeV") == 0){
+                if (mode == 40 | mode == 41 || mode == 44){
+                    startPtBin     = 1;
+                }
             }
         } else if (meson.CompareTo("Omega") == 0){
             if (energy.CompareTo("7TeV") == 0){
