@@ -3373,7 +3373,7 @@
             fBinsPt= 			new Double_t[20];
             fNRebin = 		new Int_t[19];
 
-            if (fEnergyFlag.CompareTo("7TeV") == 0) {
+            if (energy.CompareTo("7TeV") == 0) {
                 fStartPtBin     = 1;
                 fColumn         = 5;
                 fRow            = 3;
@@ -3387,17 +3387,17 @@
                         fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebin[i];
                 }
 
-                if(fMode == 40){
-                    fScaleFac = 2.;
+                if(modi == 40){
+                    //fScaleFac = 2.;
                     fExampleBin = 2;
-                } else if(fMode == 41){
-                    fScaleFac = 2.;
+                } else if(modi == 41){
+                    //fScaleFac = 2.;
                     fExampleBin = 4;
-                } else if(fMode == 44){
-                    fScaleFac = 1.;
+                } else if(modi == 44){
+                    //fScaleFac = 1.;
                     fExampleBin = 10;
                 } else{
-                    fScaleFac = 1.;
+                    //fScaleFac = 1.;
                     fExampleBin = 2;
                 }
             }
