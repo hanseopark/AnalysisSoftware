@@ -5983,7 +5983,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     DrawGammaSetMarkerTGraphErr(eta2pi0_RHIC200GeV, 27, 3., kGray+1 , kGray+1, 2., kFALSE);
     eta2pi0_RHIC200GeV->Draw("same,p");
-    DrawGammaSetMarkerTGraphErr(eta2pi0_NA27_275GeV, 25, 2., kGreen-6, kGreen-6, 2., kFALSE);
+    DrawGammaSetMarkerTGraphErr(eta2pi0_NA27_275GeV, 25, 2., kGray+2, kGray+2, 2., kFALSE);
     eta2pi0_NA27_275GeV->Draw("p,same");
     DrawGammaSetMarkerTGraphAsym(graphEtaToPi07000GeV, 28, 3., kBlue-6 , kBlue-6, 2., kFALSE);
     graphEtaToPi07000GeV->Draw("same,p");
