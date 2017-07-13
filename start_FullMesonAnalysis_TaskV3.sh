@@ -50,7 +50,7 @@ IsROOT6=0
 
 function GiveBinning5TeV()
 {
-     echo "how many p_t bins do you want to use for the pi0? 13 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
+     echo "how many p_t bins do you want to use for the pi0? 14 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
 
      read answer
      if [ $answer -gt 19 ] && [ $answer -lt 40 ]; then

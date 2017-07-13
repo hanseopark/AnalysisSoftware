@@ -2847,6 +2847,35 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     maxNBins = 55;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi08TeVPtmEMC[i];
+                    for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                        if (isDCA) {
+                            fBinsPt[i]         = fBinsPi05TeVPtDCA[i];
+                        } else if ( modi == 2 ) {
+                            fBinsPt[i]     = fBinsPi05TeVPtPCMEMC[i];
+                            if ( i < fNBinsPt )
+                                fNRebin[i] = fBinsPi05TeVPCMEMCPtRebin[i];
+                        } else if ( modi == 4 ) {
+                          if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                            fBinsPt[i]     = fBinsPi05TeVPtEMCTrigger1[i];
+                            if ( i < fNBinsPt )
+                                fNRebin[i] = fBinsPi05TeVEMCPtRebinTrigger1[i];
+                          }else{
+                            fBinsPt[i]     = fBinsPi05TeVPtEMC[i];
+                            if ( i < fNBinsPt )
+                                fNRebin[i] = fBinsPi05TeVEMCPtRebin[i];
+                          }
+                        } else if ( modi == 12 ) {
+                          fBinsPt[i]     = fBinsPi05TeVPtDCal[i];
+                          if ( i < fNBinsPt )   fNRebin[i] = fBinsPi05TeVPtRebinDCal[i];
+                        } else if ( modi == 13 ) {
+                          fBinsPt[i]     = fBinsPi05TeVPtPCMDCal[i];
+                          if ( i < fNBinsPt )   fNRebin[i] = fBinsPi05TeVPtRebinPCMDCal[i];
+                        } else  {
+                            fBinsPt[i]          = fBinsPi05TeVPt[i];
+                            if (i < fNBinsPt)
+                            fNRebin[i]  = fBinsPi05TeVPtRebin[i];
+                        }
+
                     }
                 } else if ( mode == 11 ){
                     maxNBins = 60;
