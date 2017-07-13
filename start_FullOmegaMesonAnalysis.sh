@@ -2,12 +2,12 @@
 #
 #
 #
-# This script gests as input a directory where the GammaConvV1 root file is stored,    
+# This script gests as input a directory where the GammaConvV1 root file is stored,
 # it also needs the desired output directory where the produced root files are put.
 # If nothing is given it will use ./ for the input directory and ./Output for the output
 #
 #Input 1: Root file to analyze Default: AnalyisResults
-#Input 2: Input directory  Default:$PWD 
+#Input 2: Input directory  Default:$PWD
 #Input 3: Output directory Default: $PWD/Results  (directory will be created if it does not exist)
 #
 
@@ -35,7 +35,7 @@ function GiveBinning7TeV()
     BinsPtOmega=$answer
     correctOmega=1
     echo "You have chosen " $answer " pt bins for Omega";
-        
+
 }
 
 
@@ -47,7 +47,7 @@ function GiveBinningpPb()
     BinsPtOmega=$answer
     correctOmega=1
     echo "You have chosen " $answer " pt bins for Omega";
-    
+
 }
 
 
@@ -63,35 +63,35 @@ function CorrectSignal()
 }
 
 
-function CreateFinalResults() 
+function CreateFinalResults()
 {
-    if [ $mode != 2 ] && [ $mode != 4 ]; then 
+    if [ $mode != 2 ] && [ $mode != 4 ]; then
         root -x -l -b -q TaskV1/ProduceFinalResultsV2.C\+\($1,\"\"\,\"kTRUE\"\,kFALSE\,$mode\)
-    fi    
+    fi
 }
 
-function Usage() 
+function Usage()
 {
     echo -e "
-This Script is provided by the Gamma Conversion Group of ALICE 
-the main developers are 
+This Script is provided by the Gamma Conversion Group of ALICE
+the main developers are
     Friederike Bock \t friederike.bock@cern.ch
     Ana Marin \t\t marin@physi.uni-heidelberg.de
     Florian Jonas \t florian.jonas@cern.ch
-            
+
 If there are any complications with running this script do not hesitate to connect them.
 
 
-How to use this script? 
-$PROGNAME -h  \t\t\t\t\t usage will be displayed 
-$PROGNAME --help \t\t\t\t usage will be displayed 
+How to use this script?
+$PROGNAME -h  \t\t\t\t\t usage will be displayed
+$PROGNAME --help \t\t\t\t usage will be displayed
 $PROGNAME -c data.root suffix \t\t\t Will only correct and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -d data.root suffix \t\t\t Will only fullfil cutstudies and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -m DirectoryOfMergedOutputs suffix \t Automatic merging for LHC10bc and LHC10de for efficiencies will be done \n \t\t\t\t\t\t\t\t\t according to the fraction in Data, be careful files have to be arranged in a certain structure \n
     \t\t\t\t\t\t\t\t DataRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1Data.root
     \t\t\t\t\t\t\t\t MCRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1MC.root
     \t\t\t\t\t\t\t\t MCRootFileBC=DirectoryOfMergedOutputs/mergedBC/GammaConvV1MC.root
-    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n 
+    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n
 $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the final results and \n \t\t\t\t\t\t\t\t\t produce the graphical output in the specified suffix-format.\n
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
@@ -101,24 +101,24 @@ $PROGNAME  *-*OmegaetaOnly* \t\t\t Omega in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 
-This script needs as a basis the output from the GammaConversion-Software which is provided with the Aliroot software, both the 'data.root' and the 'MC.root' have to be output files of this. The script then will check which cutnumbers are in these files and will ask you which exactly you want to analyse, furthermore you have to set a standard cut which has to be always the first in the CutLogFile. Because for this cut the systematic errors will be calculated. Not only one analysis will be fullfiled, you can additionally choose to do a Alpha studie or Chi2 of the meson as well which will give you the oportunity to calculate two indepent error due to cut variation. Additionally the CorrectSignal.C will correct the spectrum for all possible contributions and afterwards calculate the systematic error due to yield extraction. All these error will then enter the final results where you will have plots with only statistical errors as well as systematic + static errors. Several data output files are created, and 
-stored in the corresponding cut-directory or the working directory for the cutsstudies file. 
+This script needs as a basis the output from the GammaConversion-Software which is provided with the Aliroot software, both the 'data.root' and the 'MC.root' have to be output files of this. The script then will check which cutnumbers are in these files and will ask you which exactly you want to analyse, furthermore you have to set a standard cut which has to be always the first in the CutLogFile. Because for this cut the systematic errors will be calculated. Not only one analysis will be fullfiled, you can additionally choose to do a Alpha studie or Chi2 of the meson as well which will give you the oportunity to calculate two indepent error due to cut variation. Additionally the CorrectSignal.C will correct the spectrum for all possible contributions and afterwards calculate the systematic error due to yield extraction. All these error will then enter the final results where you will have plots with only statistical errors as well as systematic + static errors. Several data output files are created, and
+stored in the corresponding cut-directory or the working directory for the cutsstudies file.
 
     "
-    exit 
+    exit
 }
 
 if [ "$#" == "0" ]; then
     echo -e "
-$PROGNAME -h  \t\t\t\t\t usage will be displayed 
-$PROGNAME --help \t\t\t\t usage will be displayed 
+$PROGNAME -h  \t\t\t\t\t usage will be displayed
+$PROGNAME --help \t\t\t\t usage will be displayed
 $PROGNAME -c data.root suffix \t\t\t Will only correct and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -d data.root suffix \t\t\t Will only fullfil cutstudies and produce the final results for already existing RAWdata \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME -m DirectoryOfMergedOutputs suffix \t Automatic merging for LHC10bc and LHC10de for efficiencies will be done \n \t\t\t\t\t\t\t\t\t according to the fraction in Data, be careful files have to be arranged in a certain structure \n
     \t\t\t\t\t\t\t\t DataRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1Data.root
     \t\t\t\t\t\t\t\t MCRootFile=DirectoryOfMergedOutputs/mergedALL/GammaConvV1MC.root
     \t\t\t\t\t\t\t\t MCRootFileBC=DirectoryOfMergedOutputs/mergedBC/GammaConvV1MC.root
-    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n 
+    \t\t\t\t\t\t\t\t MCRootFileD=DirectoryOfMergedOutputs/mergedDE/GammaConvV1MC.root\n
 $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the final results and \n \t\t\t\t\t\t\t\t\t produce the graphical output in the specified suffix-format.\n
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
@@ -160,40 +160,40 @@ elif [[ "$1" != -* ]] ; then
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
 #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
-else 
+else
     DataRootFile=$1
     MCRootFile=$2
     Suffix=$3;
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #    exit
     fi
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1    
+        PARTLY=1
         MCFILE=0
     fi
 fi
 
 PERIODNAME="No"
 
-if [ $ONLYCUTS -eq 1 ]; then 
+if [ $ONLYCUTS -eq 1 ]; then
     correct=0
     while [ $correct -eq 0 ]
     do
@@ -207,7 +207,7 @@ if [ $ONLYCUTS -eq 1 ]; then
         correct=1
     fi
     done
-    
+
     correct=0
     while [ $correct -eq 0 ]
     do
@@ -226,7 +226,7 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which mode are you running? 40 (PCM-PCM *), 41 (PCM-EMCAL *), 42 (PCM-PHOS), 43 (PCM-DCAL), 44 (EMCAL-EMCAL *), 45 (PHOS-PHOS), 46 (DCAL-DCAL), 47 (PCM-DALITZ), 48 (EMCAL-DALITZ), 49 (PHOS-DALITZ), 50 (DCAL-DALITZ)"
+    echo "Which mode are you running? 40 (PCM-PCM *), 41 (PCM-EMCAL *), 42 (PCM-PHOS *), 43 (PCM-DCAL), 44 (EMCAL-EMCAL *), 45 (PHOS-PHOS*), 46 (DCAL-DCAL), 47 (PCM-DALITZ), 48 (EMCAL-DALITZ), 49 (PHOS-DALITZ), 50 (DCAL-DALITZ)"
     read answer
     if [ $answer = "40" ]; then
         echo "You are analysing PCM-PCM output";
@@ -301,7 +301,7 @@ do
         if [ $dataFileOK -eq 1 ] ; then
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$DataRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
-        else 
+        else
             echo $DataRootFile #DEBUGGING
             root -b -q -x -l TaskV1/MakeCutLog.C\(\"$MCRootFile\"\,\"CutSelection.log\"\,$mode\)
             correct=1
@@ -342,12 +342,12 @@ do
     if [ $energy = "900GeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning900GeV
-        else 
+        else
             correctOmega=1
         fi
         if [ $correctOmega -eq 0 ]; then
             correct=0
-        else 
+        else
             correct=1
         fi
         if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
@@ -356,12 +356,12 @@ do
     elif [ $energy = "2.76TeV" ]; then
         if [ $ONLYRESULTS -eq 0 ]; then
             GiveBinning2760GeV
-        else 
+        else
             correctOmega=1
         fi
         if [ $correctOmega -eq 0 ]; then
             correct=0
-        else 
+        else
             correct=1
         fi
     #elif [ $energy = "5TeV" ] ; then
@@ -375,16 +375,16 @@ do
     #    else
     #        correct=1
     #    fi
-    
+
     elif [ $energy = "7TeV" ] ; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning7TeV
-        else 
+        else
             correctOmega=1
         fi
         if [ $correctOmega -eq 0 ]; then
-            correct=0    
-        else 
+            correct=0
+        else
             correct=1
         fi
 
@@ -394,12 +394,12 @@ do
     elif [ $energy = "8TeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinning8TeV
-        else 
+        else
             correctOmega=1
         fi
         if [ $correctOmega -eq 0 ]; then
-            correct=0    
-        else 
+            correct=0
+        else
             correct=1
         fi
 
@@ -418,24 +418,24 @@ do
     elif [ $energy = "pPb_5.023TeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinningpPb
-        else 
+        else
             correctOmega=1
         fi
         if [ $correctOmega -eq 0 ]; then
             correct=0
-        else 
+        else
             correct=1
         fi
 
     elif [ $energy = "PbPb_2.76TeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinningHI
-        else 
+        else
             correctOmega=1
-        fi        
+        fi
         if [ $correctOmega -eq 0 ]; then
             correct=0
-        else 
+        else
             correct=1
         fi
 
@@ -471,7 +471,7 @@ if [ $ONLYRESULTS = 0 ] ; then
                 crystal=CrystalBall
             elif [ $answer = "Gaussian" ] || [ $answer = "G" ] || [ $answer = "g" ]; then
                 echo "Gaussian chosen ...";
-                correct=1    
+                correct=1
                 crystal=Gaussian
             else
                 echo "Command not found. Please try again.";
@@ -505,7 +505,7 @@ if [ $ONLYRESULTS = 0 ] ; then
             mkdir $cutSelection/$energy
         fi
 
-        if [ $ONLYCUTS -eq 0 ]; then 
+        if [ $ONLYCUTS -eq 0 ]; then
             if [ -d $cutSelection/$energy/$Suffix ]; then
                 echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
             else
@@ -514,20 +514,20 @@ if [ $ONLYRESULTS = 0 ] ; then
 
             if [ $ONLYCORRECTION -eq 0 ]; then
                 echo "CutSelection is $cutSelection";
-                optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
-                if [ -f $DataRootFile ]; then 
+                optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+                if [ -f $DataRootFile ]; then
                     ExtractSignal $optionsOmegaData
                 fi
                 OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
-                if [ $MCFILE -eq 1 ]; then 
-                    optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+                if [ $MCFILE -eq 1 ]; then
+                    optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
                     ExtractSignal $optionsOmegaMC
                     OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
                     OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
                     #root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$OmegadataRAWFILE\"\,\"$OmegaMCRAWFILE\"\,\"$cutSelection\"\,\"Omega\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtOmega\,$mode\)
-                fi    
+                fi
             fi
-            
+
             OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_$cutSelection.root`
             OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
             OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
@@ -535,13 +535,13 @@ if [ $ONLYRESULTS = 0 ] ; then
             if [ -f $OmegadataRAWFILE ] && [ -f $OmegaMCcorrectionFILE ]; then
                 echo "test"
                 #CorrectSignal $OmegadataRAWFILE $OmegaMCcorrectionFILE $cutSelection $Suffix Omega kFALSE $ESTIMATEPILEUP $directphoton
-            else 
+            else
                 PARTLY=1
             fi
             if [ -f $OmegaMCRAWFILE ] && [ -f $OmegaMCcorrectionFILE ]; then
                 #CorrectSignal $OmegaMCRAWFILE $OmegaMCcorrectionFILE $cutSelection $Suffix Omega kTRUE $ESTIMATEPILEUP $directphoton
                 echo "test"
-            else 
+            else
                 PARTLY=1
             fi
 
@@ -551,4 +551,4 @@ if [ $ONLYRESULTS = 0 ] ; then
 
     #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
     #root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Omega\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-fi        
+fi
