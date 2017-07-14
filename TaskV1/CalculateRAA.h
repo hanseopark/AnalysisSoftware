@@ -43,6 +43,7 @@ TH1D* 	histoTrueMassMesonMinusExp;
 TH1D* 	histoMesonSignalFullPtInvMass;
 TH1D* 	histoFWHMMesonMeV;
 TH1D*		histoTrueFWHMMesonMeV;
+TH1D*    histoSecCorr[4] = { NULL, NULL, NULL, NULL}; 
 TH1D*    histoSecAccept[4] = { NULL, NULL, NULL, NULL}; 
 TH1D*    histoSecEffi[4] = { NULL, NULL, NULL, NULL}; 
 TH1D*    histoSecRawYield[4] = { NULL, NULL, NULL, NULL}; 

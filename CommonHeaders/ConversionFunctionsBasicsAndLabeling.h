@@ -2436,6 +2436,9 @@
         case 9:
             chi2CutString = "#chi_{#gamma}^{2} < 15";
             break;
+        case 10:
+            chi2CutString = "#chi_{#gamma}^{2} < 25";
+            break;
         default:
             chi2CutString = "#chi_{#gamma}^{2} cut unknown";
             break;

@@ -123,9 +123,9 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     } 
     
     // Set names of cut variations for file input
-    TString nameCutVariationString[13] = { "dEdxE", "dEdxPi", "TOF", "TPCCluster", "SinglePt", 
+    TString nameCutVariationString[14] = { "dEdxE", "dEdxPi", "TOF", "TPCCluster", "SinglePt", 
                                            "Chi2" , "Qt" , "CosPoint", "Asym" , "Cocktail", 
-                                           "IntRange", "Alpha", "BG"};
+                                           "IntRange", "Alpha", "BG", "ConvPhi"};
 
     // Set colors and markers
     Color_t color[20];
@@ -143,7 +143,8 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
 
     // Create output folder
 	TString outputdir = Form("GammaSystematicErrorsCalculated_%s",dateForOutput.Data());
-	gSystem->Exec("mkdir -p "+outputdir);
+	TString outputsmooth = Form("%s/Smoothing",outputdir.Data());
+	gSystem->Exec("mkdir -p "+outputsmooth);
 
     // ***************************************************************************************************
     // ******************************** Booleans for enabling systematic errors **************************
@@ -153,13 +154,16 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                                         0, 0, 0, 0, 0};
     Bool_t benableIncGamma[15]      = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 0,
-                                        0, 0, 0, 0, 0};
+                                        0, 0, 0, 1, 0};
     Bool_t benableIncRatio[15]      = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 0,
-                                        1, 0, 0, 0, 0};
+                                        1, 0, 0, 1, 0};
     Bool_t benableDoubleRatio[15]   = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 0,
-                                        1, 0, 0, 0, 0};
+                                        1, 0, 0, 1, 0};
+    Bool_t benablePi0[15]           = { 1, 1, 1, 1, 1,
+                                        1, 1, 1, 1, 0,
+                                        1, 0, 0, 1, 0};
     
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
@@ -167,33 +171,37 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     Bool_t bsmooth[15]              = { 0, 0, 0, 0, 0, 
                                         0, 0, 0, 0, 0, 
                                         0, 0, 0, 0, 0};
-    Bool_t bsmoothIncGamma[15]      = { 0, 0, 0, 0, 0, 
+    Bool_t bsmoothIncGamma[15]      = { 1, 1, 1, 1, 1, 
+                                        1, 1, 1, 1, 0, 
+                                        0, 0, 0, 1, 0};
+    Bool_t bsmoothIncRatio[15]      = { 1, 1, 1, 1, 1, 
+                                        1, 1, 1, 1, 0, 
+                                        1, 0, 0, 1, 0};
+    Bool_t bsmoothDoubleRatio[15]   = { 1, 1, 1, 1, 1, 
+                                        1, 1, 1, 1, 0, 
+                                        1, 0, 0, 1, 0};
+    Bool_t bsmoothPi0[15]           = { 1, 1, 1, 1, 1, 
+                                        1, 1, 1, 1, 0, 
+                                        1, 0, 0, 1, 0};
+    Bool_t bsmoothvoid[15]          = { 0, 0, 0, 0, 0, 
                                         0, 0, 0, 0, 0, 
                                         0, 0, 0, 0, 0};
-    Bool_t bsmoothIncRatio[15]      = { 0, 0, 0, 0, 0, 
-                                        0, 0, 0, 0, 0, 
-                                        0, 0, 0, 0, 0};
-    Bool_t bsmoothDoubleRatio[15]   = { 0, 0, 0, 0, 0, 
-                                        0, 0, 0, 0, 0, 
-                                        0, 0, 0, 0, 0};
-                                        
+                                
+    Bool_t addedSig                 = kTRUE;
     for (Int_t i = 0; i < numberCutStudies; i++){
-        if (energy.CompareTo("PbPb_2.76TeV") == 0){
-            if(!spectrumName.CompareTo("IncRatio")){
-                bsmooth[i]                      = bsmoothIncRatio[i];            
-                benable[i]                      = benableIncRatio[i];            
-            } else if(!spectrumName.CompareTo("DoubleRatio")){
-                bsmooth[i]                      = bsmoothDoubleRatio[i];            
-                benable[i]                      = benableDoubleRatio[i];
-            } else if(!spectrumName.CompareTo("Gamma")){
-                bsmooth[i]                      = bsmoothIncGamma[i];            
-                benable[i]                      = benableIncGamma[i];            
-            } else if(!spectrumName.CompareTo("Pi0")){
-                bsmooth[i]                      = bsmoothIncGamma[i];            
-                benable[i]                      = benableIncGamma[i];            
-            }
-        } 
-        if (!benable[i]) nCutsActive--;
+        if(!spectrumName.CompareTo("IncRatio")){
+            bsmooth[i]                      = bsmoothIncRatio[i];            
+            benable[i]                      = benableIncRatio[i];            
+        } else if(!spectrumName.CompareTo("DoubleRatio")){
+            bsmooth[i]                      = bsmoothDoubleRatio[i];            
+            benable[i]                      = benableDoubleRatio[i];
+        } else if(!spectrumName.CompareTo("Gamma")){
+            bsmooth[i]                      = bsmoothIncGamma[i];            
+            benable[i]                      = benableIncGamma[i];            
+        } else if(!spectrumName.CompareTo("Pi0")){
+            bsmooth[i]                      = bsmoothPi0[i];            
+            benable[i]                      = benablePi0[i];            
+        }
     }                      
     
 	Int_t classTypeCut[15]     = {0, 0, 0, 0, 0, 
@@ -292,6 +300,11 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     Double_t errorsMeanErrCorrSummed[nPtBins];
     Double_t errorsMeanErrCorrMatSummed[nPtBins];
 
+    Double_t errorsMeanNotSmooth[nCuts][nPtBins];
+    Double_t errorsMeanErrNotSmooth[nCuts][nPtBins];
+    Double_t errorsMeanCorrNotSmooth[nCuts][nPtBins];
+    Double_t errorsMeanErrCorrNotSmooth[nCuts][nPtBins];
+
     TGraphErrors* negativeErrors[nCuts];
     TGraphErrors* negativeErrorsSummed;
     TGraphErrors* negativeErrorsSummedTypeA;
@@ -318,6 +331,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     TGraphErrors* meanErrorsSummedTypeB;
     TGraphErrors* meanErrorsSummedTypeC;
     TGraphErrors* meanErrorsCorr[nCuts];
+    TGraphErrors* meanErrorsCorrNotSmooth[nCuts];
     TGraphErrors* meanErrorsCorrSummed;
     TGraphErrors* meanErrorsCorrSummedTypeA;
     TGraphErrors* meanErrorsCorrSummedTypeB;
@@ -368,6 +382,12 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 errorsMeanErr[i][l]             = 0.0;
                 errorsMeanCorr[i][l]            = 0;
                 errorsMeanErrCorr[i][l]         = 0.0;                
+
+                errorsMeanNotSmooth[i][l]                = 0;
+                errorsMeanErrNotSmooth[i][l]             = 0.0;
+                errorsMeanCorrNotSmooth[i][l]            = 0;
+                errorsMeanErrCorrNotSmooth[i][l]         = 0.0;                
+                
             }
             continue;
         }    
@@ -395,7 +415,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         // A Errors
         if( nameCutVariationString[i].CompareTo("Chi2") == 0 || nameCutVariationString[i].CompareTo("dEdxE") == 0 || nameCutVariationString[i].CompareTo("PsiPair") == 0  || 
             nameCutVariationString[i].CompareTo("TPCCluster") == 0 || nameCutVariationString[i].CompareTo("IntRange") == 0 || /*nameCutVariationString[i].CompareTo("RCut") == 0 ||*/
-            nameCutVariationString[i].CompareTo("TOF") == 0 || nameCutVariationString[i].CompareTo("SinglePt") == 0 || nameCutVariationString[i].CompareTo("Alpha") == 0 ){ 
+            nameCutVariationString[i].CompareTo("TOF") == 0 || nameCutVariationString[i].CompareTo("SinglePt") == 0 || nameCutVariationString[i].CompareTo("ConvPhi") == 0 ){ 
             classTypeCut[i] = 1;  
         }
         // B Errors
@@ -452,7 +472,6 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
 
         
         // Calculate systematic error from input spectrum
-        cout << nameCutVariationString[i].Data() << endl;
         CalculateMeanSysErr(            errorsMean[i],  errorsMeanErr[i],   errorsPos[i],       errorsNeg[i],           nPtBinsActive);
         CorrectSystematicErrorsWithMean(errorsPos[i],   errorsPosErr[i],    errorsPosCorr[i],   errorsPosErrCorr[i],    nPtBinsActive);
         CorrectSystematicErrorsWithMean(errorsNeg[i],   errorsNegErr[i],    errorsNegCorr[i],   errorsNegErrCorr[i],    nPtBinsActive);
@@ -461,24 +480,39 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         // ***************************************************************************************************
         // ************************ Adjust errors if requested to fixed values *******************************
         // ***************************************************************************************************
-        if (bsmooth[i]){
-            Double_t errorFixed                 = -1;
-            Bool_t adjustPtDependent            = kFALSE;
+        Double_t errorFixed                 = -1;
+        Bool_t adjustPtDependent            = kFALSE;
+        if (bsmooth[i] && !addedSig){
 
-            // fix dEdx e error #0
+            for (Int_t k = 0; k < nPtBinsActive; k++){
+                errorsMeanNotSmooth[i][k]        = errorsMean[i][k];
+                errorsMeanErrNotSmooth[i][k]     = errorsMeanErr[i][k];
+                errorsMeanCorrNotSmooth[i][k]    = errorsMeanCorr[i][k];
+                errorsMeanErrCorrNotSmooth[i][k] = errorsMeanErrCorr[i][k];
+            }
+
+            // fix dEdxE error #0
             if (!nameCutVariationString[i].CompareTo("dEdxE")){
-                adjustPtDependent               = kTRUE;
                 for (Int_t k = 0; k < nPtBinsActive; k++){
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
+                    if (!cent.CompareTo("0-10%")){
+                        adjustPtDependent               = kTRUE;
                         if (spectrumName.Contains("Ratio")){
-                            if (ptBins[k]>2.0){
-                                errorFixed      = 0.2+pow(ptBins[k],1.7)*0.05;
-                            }
+                            errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.05;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.3+pow(ptBins[k]-6,2)*0.06;
                         } else {
-                            if (ptBins[k]>1.0)
-                                errorFixed      = 0.1+pow(ptBins[k],1.3)*0.02;
-                        }    
-                    } 
+                            errorFixed      = 0.2+pow(ptBins[k],1.8)*0.02;
+                        }
+                    } else {
+                        adjustPtDependent               = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.05;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.4+pow(ptBins[k],1.8)*0.03;
+                        } else {
+                            errorFixed      = 0.3+pow(ptBins[k],1.8)*0.02;
+                        }
+                    }
                     
                     if (errorFixed != -1){
                         errorsMean[i][k]        = errorFixed;
@@ -489,103 +523,156 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 }    
             }
 
-            // fix Single pt sys #1
-            if (!nameCutVariationString[i].CompareTo("TPCCluster")){
-                if (spectrumName.Contains("Ratio")){
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
+            // fix dEdxPi sys #1
+            if (!nameCutVariationString[i].CompareTo("dEdxPi")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if (!cent.CompareTo("0-10%")){
                         adjustPtDependent               = kTRUE;
-                        for (Int_t k = 0; k < nPtBinsActive; k++){
-                            errorFixed          = 0.05+pow(ptBins[k],1.5)*0.02+0.1*ptBins[k];
-                            
-                            if (errorFixed != -1){
-                                errorsMean[i][k]        = errorFixed;
-                                errorsMeanErr[i][k]     = errorFixed*0.01;
-                                errorsMeanCorr[i][k]    = errorFixed;
-                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    } else {    
-                        errorFixed                  = 0.3;                        
-                    }    
-                } else {
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
-                        errorFixed                  = 0.05;                        
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.015;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.015;
+                        } else {
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                        }    
+                    } else {
+                        adjustPtDependent               = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed                  = 0.2+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.015;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.015;
+                        } else {
+                            errorFixed                  = 0.25+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                        }                            
                     }
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }
+
+            // fix TOF sys #2
+            if (!nameCutVariationString[i].CompareTo("TOF")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (spectrumName.Contains("Ratio")){
+                        errorFixed              = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.7)*0.005;
+                    } else if (spectrumName.Contains("Pi0")){
+                        errorFixed              = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.7)*0.002;
+                    } else {
+                        errorFixed                  = 0.05*ptBins[k]+pow(ptBins[k],2.2)*0.008;
+                    }
+                            
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }    
+            }
+            
+            // fix TPC cls sys #3
+            if (!nameCutVariationString[i].CompareTo("TPCCluster")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.04;
+                        } else {
+                            errorFixed                  = 0.3;                        
+                        }
+                    } else {
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.3+pow(ptBins[k]-5,2)*0.04;
+                        } else {
+                            errorFixed                  = 0.3;                        
+                        }                        
+                    }
+
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
                 }
             }
             
-            // fix Single pt sys #2
+            // fix Single pt sys #4
             if (!nameCutVariationString[i].CompareTo("SinglePt")){
-                if (spectrumName.Contains("Ratio")){
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
-                        adjustPtDependent               = kTRUE;
-                        for (Int_t k = 0; k < nPtBinsActive; k++){
-                            if (ptBins[k] > 0.7)
-                                errorFixed              = 0.3+pow(ptBins[k],1.8)*0.006+0.1*ptBins[k];
-                            
-                            if (errorFixed != -1){
-                                errorsMean[i][k]        = errorFixed;
-                                errorsMeanErr[i][k]     = errorFixed*0.01;
-                                errorsMeanCorr[i][k]    = errorFixed;
-                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    } else {    
-                        errorFixed                  = 0.3;                        
-                    }    
-                } else {
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (spectrumName.Contains("Ratio")){
+                        errorFixed              = 0.1*ptBins[k]+pow(ptBins[k]-6,2)*0.06;
+                    } else if (spectrumName.Contains("Pi0")){
+                        errorFixed              = 0.1*ptBins[k]+pow(ptBins[k]-6,2)*0.08;
+                    } else {
                         errorFixed                  = 0.15;
                     }    
-                }    
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
             }
 
-            // fix Chi2/psi pair uncertainties #3
+            // fix Chi2/psi sys #5
             if (!nameCutVariationString[i].CompareTo("Chi2")){
-                if (spectrumName.Contains("Ratio")){
-                    adjustPtDependent           = kTRUE;
-                    for (Int_t k = 0; k < nPtBinsActive; k++){
-                        if (!energy.CompareTo("PbPb_2.76TeV")){
-                            if (ptBins[k] > 2.0)
-                                errorFixed          = 0.3+pow(ptBins[k],1.6)*0.003+0.3*ptBins[k];
-//                             else 
-//                                 errorFixed          = 4.0-2.3*ptBins[k];
-                        } 
-                        
-                        if (errorFixed != -1){
-                            errorsMean[i][k]        = errorFixed;
-                            errorsMeanErr[i][k]     = errorFixed*0.01;
-                            errorsMeanCorr[i][k]    = errorFixed;
-                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }    
-                    }
-                } else {
-                    adjustPtDependent           = kTRUE;
-                    for (Int_t k = 0; k < nPtBinsActive; k++){
-                        if (!energy.CompareTo("PbPb_2.76TeV"))
-                            errorFixed              = 0.45+pow(ptBins[k],1.6)*0.02+0.04*ptBins[k];
-                        
-                        if (errorFixed != -1){
-                            errorsMean[i][k]        = errorFixed;
-                            errorsMeanErr[i][k]     = errorFixed*0.01;
-                            errorsMeanCorr[i][k]    = errorFixed;
-                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }    
-                    }
-                }    
-            }
-            
-            // fix Qt sys #4
-            if (!nameCutVariationString[i].CompareTo("Qt")){
-                adjustPtDependent               = kTRUE;
                 for (Int_t k = 0; k < nPtBinsActive; k++){
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
+                    if(!cent.CompareTo("0-10%")){
+                        adjustPtDependent           = kTRUE;
                         if (spectrumName.Contains("Ratio")){
-                            errorFixed      = 0.15+pow(ptBins[k],1.5)*0.05+0.15*ptBins[k];
+                            if (ptBins[k]>2.5)
+                                errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.05;
+                            else
+                                errorFixed      = -0.05+0.005*ptBins[k]+pow(ptBins[k]-6,2)*0.08;
+                        } else if (spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<3.5)
+                                errorFixed      = 0.3+pow(ptBins[k]-6,2)*0.07;
+                            else
+                                errorFixed      = 0.7+pow(ptBins[k],1.3)*0.02;
                         } else {
-                            errorFixed      = 0.15+pow(ptBins[k],2.0)*0.007+0.05*ptBins[k];
-                        }    
-                    } 
+                            adjustPtDependent           = kFALSE;
+                            errorFixed              = 0.7;    
+                        }
+                    } else {
+                        adjustPtDependent           = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.05;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed      = 1.1+pow(ptBins[k],1.8)*0.03;
+                        } else {
+                            errorFixed      = 0.4+pow(ptBins[k],1.8)*0.02;                            
+                        }
+                    }
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }    
+            
+            // fix Qt sys #6
+            if (!nameCutVariationString[i].CompareTo("Qt")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (spectrumName.Contains("Ratio")){
+                        errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2)*0.03;
+                    } else if (spectrumName.Contains("Pi0")){
+                        errorFixed      = 0.25+0.05*ptBins[k]+pow(ptBins[k],2)*0.025;
+                    } else {
+                        errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.0)*0.007;
+                    }    
                     
                     if (errorFixed != -1){
                         errorsMean[i][k]        = errorFixed;
@@ -596,88 +683,468 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 }
             }
             
-
-            // fix BG sys #6
-            if (!nameCutVariationString[i].CompareTo("BG")){
-                errorFixed              = 0.3;
+            // fix cosPoint sys #7
+            if (!nameCutVariationString[i].CompareTo("CosPoint")){
+                if (!cent.CompareTo("0-10%"))
+                    errorFixed                  = 0.2;           
+                else 
+                    if (spectrumName.Contains("Ratio"))
+                        errorFixed                  = 0.4; 
+                    else 
+                        errorFixed                  = 0.2; 
             }
-            // fix cosPoint sys #10
+
+            // fix asym sys #8
+            if (!nameCutVariationString[i].CompareTo("Asym")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if(!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.1+pow(ptBins[k],2)*0.005;
+                        } else {
+                            adjustPtDependent           = kFALSE;
+                            errorFixed              = 0.05;
+                        }
+                    } else {
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.3+pow(ptBins[k],2)*0.005;
+                        } else {
+                            adjustPtDependent           = kFALSE;
+                            errorFixed              = 0.05;
+                        }
+                    }
+                        
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }
+                }
+            }
+
+            // fix Cocktail sys #9
+            if (!nameCutVariationString[i].CompareTo("Cocktail")){
+            }
             
-            // fix dEdxPi sys #11
-            if (!nameCutVariationString[i].CompareTo("dEdxPi")){
-                if (spectrumName.Contains("Ratio")){
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
-                        adjustPtDependent               = kTRUE;
-                        for (Int_t k = 0; k < nPtBinsActive; k++){
-                                errorFixed              = 0.15+pow(ptBins[k],2.7)*0.008+0.05*ptBins[k];
-                            
-                            if (errorFixed != -1){
-                                errorsMean[i][k]        = errorFixed;
-                                errorsMeanErr[i][k]     = errorFixed*0.01;
-                                errorsMeanCorr[i][k]    = errorFixed;
-                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    }   
-                } else {
-                    if (!energy.CompareTo("PbPb_2.76TeV")){
-                        adjustPtDependent               = kTRUE;
-                        for (Int_t k = 0; k < nPtBinsActive; k++){
-                            errorFixed                  = 0.05+pow(ptBins[k],2.2)*0.008+0.05*ptBins[k];
-                            
-                            if (errorFixed != -1){
-                                errorsMean[i][k]        = errorFixed;
-                                errorsMeanErr[i][k]     = errorFixed*0.01;
-                                errorsMeanCorr[i][k]    = errorFixed;
-                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    }                       
-                }    
+            // fix IntRange sys #10
+            if (!nameCutVariationString[i].CompareTo("IntRange")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent           = kTRUE;
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") ){
+                            if (ptBins[k]<6)
+                                errorFixed      = 0.2+0.07*ptBins[k]+pow(ptBins[k]-5,2)*0.1;
+                            else
+                                errorFixed      = 0.35+pow(ptBins[k]-6,2)*0.05;
+                        }
+                    } else{
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") ){
+                            errorFixed      = 0.25+0.07*ptBins[k]+pow(ptBins[k]-5,2)*0.05;
+                        }
+                    }
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
             }
                 
-            // fix alpha uncertainties #12
+            // fix alpha sys #11
             if (!nameCutVariationString[i].CompareTo("Alpha")){
-                if (spectrumName.Contains("Ratio")){
-                    adjustPtDependent           = kTRUE;
-                    for (Int_t k = 0; k < nPtBinsActive; k++){
-                        errorFixed              = 0.01+pow(ptBins[k],2)*0.008;
-                        if (errorFixed != -1){
-                            errorsMean[i][k]        = errorFixed;
-                            errorsMeanErr[i][k]     = errorFixed*0.01;
-                            errorsMeanCorr[i][k]    = errorFixed;
-                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }       
+            }
+            
+            // fix BG sys #12
+            if (!nameCutVariationString[i].CompareTo("BG")){
+            }
+
+            // fix alpha sys #13
+            if (!nameCutVariationString[i].CompareTo("ConvPhi")){
+                adjustPtDependent           = kTRUE;
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") )
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.02;
+                        else {
+                            errorFixed      = -1;
+                        }
+                    } else {
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") )
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.05;
+                        else
+                            errorFixed      = 0.1+pow(ptBins[k],2)*0.02;
+                    }
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }       
+                }
+            }
+            
+            
+            // put fixed values for pt independent errors, which were adjusted
+            if (!adjustPtDependent && errorFixed != -1){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    errorsMean[i][k]        = errorFixed;
+                    errorsMeanErr[i][k]     = errorFixed*0.01;
+                    errorsMeanCorr[i][k]    = errorFixed;
+                    errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                }
+            }    
+        } else  if (bsmooth[i] && addedSig){
+
+            for (Int_t k = 0; k < nPtBinsActive; k++){
+                errorsMeanNotSmooth[i][k]        = errorsMean[i][k];
+                errorsMeanErrNotSmooth[i][k]     = errorsMeanErr[i][k];
+                errorsMeanCorrNotSmooth[i][k]    = errorsMeanCorr[i][k];
+                errorsMeanErrCorrNotSmooth[i][k] = errorsMeanErrCorr[i][k];
+            }
+
+            // fix dEdxE error #0
+            if (!nameCutVariationString[i].CompareTo("dEdxE")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if (!cent.CompareTo("0-10%")){
+                        adjustPtDependent               = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            if (ptBins[k]<2)
+                                errorFixed      = 0.4+pow(ptBins[k]-2.5,2)*0.5;
+                            else
+                                errorFixed      = 0.2+pow(ptBins[k]-4,2)*0.02;
+                        } else if (spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<2)
+                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.5;                                
+                            else 
+                                errorFixed      = 0.8+pow(ptBins[k]-2,2)*0.01;
+                        } else {
+                            errorFixed      = 0.2+pow(ptBins[k],1.8)*0.025;
+                        }
+                    } else {
+                        adjustPtDependent               = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.03;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.5+pow(ptBins[k],1.8)*0.015;
+                        } else {
+                            errorFixed      = 0.3+pow(ptBins[k],1.8)*0.025;
+                        }
+                    }
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
                     }
                 }    
             }
-            
-            // fix Cocktail sys #13
-            if (!nameCutVariationString[i].CompareTo("Cocktail")){
-                if (!spectrumName.CompareTo("DoubleRatio")){
-                    errorFixed                  = 4.0;                        
+
+            // fix dEdxPi sys #1
+            if (!nameCutVariationString[i].CompareTo("dEdxPi")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if (!cent.CompareTo("0-10%")){
+                        adjustPtDependent               = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                        } else {
+                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.013;
+                        }    
+                    } else {
+                        adjustPtDependent               = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed                  = 0.2+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed                  = 0.2+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                        } else {
+                            errorFixed                  = 0.25+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.015;
+                        }                            
+                    }
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }
+
+            // fix TOF sys #2
+            if (!nameCutVariationString[i].CompareTo("TOF")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                        errorFixed              = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.002;
+                    } else {
+                        errorFixed                  = 0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                    }
+                            
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
                 }    
             }
             
-            // fix IntRange sys #15
-            if (!nameCutVariationString[i].CompareTo("IntRange")){
-                if (spectrumName.Contains("Ratio")){
-                    adjustPtDependent           = kTRUE;
-                    for (Int_t k = 0; k < nPtBinsActive; k++){
-                        if (!energy.CompareTo("PbPb_2.76TeV")){
-                            if (ptBins[k] > 8.0)
-                                errorFixed          = 3;
+            // fix TPC cls sys #3
+            if (!nameCutVariationString[i].CompareTo("TPCCluster")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<2)
+                                errorFixed      = 0.6+pow(ptBins[k]-2.5,2)*0.5;
+                            else                               
+                                errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.03;
+                        } else {
+                            errorFixed                  = 0.3;                        
                         }
-                        
-                        if (errorFixed != -1){
-                            errorsMean[i][k]        = errorFixed;
-                            errorsMeanErr[i][k]     = errorFixed*0.01;
-                            errorsMeanCorr[i][k]    = errorFixed;
-                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    } else {
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.2+pow(ptBins[k]-5,2)*0.03;
+                        } else {
+                            errorFixed                  = 0.3;                        
+                        }                        
+                    }
+
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }
+            
+            // fix Single pt sys #4
+            if (!nameCutVariationString[i].CompareTo("SinglePt")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio")){
+                            if (ptBins[k]<3)
+                                errorFixed      = 1.+pow(ptBins[k]-2.5,2)*0.5;
+                            else                               
+                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                        } else if (spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<3)
+                                errorFixed      = 1.+pow(ptBins[k]-2.5,2)*0.5;
+                            else                               
+                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.)*0.001;
+                        } else {
+                            errorFixed          = 0.15;
+                        }    
+                    } else {
+                        if (spectrumName.Contains("Ratio")){
+                            if (ptBins[k]<2.5)
+                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.5;
+                            else                               
+                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                        } else if (spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<2.5)
+                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.5;
+                            else                               
+                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                        } else {
+                            errorFixed          = 0.15;
                         }    
                     }
-                }    
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
             }
+
+            // fix Chi2/psi sys #5
+            if (!nameCutVariationString[i].CompareTo("Chi2")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if(!cent.CompareTo("0-10%")){
+                        adjustPtDependent           = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            if (ptBins[k]>2.5)
+                                errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.03;
+                            else
+                                errorFixed      = -0.05+0.005*ptBins[k]+pow(ptBins[k]-6,2)*0.08;
+                        } else if (spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<3.5)
+                                errorFixed      = 0.3+pow(ptBins[k]-6,2)*0.07;
+                            else
+                                errorFixed      = 0.7+pow(ptBins[k],1.3)*0.02;
+                        } else {
+                            adjustPtDependent           = kFALSE;
+                            errorFixed              = 0.7;    
+                        }
+                    } else {
+                        adjustPtDependent           = kTRUE;
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed      = 1.+pow(ptBins[k]-3,2)*0.02;
+                        } else if (spectrumName.Contains("Pi0")){
+                            if (ptBins[k]<3.5)
+                                errorFixed      = 0.2+pow(ptBins[k]-6,2)*0.07;
+                            else
+                                errorFixed      = 0.7+pow(ptBins[k],1.3)*0.02;
+                        } else {
+                            errorFixed      = 0.4+pow(ptBins[k],1.8)*0.02;                            
+                        }
+                    }
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }    
+            
+            // fix Qt sys #6
+            if (!nameCutVariationString[i].CompareTo("Qt")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent               = kTRUE;
+                    if (!cent.CompareTo("0-10%")){
+                        
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2)*0.01;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.25+0.05*ptBins[k]+pow(ptBins[k],2)*0.015;
+                        } else {
+                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.0)*0.007;
+                        }    
+                        
+                    } else {
+                        
+                        if (spectrumName.Contains("Ratio")){
+                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2)*0.025;
+                        } else if (spectrumName.Contains("Pi0")){
+                            errorFixed      = 0.25+0.05*ptBins[k]+pow(ptBins[k],2)*0.015;
+                        } else {
+                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.0)*0.007;
+                        }    
+                    }                   
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }
+            
+            // fix cosPoint sys #7
+            if (!nameCutVariationString[i].CompareTo("CosPoint")){
+                if (!cent.CompareTo("0-10%"))
+                    errorFixed                  = 0.2;           
+                else 
+                    if (spectrumName.Contains("Ratio"))
+                        errorFixed                  = 0.3; 
+                    else 
+                        errorFixed                  = 0.2; 
+            }
+
+            // fix asym sys #8
+            if (!nameCutVariationString[i].CompareTo("Asym")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if(!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            adjustPtDependent           = kFALSE;
+                            errorFixed              = -1;
+                        } else {
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.05+pow(ptBins[k],2)*0.005;
+                        }
+                    } else {
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.1+pow(ptBins[k],2)*0.005;
+                        } else {
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.05+pow(ptBins[k],2)*0.005;
+                        }
+                    }
+                        
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }
+                }
+            }
+
+            // fix Cocktail sys #9
+            if (!nameCutVariationString[i].CompareTo("Cocktail")){
+            }
+            
+            // fix IntRange sys #10
+            if (!nameCutVariationString[i].CompareTo("IntRange")){
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    adjustPtDependent           = kTRUE;
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") ){
+                            errorFixed      = 1.8+pow(ptBins[k],1.7)*0.01;
+                        }
+                    } else{
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") ){
+                            errorFixed      = 1.+pow(ptBins[k],1.7)*0.01;
+                        }
+                    }
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }    
+                }
+            }
+                
+            // fix alpha sys #11
+            if (!nameCutVariationString[i].CompareTo("Alpha")){
+            }
+            
+            // fix BG sys #12
+            if (!nameCutVariationString[i].CompareTo("BG")){
+            }
+
+            // fix alpha sys #13
+            if (!nameCutVariationString[i].CompareTo("ConvPhi")){
+                adjustPtDependent           = kTRUE;
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                    if (!cent.CompareTo("0-10%")){
+                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") )
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.02;
+                        else {
+                            errorFixed      = -1;
+                        }
+                    } else {
+                        if (spectrumName.Contains("Ratio") )
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.06;
+                        else if(spectrumName.Contains("Pi0"))
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.03;
+                        else
+                            errorFixed      = 0.1+pow(ptBins[k],2)*0.02;
+                    }
+                    
+                    if (errorFixed != -1){
+                        errorsMean[i][k]        = errorFixed;
+                        errorsMeanErr[i][k]     = errorFixed*0.01;
+                        errorsMeanCorr[i][k]    = errorFixed;
+                        errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                    }       
+                }
+            }
+            
             
             // put fixed values for pt independent errors, which were adjusted
             if (!adjustPtDependent && errorFixed != -1){
@@ -690,7 +1157,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
             }    
         }    
         
-
+        
         // Add systematic error contribution from current cutvariation to total summed error
         for (Int_t l = 0; l < nPtBinsActive; l++){
             errorsPosSummed[l]                  = errorsPosSummed[l]+pow(errorsPos[i][l],2);
@@ -704,7 +1171,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         for (Int_t l = 0; l < nPtBinsActive; l++){
             if( nameCutVariationString[i].CompareTo("Chi2") == 0 || nameCutVariationString[i].CompareTo("dEdxE") == 0 || nameCutVariationString[i].CompareTo("PsiPair") == 0  || 
             nameCutVariationString[i].CompareTo("TPCCluster") == 0 || nameCutVariationString[i].CompareTo("IntRange") == 0 || 
-            nameCutVariationString[i].CompareTo("TOF") == 0 || nameCutVariationString[i].CompareTo("SinglePt") == 0 || nameCutVariationString[i].CompareTo("Alpha") == 0 ){
+            nameCutVariationString[i].CompareTo("TOF") == 0 || nameCutVariationString[i].CompareTo("SinglePt") == 0 || nameCutVariationString[i].CompareTo("ConvPhi") == 0 ){
                 errorsPosSummedTypeA[l]         = errorsPosSummedTypeA[l]+pow(errorsPos[i][l],2);
                 errorsNegSummedTypeA[l]         = errorsNegSummedTypeA[l]+ pow(errorsNeg[i][l],2);
                 errorsMeanSummedTypeA[l]        = errorsMeanSummedTypeA[l]+ pow(errorsMean[i][l],2);
@@ -737,12 +1204,15 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         negativeErrorsCorr[i]                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegCorr[i] ,ptBinsErr ,errorsNegErrCorr[i] );
         meanErrorsCorr[i]                       = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorr[i] ,ptBinsErr ,errorsMeanErrCorr[i] );
         positiveErrorsCorr[i]                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsPosCorr[i] ,ptBinsErr ,errorsPosErrCorr[i] );
+        meanErrorsCorrNotSmooth[i]              = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrNotSmooth[i] ,ptBinsErr ,errorsMeanErrCorrNotSmooth[i] );
 
     }
 
     // Set the material budget error
     Double_t errorMaterial                      = 4.50;
-    if (spectrumName.CompareTo("NoMatRatio") == 0)
+    if(spectrumName.CompareTo("Pi0")==0)
+        errorMaterial                           = 9.;
+    else if (spectrumName.CompareTo("NoMatRatio") == 0)
         errorMaterial                           = 0.;
 
     for (Int_t l = 0; l < nPtBinsActive; l++){
@@ -825,14 +1295,12 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                                         << "\t"  << "-"<< errorsMeanCorrMatSummedTypeB[l] << "\t" <<errorsMeanCorrMatSummedTypeB[l]  
                                         << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;        
     }
-cout << errorsMeanCorrMatSummedTypeA[2] << endl;
         
     Double_t errorsMat[nPtBinsActive];
     for (Int_t l = 0; l < nPtBinsActive; l++){
-        errorsMat[l]                            = errorMaterial;
+        errorsMat[l] = errorMaterial;
     }
     TGraphErrors* graphMaterialError            = new TGraphErrors(nPtBinsActive,ptBins ,errorsMat ,ptBinsErr ,errorsMeanErrSummed );
-cout << errorsMeanCorrMatSummedTypeA[2] << endl;
     negativeErrorsSummed                        = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegSummed ,ptBinsErr ,errorsNegErrSummed );
     negativeErrorsCorrSummed                    = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegCorrSummed ,ptBinsErr ,errorsNegErrCorrSummed );
     positiveErrorsSummed                        = new TGraphErrors(nPtBinsActive,ptBins ,errorsPosSummed ,ptBinsErr ,errorsPosErrSummed );
@@ -848,7 +1316,6 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
     meanErrorsSummedTypeA                       = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanSummedTypeA ,ptBinsErr ,errorsMeanErrSummedTypeA );
     meanErrorsCorrSummedTypeA                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrSummedTypeA ,ptBinsErr ,errorsMeanErrCorrSummedTypeA );
     meanErrorsCorrSummedTypeAIncMat             = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrMatSummedTypeA ,ptBinsErr ,errorsMeanErrCorrMatSummedTypeA );
-    cout << errorsMeanCorrMatSummedTypeA[2] << endl;
     meanErrorsCorrSummedTypeAIncMat->Print();
 
     negativeErrorsSummedTypeB                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegSummedTypeB ,ptBinsErr ,errorsNegErrSummedTypeB );
@@ -929,11 +1396,11 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
         TLegend* legendMeanNew              = GetAndSetLegend2(minXLegend, maxYLegend-heightLegend, minXLegend+widthLegend, maxYLegend, 40, nColumnsLegend, "", 43, 0.1);
         for(Int_t i = 0;i< nCuts ;i++){
             if (benable[i]){
-                if(!spectrumName.CompareTo("Gamma")||i!=7){
+//                 if(!spectrumName.CompareTo("Gamma")||i!=7){
                     DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], markerStyle[i], 1.,color[i],color[i]);
                     meanErrorsCorr[i]->Draw("pX0,csame");
                     legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");
-                }
+//                 }
             }    
         }
         
@@ -953,6 +1420,56 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
 
     canvasNewSysErrMean->Update();
     canvasNewSysErrMean->SaveAs(Form("%s/SysMeanNewWithMean_%s_%s%s_%s.%s",outputdir.Data(), spectrumName.Data(), energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data(),suffix.Data()));
+    
+    canvasNewSysErrMean->cd();             
+    histo2DNewSysErrMean->DrawCopy();
+
+    for(Int_t i = 0;i< nCuts ;i++){
+        if (benable[i]){
+            if(!spectrumName.CompareTo("Gamma")||i!=7){
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorrNotSmooth[i], markerStyle[i], 1.,color[i],color[i]);
+                meanErrorsCorrNotSmooth[i]->Draw("pX0,csame");
+            }
+        }    
+    }
+
+    DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "Material" ), 1.,GetColorSystematics( "Material" ),GetColorSystematics( "Material" ));
+    graphMaterialError->Draw("p,csame");
+
+    DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
+    meanErrorsCorrSummedIncMat->Draw("p,csame");
+    legendMeanNew->Draw();
+
+    // labeling
+    labelGamma->Draw();
+    labelEnergy->Draw();
+    labelSpectrum->Draw();
+
+    canvasNewSysErrMean->Update();
+    canvasNewSysErrMean->SaveAs(Form("%s/SysMeanNewWithMean_NotSmooth_%s_%s%s_%s.%s",outputdir.Data(), spectrumName.Data(), energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data(),suffix.Data()));
+    
+    for(Int_t i = 0;i< nCuts ;i++){
+        if (benable[i]){
+
+            canvasNewSysErrMean->cd();
+            TH2D *histo2DCheckSmooth = new TH2D("histo2DCheckSmooth", "histo2DCheckSmooth", 20,0.,ptBins[nPtBinsActive-1]+1,1000.,-0.5,20.);
+                SetStyleHistoTH2ForGraphs( histo2DCheckSmooth, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %",
+                                    0.85*55./1200, 55./1200, 0.85*55./1200, 55./1200, 0.9, 0.75);
+                histo2DCheckSmooth->GetYaxis()->SetLabelOffset(0.001);
+                histo2DCheckSmooth->GetXaxis()->SetLabelOffset(-0.01);
+        //      histo2DCheckSmooth->GetXaxis()->SetMoreLogLabels(kTRUE);
+                histo2DCheckSmooth->DrawCopy();
+
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], markerStyle[i], 1.,color[i],color[i]);
+                meanErrorsCorr[i]->Draw("pX0,csame");
+
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorrNotSmooth[i], markerStyle[i], 1.,kGray+2,kGray+2);
+                meanErrorsCorrNotSmooth[i]->Draw("pX0,csame");
+                    
+            canvasNewSysErrMean->SaveAs(Form("%s/SysBeforeSmoothing_%s_%s_%s%s_%s.%s",outputsmooth.Data(), spectrumName.Data(), nameCutVariationString[i].Data(), energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data(),suffix.Data()));
+        }
+    }
+    
 
     //+++++++++++++++++++++++++ SAVING SYSTEMATICS TO DAT FILE +++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -972,19 +1489,19 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
     for (Int_t l=0; l< nPtBinsActive; l++){
-//         if(!spectrumName.CompareTo("Pi0"))
+        if(!spectrumName.CompareTo("Pi0"))
             SysErrDatAver  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
-//         else 
-//             SysErrDatAver  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] 
-//                                         << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  
-//                                         << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l] 
-//                                         << "\t"  << "-"<< errorsMeanCorrSummedTypeB[l] << "\t" <<errorsMeanCorrSummedTypeB[l]  
-//                                         << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;        
-//             cout  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] 
-//                                         << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  
-//                                         << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l] 
-//                                         << "\t"  << "-"<< errorsMeanCorrMatSummedTypeB[l] << "\t" <<errorsMeanCorrMatSummedTypeB[l]  
-//                                         << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;        
+        else 
+            SysErrDatAver  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] 
+                                        << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  
+                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l] 
+                                        << "\t"  << "-"<< errorsMeanCorrSummedTypeB[l] << "\t" <<errorsMeanCorrSummedTypeB[l]  
+                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;        
+            cout  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] 
+                                        << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  
+                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l] 
+                                        << "\t"  << "-"<< errorsMeanCorrMatSummedTypeB[l] << "\t" <<errorsMeanCorrMatSummedTypeB[l]  
+                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;        
     }
     SysErrDatAver.close();
 
@@ -1058,7 +1575,7 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
 
     TCanvas* canvasSummedErrMean        = new TCanvas("canvasSummedErrMean", "", 200, 10, 1200, 1100);  // gives the page size
     DrawGammaCanvasSettings( canvasSummedErrMean,  0.075, 0.01, 0.015, 0.095);
-    canvasSummedErrMean->SetLogx(1);
+//     canvasSummedErrMean->SetLogx(1);
 
         TH2F * histo2DSummedErrMean;
         histo2DSummedErrMean            = new TH2F("histo2DSummedErrMean", "histo2DSummedErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07, 1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]),
@@ -1092,7 +1609,7 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
             legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"Track Reco.","p");
         }
         // Photon reconstruction
-        if (benable[5] || benable[6] || benable[7] || benable[8]){  
+        if (benable[5] || benable[6] || benable[7] || benable[8] || benable[14]){  
             DrawGammaSetMarkerTGraphErr(meanErrorsPhotonReco, 23, markersizeSummed,color[3],color[3]);
             meanErrorsPhotonReco->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reco.","p");
@@ -1104,7 +1621,7 @@ cout << errorsMeanCorrMatSummedTypeA[2] << endl;
             legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Extraction #pi^{0}","p");
         }
         // Pile up
-        if (benable[13] || benable[14]){
+        if (benable[13]){
             DrawGammaSetMarkerTGraphErr(meanErrorsPileup, 25, markersizeSummed,color[5],color[5]);
             meanErrorsPileup->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pileup","p");

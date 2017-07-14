@@ -206,8 +206,8 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 		} else {
-			TString nameGraphPos = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
-			TString nameGraphNeg = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
+			TString nameGraphPos = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+			TString nameGraphNeg = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
 			cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
 			graphPosErrors = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
 			graphNegErrors = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -1372,12 +1372,14 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 		meanErrors[i]->Draw("pE0,csame");
 		legendMean->AddEntry(meanErrors[i],nameCutVariation[i].Data(),"p");
 	}
-	DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
-	graphMaterialError->Draw("pX0,csame");
-	legendMean->AddEntry(graphMaterialError,"Material","p");
-	DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
-	graphMassResolError->Draw("pX0,csame");
-	legendMean->AddEntry(graphMassResolError,"Mass resolution","p");
+	if(!meson.CompareTo("EtaToPi0")==0){
+        DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
+        graphMaterialError->Draw("pX0,csame");
+        legendMean->AddEntry(graphMaterialError,"Material","p");
+        DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
+        graphMassResolError->Draw("pX0,csame");
+        legendMean->AddEntry(graphMassResolError,"Mass resolution","p");
+    }
 	
 
 	
@@ -1394,12 +1396,12 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
 	
 	TH2D *histo2DNewSysErrMean ;
-	if (meson.Contains("Pi0")){
+	if (meson.CompareTo("Pi0")==0){
 		histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "histo2DNewSysErrMean", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,30.);
 	} else { 
 		histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "histo2DNewSysErrMean", 20,0.,ptBins[nPtBins-1]+1,1000.,-0.5,65.);
 	}
-	histo2DNewSysErrMean->SetYTitle("mean smoothed systematic Err %");
+	histo2DNewSysErrMean->SetYTitle("systematic error (%)");
 	histo2DNewSysErrMean->SetXTitle("#it{p}_{T} (GeV/#it{c})");
 	histo2DNewSysErrMean->GetYaxis()->SetNdivisions(510,kTRUE);
 	histo2DNewSysErrMean->GetYaxis()->SetLabelSize(0.03);
@@ -1416,7 +1418,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	if (meson.Contains("Pi0")){
 		legendMeanNew= new TLegend(0.12,0.65,0.6,0.95);
 	} else {
-		legendMeanNew= new TLegend(0.23,0.65,0.72,0.95);
+		legendMeanNew= new TLegend(0.12,0.65,0.65,0.95);
 	}	
 	legendMeanNew->SetTextSize(0.035);
 	legendMeanNew->SetMargin(0.1);
@@ -1431,12 +1433,14 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 		legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");	
 	}
 
-	DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
-	graphMaterialError->Draw("pX0,csame");
-	legendMeanNew->AddEntry(graphMaterialError,"Material","p");
-	DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
-	graphMassResolError->Draw("pX0,csame");
-	legendMeanNew->AddEntry(graphMassResolError,"Mass resolution","p");
+	if(!meson.CompareTo("EtaToPi0")==0){
+        DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
+        graphMaterialError->Draw("pX0,csame");
+        legendMeanNew->AddEntry(graphMaterialError,"Material","p");
+        DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
+        graphMassResolError->Draw("pX0,csame");
+        legendMeanNew->AddEntry(graphMassResolError,"Mass resolution","p");
+    }
 	
 	DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
 	meanErrorsCorrSummedIncMat->Draw("p,csame");
@@ -1469,11 +1473,13 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 			meanErrorsCorrSmoothed[i]->Draw("pX0,csame");
 	// 		legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");	
 		}
-		DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
-		graphMassResolError->Draw("pX0,csame");
+        if(!meson.CompareTo("EtaToPi0")==0){
+            DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
+            graphMassResolError->Draw("pX0,csame");
 
-		DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
-		graphMaterialError->Draw("pX0,csame");
+            DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
+            graphMaterialError->Draw("pX0,csame");
+        }
 
 //         meanErrorsCorrSummedIncMat->Print();
 //         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kGray,kGray);
@@ -1586,8 +1592,10 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 // 	DrawGammaSetMarkerTGraphErr(meanErrorsOther, 26, 1.,color[6],color[6]);
 // 	meanErrorsOther->Draw("pX0,csame");
 	// PCM Material budget 
-	DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
-	graphMaterialError->Draw("pX0,csame");
+    if(!meson.CompareTo("EtaToPi0")==0){
+        DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
+        graphMaterialError->Draw("pX0,csame");
+    }
 	// PCM Mass Resolution
 // 	DrawGammaSetMarkerTGraphErr(graphMassResolError, 21, 1.,color[11],color[11]);
 // 	graphMassResolError->Draw("pX0,csame");
@@ -1597,7 +1605,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"Track Reconstruction","p");
 	legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reconstruction","p");
 // 	legendSummedMeanNew->AddEntry(meanErrorsAcceptance,"Acceptance (#eta)","p");
-    legendSummedMeanNew->AddEntry(graphMaterialError,"Material","p");
+    if(!meson.CompareTo("EtaToPi0")==0) legendSummedMeanNew->AddEntry(graphMaterialError,"Material","p");
 // 	legendSummedMeanNew->AddEntry(graphMassResolError,"Mass resolution","p");	
 // 	legendSummedMeanNew->AddEntry(meanErrorsOther,"TOF, cos(P.A.)","p");
 	

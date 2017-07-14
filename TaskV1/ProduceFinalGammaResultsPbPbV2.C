@@ -70,7 +70,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     Int_t nLinesNLOLegends  = 2;
     if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0) 
         nLinesNLOLegends    = 3;
-    Double_t minPt   = 0.4;
+    Double_t minPt   = 0.6;
     Double_t maxPt   = 40.;
     Double_t minYDR  = 0.75;
     Double_t maxYDR  = 2.;
@@ -124,15 +124,15 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     cocktailFitAllGammaForNLO->SetRange(0,20);
     cout << WriteParameterToFile(cocktailFitAllGammaForNLO)<< endl;   
     
-    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Gamma_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_07_04/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_07_04.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Gamma_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
 
     // ******************************************************************
     // *********** reading systematic errors for double ratio ***********
@@ -155,10 +155,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     while(!fileSysErrDoubleRatio.eof() && nPointsErrors < 100){
         fileSysErrDoubleRatio   >> ptSysDoubleRatio[nPointsErrors]
                                 >> relSystErrorDoubleRatioDown[nPointsErrors]                 >> relSystErrorDoubleRatioUp[nPointsErrors] 
-                                >> relSystErrorWOMaterialDoubleRatioDown[nPointsErrors]       >> relSystErrorWOMaterialDoubleRatioUp[nPointsErrors];
-//                                 >> relSystErrorADoubleRatioDown[nPointsErrors]                >> relSystErrorADoubleRatioUp[nPointsErrors] 
-//                                 >> relSystErrorBDoubleRatioDown[nPointsErrors]                >> relSystErrorBDoubleRatioUp[nPointsErrors] 
-//                                 >> relSystErrorCDoubleRatioDown[nPointsErrors]                >> relSystErrorCDoubleRatioUp[nPointsErrors];
+                                >> relSystErrorWOMaterialDoubleRatioDown[nPointsErrors]       >> relSystErrorWOMaterialDoubleRatioUp[nPointsErrors]
+                                >> relSystErrorADoubleRatioDown[nPointsErrors]                >> relSystErrorADoubleRatioUp[nPointsErrors] 
+                                >> relSystErrorBDoubleRatioDown[nPointsErrors]                >> relSystErrorBDoubleRatioUp[nPointsErrors] 
+                                >> relSystErrorCDoubleRatioDown[nPointsErrors]                >> relSystErrorCDoubleRatioUp[nPointsErrors];
         cout << nPointsErrors <<  "\t"  << ptSysDoubleRatio[nPointsErrors] << "\t"  << relSystErrorDoubleRatioDown[nPointsErrors] << "\t" << relSystErrorDoubleRatioUp[nPointsErrors] << "\t" 
              << relSystErrorWOMaterialDoubleRatioDown[nPointsErrors] << "\t"  <<relSystErrorWOMaterialDoubleRatioUp[nPointsErrors] << endl;;        
         nPointsErrors++;
@@ -186,10 +186,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     while(!fileSysErrDoubleRatioPi0Fit.eof() && nPointsErrors < 100){
         fileSysErrDoubleRatioPi0Fit     >> ptSysDoubleRatioFit[nPointsErrors]
                                         >> relSystErrorDoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorDoubleRatioPi0FitUp[nPointsErrors] 
-                                        >> relSystErrorWOMaterialDoubleRatioPi0FitDown[nPointsErrors]         >> relSystErrorWOMaterialDoubleRatioPi0FitUp[nPointsErrors];
-//                                         >> relSystErrorADoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorADoubleRatioPi0FitUp[nPointsErrors] 
-//                                         >> relSystErrorBDoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorBDoubleRatioPi0FitUp[nPointsErrors] 
-//                                         >> relSystErrorCDoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorCDoubleRatioPi0FitUp[nPointsErrors];
+                                        >> relSystErrorWOMaterialDoubleRatioPi0FitDown[nPointsErrors]         >> relSystErrorWOMaterialDoubleRatioPi0FitUp[nPointsErrors]
+                                        >> relSystErrorADoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorADoubleRatioPi0FitUp[nPointsErrors] 
+                                        >> relSystErrorBDoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorBDoubleRatioPi0FitUp[nPointsErrors] 
+                                        >> relSystErrorCDoubleRatioPi0FitDown[nPointsErrors]                 >> relSystErrorCDoubleRatioPi0FitUp[nPointsErrors];
         cout << nPointsErrors << "\t"  << relSystErrorDoubleRatioPi0FitDown[nPointsErrors] << "\t" << relSystErrorDoubleRatioPi0FitUp[nPointsErrors] << "\t" 
              << relSystErrorWOMaterialDoubleRatioPi0FitDown[nPointsErrors] << "\t"  <<relSystErrorWOMaterialDoubleRatioPi0FitUp[nPointsErrors] << endl;;        
         nPointsErrors++;
@@ -217,10 +217,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     while(!fileSysErrIncRatioPi0Fit.eof() && nPointsErrors < 100){
         fileSysErrIncRatioPi0Fit    >> ptSysInclRatioFit[nPointsErrors]
                                     >> relSystErrorIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorIncRatioPi0FitUp[nPointsErrors] 
-                                    >> relSystErrorWOMaterialIncRatioPi0FitDown[nPointsErrors]         >> relSystErrorWOMaterialIncRatioPi0FitUp[nPointsErrors];
-//                                     >> relSystErrorAIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorAIncRatioPi0FitUp[nPointsErrors] 
-//                                     >> relSystErrorBIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorBIncRatioPi0FitUp[nPointsErrors] 
-//                                     >> relSystErrorCIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorCIncRatioPi0FitUp[nPointsErrors];
+                                    >> relSystErrorWOMaterialIncRatioPi0FitDown[nPointsErrors]         >> relSystErrorWOMaterialIncRatioPi0FitUp[nPointsErrors]
+                                    >> relSystErrorAIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorAIncRatioPi0FitUp[nPointsErrors] 
+                                    >> relSystErrorBIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorBIncRatioPi0FitUp[nPointsErrors] 
+                                    >> relSystErrorCIncRatioPi0FitDown[nPointsErrors]                 >> relSystErrorCIncRatioPi0FitUp[nPointsErrors];
         cout << nPointsErrors << "\t"  << relSystErrorIncRatioPi0FitDown[nPointsErrors] << "\t"  << relSystErrorIncRatioPi0FitUp[nPointsErrors] << "\t" 
              << relSystErrorWOMaterialIncRatioPi0FitDown[nPointsErrors] << "\t" << relSystErrorWOMaterialIncRatioPi0FitUp[nPointsErrors] << endl;;        
         nPointsErrors++;
@@ -248,10 +248,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     while(!fileSysErrIncRatio.eof() && nPointsErrors < 100){
         fileSysErrIncRatio         >> ptSysInclRatio[nPointsErrors]
                                 >> relSystErrorIncRatioDown[nPointsErrors]                     >> relSystErrorIncRatioUp[nPointsErrors] 
-                                >> relSystErrorWOMaterialIncRatioDown[nPointsErrors]         >> relSystErrorWOMaterialIncRatioUp[nPointsErrors];
-//                                 >> relSystErrorAIncRatioDown[nPointsErrors]                 >> relSystErrorAIncRatioUp[nPointsErrors] 
-//                                 >> relSystErrorBIncRatioDown[nPointsErrors]                 >> relSystErrorBIncRatioUp[nPointsErrors] 
-//                                 >> relSystErrorCIncRatioDown[nPointsErrors]                 >> relSystErrorCIncRatioUp[nPointsErrors];
+                                >> relSystErrorWOMaterialIncRatioDown[nPointsErrors]         >> relSystErrorWOMaterialIncRatioUp[nPointsErrors]
+                                >> relSystErrorAIncRatioDown[nPointsErrors]                 >> relSystErrorAIncRatioUp[nPointsErrors] 
+                                >> relSystErrorBIncRatioDown[nPointsErrors]                 >> relSystErrorBIncRatioUp[nPointsErrors] 
+                                >> relSystErrorCIncRatioDown[nPointsErrors]                 >> relSystErrorCIncRatioUp[nPointsErrors];
         cout << nPointsErrors << "\t"  << relSystErrorIncRatioDown[nPointsErrors] << "\t"  << relSystErrorIncRatioUp[nPointsErrors] << "\t" 
              << relSystErrorWOMaterialIncRatioDown[nPointsErrors] << "\t" << relSystErrorWOMaterialIncRatioUp[nPointsErrors] << endl;;        
         nPointsErrors++;
@@ -279,10 +279,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     while(!fileSysErrIncGamma.eof() && nPointsErrors < 100){
         fileSysErrIncGamma      >> ptSysGamma[nPointsErrors]
                                 >> relSystErrorIncGammaDown[nPointsErrors]                  >> relSystErrorIncGammaUp[nPointsErrors] 
-                                >> relSystErrorWOMaterialIncGammaDown[nPointsErrors]        >> relSystErrorWOMaterialIncGammaUp[nPointsErrors] ;
-//                                 >> relSystErrorAIncGammaDown[nPointsErrors]                 >> relSystErrorAIncGammaUp[nPointsErrors] 
-//                                 >> relSystErrorBIncGammaDown[nPointsErrors]                 >> relSystErrorBIncGammaUp[nPointsErrors] 
-//                                 >> relSystErrorCIncGammaDown[nPointsErrors]                 >> relSystErrorCIncGammaUp[nPointsErrors];
+                                >> relSystErrorWOMaterialIncGammaDown[nPointsErrors]        >> relSystErrorWOMaterialIncGammaUp[nPointsErrors]
+                                >> relSystErrorAIncGammaDown[nPointsErrors]                 >> relSystErrorAIncGammaUp[nPointsErrors] 
+                                >> relSystErrorBIncGammaDown[nPointsErrors]                 >> relSystErrorBIncGammaUp[nPointsErrors] 
+                                >> relSystErrorCIncGammaDown[nPointsErrors]                 >> relSystErrorCIncGammaUp[nPointsErrors];
         cout << nPointsErrors << "\t"  << relSystErrorIncGammaDown[nPointsErrors] << "\t"  <<relSystErrorIncGammaUp[nPointsErrors] << "\t" 
              << relSystErrorWOMaterialIncGammaDown[nPointsErrors] << "\t" << relSystErrorWOMaterialIncGammaUp[nPointsErrors] << endl;;        
         nPointsErrors++;
@@ -436,9 +436,9 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrB    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorB", relSystErrorBDoubleRatioPi0FitDown, relSystErrorBDoubleRatioPi0FitUp, binOffset, nPointsErrors);    
     TGraphAsymmErrors* graphDoubleRatioFitPi0SysErrC    = CalculateSysErrFromRelSysHisto( histoDRFit, "DoubleRatioPi0FitSystErrorC", relSystErrorCDoubleRatioPi0FitDown, relSystErrorCDoubleRatioPi0FitUp, binOffset, nPointsErrors);    
     TGraphAsymmErrors* graphDoubleRatioSysErr  = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystError", relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphDoubleRatioSysErrA = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorA", relSystErrorADoubleRatioDown, relSystErrorADoubleRatioUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphDoubleRatioSysErrB = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorB", relSystErrorBDoubleRatioDown, relSystErrorBDoubleRatioUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphDoubleRatioSysErrC = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorC", relSystErrorCDoubleRatioDown, relSystErrorCDoubleRatioUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioSysErrA = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorA", relSystErrorADoubleRatioDown, relSystErrorADoubleRatioUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioSysErrB = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorB", relSystErrorBDoubleRatioDown, relSystErrorBDoubleRatioUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphDoubleRatioSysErrC = CalculateSysErrFromRelSysHisto( histoDR, "DoubleRatioSystErrorC", relSystErrorCDoubleRatioDown, relSystErrorCDoubleRatioUp, binOffset, nPointsErrors);    
     
     //************************************************************************
     //******************* Calculate error graph for inclusive ratio **********
@@ -448,17 +448,17 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TGraphAsymmErrors* graphIncRatioFitPi0SysErrB     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorB", relSystErrorBIncRatioPi0FitDown, relSystErrorBIncRatioPi0FitUp, binOffset, nPointsErrors);    
     TGraphAsymmErrors* graphIncRatioFitPi0SysErrC     = CalculateSysErrFromRelSysHisto( histoIncRatioPi0Fit, "IncRatioPi0FitSystErrorC", relSystErrorCIncRatioPi0FitDown, relSystErrorCIncRatioPi0FitUp, binOffset, nPointsErrors);    
     TGraphAsymmErrors* graphIncRatioSysErr  = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystError", relSystErrorIncRatioDown, relSystErrorIncRatioUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncRatioSysErrA = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorA", relSystErrorAIncRatioDown, relSystErrorAIncRatioUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncRatioSysErrB = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorB", relSystErrorBIncRatioDown, relSystErrorBIncRatioUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncRatioSysErrC = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorC", relSystErrorCIncRatioDown, relSystErrorCIncRatioUp, binOffset, nPointsErrors);  
+    TGraphAsymmErrors* graphIncRatioSysErrA = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorA", relSystErrorAIncRatioDown, relSystErrorAIncRatioUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncRatioSysErrB = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorB", relSystErrorBIncRatioDown, relSystErrorBIncRatioUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncRatioSysErrC = CalculateSysErrFromRelSysHisto( histoIncRatio, "IncRatioSystErrorC", relSystErrorCIncRatioDown, relSystErrorCIncRatioUp, binOffset, nPointsErrors);  
 
     // **************************************************************************
     // ***************** Calculate systematic error graphs **********************
     // **************************************************************************
     TGraphAsymmErrors* graphIncGammaSysErr      = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystError", relSystErrorIncGammaDown, relSystErrorIncGammaUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncGammaSysErrA     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorA", relSystErrorAIncGammaDown, relSystErrorAIncGammaUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncGammaSysErrB     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorB", relSystErrorBIncGammaDown, relSystErrorBIncGammaUp, binOffset, nPointsErrors);    
-//     TGraphAsymmErrors* graphIncGammaSysErrC     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorC", relSystErrorCIncGammaDown, relSystErrorCIncGammaUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncGammaSysErrA     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorA", relSystErrorAIncGammaDown, relSystErrorAIncGammaUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncGammaSysErrB     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorB", relSystErrorBIncGammaDown, relSystErrorBIncGammaUp, binOffset, nPointsErrors);    
+    TGraphAsymmErrors* graphIncGammaSysErrC     = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorC", relSystErrorCIncGammaDown, relSystErrorCIncGammaUp, binOffset, nPointsErrors);    
     TGraphAsymmErrors* graphIncGammaSysErrW0Mat = CalculateSysErrFromRelSysHisto( histoIncGamma, "IncGammaSystErrorWOMat", relSystErrorWOMaterialIncGammaDown, relSystErrorWOMaterialIncGammaUp, binOffset, nPointsErrors);    
 
     //************************************************************************
@@ -856,13 +856,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     canvasDirGamma->SetLogy();
     canvasDirGamma->SetLogx();
 
-    TH2D *dummyDirGamma ;
-    dummyDirGamma = new TH2D("dummyDirGamma", "dummyDirGamma", 120, 0., 16, 1000., 1e-10,1e4);
+    TH2D *dummyDirGamma = new TH2D("dummyDirGamma", "dummyDirGamma", 1200, 0., 16, 1000., 1e-9,1e4);
     SetStyleHistoTH2ForGraphs( dummyDirGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
     dummyDirGamma->GetXaxis()->SetLabelOffset(-0.015);
     dummyDirGamma->GetXaxis()->SetRangeUser(minPt, maxPt);
-    dummyDirGamma->GetYaxis()->SetRangeUser(1e-7,1e1);
+    dummyDirGamma->GetYaxis()->SetRangeUser(1e-6,1e1);
     dummyDirGamma->DrawCopy();
 
     graphDirGammaSpectrumSyst->Draw("Z2,same");
@@ -889,39 +888,39 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
             SetHistogramm(histoDR,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
             histoDR->Write("DoubleRatioStatError",TObject::kOverwrite);
             graphDoubleRatioSysErr->Write("DoubleRatioSystError",TObject::kOverwrite);
-//             graphDoubleRatioSysErrA->Write("DoubleRatioSystErrorA",TObject::kOverwrite);
-//             graphDoubleRatioSysErrB->Write("DoubleRatioSystErrorB",TObject::kOverwrite);
-//             graphDoubleRatioSysErrC->Write("DoubleRatioSystErrorC",TObject::kOverwrite);
+            graphDoubleRatioSysErrA->Write("DoubleRatioSystErrorA",TObject::kOverwrite);
+            graphDoubleRatioSysErrB->Write("DoubleRatioSystErrorB",TObject::kOverwrite);
+            graphDoubleRatioSysErrC->Write("DoubleRatioSystErrorC",TObject::kOverwrite);
             histoDRFit->SetName("DoubleRatioPi0FitStatError");
             SetHistogramm(histoDRFit,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
             histoDRFit->Write("DoubleRatioPi0FitStatError",TObject::kOverwrite);
             graphDoubleRatioFitPi0SysErr->Write("DoubleRatioPi0FitSystError",TObject::kOverwrite);
-//             graphDoubleRatioFitPi0SysErrA->Write("DoubleRatioPi0FitSystErrorA",TObject::kOverwrite);
-//             graphDoubleRatioFitPi0SysErrB->Write("DoubleRatioPi0FitSystErrorB",TObject::kOverwrite);
-//             graphDoubleRatioFitPi0SysErrC->Write("DoubleRatioPi0FitSystErrorC",TObject::kOverwrite);
+            graphDoubleRatioFitPi0SysErrA->Write("DoubleRatioPi0FitSystErrorA",TObject::kOverwrite);
+            graphDoubleRatioFitPi0SysErrB->Write("DoubleRatioPi0FitSystErrorB",TObject::kOverwrite);
+            graphDoubleRatioFitPi0SysErrC->Write("DoubleRatioPi0FitSystErrorC",TObject::kOverwrite);
 
             histoIncRatio->SetName("IncRatioStatError");
             SetHistogramm(histoIncRatio,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
             histoIncRatio->Write("IncRatioStatError",TObject::kOverwrite);
             graphIncRatioSysErr->Write("IncRatioSystError",TObject::kOverwrite);
-//             graphIncRatioSysErrA->Write("IncRatioSystErrorA",TObject::kOverwrite);
-//             graphIncRatioSysErrB->Write("IncRatioSystErrorB",TObject::kOverwrite);
-//             graphIncRatioSysErrC->Write("IncRatioSystErrorC",TObject::kOverwrite);
+            graphIncRatioSysErrA->Write("IncRatioSystErrorA",TObject::kOverwrite);
+            graphIncRatioSysErrB->Write("IncRatioSystErrorB",TObject::kOverwrite);
+            graphIncRatioSysErrC->Write("IncRatioSystErrorC",TObject::kOverwrite);
             histoIncRatioPi0Fit->SetName("IncRatioPi0FitStatError");
             SetHistogramm(histoIncRatioPi0Fit,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
             histoIncRatioPi0Fit->Write("IncRatioPi0FitStatError",TObject::kOverwrite);
             graphIncRatioFitPi0SysErr->Write("IncRatioPi0FitSystError",TObject::kOverwrite);
-//             graphIncRatioFitPi0SysErrA->Write("IncRatioPi0FitSystErrorA",TObject::kOverwrite);
-//             graphIncRatioFitPi0SysErrB->Write("IncRatioPi0FitSystErrorB",TObject::kOverwrite);
-//             graphIncRatioFitPi0SysErrC->Write("IncRatioPi0FitSystErrorC",TObject::kOverwrite);
+            graphIncRatioFitPi0SysErrA->Write("IncRatioPi0FitSystErrorA",TObject::kOverwrite);
+            graphIncRatioFitPi0SysErrB->Write("IncRatioPi0FitSystErrorB",TObject::kOverwrite);
+            graphIncRatioFitPi0SysErrC->Write("IncRatioPi0FitSystErrorC",TObject::kOverwrite);
 
             histoIncGamma->SetName("IncGammaStatError");
             SetHistogramm(histoIncGamma,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
             histoIncGamma->Write("IncGammaStatError",TObject::kOverwrite);
             graphIncGammaSysErr->Write("IncGammaSystError",TObject::kOverwrite);
-//             graphIncGammaSysErrA->Write("IncGammaSystErrorA",TObject::kOverwrite);
-//             graphIncGammaSysErrB->Write("IncGammaSystErrorB",TObject::kOverwrite);
-//             graphIncGammaSysErrC->Write("IncGammaSystErrorC",TObject::kOverwrite);
+            graphIncGammaSysErrA->Write("IncGammaSystErrorA",TObject::kOverwrite);
+            graphIncGammaSysErrB->Write("IncGammaSystErrorB",TObject::kOverwrite);
+            graphIncGammaSysErrC->Write("IncGammaSystErrorC",TObject::kOverwrite);
 
             histoPi0Spectrum->SetName("Pi0StatError");
             SetHistogramm(histoPi0Spectrum,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");

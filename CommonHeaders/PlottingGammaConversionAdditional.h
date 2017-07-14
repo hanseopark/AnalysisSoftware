@@ -3832,6 +3832,8 @@
                     return 29;
                 } else if (!centrality.CompareTo("20-40%")){
                     return 33;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 34;
                 } else if (!centrality.CompareTo("40-60%")){
                     return 20;
                 } else if (!centrality.CompareTo("60-80%")){
@@ -3854,6 +3856,8 @@
                     return 30;
                 } else if (!centrality.CompareTo("20-40%")){
                     return 27;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 28;
                 } else if (!centrality.CompareTo("40-60%")){
                     return 24;
                 } else if (!centrality.CompareTo("60-80%")){
@@ -3964,6 +3968,8 @@
                     return 2.5;
                 } else if (!centrality.CompareTo("20-40%")){
                     return 2.5;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 2.;
                 } else if (!centrality.CompareTo("40-60%")){
                     return 2;
                 } else if (!centrality.CompareTo("60-80%")){

@@ -188,9 +188,14 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	
     if (textMeson.CompareTo("Pi0") == 0){
         for (Int_t j = 0; j < 4; j++){        
-            histoSecAccept[j] 	    	= (TH1D*)file->Get(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
-            histoSecEffi[j] 			= (TH1D*)file->Get(Form("TrueSecFrom%sEffiPt",nameSecMeson[j].Data()));
-            histoSecRawYield[j] 	    = (TH1D*)file->Get(Form("SecYieldFrom%sMesonFromCocktail", nameSecMeson[j].Data()));
+            if(j==3) 
+                histoSecCorr[j] 	    	= (TH1D*)file->Get(Form("RatioSecYieldFrom%sMesonToRaw", nameSecMeson[j].Data()));
+            else {
+                histoSecCorr[j] 	    	= (TH1D*)file->Get(Form("RatioSecYieldFrom%sMesonFromCocktailToRaw", nameSecMeson[j].Data()));
+                histoSecAccept[j] 	    	= (TH1D*)file->Get(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
+                histoSecEffi[j] 			= (TH1D*)file->Get(Form("TrueSecFrom%sEffiPt",nameSecMeson[j].Data()));
+                histoSecRawYield[j] 	    = (TH1D*)file->Get(Form("SecYieldFrom%sMesonFromCocktail", nameSecMeson[j].Data()));
+            }
         }
     }
 
@@ -1208,6 +1213,7 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		histoRawYield->Write(Form("%s_RawYieldPerEvent",textMeson.Data()),TObject::kOverwrite);
 
         for (Int_t j = 0; j < 4; j++){
+            if(histoSecCorr[j])histoSecCorr[j]->Write(Form("RatioSecYieldFrom%sMesonFromCocktailToRaw", nameSecMeson[j].Data()),TObject::kOverwrite);
             if(histoSecAccept[j])histoSecAccept[j]->Write(Form("Pi0From%sAcceptance",nameSecMeson[j].Data()),TObject::kOverwrite);
             if(histoSecEffi[j])histoSecEffi[j]->Write(Form("Pi0From%sEfficiency",nameSecMeson[j].Data()),TObject::kOverwrite);
             if(histoSecRawYield[j])histoSecRawYield[j]->Write(Form("Pi0From%sRawYieldPerEvent",nameSecMeson[j].Data()),TObject::kOverwrite);

@@ -2230,11 +2230,11 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         TString Outputname = Form("%s/%s_%s_SystematicErrorCuts.root",outputDirRootFile.Data(),meson.Data(),prefix2.Data());
         TFile* SystematicErrorFile = new TFile(Outputname.Data(),"UPDATE");
 
-            SystErrGraphPos->Write(Form("%s_SystErrorRelPos_%s",meson.Data(),cutVariationName.Data()),TObject::kOverwrite);
-            SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_%s",meson.Data(),cutVariationName.Data()),TObject::kOverwrite);
+            SystErrGraphPos->Write(Form("%s_SystErrorRelPos_%s_%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
+            SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_%s_%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
             if (isEta){
-                if (SystErrGraphPosEtaToPi0) SystErrGraphPosEtaToPi0->Write(Form("EtaToPi0_SystErrorRelPos_%s",cutVariationName.Data()),TObject::kOverwrite);
-                if (SystErrGraphNegEtaToPi0) SystErrGraphNegEtaToPi0->Write(Form("EtaToPi0_SystErrorRelNeg_%s",cutVariationName.Data()),TObject::kOverwrite);
+                if (SystErrGraphPosEtaToPi0) SystErrGraphPosEtaToPi0->Write(Form("EtaToPi0_SystErrorRelPos_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
+                if (SystErrGraphNegEtaToPi0) SystErrGraphNegEtaToPi0->Write(Form("EtaToPi0_SystErrorRelNeg_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
                 if (systErrGraphNegYieldExtPi0EtaBinning) systErrGraphNegYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()), 
                                                                                                       TObject::kOverwrite);
                 if (systErrGraphPosYieldExtPi0EtaBinning) systErrGraphPosYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s", centralityString.Data()), 

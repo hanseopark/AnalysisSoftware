@@ -200,9 +200,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_pPb5TeV_2017_04_11.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_pPb5TeV_2017_04_11.dat";
     } else if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_06_30.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_06_30.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_06_30/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_06_30.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_07_14.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_07_14.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_07_14.dat";
     } else {
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
