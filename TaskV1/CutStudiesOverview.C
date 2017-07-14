@@ -2230,8 +2230,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         TString Outputname = Form("%s/%s_%s_SystematicErrorCuts.root",outputDirRootFile.Data(),meson.Data(),prefix2.Data());
         TFile* SystematicErrorFile = new TFile(Outputname.Data(),"UPDATE");
 
-            SystErrGraphPos->Write(Form("%s_SystErrorRelPos_%s_%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
-            SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_%s_%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
+            SystErrGraphPos->Write(Form("%s_SystErrorRelPos_%s%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
+            SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_%s%s",meson.Data(),cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
             if (isEta){
                 if (SystErrGraphPosEtaToPi0) SystErrGraphPosEtaToPi0->Write(Form("EtaToPi0_SystErrorRelPos_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
                 if (SystErrGraphNegEtaToPi0) SystErrGraphNegEtaToPi0->Write(Form("EtaToPi0_SystErrorRelNeg_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
