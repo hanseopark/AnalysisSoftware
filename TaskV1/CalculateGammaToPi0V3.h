@@ -210,19 +210,19 @@
     //***********************************************************************************************
     //******** Creates proper labeling with collision system, detection system and particle  ********
     //***********************************************************************************************
-    void PlotLatexLegend( Double_t xPosition        = 0.5,
-                        Double_t yPosition        = 0.5,
-                        Double_t textSizeSpectra  = 0.04,
-                        TString collisionSystem   = "",
-                        TString detectionProcess  = "", 
-                        Int_t labelNums           = 3,
-                        Int_t align               = 11
+    void PlotLatexLegend(   Double_t xPosition        = 0.5,
+                            Double_t yPosition        = 0.5,
+                            Double_t textSizeSpectra  = 0.04,
+                            TString collisionSystem   = "",
+                            TString detectionProcess  = "",
+                            Int_t labelNums           = 3,
+                            Int_t align               = 11
                         )
     {
         TLatex* labelPi0Plot    = NULL; 
         TLatex* labelEnergyPlot = NULL;
         TLatex* labelDetProcPlot= NULL; 
-        
+
         if(labelNums<3){
             labelEnergyPlot = new TLatex(xPosition, yPosition+0.85*textSizeSpectra,collisionSystem.Data());
             labelDetProcPlot= new TLatex(xPosition, yPosition,detectionProcess.Data());
@@ -245,20 +245,20 @@
     //**  with the heaviside function used as prior (excluding R_gamma < 1)                        **
     //***********************************************************************************************
     Double_t GetUpperLimit( Double_t mean, Double_t statErr, Double_t sysErr,
-                            Double_t confidenceLevel, Double_t& confidenceLevelReached, 
+                            Double_t confidenceLevel, Double_t& confidenceLevelReached,
                             Double_t accuracy = 1e-9, Int_t maxNIterations = 1e8
                         ) {
-        
+
         // R_gamma limits
         Double_t    minRGamma           = 1.;
         Double_t    maxRGamma           = 10.;
-        
+
         // total uncertainty
         Double_t    sigmaTot            = TMath::Sqrt(statErr*statErr + sysErr*sysErr);
-        
+
         // cond. prob norm
         Double_t    condProbNorm        = TMath::Erf( (mean - 1)/(TMath::Sqrt(2)*sigmaTot) ) + 1;   // - 1 term from limit erf(-inf)
-        
+
         // cond. prob
         TF1         condProb("condProb", Form("[0] * ( TMath::Erf( ([1] - 1)/(TMath::Sqrt(2)*[2]) ) - TMath::Erf( ([1] - x)/(TMath::Sqrt(2)*[2]) ) )"), minRGamma, maxRGamma);
         condProb.SetParameter(0, 1./condProbNorm);
@@ -271,19 +271,19 @@
         Double_t    step                = 0.;
         Int_t       nIterations         = 0;
         while (((condProb.Eval(upperLimit) < (confidenceLevel-accuracy)) || condProb.Eval(upperLimit) > (confidenceLevel+accuracy)) && nIterations < maxNIterations) {
-            
+
             if (condProb.Eval(upperLimit) > confidenceLevel)
                 step                    = - TMath::Abs(upperLimit-1)/2;
             else
                 step                    = TMath::Abs(upperLimitPrev-upperLimit)/2;
             upperLimitPrev              = upperLimit;
             upperLimit                  = upperLimit + step;
-            
+
             //if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
-            
+
             nIterations++;
         }
-        
+
         confidenceLevelReached          = condProb.Eval(upperLimit);
         return upperLimit;
     }
@@ -294,11 +294,11 @@
     //**      given in a histogram and systematic errors in a graphs                               **
     //**    - confidence level can be varied as well as the accuracy and the number of iterations  **
     //***********************************************************************************************
-    TH1D* GetUpperLimitsHisto(TH1D* histo, 
-                            TGraphAsymmErrors* sysErrGraph, 
-                            Double_t confidenceLevel          = 0.95, 
-                            Double_t accuracy                 = 0.004, 
-                            Int_t maxNIterations              = 1e3
+    TH1D* GetUpperLimitsHisto(  TH1D* histo,
+                                TGraphAsymmErrors* sysErrGraph,
+                                Double_t confidenceLevel          = 0.95,
+                                Double_t accuracy                 = 0.004,
+                                Int_t maxNIterations              = 1e3
                             ) {
 
         cout << endl;
@@ -345,7 +345,7 @@
         cout << "**                                                         **" << endl;
         cout << "*************************************************************" << endl;
         cout << endl;
-        
+
         return upperLimits;
     }
 
@@ -353,10 +353,10 @@
     //*******  functions to calculate uncertainty from fit (variation with parameter errors)  *******
     //***********************************************************************************************
     TF1* VaryFunctionWithParameterError(TF1* func, Bool_t up = kTRUE) {
-        
+
         Double_t    sign            = 1.;
         if (!up)    sign            = -1.;
-        
+
         Int_t nPar                  = func->GetNpar();
         std::vector<Double_t> parameter(nPar);
         std::vector<Double_t> parameterError(nPar);
@@ -366,21 +366,21 @@
             parameterError[i]       = func->GetParError(i);
             parameterModified[i]    = parameter[i] + sign*parameterError[i];
         }
-        
+
         TF1* returnFunc             = (TF1*)func->Clone(Form("%s_up", func->GetName()));
         for (Int_t i=0; i<nPar; i++) returnFunc->SetParameter(i, parameterModified[i]);
-        
+
         return returnFunc;
     }
 
     //***********************************************************************************************
     //****************** Calculate systematic errors with the fitted pi0 ****************************
     //***********************************************************************************************
-    TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit( TH1D* doubleRatio, 
-                                                                TGraphAsymmErrors* systUncert, 
+    TGraphAsymmErrors* ProduceTotalSystematicUncertaintyWithFit( TH1D* doubleRatio,
+                                                                TGraphAsymmErrors* systUncert,
                                                                 TF1* pi0Fit
                                                             ) {
-        
+
         // syst. uncert. graph
         Int_t       nPoints             = systUncert->GetN();
         Double_t*   xVal                = systUncert->GetX();
@@ -393,32 +393,32 @@
         // declare total syst. uncert.
         Double_t*   yErrUpTot           = new Double_t[nPoints];
         Double_t*   yErrDownTot         = new Double_t[nPoints];
-        
+
         // vary fit using parameter errors
         TF1*        pi0FitUp            = VaryFunctionWithParameterError(pi0Fit);
         TF1*        pi0FitDown          = VaryFunctionWithParameterError(pi0Fit, kFALSE);
-        
+
         // calculate total syst. uncert.
         Double_t    totSystUncertUp     = 0.;
         Double_t    totSystUncertDown   = 0.;
         Double_t    systUncertFit       = 0.;
         for (Int_t i=0; i<nPoints; i++) {
             for (Int_t j=1; j<doubleRatio->GetNbinsX()+1; j++) {
-                
+
                 if (doubleRatio->GetBinCenter(j)!=xVal[i]) continue;
-                
+
                 systUncertFit           = TMath::Abs(pi0FitUp->Eval(xVal[i])-pi0FitDown->Eval(xVal[i])) / 2;
                 systUncertFit           = systUncertFit / pi0Fit->Eval(xVal[i]);
                 systUncertFit           = systUncertFit * doubleRatio->GetBinContent(j);
-                
+
                 totSystUncertUp         = TMath::Sqrt( yErrUp[j]*yErrUp[j] + systUncertFit*systUncertFit );
                 totSystUncertDown       = TMath::Sqrt( yErrDown[j]*yErrDown[j] + systUncertFit*systUncertFit );
-                
+
                 yErrUpTot[i]            = totSystUncertUp;
                 yErrDownTot[i]          = totSystUncertDown;
             }
         }
-        
+
         TGraphAsymmErrors* systUncertTotal = new TGraphAsymmErrors(nPoints,xVal,yVal,xErrDown,xErrUp,yErrDownTot,yErrUpTot);
         systUncertTotal->SetName(Form("%s_total", systUncert->GetName()));
         return systUncertTotal;
