@@ -3398,7 +3398,7 @@
                     fNBinsPt = 19;
                 }
 
-                if(fMode == 40){
+                if(modi == 40){
                     fScaleFac = 2.;
                     fExampleBin = 4;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
@@ -3406,7 +3406,7 @@
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[i];
                     }
-                } else if(fMode == 41){
+                } else if(modi == 41){
                     fScaleFac = 2.;
                     fExampleBin = 4;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
@@ -3414,7 +3414,7 @@
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[i];
                     }
-                } else if(fMode == 42){
+                } else if(modi == 42){
                     fScaleFac = 1.;
                     fExampleBin = 10;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
@@ -3422,7 +3422,7 @@
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[i];
                     }
-                } else if(fMode == 44){
+                } else if(modi == 44){
                     fScaleFac = 1.;
                     fExampleBin = 10;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
@@ -3430,7 +3430,7 @@
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[i];
                     }
-                } else if(fMode == 45){
+                } else if(modi == 45){
                     fScaleFac = 1.;
                     fExampleBin = 10;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
