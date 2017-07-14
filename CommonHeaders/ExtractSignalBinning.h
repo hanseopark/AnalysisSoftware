@@ -243,7 +243,7 @@
                                                             5, 5, 5, 5, 5, 5, 5, 5, 5};
     Int_t fBinsPi0EtaBinning5TeVPCMEMCPtRebin[13]   = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
                                                         4, 4, 4 };
-   
+
 
     //****************************************************************************************************
     //******************** Pt binning for pp, 7 TeV ******************************************************
@@ -751,19 +751,19 @@
     Int_t fBinsEtapPb5TeVPt3BodyRebin[14]           = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                                         5, 5, 5, 5};
 
-    Double_t fBinsDirGammapPb5TeVPt[24]             = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 
-                                                        1.8, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0, 4.8, 5.6, 6.4, 
+    Double_t fBinsDirGammapPb5TeVPt[24]             = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,
+                                                        1.8, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0, 4.8, 5.6, 6.4,
                                                         7.2, 8.0, 10.0, 14.0};
     Int_t fBinsDirGammapPb5TeVPtRebin[23]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
                                                         4, 4, 4};
-    Double_t fBinsDirGammapPb5TeVPCMEMCPt[40]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 
-                                                        1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 
-                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 
+    Double_t fBinsDirGammapPb5TeVPCMEMCPt[40]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,
+                                                        1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
+                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,
                                                         8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 26.0, 30.0};
-    Int_t fBinsDirGammapPb5TeVPCMEMCPtRebin[39]     = { 10, 4, 4, 2, 1, 1, 1, 1, 1, 1, 
+    Int_t fBinsDirGammapPb5TeVPCMEMCPtRebin[39]     = { 10, 4, 4, 2, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 2, 2, 2,
-                                                        2, 4, 4, 5, 5, 5, 8, 8, 8, 8, 
+                                                        2, 4, 4, 5, 5, 5, 8, 8, 8, 8,
                                                         8, 8, 8, 8, 8, 8, 10, 10};
 
     //****************************************************************************************************
@@ -804,7 +804,7 @@
                                                         2.7, 3.1, 3.5, 4.0, 4.5, 5.5, 6.5, 8.0, 11.0, 14.0};
     Int_t fBinsDirGammaPbPb2760GeVPtRebin[19]       = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4};
-                                                        
+
     //****************************************************************************************************
     //***************************** Pt binning for PbPb 2011, 2.76 TeV ***********************************
     //****************************************************************************************************
@@ -840,7 +840,7 @@
                                                            2,   2,   4,   4,   4,   5};
     Int_t fBinsPi0PbPb2760GeVPtLHC11hPCMEMCRebin[26]= { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4, 5,
-                                                        5, 10, 10, 10, 10, 10 };                                                        
+                                                        5, 10, 10, 10, 10, 10 };
     Double_t fBinsEtaPbPb2760GeVPtLHC11hEMCBins[15] = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.,
                                                         12., 15., 18., 24., 30.};
 
@@ -930,7 +930,7 @@
                 } else if (mode == 1){      // PCM-Dalitz
                     return 3;
                 } else if (mode == 2 || mode == 13) {     // PCM-EMC
-                    switch (trigger){   
+                    switch (trigger){
                         case 0:             // INT1 13g
                         case 1:             // INT1 13g
                             return 7;
@@ -1394,11 +1394,31 @@
                  return 8;
                }else if (mode == 4 || mode == 12 ){
                  return 8;
-               }else 
+               }else
                  return 1;
             }
         } else if (meson.CompareTo("EtaPrim") == 0){
             return 3;
+        } else if (meson.Contains("Omega")) {
+            if(mode == 40){
+                scaleFac        = 2.;
+                return 4;
+            } else if(mode == 41){
+                scaleFac        = 2.;
+                return 4;
+            } else if(mode == 42){
+                scaleFac        = 1.;
+                return 10;
+            } else if(mode == 44){
+                scaleFac        = 1.;
+                return 10;
+            } else if(mode == 45){
+                scaleFac        = 1.;
+                return 10;
+            } else{
+                scaleFac        = 2.;
+                return 2;
+            }
 
         } else {
             cout << "single bin for meson not defined" << endl;
@@ -1707,7 +1727,7 @@
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma5TeVPtRebin[i];
                     }
                 } else {
-                  
+
                     if (triggerSet == -1){
                         if (trigger.CompareTo("52") == 0){
                             specialTrigg = 1; // EMC7
@@ -1721,14 +1741,14 @@
                     }
 
                     fStartPtBin     = 1;
-                    
+
                     if( modi == 2 )
                       fStartPtBin = 3;
                     if( modi == 4 )
                       fStartPtBin = 7;
                     if( modi == 12 || modi == 13 )
                       fStartPtBin = 2;
-                    
+
                     fColumn         = 6;
                     fRow            = 5;
                     if (isDCA) {
@@ -1743,23 +1763,23 @@
                         cout << "You have chosen t o have more than 50 bins, this is not possible, it will be reduced to 50" << endl;
                         fNBinsPt    = 50;
                     }
-                    
+
                     if (modi == 2 && specialTrigg == 1) fStartPtBin = 7; // EMC7
                     if (modi == 2 && specialTrigg == 2) fStartPtBin = 7; // EG2
                     if (modi == 2 && specialTrigg == 3) fStartPtBin = 7; // EG1
-                    
+
                     if (modi == 4 && specialTrigg == 1) { fStartPtBin = 20; fNBinsPt = 49; } // EMC7
                     if (modi == 4 && specialTrigg == 2) { fStartPtBin = 20; fNBinsPt = 49; } // EG2
                     if (modi == 4 && specialTrigg == 3) { fStartPtBin = 20; fNBinsPt = 49; } // EG1
-                    
+
                     if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
                       fColumn         = 6;
                       fRow            = 6;
                     }
-                    
-                    
-                    
-                    
+
+
+
+
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         if (isDCA) {
                             fBinsPt[i]         = fBinsPi05TeVPtDCA[i];
@@ -2171,11 +2191,11 @@
                         specialTrigg = 3; //L1 G2 (lower threshold)
                     } else {
                         specialTrigg = 0;    // L0
-                    }    
+                    }
                 } else {
                     specialTrigg        = triggerSet;
                 }
-                
+
                 if (directPhoton.CompareTo("directPhoton") == 0 ){
                     fStartPtBin     = 1;
                     fColumn         = 5;
@@ -2201,15 +2221,15 @@
                             fBinsPt[i]  = fBinsDirGammapPb5TeVPt[i];
                             if (i < fNBinsPt+1)
                                 fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
-                        } else if (modi == 2){                         
+                        } else if (modi == 2){
                             fBinsPt[i]  = fBinsDirGammapPb5TeVPCMEMCPt[i];
                             if (i < fNBinsPt+1)
-                                fNRebin[i]  = fBinsDirGammapPb5TeVPCMEMCPtRebin[i];      
+                                fNRebin[i]  = fBinsDirGammapPb5TeVPCMEMCPtRebin[i];
                         } else {
                             fBinsPt[i]  = fBinsDirGammapPb5TeVPt[i];
                             if (i < fNBinsPt+1)
                                 fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
-                        }    
+                        }
                     }
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
@@ -2337,7 +2357,7 @@
                         if (i < fNBinsPt+1){
                             if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[i];
                             else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[i];
-                        } 
+                        }
                     }
                 } else {
                     fStartPtBin     = 1;
@@ -2384,7 +2404,7 @@
                             if (i < fNBinsPt+1){
                                 if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsPi0PbPb2760GeVPtLHC11hSemicRebin[i];
                                 else fNRebin[i] = fBinsPi0PbPb2760GeVPtLHC11hRebin[i];
-                            } 
+                            }
                         } else {
                             if (i < fNBinsPt+1) fNRebin[i] = fBinsPi0PbPb2760GeVPtLHC11hPCMEMCRebin[i];
                         }
@@ -2427,7 +2447,7 @@
                         fMaxYFracBGOverIntHist      = 12;
                     } else if (!centDCA.CompareTo("20-50%")) {
                         nIterBGFit                  = 17;
-                        fMaxYFracBGOverIntHist      = 12; 
+                        fMaxYFracBGOverIntHist      = 12;
                     } else if (!centDCA.CompareTo("20-40%")){
                         nIterBGFit              = 17;
                         fMaxYFracBGOverIntHist  = 8;
@@ -2695,7 +2715,7 @@
             //********************************** Eta for pp 5TeV*******************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("5TeV") == 0) {
-              
+
                 if (triggerSet == -1){
                     if (trigger.CompareTo("52") == 0){
                         specialTrigg = 1; // EMC7
@@ -2707,15 +2727,15 @@
                 } else {
                     specialTrigg        = triggerSet;
                 }
-                    
-                    
+
+
                 fStartPtBin         = 1;
-                
+
                 if( modi == 2 )
                     fStartPtBin = 3;
                 if( modi == 4 )
                     fStartPtBin = 5;
-                
+
                 fColumn             = 5;
                 fRow                = 4;
                 if (isDCA){
@@ -2731,17 +2751,17 @@
                     cout << "You have chosen to have more than 23 bins for Eta, this is not possible, it will be reduced to 23" << endl;
                     fNBinsPt        = 23;
                 }
-                
+
                 if (modi == 4 && specialTrigg == 1) { fStartPtBin = 11; fNBinsPt = 29; } // EMC7
                 if (modi == 4 && specialTrigg == 2) { fStartPtBin = 11; fNBinsPt = 29; } // EG2
                 if (modi == 4 && specialTrigg == 3) { fStartPtBin = 11; fNBinsPt = 29; } // EG1
-                
+
                 if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
                   fColumn         = 5;
                   fRow            = 5;
                 }
-                
-                
+
+
                 for (Int_t i = 0; i < fNBinsPt+2; i++) {
                     if (isDCA){
                         fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
@@ -2759,7 +2779,7 @@
                             }
                     }
                     if (setPi0.CompareTo("Eta") == 0){
-                        if (i < fNBinsPt+1){ 
+                        if (i < fNBinsPt+1){
                             if( modi == 2 ){
                               fNRebin[i] = fBinsEta5TeVPCMEMCPtRebin[i];
                             } else if ( modi == 4 ){
@@ -3326,19 +3346,19 @@
                 fStartPtBin         = 1;
                 fColumn             = 3;
                 fRow                = 2;
-                
+
                 if( modi == 2 ){
                   fStartPtBin = 5;
                   fColumn             = 5;
                   fRow                = 4;
                 }
-                
+
                 if( modi == 4 ){
                   fStartPtBin = 4;
                   fColumn             = 5;
                   fRow                = 5;
                 }
-                
+
                 if (fNBinsPt > 22) {
                     cout << "You have chosen to have more than 22 bins, this is not possible, it will be reduced to 22" << endl;
                     fNBinsPt        = 22;
@@ -3389,7 +3409,7 @@
             fBinsPt= 			new Double_t[20];
             fNRebin = 		new Int_t[19];
 
-            if (fEnergyFlag.CompareTo("7TeV") == 0) {
+            if (energy.CompareTo("7TeV") == 0) {
                 fStartPtBin     = 0;
                 fColumn         = 5;
                 fRow            = 4;
@@ -3399,48 +3419,36 @@
                 }
 
                 if(modi == 40){
-                    fScaleFac = 2.;
-                    fExampleBin = 4;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[i];
                     }
                 } else if(modi == 41){
-                    fScaleFac = 2.;
-                    fExampleBin = 4;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[i];
                     }
                 } else if(modi == 42){
-                    fScaleFac = 1.;
-                    fExampleBin = 10;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[i];
                     }
                 } else if(modi == 44){
-                    fScaleFac = 1.;
-                    fExampleBin = 10;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[i];
                     }
                 } else if(modi == 45){
-                    fScaleFac = 1.;
-                    fExampleBin = 10;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[i];
                     }
                 } else{
-                    fScaleFac = 2.;
-                    fExampleBin = 2;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];
                         if (i < fNBinsPt+1)
@@ -3645,7 +3653,7 @@
         } else if (meson.Contains("Omega")){
             if (energy.CompareTo("7TeV") == 0){
                if(mode == 40){
-                   maxNBins = 19;
+                   maxNBins = 11;
                    for(Int_t i = 0; i < maxNBins+1; i++){
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];
                    }
@@ -3655,12 +3663,12 @@
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[i];
                    }
                } else if(mode == 42){
-                   maxNBins = 19;
+                   maxNBins = 9;
                    for(Int_t i = 0; i < maxNBins+1; i++){
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                    }
                } else if(mode == 44){
-                   maxNBins = 19;
+                   maxNBins = 5;
                    for(Int_t i = 0; i < maxNBins+1; i++){
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                    }
@@ -3689,7 +3697,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
-                    startPtBin     = 3;            
+                    startPtBin     = 3;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 3;
                 } else if ( mode == 4 || mode == 12 ){
@@ -3705,7 +3713,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
-                    startPtBin     = 1;            
+                    startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 2;
                 } else if ( mode == 4 || mode == 12 ){
@@ -3721,7 +3729,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
-                    startPtBin     = 1;            
+                    startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 6;
                 } else if ( mode == 4 || mode == 12 ){
@@ -3737,7 +3745,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
-                    startPtBin     = 1;            
+                    startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 2;
                 } else if ( mode == 3 ){
@@ -3753,7 +3761,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
-                    startPtBin     = 1;            
+                    startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 3;
                 } else if ( mode == 3 ){
@@ -3769,7 +3777,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 3;
                 } else if ( mode == 1 ){
-                    startPtBin     = 3;            
+                    startPtBin     = 3;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 5;
                 } else if ( mode == 3 ){
