@@ -966,7 +966,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         Double_t maxTriggReject = 60000;
 
         TH2F * histo2DTriggReject = new TH2F("histo2DTriggReject","histo2DTriggReject",1000,0., 50.,10000,minTriggReject, maxTriggReject);
-        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "E (GeV)","#it{RF}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
+        SetStyleHistoTH2ForGraphs(histo2DTriggReject, "#it{E} (GeV)","#it{RF}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
                                 0.85*textSizeSpectra2,textSizeSpectra2, 0.85*textSizeSpectra2,textSizeSpectra2, 0.85,0.85);
         histo2DTriggReject->DrawCopy();
 
@@ -8020,7 +8020,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         fitPCMlowEta->SetParameter(5, 0);
 
 
-      TLatex *labelInvMassPtRangePCMl = new TLatex(0.945,0.9,Form("#pi^{0}: %.1f GeV/c < p_{T} < %.1f GeV/c",PCMEtabinLow[iBin],PCMEtabinHigh[iBin]));
+      TLatex *labelInvMassPtRangePCMl = new TLatex(0.945,0.9,Form("#eta: %.1f GeV/c < p_{T} < %.1f GeV/c",PCMEtabinLow[iBin],PCMEtabinHigh[iBin]));
 
       DrawGammaSetMarker(histoPCMSignalPlusBGEta, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPCMSignalPlusBGEta->SetLineWidth(1);
