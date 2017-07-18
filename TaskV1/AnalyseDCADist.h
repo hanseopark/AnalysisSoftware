@@ -21,8 +21,6 @@ void DrawGammaDCAHisto( TH1* ,
 void DrawGammaInvMassHisto( TH1* ,
              TString , TString , TString ,
              Float_t , Float_t ,Int_t ,Double_t );
-Double_t CrystalBall(Double_t *x, Double_t *par) ;
-
 
 TH1F* fHistDCAZUnderMeson_MesonPt[6][30];
 TH1F* fHistDCAZUnderMesonBG1_MesonPt[6][30];

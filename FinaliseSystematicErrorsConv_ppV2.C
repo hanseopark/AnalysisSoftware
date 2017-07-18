@@ -88,7 +88,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 "MCSmearing" };
     if(!energy.CompareTo("900GeV"))
         nameCutVariationSCCurrent[10] = "SPD";
-    if(!energy.CompareTo("8TeV"))
+    if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))
         nameCutVariationSCCurrent[12] = "PileupDCA";
     Color_t color[20];
     Color_t markerStyle[20];
@@ -385,9 +385,24 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
 
             // TPCCluster
             if (nameCutVariationSC[i].CompareTo("TPCCluster")==0 ){
-                minPt       = 0;
-                if (!energy.CompareTo("2.76TeV"))
-                    errorReset  = 0.5;
+                for (Int_t k = 0; k < nPtBins; k++){
+                    if (!energy.CompareTo("2.76TeV"))
+                        errorReset  = 0.5;
+                    if (!energy.CompareTo("8TeV")){
+                        if (!meson.CompareTo("Pi0"))
+                            errorReset  = 0.05;
+                        else if (!meson.CompareTo("Eta")||!meson.CompareTo("EtaToPi0")){
+                            if (ptBins[k] < 1.3)
+                                errorReset      = 0.04+pow(ptBins[k]-1.3,2)*4;
+                            else
+                                errorReset      = 0.04;
+                        }
+                    }
+                    errorsMean[i][k]        = errorReset;
+                    errorsMeanErr[i][k]     = errorReset*0.01;
+                    errorsMeanCorr[i][k]    = errorReset;
+                    errorsMeanErrCorr[i][k] = errorReset*0.01;
+                }
             }
 
             // dEdx e variations
@@ -625,9 +640,9 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         if (!energy.CompareTo("8TeV")){
                             if (ptBins[k] > 2.0)
-                                errorReset      = 4.+pow(ptBins[k]-2,2)*0.17;
+                                errorReset      = 5.+pow(ptBins[k]-2,2)*0.17;
                             else 
-                                errorReset      = 4.+pow(ptBins[k]-2,2)*5;
+                                errorReset      = 5.+pow(ptBins[k]-2,2)*10;
                         } else if (!energy.CompareTo("2.76TeV")){
                             errorReset          = 6.0;
                         } else if (!energy.CompareTo("900GeV")){
@@ -1019,7 +1034,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         errorsMeanCorrTrackReco[l]          =   TMath::Sqrt(pow(errorsMeanCorr[4][l],2)+    // TPCCluster
                                                             pow(errorsMeanCorr[5][l],2));   // Single pT
         // pileup
-        if(!energy.CompareTo("8TeV"))
+        if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))
             errorsMeanCorrPileup[l]         =   TMath::Sqrt(pow(errorsMeanCorr[1][l],2)+ // out of bunch methods
                                                             pow(errorsMeanCorr[11][l],2)+// SPD
                                                             pow(errorsMeanCorr[12][l],2));   // DCA out of bunch
@@ -1030,7 +1045,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
     TGraphErrors* meanErrorsSignalExtraction    = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsTrackReco           = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsPileup              = NULL;
-    if(!energy.CompareTo("8TeV"))
+    if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))
         meanErrorsPileup              = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPileup ,ptBinsErr ,errorsMeanErrCorrSummed );
     
     
@@ -1053,7 +1068,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         if (meson.Contains("Pi0") ){
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,25.);
         } else {
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,25.);
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,35.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1082,7 +1097,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
         legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reconstruction","p");
         cout << "here" << endl;
         if (meson.CompareTo("EtaToPi0")){
-            if(!energy.CompareTo("8TeV")) {
+            if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV")) {
                 DrawGammaSetMarkerTGraphErr(meanErrorsPileup, 25, 1.,color[5],color[5]);
                 meanErrorsPileup->Draw("p,csame");
                 legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pileup Estimate","p");

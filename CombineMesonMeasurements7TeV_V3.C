@@ -68,14 +68,14 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
     latexDummy->Draw();
 }
 
-void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP_20170225.root",
-                                        TString fileNameEMCAL   = "/home/nschmidt/AnalysisResults/pp/7TeV/EMCal/Daniel/data_EMCAL-EMCALResultsFullCorrection_PP_20170420.root",
+void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP_7TeV_20170718.root",
+                                        TString fileNameEMCAL   = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP_20170714.root",
 //                                         TString fileNameEMCAL   = "CombinationInput7TeV/pi0Specrtum7TeV_2011EMCAL_31Jan2017.root",
                                         TString fileNameEMCAL2   = "CombinationInput7TeV/mesonSpecrta7TeV_2011EMCAL_2March2017.root",
                                         TString fileNamePHOS    = "/home/nschmidt/AnalysisResults/pp/7TeV/PHOS/pp7TeV_PHOS_20170418_etapi0.root",
                                         TString fileNamePCMPHOS = "CombinationInput7TeV/data_PCM-PHOSResultsFullCorrection_PP_NoBinShifting_v2.root",
 //                                         TString fileNamePCMEMCAL = "CombinationInput7TeV/data_PCM-EMCALResultsFullCorrection_PP.2.root",
-                                        TString fileNamePCMEMCAL = "/home/nschmidt/AnalysisResults/pp/7TeV/PCM-EMC/data_PCM-EMCALResultsFullCorrection_PP_20170420.root",
+                                        TString fileNamePCMEMCAL = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_PCM-EMCALResultsFullCorrection_PP_20170714.root",
                                         TString fileInputCorrFactors = "/home/nschmidt/AnalysisResults/pp/7TeV/Comb/correlationInput/ComputeCorrelationFactors_pp7TeV/pp7TeV.root",
                                         TString suffix          = "pdf",
                                         TString isMC            = "",
