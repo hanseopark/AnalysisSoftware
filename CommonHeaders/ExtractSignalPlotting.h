@@ -855,10 +855,202 @@
         
     }
 
+    // Plotting Invariant mass with for example bin containing all different backgroundgroups. The background histos are given by user through a 2D array [group][ptbin]
+    // 0: total background (addition) 1: group 1 ...
+    void PlotExampleInvMassBinsBckGroups(TH1D* histoInvMassSignalWithBG,
+                                    TH1D*** histoInvMassSignalBckGroups,
+                                    Int_t exampleBin,
+                                    TString outputDir,
+                                    TString suffix,
+                                    Double_t* fPlottingRangeMeson,
+                                    Float_t* pictDrawingCoordinatesDummy,
+                                    Double_t fNumberOfEvents,
+                                    TString dateDummy,
+                                    TString fMesonType,
+                                    TString fSimulation,
+                                    TString fPlottingType,
+                                    TString fCollisionSystemDummy,
+                                    Double_t* fRangeBinsPt,
+                                    TString decayChannel,
+                                    TString detectionChannel                = "",
+                                    Int_t triggerSet                        = 0,
+                                    Double_t scaleFacSignal                 = 1.0,
+                                    Int_t detMode                           = 0,
+                                    Bool_t addSig                           = kFALSE,
+                                    TString fileName                        = "InvMassBinBckGroups",
+                                    Bool_t isVsPtConv                       = kFALSE
+                                ){
+
+        cout << "Trigger set: " << triggerSet << endl;
+        cout << "fCollisionSystemDummy: " << fCollisionSystemDummy << endl;
+        TString triggerStr2             = ReturnTriggerName(triggerSet,fCollisionSystemDummy);
+        TString triggerStr              = Form("%s triggered", triggerStr2.Data());
+        TString methodStr               = ReturnTextReconstructionProcess(detMode);
+        TString methodStrOut            = ReturnTextReconstructionProcessWrite(detMode);
+        if (addSig)
+            methodStrOut                = methodStrOut+"AddSig";
+
+        TH1D* histoPi0InvMassSigPlusBG;
+        TH1D* histoOmegaInvMassBG[5]; // Array containing all normalized bck groups
+        histoPi0InvMassSigPlusBG         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07"); // Signal + Background
+
+        for(Int_t k=0;k<5;k++){
+            histoOmegaInvMassBG[k] = (TH1D*)histoInvMassSignalBckGroups[k][fExampleBin]->Clone(Form("InvMassNormBG_%i",k));
+        }
+
+
+        Double_t textSizeLabelsPixel                 = 100*3/5;
+        TCanvas* canvasInvMassSamplePlot             = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
+        DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.09, 0.012, 0.035, 0.08);
+
+        Double_t startPt                    = fRangeBinsPt[exampleBin];
+        Double_t endPt                      = fRangeBinsPt[exampleBin+1];
+
+        Style_t markerStyleInvMassSGBG      = 0;
+        Size_t markerSizeInvMassSGBG        = 0;
+        Color_t markerColorInvMassSGBG      = kBlack;
+        Style_t markerStyleInvMassMBG       = 24;
+        Size_t markerSizeInvMassMBG         = 1.5;
+        Color_t markerColorInvMassMBG       = kGray+2;
+        Color_t markerColorInvMassMBG1      = kGray+3;
+        Color_t markerColorInvMassMBG2      = kGray+1;
+        Style_t markerStyleInvMassBG[5]        = {20,25,28,27,30};
+        Size_t markerSizeInvMassBG          = 2;
+        Color_t markerColorInvMassBG[5]        = {kGreen+1,kRed+1,kBlue-2,kOrange+7,kMagenta+3};
+        Style_t markerStyleInvMassSG        = 20;
+        Size_t markerSizeInvMassSG          = 3;
+        Color_t markerColorInvMassSG        = kRed+2;
+        Color_t fitColorInvMassSG           = kAzure+2;
+        Color_t fitColorInvMassSG2          = kGreen+3;
+
+        Double_t textsizeLabelsPP       = 0.04;
+        Double_t marginInvMass          = 0.1*1500;
+        Double_t textsizeLabelsInvMass  = 0;
+        Double_t textsizeFacInvMass     = 0;
+        if (canvasInvMassSamplePlot->XtoPixel(canvasInvMassSamplePlot->GetX2()) < canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1())){
+            textsizeLabelsInvMass       = (Double_t)textSizeLabelsPixel/canvasInvMassSamplePlot->XtoPixel(canvasInvMassSamplePlot->GetX2()) ;
+            textsizeFacInvMass          = (Double_t)1./canvasInvMassSamplePlot->XtoPixel(canvasInvMassSamplePlot->GetX2()) ;
+        } else {
+            textsizeLabelsInvMass       = (Double_t)textSizeLabelsPixel/canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1());
+            textsizeFacInvMass          = (Double_t)1./canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1());
+        }
+
+        TH1F * histo1DInvMassDummy;
+        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else if(fMesonType.CompareTo("Eta") == 0){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else { // omega
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        }
+
+        TString ptLabel         =  "#it{p}_{T} ";
+        if (isVsPtConv)
+            ptLabel             =  "#it{p}_{T,#gamma_{conv}}";
+
+        // Set range for fits and labels
+        TLatex *labelInvMassPtRange;
+        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        } else if(fMesonType.CompareTo("Eta") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        } else { // omega
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        }
+
+        // Start Drawing
+        TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+        labelALICE->SetTextFont(43);
+        labelALICE->Draw();
+
+        TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
+        SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+        labelInvMassEnergy->SetTextFont(43);
+        labelInvMassEnergy->Draw();
+
+        TLatex *labelTrigger  = new TLatex(0.135,0.9-2*0.9*textsizeLabelsPP,triggerStr.Data());
+        SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4);
+        labelTrigger->SetTextFont(43);
+        labelTrigger->Draw();
+
+        TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, methodStr);
+        SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
+        labelInvMassReco->SetTextFont(43);
+        labelInvMassReco->Draw();
+
+        SetStyleTLatex( labelInvMassPtRange, 0.85*textSizeLabelsPixel,4);
+        labelInvMassPtRange->SetTextAlign(31);
+        labelInvMassPtRange->SetTextFont(43);
+        labelInvMassPtRange->Draw();
+        canvasInvMassSamplePlot->cd();
+        histo1DInvMassDummy->Draw();
+
+        Double_t minimum = histoPi0InvMassSigPlusBG->GetMinimum();
+        if (minimum < 0) minimum = 1.3*minimum;
+        else minimum = 0.7*minimum;
+        histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
+        if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb")){
+            histo1DInvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
+            histo1DInvMassDummy->GetXaxis()->SetNdivisions(510);
+        }
+
+        histo1DInvMassDummy->Draw("AXIS");
+
+        DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+        histoPi0InvMassSigPlusBG->SetLineWidth(1);
+        histoPi0InvMassSigPlusBG->Draw("hist,e,same");
+
+        for(Int_t k=0;k<5;k++){
+            if(k==0){ // Draw total background like you normally draw the total background
+                DrawGammaSetMarker(histoOmegaInvMassBG[k], markerStyleInvMassBG[k], markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
+            }else{
+                DrawGammaSetMarker(histoOmegaInvMassBG[k], markerStyleInvMassBG[k], markerSizeInvMassBG, markerColorInvMassBG[k], markerColorInvMassBG[k]);
+            }
+            histoOmegaInvMassBG[k]->Draw("hist,pe,same");
+        }
+        Int_t nLegendLines      = 6;
+
+        labelALICE->Draw();
+        labelInvMassEnergy->Draw();
+        labelTrigger->Draw();
+        labelInvMassReco->Draw();
+        labelInvMassPtRange->Draw();
+        // 0.67
+        TLegend* legendInvMass2  = GetAndSetLegend2(0.55, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
+        legendInvMass2->SetMargin(0.25);
+        legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
+        for(Int_t k=0;k<5;k++){
+            if(k==0){
+                legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing total",k),"lpe");
+            }
+            else{
+                legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing group %i",k),"lpe");
+            }
+        }
+        legendInvMass2->Draw();
+        histo1DInvMassDummy->Draw("AXIS,same");
+
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_%s%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(),fileName.Data() ,methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+    }
+
     //_______________________ Plotting Invariant mass with fitted BG and subtraction in a single p_t bin __________________________________
     void PlotExampleInvMassBinsBckFit(TH1D* histoInvMassSignalWithBG,
                                     TH1D* histoInvMassSignal,
                                     TF1* fitInvMassBG,
+                                    TH1D* fitInvMassBGConfidence,
                                     TF1* fitSignal,
                                     Int_t exampleBin,
                                     TString outputDir,
@@ -892,11 +1084,13 @@
 
         TH1D* histoPi0InvMassSigPlusBG;
         TH1D* histoPi0InvMassSig;
+        TH1D* fitOmegaInvMassBGConfidence;
         TF1* fitOmegaInvMassBG;
         TF1* fitPi0InvMassSig;
         histoPi0InvMassSigPlusBG         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07"); // Signal + Background
         histoPi0InvMassSig               = (TH1D*) histoInvMassSignal->Clone("InvMassSig_PtBin07"); // Histo of Signal
         fitOmegaInvMassBG                = (TF1*)fitInvMassBG->Clone("InvMassBG_PtBin07"); // Fit of background
+        fitOmegaInvMassBGConfidence      = (TH1D*)fitInvMassBGConfidence->Clone("InvMassBGConfidence_PtBin07"); // This histogram is used to plot an errorband
         fitPi0InvMassSig                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07"); // Fit of Signal
 
         fitPi0InvMassSig->SetParameter(4, 0);
@@ -962,6 +1156,7 @@
         TString ptLabel         =  "#it{p}_{T} ";
         if (isVsPtConv)
             ptLabel             =  "#it{p}_{T,#gamma_{conv}}";
+
         // Set range for fits and labels
         TLatex *labelInvMassPtRange;
         if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
@@ -980,15 +1175,15 @@
         TF1* fitPi0InvMassSig_scaled = new TF1();
         fitPi0InvMassSig_scaled = ScaleTF1(fitPi0InvMassSig,scaleFacSignal,"fitPi0InvMassSig_scaled");
 
-        //fitPi0InvMassSig->Scale( scaleFacSignal);
         // Set fit colors
         fitPi0InvMassSig_scaled->SetNpx(10000);
         fitPi0InvMassSig_scaled->SetLineColor(fitColorInvMassSG);
         fitPi0InvMassSig_scaled->SetLineWidth(3);
         fitOmegaInvMassBG->SetNpx(10000);
         fitOmegaInvMassBG->SetLineColor(fitColorInvMassSG2);
-        fitOmegaInvMassBG->SetLineWidth(3);
+        fitOmegaInvMassBG->SetLineWidth(1);
 
+        fitOmegaInvMassBGConfidence->SetFillColorAlpha(kGreen+2,0.4);
 
         // Start Drawing
         TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
@@ -1031,8 +1226,8 @@
 
         DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
         histoPi0InvMassSigPlusBG->SetLineWidth(1);
+        fitOmegaInvMassBGConfidence->Draw("e3 same");
         histoPi0InvMassSigPlusBG->Draw("hist,e,same");
-        //DrawGammaSetMarker(histoPi0InvMassBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
         fitOmegaInvMassBG->Draw("same");
         DrawGammaSetMarker(histoPi0InvMassSig, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
         histoPi0InvMassSig->Draw("same");
@@ -1247,7 +1442,174 @@
         canvasInvMassSamplePlot->Print(Form("%s/%s_%s_TrueInvMassDistributionDisentangled_PtBin_%i.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(),exampleBin,suffix.Data()));
     }
 
+    //__________________________________________ Plotting all Back Groups in one plot _______________________________________________
+    void PlotInvMassInPtBinsBckGroups(   TH1D** fHistoMappingGGInvMassPtBinPlot,
+                                TH1D*** fHistoMappingBackNormInvMassPtBinPlot,
+                                TString namePlot,
+                                TString nameCanvas,
+                                TString namePad,
+                                Double_t* fPlottingRangeMeson,
+                                TString dateDummy,
+                                TString fMesonType,
+                                Int_t fRowPlot,
+                                Int_t fColumnPlot,
+                                Int_t fStartBinPtRange,
+                                Int_t fNumberPtBins,
+                                Double_t* fRangeBinsPt,
+                                TString fDecayChannel,
+                                Bool_t fMonteCarloInfo,
+                                TString decayChannel,
+                                TString fDetectionChannel,
+                                TString fEnergy,
+                                Bool_t isVsPtConv               = kFALSE
+                            ){
+        TGaxis::SetMaxDigits(3);
 
+        TCanvas * canvasDataSpectra     = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
+        canvasDataSpectra->SetTopMargin(0.0);
+        canvasDataSpectra->SetBottomMargin(0.0);
+        canvasDataSpectra->SetRightMargin(0.0);
+        canvasDataSpectra->SetLeftMargin(0.0);
+
+        TPad * padDataSpectra           = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+        padDataSpectra->SetFillColor(0);
+        padDataSpectra->GetFrame()->SetFillColor(0);
+        padDataSpectra->SetBorderMode(0);
+        padDataSpectra->SetLogy(0);
+        padDataSpectra->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+        padDataSpectra->Draw();
+
+    //     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
+    //     cout << fMesonType.Data() << endl;
+        Int_t place                     = 0;
+        for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
+    //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+            Double_t startPt            = fRangeBinsPt[iPt];
+            Double_t endPt              = fRangeBinsPt[iPt+1];
+
+            place                       = place + 1; //give the right place in the page
+            if (place == fColumnPlot){
+                iPt--;
+                padDataSpectra->cd(place);
+
+    //             cout << "entered ALICE plotting" << endl;
+                TString textAlice       = "ALICE performance";
+                TString textEvents;
+                if(fMonteCarloInfo){
+                    textEvents          = "MC";
+                } else {
+                    textEvents          = "Data";
+                }
+                Double_t nPixels        = 13;
+                Double_t textHeight     = 0.08;
+                if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
+                    textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
+                } else {
+                    textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
+                }
+
+                Double_t startTextX     = 0.10;
+                Double_t startTextY     = 0.9;
+                Double_t differenceText = textHeight*1.25;
+
+                TLatex *alice           = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+                TLatex *latexDate       = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+                TLatex *energy          = new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
+                TLatex *process         = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+                TLatex *detprocess      = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionChannel);
+                TLatex *events          = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+
+                alice->SetNDC();
+                alice->SetTextColor(1);
+                alice->SetTextSize(textHeight*1.3);
+                alice->Draw();
+
+                latexDate->SetNDC();
+                latexDate->SetTextColor(1);
+                latexDate->SetTextSize(textHeight);
+                latexDate->Draw();
+
+                energy->SetNDC();
+                energy->SetTextColor(1);
+                energy->SetTextSize(textHeight);
+                energy->Draw();
+
+                process->SetNDC();
+                process->SetTextColor(1);
+                process->SetTextSize(textHeight);
+                process->Draw();
+
+                detprocess->SetNDC();
+                detprocess->SetTextColor(1);
+                detprocess->SetTextSize(textHeight);
+                detprocess->Draw();
+
+                events->SetNDC();
+                events->SetTextColor(1);
+                events->SetTextSize(textHeight);
+                events->Draw();
+
+                TLegend* legendData     = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.)*differenceText);
+                legendData->SetTextSize(textHeight);
+                legendData->SetTextFont(62);
+                legendData->SetFillColor(0);
+                legendData->SetFillStyle(0);
+                legendData->SetLineWidth(0);
+                legendData->SetLineColor(0);
+                legendData->SetMargin(0.15);
+                Size_t markersize       = fHistoMappingGGInvMassPtBinPlot[iPt]->GetMarkerSize();
+                fHistoMappingGGInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
+                legendData->AddEntry(fHistoMappingGGInvMassPtBinPlot[iPt],"same evt. #it{M}_{#gamma#gamma} (BG+Signal)","ep");
+                Size_t linesize         = fHistoMappingBackNormInvMassPtBinPlot[0][iPt]->GetLineWidth();
+                fHistoMappingBackNormInvMassPtBinPlot[0][iPt]->SetLineWidth(0.8*linesize);
+                for(Int_t k=0;k<5;k++){
+                    if(fHistoMappingBackNormInvMassPtBinPlot[k][iPt]==NULL) continue;
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[k][iPt],Form("mixed evt. Group %i #it{M}_{#gamma#gamma}",k),"l");
+                }
+                legendData->Draw();
+            } else {
+
+                padDataSpectra->cd(place);
+                padDataSpectra->cd(place)->SetTopMargin(0.12);
+                padDataSpectra->cd(place)->SetBottomMargin(0.15);
+                padDataSpectra->cd(place)->SetRightMargin(0.02);
+    //             cout << "place: " << place << endl;
+                int remaining           = (place-1)%fColumnPlot;
+                if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
+                else padDataSpectra->cd(place)->SetLeftMargin(0.25);
+    //             cout << "here" << endl;
+                TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
+                if (isVsPtConv)
+                    titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+                DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
+                                titlePt,
+                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+    //             cout << "here" << endl;
+                for(Int_t k=0;k<5;k++){
+                    if(fHistoMappingBackNormInvMassPtBinPlot[k][iPt]==NULL) continue;
+                    DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[k][iPt],
+                                    titlePt,
+                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                    fPlottingRangeMeson[0],fPlottingRangeMeson[1],k+1);
+               }
+    //             cout << "here" << endl;
+                Double_t fBGFitRangeLow     = fBGFitRange[0];
+                Double_t fBGFitRangeHigh    = fBGFitRange[1];
+                if (namePlot.Contains("Left")){
+                    fBGFitRangeLow          = fBGFitRangeLeft[0];
+                    fBGFitRangeHigh         = fBGFitRangeLeft[1];
+                }
+                TBox *box               = new TBox(fBGFitRangeLow,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.93,fBGFitRangeHigh,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.91);
+                box->SetFillStyle(1001);
+                box->SetFillColor(kAzure+9);
+                box->Draw("same");
+            }
+        }
+        canvasDataSpectra->Print(namePlot.Data());
+        delete padDataSpectra;
+        delete canvasDataSpectra;
+    }
 
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________

@@ -224,32 +224,35 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     fBackgroundMultNumber           = ReturnBackgroundMult(fMesonCutSelection);
 
     TString ObjectNameESD           = "ESD_Mother_InvMass_Pt";
-    TString ObjectNameBck[3]        = { "ESD_Background_2_InvMass_Pt",
+    TString ObjectNameBck[4]        = { "ESD_Background_1_InvMass_Pt",
+                                        "ESD_Background_2_InvMass_Pt",
                                         "ESD_Background_3_InvMass_Pt",
                                         "ESD_Background_4_InvMass_Pt"
                                       };
 
-    hist_bck2                       = (TH2D*)ESDContainer->FindObject(ObjectNameBck[0].Data());
-    hist_bck3                       = (TH2D*)ESDContainer->FindObject(ObjectNameBck[1].Data());
-    hist_bck4                       = (TH2D*)ESDContainer->FindObject(ObjectNameBck[2].Data());
+    for(Int_t k=0;k<4;k++){
+       hist_bck[k]                       = (TH2D*)ESDContainer->FindObject(ObjectNameBck[k].Data());
+    }
 
-    fBckInvMassVSPt2                = (TH2D*)hist_bck2->Clone("hist_bck2");
-    fBckInvMassVSPt3                = (TH2D*)hist_bck3->Clone("hist_bck3");
-    fBckInvMassVSPt4                = (TH2D*)hist_bck3->Clone("hist_bck4");
+    for(Int_t k=1;k<5;k++){
+        fBckInvMassVSPt[k]                = (TH2D*)hist_bck[k-1]->Clone(Form("hist_bck%i",k));
+    }
 
     SetCorrectMCHistogrammNames();
 
     fGammaGammaInvMassVSPt= (TH2D*)ESDContainer->FindObject(ObjectNameESD.Data());
 
-    fBckInvMassVSPt                 = fBckInvMassVSPt2;
-    fBckInvMassVSPt->Add(fBckInvMassVSPt3);
-    fBckInvMassVSPt->Add(fBckInvMassVSPt4);
+
+    fBckInvMassVSPt[0]  =(TH2D*) fBckInvMassVSPt[1]->Clone("hist_bck0");
+    fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[2]);
+    fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[3]);
+    fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[4]);
+
 
     const char* FileDataLogname     = Form("%s/%s/%s_%s_EffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(), fCutSelectionRead.Data());
     fFileDataLog.open(FileDataLogname, ios::out);
 
     ProduceBckWithoutWeighting(fBckInvMassVSPt); //background without weighting because THSparse wasn't used
-
 
     if(fIsMC){
         cout<<"STARTED BLOCK fIsMC"<<endl;
@@ -311,19 +314,20 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         fNEvents = GetNEvents(fEventQuality);
     }
 
-    TH1D *fBck              = (TH1D*)fBckInvMassVSPt->ProjectionX("");
+    TH1D *fBck[5] = {NULL,NULL,NULL,NULL,NULL};
+    for(Int_t k = 0; k< 5; k++){
+        fBck[k] =  (TH1D*)fBckInvMassVSPt[k]->ProjectionX("");
+        fBck[k]->Rebin(fNRebinGlobal);
+    }
     TH1D *fGammaGamma       = (TH1D*)fGammaGammaInvMassVSPt->ProjectionX("ESD_Mother_InvMass");
 
     cout<< "The mass of the meson is: "<< fMesonMassExpect<< " Events analysed: "<< fNEvents<< endl;
     cout << "here" << endl;
     // Process the 1D invariant mass histos
     fGammaGamma->SetTitle(Form("%s %s",fGammaGamma->GetTitle(),fCutSelection.Data()));
-    cout << "here" << endl;
     fGammaGamma->Rebin(fNRebinGlobal);
-    //fGammaGamma->Scale(1./fNRebinGlobal);
-    fBck->Rebin(fNRebinGlobal);
     //fBck->Scale(1./fNRebinGlobal);
-    ProcessEM( fGammaGamma , fBck, fBGFitRange);
+    ProcessEM( fGammaGamma , fBck[0], fBGFitRange); // scale the added background
     fHistoMappingBackNormInvMass = fBckNorm;
     fHistoMappingSignalInvMass = fSignal;
 
@@ -332,11 +336,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     fHistoMappingSignalInvMass->DrawCopy("same");
 
     // Function to Project the 2D histos InvariantMass VS Pt into Invariant Mass spectrum
+    // Only do it for added background for now
     FillMassHistosArray(fGammaGammaInvMassVSPt);
-    ProcessEM( fMesonFullPtSignal, fMesonFullPtBackground, fBGFitRange);
+    ProcessEM( fMesonFullPtSignal, fMesonFullPtBackground[0], fBGFitRange);
     fMesonFullPtBackNorm            = fBckNorm;
 
-    ProcessEM( fFittingHistMidPtSignal, fFittingHistMidPtBackground, fBGFitRange);
+    ProcessEM( fFittingHistMidPtSignal, fFittingHistMidPtBackground[0], fBGFitRange);
     fFittingHistMidPtSignalSub = fSignal;
     if(fCrysFitting==0){
         fFileErrLog << "Using exp fit"<<endl;
@@ -377,12 +382,11 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     fOmegaFullPtSignal = (TH1D*)fMesonFullPtSignal->Clone("fMesonFullPtSignal");
     fOmegaFullPtSignal->Write("fSignal");
     // Different event mixing background groups
-    fOmegaFullPtBack2 = (TH1D*)hist_bck2->Clone("hist_bck2");
-    fOmegaFullPtBack2->Write("fBack2");
-    fOmegaFullPtBack3 = (TH1D*)hist_bck3->Clone("hist_bck3");
-    fOmegaFullPtBack3->Write("fBack3");
-    fOmegaFullPtBack4 = (TH1D*)hist_bck4->Clone("hist_bck4");
-    fOmegaFullPtBack4->Write("fBack4");
+    for(Int_t k = 0; k<4;k++){
+        fOmegaFullPtBack[k] = (TH1D*)hist_bck[k]->Clone(Form("hist_bck%i",k));
+        fOmegaFullPtBack[k]->Write(Form("fBack%i",k));
+    }
+
     fOmegaFullPtBackNorm = (TH1D*)fMesonFullPtBackNorm->Clone("fMesonFullPtBackNorm");
     fOmegaFullPtBackNorm->Write("fBackNorm");
     filefull->Close();
@@ -399,10 +403,17 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         fFileDataLog << "---------------------------------------------------------------------------------" << endl;
 
         ProcessBckFitSubtraction(fHistoMappingGGInvMassPtBin[iPt],iPt,fPeakRange,fFitRange,optionEnergy,Suffix,cutSelection,meson);
+        Double_t fNormTot = 1.; // variable containing the factor used to scale the total background
+        for(Int_t k=0;k<5;k++){
+            ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[k][iPt], fBGFitRange);
+            if(k==0) fNormTot = fNorm; // k==0 means tot back was just scaled -> store value
+            fHistoMappingSignalInvMassPtBin[iPt] = fSignal;
+            fHistoMappingBackNormInvMassPtBin[k][iPt] = fBckNorm;
 
-        ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRange);
-        fHistoMappingSignalInvMassPtBin[iPt] = fSignal;
-        fHistoMappingBackNormInvMassPtBin[iPt] = fBckNorm;
+            fHistoMappingBackSameNormInvMassPtBin[k][iPt] = (TH1D*) fHistoMappingBackInvMassPtBin[k][iPt]->Clone(Form("BckSameNorm%i",k)); // clone all the unscaled bckgroups
+            fHistoMappingBackSameNormInvMassPtBin[k][iPt]->Sumw2();
+            fHistoMappingBackSameNormInvMassPtBin[k][iPt]->Scale(fNormTot); // scale verything with the SAME factor -> factor obtained from scaling of total background
+        }
 
         TString namesecHistoBckNorm;
         TString namesecHistoSignal;
@@ -413,8 +424,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         TFile *file1 = TFile::Open("histback.root",tempStr.Data());
         //writes background  and signal for each pt bin in a root file - carolina's modification
         file1->cd();
-        namesecHistoBckNorm                         = Form("BckNorm_InvMass_in_Pt_Bin%02i", iPt);
-        fHistoMappingBackNormInvMassPtBin[iPt]->Write(namesecHistoBckNorm.Data());
+        for(Int_t k=0;k<5;k++){
+            namesecHistoBckNorm                         = Form("BckNorm%i_InvMass_in_Pt_Bin%02i",k, iPt);
+            fHistoMappingBackNormInvMassPtBin[k][iPt]->Write(namesecHistoBckNorm.Data());
+        }
         namesecHistoSignal                          = Form("Signal_InvMass_in_Pt_Bin%02i", iPt);
         fHistoMappingGGInvMassPtBin[iPt]->Write(namesecHistoSignal.Data());
 
@@ -424,8 +437,8 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         FitWithPol2ForBG(fHistoMappingGGInvMassPtBin[iPt], fMesonFitRange,iPt,kFALSE);
         fFitWithPol2ForBG[iPt]                       = fFitReco;
 
-        ProcessRatioSignalBackground(fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackNormInvMassPtBin[iPt]);
-        fHistoMappingRatioSBInvMassPtBin[iPt]        = fRatioSB;
+        ProcessRatioSignalBackground(fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackNormInvMassPtBin[0][iPt]);
+        fHistoMappingRatioSBInvMassPtBin[0][iPt]        = fRatioSB; // only implemented for added background so far
 
         fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << "normal range/right normalization" << endl;
 
@@ -510,7 +523,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             fGGYieldsError[k][iPt]          = fYieldsError;
 
             // Integrate the bck histo
-            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[iPt], fMesonCurIntRange[k]);
+            IntegrateHistoInvMass( fHistoMappingBackNormInvMassPtBin[0][iPt], fMesonCurIntRange[k]);
             fBckYields[k][iPt]              = fYields;
             fBckYieldsError[k][iPt]         = fYieldsError;
 
@@ -700,7 +713,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
         // Function to subtract GG minus Bck
         cout << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-        ProcessEMLeftRight( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[iPt], fBGFitRangeLeft, fBGFitRange);
+        ProcessEMLeftRight( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[0][iPt], fBGFitRangeLeft, fBGFitRange); // only done for added background so far
         fHistoMappingSignalInvMassLeftPtBin[iPt] = fSignal;
         fHistoMappingBackNormInvMassLeftPtBin[iPt] = fBckNorm;
 
@@ -861,10 +874,21 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     fileSysErrDat.close();
     //******************************** OUTPUT END ******************************************************
 
-    TString nameMeson           = Form("%s/%s_%s_MesonWithBck%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
-    TString nameCanvas          = "MesonWithBckCanvas";
-    TString namePad             = "MesonWithBckPad";
-    PlotInvMassInPtBins( fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, nameMeson, nameCanvas, namePad, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem);
+    // Plot one for each background group
+    TString nameMeson;
+    TString nameCanvas;
+    TString namePad;
+    for(Int_t k=0;k<5;k++){
+        nameMeson           = Form("%s/%s_%s_MesonWith_Group%i_Bck%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),k,fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
+        nameCanvas          = "MesonWithBckCanvas";
+        namePad             = "MesonWithBckPad";
+        PlotInvMassInPtBins( fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassPtBin[k], nameMeson, nameCanvas, namePad, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem);
+    }
+    // Draw all backgroups in one plot (individual scaling)
+    nameMeson           = Form("%s/%s_%s_MesonWith_AllGroups_Bck%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
+    nameCanvas          = "MesonWithBckCanvas";
+    namePad             = "MesonWithBckPad";
+    PlotInvMassInPtBinsBckGroups(fHistoMappingGGInvMassPtBin, fHistoMappingBackNormInvMassPtBin, nameMeson, nameCanvas, namePad, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem);
 
     TString nameMesonSub        = Form("%s/%s_%s_MesonSubtracted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
     TString nameCanvasSub       = "MesonCanvasSubtracted";
@@ -897,13 +921,16 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     namePadSub                  = "MesonPadSubtractedLeft";
 
     PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassLeftPtBin, fHistoMappingTrueMesonInvMassPtBins, fFitInvMassLeftPtBin, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess, fCollisionSystem);
-
-    PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],
+    PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[0][fExampleBin],
                         fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                         fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
-    PlotExampleInvMassBinsBckFit(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingGGInvMassBackFitPtBin[fExampleBin], fBackgroundFitPol[fExampleBin],
+    PlotExampleInvMassBinsBckFit(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingGGInvMassBackFitPtBin[fExampleBin], fBackgroundFitPol[fExampleBin],fHistoBckFitConfidence[fExampleBin],
                          fFitSignalInvMassBackFitPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                         fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+    PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroups");
+    PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingBackSameNormInvMassPtBin,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                    fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale");
     if(fIsMC){
         TString nameMesonTrue   = Form("%s/%s_%s_TrueMesonFitted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
         TString nameCanvasTrue  = "TrueMesonCanvasFitted";
@@ -972,8 +999,7 @@ void ProcessBckFitSubtraction(TH1D *fGammaGamma, Int_t i, Double_t * fPeakRangeD
     //2ND OPTION
     FitBackFunc = new TF1("BGfit",FunctionBGExclusion,fFitRangeDummy[0],fFitRangeDummy[1],5);
     fBackgroundFitPol[i] = new TF1("BGfit","pol4",fFitRangeDummy[0],fFitRangeDummy[1]);
-    fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->Fit(FitBackFunc,"QMRE0","",fFitRangeDummy[0],fFitRangeDummy[1]);//QMRE0
-
+    TFitResultPtr resultBckFit =fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->Fit(FitBackFunc,"QMRES0","",fFitRangeDummy[0],fFitRangeDummy[1]);//QMRES0
     Double_t FitParams[5];
     FitBackFunc->GetParameters(&FitParams[0]);
     fBackgroundFitPol[i]->SetParameters(FitParams);
@@ -984,9 +1010,18 @@ void ProcessBckFitSubtraction(TH1D *fGammaGamma, Int_t i, Double_t * fPeakRangeD
         */
     for (Int_t binx= 0; binx < fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetNbinsX()+1; binx++){
         if(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinCenter(binx) > fFitRangeDummy[0] && fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinCenter(binx) < fFitRangeDummy[1]){
-            fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->SetBinContent(binx,fBackgroundFitPol[i]->Eval(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinCenter(binx)));
-            fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->SetBinError(binx,fGammaGamma->GetBinError(binx));
+
+            Double_t area = fBackgroundFitPol[i]->Integral(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinLowEdge(binx),
+                                                           (fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinLowEdge(binx))+fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinWidth(binx));
+            Double_t area_err = fBackgroundFitPol[i]->IntegralError(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinLowEdge(binx),
+                                                                   (fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinLowEdge(binx))+fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinWidth(binx),
+                                                                    resultBckFit->GetParams(), resultBckFit->GetCovarianceMatrix().GetMatrixArray() );
+            fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->SetBinContent(binx,area/(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinWidth(binx)));
+            fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->SetBinError(binx,area_err/(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->GetBinWidth(binx)));
+
         }
+        // Clone histo for error band
+        fHistoBckFitConfidence[i] =  (TH1D*)fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->Clone(Form(" fHistoBckFitConfidence_%i",i));
     }
     fHistoMappingGGInvMassBackFitPtBin[i] = (TH1D*) fGammaGamma->Clone(Form("GG_SubtractedSignal_%i",i));
     fHistoMappingGGInvMassBackFitPtBin[i]->Sumw2();
@@ -1014,17 +1049,17 @@ void ProcessEM( TH1D* fGammaGamma,
 
     Double_t 	r= fGammaGamma->Integral(fGammaGamma->GetXaxis()->FindBin(fBGFitRangeEM[0]),fGammaGamma->GetXaxis()->FindBin(fBGFitRangeEM[1]));
     Double_t 	b= fBck->Integral(fBck->GetXaxis()->FindBin(fBGFitRangeEM[0]),fBck->GetXaxis()->FindBin(fBGFitRangeEM[1]));
-    Double_t 	norm = 1;
 
-    if(b != 0) norm = r/b;
-    fBckNorm->Scale(norm);
+    if(b != 0) fNorm = r/b;
+
+    fBckNorm->Scale(fNorm);
     //    cout<<"r="<<r<<" b="<<b<<" r/b="<<r/b<< " " << endl;
 
     Int_t numberOfZeros = 0;
     for (Int_t i = 1; i < fBckNorm->GetNbinsX()+1; i++){
         if (fBckNorm->GetBinContent(i) == 0){
             numberOfZeros++;
-            if (norm > 1.){
+            if (fNorm > 1.){
                 fBckNorm->SetBinError(i,1.);
                 fBckNorm->SetBinContent(i,0.);
             }
@@ -1103,7 +1138,7 @@ void ProcessRatioSignalBackground(TH1D* fGammaGamma, TH1D* fBck)
     fRatioSB = (TH1D*)fGammaGamma->Clone("RatioSB");
     fRatioSB->Divide(fGammaGamma, fBck, 1.,1.,"B");
 }
-
+/*
 void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContainer){
 
     THnSparseF* fSparseMotherZM;
@@ -1283,46 +1318,71 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
     fFittingHistMidPtBackground->Rebin(fNRebin[4]);
     //fFittingHistMidPtBackground->Scale(1./fNRebin[4]);
 }
-
-void ProduceBckWithoutWeighting(TH2D *fBckInvMassVSPtDummy){
+*/
+void ProduceBckWithoutWeighting(TH2D **fBckInvMassVSPtDummy){
     //calculation background for midPt without weighting
-    Int_t startBinMidPt = fBckInvMassVSPtDummy->GetYaxis()->FindBin(fMidPt[0]+0.001);
-    Int_t endBinMidPt = fBckInvMassVSPtDummy->GetYaxis()->FindBin(fMidPt[1]-0.001);
-    fFittingHistMidPtBackground = new TH1D("Mapping_Back_InvMass_MidPt","Mapping_Back_InvMass_MidPt",fBckInvMassVSPtDummy->GetNbinsX(),0.,1.);
-    fFittingHistMidPtBackground->Sumw2();
-    fBckInvMassVSPtDummy->ProjectionX("Mapping_Back_InvMass_MidPt",startBinMidPt,endBinMidPt);
-    fFittingHistMidPtBackground=(TH1D*)gDirectory->Get("Mapping_Back_InvMass_MidPt");
-    fFittingHistMidPtBackground->Rebin(fNRebin[4]);
+    for(Int_t k = 0; k<5; k++){
+        if(fBckInvMassVSPtDummy[k]==NULL){
+            continue;
+        }
+        //calculation background for midPt without weighting
+        Int_t startBinMidPt = fBckInvMassVSPtDummy[k]->GetYaxis()->FindBin(fMidPt[0]+0.001);
+        Int_t endBinMidPt = fBckInvMassVSPtDummy[k]->GetYaxis()->FindBin(fMidPt[1]-0.001);
+        fFittingHistMidPtBackground[k] = new TH1D(Form("Mapping_Back%i_InvMass_MidPt",k),Form("Mapping_Back%i_InvMass_MidPt",k),fBckInvMassVSPtDummy[k]->GetNbinsX(),0.,1.);
+        fFittingHistMidPtBackground[k]->Sumw2();
+        fBckInvMassVSPtDummy[k]->ProjectionX(Form("Mapping_Back%i_InvMass_MidPt",k),startBinMidPt,endBinMidPt);
+        fFittingHistMidPtBackground[k]=(TH1D*)gDirectory->Get(Form("Mapping_Back%i_InvMass_MidPt",k));
+        fFittingHistMidPtBackground[k]->Rebin(fNRebin[4]);
 
-    //calulation background for fullPt without weighting
-    fMesonFullPtBackground = new TH1D("Mapping_Back_InvMass_FullPt","Mapping_Back_InvMass_FullPt",fBckInvMassVSPtDummy->GetNbinsX(),0.,1.);
-    fMesonFullPtBackground->Sumw2();
-    Int_t startBinFullPt = fBckInvMassVSPtDummy->GetYaxis()->FindBin(fFullPt[0]+0.001);
-    Int_t endBinFullPt = fBckInvMassVSPtDummy->GetYaxis()->FindBin(fFullPt[1]-0.001);
-    fBckInvMassVSPtDummy->ProjectionX("Mapping_Back_InvMass_FullPt",startBinFullPt,endBinFullPt);
-    fMesonFullPtBackground=(TH1D*)gDirectory->Get("Mapping_Back_InvMass_FullPt");
-    fMesonFullPtBackground->Rebin(fNRebin[4]);
+        //calulation background for fullPt without weighting
+        fMesonFullPtBackground[k] = new TH1D(Form("Mapping_Back%i_InvMass_FullPt",k),Form("Mapping_Back%i_InvMass_FullPt",k),fBckInvMassVSPtDummy[k]->GetNbinsX(),0.,1.);
+        fMesonFullPtBackground[k]->Sumw2();
+        Int_t startBinFullPt = fBckInvMassVSPtDummy[k]->GetYaxis()->FindBin(fFullPt[0]+0.001);
+        Int_t endBinFullPt = fBckInvMassVSPtDummy[k]->GetYaxis()->FindBin(fFullPt[1]-0.001);
+        fBckInvMassVSPtDummy[k]->ProjectionX(Form("Mapping_Back%i_InvMass_FullPt",k),startBinFullPt,endBinFullPt);
+        fMesonFullPtBackground[k]=(TH1D*)gDirectory->Get(Form("Mapping_Back%i_InvMass_FullPt",k));
+        fMesonFullPtBackground[k]->Rebin(fNRebin[4]);
 
+        for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+            fNameHistoBack = Form("Mapping_Back%i_InvMass_in_Pt_Bin%02d",k ,iPt);
+            if(fHistoMappingBackInvMassPtBin[k][iPt]!= NULL){
+                delete fHistoMappingBackInvMassPtBin[k][iPt];
+                fHistoMappingBackInvMassPtBin[k][iPt]=NULL;
+            }
+            fHistoMappingBackInvMassPtBin[k][iPt]=new TH1D(fNameHistoBack.Data(),fNameHistoBack.Data(),fBckInvMassVSPtDummy[k]->GetNbinsX(),0.,1.);
+            fHistoMappingBackInvMassPtBin[k][iPt]->Sumw2();
+            Int_t startBin = fBckInvMassVSPtDummy[k]->GetYaxis()->FindBin(fBinsPt[iPt]+0.001);
+            Int_t endBin = fBckInvMassVSPtDummy[k]->GetYaxis()->FindBin(fBinsPt[iPt+1]-0.001);
+
+            fBckInvMassVSPtDummy[k]->ProjectionX(fNameHistoBack.Data(),startBin,endBin);
+            fHistoMappingBackInvMassPtBin[k][iPt]=(TH1D*)gDirectory->Get(fNameHistoBack.Data());
+            if(fNRebin[iPt]>1){
+                fHistoMappingBackInvMassPtBin[k][iPt]->Rebin(fNRebin[iPt]);
+            }
+
+        }
+    }
+}
+
+void ProduceBckWithoutWeightingMinimal(TH2D *fBckInvMassVSPtDummy,TH1D **fHistoMappingBackGroupInvMassPtBin){ // Produce Background in bins without midPt and without fullPt without weighting
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
-        if(fHistoMappingBackInvMassPtBin[iPt]!= NULL){
-            delete fHistoMappingBackInvMassPtBin[iPt];
-            fHistoMappingBackInvMassPtBin[iPt]=NULL;
+        if(fHistoMappingBackGroupInvMassPtBin[iPt]!= NULL){
+            delete fHistoMappingBackGroupInvMassPtBin[iPt];
+            fHistoMappingBackGroupInvMassPtBin[iPt]=NULL;
         }
-        fHistoMappingBackInvMassPtBin[iPt]=new TH1D(fNameHistoBack.Data(),fNameHistoBack.Data(),fBckInvMassVSPtDummy->GetNbinsX(),0.,1.);
-            fHistoMappingBackInvMassPtBin[iPt]->Sumw2();
+        fHistoMappingBackGroupInvMassPtBin[iPt]=new TH1D(fNameHistoBack.Data(),fNameHistoBack.Data(),fBckInvMassVSPtDummy->GetNbinsX(),0.,1.);
+            fHistoMappingBackGroupInvMassPtBin[iPt]->Sumw2();
         Int_t startBin = fBckInvMassVSPtDummy->GetYaxis()->FindBin(fBinsPt[iPt]+0.001);
         Int_t endBin = fBckInvMassVSPtDummy->GetYaxis()->FindBin(fBinsPt[iPt+1]-0.001);
 
         fBckInvMassVSPtDummy->ProjectionX(fNameHistoBack.Data(),startBin,endBin);
-        fHistoMappingBackInvMassPtBin[iPt]=(TH1D*)gDirectory->Get(fNameHistoBack.Data());
+        fHistoMappingBackGroupInvMassPtBin[iPt]=(TH1D*)gDirectory->Get(fNameHistoBack.Data());
         if(fNRebin[iPt]>1){
-            fHistoMappingBackInvMassPtBin[iPt]->Rebin(fNRebin[iPt]);
+            fHistoMappingBackGroupInvMassPtBin[iPt]->Rebin(fNRebin[iPt]);
         }
-
     }
 }
-
 
 void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy)
 {
@@ -2024,7 +2084,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
     fHistoWidthMesonLeft->Write();
     fHistoFWHMMesonLeft->Write();
     fMesonFullPtSignal->Write();
-    fMesonFullPtBackground->Write();
+
     fMesonFullPtBackNorm->SetName("Mapping_BackNorm_InvMass_FullPt");
     fMesonFullPtBackNorm->Write();
     fNumberOfGoodESDTracks->Write();
@@ -2034,10 +2094,15 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
     TString nameHistoBckNorm;
     TString fitnameSignal;
     TString nameHistoSignalPos;
+    for(Int_t k=0;k<5;k++){
+        fMesonFullPtBackground[k]->Write();
+        for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
+            nameHistoBckNorm = Form("Mapping_BckNorm_Group%i_InvMass_in_Pt_Bin%02d",k, ii);
+            fHistoMappingBackNormInvMassPtBin[k][ii]->Write(nameHistoBckNorm.Data());
+        }
+    }
     for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
         fHistoMappingGGInvMassPtBin[ii]->Write();
-        nameHistoBckNorm = Form("Mapping_BckNorm_InvMass_in_Pt_Bin%02d", ii);
-        fHistoMappingBackNormInvMassPtBin[ii]->Write(nameHistoBckNorm.Data());
         nameHistoSignal = Form("fHistoMappingSignalInvMass_in_Pt_Bin%02d", ii);
         fHistoMappingSignalInvMassPtBin[ii]->Write(nameHistoSignal.Data());
         fitnameSignal = Form("Signal_InvMassFit_in_Pt_Bin%02d", ii);
@@ -2242,13 +2307,23 @@ void Initialize(TString setPi0, Int_t numberOfBins){
     fHistoMappingGGInvMassPtBin = 							new TH1D*[fNBinsPt];
     fHistoMappingGGInvMassBackFitPtBin =					new TH1D*[fNBinsPt];
     fHistoMappingGGInvMassBackFitWithoutSignalPtBin =		new TH1D*[fNBinsPt];
-    fHistoMappingBackInvMassPtBin = 						new TH1D*[fNBinsPt];
-    fHistoMappingBackNormInvMassPtBin = 					new TH1D*[fNBinsPt];
-    fHistoMappingSignalInvMassPtBin =						new TH1D*[fNBinsPt];
+    fHistoMappingSignalInvMassPtBin =				    new TH1D*[fNBinsPt];
+    for(Int_t k = 0; k<5; k++){
+        fHistoMappingBackInvMassPtBin[k] = 						new TH1D*[fNBinsPt];
+        fHistoMappingBackNormInvMassPtBin[k] = 					new TH1D*[fNBinsPt];
+        fHistoMappingBackSameNormInvMassPtBin[k] =              new TH1D*[fNBinsPt];
+        fHistoMappingRatioSBInvMassPtBin[k]= 				    new TH1D*[fNBinsPt];
+        for(Int_t i = 0;i<fNBinsPt; i++){
+            fHistoMappingBackInvMassPtBin[k][i] = 							NULL;
+            fHistoMappingBackNormInvMassPtBin[k][i] = 						NULL;
+    //      fRatio[i] =                                                 NULL;
+            fHistoMappingRatioSBInvMassPtBin[k][i] = 						NULL;
+        }
+    }
 //  fRatio =                                                new TH1D*[fNBinsPt];
-    fHistoMappingRatioSBInvMassPtBin= 						new TH1D*[fNBinsPt];
 
     fBackgroundFitPol = 									new TF1*[fNBinsPt];
+    fHistoBckFitConfidence =                                new TH1D*[fNBinsPt];
     fFitSignalInvMassPtBin = 								new TF1*[fNBinsPt];
     fFitSignalInvMassBackFitPtBin = 						new TF1*[fNBinsPt];
     fFitSignalPeakPosInvMassLeftPtBin                     = new TF1*[fNBinsPt];
@@ -2274,11 +2349,6 @@ void Initialize(TString setPi0, Int_t numberOfBins){
         fHistoMappingGGInvMassBackFitPtBin[i] = 					NULL;
         fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i] = 		NULL;
         fBackgroundFitPol[i] = 										NULL;
-        fHistoMappingBackInvMassPtBin[i] = 							NULL;
-        fHistoMappingBackNormInvMassPtBin[i] = 						NULL;
-//      fRatio[i] =                                                 NULL;
-        fHistoMappingSignalInvMassPtBin[i] = 						NULL;
-        fHistoMappingRatioSBInvMassPtBin[i] = 						NULL;
 
         fFitSignalInvMassPtBin[i] = 								NULL;
         fFitSignalInvMassBackFitPtBin[i] = 							NULL;
@@ -2438,10 +2508,12 @@ void Delete(){
     if (fHistoMappingTrueMesonInvMassPtBins) delete fHistoMappingTrueMesonInvMassPtBins;
     if (fHistoMappingTrueMesonInvMassPtReweightedBins) delete fHistoMappingTrueMesonInvMassPtReweightedBins;
     if (fHistoMappingGGInvMassPtBin) delete fHistoMappingGGInvMassPtBin;
-    if (fHistoMappingBackInvMassPtBin) delete fHistoMappingBackInvMassPtBin;
-    if (fHistoMappingBackNormInvMassPtBin) delete fHistoMappingBackNormInvMassPtBin;
-    if (fHistoMappingSignalInvMassPtBin) delete fHistoMappingSignalInvMassPtBin;
-    if (fHistoMappingRatioSBInvMassPtBin) delete fHistoMappingRatioSBInvMassPtBin;
+    for (Int_t k = 0; k< 5; k++){
+        if (fHistoMappingBackInvMassPtBin[k]) delete fHistoMappingBackInvMassPtBin[k];
+        if (fHistoMappingBackSameNormInvMassPtBin[k]) delete fHistoMappingBackSameNormInvMassPtBin[k];
+        if (fHistoMappingBackNormInvMassPtBin[k]) delete fHistoMappingBackNormInvMassPtBin[k];
+        if (fHistoMappingRatioSBInvMassPtBin[k]) delete fHistoMappingRatioSBInvMassPtBin[k];
+    }
     if (fFitSignalInvMassPtBin) delete fFitSignalInvMassPtBin;
     if (fFitBckInvMassPtBin) delete fFitBckInvMassPtBin;
     if (fHistoMappingBackNormInvMassLeftPtBin) delete fHistoMappingBackNormInvMassLeftPtBin;

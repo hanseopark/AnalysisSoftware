@@ -21,6 +21,7 @@ Float_t fBackgroundMultNumber;
 Double_t fYMaxMeson                                         = 0.9;
 Double_t fMesonMassExpect                                   = 0;   // expected meson mass
 Double_t fNEvents                                           = 0;
+Double_t fNorm                                              = 1;   // used in ProcessEM to make scaling factor globally available (will be overwritten each time ProcessEM was run)
 
 Double_t *fPeakRange;
 Double_t *fIntFixedRange;
@@ -57,17 +58,15 @@ TH1D*   fBckNorm                                            = NULL;
 TH1D*   fSignal                                             = NULL;
 TH1D*   fRatioSB                                            = NULL;
 TH1D*   fFittingHistMidPtSignal                             = NULL;
-TH1D*   fFittingHistMidPtBackground                         = NULL;
+TH1D*   fFittingHistMidPtBackground[5]                      = {NULL,NULL,NULL,NULL,NULL};
 TH1D*   fFittingHistMidPtSignalSub                          = NULL;
 TH1D*   fMesonFullPtSignal                                  = NULL;
-TH1D*   fMesonFullPtBackground                              = NULL;
+TH1D*   fMesonFullPtBackground[5]                           = {NULL,NULL,NULL,NULL,NULL};
 TH1D*   fOmegaFullPtSignal                                  = NULL;
 TH2D*   fOmegaFullPtSignalR2                                = NULL;
 TH1D*   fOmegaFullPtSignalR1                                = NULL;
 TH1D*   fOmegaFullPtBackNorm                                = NULL;
-TH1D*   fOmegaFullPtBack2                                   = NULL;
-TH1D*   fOmegaFullPtBack3                                   = NULL;
-TH1D*   fOmegaFullPtBack4                                   = NULL;
+TH1D*   fOmegaFullPtBack[4]                                 = {NULL,NULL,NULL,NULL};
 TH1D*   fRelation                                           = NULL;
 TH1D*   fMesonFullPtBackNorm                                = NULL;
 TH1D*   fHistoMotherZMProj                                  = NULL;
@@ -123,11 +122,12 @@ TH1D** 	fHistoMappingTrueAllBckInvMassPtBins=				NULL;
 TH1D** 	fHistoMappingGGInvMassPtBin=						NULL;
 TH1D** 	fHistoMappingGGInvMassBackFitPtBin=					NULL;
 TH1D** 	fHistoMappingGGInvMassBackFitWithoutSignalPtBin=	NULL;
-TH1D** 	fHistoMappingBackInvMassPtBin=						NULL;
-TH1D** 	fHistoMappingBackNormInvMassPtBin=					NULL;
+TH1D** 	fHistoMappingBackInvMassPtBin[5]=				   {NULL,NULL,NULL,NULL,NULL};
+TH1D** 	fHistoMappingBackNormInvMassPtBin[5]=			   {NULL,NULL,NULL,NULL,NULL};
+TH1D** 	fHistoMappingBackSameNormInvMassPtBin[5]=		   {NULL,NULL,NULL,NULL,NULL}; // Contains the scaled background histos, but in this case they were all scaled with the same factor (obtained from scaling of tot. bck.)
+TH1D** 	fHistoMappingSignalInvMassPtBin=				   NULL;
 //TH1D** 	fRatio=                                             NULL;
-TH1D** 	fHistoMappingRatioSBInvMassPtBin=					NULL;
-TH1D** 	fHistoMappingSignalInvMassPtBin=					NULL;
+TH1D** 	fHistoMappingRatioSBInvMassPtBin[5]=			   {NULL,NULL,NULL,NULL,NULL};
 TH1D** 	fHistoMappingPeakPosInvMassPtBin=					NULL;
 // Histograms for normalization on the left of the peak
 TH1D** 	fHistoMappingBackNormInvMassLeftPtBin=				NULL;
@@ -139,7 +139,8 @@ TH1D** 	fHistoMappingTrueMesonCaloMergedClusterInvMassPtBins =			NULL;
 TH1D** 	fHistoMappingTrueMesonCaloMergedClusterPartConvInvMassPtBins =	NULL;
 TH1D** 	fHistoMappingTrueMesonCaloEMNonLeadingInvMassPtBins =			NULL;
 
-TF1**  fBackgroundFitPol=NULL;
+TF1**  fBackgroundFitPol=                                   NULL;
+TH1D** fHistoBckFitConfidence =                               NULL;
 TF1 * 	fFitReco=											NULL;
 TF1 * 	fFitGausExp=										NULL;
 TF1 * 	fFitLinearBck=										NULL;
@@ -330,13 +331,8 @@ TH2D*	fHistoTrueMesonInvMassVSPtReweighted=				NULL;
 TProfile2D*	fProfileTrueMesonInvMassVSPtWeights=		 	NULL;
 
 TH2D*	fGammaGammaInvMassVSPt=								NULL;
-TH2D*   hist_bck2=                                          NULL;
-TH2D*   hist_bck3=                                          NULL;
-TH2D*   hist_bck4=                                          NULL;
-TH2D*	fBckInvMassVSPt=									NULL;
-TH2D*	fBckInvMassVSPt2=									NULL;
-TH2D*	fBckInvMassVSPt3=									NULL;
-TH2D*	fBckInvMassVSPt4=									NULL;
+TH2D*   hist_bck[4]=                                        {NULL,NULL,NULL,NULL};
+TH2D*	fBckInvMassVSPt[5]=									{NULL,NULL,NULL,NULL,NULL}; // 0: Background summed 1: Background Group 1 2: Background Group 2 ...
 
 TH2F**	fHistoWeightsBGZbinVsMbin = 						0x0;
 TH2F**	fHistoFillPerEventBGZbinVsMbin = 					0x0;
@@ -373,8 +369,9 @@ void FitSubtractedInvMassInPtBins(TH1D * , Double_t *fMesonIntDeltaRangeFit, Int
 void FitTrueInvMassInPtBins(TH1D * , Double_t *fMesonIntDeltaRangeFit, Int_t, Bool_t);  // Fits the Invariant Mass histos with a given function
 void FitCBSubtractedInvMassInPtBins(TH1D * , Double_t *fMesonIntDeltaRangeFit, Int_t, Bool_t , TString );  // Fits the Invariant Mass histos with a given function;
 void FitWithPol2ForBG(TH1D*, Double_t*fMesonFitRangeCur, Int_t, Bool_t);
-void ProduceBckProperWeighting(TList*, TList* );
-void ProduceBckWithoutWeighting(TH2D *);
+// void ProduceBckProperWeighting(TList*, TList* );
+void ProduceBckWithoutWeighting(TH2D **);
+void ProduceBckWithoutWeightingMinimal(TH2D *,TH1D **);
 void IntegrateHistoInvMassStream(TH1D * , Double_t *);
 void IntegrateHistoInvMass(TH1D * , Double_t *);
 void IntegrateFitFunc(TF1 * , TH1D *, Double_t *);
