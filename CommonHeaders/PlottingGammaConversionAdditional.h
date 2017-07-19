@@ -3689,7 +3689,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return kGreen+2;
                 } else return kGray+2;
-            } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
+            } else if (!generator.CompareTo("LHC16g1")){
                 if (!centrality.CompareTo("0-10%")){
                     return kBlue-4;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3878,7 +3878,7 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return 28;
                 } else return 25;
-            } else if (!generator.CompareTo("LHC15k1a1") || !generator.CompareTo("LHC15k1a2") || !generator.CompareTo("LHC15k1a3") || !generator.CompareTo("LHC16h4")){
+            } else if (!generator.CompareTo("LHC16g1")){
                 if (!centrality.CompareTo("0-10%")){
                     return 25;
                 } else if (!centrality.CompareTo("10-20%")){

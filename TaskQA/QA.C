@@ -926,13 +926,16 @@ void QA(    TString select          = "LHC11a",         // set selected
     else if(select.CompareTo("LHC15o")==0){
 	        mode = 0;
 		nSets = 2;
-		cutNr = 4;
 		fEnergyFlag = "PbPb_5.02TeV";
-		DataSets[0]="LHC15o"; DataSets[1]="LHC16h4";
-		plotDataSets[0]="LHC15o High IR"; plotDataSets[1]="LHC16h4";
-		labelData="LHC15o 0-100%";
-		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC15o/GammaConvV1_246_all_noMissingTracks_noZDCFix.root";
-		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/PbPb/LHC16h4/GammaConvV1_246.root";
+		DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
+		if(cutNr==0) {plotDataSets[0]="LHC15o 0-10%"; plotDataSets[1]="LHC16g1 0-10%";}
+		if(cutNr==1) {plotDataSets[0]="LHC15o 10-20%"; plotDataSets[1]="LHC16g1 10-20%";}
+		if(cutNr==2) {plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC16g1 20-50%";}
+		if(cutNr==3) {plotDataSets[0]="LHC15o 50-90%"; plotDataSets[1]="LHC16g1 50-90%";}
+		if(cutNr==4) {plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16g1 0-100%";}
+		labelData="Data";
+		pathDataSets[0]="/home/meike/analysis/data/GridOutput/GammaConv/PbPbAOD/LHC15o/GammaConvV1_246_merged.root";
+		pathDataSets[1]="/home/meike/analysis/data/GridOutput/GammaConv/PbPbAOD/LHC16g1/GammaConvV1_246_train857.root";
 		pathPhotonQA[0]="";
 		pathPhotonQA[1]="";
     }

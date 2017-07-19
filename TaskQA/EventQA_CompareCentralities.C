@@ -25,7 +25,7 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     Size_t constMarkerSize      = 1;
     TString fEnergyFlag         = "PbPb_5.02TeV";
     TString dataSet             = "LHC15o";                                 // used for filename, GetDefaultMarkerStyle 
-    TString MCSet               = "LHC16h4";
+    TString MCSet               = "LHC16g1";
     TString centralities[nSets] = {"0-10%","10-20%","20-50%","50-90%"};     // used for plot and marker style and color
     TString cutsDataSets[nSets] = {
       "10110013_00200009247602008250404000_0652501500000000",

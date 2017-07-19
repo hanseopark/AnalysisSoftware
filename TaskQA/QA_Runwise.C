@@ -849,12 +849,15 @@ void QA_Runwise(
       fEnergyFlag = "PbPb_5.02TeV";
       nSets = 2;
       nData = 1;
-      cutNr = 4;
-      filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/";
+      filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPbAOD/";
       filePathPhoton = "";
       fileName = "GammaConvV1_246.root";
-      DataSets[0]="LHC15o"; DataSets[1]="LHC16h4";
-      plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16h4 0-100%";
+      DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
+      if(cutNr==0) {plotDataSets[0]="LHC15o 0-10%"; plotDataSets[1]="LHC16g1 0-10%";}
+      if(cutNr==1) {plotDataSets[0]="LHC15o 10-20%"; plotDataSets[1]="LHC16g1 10-20%";}
+      if(cutNr==2) {plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC16g1 20-50%";}
+      if(cutNr==3) {plotDataSets[0]="LHC15o 50-90%"; plotDataSets[1]="LHC16g1 50-90%";}
+      if(cutNr==4) {plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16g1 0-100%";}
       doEquidistantXaxis=kTRUE;
       markerSize = 1.0;
     }
