@@ -1,10 +1,10 @@
-if [ $1 = "fbock" ]; then 
+if [ $1 = "fbock" ]; then
    PHOTONCONVDIR=/home/fbock/Photon/Software/PCGGIT
-elif [ $1 = "leardini" ]; then 
+elif [ $1 = "leardini" ]; then
    PHOTONCONVDIR=/home/admin1/leardini/newSoftware/AnalysisSoftware
 elif [ $1 = "dmuhlhei" ]; then
    PHOTONCONVDIR=/home/daniel/data/work/pcgGit/AnalysisSoftware
-elif [ $1 = "msas" ]; then 
+elif [ $1 = "msas" ]; then
    PHOTONCONVDIR=/home/mike/git_afterburner/AnalysisSoftware
 fi
 
@@ -41,11 +41,11 @@ ln -sf $PHOTONCONVDIR/ToyModels/* ToyModels/
 ln -sf $PHOTONCONVDIR/SimulationStudies/*.C SimulationStudies/
 ln -sf $PHOTONCONVDIR/SimulationStudies/*.h SimulationStudies/
 
-if [ $1 = "dmuhlhei" ]; then 
+if [ $1 = "dmuhlhei" ]; then
 	ln -sf $PHOTONCONVDIR/DataQA DataQA
 fi
 
-if [ $1 = "leardini" ]; then 
+if [ $1 = "leardini" ]; then
     mkdir -p LHC11hExternalInputs
 	ln -sf $PHOTONCONVDIR/LHC11hExternalInputs/* LHC11hExternalInputs/
 fi
@@ -63,7 +63,7 @@ if [ $2 = "pp2760GeV" ]; then
     rm *13TeV*
     rm *LHC11h*
     rm *LHC10*
-elif [ $2 = "pPb5023GeV" ]; then
+elif [ $2 = "pPb5TeV" ]; then
     rm *PbPb*
     rm *pp*
     rm *2760*

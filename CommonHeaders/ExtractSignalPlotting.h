@@ -9,21 +9,21 @@
     Color_t     backgroundColor[3]                                      = {kBlue+2, kGreen+3, kGray+2};
 
 
-    void     PlotDCAzInPtBinsWithBack           (   TH1D**      ESDGammaPtDCAzBins, 
+    void     PlotDCAzInPtBinsWithBack           (   TH1D**      ESDGammaPtDCAzBins,
                                                     TH1D**      ESDGammaPtDCAzBinsBack,
-                                                    TH1D**      ESDGammaPtDCAzBinsBackB, 
-                                                    TString     namePlot, 
-                                                    TString     nameCanvas, 
-                                                    TString     namePad, 
-                                                    TString     dateDummy, 
-                                                    TString     fMesonType,  
-                                                    Int_t       fRowPlot, 
-                                                    Int_t       fColumnPlot, 
-                                                    Int_t       fStartBinPtRange, 
-                                                    Int_t       fNumberPtBins, 
-                                                    Double_t*   fRangeBinsPt, 
-                                                    TString     fDecayChannel, 
-                                                    Bool_t      fMonteCarloInfo, 
+                                                    TH1D**      ESDGammaPtDCAzBinsBackB,
+                                                    TString     namePlot,
+                                                    TString     nameCanvas,
+                                                    TString     namePad,
+                                                    TString     dateDummy,
+                                                    TString     fMesonType,
+                                                    Int_t       fRowPlot,
+                                                    Int_t       fColumnPlot,
+                                                    Int_t       fStartBinPtRange,
+                                                    Int_t       fNumberPtBins,
+                                                    Double_t*   fRangeBinsPt,
+                                                    TString     fDecayChannel,
+                                                    Bool_t      fMonteCarloInfo,
                                                     TString     textCent = "MinBias"                );
     void    PlotDCAzInPtBinsWithBack            (   TH1D**      ESDGammaPtDCAzBins,
                                                     TH1D**      ESDGammaPtDCAzBinsBack,
@@ -91,20 +91,20 @@
             return "EGA";
         } else if (trigger == 85){                          // EG2
             return "EG2";
-        } else if (trigger == 83){                          // EG1  
+        } else if (trigger == 83){                          // EG1
             return "EG1";
-        }    
+        }
         return "";
     }*/
 
 
 
     //________________________________ Plotting Invariant mass in a single p_t bin ____________________________________________
-    void PlotInvMassSinglePtBin(    TH1D* fHistoMappingGGInvMassPtBinPlot, 
-                                    TH1D* fHistoMappingBackNormInvMassPtBinPlot, 
-                                    TString namePlot, 
-                                    TString nameCanvas, 
-                                    Double_t* fPlottingRangeMeson, 
+    void PlotInvMassSinglePtBin(    TH1D* fHistoMappingGGInvMassPtBinPlot,
+                                    TH1D* fHistoMappingBackNormInvMassPtBinPlot,
+                                    TString namePlot,
+                                    TString nameCanvas,
+                                    Double_t* fPlottingRangeMeson,
                                     TString decayChannel){
         TCanvas * canvasDataSpectra = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         canvasDataSpectra->SetTopMargin(0.12);
@@ -130,22 +130,22 @@
     }
 
     //_______________________ Plotting Invariant mass with BG and subtraction in a single p_t bin __________________________________
-    void PlotExampleInvMassBins(    TH1D* histoInvMassSignalWithBG, 
-                                    TH1D* histoInvMassSubtracted, 
-                                    TH1D* histoInvMassBG, 
-                                    TF1* fitSignal, 
-                                    Int_t exampleBin, 
-                                    TString outputDir, 
-                                    TString suffix, 
-                                    Double_t* fPlottingRangeMeson, 
-                                    Float_t* pictDrawingCoordinatesDummy, 
-                                    Double_t fNumberOfEvents, 
-                                    TString dateDummy, 
-                                    TString fMesonType, 
-                                    TString fSimulation, 
-                                    TString fPlottingType, 
-                                    TString fCollisionSystemDummy, 
-                                    Double_t* fRangeBinsPt, 
+    void PlotExampleInvMassBins(    TH1D* histoInvMassSignalWithBG,
+                                    TH1D* histoInvMassSubtracted,
+                                    TH1D* histoInvMassBG,
+                                    TF1* fitSignal,
+                                    Int_t exampleBin,
+                                    TString outputDir,
+                                    TString suffix,
+                                    Double_t* fPlottingRangeMeson,
+                                    Float_t* pictDrawingCoordinatesDummy,
+                                    Double_t fNumberOfEvents,
+                                    TString dateDummy,
+                                    TString fMesonType,
+                                    TString fSimulation,
+                                    TString fPlottingType,
+                                    TString fCollisionSystemDummy,
+                                    Double_t* fRangeBinsPt,
                                     TString decayChannel,
                                     TString detectionChannel = "" ){
 
@@ -159,7 +159,7 @@
         if(decayChannel.CompareTo("e^{+}e^{-}#gamma")==0){
             kDalitz=kTRUE;
         }
-        
+
         canvasLonelyBin->cd();
         DrawGammaHistoBigger( histoInvMassSignalWithBG,
                     Form("       %3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
@@ -182,10 +182,10 @@
         Bool_t mcFile;
         if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
             lable                           = kTRUE;
-        } else { 
-            lable                           = kFALSE; 
+        } else {
+            lable                           = kFALSE;
         }
-        if(fSimulation.CompareTo("data")==0){ 
+        if(fSimulation.CompareTo("data")==0){
             mcFile                          = kFALSE;
         } else {
             mcFile                          = kTRUE;
@@ -438,22 +438,22 @@
     */
 
     //_______________________ Plotting Invariant mass with BG and subtraction in a single p_t bin __________________________________
-    void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG, 
-                                    TH1D* histoInvMassSubtracted, 
-                                    TH1D* histoInvMassBG, 
-                                    TF1* fitSignal, 
-                                    Int_t exampleBin, 
-                                    TString outputDir, 
-                                    TString suffix, 
-                                    Double_t* fPlottingRangeMeson, 
-                                    Float_t* pictDrawingCoordinatesDummy, 
-                                    Double_t fNumberOfEvents, 
-                                    TString dateDummy, 
-                                    TString fMesonType, 
-                                    TString fSimulation, 
-                                    TString fPlottingType, 
-                                    TString fCollisionSystemDummy, 
-                                    Double_t* fRangeBinsPt, 
+    void PlotExampleInvMassBinsV2(  TH1D* histoInvMassSignalWithBG,
+                                    TH1D* histoInvMassSubtracted,
+                                    TH1D* histoInvMassBG,
+                                    TF1* fitSignal,
+                                    Int_t exampleBin,
+                                    TString outputDir,
+                                    TString suffix,
+                                    Double_t* fPlottingRangeMeson,
+                                    Float_t* pictDrawingCoordinatesDummy,
+                                    Double_t fNumberOfEvents,
+                                    TString dateDummy,
+                                    TString fMesonType,
+                                    TString fSimulation,
+                                    TString fPlottingType,
+                                    TString fCollisionSystemDummy,
+                                    Double_t* fRangeBinsPt,
                                     TString decayChannel,
                                     TString detectionChannel                = "",
                                     Int_t triggerSet                        = 0,
@@ -462,7 +462,7 @@
                                     Bool_t addSig                           = kFALSE,
                                     Bool_t isVsPtConv                       = kFALSE
                                 ){
-        
+
         cout << "Trigger set: " << triggerSet << endl;
         cout << "fCollisionSystemDummy: " << fCollisionSystemDummy << endl;
         TString triggerStr2             = ReturnTriggerName(triggerSet,fCollisionSystemDummy);
@@ -487,7 +487,7 @@
         histoPi0InvMassBG                = (TH1D*)histoInvMassBG->Clone("InvMassBG_PtBin07");
         fitPi0InvMassSig                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07");
         fitPi0InvMassSigRemBG            = (TF1*)fitSignal->Clone("FitInvMassOrig_PtBin07");
-        
+
         histoPi0InvMassSig->Fit(fitPi0InvMassSig,"QRME0");
         for (Int_t l=0; l < 6; l++){
             cout << fitPi0InvMassSig->GetParameter(l) << "\t +- " << fitPi0InvMassSig->GetParError(l) << endl;
@@ -558,7 +558,7 @@
         fitPi0InvMassSig->SetParameter(5, 0);
         histoPi0InvMassSigRemBGSub->Scale(scaleFacSignal);
         histoPi0InvMassSigRemBG->Scale(scaleFacSignal);
-        
+
         Double_t textSizeLabelsPixel                 = 100*3/5;
         TCanvas* canvasInvMassSamplePlot    = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
         DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.09, 0.012, 0.035, 0.08);
@@ -640,7 +640,7 @@
         fitPi0InvMassSigRemBG->SetNpx(10000);
         fitPi0InvMassSigRemBG->SetLineColor(fitColorInvMassSG);
         fitPi0InvMassSigRemBG->SetLineWidth(4);
-            
+
         TH1D* histoFit  = (TH1D*)fitPi0InvMassSig->GetHistogram();
         histoFit->SetTitle("");
         histoFit->Scale(scaleFacSignal);
@@ -653,11 +653,11 @@
         Double_t minimum = histoPi0InvMassSigRemBGSub->GetMinimum();
         if (minimum < 0) minimum = 1.1*minimum;
         else minimum = 0.9*minimum;
-            
+
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
         histo1DInvMassDummy->Draw("AXIS");
-        
+
         DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
         histoPi0InvMassSigPlusBG->SetLineWidth(1);
         histoPi0InvMassSigPlusBG->Draw("hist,e,same");
@@ -667,12 +667,12 @@
         Int_t nLegendLines      = 5;
         if (scaleFacSignal == 1.0){
             DrawGammaSetMarker(histoPi0InvMassSigRemBGSub, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-            histoPi0InvMassSigRemBGSub->Draw("same");    
+            histoPi0InvMassSigRemBGSub->Draw("same");
             fitPi0InvMassSig->Draw("same");
         } else {
             DrawGammaSetMarker(histoPi0InvMassSigRemBGSub, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
             histoPi0InvMassSigRemBGSub->Draw("same");
-            
+
             histoFit->SetLineColor(fitColorInvMassSG);
             histoFit->SetLineWidth(4);
             histoFit->Draw("same");
@@ -683,7 +683,7 @@
         SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
         labelALICE->SetTextFont(43);
         labelALICE->Draw();
-        
+
         TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
         SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
         labelInvMassEnergy->SetTextFont(43);
@@ -693,7 +693,7 @@
         SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4);
         labelTrigger->SetTextFont(43);
         labelTrigger->Draw();
-        
+
         TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, methodStr);
         SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
         labelInvMassReco->SetTextFont(43);
@@ -712,7 +712,7 @@
         legendInvMass->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
         if (scaleFacSignal != 1.0){
             legendInvMass->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
-        }    
+        }
         legendInvMass->AddEntry(fitPi0InvMassSig, "Fit","l");
         legendInvMass->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
@@ -724,28 +724,28 @@
         if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb") ){
             histo1DInvMassDummy->GetXaxis()->SetRangeUser(0.05,0.249);
             histo1DInvMassDummy->GetXaxis()->SetNdivisions(508);
-        }    
+        }
         histo1DInvMassDummy->Draw("AXIS");
-        
+
         histoPi0InvMassSigPlusBG->Draw("hist,e,same");
         histoPi0InvMassBGTot->Draw("same");
 
         if (scaleFacSignal == 1.0){
-            histoPi0InvMassSigRemBGSub->Draw("same");    
+            histoPi0InvMassSigRemBGSub->Draw("same");
             fitPi0InvMassSig->Draw("same");
         } else {
             histoPi0InvMassSigRemBGSub->Draw("same");
             histoFit->Draw("same");
         }
 
-        labelALICE->Draw();    
+        labelALICE->Draw();
         labelInvMassEnergy->Draw();
-        labelTrigger->Draw();    
+        labelTrigger->Draw();
         labelInvMassReco->Draw();
         labelInvMassPtRange->Draw();
         legendInvMass->Draw();
 
-        
+
         Double_t mass = fMesonMass[exampleBin];
         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
         Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
@@ -756,9 +756,9 @@
         DrawGammaLines(normalLow, normalLow, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
         DrawGammaLines(normalUp, normalUp, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
         histo1DInvMassDummy->Draw("AXIS,same");
-        
+
         canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
-        
+
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->Draw();
         histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
@@ -768,7 +768,7 @@
         }
 
         histo1DInvMassDummy->Draw("AXIS");
-        
+
         DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
         histoPi0InvMassSigPlusBG->SetLineWidth(1);
         histoPi0InvMassSigPlusBG->Draw("hist,e,same");
@@ -777,12 +777,12 @@
         DrawGammaSetMarker(histoPi0InvMassRemBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
         histoPi0InvMassRemBG->Draw("same");
 
-        
+
         if (scaleFacSignal == 1.0){
-            histoPi0InvMassSigRemBGSub->Draw("same");    
+            histoPi0InvMassSigRemBGSub->Draw("same");
             fitPi0InvMassSig->Draw("same");
         } else {
-            histoPi0InvMassSigRemBGSub->Draw("same");    
+            histoPi0InvMassSigRemBGSub->Draw("same");
             histoFit->Draw("same");
         }
 
@@ -800,7 +800,7 @@
         legendInvMass2->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
         if (scaleFacSignal != 1.0){
             legendInvMass2->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
-        }    
+        }
         legendInvMass2->AddEntry(fitPi0InvMassSig, "Fit","l");
         legendInvMass2->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
@@ -812,21 +812,21 @@
         histo1DInvMassDummy->Draw();
         histo1DInvMassDummy->GetYaxis()->SetRangeUser(histoPi0InvMassSigRemBG->GetMinimum(),1.15*histoPi0InvMassSigPlusBG->GetMaximum());
         histo1DInvMassDummy->Draw("AXIS");
-        
+
         DrawGammaSetMarker(histoPi0InvMassSigPlusBG, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
         histoPi0InvMassSigPlusBG->SetLineWidth(1);
         histoPi0InvMassSigPlusBG->Draw("hist,e,same");
         DrawGammaSetMarker(histoPi0InvMassBG, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
         histoPi0InvMassBG->Draw("same");
-        
+
         if (scaleFacSignal == 1.0){
             DrawGammaSetMarker(histoPi0InvMassSigRemBG, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
-            histoPi0InvMassSigRemBG->Draw("same");    
+            histoPi0InvMassSigRemBG->Draw("same");
             fitPi0InvMassSigRemBG->Draw("same");
         } else {
             DrawGammaSetMarker(histoPi0InvMassSigRemBG, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
             histoPi0InvMassSigRemBG->Draw("same");
-            
+
             histoFitWBG->SetLineColor(fitColorInvMassSG);
             histoFitWBG->SetLineWidth(4);
             histoFitWBG->Draw("same");
@@ -845,14 +845,14 @@
         legendInvMass3->AddEntry(histoPi0InvMassSigRemBG,"Mixed evt. BG sub.","p");
         if (scaleFacSignal != 1.0){
             legendInvMass3->AddEntry((TObject*)0,Form("scaled by %2.1f",scaleFacSignal),"");
-        }    
+        }
         legendInvMass3->AddEntry(fitPi0InvMassSigRemBG, "Signal fit +","l");
         legendInvMass3->AddEntry((TObject*)0,"linear BG fit","");
         legendInvMass3->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
-        
+
         canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
-        
+
     }
 
     // Plotting Invariant mass with for example bin containing all different backgroundgroups. The background histos are given by user through a 2D array [group][ptbin]
@@ -1034,9 +1034,8 @@
         legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
         for(Int_t k=0;k<5;k++){
             if(k==0){
-                legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing total %i",k),"lpe");
-            }
-            else{
+                legendInvMass2->AddEntry(histoOmegaInvMassBG[k],"Event mixing total","lpe");
+            } else {
                 legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing group %i",k),"lpe");
             }
         }
@@ -1259,23 +1258,23 @@
 
 
     //_______________________ Plotting Invariant mass with BG and subtraction in a single p_t bin __________________________________
-    void PlotExampleInvMassBinsMC(  TH1D* fHistoTrueSignal, 
-                                    TH1D* fHistoTrueSignalPhotons, 
-                                    TH1D* fHistoTrueSignalElectrons, 
-                                    TH1D* fHistoTrueSignalConvPhotons, 
-                                    TH1D* fHistoTrueSignalMixed, 
-                                    Int_t exampleBin, 
-                                    TString outputDir, 
-                                    TString suffix, 
-                                    Double_t* fPlottingRangeMeson, 
-                                    Float_t* pictDrawingCoordinatesDummy, 
-                                    Double_t fNumberOfEvents, 
-                                    TString dateDummy, 
-                                    TString fMesonType, 
-                                    TString fSimulation, 
-                                    TString fPlottingType, 
-                                    TString fCollisionSystemDummy, 
-                                    Double_t* fRangeBinsPt, 
+    void PlotExampleInvMassBinsMC(  TH1D* fHistoTrueSignal,
+                                    TH1D* fHistoTrueSignalPhotons,
+                                    TH1D* fHistoTrueSignalElectrons,
+                                    TH1D* fHistoTrueSignalConvPhotons,
+                                    TH1D* fHistoTrueSignalMixed,
+                                    Int_t exampleBin,
+                                    TString outputDir,
+                                    TString suffix,
+                                    Double_t* fPlottingRangeMeson,
+                                    Float_t* pictDrawingCoordinatesDummy,
+                                    Double_t fNumberOfEvents,
+                                    TString dateDummy,
+                                    TString fMesonType,
+                                    TString fSimulation,
+                                    TString fPlottingType,
+                                    TString fCollisionSystemDummy,
+                                    Double_t* fRangeBinsPt,
                                     TString decayChannel,
                                     TString detectionChannel                = "",
                                     Int_t triggerSet                        = -1,
@@ -1291,15 +1290,15 @@
         TString methodStr               = ReturnTextReconstructionProcess(mode);
         if (addSig)
             methodStr                   = methodStr+"AddSig";
-        
+
         Bool_t lable ;
         Bool_t mcFile;
-        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){ 
+        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
             lable                       = kTRUE;
-        } else { 
-            lable                       = kFALSE; 
+        } else {
+            lable                       = kFALSE;
         }
-        if(fSimulation.CompareTo("data")==0){ 
+        if(fSimulation.CompareTo("data")==0){
             mcFile                      = kFALSE;
         } else {
             mcFile                      = kTRUE;
@@ -1323,7 +1322,7 @@
         Style_t markerStyleInvMassMC3       = 33;
         Size_t markerSizeInvMassMC3         = 1.8;
         Color_t markerColorInvMassMC3       = kBlue+2;
-        
+
         Style_t markerStyleInvMassMC4       = 27;
         Size_t markerSizeInvMassMC4         = 1.4;
         Color_t markerColorInvMassMC4       = kCyan+2;
@@ -1331,7 +1330,7 @@
         Style_t markerStyleInvMassMC5       = 24;
         Size_t markerSizeInvMassMC5         = 1.4;
         Color_t markerColorInvMassMC5       = kViolet+2;
-        
+
         Double_t textsizeLabelsPP       = 0.04;
         Double_t marginInvMass          = 0.1*1500;
         Double_t textsizeLabelsInvMass  = 0;
@@ -1368,7 +1367,7 @@
             } else {
                 labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s <%3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             }
-        
+
 
             DrawGammaSetMarker(fHistoTrueSignal, markerStyleInvMassMC1, markerSizeInvMassMC1, markerColorInvMassMC1, markerColorInvMassMC1);
             fHistoTrueSignal->SetLineWidth(1);
@@ -1383,7 +1382,7 @@
                 fHistoTrueSignalElectrons->SetLineWidth(1);
                 fHistoTrueSignalElectrons->Draw("same,p,e1");
             }
-            
+
             DrawGammaSetMarker(fHistoTrueSignalConvPhotons, markerStyleInvMassMC4, markerSizeInvMassMC4, markerColorInvMassMC4, markerColorInvMassMC4);
             fHistoTrueSignalConvPhotons->SetLineWidth(1);
             fHistoTrueSignalConvPhotons->Draw("same,p,e1");
@@ -1398,7 +1397,7 @@
             SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
             labelALICE->SetTextFont(43);
             labelALICE->Draw();
-            
+
             TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
             SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
             labelInvMassEnergy->SetTextFont(43);
@@ -1408,7 +1407,7 @@
             SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4);
             labelTrigger->SetTextFont(43);
             labelTrigger->Draw();
-            
+
             TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, methodStr);
             SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
             labelInvMassReco->SetTextFont(43);
@@ -1418,11 +1417,11 @@
             labelInvMassPtRange->SetTextAlign(31);
             labelInvMassPtRange->SetTextFont(43);
             labelInvMassPtRange->Draw();
-            
+
             Double_t nSignals           = 3;
             if (fHistoTrueSignalMixed != NULL) nSignals++;
             if (fHistoTrueSignalElectrons != NULL) nSignals++;
-    
+
             TLegend* legendMC  = GetAndSetLegend2(0.62, 0.87-nSignals*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel, 1, "", 43, 0.22);
             legendMC->AddEntry(fHistoTrueSignal,"validated meson","ep");
             if (mode == 4 || mode == 5){
@@ -1437,7 +1436,7 @@
             }
             legendMC->Draw();
             histo1DInvMassDummy->Draw("AXIS,same");
-            
+
         canvasInvMassSamplePlot->Update();
         canvasInvMassSamplePlot->Print(Form("%s/%s_%s_TrueInvMassDistributionDisentangled_PtBin_%i.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(),exampleBin,suffix.Data()));
     }
@@ -1613,24 +1612,24 @@
 
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotInvMassInPtBins(   TH1D** fHistoMappingGGInvMassPtBinPlot, 
-                                TH1D** fHistoMappingBackNormInvMassPtBinPlot, 
-                                TString namePlot, 
-                                TString nameCanvas, 
-                                TString namePad, 
-                                Double_t* fPlottingRangeMeson, 
-                                TString dateDummy, 
-                                TString fMesonType, 
-                                Int_t fRowPlot, 
-                                Int_t fColumnPlot, 
-                                Int_t fStartBinPtRange, 
-                                Int_t fNumberPtBins, 
-                                Double_t* fRangeBinsPt, 
-                                TString fDecayChannel, 
-                                Bool_t fMonteCarloInfo, 
-                                TString decayChannel,  
-                                TString fDetectionChannel, 
-                                TString fEnergy, 
+    void PlotInvMassInPtBins(   TH1D** fHistoMappingGGInvMassPtBinPlot,
+                                TH1D** fHistoMappingBackNormInvMassPtBinPlot,
+                                TString namePlot,
+                                TString nameCanvas,
+                                TString namePad,
+                                Double_t* fPlottingRangeMeson,
+                                TString dateDummy,
+                                TString fMesonType,
+                                Int_t fRowPlot,
+                                Int_t fColumnPlot,
+                                Int_t fStartBinPtRange,
+                                Int_t fNumberPtBins,
+                                Double_t* fRangeBinsPt,
+                                TString fDecayChannel,
+                                Bool_t fMonteCarloInfo,
+                                TString decayChannel,
+                                TString fDetectionChannel,
+                                TString fEnergy,
                                 Bool_t isVsPtConv               = kFALSE
                             ){
         TGaxis::SetMaxDigits(3);
@@ -1677,7 +1676,7 @@
                 } else {
                     textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
                 }
-                
+
                 Double_t startTextX     = 0.10;
                 Double_t startTextY     = 0.9;
                 Double_t differenceText = textHeight*1.25;
@@ -1704,12 +1703,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -1735,7 +1734,7 @@
                 legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],"mixed evt. #it{M}_{#gamma#gamma}","l");
                 legendData->Draw();
             } else {
-                
+
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -1763,7 +1762,7 @@
                 if (namePlot.Contains("Left")){
                     fBGFitRangeLow          = fBGFitRangeLeft[0];
                     fBGFitRangeHigh         = fBGFitRangeLeft[1];
-                }  
+                }
                 TBox *box               = new TBox(fBGFitRangeLow,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.93,fBGFitRangeHigh,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.91);
                 box->SetFillStyle(1001);
                 box->SetFillColor(kAzure+9);
@@ -2042,24 +2041,24 @@
     }
 
     //________________________________________ Plot Invariant Mass Bin With Secondary Contribution _______________________________
-    void PlotInvMassSecondaryInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot, 
-                                        TH1D** fHistoMappingSecondaryTotalInvMassPtBinPlot, 
-                                        TH1D** fHistoMappingSecondaryK0sInvMassPtBinPlot, 
-                                        TString namePlot, 
-                                        TString nameCanvas, 
-                                        TString namePad, 
-                                        Double_t* fPlottingRangeMeson, 
-                                        TString dateDummy, 
-                                        TString fMesonType,  
-                                        Int_t fRowPlot, 
-                                        Int_t fColumnPlot, 
-                                        Int_t fStartBinPtRange, 
-                                        Int_t fNumberPtBins, 
-                                        Double_t* fRangeBinsPt, 
-                                        TString fDecayChannel, 
-                                        Bool_t fMonteCarloInfo, 
-                                        TString decayChannel,  
-                                        TString fDetectionChannel, 
+    void PlotInvMassSecondaryInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
+                                        TH1D** fHistoMappingSecondaryTotalInvMassPtBinPlot,
+                                        TH1D** fHistoMappingSecondaryK0sInvMassPtBinPlot,
+                                        TString namePlot,
+                                        TString nameCanvas,
+                                        TString namePad,
+                                        Double_t* fPlottingRangeMeson,
+                                        TString dateDummy,
+                                        TString fMesonType,
+                                        Int_t fRowPlot,
+                                        Int_t fColumnPlot,
+                                        Int_t fStartBinPtRange,
+                                        Int_t fNumberPtBins,
+                                        Double_t* fRangeBinsPt,
+                                        TString fDecayChannel,
+                                        Bool_t fMonteCarloInfo,
+                                        TString decayChannel,
+                                        TString fDetectionChannel,
                                         TString fEnergy,
                                         Bool_t isVsPtConv                                       = kFALSE
                                     ){
@@ -2095,7 +2094,7 @@
                 TString textAlice           = "ALICE performance";
                 TString textEvents;
                 if(fMonteCarloInfo){
-                    textEvents              = "MC";   
+                    textEvents              = "MC";
                 } else {
                     textEvents              = "Data";
                 }
@@ -2132,12 +2131,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -2167,8 +2166,8 @@
                                 titlePt,
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
-                
-                
+
+
                 if (fHistoMappingSecondaryK0sInvMassPtBinPlot!=NULL){
                     if (fHistoMappingSecondaryK0sInvMassPtBinPlot[iPt]!=NULL){
                         DrawGammaHistoColored( fHistoMappingSecondaryK0sInvMassPtBinPlot[iPt],
@@ -2186,23 +2185,23 @@
     }
 
     //________________________________________ Plot Invariant Mass Bin With GG contamination for Dalitz _______________________________
-    void PlotInvMassBckGGInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot, 
+    void PlotInvMassBckGGInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
                                     TH1D** fHistoMappingSecondaryTotalInvMassPtBinPlot,
-                                    TString namePlot, 
-                                    TString nameCanvas, 
-                                    TString namePad, 
-                                    Double_t* fPlottingRangeMeson, 
-                                    TString dateDummy, 
-                                    TString fMesonType, 
-                                    Int_t fRowPlot, 
-                                    Int_t fColumnPlot, 
+                                    TString namePlot,
+                                    TString nameCanvas,
+                                    TString namePad,
+                                    Double_t* fPlottingRangeMeson,
+                                    TString dateDummy,
+                                    TString fMesonType,
+                                    Int_t fRowPlot,
+                                    Int_t fColumnPlot,
                                     Int_t fStartBinPtRange,
-                                    Int_t fNumberPtBins, 
-                                    Double_t* fRangeBinsPt, 
-                                    TString fDecayChannel, 
-                                    Bool_t fMonteCarloInfo, 
-                                    TString decayChannel, 
-                                    TString fDetectionChannel, 
+                                    Int_t fNumberPtBins,
+                                    Double_t* fRangeBinsPt,
+                                    TString fDecayChannel,
+                                    Bool_t fMonteCarloInfo,
+                                    TString decayChannel,
+                                    TString fDetectionChannel,
                                     TString fEnergy,
                                     Bool_t isVsPtConv                                       = kFALSE
                                 ){
@@ -2276,12 +2275,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -2323,22 +2322,22 @@
 
 
     //__________________________________ Plotting Invariant Mass as Ratio _________________________________________________________
-    void PlotInvMassRatioInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot, 
-                                    TString namePlot, 
-                                    TString nameCanvas, 
-                                    TString namePad, 
-                                    Double_t* fPlottingRangeMeson, 
-                                    TString dateDummy, 
-                                    TString fMesonType, 
+    void PlotInvMassRatioInPtBins(  TH1D** fHistoMappingGGInvMassPtBinPlot,
+                                    TString namePlot,
+                                    TString nameCanvas,
+                                    TString namePad,
+                                    Double_t* fPlottingRangeMeson,
+                                    TString dateDummy,
+                                    TString fMesonType,
                                     Int_t fRowPlot,
                                     Int_t fColumnPlot,
                                     Int_t fStartBinPtRange,
                                     Int_t fNumberPtBins,
-                                    Double_t* fRangeBinsPt, 
+                                    Double_t* fRangeBinsPt,
                                     TString fDecayChannel,
                                     Bool_t fMonteCarloInfo,
                                     TString decayChannel,
-                                    TString fDetectionChannel, 
+                                    TString fDetectionChannel,
                                     TString fEnergy,
                                     Bool_t isVsPtConv                               = kFALSE
                                 ){
@@ -2373,7 +2372,7 @@
                 TString textEvents;
                 if(fMonteCarloInfo){
                     textEvents          = "MC";
-                } else { 
+                } else {
                     textEvents          = "Data";
                 }
                 Double_t nPixels        = 13;
@@ -2403,18 +2402,18 @@
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-        
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -2454,12 +2453,12 @@
     }
 
     //____________________________ Plotting Invariant Mass with Subtraction for Single Bin ______________________________________
-    void PlotWithFitSubtractedInvMassSinglePtBin(   TH1D * fHistoMappingSignalInvMassPtBinPlot, 
+    void PlotWithFitSubtractedInvMassSinglePtBin(   TH1D * fHistoMappingSignalInvMassPtBinPlot,
                                                     TH1D** fHistoMappingTrueMesonInvMassPtBinsPlot,
-                                                    TF1 * fFitSignalInvMassPtBinPlot, 
+                                                    TF1 * fFitSignalInvMassPtBinPlot,
                                                     TString namePlot,
                                                     TString nameCanvas,
-                                                    Double_t* fPlottingRangeMeson, 
+                                                    Double_t* fPlottingRangeMeson,
                                                     Bool_t fMonteCarloInfo,
                                                     TString decayChannel){
         TCanvas *canvasDataFit      = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -2484,21 +2483,21 @@
             fFitSignalInvMassPtBinPlot->SetLineColor(kCyan+3);
             fFitSignalInvMassPtBinPlot->SetLineWidth(1);
             fFitSignalInvMassPtBinPlot->DrawCopy("same");
-        } 
+        }
         canvasDataFit->Print(namePlot.Data());
         delete canvasDataFit;
     }
 
     //____________________________ Plotting Invariant Mass with Subtraction for Single Bin ______________________________________
-    void PlotWithFitSubtractedInvMassSinglePtBin2(  TH1D * fHistoMappingSignalInvMassPtBinPlot, 
+    void PlotWithFitSubtractedInvMassSinglePtBin2(  TH1D * fHistoMappingSignalInvMassPtBinPlot,
                                                     TH1D * fHistoMappingSignalInvMassPtBinPlot2,
-                                                    TH1D * fHistoMappingSignalInvMassPtBinPlot3, 
-                                                    TF1 * fFitSignalInvMassPtBinPlot, 
-                                                    TF1 * fFitBGInvMassPtBinPlot, 
-                                                    TString namePlot, 
-                                                    TString nameCanvas, 
-                                                    Double_t* fPlottingRangeMeson, 
-                                                    Bool_t fMonteCarloInfo, 
+                                                    TH1D * fHistoMappingSignalInvMassPtBinPlot3,
+                                                    TF1 * fFitSignalInvMassPtBinPlot,
+                                                    TF1 * fFitBGInvMassPtBinPlot,
+                                                    TString namePlot,
+                                                    TString nameCanvas,
+                                                    Double_t* fPlottingRangeMeson,
+                                                    Bool_t fMonteCarloInfo,
                                                     TString decayChannel) {
         TCanvas *canvasDataFit      = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         canvasDataFit->SetTopMargin(0.12);
@@ -2522,47 +2521,47 @@
         fHistoMappingSignalInvMassPtBinPlot3->SetMarkerSize(0.5);
         fHistoMappingSignalInvMassPtBinPlot3->SetLineColor(kCyan+1);
         fHistoMappingSignalInvMassPtBinPlot3->DrawCopy("same,p,e1");
-        
+
         if (fFitBGInvMassPtBinPlot!=0x00){
             fFitBGInvMassPtBinPlot->SetLineColor(kCyan+3);
             fFitBGInvMassPtBinPlot->SetLineWidth(1);
             fFitBGInvMassPtBinPlot->DrawCopy("same");
-        } 
+        }
         if (fFitSignalInvMassPtBinPlot!=0x00){
             fFitSignalInvMassPtBinPlot->SetLineColor(kBlack);
             fFitSignalInvMassPtBinPlot->SetLineWidth(1);
             fFitSignalInvMassPtBinPlot->DrawCopy("same");
-        } 
+        }
 
         canvasDataFit->Print(namePlot.Data());
         delete canvasDataFit;
 
-            if(fMonteCarloInfo)fMonteCarloInfo=kFALSE; 
+            if(fMonteCarloInfo)fMonteCarloInfo=kFALSE;
     }
 
     //____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________
-    void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot, 
-                                            TH1D** fHistoMappingTrueMesonInvMassPtBinsPlot, 
-                                            TF1 ** fFitSignalInvMassPtBinPlot, 
-                                            TString namePlot, 
-                                            TString nameCanvas, 
-                                            TString namePad, 
-                                            Double_t* fPlottingRangeMeson, 
-                                            TString dateDummy, 
-                                            TString fMesonType, 
-                                            Int_t fRowPlot, 
-                                            Int_t fColumnPlot, 
-                                            Int_t fStartBinPtRange, 
-                                            Int_t fNumberPtBins, 
-                                            Double_t* fRangeBinsPt, 
+    void PlotWithFitSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot,
+                                            TH1D** fHistoMappingTrueMesonInvMassPtBinsPlot,
+                                            TF1 ** fFitSignalInvMassPtBinPlot,
+                                            TString namePlot,
+                                            TString nameCanvas,
+                                            TString namePad,
+                                            Double_t* fPlottingRangeMeson,
+                                            TString dateDummy,
+                                            TString fMesonType,
+                                            Int_t fRowPlot,
+                                            Int_t fColumnPlot,
+                                            Int_t fStartBinPtRange,
+                                            Int_t fNumberPtBins,
+                                            Double_t* fRangeBinsPt,
                                             TString fDecayChannel,
-                                            Bool_t fMonteCarloInfo, 
-                                            TString decayChannel, 
-                                            TString fDetectionChannel, 
-                                            TString fEnergy, 
+                                            Bool_t fMonteCarloInfo,
+                                            TString decayChannel,
+                                            TString fDetectionChannel,
+                                            TString fEnergy,
                                             TString fTextMCvalidated     ="",
-                                            Bool_t labelData             = kTRUE, 
-                                            TString fTextFit             = "Fit", 
+                                            Bool_t labelData             = kTRUE,
+                                            TString fTextFit             = "Fit",
                                             TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
                                             Bool_t isVsPtConv            = kFALSE
                                             ){
@@ -2628,18 +2627,18 @@
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-        
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -2726,9 +2725,9 @@
 
                             TString nameOfPlot = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetName();
                             Double_t mass = fMesonMass[iPt];
-                            if (nameOfPlot.Contains("Left")) 
+                            if (nameOfPlot.Contains("Left"))
                                 mass                        = fMesonMassLeft[iPt];
-                            if (nameOfPlot.Contains("True")) 
+                            if (nameOfPlot.Contains("True"))
                                 mass                        = fMesonTrueMass[iPt];
 
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
@@ -2781,7 +2780,7 @@
                             l3b->SetLineStyle(3);
                             l3b->SetLineWidth(1);
                             l3b->Draw("same");
-                    } 
+                    }
                     DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
                                     titlePt,
                                     Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
@@ -2808,11 +2807,11 @@
                     if (fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]!=0x00){
                             TString nameOfPlot = fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetName();
                             Double_t mass = fMesonMass[iPt];
-                            if (nameOfPlot.Contains("Left")) 
+                            if (nameOfPlot.Contains("Left"))
                                 mass                        = fMesonMassLeft[iPt];
                             if (nameOfPlot.Contains("True"))
                                 mass                        = fMesonTrueMass[iPt];
-                            
+
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                             Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
                             Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];
@@ -2832,7 +2831,7 @@
                             lmassPos->SetLineStyle(1);
                             lmassPos->SetLineWidth(1);
                             lmassPos->Draw("same");
-                            
+
                             TLine * l1a                     = new TLine (normalLow,fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetMinimum(),normalLow,fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetMaximum());
                             l1a->SetLineColor(kGray+1);
                             l1a->SetLineStyle(1);
@@ -2863,21 +2862,21 @@
                             l3b->SetLineStyle(3);
                             l3b->SetLineWidth(1);
                             l3b->Draw("same");
-                    } 
-                    
-                    
+                    }
+
+
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerColor(kRed+2);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerSize(0.5);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetLineColor(kRed+2);
     //                 fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetLineWidth(1);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->DrawCopy("same,p,e1");
-                    
+
                 }
                 if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
-                } 
+                }
             }
         }
         canvasDataFit->Print(namePlot.Data());
@@ -2887,34 +2886,34 @@
     }
 
     //____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________
-    void PlotWithManyFitSubtractedInvMassInPtBins(  TH1D ** fHistoMappingSignalInvMassPtBinPlot, 
-                                                    TF1 ** fFitSignalInvMassPtBinPlot, 
-                                                    TF1 *** fFitSigWithOtherBGInvMassPtBinPlot, 
+    void PlotWithManyFitSubtractedInvMassInPtBins(  TH1D ** fHistoMappingSignalInvMassPtBinPlot,
+                                                    TF1 ** fFitSignalInvMassPtBinPlot,
+                                                    TF1 *** fFitSigWithOtherBGInvMassPtBinPlot,
                                                     Int_t nFits,
                                                     TString* fTextFitAdd,
-                                                    TString namePlot, 
-                                                    TString nameCanvas, 
-                                                    TString namePad, 
-                                                    Double_t* fPlottingRangeMeson, 
-                                                    TString dateDummy, 
-                                                    TString fMesonType, 
-                                                    Int_t fRowPlot, 
-                                                    Int_t fColumnPlot, 
-                                                    Int_t fStartBinPtRange, 
-                                                    Int_t fNumberPtBins, 
-                                                    Double_t* fRangeBinsPt, 
+                                                    TString namePlot,
+                                                    TString nameCanvas,
+                                                    TString namePad,
+                                                    Double_t* fPlottingRangeMeson,
+                                                    TString dateDummy,
+                                                    TString fMesonType,
+                                                    Int_t fRowPlot,
+                                                    Int_t fColumnPlot,
+                                                    Int_t fStartBinPtRange,
+                                                    Int_t fNumberPtBins,
+                                                    Double_t* fRangeBinsPt,
                                                     TString fDecayChannel,
-                                                    Bool_t fMonteCarloInfo, 
-                                                    TString decayChannel, 
-                                                    TString fDetectionChannel, 
-                                                    TString fEnergy, 
+                                                    Bool_t fMonteCarloInfo,
+                                                    TString decayChannel,
+                                                    TString fDetectionChannel,
+                                                    TString fEnergy,
                                                     TString fTextMCvalidated    = "",
-                                                    Bool_t labelData            = kTRUE, 
-                                                    TString fTextFit            = "Fit", 
-                                                    TString fTextMGammaGamma    = "mixed evt. subtr. #it{M}_{#gamma#gamma}", 
+                                                    Bool_t labelData            = kTRUE,
+                                                    TString fTextFit            = "Fit",
+                                                    TString fTextMGammaGamma    = "mixed evt. subtr. #it{M}_{#gamma#gamma}",
                                                     Bool_t isVsPtConv           = kFALSE
                                                 ){
-        
+
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
         canvasDataFit->SetTopMargin(0.00);
         canvasDataFit->SetBottomMargin(0.00);
@@ -2977,18 +2976,18 @@
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-        
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -3001,7 +3000,7 @@
                 if (fMonteCarloInfo) {
                     Double_t totalheightLeg     = 2.;
                     totalheightLeg = totalheightLeg+nFits;
-                    
+
                     TLegend* legendMC           = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+totalheightLeg)*differenceText);
                     legendMC->SetTextSize(textHeight);
                     legendMC->SetTextFont(62);
@@ -3026,8 +3025,8 @@
                             fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(3*linewidth);
                             legendMC->AddEntry(fFitSigWithOtherBGInvMassPtBinPlot[m][iPt],fTextFitAdd[m].Data(),"l");
                         }
-                    }    
-                    
+                    }
+
                     legendMC->Draw();
                 }else {
                     TLegend* legendData         = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.+nFits)*differenceText);
@@ -3052,7 +3051,7 @@
                             fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(3*linewidth);
                             legendData->AddEntry(fFitSigWithOtherBGInvMassPtBinPlot[m][iPt],fTextFitAdd[m].Data(),"l");
                         }
-                    }    
+                    }
                     legendData->Draw();
                 }
 
@@ -3079,19 +3078,19 @@
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1.5);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
-                } 
+                }
                 Color_t colorFit[3]     = {kRed+1, kAzure+2, 807};
                 Style_t styleFit[3]     = {7, 3, 6};
-                
+
                 for (Int_t m = 0; (m < nFits && m < 3); m++){
                     if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]){
     //                     cout << m << "\t"<< iPt << "\t" << fFitSigWithOtherBGInvMassPtBinPlot[m][iPt] << endl;
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineColor(colorFit[m]);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineStyle(styleFit[m]);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(1.5);
-                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->DrawCopy("same");    
-                    }   
-                }    
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->DrawCopy("same");
+                    }
+                }
             }
         }
         canvasDataFit->Print(namePlot.Data());
@@ -3101,29 +3100,29 @@
 
 
     //____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________
-    void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot, 
-                                            TH1D** fHistoMappingTrueMesonInvMassPtBinsPlot, 
-                                            TF1 ** fFitSignalInvMassPtBinPlot, 
+    void PlotWith2FitsSubtractedInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot,
+                                            TH1D** fHistoMappingTrueMesonInvMassPtBinsPlot,
+                                            TF1 ** fFitSignalInvMassPtBinPlot,
                                             TF1 ** fFitLinearBck,
-                                            TString namePlot, 
-                                            TString nameCanvas, 
-                                            TString namePad, 
-                                            Double_t* fPlottingRangeMeson, 
-                                            TString dateDummy, 
-                                            TString fMesonType, 
-                                            Int_t fRowPlot, 
-                                            Int_t fColumnPlot, 
-                                            Int_t fStartBinPtRange, 
-                                            Int_t fNumberPtBins, 
-                                            Double_t* fRangeBinsPt, 
+                                            TString namePlot,
+                                            TString nameCanvas,
+                                            TString namePad,
+                                            Double_t* fPlottingRangeMeson,
+                                            TString dateDummy,
+                                            TString fMesonType,
+                                            Int_t fRowPlot,
+                                            Int_t fColumnPlot,
+                                            Int_t fStartBinPtRange,
+                                            Int_t fNumberPtBins,
+                                            Double_t* fRangeBinsPt,
                                             TString fDecayChannel,
-                                            Bool_t fMonteCarloInfo, 
-                                            TString decayChannel, 
-                                            TString fDetectionChannel, 
-                                            TString fEnergy, 
+                                            Bool_t fMonteCarloInfo,
+                                            TString decayChannel,
+                                            TString fDetectionChannel,
+                                            TString fEnergy,
                                             TString fTextMCvalidated     ="",
-                                            Bool_t labelData             = kTRUE, 
-                                            TString fTextFit             = "Fit", 
+                                            Bool_t labelData             = kTRUE,
+                                            TString fTextFit             = "Fit",
                                             TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
                                             Bool_t isVsPtConv            = kFALSE
                                             ){
@@ -3189,18 +3188,18 @@
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-        
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -3240,7 +3239,7 @@
 
                         fFitLinearBck[iPt]->SetLineWidth(5*linewidth);
                         legendMC->AddEntry(fFitLinearBck[iPt],"BG fit","l");
-                        
+
                     }
                     legendMC->Draw();
                 }else {
@@ -3259,10 +3258,10 @@
                         Size_t linewidth        = fFitSignalInvMassPtBinPlot[iPt]->GetLineWidth();
                         fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(5*linewidth);
                         legendData->AddEntry(fFitSignalInvMassPtBinPlot[iPt],fTextFit.Data(),"l");
-                        
+
                         fFitLinearBck[iPt]->SetLineWidth(5*linewidth);
                         legendData->AddEntry(fFitLinearBck[iPt],"BG fit","l");
-                    
+
                     }
                     legendData->Draw();
                 }
@@ -3295,9 +3294,9 @@
                     if (fHistoMappingSignalInvMassPtBinPlot[iPt]!=0x00){
                             TString nameOfPlot = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetName();
                             Double_t mass = fMesonMass[iPt];
-                            if (nameOfPlot.Contains("Left")) 
+                            if (nameOfPlot.Contains("Left"))
                                 mass                        = fMesonMassLeft[iPt];
-                            if (nameOfPlot.Contains("True")) 
+                            if (nameOfPlot.Contains("True"))
                                 mass                        = fMesonTrueMass[iPt];
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                             Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
@@ -3348,7 +3347,7 @@
                             l3b->SetLineStyle(3);
                             l3b->SetLineWidth(1);
                             l3b->Draw("same");
-                    } 
+                    }
                     DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
                                     titlePt,
                                     Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
@@ -3375,11 +3374,11 @@
                     if (fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]!=0x00){
                             TString nameOfPlot = fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetName();
                             Double_t mass = fMesonMass[iPt];
-                            if (nameOfPlot.Contains("Left")) 
+                            if (nameOfPlot.Contains("Left"))
                                 mass                        = fMesonMassLeft[iPt];
                             if (nameOfPlot.Contains("True"))
                                 mass                        = fMesonTrueMass[iPt];
-                            
+
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
                             Double_t intRangeWideLow        = mass + fMesonIntDeltaRangeWide[0];
                             Double_t intRangeNarrowLow      = mass + fMesonIntDeltaRangeNarrow[0];
@@ -3399,7 +3398,7 @@
                             lmassPos->SetLineStyle(1);
                             lmassPos->SetLineWidth(1);
                             lmassPos->Draw("same");
-                            
+
                             TLine * l1a                     = new TLine (normalLow,fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetMinimum(),normalLow,fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetMaximum());
                             l1a->SetLineColor(kGray+1);
                             l1a->SetLineStyle(1);
@@ -3430,25 +3429,25 @@
                             l3b->SetLineStyle(3);
                             l3b->SetLineWidth(1);
                             l3b->Draw("same");
-                    } 
-                    
-                    
+                    }
+
+
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerColor(kRed+2);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerSize(0.5);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetLineColor(kRed+2);
     //                 fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetLineWidth(1);
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->DrawCopy("same,p,e1");
-                    
+
                 }
                 if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
-                    
-                    fFitLinearBck[iPt]->SetLineColor(kBlue);   
+
+                    fFitLinearBck[iPt]->SetLineColor(kBlue);
                     fFitLinearBck[iPt]->SetLineWidth(1);
                     fFitLinearBck[iPt]->DrawCopy("same");
-                } 
+                }
             }
         }
         canvasDataFit->Print(namePlot.Data());
@@ -3459,25 +3458,25 @@
 
 
     //____________________________ Plotting Invariant Mass Subtracted for all bins ________________________________________________________
-    void PlotWithBGFitSubtractedInvMassInPtBins(    TH1D ** fHistoMappingSignalPlusBGInvMassPtBinPlot, 
-                                                    TH1D ** fHistoMappingBG, 
-                                                    TH1D** fHistoMappingSignal, 
+    void PlotWithBGFitSubtractedInvMassInPtBins(    TH1D ** fHistoMappingSignalPlusBGInvMassPtBinPlot,
+                                                    TH1D ** fHistoMappingBG,
+                                                    TH1D** fHistoMappingSignal,
                                                     TF1 ** fFitBGInvMassPtBinPlot,
                                                     TString namePlot,
                                                     TString nameCanvas,
-                                                    TString namePad, 
-                                                    Double_t* fPlottingRangeMeson, 
-                                                    TString dateDummy, 
-                                                    TString fMesonType, 
-                                                    Int_t fRowPlot, 
+                                                    TString namePad,
+                                                    Double_t* fPlottingRangeMeson,
+                                                    TString dateDummy,
+                                                    TString fMesonType,
+                                                    Int_t fRowPlot,
                                                     Int_t fColumnPlot,
-                                                    Int_t fStartBinPtRange, 
-                                                    Int_t fNumberPtBins, 
-                                                    Double_t* fRangeBinsPt, 
-                                                    TString fDecayChannel, 
-                                                    Bool_t fMonteCarloInfo, 
-                                                    TString decayChannel, 
-                                                    TString fDetectionChannel, 
+                                                    Int_t fStartBinPtRange,
+                                                    Int_t fNumberPtBins,
+                                                    Double_t* fRangeBinsPt,
+                                                    TString fDecayChannel,
+                                                    Bool_t fMonteCarloInfo,
+                                                    TString decayChannel,
+                                                    TString fDetectionChannel,
                                                     TString fEnergy,
                                                     Bool_t isVsPtConv                                       = kFALSE
                                             ){
@@ -3549,12 +3548,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -3615,7 +3614,7 @@
                 fHistoMappingBG[iPt]->SetLineColor(kCyan+1);
                 fHistoMappingBG[iPt]->SetLineWidth(1);
                 fHistoMappingBG[iPt]->DrawCopy("same,pe1");
-                
+
                 fHistoMappingSignal[iPt]->SetMarkerSize(0.2);
                 fHistoMappingSignal[iPt]->SetMarkerColor(kRed+2);
                 fHistoMappingSignal[iPt]->SetLineColor(kRed+2);
@@ -3629,7 +3628,7 @@
                     TLine * l1 = new TLine (fFitBGInvMassPtBinPlot[iPt]->GetParameter(1),fHistoMappingSignalPlusBGInvMassPtBinPlot[iPt]->GetMinimum(),fFitBGInvMassPtBinPlot[iPt]->GetParameter(1),fHistoMappingSignalPlusBGInvMassPtBinPlot[iPt]->GetMaximum());
                     l1->SetLineColor(4);
                     l1->SetLineWidth(1);
-                } 
+                }
 
             }
         }
@@ -3641,22 +3640,22 @@
 
 
     //______________________________ Invariant Mass with Fit to Peak Position for all Pt bins __________________________________
-    void PlotWithFitPeakPosInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot, 
+    void PlotWithFitPeakPosInvMassInPtBins( TH1D ** fHistoMappingSignalInvMassPtBinPlot,
                                             TH1D **fHistoMappingTrueMesonInvMassPtBinsPlot,
-                                            TF1 ** fFitSignalInvMassPtBinPlot, 
-                                            TString namePlot, 
-                                            TString nameCanvas, 
+                                            TF1 ** fFitSignalInvMassPtBinPlot,
+                                            TString namePlot,
+                                            TString nameCanvas,
                                             TString namePad,
-                                            Double_t* fPlottingRangeMeson, 
-                                            TString dateDummy, 
-                                            TString fMesonType, 
-                                            Int_t fRowPlot, 
-                                            Int_t fColumnPlot, 
-                                            Int_t fStartBinPtRange, 
+                                            Double_t* fPlottingRangeMeson,
+                                            TString dateDummy,
+                                            TString fMesonType,
+                                            Int_t fRowPlot,
+                                            Int_t fColumnPlot,
+                                            Int_t fStartBinPtRange,
                                             Int_t fNumberPtBins,
-                                            Double_t* fRangeBinsPt, 
-                                            TString fDecayChannel, 
-                                            Bool_t fMonteCarloInfo, 
+                                            Double_t* fRangeBinsPt,
+                                            TString fDecayChannel,
+                                            Bool_t fMonteCarloInfo,
                                             TString decayChannel,
                                             TString fDetectionChannel,
                                             TString fEnergy,
@@ -3691,7 +3690,7 @@
                 TString textEvents;
                 if(fMonteCarloInfo){
                     textEvents          = "MC";
-                } else { 
+                } else {
                     textEvents          = "Data";
                 }
                 Double_t nPixels        = 13;
@@ -3721,18 +3720,18 @@
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-        
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -3777,7 +3776,7 @@
                     TLine * l1          = new TLine (fFitSignalInvMassPtBinPlot[iPt]->GetParameter(1),fHistoMappingSignalInvMassPtBinPlot[iPt]->GetMinimum(),fFitSignalInvMassPtBinPlot[iPt]->GetParameter(1),fHistoMappingSignalInvMassPtBinPlot[iPt]->GetMaximum());
                     l1->SetLineColor(4);
                     l1->SetLineWidth(1);
-                } 
+                }
 
             }
         }
@@ -3789,27 +3788,27 @@
 
 
     //____________________________ Plotting Invariant Mass validated splitted in different categories for all bins ________________________________________________________
-    void PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(    TH1D ** fHistoTrueSignal, 
-                                                                TH1D** fHistoTrueSignalPhotons, 
-                                                                TH1D** fHistoTrueSignalElectrons, 
-                                                                TH1D** fHistoTrueSignalConvPhotons, 
-                                                                TH1D** fHistoTrueSignalMixed, 
-                                                                TString namePlot, 
-                                                                TString nameCanvas, 
-                                                                TString namePad, 
+    void PlotTrueInvMassSplittedInPhotonAndElectronInPtBins(    TH1D ** fHistoTrueSignal,
+                                                                TH1D** fHistoTrueSignalPhotons,
+                                                                TH1D** fHistoTrueSignalElectrons,
+                                                                TH1D** fHistoTrueSignalConvPhotons,
+                                                                TH1D** fHistoTrueSignalMixed,
+                                                                TString namePlot,
+                                                                TString nameCanvas,
+                                                                TString namePad,
                                                                 Double_t* fPlottingRangeMeson,
                                                                 TString dateDummy,
-                                                                TString fMesonType, 
-                                                                Int_t fRowPlot, 
+                                                                TString fMesonType,
+                                                                Int_t fRowPlot,
                                                                 Int_t fColumnPlot,
-                                                                Int_t fStartBinPtRange, 
-                                                                Int_t fNumberPtBins, 
-                                                                Double_t* fRangeBinsPt, 
-                                                                TString fDecayChannel, 
-                                                                Bool_t fMonteCarloInfo, 
-                                                                TString decayChannel, 
-                                                                TString fDetectionChannel, 
-                                                                TString fEnergy, 
+                                                                Int_t fStartBinPtRange,
+                                                                Int_t fNumberPtBins,
+                                                                Double_t* fRangeBinsPt,
+                                                                TString fDecayChannel,
+                                                                Bool_t fMonteCarloInfo,
+                                                                TString decayChannel,
+                                                                TString fDetectionChannel,
+                                                                TString fEnergy,
                                                                 Int_t mode,
                                                                 Bool_t isVsPtConv                       = kFALSE
                                                         ){
@@ -3881,12 +3880,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -3924,7 +3923,7 @@
                     legendMC->AddEntry(fHistoTrueSignalConvPhotons[iPt-1],"val. #gamma_{conv}#gamma_{conv}","ep");
                 }
                 legendMC->Draw();
-                
+
             } else {
 
                 padDataFit->cd(place);
@@ -3954,7 +3953,7 @@
                 fHistoTrueSignalPhotons[iPt]->SetMarkerSize(0.3);
                 fHistoTrueSignalPhotons[iPt]->SetLineColor(kRed+2);
                 fHistoTrueSignalPhotons[iPt]->DrawCopy("same,p,e1");
-                
+
                 if (fHistoTrueSignalElectrons != NULL){
                     fHistoTrueSignalElectrons[iPt]->SetMarkerColor(kBlue+2);
                     fHistoTrueSignalElectrons[iPt]->SetMarkerStyle(33);
@@ -3962,13 +3961,13 @@
                     fHistoTrueSignalElectrons[iPt]->SetLineColor(kBlue+2);
                     fHistoTrueSignalElectrons[iPt]->DrawCopy("same,p,e1");
                 }
-                
+
                 fHistoTrueSignalConvPhotons[iPt]->SetMarkerColor(kCyan+2);
                 fHistoTrueSignalConvPhotons[iPt]->SetMarkerStyle(27);
                 fHistoTrueSignalConvPhotons[iPt]->SetMarkerSize(0.3);
                 fHistoTrueSignalConvPhotons[iPt]->SetLineColor(kCyan+2);
                 fHistoTrueSignalConvPhotons[iPt]->DrawCopy("same,p,e1");
-                
+
                 if (fHistoTrueSignalMixed != NULL){
                     fHistoTrueSignalMixed[iPt]->SetMarkerColor(kViolet+2);
                     fHistoTrueSignalMixed[iPt]->SetMarkerStyle(24);
@@ -3976,7 +3975,7 @@
                     fHistoTrueSignalMixed[iPt]->SetLineColor(kViolet+2);
                     fHistoTrueSignalMixed[iPt]->DrawCopy("same,p,e1");
                 }
-                
+
             }
         }
         canvasDataFit->Print(namePlot.Data());
@@ -3986,24 +3985,24 @@
 
     //____________________________ Plotting Invariant Mass validated splitted in different categories for all bins ________________________________________________________
     void PlotTrueInvMassSplittedInMergedInPtBins(   TH1D ** fHistoTrueSignal,
-                                                    TH1D** fHistoTrueSignalMerged, 
-                                                    TH1D** fHistoTrueSignalMergedPartConv, 
-                                                    TString namePlot, 
-                                                    TString nameCanvas, 
-                                                    TString namePad, 
-                                                    Double_t* fPlottingRangeMeson, 
-                                                    TString dateDummy, 
-                                                    TString fMesonType,  
-                                                    Int_t fRowPlot, 
-                                                    Int_t fColumnPlot, 
-                                                    Int_t fStartBinPtRange, 
-                                                    Int_t fNumberPtBins, 
+                                                    TH1D** fHistoTrueSignalMerged,
+                                                    TH1D** fHistoTrueSignalMergedPartConv,
+                                                    TString namePlot,
+                                                    TString nameCanvas,
+                                                    TString namePad,
+                                                    Double_t* fPlottingRangeMeson,
+                                                    TString dateDummy,
+                                                    TString fMesonType,
+                                                    Int_t fRowPlot,
+                                                    Int_t fColumnPlot,
+                                                    Int_t fStartBinPtRange,
+                                                    Int_t fNumberPtBins,
                                                     Double_t* fRangeBinsPt,
-                                                    TString fDecayChannel, 
+                                                    TString fDecayChannel,
                                                     Bool_t fMonteCarloInfo,
                                                     TString decayChannel,
                                                     TString fDetectionChannel,
-                                                    TString fEnergy, 
+                                                    TString fEnergy,
                                                     Int_t mode,
                                                     Bool_t isVsPtConv                       = kFALSE
                                                 ){
@@ -4075,12 +4074,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4111,7 +4110,7 @@
                     legendMC->AddEntry(fHistoTrueSignalMergedPartConv[iPt-1],"val. #gamma_{conv}E#it{M}_{merged}, part conv","ep");
                 }
                 legendMC->Draw();
-                
+
             } else {
 
                 padDataFit->cd(place);
@@ -4141,13 +4140,13 @@
                 fHistoTrueSignalMerged[iPt]->SetMarkerSize(0.3);
                 fHistoTrueSignalMerged[iPt]->SetLineColor(kRed+2);
                 fHistoTrueSignalMerged[iPt]->DrawCopy("same,p,e1");
-                    
+
                 fHistoTrueSignalMergedPartConv[iPt]->SetMarkerColor(kBlue+2);
                 fHistoTrueSignalMergedPartConv[iPt]->SetMarkerStyle(33);
                 fHistoTrueSignalMergedPartConv[iPt]->SetMarkerSize(0.5);
                 fHistoTrueSignalMergedPartConv[iPt]->SetLineColor(kBlue+2);
                 fHistoTrueSignalMergedPartConv[iPt]->DrawCopy("same,p,e1");
-                
+
             }
         }
         canvasDataFit->Print(namePlot.Data());
@@ -4155,15 +4154,15 @@
         delete canvasDataFit;
     }
     //________________________________________ Plot Invariant Mass Bin With GG contamination for Dalitz _______________________________
-    void PlotSignalInvMassW0TrueMesonInPtBins(  TH1D** fHistoMappingSignalInvMassW0TruePi0PtBinsPlot, 
+    void PlotSignalInvMassW0TrueMesonInPtBins(  TH1D** fHistoMappingSignalInvMassW0TruePi0PtBinsPlot,
                                                 TString namePlot,
                                                 TString nameCanvas,
                                                 TString namePad,
                                                 Double_t* fPlottingRangeMeson,
-                                                TString dateDummy, 
-                                                TString fMesonType,  
-                                                Int_t fRowPlot, 
-                                                Int_t fColumnPlot, 
+                                                TString dateDummy,
+                                                TString fMesonType,
+                                                Int_t fRowPlot,
+                                                Int_t fColumnPlot,
                                                 Int_t fStartBinPtRange,
                                                 Int_t fNumberPtBins,
                                                 Double_t* fRangeBinsPt,
@@ -4221,7 +4220,7 @@
                 Double_t startTextX     = 0.10;
                 Double_t startTextY     = 0.8;
                 Double_t differenceText = textHeight*1.25;
-                
+
                 TLatex *alice           = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
                 TLatex *latexDate       = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
                 TLatex *energy          = new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
@@ -4244,12 +4243,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4283,22 +4282,22 @@
     }
 
 
-    void PlotInvMassW0TrueMesonInPtBins(    TH1D** fHistoMappingGGInvMassW0TruePi0PtBinsPlot, 
-                                            TH1D** fHistoMappingBackNormInvMassPtBinPlot, 
+    void PlotInvMassW0TrueMesonInPtBins(    TH1D** fHistoMappingGGInvMassW0TruePi0PtBinsPlot,
+                                            TH1D** fHistoMappingBackNormInvMassPtBinPlot,
                                             TString namePlot,
                                             TString nameCanvas,
-                                            TString namePad, 
-                                            Double_t* fPlottingRangeMeson, 
-                                            TString dateDummy, 
+                                            TString namePad,
+                                            Double_t* fPlottingRangeMeson,
+                                            TString dateDummy,
                                             TString fMesonType,
-                                            Int_t fRowPlot, 
-                                            Int_t fColumnPlot, 
-                                            Int_t fStartBinPtRange, 
+                                            Int_t fRowPlot,
+                                            Int_t fColumnPlot,
+                                            Int_t fStartBinPtRange,
                                             Int_t fNumberPtBins,
-                                            Double_t* fRangeBinsPt, 
+                                            Double_t* fRangeBinsPt,
                                             TString fDecayChannel,
-                                            Bool_t fMonteCarloInfo, 
-                                            TString decayChannel, 
+                                            Bool_t fMonteCarloInfo,
+                                            TString decayChannel,
                                             TString fDetectionChannel,
                                             TString fEnergy,
                                             Bool_t isVsPtConv                                   = kFALSE
@@ -4346,7 +4345,7 @@
                 } else {
                     textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
                 }
-                
+
                 Double_t startTextX     = 0.10;
                 Double_t startTextY     = 0.9;
                 Double_t differenceText = textHeight*1.25;
@@ -4373,12 +4372,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4434,22 +4433,22 @@
 
     //________________________________________ Plot Invariant Mass Bin With Secondary Contribution _______________________________
     void PlotInvMassDoubleCountingInPtBins( TH1D** fHistoMappingGGInvMassPtBinPlot,
-                                            TH1D** fHistoMappingDCInvMassPtBinPlot, 
-                                            TString namePlot, 
-                                            TString nameCanvas, 
-                                            TString namePad, 
+                                            TH1D** fHistoMappingDCInvMassPtBinPlot,
+                                            TString namePlot,
+                                            TString nameCanvas,
+                                            TString namePad,
                                             Double_t* fPlottingRangeMeson,
                                             TString dateDummy,
-                                            TString fMesonType,  
+                                            TString fMesonType,
                                             Int_t fRowPlot,
                                             Int_t fColumnPlot,
-                                            Int_t fStartBinPtRange, 
-                                            Int_t fNumberPtBins, 
-                                            Double_t* fRangeBinsPt, 
-                                            TString fDecayChannel, 
-                                            Bool_t fMonteCarloInfo, 
+                                            Int_t fStartBinPtRange,
+                                            Int_t fNumberPtBins,
+                                            Double_t* fRangeBinsPt,
+                                            TString fDecayChannel,
+                                            Bool_t fMonteCarloInfo,
                                             TString decayChannel,
-                                            TString fDetectionChannel, 
+                                            TString fDetectionChannel,
                                             TString fEnergy,
                                             Bool_t isVsPtConv                                = kFALSE
                                         ){
@@ -4522,12 +4521,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4558,8 +4557,8 @@
                                 Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
     //             cout << fHistoMappingDCInvMassPtBinPlot[iPt]->GetNbinsX() << endl;
-                
-                
+
+
             }
         }
         canvasDataSpectra->Print(namePlot.Data());
@@ -4570,22 +4569,22 @@
 
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotInvMassMergedInPtBins( TH1D**      fHistoInvMassPtBinPlot, 
-                                    TString     namePlot, 
-                                    TString     nameCanvas, 
-                                    TString     namePad, 
-                                    Double_t*   fPlottingRangeMeson, 
-                                    TString     dateDummy, 
-                                    TString     fMesonType, 
-                                    Int_t       fRowPlot, 
-                                    Int_t       fColumnPlot, 
-                                    Int_t       fStartBinPtRange, 
-                                    Int_t       fNumberPtBins, 
-                                    Double_t*   fRangeBinsPt, 
-                                    TString     fDecayChannel, 
-                                    Bool_t      fMonteCarloInfo, 
-                                    TString     decayChannel,  
-                                    TString     fDetectionChannel, 
+    void PlotInvMassMergedInPtBins( TH1D**      fHistoInvMassPtBinPlot,
+                                    TString     namePlot,
+                                    TString     nameCanvas,
+                                    TString     namePad,
+                                    Double_t*   fPlottingRangeMeson,
+                                    TString     dateDummy,
+                                    TString     fMesonType,
+                                    Int_t       fRowPlot,
+                                    Int_t       fColumnPlot,
+                                    Int_t       fStartBinPtRange,
+                                    Int_t       fNumberPtBins,
+                                    Double_t*   fRangeBinsPt,
+                                    TString     fDecayChannel,
+                                    Bool_t      fMonteCarloInfo,
+                                    TString     decayChannel,
+                                    TString     fDetectionChannel,
                                     TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -4627,8 +4626,8 @@
                     textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight          = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX     = 0.10;
                 Double_t startTextY     = 0.9;
                 Double_t differenceText = textHeight*1.25;
@@ -4655,12 +4654,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4669,8 +4668,8 @@
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
-            } else {            
+
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -4693,22 +4692,22 @@
     }
 
     //__________________________________________ Plotting all M02 bins _______________________________________________
-    void PlotM02MergedInPtBins(     TH1D**      fHistoM02PtBinPlot, 
-                                    TString     namePlot, 
-                                    TString     nameCanvas, 
-                                    TString     namePad, 
-                                    Double_t*   fPlottingM02Range, 
-                                    TString     dateDummy, 
-                                    TString     fMesonType, 
-                                    Int_t       fRowPlot, 
-                                    Int_t       fColumnPlot, 
-                                    Int_t       fStartBinPtRange, 
-                                    Int_t       fNumberPtBins, 
-                                    Double_t*   fRangeBinsPt, 
-                                    TString     fDecayChannel, 
-                                    Bool_t      fMonteCarloInfo, 
-                                    TString     decayChannel,  
-                                    TString     fDetectionChannel, 
+    void PlotM02MergedInPtBins(     TH1D**      fHistoM02PtBinPlot,
+                                    TString     namePlot,
+                                    TString     nameCanvas,
+                                    TString     namePad,
+                                    Double_t*   fPlottingM02Range,
+                                    TString     dateDummy,
+                                    TString     fMesonType,
+                                    Int_t       fRowPlot,
+                                    Int_t       fColumnPlot,
+                                    Int_t       fStartBinPtRange,
+                                    Int_t       fNumberPtBins,
+                                    Double_t*   fRangeBinsPt,
+                                    TString     fDecayChannel,
+                                    Bool_t      fMonteCarloInfo,
+                                    TString     decayChannel,
+                                    TString     fDetectionChannel,
                                     TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -4750,8 +4749,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -4778,12 +4777,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4792,8 +4791,8 @@
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
-            } else {            
+
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -4819,27 +4818,27 @@
 
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotInvMassMergedMCInPtBins(   TH1D**      fHistoMergedRecPtBinPlot, 
-                                        TH1D**      fHistoMergedValPtBinPlot, 
-                                        TH1D**      fHistoMergedPartConvValPtBinPlot, 
+    void PlotInvMassMergedMCInPtBins(   TH1D**      fHistoMergedRecPtBinPlot,
+                                        TH1D**      fHistoMergedValPtBinPlot,
+                                        TH1D**      fHistoMergedPartConvValPtBinPlot,
                                         TH1D**      fHistoBGPtBinPlot,
                                         TH1D**      fHistoValGammaPtBinPlot,
                                         TH1D**      fHistoValElectronPtBinPlot,
-                                        TString     namePlot, 
-                                        TString     nameCanvas, 
-                                        TString     namePad, 
-                                        Double_t*   fPlottingRangeMeson, 
-                                        TString     dateDummy, 
-                                        TString     fMesonType, 
-                                        Int_t       fRowPlot, 
-                                        Int_t       fColumnPlot, 
-                                        Int_t       fStartBinPtRange, 
-                                        Int_t       fNumberPtBins, 
-                                        Double_t*   fRangeBinsPt, 
-                                        TString     fDecayChannel, 
-                                        Bool_t      fMonteCarloInfo, 
-                                        TString     decayChannel,  
-                                        TString     fDetectionChannel, 
+                                        TString     namePlot,
+                                        TString     nameCanvas,
+                                        TString     namePad,
+                                        Double_t*   fPlottingRangeMeson,
+                                        TString     dateDummy,
+                                        TString     fMesonType,
+                                        Int_t       fRowPlot,
+                                        Int_t       fColumnPlot,
+                                        Int_t       fStartBinPtRange,
+                                        Int_t       fNumberPtBins,
+                                        Double_t*   fRangeBinsPt,
+                                        TString     fDecayChannel,
+                                        Bool_t      fMonteCarloInfo,
+                                        TString     decayChannel,
+                                        TString     fDetectionChannel,
                                         TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -4881,8 +4880,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -4909,12 +4908,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -4931,7 +4930,7 @@
                 if (fHistoValGammaPtBinPlot) nLegend++;
                 if (fHistoValElectronPtBinPlot) nLegend++;
                 if (fHistoBGPtBinPlot) nLegend++;
-                
+
                 TLegend* legend             = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+nLegend)*differenceText);
                 legend->SetTextSize(textHeight);
                 legend->SetTextFont(62);
@@ -4984,9 +4983,9 @@
                         legend->AddEntry(fHistoBGPtBinPlot[iPt],"background","l");
                     }
                 }
-                legend->Draw(); 
-                
-            } else {            
+                legend->Draw();
+
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -5057,22 +5056,22 @@
     }
 
     //__________________________________________ Plotting all M02 bins _______________________________________________
-    void PlotM02ExoticsInEBins(     TH1D**      fHistoM02PtBinPlot, 
-                                    TString     namePlot, 
-                                    TString     nameCanvas, 
-                                    TString     namePad, 
-                                    Double_t*   fPlottingM02Range, 
-                                    TString     dateDummy, 
-                                    TString     fMesonType, 
-                                    Int_t       fRowPlot, 
-                                    Int_t       fColumnPlot, 
-                                    Int_t       fStartBinPtRange, 
-                                    Int_t       fNumberPtBins, 
-                                    Double_t*   fRangeBinsPt, 
-                                    TString     fDecayChannel, 
-                                    Bool_t      fMonteCarloInfo, 
-                                    TString     decayChannel,  
-                                    TString     fDetectionChannel, 
+    void PlotM02ExoticsInEBins(     TH1D**      fHistoM02PtBinPlot,
+                                    TString     namePlot,
+                                    TString     nameCanvas,
+                                    TString     namePad,
+                                    Double_t*   fPlottingM02Range,
+                                    TString     dateDummy,
+                                    TString     fMesonType,
+                                    Int_t       fRowPlot,
+                                    Int_t       fColumnPlot,
+                                    Int_t       fStartBinPtRange,
+                                    Int_t       fNumberPtBins,
+                                    Double_t*   fRangeBinsPt,
+                                    TString     fDecayChannel,
+                                    Bool_t      fMonteCarloInfo,
+                                    TString     decayChannel,
+                                    TString     fDetectionChannel,
                                     TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -5114,8 +5113,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -5142,12 +5141,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -5156,8 +5155,8 @@
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
-            } else {            
+
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -5183,27 +5182,27 @@
 
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotInvMassMergedTrueInPtBins( TH1D**      fHistoMergedValPtBinPlot, 
-                                        TH1D**      fHistoMergedPartConvValPtBinPlot, 
+    void PlotInvMassMergedTrueInPtBins( TH1D**      fHistoMergedValPtBinPlot,
+                                        TH1D**      fHistoMergedPartConvValPtBinPlot,
                                         TH1D**      fHistoPi0ValPtBinPlot,
                                         TH1D**      fHistoPi0PartConvValPtBinPlot,
                                         TH1D**      fHistoEtaValPtBinPlot,
                                         TH1D**      fHistoEtaPartConvValPtBinPlot,
-                                        TString     namePlot, 
-                                        TString     nameCanvas, 
-                                        TString     namePad, 
-                                        Double_t*   fPlottingRangeMeson, 
-                                        TString     dateDummy, 
-                                        TString     fMesonType, 
-                                        Int_t       fRowPlot, 
-                                        Int_t       fColumnPlot, 
-                                        Int_t       fStartBinPtRange, 
-                                        Int_t       fNumberPtBins, 
-                                        Double_t*   fRangeBinsPt, 
-                                        TString     fDecayChannel, 
-                                        Bool_t      fMonteCarloInfo, 
-                                        TString     decayChannel,  
-                                        TString     fDetectionChannel, 
+                                        TString     namePlot,
+                                        TString     nameCanvas,
+                                        TString     namePad,
+                                        Double_t*   fPlottingRangeMeson,
+                                        TString     dateDummy,
+                                        TString     fMesonType,
+                                        Int_t       fRowPlot,
+                                        Int_t       fColumnPlot,
+                                        Int_t       fStartBinPtRange,
+                                        Int_t       fNumberPtBins,
+                                        Double_t*   fRangeBinsPt,
+                                        TString     fDecayChannel,
+                                        Bool_t      fMonteCarloInfo,
+                                        TString     decayChannel,
+                                        TString     fDetectionChannel,
                                         TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -5245,8 +5244,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -5273,12 +5272,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -5287,7 +5286,7 @@
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
+
                 Int_t nLegend               = 0;
                 if (fHistoMergedValPtBinPlot) nLegend++;
                 if (fHistoMergedPartConvValPtBinPlot) nLegend++;
@@ -5295,7 +5294,7 @@
                 if (fHistoPi0PartConvValPtBinPlot) nLegend++;
                 if (fHistoEtaValPtBinPlot) nLegend++;
                 if (fHistoEtaPartConvValPtBinPlot) nLegend++;
-                
+
                 TLegend* legend             = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+nLegend)*differenceText);
                 legend->SetTextSize(textHeight);
                 legend->SetTextFont(62);
@@ -5348,8 +5347,8 @@
                         legend->AddEntry(fHistoEtaPartConvValPtBinPlot[iPt],"merged #eta p. conv","ep");
                     }
                 }
-                legend->Draw(); 
-            } else {            
+                legend->Draw();
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -5420,27 +5419,27 @@
     }
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot, 
-                                        TH1D**      fHistoMergedValPtBinPlot, 
-                                        TH1D**      fHistoMergedPartConvValPtBinPlot, 
+    void PlotM02MergedMCInPtBins(       TH1D**      fHistoMergedRecPtBinPlot,
+                                        TH1D**      fHistoMergedValPtBinPlot,
+                                        TH1D**      fHistoMergedPartConvValPtBinPlot,
                                         TH1D**      fHistoBGPtBinPlot,
                                         TH1D**      fHistoValGammaPtBinPlot,
                                         TH1D**      fHistoValElectronPtBinPlot,
-                                        TString     namePlot, 
-                                        TString     nameCanvas, 
-                                        TString     namePad, 
-                                        Double_t*   fPlottingM02Range, 
-                                        TString     dateDummy, 
-                                        TString     fMesonType, 
-                                        Int_t       fRowPlot, 
-                                        Int_t       fColumnPlot, 
-                                        Int_t       fStartBinPtRange, 
-                                        Int_t       fNumberPtBins, 
-                                        Double_t*   fRangeBinsPt, 
-                                        TString     fDecayChannel, 
-                                        Bool_t      fMonteCarloInfo, 
-                                        TString     decayChannel,  
-                                        TString     fDetectionChannel, 
+                                        TString     namePlot,
+                                        TString     nameCanvas,
+                                        TString     namePad,
+                                        Double_t*   fPlottingM02Range,
+                                        TString     dateDummy,
+                                        TString     fMesonType,
+                                        Int_t       fRowPlot,
+                                        Int_t       fColumnPlot,
+                                        Int_t       fStartBinPtRange,
+                                        Int_t       fNumberPtBins,
+                                        Double_t*   fRangeBinsPt,
+                                        TString     fDecayChannel,
+                                        Bool_t      fMonteCarloInfo,
+                                        TString     decayChannel,
+                                        TString     fDetectionChannel,
                                         TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -5482,8 +5481,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -5510,12 +5509,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -5532,7 +5531,7 @@
                 if (fHistoValGammaPtBinPlot) nLegend++;
                 if (fHistoValElectronPtBinPlot) nLegend++;
                 if (fHistoBGPtBinPlot) nLegend++;
-                
+
                 TLegend* legend             = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+nLegend)*differenceText);
                 legend->SetTextSize(textHeight);
                 legend->SetTextFont(62);
@@ -5585,9 +5584,9 @@
                         legend->AddEntry(fHistoBGPtBinPlot[iPt],"background","l");
                     }
                 }
-                legend->Draw(); 
-                
-            } else {            
+                legend->Draw();
+
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -5658,27 +5657,27 @@
     }
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot, 
-                                        TH1D**      fHistoMergedPartConvValPtBinPlot, 
+    void PlotM02MergedTrueInPtBins(     TH1D**      fHistoMergedValPtBinPlot,
+                                        TH1D**      fHistoMergedPartConvValPtBinPlot,
                                         TH1D**      fHistoPi0ValPtBinPlot,
                                         TH1D**      fHistoPi0PartConvValPtBinPlot,
                                         TH1D**      fHistoEtaValPtBinPlot,
                                         TH1D**      fHistoEtaPartConvValPtBinPlot,
-                                        TString     namePlot, 
-                                        TString     nameCanvas, 
-                                        TString     namePad, 
-                                        Double_t*   fPlottingM02Range, 
-                                        TString     dateDummy, 
-                                        TString     fMesonType, 
-                                        Int_t       fRowPlot, 
-                                        Int_t       fColumnPlot, 
-                                        Int_t       fStartBinPtRange, 
-                                        Int_t       fNumberPtBins, 
-                                        Double_t*   fRangeBinsPt, 
-                                        TString     fDecayChannel, 
-                                        Bool_t      fMonteCarloInfo, 
-                                        TString     decayChannel,  
-                                        TString     fDetectionChannel, 
+                                        TString     namePlot,
+                                        TString     nameCanvas,
+                                        TString     namePad,
+                                        Double_t*   fPlottingM02Range,
+                                        TString     dateDummy,
+                                        TString     fMesonType,
+                                        Int_t       fRowPlot,
+                                        Int_t       fColumnPlot,
+                                        Int_t       fStartBinPtRange,
+                                        Int_t       fNumberPtBins,
+                                        Double_t*   fRangeBinsPt,
+                                        TString     fDecayChannel,
+                                        Bool_t      fMonteCarloInfo,
+                                        TString     decayChannel,
+                                        TString     fDetectionChannel,
                                         TString     fEnergy
                                 ){
         TGaxis::SetMaxDigits(3);
@@ -5720,8 +5719,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -5748,12 +5747,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -5762,7 +5761,7 @@
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
+
                 Int_t nLegend               = 0;
                 if (fHistoMergedValPtBinPlot) nLegend++;
                 if (fHistoMergedPartConvValPtBinPlot) nLegend++;
@@ -5770,7 +5769,7 @@
                 if (fHistoPi0PartConvValPtBinPlot) nLegend++;
                 if (fHistoEtaValPtBinPlot) nLegend++;
                 if (fHistoEtaPartConvValPtBinPlot) nLegend++;
-                
+
                 TLegend* legend = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+nLegend)*differenceText);
                 legend->SetTextSize(textHeight);
                 legend->SetTextFont(62);
@@ -5823,8 +5822,8 @@
                         legend->AddEntry(fHistoEtaPartConvValPtBinPlot[iPt],"merged #eta p. conv","ep");
                     }
                 }
-                legend->Draw(); 
-            } else {            
+                legend->Draw();
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -5895,26 +5894,26 @@
     }
 
     //__________________________________________ Plotting all Invariant Mass bins _______________________________________________
-    void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot, 
+    void PlotM02MergedTruePrimSecInPtBins(      TH1D**      fHistoPi0ValPtBinPlot,
                                                 TH1D**      fHistoPi0PrimValPtBinPlot,
                                                 TH1D**      fHistoPi0SecValPtBinPlot,
                                                 TH1D**      fHistoPi0SecFK0sValPtBinPlot,
                                                 TH1D**      fHistoPi0SecFLambdaValPtBinPlot,
-                                                TString     namePlot, 
-                                                TString     nameCanvas, 
-                                                TString     namePad, 
-                                                Double_t*   fPlottingM02Range, 
-                                                TString     dateDummy, 
-                                                TString     fMesonType, 
-                                                Int_t       fRowPlot, 
-                                                Int_t       fColumnPlot, 
-                                                Int_t       fStartBinPtRange, 
-                                                Int_t       fNumberPtBins, 
-                                                Double_t*   fRangeBinsPt, 
-                                                TString     fDecayChannel, 
-                                                Bool_t      fMonteCarloInfo, 
-                                                TString     decayChannel,  
-                                                TString     fDetectionChannel, 
+                                                TString     namePlot,
+                                                TString     nameCanvas,
+                                                TString     namePad,
+                                                Double_t*   fPlottingM02Range,
+                                                TString     dateDummy,
+                                                TString     fMesonType,
+                                                Int_t       fRowPlot,
+                                                Int_t       fColumnPlot,
+                                                Int_t       fStartBinPtRange,
+                                                Int_t       fNumberPtBins,
+                                                Double_t*   fRangeBinsPt,
+                                                TString     fDecayChannel,
+                                                Bool_t      fMonteCarloInfo,
+                                                TString     decayChannel,
+                                                TString     fDetectionChannel,
                                                 TString     fEnergy
                                         ){
         TGaxis::SetMaxDigits(3);
@@ -5956,8 +5955,8 @@
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
                 } else {
                     textHeight              = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
-                }   
-                
+                }
+
                 Double_t startTextX         = 0.10;
                 Double_t startTextY         = 0.9;
                 Double_t differenceText     = textHeight*1.25;
@@ -5984,12 +5983,12 @@
                 energy->SetTextSize(textHeight);
                 energy->Draw();
 
-                process->SetNDC(); 
+                process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
 
-                detprocess->SetNDC(); 
+                detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
@@ -5998,14 +5997,14 @@
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
+
                 Int_t nLegend               = 0;
                 if (fHistoPi0ValPtBinPlot) nLegend++;
                 if (fHistoPi0PrimValPtBinPlot) nLegend++;
                 if (fHistoPi0SecValPtBinPlot) nLegend++;
                 if (fHistoPi0SecFK0sValPtBinPlot) nLegend++;
                 if (fHistoPi0SecFLambdaValPtBinPlot) nLegend++;
-                
+
                 TLegend* legend             = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+nLegend)*differenceText);
                 legend->SetTextSize(textHeight);
                 legend->SetTextFont(62);
@@ -6051,8 +6050,8 @@
                         legend->AddEntry(fHistoPi0SecFLambdaValPtBinPlot[iPt],"merged sec #pi^{0} f. #Lambda","ep");
                     }
                 }
-                legend->Draw(); 
-            } else {            
+                legend->Draw();
+            } else {
                 padDataSpectra->cd(place);
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
@@ -6125,9 +6124,9 @@
                         Float_t xMax,
                         Int_t bck,
                         Color_t color) {
-        
+
         histo1->GetXaxis()->SetRangeUser(xMin, xMax);
-        
+
         if(XTitle.Length() > 0){
             histo1->SetXTitle(XTitle.Data());
         }
@@ -6217,13 +6216,13 @@
 
     //     cout << textCent.Data() << endl;
         TGaxis::SetMaxDigits(3);
-        
+
         TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
         canvasDataSpectra->SetTopMargin(0.02);
         canvasDataSpectra->SetBottomMargin(0.02);
         canvasDataSpectra->SetRightMargin(0.02);
         canvasDataSpectra->SetLeftMargin(0.02);
-        
+
         TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
         padDataSpectra->SetFillColor(0);
         padDataSpectra->GetFrame()->SetFillColor(0);
@@ -6231,7 +6230,7 @@
         padDataSpectra->SetLogy(1);
         padDataSpectra->Divide(fColumnPlot,fRowPlot);
         padDataSpectra->Draw();
-        
+
         Double_t relWidthLogo;
         if (fMesonType.CompareTo("Pi0") == 0){
             relWidthLogo                            = 0.3;
@@ -6240,20 +6239,20 @@
         }
         Double_t padXWidth                          = 2800/fColumnPlot;
         Double_t padYWidth                          = 1800/fRowPlot;
-        
+
     //     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
-        
+
         Int_t place                                 = 0;
         for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
     //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
             Double_t startPt                        = fRangeBinsPt[iPt];
             Double_t endPt                          = fRangeBinsPt[iPt+1];
-            
+
             place                                   = place + 1;                                    //give the right place in the page
             if (place == fColumnPlot){
                 iPt--;
                 padDataSpectra->cd(place);
-                
+
                 TString textAlice                   = "ALICE performance";
                 TString textEvents;
                 if(fMonteCarloInfo) {
@@ -6261,7 +6260,7 @@
                 } else {
                     textEvents                      = "Data";
                 }
-                
+
                 Double_t nPixels                    = 13;
                 Double_t textHeight                 = 0.08;
                 if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
@@ -6269,48 +6268,48 @@
                 } else {
                     textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
                 }
-                
+
                 Double_t startTextX                 = 0.1;
                 Double_t startTextY                 = 0.9;
                 Double_t differenceText             = textHeight*1.25;
-                
+
                 TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
                 TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
                 TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
                 TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
                 TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
                 TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
-                
+
                 alice->SetNDC();
                 alice->SetTextColor(1);
                 alice->SetTextSize(textHeight*1.3);
                 alice->Draw();
-                
+
                 latexDate->SetNDC();
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-                
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
-                
+
                 process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
-                
+
                 detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
-                
+
                 events->SetNDC();
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
+
                 TLegend* legendData                 = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.)*differenceText);
                 legendData->SetTextSize(textHeight);
                 legendData->SetTextFont(62);
@@ -6332,17 +6331,17 @@
                 int remaining                       = (place-1)%fColumnPlot;
                 if (remaining > 0)  padDataSpectra->cd(place)->SetLeftMargin(0.15);
                 else                padDataSpectra->cd(place)->SetLeftMargin(0.25);
-                
+
                 DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
                             "DCA z (cm)", "dN/dDCA z",
                             -10,10,0);
-                
+
                 DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt],
                                 Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
                                 "DCA z (cm)", "dN/dDCA z",
                                 -10,10,1);
-                
+
                 if (ESDGammaPtDCAzBinsBackB) {
                     DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
                                 Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
@@ -6357,16 +6356,16 @@
     }
 
     void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack, TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent){
-        
+
     //     cout << textCent.Data() << endl;
         TGaxis::SetMaxDigits(3);
-        
+
         TCanvas * canvasDataSpectra                 = new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
         canvasDataSpectra->SetTopMargin(0.02);
         canvasDataSpectra->SetBottomMargin(0.02);
         canvasDataSpectra->SetRightMargin(0.02);
         canvasDataSpectra->SetLeftMargin(0.02);
-        
+
         TPad * padDataSpectra                       = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
         padDataSpectra->SetFillColor(0);
         padDataSpectra->GetFrame()->SetFillColor(0);
@@ -6374,7 +6373,7 @@
         padDataSpectra->SetLogy(1);
         padDataSpectra->Divide(fColumnPlot,fRowPlot);
         padDataSpectra->Draw();
-        
+
         Double_t relWidthLogo;
         if (fMesonType.CompareTo("Pi0") == 0){
             relWidthLogo                            = 0.3;
@@ -6383,20 +6382,20 @@
         }
         Double_t padXWidth                          = 2800/fColumnPlot;
         Double_t padYWidth                          = 1800/fRowPlot;
-        
+
     //     cout<<"fColumnPlot: "<<fColumnPlot<<" fRowPlot: "<<fRowPlot<<endl;
-        
+
         Int_t place                                 = 0;
         for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
     //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
             Double_t startPt                        = fRangeBinsPt[iPt];
             Double_t endPt                          = fRangeBinsPt[iPt+1];
-            
+
             place                                   = place + 1;                                    //give the right place in the page
             if (place == fColumnPlot){
                 iPt--;
                 padDataSpectra->cd(place);
-                
+
                 TString textAlice                   = "ALICE performance";
                 TString textEvents;
                 if(fMonteCarloInfo) {
@@ -6404,7 +6403,7 @@
                 } else {
                     textEvents                      = "Data";
                 }
-                
+
                 Double_t nPixels                    = 13;
                 Double_t textHeight                 = 0.08;
                 if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
@@ -6412,48 +6411,48 @@
                 } else {
                     textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1());
                 }
-                
+
                 Double_t startTextX                 = 0.1;
                 Double_t startTextY                 = 0.9;
                 Double_t differenceText             = textHeight*1.25;
-                
+
                 TLatex *alice                       = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
                 TLatex *latexDate                   = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
                 TLatex *energy                      = new TLatex(startTextX, (startTextY-2.25*differenceText), fCollisionSystem);
                 TLatex *process                     = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
                 TLatex *detprocess                  = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionProcess);
                 TLatex *events                      = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
-                
+
                 alice->SetNDC();
                 alice->SetTextColor(1);
                 alice->SetTextSize(textHeight*1.3);
                 alice->Draw();
-                
+
                 latexDate->SetNDC();
                 latexDate->SetTextColor(1);
                 latexDate->SetTextSize(textHeight);
                 latexDate->Draw();
-                
+
                 energy->SetNDC();
                 energy->SetTextColor(1);
                 energy->SetTextSize(textHeight);
                 energy->Draw();
-                
+
                 process->SetNDC();
                 process->SetTextColor(1);
                 process->SetTextSize(textHeight);
                 process->Draw();
-                
+
                 detprocess->SetNDC();
                 detprocess->SetTextColor(1);
                 detprocess->SetTextSize(textHeight);
                 detprocess->Draw();
-                
+
                 events->SetNDC();
                 events->SetTextColor(1);
                 events->SetTextSize(textHeight);
                 events->Draw();
-                
+
                 TLegend* legendData                 = GetAndSetLegend(startTextX, startTextY-12*differenceText, 4);
                 legendData->SetTextSize(textHeight);
                 legendData->SetTextFont(62);
@@ -6476,19 +6475,19 @@
                 int remaining                       = (place-1)%fColumnPlot;
                 if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
                 else padDataSpectra->cd(place)->SetLeftMargin(0.25);
-                
+
                 DrawDCAzHisto(  ESDGammaPtDCAzBins[iPt],
                             Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
                             "DCA z (cm)", "dN/dDCA z",
                             -10,10,0);
-                
+
                 for (Int_t i = 0; i < 3; i++) {
                     DrawDCAzHisto(  ESDGammaPtDCAzBinsBack[iPt][i],
                                 Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
                                 "DCA z (cm)", "dN/dDCA z",
                                 -10,10,1,backgroundColor[i]);
                 }
-                
+
                 if (ESDGammaPtDCAzBinsBackB) {
                     DrawDCAzHisto(  ESDGammaPtDCAzBinsBackB[iPt],
                                 Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt),
@@ -6504,11 +6503,11 @@
 
     // overloading PlotDCAzInPtBinsWithBack()
     void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
-        
+
         Int_t nPads = fNumberPtBins + 2;
-        
+
         Int_t nColumns  = 2;
-        
+
         for (Int_t i = 0; i < nPads; i++) {
             if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
                 nColumns++;
@@ -6516,18 +6515,18 @@
                 break;
             }
         }
-        
+
         Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
-        
+
         PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
     }
 
     void PlotDCAzInPtBinsWithBack(TH1D** ESDGammaPtDCAzBins, TH1D*** ESDGammaPtDCAzBinsBack,TH1D** ESDGammaPtDCAzBinsBackB, TString namePlot, TString nameCanvas, TString namePad, TString dateDummy, TString fMesonType, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt, TString fDecayChannel, Bool_t fMonteCarloInfo, TString textCent) {
-        
+
         Int_t nPads = fNumberPtBins + 2;
-        
+
         Int_t nColumns  = 2;
-        
+
         for (Int_t i = 0; i < nPads; i++) {
             if (((nColumns+1) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1) - nPads <= (nColumns) * CalculateNumberOfRowsForDCAzPlots(nPads, nColumns) - nPads) || (TMath::Abs(nColumns+1 - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns+1)) < TMath::Abs(nColumns - CalculateNumberOfRowsForDCAzPlots(nPads, nColumns)))) {
                 nColumns++;
@@ -6535,9 +6534,9 @@
                 break;
             }
         }
-        
+
         Int_t nRows = CalculateNumberOfRowsForDCAzPlots(nPads, nColumns);
-        
+
         PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
     }
 
@@ -6547,10 +6546,10 @@
     Int_t CalculateNumberOfRowsForDCAzPlots(Int_t numberOfPads, Int_t numberOfColumns) {
         // this function returns the number of rows
         // for a given number of pads and columns,
-        
+
         Int_t over = 0;
         Int_t rows = 0;
-        
+
         for (Int_t i = 0; i < numberOfPads; i++) {
             if ((numberOfPads + over)%numberOfColumns != 0) {
                 over++;
@@ -6558,7 +6557,7 @@
                 break;
             }
         }
-        
+
         return rows = (numberOfPads + over)/numberOfColumns;
     }
 #endif

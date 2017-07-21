@@ -8,12 +8,12 @@
 
     /************************************************************************************************
     ************************************************************************************************
-    This header contains the functions to plot additional things, like logos and Lines 
+    This header contains the functions to plot additional things, like logos and Lines
     in your histograms
     ************************************************************************************************
     ************************************************************************************************
 
-    The functions are 
+    The functions are
     - DrawAliceLogo
     - DrawAliceLogoOmega
     - DrawAliceLogo1D
@@ -34,12 +34,12 @@
     #include <TH3.h>
 
     /*********************************************************************************************************
-    DrawAliceLogoPi0Performance 
+    DrawAliceLogoPi0Performance
     * will draw you the ALICE Logo as well the text "ALICE Performance", "pp @ 7 TeV" and the date
     which you can hand over
     Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
-    Float_t textSize, 
+    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
+    Float_t textSize,
     TString collisionSystem, Bool_t mcFile
     * float_t startX, float_t startY - give starting Point of Logo
     * float_t widthLogo - gives the width of the logo
@@ -48,46 +48,46 @@
     **********************************************************************************************************
     **********************************************************************************************************/
 
-    void DrawAliceLogoPi0WithPHOSPerformance(   Float_t startTextX, 
-                                                Float_t startTextY, 
-                                                Float_t startPi0TextX, 
+    void DrawAliceLogoPi0WithPHOSPerformance(   Float_t startTextX,
+                                                Float_t startTextY,
+                                                Float_t startPi0TextX,
                                                 Float_t differenceText,
-                                                Float_t startLogoX, 
-                                                Float_t startLogoY, 
-                                                Float_t widthLogo, 
-                                                Float_t textSize, 
+                                                Float_t startLogoX,
+                                                Float_t startLogoY,
+                                                Float_t widthLogo,
+                                                Float_t textSize,
                                                 Float_t nEvents,
-                                                TString collisionSystem, 
-                                                Bool_t mcFile , 
-                                                Bool_t rawData, 
-                                                Bool_t pi0Label, 
+                                                TString collisionSystem,
+                                                Bool_t mcFile ,
+                                                Bool_t rawData,
+                                                Bool_t pi0Label,
                                                 Double_t xLengthCanvas,
                                                 Double_t yLengthCanvas,
                                                 TString date=""){
 
         TString aliceText   = "ALICE Performance";
-        if(rawData) 
+        if(rawData)
             aliceText       = "RAW DATA";
         string processText;
         if(pi0Label){
             processText     = "#pi^{0}";
-        } else { 
-            processText     = "#eta"; 
+        } else {
+            processText     = "#eta";
         }
         string eventsText;
-        if(mcFile){ 
+        if(mcFile){
             eventsText      = "MC";
-        } else { 
+        } else {
             eventsText = "Data";
         }
-        
+
         differenceText      = textSize + 3/yLengthCanvas;
-        
-        Double_t widthLogoPix   = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix  = widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix   = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix  = widthLogoPix/0.73447;
         Double_t totalXLogo     = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo     = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         TLatex *alice           = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *energy          = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process         = new TLatex(startPi0TextX+4.5*textSize, (startTextY+(2*differenceText)), Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str()));
@@ -96,34 +96,34 @@
         TLatex *process4        = new TLatex(startPi0TextX, (startTextY+2*differenceText),"PCM:");
         TLatex *events          = 0x00;
         TLatex *latexDate       = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events              = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
-            if (date.CompareTo("") != 0) 
+            if (date.CompareTo("") != 0)
                 latexDate       = new TLatex(startTextX,startTextY-differenceText,date.Data());
         } else {
-            if (date.CompareTo("") != 0) 
+            if (date.CompareTo("") != 0)
                 latexDate       = new TLatex(startTextX,startTextY,date.Data());
         }
 
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX ,startLogoY ,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
-        
+        }
+
         if (date.CompareTo("") != 0){
             latexDate->SetNDC();
             latexDate->SetTextColor(1);
@@ -133,7 +133,7 @@
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
+
         process2->SetNDC(kTRUE); // <- use NDC coordinate
         process2->SetTextSize(textSize);
         process2->Draw();
@@ -141,11 +141,11 @@
         process3->SetNDC(kTRUE); // <- use NDC coordinate
         process3->SetTextSize(textSize);
         process3->Draw();
-        
+
         process4->SetNDC(kTRUE); // <- use NDC coordinate
         process4->SetTextSize(textSize);
         process4->Draw();
-        
+
 
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
@@ -159,7 +159,7 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
-            
+
         return;
     }
 
@@ -182,7 +182,7 @@
     }
 
     void DrawAliceLogoPi0WithPHOSOnlyPerformance(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                             Float_t textSize, Float_t nEvents,
                             TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, TString date=""){
 
@@ -194,14 +194,14 @@
         string eventsText;
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX+2.5*textSize, (startTextY+(2*differenceText)), Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str()));
@@ -210,7 +210,7 @@
         TLatex *process4 = new TLatex(startPi0TextX, (startTextY+2*differenceText),"PCM:");
         TLatex *events = 0x00;
             TLatex *latexDate = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
             if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY-differenceText,date.Data());
         } else {
@@ -218,24 +218,24 @@
         }
 
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX ,startLogoY ,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
-        
+        }
+
         if (date.CompareTo("") != 0){
             latexDate->SetNDC();
             latexDate->SetTextColor(1);
@@ -245,7 +245,7 @@
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
+
         process2->SetNDC(kTRUE); // <- use NDC coordinate
         process2->SetTextSize(textSize);
         process2->Draw();
@@ -253,11 +253,11 @@
         process3->SetNDC(kTRUE); // <- use NDC coordinate
         process3->SetTextSize(textSize);
         process3->Draw();
-        
+
         process4->SetNDC(kTRUE); // <- use NDC coordinate
         process4->SetTextSize(textSize);
         process4->Draw();
-        
+
 
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
             myPadLogo->SetBorderMode(0);
@@ -271,16 +271,16 @@
             myPadLogo->Draw();  // to take out for not using a logo.
             myPadLogo->cd();
             myAliceLogo->Draw();
-            
+
         return;
     }
 
     void DrawAliceLogoPi0WithPHOSPrelim(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                     Float_t textSize, Float_t nEvents,
                                     TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas){
         cout <<  "ALICE work in progress" << endl;
-        
+
         string aliceText = "ALICE Preliminary";
         if(rawData) aliceText = "RAW DATA";
         string processText;
@@ -289,14 +289,14 @@
         string eventsText;
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX+3.5*textSize, (startTextY+(2*differenceText)), Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str()));
@@ -305,45 +305,45 @@
         TLatex *process3 = new TLatex(startPi0TextX, (startTextY+differenceText),"PHOS:");
         TLatex *process4 = new TLatex(startPi0TextX, (startTextY+2*differenceText),"PCM:");
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX ,startLogoY ,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
-        
+        }
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
+
         process2->SetNDC(kTRUE); // <- use NDC coordinate
         process2->SetTextSize(textSize);
         process2->Draw();
-        
+
         process3->SetNDC(kTRUE); // <- use NDC coordinate
         process3->SetTextSize(textSize);
         process3->Draw();
-        
+
         process4->SetNDC(kTRUE); // <- use NDC coordinate
         process4->SetTextSize(textSize);
         process4->Draw();
-        
-        
+
+
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -356,41 +356,41 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
-        
+
     }
 
     void DrawAliceLogoPi0WithPHOSFinal(Float_t startTextX, Float_t startTextY, Float_t textSize,
                                     TString collisionSystem, Bool_t pi0Label){
         cout <<  "ALICE work in progress" << endl;
-        
+
         TString aliceText = "ALICE";
         TString processText;
         if(pi0Label){processText = "#pi^{0}";}
         else { processText = "#eta";}
-        
+
         Float_t differenceText = 1.15*textSize;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+differenceText),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY),Form("%s, %s", processText.Data(), collisionSystem.Data())); // Bo: this was modified
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
-        energy->Draw();	
+        energy->Draw();
     }
 
 
     void DrawAliceLogoAllMesonsWithPHOSPrelim(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                     Float_t textSize, Float_t nEvents,
                                     TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas){
         cout <<  "ALICE work in progress" << endl;
-        
+
         string aliceText = "ALICE Preliminary";
         if(rawData) aliceText = "RAW DATA";
         string processTextPCM = "#pi^{0}, #eta";
@@ -398,14 +398,14 @@
         string eventsText;
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX+3.5*textSize, (startTextY+(2*differenceText)), Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processTextPCM.c_str()));
@@ -416,49 +416,49 @@
         TLatex *process3 = new TLatex(startPi0TextX, (startTextY+differenceText),"PHOS:");
         TLatex *process4 = new TLatex(startPi0TextX, (startTextY+2*differenceText),"PCM:");
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX ,startLogoY ,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
-        
+        }
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
+
         process2->SetNDC(kTRUE); // <- use NDC coordinate
         process2->SetTextSize(textSize);
         process2->Draw();
-        
+
         process5->SetNDC(kTRUE); // <- use NDC coordinate
         process5->SetTextSize(textSize);
         process5->Draw();
-        
+
         process3->SetNDC(kTRUE); // <- use NDC coordinate
         process3->SetTextSize(textSize);
         process3->Draw();
-        
+
         process4->SetNDC(kTRUE); // <- use NDC coordinate
         process4->SetTextSize(textSize);
         process4->Draw();
-        
-        
+
+
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -471,15 +471,15 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
-        
+
 
     if(pi0Label) pi0Label = kFALSE;
-        
+
     }
 
 
     void DrawAliceLogoPi0WithPHOSPi0EtaPrelim(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                 Float_t textSize, Float_t nEvents,
                                 TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas){
 
@@ -488,7 +488,7 @@
 
 
         cout <<  "ALICE work in progress" << endl;
-        
+
         string aliceText = "ALICE Preliminary";
         if(rawData) aliceText = "RAW DATA";
         string processText;
@@ -496,62 +496,62 @@
         string eventsText;
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX+3.5*textSize, (startTextY+(2*differenceText)), Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str()));
         TLatex *process2 = new TLatex(startPi0TextX+3.5*textSize, (startTextY+differenceText), Form("%s #rightarrow #gamma #gamma",processText.c_str()));
-        
+
         //	TLatex *process3 = new TLatex(startPi0TextX, (startTextY+differenceText),"PHOS/EMCAL:");
         TLatex *process3 = new TLatex(startPi0TextX, (startTextY+differenceText),"PHOS:");
         TLatex *process4 = new TLatex(startPi0TextX, (startTextY+2*differenceText),"PCM:");
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX ,startLogoY ,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
-        
+        }
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
+
         process2->SetNDC(kTRUE); // <- use NDC coordinate
         process2->SetTextSize(textSize);
         process2->Draw();
-        
+
         process3->SetNDC(kTRUE); // <- use NDC coordinate
         process3->SetTextSize(textSize);
         process3->Draw();
-        
+
         process4->SetNDC(kTRUE); // <- use NDC coordinate
         process4->SetTextSize(textSize);
         process4->Draw();
-        
-        
+
+
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -564,11 +564,11 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
-        
+
     }
 
     void DrawAliceLogoPi0EtaPrelim(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                 Float_t textSize, Float_t nEvents,
                                 TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas){
 
@@ -581,44 +581,44 @@
         string eventsText;
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), Form("PCM: %s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str()));
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX ,startLogoY ,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
         }
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
+
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -631,14 +631,14 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
-        
+
     }
 
 
     void DrawAliceLogoPi0Performance(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                             Float_t textSize, Float_t nEvents,
-                            TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, TString date="", 
+                            TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, TString date="",
                             TString centralityLabel = "MinBias", Bool_t dalitz =kFALSE){
         TString aliceText = "ALICE Performance";
         if(rawData) aliceText = "RAW DATA";
@@ -652,9 +652,9 @@
         TString decayChainText;
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         differenceText = textSize + 3/yLengthCanvas;
@@ -664,7 +664,7 @@
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events = 0x00;
             TLatex *latexDate = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
                 events = new TLatex(startTextX,startTextY,Form("%s: %2.1e events, %s",eventsText.c_str(), nEvents, centralityLabel.Data())); // Bo: this was modified
                 if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY-differenceText,date.Data());
         } else {
@@ -672,22 +672,22 @@
         }
 
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
@@ -714,11 +714,11 @@
     }
 
     void DrawAliceLogoPi0PerformanceExtract(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                             Float_t textSize, Float_t nEvents,
-                            TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas,TString date= "",Bool_t dalitz= kFALSE, 
+                            TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas,TString date= "",Bool_t dalitz= kFALSE,
                             TString detectionChannel = ""){
-        
+
     if(startPi0TextX){}
 
         TString aliceText = "ALICE Performance";
@@ -729,19 +729,19 @@
         else { processText = "#eta";}
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
+
         TString decayChainText;
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma",processText.c_str());}
-        
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *latexDate = 0x00;
         if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY+differenceText,date.Data());
@@ -750,12 +750,12 @@
         TLatex *latexDetPro = 0x00;
         if (detectionChannel.CompareTo("") != 0) latexDetPro = new TLatex(startTextX,startTextY-(2*differenceText),detectionChannel.Data());
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY-(3*differenceText),Form("%s: %2.1e events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
 
     // 	TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
@@ -767,12 +767,12 @@
             latexDate->SetTextSize(textSize);
             latexDate->Draw();
         }
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextColor(1);
         process->SetTextSize(textSize);
@@ -784,14 +784,14 @@
             latexDetPro->SetTextSize(textSize);
             latexDetPro->Draw();
         }
-        
-        
-        if (nEvents != 0){ 
+
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
     // 	//myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
     // 	myPadLogo->SetBorderMode(0);
     // 	myPadLogo->SetBorderSize(2);
@@ -807,14 +807,14 @@
     }
 
 
-        
+
     /*********************************************************************************************************
     DrawAliceLogoPi0MC
         * will draw you the ALICE Logo as well the text  "pp @ 7 TeV" and the date
         which you can hand over
         Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-        Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
-        Float_t textSize, 
+        Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
+        Float_t textSize,
         TString collisionSystem, Bool_t mcFile
         * float_t startX, float_t startY - give starting Point of Logo
         * float_t widthLogo - gives the width of the logo
@@ -824,7 +824,7 @@
     **********************************************************************************************************/
 
     void DrawAliceLogoPi0MC(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                        Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                        Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                         Float_t textSize, Float_t nEvents,
                         TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, TString date = "",Bool_t dalitz=kFALSE){
         TString aliceText = "ALICE Performance";
@@ -840,49 +840,49 @@
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
 
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events = 0x00;
         TLatex *latexDate = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
             if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY-differenceText,date.Data());
         } else {
             if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY,date.Data());
         }
-            
-            
+
+
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         //alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
-        
+        }
+
         if (date.CompareTo("") != 0){
             latexDate->SetNDC();
             latexDate->SetTextColor(1);
@@ -901,7 +901,7 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw();
-        
+
     }
 
 
@@ -909,10 +909,10 @@
 
 
     void DrawAliceLogoPi0Preliminary(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                 Float_t textSize, Float_t nEvents,
                             TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, Bool_t dalitz= kFALSE){
-        
+
         string aliceText = "ALICE Preliminary";
         if(rawData) aliceText = "RAW DATA";
         string processText;
@@ -926,41 +926,41 @@
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
 
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -976,10 +976,10 @@
     }
 
     void DrawAliceLogoPi0PreliminaryPbPb(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                 Float_t textSize, Float_t nEvents,
                             TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, Bool_t dalitz= kFALSE){
-        
+
         string aliceText = "ALICE Preliminary";
         if(rawData) aliceText = "RAW DATA";
         string processText;
@@ -993,41 +993,41 @@
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
 
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY), decayChainText.Data());
         TLatex *events = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -1044,10 +1044,10 @@
 
 
     void DrawAliceLogoPi0WorkInProgress(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                 Float_t textSize, Float_t nEvents,
                                 TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, Bool_t dalitz = kFALSE, TString stringCentrality=""){
-        
+
         string aliceText = "ALICE";
         if(rawData) aliceText = "RAW DATA";
         string processText;
@@ -1060,44 +1060,44 @@
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma",processText.c_str());}
 
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events = 0x00;
-        if (nEvents != 0 && stringCentrality.CompareTo("") == 0){ 
+        if (nEvents != 0 && stringCentrality.CompareTo("") == 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         } else if (nEvents != 0 ){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e events %s",eventsText.c_str(), nEvents, stringCentrality.Data())); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -1115,12 +1115,12 @@
 
 
     /*********************************************************************************************************
-    DrawAliceLogoPi0Performance 
+    DrawAliceLogoPi0Performance
     * will draw you the ALICE Logo as well the text "ALICE Performance", "pp @ 7 TeV" and the date
     which you can hand over
     Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
-    Float_t textSize, 
+    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
+    Float_t textSize,
     Bool_t collisionSystem, Bool_t mcFile
     * float_t startX, float_t startY - give starting Point of Logo
     * float_t widthLogo - gives the width of the logo
@@ -1130,15 +1130,15 @@
     **********************************************************************************************************/
 
     void DrawAliceLogoCombined(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                             Float_t textSize, Float_t nEvents,
                         TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, TString date ="", Bool_t dalitz = kFALSE){
 
     if(pi0Label){}
-        
+
         TString aliceText = "ALICE Performance";
         if(rawData) aliceText = "RAW DATA";
-        
+
         string processText = "#pi^{0} and #eta";
         string eventsText;
         if(mcFile){ eventsText = "MC";}
@@ -1148,19 +1148,19 @@
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
 
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
-        
+
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)),decayChainText.Data());
         TLatex *events = 0x00;
         TLatex *latexDate = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
             if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY-differenceText,date.Data());
         } else {
@@ -1168,28 +1168,28 @@
         }
 
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
-        
+
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
         if (date.CompareTo("") != 0){
             latexDate->SetNDC();
             latexDate->SetTextColor(1);
@@ -1214,12 +1214,12 @@
 
 
     /*********************************************************************************************************
-    DrawAliceLogoCombinedMC 
+    DrawAliceLogoCombinedMC
     * will draw you the ALICE Logo as well the text  "pp @ 7 TeV" and the date
     which you can hand over
     Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
-    Float_t textSize, 
+    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
+    Float_t textSize,
     TString collisionSystem, Bool_t mcFile
     * float_t startX, float_t startY - give starting Point of Logo
     * float_t widthLogo - gives the width of the logo
@@ -1229,7 +1229,7 @@
     **********************************************************************************************************/
 
     void DrawAliceLogoCombinedMC(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                            Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                             Float_t textSize, Float_t nEvents,
                             TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, TString date = "",Bool_t dalitz=kFALSE){
 
@@ -1241,50 +1241,50 @@
         string eventsText;
         if(mcFile){ eventsText = "MC";}
         else { eventsText = "Data";}
-        
+
         TString decayChainText;
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
 
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.Data())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events = 0x00;
             TLatex *latexDate = 0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
             if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY-differenceText,date.Data());
         } else {
             if (date.CompareTo("") != 0) latexDate = new TLatex(startTextX,startTextY,date.Data());
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         //alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
         if (date.CompareTo("") != 0){
             latexDate->SetNDC();
             latexDate->SetTextColor(1);
@@ -1311,13 +1311,13 @@
 
 
     void DrawAliceLogoCombinedPreliminary(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                     Float_t textSize, Float_t nEvents,
                                 TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, Bool_t dalitz = kFALSE){
 
     if(pi0Label){}
 
-        
+
         string aliceText = "ALICE Preliminary";
         if(rawData) aliceText = "RAW DATA";
         string processText = "#pi^{0} and #eta";
@@ -1329,41 +1329,41 @@
         if(dalitz){ decayChainText = Form("%s #rightarrow #gamma #gamma^{_{#scale[1.2]{*}}} #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma (#rightarrow e^{+}e^{-}  e^{+}e^{-})",processText.c_str());}
 
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         differenceText = textSize + 3/yLengthCanvas;
-        
+
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events =0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
             events->Draw();
-        }	
+        }
         //myPadLogo->SetFillStyle(2000); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
         myPadLogo->SetBorderSize(2);
@@ -1379,13 +1379,13 @@
     }
 
     void DrawAliceLogoCombinedWorkInProgress(Float_t startTextX, Float_t startTextY, Float_t startPi0TextX, Float_t differenceText,
-                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo, 
+                                    Float_t startLogoX, Float_t startLogoY, Float_t widthLogo,
                                     Float_t textSize, Float_t nEvents,
                                     TString collisionSystem, Bool_t mcFile , Bool_t rawData, Bool_t pi0Label, Double_t xLengthCanvas, Double_t yLengthCanvas, Bool_t dalitz = kFALSE){
 
     if(pi0Label){}
 
-        
+
         string aliceText = "ALICE work in progress";
         if(rawData) aliceText = "RAW DATA";
         string processText = "#pi^{0} and #eta";
@@ -1398,35 +1398,35 @@
         } else { decayChainText = Form("%s #rightarrow #gamma #gamma #rightarrow e^{+}e^{-}  e^{+}e^{-}",processText.c_str());}
 
         differenceText = textSize + 3/yLengthCanvas;
-        
-        Double_t widthLogoPix = xLengthCanvas*widthLogo;	
-        Double_t heightLogoPix= widthLogoPix/0.73447;	
+
+        Double_t widthLogoPix = xLengthCanvas*widthLogo;
+        Double_t heightLogoPix= widthLogoPix/0.73447;
         Double_t totalXLogo = (startLogoX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startLogoY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
         TLatex *alice = new TLatex(startTextX,(startTextY+(2*differenceText)),Form("%s",aliceText.c_str())); // Bo: this was modified
         TLatex *energy = new TLatex(startTextX,(startTextY+differenceText),collisionSystem.Data()); // Bo: this was modified
         TLatex *process = new TLatex(startPi0TextX, (startTextY+(2*differenceText)), decayChainText.Data());
         TLatex *events =0x00;
-        if (nEvents != 0){ 
+        if (nEvents != 0){
             events = new TLatex(startTextX,startTextY,Form("%s: %2.1e  MinBias events",eventsText.c_str(), nEvents)); // Bo: this was modified
         }
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startLogoX,startLogoY,totalXLogo,totalYLogo);
-        
+
         alice->SetNDC();
         alice->SetTextColor(1);
         alice->SetTextSize(textSize);
         alice->Draw();
-        
+
         energy->SetNDC();
         energy->SetTextColor(1);
         energy->SetTextSize(textSize);
         energy->Draw();
-        
+
         process->SetNDC(kTRUE); // <- use NDC coordinate
         process->SetTextSize(textSize);
         process->Draw();
-        
-        if (nEvents != 0){ 
+
+        if (nEvents != 0){
             events->SetNDC();
             events->SetTextColor(1);
             events->SetTextSize(textSize);
@@ -1449,7 +1449,7 @@
 
 
     /*************************************************************************************************
-    DrawAliceLogo draws you the Alice logo + "work in progress" and " ALICE Performance" 
+    DrawAliceLogo draws you the Alice logo + "work in progress" and " ALICE Performance"
     be careful you have to set the path of the alice-logo for 	your system
     * float_t startX, float_t startY - give starting Point of Logo
     * float_t widthLogo - gives the width of the logo
@@ -1458,8 +1458,8 @@
     **************************************************************************************************/
 
     void DrawAliceLogo(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
-        Float_t aliceStartY = startY - textHeight * 1.1;  
+
+        Float_t aliceStartY = startY - textHeight * 1.1;
         TLatex *alice = new TLatex(startX-0.0225,aliceStartY,"ALICE Performance"); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -1467,15 +1467,15 @@
         alice->SetTextSize(textHeight);
         alice->SetLineWidth(2);
         alice->Draw("same");
-        
-        
+
+
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
 
-        
-        Float_t wipStartY = startY - textHeight *(1 + 1.1);           
+
+        Float_t wipStartY = startY - textHeight *(1 + 1.1);
         TLatex *wip = new TLatex((startX-0.011),wipStartY,"work in progress"); // Bo: this was modified
         wip->SetNDC();
         wip->SetTextColor(1);
@@ -1483,7 +1483,7 @@
         wip->SetTextSize(textHeight);
         wip->SetLineWidth(2);
         wip->Draw("same");
-        
+
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startX,startY,totalXLogo,totalYLogo);
         //  myPadLogo->SetFillColor(2); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
@@ -1497,11 +1497,11 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
-        
+
     }
 
     /*************************************************************************************************
-    DrawAliceLogo1D draws you the Alice logo + "work in progress" and " ALICE Performance" 
+    DrawAliceLogo1D draws you the Alice logo + "work in progress" and " ALICE Performance"
     be careful you have to set the path of the alice-logo for 	your system
     * float_t startX, float_t startY - give starting Point of Logo
     * float_t widthLogo - gives the width of the logo
@@ -1510,8 +1510,8 @@
     **************************************************************************************************/
 
     void DrawAliceLogo1D(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
-        Float_t aliceStartY = startY - textHeight * 1.1;  
+
+        Float_t aliceStartY = startY - textHeight * 1.1;
         TLatex *alice = new TLatex(startX+0.008,aliceStartY,"ALICE Performance"); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -1519,13 +1519,13 @@
         alice->SetTextSize(textHeight);
         alice->SetLineWidth(2);
         alice->Draw("same");
-        
+
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
 
-        Float_t wipStartY = startY - textHeight *(1 + 1.1);           
+        Float_t wipStartY = startY - textHeight *(1 + 1.1);
         TLatex *wip = new TLatex((startX+0.022),wipStartY,"work in progress"); // Bo: this was modified
         wip->SetNDC();
         wip->SetTextColor(1);
@@ -1533,7 +1533,7 @@
         wip->SetTextSize(textHeight);
         wip->SetLineWidth(2);
         wip->Draw("same");
-        
+
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startX,startY,totalXLogo,totalYLogo);
         //  myPadLogo->SetFillColor(2); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
@@ -1551,7 +1551,7 @@
 
 
     /*********************************************************************************************************
-    DrawAliceLogoPerformance 
+    DrawAliceLogoPerformance
     * will draw you the ALICE Logo as well the text "ALICE Performance", "pp @ 7 TeV" and the date
     which you can hand over
     * float_t startX, float_t startY - give starting Point of Logo
@@ -1562,9 +1562,9 @@
     **********************************************************************************************************/
 
     void DrawAliceLogoPerformance(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Float_t decrease, TString date, TString collisionSystem, TString textGenerator, TString textPeriod, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
+
         TString ALICEPerform = "ALICE Performance";
-        Float_t aliceStartY = startY - textHeight * 1.15;  
+        Float_t aliceStartY = startY - textHeight * 1.15;
         TLatex *alice = new TLatex((startX-decrease),aliceStartY,ALICEPerform); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -1580,7 +1580,7 @@
         }
         pp7->SetNDC();
         pp7->SetTextColor(1);
-        pp7->SetTextFont(62);	
+        pp7->SetTextFont(62);
         pp7->SetTextSize(textHeight);
         pp7->SetLineWidth(2);
         pp7->Draw("same");
@@ -1598,7 +1598,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         } else if (textGenerator.CompareTo("")!=0) {
             TLatex *generator = new TLatex((startX+decrease),(aliceStartY-3*textHeight*1.15),Form("%s",textGenerator.Data())); // Bo: this was modified
             generator->SetNDC();
@@ -1606,7 +1606,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         }
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
@@ -1626,12 +1626,12 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
-        
+
     }
 
     void DrawLabelsEvents(Float_t startX, Float_t startY, Float_t textHeight, Float_t decrease,  TString collisionSystem, TString textGenerator, TString textPeriod){
-        
-        Float_t aliceStartY = startY - textHeight * 1.15;  
+
+        Float_t aliceStartY = startY - textHeight * 1.15;
         TLatex *pp7 = NULL;
         if( collisionSystem.CompareTo("PbPb @ #sqrt{#it{s}_{_{NN}}} = 2.76 TeV") == 0){
             pp7 = new TLatex((startX-2*decrease),(aliceStartY),collisionSystem.Data()); // Bo: this was modified
@@ -1640,7 +1640,7 @@
         }
         pp7->SetNDC();
         pp7->SetTextColor(1);
-        pp7->SetTextFont(62);	
+        pp7->SetTextFont(62);
         pp7->SetTextSize(textHeight);
         pp7->SetLineWidth(2);
         pp7->Draw("same");
@@ -1651,7 +1651,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         } else if (textGenerator.CompareTo("")!=0) {
             TLatex *generator = new TLatex((startX+decrease),(aliceStartY-1*textHeight*1.15),Form("%s",textGenerator.Data())); // Bo: this was modified
             generator->SetNDC();
@@ -1659,7 +1659,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         }
     }
 
@@ -1667,7 +1667,7 @@
 
 
     /*********************************************************************************************************
-    DrawAliceLogoMC 
+    DrawAliceLogoMC
     * will draw you the ALICE Logo as well the text  "pp @ 7 TeV" and the date
     which you can hand over
     * float_t startX, float_t startY - give starting Point of Logo
@@ -1678,8 +1678,8 @@
     **********************************************************************************************************/
 
     void DrawAliceLogoMC(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Float_t decrease, TString date,TString collisionSystem, TString textGenerator, TString textPeriod, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
-        Float_t aliceStartY = startY - textHeight * 1.1;  
+
+        Float_t aliceStartY = startY - textHeight * 1.1;
         TLatex *alice = new TLatex((startX-decrease),aliceStartY,"ALICE Performance"); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -1690,7 +1690,7 @@
         TLatex *pp7 = new TLatex((startX+2*decrease),(aliceStartY-textHeight*1.1),collisionSystem.Data()); // Bo: this was modified
         pp7->SetNDC();
         pp7->SetTextColor(1);
-        pp7->SetTextFont(62);	
+        pp7->SetTextFont(62);
         pp7->SetTextSize(textHeight);
         pp7->SetLineWidth(2);
         pp7->Draw("same");
@@ -1708,7 +1708,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         } else if (textGenerator.CompareTo("")!=0) {
             TLatex *generator = new TLatex((startX+1*decrease),(aliceStartY-3*textHeight*1.1),Form("%s",textGenerator.Data())); // Bo: this was modified
             generator->SetNDC();
@@ -1716,15 +1716,15 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         }
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startY*yLengthCanvas - heightLogoPix)/yLengthCanvas;
 
-        
-        
+
+
         TPad *myPadLogo = new TPad("myPadLogo", "Pad for ALICE Logo",startX,startY,totalXLogo,totalYLogo);
         //  myPadLogo->SetFillColor(2); // color to first figure out where is the pad then comment !
         myPadLogo->SetBorderMode(0);
@@ -1738,32 +1738,32 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
-        
+
     }
 
 
     /*********************************************************************************************************
-    DrawAliceLogoPerformance2D 
+    DrawAliceLogoPerformance2D
     * will draw you the ALICE Logo as well the text "ALICE Performance", "pp @ 7 TeV" and the date
     which you can hand over
     * float_t startX, float_t startY - give starting Point of Logo
     * float_t widthLogo - gives the width of the logo
     * float_t textHeight - gives you the heigth of the text
-    * float_t decrease - gives percentage in the canvas to which the text should be decreased in y 
+    * float_t decrease - gives percentage in the canvas to which the text should be decreased in y
     compared to the logo
     * char * date - date handed over
     **********************************************************************************************************
     **********************************************************************************************************/
 
     void DrawAliceLogoPerformance2D(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Float_t decrease, TString date, TString collisionSystem, TString textGenerator, TString textPeriod, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
-        
+
+
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startY*yLengthCanvas - heightLogoPix)/yLengthCanvas;
 
-        Float_t aliceStartY = totalYLogo - 0.03;  
+        Float_t aliceStartY = totalYLogo - 0.03;
         TLatex *alice = new TLatex((startX-2*decrease),aliceStartY,"ALICE Performance"); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -1774,7 +1774,7 @@
         TLatex *pp7 = new TLatex((startX-decrease),(aliceStartY-textHeight*1.1),collisionSystem.Data()); // Bo: this was modified
         pp7->SetNDC();
         pp7->SetTextColor(1);
-        pp7->SetTextFont(62);	
+        pp7->SetTextFont(62);
         pp7->SetTextSize(textHeight);
         pp7->SetLineWidth(2);
         pp7->Draw("same");
@@ -1792,7 +1792,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         } else if (textGenerator.CompareTo("")!=0) {
             TLatex *generator = new TLatex((startX-2*decrease),(aliceStartY-3*textHeight*1.1),Form("%s",textGenerator.Data())); // Bo: this was modified
             generator->SetNDC();
@@ -1800,7 +1800,7 @@
             generator->SetTextFont(62);
             generator->SetTextSize(textHeight);
             generator->SetLineWidth(2);
-            generator->Draw("same");	
+            generator->Draw("same");
         }
 
 
@@ -1817,19 +1817,19 @@
         myPadLogo->Draw();  // to take out for not using a logo.
         myPadLogo->cd();
         myAliceLogo->Draw("same");
-        
+
     }
 
 
     //***********************************************************************************************************
-    //* DrawAliceText draws you the "work in progress" and " ALICE Performance" 
+    //* DrawAliceText draws you the "work in progress" and " ALICE Performance"
     //* float_t startX, float_t startY - give starting Point of Logo
     //* float_t textHeight - gives you the heigth of the text
     //***********************************************************************************************************
     //***********************************************************************************************************
 
     void DrawAliceText(Float_t startX, Float_t startY, Float_t textHeight){
-        Float_t aliceStartY = startY - textHeight * 1.1;  
+        Float_t aliceStartY = startY - textHeight * 1.1;
         TLatex *alice = new TLatex(startX,aliceStartY,"ALICE Performance"); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -1837,8 +1837,8 @@
         alice->SetTextSize(textHeight);
         alice->SetLineWidth(2);
         alice->Draw();
-        
-        Float_t wipStartY = startY - textHeight *(1 + 1.1);           
+
+        Float_t wipStartY = startY - textHeight *(1 + 1.1);
         TLatex *wip = new TLatex(startX,wipStartY,"work in progress"); // Bo: this was modified
         wip->SetNDC();
         wip->SetTextColor(1);
@@ -1848,7 +1848,7 @@
         wip->Draw();
     }
 
-    /***************************************************************************************************** 
+    /*****************************************************************************************************
     DrawStructure() draws the structure of the Inner Alice Detectors labeled for a xy - Plot
     ******************************************************************************************************
     ******************************************************************************************************/
@@ -1860,133 +1860,133 @@
         ssdText->SetTextSize(0.03);
         ssdText->SetLineWidth(4);
         ssdText->Draw();
-        
+
         TLatex *sddText = new TLatex(0.14,0.78,"SDD");
         sddText->SetNDC();
         sddText->SetTextFont(72);
         sddText->SetTextSize(0.03);
         sddText->SetLineWidth(4);
         sddText->Draw();
-        
+
         TLatex *spdText = new TLatex(0.14,0.27,"SPD");
         spdText->SetNDC();
         spdText->SetTextFont(72);
         spdText->SetTextSize(0.03);
         spdText->SetLineWidth(4);
         spdText->Draw();
-        
+
         TLatex *tpcRText = new TLatex(0.52,0.095,"TPC Rods");
         tpcRText->SetNDC();
         tpcRText->SetTextFont(72);
         tpcRText->SetTextSize(0.03);
         tpcRText->SetLineWidth(4);
         tpcRText->Draw();
-        
+
         TLatex *tpcIText = new TLatex(0.14,0.18,"TPC inner");
         tpcIText->SetNDC();
         tpcIText->SetTextFont(72);
         tpcIText->SetTextSize(0.03);
         tpcIText->SetLineWidth(4);
         tpcIText->Draw();
-        
+
         TLatex *tpcIFText = new TLatex(0.14,0.15,"field cage");
         tpcIFText->SetNDC();
         tpcIFText->SetTextFont(72);
         tpcIFText->SetTextSize(0.03);
         tpcIFText->SetLineWidth(4);
         tpcIFText->Draw();
-        
+
         TLatex *tpcIFVText = new TLatex(0.16,0.12,"vessel");
         tpcIFVText->SetNDC();
         tpcIFVText->SetTextFont(72);
         tpcIFVText->SetTextSize(0.03);
         tpcIFVText->SetLineWidth(4);
         tpcIFVText->Draw();
-        
+
         TLatex *tpc1IText = new TLatex(0.705,0.18,"TPC inner");
         tpc1IText->SetNDC();
         tpc1IText->SetTextFont(72);
         tpc1IText->SetTextSize(0.03);
         tpc1IText->SetLineWidth(4);
         tpc1IText->Draw();
-        
+
         TLatex *tpcICText = new TLatex(0.69,0.15,"containment");
         tpcICText->SetNDC();
         tpcICText->SetTextFont(72);
         tpcICText->SetTextSize(0.03);
         tpcICText->SetLineWidth(4);
         tpcICText->Draw();
-        
+
         TLatex *tpcICVText = new TLatex(0.72,0.12,"vessel");
         tpcICVText->SetNDC();
         tpcICVText->SetTextFont(72);
         tpcICVText->SetTextSize(0.03);
         tpcICVText->SetLineWidth(10);
         tpcICVText->Draw();
-        
+
         TLatex *tpcGasText = new TLatex(0.79,0.30,"TPC");
         tpcGasText->SetNDC();
         tpcGasText->SetTextFont(72);
         tpcGasText->SetTextSize(0.03);
         tpcGasText->SetLineWidth(10);
         tpcGasText->Draw();
-        
+
         TLatex *tpcGas2Text = new TLatex(0.77,0.27,"drift gas");
         tpcGas2Text->SetNDC();
         tpcGas2Text->SetTextFont(72);
         tpcGas2Text->SetTextSize(0.03);
         tpcGas2Text->SetLineWidth(10);
         tpcGas2Text->Draw();
-        
-        
+
+
         TArrow *arrow = new TArrow(-150.8049,145.,-11.99843,38.629599,0.02,">"); //SSD arrow
         arrow->SetFillColor(1);
         arrow->SetFillStyle(1001);
         arrow->SetLineWidth(2.);
         arrow->Draw();
-        
+
         TArrow *arrow1 = new TArrow(-160.,105.,-11.99843,25.,0.02,">"); //SDD arrow
         arrow1->SetFillColor(1);
         arrow1->SetFillStyle(1001);
         arrow1->SetLineWidth(2.);
         arrow1->Draw();
-        
-        
+
+
         TArrow *arrow2 = new TArrow(-150,-108.,-7.,2.,0.02,">");  //SPD arrow
         arrow2->SetFillColor(1);
         arrow2->SetFillStyle(1001);
         arrow2->SetLineWidth(2.);
         arrow2->Draw();
-        
+
         TArrow *arrow3 = new TArrow(-105.,-160.,-30.,-75.,0.02,">"); //TPC field cage vessel arrow
         arrow3->SetFillColor(1);
         arrow3->SetFillStyle(1001);
         arrow3->SetLineWidth(2.);
         arrow3->Draw();
-        
-        
+
+
         TArrow *arrow4 = new TArrow(50.,-178.,15.,-88.,0.02,">"); //TPC rods arrow
         arrow4->SetFillColor(1);
         arrow4->SetFillStyle(1001);
         arrow4->SetLineWidth(2.);
         arrow4->Draw();
-        
+
         TArrow *arrow5 = new TArrow(130.,-130.,50.,-38.,0.02,">");// TPC inner constainment vessel arrow
         arrow5->SetFillColor(1);
         arrow5->SetFillStyle(1001);
         arrow5->SetLineWidth(2.);
         arrow5->Draw();
-        
-        
+
+
         TArrow *arrow6 = new TArrow(160.,-90.,130.,-70.,0.02,">");// TPC gas
         arrow6->SetFillColor(1);
         arrow6->SetFillStyle(1001);
         arrow6->SetLineWidth(2.);
         arrow6->Draw();
-        
+
     }
 
-    /***************************************************************************************************** 
+    /*****************************************************************************************************
     DrawStructure() draws the structure of the Inner Alice Detectors labeled for a xy - Plot
     ******************************************************************************************************
     ******************************************************************************************************/
@@ -1999,7 +1999,7 @@
         ssdText->SetTextSize(0.03);
         ssdText->SetLineWidth(4);
         ssdText->Draw();
-        
+
         TLatex *sddText = new TLatex(0.14,0.78,"SDD");
         sddText->SetTextColor(800);
         sddText->SetNDC();
@@ -2007,7 +2007,7 @@
         sddText->SetTextSize(0.03);
         sddText->SetLineWidth(4);
         sddText->Draw();
-        
+
         TLatex *spdText = new TLatex(0.14,0.27,"SPD");
         spdText->SetTextColor(800);
         spdText->SetNDC();
@@ -2015,7 +2015,7 @@
         spdText->SetTextSize(0.03);
         spdText->SetLineWidth(4);
         spdText->Draw();
-        
+
         TLatex *tpcRText = new TLatex(0.52,0.095,"TPC Rods");
         tpcRText->SetTextColor(800);
         tpcRText->SetNDC();
@@ -2023,7 +2023,7 @@
         tpcRText->SetTextSize(0.03);
         tpcRText->SetLineWidth(4);
         tpcRText->Draw();
-        
+
         TLatex *tpcIText = new TLatex(0.14,0.18,"TPC inner");
         tpcIText->SetTextColor(800);
         tpcIText->SetNDC();
@@ -2031,7 +2031,7 @@
         tpcIText->SetTextSize(0.03);
         tpcIText->SetLineWidth(4);
         tpcIText->Draw();
-        
+
         TLatex *tpcIFText = new TLatex(0.14,0.15,"field cage");
         tpcIFText->SetTextColor(800);
         tpcIFText->SetNDC();
@@ -2039,7 +2039,7 @@
         tpcIFText->SetTextSize(0.03);
         tpcIFText->SetLineWidth(4);
         tpcIFText->Draw();
-        
+
         TLatex *tpcIFVText = new TLatex(0.16,0.12,"vessel");
         tpcIFVText->SetTextColor(800);
         tpcIFVText->SetNDC();
@@ -2047,7 +2047,7 @@
         tpcIFVText->SetTextSize(0.03);
         tpcIFVText->SetLineWidth(4);
         tpcIFVText->Draw();
-        
+
         TLatex *tpc1IText = new TLatex(0.705,0.18,"TPC inner");
         tpc1IText->SetTextColor(800);
         tpc1IText->SetNDC();
@@ -2055,7 +2055,7 @@
         tpc1IText->SetTextSize(0.03);
         tpc1IText->SetLineWidth(4);
         tpc1IText->Draw();
-        
+
         TLatex *tpcICText = new TLatex(0.69,0.15,"containment");
         tpcICText->SetTextColor(800);
         tpcICText->SetNDC();
@@ -2063,7 +2063,7 @@
         tpcICText->SetTextSize(0.03);
         tpcICText->SetLineWidth(4);
         tpcICText->Draw();
-        
+
         TLatex *tpcICVText = new TLatex(0.72,0.12,"vessel");
         tpcICVText->SetTextColor(800);
         tpcICVText->SetNDC();
@@ -2071,7 +2071,7 @@
         tpcICVText->SetTextSize(0.03);
         tpcICVText->SetLineWidth(10);
         tpcICVText->Draw();
-        
+
         TLatex *tpcGasText = new TLatex(0.79,0.30,"TPC");
         tpcGasText->SetTextColor(800);
         tpcGasText->SetNDC();
@@ -2079,7 +2079,7 @@
         tpcGasText->SetTextSize(0.03);
         tpcGasText->SetLineWidth(10);
         tpcGasText->Draw();
-        
+
         TLatex *tpcGas2Text = new TLatex(0.77,0.27,"drift gas");
         tpcGas2Text->SetTextColor(800);
         tpcGas2Text->SetNDC();
@@ -2087,60 +2087,60 @@
         tpcGas2Text->SetTextSize(0.03);
         tpcGas2Text->SetLineWidth(10);
         tpcGas2Text->Draw();
-        
-        
+
+
         TArrow *arrow = new TArrow(-82.,90.,-11.99843,38.629599,0.02,">"); //SSD arrow
         arrow->SetLineColor(kBlack);
-        arrow->SetFillColor(kBlack);	
+        arrow->SetFillColor(kBlack);
         arrow->SetFillStyle(1001);
         arrow->SetLineWidth(2.);
         arrow->Draw();
-        
+
         TArrow *arrow1 = new TArrow(-90.,65.,-11.99843,25.,0.02,">"); //SDD arrow
         arrow1->SetLineColor(kBlack);
         arrow1->SetFillColor(kBlack);
         arrow1->SetFillStyle(1001);
         arrow1->SetLineWidth(2.);
         arrow1->Draw();
-        
-        
+
+
         TArrow *arrow2 = new TArrow(-90.,-65.,-7.,2.,0.02,">");  //SPD arrow
         arrow2->SetLineColor(kBlack);
         arrow2->SetFillColor(kBlack);
         arrow2->SetFillStyle(1001);
         arrow2->SetLineWidth(2.);
         arrow2->Draw();
-        
+
         TArrow *arrow3 = new TArrow(-70.,-100.,-30.,-75.,0.02,">"); //TPC field cage vessel arrow
         arrow3->SetLineColor(kBlack);
         arrow3->SetFillColor(kBlack);
         arrow3->SetFillStyle(1001);
         arrow3->SetLineWidth(2.);
         arrow3->Draw();
-        
-        
+
+
         TArrow *arrow4 = new TArrow(20.,-110.,15.,-83.,0.02,">"); //TPC rods arrow
         arrow4->SetLineColor(kBlack);
         arrow4->SetFillColor(kBlack);
         arrow4->SetFillStyle(1001);
         arrow4->SetLineWidth(2.);
         arrow4->Draw();
-        
+
         TArrow *arrow5 = new TArrow(80.,-85.,50.,-38.,0.02,">");// TPC inner constainment vessel arrow
         arrow5->SetLineColor(kBlack);
         arrow5->SetFillColor(kBlack);
         arrow5->SetFillStyle(1001);
         arrow5->SetLineWidth(2.);
         arrow5->Draw();
-        
-        
+
+
         TArrow *arrow6 = new TArrow(100.,-50.,90.,-10.,0.02,">");// TPC gas
         arrow6->SetLineColor(kBlack);
         arrow6->SetFillColor(kBlack);
         arrow6->SetFillStyle(1001);
         arrow6->SetLineWidth(2.);
         arrow6->Draw();
-        
+
     }
 
 
@@ -2151,150 +2151,150 @@
         ssdText->SetTextSize(0.03);
         ssdText->SetLineWidth(4);
         ssdText->Draw();
-        
+
         TLatex *sddText = new TLatex(0.14,0.17,"SDD");
         sddText->SetNDC();
         sddText->SetTextFont(72);
         sddText->SetTextSize(0.03);
         sddText->SetLineWidth(4);
         sddText->Draw();
-        
+
         TLatex *spdText = new TLatex(0.14,0.12,"SPD & Beam pipe");
         spdText->SetNDC();
         spdText->SetTextFont(72);
         spdText->SetTextSize(0.03);
         spdText->SetLineWidth(4);
         spdText->Draw();
-        
+
         TLatex *tpcRText = new TLatex(0.14,0.53,"TPC Rods");
         tpcRText->SetNDC();
         tpcRText->SetTextFont(72);
         tpcRText->SetTextSize(0.03);
         tpcRText->SetLineWidth(4);
         tpcRText->Draw();
-        
+
         TLatex *tpcIText = new TLatex(0.14,0.45,"TPC inner field");
         tpcIText->SetNDC();
         tpcIText->SetTextFont(72);
         tpcIText->SetTextSize(0.03);
         tpcIText->SetLineWidth(4);
         tpcIText->Draw();
-        
+
         TLatex *tpcIFVText = new TLatex(0.14,0.42,"cage vessel");
         tpcIFVText->SetNDC();
         tpcIFVText->SetTextFont(72);
         tpcIFVText->SetTextSize(0.03);
         tpcIFVText->SetLineWidth(4);
         tpcIFVText->Draw();
-        
+
         TLatex *tpc1IText = new TLatex(0.14,0.35,"TPC inner");
         tpc1IText->SetNDC();
         tpc1IText->SetTextFont(72);
         tpc1IText->SetTextSize(0.03);
         tpc1IText->SetLineWidth(4);
         tpc1IText->Draw();
-        
+
         TLatex *tpcICText = new TLatex(0.14,0.32,"containment vessel");
         tpcICText->SetNDC();
         tpcICText->SetTextFont(72);
         tpcICText->SetTextSize(0.03);
         tpcICText->SetLineWidth(4);
         tpcICText->Draw();
-        
+
         TLatex *tpcGasText = new TLatex(0.14,0.7,"TPC");
         tpcGasText->SetNDC();
         tpcGasText->SetTextFont(72);
         tpcGasText->SetTextSize(0.03);
         tpcGasText->SetLineWidth(10);
         tpcGasText->Draw();
-        
+
         TLatex *tpcGas2Text = new TLatex(0.14,0.67,"drift gas");
         tpcGas2Text->SetNDC();
         tpcGas2Text->SetTextFont(72);
         tpcGas2Text->SetTextSize(0.03);
         tpcGas2Text->SetLineWidth(10);
         tpcGas2Text->Draw();
-        
+
         TLatex *tpcMebText = new TLatex(0.70,0.54,"TPC central ");
         tpcMebText->SetNDC();
         tpcMebText->SetTextFont(72);
         tpcMebText->SetTextSize(0.03);
         tpcMebText->SetLineWidth(10);
         tpcMebText->Draw();
-        
+
         TLatex *tpcMeb2Text = new TLatex(0.72,0.51,"electrode");
         tpcMeb2Text->SetNDC();
         tpcMeb2Text->SetTextFont(72);
         tpcMeb2Text->SetTextSize(0.03);
         tpcMeb2Text->SetLineWidth(10);
         tpcMeb2Text->Draw();
-        
-        
-        
+
+
+
         TArrow *arrow = new TArrow(-90.,10.,-10,4.,0.02,">"); //SPD arrow
         arrow->SetFillColor(1);
         arrow->SetFillStyle(1001);
         arrow->SetLineWidth(2.);
         arrow->Draw();
-        
+
         TArrow *arrow1 = new TArrow(-180.,22.,-27,15.,0.02,">"); //SDD1 arrow
         arrow1->SetFillColor(1);
         arrow1->SetFillStyle(1001);
         arrow1->SetLineWidth(2.);
         arrow1->Draw();
-        
-        
+
+
         TArrow *arrow2 = new TArrow(-180,22.,-25.,25.,0.02,">");  //SDD2 arrow
         arrow2->SetFillColor(1);
         arrow2->SetFillStyle(1001);
         arrow2->SetLineWidth(2.);
         arrow2->Draw();
-        
-        TArrow *arrow3 = new TArrow(-150.,40.,-35.,40.,0.02,">"); //SSD1 arrow 
+
+        TArrow *arrow3 = new TArrow(-150.,40.,-35.,40.,0.02,">"); //SSD1 arrow
         arrow3->SetFillColor(1);
         arrow3->SetFillStyle(1001);
         arrow3->SetLineWidth(2.);
         arrow3->Draw();
-        
-        
+
+
         TArrow *arrow4 = new TArrow(-150.,40.,-45.,45.,0.02,">"); //SSD2 arrow
         arrow4->SetFillColor(1);
         arrow4->SetFillStyle(1001);
         arrow4->SetLineWidth(2.);
         arrow4->Draw();
-        
+
         TArrow *arrow5 = new TArrow(-100.,60.,-60.,62.,0.02,">");// TPC inner containment vessel arrow
         arrow5->SetFillColor(1);
         arrow5->SetFillStyle(1001);
         arrow5->SetLineWidth(2.);
         arrow5->Draw();
-        
-        
+
+
         TArrow *arrow6 = new TArrow(-120.,80.,-80.,80.,0.02,">");// TPC inner field cage vessel
         arrow6->SetFillColor(1);
         arrow6->SetFillStyle(1001);
         arrow6->SetLineWidth(2.);
         arrow6->Draw();
-        
+
         TArrow *arrow7 = new TArrow(-150.,100.,-67.,82.5,0.02,">");// TPC rods
         arrow7->SetFillColor(1);
         arrow7->SetFillStyle(1001);
         arrow7->SetLineWidth(2.);
         arrow7->Draw();
-        
+
         TArrow *arrow8 = new TArrow(-150.,135.,-100.,140.,0.02,">");// TPC gas
         arrow8->SetFillColor(1);
         arrow8->SetFillStyle(1001);
         arrow8->SetLineWidth(2.);
         arrow8->Draw();
-        
+
         TArrow *arrow9 = new TArrow(130.,100.,2.,110.,0.02,">");// TPC gas
         arrow9->SetFillColor(1);
         arrow9->SetFillStyle(1001);
         arrow9->SetLineWidth(2.);
         arrow9->Draw();
-        
-        
+
+
     }
 
     void DrawStructureZRNew(){
@@ -2304,158 +2304,158 @@
         ssdText->SetTextSize(0.03);
         ssdText->SetLineWidth(4);
         ssdText->Draw();
-        
+
         TLatex *sddText = new TLatex(0.13,0.24,"SDD");
         sddText->SetNDC();
         sddText->SetTextFont(72);
         sddText->SetTextSize(0.03);
         sddText->SetLineWidth(4);
         sddText->Draw();
-        
+
         TLatex *spdText = new TLatex(0.13,0.12,"SPD & Beam pipe");
         spdText->SetNDC();
         spdText->SetTextFont(72);
         spdText->SetTextSize(0.03);
         spdText->SetLineWidth(4);
         spdText->Draw();
-        
+
         TLatex *tpcRText = new TLatex(0.13,0.85,"TPC Rods");
         tpcRText->SetNDC();
         tpcRText->SetTextFont(72);
         tpcRText->SetTextSize(0.03);
         tpcRText->SetLineWidth(4);
         tpcRText->Draw();
-        
+
         TLatex *tpcIText = new TLatex(0.13,0.74,"TPC inner field");
         tpcIText->SetNDC();
         tpcIText->SetTextFont(72);
         tpcIText->SetTextSize(0.03);
         tpcIText->SetLineWidth(4);
         tpcIText->Draw();
-        
+
         TLatex *tpcIFVText = new TLatex(0.13,0.71,"cage vessel");
         tpcIFVText->SetNDC();
         tpcIFVText->SetTextFont(72);
         tpcIFVText->SetTextSize(0.03);
         tpcIFVText->SetLineWidth(4);
         tpcIFVText->Draw();
-        
+
         TLatex *tpc1IText = new TLatex(0.13,0.65,"TPC inner");
         tpc1IText->SetNDC();
         tpc1IText->SetTextFont(72);
         tpc1IText->SetTextSize(0.03);
         tpc1IText->SetLineWidth(4);
         tpc1IText->Draw();
-        
+
         TLatex *tpcICText = new TLatex(0.13,0.62,"containment");
         tpcICText->SetNDC();
         tpcICText->SetTextFont(72);
         tpcICText->SetTextSize(0.03);
         tpcICText->SetLineWidth(4);
         tpcICText->Draw();
-        
+
         TLatex *tpcICText2 = new TLatex(0.13,0.59,"vessel");
         tpcICText2->SetNDC();
         tpcICText2->SetTextFont(72);
         tpcICText2->SetTextSize(0.03);
         tpcICText2->SetLineWidth(4);
         tpcICText2->Draw();
-        
-        
+
+
         TLatex *tpcGasText = new TLatex(0.81,0.9,"TPC");
         tpcGasText->SetNDC();
         tpcGasText->SetTextFont(72);
         tpcGasText->SetTextSize(0.03);
         tpcGasText->SetLineWidth(10);
         tpcGasText->Draw();
-        
+
         TLatex *tpcGas2Text = new TLatex(0.76,0.87,"drift gas");
         tpcGas2Text->SetNDC();
         tpcGas2Text->SetTextFont(72);
         tpcGas2Text->SetTextSize(0.03);
         tpcGas2Text->SetLineWidth(10);
         tpcGas2Text->Draw();
-        
+
         TLatex *tpcMebText = new TLatex(0.73,0.74,"TPC central ");
         tpcMebText->SetNDC();
         tpcMebText->SetTextFont(72);
         tpcMebText->SetTextSize(0.03);
         tpcMebText->SetLineWidth(10);
         tpcMebText->Draw();
-        
+
         TLatex *tpcMeb2Text = new TLatex(0.76,0.71,"electrode");
         tpcMeb2Text->SetNDC();
         tpcMeb2Text->SetTextFont(72);
         tpcMeb2Text->SetTextSize(0.03);
         tpcMeb2Text->SetLineWidth(10);
         tpcMeb2Text->Draw();
-        
-        
-        
+
+
+
         TArrow *arrow = new TArrow(-55.,5.,-5,5.,0.02,">"); //SPD arrow
         arrow->SetFillColor(1);
         arrow->SetFillStyle(1001);
         arrow->SetLineWidth(2.);
         arrow->Draw();
-        
+
         TArrow *arrow1 = new TArrow(-120.,19.,-15,15.,0.02,">"); //SDD1 arrow
         arrow1->SetFillColor(1);
         arrow1->SetFillStyle(1001);
         arrow1->SetLineWidth(2.);
         arrow1->Draw();
-        
-        
+
+
         TArrow *arrow2 = new TArrow(-120,19.,-25.,25.,0.02,">");  //SDD2 arrow
         arrow2->SetFillColor(1);
         arrow2->SetFillStyle(1001);
         arrow2->SetLineWidth(2.);
         arrow2->Draw();
-        
-        TArrow *arrow3 = new TArrow(-120.,42.,-35.,39.,0.02,">"); //SSD1 arrow 
+
+        TArrow *arrow3 = new TArrow(-120.,42.,-35.,39.,0.02,">"); //SSD1 arrow
         arrow3->SetFillColor(1);
         arrow3->SetFillStyle(1001);
         arrow3->SetLineWidth(2.);
         arrow3->Draw();
-        
-        
+
+
         TArrow *arrow4 = new TArrow(-120.,42.,-45.,43.,0.02,">"); //SSD2 arrow
         arrow4->SetFillColor(1);
         arrow4->SetFillStyle(1001);
         arrow4->SetLineWidth(2.);
         arrow4->Draw();
-        
+
         TArrow *arrow5 = new TArrow(-80.,60.,-60.,60.,0.02,">");// TPC inner containment vessel arrow
         arrow5->SetFillColor(1);
         arrow5->SetFillStyle(1001);
         arrow5->SetLineWidth(2.);
         arrow5->Draw();
-        
-        
+
+
         TArrow *arrow6 = new TArrow(-110.,76.,-80.,78.,0.02,">");// TPC inner field cage vessel
         arrow6->SetFillColor(1);
         arrow6->SetFillStyle(1001);
         arrow6->SetLineWidth(2.);
         arrow6->Draw();
-        
+
         TArrow *arrow7 = new TArrow(-95.,86.,-65.,82.5,0.02,">");// TPC rods
         arrow7->SetFillColor(1);
         arrow7->SetFillStyle(1001);
         arrow7->SetLineWidth(2.);
         arrow7->Draw();
-        
+
         TArrow *arrow8 = new TArrow(110.,91.,80.,95.,0.02,">");// TPC gas
         arrow8->SetFillColor(1);
         arrow8->SetFillStyle(1001);
         arrow8->SetLineWidth(2.);
         arrow8->Draw();
-        
+
         TArrow *arrow9 = new TArrow(100.,76.,0.,95.,0.02,">");// TPC gas
         arrow9->SetFillColor(1);
         arrow9->SetFillStyle(1001);
         arrow9->SetLineWidth(2.);
         arrow9->Draw();
-        
-        
+
+
     }
 
 
@@ -2471,28 +2471,28 @@
         k0s->SetTextSize(0.05);
         k0s->SetLineWidth(4);
         k0s->Draw();
-        
+
         TLatex *lambda = new TLatex(0.72,0.47,"#Lambda");
         lambda->SetNDC();
         lambda->SetTextFont(62);
         lambda->SetTextSize(0.05);
         lambda->SetLineWidth(4);
         lambda->Draw();
-        
+
         TLatex *lambdabar = new TLatex(0.25,0.48,"#bar{#Lambda}");
         lambdabar->SetNDC();
         lambdabar->SetTextFont(62);
         lambdabar->SetTextSize(0.05);
         lambdabar->SetLineWidth(4);
         lambdabar->Draw();
-        
+
         TLatex *gamma = new TLatex(0.5,0.18,"#gamma");
         gamma->SetNDC();
         gamma->SetTextFont(62);
         gamma->SetTextSize(0.05);
         gamma->SetLineWidth(4);
         gamma->Draw();
-        
+
     }
 
 
@@ -2508,36 +2508,36 @@
         muon->SetTextColor(1);
         muon->SetTextFont(62);
         muon->SetTextSize(0.04);
-        muon->SetLineWidth(2);	
-        
+        muon->SetLineWidth(2);
+
         TLatex *pion = new TLatex(0.4,0.17,"#pi"); //text at pion line
         pion->SetNDC();
         pion->SetTextColor(1);
         pion->SetTextFont(62);
         pion->SetTextSize(0.04);
-        pion->SetLineWidth(2);	
-        
+        pion->SetLineWidth(2);
+
         TLatex *kaon = new TLatex(0.35,0.8,"K"); //text at kaon line
         kaon->SetNDC();
         kaon->SetTextColor(1);
         kaon->SetTextFont(62);
         kaon->SetTextSize(0.04);
-        kaon->SetLineWidth(2);	
-        
+        kaon->SetLineWidth(2);
+
         TLatex *proton = new TLatex(0.44,0.7,"p"); //text at proton line
         proton->SetNDC();
         proton->SetTextColor(1);
         proton->SetTextFont(62);
         proton->SetTextSize(0.04);
-        proton->SetLineWidth(2);	
-        
+        proton->SetLineWidth(2);
+
         TLatex *electron = new TLatex(0.58,0.4,"e"); //text at electron line
         electron->SetNDC();
         electron->SetTextColor(1);
         electron->SetTextFont(62);
         electron->SetTextSize(0.04);
-        electron->SetLineWidth(2);	
-        
+        electron->SetLineWidth(2);
+
         electron->Draw("same");
         muon->Draw("same");
         kaon->Draw("same");
@@ -2557,36 +2557,36 @@
         muon->SetTextColor(1);
         muon->SetTextFont(62);
         muon->SetTextSize(0.04);
-        muon->SetLineWidth(2);	
-        
+        muon->SetLineWidth(2);
+
         TLatex *pion = new TLatex(0.22,0.3,"#pi"); //text at pion line
         pion->SetNDC();
         pion->SetTextColor(1);
         pion->SetTextFont(62);
         pion->SetTextSize(0.04);
-        pion->SetLineWidth(2);	
-        
+        pion->SetLineWidth(2);
+
         TLatex *kaon = new TLatex(0.25,0.8,"K"); //text at kaon line
         kaon->SetNDC();
         kaon->SetTextColor(1);
         kaon->SetTextFont(62);
         kaon->SetTextSize(0.04);
-        kaon->SetLineWidth(2);	
-        
+        kaon->SetLineWidth(2);
+
         TLatex *proton = new TLatex(0.37,0.7,"p"); //text at proton line
         proton->SetNDC();
         proton->SetTextColor(1);
         proton->SetTextFont(62);
         proton->SetTextSize(0.04);
-        proton->SetLineWidth(2);	
-        
+        proton->SetLineWidth(2);
+
         TLatex *electron = new TLatex(0.2,0.18,"e"); //text at electron line
         electron->SetNDC();
         electron->SetTextColor(1);
         electron->SetTextFont(62);
         electron->SetTextSize(0.04);
-        electron->SetLineWidth(2);	
-        
+        electron->SetLineWidth(2);
+
         electron->Draw("same");
         muon->Draw("same");
         kaon->Draw("same");
@@ -2610,7 +2610,7 @@
         l1->SetLineStyle(lineStyle);
         l1->Draw("same");
     }
-        
+
 
     TBox* CreateBoxFromGraph( TGraphAsymmErrors* graph, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
         TBox* box = new TBox(xStart ,yStart , xEnd, yEnd);
@@ -2618,7 +2618,7 @@
         box->SetLineWidth(graph->GetLineWidth());
         box->SetFillStyle(0);
         return box;
-    }					 
+    }
 
     TBox* CreateBoxFromGraphWithFill( TGraphAsymmErrors* graph, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
         TBox* box = new TBox(xStart ,yStart , xEnd, yEnd);
@@ -2627,7 +2627,7 @@
         box->SetFillStyle(graph->GetFillStyle());
         box->SetFillColor(graph->GetFillColor());
         return box;
-    }					 
+    }
 
 
     TBox* CreateBoxConv(Color_t colorBox, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
@@ -2635,7 +2635,7 @@
         box->SetLineColor(colorBox);
         box->SetFillColor(colorBox);
         return box;
-    }					 
+    }
 
 
     TBox* CreateBoxFromGraph( TGraphErrors* graph, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
@@ -2644,7 +2644,7 @@
         box->SetLineWidth(graph->GetLineWidth());;
         box->SetFillStyle(0);
         return box;
-    }					 
+    }
 
 
     TBox* CreateBoxFromGraph( TGraph* graph, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
@@ -2653,7 +2653,7 @@
         box->SetLineWidth(graph->GetLineWidth());
         box->SetFillStyle(0);
         return box;
-    }					 
+    }
 
     TBox* CreateBoxFromHisto( TH1* histo, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd ) {
         TBox* box = new TBox(xStart ,yStart , xEnd, yEnd);
@@ -2661,35 +2661,35 @@
         box->SetLineWidth(histo->GetLineWidth());
         box->SetFillStyle(0);
         return box;
-    }					 
+    }
 
     TMarker* CreateMarkerFromGraph( TGraphAsymmErrors* graph, Double_t x, Double_t y, Double_t scaleSize) {
         TMarker* marker= new TMarker(x,y, graph->GetMarkerStyle());
         marker->SetMarkerColor(graph->GetMarkerColor());
         marker->SetMarkerSize(graph->GetMarkerSize() * scaleSize);
         return marker;
-    }					 
+    }
 
     TMarker* CreateMarkerFromGraph( TGraphErrors* graph, Double_t x, Double_t y, Double_t scaleSize) {
         TMarker* marker= new TMarker(x,y, graph->GetMarkerStyle());
         marker->SetMarkerColor(graph->GetMarkerColor());
         marker->SetMarkerSize(graph->GetMarkerSize() * scaleSize);
         return marker;
-    }					 
+    }
 
     TMarker* CreateMarkerFromGraph( TGraph* graph, Double_t x, Double_t y, Double_t scaleSize) {
         TMarker* marker= new TMarker(x,y, graph->GetMarkerStyle());
         marker->SetMarkerColor(graph->GetMarkerColor());
         marker->SetMarkerSize(graph->GetMarkerSize() * scaleSize);
         return marker;
-    }					 
+    }
 
     TMarker* CreateMarkerFromHisto( TH1* histo, Double_t x, Double_t y, Double_t scaleSize) {
         TMarker* marker= new TMarker(x,y, histo->GetMarkerStyle());
         marker->SetMarkerColor(histo->GetMarkerColor());
         marker->SetMarkerSize(histo->GetMarkerSize() * scaleSize);
         return marker;
-    }					 
+    }
 
     TLine* CreateLineFromFit(TF1* fit, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd, Double_t scaleWidth) {
         TLine *line = new TLine(xStart,yStart,xEnd,yEnd);
@@ -2697,7 +2697,7 @@
         line->SetLineWidth(fit->GetLineWidth()*scaleWidth);
         line->SetLineStyle(fit->GetLineStyle());
         return line;
-    }					
+    }
 
     TLine* CreateLineFromHisto(TH1* histo, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd, Double_t scaleWidth) {
         TLine * line = new TLine (xStart,yStart,xEnd,yEnd);
@@ -2705,7 +2705,7 @@
         line->SetLineWidth(histo->GetLineWidth()*scaleWidth);
         line->SetLineStyle(histo->GetLineStyle());
         return line;
-    }					
+    }
 
     TLine* CreateLineFromGraph(TGraph* graph, Double_t xStart, Double_t yStart, Double_t xEnd, Double_t yEnd, Double_t scaleWidth) {
         TLine * line = new TLine (xStart,yStart,xEnd,yEnd);
@@ -2713,12 +2713,12 @@
         line->SetLineWidth(graph->GetLineWidth()*scaleWidth);
         line->SetLineStyle(graph->GetLineStyle());
         return line;
-    }					
+    }
 
 
     void DrawAliceLogoSimple(Float_t startX, Float_t startY, Float_t widthLogo, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
-        
+
+
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
@@ -2743,14 +2743,14 @@
     }
 
     void DrawAliceLogoSimplePreliminary(Float_t startX, Float_t startY, Float_t widthLogo, Size_t textSize, Double_t xLengthCanvas, Double_t yLengthCanvas){
-        
-        
+
+
         Double_t widthLogoPix = xLengthCanvas*widthLogo;
         Double_t heightLogoPix = widthLogoPix/0.73447;
         Double_t totalXLogo = (startX*xLengthCanvas + widthLogoPix)/xLengthCanvas;
         Double_t totalYLogo = (startY*yLengthCanvas + heightLogoPix)/yLengthCanvas;
 
-        Float_t aliceStartY = startY - textSize- 0.03;  
+        Float_t aliceStartY = startY - textSize- 0.03;
         TLatex *alice = new TLatex(startX,aliceStartY,"PRELIMINARY"); // Bo: this was modified
         alice->SetNDC();
         alice->SetTextColor(1);
@@ -2778,22 +2778,22 @@
     }
 
 
-    void PrintLevyFitResults(Float_t startX, 
+    void PrintLevyFitResults(Float_t startX,
                             Float_t startY,
-                            Float_t spacingxVal, 
-                            Float_t spacingxText, 
-                            Float_t spacingy, 
-                            Size_t textsize, 
+                            Float_t spacingxVal,
+                            Float_t spacingxText,
+                            Float_t spacingy,
+                            Size_t textsize,
                             Double_t* fitResults){
         cout << fitResults[0] << "\t" << fitResults[1] << "\t" << fitResults[2] << endl;
         cout << fitResults[3] << "\t" << fitResults[4] << "\t" << fitResults[5] << endl;
         cout << fitResults[6] << "\t" << fitResults[7] << "\t" << fitResults[8] << endl;
-        
-        TLatex *latexdNdyLabel = new TLatex(startX,startY,"dN/dy:"); 
+
+        TLatex *latexdNdyLabel = new TLatex(startX,startY,"dN/dy:");
         TLatex *latexdNdyValue = new TLatex(startX + spacingxText,startY, Form("%1.2f",fitResults[0]));
         TLatex *latexdNdyStatErr = new TLatex(startX + spacingxText + spacingxVal ,startY, Form("#pm %1.2f_{stat}",fitResults[1]));
         TLatex *latexdNdySysErr = new TLatex(startX + spacingxText + 2*spacingxVal ,startY, Form("#pm %1.2f_{sys}",fitResults[2]));
-        
+
         TLatex *latexNLabel = new TLatex(startX,startY - spacingy,"n:");
         TLatex *latexNValue = new TLatex(startX + spacingxText,startY - spacingy, Form("%1.2f",fitResults[3]));
         TLatex *latexNStatErr = new TLatex(startX + spacingxText + spacingxVal ,startY -spacingy, Form("#pm %1.2f_{stat}",fitResults[4]));
@@ -2804,133 +2804,133 @@
         TLatex *latexTStatErr = new TLatex(startX + spacingxText + spacingxVal ,startY-2*spacingy , Form("#pm %1.3f_{stat}",fitResults[7]));
         TLatex *latexTSysErr = new TLatex(startX + spacingxText + 2*spacingxVal ,startY-2*spacingy , Form("#pm %1.3f_{sys}",fitResults[8]));
 
-        
+
         latexdNdyLabel->SetNDC();
         latexdNdyLabel->SetTextColor(1);
-        latexdNdyLabel->SetTextSize(textsize);	
+        latexdNdyLabel->SetTextSize(textsize);
         latexdNdyLabel->Draw();
-        
+
         latexdNdyValue->SetNDC();
         latexdNdyValue->SetTextColor(1);
-        latexdNdyValue->SetTextSize(textsize);	
+        latexdNdyValue->SetTextSize(textsize);
         latexdNdyValue->Draw();
-        
+
         latexdNdyStatErr->SetNDC();
         latexdNdyStatErr->SetTextColor(1);
-        latexdNdyStatErr->SetTextSize(textsize);	
+        latexdNdyStatErr->SetTextSize(textsize);
         latexdNdyStatErr->Draw();
-        
+
         latexdNdySysErr->SetNDC();
         latexdNdySysErr->SetTextColor(1);
-        latexdNdySysErr->SetTextSize(textsize);	
+        latexdNdySysErr->SetTextSize(textsize);
         latexdNdySysErr->Draw();
-        
+
         latexNLabel->SetNDC();
         latexNLabel->SetTextColor(1);
-        latexNLabel->SetTextSize(textsize);	
+        latexNLabel->SetTextSize(textsize);
         latexNLabel->Draw();
-        
+
         latexNValue->SetNDC();
         latexNValue->SetTextColor(1);
-        latexNValue->SetTextSize(textsize);	
+        latexNValue->SetTextSize(textsize);
         latexNValue->Draw();
-        
+
         latexNStatErr->SetNDC();
         latexNStatErr->SetTextColor(1);
-        latexNStatErr->SetTextSize(textsize);	
+        latexNStatErr->SetTextSize(textsize);
         latexNStatErr->Draw();
-        
+
         latexNSysErr->SetNDC();
         latexNSysErr->SetTextColor(1);
-        latexNSysErr->SetTextSize(textsize);	
+        latexNSysErr->SetTextSize(textsize);
         latexNSysErr->Draw();
-        
+
         latexTLabel->SetNDC();
         latexTLabel->SetTextColor(1);
-        latexTLabel->SetTextSize(textsize);	
+        latexTLabel->SetTextSize(textsize);
         latexTLabel->Draw();
-        
+
         latexTValue->SetNDC();
         latexTValue->SetTextColor(1);
-        latexTValue->SetTextSize(textsize);	
+        latexTValue->SetTextSize(textsize);
         latexTValue->Draw();
-        
+
         latexTStatErr->SetNDC();
         latexTStatErr->SetTextColor(1);
-        latexTStatErr->SetTextSize(textsize);	
+        latexTStatErr->SetTextSize(textsize);
         latexTStatErr->Draw();
-        
+
         latexTSysErr->SetNDC();
         latexTSysErr->SetTextColor(1);
-        latexTSysErr->SetTextSize(textsize);	
+        latexTSysErr->SetTextSize(textsize);
         latexTSysErr->Draw();
-        
+
     }
 
-    void DrawBinShiftingText( Float_t startX, 
-                            Float_t startY , 
-                            Size_t textsize, 
+    void DrawBinShiftingText( Float_t startX,
+                            Float_t startY ,
+                            Size_t textsize,
                             Double_t differenceText=0.021){  // kk
 
-        TLatex *latexBinShifting1= new TLatex(startX,startY,"Correction in E #frac{d^{3}#sigma}{dp^{3}}"); 
+        TLatex *latexBinShifting1= new TLatex(startX,startY,"Correction in E #frac{d^{3}#sigma}{dp^{3}}");
             latexBinShifting1->SetNDC();
         latexBinShifting1->SetTextColor(1);
-        latexBinShifting1->SetTextSize(textsize);	
-        //latexBinShifting1->SetTextAngle(90);	
+        latexBinShifting1->SetTextSize(textsize);
+        //latexBinShifting1->SetTextAngle(90);
         latexBinShifting1->Draw();
 
-        TLatex *latexBinShifting2= new TLatex(startX,startY-(differenceText+textsize),"for bin width applied"); 
+        TLatex *latexBinShifting2= new TLatex(startX,startY-(differenceText+textsize),"for bin width applied");
             latexBinShifting2->SetNDC();
         latexBinShifting2->SetTextColor(1);
-        latexBinShifting2->SetTextSize(textsize);	
-        //latexBinShifting2->SetTextAngle(90);	
-        latexBinShifting2->Draw();	
+        latexBinShifting2->SetTextSize(textsize);
+        //latexBinShifting2->SetTextAngle(90);
+        latexBinShifting2->Draw();
 
-        TLatex *latexBinShifting3= new TLatex(startX,startY-2*differenceText-1.5*textsize,"NIM A 355 (1995) 541"); 
+        TLatex *latexBinShifting3= new TLatex(startX,startY-2*differenceText-1.5*textsize,"NIM A 355 (1995) 541");
             latexBinShifting3->SetNDC();
         latexBinShifting3->SetTextColor(1);
-        latexBinShifting3->SetTextSize(textsize);	
-        //latexBinShifting3->SetTextAngle(90);	
+        latexBinShifting3->SetTextSize(textsize);
+        //latexBinShifting3->SetTextAngle(90);
         latexBinShifting3->Draw();
     }
 
 
-    void DrawPrevPrelimPi0(Float_t startX, 
-                        Float_t startY , 
+    void DrawPrevPrelimPi0(Float_t startX,
+                        Float_t startY ,
                         Size_t textsize){  // kk
         TLatex *latex7000prev1 = new TLatex(startX,startY, "Previous prelimimary #pi^{0} @ 7 TeV:  #sigma_{MB} = 67mb #pm 10% used");
         //	TLatex *latex7000Errorprev1 = new TLatex(startX + spacingx ,startY-1.25*spacingy,"#pm 4.3 mb");
 
         latex7000prev1->SetNDC();
         latex7000prev1->SetTextColor(1);
-        latex7000prev1->SetTextSize(textsize);	
+        latex7000prev1->SetTextSize(textsize);
         latex7000prev1->Draw();
     }
 
-    void DrawNormalizationErrorText( Float_t startX, 
-                                    Float_t startY, 
-                                    Float_t spacingx, 
-                                    Float_t spacingy, 
-                                    Size_t textsize, 
+    void DrawNormalizationErrorText( Float_t startX,
+                                    Float_t startY,
+                                    Float_t spacingx,
+                                    Float_t spacingy,
+                                    Size_t textsize,
                                     TString energy){
 
-        TLatex *latexNormErrorText1 = new TLatex(startX,startY,"#sigma_{pp} uncertainty"); 
+        TLatex *latexNormErrorText1 = new TLatex(startX,startY,"#sigma_{pp} uncertainty");
         latexNormErrorText1->SetNDC();
         latexNormErrorText1->SetTextColor(1);
-        latexNormErrorText1->SetTextSize(textsize);	
+        latexNormErrorText1->SetTextSize(textsize);
         latexNormErrorText1->Draw();
-        
+
         if(energy == "7TeV"){
             TLatex *latex7000 = new TLatex(startX,startY -1.25*spacingy, "7 TeV");
             TLatex *latex7000Error = new TLatex(startX + spacingx ,startY-1.25*spacingy,"#pm 3.5%");  //4.3 mb
             latex7000->SetNDC();
             latex7000->SetTextColor(1);
-            latex7000->SetTextSize(textsize);	
+            latex7000->SetTextSize(textsize);
             latex7000->Draw();
-            
+
             latex7000Error->SetNDC();
             latex7000Error->SetTextColor(1);
-            latex7000Error->SetTextSize(textsize);	
+            latex7000Error->SetTextSize(textsize);
             latex7000Error->Draw();
         }
 
@@ -2940,12 +2940,12 @@
             TLatex *latex2760Error = new TLatex(startX + spacingx ,startY-1.25*spacingy,"#pm  7%"); //3.9bm
             latex2760->SetNDC();
             latex2760->SetTextColor(1);
-            latex2760->SetTextSize(textsize);	
+            latex2760->SetTextSize(textsize);
             latex2760->Draw();
-            
+
             latex2760Error->SetNDC();
             latex2760Error->SetTextColor(1);
-            latex2760Error->SetTextSize(textsize);	
+            latex2760Error->SetTextSize(textsize);
             latex2760Error->Draw();
         }
 
@@ -2955,12 +2955,12 @@
 
             latex900->SetNDC();
             latex900->SetTextColor(1);
-            latex900->SetTextSize(textsize);	
+            latex900->SetTextSize(textsize);
             latex900->Draw();
-            
+
             latex900Error->SetNDC();
             latex900Error->SetTextColor(1);
-            latex900Error->SetTextSize(textsize);	
+            latex900Error->SetTextSize(textsize);
             latex900Error->Draw();
         }
 
@@ -2977,32 +2977,32 @@
 
             latex7000->SetNDC();
             latex7000->SetTextColor(1);
-            latex7000->SetTextSize(textsize);	
+            latex7000->SetTextSize(textsize);
             latex7000->Draw();
 
             latex7000Error->SetNDC();
             latex7000Error->SetTextColor(1);
-            latex7000Error->SetTextSize(textsize);	
+            latex7000Error->SetTextSize(textsize);
             latex7000Error->Draw();
 
             latex2760->SetNDC();
             latex2760->SetTextColor(1);
-            latex2760->SetTextSize(textsize);	
+            latex2760->SetTextSize(textsize);
             latex2760->Draw();
 
             latex2760Error->SetNDC();
             latex2760Error->SetTextColor(1);
-            latex2760Error->SetTextSize(textsize);	
+            latex2760Error->SetTextSize(textsize);
             latex2760Error->Draw();
 
             latex900->SetNDC();
             latex900->SetTextColor(1);
-            latex900->SetTextSize(textsize);	
+            latex900->SetTextSize(textsize);
             latex900->Draw();
 
             latex900Error->SetNDC();
             latex900Error->SetTextColor(1);
-            latex900Error->SetTextSize(textsize);	
+            latex900Error->SetTextSize(textsize);
             latex900Error->Draw();
 
         }
@@ -3015,35 +3015,35 @@
 
             latex7000->SetNDC();
             latex7000->SetTextColor(1);
-            latex7000->SetTextSize(textsize);	
+            latex7000->SetTextSize(textsize);
             latex7000->Draw();
-            
+
             latex7000Error->SetNDC();
             latex7000Error->SetTextColor(1);
-            latex7000Error->SetTextSize(textsize);	
+            latex7000Error->SetTextSize(textsize);
             latex7000Error->Draw();
 
             latex900->SetNDC();
             latex900->SetTextColor(1);
-            latex900->SetTextSize(textsize);	
+            latex900->SetTextSize(textsize);
             latex900->Draw();
-            
+
             latex900Error->SetNDC();
             latex900Error->SetTextColor(1);
-            latex900Error->SetTextSize(textsize);	
+            latex900Error->SetTextSize(textsize);
             latex900Error->Draw();
         }
     }
 
-    void DrawIndividualTextSlicesR ( Double_t* yValues, 
-                                    Size_t textsize, 
+    void DrawIndividualTextSlicesR ( Double_t* yValues,
+                                    Size_t textsize,
                                     TString option ){
-        
+
     // 	Double_t rValuesLin[9] = {4.,10.,19.,28.,40,48.,64.,90.,110.};
     // 	Double_t rValuesLog[9] = {4.,8.,19.,28.,40,48.,64.,83.,110.};
         Double_t rValuesLin[9] = {4.,10.,19.,28.,40,48.,64.,90.,110.};
         Double_t rValuesLog[9] = {4.,8.,19.,28.,40,48.,64.,83.,110.};
-        
+
         Double_t rValues[9];
         if (option.CompareTo("lin") == 0){
             for ( Int_t i = 0; i<9 ; i++){
@@ -3054,7 +3054,7 @@
                 rValues[i] = rValuesLog[i];
             }
         }
-        
+
         TLatex *latex1 = NULL;
         TLatex *latex0 = NULL;
         if (option.CompareTo("lin") == 0){
@@ -3062,7 +3062,7 @@
             latex1 = new TLatex(rValues[1],yValues[1], "SPD");
         } else {
             latex1 = new TLatex(rValues[1],yValues[1], "Beam Pipe & SPD");
-        }	
+        }
         TLatex *latex2 = new TLatex(rValues[2],yValues[2], "SDD 1^{st} Layer");
         TLatex *latex3 = new TLatex(rValues[3],yValues[3], "SDD 2^{nd} Layer + Support Structures");
         TLatex *latex4 = new TLatex(rValues[4],yValues[4], "SSD 1^{st} Layer");
@@ -3072,56 +3072,56 @@
         TLatex *latex8 = new TLatex(rValues[8],yValues[8], "TPC Gas");
         if (option.CompareTo("lin") == 0){
             latex0->SetTextColor(1);
-            latex0->SetTextSize(textsize);	
+            latex0->SetTextSize(textsize);
             latex0->SetTextAngle(90);
             latex0->Draw();
         }
-        
+
         latex1->SetTextColor(1);
-        latex1->SetTextSize(textsize);	
+        latex1->SetTextSize(textsize);
         latex1->SetTextAngle(90);
         latex1->Draw();
-            
+
         latex2->SetTextColor(1);
-        latex2->SetTextSize(textsize);	
+        latex2->SetTextSize(textsize);
         latex2->SetTextAngle(90);
         latex2->Draw();
 
         latex3->SetTextColor(1);
-        latex3->SetTextSize(textsize);	
+        latex3->SetTextSize(textsize);
         latex3->SetTextAngle(90);
         latex3->Draw();
 
         latex4->SetTextColor(1);
-        latex4->SetTextSize(textsize);	
+        latex4->SetTextSize(textsize);
         latex4->SetTextAngle(90);
         latex4->Draw();
 
         latex5->SetTextColor(1);
-        latex5->SetTextSize(textsize);	
+        latex5->SetTextSize(textsize);
         latex5->SetTextAngle(90);
         latex5->Draw();
 
         latex6->SetTextColor(1);
-        latex6->SetTextSize(textsize);	
+        latex6->SetTextSize(textsize);
         latex6->SetTextAngle(90);
         latex6->Draw();
 
         latex7->SetTextColor(1);
-        latex7->SetTextSize(textsize);	
+        latex7->SetTextSize(textsize);
         latex7->SetTextAngle(90);
         latex7->Draw();
 
         latex8->SetTextColor(1);
-        latex8->SetTextSize(textsize);	
+        latex8->SetTextSize(textsize);
         latex8->SetTextAngle(90);
         latex8->Draw();
 
     }
 
 
-    void DrawCentrality(Double_t x_low, 
-                        Double_t y_low, 
+    void DrawCentrality(Double_t x_low,
+                        Double_t y_low,
                         TString centrality){
         TText *centr = new TText(x_low,y_low,centrality);
         centr->SetNDC();
@@ -3130,9 +3130,9 @@
         centr->Draw();
     }
 
-    void DrawSystem( Double_t x_low, 
-                    Double_t y_low, 
-                    TString energy, 
+    void DrawSystem( Double_t x_low,
+                    Double_t y_low,
+                    TString energy,
                     TString centrality){
 
         TString collisionenergy ="";
@@ -3147,7 +3147,7 @@
         CollisionEnergy->SetTextSize(0.05);
         CollisionEnergy->SetLineWidth(2);
         CollisionEnergy->Draw();
-        
+
         /* TText *centr = new TText(x_low,y_low,centrality); */
         /*   centr->SetNDC(); */
         /*   centr->SetTextFont(42); */
@@ -3158,10 +3158,10 @@
 
 
 
-    TCanvas *GetAndSetCanvas( TString name, 
-                            Double_t leftmargin = 0.11, 
+    TCanvas *GetAndSetCanvas( TString name,
+                            Double_t leftmargin = 0.11,
                             Double_t bottommargin = 0.1,
-                            Double_t x = 1400, 
+                            Double_t x = 1400,
                             Double_t y = 1000){
 
         TCanvas *canvas =  new TCanvas(name,name,x,y);
@@ -3175,10 +3175,10 @@
 
     }
 
-    TLegend *GetAndSetLegend( Double_t positionX, 
-                            Double_t positionY, 
-                            Double_t entries, 
-                            Int_t Columns = 1, 
+    TLegend *GetAndSetLegend( Double_t positionX,
+                            Double_t positionY,
+                            Double_t entries,
+                            Int_t Columns = 1,
                             TString header =""){
 
         if(header.CompareTo("") != 0) entries++;
@@ -3196,12 +3196,12 @@
         return legend;
     }
 
-    TLegend *GetAndSetLegend2(  Double_t positionX, 
-                                Double_t positionY, 
-                                Double_t positionXRight, 
-                                Double_t positionYUp, 
-                                Size_t textSize, 
-                                Int_t columns               = 1, 
+    TLegend *GetAndSetLegend2(  Double_t positionX,
+                                Double_t positionY,
+                                Double_t positionXRight,
+                                Double_t positionYUp,
+                                Size_t textSize,
+                                Int_t columns               = 1,
                                 TString header              = "",
                                 Font_t textFont             = 43,
                                 Double_t margin             = 0
@@ -3222,12 +3222,12 @@
     }
 
 
-    void SetHistogramm( TH1 *hist, 
-                        TString xLabel, 
-                        TString yLabel, 
-                        Double_t rangeYlow = -99., 
-                        Double_t rangeYhigh = -99., 
-                        Double_t xOffset = 1.0, 
+    void SetHistogramm( TH1 *hist,
+                        TString xLabel,
+                        TString yLabel,
+                        Double_t rangeYlow = -99.,
+                        Double_t rangeYhigh = -99.,
+                        Double_t xOffset = 1.0,
                         Double_t yOffset = 1.15){
 
         Double_t scale = 1./gPad->GetAbsHNDC();
@@ -3249,12 +3249,12 @@
         hist->SetMarkerStyle(20);
     }
 
-    void SetGraph( TGraph *graph, 
-                TString xLabel, 
-                TString yLabel, 
-                Double_t rangeYlow = -99., 
-                Double_t rangeYhigh = -99., 
-                Double_t xOffset = 1.0, 
+    void SetGraph( TGraph *graph,
+                TString xLabel,
+                TString yLabel,
+                Double_t rangeYlow = -99.,
+                Double_t rangeYhigh = -99.,
+                Double_t xOffset = 1.0,
                 Double_t yOffset = 1.15){
 
         Double_t scale = 1./gPad->GetAbsHNDC();
@@ -3275,12 +3275,12 @@
         graph->SetMarkerStyle(20);
     }
 
-    void PutProcessLabelAndEnergyOnPlot(    Double_t startTextX, 
-                                            Double_t startTextY, 
-                                            Size_t textHeight, 
-                                            TString fEnergy, 
+    void PutProcessLabelAndEnergyOnPlot(    Double_t startTextX,
+                                            Double_t startTextY,
+                                            Size_t textHeight,
+                                            TString fEnergy,
                                             TString fDecayChannel,
-                                            TString fDetectionChannel, 
+                                            TString fDetectionChannel,
                                             Style_t textFont            = 62,
                                             Size_t textHeightRel        = 0.03,
                                             TString fPeriodName         = "",
@@ -3288,10 +3288,10 @@
                                             Float_t textHeightFac       = 1.25,
                                             Int_t textAlign             = 11
                                     ){
-        
+
         Double_t differenceText     = textHeight*textHeightFac;
         if (textFont == 63 || textFont == 43) differenceText = textHeightRel*textHeightFac;
-        
+
         Double_t startYPeriod       = startTextY-2*differenceText;
         Double_t startYProcess      = startTextY-2*differenceText;
         Double_t startYdDetProcess  = startTextY-3*differenceText;
@@ -3299,12 +3299,12 @@
             startYProcess         = startTextY-3*differenceText;
             startYdDetProcess     = startTextY-4*differenceText;
         }
-            
-            
+
+
         TLatex *energy          = new TLatex(startTextX, (startTextY-differenceText), fEnergy);
         TLatex *process         = new TLatex(startTextX, startYProcess, fDecayChannel);
         TLatex *detprocess      = new TLatex(startTextX, startYdDetProcess, fDetectionChannel);
-        
+
         energy->SetNDC();
         energy->SetTextColor(textColor);
         energy->SetTextFont(textFont);
@@ -3312,20 +3312,20 @@
         energy->SetTextAlign(textAlign);
         energy->Draw();
 
-        process->SetNDC(); 
+        process->SetNDC();
         process->SetTextColor(textColor);
         process->SetTextFont(textFont);
         process->SetTextSize(textHeight);
         process->SetTextAlign(textAlign);
         process->Draw();
 
-        detprocess->SetNDC(); 
+        detprocess->SetNDC();
         detprocess->SetTextColor(textColor);
         detprocess->SetTextFont(textFont);
         detprocess->SetTextSize(textHeight);
         detprocess->SetTextAlign(textAlign);
         detprocess->Draw();
-        
+
         if (fPeriodName.CompareTo("") != 0 && fPeriodName.CompareTo("No") != 0 ){
             TLatex *period          = new TLatex(startTextX, startYPeriod, fPeriodName);
             period->SetNDC();
@@ -3333,7 +3333,7 @@
             period->SetTextFont(textFont);
             period->SetTextSize(textHeight);
             period->SetTextAlign(textAlign);
-            period->Draw();    
+            period->Draw();
         }
     }
 
@@ -3349,7 +3349,7 @@
         Double_t differenceText = textHeight*textHeightFac;
         if (textFont == 63 || textFont == 43)
             differenceText        = textHeightRel*textHeightFac;
-        
+
         TString labelString     = "- this thesis -";
         TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
 
@@ -3369,14 +3369,14 @@
                                 Style_t    textFont        = 62,
                                 Color_t    textColor       = 1,
                                 Bool_t     alignLeft       = kTRUE) {
-    
+
         Double_t differenceText = textHeight*textHeightFac;
         if (textFont == 63 || textFont == 43)
             differenceText        = textHeightRel*textHeightFac;
-        
+
         TString labelString     = "ALICE simulation";
         TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
-        
+
         if(!alignLeft) label->SetTextAlign(31);
         label->SetNDC();
         label->SetTextColor(textColor);
@@ -3386,10 +3386,10 @@
     }
 
     Color_t GetColorDefaultColor( TString energy,
-                                TString generator, 
-                                TString centrality, 
+                                TString generator,
+                                TString centrality,
                                 Bool_t kBox = kFALSE){
-        
+
         if (!energy.CompareTo("900GeV")){
             if (!kBox){
                 if (!generator.CompareTo("")){
@@ -3407,7 +3407,7 @@
                 return kRed -5;
             }
         }
-        
+
         if (!energy.CompareTo("2.76TeV")){
             if (!kBox){
                 if (!generator.CompareTo("")||!generator.CompareTo("LHC13g")||!generator.CompareTo("LHC13g-kEMC7")||
@@ -3434,7 +3434,7 @@
 
         if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
             if (!generator.CompareTo("")){
-                return kOrange+1;   
+                return kOrange+1;
             } else if (!generator.CompareTo("LHC16h8a")) {
                 return kBlue;
             } else if (!generator.CompareTo("LHC16h8b")) {
@@ -3574,7 +3574,7 @@
                 return kRed;
             }
         }
-        
+
         if (!energy.CompareTo("pPb_5.023TeV")){
             if (!kBox){
                 if (!generator.CompareTo("")){
@@ -3608,7 +3608,7 @@
                 return kViolet+6;
             }
         }
-        
+
         if (!energy.CompareTo("PbPb_2.76TeV")){
             if (!kBox){
                 if (!generator.CompareTo("")){
@@ -3633,8 +3633,8 @@
                     } else if (!centrality.CompareTo("60-80%")){
                         return kBlue+1;
                     } else if (!centrality.CompareTo("40-80%")){
-                        return kCyan+2;	
-                    }	
+                        return kCyan+2;
+                    }
                 } else {
                     if (!centrality.CompareTo("0-10%")){
                         return kRed+3;
@@ -3657,9 +3657,9 @@
                     } else if (!centrality.CompareTo("60-80%")){
                         return kBlue+3;
                     } else if (!centrality.CompareTo("40-80%")){
-                        return kCyan+3; 
+                        return kCyan+3;
                     }
-                }    
+                }
             } else {
                 if (!generator.CompareTo("")){
                     if (!centrality.CompareTo("0-10%")){
@@ -3673,7 +3673,7 @@
                     } else if (!centrality.CompareTo("20-50%")){
                         return kCyan-5;
                     } else if (!centrality.CompareTo("40-80%")){
-                        return kCyan-5;	
+                        return kCyan-5;
                     }
                 }
             }
@@ -3705,8 +3705,8 @@
         return kBlack;
     }
 
-    Style_t GetDefaultMarkerStyle( TString energy, 
-                                TString generator, 
+    Style_t GetDefaultMarkerStyle( TString energy,
+                                TString generator,
                                 TString centrality){
         if (!energy.CompareTo("900GeV")){
             if (!generator.CompareTo("")){
@@ -3740,7 +3740,7 @@
                 return 28;
             } else {
                 return 24;
-            } 
+            }
         }
         if (!energy.CompareTo("7TeV")){
             if (!generator.CompareTo("")){
@@ -3751,7 +3751,7 @@
                 return 30;
             } else {
                 return 24;
-            } 
+            }
         }
         if (!energy.CompareTo("8TeV")){
             if (!generator.CompareTo("")){
@@ -3771,7 +3771,7 @@
                 return 28;
             } else {
                 return 27;
-            } 
+            }
         }
 
         if (!energy.CompareTo("13TeV")){
@@ -3813,9 +3813,9 @@
                 return 28;
             } else {
                 return 27;
-            } 
+            }
         }
-            
+
         if (!energy.CompareTo("PbPb_2.76TeV")){
             if (!generator.CompareTo("")){
                 if (!centrality.CompareTo("0-10%")){
@@ -3839,8 +3839,8 @@
                 } else if (!centrality.CompareTo("60-80%")){
                     return 21;
                 } else if (!centrality.CompareTo("40-80%")){
-                    return 34;	
-                }	
+                    return 34;
+                }
             } else {
                 if (!centrality.CompareTo("0-10%")){
                     return 24;
@@ -3863,9 +3863,9 @@
                 } else if (!centrality.CompareTo("60-80%")){
                     return 25;
                 } else if (!centrality.CompareTo("40-80%")){
-                    return 28;  
+                    return 28;
                 }
-            }    
+            }
         }
         if (!energy.CompareTo("PbPb_5.02TeV")){
             if (!generator.CompareTo("LHC15o")){
@@ -3894,10 +3894,10 @@
         return 0;
     }
 
-    Size_t GetDefaultMarkerSize( TString energy, 
-                                TString generator, 
+    Size_t GetDefaultMarkerSize( TString energy,
+                                TString generator,
                                 TString centrality){
-        
+
         if (!energy.CompareTo("900GeV")){
             if (!generator.CompareTo("")){
                 return 1.8;
@@ -3905,7 +3905,7 @@
                 return 1.8;
             }
         }
-        
+
         if (!energy.CompareTo("2.76TeV")){
             if (!generator.CompareTo("")){
                 return 2.2;
@@ -3913,7 +3913,7 @@
                 return 2.2;
             }
         }
-        
+
         if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV")){
             if (!generator.CompareTo("")){
                 return 2;
@@ -3921,27 +3921,27 @@
                 return 2.2;
             }
         }
-        
+
         if (!energy.CompareTo("7TeV")){
             if (!generator.CompareTo("")){
                 return 2.2;
             } else {
                 return 2.2;
-            } 
+            }
         }
-        
+
         if (!energy.CompareTo("8TeV")){
             if (!generator.CompareTo("")){
                 return 2.2;
             } else {
                 return 2.2;
-            } 
+            }
         }
-        
+
         if (!energy.CompareTo("13TeV")){
                 return 2.0;
         }
-        
+
         if (!energy.CompareTo("pPb_5.023TeV")){
             if (!generator.CompareTo("")){
                 return 2.2;
@@ -3949,9 +3949,9 @@
                 return 2.2;
             } else {
                 return 2.2;
-            } 
+            }
         }
-        
+
         if (!energy.CompareTo("PbPb_2.76TeV")){
             if (!generator.CompareTo("")){
                 if (!centrality.CompareTo("0-10%")){
@@ -3975,10 +3975,10 @@
                 } else if (!centrality.CompareTo("60-80%")){
                     return 2;
                 } else if (!centrality.CompareTo("40-80%")){
-                    return 2;	
-                }	
-            }	
-        }	
+                    return 2;
+                }
+            }
+        }
 
         if (!energy.CompareTo("PbPb_5.02TeV")){
             if (!generator.CompareTo("")){
@@ -3996,22 +3996,22 @@
         return 0;
     }
 
-    Color_t GetDefaultColorDiffDetectors( TString detector, 
-                                        Bool_t isMC, 
-                                        Bool_t isBox = kFALSE, 
+    Color_t GetDefaultColorDiffDetectors( TString detector,
+                                        Bool_t isMC,
+                                        Bool_t isBox = kFALSE,
                                         Bool_t isHighPt = kTRUE){
         if (isMC){ // MC
             if (detector.CompareTo("PCM") == 0){
                 return kGray+1;
             } else if (detector.CompareTo("PHOS") == 0){
                 return kRed-7;
-            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                 return kGreen-6;
-            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
                 return kBlue-6;
-            } else if (detector.CompareTo("PCM-PHOS") == 0){	
+            } else if (detector.CompareTo("PCM-PHOS") == 0){
                 return kOrange+1;
-            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                 return kViolet-4;
             } else if (detector.CompareTo("EMCal high pT") == 0){
                 return kOrange+1;
@@ -4020,7 +4020,7 @@
             }	else {
                 return kCyan-6;
             }
-            
+
         } else { // data
             if (!isBox){
                 if (detector.CompareTo("PCM") == 0){
@@ -4029,16 +4029,16 @@
                 } else if (detector.CompareTo("PHOS") == 0){
                     if(isHighPt) return kRed+1;
                     else return kRed-6;
-                } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+                } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                     if(isHighPt) return kGreen+2;
                     else return kGreen-6;
-                } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
+                } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
                     if(isHighPt) return kBlue+1;
                     else return kBlue-6;
-                } else if (detector.CompareTo("PCM-PHOS") == 0){	
+                } else if (detector.CompareTo("PCM-PHOS") == 0){
                     if(isHighPt) return 807;
                         else return 806;
-                } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+                } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                     if(isHighPt) return kViolet;
                         else return kViolet-4;
                 } else if (detector.CompareTo("Comb") == 0){
@@ -4059,13 +4059,13 @@
                     return kGray+1;
                 } else if (detector.CompareTo("PHOS") == 0){
                     return kRed-6;
-                } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+                } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                     return kGreen-6;
-                } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
-                    return kBlue-7;	
-                } else if (detector.CompareTo("PCM-PHOS") == 0){	
+                } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
+                    return kBlue-7;
+                } else if (detector.CompareTo("PCM-PHOS") == 0){
                     return 806;
-                } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+                } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                     return kViolet-4;
                 }  else if (detector.CompareTo("EMCal high pT") == 0){
                     return 806;
@@ -4074,27 +4074,27 @@
                 } else {
                     return kCyan-6;
                 }
-            }	
-        }	
+            }
+        }
         return kBlack;
     }
 
 
 
-    Style_t GetDefaultMarkerStyleDiffDetectors( TString detector, 
+    Style_t GetDefaultMarkerStyleDiffDetectors( TString detector,
                                                 Bool_t isMC){
         if (isMC){ // MC
             if (detector.CompareTo("PCM") == 0){
                 return 24;
             } else if (detector.CompareTo("PHOS") == 0){
                 return 25;
-            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                 return 27;
-            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
                 return 28;
-            } else if (detector.CompareTo("PCM-PHOS") == 0){	
+            } else if (detector.CompareTo("PCM-PHOS") == 0){
                 return 28;
-            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                 return 30;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 28;
@@ -4110,13 +4110,13 @@
                 return 20;
             } else if (detector.CompareTo("PHOS") == 0){
                 return 21;
-            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                 return 33;
-            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
                 return 34;
-            } else if (detector.CompareTo("PCM-PHOS") == 0){	
+            } else if (detector.CompareTo("PCM-PHOS") == 0){
                 return 34;
-            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                 return 29;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 34;
@@ -4127,7 +4127,7 @@
             } else {
                 return 29;
             }
-        }	
+        }
         return 1;
     }
 
@@ -4138,13 +4138,13 @@
                 return 2.2;
             } else if (detector.CompareTo("PHOS") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                 return 3.3;
-            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("PCM-PHOS") == 0){	
+            } else if (detector.CompareTo("PCM-PHOS") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                 return 2.2;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 2.2;
@@ -4158,13 +4158,13 @@
                 return 2.2;
             } else if (detector.CompareTo("PHOS") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){	
+            } else if (detector.CompareTo("EMCal") == 0 || detector.CompareTo("EMC") == 0){
                 return 3.3;
-            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){	
+            } else if (detector.CompareTo("PCM-EMCal") == 0 || detector.CompareTo("PCM-EMC") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("PCM-PHOS") == 0){	
+            } else if (detector.CompareTo("PCM-PHOS") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){	
+            } else if (detector.CompareTo("Dalitz") == 0 || detector.CompareTo("PCM-Dalitz") == 0){
                 return 2.2;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 2.2;
@@ -4177,26 +4177,26 @@
         return 1.;
     }
 
-    void PlotErrorBarAtUpperEdgeOfTGraphAsymErr(TGraphAsymmErrors* graph, 
-                                                Double_t widthTick = 0.05, 
+    void PlotErrorBarAtUpperEdgeOfTGraphAsymErr(TGraphAsymmErrors* graph,
+                                                Double_t widthTick = 0.05,
                                                 Bool_t isLog = kFALSE){
-        
+
         TGraphAsymmErrors* dummy = (TGraphAsymmErrors*)graph->Clone("dummyPlotErrorsAtEdge");
         for (Int_t i=0; i < dummy->GetN();i++){
             Double_t widthTickUsedUp = widthTick;
             Double_t widthTickUsedDown = widthTick;
-            DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEYhigh()[i], dummy->GetY()[i]+dummy->GetEYhigh()[i], 
+            DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEYhigh()[i], dummy->GetY()[i]+dummy->GetEYhigh()[i],
                         dummy->GetLineWidth(), dummy->GetLineColor(),dummy->GetLineStyle());
-        
+
         }
     }
 
-    Color_t GetDefaultTriggerColor( TString periodName, 
+    Color_t GetDefaultTriggerColor( TString periodName,
                                     Int_t SpecialTrigger){
         if( periodName.CompareTo("LHC11a") == 0                 ||
             periodName.CompareTo("LHC11a_p4_wSDD") == 0         ||
             periodName.CompareTo("LHC11a_p4_wSDD-kEMC1") == 0   ||
-            periodName.CompareTo("LHC11a_pass4_wSDD") == 0         
+            periodName.CompareTo("LHC11a_pass4_wSDD") == 0
         ){
             switch(SpecialTrigger)
             {
@@ -4263,12 +4263,12 @@
         return kBlack;
     }
 
-    Style_t GetDefaultTriggerMarker( TString periodName, 
+    Style_t GetDefaultTriggerMarker( TString periodName,
                                     Int_t SpecialTrigger){
         if( periodName.CompareTo("LHC11a") == 0                 ||
-            periodName.CompareTo("LHC11a_p4_wSDD") == 0         || 
+            periodName.CompareTo("LHC11a_p4_wSDD") == 0         ||
             periodName.CompareTo("LHC11a_p4_wSDD-kEMC1") == 0   ||
-            periodName.CompareTo("LHC11a_pass4_wSDD") == 0         
+            periodName.CompareTo("LHC11a_pass4_wSDD") == 0
         ){
             switch(SpecialTrigger)
             {
@@ -4348,10 +4348,10 @@
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && !isShade)  return kGreen+3;
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return kGreen-8;
         else if (triggerName.Contains("EG1") && !isShade)  return kCyan+2;
-        else if (triggerName.Contains("EG1") && isShade)   return kCyan-6;    
-        else return kBlack; 
-        
-        return kBlack; 
+        else if (triggerName.Contains("EG1") && isShade)   return kCyan-6;
+        else return kBlack;
+
+        return kBlack;
     }
 
     Marker_t GetDefaultTriggerMarkerStyleName (TString triggerName, Bool_t isShade ){
@@ -4374,9 +4374,9 @@
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return 30;
         else if (triggerName.Contains("EG1_NLM1") && !isShade)  return 27;
         else if (triggerName.Contains("EG1") && !isShade)  return 33;
-        else if (triggerName.Contains("EG1") && isShade)   return 27;    
+        else if (triggerName.Contains("EG1") && isShade)   return 27;
         else return 20;
-        
+
         return 20;
     }
 
@@ -4400,9 +4400,9 @@
         else if ((triggerName.Contains("EG2") || triggerName.Contains("EGA")) && isShade)   return (Size_t)2;
         else if (triggerName.Contains("EG1_NLM1") && !isShade)  return (Size_t)2;
         else if (triggerName.Contains("EG1") && !isShade)  return (Size_t)2;
-        else if (triggerName.Contains("EG1") && isShade)   return (Size_t)2;    
+        else if (triggerName.Contains("EG1") && isShade)   return (Size_t)2;
         else return (Size_t)1.5;
-        
+
         return (Size_t)1.5;
     }
 
@@ -4431,12 +4431,12 @@
             cnst->SetLineStyle(2);
             cnst->SetLineWidth(3);
             cnst->Draw("same");
-            TF1 *max1 = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);        
+            TF1 *max1 = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);
             max1->SetLineColor(kWhite);
             max1->SetLineWidth(4);
             max1->SetLineStyle(2);
             max1->Draw("same");
-            TF1 *max = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);        
+            TF1 *max = new TF1("max","exp(0.0662-0.0201*x)-0.0955+0.00186*x+21.9/x",9.5,maxPt);
             max->SetLineColor(kRed+2);
             max->SetLineWidth(3);
             max->SetLineStyle(2);
@@ -4460,7 +4460,7 @@
             cnst->SetLineStyle(2);
             cnst->SetLineWidth(1);
             cnst->Draw("same");
-            TF1 *max = new TF1("max","exp(0.353-0.0264*x)-0.524+0.00559*x+21.9/x",9.5,maxPt);        
+            TF1 *max = new TF1("max","exp(0.353-0.0264*x)-0.524+0.00559*x+21.9/x",9.5,maxPt);
             max->SetLineColor(kWhite);
             max->SetLineWidth(2);
             max->SetLineStyle(2);
@@ -4469,20 +4469,22 @@
             max->SetLineWidth(1);
             max->SetLineStyle(2);
             max->Draw("same");
-        }    
-    }    
+        }
+    }
 
     //**********************************************************************************
     //**********************************************************************************
     //**********************************************************************************
-    Color_t GetColorSystematics(    TString variationName, 
+    Color_t GetColorSystematics(    TString variationName,
                                     TString mode            = ""
-                                ){    
+                                ){
 
-        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("PileupDCA") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+        if ( variationName.Contains("BGEstimateIterations") || variationName.CompareTo("PileupDCA") == 0 )
+            return kTeal+3;
+        if ( variationName.Contains("BGEstimate")  || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
             return kTeal-5;
         if ( variationName.CompareTo("BG") == 0 )
-            return kOrange+5;
+            return 800;
         if ( variationName.Contains("Periods") )
             return kBlue-7;
         if ( variationName.CompareTo("SPD") == 0 )
@@ -4490,11 +4492,11 @@
         if ( variationName.CompareTo("CosPoint") == 0 )
             return kYellow+2;
         if ( variationName.CompareTo("Eta") == 0 )
-            return kTeal-7; 
+            return kTeal-7;
         if ( variationName.CompareTo("MCSmearing") == 0 )
-            return kCyan+6; 
+            return kAzure-5;
         if ( variationName.CompareTo("PsiPair") == 0 )
-            return kRed-2;    
+            return kRed-2;
         if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0 || variationName.CompareTo("IntRange") == 0 )
             return kBlue;
         if ( variationName.CompareTo("dEdxE") == 0 )
@@ -4516,7 +4518,7 @@
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return kCyan-2;
         if ( variationName.CompareTo("DoubleCount") == 0)
-            return kGray+2;    
+            return kGray+2;
         if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
             return kViolet+1;
         if ( variationName.CompareTo("ClusterNCells") == 0 )
@@ -4557,7 +4559,7 @@
             return kSpring-6;
         if ( variationName.CompareTo("Cocktail") == 0 )
             return 404;
-        
+
         cout << "GetColorSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
         return kBlack;
     }
@@ -4565,11 +4567,13 @@
     //**********************************************************************************
     //************** Determine marker style for systematics ****************************
     //**********************************************************************************
-    Style_t GetMarkerStyleSystematics(  TString variationName, 
+    Style_t GetMarkerStyleSystematics(  TString variationName,
                                         TString mode            = ""
-                                    ){    
+                                    ){
 
-        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("PileupDCA") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+        if ( variationName.Contains("BGEstimateIterations") || variationName.CompareTo("PileupDCA") == 0)
+            return 25;
+        if ( variationName.Contains("BGEstimate")  || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
             return 24;
         if ( variationName.CompareTo("BG") == 0 )
             return 28;
@@ -4580,11 +4584,11 @@
         if ( variationName.CompareTo("CosPoint") == 0 )
             return 24;
         if ( variationName.CompareTo("Eta") == 0 )
-            return 30; 
+            return 30;
         if ( variationName.CompareTo("MCSmearing") == 0 )
-            return 21; 
+            return 21;
         if ( variationName.CompareTo("PsiPair") == 0 )
-            return 23;    
+            return 23;
         if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0 )
             return 24;
         if ( variationName.CompareTo("dEdxE") == 0 )
@@ -4606,7 +4610,7 @@
         if ( variationName.CompareTo("ConvPhi") == 0 )
             return 28;
         if ( variationName.CompareTo("DoubleCount") == 0)
-            return 29;    
+            return 29;
         if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
             return 29;
         if ( variationName.CompareTo("ClusterNCells") == 0 )
@@ -4647,7 +4651,7 @@
             return 33;
         if ( variationName.CompareTo("Cocktail") == 0 )
             return 21;
-        
+
         cout << "GetMarkerStyleSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
         return 20;
     }
@@ -4655,24 +4659,26 @@
     //**********************************************************************************
     //********************** Determine name for systematics ****************************
     //**********************************************************************************
-    TString GetSystematicsName  (  TString variationName = "" ){    
-        
-        if ( variationName.CompareTo("BGEstimate_pp") == 0 || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
-            return "pile-up";
+    TString GetSystematicsName  (  TString variationName = "" ){
+
+        if ( variationName.CompareTo("PileupDCA") == 0 || variationName.Contains("BGEstimateIterations") )
+            return "OB pile-up B";
+        if ( variationName.Contains("BGEstimate") )
+            return "OB pile-up A";
+        if ( variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+            return "IB pile-up ";
         if ( variationName.CompareTo("BG") == 0 )
             return "BG method";
-        if ( variationName.CompareTo("PileupDCA") == 0 )
-            return "Out-of-bunch pile-up";
         if ( variationName.Contains("Periods"))
             return "periods";
         if ( variationName.CompareTo("SPD") == 0 )
-            return "SPD pileup";
+            return "IB pile-up";
         if ( variationName.CompareTo("CosPoint") == 0 )
             return "cos(#Theta_{point})";
         if ( variationName.CompareTo("Eta") == 0 )
-            return "#eta_{#gamma, e^{#pm}}"; 
+            return "#eta_{#gamma, e^{#pm}}";
         if ( variationName.CompareTo("MCSmearing") == 0 )
-            return "MC smearing"; 
+            return "MC smearing";
         if ( variationName.CompareTo("PsiPair") == 0 )
             return "#psi_{pair} #gamma";
         if ( variationName.CompareTo("YieldExtraction") == 0 || variationName.CompareTo("YieldExtraction_pp") == 0 )
@@ -4700,7 +4706,7 @@
         if ( variationName.CompareTo("TOF") == 0 )
             return "TOF";
         if ( variationName.CompareTo("DoubleCount") == 0)
-            return "double count";    
+            return "double count";
         if ( variationName.CompareTo("ClusterMinEnergy") == 0 )
             return "min E_{cluster}";
         if ( variationName.CompareTo("ClusterNCells") == 0 )
@@ -4749,10 +4755,10 @@
             return "cell E_{agg}";
         if ( variationName.CompareTo("Cocktail") == 0 )
             return "cocktail";
-        
+
         cout << "GetSystematicsName(): no valid input parameters given..." << endl;
         return "";
-        
-    }    
+
+    }
 
 #endif

@@ -117,10 +117,10 @@
     //************************************************************************************
     //********************* Separate cut numbers, old version ****************************
     //************************************************************************************
-    void ReturnSeparatedCutNumber(  TString cutSel, 
+    void ReturnSeparatedCutNumber(  TString cutSel,
                                     TString& gammaCutNumber,
                                     TString& electronCutNumber,
-                                    TString& mesonCutNumber, 
+                                    TString& mesonCutNumber,
                                     Bool_t kDalitz=kFALSE){
 
         TObjArray *arr;
@@ -133,7 +133,7 @@
             objstrGamma = (TObjString*)arr->At(0);
             objstrElectron = (TObjString*)arr->At(1);
             objstrMeson = (TObjString*)arr->At(2);
-            
+
             gammaCutNumber= objstrGamma->GetString();
             electronCutNumber = objstrElectron->GetString();
             mesonCutNumber = objstrMeson->GetString();
@@ -141,7 +141,7 @@
         else {
             objstrGamma = (TObjString*)arr->At(0);
             objstrMeson = (TObjString*)arr->At(1);
-            
+
             gammaCutNumber= objstrGamma->GetString();
             mesonCutNumber = objstrMeson->GetString();
         }
@@ -151,18 +151,18 @@
 
     //************************************************************************************
     //********************* Separate cut numbers, new version ****************************
-    //** separates the possible combinations according to the mode into the             ** 
+    //** separates the possible combinations according to the mode into the             **
     //** respective eventCutNumber, gammaCutNumber (PCM), clusterCutNumber (EMCal/PHOS),**
     //** electronCutNumber (Dalitz) and mesonCutNumber                                  **
     //************************************************************************************
-    void ReturnSeparatedCutNumberAdvanced(  TString cutSel, 
-                                            TString& eventCutNumber, 
-                                            TString& gammaCutNumber, 
-                                            TString& clusterCutNumber, 
+    void ReturnSeparatedCutNumberAdvanced(  TString cutSel,
+                                            TString& eventCutNumber,
+                                            TString& gammaCutNumber,
+                                            TString& clusterCutNumber,
                                             TString& electronCutNumber,
                                             TString& mesonCutNumber,
                                             Int_t type=0){
-        
+
         TObjArray *arr;
         arr = cutSel.Tokenize("_");
         TObjString* objstrEvent;
@@ -170,12 +170,12 @@
         TObjString* objstrCluster;
         TObjString* objstrElectron;
         TObjString* objstrMeson;
-        
+
         if (type == 0){ // PCM-PCM
             objstrEvent         = (TObjString*)arr->At(0);
             objstrGamma         = (TObjString*)arr->At(1);
             objstrMeson         = (TObjString*)arr->At(2);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             mesonCutNumber      = objstrMeson->GetString();
@@ -185,7 +185,7 @@
             objstrGamma         = (TObjString*)arr->At(1);
             objstrElectron      = (TObjString*)arr->At(2);
             objstrMeson         = (TObjString*)arr->At(3);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             electronCutNumber   = objstrElectron->GetString();
@@ -195,7 +195,7 @@
             objstrGamma         = (TObjString*)arr->At(1);
             objstrCluster       = (TObjString*)arr->At(2);
             objstrMeson         = (TObjString*)arr->At(3);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
@@ -205,7 +205,7 @@
             objstrGamma         = (TObjString*)arr->At(1);
             objstrCluster       = (TObjString*)arr->At(2);
             objstrMeson         = (TObjString*)arr->At(3);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
@@ -214,7 +214,7 @@
             objstrEvent         = (TObjString*)arr->At(0);
             objstrCluster       = (TObjString*)arr->At(1);
             objstrMeson         = (TObjString*)arr->At(2);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
@@ -232,7 +232,7 @@
             objstrEvent         = (TObjString*)arr->At(0);
             objstrCluster       = (TObjString*)arr->At(1);
             objstrMeson         = (TObjString*)arr->At(2);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
@@ -242,7 +242,7 @@
             objstrElectron      = (TObjString*)arr->At(2);
             objstrCluster       = (TObjString*)arr->At(3);
             objstrMeson         = (TObjString*)arr->At(4);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
@@ -254,7 +254,7 @@
             objstrElectron      = (TObjString*)arr->At(2);
             objstrCluster       = (TObjString*)arr->At(3);
             objstrMeson         = (TObjString*)arr->At(4);
-            
+
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
@@ -279,7 +279,7 @@
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
-            mesonCutNumber      = objstrMeson->GetString();        
+            mesonCutNumber      = objstrMeson->GetString();
         } else if (type == 12){ // flow
             objstrEvent         = (TObjString*)arr->At(0);
             objstrGamma         = (TObjString*)arr->At(1);
@@ -287,8 +287,8 @@
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
 
-        }    
-        
+        }
+
         cout << cutSel.Data() << "\t" << eventCutNumber.Data() << "\t" << gammaCutNumber.Data() << "\t" <<  clusterCutNumber.Data() << "\t" <<electronCutNumber.Data() << "\t" << mesonCutNumber.Data() << endl;
         return;
     }
@@ -400,7 +400,7 @@
     //************************************************************************************
     //********************* get number of events for PCM/calo analysis *******************
     //************************************************************************************
-    Int_t GetNEvents (  TH1* histo, 
+    Int_t GetNEvents (  TH1* histo,
                         Bool_t doCout=kTRUE){
         if (!histo) cout << "NO EVENT HISTO" << endl;
         if(histo->GetNbinsX()==11){
@@ -409,7 +409,7 @@
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
             for (Int_t i = 1; i<12; i++ ){
                 if(doCout) cout << histo->GetBinContent(i) << "\t";
-            }    
+            }
             if(doCout) cout << nEventsMB  << endl;
             for (Int_t i = 1; i<12; i++ ){
                     if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
@@ -432,7 +432,7 @@
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
             for (Int_t i = 1; i<13; i++ ){
                 if(doCout) cout << histo->GetBinContent(i) << "\t";
-            }    
+            }
             if(doCout) cout << nEventsMB  << endl;
             for (Int_t i = 1; i<13; i++ ){
                     if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
@@ -457,7 +457,7 @@
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
             for (Int_t i = 1; i<14; i++ ){
                 if(doCout) cout << histo->GetBinContent(i) << "\t";
-            }    
+            }
             if(doCout) cout << nEventsMB  << endl;
             for (Int_t i = 1; i<14; i++ ){
                     if(doCout) cout << histo->GetXaxis()->GetBinLabel(i) << "\t" << histo->GetBinContent(i)/nEventsMB << "\n";
@@ -552,15 +552,15 @@
         switch (mode){
             case 0:
                 return "PCM";
-            case 1: 
+            case 1:
                 return "PCM-Dal";
             case 2:
                 return "PCM-EMC";
-            case 3: 
+            case 3:
                 return "PCM-PHOS";
             case 4:
                 return "EMC";
-            case 5: 
+            case 5:
                 return "PHOS";
             case 6:
                 return "EMC-Dal";
@@ -691,8 +691,8 @@
     //************************************************************************************
     //***** return detailed labels for different processes depending on energy ***********
     //************************************************************************************
-    TString ReturnFullTextMeson(TString fEnergyFlagOpt, 
-                                TString textProcessOpt){ 
+    TString ReturnFullTextMeson(TString fEnergyFlagOpt,
+                                TString textProcessOpt){
 
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 7 TeV ",textProcessOpt.Data());
@@ -717,10 +717,10 @@
     }
 
     //************************************************************************************
-    //return detailed labels Pi+pi-gamma channel for different processes depending on energy 
+    //return detailed labels Pi+pi-gamma channel for different processes depending on energy
     //************************************************************************************
     TString ReturnFullTextMesonPiPlPiMiGamma(   TString fEnergyFlagOpt,
-                                                TString textProcessOpt){ 
+                                                TString textProcessOpt){
 
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return Form("pp #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 7 TeV ",textProcessOpt.Data());
@@ -743,7 +743,7 @@
     //************************************************************************************
     //***************** return proper labeling for collision system **********************
     //************************************************************************************
-    TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){ 
+    TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  "pp, #sqrt{#it{s}} = 7 TeV";
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
@@ -771,17 +771,17 @@
     //************************************************************************************
     //***************** return proper cms-energy for collision system ********************
     //************************************************************************************
-    Double_t ReturnCollisionEnergy( TString fEnergyFlagOpt){ 
+    Double_t ReturnCollisionEnergy( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  7000;
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
-            return 8000; 	
+            return 8000;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
             return 13000;
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
-            return 5020;  
+            return 5020;
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
-            return 2760; 
+            return 2760;
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
             return 900;
         } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) || (fEnergyFlagOpt.CompareTo("HI") == 0) ) {
@@ -792,14 +792,14 @@
             return 5023;
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
-            return 1;     
+            return 1;
         }
     }
 
     //************************************************************************************
     //***************** return proper cms-energy for collision system ********************
     //************************************************************************************
-    TString ReturnCollisionEnergyOutputString( TString fEnergyFlagOpt){ 
+    TString ReturnCollisionEnergyOutputString( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  "pp7TeV";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0|| fEnergyFlagOpt.CompareTo("5.02TeV") == 0) {
@@ -822,14 +822,14 @@
             return  "pPb8TeV";
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
-            return "";     
+            return "";
         }
     }
 
     //************************************************************************************
     //***************** return proper cms-energy for collision system ********************
     //************************************************************************************
-    TString ReturnCollisionEnergyStringForTheory( TString fEnergyFlagOpt){ 
+    TString ReturnCollisionEnergyStringForTheory( TString fEnergyFlagOpt){
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  "7TeV";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
@@ -852,7 +852,7 @@
             return  "8TeV";
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
-            return "";     
+            return "";
         }
     }
 
@@ -883,19 +883,19 @@
         if(gammaCutNumber.Length() > 23) return 2;
         else return 2;
     }
-    Int_t GetPhotonEtaForPhiCutPosition (TString gammaCutNumber){	 
+    Int_t GetPhotonEtaForPhiCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 3;
         else return -1;
     }
-    Int_t GetPhotonMinPhiCutPosition (TString gammaCutNumber){	
+    Int_t GetPhotonMinPhiCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 4;
         else return -1;
     }
-    Int_t GetPhotonMaxPhiCutPosition (TString gammaCutNumber){	 
+    Int_t GetPhotonMaxPhiCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 5;
         else return -1;
-    }  
-    Int_t GetPhotonSinglePtCutPosition (TString gammaCutNumber){	 
+    }
+    Int_t GetPhotonSinglePtCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 6;
         else return 3;
     }
@@ -903,76 +903,76 @@
         if(gammaCutNumber.Length() > 23) return 7;
         else return 4;
     }
-    Int_t GetPhotonEDedxSigmaCutPosition (TString gammaCutNumber){	
+    Int_t GetPhotonEDedxSigmaCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 8;
         else return 5;
     }
     Int_t GetPhotonPiDedxSigmaCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 9;
         else return 6;
-    } 
-    Int_t GetPhotonPiMomDedxSigmaCutPosition (TString gammaCutNumber){	
+    }
+    Int_t GetPhotonPiMomDedxSigmaCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 10;
         else return 7;
-    } 
-    Int_t GetPhotonPiMaxMomDedxSigmaCutPosition (TString gammaCutNumber){		
+    }
+    Int_t GetPhotonPiMaxMomDedxSigmaCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 11;
         else return 8;
-    } 
-    Int_t GetPhotonLowPRejectionSigmaCutPosition (TString gammaCutNumber){		
+    }
+    Int_t GetPhotonLowPRejectionSigmaCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 12;
         else return 9;
-    } 
-    Int_t GetPhotonTOFelectronPIDCutPosition (TString gammaCutNumber){		
+    }
+    Int_t GetPhotonTOFelectronPIDCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() > 23) return 13;
         else return 10;
-    } 
-    Int_t GetPhotonQtMaxCutPosition (TString gammaCutNumber){		
+    }
+    Int_t GetPhotonQtMaxCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 16;
         else if(gammaCutNumber.Length() == 24) return 14;
         else return 11;
-    } 
-    Int_t GetPhotonChi2GammaCutPosition (TString gammaCutNumber){		
+    }
+    Int_t GetPhotonChi2GammaCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 17;
         else if(gammaCutNumber.Length() == 24) return 15;
         else return 12;
-    } 
-    Int_t GetPhotonPsiPairCutPosition (TString gammaCutNumber){	
+    }
+    Int_t GetPhotonPsiPairCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 18;
         else if(gammaCutNumber.Length() == 24) return 16;
         else return 13;
-    } 
-    Int_t GetPhotonDoPhotonAsymmetryCutPosition (TString gammaCutNumber){	
+    }
+    Int_t GetPhotonDoPhotonAsymmetryCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 19;
         else if(gammaCutNumber.Length() == 24) return 17;
         else return 14;
-    } 
-    Int_t GetPhotonCosinePointingAngleCutPosition (TString gammaCutNumber){	
+    }
+    Int_t GetPhotonCosinePointingAngleCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 20;
         else if(gammaCutNumber.Length() == 24) return 18;
         else return 15;
     }
-    Int_t GetPhotonSharedElectronCutPosition (TString gammaCutNumber){	
+    Int_t GetPhotonSharedElectronCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 21;
         else if(gammaCutNumber.Length() == 24) return 19;
         else return 16;
-    } 
-    Int_t GetPhotonRejectToCloseV0sCutPosition (TString gammaCutNumber){		
+    }
+    Int_t GetPhotonRejectToCloseV0sCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 22;
         else if(gammaCutNumber.Length() == 24) return 20;
         else return 17;
     }
-    Int_t GetPhotonDcaRPrimVtxCutPosition (TString gammaCutNumber){	
+    Int_t GetPhotonDcaRPrimVtxCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 23;
         else if(gammaCutNumber.Length() == 24) return 21;
         else return 18;
     }
-    Int_t GetPhotonDcaZPrimVtxCutPosition (TString gammaCutNumber){	
+    Int_t GetPhotonDcaZPrimVtxCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 24;
         else if(gammaCutNumber.Length() == 24) return 22;
         else return 19;
     }
-    Int_t GetPhotonEventPlaneCutPosition (TString gammaCutNumber){		
+    Int_t GetPhotonEventPlaneCutPosition (TString gammaCutNumber){
         if(gammaCutNumber.Length() == 26) return 25;
         else if(gammaCutNumber.Length() == 24) return 23;
         else return 20;
@@ -1141,7 +1141,7 @@
     TDatime 	today;
     int 		iHour = today.GetHour();
     int     iMinute = today.GetMinute();
-    
+
     if(iHour < 10){
         if(iMinute < 10){
         return Form("_0%i0%i",iHour, iMinute);
@@ -1163,9 +1163,9 @@
     //************************************************************************************
     //** Analyzes meson rapidity cut, returns labeling string + double for normalization *
     //************************************************************************************
-    Double_t ReturnRapidityStringAndDouble( TString cutSel, 
+    Double_t ReturnRapidityStringAndDouble( TString cutSel,
                                             TString& rapidityRangeDummy){
-        
+
         TString rapitdityCutNumberDummy     = cutSel(GetMesonRapidityCutPosition(),1);
         if (rapitdityCutNumberDummy.CompareTo("0") == 0){
             cout << "using rapidity of 0.9" << endl;
@@ -1206,7 +1206,7 @@
         } else if (rapitdityCutNumberDummy.CompareTo("9") == 0){
             cout << "using rapidity of 0.4" << endl;
             rapidityRangeDummy              = "0.4";
-            return 0.8;   
+            return 0.8;
         } else {
             cout <<  " no rapidity Range selected" << endl;
             return 1.;
@@ -1263,7 +1263,7 @@
     //************************************************************************************
     Double_t AnalyseClusterMinEtaCut (Int_t etaMin){
         switch (etaMin){
-            case 0: 
+            case 0:
                 return -10.;
             case 1:
                 return -0.6687;
@@ -1280,8 +1280,8 @@
             case 7:
                 return -0.4;
             default:
-                return 0;   
-        }        
+                return 0;
+        }
     }
 
     //************************************************************************************
@@ -1289,7 +1289,7 @@
     //************************************************************************************
     Double_t AnalyseClusterMaxEtaCut (Int_t etaMin){
         switch (etaMin){
-            case 0: 
+            case 0:
                 return 10.;
             case 1:
                 return 0.66465;
@@ -1306,8 +1306,8 @@
             case 7:
                 return 0.4;
             default:
-                return 0;   
-        }        
+                return 0;
+        }
     }
 
     //************************************************************************************
@@ -1315,7 +1315,7 @@
     //************************************************************************************
     Double_t AnalyseClusterMinPhiCut (Int_t etaMin){
         switch (etaMin){
-            case 0: 
+            case 0:
                 return -10000;
             case 1:
                 return 1.39626;
@@ -1326,8 +1326,8 @@
             case 4:
                 return 4.54;
             default:
-                return 0;   
-        }        
+                return 0;
+        }
     }
 
     //************************************************************************************
@@ -1335,7 +1335,7 @@
     //************************************************************************************
     Double_t AnalyseClusterMaxPhiCut (Int_t etaMin){
         switch (etaMin){
-            case 0: 
+            case 0:
                 return 10000;
             case 1:
                 return 3.15;
@@ -1346,22 +1346,22 @@
             case 4:
                 return 5.59;
             default:
-                return 0;   
-        }        
+                return 0;
+        }
     }
 
     //************************************************************************************
     //****** Analyzes photon (cluster) eta cut, returns double for normalization *********
     //************************************************************************************
     TString AnalyseEtaCalo(TString caloCutNumber){
-        
+
         TString etaMinCutNumber(caloCutNumber(GetClusterEtaMinCutPosition(caloCutNumber),1));
         TString etaMaxCutNumber(caloCutNumber(GetClusterEtaMaxCutPosition(caloCutNumber),1));
-    
+
         Float_t minEtaCut   = AnalyseClusterMinEtaCut(CutNumberToInteger(etaMinCutNumber));
         Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(CutNumberToInteger(etaMaxCutNumber));
-        
-        
+
+
         return Form("%.2f < #gamma_{calo} < %.2f", minEtaCut, maxEtaCut);
     }
 
@@ -1370,14 +1370,14 @@
     //****** Analyzes photon (cluster) eta cut, returns double for normalization *********
     //************************************************************************************
     Double_t ReturnDeltaEtaCalo(TString caloCutNumber){
-        
+
         TString etaMinCutNumber(caloCutNumber(GetClusterEtaMinCutPosition(caloCutNumber),1));
         TString etaMaxCutNumber(caloCutNumber(GetClusterEtaMaxCutPosition(caloCutNumber),1));
-    
+
         Float_t minEtaCut   = AnalyseClusterMinEtaCut(CutNumberToInteger(etaMinCutNumber));
         Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(CutNumberToInteger(etaMaxCutNumber));
         Float_t deltaEtaCut = TMath::Abs(minEtaCut) + TMath::Abs(maxEtaCut);
-        
+
         return deltaEtaCut;
     }
 
@@ -1385,16 +1385,16 @@
     //****** Analyzes photon (cluster) phi cut, returns double for normalization *********
     //************************************************************************************
     Double_t ReturnDeltaPhiCalo(TString caloCutNumber){
-        
+
         TString phiMinCutNumber(caloCutNumber(GetClusterPhiMinCutPosition(caloCutNumber),1));
         TString phiMaxCutNumber(caloCutNumber(GetClusterPhiMaxCutPosition(caloCutNumber),1));
-    
+
         Float_t minPhiCut   = AnalyseClusterMinPhiCut(CutNumberToInteger(phiMinCutNumber));
         Float_t maxPhiCut   = AnalyseClusterMaxPhiCut(CutNumberToInteger(phiMaxCutNumber));
-        Float_t deltaPhiCut = maxPhiCut - minPhiCut; 
+        Float_t deltaPhiCut = maxPhiCut - minPhiCut;
         if ( minPhiCut == -10000 && maxPhiCut == 10000 )
             deltaPhiCut     = 2*TMath::Pi();
-        
+
         return deltaPhiCut;
     }
 
@@ -1430,12 +1430,12 @@
             return 100;
         }
         return 0;
-    }   
+    }
 
     //************************************************************************************
     //****** Analyzes the eventCutnumber and returns the NColl for the respective cent ***
     //************************************************************************************
-    Double_t GetNCollFromCutNumber (    TString cutNumber, 
+    Double_t GetNCollFromCutNumber (    TString cutNumber,
                                         TString energy      = "PbPb_2.76TeV"
                                 ){
         TString systemCutNumber     = cutNumber(GetEventSystemCutPosition(),1);
@@ -1455,30 +1455,30 @@
                 } else if (centralityCutNumber.CompareTo("46") == 0){ //40-60%
                     return ncoll4060;
                 } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
-                    return ncoll4080;		
+                    return ncoll4080;
                 } else if (centralityCutNumber.CompareTo("45") == 0){ //40-50%
-                    return ncoll4050;   
+                    return ncoll4050;
                 } else if (centralityCutNumber.CompareTo("56") == 0){ //50-60%
-                    return ncoll5060;   
+                    return ncoll5060;
                 } else if (centralityCutNumber.CompareTo("68") == 0){ //60-80%
                     return ncoll6080;
                 } else if (centralityCutNumber.CompareTo("67") == 0){ //60-70%
-                    return ncoll6070;   
+                    return ncoll6070;
                 } else if (centralityCutNumber.CompareTo("78") == 0){ //70-80%
-                    return ncoll7080;   
+                    return ncoll7080;
                 } else if (centralityCutNumber.CompareTo("89") == 0){ //80-90%
-                    return ncoll8090;   
+                    return ncoll8090;
                 } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
-                    return 77.1;   
+                    return 77.1;
                 } else if (centralityCutNumber.CompareTo("04") == 0){ //0-40%
-                    return 740.;   
-                }      
-            } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){   
+                    return 740.;
+                }
+            } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
                 if (centralityCutNumber.CompareTo("01") == 0){ //0-5%
                     return ncoll0005;
                 } else if (centralityCutNumber.CompareTo("12") == 0){ //0-5%
                     return ncoll0510;
-                } 
+                }
             } else if (systemCutNumber.CompareTo("4") == 0 || systemCutNumber.CompareTo("7") == 0){
                 if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
                     return ncoll7590;
@@ -1488,7 +1488,7 @@
             return ncollpPb5023GeV;
         } else {
             return 1.;
-        }    
+        }
         return 1.;
     }
 
@@ -1498,7 +1498,7 @@
     Double_t GetNCollErrFromCutNumber ( TString cutNumber,
                                         TString energy      = "PbPb_2.76TeV"
                                     ){
-        
+
         TString systemCutNumber     = cutNumber(GetEventSystemCutPosition(),1);
         TString centralityCutNumber = cutNumber(GetEventCentralityMinCutPosition(),2);
         if (energy.CompareTo("PbPb_2.76TeV") == 0){
@@ -1518,34 +1518,34 @@
                 } else if (centralityCutNumber.CompareTo("48") == 0){ //40-80%
                     return nCollErr4080;
                 } else if (centralityCutNumber.CompareTo("45") == 0){ //40-50%
-                    return nCollErr4050;   
+                    return nCollErr4050;
                 } else if (centralityCutNumber.CompareTo("56") == 0){ //50-60%
-                    return nCollErr5060;   
+                    return nCollErr5060;
                 } else if (centralityCutNumber.CompareTo("68") == 0){ //60-80%
                     return nCollErr6080;
                 } else if (centralityCutNumber.CompareTo("67") == 0){ //60-70%
-                    return nCollErr6070;   
+                    return nCollErr6070;
                 } else if (centralityCutNumber.CompareTo("78") == 0){ //70-80%
-                    return nCollErr7080;   
+                    return nCollErr7080;
                 } else if (centralityCutNumber.CompareTo("89") == 0){ //80-90%
-                    return nCollErr8090;   
-                }      
-            } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){   
+                    return nCollErr8090;
+                }
+            } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
                 if (centralityCutNumber.CompareTo("01") == 0){ //0-5%
                     return nCollErr0005;
                 } else if (centralityCutNumber.CompareTo("12") == 0){ //0-5%
                     return nCollErr0510;
-                } 
+                }
             } else if (systemCutNumber.CompareTo("4") == 0 || systemCutNumber.CompareTo("7") == 0){
                 if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
                     return nCollErr7590;
                 }
-            }    
+            }
         } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
             return ncollErrpPb5023GeV;
         } else {
             return 1.;
-        }    
+        }
         return 1;
     }
 
@@ -1574,27 +1574,27 @@
             } else if (name.CompareTo("4060") == 0){ //40-60%
                 return ncoll4060;
             } else if (name.CompareTo("4080") == 0){ //40-80%
-                return ncoll4080;	
+                return ncoll4080;
             } else if (name.CompareTo("4050") == 0){ //40-50%
                 return ncoll4050;
             } else if (name.CompareTo("5060") == 0){ //40-60%
-                return ncoll5060;   
+                return ncoll5060;
             } else if (name.CompareTo("6080") == 0){ //60-80%
                 return ncoll6080;
             } else if (name.CompareTo("6070") == 0){ //60-80%
-                return ncoll6070;   
+                return ncoll6070;
             } else if (name.CompareTo("7080") == 0){ //60-80%
-                return ncoll7080;      
+                return ncoll7080;
             } else if (name.CompareTo("8090") == 0){ //60-80%
                 return ncoll8090;
             } else if (name.CompareTo("7590") == 0){ //60-80%
-                return ncoll7590;            
+                return ncoll7590;
             }
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){    
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
             return ncollpPb5023GeV;
         } else {
             return 1.;
-        } 
+        }
         return 1;
     }
 
@@ -1622,27 +1622,27 @@
             } else if (name.CompareTo("4060") == 0){ //40-60%
                 return nCollErr4060;
             } else if (name.CompareTo("4080") == 0){ //40-80%
-                return nCollErr4080;	
+                return nCollErr4080;
             } else if (name.CompareTo("4050") == 0){ //40-50%
                 return nCollErr4050;
             } else if (name.CompareTo("5060") == 0){ //50-60%
-                return nCollErr5060;   
+                return nCollErr5060;
             } else if (name.CompareTo("6080") == 0){ //60-80%
                 return nCollErr6080;
             } else if (name.CompareTo("6070") == 0){ //60-70%
                 return nCollErr6070;
             } else if (name.CompareTo("7080") == 0){ //70-80%
-                return nCollErr7080;   
+                return nCollErr7080;
             } else if (name.CompareTo("8090") == 0){ //80-90%
-                return nCollErr8090;      
+                return nCollErr8090;
             } else if (name.CompareTo("7590") == 0){ //75-90%
-                return nCollErr7590;      
+                return nCollErr7590;
             }
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){    
-            return ncollErrpPb5023GeV;      
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
+            return ncollErrpPb5023GeV;
         } else {
             return 1.;
-        }    
+        }
         return 1.;
     }
 
@@ -1657,7 +1657,7 @@
         TString centralityCutNumber = cutNumber(GetEventCentralityMinCutPosition(),2);
         if (systemCutNumber.CompareTo("1") == 0 || systemCutNumber.CompareTo("2") == 0 || systemCutNumber.CompareTo("5") == 0){
             if (centralityCutNumber.CompareTo("02") == 0){ //0-20%
-                return 1./0.302 -1.; 
+                return 1./0.302 -1.;
             } else if (centralityCutNumber.CompareTo("01") == 0){ //0-10%
                 return 1./0.303 -1.;
             } else if (centralityCutNumber.CompareTo("12") == 0){ //10-20%
@@ -1669,13 +1669,13 @@
             } else if (centralityCutNumber.CompareTo("46") == 0){ //40-60%
                 return 1./0.344 -1.;
             } else if (centralityCutNumber.CompareTo("45") == 0){ //40-50%
-                return 1./0.342 -1.;   
+                return 1./0.342 -1.;
             } else if (centralityCutNumber.CompareTo("56") == 0){ //50-60%
-                return 1./0.346 -1.;   
+                return 1./0.346 -1.;
             } else if (centralityCutNumber.CompareTo("68") == 0){ //60-80%
                 return 1./0.3979 -1.;
             } else if (centralityCutNumber.CompareTo("67") == 0){ //60-70%
-                return 1./0.39 -1.; 
+                return 1./0.39 -1.;
             } else if (centralityCutNumber.CompareTo("78") == 0){ //70-80%
                 return 1./0.41 -1.;
             } else if (centralityCutNumber.CompareTo("89") == 0){ //80-90%
@@ -1687,12 +1687,12 @@
             } else if (centralityCutNumber.CompareTo("08") == 0){ //0-80%
                 return 1./0.3 -1.;
             }
-        } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){   
+        } else if (systemCutNumber.CompareTo("3") == 0 || systemCutNumber.CompareTo("6") == 0){
             if (centralityCutNumber.CompareTo("01") == 0){ //0-5%
                 return 1./0.306  -1.;
             } else if (centralityCutNumber.CompareTo("12") == 0){ //0-5%
                 return 1./0.301  -1.;
-            } 
+            }
         } else if (systemCutNumber.CompareTo("4") == 0 || systemCutNumber.CompareTo("7") == 0){
             if (centralityCutNumber.CompareTo("69") == 0){ //75-90%
             return 1./0.42 -1.;
@@ -1709,10 +1709,10 @@
             } else if (centralityCutNumber.CompareTo("68") == 0){ //60-80%
                 return 1./1.11 -1.;
             } else if (centralityCutNumber.CompareTo("60") == 0){ //60-100%
-                return 1./1.62 -1.; 
+                return 1./1.62 -1.;
             } else if (centralityCutNumber.CompareTo("80") == 0){ //80-100%
                 return 1./3.00 -1.;
-            } 
+            }
         } else return 0.;
         return 0.;
     }
@@ -1725,13 +1725,13 @@
         if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return 1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
-            return  1./0.75 -1.;	
+            return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
             cout << "Caution: no correct K0 Scaling factor for 13TeV available yet" << endl;
             return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0) {
             cout << "Same as 7 TeV K0 scaling factor" << endl;
-            return  1./0.75 -1.;	
+            return  1./0.75 -1.;
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {
             return  1./0.685 -1.;
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
@@ -1745,14 +1745,14 @@
             return  GetScalingFactorSecCorrection(cutNr.Data());
         } else {
             cout << "No correct collision system specification, has been given" << endl;
-            return 0.;     
+            return 0.;
         }
     }
 
     //************************************************************************************
     //***** Analyzes the name of the cent and return the TAA for the respective cent *****
     //************************************************************************************
-    Double_t GetTAAFromName (   TString name, 
+    Double_t GetTAAFromName (   TString name,
                                 TString energy  = "PbPb_2.76TeV"
                             ){
         if (energy.CompareTo("PbPb_2.76TeV") == 0){
@@ -1772,8 +1772,8 @@
                 return tAA4060;
             } else if (name.CompareTo("6080") == 0){ //60-80%
                 return tAA6080;
-            } 
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){    
+            }
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
             return tpPb5023GeV;
         } else {
             return 1.;
@@ -1805,11 +1805,11 @@
             } else if (name.CompareTo("6080") == 0){ //60-80%
                 return tAAErr6080;
             }
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){    
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
             return tpPbErr5023GeV;
         } else {
             return 1.;
-        }    
+        }
         return 1.;
     }
 
@@ -1819,11 +1819,11 @@
     void ReturnParameterSetFittingPbPb(TString cutsel, Double_t* parameters){
         TString centralityCutNumber = cutsel(GetEventSystemCutPosition(),3);
         cout << "bla here" << endl;
-        if ( centralityCutNumber.CompareTo("102") == 0 || 
-            centralityCutNumber.CompareTo("101") == 0 || 
+        if ( centralityCutNumber.CompareTo("102") == 0 ||
+            centralityCutNumber.CompareTo("101") == 0 ||
             centralityCutNumber.CompareTo("112") == 0 ||
-            centralityCutNumber.CompareTo("502") == 0 || 
-            centralityCutNumber.CompareTo("501") == 0 || 
+            centralityCutNumber.CompareTo("502") == 0 ||
+            centralityCutNumber.CompareTo("501") == 0 ||
             centralityCutNumber.CompareTo("512") == 0 ){ //0-20%
             parameters[0] = 100.;
             parameters[1] = 1500.;
@@ -1859,7 +1859,7 @@
             parameters[7] = 6.;
             parameters[8] = 2.;
             parameters[9] = 18.;
-        } else if (centralityCutNumber.CompareTo("124") == 0 || 
+        } else if (centralityCutNumber.CompareTo("124") == 0 ||
                 centralityCutNumber.CompareTo("524") == 0){ //20-40%
             parameters[0] = 50.;
             parameters[1] = 900.;
@@ -1882,7 +1882,7 @@
             parameters[7] = 4.;
             parameters[8] = 2.;
             parameters[9] = 18.;
-        } else if (centralityCutNumber.CompareTo("146") == 0 || 
+        } else if (centralityCutNumber.CompareTo("146") == 0 ||
                 centralityCutNumber.CompareTo("546") == 0){ //40-60%
             parameters[0] = 10.;
             parameters[1] = 200.;
@@ -1894,7 +1894,7 @@
             parameters[7] = 4.5;
             parameters[8] = 2.;
             parameters[9] = 18.;
-        } else if (centralityCutNumber.CompareTo("168") == 0 || 
+        } else if (centralityCutNumber.CompareTo("168") == 0 ||
                 centralityCutNumber.CompareTo("568") == 0){ //60-80%
             parameters[0] = 1.;
             parameters[1] = 80.;
@@ -1917,7 +1917,7 @@
             parameters[7] = 3.3;
             parameters[8] = 2.;
             parameters[9] = 18.;
-        } 
+        }
         return;
     }
 
@@ -1925,8 +1925,8 @@
     //** Analyzes the name of the cent and returns the staring parameters for the fit ****
     //************************************************************************************
     void ReturnParameterSetFittingPbPbFromString(TString centralityCutNumber, Double_t* parameters){
-        if (centralityCutNumber.CompareTo("0020") == 0 || 
-            centralityCutNumber.CompareTo("0010") == 0 || 
+        if (centralityCutNumber.CompareTo("0020") == 0 ||
+            centralityCutNumber.CompareTo("0010") == 0 ||
             centralityCutNumber.CompareTo("1020") == 0  ){ //0-20%
             parameters[0] = 100.;
             parameters[1] = 1500.;
@@ -2041,7 +2041,7 @@
             parameters[12] = 0.135;
             parameters[13] = 3.;
             parameters[14] = 7.;
-        } 
+        }
         return;
     }
 
@@ -2054,10 +2054,10 @@
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
         if (ppCutNumber.CompareTo("0") ==0){
-            return "pp"; 
-        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("9") ==0){       
+            return "pp";
+        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("9") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "0-100%"; 
+                return "0-100%";
             } else if( centralityCutNumberEnd.CompareTo("0")!=0){
                 return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
             } else {
@@ -2065,18 +2065,18 @@
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "0-45%"; 
+                return "0-45%";
             } else {
                 return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5,"%");
             }
         } else if (ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("7") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "45-95%"; 
+                return "45-95%";
             } else {
                 return Form("%i-%i%s",45+CutNumberToInteger(centralityCutNumberStart)*5,45+CutNumberToInteger(centralityCutNumberEnd)*5,"%");
             }
         } else return "";
-    }	
+    }
 
     //************************************************************************************
     //** Analyzes the eventCutNumber and returns the centrality name for labeling w/o % **
@@ -2086,27 +2086,27 @@
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
         if (ppCutNumber.CompareTo("0") ==0){
-            return "pp"; 
-        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("9") ==0){       
+            return "pp";
+        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("9") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "0-100"; 
+                return "0-100";
             } else {
                 return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "0-45"; 
+                return "0-45";
             } else {
                 return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
             }
         } else if (ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("7") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "45-95"; 
+                return "45-95";
             } else {
                 return Form("%i-%i",45+CutNumberToInteger(centralityCutNumberStart)*5,45+CutNumberToInteger(centralityCutNumberEnd)*5);
             }
-        } else return ""; 
-    }  
+        } else return "";
+    }
 
     //************************************************************************************
     //** Analyzes the eventCutNumber and returns the centrality name as joing numbers ****
@@ -2116,40 +2116,40 @@
         TString centralityCutNumberEnd      = cutNumber(GetEventCentralityMaxCutPosition(),1);
         TString ppCutNumber                 = cutNumber(GetEventSystemCutPosition(),1);
         if (ppCutNumber.CompareTo("0") ==0){
-            return "pp"; 
-        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("9") ==0){       
+            return "pp";
+        } else if ( ppCutNumber.CompareTo("1") ==0 || ppCutNumber.CompareTo("2") ==0 || ppCutNumber.CompareTo("5") ==0 || ppCutNumber.CompareTo("8") ==0 || ppCutNumber.CompareTo("9") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "00100"; 
+                return "00100";
             } else {
                 if (centralityCutNumberStart.CompareTo("0") == 0){
                     return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*10);
-                } else {	
+                } else {
                     return Form("%i%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
-                }	
+                }
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "0045"; 
+                return "0045";
             } else {
                 if (centralityCutNumberStart.CompareTo("0") == 0){
                     return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*5);
                 } else {
                     return Form("%i%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
-                }	
+                }
             }
         } else if (ppCutNumber.CompareTo("4") ==0 || ppCutNumber.CompareTo("7") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
-                return "4595"; 
+                return "4595";
             } else {
                 return Form("%i%i",45+CutNumberToInteger(centralityCutNumberStart)*5,45+CutNumberToInteger(centralityCutNumberEnd)*5);
             }
-        } else return ""; 
-    }  
+        } else return "";
+    }
 
     //************************************************************************************
     //** Analyzes the TPC cluster cut, return correct cut label **************************
     //************************************************************************************
-    TString AnalyseTPCClusterCut(Int_t clsTPCCut){   
+    TString AnalyseTPCClusterCut(Int_t clsTPCCut){
         switch(clsTPCCut){
             case 0: // 0
                 return "min. TPC cl.: 0";
@@ -2158,22 +2158,22 @@
             case 2:  // 80
                 return "min. TPC cl.: 80";
             case 3:  // 100
-                return "min. TPC cl.: 100";     
+                return "min. TPC cl.: 100";
             case 4:  // 95% of findable clusters
-                return "TPC cl./uncorr find. cl.: 0.95";     
+                return "TPC cl./uncorr find. cl.: 0.95";
             case 5:  // 0% of findable clusters
-                return "TPC cl./corr find. cl.: 0.";     
+                return "TPC cl./corr find. cl.: 0.";
             case 6:  // 80% of findable clusters
-                return "TPC cl./corr find. cl.: 0.7";     
+                return "TPC cl./corr find. cl.: 0.7";
             case 7:  // 0% of findable clusters
-                return "TPC cl./uncorr find. cl.: 0.35";          
+                return "TPC cl./uncorr find. cl.: 0.35";
             case 8:
-                return "TPC cl./corr find. cl.: 0.35";          
+                return "TPC cl./corr find. cl.: 0.35";
             case 9:
-                return "TPC cl./corr find. cl.: 0.6";          
+                return "TPC cl./corr find. cl.: 0.6";
             default:
                 return "no cluster cut defined";
-        }  
+        }
     }
 
     //************************************************************************************
@@ -2291,7 +2291,7 @@
                 fPIDMinPnSigmaAbovePionLine     = 0.2;
                 break;
             default:
-                cout << "pion line minimum pt cut unknown" << endl;            
+                cout << "pion line minimum pt cut unknown" << endl;
         }
 
         TString sPiMaxMomdedxSigmaCut           = sPionCut(2,1);
@@ -2330,36 +2330,36 @@
     //************************************************************************************
     //** Analyzes the TOF electron PID cut, return correct cut label *********************
     //************************************************************************************
-    TString AnalyseTOFelectronPIDCut(Int_t TOFpidCut){   
+    TString AnalyseTOFelectronPIDCut(Int_t TOFpidCut){
         switch(TOFpidCut){
             case 0: // 0
                 return "-100 < #sigma^{TOF}_{e} < 100";
                 break;
-            case 1: 
+            case 1:
                 return "-7 < #sigma^{TOF}_{e} < 7";
                 break;
-            case 2: 
+            case 2:
                 return "-5 < #sigma^{TOF}_{e} < 5";
                 break;
-            case 3: 
+            case 3:
                 return "-3 < #sigma^{TOF}_{e} < 5";
                 break;
-            case 4: 
+            case 4:
                 return "-2 < #sigma^{TOF}_{e} < 3";
                 break;
-            case 5: 
+            case 5:
                 return "-3 < #sigma^{TOF}_{e} < 3";
                 break;
             default:
                 return "no TOF cut defined";
-        }  
+        }
     }
 
 
     //************************************************************************************
     //********* Analyzes the chi2 gamma cut, return correct cut label ********************
     //************************************************************************************
-    TString AnalyseChi2GammaCut(    Int_t chi2GammaCut, 
+    TString AnalyseChi2GammaCut(    Int_t chi2GammaCut,
                                     Int_t psiPairCut){   // Set Cut
 
         TString psiPairCutString            = "";
@@ -2446,7 +2446,7 @@
         if (k2DPsiPairChi2){
             return Form("2D cut: %s, %s", chi2CutString.Data(), psiPairCutString.Data());
         } else {
-            return Form("1D cut: %s", chi2CutString.Data());
+            return Form("1D cut: %s, 1D cut %s", chi2CutString.Data(), psiPairCutString.Data());
         }
         return "";
     }
@@ -2454,8 +2454,8 @@
     //************************************************************************************
     //********* Analyzes the qt gamma cut, return correct cut label **********************
     //************************************************************************************
-    TString AnalyseQtMaxCut(Int_t QtMaxCut){   
-            
+    TString AnalyseQtMaxCut(Int_t QtMaxCut){
+
         switch(QtMaxCut){
             case 0: //
                 return "no q_{T}_{#gamma} cut applied";
@@ -2472,7 +2472,7 @@
             case 6:
                 return "2D ellipse q_{T}_{#gamma} < 0.02 GeV/c, #alpha < 0.95";
             case 7:
-                return "q_{T}_{#gamma} < 0.15 GeV/c";  
+                return "q_{T}_{#gamma} < 0.15 GeV/c";
             case 8:
                 return "2D ellipse q_{T}_{#gamma} < 0.05 GeV/c, #alpha < 0.95";
             case 9:
@@ -2507,7 +2507,7 @@
             default:
                 return "p_{T}_{e^{#pm}} cut not defined";
         }
-        
+
     }
 
     //************************************************************************************
@@ -2516,25 +2516,25 @@
     TString AnalyseDCAZPhotonCut(Int_t dcaZPhoton){
         switch(dcaZPhoton){
             case 0:  //
-                return "|dca_{Z}| < 1000 cm"; 
+                return "|dca_{Z}| < 1000 cm";
             case 1:  //
-                return "|dca_{Z}| < 10 cm"; 
+                return "|dca_{Z}| < 10 cm";
             case 2:  //
-                return "|dca_{Z}| < 5 cm"; 
+                return "|dca_{Z}| < 5 cm";
             case 3:  //
-                return "|dca_{Z}| < 4 cm"; 
+                return "|dca_{Z}| < 4 cm";
             case 4:  //
-                return "|dca_{Z}| < 3 cm"; 
+                return "|dca_{Z}| < 3 cm";
             case 5:  //
-                return "|dca_{Z}| < 2.5 cm"; 
+                return "|dca_{Z}| < 2.5 cm";
             case 6:  //
-                return "|dca_{Z}| < 2 cm"; 
+                return "|dca_{Z}| < 2 cm";
             case 7:  //
-                return "|dca_{Z}| < 1.5 cm"; 
+                return "|dca_{Z}| < 1.5 cm";
             case 8:  //
-                return "|dca_{Z}| < 1 cm"; 
+                return "|dca_{Z}| < 1 cm";
             case 9:  //
-                return "|dca_{Z}| < 0.5 cm"; 
+                return "|dca_{Z}| < 0.5 cm";
             default:
                 return "|dca_{Z}| cut not defined";
         }
@@ -2544,27 +2544,27 @@
     //********* Analyzes the dca z gamma cut, return max dca value ***********************
     //************************************************************************************
     Double_t AnalyseDCAZPhotonCutValue(Int_t dcaZPhoton){
-        switch(dcaZPhoton){   
+        switch(dcaZPhoton){
             case 0:  //
-                return 1000.; 
+                return 1000.;
             case 1:  //
-                return 10.; 
+                return 10.;
             case 2:  //
-                return 5.; 
+                return 5.;
             case 3:  //
-                return 4.; 
+                return 4.;
             case 4:  //
-                return 3.; 
+                return 3.;
             case 5:  //
-                return 2.5; 
+                return 2.5;
             case 6:  //
-                return 2.; 
+                return 2.;
             case 7:  //
-                return 1.5; 
+                return 1.5;
             case 8:  //
-                return 1.; 
+                return 1.;
             case 9:  //
-                return 0.5; 
+                return 0.5;
             default:
                 return 1000;
         }
@@ -2576,21 +2576,21 @@
     TString AnalyseCosPointCut(Int_t cosPoint){
         switch(cosPoint){
             case 0:  //
-                return "cos(#Theta_{point}) > -1"; 
+                return "cos(#Theta_{point}) > -1";
             case 1:  //
-                return "cos(#Theta_{point}) > 0"; 
+                return "cos(#Theta_{point}) > 0";
             case 2:  //
-                return "cos(#Theta_{point}) > 0.5"; 
+                return "cos(#Theta_{point}) > 0.5";
             case 3:  //
-                return "cos(#Theta_{point}) > 0.75"; 
+                return "cos(#Theta_{point}) > 0.75";
             case 4:  //
-                return "cos(#Theta_{point}) > 0.85"; 
+                return "cos(#Theta_{point}) > 0.85";
             case 5:  //
-                return "cos(#Theta_{point}) > 0.88"; 
+                return "cos(#Theta_{point}) > 0.88";
             case 6:  //
-                return "cos(#Theta_{point}) > 0.9"; 
+                return "cos(#Theta_{point}) > 0.9";
             case 7:  //
-                return "cos(#Theta_{point}) > 0.95"; 
+                return "cos(#Theta_{point}) > 0.95";
             default:
                 return "cos(#Theta_{point}) cut not defined";
         }
@@ -2599,7 +2599,7 @@
     //************************************************************************************
     //********* Analyzes the eta gamma/electron cut, return correct cut label ************
     //************************************************************************************
-    TString AnalyseEtaCut(Int_t etaCut){ 
+    TString AnalyseEtaCut(Int_t etaCut){
 
         switch(etaCut){
             case 0: // 0.9
@@ -2630,7 +2630,7 @@
     //************************************************************************************
     //****** Analyzes the eta gamma/electron cut for pPb, return correct cut label *******
     //************************************************************************************
-    TString AnalyseEtaCutpPb(Int_t etaCut){ 
+    TString AnalyseEtaCutpPb(Int_t etaCut){
 
         switch(etaCut){
             case 0: // 0.9
@@ -2679,7 +2679,7 @@
             case 6:
                 return "20 cm < R_{conv, #gamma} < 180 cm";
             case 7:
-                return "35 cm < R_{conv, #gamma} < 180 cm"; // before 26 (19.4.2014)qdel 
+                return "35 cm < R_{conv, #gamma} < 180 cm"; // before 26 (19.4.2014)qdel
             case 8:
                 return "12.5 cm < R_{conv, #gamma} < 180 cm";
             case 9:
@@ -2718,7 +2718,7 @@
                 stringRCut= "20 cm < R_{conv, #gamma} < 180 cm";
                 break;
             case 7:
-                stringRCut= "35 cm < R_{conv, #gamma} < 180 cm"; // before 26 (19.4.2014)qdel 
+                stringRCut= "35 cm < R_{conv, #gamma} < 180 cm"; // before 26 (19.4.2014)qdel
                 break;
             case 8:
                 stringRCut= "12.5 cm < R_{conv, #gamma} < 180 cm";
@@ -2730,7 +2730,7 @@
                 stringRCut= "R cut not defined";
                 break;
         }
-        
+
         TString stringPhotonQuality = "";
         switch(photonQualitCut) {
             case 0:
@@ -2750,7 +2750,7 @@
                 break;
         }
         return Form("%s, %s", stringRCut.Data(), stringPhotonQuality.Data());
-        
+
     }
 
     //************************************************************************************
@@ -2799,7 +2799,7 @@
                 psiPairCutString =  "#Psi_{Pair} cut not defined";
                 break;
         }
-        
+
         TString chi2CutString = "";
         switch(chi2GammaCut){
             case 0: // 100
@@ -2842,7 +2842,7 @@
             return Form("1D cut: %s", psiPairCutString.Data());
         }
         return "";
-    }   
+    }
 
     //************************************************************************************
     //******** Analyzes the psi_pair and R gamma cut, return correct cut label ***********
@@ -2921,12 +2921,12 @@
                 break;
         }
         return Form("%s, %s", psiPairCut.Data(), RCutString.Data());
-    }   
+    }
 
     //************************************************************************************
     //********** Analyzes the V0reader gamma cut, return correct cut label ***************
     //************************************************************************************
-    TString AnalyseV0ReaderCut(Int_t V0ReaderCut){ 
+    TString AnalyseV0ReaderCut(Int_t V0ReaderCut){
         // Set Cut
         switch(V0ReaderCut){
             case 0:  //
@@ -2959,7 +2959,7 @@
             default:
                 return " #chi_{#gamma}^{2} #Psi_{Pair} cut not defined";
         }
-    }  
+    }
 
     //************************************************************************************
     //***** Analyzes the photon quality gamma cut, return correct cut label **************
@@ -2977,7 +2977,7 @@
             default:
                 return "photon Quality cut not defined";
         }
-    }  
+    }
 
     //************************************************************************************
     //********* Analyzes the photon asymmetry cut, return correct cut label **************
@@ -3007,21 +3007,21 @@
 
         Int_t minCutNumberPhi   = GetPhotonMinPhiCutPosition(gammaCutNumber);
         if (minCutNumberPhi == -1) return "Full TPC acceptance";
-        
+
         TString minPhiCutNumber(gammaCutNumber(minCutNumberPhi,1));
         TString maxPhiCutNumber(gammaCutNumber(GetPhotonMaxPhiCutPosition(gammaCutNumber),1));
         TString etaExclusion(gammaCutNumber(GetPhotonEtaForPhiCutPosition(gammaCutNumber),1));
-        
+
         TString etaAcc          = "";
         if (etaExclusion.CompareTo("1") == 0) etaAcc = "#eta < 0" ;
             else if (etaExclusion.CompareTo("2") == 0) etaAcc = "#eta > 0" ;
-            
+
         if ( etaExclusion.CompareTo("0") == 0 && minPhiCutNumber.CompareTo("0")==0 && maxPhiCutNumber.CompareTo("0")==0 ){
             return "Full TPC acceptance";
         } else if (minPhiCutNumber.CompareTo("0")==0 && maxPhiCutNumber.CompareTo("0")==0){
             return Form("Full $varphi acceptance, %s",etaAcc.Data()) ;
-        }	
-            
+        }
+
         Double_t fMinPhiCut     = 0;
         Double_t fMaxPhiCut     = 2* TMath::Pi();
         switch(CutNumberToInteger(minPhiCutNumber)) {
@@ -3041,7 +3041,7 @@
                 fMinPhiCut = 3.4; //EMCal tight
                 break;
             case 5:
-                fMinPhiCut = 2.0; //OROC C08 medium cut 
+                fMinPhiCut = 2.0; //OROC C08 medium cut
                 break;
             case 6:
                 fMinPhiCut = 2.2; //OROC C08 small cut
@@ -3053,7 +3053,7 @@
             default:
                 fMinPhiCut = 0.;
                 break;
-        }	
+        }
 
         switch (CutNumberToInteger(maxPhiCutNumber)) {
             case 0:
@@ -3072,7 +3072,7 @@
                 fMaxPhiCut = 1.; //EMCal
                 break;
             case 5:
-                fMaxPhiCut = 4.0; //OROC C08 medium cut 
+                fMaxPhiCut = 4.0; //OROC C08 medium cut
                 break;
             case 6:
                 fMaxPhiCut = 3.8; //OROC C08 small cut
@@ -3089,12 +3089,12 @@
         if (fMinPhiCut < fMaxPhiCut){
             if (etaAcc.CompareTo("") == 0)
                 return Form("exclude #gamma_{conv} in %1.3f < #varphi < %1.3f", fMinPhiCut, fMaxPhiCut);
-            else 
+            else
                 return Form("exclude #gamma_{conv} in %1.3f < #varphi < %1.3f, %s", fMinPhiCut, fMaxPhiCut, etaAcc.Data());
         } else {
             return Form("restrict #gamma_{conv} to %1.3f < #varphi < %1.3f",  fMaxPhiCut, fMinPhiCut );
-        }	
-        
+        }
+
         return "";
     }
 
@@ -3102,7 +3102,7 @@
     //************************************************************************************
     //******** Analyzes the trigger event cut, return correct cut label ******************
     //************************************************************************************
-    TString AnalyseSpecialTriggerCut(Int_t SpecialTrigger, TString periodName = "No"){ 
+    TString AnalyseSpecialTriggerCut(Int_t SpecialTrigger, TString periodName = "No"){
         // Set Cut
         switch(SpecialTrigger){
             case 0:
@@ -3110,17 +3110,17 @@
                     return "without SDD, V0OR";
                 else if (periodName.Contains("LHC12") || periodName.Contains("LHC13") )
                     return "V0AND";
-                else 	
+                else
                     return "V0OR";
             case 1:
                 if (periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_woSDD")==0)
                     return "without SDD, V0OR";
-                else 
+                else
                     return "V0OR";
             case 3:
                 if (periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_wSDD")==0)
                     return "with SDD, V0OR";
-                else 
+                else
                     return "V0OR";
             case 10:
                 return "V0AND";
@@ -3132,25 +3132,25 @@
             case 13:
                 if (periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_wSDD")==0)
                     return "with SDD, V0AND";
-                else 	
+                else
                     return "V0AND";
-            case 51: 	
+            case 51:
                 return "EMC L0, INT1";
-            case 52: 	
+            case 52:
                 return "EMC L0, INT7";
-            case 53: 	
+            case 53:
                 return "EMC L0, INT8";
-            case 81: 	
+            case 81:
                 return "EMC L1-GA, INT7";
-            case 83: 	
+            case 83:
                 return "EMC L1-G1, INT7";
-            case 85: 	
+            case 85:
                 return "EMC L1-G2, INT7";
-            case 91: 	
+            case 91:
                 return "EMC L1-JE, INT7";
-            case 93: 	
+            case 93:
                 return "EMC L1-J1, INT7";
-            case 95: 	
+            case 95:
                 return "EMC L1-J2, INT7";
 
             default:
@@ -3161,16 +3161,16 @@
     //************************************************************************************
     //******** Analyzes the multiplicity cut in pp events ********************************
     //************************************************************************************
-    TString AnalysePPMultiplicityCut(Int_t minMult, Int_t maxMult){ 
+    TString AnalysePPMultiplicityCut(Int_t minMult, Int_t maxMult){
         // Set Cut
         Int_t multBins[9] =  {0,   2,   5,    10,   15,  30,  50,  100,  1000 };
-        
+
         TString multiplicityString = "";
         if ( (minMult == 0 && maxMult == 0) || maxMult<minMult){
             multiplicityString = "No selection";
         } else {
             multiplicityString =  Form("%d #leq TPC track mult < %d", multBins[minMult], multBins[maxMult]);
-        }    
+        }
         return multiplicityString;
     }
 
@@ -3220,7 +3220,7 @@
         }  else {
             cout << "AnalyseTrackMatchingCut: clusterType " << clusterType << " not recognized!" << endl;
             return "track missmatch not defined ";
-        }   
+        }
     }
 
     //************************************************************************************
@@ -3269,7 +3269,7 @@
             cout << "AnalyseTrackMatchingCaloCut: clusterType " << clusterType << " not recognized!" << endl;
             return "track missmatch not defined ";
         }
-    }  
+    }
 
     //************************************************************************************
     //***************** Analyzes the min energy, return correct cut value ****************
@@ -3278,35 +3278,35 @@
         TString minEnergyCutNumber(clusterCutSelection(GetClusterMinEnergyCutPosition(clusterCutSelection),1));
         Int_t minEnergyCut          = CutNumberToInteger(minEnergyCutNumber);
         switch(minEnergyCut){
-            case 0: 
+            case 0:
                 return 0;
                 break;
-            case 1: 
-                return 0.5; 
+            case 1:
+                return 0.5;
                 break;
-            case 2: 
-                return 0.6; 
+            case 2:
+                return 0.6;
                 break;
-            case 3: 
-                return 0.7; 
+            case 3:
+                return 0.7;
                 break;
-            case 4: 
-                return 0.8; 
+            case 4:
+                return 0.8;
                 break;
-            case 5: 
-                return 0.9; 
+            case 5:
+                return 0.9;
                 break;
-            case 6: 
-                return 4.5; 
+            case 6:
+                return 4.5;
                 break;
-            case 7: 
-                return 5.0; 
+            case 7:
+                return 5.0;
                 break;
-            case 8: 
-                return 5.5; 
+            case 8:
+                return 5.5;
                 break;
-            case 9: 
-                return 6.0; 
+            case 9:
+                return 6.0;
                 break;
             default:
                 return 0;
@@ -3352,55 +3352,55 @@
         Double_t fMinM02 = 0.;
         cout << minM02 << "\t" << maxM02 << endl;
         switch(minM02){
-            case 0: 
+            case 0:
                 fMinM02=0;
                 break;
-            case 1: 
-                fMinM02=0.002; 
+            case 1:
+                fMinM02=0.002;
                 break;
-            case 2: 
-                fMinM02=0.1; 
+            case 2:
+                fMinM02=0.1;
                 break;
-            case 3: 
-                fMinM02=0.2; 
+            case 3:
+                fMinM02=0.2;
                 break;
             default:
                 fMinM02 = -10;
                 break;
-        
+
         }
-        
+
         Double_t fMaxM02 = 1000.;
         switch(maxM02){
-            case 0: 
+            case 0:
                 fMaxM02=1000;
                 break;
-            case 1: 
-                fMaxM02=1.; 
+            case 1:
+                fMaxM02=1.;
                 break;
-            case 2: 
-                fMaxM02=0.7; 
+            case 2:
+                fMaxM02=0.7;
                 break;
-            case 3: 
-                fMaxM02=0.5; 
+            case 3:
+                fMaxM02=0.5;
                 break;
-            case 4: 
-                fMaxM02=0.4; 
+            case 4:
+                fMaxM02=0.4;
                 break;
-            case 5: 
-                fMaxM02=0.3; 
+            case 5:
+                fMaxM02=0.3;
                 break;
-            case 6: 
-                fMaxM02=0.27; 
+            case 6:
+                fMaxM02=0.27;
                 break;
             default:
                 fMaxM02 = -10;
                 break;
         }
         return Form("%1.1f < M_{02} < %3.2f", fMinM02, fMaxM02);
-    
-        
-    }	
+
+
+    }
 
     //************************************************************************************
     //********* Analyzes the M02 cut for merged ana, return correct cut label ************
@@ -3409,52 +3409,52 @@
         Double_t fMinM02 = 0.;
         cout << minM02 << "\t" << maxM02 << endl;
         switch(minM02){
-            case 0: 
+            case 0:
                 fMinM02=0.1;
                 break;
-            case 1: 
-                fMinM02=-10; 
+            case 1:
+                fMinM02=-10;
                 break;
-            case 2: 
-                fMinM02=-10; 
+            case 2:
+                fMinM02=-10;
                 break;
-            case 3: 
-                fMinM02=-10; 
+            case 3:
+                fMinM02=-10;
                 break;
-            case 4: 
-                fMinM02=-10; 
+            case 4:
+                fMinM02=-10;
                 break;
-            case 5: 
-                fMinM02=-10; 
+            case 5:
+                fMinM02=-10;
                 break;
-            case 6: 
-                fMinM02=0.30; 
+            case 6:
+                fMinM02=0.30;
                 break;
-            case 7: 
-                fMinM02=0.27; 
+            case 7:
+                fMinM02=0.27;
                 break;
-            case 8: 
-                fMinM02=0.25; 
+            case 8:
+                fMinM02=0.25;
                 break;
             default:
                 fMinM02=-10;
                 break;
-        
+
         }
-        
+
         Double_t fMaxM02 = 1000.;
         switch(maxM02){
-            case 0: 
+            case 0:
                 fMaxM02=1000;
                 break;
-            case 1: 
-                fMaxM02=-10; 
+            case 1:
+                fMaxM02=-10;
                 break;
-            case 2: 
-                fMaxM02=-10; 
+            case 2:
+                fMaxM02=-10;
                 break;
-            case 3: 
-                fMaxM02=-10; 
+            case 3:
+                fMaxM02=-10;
                 break;
             default:
                 fMaxM02 = -10;
@@ -3466,9 +3466,9 @@
         return Form("M_{02} > %1.3f, #it{p}_{T} dependent upper limit %d ", fMinM02, maxM02);
         else if (fMinM02 != -10)
         return Form("M_{02} < %1.3f, #it{p}_{T} dependent lower limit %d ", fMaxM02, minM02);
-        else 
+        else
         return Form("M_{02}: #it{p}_{T} dependent lower (%d) & upper (%d) limit  ", minM02, maxM02);
-    } 
+    }
 
 
     //************************************************************************************
@@ -3487,7 +3487,7 @@
             return "EMCal 2011 geometry with TRD (2.45 < #varphi < 3.15)";
         } else if (minPhi == 1 && maxPhi ==2){
             return "EMCal 2011 geometry no TRD (1.39636 < #varphi < 2.45)";
-        }	
+        }
         return "";
     }
 
@@ -3497,41 +3497,41 @@
     TString AnalyseMinEnergyCut(Int_t minEnergyCut){
         Double_t fMinEnergy = 0.;
         switch(minEnergyCut){
-            case 0: 
+            case 0:
                 fMinEnergy = 0;
                 break;
-            case 1: 
-                fMinEnergy = 0.5; 
+            case 1:
+                fMinEnergy = 0.5;
                 break;
-            case 2: 
-                fMinEnergy = 0.6; 
+            case 2:
+                fMinEnergy = 0.6;
                 break;
-            case 3: 
-                fMinEnergy = 0.7; 
+            case 3:
+                fMinEnergy = 0.7;
                 break;
-            case 4: 
-                fMinEnergy = 0.8; 
+            case 4:
+                fMinEnergy = 0.8;
                 break;
-            case 5: 
-                fMinEnergy = 0.9; 
+            case 5:
+                fMinEnergy = 0.9;
                 break;
-            case 6: 
-                fMinEnergy = 4.5; 
+            case 6:
+                fMinEnergy = 4.5;
                 break;
-            case 7: 
-                fMinEnergy = 5.0; 
+            case 7:
+                fMinEnergy = 5.0;
                 break;
-            case 8: 
-                fMinEnergy = 5.5; 
+            case 8:
+                fMinEnergy = 5.5;
                 break;
-            case 9: 
-                fMinEnergy = 6.0; 
+            case 9:
+                fMinEnergy = 6.0;
                 break;
             default:
                 fMinEnergy = 0;
                 break;
         }
-        
+
         return Form("E_{clus} > %3.3f GeV/c", fMinEnergy);
     }
 
@@ -3541,41 +3541,41 @@
     TString AnalyseMinEnergyMergedCut(Int_t minEnergyCut){
         Double_t fMinEnergy = 0.;
         switch(minEnergyCut){
-            case 0: 
+            case 0:
                 fMinEnergy = 0.1;
                 break;
-            case 1: 
-                fMinEnergy = 4.0; 
+            case 1:
+                fMinEnergy = 4.0;
                 break;
-            case 2: 
-                fMinEnergy = 5.0; 
+            case 2:
+                fMinEnergy = 5.0;
                 break;
-            case 3: 
-                fMinEnergy = 6.0; 
+            case 3:
+                fMinEnergy = 6.0;
                 break;
-            case 4: 
-                fMinEnergy = 7.0; 
+            case 4:
+                fMinEnergy = 7.0;
                 break;
-            case 5: 
-                fMinEnergy = 7.5; 
+            case 5:
+                fMinEnergy = 7.5;
                 break;
-            case 6: 
-                fMinEnergy = 8.0; 
+            case 6:
+                fMinEnergy = 8.0;
                 break;
-            case 7: 
-                fMinEnergy = 8.5; 
+            case 7:
+                fMinEnergy = 8.5;
                 break;
-            case 8: 
-                fMinEnergy = 9.0; 
+            case 8:
+                fMinEnergy = 9.0;
                 break;
-            case 9: 
-                fMinEnergy = 9.5; 
+            case 9:
+                fMinEnergy = 9.5;
                 break;
             default:
                 fMinEnergy = 0;
                 break;
         }
-        
+
         return Form("E_{clus} > %3.3f GeV/c", fMinEnergy);
     }
 
@@ -3585,17 +3585,17 @@
     //************************************************************************************
     TString AnalyseClusterTimingCut(Int_t timing){
         switch(timing){
-            case 0: 
+            case 0:
                 return "-500 s < t_{clus} < 500 s";
-            case 1: 
+            case 1:
                 return "-1 #mu s < t_{clus} < 1 #mu s";
-            case 2: 
+            case 2:
                 return "-500 ns < t_{clus} < 500 ns";
-            case 3: 
+            case 3:
                 return "-200 ns < t_{clus} < 200 ns";
-            case 4: 
+            case 4:
                 return "-100 ns < t_{clus} < 100 ns";
-            case 5: 
+            case 5:
                 return "-50 ns < t_{clus} < 50 ns";
             case 6:
                 return "-30 ns < t_{clus} < 35 ns";
@@ -3619,12 +3619,12 @@
     //************************************************************************************
     TString AnalyseClusterNonLinearityCut(Int_t nonlinearity){
 
-    
+
     //   return Form("non linearity cut %d",nonlinearity);
     switch(nonlinearity){
-        case 0: 
+        case 0:
             return "none";
-        case 1: 
+        case 1:
             return "SDM (Jason)";
         case 11:
             return "ConvCalo, tight timing";
@@ -3634,9 +3634,9 @@
             return "TBv3 w/ ConvCalo-mass corr";
         case 14:
             return "TBv3 w/ Calo-mass corr";
-        case 15: 
+        case 15:
             return "ConvCalo with data shifted";
-        case 16: 
+        case 16:
             return "SDM w/ data corr (new)";
         case 21:
             return "ConvCalo, mass param, open timing";
@@ -3648,7 +3648,7 @@
             return "SDM w/o data corr (new), open timing";
         default:
             return Form("non linearity cut %d",nonlinearity);
-    }    
+    }
     //  switch(nonlinearity){
     //    case 0:
     //      return "from tender?";
@@ -3664,11 +3664,11 @@
         TString nCellsCutNumber(clusterCutString(GetClusterNLMCutPosition(clusterCutString),1));
         return CutNumberToInteger(nCellsCutNumber);
     }
-        
+
     //************************************************************************************
     //** Analyzes the alpha meson cut, return correct cut label **************************
     //************************************************************************************
-    TString AnalyseAlphaMesonCut(Int_t alphaMesonCut){ 
+    TString AnalyseAlphaMesonCut(Int_t alphaMesonCut){
         switch(alphaMesonCut){
             case 0:	// 0- 0.7
                 return "|#alpha_{meson}| < 0.7";
@@ -3698,7 +3698,7 @@
     //************************************************************************************
     //** Analyzes the MC smearing cut for mesons, return correct cut label ***************
     //************************************************************************************
-    TString AnalyseMCSmearingCut(Int_t mcSmearingCut){ 
+    TString AnalyseMCSmearingCut(Int_t mcSmearingCut){
         switch(mcSmearingCut){
             case 0:
                 return "no additional smearing" ;
@@ -3727,7 +3727,7 @@
         Int_t BackgroundScheme          = CutNumberToInteger(sBackgroundSchemeB);
         TString bGScheme                = "";
         cout << "BackgroundScheme: " << BackgroundScheme << endl;
-        
+
         switch(BackgroundScheme){
             case 0: //Rotation
                 bGScheme="Rotation";
@@ -3758,9 +3758,9 @@
                 break;
             default:
                 bGScheme="no BG method selected";
-            
+
         }
-        
+
         TString sNumberOfBGEvents       = sBackgroundScheme(1,1);
         Int_t NumberOfBGEvents          = CutNumberToInteger(sNumberOfBGEvents);
         Int_t fNumberOfBGEvents         = 0;
@@ -3799,7 +3799,7 @@
         Int_t DegreesForRotationMethod      = CutNumberToInteger(sDegreesForRotationMethod);
         Int_t fnDegreeRotationPMForBG       = 0;
         cout << "DegreesForRotationMethod: " << DegreesForRotationMethod << endl;
-        
+
         switch(DegreesForRotationMethod){
             case 0:
                 fnDegreeRotationPMForBG = 5;
@@ -3828,7 +3828,7 @@
     //************************************************************************************
     //*********** Analyzes the rapidity meson cut, return correct cut label **************
     //************************************************************************************
-    TString AnalyseRapidityMesonCut(Int_t RapidityMesonCut){ 
+    TString AnalyseRapidityMesonCut(Int_t RapidityMesonCut){
         // Set Cut
         switch(RapidityMesonCut){
             case 0:  //
@@ -3850,7 +3850,7 @@
             case 8:  //
                 return "|y_{meson}| < 0.25";
             case 9:  //
-                return "|y_{meson}| < 0.4";        
+                return "|y_{meson}| < 0.4";
             default:
                 return "rapidity cut not defined";
         }
@@ -3859,7 +3859,7 @@
     //************************************************************************************
     //*********** Analyzes the rapidity meson cut for pPv, return correct cut label ******
     //************************************************************************************
-    TString AnalyseRapidityMesonCutpPb(Int_t RapidityMesonCut){ 
+    TString AnalyseRapidityMesonCutpPb(Int_t RapidityMesonCut){
         // Set Cut
         switch(RapidityMesonCut){
             case 0:  //
@@ -3881,7 +3881,7 @@
             case 8:  //
                 return "|y_{meson}| < 0.25";
             case 9:  //
-                return "|y_{meson}| < 0.4";        
+                return "|y_{meson}| < 0.4";
             default:
                 return "rapidity cut not defined";
         }
@@ -3903,7 +3903,7 @@
             case 4:
                 return "#chi_{meson}^{2} < 500";
             case 5:
-                return "#chi_{meson}^{2} < 1000";  
+                return "#chi_{meson}^{2} < 1000";
             default:
                 return "#chi_{meson}^{2} cut unknown";
         }
@@ -3956,10 +3956,10 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
-    Double_t ReturnCorrectXSection ( TString energy, 
+    Double_t ReturnCorrectXSection ( TString energy,
                                     Int_t selTrig){
-        
-        Double_t xSectionInt = 0;    
+
+        Double_t xSectionInt = 0;
         if(energy.CompareTo("900GeV") == 0){
             if (selTrig == 1){
                 xSectionInt = xSection900GeVV0AND;
@@ -3970,7 +3970,7 @@
             } else {
                 xSectionInt = xSection900GeV;
                 cout << "V0OR xSection taken: \t" << xSectionInt << endl;
-            }    
+            }
         } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 ){
             if (selTrig == 1){
                 xSectionInt = xSection5023GeVV0AND;
@@ -3978,17 +3978,17 @@
             } else if (selTrig == 3){
                 xSectionInt = xSection5023GeVINELpPb;
                 cout << "INEL xSection taken: \t" << xSectionInt << endl;
-            }    
+            }
         } else if(energy.CompareTo("2.76TeV") == 0){
             if (selTrig == 1){
                 xSectionInt = xSection2760GeVV0AND;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
             } else if (selTrig == 3){
                 xSectionInt = xSection2760GeVINEL*1e-12;
-                cout << "INEL xSection taken: \t" << xSectionInt << endl;            
-            } else {    
+                cout << "INEL xSection taken: \t" << xSectionInt << endl;
+            } else {
                 xSectionInt = xSection2760GeV;
-                cout << "V0OR xSection taken: \t" << xSectionInt << endl;  
+                cout << "V0OR xSection taken: \t" << xSectionInt << endl;
             }
         } else if(energy.CompareTo("7TeV") == 0){
             if (selTrig == 1){
@@ -4000,7 +4000,7 @@
             } else {
                 xSectionInt = xSection7TeV;
                 cout << "V0OR xSection taken: \t" << xSectionInt << endl;
-            }    
+            }
         } else if(energy.CompareTo("8TeV") == 0){
             if (selTrig == 1){
                 xSectionInt = xSection8TeVV0AND;
@@ -4015,32 +4015,32 @@
             if (selTrig == 3){
                 xSectionInt = xSection5023GeVINELpPb;
                 cout << "INEL xSection taken: \t" << xSectionInt << endl;
-            }    
+            }
         } else {
             cout << "ERROR: energy not deterimined, xsection set to \t" << xSectionInt << endl;
-        }    
+        }
         return xSectionInt;
     }
 
     //************************************************************************************
-    //* Decodes from the mode the respective reco process and return correct label + details 
+    //* Decodes from the mode the respective reco process and return correct label + details
     //************************************************************************************
-    TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TString meson = "", TString clusterCutNumber = "" ){ 
+    TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TString meson = "", TString clusterCutNumber = "" ){
         if (separate == 0){
             switch (mode){
                 case 0:
                     return "#gamma's rec. with PCM";
-                case 1: 
+                case 1:
                     return "#gamma's rec. with PCM, Dalitz";
                 case 2:
                     return "#gamma's rec. with PCM, EMCal";
-                case 3: 
+                case 3:
                     return "#gamma's rec. with PCM, PHOS";
                 case 4:
                     return "#gamma's rec. with EMCal";
                 case 5:
                     return "#gamma's rec. with PHOS";
-                case 6: 
+                case 6:
                     return "#gamma's rec. with EMCal, Dalitz";
                 case 7:
                     return "#gamma's rec. with PHOS, Dalitz";
@@ -4048,20 +4048,20 @@
                     if (clusterCutNumber.CompareTo("") != 0){
                         Int_t nlm = ReturnClusterNLM(clusterCutNumber);
                         if (meson.CompareTo("") == 0) return Form("rec. w/ mEMCal, %d lm", nlm );
-                        else return Form("%s rec. mEMCal, %d lm", meson.Data(), nlm);                    
-                    } else {    
+                        else return Form("%s rec. mEMCal, %d lm", meson.Data(), nlm);
+                    } else {
                         if (meson.CompareTo("") == 0) return "rec. w/ mEMCal";
                         else return Form("%s rec. mEMCal", meson.Data());
-                    }    
+                    }
                 case 11:
                     if (clusterCutNumber.CompareTo("") != 0){
                         Int_t nlm = ReturnClusterNLM(clusterCutNumber);
                         if (meson.CompareTo("") == 0) return Form("rec. w/ mPHOS, %d lm", nlm );
-                        else return Form("%s rec. w/ mPHOS, %d lm", meson.Data(), nlm);                    
-                    } else {    
+                        else return Form("%s rec. w/ mPHOS, %d lm", meson.Data(), nlm);
+                    } else {
                         if (meson.CompareTo("") == 0) return "rec. w/ mPHOS";
                         else return Form("%s rec. w/ mPHOS", meson.Data());
-                    }    
+                    }
                 case 12:
                     return "#gamma's rec. with DCal";
                 case 13:
@@ -4076,10 +4076,10 @@
                 case 0:
                 case 1:
                 case 2:
-                case 3:    
+                case 3:
                     return "#gamma's rec. with PCM";
                 case 6:
-                case 7:    
+                case 7:
                     return "#gamma*'s rec. with Dalitz";
                 case 12:
                     return "#gamma's rec. with DCAL";
@@ -4107,7 +4107,7 @@
                     return "#gamma's rec. with PCM, DCal";
                 default:
                     return "not known";
-            }    
+            }
         } else {
             cout << "ReturnFullTextReconstructionProcess: separate" << separate << " not recognized!" << endl;
             return "not known";
@@ -4138,9 +4138,9 @@
             return "HIJING";
         } else {
             return "undefined";
-        }    
+        }
         return "";
-    }    
+    }
 
     //************************************************************************************
     //** Return correct trigger rejection factor based on trigger cutnumber and energy ***
@@ -4155,9 +4155,9 @@
                 triggerRejec    = 125;
             } else if (trigger == 85){  // EG2
                 triggerRejec    = 1909;
-            } else if (trigger == 83){  // EG1  
+            } else if (trigger == 83){  // EG1
                 triggerRejec    = 7217;
-            }    
+            }
         }else  if (energy.CompareTo("8TeV") == 0){
         cout << "Trigger used: " << trigger << endl;
         if (trigger == 52){  // EMC7
@@ -4250,9 +4250,9 @@
             return "EGA";
         } else if (trigger == 85){                          // EG2
             return "EG2";
-        } else if (trigger == 83){                          // EG1  
+        } else if (trigger == 83){                          // EG1
             return "EG1";
-        }    
+        }
         return "";
     }
 
@@ -4289,7 +4289,7 @@
                 cout << "wrong kappa cut value" << endl;
                 return kFALSE;
         }
-        
+
         return kTRUE;
     }
 

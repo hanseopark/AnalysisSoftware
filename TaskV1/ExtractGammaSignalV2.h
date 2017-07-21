@@ -16,10 +16,11 @@
     TString     fSuffix                                                 = "";
     TString     fMeson                                                  = "";
 
-    TString     fCutSelectionRead                                       = ""; 
+    TString     fCutSelectionRead                                       = "";
     TString     fEventCutSelectionRead                                  = "";
     TString     fGammaCutSelectionRead                                  = "";
     TString     fMesonCutSelectionRead                                  = "";
+    TString     fClusterCutSelectionRead                                = "";
 
     TString     fHistogramDimension                                     = "";
     Int_t       nHistogramDimension                                     = 1;
@@ -30,11 +31,11 @@
 
     Bool_t      fEnableDCConv                                           = kFALSE;
 
-    TString     fDecays[7]                                              = { "Pi0",  "Eta",   "Etap", "Omega",   "Rho", 
+    TString     fDecays[7]                                              = { "Pi0",  "Eta",   "Etap", "Omega",   "Rho",
                                                                             "Phi",  "Sigma"
                                                                         };
     Int_t       nCombinatorics                                          = 16;
-    TString     fCombinatorics[17]                                      = { "Elec+Elec",     "Elec+Pion",   "Elec+Kaon",        "Elec+Proton",   "Elec+Muon", 
+    TString     fCombinatorics[17]                                      = { "Elec+Elec",     "Elec+Pion",   "Elec+Kaon",        "Elec+Proton",   "Elec+Muon",
                                                                             "Pion+Pion",     "Pion+Kaon",   "Pion+Proton",      "Pion+Muon",     "Kaon+Kaon",
                                                                             "Kaon+Proton",   "Kaon+Muon",   "Proton+Proton",    "Proton+Muon",   "Muon+Muon",
                                                                             "Rest",          "All"
@@ -224,9 +225,9 @@
     TH1D**      fHistoBackInvMassPtGconvBin                                                         = NULL;
     TH1D**      fHistoBackNormInvMassPtGconvBin                                                     = NULL;
     TH1D**      fHistoBackNormInvMassLeftPtGconvBin                                                 = NULL;
-    TH1D**      fHistoTruePrimMesonInvMassPtBins                                                    = NULL;  
-    TH1D**      fHistoTrueFullMesonInvMassPtBins                                                    = NULL;  
-    TH1D**      fHistoTrueSecMesonInvMassPtBins[4]                                                  = {NULL, NULL, NULL, NULL};    
+    TH1D**      fHistoTruePrimMesonInvMassPtBins                                                    = NULL;
+    TH1D**      fHistoTrueFullMesonInvMassPtBins                                                    = NULL;
+    TH1D**      fHistoTrueSecMesonInvMassPtBins[4]                                                  = {NULL, NULL, NULL, NULL};
     TH2D*       fHistoTruePrimMesonInvMassVSPt                                                      = NULL;
     TF1**       fFitTrueFullSignalInvMassPtBin                                                      = NULL;
     TH2D*       fHistoMCPrimPi0PtGammaLeg                                                           = NULL;
@@ -351,7 +352,7 @@
 
 
     //******************** Definition of functions ****************************
-    void     RebinSpectrum                      (   TH1D*       Spectrum, 
+    void     RebinSpectrum                      (   TH1D*       Spectrum,
                                                     TString     NewName = ""                        );
     void     RebinSpectrumToDCAzDistBinning     (   TH1D*       Spectrum,
                                                     TString     NewName = ""                        );
@@ -364,19 +365,19 @@
                                                     Int_t       mode,
                                                     Bool_t      addSig                              );
     void     SaveHistos                         (   Int_t       isMC,
-                                                    TString     fCutID, 
+                                                    TString     fCutID,
                                                     TString     fPrefix3,
                                                     Bool_t      PileUpCorrection                    );
-    void     SaveCorrectionHistos               (   TString     fCutID, 
+    void     SaveCorrectionHistos               (   TString     fCutID,
                                                     TString     fPrefix3,
                                                     Bool_t      PileUpCorrection                    );
-    void     SaveDCAHistos                      (   Int_t       isMC, 
-                                                    TString     fCutID, 
+    void     SaveDCAHistos                      (   Int_t       isMC,
+                                                    TString     fCutID,
                                                     TString     fPrefix3                            );
     void     FillDCAHistogramsFromTree          (   TTree*      dcaTree,
                                                     Bool_t      isMC                                );
     void     FillMassHistosArray                (   TH2D*       fGammaGammaInvMassVSPtDummy         );
-    void     ProduceBckProperWeighting          (   TH2D*       fHistoBckZM, 
+    void     ProduceBckProperWeighting          (   TH2D*       fHistoBckZM,
                                                     TH2D*       fHistoMotherZM                      );
     Bool_t   CompareArrays                      (   Int_t       nEntriesA,
                                                     Double_t*   arrayA,
@@ -400,12 +401,12 @@
     Bool_t    CalculatePileUpCorrectionFactor   (   TH1D*       ratioWithWithoutPileUp,
                                                     TH1D*       &pileupCorrectionFactor,
                                                     TF1*        &fitToRatio                         );
-    Bool_t   LoadSecondariesFromCocktailFile    (   TString, 
+    Bool_t   LoadSecondariesFromCocktailFile    (   TString,
                                                     TString                                         );
     void     Delete                             (                                                   );
-    void     FillMassMCTrueMesonHistosArrays    (   TH2D* fHistoTrueMesonPrimInvMassVSPtFill, 
+    void     FillMassMCTrueMesonHistosArrays    (   TH2D* fHistoTrueMesonPrimInvMassVSPtFill,
                                                     TH2D** fHistoTrueMesonSecInvMassVSPtFill        );
     void     CheckForNULLForPointer             (   TH1D* fDummy1                                   );
-    void     PlotAdditionalDCAz                 (   Int_t       isMC, 
+    void     PlotAdditionalDCAz                 (   Int_t       isMC,
                                                     TString     fCutID                              );
 #endif

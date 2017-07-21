@@ -3754,7 +3754,7 @@
             precisionSys            = orderY - orderSys;
             sysPresent              = kTRUE;
 
-            line                            = Form("%1.4f",line.Data(), currentX[i]);
+            line                            = Form("%1.4f", currentX[i]);
             line                            = Form("%s (BIN= %1.1f TO %1.1f); \t",line.Data(), currentX[i]-currentXErrDown[i], currentX[i]+currentXErrUp[i] );
             if (statPresent){
                 if (precision == 0){
