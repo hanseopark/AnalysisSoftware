@@ -3027,12 +3027,14 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     // MC histograms primaries
     ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
     ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
+    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ) ObjectNameMCPi0AccWOWeights = "MC_Pi0InAcc_Pt";
     if(fMode == 4 || fMode == 12 || fMode == 5)
       ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0WOEvtWeightInAcc_Pt";
     else
       ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0_WOEventWeightsInAcc_Pt";
     ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
     ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
+    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ) ObjectNameMCEtaAccWOWeights         = "MC_EtaInAcc_Pt";
     if(fMode == 4 || fMode == 12 || fMode == 5)
       ObjectNameMCEtaAccWOEvtWeights    = "MC_EtaWOEvtWeightInAcc_Pt";
     else

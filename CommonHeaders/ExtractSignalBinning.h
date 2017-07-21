@@ -3410,7 +3410,7 @@
             fColumn         = 5;
             fRow            = 4;
 
-            if (fEnergyFlag.CompareTo("7TeV") == 0) {
+            if (energy.CompareTo("7TeV") == 0) {
                 if (fNBinsPt > 20) {
                     cout << "You have chosen to have more than 15 bins for Omega, this is not possible, it will be reduced to 12" << endl;
                     fNBinsPt = 19;

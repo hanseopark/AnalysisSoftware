@@ -2219,7 +2219,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);// gives the page size
     DrawGammaCanvasSettings( canvasCompEffSimple, 0.10, 0.01, 0.035, 0.09);
 
-    if (containsWOWeights &&  nameMeson.Contains("Pi0")){ //(mode!=0 || mode!=9) &&
+    if (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 && nameMeson.CompareTo("Eta") == 0) )){ //(mode!=0 || mode!=9) &&
 
         if ( !(mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )){
             TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
@@ -2228,8 +2228,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             for (Int_t k = 0; k < 3; k++){
                 histoRatioEffWOWeightingEff[k]          = (TH1D*) histoEffiPt[k]->Clone();
                 histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
-
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.4,maxPtMeson);
+                if(mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
+                  histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
+                }else{
+                  histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.4,maxPtMeson);
+                }
                 cout << "fitting ratio norm/true eff with pol0" << endl;
                 cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
                 fitEffiBiasWOWeightsPol0[k]->SetLineColor(colorEffiShadePol0[k]);
@@ -2242,7 +2245,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
 
                 if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
+                if(mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
+                  histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
+                }else{
+                  histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
+                }
                 cout << "fitting ratio norm/true eff with pol1" << endl;
                 cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
                 fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
