@@ -3710,7 +3710,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     canvasSysYieldExtraction->SaveAs(Form("%s/%s_%s_SysYieldExtraction_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
 
-
+    // Systematics from different show-bg option for DCA bg
     Double_t relBGEstimate[100];
     Double_t relBGEstimateError[100];
     for (Int_t i = 1; i < nBinsPt +1; i++){
@@ -3725,7 +3725,24 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
         }
     }
-    TGraphAsymmErrors* SystErrGraphBGEstimate = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate, binsXWidth, binsXWidth, relBGEstimateError, relBGEstimateError);
+    TGraphAsymmErrors* SystErrGraphBGEstimateOptions = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate, binsXWidth, binsXWidth, relBGEstimateError, relBGEstimateError);
+
+    // Systematics from different iterations for DCA bg
+    Double_t relBGEstimate2[100];
+    Double_t relBGEstimateError2[100];
+    for (Int_t i = 1; i < nBinsPt +1; i++){
+        relBGEstimateError2[i] = 0.;
+        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) &&
+            TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
+            relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[3]->GetBinContent(i)) *100;
+            } else if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) &&
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
+                relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[3]->GetBinContent(i)) *100;
+                } else {
+                    relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
+                }
+    }
+    TGraphAsymmErrors* SystErrGraphBGEstimateIterations = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate2, binsXWidth, binsXWidth, relBGEstimateError2, relBGEstimateError2);
 
     // ********************************************************************************************************************************
     // ****************************** Write file with corrections only ****************************************************************
@@ -3746,7 +3763,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         if (SystErrGraphPos)                    SystErrGraphPos->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);
         if (SystErrGraphNeg)                    SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_YieldExtraction_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);
-        if (SystErrGraphBGEstimate)             SystErrGraphBGEstimate->Write(Form("%s_SystErrorRel_BGEstimate_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);
+        if (SystErrGraphBGEstimateOptions)      SystErrGraphBGEstimateOptions->Write(Form("%s_SystErrorRel_BGEstimate_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);
+        if (SystErrGraphBGEstimateIterations)   SystErrGraphBGEstimateIterations->Write(Form("%s_SystErrorRel_BGEstimateIterations_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);
         if (histoBGEstimateCat[0])              histoBGEstimateCat[0]->Write("BGEstimateFromPileup");
         if (histoCorrectionFactorsHistvsPtCat[0]) histoCorrectionFactorsHistvsPtCat[0]->Write("PileupContamination");
         for (Int_t k = 0; k < 6; k++){

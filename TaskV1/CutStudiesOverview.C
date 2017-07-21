@@ -199,6 +199,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TGraphAsymmErrors* systErrGraphPosYieldExtPi0EtaBinning     = NULL;
 
     TGraphAsymmErrors* systErrGraphBGEstimate                   = NULL;
+    TGraphAsymmErrors* systErrGraphBGEstimateIterations         = NULL;
     TString            centralityString                         = "";
     Double_t           maxPt                                    = 0;
     Bool_t             kSpecialTrigger                          = kFALSE;
@@ -393,7 +394,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 }
                 systErrGraphPosYieldExt                         = (TGraphAsymmErrors*)Cutcorrfile[i]->Get(Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(), centralityString.Data()));
                 systErrGraphBGEstimate                          = (TGraphAsymmErrors*)Cutcorrfile[i]->Get(Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(), centralityString.Data()));
-
+                systErrGraphBGEstimateIterations                = (TGraphAsymmErrors*)Cutcorrfile[i]->Get(Form("%s_SystErrorRel_BGEstimateIterations_%s",meson.Data(), centralityString.Data()));
                 if (isEta){
                     systErrGraphNegYieldExtPi0EtaBinning        = (TGraphAsymmErrors*)CutcorrPi0EtaBinfile[i]->Get(Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()));
                     Double_t* negErrorYield                     = systErrGraphNegYieldExtPi0EtaBinning->GetY();
@@ -2343,6 +2344,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             systErrGraphNegYieldExt->Write(Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
             systErrGraphPosYieldExt->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
             if (systErrGraphBGEstimate) systErrGraphBGEstimate->Write(Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
+            if (systErrGraphBGEstimateIterations) systErrGraphBGEstimateIterations->Write(Form("%s_SystErrorRel_BGEstimateIterations_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
         SystematicErrorFile->Write();
         SystematicErrorFile->Close();
 
