@@ -10,12 +10,12 @@
 # This script has to be run with "bash"
 
 # switches to enable/disable certain procedures
-DOWNLOADON=1
+DOWNLOADON=0
 MERGEON=1
-SINGLERUN=1
-SEPARATEON=1
-MERGEONSINGLEData=1
-MERGEONSINGLEMC=1
+SINGLERUN=0
+SEPARATEON=0
+MERGEONSINGLEData=0
+MERGEONSINGLEMC=0
 SPECIALMERGE=0
 ISADDDOWNLOAD=0
 ADDDOWNLOADALREADY=0
@@ -520,10 +520,12 @@ TRAINDIR=Legotrain-vAN20170525FF-newDefaultPlusSys
 # LHC13b2_efix_p4MC="1004";
 # LHC13bData="647"; #pass 3
 # LHC13cData="648"; #pass 2
-LHC13b2_efix_p1MC="1026";
-LHC13b2_efix_p2MC="1046";
-LHC13b2_efix_p3MC="1047";
-LHC13b2_efix_p4MC="1048";
+# LHC13b2_efix_p1MC="1026";
+# LHC13b2_efix_p2MC="1046";
+# LHC13b2_efix_p3MC="1047";
+# LHC13b2_efix_p4MC="1048";
+# LHC13bData="660"; #pass 3
+# LHC13cData="661"; #pass 2
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -998,18 +1000,22 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
 
     if [ $MERGEON == 1 ]; then
-#         ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_*.root > filesForMerging.txt
-#         filesForMerging=`cat filesForMerging.txt`
-#         for fileName in $filesForMerging; do
-#             echo $fileName
-#             GetFileNumberMerging $fileName $((NSlashes-1)) 3
-#             echo $number
-#             ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root
-#             ls $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
-#             if [ -f $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] ; then
-#                 hadd -f $OUTPUTDIR/GammaConvCalo_LHC13bc-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
-#             fi
-#         done
+        ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_*.root > filesForMerging.txt
+        mkdir $OUTPUTDIR/SingleFiles
+        filesForMerging=`cat filesForMerging.txt`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 3
+            echo $number
+            ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
+            if [ -f $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC13bc-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root
+                echo "moving single output files"
+                mv $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_LHC13c-pass$passNr\_$number.root $OUTPUTDIR/SingleFiles/
+            fi
+        done
 #
 #         if [ $HAVELHC13d == 1 ] && [ $HAVELHC13e == 1 ]; then
 #             ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr\_*.root > filesForMerging.txt
@@ -1049,18 +1055,23 @@ if [ $CLEANUPMAYOR == 0 ]; then
             echo "number:"$number
             if [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root ] ; then
                 hadd -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root
+                echo "moving single output files"
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root $OUTPUTDIR/SingleFiles/
             fi
         done
-        ls $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_*.root > filesForMerging.txt
-        filesForMerging=`cat filesForMerging.txt`
-        for fileName in $filesForMerging; do
-            echo $fileName
-            GetFileNumberMerging $fileName $((NSlashes-1)) 4
-            echo $number
-            if [ -f  $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_LHC13e7_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_$number.root
-            fi
-        done
+#         ls $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_*.root > filesForMerging.txt
+#         filesForMerging=`cat filesForMerging.txt`
+#         for fileName in $filesForMerging; do
+#             echo $fileName
+#             GetFileNumberMerging $fileName $((NSlashes-1)) 4
+#             echo $number
+#             if [ -f  $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_$number.root ] ; then
+#                 hadd -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_LHC13e7_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_$number.root
+#             fi
+#         done
     fi
 else
     if [ $HAVELHC13b == 1 ]; then

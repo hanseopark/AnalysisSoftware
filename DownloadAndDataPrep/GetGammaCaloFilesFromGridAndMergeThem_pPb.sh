@@ -286,6 +286,8 @@ LHC13b2_efix_p1MC="1026";
 LHC13b2_efix_p2MC="1046";
 LHC13b2_efix_p3MC="1047";
 LHC13b2_efix_p4MC="1048";
+LHC13bData="660"; #pass 3
+LHC13cData="661"; #pass 2
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -748,18 +750,18 @@ if [ $CLEANUPMAYOR == 0 ]; then
 
 
     if [ $MERGEON == 1 ]; then
-#         ls $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_*.root > filesForMerging.txt
-#         filesForMerging=`cat filesForMerging.txt`
-#         for fileName in $filesForMerging; do
-#             echo $fileName
-#             number=`echo $fileName  | cut -d "/" -f $((NSlashes-1)) | cut -d "_" -f 3 | cut -d "." -f1`
-#             echo $number
-#             ls $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_$number.root
-#             ls $OUTPUTDIR/GammaCalo_LHC13c-pass$passNr\_$number.root
-#             if [ -f $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC13c-pass$passNr\_$number.root ] ; then
-#                 hadd -f $OUTPUTDIR/GammaCalo_LHC13bc-pass$passNr\_$number.root $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaCalo_LHC13c-pass$passNr\_$number.root
-#             fi
-#         done
+        ls $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_*.root > filesForMerging.txt
+        filesForMerging=`cat filesForMerging.txt`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $((NSlashes-1)) | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            ls $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaCalo_LHC13c-pass$passNr\_$number.root
+            if [ -f $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaCalo_LHC13c-pass$passNr\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaCalo_LHC13bc-pass$passNr\_$number.root $OUTPUTDIR/GammaCalo_LHC13b-pass$passNr\_$number.root $OUTPUTDIR/GammaCalo_LHC13c-pass$passNr\_$number.root
+            fi
+        done
 #
 #         ls $OUTPUTDIR/GammaCalo_LHC13d-pass$passNr\_*.root > filesForMerging.txt
 #         filesForMerging=`cat filesForMerging.txt`

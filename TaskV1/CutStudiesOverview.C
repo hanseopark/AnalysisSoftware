@@ -40,7 +40,7 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
@@ -54,17 +54,17 @@ struct SysErrorConversion {
 };
 
 
-void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat", 
-                        TString suffix = "gif", 
-                        TString meson = "", 
-                        TString isMC = "", 
-                        TString optionMult = "", 
-                        TString optionEnergy = "", 
-                        TString cutVariationName = "", 
-                        Int_t NumberOfCuts = 1, 
-                        Bool_t optGammaOn = 1, 
-                        TString fDalitz = "", 
-                        TString optionPeriod = "No", 
+void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
+                        TString suffix = "gif",
+                        TString meson = "",
+                        TString isMC = "",
+                        TString optionMult = "",
+                        TString optionEnergy = "",
+                        TString cutVariationName = "",
+                        Int_t NumberOfCuts = 1,
+                        Bool_t optGammaOn = 1,
+                        TString fDalitz = "",
+                        TString optionPeriod = "No",
                         Int_t mode = 9,
                         Bool_t doBarlow = kFALSE ){
 
@@ -74,8 +74,9 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     Double_t    nColls                  [50];
     TString     prefix2                                         = "";
     Bool_t      doMassRatio                                     = kTRUE;
+    Bool_t      doWidthRatio                                     = kTRUE;
     Bool_t      correctionFilesAvail                            = kTRUE;
-    
+
     // Set common default plot style
     StyleSettingsThesis();
     SetPlotStyle();
@@ -84,13 +85,13 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     if (cutVariationName.CompareTo("None")==0){
         cutVariationName                                        = "";
     }
-        
-    // Define Output Directory    
+
+    // Define Output Directory
     TString outputDir                                           = Form("CutStudies/%s",optionEnergy.Data());
     if (cutVariationName.CompareTo("None")!=0) outputDir        = Form("CutStudies/%s/%s",optionEnergy.Data(),cutVariationName.Data());
     TString outputDirRootFile                                   = Form("CutStudies/%s",optionEnergy.Data());
     gSystem->Exec("mkdir -p "+outputDir);
-    
+
     // Define meson names for plots
     TString textMeson;
     Bool_t isEta                                                = kFALSE;
@@ -106,23 +107,23 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     } else {
         prefix2                                                 = "data";
     }
-    
+
     // Set collisions system
-    TString collisionSystem     = ReturnFullCollisionsSystem(optionEnergy);   
+    TString collisionSystem     = ReturnFullCollisionsSystem(optionEnergy);
     if (collisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
-        return;     
+        return;
     }
     TString detectionProcess    = ReturnFullTextReconstructionProcess(mode);
     TString process             = Form("%s #rightarrow #gamma#gamma", textMeson.Data());
-    
+
     // Define colors for differnt cuts
     Color_t color[20]                                           = { kBlack, kAzure, kGreen+2,kOrange+2,kRed, kViolet,  kBlue-9, kMagenta+4,
-                                                                    kCyan+3, kCyan-10, kCyan, kGreen+4, kGreen-9, 
+                                                                    kCyan+3, kCyan-10, kCyan, kGreen+4, kGreen-9,
                                                                     kGreen,  kYellow+4, kYellow+3, kSpring+10,
                                                                     kMagenta-8, kGray, kGray+3};
 
-    // Read cuts from CutSelection file                    
+    // Read cuts from CutSelection file
     ifstream in(CombineCutsName.Data());
     cout<<"Available Cuts:"<<endl;
     string TempCutNumber;
@@ -149,7 +150,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         for (Int_t i=0; i< NumberOfCuts; i++) nColls[i]         = 1.;
     }
 
-    // Define necessary histogram/file/string arrays 
+    // Define necessary histogram/file/string arrays
     const Int_t ConstNumberOfCuts                               = NumberOfCuts;
     const Int_t MaxNumberOfCuts = 20;
     if(ConstNumberOfCuts > MaxNumberOfCuts){
@@ -169,6 +170,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TH1D*   histoAcceptanceCut          [ConstNumberOfCuts];
     TH1D*   histoRawYieldCut            [ConstNumberOfCuts];
     TH1D*   histoMassRatioCut           [ConstNumberOfCuts];
+    TH1D*   histoWidthRatioCut          [ConstNumberOfCuts];
     TH1D*   histoEtaToPi0Cut            [ConstNumberOfCuts];
     TH1D*   histoWidthMeson             [ConstNumberOfCuts];
     TH1D*   histoSBCut                  [ConstNumberOfCuts];
@@ -180,6 +182,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TH1D*   histoRatioAcceptanceCut     [ConstNumberOfCuts];
     TH1D*   histoRatioRawYieldCut       [ConstNumberOfCuts];
     TH1D*   histoRatioMassRatioCut      [ConstNumberOfCuts];
+    TH1D*   histoRatioWidthRatioCut     [ConstNumberOfCuts];
     TH1D*   histoRatioEtaToPi0Cut       [ConstNumberOfCuts];
     TH1D*   histoRatioWidthMeson        [ConstNumberOfCuts];
     TH1D*   histoRatioSBCut             [ConstNumberOfCuts];
@@ -199,10 +202,10 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TString            centralityString                         = "";
     Double_t           maxPt                                    = 0;
     Bool_t             kSpecialTrigger                          = kFALSE;
-    
+
     if (cutVariationName.CompareTo("SpecialTrigg") == 0){
             kSpecialTrigger                                     = kTRUE;
-    }        
+    }
     for (Int_t i=0; i< NumberOfCuts; i++){
         // Define CutSelections
         TString fEventCutSelection                              = "";
@@ -224,34 +227,34 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         if (CutNumberToInteger(fTrigger)>3 && cutVariationName.CompareTo("") == 0){
             cutVariationName                                  ="SpecialTrigg";
             kSpecialTrigger                                   = kTRUE;
-        }    
+        }
         // only read corrected file if "Special trigger was used"
 
-        FileNameCorrected[i]                                = Form( "%s/%s/%s_%s_GammaConvV1%sCorrection_%s.root", cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), 
+        FileNameCorrected[i]                                = Form( "%s/%s/%s_%s_GammaConvV1%sCorrection_%s.root", cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(),
                                                                     fDalitz.Data(), cutNumber[i].Data());
         cout<< FileNameCorrected[i] << endl;
-        Cutcorrfile[i]                                      = new TFile(FileNameCorrected[i]);    
+        Cutcorrfile[i]                                      = new TFile(FileNameCorrected[i]);
         if (Cutcorrfile[i]->IsZombie()){
             correctionFilesAvail                            = kFALSE;
         }
-            
+
         if (isEta){
-            FileNamePi0EtaBinCorrected[i]                   = Form("%s/%s/Pi0EtaBinning_%s_GammaConvV1%sCorrection_%s.root", cutNumberAdv[i].Data(), optionEnergy.Data(), prefix2.Data(), 
+            FileNamePi0EtaBinCorrected[i]                   = Form("%s/%s/Pi0EtaBinning_%s_GammaConvV1%sCorrection_%s.root", cutNumberAdv[i].Data(), optionEnergy.Data(), prefix2.Data(),
                                                                     fDalitz.Data(), cutNumber[i].Data());
-            CutcorrPi0EtaBinfile[i]                         = new TFile(FileNamePi0EtaBinCorrected[i]);    
+            CutcorrPi0EtaBinfile[i]                         = new TFile(FileNamePi0EtaBinCorrected[i]);
             if (CutcorrPi0EtaBinfile[i]->IsZombie()){
                 cout << "Pi0/Eta ratio can't be compared file: " << FileNamePi0EtaBinCorrected[i] << " missing! "<< endl;
                 isEta                                       = kFALSE;
             }
-        }    
+        }
 
         // read uncorrected file
-        FileNameUnCorrected[i]                                  = Form("%s/%s/%s_%s_GammaConvV1%sWithoutCorrection_%s.root",cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), 
+        FileNameUnCorrected[i]                                  = Form("%s/%s/%s_%s_GammaConvV1%sWithoutCorrection_%s.root",cutNumberAdv[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(),
                                                                     fDalitz.Data(), cutNumber[i].Data());
         cout<< FileNameUnCorrected[i] << endl;
         Cutuncorrfile[i]                                        = new TFile(FileNameUnCorrected[i]);
         if (Cutuncorrfile[i]->IsZombie()) return;
-        
+
         // put proper cutvariation labeling for plots
         if (cutVariationName.Contains("SpecialTrigg")){
             fTrigger                                            = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
@@ -284,10 +287,10 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         } else if (cutVariationName.Contains("TPCCluster")){
             TString fClusterCut                                 = fGammaCutSelection(GetPhotonClsTPCCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
-        } else if (cutVariationName.Contains("dEdxE")){     
+        } else if (cutVariationName.Contains("dEdxE")){
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonEDedxSigmaCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
-        } else if (cutVariationName.Contains("dEdxPi")){    
+        } else if (cutVariationName.Contains("dEdxPi")){
             TString fdEdxCut                                    = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
             cutStringsName[i]                                   = fdEdxCut.Data();
             cout << fdEdxCut.Data() << "\t" << cutStringsName[i].Data() << endl;
@@ -310,7 +313,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             TString fPsiPairCut                                 = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
             TString fChi2Cut                                    = fGammaCutSelection(GetPhotonChi2GammaCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalysePsiPair(CutNumberToInteger(fPsiPairCut), CutNumberToInteger(fChi2Cut));
-        } else if (cutVariationName.Contains("DCAZPhoton")){   
+        } else if (cutVariationName.Contains("DCAZPhoton")){
             TString fDCAZCut                                    = fGammaCutSelection(GetPhotonDcaZPrimVtxCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalyseDCAZPhotonCut(CutNumberToInteger(fDCAZCut));
         } else if (cutVariationName.Contains("CosPoint")){
@@ -319,11 +322,11 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         } else if (cutVariationName.Contains("PhotonQuality")){
             TString fPhotonQuality                              = fGammaCutSelection(GetPhotonSharedElectronCutPosition(fGammaCutSelection),1);
             cutStringsName[i]                                   = AnalysePhotonQuality(CutNumberToInteger(fPhotonQuality));
-        } else if (cutVariationName.Contains("ConvPhi")){    
-            cutStringsName[i]                                   = AnalyseConvPhiExclusionCut(fGammaCutSelection);            
+        } else if (cutVariationName.Contains("ConvPhi")){
+            cutStringsName[i]                                   = AnalyseConvPhiExclusionCut(fGammaCutSelection);
         } else if (cutVariationName.Contains("BG")){
             TString fBGCut                                      = fMesonCutSelection(GetMesonBGSchemeCutPosition(),3);
-            cutStringsName[i]                                   = AnalyseBackgroundScheme(fBGCut.Data());   
+            cutStringsName[i]                                   = AnalyseBackgroundScheme(fBGCut.Data());
         } else if (cutVariationName.Contains("Rapidity")){
             TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
             cutStringsName[i]                                   = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
@@ -341,30 +344,30 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         } else if (cutVariationName.Contains("MCSmearing")){
             TString fMCSmearing                                 = fMesonCutSelection(GetMesonUseMCPSmearingCutPosition(),1);
             cutStringsName[i]                                   = AnalyseMCSmearingCut(CutNumberToInteger(fMCSmearing));
-        } else if (cutVariationName.Contains("ClusterTrackMatchingCalo")){    
+        } else if (cutVariationName.Contains("ClusterTrackMatchingCalo")){
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
             TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
-        } else if (cutVariationName.Contains("ClusterTrackMatching")){    
+        } else if (cutVariationName.Contains("ClusterTrackMatching")){
             TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
             TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseTrackMatchingCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
-        } else if (cutVariationName.Contains("ClusterMaterialTRD")){    
+        } else if (cutVariationName.Contains("ClusterMaterialTRD")){
             TString fMinPhi                                     = fClusterCutSelection(GetClusterPhiMinCutPosition(fClusterCutSelection),1);
             TString fMaxPhi                                     = fClusterCutSelection(GetClusterPhiMaxCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseAcceptanceCutPhiCluster(CutNumberToInteger(fMinPhi), CutNumberToInteger(fMaxPhi));
-        } else if (cutVariationName.Contains("ClusterM02")){    
+        } else if (cutVariationName.Contains("ClusterM02")){
             TString fMinM02Cut                                  = fClusterCutSelection(GetClusterMinM02CutPosition(fClusterCutSelection),1);
             TString fMaxM02Cut                                  = fClusterCutSelection(GetClusterMaxM02CutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseM02Cut(CutNumberToInteger(fMinM02Cut), CutNumberToInteger(fMaxM02Cut));
-        } else if (cutVariationName.Contains("ClusterNCells")){    
+        } else if (cutVariationName.Contains("ClusterNCells")){
             TString fNCellsCut                                  = fClusterCutSelection(GetClusterMinNCellsCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseNCellsCut(CutNumberToInteger(fNCellsCut));
-        } else if (cutVariationName.Contains("ClusterMinEnergy")){    
+        } else if (cutVariationName.Contains("ClusterMinEnergy")){
             TString fMinEnergyCut                               = fClusterCutSelection(GetClusterMinEnergyCutPosition(fClusterCutSelection),1);
             cout << fMinEnergyCut << "\t" << GetClusterMinEnergyCutPosition(fClusterCutSelection) << "\t"<< fClusterCutSelection.Length()<<endl;
             cutStringsName[i]                                   = AnalyseMinEnergyCut(CutNumberToInteger(fMinEnergyCut));
-        } else if (cutVariationName.Contains("ClusterTiming")){    
+        } else if (cutVariationName.Contains("ClusterTiming")){
             TString fTimingCut                                  = fClusterCutSelection(GetClusterTimingCutPosition(fClusterCutSelection),1);
             cutStringsName[i]                                   = AnalyseClusterTimingCut(CutNumberToInteger(fTimingCut));
         } else if (cutVariationName.Contains("ClusterNonLinearity")){
@@ -376,7 +379,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         } else {
             cutStringsName[i]                                   = cutNumberAdv[i].Data();
         }
-        
+
         // read histograms from corrected file
         if (correctionFilesAvail){
             // for first cut read yield extraction errors as well
@@ -390,7 +393,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 }
                 systErrGraphPosYieldExt                         = (TGraphAsymmErrors*)Cutcorrfile[i]->Get(Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(), centralityString.Data()));
                 systErrGraphBGEstimate                          = (TGraphAsymmErrors*)Cutcorrfile[i]->Get(Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(), centralityString.Data()));
-                
+
                 if (isEta){
                     systErrGraphNegYieldExtPi0EtaBinning        = (TGraphAsymmErrors*)CutcorrPi0EtaBinfile[i]->Get(Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()));
                     Double_t* negErrorYield                     = systErrGraphNegYieldExtPi0EtaBinning->GetY();
@@ -398,19 +401,19 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         negErrorYield[j]                        = -1*negErrorYield[j];
                     }
                     systErrGraphPosYieldExtPi0EtaBinning        = (TGraphAsymmErrors*)CutcorrPi0EtaBinfile[i]->Get(Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s", centralityString.Data()));
-                }    
+                }
             }
-            
+
             TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
             TString nameEfficiency                              = "TrueMesonEffiPt";
             TString nameAcceptance                              = "fMCMesonAccepPt";
             if ( mode == 4 || mode == 5 ){
                 nameCorrectedYield                              = "CorrectedYieldNormEff";
                 nameEfficiency                                  = "MesonEffiPt";
-            }    
+            }
 //             if ((mode == 2 || mode == 3) && !meson.Contains("Pi0")){
 //                 nameCorrectedYield                                 = "CorrectedYieldNormEff";
-//                 nameEfficiency                                     = "MesonEffiPt";                
+//                 nameEfficiency                                     = "MesonEffiPt";
 //             }
             histoCorrectedYieldCut[i]                           = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
             histoCorrectedYieldCut[i]->SetName(Form("%s_%s", nameCorrectedYield.Data(),cutNumber[i].Data()));
@@ -419,12 +422,19 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             histoAcceptanceCut[i]                               = (TH1D*)Cutcorrfile[i]->Get(nameAcceptance.Data());
             histoAcceptanceCut[i]->SetName(Form("%s_%s", nameAcceptance.Data(), cutNumber[i].Data()));
             histoMassRatioCut[i]                                = (TH1D*)Cutcorrfile[i]->Get("histoRatioRecMass");
-            if (histoMassRatioCut[i] == NULL) 
+            if (histoMassRatioCut[i] == NULL)
                 histoMassRatioCut[i]                            = (TH1D*)Cutcorrfile[i]->Get("histoRatioRecMassGauss");
             if (histoMassRatioCut[i] == NULL )
                 doMassRatio                                     = kFALSE;
             if (doMassRatio) histoMassRatioCut[i]->SetName(Form("histoMassRatio_%s", cutNumber[i].Data()));
-            
+
+            histoWidthRatioCut[i]                                = (TH1D*)Cutcorrfile[i]->Get("histoRatioRecFWHM");
+            if (histoWidthRatioCut[i] == NULL)
+                histoWidthRatioCut[i]                            = (TH1D*)Cutcorrfile[i]->Get("histoRatioRecFWHMGauss");
+            if (histoWidthRatioCut[i] == NULL )
+                doWidthRatio                                     = kFALSE;
+            if (doWidthRatio) histoWidthRatioCut[i]->SetName(Form("histoWidthRatio_%s", cutNumber[i].Data()));
+
             if (isEta){
                 histoCorrectedYieldPi0EtaCut[i]                 = (TH1D*)CutcorrPi0EtaBinfile[i]->Get(nameCorrectedYield.Data());
                 histoCorrectedYieldPi0EtaCut[i]->SetName(Form("Pi0EtaBinning_%s_%s", nameCorrectedYield.Data(),cutNumber[i].Data()));
@@ -452,12 +462,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         histoSignNarrowCut[i]                                   = (TH1D*)Cutuncorrfile[i]->Get("histoSigndefaultNarrowMeson");
         histoSignNarrowCut[i]->SetName(Form("histoSigndefaultNarrowMeson_%s",cutNumber[i].Data()));
         cout << "line " << __LINE__ << endl;
-        
+
         if (mode == 2 || mode == 3 || mode == 4 || mode == 5){
             histoRawClusterPtCut[i]                             = (TH1D*)Cutuncorrfile[i]->Get("ClusterPtPerEvent");
-        }    
+        }
         cout << "line " << __LINE__ << endl;
-        
+
         // calculate ratios for meson measurements
         if (correctionFilesAvail){
             histoRatioCorrectedYieldCut[i]                      = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s", cutNumber[i].Data()));
@@ -475,18 +485,22 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             if (doMassRatio){
                 histoRatioMassRatioCut[i]                       = (TH1D*) histoMassRatioCut[i]->Clone(Form("histoRatioMassRatio_%s", cutNumber[i].Data()));
                 histoRatioMassRatioCut[i]->Divide(histoRatioMassRatioCut[i],histoMassRatioCut[0],1.,1.,"B");
-            }    
+            }
+            if (doWidthRatio){
+                histoRatioWidthRatioCut[i]                       = (TH1D*) histoWidthRatioCut[i]->Clone(Form("histoRatioWidthRatio_%s", cutNumber[i].Data()));
+                histoRatioWidthRatioCut[i]->Divide(histoRatioWidthRatioCut[i],histoWidthRatioCut[0],1.,1.,"B");
+            }
             if (isEta){
                 histoRatioEtaToPi0Cut[i]                        = (TH1D*) histoEtaToPi0Cut[i]->Clone(Form("histoEtaToPi0Ratio_%s", cutNumber[i].Data()));
                 histoRatioEtaToPi0Cut[i]->Divide(histoRatioEtaToPi0Cut[i],histoEtaToPi0Cut[0],1.,1.,"B");
-            }    
-        }    
+            }
+        }
         histoRatioRawYieldCut[i]                                = (TH1D*) histoRawYieldCut[i]->Clone(Form("histoRatioRawYieldCut_%s", cutNumber[i].Data()));
         if (!kSpecialTrigger){
             histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"B");
         } else {
             histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"");
-        }    
+        }
         cout << "line " << __LINE__ << endl;
         histoRatioWidthMeson[i]                                      = (TH1D*) histoWidthMeson[i]->Clone(Form("histoRatioWidthMeson_%s", cutNumber[i].Data()));
         histoRatioWidthMeson[i]->Divide(histoRatioWidthMeson[i],histoWidthMeson[0],1.,1.,"B");
@@ -505,10 +519,10 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoRatioRawClusterPtCut[i]->Divide(histoRatioRawClusterPtCut[i],histoRawClusterPtCut[0],1.,1.,"B");
             } else {
                 histoRatioRawClusterPtCut[i]->Divide(histoRatioRawClusterPtCut[i],histoRawClusterPtCut[0],1.,1.,"");
-            }    
-        }    
+            }
+        }
         cout << "line " << __LINE__ << endl;
-        
+
     }
 
     cout<<"=========================="<<endl;
@@ -518,7 +532,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     //********************* Plotting RAW-Yield *********************************************
     //**************************************************************************************
 
-        TCanvas* canvasRawYieldMeson = new TCanvas("canvasRawYieldMeson","",1350,1500);  
+        TCanvas* canvasRawYieldMeson = new TCanvas("canvasRawYieldMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasRawYieldMeson,  0.13, 0.02, 0.02, 0.09);
         // Upper pad definition
         TPad* padRawYield = new TPad("padRawYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -544,7 +558,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             if(i == 0){
                 Double_t scaleFactorRaw = 5.;
                 if (kSpecialTrigger) scaleFactorRaw = 100.;
-                
+
                 DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoRawYieldCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s RAW Yield/(#it{N}_{ev} #it{N}_{coll})",textMeson.Data()),
@@ -562,12 +576,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoRawYieldCut[i]->DrawCopy("same,e1,p");
                 legendRawMeson->AddEntry(histoRawYieldCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendRawMeson->Draw();
         // Labeling of plot
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-    
+
         padRawYieldRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -578,17 +592,17 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 //                     minYRatio = 0.001;
 //                     maxYRatio = 2;
 //                     padRawYieldRatios->SetLogy(1);
-//                 }      
+//                 }
                 SetStyleHistoTH1ForGraphs(histoRatioRawYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioRawYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-                
+
                 for(Int_t b = 0; b< histoRatioRawYieldCut[i]->GetNbinsX(); b++){
                     histoRatioRawYieldCut[i]->SetBinError(b+1,histoRawYieldCut[i]->GetBinError(b+1)/histoRawYieldCut[i]->GetBinContent(b+1));
                 }
                 histoRatioRawYieldCut[i]->SetFillColor(kGray+2);
                 histoRatioRawYieldCut[i]->SetFillStyle(0);
-                histoRatioRawYieldCut[i]->DrawCopy("p,e2");  
+                histoRatioRawYieldCut[i]->DrawCopy("p,e2");
 
 //                 histoRatioRawYieldCut[i]->DrawCopy("p,e1");
             } else{
@@ -609,15 +623,15 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     if (cutVariationName.Contains("SpecialTrigg")){
         //**************************************************************************************
         //********************* Plotting RAW-Yield for special triggers  ***********************
-        //**************************************************************************************        
+        //**************************************************************************************
 
         TCanvas* canvasRawYieldsTrigg = new TCanvas("canvasRawYieldsTrigg","",1000,1000);  // gives the page size
         DrawGammaCanvasSettings( canvasRawYieldsTrigg,  0.1, 0.02, 0.04, 0.08);
         canvasRawYieldsTrigg->SetLogy(1);
 
         // Set legend
-        
-        TLegend* legendSpecRawTrigger = GetAndSetLegend2(0.15,0.15,0.3,0.15+1.15*0.032*NumberOfCuts, 1000*0.032); 
+
+        TLegend* legendSpecRawTrigger = GetAndSetLegend2(0.15,0.15,0.3,0.15+1.15*0.032*NumberOfCuts, 1000*0.032);
         // Draw Raw yield for different triggers
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
@@ -642,17 +656,17 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         legendSpecRawTrigger->Draw();
         // labeling of the plot
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-        
+
         canvasRawYieldsTrigg->Update();
         canvasRawYieldsTrigg->SaveAs(Form("%s/%s_%s_TriggerYieldSpectra%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
         delete canvasRawYieldsTrigg;
 
         //**************************************************************************************
         //***************** Plotting RAW-Yield ratios for special triggers  ********************
-        //**************************************************************************************                
+        //**************************************************************************************
         TCanvas* canvasRatioRawYields = new TCanvas("canvasRatioRawYields","",1000,1000);  // gives the page size
         DrawGammaCanvasSettings( canvasRatioRawYields,  0.1, 0.02, 0.04, 0.08);
-        if (mode==2 || mode == 4 )canvasRatioRawYields->SetLogy(1); 
+        if (mode==2 || mode == 4 )canvasRatioRawYields->SetLogy(1);
         // create legend
         TLegend* legendRatioRaw = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*NumberOfCuts, 1000*0.032);
         // find min und max
@@ -685,12 +699,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         // labeling
         legendRatioRaw->Draw();
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-        
+
         canvasRatioRawYields->Update();
         canvasRatioRawYields->SaveAs(Form("%s/%s_%s_TriggerYieldRatio%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
         delete canvasRatioRawYields;
     }
-    
+
     //**************************************************************************************
     //************************ Plotting Width  *********************************************
     //**************************************************************************************
@@ -770,7 +784,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     //************************ Plotting SB  ************************************************
     //**************************************************************************************
 
-        TCanvas* canvasSBMeson = new TCanvas("canvasSBMeson","",1350,1500);  
+        TCanvas* canvasSBMeson = new TCanvas("canvasSBMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasSBMeson,  0.13, 0.02, 0.02, 0.09);
         // Upper pad definition
         TPad* padSB = new TPad("padSB", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -788,14 +802,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 
         // Plot SB in uppper panel
         padSB->cd();
-        
+
         TLegend* legendSB = GetAndSetLegend2(0.27,0.02,0.35,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
         if (cutVariationName.Contains("dEdxPi")){
             legendSB->SetTextSize(0.02);
         }
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
-            
+
                 DrawGammaSetMarker(histoSBCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoSBCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s S/B",textMeson.Data()),
@@ -813,12 +827,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoSBCut[i]->DrawCopy("same,e1,p");
                 legendSB->AddEntry(histoSBCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendSB->Draw();
         // Labeling of plot
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-            
+
         padSBRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -829,7 +843,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     minYRatio = 0.001;
                     maxYRatio = 2;
                     padSBRatios->SetLogy(1);
-                }      
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioSBCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSBCut[i], 20, 1.,color[0],color[0]);
                 histoRatioSBCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -854,7 +868,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     //************************ Plotting SBNarrow  ************************************************
     //**************************************************************************************
 
-        TCanvas* canvasSBNarrowMeson = new TCanvas("canvasSBNarrowMeson","",1350,1500);  
+        TCanvas* canvasSBNarrowMeson = new TCanvas("canvasSBNarrowMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasSBNarrowMeson,  0.13, 0.02, 0.02, 0.09);
         // Upper pad definition
         TPad* padSBNarrow = new TPad("padSBNarrow", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -878,7 +892,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
-            
+
                 DrawGammaSetMarker(histoSBNarrowCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoSBNarrowCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s S/B (narrow range)",textMeson.Data()),
@@ -896,11 +910,11 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoSBNarrowCut[i]->DrawCopy("same,e1,p");
                 legendSBNarrow->AddEntry(histoSBNarrowCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendSBNarrow->Draw();
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-            
+
         padSBNarrowRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -911,7 +925,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     minYRatio = 0.001;
                     maxYRatio = 2;
                     padSBNarrowRatios->SetLogy(1);
-                }      
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioSBNarrowCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSBNarrowCut[i], 20, 1.,color[0],color[0]);
                 histoRatioSBNarrowCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -931,13 +945,13 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         canvasSBNarrowMeson->SaveAs(Form("%s/%s_%s_SBNarrow%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
         delete canvasSBNarrowMeson;
 
-        
+
 
     //**************************************************************************************
     //************************ Plotting SignNarrow  ************************************************
     //**************************************************************************************
 
-        TCanvas* canvasSignNarrowMeson = new TCanvas("canvasSignNarrowMeson","",1350,1500);  
+        TCanvas* canvasSignNarrowMeson = new TCanvas("canvasSignNarrowMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasSignNarrowMeson,  0.13, 0.02, 0.02, 0.09);
         // Upper pad definition
         TPad* padSignNarrow = new TPad("padSignNarrow", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -961,7 +975,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
-            
+
                 DrawGammaSetMarker(histoSignNarrowCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoSignNarrowCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s Significance (narrow range)",textMeson.Data()),
@@ -979,11 +993,11 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoSignNarrowCut[i]->DrawCopy("same,e1,p");
                 legendSignNarrow->AddEntry(histoSignNarrowCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendSignNarrow->Draw();
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-            
+
         padSignNarrowRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -994,7 +1008,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     minYRatio = 0.001;
                     maxYRatio = 2;
                     padSignNarrowRatios->SetLogy(1);
-                }      
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioSignNarrowCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSignNarrowCut[i], 20, 1.,color[0],color[0]);
                 histoRatioSignNarrowCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1014,13 +1028,13 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         canvasSignNarrowMeson->SaveAs(Form("%s/%s_%s_SignNarrow%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
         delete canvasSignNarrowMeson;
 
-        
+
 
     //**************************************************************************************
     //************************ Plotting Sign  ************************************************
     //**************************************************************************************
 
-        TCanvas* canvasSignMeson = new TCanvas("canvasSignMeson","",1350,1500);  
+        TCanvas* canvasSignMeson = new TCanvas("canvasSignMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasSignMeson,  0.13, 0.02, 0.02, 0.09);
         // Upper pad definition
         TPad* padSign = new TPad("padSign", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -1044,7 +1058,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
-            
+
                 DrawGammaSetMarker(histoSignCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoSignCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s Significance",textMeson.Data()),
@@ -1062,12 +1076,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoSignCut[i]->DrawCopy("same,e1,p");
                 legendSign->AddEntry(histoSignCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendSign->Draw();
         // Labeling of plot
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-            
+
         padSignRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -1078,7 +1092,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     minYRatio = 0.001;
                     maxYRatio = 2;
                     padSignRatios->SetLogy(1);
-                }      
+                }
                 SetStyleHistoTH1ForGraphs(histoRatioSignCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioSignCut[i], 20, 1.,color[0],color[0]);
                 histoRatioSignCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1098,13 +1112,13 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         canvasSignMeson->SaveAs(Form("%s/%s_%s_Sign%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
         delete canvasSignMeson;
 
-        
+
     if (mode == 2 || mode == 3 || mode == 4 || mode == 5){
         //**************************************************************************************
         //********************* Plotting RAW-Cluster Yield *********************************************
         //**************************************************************************************
 
-            TCanvas* canvasRawClusterPt = new TCanvas("canvasRawClusterPt","",1350,1500);  
+            TCanvas* canvasRawClusterPt = new TCanvas("canvasRawClusterPt","",1350,1500);
             DrawGammaCanvasSettings( canvasRawClusterPt,  0.13, 0.02, 0.02, 0.09);
             // Upper pad definition
             TPad* padRawClusterPt = new TPad("padRawClusterPt", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -1130,7 +1144,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 if(i == 0){
                     Double_t scaleFactorRaw = 5.;
                     if (kSpecialTrigger) scaleFactorRaw = 5.;
-                    
+
                     DrawGammaSetMarker(histoRawClusterPtCut[i], 20, 1., color[0], color[0]);
                     DrawAutoGammaMesonHistos( histoRawClusterPtCut[i],
                                             "", "#it{p}_{T} (GeV/#it{c})", "cluster RAW Yield/(#it{N}_{ev} #it{N}_{coll})",
@@ -1148,12 +1162,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     histoRawClusterPtCut[i]->DrawCopy("same,e1,p");
                     legendRawCluster->AddEntry(histoRawClusterPtCut[i],cutStringsName[i].Data());
                 }
-                
+
             }
             legendRawCluster->Draw();
             // Labeling of plot
             PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                
+
             padRawClusterPtRatios->cd();
             for(Int_t i = 0; i< NumberOfCuts; i++){
                 if(i==0){
@@ -1164,7 +1178,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         minYRatio = 0.001;
                         maxYRatio = 2;
                         padRawClusterPtRatios->SetLogy(1);
-                    }      
+                    }
                     SetStyleHistoTH1ForGraphs(histoRatioRawClusterPtCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                     DrawGammaSetMarker(histoRatioRawClusterPtCut[i], 20, 1.,color[0],color[0]);
                     histoRatioRawClusterPtCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
@@ -1187,7 +1201,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         if (cutVariationName.Contains("SpecialTrigg") && meson.CompareTo("Pi0") == 0 ){
             //**************************************************************************************
             //********************* Plotting RAW-Yield for special triggers  ***********************
-            //**************************************************************************************        
+            //**************************************************************************************
 
             TCanvas* canvasRawClusterPtTrigg = new TCanvas("canvasRawClusterPtTrigg","",1000,1000);  // gives the page size
             DrawGammaCanvasSettings( canvasRawClusterPtTrigg,  0.1, 0.02, 0.04, 0.08);
@@ -1219,17 +1233,17 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             legendSpecRawClusterTrigger->Draw();
             // labeling of the plot
             PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-            
+
             canvasRawClusterPtTrigg->Update();
             canvasRawClusterPtTrigg->SaveAs(Form("%s/%s_TriggerYieldCluster%s.%s",outputDir.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
             delete canvasRawClusterPtTrigg;
 
             //**************************************************************************************
             //***************** Plotting RAW-Yield ratios for special triggers  ********************
-            //**************************************************************************************                
+            //**************************************************************************************
             TCanvas* canvasRatioRawClusterPt = new TCanvas("canvasRatioRawClusterPt","",1000,1000);  // gives the page size
             DrawGammaCanvasSettings( canvasRatioRawClusterPt,  0.1, 0.02, 0.04, 0.08);
-            if (mode==2 || mode == 4 )canvasRatioRawClusterPt->SetLogy(1); 
+            if (mode==2 || mode == 4 )canvasRatioRawClusterPt->SetLogy(1);
             // create legend
             TLegend* legendRatioRawClusterTrigger = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*NumberOfCuts, 1000*0.032);
             // find min und max
@@ -1268,14 +1282,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             delete canvasRatioRawClusterPt;
         }
     }
-        
-        
+
+
     if (correctionFilesAvail){
         //*****************************************************************************************
         //******************* Compare Corrected Yields ********************************************
         //*****************************************************************************************
         // Define canvas
-        TCanvas* canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);  
+        TCanvas* canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasCorrectedYieldMeson,  0.13, 0.02, 0.02, 0.09);
         // Define upper panel
         TPad* padCorrectedYield = new TPad("padCorrectedYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -1289,8 +1303,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         padCorrectedYieldRatios->Draw();
 
         // Plot corrected yield in upper panel
-        padCorrectedYield->cd();            
-        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032); 
+        padCorrectedYield->cd();
+        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
 //         if (cutVariationName.Contains("dEdxPi")){
 //             legendCorrectedYieldMeson->SetTextSize(0.02);
 //         }
@@ -1319,8 +1333,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 
         // labeling the plot
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-        
-        // plot ratio of corrected yields in lower panel    
+
+        // plot ratio of corrected yields in lower panel
         padCorrectedYieldRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -1328,7 +1342,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 Double_t minYRatio = 0.8;
                 Double_t maxYRatio = 1.2;
 //                 if(optionMult.CompareTo("Mult")==0) {
-//                     if( optionEnergy.Contains("Pb")){ 
+//                     if( optionEnergy.Contains("Pb")){
 //                         minYRatio = 0.005;        maxYRatio = 2.1;
 //                     } else {
 //                         minYRatio = -1.05;        maxYRatio = 12.5;
@@ -1339,22 +1353,22 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 //                     minYRatio = 0.65;          maxYRatio = 1.15;
 //                 } else if (cutVariationName.Contains("ClusterTrackMatching")){
 //                     minYRatio = 0.75;      maxYRatio = 1.25;
-//                 }    
+//                 }
 //                 if (mode != 0 && mode!= 1 ){
 //                     minYRatio = 0.75;      maxYRatio = 1.25;
 //                 }
                 SetStyleHistoTH1ForGraphs(histoRatioCorrectedYieldCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1.,color[0],color[0]);
                 histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-                
+
                 for(Int_t b = 0; b< histoRatioCorrectedYieldCut[i]->GetNbinsX(); b++){
                     histoRatioCorrectedYieldCut[i]->SetBinError(b+1,histoCorrectedYieldCut[i]->GetBinError(b+1)/histoCorrectedYieldCut[i]->GetBinContent(b+1));
                 }
                 histoRatioCorrectedYieldCut[i]->SetFillColor(kGray+2);
                 histoRatioCorrectedYieldCut[i]->SetFillStyle(0);
-                histoRatioCorrectedYieldCut[i]->DrawCopy("p,e2");  
-    
-//                 histoRatioCorrectedYieldCut[i]->DrawCopy("p,e1");                
+                histoRatioCorrectedYieldCut[i]->DrawCopy("p,e2");
+
+//                 histoRatioCorrectedYieldCut[i]->DrawCopy("p,e1");
             } else{
                 if(i<20){
                     DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
@@ -1364,7 +1378,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoRatioCorrectedYieldCut[i]->DrawCopy("same,e1,p");
             }
         }
-        
+
 
 
         DrawGammaLines(0., maxPt,1., 1.,0.1);
@@ -1377,7 +1391,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         //**************************************************************************************
         //********************* Plotting efficiencies *********************************************
         //**************************************************************************************
-        // Define canvas    
+        // Define canvas
         TCanvas* canvasTrueEffiMeson = new TCanvas("canvasTrueEffiMeson","",1350,1500);  // gives the page size
         DrawGammaCanvasSettings( canvasTrueEffiMeson,  0.13, 0.02, 0.02, 0.09);
         // Define upper panel
@@ -1394,7 +1408,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 //         if (mode == 2 || mode == 3 ) padTrueEffi->SetLogy(1);
 //         else padTrueEffi->SetLogy(0);
 
-        TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*NumberOfCuts,0.3,0.92, 1500*0.75*0.032); 
+        TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.92-1.15*0.032*NumberOfCuts,0.3,0.92, 1500*0.75*0.032);
         if (cutVariationName.Contains("dEdxPi")){
             legendEffiMeson->SetTextSize(0.02);
         }
@@ -1420,26 +1434,26 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoTrueEffiCut[i]->DrawCopy("same,e1,p");
                 legendEffiMeson->AddEntry(histoTrueEffiCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendEffiMeson->Draw();
-    
+
         // Efficiency plot labeling
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.2, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                
+
         // Draw ratio of efficiencies in lower panel
         padTrueEffiRatios->cd();
         if( optionEnergy.Contains("Pb") ) padTrueEffiRatios->SetLogy(0);
         else padTrueEffiRatios->SetLogy(0);
         for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i==0){      
+            if(i==0){
                 Double_t minYRatio = 0.8;
                 Double_t maxYRatio = 1.2;
                 if (cutVariationName.Contains("MultiplicityPP")){
                     minYRatio = 0.5;
                     maxYRatio = 2.7;
-                    
-                }    
+
+                }
 //                 if( optionEnergy.Contains("Pb") && optionMult.CompareTo("Mult") == 0){
 //                     minYRatio = 0.05;        maxYRatio = 2.4;
 //                 } else if (cutVariationName.Contains("PhotonQuality")){
@@ -1449,13 +1463,13 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 SetStyleHistoTH1ForGraphs(histoRatioTrueEffiCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
                 DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20, 1.,color[0],color[0]);
                 histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
-                
+
                 for(Int_t b = 0; b< histoRatioTrueEffiCut[i]->GetNbinsX(); b++){
                     histoRatioTrueEffiCut[i]->SetBinError(b+1,histoTrueEffiCut[i]->GetBinError(b+1)/histoTrueEffiCut[i]->GetBinContent(b+1));
                 }
                 histoRatioTrueEffiCut[i]->SetFillColor(kGray+2);
                 histoRatioTrueEffiCut[i]->SetFillStyle(0);
-                histoRatioTrueEffiCut[i]->DrawCopy("p,e2");  
+                histoRatioTrueEffiCut[i]->DrawCopy("p,e2");
 
 //                 histoRatioTrueEffiCut[i]->DrawCopy("p,e1");
             } else{
@@ -1473,12 +1487,12 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         canvasTrueEffiMeson->Update();
         canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
         delete canvasTrueEffiMeson;
-        
+
 
         //**************************************************************************************
         //********************* Plotting Acceptance *********************************************
         //**************************************************************************************
-        // Define canvas    
+        // Define canvas
         TCanvas* canvasAcceptanceMeson = new TCanvas("canvasAcceptanceMeson","",1350,1500);  // gives the page size
         DrawGammaCanvasSettings( canvasAcceptanceMeson,  0.13, 0.02, 0.02, 0.09);
         // Define upper panel
@@ -1521,19 +1535,19 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 histoAcceptanceCut[i]->DrawCopy("same,e1,p");
                 legendAcceptMeson->AddEntry(histoAcceptanceCut[i],cutStringsName[i].Data());
             }
-            
+
         }
         legendAcceptMeson->Draw();
-    
+
         // Acceptance plot labeling
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                
+
         // Draw ratio of efficiencies in lower panel
         padAcceptanceRatios->cd();
         if( optionEnergy.Contains("Pb") ) padAcceptanceRatios->SetLogy(0);
         else padAcceptanceRatios->SetLogy(0);
         for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i==0){      
+            if(i==0){
                 Double_t minYRatio = 0.45;
                 Double_t maxYRatio = 1.55;
                 if( optionEnergy.Contains("Pb") && optionMult.CompareTo("Mult") == 0){
@@ -1567,7 +1581,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             //**************************************************************************************
             //********************* Plotting MassRatio *********************************************
             //**************************************************************************************
-            // Define canvas    
+            // Define canvas
             TCanvas* canvasMassRatioMeson = new TCanvas("canvasMassRatioMeson","",1350,1500);  // gives the page size
             DrawGammaCanvasSettings( canvasMassRatioMeson,  0.13, 0.02, 0.02, 0.09);
             // Define upper panel
@@ -1608,22 +1622,22 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     histoMassRatioCut[i]->DrawCopy("same,e1,p");
                     legendMassRatio->AddEntry(histoMassRatioCut[i],cutStringsName[i].Data());
                 }
-                
+
             }
             legendMassRatio->Draw();
             DrawGammaLines(0., maxPt,1., 1.,0.1);
             DrawGammaLines(0., maxPt,1.02, 1.02,0.1,kGray+1, 7);
             DrawGammaLines(0., maxPt,0.98, 0.98,0.1,kGray+1, 7);
-            
+
             // MassRatio plot labeling
             PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                    
+
             // Draw ratio of efficiencies in lower panel
             padMassRatioRatios->cd();
             if( optionEnergy.Contains("Pb") ) padMassRatioRatios->SetLogy(0);
             else padMassRatioRatios->SetLogy(0);
             for(Int_t i = 0; i< NumberOfCuts; i++){
-                if(i==0){      
+                if(i==0){
                     Double_t minYRatio = 0.95;
                     Double_t maxYRatio = 1.05;
                     SetStyleHistoTH1ForGraphs(histoRatioMassRatioCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
@@ -1646,12 +1660,98 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             canvasMassRatioMeson->SaveAs(Form("%s/%s_%s_MassRatio%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
             delete canvasMassRatioMeson;
         }
-        
+
+        if (doWidthRatio){
+            //**************************************************************************************
+            //********************* Plotting MassRatio *********************************************
+            //**************************************************************************************
+            // Define canvas
+            TCanvas* canvasWidthRatioMeson = new TCanvas("canvasWidthRatioMeson","",1350,1500);  // gives the page size
+            DrawGammaCanvasSettings( canvasWidthRatioMeson,  0.13, 0.02, 0.02, 0.09);
+            // Define upper panel
+            TPad* padWidthRatio = new TPad("padWidthRatio", "", 0., 0.25, 1., 1.,-1, -1, -2);
+            DrawGammaPadSettings( padWidthRatio, 0.12, 0.02, 0.04, 0.);
+            padWidthRatio->Draw();
+            // Define lower panel
+            TPad* padWidthRatioRatios = new TPad("padWidthRatioRatios", "", 0., 0., 1., 0.25,-1, -1, -2);
+            DrawGammaPadSettings( padWidthRatioRatios, 0.12, 0.02, 0.0, 0.2);
+            padWidthRatioRatios->Draw();
+
+            // draw efficiency in upper panel
+            padWidthRatio->cd();
+            //         if (mode == 2 || mode == 3 ) padWidthRatio->SetLogy(1);
+            padWidthRatio->SetLogy(0);
+
+            TLegend* legendWidthRatio = GetAndSetLegend2(0.15,0.92-1.15*0.032*NumberOfCuts,0.3,0.92, 1500*0.75*0.032);
+            if (cutVariationName.Contains("dEdxPi")){
+                legendWidthRatio->SetTextSize(0.02);
+            }
+            for(Int_t i = 0; i< NumberOfCuts; i++){
+                if(i == 0){
+                    DrawGammaSetMarker(histoWidthRatioCut[i], 20, 1., color[0], color[0]);
+                    DrawAutoGammaMesonHistos( histoWidthRatioCut[i],
+                                              "", "#it{p}_{T} (GeV/#it{c})", Form("#sigma_{%s, MC}/#sigma_{%s, data}",textMeson.Data(),textMeson.Data()),
+                                              kFALSE, 5., 10e-10,kFALSE,
+                                              kFALSE, -0.1, 0.00030,
+                                              kFALSE, 0., 10.);
+                    histoWidthRatioCut[i]->GetYaxis()->SetRangeUser(0.6,1.2);
+                    histoWidthRatioCut[i]->DrawCopy("e1,p");
+                    legendWidthRatio->AddEntry(histoWidthRatioCut[i],Form("standard: %s",cutStringsName[i].Data()));
+                } else {
+                    if(i<20){
+                        DrawGammaSetMarker(histoWidthRatioCut[i], 20+i, 1.,color[i],color[i]);
+                    } else {
+                        DrawGammaSetMarker(histoWidthRatioCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                    }
+                    histoWidthRatioCut[i]->DrawCopy("same,e1,p");
+                    legendWidthRatio->AddEntry(histoWidthRatioCut[i],cutStringsName[i].Data());
+                }
+
+            }
+            legendWidthRatio->Draw();
+            DrawGammaLines(0., maxPt,1., 1.,0.1);
+            DrawGammaLines(0., maxPt,1.1, 1.1,0.1,kGray+1, 7);
+            DrawGammaLines(0., maxPt,0.9, 0.9,0.1,kGray+1, 7);
+            DrawGammaLines(0., maxPt,0.8, 0.8,0.1,kGray+1, 9);
+            DrawGammaLines(0., maxPt,0.7, 0.7,0.1,kGray+1, 8);
+
+            // WidthRatio plot labeling
+            PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
+            // Draw ratio of efficiencies in lower panel
+            padWidthRatioRatios->cd();
+            if( optionEnergy.Contains("Pb") ) padWidthRatioRatios->SetLogy(0);
+            else padWidthRatioRatios->SetLogy(0);
+            for(Int_t i = 0; i< NumberOfCuts; i++){
+                if(i==0){
+                    Double_t minYRatio = 0.95;
+                    Double_t maxYRatio = 1.05;
+                    SetStyleHistoTH1ForGraphs(histoRatioWidthRatioCut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
+                    DrawGammaSetMarker(histoRatioWidthRatioCut[i], 20, 1.,color[0],color[0]);
+                    histoRatioWidthRatioCut[i]->GetYaxis()->SetRangeUser(minYRatio,maxYRatio);
+                    histoRatioWidthRatioCut[i]->DrawCopy("p,e1");
+                } else{
+                    if(i<20){
+                        DrawGammaSetMarker(histoRatioWidthRatioCut[i], 20+i, 1.,color[i],color[i]);
+                    } else {
+                        DrawGammaSetMarker(histoRatioWidthRatioCut[i], 20+i, 1.,color[i-20],color[i-20]);
+                    }
+                    histoRatioWidthRatioCut[i]->DrawCopy("same,e1,p");
+                }
+
+                DrawGammaLines(0., maxPt,1., 1.,0.1);
+            }
+
+            canvasWidthRatioMeson->Update();
+            canvasWidthRatioMeson->SaveAs(Form("%s/%s_%s_WidthRatio.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
+            delete canvasWidthRatioMeson;
+        }
+
         if (isEta){
             //**************************************************************************************
             //********************* Plotting Eta to pi0 ratio  *************************************
             //**************************************************************************************
-            // Define canvas    
+            // Define canvas
             TCanvas* canvasEtaToPi0Meson = new TCanvas("canvasEtaToPi0Meson","",1350,1500);  // gives the page size
             DrawGammaCanvasSettings( canvasEtaToPi0Meson,  0.13, 0.02, 0.02, 0.09);
             // Define upper panel
@@ -1692,22 +1792,22 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     histoEtaToPi0Cut[i]->DrawCopy("same,e1,p");
                     legendEtaToPi0->AddEntry(histoEtaToPi0Cut[i],cutStringsName[i].Data());
                 }
-                
+
             }
             legendEtaToPi0->Draw();
             DrawGammaLines(0., maxPt,0.45, 0.45,0.1);
             DrawGammaLines(0., maxPt,0.55, 0.55,0.1,kGray+1, 7);
             DrawGammaLines(0., maxPt,0.35, 0.35 ,0.1,kGray+1, 7);
-            
+
             // EtaToPi0 plot labeling
             PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                    
+
             // Draw ratio of efficiencies in lower panel
             padEtaToPi0Ratios->cd();
             if( optionEnergy.Contains("Pb") ) padEtaToPi0Ratios->SetLogy(0);
             else padEtaToPi0Ratios->SetLogy(0);
             for(Int_t i = 0; i< NumberOfCuts; i++){
-                if(i==0){      
+                if(i==0){
                     Double_t minYRatio = 0.2;
                     Double_t maxYRatio = 1.8;
                     SetStyleHistoTH1ForGraphs(histoRatioEtaToPi0Cut[i], "#it{p}_{T} (GeV/#it{c})", "#frac{modified}{standard}", 0.08, 0.11, 0.07, 0.1, 0.75, 0.5, 510,505);
@@ -1733,16 +1833,16 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             canvasEtaToPi0Meson->Update();
             canvasEtaToPi0Meson->SaveAs(Form("%s/%s_%s_EtaToPi0%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
             delete canvasEtaToPi0Meson;
-            
-        }    
-        
+
+        }
+
         //*************************************************************************************************
         //******************** Output of the systematic Error due to Signal extraction for Meson ************
         //*************************************************************************************************
         // Determine number of bins
         Int_t NBinsPt = histoCorrectedYieldCut[0]->GetNbinsX();
         const Int_t NBinstPtConst = NBinsPt+1;
-        
+
         // Create array of bin boundaries
         Double_t  BinsXCenter[NBinstPtConst];
         Double_t  BinsXWidth[NBinstPtConst];
@@ -1771,7 +1871,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         Double_t RelDifferenceCut[ConstNumberOfCuts][NBinstPtConst];
         Double_t RelDifferenceErrorCut[ConstNumberOfCuts][NBinstPtConst];
         Double_t RelDifferenceRawCut[ConstNumberOfCuts][NBinstPtConst];
-            
+
         // Create largest difference array
         Double_t LargestDiffNeg[NBinstPtConst];
         Double_t LargestDiffPos[NBinstPtConst];
@@ -1798,7 +1898,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
 
-        // Calculate largest difference among cut variation 
+        // Calculate largest difference among cut variation
         for(Int_t j = 1; j < NumberOfCuts; j++){
             for (Int_t i = 0; i < NBinsPt +1; i++){
                 // Calculate difference (rel/abs) and error for corrected yield
@@ -1823,15 +1923,15 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     RelDifferenceErrorCut[j][i] = 0. ;
                     DifferenceCut[j][i] = 0.;
                     DifferenceErrorCut[j][i] = 0.;
-                }  
-                    
-                if(doBarlow){ 
+                }
+
+                if(doBarlow){
                     // !!! => Careful, this is meant to be a cross check. If it has to be used for the syst errors
                     // the syste error macros has to be changed accordingly (the mean of pos and  neg dev cannot be used)
-                    
+
                     // Calculate largest differences in positiv and negative direction
                     if(DifferenceCut[j][i] < 0){ // largest negativ deviation
-                        // Take deviation if larger than previous largest deviation 
+                        // Take deviation if larger than previous largest deviation
                         // and relative raw yield loss less than 75%
                         if (TMath::Abs(LargestDiffNeg[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                             if( TMath::Abs(DifferenceCut[j][i])/TMath::Abs(DifferenceErrorCut[j][i]) > 1. ){
@@ -1842,7 +1942,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                             }
                         }
                     } else { // largest positive deviation
-                        // Take deviation if larger than previous largest deviation 
+                        // Take deviation if larger than previous largest deviation
                         // and relative raw yield loss less than 75%
                         if (TMath::Abs(LargestDiffPos[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                             if( TMath::Abs(DifferenceCut[j][i])/TMath::Abs(DifferenceErrorCut[j][i]) > 1. ){
@@ -1853,19 +1953,19 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                             }
                         }
                     }
-                    
+
                 } else {
-                    
+
                     // Calculate largest differences in positiv and negative direction
                     if(DifferenceCut[j][i] < 0){ // largest negativ deviation
-                        // Take deviation if larger than previous largest deviation 
+                        // Take deviation if larger than previous largest deviation
                         // and relative raw yield loss less than 75%
                         if (TMath::Abs(LargestDiffNeg[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                             LargestDiffNeg[i] = DifferenceCut[j][i];
                             LargestDiffErrorNeg[i] = DifferenceErrorCut[j][i];
                         }
                     } else { // largest positive deviation
-                        // Take deviation if larger than previous largest deviation 
+                        // Take deviation if larger than previous largest deviation
                         // and relative raw yield loss less than 75%
                         if (TMath::Abs(LargestDiffPos[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                             LargestDiffPos[i] = DifferenceCut[j][i];
@@ -1876,14 +1976,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         LargestDiffPos[i] = 0;
                         LargestDiffErrorPos[i] = 0;
                         LargestDiffNeg[i] = 0;
-                        LargestDiffErrorNeg[i] = 0;                      
+                        LargestDiffErrorNeg[i] = 0;
                     }
                 }
             }
         }
-        
-        if(doBarlow){ 
-            
+
+        if(doBarlow){
+
             TString SysErrCheckname = Form("%s/%s_%s_SystematicErrorBarlowCheck.dat",outputDir.Data(),meson.Data(),prefix2.Data());
             fstream SysErrDatCheck;
             SysErrDatCheck.open(SysErrCheckname.Data(), ios::out);
@@ -1892,7 +1992,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 if (l == 0) {
                     SysErrDatCheck << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
                     for(Int_t i = 1; i < (NBinsPt +1); i++){
-                        SysErrDatCheck << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;    
+                        SysErrDatCheck << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;
                     }
                 } else{
                     for(Int_t i = 1; i < (NBinsPt +1); i++){
@@ -1903,10 +2003,10 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         SysErrDatCheck << "Check: Delta/sigma_Delta < 1? " << (TMath::Abs(DifferenceCut[l][i]))/(TMath::Abs(DifferenceErrorCut[l][i])) << endl;
                     }
                 }
-            }            
+            }
             SysErrDatCheck.close();
-        }                        
-                    
+        }
+
         // Write systematic error input to log file
         TString SysErrDatname = Form("%s/%s_%s_SystematicErrorCutStudies.dat",outputDir.Data(),meson.Data(),prefix2.Data());
         fstream SysErrDat;
@@ -1918,7 +2018,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             if (l == 0) {
                 SysErrDat << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
                 for(Int_t i = 1; i < (NBinsPt +1); i++){
-                SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;    
+                SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;
                 }
             } else{
                 SysErrDat << endl <<"Bin" << "\t" << cutNumber[l] << "\t" << "Error " << "\t Dif to Cut1" << endl;
@@ -1927,7 +2027,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << "\t" <<  DifferenceCut[l][i] << "\t"<< DifferenceErrorCut[l][i] << "\t" <<
                         RelDifferenceCut[l][i] <<  "\t" << RelDifferenceErrorCut[l][i] <<"\t" << RelDifferenceRawCut[l][i]<< endl;
                     } else {
-                        SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << "\t" <<  DifferenceCut[l][i] << "\t"<< DifferenceErrorCut[l][i] << "\t" << 
+                        SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << "\t" <<  DifferenceCut[l][i] << "\t"<< DifferenceErrorCut[l][i] << "\t" <<
                         RelDifferenceCut[l][i] <<  "\t" << RelDifferenceErrorCut[l][i] <<"\t" << RelDifferenceRawCut[l][i]  <<"\t not considered in largest dev" <<endl;
                     }
                 }
@@ -1948,14 +2048,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 LargestDiffRelErrorNeg[i] = - LargestDiffErrorNeg[i]/SysErrCut[0][i].value*100.;
                 LargestDiffRelErrorPos[i] = LargestDiffErrorPos[i]/SysErrCut[0][i].value*100.;
                 if (i > 0){
-                    SysErrDat << BinsXCenter[i] << "\t" << LargestDiffNeg[i]/SysErrCut[0][i].value*100. << "\t" << LargestDiffErrorNeg[i]/SysErrCut[0][i].value*100. << "\t" <<     
+                    SysErrDat << BinsXCenter[i] << "\t" << LargestDiffNeg[i]/SysErrCut[0][i].value*100. << "\t" << LargestDiffErrorNeg[i]/SysErrCut[0][i].value*100. << "\t" <<
                     LargestDiffPos[i]/SysErrCut[0][i].value*100. << "\t" << LargestDiffErrorPos[i]/SysErrCut[0][i].value*100.<<endl;
                 } else {
                     LargestDiffRelNeg[i] = 0.;
                     LargestDiffRelPos[i] = 0.;
                     LargestDiffRelErrorNeg[i] = 0.;
                     LargestDiffRelErrorPos[i] = 0.;
-                }  
+                }
             } else {
                 LargestDiffRelNeg[i] = 0.;
                 LargestDiffRelPos[i] = 0.;
@@ -1963,22 +2063,22 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 LargestDiffRelErrorPos[i] = 0.;
             }
         }
-        
+
         SysErrDat.close();
 
         // Create sys-err graphs
         TGraphAsymmErrors* SystErrGraphNeg = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffRelNeg, BinsXWidth, BinsXWidth, LargestDiffRelErrorNeg, LargestDiffRelErrorNeg);
         SystErrGraphNeg->SetName(Form("%s_SystErrorRelNeg_%s",meson.Data(),cutVariationName.Data()));
-        cout << "Negative error graph" << endl; 
+        cout << "Negative error graph" << endl;
         SystErrGraphNeg->Print();
         TGraphAsymmErrors* SystErrGraphPos = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffRelPos, BinsXWidth, BinsXWidth, LargestDiffRelErrorPos, LargestDiffRelErrorPos);
         SystErrGraphPos->SetName(Form("%s_SystErrorRelPos_%s",meson.Data(),cutVariationName.Data()));
         cout << "positive error graph" << endl;
         SystErrGraphPos->Print();
-        
+
         TGraphAsymmErrors* SystErrGraphNegEtaToPi0 = NULL;
         TGraphAsymmErrors* SystErrGraphPosEtaToPi0 = NULL;
-        
+
         if (isEta){
             //*************************************************************************************************
             //******************** Output of the systematic Error due to Signal extraction for Meson ************
@@ -1986,7 +2086,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             // Determine number of bins
             Int_t NBinsPtEtaToPi0                        = histoEtaToPi0Cut[0]->GetNbinsX();
             const Int_t NBinstPtConstEtaToPi0            = NBinsPtEtaToPi0+1;
-            
+
             // Create array of bin boundaries
             Double_t  BinsXCenterEtaToPi0[NBinstPtConstEtaToPi0];
             Double_t  BinsXWidthEtaToPi0[NBinstPtConstEtaToPi0];
@@ -2015,7 +2115,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             Double_t RelDifferenceEtaToPi0Cut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
             Double_t RelDifferenceEtaToPi0ErrorCut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
             Double_t RelDifferenceEtaToPi0RawCut[ConstNumberOfCuts][NBinstPtConstEtaToPi0];
-                
+
             // Create largest difference array
             Double_t LargestDiffEtaToPi0Neg[NBinstPtConstEtaToPi0];
             Double_t LargestDiffEtaToPi0Pos[NBinstPtConstEtaToPi0];
@@ -2042,7 +2142,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
 
 
-            // Calculate largest difference among cut variation 
+            // Calculate largest difference among cut variation
             for(Int_t j = 1; j < NumberOfCuts; j++){
                 for (Int_t i = 0; i < NBinsPtEtaToPi0 +1; i++){
                     // Calculate difference (rel/abs) and error for corrected yield
@@ -2061,22 +2161,22 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     } else {
                         RelDifferenceEtaToPi0RawCut[j][i]   = -10000.;
                     }
-                    
+
                     if (i == 0){
                         DifferenceEtaToPi0Cut[j][i]         = 0.;
                         DifferenceEtaToPi0ErrorCut[j][i]    = 0;
                         RelDifferenceEtaToPi0Cut[j][i]      = 0.;
                         RelDifferenceEtaToPi0ErrorCut[j][i] = 0;
-                        RelDifferenceEtaToPi0RawCut[j][i]   = 0;                      
-                    }  
-                    
-                    if(doBarlow){ 
+                        RelDifferenceEtaToPi0RawCut[j][i]   = 0;
+                    }
+
+                    if(doBarlow){
                         // !!! => Careful, this is meant to be a cross check. If it has to be used for the syst errors
                         // the syste error macros has to be changed accordingly (the mean of pos and  neg dev cannot be used)
-                        
+
                         // Calculate largest differences in positiv and negative direction
                         if(DifferenceEtaToPi0Cut[j][i] < 0){ // largest negativ deviation
-                            // Take deviation if larger than previous largest deviation 
+                            // Take deviation if larger than previous largest deviation
                             // and relative raw yield loss less than 75%
                             if (TMath::Abs(LargestDiffEtaToPi0Neg[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
                                 if( TMath::Abs(DifferenceEtaToPi0Cut[j][i])/TMath::Abs(DifferenceEtaToPi0ErrorCut[j][i]) > 1. ){
@@ -2087,7 +2187,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                                 }
                             }
                         } else { // largest positive deviation
-                            // Take deviation if larger than previous largest deviation 
+                            // Take deviation if larger than previous largest deviation
                             // and relative raw yield loss less than 75%
                             if (TMath::Abs(LargestDiffEtaToPi0Pos[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
                                 if( TMath::Abs(DifferenceEtaToPi0Cut[j][i])/TMath::Abs(DifferenceEtaToPi0ErrorCut[j][i]) > 1. ){
@@ -2098,19 +2198,19 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                                 }
                             }
                         }
-                        
+
                     } else {
-                        
+
                         // Calculate largest differences in positiv and negative direction
                         if(DifferenceEtaToPi0Cut[j][i] < 0){ // largest negativ deviation
-                            // Take deviation if larger than previous largest deviation 
+                            // Take deviation if larger than previous largest deviation
                             // and relative raw yield loss less than 75%
                             if (TMath::Abs(LargestDiffEtaToPi0Neg[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
                                 LargestDiffEtaToPi0Neg[i]           = DifferenceEtaToPi0Cut[j][i];
                                 LargestDiffEtaToPi0ErrorNeg[i]      = DifferenceEtaToPi0ErrorCut[j][i];
                             }
                         } else { // largest positive deviation
-                            // Take deviation if larger than previous largest deviation 
+                            // Take deviation if larger than previous largest deviation
                             // and relative raw yield loss less than 75%
                             if (TMath::Abs(LargestDiffEtaToPi0Pos[i]) < TMath::Abs(DifferenceEtaToPi0Cut[j][i]) && RelDifferenceEtaToPi0RawCut[j][i] > -75.){
                                 LargestDiffEtaToPi0Pos[i]           = DifferenceEtaToPi0Cut[j][i];
@@ -2122,14 +2222,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                             LargestDiffEtaToPi0ErrorPos[i]      = 0.;
                             LargestDiffEtaToPi0Neg[i]           = 0.;
                             LargestDiffEtaToPi0ErrorNeg[i]      = 0.;
-                        }  
+                        }
 
                     }
                 }
             }
-            
-            if(doBarlow){ 
-                
+
+            if(doBarlow){
+
                 TString SysErrCheckEtaToPi0name     = Form("%s/EtaToPi0_%s_SystematicErrorBarlowCheck.dat",outputDir.Data(),prefix2.Data());
                 fstream SysErrDatEtaToPi0Check;
                 SysErrDatEtaToPi0Check.open(SysErrCheckEtaToPi0name.Data(), ios::out);
@@ -2138,7 +2238,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     if (l == 0) {
                         SysErrDatEtaToPi0Check << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
                         for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
-                            SysErrDatEtaToPi0Check << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << endl;    
+                            SysErrDatEtaToPi0Check << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << endl;
                         }
                     } else{
                         for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
@@ -2149,10 +2249,10 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                             SysErrDatEtaToPi0Check << "Check: Delta/sigma_Delta < 1? " << (TMath::Abs(DifferenceEtaToPi0Cut[l][i]))/(TMath::Abs(DifferenceEtaToPi0ErrorCut[l][i])) << endl;
                         }
                     }
-                }            
+                }
                 SysErrDatEtaToPi0Check.close();
-            }                        
-                        
+            }
+
             // Write systematic error input to log file
             TString SysErrDatEtaToPi0name = Form("%s/EtaToPi0_%s_SystematicErrorCutStudies.dat",outputDir.Data(),prefix2.Data());
             fstream SysErrDatEtaToPi0;
@@ -2164,19 +2264,19 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 if (l == 0) {
                     SysErrDatEtaToPi0 << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
                     for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
-                    SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << endl;    
+                    SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << endl;
                     }
                 } else{
                     SysErrDatEtaToPi0 << endl <<"Bin" << "\t" << cutNumber[l] << "\t" << "Error " << "\t Dif to Cut1" << endl;
                     for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
                         if (RelDifferenceEtaToPi0RawCut[l][i] > -75.){
-                            SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << "\t" 
-                                              << DifferenceEtaToPi0Cut[l][i] << "\t"<< DifferenceEtaToPi0ErrorCut[l][i] << "\t" 
+                            SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << "\t"
+                                              << DifferenceEtaToPi0Cut[l][i] << "\t"<< DifferenceEtaToPi0ErrorCut[l][i] << "\t"
                                               << RelDifferenceEtaToPi0Cut[l][i] <<  "\t" << RelDifferenceEtaToPi0ErrorCut[l][i] <<"\t" << RelDifferenceEtaToPi0RawCut[l][i]<< endl;
                         } else {
-                            SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << "\t" 
-                                              << DifferenceEtaToPi0Cut[l][i] << "\t"<< DifferenceEtaToPi0ErrorCut[l][i] << "\t" 
-                                              << RelDifferenceEtaToPi0Cut[l][i] <<  "\t" << RelDifferenceEtaToPi0ErrorCut[l][i] <<"\t" << RelDifferenceEtaToPi0RawCut[l][i]  
+                            SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << SysErrCutEtaToPi0[l][i].value << "\t" << SysErrCutEtaToPi0[l][i].error << "\t"
+                                              << DifferenceEtaToPi0Cut[l][i] << "\t"<< DifferenceEtaToPi0ErrorCut[l][i] << "\t"
+                                              << RelDifferenceEtaToPi0Cut[l][i] <<  "\t" << RelDifferenceEtaToPi0ErrorCut[l][i] <<"\t" << RelDifferenceEtaToPi0RawCut[l][i]
                                               << "\t not considered in largest dev" <<endl;
                         }
                     }
@@ -2186,7 +2286,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             SysErrDatEtaToPi0 << endl;
             SysErrDatEtaToPi0 << "Bin" << "\t" << "Largest Dev Neg" << "\t" << "Largest Dev Pos"  << endl;
             for(Int_t i = 1; i < (NBinsPtEtaToPi0 +1); i++){
-                SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i]  << "\t" << LargestDiffEtaToPi0Neg[i] << "\t" <<LargestDiffEtaToPi0ErrorNeg[i]<< "\t" 
+                SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i]  << "\t" << LargestDiffEtaToPi0Neg[i] << "\t" <<LargestDiffEtaToPi0ErrorNeg[i]<< "\t"
                                   << LargestDiffEtaToPi0Pos[i] << "\t" << LargestDiffEtaToPi0ErrorPos[i]<<endl;
             }
             SysErrDatEtaToPi0 << endl << endl <<"Bin" << "\t" << "Largest Dev Neg rel" << "\t" << "Largest Dev Pos rel"  << endl;
@@ -2198,8 +2298,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                     LargestDiffEtaToPi0RelErrorNeg[i]   = - LargestDiffEtaToPi0ErrorNeg[i]/SysErrCutEtaToPi0[0][i].value*100.;
                     LargestDiffEtaToPi0RelErrorPos[i]   = LargestDiffEtaToPi0ErrorPos[i]/SysErrCutEtaToPi0[0][i].value*100.;
                     if (i > 0){
-                        SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << LargestDiffEtaToPi0Neg[i]/SysErrCutEtaToPi0[0][i].value*100. << "\t" 
-                                          << LargestDiffEtaToPi0ErrorNeg[i]/SysErrCutEtaToPi0[0][i].value*100. << "\t" 
+                        SysErrDatEtaToPi0 << BinsXCenterEtaToPi0[i] << "\t" << LargestDiffEtaToPi0Neg[i]/SysErrCutEtaToPi0[0][i].value*100. << "\t"
+                                          << LargestDiffEtaToPi0ErrorNeg[i]/SysErrCutEtaToPi0[0][i].value*100. << "\t"
                                           << LargestDiffEtaToPi0Pos[i]/SysErrCutEtaToPi0[0][i].value*100. << "\t" << LargestDiffEtaToPi0ErrorPos[i]/SysErrCutEtaToPi0[0][i].value*100. << endl;
                     } else {
                         LargestDiffEtaToPi0RelNeg[i]        = 0.;
@@ -2217,15 +2317,15 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             SysErrDatEtaToPi0.close();
 
             // Create sys-err graphs
-            SystErrGraphNegEtaToPi0 = new TGraphAsymmErrors( NBinsPtEtaToPi0+1, BinsXCenterEtaToPi0, LargestDiffEtaToPi0RelNeg, BinsXWidthEtaToPi0, BinsXWidthEtaToPi0, 
+            SystErrGraphNegEtaToPi0 = new TGraphAsymmErrors( NBinsPtEtaToPi0+1, BinsXCenterEtaToPi0, LargestDiffEtaToPi0RelNeg, BinsXWidthEtaToPi0, BinsXWidthEtaToPi0,
                                                                                 LargestDiffEtaToPi0RelErrorNeg, LargestDiffEtaToPi0RelErrorNeg);
             SystErrGraphNeg->SetName(Form("EtaToPi0_SystErrorRelNeg_%s",cutVariationName.Data()));
-            SystErrGraphPosEtaToPi0 = new TGraphAsymmErrors( NBinsPtEtaToPi0+1, BinsXCenterEtaToPi0, LargestDiffEtaToPi0RelPos, BinsXWidthEtaToPi0, BinsXWidthEtaToPi0, 
+            SystErrGraphPosEtaToPi0 = new TGraphAsymmErrors( NBinsPtEtaToPi0+1, BinsXCenterEtaToPi0, LargestDiffEtaToPi0RelPos, BinsXWidthEtaToPi0, BinsXWidthEtaToPi0,
                                                                                 LargestDiffEtaToPi0RelErrorPos, LargestDiffEtaToPi0RelErrorPos);
             SystErrGraphPos->SetName(Form("EtaToPi0_SystErrorRelPos_%s",cutVariationName.Data()));
-   
+
         }
-        
+
         // Write sys-err graph to root output file
         TString Outputname = Form("%s/%s_%s_SystematicErrorCuts.root",outputDirRootFile.Data(),meson.Data(),prefix2.Data());
         TFile* SystematicErrorFile = new TFile(Outputname.Data(),"UPDATE");
@@ -2235,17 +2335,17 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             if (isEta){
                 if (SystErrGraphPosEtaToPi0) SystErrGraphPosEtaToPi0->Write(Form("EtaToPi0_SystErrorRelPos_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
                 if (SystErrGraphNegEtaToPi0) SystErrGraphNegEtaToPi0->Write(Form("EtaToPi0_SystErrorRelNeg_%s%s",cutVariationName.Data(),centralityString.Data()),TObject::kOverwrite);
-                if (systErrGraphNegYieldExtPi0EtaBinning) systErrGraphNegYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()), 
+                if (systErrGraphNegYieldExtPi0EtaBinning) systErrGraphNegYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s", centralityString.Data()),
                                                                                                       TObject::kOverwrite);
-                if (systErrGraphPosYieldExtPi0EtaBinning) systErrGraphPosYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s", centralityString.Data()), 
+                if (systErrGraphPosYieldExtPi0EtaBinning) systErrGraphPosYieldExtPi0EtaBinning->Write(Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s", centralityString.Data()),
                                                                                                       TObject::kOverwrite);
-            }    
+            }
             systErrGraphNegYieldExt->Write(Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
             systErrGraphPosYieldExt->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
             if (systErrGraphBGEstimate) systErrGraphBGEstimate->Write(Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
         SystematicErrorFile->Write();
         SystematicErrorFile->Close();
-        
+
         // Write out Ratios for V0finder comparison
         if (cutVariationName.Contains("V0")){
             TString Outputname2 = Form("%s/%s_RatioRawYields.root",outputDir.Data(),meson.Data());
@@ -2257,14 +2357,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             RatioRawYieldsFile->Close();
         }
         Printf("File: %s/%s_%s_SystematicErrorCuts.root",outputDirRootFile.Data(),meson.Data(),prefix2.Data());
-            
+
         //**************************************************************************************************************************
         //*******************************Start of optional pure photon part ********************************************************
         //**************************************************************************************************************************
         if (optGammaOn){
-            
+
             // Define photon histogram/bool/file arrays
-            TH1D*   histoCorrectedYieldGammaCut         [ConstNumberOfCuts];        // photon corrected yields 
+            TH1D*   histoCorrectedYieldGammaCut         [ConstNumberOfCuts];        // photon corrected yields
             TH1D*   histoGammaEffiCut                   [ConstNumberOfCuts];        // photon efficiencies
             TH1D*   histoRawYieldGammaCut               [ConstNumberOfCuts];        // photon raw yields
             TH1D*   histoRatioCorrectedYieldGammaCut    [ConstNumberOfCuts];        // ratio of corrected photon yields
@@ -2273,15 +2373,15 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             Bool_t  gammaAvail                          [ConstNumberOfCuts];        // flag if photon output is available for certain cut
             TString FileNameCorrectedGamma              [MaxNumberOfCuts];        // file name of corrected photon file
             TFile*  CutcorrfileGamma                    [ConstNumberOfCuts];        // files for different cuts
-            
+
             // Reading gamma histograms
             for (Int_t i=0; i< NumberOfCuts; i++){
                 FileNameCorrectedGamma[i] = Form("%s/%s/Gamma_%s_%s_GammaConvV1Correction_%s.root",cutNumberAdv[i].Data(),optionEnergy.Data(), meson.Data(),prefix2.Data(), cutNumber[i].Data());
                 CutcorrfileGamma[i] = new TFile(FileNameCorrectedGamma[i]);
                 // check if file exists
-                if (CutcorrfileGamma[i]->IsZombie()){ 
-                    gammaAvail[i] = kFALSE; 
-                } else { 
+                if (CutcorrfileGamma[i]->IsZombie()){
+                    gammaAvail[i] = kFALSE;
+                } else {
                     cout<< FileNameCorrectedGamma[i] << "\t" << "exists" << endl;
                     gammaAvail[i] = kTRUE;
                 }
@@ -2302,11 +2402,11 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         histoRatioGammaEffiCut[i] = (TH1D*) histoGammaEffiCut[i]->Clone(Form("MCGammaPrimaryRecoEffMCPt_%s",cutNumber[i].Data()));
                         histoRatioGammaEffiCut[i]->Divide(histoRatioGammaEffiCut[i],histoGammaEffiCut[0],1.,1.,"B");
                     }
-                    
-                }    
+
+                }
             }
             cout<<"=========================="<<endl;
-                
+
             //*****************************************************************************************
             //******************* Compare Corrected Photon Yields ********************************************
             //*****************************************************************************************
@@ -2314,7 +2414,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 TCanvas* canvasCorrectedYieldGamma = new TCanvas("canvasCorrectedYieldGamma","",1350,1500);  // gives the page size
                 DrawGammaCanvasSettings( canvasCorrectedYieldGamma, 0.13, 0.02, 0.02, 0.1);
                 canvasCorrectedYieldGamma->SetLogy(0);
-                // Define upper panel 
+                // Define upper panel
                 TPad* padCorrectedYieldGamma = new TPad("padCorrectedYieldGamma", "", 0., 0.33, 1., 1.,-1, -1, -2);
                 DrawGammaPadSettings( padCorrectedYieldGamma, 0.12, 0.02, 0.02, 0.);
                 padCorrectedYieldGamma->SetLogy(1);
@@ -2324,7 +2424,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 DrawGammaPadSettings( padCorrectedYieldGammaRatios, 0.12, 0.02, 0., 0.2);
                 padCorrectedYieldGammaRatios->Draw();
                 padCorrectedYieldGammaRatios->SetLogy(0);
-                
+
                 // plot corrected photon yield in upper panel if histograms exist
                 padCorrectedYieldGamma->cd();
                 TLegend* legendCorrectedYieldGamma = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
@@ -2356,8 +2456,8 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 
                 // labeling of plot
                 PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                    
-                // plot ratios of corrected gammas    
+
+                // plot ratios of corrected gammas
                 padCorrectedYieldGammaRatios->cd();
                 for(Int_t i = 0; i< NumberOfCuts; i++){
                     if(i==0){
@@ -2399,9 +2499,9 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 DrawGammaPadSettings( padRawYieldGammaRatios, 0.12, 0.02, 0., 0.2);
                 padRawYieldGammaRatios->Draw();
                 padRawYieldGammaRatios->SetLogy(0);
-                
+
                 // plot raw yields in upper panel
-                padRawYieldGamma->cd();          
+                padRawYieldGamma->cd();
                 TLegend* legendRawYieldGamma = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
                 if (cutVariationName.Contains("dEdxPi")){
                     legendRawYieldGamma->SetTextSize(0.02);
@@ -2425,14 +2525,14 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         if (gammaAvail[i])histoRawYieldGammaCut[i]->DrawCopy("same,e1,p");
                         if (gammaAvail[i])legendRawYieldGamma->AddEntry(histoRawYieldGammaCut[i], cutStringsName[i].Data());
                     }
-                    
+
                 }
                 legendRawYieldGamma->Draw();
-                
-                // labeling  
+
+                // labeling
                 PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
-                // draw ratios in lower panel    
+                // draw ratios in lower panel
                 padRawYieldGammaRatios->cd();
                 for(Int_t i = 0; i< NumberOfCuts; i++){
                     if(i==0){
@@ -2456,7 +2556,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 canvasRawYieldGamma->Update();
                 canvasRawYieldGamma->SaveAs(Form("%s/Gamma_%s_RawYield%s.%s",outputDir.Data(), prefix2.Data(),centralityString.Data(),suffix.Data()));
                 delete canvasRawYieldGamma;
-                
+
             //*****************************************************************************************
             //******************* compare raw photon yields *******************************************
             //*****************************************************************************************
@@ -2472,7 +2572,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 TPad* padEffiGammaRatios = new TPad("padEffiGammaRatios", "", 0., 0., 1., 0.33,-1, -1, -2);
                 DrawGammaPadSettings( padEffiGammaRatios, 0.12, 0.02, 0., 0.2);
                 padEffiGammaRatios->Draw();
-                
+
                 // draw photon efficiencies in upper panel
                 padEffiGamma->cd();
                 TLegend* legendEffiGamma = GetAndSetLegend2(0.15,0.92-1.15*0.032*NumberOfCuts,0.6,0.92, 1500*0.75*0.032);
@@ -2498,13 +2598,13 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                         if (gammaAvail[i])histoGammaEffiCut[i]->DrawCopy("same,e1,p");
                         if (gammaAvail[i])legendEffiGamma->AddEntry(histoGammaEffiCut[i], cutStringsName[i].Data());
                     }
-                    
+
                 }
                 legendEffiGamma->Draw();
                 // labeling
                 PutProcessLabelAndEnergyOnPlot( 0.94, 0.2, 0.032, collisionSystem, "#gamma", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
-                    
-                // draw ratio of photon efficiencies in lower panel    
+
+                // draw ratio of photon efficiencies in lower panel
                 padEffiGammaRatios->cd();
                 for(Int_t i = 0; i< NumberOfCuts; i++){
                     if(i==0){
@@ -2527,7 +2627,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 
                 canvasEffiGamma->Update();
                 canvasEffiGamma->SaveAs(Form("%s/Gamma_%s_Efficiencies%s.%s",outputDir.Data(), prefix2.Data(),centralityString.Data(),suffix.Data()));
-                delete canvasEffiGamma;        
+                delete canvasEffiGamma;
         }
     }
     return;
