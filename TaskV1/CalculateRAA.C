@@ -729,8 +729,47 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 	
 	canvasSysErrorConversion3->Update();	
 	canvasSysErrorConversion3->SaveAs(Form("%s/%s_%s_CorrectedYieldwithSysErrorConversionBinShifted_%s.%s", outputDir.Data(), textMeson.Data() ,prefix2.Data(), cutSel.Data(), suffix.Data()));
-	delete canvasSysErrorConversion3;
 				
+    
+	//****************** Corrected yield in mt with systematic errors ***************************************    
+    Int_t PDGcode;
+    if (textMeson.CompareTo("Pi0") ==0) PDGcode = 111;
+    else if (textMeson.CompareTo("Eta") ==0) PDGcode = 221;
+    TGraphAsymmErrors* graphCorrYieldinMt = CalculateSpectrumInMt(histoCorrYieldBinShifted,PDGcode,"graphCorrYieldinMt");
+    TGraphAsymmErrors* graphCorrYieldinMtSystErr = CalculateSpectrumInMt(graphCorrectedYieldSysErrBinShifted,PDGcode,"graphCorrYieldinMtSystErr");
+    TGraphAsymmErrors* graphCorrYieldinMtSystErrA = CalculateSpectrumInMt(graphCorrectedYieldSysErrABinShifted,PDGcode,"graphCorrYieldinMtSystErrA");
+    
+    canvasSysErrorConversion3->cd();
+	TH2F * histo2DCorrYieldinMT = new TH2F("histo2DCorrYieldinMT","histo2DCorrYieldinMT",10,0.,maxPt+1,1000.,4e-8,900.);
+	histo2DCorrYieldinMT->SetXTitle("m_{T} (GeV/#it{c})");
+	if (textMeson.CompareTo("Pi0") ==0){
+		histo2DCorrYieldinMT->SetYTitle("#frac{1}{2#pi N_{ev}} #frac{d^{2}N^{#pi^{0}}}{m_{T}dm_{T}dy} (c/GeV)^{2}");
+	} else {
+		histo2DCorrYieldinMT->SetYTitle("#frac{1}{2#pi N_{ev}} #frac{d^{2}N^{#eta}}{m_{T}dm_{T}dy} (c/GeV)^{2}");
+	}
+	histo2DCorrYieldinMT->SetTitle("");
+	histo2DCorrYieldinMT->GetYaxis()->SetDecimals();
+	histo2DCorrYieldinMT->GetYaxis()->SetLabelSize(0.03);
+	histo2DCorrYieldinMT->GetYaxis()->SetTitleSize(0.03);
+	histo2DCorrYieldinMT->GetYaxis()->SetTitleOffset(1.6);
+	histo2DCorrYieldinMT->GetXaxis()->SetTitleSize(0.03);
+	histo2DCorrYieldinMT->GetXaxis()->SetTitleOffset(1.);
+	histo2DCorrYieldinMT->GetXaxis()->SetNdivisions(510,kTRUE);
+	histo2DCorrYieldinMT->DrawCopy();  
+        
+	DrawGammaSetMarkerTGraph(graphCorrYieldinMtSystErr, 20, 0.2, kBlack, kBlack);
+	graphCorrYieldinMtSystErr->SetFillColor(kGray+1);
+	graphCorrYieldinMtSystErr->Draw("same,2,p");
+	DrawGammaSetMarkerTGraph(graphCorrYieldinMt, 20, 0.5, kBlack, kBlack);
+	graphCorrYieldinMt->Draw("same,p,x0,e1");
+	
+	histo2DCorrYieldinMT->DrawCopy("same");  
+	DrawAliceLogoPi0WorkInProgress(pictDrawingCoordinates[0], pictDrawingCoordinates[1], pictDrawingCoordinates[2], 0.03, pictDrawingCoordinates[4], pictDrawingCoordinates[5], pictDrawingCoordinates[6], 0.04, pictDrawingCoordinates[8],collisionSystem, pictDrawingOptions[1], pictDrawingOptions[2], kTRUE,1350,900,kFALSE,centralityString);
+        
+	canvasSysErrorConversion3->Update();	
+	canvasSysErrorConversion3->SaveAs(Form("%s/%s_%s_CorrectedYieldinMtwithSysError_%s.%s", outputDir.Data(), textMeson.Data() ,prefix2.Data(), cutSel.Data(), suffix.Data()));
+	delete canvasSysErrorConversion3;
+    
 	if (textMeson.CompareTo("Pi0") ==0){
 		//***************************************************************************************************
 		//*************************** Fitting  Pi0 Spectrum *************************************************
@@ -1202,12 +1241,16 @@ void CalculateRAA(TString fileName = "myOutput", TString cutSel = "",TString fil
 		graphCorrectedYieldStatPlusSysBinShifted->Write(Form("%sComplErrorBinShifted",textMeson.Data()),TObject::kOverwrite);			
 		graphCorrectedYieldSysErrBinShiftedScaledNColl->Write(Form("%sSystErrorBinShiftedScaledNColl",textMeson.Data()),TObject::kOverwrite);
 
+        graphCorrYieldinMt->Write(Form("%sInMtSystError",textMeson.Data()),TObject::kOverwrite);
+        graphCorrYieldinMtSystErr->Write(Form("%sInMtSystError",textMeson.Data()),TObject::kOverwrite);
+        graphCorrYieldinMtSystErrA->Write(Form("%sInMtSystErrorA",textMeson.Data()),TObject::kOverwrite);
+        
 		graphRAA->Write(Form("%sRAA",textMeson.Data()),TObject::kOverwrite);
 		graphRAASys->Write(Form("%sRAASys",textMeson.Data()),TObject::kOverwrite);
 
 		if (histoRatioEtaPi0)  histoRatioEtaPi0->Write("EtatoPi0Ratio",TObject::kOverwrite); 
 		if (graphSystErrRatio) graphSystErrRatio->Write("EtatoPi0RatioSys",TObject::kOverwrite);
-
+        
 		histoAccept->Write(Form("%s_Acceptance",textMeson.Data()),TObject::kOverwrite);
 		histoEffi->Write(Form("%s_Efficiency",textMeson.Data()),TObject::kOverwrite);
 		histoRawYield->Write(Form("%s_RawYieldPerEvent",textMeson.Data()),TObject::kOverwrite);

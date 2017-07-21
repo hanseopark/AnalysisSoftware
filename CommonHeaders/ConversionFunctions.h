@@ -342,6 +342,91 @@
         return MtScaledParam(param, particlePDG, 111, scaleFactor, isInvYield, doAdditionalScaling);
     }
 
+    //**********************************************************************************************************
+    // Calculates spectrum in mt from pt (y-shifted) spectrum
+    //**********************************************************************************************************
+    TGraphAsymmErrors* CalculateSpectrumInMt(TH1D* ptSpectrum, Int_t particlePDG, TString newSpectrumName){
+        
+        if(!ptSpectrum) return NULL;
+        TGraphAsymmErrors *dummy = NULL;
+        TString type = ptSpectrum->ClassName();
+        if(type.BeginsWith("TH1"))
+            dummy = new TGraphAsymmErrors(ptSpectrum);
+        TGraphAsymmErrors *mtspectrum = (TGraphAsymmErrors*)dummy->Clone();
+        
+        Int_t numberPoints     = dummy->GetN();
+        Double_t mass          = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
+        
+        Double_t xMtSpectrum[numberPoints];
+        Double_t yMtSpectrum[numberPoints];
+        Double_t errorMtXlow[numberPoints];
+        Double_t errorMtXhigh[numberPoints];
+        Double_t errorMtYlow[numberPoints]; 
+        Double_t errorMtYhigh[numberPoints];
+        
+        Double_t *xPtSpectrum  = dummy->GetX();
+        Double_t *yPtSpectrum  = dummy->GetY();
+        Double_t *errorPtXlow  = dummy->GetEXlow();
+        Double_t *errorPtXhigh = dummy->GetEXhigh();
+        Double_t *errorPtYlow  = dummy->GetEYlow();
+        Double_t *errorPtYhigh = dummy->GetEYhigh();
+        for (Int_t i = 0; i < numberPoints; i++){
+            if(yPtSpectrum[i]!=0){
+                xMtSpectrum[i] = TMath::Power(xPtSpectrum[i]*xPtSpectrum[i] + mass*mass,0.5);
+                errorMtXlow[i] = TMath::Power(xPtSpectrum[i]*xPtSpectrum[i] + mass*mass,-0.5)*xPtSpectrum[i]*errorPtXlow[i];
+                
+                yMtSpectrum[i] = yPtSpectrum[i];
+                
+                mtspectrum->SetPoint(i,xMtSpectrum[i],yMtSpectrum[i]);
+                mtspectrum->SetPointEXlow (i,errorMtXlow[i]);
+                mtspectrum->SetPointEXhigh(i,errorMtXlow[i]);
+                mtspectrum->SetPointEYlow (i,errorPtYlow[i]);
+                mtspectrum->SetPointEYhigh(i,errorPtYhigh[i]);
+            }                
+        }
+
+        return mtspectrum;
+    }
+    
+    TGraphAsymmErrors* CalculateSpectrumInMt(TGraphAsymmErrors* ptSpectrum, Int_t particlePDG, TString newSpectrumName){
+        
+        if(!ptSpectrum) return NULL;
+        TGraphAsymmErrors *dummy      = (TGraphAsymmErrors*)ptSpectrum->Clone();
+        TGraphAsymmErrors *mtspectrum = (TGraphAsymmErrors*)dummy->Clone();
+        
+        Int_t numberPoints     = dummy->GetN();
+        Double_t mass          = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
+        
+        Double_t xMtSpectrum[numberPoints];
+        Double_t yMtSpectrum[numberPoints];
+        Double_t errorMtXlow[numberPoints];
+        Double_t errorMtXhigh[numberPoints];
+        Double_t errorMtYlow[numberPoints]; 
+        Double_t errorMtYhigh[numberPoints];
+        
+        Double_t *xPtSpectrum  = dummy->GetX();
+        Double_t *yPtSpectrum  = dummy->GetY();
+        Double_t *errorPtXlow  = dummy->GetEXlow();
+        Double_t *errorPtXhigh = dummy->GetEXhigh();
+        Double_t *errorPtYlow  = dummy->GetEYlow();
+        Double_t *errorPtYhigh = dummy->GetEYhigh();
+        for (Int_t i = 0; i < numberPoints; i++){
+            if(yPtSpectrum[i]!=0){
+                xMtSpectrum[i] = TMath::Power(xPtSpectrum[i]*xPtSpectrum[i] + mass*mass,0.5);
+                errorMtXlow[i] = TMath::Power(xPtSpectrum[i]*xPtSpectrum[i] + mass*mass,-0.5)*xPtSpectrum[i]*errorPtXlow[i];
+                
+                yMtSpectrum[i] = yPtSpectrum[i];
+                
+                mtspectrum->SetPoint(i,xMtSpectrum[i],yMtSpectrum[i]);
+                mtspectrum->SetPointEXlow (i,errorMtXlow[i]);
+                mtspectrum->SetPointEXhigh(i,errorMtXlow[i]);
+                mtspectrum->SetPointEYlow (i,errorPtYlow[i]);
+                mtspectrum->SetPointEYhigh(i,errorPtYhigh[i]);
+            }                
+        }
+
+        return mtspectrum;
+    }
 
     //**********************************************************************************************************
     // Calculates the ratio of a histogram and a fit, with the posibility to integrate the function in the same 
