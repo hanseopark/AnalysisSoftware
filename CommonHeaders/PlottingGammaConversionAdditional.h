@@ -4490,7 +4490,7 @@
         if ( variationName.CompareTo("SPD") == 0 )
             return kCyan+4;
         if ( variationName.CompareTo("CosPoint") == 0 )
-            return kYellow+2;
+            return kSpring+2;
         if ( variationName.CompareTo("Eta") == 0 )
             return kTeal-7;
         if ( variationName.CompareTo("MCSmearing") == 0 )

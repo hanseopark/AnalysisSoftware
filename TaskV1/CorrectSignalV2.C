@@ -3732,15 +3732,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t relBGEstimateError2[100];
     for (Int_t i = 1; i < nBinsPt +1; i++){
         relBGEstimateError2[i] = 0.;
-        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) &&
-            TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
+        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) ){
             relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[3]->GetBinContent(i)) *100;
-            } else if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) &&
-                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
-                relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[3]->GetBinContent(i)) *100;
-                } else {
-                    relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
-                }
+        } else {
+            relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[4]->GetBinContent(i)) *100;
+        }
     }
     TGraphAsymmErrors* SystErrGraphBGEstimateIterations = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate2, binsXWidth, binsXWidth, relBGEstimateError2, relBGEstimateError2);
 
