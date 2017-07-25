@@ -131,7 +131,6 @@ void CombineMesonMeasurementsPP()
                 continue; //skip PCM-PHOS for the moment
               }
 
-
                 //______________________________ Loading pi0 inv. cross sections
                 graphPi0InvariantCrossSectionStat[i][j]   = (TGraphAsymmErrors*)directoryPi0[i]->Get(Form("graphInvCrossSectionPi0%s%s%sStatErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data(),graphNameModifier[j].Data()));
                 graphPi0InvariantCrossSectionSys[i][j]   = (TGraphAsymmErrors*)directoryPi0[i]->Get(Form("graphInvCrossSectionPi0%s%s%sSysErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data(),graphNameModifier[j].Data()));
@@ -145,6 +144,13 @@ void CombineMesonMeasurementsPP()
                   graphPi0InvariantCrossSectionStat[i][j]=NULL;
                   graphPi0InvariantCrossSectionSys[i][j]=NULL;
                 }
+
+                if(i==0 && j==10){
+                  nameMeasGlobal[j]                  = "PCM";
+                  nameMeasGlobalshort[j]             = "PCM";
+                  graphNameModifier[j]               = "";
+                }
+
                 //______________________________ Loading eta inv. cross sections
                 graphEtaInvariantCrossSectionStat[i][j]   = (TGraphAsymmErrors*)directoryEta[i]->Get(Form("graphInvCrossSectionEta%s%s%sStatErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data(),graphNameModifier[j].Data()));
                 graphEtaInvariantCrossSectionSys[i][j]   = (TGraphAsymmErrors*)directoryEta[i]->Get(Form("graphInvCrossSectionEta%s%s%sSysErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data(),graphNameModifier[j].Data()));
@@ -164,6 +170,11 @@ void CombineMesonMeasurementsPP()
                 graphEtaToPi0RatioSys[i][j]   = (TGraphAsymmErrors*)directoryEta[i]->Get(Form("graphRatioEtaToPi0%s%sSysErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
                 if(graphEtaToPi0RatioStat[i][j])
                     cout << "found " << Form("graphRatioEtaToPi0%s%sStatErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()) << endl;
+                if(i==0 && j==10){
+                  nameMeasGlobal[j]                  = "Comb";
+                  nameMeasGlobalshort[j]             = "Comb";
+                  graphNameModifier[j]               = "A";
+                }
             }
         }
     }
@@ -383,8 +394,8 @@ void CombineMesonMeasurementsPP()
         }
     }
     Double_t rightalignDouble = 0.93;
-    drawLatexAdd("ALICE this work",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.86,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.87,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionPi0    = GetAndSetLegend2(0.17, 0.05, 0.5, 0.05+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantCrossSectionPi0->SetNColumns(1);
@@ -447,8 +458,8 @@ void CombineMesonMeasurementsPP()
             }
         }
     }
-    drawLatexAdd("ALICE this work",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.86,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.87,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionPi02    = GetAndSetLegend2(0.17, 0.15, 0.5, 0.15+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantCrossSectionPi02->SetNColumns(1);
@@ -565,8 +576,8 @@ void CombineMesonMeasurementsPP()
             }
         }
     }
-    drawLatexAdd("ALICE this work",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.86,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.87,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantXSecTheoryPi0    = GetAndSetLegend2(0.17, 0.05, 0.5, 0.05+textsizeLabelsXSec[0]*numActiveMeas+2*textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantXSecTheoryPi0->SetNColumns(1);
@@ -624,8 +635,8 @@ void CombineMesonMeasurementsPP()
             }
         }
     }
-    drawLatexAdd("ALICE this work",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.86,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.87,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     legendInvariantXSecTheoryPi0->Draw();
     //__________________________________________ Loop over all ratio pads and draw
@@ -709,6 +720,7 @@ void CombineMesonMeasurementsPP()
     histoXSecDummy[0]->Draw();
     for (Int_t i = 0; i < 6; i++){
         if(includeEnergy[i]){
+
             if(graphEtaInvariantCrossSectionSys[i][10]&&graphEtaInvariantCrossSectionStat[i][10]){
                 graphEtaInvariantCrossSectionSys[i][10]     ->Draw("E2same");
                 graphEtaInvariantCrossSectionStat[i][10]    ->Draw("p,same,z");
@@ -725,16 +737,16 @@ void CombineMesonMeasurementsPP()
                 fitTCMInvCrossSectionEtaCombPlot[i]->SetParErrors(fitTCMInvCrossSectionEtaComb[i]->GetParErrors());
                 cout << WriteParameterToFile(fitTCMInvCrossSectionEtaComb[i]) << endl;
                 DrawGammaSetMarkerTF1( fitTCMInvCrossSectionEtaCombPlot[i], 7, 2, kGray+2);
-                fitTCMInvCrossSectionEtaCombPlot[i]->Draw("same");
+                if(i!=0) fitTCMInvCrossSectionEtaCombPlot[i]->Draw("same");
                 Double_t paramTsallisComb[3]    = {graphEtaInvariantCrossSectionStat[i][10]->GetY()[1], 6.6, 0.22};
                 fitTsallisInvCrossSectionEtaComb[i] = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphEtaInvariantCrossSectionStat[i][10],minXSpectraEta[i][10],maxXSpectraEta[i][10],paramTsallisComb,"QNRMEX0+");
                 DrawGammaSetMarkerTF1( fitTsallisInvCrossSectionEtaComb[i], 3, 2, kGray+1);
-                fitTsallisInvCrossSectionEtaComb[i]->Draw("same");
+                if(i!=0) fitTsallisInvCrossSectionEtaComb[i]->Draw("same");
             }
         }
     }
-    drawLatexAdd("ALICE this work",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-    drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.86,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.87,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionEta    = GetAndSetLegend2(0.17, 0.05, 0.5, 0.05+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantCrossSectionEta->SetNColumns(1);
@@ -794,13 +806,13 @@ void CombineMesonMeasurementsPP()
             if(graphEtaInvariantCrossSectionSys[i][10]&&graphEtaInvariantCrossSectionStat[i][10]){
                 graphEtaInvariantCrossSectionSys[i][10]     ->Draw("E2same");
                 graphEtaInvariantCrossSectionStat[i][10]    ->Draw("p,same,z");
-                fitTCMInvCrossSectionEtaCombPlot[i]->Draw("same");
-                fitTsallisInvCrossSectionEtaComb[i]->Draw("same");
+                if(i!=0) fitTCMInvCrossSectionEtaCombPlot[i]->Draw("same");
+                if(i!=0) fitTsallisInvCrossSectionEtaComb[i]->Draw("same");
             }
         }
     }
-    drawLatexAdd("ALICE this work",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
-    drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.86,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("ALICE",rightalignDouble,0.91,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.87,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
     TLegend* legendInvariantCrossSectionEta2    = GetAndSetLegend2(0.17, 0.15, 0.5, 0.15+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantCrossSectionEta2->SetNColumns(1);
