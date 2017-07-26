@@ -7158,6 +7158,81 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
             canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_withPP2760GeVandKaonsToPionsMt.%s",outputDir.Data(),suffix.Data()));
             canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_withPP2760GeVandKaonsToPionsMt.%s",paperPlots.Data(),suffix.Data()));
+            
+            canvasEtatoPi0combo->cd();
+                    histo2DEtatoPi0combo->Draw("copy");
+
+                    
+                    DrawGammaSetMarkerTGraphAsym(graphEtaToPi0JetQuenching_0010, 0, 0, colorNLO0010,colorNLO0010, widthLinesBoxes, kTRUE, colorNLO0010);
+                    graphEtaToPi0JetQuenching_0010->Draw("3,same");
+
+                    graphEPOSEtaToPi0_0010->GetXaxis()->SetRangeUser(0,13);
+                    graphEPOSEtaToPi0_0010->Draw("same,l,x");
+
+                    DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
+                    TheoryCracowEtaToPi0LowPt_0010->Draw("l,same");
+
+                    graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
+                    graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
+
+        //          graphCombEtatoPi0SysPbPb2760GeV_2050->Draw("E2same");
+        //          if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0StatPbPb2760GeV_2050);
+        //          graphCombEtatoPi0StatPbPb2760GeV_2050->Draw("p,same");
+
+        //           labelEtaToPi0Energy->Draw();
+                
+                    TLegend* legendEtatoPi0combo_onlyPbPb3;
+                    if(thesisPlotting)legendEtatoPi0combo_onlyPbPb3 = new TLegend(0.13,0.78,0.53,0.9);
+                    else legendEtatoPi0combo_onlyPbPb3 = new TLegend(0.13,0.83,0.53,0.93);
+                    legendEtatoPi0combo_onlyPbPb3->SetFillColor(0);
+                    legendEtatoPi0combo_onlyPbPb3->SetLineColor(0);
+                    legendEtatoPi0combo_onlyPbPb3->SetTextFont(42);
+                    legendEtatoPi0combo_onlyPbPb3->SetTextSize(0.037);
+                    legendEtatoPi0combo_onlyPbPb3->SetMargin(0.17);
+                    legendEtatoPi0combo_onlyPbPb3->SetHeader(collisionSystem2760GeV.Data());
+                    legendEtatoPi0combo_onlyPbPb3->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_0010,Form("  %s",cent0010.Data()),"fp");
+                    legendEtatoPi0combo_onlyPbPb3->AddEntry(etapi0RatioPbPb2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
+                    legendEtatoPi0combo_onlyPbPb3->Draw();
+
+                    TLegend* legendRatioALICE3 = new TLegend(0.58,0.83,0.94,0.93); //0.12,0.62,0.5,0.71);
+                    legendRatioALICE3->SetFillColor(0);
+                    legendRatioALICE3->SetLineColor(0);
+                    legendRatioALICE3->SetTextFont(42);
+                    legendRatioALICE3->SetTextSize(0.037);
+                    legendRatioALICE3->SetMargin(0.17);
+            //           legendRatioALICE2->SetHeader("NLO DCZW (#tau_{0} = 0.6 fm)");
+                    legendRatioALICE3->AddEntry(graphEtaToPi0JetQuenching_0010,"0#font[122]{-}10% NLO DCZW","f");
+                    legendRatioALICE3->AddEntry((TObject*)0,"arXiv:1506.00838","");
+                    legendRatioALICE3->Draw();
+
+                    TLegend* legendRatioALICE4A = new TLegend(0.54,0.23,0.76,0.33);
+                    legendRatioALICE4A->SetFillColor(0);
+                    legendRatioALICE4A->SetLineColor(0);
+                    legendRatioALICE4A->SetTextFont(42);
+                    legendRatioALICE4A->SetTextSize(0.037);
+                    legendRatioALICE4A->SetMargin(0.28);
+            //           legendRatioALICE3A->SetHeader("EPOS");
+                    legendRatioALICE4A->AddEntry(graphEPOSEtaToPi0_0010,"0#font[122]{-}10% EPOS", "l");
+                    legendRatioALICE4A->AddEntry((TObject*)0,"PRC 85, 064907 (2012)","");
+                    legendRatioALICE4A->Draw();
+                    TLegend* legendRatioALICE4B = new TLegend(0.54,0.12,0.92,0.22);
+                    legendRatioALICE4B->SetFillColor(0);
+                    legendRatioALICE4B->SetLineColor(0);
+                    legendRatioALICE4B->SetTextFont(42);
+                    legendRatioALICE4B->SetTextSize(0.037);
+                    legendRatioALICE4B->SetMargin(0.17);
+            //           legendRatioALICE3B->SetHeader("NEQ SHM");
+                    legendRatioALICE4B->AddEntry(TheoryCracowEtaToPi0LowPt_0010,"0#font[122]{-}10% NEQ SHM","l");
+                    legendRatioALICE4B->AddEntry((TObject*)0,"PRC 90, 014906 (2014)","");
+                    legendRatioALICE4B->Draw();
+
+                    etapi0RatioPbPb2760GeV->Draw("c,histo,same");
+                    
+        //             if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+
+                canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsAndMt_0010.%s",outputDir.Data(),suffix.Data()));
+                canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsAndMt_0010.%s",paperPlots.Data(),suffix.Data()));
+                canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsAndMt_0010.%s",PubNotePlots.Data(),suffix.Data()));
                 
         }
 

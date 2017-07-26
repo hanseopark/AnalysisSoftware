@@ -73,7 +73,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	Double_t* ptBinsErr = NULL;
 	Double_t* newPoint = NULL;
 	
-	TString nameCutVariation[10] = {"Yield extraction",
+	TString nameCutVariation[11] = {"Yield extraction",
 									"dE/dx e-line", 
 									"dE/dx #pi-line", 
 									"TPC cluster", 
@@ -82,7 +82,8 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 									"2D q_{T}",
 									"#alpha meson", 
 									"#varphi_{conv}",
-									"Yield extraction #pi^{0}"
+									"Yield extraction #pi^{0}",
+                                    "Pile-up"
 // 									"#eta",
 // 									"Max #pi momentum", 
 // 									"TOF",
@@ -93,7 +94,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 		nameCutVariation[0]          = "Yield extraction #eta";
     }
 											
-	TString nameCutVariationSC[10] = {"YieldExtraction", 
+	TString nameCutVariationSC[11] = {"YieldExtraction", 
 										"dEdxE", 
 										"dEdxPi", 
 										"TPCCluster", 
@@ -102,7 +103,8 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 										"Qt", 
 										"Alpha", 
 										"ConvPhi",
-										"YieldExtraction"
+										"YieldExtraction",
+                                        "Pile-up"
 // 										"Eta",
 // 										"pdEdxPi", 
 // 										"TOF",
@@ -186,9 +188,9 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	for (Int_t i = 0; i < nCuts; i++){
 		TGraphAsymmErrors* graphPosErrors;
 		TGraphAsymmErrors* graphNegErrors;
+        TString nameGraphPos    = "";
+        TString nameGraphNeg    = "";
 		 if (i == 0){// special for treatment eta to pi0 ratio syst errors
-            TString nameGraphPos    = "";
-            TString nameGraphNeg    = "";
 			if (meson.CompareTo("EtaToPi0") == 0){
                 nameGraphPos        = Form("Eta_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
                 nameGraphNeg        = Form("Eta_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
@@ -199,15 +201,26 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-        } else if ( i == 9) { 
-            TString nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
-            TString nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
+        } else if ( i == 9) { //pile-up
+			if (meson.CompareTo("EtaToPi0") == 0){
+                nameGraphPos        = Form("Eta_SystErrorRel_BGEstimate_%s",additionalName.Data() );
+                nameGraphNeg        = Form("Eta_SystErrorRel_BGEstimate_%s",additionalName.Data() );                
+            } else {
+                nameGraphPos        = Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(),additionalName.Data() );
+                nameGraphNeg        = Form("%s_SystErrorRel_BGEstimate_%s",meson.Data(),additionalName.Data() );
+            }
+            cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+            graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+        } else if ( i == 10) { 
+            nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
+            nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );                
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 		} else {
-			TString nameGraphPos = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
-			TString nameGraphNeg = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+			nameGraphPos = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+			nameGraphNeg = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
 			cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
 			graphPosErrors = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
 			graphNegErrors = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -1366,7 +1379,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	legendMean->SetTextSize(0.035);
 	legendMean->SetFillColor(0);
 	legendMean->SetBorderSize(0);
-	if (numberCutStudies> 9) legendMean->SetNColumns(2);
+// 	if (numberCutStudies> 9) legendMean->SetNColumns(2);
 	for(Int_t i = 0; i< numberCutStudies ; i++){
 		DrawGammaSetMarkerTGraphErr(meanErrors[i], 20+i, 1.,color[i],color[i]);
 		meanErrors[i]->Draw("pE0,csame");
@@ -1508,12 +1521,13 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	Double_t errorsMeanCorrPhotonReco[nPtBins];	
 	Double_t errorsMeanCorrAcceptance[nPtBins];			
 	Double_t errorsMeanCorrOther[nPtBins];	
+    Double_t errorsMeanCorrPileUp[nPtBins];
 	
 	for (Int_t l=0; l< nPtBins; l++){
     //"YieldExtraction"-0,"dEdxE"-1,"dEdxPi"-2, "TPCCluster"-3, "SinglePt"-4, "Chi2"-5, "Qt"-6, "Alpha"-7, "ConvPhi"-8, "YieldsfotEtaToPi0" -9
 		// grouping:
-		if (numberCutStudies>9){
-			// Signal extraction: Yield extraction 0, Alpha 7, mass resolution (and secondyields extraction for eta to pi0)
+		if (meson.CompareTo("EtaToPi0")==0){
+			// Signal extraction: Yield extraction 0, Alpha 7, and secondyields extraction for eta to pi0
 			errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorrSmoothed[7][l]*errorsMeanCorrSmoothed[7][l]+errorsMeanCorr[9][l]*errorsMeanCorr[9][l]+errorMassRes[l]*errorMassRes[l]);	
 		} else {
 			// Signal extraction: Yield extraction 0, Alpha 7, mass resolution 
@@ -1525,6 +1539,8 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 		errorsMeanCorrPhotonReco[l] =TMath::Sqrt( errorsMeanCorrSmoothed[5][l]* errorsMeanCorrSmoothed[5][l]+errorsMeanCorrSmoothed[6][l]*errorsMeanCorrSmoothed[6][l]);
 		// track reconstruction: TPCCluster 3, Single pt 4, ConvPhi 8
 		errorsMeanCorrTrackReco[l] = TMath::Sqrt(errorsMeanCorrSmoothed[3][l]*errorsMeanCorrSmoothed[3][l]+errorsMeanCorrSmoothed[4][l]*errorsMeanCorrSmoothed[4][l]+errorsMeanCorrSmoothed[8][l]*errorsMeanCorrSmoothed[8][l]);
+		// Pile-up
+		if(numberCutStudies>10) errorsMeanCorrPileUp[l] = TMath::Sqrt(errorsMeanCorrSmoothed[10][l]*errorsMeanCorrSmoothed[10][l]);
 	}
 		
 		
@@ -1532,6 +1548,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	TGraphErrors* meanErrorsPhotonReco = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPhotonReco ,ptBinsErr ,errorsMeanErrCorrSummed );
 	TGraphErrors* meanErrorsSignalExtraction = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
 	TGraphErrors* meanErrorsTrackReco = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
+	TGraphErrors* meanErrorsPileUp = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPileUp ,ptBinsErr ,errorsMeanErrCorrSummed );
 // 	TGraphErrors* meanErrorsAcceptance = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrAcceptance ,ptBinsErr ,errorsMeanErrCorrSummed );
 // 	TGraphErrors* meanErrorsOther = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrOther ,ptBinsErr ,errorsMeanErrCorrSummed );
 
@@ -1591,6 +1608,9 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	// Other error
 // 	DrawGammaSetMarkerTGraphErr(meanErrorsOther, 26, 1.,color[6],color[6]);
 // 	meanErrorsOther->Draw("pX0,csame");
+    //pile-up
+	DrawGammaSetMarkerTGraphErr(meanErrorsPileUp, 26, 1.,color[6],color[6]);
+	if(numberCutStudies>10) meanErrorsPileUp->Draw("pX0,csame");
 	// PCM Material budget 
     if(!meson.CompareTo("EtaToPi0")==0){
         DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[4],color[4]);
@@ -1608,6 +1628,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
     if(!meson.CompareTo("EtaToPi0")==0) legendSummedMeanNew->AddEntry(graphMaterialError,"Material","p");
 // 	legendSummedMeanNew->AddEntry(graphMassResolError,"Mass resolution","p");	
 // 	legendSummedMeanNew->AddEntry(meanErrorsOther,"TOF, cos(P.A.)","p");
+	if(numberCutStudies>10) legendSummedMeanNew->AddEntry(meanErrorsPileUp,"Pile-up","p");
 	
 	DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
 	meanErrorsCorrSummedIncMat->Draw("p,csame");
@@ -1630,6 +1651,10 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
     meanErrorsPID->Print();
     cout << " \n meanErrorsPhotonReco:" << endl;
     meanErrorsPhotonReco->Print();
+    if(numberCutStudies>10) {
+        cout << " \n meanErrorsPileUp:" << endl;
+        meanErrorsPileUp->Print();
+    }
     cout << " \n meanErrorsCorrSummedIncMatSmoothed:" << endl;
     meanErrorsCorrSummedIncMatSmoothed->Print();
 
