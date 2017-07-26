@@ -1034,7 +1034,7 @@
         legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
         for(Int_t k=0;k<5;k++){
             if(k==0){
-                legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing total",k),"lpe");
+                legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing total %i",k),"lpe");
             }
             else{
                 legendInvMass2->AddEntry(histoOmegaInvMassBG[k],Form("Event mixing group %i",k),"lpe");

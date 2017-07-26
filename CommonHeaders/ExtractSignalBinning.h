@@ -3672,7 +3672,7 @@
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];
                    }
                } else if(mode == 41){
-                   maxNBins = 19;
+                   maxNBins = 10;
                    for(Int_t i = 0; i < maxNBins+1; i++){
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[i];
                    }
@@ -3687,7 +3687,7 @@
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                    }
                } else if(mode == 45){
-                   maxNBins = 19;
+                   maxNBins = 13;
                    for(Int_t i = 0; i < maxNBins+1; i++){
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[i];
                    }
