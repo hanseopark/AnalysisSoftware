@@ -1,0 +1,22 @@
+select	pPbCompareFullPHOS
+nNL	4
+addPathFiles	/PCM-PHOS	/PCM-PHOS	/PHOS	/PHOS	stop
+addPathFilesAdd	0	/PHOS	/PCM-PHOS	/PCM-PHOS	/PCM-PHOS	stop
+isRecursAddInput	0	1	1	1	1	stop
+inputFileNames	LHC13bc-DPMJET-ConvCaloPHOS	LHC13bc-HIJING-ConvCaloPHOS	LHC13bc-DPMJET-CaloPHOS	LHC13bc-HIJING-CaloPHOS	stop
+inputFileNamesAdd	0	LHC13bc-DPMJET-CaloPHOS_51_2	LHC13bc-HIJING-ConvCaloPHOS_51_2	LHC13bc-DPMJET-ConvCaloPHOS_52_2	LHC13bc-HIJING-ConvCaloPHOS_52_2	stop
+
+plotMassData	1	0	1	0	stop
+plotMassMC	1	0	1	0	stop
+plotMassRatio	1	0	1	0	stop
+plotLabelsData	PCM-PHOS	PCM-PHOS	PHOS	PHOS	stop
+plotLabelsMC	PCM-PHOS-DPMJet CCMF	PCM-PHOS-HIJING CCMF	PHOS-DPMJet CMF	PHOS-HIJING CMF	stop
+plotLabelsRatio	DPMJet CCMF	HIJING CCMF	DPMJet CMF	HIJING CMF	stop
+nameUsedCorr	CONST	CONST	DEXP	DPOW	stop
+nameUsedCorrAdd	0	CONST	CONST	CONST	CONST	stop
+color	861	863	859	857	801	stop
+lineStyle	1	4	7	9	2	stop
+
+energy	pPb_5.023TeV
+periods	LHC13[b,c]
+mode	5
