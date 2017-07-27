@@ -457,7 +457,7 @@
             // BinContent 12 - SPD cluster vs tracklets
             if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
             return nEvents;
-        }else if(histo->GetNbinsX()==14){
+        }else if(histo->GetNbinsX()==13){
             if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)-histo->GetBinContent(13)==0) return 0;
             Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
@@ -537,7 +537,7 @@
             if (nEventsMB > 0)
                 missEventFrac = histo->GetBinContent(3)/nEventsMB;
             return missEventFrac;
-        }else if(histo->GetNbinsX()==14){
+        }else if(histo->GetNbinsX()==13){
             if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(13)-histo->GetBinContent(4)==0) return 0;
             Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
