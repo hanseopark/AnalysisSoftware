@@ -98,6 +98,12 @@
     Double_t xSection8TeVT0AND      = 25.5*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/531
     Double_t xSection8TeVT0ErrUp    = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/531
     Double_t xSection8TeVT0ErrDown  = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/531
+    // pp 13 TeV  
+    Double_t xSection13TeVV0AND      = 57.8*1e-3;   // 
+    Double_t xSection13TeVErrUp      = 1.27;         // 
+    Double_t xSection13TeVErrDown    = 1.27;         // 
+
+
     // pPb  5TeV
     Double_t xSection5023GeVINELpPb = 70*1e-3;
     Double_t ncollpPb5023GeV       = 6.9;
@@ -451,7 +457,7 @@
             // BinContent 12 - SPD cluster vs tracklets
             if(doCout)cout <<"nEvents new: "<< nEvents <<  endl;
             return nEvents;
-        }else if(histo->GetNbinsX()==13){
+        }else if(histo->GetNbinsX()==14){
             if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(4)-histo->GetBinContent(13)==0) return 0;
             Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9)-histo->GetBinContent(2);
@@ -531,7 +537,7 @@
             if (nEventsMB > 0)
                 missEventFrac = histo->GetBinContent(3)/nEventsMB;
             return missEventFrac;
-        }else if(histo->GetNbinsX()==13){
+        }else if(histo->GetNbinsX()==14){
             if(histo->GetEntries()-histo->GetBinContent(5)-histo->GetBinContent(7)-histo->GetBinContent(12)-histo->GetBinContent(13)-histo->GetBinContent(4)==0) return 0;
             Int_t nEvents = histo->GetBinContent(1)+(histo->GetBinContent(1)/(histo->GetBinContent(1)+histo->GetBinContent(5)))*histo->GetBinContent(6);
             Int_t nEventsMB = histo->GetEntries()-histo->GetBinContent(4) -histo->GetBinContent(8)-histo->GetBinContent(9);
@@ -4011,6 +4017,17 @@
             } else {
                 cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
             }
+        } else if(energy.CompareTo("13TeV") == 0){
+            if (selTrig == 1){
+                xSectionInt = xSection13TeVV0AND;
+                cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+            } else if (selTrig == 2){
+                xSectionInt = xSection13TeVT0AND;
+                cout << "T0AND xSection taken: \t" << xSectionInt << endl;
+            } else {
+                cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
+            }
+
         } else if( energy.CompareTo("pPb_5TeV") == 0  || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
             if (selTrig == 3){
                 xSectionInt = xSection5023GeVINELpPb;
