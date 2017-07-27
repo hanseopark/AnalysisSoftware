@@ -3559,7 +3559,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     SysErrorConversion sysErr[6][100];
     for (Int_t k = 0; k < 6; k++){
         for (Int_t i = 1; i < nBinsPt +1; i++){
-            if (mode == 9 || mode == 0 || mode == 1){
+            if ( (mode == 9 || mode == 0 || mode == 1 || mode == 2) || (mode == 4 && nameMeson.CompareTo("Eta") && optionEnergy.CompareTo("pPb_5.023TeV") ) ){
     //          binYValue[i] = histoCorrectedYieldTrue->GetBinContent(i);
                 sysErr[k][i].value  = histoCorrectedYieldTrue[k]->GetBinContent(i);
                 sysErr[k][i].error  = histoCorrectedYieldTrue[k]->GetBinError(i);

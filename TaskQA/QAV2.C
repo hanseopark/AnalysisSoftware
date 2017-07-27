@@ -1,6 +1,6 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
  *******************************************************************************/
 
 #include "QA.h"
@@ -16,21 +16,21 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
                 Int_t doExtQA           = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
                 TString suffix          = "eps"             // output format of plots
          ){
-    
+
     //**************************************************************************************************************
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
     const Int_t maxSets             = 40;
     Int_t cutNr                     = -1;               // if -1 & not overwritten in configFile: you have to choose number at runtime
     Int_t mode                      = -1;               // will abort if not set in file
-    
+
     //nSets == 0 is always data!
     Int_t nSets                     = 0;
     TString fEnergyFlag             = "";
     TString labelData               = "";
     Bool_t addSubfolder             = kFALSE;
     TString select                  = "";
-    
+
     TString DataSets        [maxSets];
     TString plotDataSets    [maxSets];
     TString pathDataSets    [maxSets];
@@ -42,22 +42,22 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     Double_t arrQAHotCells1D[4];
     Double_t arrmin2D[9];
     Double_t arrmax2D[9];
-    
+
     // initialize arrays
     for (Int_t i = 0; i< maxSets; i++){
         DataSets[i]                 = "";
         plotDataSets[i]             = "";
         pathDataSets[i]             = "";
         pathPhotonQA[i]             = "";
-    }    
-    
+    }
+
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
     //**************************************************************************************************************
-    // ATTENTION: The data set has to be separated with either tabs or spaces a mixture of 
+    // ATTENTION: The data set has to be separated with either tabs or spaces a mixture of
     //            both will most likely lead to misconfigurations
     //**************************************************************************************************************
-    
+
     cout << "INFO: You have chosen the given the following config file: " << configFileName.Data() << endl;
     ifstream fileConfigQA;
     fileConfigQA.open(configFileName,ios_base::in);
@@ -65,15 +65,15 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
         cout << "ERROR: settings " << configFileName.Data() << " not found!" << endl;
         return;
     }
-    
+
     // read settings from file
-    for( TString tempLine; tempLine.ReadLine(fileConfigQA, kTRUE); ) {        
+    for( TString tempLine; tempLine.ReadLine(fileConfigQA, kTRUE); ) {
         // check if line should be considered
         if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
             continue;
-        } 
+        }
         cout << tempLine.Data() << endl;
-     
+
         // Separate the string according to tabulators
         TObjArray *tempArr  = tempLine.Tokenize("\t");
         if(tempArr->GetEntries()<1){
@@ -88,7 +88,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
                 delete tempArr;
                 continue;
             } else if (tempArr->GetEntries() == 1 && !((TString)((TObjString*)tempArr->At(0))->GetString()).BeginsWith("enableSubfolder") ) {
-                cout << ((TString)((TObjString*)tempArr->At(0))->GetString()).Data() << " has not be reset, no value given!" << endl;    
+                cout << ((TString)((TObjString*)tempArr->At(0))->GetString()).Data() << " has not be reset, no value given!" << endl;
                 delete tempArr;
                 continue;
             }
@@ -106,94 +106,94 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
             labelData       = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("cutNr",TString::kIgnoreCase)){
             cutNr           = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
-        } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){    
+        } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
             mode            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
-        } else if (tempValue.BeginsWith("enableSubfolder",TString::kIgnoreCase)){       
+        } else if (tempValue.BeginsWith("enableSubfolder",TString::kIgnoreCase)){
             addSubfolder    = kTRUE;
-        } else if (tempValue.BeginsWith("pathDataSets",TString::kIgnoreCase)){    
+        } else if (tempValue.BeginsWith("pathDataSets",TString::kIgnoreCase)){
             cout << "setting paths" << endl;
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     pathDataSets[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("pathPhotonQA",TString::kIgnoreCase)){        
+            }
+        } else if (tempValue.BeginsWith("pathPhotonQA",TString::kIgnoreCase)){
             cout << "setting paths" << endl;
             diffPhotonQAPath            = kTRUE;
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (!((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     pathPhotonQA[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("DataSetNamesPlot",TString::kIgnoreCase)){    
+            }
+        } else if (tempValue.BeginsWith("DataSetNamesPlot",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     plotDataSets[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("DataSetNames",TString::kIgnoreCase)){    
+            }
+        } else if (tempValue.BeginsWith("DataSetNames",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     DataSets[i-1]       = ((TString)((TObjString*)tempArr->At(i))->GetString());
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
+            }
         } else if (tempValue.BeginsWith("enableCellQACuts",TString::kIgnoreCase)){
             fuseClusterQAValues          = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
-        } else if (tempValue.BeginsWith("setQAEnergy",TString::kIgnoreCase)){    
+        } else if (tempValue.BeginsWith("setQAEnergy",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 5; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
                     arrQAEnergy[i-1]            = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
                 }
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("setQATime",TString::kIgnoreCase)){    
+            }
+        } else if (tempValue.BeginsWith("setQATime",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 5; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
                     arrQATime[i-1]              = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
                 }
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("setQAHotCells1D",TString::kIgnoreCase)){    
+            }
+        } else if (tempValue.BeginsWith("setQAHotCells1D",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 5; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
                     arrQAHotCells1D[i-1]        = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
                 }
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("min2D",TString::kIgnoreCase)){    
+            }
+        } else if (tempValue.BeginsWith("min2D",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 10; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
                     arrmin2D[i-1]               = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
                 }
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        } else if (tempValue.BeginsWith("max2D",TString::kIgnoreCase)){    
+            }
+        } else if (tempValue.BeginsWith("max2D",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < 10; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase)){
                     arrmax2D[i-1]               = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
                 }
-                else 
+                else
                     i                   = tempArr->GetEntries();
-            }    
-        }    
-        
+            }
+        }
+
         delete tempArr;
     }
-    
+
     //**************************************************************************************************************
     //******************************* Check wether settings were valid *********************************************
     //**************************************************************************************************************
-    
+
     cout << "**************************************************************************" << endl;
     cout << "**************** Settings found in config file ***************************" << endl;
     cout << "**************************************************************************" << endl;
@@ -204,7 +204,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     cout << "mode:\t"<< mode << endl;
     cout << "addSubfolder:\t"<< addSubfolder << endl;
     cout << "labelData:\t" << labelData.Data() << endl;
-    
+
     if (nSets == 0 || !fEnergyFlag.CompareTo("") || mode == -1 ){
         cout << "ABORTING: You are missing the nSets, energy or mode setting, can't continue like that" << endl;
         return;
@@ -224,7 +224,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     }
     cout << "**************************************************************************" << endl;
     cout << "**************************************************************************" << endl;
-    
+
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************

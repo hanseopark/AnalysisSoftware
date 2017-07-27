@@ -76,7 +76,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
                                                 TString fileNameCorrFactors     = "",
                                                 TString fileNameInterpolation   = "",
                                                 TString fileConfigRpPbErr       = "",
-                                                Bool_t isNSD                    = kTRUE
+                                                Bool_t isNSD                    = kTRUE,
+                                                Bool_t isThesis                 = kFALSE
 
                                            ){
 
@@ -84,7 +85,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     gROOT->Reset();
     gROOT->SetStyle("Plain");
-
+//
     StyleSettingsThesis();
     SetPlotStyle();
 
@@ -92,6 +93,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     TString dateForOutput                       = ReturnDateStringForOutput();
     cout << dateForOutput.Data() << endl;
+
+    TString textALICE                           = "ALICE";
+    if (isThesis)
+        textALICE                               = "ALICE this thesis";
     //___________________________________ Declaration of files _____________________________________________
     TString collisionSystempPb                  = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurementspPb5023GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
@@ -1335,11 +1340,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         }
         legendWeights->Draw();
 
-        TLatex *labelWeightsEnergy      = new TLatex(0.7,0.20,collisionSystempPb.Data());
-        SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelWeightsEnergy      = new TLatex(0.95,0.20,collisionSystempPb.Data());
+        SetStyleTLatex( labelWeightsEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelWeightsEnergy->Draw();
-        TLatex *labelWeightsPi0         = new TLatex(0.7,0.16,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel, 4, 1, 43 );
+        TLatex *labelWeightsPi0         = new TLatex(0.95,0.15,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelWeightsPi0, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelWeightsPi0->Draw();
 
 //      DrawGammaLines(0.23, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -1351,7 +1356,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasWeights->SaveAs(Form("%s/Pi0_Weights_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
 
     histo2DPi0Weights->Draw("copy");
-        TLegend* legendWeights2   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetPi0), 32);
+        TLegend* legendWeights2   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*(nMeasSetPi0+1)/2), textSizeLabelsPixel, 2, "", 43, 0);
         for (Int_t i = 0; i < nMeasSetPi0; i++){
             DrawGammaSetMarkerTGraph(graphWeightsPi0[availablePi0Meas[i]], markerStyleDet[availablePi0Meas[i]], markerSizeDet[availablePi0Meas[i]]*0.5, colorDet[availablePi0Meas[i]] , colorDet[availablePi0Meas[i]]);
             graphWeightsPi0[availablePi0Meas[i]]->Draw("p,same,z");
@@ -1379,13 +1384,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelSysErr->SetLogx();
 
     TH2F * histo2DRelSysErr;
-    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23, 25.,1000,0,45.5);
+    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23, 25.,1000,0,39.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelSysErr->Draw("copy");
 
-        TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetPi0), 0.95, 0.92, 32);
+        TLegend* legendRelSysErr        = GetAndSetLegend2(0.62, 0.92-(0.04*nMeasSetPi0WOPE), 0.95, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetPi0WOPE; i++){
             DrawGammaSetMarkerTGraph(sysErrorRelCollectionPi0[availablePi0MeasWOPE[i]], markerStyleDet[availablePi0MeasWOPE[i]], markerSizeDet[availablePi0MeasWOPE[i]]*0.5, colorDet[availablePi0MeasWOPE[i]],
                                      colorDet[availablePi0MeasWOPE[i]]);
@@ -1395,16 +1400,16 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendRelSysErr->Draw();
 
         TLatex *labelRelSysErrEnergy    = new TLatex(0.15,0.89,collisionSystempPb.Data());
-        SetStyleTLatex( labelRelSysErrEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        SetStyleTLatex( labelRelSysErrEnergy, textSizeLabelsPixel, 4, 1, 43);
         labelRelSysErrEnergy->Draw();
         TLatex *labelRelSysErrPi0       = new TLatex(0.15,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelSysErrPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        SetStyleTLatex( labelRelSysErrPi0, textSizeLabelsPixel, 4, 1, 43);
         labelRelSysErrPi0->Draw();
 
     canvasRelSysErr->SaveAs(Form("%s/Pi0_RelSysErr_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
 
     histo2DRelSysErr->Draw("copy");
-        TLegend* legendRelSysErr2       = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetPi0), 0.95, 0.92, 32);
+        TLegend* legendRelSysErr2       = GetAndSetLegend2(0.62, 0.92-(0.04*(nMeasSetPi0+1)/2), 0.95, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
         for (Int_t i = 0; i < nMeasSetPi0; i++){
             DrawGammaSetMarkerTGraph(sysErrorRelCollectionPi0[availablePi0Meas[i]], markerStyleDet[availablePi0Meas[i]], markerSizeDet[availablePi0Meas[i]]*0.5, colorDet[availablePi0Meas[i]],
                                      colorDet[availablePi0Meas[i]]);
@@ -1432,12 +1437,12 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelStatErr->SetLogx();
 
     TH2F * histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23, 25.,1000,0,45.5);
+    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23, 25.,1000,0,39.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelStatErr->Draw("copy");
-        TLegend* legendRelStatErr       = GetAndSetLegend2(0.34, 0.92-(0.035*nMeasSetPi0WOPE), 0.45, 0.92, 32);
+        TLegend* legendRelStatErr       = GetAndSetLegend2(0.14, 0.92-(0.04*nMeasSetPi0WOPE), 0.45, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetPi0WOPE; i++){
             DrawGammaSetMarkerTGraph(statErrorRelCollectionPi0[availablePi0MeasWOPE[i]], markerStyleDet[availablePi0MeasWOPE[i]], markerSizeDet[availablePi0MeasWOPE[i]]*0.5, colorDet[availablePi0MeasWOPE[i]],
                                      colorDet[availablePi0MeasWOPE[i]]);
@@ -1446,17 +1451,17 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         }
         legendRelStatErr->Draw();
 
-        TLatex *labelRelStatErrEnergy   = new TLatex(0.75,0.89,collisionSystempPb.Data());
-        SetStyleTLatex( labelRelStatErrEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRelStatErrEnergy   = new TLatex(0.95,0.89,collisionSystempPb.Data());
+        SetStyleTLatex( labelRelStatErrEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRelStatErrEnergy->Draw();
-        TLatex *labelRelStatErrPi0      = new TLatex(0.75,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelStatErrPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRelStatErrPi0      = new TLatex(0.95,0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRelStatErrPi0, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRelStatErrPi0->Draw();
 
     canvasRelStatErr->SaveAs(Form("%s/Pi0_RelStatErr_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
 
     histo2DRelStatErr->Draw("copy");
-        TLegend* legendRelStatErr2       = GetAndSetLegend2(0.34, 0.92-(0.035*nMeasSetPi0), 0.45, 0.92, 32);
+        TLegend* legendRelStatErr2       = GetAndSetLegend2(0.14, 0.92-(0.04*(nMeasSetPi0+1)/2), 0.45, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
         for (Int_t i = 0; i < nMeasSetPi0; i++){
             DrawGammaSetMarkerTGraph(statErrorRelCollectionPi0[availablePi0Meas[i]], markerStyleDet[availablePi0Meas[i]], markerSizeDet[availablePi0Meas[i]]*0.5, colorDet[availablePi0Meas[i]],
                                      colorDet[availablePi0Meas[i]]);
@@ -1485,7 +1490,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelTotErr->SetLogx();
 
     TH2F * histo2DRelTotErrPi0;
-    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23, 25.,1000,0,45.5);
+    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23, 25.,1000,0,39.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -1501,11 +1506,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendRelTotErr1->AddEntry(graphCombPi0InvYieldRelTot,"All","p");
         legendRelTotErr1->Draw();
 
-        TLatex *labelRelTotErrEnergy    = new TLatex(0.75,0.89,collisionSystempPb.Data());
-        SetStyleTLatex( labelRelTotErrEnergy, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRelTotErrEnergy    = new TLatex(0.95,0.89,collisionSystempPb.Data());
+        SetStyleTLatex( labelRelTotErrEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRelTotErrEnergy->Draw();
-        TLatex *labelRelTotErrPi0       = new TLatex(0.75,0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelTotErrPi0, 0.85*textSizeLabelsPixel, 4, 1, 43);
+        TLatex *labelRelTotErrPi0       = new TLatex(0.95,0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRelTotErrPi0, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRelTotErrPi0->Draw();
 
     canvasRelTotErr->SaveAs(Form("%s/Pi0_TotErr_Comp.%s",outputDir.Data(),suffix.Data()));
@@ -1676,7 +1681,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             TLatex *labelRatioToFitBinShift   = new TLatex(0.94, 0.91, collisionSystempPb.Data());
             SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
             labelRatioToFitBinShift->Draw();
-            TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.94, 0.86, "ALICE");
+            TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.94, 0.86, textALICE.Data());
             SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
             labelRatioToFitALICEBinShift->Draw();
             TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.94, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
@@ -1850,10 +1855,10 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TLatex *labelRatioToFitEnergy   = new TLatex(0.95, 0.92, collisionSystempPb.Data());
         SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitEnergy->Draw();
-        TLatex *labelRatioToFitALICE    = new TLatex(0.95, 0.87, "ALICE");
+        TLatex *labelRatioToFitALICE    = new TLatex(0.95, 0.86, textALICE.Data());
         SetStyleTLatex( labelRatioToFitALICE, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitALICE->Draw();
-        TLatex *labelRatioToFitPi0      = new TLatex(0.95, 0.817, "#pi^{0} #rightarrow #gamma#gamma");
+        TLatex *labelRatioToFitPi0      = new TLatex(0.95, 0.810, "#pi^{0} #rightarrow #gamma#gamma");
         SetStyleTLatex( labelRatioToFitPi0, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitPi0->Draw();
 
@@ -2101,7 +2106,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         canvasWeights->cd();
 
         histo2DPi0Weights->Draw("copy");
-            TLegend* legendWeightsPi0RpPb   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetPi0RpPb), 32);
+            TLegend* legendWeightsPi0RpPb   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*(nMeasSetPi0RpPb+1)/2), textSizeLabelsPixel, 2, "", 43, 0);
             for (Int_t i = 0; i < nMeasSetPi0RpPb; i++){
                 DrawGammaSetMarkerTGraph(graphWeightsPi0RpPb[availablePi0RpPbMeas[i]], markerStyleDet[availablePi0RpPbMeas[i]], markerSizeDet[availablePi0RpPbMeas[i]]*0.5, colorDet[availablePi0RpPbMeas[i]] , colorDet[availablePi0RpPbMeas[i]]);
                 graphWeightsPi0RpPb[availablePi0RpPbMeas[i]]->Draw("p,same,z");
@@ -2110,8 +2115,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             legendWeightsPi0RpPb->Draw();
 
             labelWeightsEnergy->Draw();
-            TLatex *labelWeightsPi0RpPb         = new TLatex(0.7,0.16,"R_{pPb}: #pi^{0} #rightarrow #gamma#gamma");
-            SetStyleTLatex( labelWeightsPi0RpPb, 0.85*textSizeLabelsPixel, 4, 1, 43 );
+            TLatex *labelWeightsPi0RpPb         = new TLatex(0.95,0.15,"R_{pPb}: #pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelWeightsPi0RpPb, 0.85*textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
             labelWeightsPi0RpPb->Draw();
 
     //      DrawGammaLines(0.23, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -2407,7 +2412,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 //  histo2DEtaWeights->GetYaxis()->SetRangeUser(-10,10);
     histo2DEtaWeights->Draw("copy");
 
-        TLegend* legendWeightsEtaWOPE   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetEtaWOPE), 32);
+        TLegend* legendWeightsEtaWOPE   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*nMeasSetEtaWOPE), textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaWOPE; i++){
             DrawGammaSetMarkerTGraph(graphWeightsEtaWOPE[availableEtaMeasWOPE[i]], markerStyleDet[availableEtaMeasWOPE[i]], markerSizeDet[availableEtaMeasWOPE[i]]*0.5, colorDet[availableEtaMeasWOPE[i]] , colorDet[availableEtaMeasWOPE[i]]);
             graphWeightsEtaWOPE[availableEtaMeasWOPE[i]]->Draw("p,same,z");
@@ -2416,8 +2421,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendWeightsEtaWOPE->Draw();
 
         labelWeightsEnergy->Draw();
-        TLatex *labelWeightsEta         = new TLatex(0.7,0.16,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelWeightsEta         = new TLatex(0.95,0.15,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelWeightsEta, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelWeightsEta->Draw();
 
 //      DrawGammaLines(0.43, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -2429,7 +2434,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasWeights->SaveAs(Form("%s/Eta_Weights_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
 
     histo2DEtaWeights->Draw("copy");
-        TLegend* legendWeightsEta   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetEta), 32);
+        TLegend* legendWeightsEta   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*nMeasSetEta), textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEta; i++){
             DrawGammaSetMarkerTGraph(graphWeightsEta[availableEtaMeas[i]], markerStyleDet[availableEtaMeas[i]], markerSizeDet[availableEtaMeas[i]]*0.5, colorDet[availableEtaMeas[i]] , colorDet[availableEtaMeas[i]]);
             graphWeightsEta[availableEtaMeas[i]]->Draw("p,same,z");
@@ -2457,14 +2462,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelSysErr->cd();
 
     TH2F * histo2DRelSysErrEta;
-    histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.43, 25.,1000,0,60.5);
+    histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.43, 25.,1000,0,48.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEta->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DRelSysErrEta->GetYaxis()->SetRangeUser(-10,10);
     histo2DRelSysErrEta->Draw("copy");
 
-        TLegend* legendRelSysErrEtaWOPE        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEtaWOPE), 0.95, 0.92, 32);
+        TLegend* legendRelSysErrEtaWOPE        = GetAndSetLegend2(0.72, 0.92-(0.04*nMeasSetEtaWOPE), 0.95, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaWOPE; i++){
             DrawGammaSetMarkerTGraph(sysErrorRelCollectionEta[availableEtaMeasWOPE[i]], markerStyleDet[availableEtaMeasWOPE[i]], markerSizeDet[availableEtaMeasWOPE[i]]*0.5, colorDet[availableEtaMeasWOPE[i]],
                                      colorDet[availableEtaMeasWOPE[i]]);
@@ -2475,13 +2480,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
         labelRelSysErrEnergy->Draw();
         TLatex *labelRelSysErrEta       = new TLatex(0.15,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelSysErrEta, 0.85*textSizeLabelsPixel,4, 1, 43);
+        SetStyleTLatex( labelRelSysErrEta, textSizeLabelsPixel,4, 1, 43);
         labelRelSysErrEta->Draw();
 
     canvasRelSysErr->SaveAs(Form("%s/Eta_RelSysErr_WOPE.%s",outputDir.Data(),suffix.Data()));
     histo2DRelSysErrEta->Draw("copy");
 
-        TLegend* legendRelSysErrEta        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEta), 0.95, 0.92, 32);
+        TLegend* legendRelSysErrEta        = GetAndSetLegend2(0.72, 0.92-(0.04*nMeasSetEta), 0.95, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEta; i++){
             DrawGammaSetMarkerTGraph(sysErrorRelCollectionEta[availableEtaMeas[i]], markerStyleDet[availableEtaMeas[i]], markerSizeDet[availableEtaMeas[i]]*0.5, colorDet[availableEtaMeas[i]],
                                      colorDet[availableEtaMeas[i]]);
@@ -2502,14 +2507,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelStatErr->cd();
 
     TH2F * histo2DRelStatErrEta;
-    histo2DRelStatErrEta                = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.43, 25.,1000,0,60.5);
+    histo2DRelStatErrEta                = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.43, 25.,1000,0,48.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEta->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DRelStatErrEta->GetYaxis()->SetRangeUser(-10,10);
     histo2DRelStatErrEta->Draw("copy");
 
-        TLegend* legendRelStatErrEtaWOPE       = GetAndSetLegend2(0.14, 0.92-(0.035*nMeasSetEtaWOPE), 0.45, 0.92, 32);
+        TLegend* legendRelStatErrEtaWOPE       = GetAndSetLegend2(0.12, 0.92-(0.04*nMeasSetEtaWOPE), 0.32, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaWOPE; i++){
             DrawGammaSetMarkerTGraph(statErrorRelCollectionEta[availableEtaMeasWOPE[i]], markerStyleDet[availableEtaMeasWOPE[i]], markerSizeDet[availableEtaMeasWOPE[i]]*0.5, colorDet[availableEtaMeasWOPE[i]] ,
                                colorDet[availableEtaMeasWOPE[i]]);
@@ -2519,14 +2524,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendRelStatErrEtaWOPE->Draw();
 
         labelRelStatErrEnergy->Draw();
-        TLatex *labelRelStatErrEta      = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelStatErrEta, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRelStatErrEta      = new TLatex(0.95,0.85,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRelStatErrEta, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRelStatErrEta->Draw();
 
     canvasRelStatErr->SaveAs(Form("%s/Eta_RelStatErr_WOPE.%s",outputDir.Data(),suffix.Data()));
     histo2DRelStatErrEta->Draw("copy");
 
-        TLegend* legendRelStatErrEta       = GetAndSetLegend2(0.14, 0.92-(0.035*nMeasSetEta), 0.45, 0.92, 32);
+        TLegend* legendRelStatErrEta       = GetAndSetLegend2(0.12, 0.92-(0.04*nMeasSetEta), 0.32, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEta; i++){
             DrawGammaSetMarkerTGraph(statErrorRelCollectionEta[availableEtaMeas[i]], markerStyleDet[availableEtaMeas[i]], markerSizeDet[availableEtaMeas[i]]*0.5, colorDet[availableEtaMeas[i]] ,
                                colorDet[availableEtaMeas[i]]);
@@ -2553,7 +2558,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEta;
-    histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.43, 25.,1000,0,60.5);
+    histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.43, 25.,1000,0,48.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEta->GetXaxis()->SetLabelOffset(-0.01);
@@ -2564,14 +2569,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         DrawGammaSetMarkerTGraphAsym(graphCombEtaInvYieldRelTot, markerStyleComb+4, markerSizeComb, kRed+2 , kRed+2);
         graphCombEtaInvYieldRelTot->Draw("p,same,z");
 
-        TLegend* legendRelTotErrEta     = GetAndSetLegend2(0.14, 0.92-(0.035*2), 0.45, 0.92, 32);
+        TLegend* legendRelTotErrEta     = GetAndSetLegend2(0.14, 0.92-(0.04*2), 0.45, 0.92, textSizeLabelsPixel);
         legendRelTotErrEta->AddEntry(graphCombEtaInvYieldWOPERelTot,"PCM, EMC","p");
         legendRelTotErrEta->AddEntry(graphCombEtaInvYieldRelTot,"All","p");
         legendRelTotErrEta->Draw();
 
         labelRelTotErrEnergy->Draw();
-        TLatex *labelRelTotErrEta       = new TLatex(0.75,0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelRelTotErrEta, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRelTotErrEta       = new TLatex(0.95,0.85,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelRelTotErrEta, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRelTotErrEta->Draw();
 
     canvasRelTotErr->SaveAs(Form("%s/Eta_RelTotErr.%s",outputDir.Data(),suffix.Data()));
@@ -2733,7 +2738,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TLatex *labelRatioToFitBinShift   = new TLatex(0.94, 0.91, collisionSystempPb.Data());
         SetStyleTLatex( labelRatioToFitBinShift, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRatioToFitBinShift->Draw();
-        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.94, 0.86, "ALICE");
+        TLatex *labelRatioToFitALICEBinShift    = new TLatex(0.94, 0.86, textALICE.Data());
         SetStyleTLatex( labelRatioToFitALICEBinShift, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRatioToFitALICEBinShift->Draw();
         TLatex *labelRatioToFitPi0BinShift      = new TLatex(0.94, 0.807, "#eta #rightarrow #gamma#gamma");
@@ -2915,7 +2920,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitALICE->Draw();
-        TLatex *labelRatioToFitEta      = new TLatex(0.95, 0.82, "#eta #rightarrow #gamma#gamma");
+        TLatex *labelRatioToFitEta      = new TLatex(0.95, 0.817, "#eta #rightarrow #gamma#gamma");
         SetStyleTLatex( labelRatioToFitEta, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
         labelRatioToFitEta->Draw();
 
@@ -2953,7 +2958,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
         //****************************** Definition of the Legend ******************************************
         Double_t rowsLegendOnlyEtaRatio[4]          = {0.91, 0.86, 0.81, 0.76};
-        Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 1.95, 1.89, 1.785};
+        Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 1.99, 1.89, 1.785};
         Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.3, 0.375};
         Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.3, 1.68};
 
@@ -3142,7 +3147,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         canvasWeights->cd();
 
         histo2DEtaWeights->Draw("copy");
-            TLegend* legendWeightsEtaRpPb   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetEtaRpPb), 32);
+            TLegend* legendWeightsEtaRpPb   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*nMeasSetEtaRpPb), textSizeLabelsPixel);
             for (Int_t i = 0; i < nMeasSetEtaRpPb; i++){
                 DrawGammaSetMarkerTGraph(graphWeightsEtaRpPb[availableEtaRpPbMeas[i]], markerStyleDet[availableEtaRpPbMeas[i]], markerSizeDet[availableEtaRpPbMeas[i]]*0.5, colorDet[availableEtaRpPbMeas[i]] , colorDet[availableEtaRpPbMeas[i]]);
                 graphWeightsEtaRpPb[availableEtaRpPbMeas[i]]->Draw("p,same,z");
@@ -3151,8 +3156,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             legendWeightsEtaRpPb->Draw();
 
             labelWeightsEnergy->Draw();
-            TLatex *labelWeightsEtaRpPb         = new TLatex(0.7,0.16,"R_{pPb}: #eta #rightarrow #gamma#gamma");
-            SetStyleTLatex( labelWeightsEtaRpPb, 0.85*textSizeLabelsPixel, 4, 1, 43 );
+            TLatex *labelWeightsEtaRpPb         = new TLatex(0.95,0.15,"R_{pPb}: #eta #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelWeightsEtaRpPb, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
             labelWeightsEtaRpPb->Draw();
 
     //      DrawGammaLines(0.23, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -3412,7 +3417,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     histo2DEtaToPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DEtaToPi0Weights->GetYaxis()->SetRangeUser(-10,10);
     histo2DEtaToPi0Weights->Draw("copy");
-        TLegend* legendWeightsEtaToPi0WOPE= GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetEtaToPi0WOPE), 32);
+        TLegend* legendWeightsEtaToPi0WOPE= GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*nMeasSetEtaToPi0WOPE), textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaToPi0WOPE; i++){
             DrawGammaSetMarkerTGraph(graphWeightsEtaToPi0WOPE[availableEtaToPi0MeasWOPE[i]], markerStyleDet[availableEtaToPi0MeasWOPE[i]], markerSizeDet[availableEtaToPi0MeasWOPE[i]]*0.5, colorDet[availableEtaToPi0MeasWOPE[i]] , colorDet[availableEtaToPi0Meas[i]]);
             graphWeightsEtaToPi0WOPE[availableEtaToPi0MeasWOPE[i]]->Draw("p,same,z");
@@ -3421,8 +3426,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendWeightsEtaToPi0WOPE->Draw();
 
         labelWeightsEnergy->Draw();
-        TLatex *labelWeightsEtaToPi0         = new TLatex(0.7,0.16,"#eta/#pi^{0}");
-        SetStyleTLatex( labelWeightsEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelWeightsEtaToPi0         = new TLatex(0.95,0.15,"#eta/#pi^{0}");
+        SetStyleTLatex( labelWeightsEtaToPi0, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelWeightsEtaToPi0->Draw();
 
 //      DrawGammaLines(0.43, 25. , 0.8, 0.8,0.1, kGray, 3);
@@ -3434,7 +3439,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasWeights->SaveAs(Form("%s/EtaToPi0_Weights_WOPCMEMC.%s",outputDir.Data(),suffix.Data()));
     histo2DEtaToPi0Weights->Draw("copy");
 
-        TLegend* legendWeightsEtaToPi0   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.035*nMeasSetEtaToPi0), 32);
+        TLegend* legendWeightsEtaToPi0   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*nMeasSetEtaToPi0), textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaToPi0; i++){
             DrawGammaSetMarkerTGraph(graphWeightsEtaToPi0[availableEtaToPi0Meas[i]], markerStyleDet[availableEtaToPi0Meas[i]], markerSizeDet[availableEtaToPi0Meas[i]]*0.5, colorDet[availableEtaToPi0Meas[i]] , colorDet[availableEtaToPi0Meas[i]]);
             graphWeightsEtaToPi0[availableEtaToPi0Meas[i]]->Draw("p,same,z");
@@ -3460,14 +3465,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelSysErr->cd();
 
     TH2F * histo2DRelSysErrEtaToPi0;
-    histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.43, 25.,1000,0,60.5);
+    histo2DRelSysErrEtaToPi0                 = new TH2F("histo2DRelSysErrEtaToPi0","histo2DRelSysErrEtaToPi0",11000,0.43, 25.,1000,0,48.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DRelSysErrEtaToPi0->GetYaxis()->SetRangeUser(-10,10);
     histo2DRelSysErrEtaToPi0->Draw("copy");
 
-        TLegend* legendRelSysErrEtaToPi0        = GetAndSetLegend2(0.62, 0.92-(0.035*nMeasSetEtaToPi0), 0.95, 0.92, 32);
+        TLegend* legendRelSysErrEtaToPi0        = GetAndSetLegend2(0.72, 0.92-(0.04*nMeasSetEtaToPi0), 0.95, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaToPi0; i++){
             DrawGammaSetMarkerTGraph(sysErrorRelCollectionEtaToPi0[availableEtaToPi0Meas[i]], markerStyleDet[availableEtaToPi0Meas[i]], markerSizeDet[availableEtaToPi0Meas[i]]*0.5,
                                      colorDet[availableEtaToPi0Meas[i]], colorDet[availableEtaToPi0Meas[i]]);
@@ -3477,8 +3482,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendRelSysErrEtaToPi0->Draw();
 
         labelRelSysErrEnergy->Draw();
-        TLatex *labelRelSysErrEtaToPi0       = new TLatex(0.15,0.85,"#eta/#pi^{0}");
-        SetStyleTLatex( labelRelSysErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRelSysErrEtaToPi0       = new TLatex(0.15,0.845,"#eta/#pi^{0}");
+        SetStyleTLatex( labelRelSysErrEtaToPi0, textSizeLabelsPixel,4, 1, 43);
         labelRelSysErrEtaToPi0->Draw();
 
     canvasRelSysErr->SaveAs(Form("%s/EtaToPi0_RelSysErr.%s",outputDir.Data(),suffix.Data()));
@@ -3490,14 +3495,14 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelStatErr->cd();
 
     TH2F * histo2DRelStatErrEtaToPi0;
-    histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.43, 25.,1000,0,60.5);
+    histo2DRelStatErrEtaToPi0                = new TH2F("histo2DRelStatErrEtaToPi0","histo2DRelStatErrEtaToPi0",11000,0.43, 25.,1000,0,48.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DRelStatErrEtaToPi0->GetYaxis()->SetRangeUser(-10,10);
     histo2DRelStatErrEtaToPi0->Draw("copy");
 
-        TLegend* legendRelStatErrEtaToPi0       = GetAndSetLegend2(0.14, 0.92-(0.035*nMeasSetEtaToPi0), 0.45, 0.92, 32);
+        TLegend* legendRelStatErrEtaToPi0       = GetAndSetLegend2(0.12, 0.92-(0.04*nMeasSetEtaToPi0), 0.32, 0.92, textSizeLabelsPixel);
         for (Int_t i = 0; i < nMeasSetEtaToPi0; i++){
             DrawGammaSetMarker(statErrorRelCollectionEtaToPi0[availableEtaToPi0Meas[i]], markerStyleDet[availableEtaToPi0Meas[i]], markerSizeDet[availableEtaToPi0Meas[i]]*0.5,
                                colorDet[availableEtaToPi0Meas[i]] , colorDet[availableEtaToPi0Meas[i]]);
@@ -3507,8 +3512,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendRelStatErrEtaToPi0->Draw();
 
         labelRelStatErrEnergy->Draw();
-        TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.75,0.85,"#eta/#pi^{0}");
-        SetStyleTLatex( labelRelStatErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRelStatErrEtaToPi0      = new TLatex(0.95,0.85,"#eta/#pi^{0}");
+        SetStyleTLatex( labelRelStatErrEtaToPi0, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRelStatErrEtaToPi0->Draw();
 
     canvasRelStatErr->SaveAs(Form("%s/EtaToPi0_RelStatErr.%s",outputDir.Data(),suffix.Data()));
@@ -3533,7 +3538,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEtaToPi0;
-    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.43, 25.,1000,0,60.5);
+    histo2DRelTotErrEtaToPi0                 = new TH2F("histo2DRelTotErrEtaToPi0","histo2DRelTotErrEtaToPi0",11000,0.43, 25.,1000,0,48.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEtaToPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEtaToPi0->GetXaxis()->SetLabelOffset(-0.01);
@@ -3549,8 +3554,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendRelTotErrEtaToPi0->Draw();
 
         labelRelTotErrEnergy->Draw();
-        TLatex *labelRelTotErrEtaToPi0       = new TLatex(0.75,0.85,"#eta/#pi^{0}");
-        SetStyleTLatex( labelRelTotErrEtaToPi0, 0.85*textSizeLabelsPixel,4, 1, 43);
+        TLatex *labelRelTotErrEtaToPi0       = new TLatex(0.95,0.85,"#eta/#pi^{0}");
+        SetStyleTLatex( labelRelTotErrEtaToPi0, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelRelTotErrEtaToPi0->Draw();
 
     canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelTotErr.%s",outputDir.Data(),suffix.Data()));
@@ -4572,7 +4577,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TLatex *labelEnergyXSectionPaper= new TLatex(0.95, 0.91, collisionSystempPb.Data());
         SetStyleTLatex( labelEnergyXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
         labelEnergyXSectionPaper->Draw();
-        TLatex *labelALICEXSectionPaper= new TLatex(0.95,0.87,"ALICE");
+        TLatex *labelALICEXSectionPaper= new TLatex(0.95,0.867,textALICE.Data());
         SetStyleTLatex( labelALICEXSectionPaper, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 31);
         labelALICEXSectionPaper->Draw();
         TLatex *labelDetSysXSectionPaper= new TLatex(0.95,0.83,"#pi^{0} #rightarrow #gamma#gamma");
@@ -4722,7 +4727,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TLatex *labelEnergyXSectionPaperEta= new TLatex(0.20, 0.13+0.05*4, collisionSystempPb.Data());
         SetStyleTLatex( labelEnergyXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelEnergyXSectionPaperEta->Draw();
-        TLatex *labelALICEXSectionPaperEta= new TLatex(0.20,0.13+0.05*3,"ALICE");
+        TLatex *labelALICEXSectionPaperEta= new TLatex(0.20,0.13+0.05*3,textALICE.Data());
         SetStyleTLatex( labelALICEXSectionPaperEta, textsizeLabelsXSecUp,4, 1, 42, kTRUE, 11);
         labelALICEXSectionPaperEta->Draw();
         TLatex *labelDetSysXSectionPaperEta = new TLatex(0.20,0.13+0.05*2,"#eta #rightarrow #gamma#gamma");
@@ -4863,7 +4868,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         SetStyleTLatex( labelEnergyEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4, 1, 42, kTRUE, 11);
         labelEnergyEtaToPi0->Draw();
 
-        TLatex *labelALICEEtaToPi0 = new TLatex(0.13, 0.92-(1*textsizeLabelsEtaToPi0*0.85),"ALICE");
+        TLatex *labelALICEEtaToPi0 = new TLatex(0.13, 0.92-(1*textsizeLabelsEtaToPi0*0.85),textALICE.Data());
         SetStyleTLatex( labelALICEEtaToPi0, 0.85*textsizeLabelsEtaToPi0,4, 1, 42, kTRUE, 11);
         labelALICEEtaToPi0->Draw();
 
@@ -5120,7 +5125,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TLatex *labelEnergyXSectionPaperAll = new TLatex(0.20, 0.20+0.04*3, collisionSystempPb.Data());
         SetStyleTLatex( labelEnergyXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelEnergyXSectionPaperAll->Draw();
-        TLatex *labelALICEXSectionPaperAll  = new TLatex(0.20,0.20+0.04*2,"ALICE");
+        TLatex *labelALICEXSectionPaperAll  = new TLatex(0.20,0.20+0.04*2,textALICE.Data());
         SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEXSectionPaperAll->Draw();
         TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"Norm. unc. 3.1%");
@@ -5261,7 +5266,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             TLatex *labelEnergyRpPb     = new TLatex(0.15, 0.95-0.04*1, collisionSystempPb.Data());
             SetStyleTLatex( labelEnergyRpPb, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
             labelEnergyRpPb->Draw();
-            TLatex *labelALICERpPb  = new TLatex(0.15,0.95-0.04*2,"ALICE");
+            TLatex *labelALICERpPb  = new TLatex(0.15,0.947-0.04*2,textALICE.Data());
             SetStyleTLatex( labelALICERpPb, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
             labelALICERpPb->Draw();
 

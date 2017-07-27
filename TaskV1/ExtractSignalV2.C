@@ -4229,7 +4229,12 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 }
             }
             if (fMode == 4 || fMode == 12 || fMode == 5){
-                mesonAmplitudeMin = mesonAmplitude*5./100.;
+                if (!fEnergyFlag.CompareTo("pPb_5.023TeV")){
+                    mesonAmplitudeMin = mesonAmplitude*0.1/100.;
+                    mesonAmplitudeMax = mesonAmplitude*300./100.;
+                } else {
+                    mesonAmplitudeMin = mesonAmplitude*5./100.;
+                }
             }
         }
     }
@@ -4262,6 +4267,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
 
+//     cout << mesonAmplitude << "\t boundaries \t"<< mesonAmplitudeMin << "\t" << mesonAmplitudeMax << "\t" << endl;
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
 
@@ -4273,20 +4279,18 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     if (vary && !fIsMC && (fMode == 0 || fMode == 9)){
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && fPrefix.CompareTo("Pi0") ==0 && ptBin >=17){
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
-        }
-        else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (ptBin >= 20) ){//
-        cout << "Skipping the vary option for this case" << endl;
+        } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (ptBin >= 20) ){//
+            cout << "Skipping the vary option for this case" << endl;
         } else {// ...do what you are supposed to....
-
-        if (!(fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1]) ){
-            fMesonLambdaTail = fFitReco->GetParameter(3);
-            fMesonLambdaTailRange[0] = 0.9*fFitReco->GetParameter(3);
-            fMesonLambdaTailRange[1] = 1.1*fFitReco->GetParameter(3);
+            if (!(fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1]) ){
+                fMesonLambdaTail = fFitReco->GetParameter(3);
+                fMesonLambdaTailRange[0] = 0.9*fFitReco->GetParameter(3);
+                fMesonLambdaTailRange[1] = 1.1*fFitReco->GetParameter(3);
+            }
+            fMesonWidthExpect = fFitReco->GetParameter(2);
+            fMesonWidthRange[0] = 0.5*fFitReco->GetParameter(2);
+            fMesonWidthRange[1] = 1.5*fFitReco->GetParameter(2);
         }
-        fMesonWidthExpect = fFitReco->GetParameter(2);
-        fMesonWidthRange[0] = 0.5*fFitReco->GetParameter(2);
-        fMesonWidthRange[1] = 1.5*fFitReco->GetParameter(2);
-    }
     }
     fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
