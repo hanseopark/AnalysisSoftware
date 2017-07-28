@@ -3408,7 +3408,7 @@
             fNRebin = 		new Int_t[19];
             fStartPtBin     = 0;
             fColumn         = 5;
-            fRow            = 4;
+            fRow            = 3;
 
             if (energy.CompareTo("7TeV") == 0) {
                 if (fNBinsPt > 20) {
@@ -3418,7 +3418,7 @@
 
                 if(modi == 40){
                     fColumn         = 3;
-                    fRow            = 4;
+                    fRow            =3;
                     fStartPtBin     = 3;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];

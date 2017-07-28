@@ -4042,21 +4042,21 @@
     TString ReturnFullTextReconstructionProcess( Int_t mode, Int_t separate = 0, TString meson = "", TString clusterCutNumber = "" ){
         if (separate == 0){
             switch (mode){
-                case 0:
+                case 0: case 40:
                     return "#gamma's rec. with PCM";
-                case 1:
+                case 1: case 47:
                     return "#gamma's rec. with PCM, Dalitz";
-                case 2:
+                case 2: case 41:
                     return "#gamma's rec. with PCM, EMCal";
-                case 3:
+                case 3: case 42:
                     return "#gamma's rec. with PCM, PHOS";
-                case 4:
+                case 4: case 44:
                     return "#gamma's rec. with EMCal";
-                case 5:
+                case 5: case 45:
                     return "#gamma's rec. with PHOS";
-                case 6:
+                case 6: case 48:
                     return "#gamma's rec. with EMCal, Dalitz";
-                case 7:
+                case 7: case 49:
                     return "#gamma's rec. with PHOS, Dalitz";
                 case 10:
                     if (clusterCutNumber.CompareTo("") != 0){
@@ -4076,9 +4076,9 @@
                         if (meson.CompareTo("") == 0) return "rec. w/ mPHOS";
                         else return Form("%s rec. w/ mPHOS", meson.Data());
                     }
-                case 12:
+                case 12: case 46:
                     return "#gamma's rec. with DCal";
-                case 13:
+                case 13: case 43:
                     return "#gamma's rec. with PCM, DCal";
                 case 20:
                     return "combined";

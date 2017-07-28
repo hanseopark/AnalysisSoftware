@@ -706,7 +706,11 @@
 
         TLegend* legendInvMass  = GetAndSetLegend2(0.67, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
         legendInvMass->SetMargin(0.25);
-        legendInvMass->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+        if(fSimulation.CompareTo("MC")==0){
+            legendInvMass->AddEntry(histoPi0InvMassSigPlusBG,"Raw MC events","l");
+        } else{
+            legendInvMass->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+        }
         legendInvMass->AddEntry(histoPi0InvMassBGTot,"Mixed event +","p");
         legendInvMass->AddEntry((TObject*)0,"remain. BG","");
         legendInvMass->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
@@ -794,7 +798,11 @@
 
         TLegend* legendInvMass2  = GetAndSetLegend2(0.67, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
         legendInvMass2->SetMargin(0.25);
-        legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+        if(fSimulation.CompareTo("MC")==0){
+            legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw MC events","l");
+        } else{
+            legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+        }
         legendInvMass2->AddEntry(histoPi0InvMassBG,"Mixed event BG","p");
         legendInvMass2->AddEntry(histoPi0InvMassRemBG,"Remain. BG","p");
         legendInvMass2->AddEntry(histoPi0InvMassSigRemBGSub,"BG subtracted","p");
@@ -840,7 +848,11 @@
 
         TLegend* legendInvMass3  = GetAndSetLegend2(0.62, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
         legendInvMass3->SetMargin(0.22);
-        legendInvMass3->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+        if(fSimulation.CompareTo("MC")==0){
+            legendInvMass3->AddEntry(histoPi0InvMassSigPlusBG,"Raw MC events","l");
+        } else{
+            legendInvMass3->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","l");
+        }
         legendInvMass3->AddEntry(histoPi0InvMassBG,"Mixed event BG","p");
         legendInvMass3->AddEntry(histoPi0InvMassSigRemBG,"Mixed evt. BG sub.","p");
         if (scaleFacSignal != 1.0){
@@ -1031,7 +1043,11 @@
         // 0.67
         TLegend* legendInvMass2  = GetAndSetLegend2(0.55, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
         legendInvMass2->SetMargin(0.25);
-        legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
+        if(fSimulation.CompareTo("MC")==0){
+            legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw MC events","le");
+        }else{
+            legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
+        }
         for(Int_t k=0;k<5;k++){
             if(k==0){
                 legendInvMass2->AddEntry(histoOmegaInvMassBG[k],"Event mixing total","lpe");
@@ -1242,7 +1258,11 @@
         // 0.67
         TLegend* legendInvMass2  = GetAndSetLegend2(0.55, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
         legendInvMass2->SetMargin(0.25);
-        legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
+        if(fSimulation.CompareTo("MC")==0){
+            legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw MC events","le");
+        } else{
+            legendInvMass2->AddEntry(histoPi0InvMassSigPlusBG,"Raw real events","le");
+        }
         legendInvMass2->AddEntry(fitOmegaInvMassBG,"Fitted BG using","l");
                 legendInvMass2->AddEntry((TObject*)0,"4th order polynomial","");
         legendInvMass2->AddEntry(histoPi0InvMassSig,"BG subtracted","p");
@@ -1548,7 +1568,7 @@
                 events->SetTextSize(textHeight);
                 events->Draw();
 
-                TLegend* legendData     = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(5.75+2.)*differenceText);
+                TLegend* legendData     = new TLegend(startTextX,startTextY-5.75*differenceText,1,startTextY-(9.75+2.)*differenceText);
                 legendData->SetTextSize(textHeight);
                 legendData->SetTextFont(62);
                 legendData->SetFillColor(0);
@@ -1563,7 +1583,7 @@
                 fHistoMappingBackNormInvMassPtBinPlot[0][iPt]->SetLineWidth(0.8*linesize);
                 for(Int_t k=0;k<5;k++){
                     if(fHistoMappingBackNormInvMassPtBinPlot[k][iPt]==NULL) continue;
-                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[k][iPt],Form("mixed evt. Group %i #it{M}_{#gamma#gamma}",k),"l");
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[k][iPt],Form("mixed evt. Group %i #it{M}_{%s}",k,decayChannel.Data()),"l");
                 }
                 legendData->Draw();
             } else {
@@ -1630,7 +1650,8 @@
                                 TString decayChannel,
                                 TString fDetectionChannel,
                                 TString fEnergy,
-                                Bool_t isVsPtConv               = kFALSE
+                                Bool_t isVsPtConv               = kFALSE,
+                                Int_t BckNmb                    = 0
                             ){
         TGaxis::SetMaxDigits(3);
 
@@ -1728,10 +1749,14 @@
                 legendData->SetMargin(0.15);
                 Size_t markersize       = fHistoMappingGGInvMassPtBinPlot[iPt]->GetMarkerSize();
                 fHistoMappingGGInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
-                legendData->AddEntry(fHistoMappingGGInvMassPtBinPlot[iPt],"same evt. #it{M}_{#gamma#gamma} (BG+Signal)","ep");
+                legendData->AddEntry(fHistoMappingGGInvMassPtBinPlot[iPt],Form("same evt. #it{M}_{%s} (BG+Signal)",decayChannel.Data()),"ep");
                 Size_t linesize         = fHistoMappingBackNormInvMassPtBinPlot[iPt]->GetLineWidth();
                 fHistoMappingBackNormInvMassPtBinPlot[iPt]->SetLineWidth(5*linesize);
-                legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],"mixed evt. #it{M}_{#gamma#gamma}","l");
+                if(BckNmb==0){
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s}",decayChannel.Data()),"l");
+                } else{
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s} group %d",decayChannel.Data(),BckNmb),"l");
+                }
                 legendData->Draw();
             } else {
 
