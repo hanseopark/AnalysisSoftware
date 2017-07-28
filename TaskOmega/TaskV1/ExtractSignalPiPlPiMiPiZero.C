@@ -2262,7 +2262,9 @@ void Initialize(TString setPi0, Int_t numberOfBins){
     fMesonTrueFWHM = 										new Double_t[fNBinsPt];
     fMesonTrueFWHMReweighted =								new Double_t[fNBinsPt];
     fMesonTrueSB = 											new Double_t[fNBinsPt];
+    fMesonTrueSBError =                                     new Double_t[fNBinsPt];
     fMesonTrueSign = 										new Double_t[fNBinsPt];
+    fMesonTrueSignError = 									new Double_t[fNBinsPt];
 
     // Normalization at the left of the peak
     fMesonMassLeft = 										new Double_t[fNBinsPt];
