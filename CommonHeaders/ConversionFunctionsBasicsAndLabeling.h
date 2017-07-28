@@ -4021,9 +4021,6 @@
             if (selTrig == 1){
                 xSectionInt = xSection13TeVV0AND;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
-            } else if (selTrig == 2){
-                xSectionInt = xSection13TeVT0AND;
-                cout << "T0AND xSection taken: \t" << xSectionInt << endl;
             } else {
                 cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
             }
