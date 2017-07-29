@@ -95,6 +95,38 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	StyleSettingsThesis();    
 	SetPlotStyle();
 
+    //***************************************************************************************
+    // V. Begun - Equilibrium model 
+    //> http://inspirehep.net/record/1267669
+    //> http://inspirehep.net/record/1298405
+    //> http://inspirehep.net/record/779957
+    //> http://inspirehep.net/record/1352138
+	const Int_t totNPtBins = 30;
+	Int_t nbinsEQ;
+
+	Double_t ptBegunEQ_0010[30]; 
+	Double_t yieldPi0BegunEQ_0010[30];    
+	Double_t yieldEtaBegunEQ_0010[30];    
+    Double_t yieldEtaToPi0BegunEQ_0010[30];    
+    
+	TString fileNameBegunEQ_0010 = "ExternalInputPbPb/Theory/CracowModel/Begun_EQModel_0-10.txt";
+	ifstream  fileBegunEQ_0010;
+	fileBegunEQ_0010.open(fileNameBegunEQ_0010,ios_base::in);
+	cout << fileNameBegunEQ_0010 << endl;
+
+	Int_t nlin = 0;
+	while(!fileBegunEQ_0010.eof() && nlin < 30){
+		fileBegunEQ_0010 >> ptBegunEQ_0010[nlin] >> yieldEtaBegunEQ_0010[nlin] >> yieldPi0BegunEQ_0010[nlin] >> yieldEtaToPi0BegunEQ_0010[nlin];
+		cout << nlin << "\t "  << ptBegunEQ_0010[nlin] << "\t "  << yieldEtaBegunEQ_0010[nlin] << "\t "  << yieldPi0BegunEQ_0010[nlin] << "\t "  << yieldEtaToPi0BegunEQ_0010[nlin] << endl;
+		nlin++;
+	}
+	fileBegunEQ_0010.close();
+    
+    TGraph *TheoryBegunEQPi0_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldPi0BegunEQ_0010);
+    TGraph *TheoryBegunEQEta_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldEtaBegunEQ_0010);
+    TGraph *TheoryBegunEQEtaToPi0_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldEtaToPi0BegunEQ_0010);
+
+    
 	//********************************************************************************************************************************************        
     //***************************************************** Cracow model for LHC11h yields *******************************************************
 	// PRC 90, 014906 (2014)
@@ -1325,7 +1357,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         gEposWOErr[iFile]->RemovePoint(  gEposWOErr[iFile]->GetN()-1);
             i--;
         }
-        gEpos[iFile]->Print();
+//         gEpos[iFile]->Print();
     }    
 
     //EPOS(2?) (file from Anders Knospe)
@@ -1493,7 +1525,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         cout << pTKopeliovich_RAA_0005[i] << endl;
         Kopeliovich_RAA_0005->SetPoint(i, pTKopeliovich_RAA_0005[i], yKopeliovich_RAA_0005[i]);
     }
-    Kopeliovich_RAA_0005->Print();
+//     Kopeliovich_RAA_0005->Print();
     TGraph* Kopeliovich_RAA_0005_finerBinning = new TGraph(97);
     for(Int_t i=0; i<140; i++){
         Double_t evaluatedRAA = Kopeliovich_RAA_0005->Eval(pTKopeliovich_Yield_0005[i], 0, "S");
@@ -1563,7 +1595,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         cout << pTKopeliovich_RAA_2040[i] << endl;
         Kopeliovich_RAA_2040->SetPoint(i, pTKopeliovich_RAA_2040[i], yKopeliovich_RAA_2040[i]);
     }
-    Kopeliovich_RAA_2040->Print();
+//     Kopeliovich_RAA_2040->Print();
     TGraph* Kopeliovich_RAA_2040_finerBinning = new TGraph(97);
     for(Int_t i=0; i<140; i++){
         Double_t evaluatedRAA = Kopeliovich_RAA_2040->Eval(pTKopeliovich_Yield_2040[i], 0, "S");
@@ -1613,7 +1645,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     for (Int_t i= 0; i < 43; i++){
         pTKopeliovich_Yield_6080[i+79] = pTAdditional[i];
     }   
-    Kopeliovich_YieldHydro_6080->Print();
+//     Kopeliovich_YieldHydro_6080->Print();
     
     TGraph* Kopeliovich_RAA_6080 = new TGraph(24);
     Double_t pTKopeliovich_RAA_6080[24];
@@ -1633,7 +1665,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         cout << pTKopeliovich_RAA_6080[i] << endl;
         Kopeliovich_RAA_6080->SetPoint(i, pTKopeliovich_RAA_6080[i], yKopeliovich_RAA_6080[i]);
     }
-    Kopeliovich_RAA_6080->Print();
+//     Kopeliovich_RAA_6080->Print();
     TGraph* Kopeliovich_RAA_6080_finerBinning = new TGraph(79);
     for(Int_t i=0; i<79+43; i++){
         Double_t evaluatedRAA = Kopeliovich_RAA_6080->Eval(pTKopeliovich_Yield_6080[i], 0, "S");
@@ -1652,7 +1684,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Kopeliovich_YieldELoss_6080->SetPoint(i, pTKopeliovich_Yield_6080[i], yELossKopeliovich_Yield_6080[i]);
         Kopeliovich_YieldTotal_6080->SetPoint(i, pTKopeliovich_Yield_6080[i], yTotalKopeliovich_Yield_6080[i]);
     }                          
-    Kopeliovich_RAA_6080_finerBinning->Print();
+//     Kopeliovich_RAA_6080_finerBinning->Print();
     j = 0;
     while (pTKopeliovich_Yield_6080[j] < 3){
         j++;
@@ -1816,6 +1848,10 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Kopeliovich_RAA_6080->Write("graphKopeliovichRAA6080");
         Kopeliovich_RAA_6080_finerBinning->Write("graphKopeliovichRAA6080_finerBinning");
 
+        TheoryBegunEQPi0_0010->Write("TheoryBegunEQPi0_0010");
+        TheoryBegunEQEta_0010->Write("TheoryBegunEQEta_0010");
+        TheoryBegunEQEtaToPi0_0010->Write("TheoryBegunEQEtaToPi0_0010");
+        
         TheoryCracowPi0LowPt_0010->Write("TheoryCracowPi0LowPt_0010");
         TheoryCracowEtaLowPt_0010->Write("TheoryCracowEtaLowPt_0010");
         TheoryCracowEtaToPi0LowPt_0010->Write("TheoryCracowEtaToPi0LowPt_0010");

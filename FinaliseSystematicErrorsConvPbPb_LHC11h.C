@@ -267,8 +267,40 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 
             if(smooth==2){
                 if(nameCutVariationSC[i].Contains("Alpha")){
-                    for (Int_t k = 0; k < nPtBins; k++){
-                        if(meson.CompareTo("Pi0")==0){
+                    if((meson.CompareTo("EtaToPi0")==0)){
+                        for (Int_t k = 0; k < nPtBins; k++){
+                            if(!centPercent.CompareTo("0-5%")){
+                                adjustPtDependent               = kTRUE;
+                                errorFixed      = 1+1.5*(ptBins[k]-2)+20/pow(ptBins[k]+0.2,2);
+                            } 
+                            else if(!centPercent.CompareTo("5-10%")){
+                                adjustPtDependent               = kTRUE;
+                                errorFixed      = 1+1.5*(ptBins[k]-2)+20/pow(ptBins[k]+0.2,2);
+                            } 
+                            else if (!centPercent.CompareTo("0-10%")){
+                                adjustPtDependent               = kTRUE;
+                                errorFixed      = 1+1.5*(ptBins[k]-2)+20/pow(ptBins[k]+0.2,2);
+                            }
+                            else if(!centPercent.CompareTo("20-40%")){
+                                adjustPtDependent               = kTRUE;
+                                errorFixed      = 1+1.5*(ptBins[k]-2)+20/pow(ptBins[k]+0.2,2);
+                            }
+                            else if(!centPercent.CompareTo("20-50%")){
+                                adjustPtDependent               = kTRUE;
+                                errorFixed      = 1+1.5*(ptBins[k]-2)+20/pow(ptBins[k]+0.2,2);
+                            }
+
+                            if (errorFixed != -1){
+                                errorsMean[i][k]        = errorFixed;
+                                errorsMeanErr[i][k]     = errorFixed*0.01;
+                                errorsMeanCorr[i][k]    = errorFixed;
+                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                            }
+                            
+                        }
+                    }
+                    else if(meson.CompareTo("Pi0")==0){
+                        for (Int_t k = 0; k < nPtBins; k++){
                             if(!centPercent.CompareTo("0-5%")){
                                 adjustPtDependent               = kTRUE;
                                 errorFixed      = 1.+pow(ptBins[k],2)*0.023;
@@ -296,8 +328,10 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                                 errorsMeanCorr[i][k]    = errorFixed;
                                 errorsMeanErrCorr[i][k] = errorFixed*0.01;
                             }
-                        } 
-                        else {
+                        }
+                    }
+                    else {
+                        for (Int_t k = 0; k < nPtBins; k++){
                             if(!centPercent.CompareTo("0-5%")){
                                 adjustPtDependent               = kTRUE;
                                 errorFixed      = 1+2.*(ptBins[k]-2)+20/pow(ptBins[k]+0.2,2);
@@ -335,7 +369,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             
                             if(!centPercent.CompareTo("0-5%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 9+1.3*(ptBins[k]-6)+15/pow(ptBins[k],1.5);
+                                errorFixed      = 9+1.3*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
                             } 
                             else if(!centPercent.CompareTo("5-10%")){
                                 adjustPtDependent               = kTRUE;
@@ -343,7 +377,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             } 
                             else if (!centPercent.CompareTo("0-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 9+1.3*(ptBins[k]-6)+20/pow(ptBins[k],1.5);
+                                errorFixed      = 9+1.3*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
                             }
                             else if(!centPercent.CompareTo("20-40%")){
                                 adjustPtDependent               = kTRUE;
@@ -351,7 +385,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             }
                             else if(!centPercent.CompareTo("20-50%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 8+1.3*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
+                                errorFixed      = 9+1.*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
                             }
                                                     
                             if (errorFixed != -1){
@@ -409,19 +443,19 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             
                             if(!centPercent.CompareTo("0-5%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 10+1.3*(ptBins[k]-6)+20/pow(ptBins[k],1.5);
+                                errorFixed      = 10+1.3*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
                             } 
                             else if(!centPercent.CompareTo("5-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 8+1.3*(ptBins[k]-6)+20/pow(ptBins[k],1.5);
+                                errorFixed      = 8+1.2*(ptBins[k]-6)+20/pow(ptBins[k],1.5);
                             } 
                             else if (!centPercent.CompareTo("0-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 9+1.3*(ptBins[k]-6)+20/pow(ptBins[k],1.5);
+                                errorFixed      = 9+1.3*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
                             }
                             else if(!centPercent.CompareTo("20-40%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 10+1.3*(ptBins[k]-6)+10/pow(ptBins[k],1.5);
+                                errorFixed      = 7+1.1*(ptBins[k]-6)+20/pow(ptBins[k],1.5);
                             }
                             else if(!centPercent.CompareTo("20-50%")){
                                 adjustPtDependent               = kTRUE;
@@ -603,23 +637,23 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                         for (Int_t k = 0; k < nPtBins; k++){
                             if(!centPercent.CompareTo("0-5%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed = 3.+0.3*ptBins[k]+20/(pow(ptBins[k]+0.3,2));
+                                errorFixed = 4.+0.3*ptBins[k]+15/(pow(ptBins[k]+0.3,2));
                             } 
                             else if(!centPercent.CompareTo("5-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed = 5+0.3*ptBins[k]+10/(pow(ptBins[k]+0.3,2));
+                                errorFixed = 5.5+0.3*ptBins[k]+8/(pow(ptBins[k]+0.3,2));
                             } 
                             else if (!centPercent.CompareTo("0-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed = 3+0.3*ptBins[k]+20/(pow(ptBins[k]+0.3,2));
+                                errorFixed = 2+0.3*ptBins[k]+20/(pow(ptBins[k]+0.3,2));
                             }
                             else if(!centPercent.CompareTo("20-40%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed = 2+0.3*ptBins[k]+20/(pow(ptBins[k]+0.3,2));
+                                errorFixed = 2+0.3*ptBins[k]+18/(pow(ptBins[k]+0.3,2));
                             }
                             else if(!centPercent.CompareTo("20-50%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed = 2+0.3*ptBins[k]+20/(pow(ptBins[k]+0.3,2));
+                                errorFixed = 1.8+0.3*ptBins[k]+20/(pow(ptBins[k]+0.3,2));
                             }
                             
                             if (errorFixed != -1){
@@ -797,7 +831,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             } 
                             else if(!centPercent.CompareTo("5-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 5+pow(ptBins[k],2)*0.07;
+                                errorFixed      = 4+pow(ptBins[k],2)*0.07;
                             } 
                             else if (!centPercent.CompareTo("0-10%")){
                                 adjustPtDependent               = kTRUE;
@@ -805,11 +839,11 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             }
                             else if(!centPercent.CompareTo("20-40%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 4+pow(ptBins[k],2)*0.07;
+                                errorFixed      = 3+pow(ptBins[k],2)*0.07;
                             }
                             else if(!centPercent.CompareTo("20-50%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed      = 2+pow(ptBins[k],2)*0.07;
+                                errorFixed      = 2+pow(ptBins[k],2)*0.05;
                             }
                             
                             if (errorFixed != -1){
@@ -894,7 +928,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             } 
                             else if(!centPercent.CompareTo("5-10%")){
                                 adjustPtDependent               = kTRUE;
-                                errorFixed = 2+0.15*ptBins[k]+20/(pow(ptBins[k]+1.5,1.5));
+                                errorFixed = 1.+0.2*ptBins[k]+23/(pow(ptBins[k]+1.5,1.5));
                             } 
                             else if (!centPercent.CompareTo("0-10%")){
                                 adjustPtDependent               = kTRUE;
@@ -981,7 +1015,24 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                             }
                         }
                     }
-                }            
+                } else if(i==0 && meson.CompareTo("Pi0")==0 && !centPercent.CompareTo("0-10%")){
+                    for (Int_t k = 0; k < nPtBins; k++){
+                        if(ptBins[k]==9){
+                            adjustPtDependent               = kFALSE;
+                            errorFixed = 6.;
+                        } else if(ptBins[k]==11){
+                            adjustPtDependent               = kFALSE;
+                            errorFixed = 7.;
+                        } else errorFixed = -1;
+                            
+                        if (errorFixed != -1){
+                            errorsMean[i][k]        = errorFixed;
+                            errorsMeanErr[i][k]     = errorFixed*0.01;
+                            errorsMeanCorr[i][k]    = errorFixed;
+                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                        }
+                    }                    
+                }
                 // put fixed values for pt independent errors, which were adjusted
                 if (!adjustPtDependent && errorFixed != -1){
                     for (Int_t k = 0; k < nPtBins; k++){
@@ -991,6 +1042,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
                         errorsMeanErrCorr[i][k] = errorFixed*0.01;
                     }
                 }    
+                
 
                 
             } // end smoothing if
@@ -2390,7 +2442,7 @@ void FinaliseSystematicErrorsConvPbPb_LHC11h(   const char* nameDataFileErrors  
 	cout << SysErrDatnameMean << endl;
 	SysErrDatAver.open(SysErrDatnameMean, ios::out);
 	for (Int_t l=0; l< nPtBins; l++){
-		if(smooth){
+		if(smooth==1){
 			SysErrDatAver << "-"<< errorsMeanCorrMatSummedSmoothed[l] << "\t" <<errorsMeanCorrMatSummedSmoothed[l] << "\t"  << "-"<< errorsMeanCorrSummedSmoothed[l] << "\t" <<errorsMeanCorrSummedSmoothed[l]  << endl;
 		} else {
 			SysErrDatAver << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;

@@ -2094,7 +2094,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     
 	TH2D *histo2DEtaFWHM = new TH2D("histo2DEtaFWHM", "histo2DEtaFWHM", 20,0.5,20. ,1000.,-30,40);
 	SetStyleHistoTH2ForGraphs(histo2DEtaFWHM, "#it{p}_{T} (GeV/#it{c})","FWHM/2.36 (MeV/#it{c}^{2})", 0.035,0.05, 0.065,0.08, .95,.8, 515, 504); 
-	histo2DEtaFWHM->GetYaxis()->SetRangeUser(0.5,15);
+	histo2DEtaFWHM->GetYaxis()->SetRangeUser(0.5,20);
 	histo2DEtaFWHM->GetYaxis()->SetLabelOffset(0.01);
 
 	TH2D *histo2DEtaMass = new TH2D("histo2DEtaMass", "histo2DEtaMass", 20,0.5,20. ,1000.,520.,570);
