@@ -101,8 +101,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     //> http://inspirehep.net/record/1298405
     //> http://inspirehep.net/record/779957
     //> http://inspirehep.net/record/1352138
-	const Int_t totNPtBins = 30;
-	Int_t nbinsEQ;
+	Int_t totNPtBins = 30;
 
 	Double_t ptBegunEQ_0010[30]; 
 	Double_t yieldPi0BegunEQ_0010[30];    
@@ -116,6 +115,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 
 	Int_t nlin = 0;
 	while(!fileBegunEQ_0010.eof() && nlin < 30){
+        // pt eta yield pi0 yield eta/pi0 ratio
 		fileBegunEQ_0010 >> ptBegunEQ_0010[nlin] >> yieldEtaBegunEQ_0010[nlin] >> yieldPi0BegunEQ_0010[nlin] >> yieldEtaToPi0BegunEQ_0010[nlin];
 		cout << nlin << "\t "  << ptBegunEQ_0010[nlin] << "\t "  << yieldEtaBegunEQ_0010[nlin] << "\t "  << yieldPi0BegunEQ_0010[nlin] << "\t "  << yieldEtaToPi0BegunEQ_0010[nlin] << endl;
 		nlin++;
@@ -126,8 +126,31 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     TGraph *TheoryBegunEQEta_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldEtaBegunEQ_0010);
     TGraph *TheoryBegunEQEtaToPi0_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldEtaToPi0BegunEQ_0010);
 
+    Double_t ptBegunEQ_2050[18]; 
+	Double_t yieldPi0BegunEQ_2050[18];    
+	Double_t yieldEtaBegunEQ_2050[18];    
+    Double_t yieldEtaToPi0BegunEQ_2050[18];    
+    totNPtBins = 18;    
     
-	//********************************************************************************************************************************************        
+	TString fileNameBegunEQ_2050 = "ExternalInputPbPb/Theory/CracowModel/Begun_EQModel_20-50.txt";
+	ifstream  fileBegunEQ_2050;
+	fileBegunEQ_2050.open(fileNameBegunEQ_2050,ios_base::in);
+	cout << fileNameBegunEQ_2050 << endl;
+
+	nlin = 0;
+	while(!fileBegunEQ_2050.eof() && nlin < 18){
+        // pt pi0 yield pi0 yield eta/pi0 ratio
+		fileBegunEQ_2050 >> ptBegunEQ_2050[nlin] >> yieldPi0BegunEQ_2050[nlin] >> yieldEtaBegunEQ_2050[nlin] >> yieldEtaToPi0BegunEQ_2050[nlin];
+		cout << nlin << "\t "  << ptBegunEQ_2050[nlin] << "\t "  << yieldPi0BegunEQ_2050[nlin] << "\t "  << yieldEtaBegunEQ_2050[nlin] << "\t "  << yieldEtaToPi0BegunEQ_2050[nlin] << endl;
+		nlin++;
+	}
+	fileBegunEQ_2050.close();
+    
+    TGraph *TheoryBegunEQPi0_2050 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_2050, yieldPi0BegunEQ_2050);
+    TGraph *TheoryBegunEQEta_2050 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_2050, yieldEtaBegunEQ_2050);
+    TGraph *TheoryBegunEQEtaToPi0_2050 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_2050, yieldEtaToPi0BegunEQ_2050);
+
+    //********************************************************************************************************************************************        
     //***************************************************** Cracow model for LHC11h yields *******************************************************
 	// PRC 90, 014906 (2014)
     // columns in the file represent:  nBin p_{T} [GeV/c]  p_{T} [GeV/c]_[MIN]   p_{T} [GeV/c]_[MAX]    dN/(2 #pi p_{T} dp_{T} dy)    dN/(2 #pi p_{T} dp_{T} dy)_[ERROR]
@@ -287,7 +310,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	TGraphAsymmErrors *TheoryCracowKaonsToPionsLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptChargedLowPtNonEq_0010, ratioKaonsToPionsLowPtNonEq_0010, 0, 0, ChargedPionLowErr_0010, ChargedPionHighErr_0010);
     TGraphAsymmErrors *TheoryCracowNeutralToChargedPionLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptChargedLowPtNonEq_0010, yieldNeutralToChargedPionLowPtNonEq_0010, 0, 0, 0, 0);
 
-	
+	    
 	//********************************************************************************************************************************************    
     //*************************************** Raa theory - Djordjevic pred for Pi0 2011  *********************************************************
     // citing M Djordjevic, M. Djordjevic and B. Blagojevic, Phys. Lett. B 737 (2014) 298-302
@@ -723,10 +746,11 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       
    }
 
-   TGraphErrors* Vitev_Bas_Raa_0005 = new TGraphErrors(275);
-   Double_t pTVitev_Bas_0005[275];
-   Double_t highVitev_Bas_0005[275];
-   Double_t lowVitev_Bas_0005[275];
+   Int_t nPointsVitev = 276;
+   TGraphErrors* Vitev_Bas_Raa_0005 = new TGraphErrors(nPointsVitev);
+   Double_t pTVitev_Bas_0005[nPointsVitev];
+   Double_t highVitev_Bas_0005[nPointsVitev];
+   Double_t lowVitev_Bas_0005[nPointsVitev];
    ifstream fileVitev_Bas_0005_low ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.05.dn");
    ifstream fileVitev_Bas_0005_high ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.05.up");
    index = 0;
@@ -746,16 +770,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_0005_high.close();
       index = 0;
    }
-   for(Int_t i=0; i<275; i++){
+   for(Int_t i=0; i<nPointsVitev; i++){
       Vitev_Bas_Raa_0005->SetPoint(i, pTVitev_Bas_0005[i], (highVitev_Bas_0005[i] + lowVitev_Bas_0005[i])/2.);
       Vitev_Bas_Raa_0005->SetPointError(i, 0.0000000001, (highVitev_Bas_0005[i] - lowVitev_Bas_0005[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_0005[i] << "\t" << (highVitev_Bas_0005[i] + lowVitev_Bas_0005[i])/2. << "\t" << (highVitev_Bas_0005[i] - lowVitev_Bas_0005[i])/2. << endl;
    }
-   
-   TGraphErrors* Vitev_Bas_Raa_0510 = new TGraphErrors(275);
-   Double_t pTVitev_Bas_0510[275];
-   Double_t highVitev_Bas_0510[275];
-   Double_t lowVitev_Bas_0510[275];
+
+   TGraphErrors* Vitev_Bas_Raa_0510 = new TGraphErrors(nPointsVitev);
+   Double_t pTVitev_Bas_0510[nPointsVitev];
+   Double_t highVitev_Bas_0510[nPointsVitev];
+   Double_t lowVitev_Bas_0510[nPointsVitev];
    ifstream fileVitev_Bas_0510_low ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.510.dn");
    ifstream fileVitev_Bas_0510_high ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.510.up");
    index = 0;
@@ -775,16 +799,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_0510_high.close();
       index = 0;
    }
-   for(Int_t i=0; i<275; i++){
+   for(Int_t i=0; i<nPointsVitev; i++){
       Vitev_Bas_Raa_0510->SetPoint(i, pTVitev_Bas_0510[i], (highVitev_Bas_0510[i] + lowVitev_Bas_0510[i])/2.);
       Vitev_Bas_Raa_0510->SetPointError(i, 0.0000000001, (highVitev_Bas_0510[i] - lowVitev_Bas_0510[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_0510[i] << "\t" << (highVitev_Bas_0510[i] + lowVitev_Bas_0510[i])/2. << "\t" << (highVitev_Bas_0510[i] - lowVitev_Bas_0510[i])/2. << endl;
    }
    
-   TGraphErrors* Vitev_Bas_Raa_1020 = new TGraphErrors(275);
-   Double_t pTVitev_Bas_1020[275];
-   Double_t highVitev_Bas_1020[275];
-   Double_t lowVitev_Bas_1020[275];
+   TGraphErrors* Vitev_Bas_Raa_1020 = new TGraphErrors(nPointsVitev);
+   Double_t pTVitev_Bas_1020[nPointsVitev];
+   Double_t highVitev_Bas_1020[nPointsVitev];
+   Double_t lowVitev_Bas_1020[nPointsVitev];
    ifstream fileVitev_Bas_1020_low ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.1020.dn");
    ifstream fileVitev_Bas_1020_high ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.1020.up");
    index = 0;
@@ -804,16 +828,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_1020_high.close();
       index = 0;
    }
-   for(Int_t i=0; i<275; i++){
+   for(Int_t i=0; i<nPointsVitev; i++){
       Vitev_Bas_Raa_1020->SetPoint(i, pTVitev_Bas_1020[i], (highVitev_Bas_1020[i] + lowVitev_Bas_1020[i])/2.);
       Vitev_Bas_Raa_1020->SetPointError(i, 0.0000000001, (highVitev_Bas_1020[i] - lowVitev_Bas_1020[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_1020[i] << "\t" << (highVitev_Bas_1020[i] + lowVitev_Bas_1020[i])/2. << "\t" << (highVitev_Bas_1020[i] - lowVitev_Bas_1020[i])/2. << endl;
    }
    
-   TGraphErrors* Vitev_Bas_Raa_2040 = new TGraphErrors(275);
-   Double_t pTVitev_Bas_2040[275];
-   Double_t highVitev_Bas_2040[275];
-   Double_t lowVitev_Bas_2040[275];
+   TGraphErrors* Vitev_Bas_Raa_2040 = new TGraphErrors(nPointsVitev);
+   Double_t pTVitev_Bas_2040[nPointsVitev];
+   Double_t highVitev_Bas_2040[nPointsVitev];
+   Double_t lowVitev_Bas_2040[nPointsVitev];
    ifstream fileVitev_Bas_2040_low ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.2040.dn");
    ifstream fileVitev_Bas_2040_high ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.2040.up");
    index = 0;
@@ -833,16 +857,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_2040_high.close();
       index = 0;
    }
-   for(Int_t i=0; i<275; i++){
+   for(Int_t i=0; i<nPointsVitev; i++){
       Vitev_Bas_Raa_2040->SetPoint(i, pTVitev_Bas_2040[i], (highVitev_Bas_2040[i] + lowVitev_Bas_2040[i])/2.);
       Vitev_Bas_Raa_2040->SetPointError(i, 0.0000000001, (highVitev_Bas_2040[i] - lowVitev_Bas_2040[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_2040[i] << "\t" << (highVitev_Bas_2040[i] + lowVitev_Bas_2040[i])/2. << "\t" << (highVitev_Bas_2040[i] - lowVitev_Bas_2040[i])/2. << endl;
    }
    
-   TGraphErrors* Vitev_Bas_Raa_4060 = new TGraphErrors(275);
-   Double_t pTVitev_Bas_4060[275];
-   Double_t highVitev_Bas_4060[275];
-   Double_t lowVitev_Bas_4060[275];
+   TGraphErrors* Vitev_Bas_Raa_4060 = new TGraphErrors(nPointsVitev);
+   Double_t pTVitev_Bas_4060[nPointsVitev];
+   Double_t highVitev_Bas_4060[nPointsVitev];
+   Double_t lowVitev_Bas_4060[nPointsVitev];
    ifstream fileVitev_Bas_4060_low ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.4060.dn");
    ifstream fileVitev_Bas_4060_high ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.4060.up");
    index = 0;
@@ -862,16 +886,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_4060_high.close();
       index = 0;
    }
-   for(Int_t i=0; i<275; i++){
+   for(Int_t i=0; i<nPointsVitev; i++){
       Vitev_Bas_Raa_4060->SetPoint(i, pTVitev_Bas_4060[i], (highVitev_Bas_4060[i] + lowVitev_Bas_4060[i])/2.);
       Vitev_Bas_Raa_4060->SetPointError(i, 0.0000000001, (highVitev_Bas_4060[i] - lowVitev_Bas_4060[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_4060[i] << "\t" << (highVitev_Bas_4060[i] + lowVitev_Bas_4060[i])/2. << "\t" << (highVitev_Bas_4060[i] - lowVitev_Bas_4060[i])/2. << endl;
    }
    
-   TGraphErrors* Vitev_Bas_Raa_6080 = new TGraphErrors(275);
-   Double_t pTVitev_Bas_6080[275];
-   Double_t highVitev_Bas_6080[275];
-   Double_t lowVitev_Bas_6080[275];
+   TGraphErrors* Vitev_Bas_Raa_6080 = new TGraphErrors(nPointsVitev);
+   Double_t pTVitev_Bas_6080[nPointsVitev];
+   Double_t highVitev_Bas_6080[nPointsVitev];
+   Double_t lowVitev_Bas_6080[nPointsVitev];
    ifstream fileVitev_Bas_6080_low("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.6080.dn");
    ifstream fileVitev_Bas_6080_high("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.6080.up");
 
@@ -892,7 +916,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_6080_high.close();
       index = 0;
    }
-   for(Int_t i=0; i<275; i++){
+   for(Int_t i=0; i<nPointsVitev; i++){
       Vitev_Bas_Raa_6080->SetPoint(i, pTVitev_Bas_6080[i], (highVitev_Bas_6080[i] + lowVitev_Bas_6080[i])/2.);
       Vitev_Bas_Raa_6080->SetPointError(i, 0.0000000001, (highVitev_Bas_6080[i] - lowVitev_Bas_6080[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_6080[i] << "\t" << (highVitev_Bas_6080[i] + lowVitev_Bas_6080[i])/2. << "\t" << (highVitev_Bas_6080[i] - lowVitev_Bas_6080[i])/2. << endl;
@@ -1851,6 +1875,9 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         TheoryBegunEQPi0_0010->Write("TheoryBegunEQPi0_0010");
         TheoryBegunEQEta_0010->Write("TheoryBegunEQEta_0010");
         TheoryBegunEQEtaToPi0_0010->Write("TheoryBegunEQEtaToPi0_0010");
+        TheoryBegunEQPi0_2050->Write("TheoryBegunEQPi0_2050");
+        TheoryBegunEQEta_2050->Write("TheoryBegunEQEta_2050");
+        TheoryBegunEQEtaToPi0_2050->Write("TheoryBegunEQEtaToPi0_2050");
         
         TheoryCracowPi0LowPt_0010->Write("TheoryCracowPi0LowPt_0010");
         TheoryCracowEtaLowPt_0010->Write("TheoryCracowEtaLowPt_0010");
@@ -1892,6 +1919,5 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		graphNLOCalcDSS07InvYieldEta2760GeV->Write("graphNLOCalcDSS07InvYieldEta2760GeV");
         
     fileTheoryGraphsPbPb->Close();
-
 
 }
