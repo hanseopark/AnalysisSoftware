@@ -349,6 +349,11 @@
     TH2D*       f2DHistoGammaTrueSecondaryCaloPt                                                    = NULL;
     TH2D*       f2DHistoGammaTrueSecondaryCaloMCPt                                                  = NULL;
 
+    //******************** Definition specific for pileup loading in PbPb 2.76Tev *************************
+    TFile* fForPileUp                       = NULL;
+    TString autoDetectedMainDirForPileUp    = "";
+    TList *TopDirForPileUp                  = NULL;
+    TList* HistosGammaConversionForPileUp   = NULL;    
 
 
     //******************** Definition of functions ****************************

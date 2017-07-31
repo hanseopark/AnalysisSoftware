@@ -308,8 +308,29 @@ void ExtractGammaSignalV2(      TString meson               = "",
         RebinSpectrum(fHistoGammaConvPt,"");
 
         // read dca tree for conversions
-        if(!addSig && !(mode == 4 || mode == 5)){
-            DCAContainer                                                        = (TList*)HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
+        if(!addSig && !(mode == 4 || mode == 5)){ //data_InputPileUpPhotons.root
+            if(option.Contains("PbPb_2.76TeV") && mode == 0){
+                // load specif file to load pile-up tree in PbPb
+                fForPileUp                                                      = new TFile(Form("%s/%s/%s_InputPileUpPhotons.root",fCutSelectionRead.Data(),option.Data(),fPrefix2.Data()));
+                if(fForPileUp->IsZombie()){ 
+                    pileUpCorrection                                         = kFALSE;
+                    cout << "pile-up corr. file not found, no pile-up correction applied" << endl;
+                } else {
+                    cout << "loading file specific for PbPb pile-up correction" << endl;
+                    autoDetectedMainDirForPileUp                                = AutoDetectMainTList(mode , fForPileUp);
+                    if (autoDetectedMainDirForPileUp.CompareTo("") == 0){
+                        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+                        return;
+                    }
+                    TopDirForPileUp =(TList*)fForPileUp->Get(autoDetectedMainDirForPileUp.Data());
+                    if(TopDirForPileUp == NULL){
+                        cout<<"ERROR: TopDir for pile-up tree not Found"<<endl;
+                        return;
+                    }
+                    HistosGammaConversionForPileUp                              = (TList*)TopDirForPileUp->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+                    DCAContainer                                                = (TList*)HistosGammaConversionForPileUp->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
+                }
+            } else DCAContainer                                                    = (TList*)HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
             if(DCAContainer){
                 dcaTree                                                         = (TTree*)DCAContainer->FindObject("ESD_ConvGamma_Pt_Dcaz_R_Eta");
                 FillDCAHistogramsFromTree(dcaTree,kFALSE);
