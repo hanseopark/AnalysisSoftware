@@ -2203,6 +2203,10 @@
                 return "-2.5 < #sigma_{e} < 4";
             case 7: // -2,3.5
                 return "-2 < #sigma_{e} < 3.5";
+            case 8: // -2.5,3
+                return "-2.5 < #sigma_{e} < 3";
+            case 9: // -2.5,5
+                return "-2.5 < #sigma_{e} < 5";
             default:
                 return "no dEdx cut defined";
         }

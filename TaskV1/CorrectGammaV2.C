@@ -1025,9 +1025,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         // fit correction factor to get back to original binning
         cout << "fitting ratio gamma raw yield to raw yield after pileup subtraction to extract the pileup correction factor" << endl;
+        Double_t rangeShift = 0.;
+        if(energy.Contains("PbPb")) rangeShift = 0.5; //otherwise function is null
         Int_t   fitStatus                                           = 0;
                 histoRatioWithWithoutPileUpFit                      = new TF1("histoRatioWithWithoutPileUpFit", "1+[0]/TMath::Power((x-[1]), [2])",
-                                                                              histoESDConvGammaPt_OrBin->GetXaxis()->GetXmin(),
+                                                                              histoESDConvGammaPt_OrBin->GetXaxis()->GetXmin()+rangeShift,
                                                                               histoESDConvGammaPt_OrBin->GetXaxis()->GetXmax());
         histoRatioWithWithoutPileUpFit->SetParameters(1, 0, 1);
         histoRatioWithWithoutPileUpFit->SetName(Form("%s_fit", histoRatioWithWithoutPileUp->GetName()));

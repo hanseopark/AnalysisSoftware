@@ -101,12 +101,12 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     //> http://inspirehep.net/record/1298405
     //> http://inspirehep.net/record/779957
     //> http://inspirehep.net/record/1352138
-	Int_t totNPtBins = 30;
+	Int_t totNPtBins = 31;
 
-	Double_t ptBegunEQ_0010[30]; 
-	Double_t yieldPi0BegunEQ_0010[30];    
-	Double_t yieldEtaBegunEQ_0010[30];    
-    Double_t yieldEtaToPi0BegunEQ_0010[30];    
+	Double_t ptBegunEQ_0010[31]; 
+	Double_t yieldPi0BegunEQ_0010[31];    
+	Double_t yieldEtaBegunEQ_0010[31];    
+    Double_t yieldEtaToPi0BegunEQ_0010[31];    
     
 	TString fileNameBegunEQ_0010 = "ExternalInputPbPb/Theory/CracowModel/Begun_EQModel_0-10.txt";
 	ifstream  fileBegunEQ_0010;
@@ -114,7 +114,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	cout << fileNameBegunEQ_0010 << endl;
 
 	Int_t nlin = 0;
-	while(!fileBegunEQ_0010.eof() && nlin < 30){
+	while(!fileBegunEQ_0010.eof() && nlin < 31){
         // pt eta yield pi0 yield eta/pi0 ratio
 		fileBegunEQ_0010 >> ptBegunEQ_0010[nlin] >> yieldEtaBegunEQ_0010[nlin] >> yieldPi0BegunEQ_0010[nlin] >> yieldEtaToPi0BegunEQ_0010[nlin];
 		cout << nlin << "\t "  << ptBegunEQ_0010[nlin] << "\t "  << yieldEtaBegunEQ_0010[nlin] << "\t "  << yieldPi0BegunEQ_0010[nlin] << "\t "  << yieldEtaToPi0BegunEQ_0010[nlin] << endl;

@@ -2662,13 +2662,6 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                             else
                                 optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
                                 ExtractSignalGammaV2 $optionsGammaMC
-                                if [ $MERGINGMC -eq 1 ]; then
-                                    if [ $addedSig -eq 1 ]; then
-                                        optionsGammaMC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"AddSig\"\,$BinsPtGamma\,kTRUE\,$mode
-                                        ExtractSignalGammaV2 $optionsGammaMC2
-                                    fi
-                                fi
-
                             fi
                         fi
                     fi

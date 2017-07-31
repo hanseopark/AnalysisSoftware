@@ -120,29 +120,16 @@ void ExtractGammaSignalV2(      TString meson               = "",
     fGammaCutSelectionRead                                                      = fGammaCutSelection.Data();
     fMesonCutSelectionRead                                                      = fMesonCutSelection.Data();
     if (addSig) {
-        if(directphotonPlots.CompareTo("directPhoton")==0){
-            cout << "running added Signal for photons" << endl;
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"3");
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelectionRead                                                  = fEventCutSelection;
-            fGammaCutSelectionRead                                                  = fGammaCutSelection;
-            fMesonCutSelectionRead                                                  = fMesonCutSelection;
-            if (fMode==9)       fCutSelectionRead                                   = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-            else if (fMode==0)  fCutSelectionRead                                   = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-            cout << fCutSelectionRead.Data() << endl;
-        } else {
-            cout << "running added Signal" << endl;
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelectionRead                                                  = fEventCutSelection;
-            fGammaCutSelectionRead                                                  = fGammaCutSelection;
-            fMesonCutSelectionRead                                                  = fMesonCutSelection;
-            if (fMode==9)       fCutSelectionRead                                   = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-            else if (fMode==0)  fCutSelectionRead                                   = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-            cout << fCutSelectionRead.Data() << endl;
-        }
+        cout << "running added Signal" << endl;
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelectionRead                                                  = fEventCutSelection;
+        fGammaCutSelectionRead                                                  = fGammaCutSelection;
+        fMesonCutSelectionRead                                                  = fMesonCutSelection;
+        if (fMode==9)       fCutSelectionRead                                   = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        else if (fMode==0)  fCutSelectionRead                                   = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        cout << fCutSelectionRead.Data() << endl;
     }
 
     TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
@@ -2675,8 +2662,8 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
     } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
-        nIterationsShowBackground[0]                    = 14;
-        nIterationsShowBackground[1]                    = 13;
+        nIterationsShowBackground[0]                    = 15;
+        nIterationsShowBackground[1]                    = 14;
         nIterationsShowBackground[2]                    = 17;
         nIterationsShowBackground[3]                    = 16;
         optionShowBackground[0]                         = "BackDecreasingWindow";                   // standard
