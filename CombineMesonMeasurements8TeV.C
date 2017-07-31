@@ -8375,6 +8375,9 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         graphCombEtaToPi0StatA->Write("graphRatioEtaToPi0Comb8TeVStatErr");
         graphCombEtaToPi0SysA->Write("graphRatioEtaToPi0Comb8TeVSysErr");
 
+        graphRatioForMt_stat->Write("graphRatioMtScalingToEtaToPi0StatErr");
+        graphRatioForMt_sys->Write("graphRatioMtScalingToEtaToPi0SysErr");
+
         directoryEta->mkdir("Supporting");
         directoryEta->cd("Supporting");
             // Writing full correction factors
@@ -8395,7 +8398,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
             graphEMCALEtaFWHMMC->Write("EtaWidthMCEMCAL");
             graphPCMEMCALEtaFWHM->Write("EtaWidthDataPCMEMCAL");
             graphPCMEMCALEtaFWHMMC->Write("EtaWidthMCPCMEMCAL");
-        
+
     fCombResults.Close();
 
 
