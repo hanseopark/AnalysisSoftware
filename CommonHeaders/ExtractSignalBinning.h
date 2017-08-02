@@ -633,6 +633,10 @@
                                                         1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
                                                         3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,
                                                         12.0, 16.0, 20.0, 24.0, 30.0};
+    Double_t fBinsPi0pPb5TeVPHOSPt[35]              = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
+                                                        1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
+                                                        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,
+                                                        12.0, 16.0, 20.0, 24.0, 30.0};
     Double_t fBinsPi0pPb5TeVPtDCA[17]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
                                                         1.8, 2.4, 3.5, 5.0, 7.0, 10.0, 14.0};
     Double_t fBinsPi0pPb5TeVCentPt[25]              = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,
@@ -656,18 +660,18 @@
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 8,
                                                         8, 10};
-    Int_t fBinsPi0pPb5TeVPCMPHOSPtRebin[37]         = { 5, 4, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
-                                                        4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
-                                                        5, 5, 5, 5, 5, 5, 10};
+    Int_t fBinsPi0pPb5TeVPCMPHOSPtRebin[34]         = { 7 , 7 , 7 , 7 , 4, 3, 3, 3, 3, 3,
+                                                        3 , 3 , 3 , 3 , 3, 3, 3, 3, 4, 4,
+                                                        4 , 4 , 4 , 4 , 4, 5, 5, 7, 7, 11,
+                                                        11, 11, 11, 11};
     Int_t fBinsPi0pPb5TeVEMCPtRebin[35]             = { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
                                                         10, 10, 10, 10, 10};
-    Int_t fBinsPi0pPb5TeVPHOSPtRebin[37]            = { 5, 4, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        5, 5, 5, 5, 5, 5, 5};
+    Int_t fBinsPi0pPb5TeVPHOSPtRebin[34]            = { 5, 4 , 3 , 3 , 3, 3, 3, 3, 3, 3,
+                                                        3, 3 , 3 , 3 , 3, 3, 3, 3, 3, 3,
+                                                        3, 3 , 3 , 3 , 3, 3, 3, 3, 3, 3,
+                                                        7, 11, 11, 11};
     Int_t fBinsPi0pPb5TeVCentPtRebin[24]            = { 10, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 5, 10, 10};
@@ -690,6 +694,11 @@
     Double_t fBinsEtapPb5TeVEMCPt[22]               = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,
                                                         3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20.,
                                                         25., 30.};
+    Double_t fBinsEtapPb5TeVPHOSPt[20]              = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 3.0,
+                                                        4.,  5.,  6., 8.,  10,  12., 16., 20., 25., 30.};
+Double_t fBinsEtapPb5TeVPCMPHOSPt[21]               = { 0., 0.3, 0.5, 0.7, 1.1, 1.4, 1.8, 2.2, 2.6, 3.0,
+                                                        3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20., 25.,
+                                                        30.};
     Double_t fBinsEtapPb5TeVPtEMCTrig[27]           = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,
                                                         3.0, 3.5, 4.,  5.,  6., 7.,  8., 9., 10, 11.,
                                                         12., 13., 14., 18., 20., 24., 30.};
@@ -713,15 +722,13 @@
     Int_t fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin[26]  ={ 10, 10,  10,  10,  8, 8,   8,  8,  8,  8,
                                                         8,   8,  8,  8,  10, 10,   10,  10,  10,  10,
                                                         10,   10,  10, 10, 12, 20};
-    Int_t fBinsEtapPb5TeVPCMPHOSPtRebin[22]         = { 10, 8,  8,  8,  8, 8,   8,  8,  8,  8,
-                                                        8,   8,  8,  8,  8, 8,   10, 10, 10, 10,
-                                                        10,  10};
+    Int_t fBinsEtapPb5TeVPCMPHOSPtRebin[20]         = { 16,  14,  14,  13,  13,  13,  13,  13,  13, 13,
+                                                        13,  13,  13,  14,  14,  21,  21,  21,  21, 21};
     Int_t fBinsEtapPb5TeVEMCPtRebin[21]             = { 10, 8,  8,  8,  8, 8,   8,  8,  8,  5,
                                                         5,   5,  5,  5,  8, 12,   15,  20,  20,  20,
                                                         20};
-    Int_t fBinsEtapPb5TeVPHOSPtRebin[22]            = { 10, 8,  8,  8,  5,  5,   5,  5,  4,  4,
-                                                        4,   5,  8,  8,  8, 8,   10, 10, 10, 10,
-                                                        10,  10};
+    Int_t fBinsEtapPb5TeVPHOSPtRebin[19]            = { 19,  17,  17,  17,  15,  15,  15,  15,  15,   15,
+                                                        15,  15,  20,  25,  25,  25,  24,  19,  19};
     Int_t fBinsEtapPb5TeVCentPtRebin[14]            = { 10, 10, 8, 8, 8, 5,  5,  4,  4, 4,
                                                         4,  5,  8,  10};
     Double_t fBinsEtapPb5TeVDalitzPt[10]            = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
@@ -2195,6 +2202,8 @@
                         specialTrigg = 2; //L1 G2 (lower threshold)
                     } else if ( trigger.CompareTo("83") == 0    ){
                         specialTrigg = 3; //L1 G2 (lower threshold)
+                    } else if ( trigger.CompareTo("62") == 0    ){
+                        specialTrigg = 4; //PHOS PHI7
                     } else {
                         specialTrigg = 0;    // L0
                     }
@@ -2262,12 +2271,14 @@
                     } else if (modi == 2){
                         fStartPtBin     = 6;
                         fColumn         = 6;
+                    } else if (modi == 3) {
+                        fStartPtBin     = 3;
                     } else if (modi == 4) {
                         fStartPtBin     = 9;
                         fColumn         = 5;
                         fRow            = 4;
                     } else if (modi == 5) {
-                        fStartPtBin     = 8;
+                        fStartPtBin     = 7;
                     } else if (modi == 1) {
                         fStartPtBin     = 1;
                         fColumn         = 6;
@@ -2322,6 +2333,8 @@
                                 fBinsPt[i]  = fBinsPi0pPb5TeVPt[i];
                             if (modi == 2 || modi == 4)
                                 fBinsPt[i]  = fBinsPi0pPb5TeVEMCPt[i];
+                            else if (modi == 3 || modi == 5)
+                                fBinsPt[i]  = fBinsPi0pPb5TeVPHOSPt[i];
                             else if ( modi == 6 )
                                 fBinsPt[i]  = fBinsPi0pPb5TeVEMCDalitzPt[i];
                             else if ( modi == 1 )
@@ -3122,13 +3135,17 @@
                 } else if (modi == 2){
                     fStartPtBin     = 5;
                 } else if (modi == 3) {
-                    fStartPtBin     = 7;
+                    fStartPtBin     = 4;
+                    fColumn         = 4;
+                    fRow            = 3;
+                    fExampleBin     = 9;
                 } else if (modi == 4) {
                     fStartPtBin     = 7; //8
                     fColumn         = 4;
                     fRow            = 3;
                 } else if (modi == 5) {
-                    fStartPtBin     = 8;
+                    fStartPtBin     = 11;
+                    fExampleBin     = 12;;
                 }
                 if (isDCA){
                     fColumn         = 4;
@@ -3190,6 +3207,10 @@
                         // EMC and PCM-EMC binning
                         } else if (modi == 2 || modi == 4){
                             fBinsPt[i]      = fBinsEtapPb5TeVEMCPt[i];
+                        } else if (modi == 3){
+                            fBinsPt[i]      = fBinsEtapPb5TeVPCMPHOSPt[i];
+                        } else if (modi == 5){
+                            fBinsPt[i]      = fBinsEtapPb5TeVPHOSPt[i];
                         } else {
                             fBinsPt[i]      = fBinsEtapPb5TeVPt[i];
                         }
