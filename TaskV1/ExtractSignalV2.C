@@ -4141,6 +4141,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                     mesonAmplitudeMin = mesonAmplitude*5./100.;
                 }
             }
+            if (fMode == 3){
+                cout << "test" << endl;
+            }
         }
     }
 
