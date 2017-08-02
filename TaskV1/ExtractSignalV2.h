@@ -995,6 +995,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         if (mode == 2 || mode == 13){
             fPeakRange[0]           = 0.48;
             fPeakRange[1]           = 0.58;
+        } else if (mode == 3){
+            fPeakRange[0]           = 0.48;
+            fPeakRange[1]           = 0.58;
         } else if ( mode == 4 || mode == 12) {
             fPeakRange[0]           = 0.51;
             fPeakRange[1]           = 0.59;
@@ -1010,6 +1013,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fFitRange[1]                = 0.7;
             if( fEnergyFlag.CompareTo("8TeV") == 0 )
                 fFitRange[1]                = 0.72;
+        } else if (mode == 3){
+            fFitRange[0]                = 0.38;
+            fFitRange[1]                = 0.7;
         } else if (mode == 4 || mode == 12 ) {
             if( fEnergyFlag.CompareTo("7TeV") == 0 ){
                 fFitRange[0]                = 0.37;
@@ -1226,12 +1232,12 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 }
             }
         } else if (mode == 3) {
-            fMesonWidthExpect               = 0.005;
-            fMesonWidthRange[0]             = 0.002;
-            fMesonWidthRange[1]             = 0.020;
-            fMesonLambdaTail                =  0.007;
-            fMesonLambdaTailRange[0]        =  0.0065;
-            fMesonLambdaTailRange[1]        =  0.0075;
+            fMesonWidthExpect               = 0.015;
+            fMesonWidthRange[0]             = 0.006;
+            fMesonWidthRange[1]             = 0.022;
+            fMesonLambdaTail                = 0.007;
+            fMesonLambdaTailRange[0]        = 0.007;
+            fMesonLambdaTailRange[1]        = 0.007;
         } else if (mode == 4 || mode == 12 ) {
             fMesonWidthExpect               = 0.025;
             fMesonLambdaTail                = 0.012;
