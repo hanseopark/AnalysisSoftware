@@ -1966,6 +1966,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
           maxFWHM               = 0.060;
         if (kIsEta && (mode == 2 || mode == 13))
           maxFWHM               = 0.060;
+        if (kIsEta && mode == 3)
+          maxFWHM               = 0.030;
 
         if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV") == 0) maxFWHM = 0.05;
 
@@ -2432,6 +2434,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         } else if (mode == 2 || mode == 13 || mode == 4 || mode == 12){
             rangeAcc[0]         = 0.;
             rangeAcc[1]         = 0.3;
+        } else if (mode == 3 || mode == 5){
+            rangeAcc[0]         = 0.;
+            rangeAcc[1]         = 0.06;
         }
 
         DrawAutoGammaMesonHistos( histoAcceptance,
@@ -2526,7 +2531,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 rangeSecRatio[1]        = 0.025;
             } else if (mode == 2 || mode == 13){
                 rangeSecRatio[1]        = 0.05;
-            } else if (mode == 4 || mode == 12){
+            } else if (mode == 4 || mode == 12 || mode == 3){
                 rangeSecRatio[1]        = 0.05;
             }
 
