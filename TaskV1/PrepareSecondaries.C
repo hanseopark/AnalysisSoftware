@@ -643,6 +643,7 @@ void PrepareSecondaries(    TString     meson                       = "",
 
     //***************************** Read histograms from cocktail input file ****************************************
     TList* cocktailInputList                                    = GetCocktailInputList(fEnergyFlag, centrality);
+    if(centrality.CompareTo("20-50%")==0) cocktailInputList     = GetCocktailInputList(fEnergyFlag, "20-40%");
     histoMesonMotherCocktailInputPtMeasBin                      = new TH1F*[nCocktailInputParticles];
     histoMesonMotherPtMeasBin                                   = new TH1F*[nCocktailInputParticles];
 
@@ -952,7 +953,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             }
 
             canvasInputCrossCheck->SaveAs(Form("%s/InputCrossCheck%s_%.2f_%s.%s",outputDir.Data(), motherParticles[i+1].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
-        }
+        }            
     }
     delete dummyHist;
     delete dummyHistRatio;
