@@ -602,7 +602,7 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.45,0.65);
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
@@ -955,7 +955,7 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.45,0.65);
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
@@ -1155,7 +1155,7 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.45,0.65);
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
