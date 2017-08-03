@@ -556,7 +556,6 @@ if [ $ONLYRESULTS = 0 ] ; then
                 echo "CutSelection is $cutSelection";
                 optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode               
                 optionsEtaData=\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
-   #             if [ -f $DataRootFile ]; then
                 if [ \( $ONLYOMEGA -eq 1 \) -a \( -f $DataRootFile \) ]; then
                         echo "test"
                         ExtractSignal $optionsOmegaData
@@ -564,9 +563,8 @@ if [ $ONLYRESULTS = 0 ] ; then
                         ExtractSignal $optionsEtaData
                     else
                         ExtractSignal $optionsEtaData
-                #        ExtractSignal $optionsOmegaData
+                        ExtractSignal $optionsOmegaData
                     fi
-      #          fi
                 OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
                 if [ $MCFILE -eq 1 ]; then
                     optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
