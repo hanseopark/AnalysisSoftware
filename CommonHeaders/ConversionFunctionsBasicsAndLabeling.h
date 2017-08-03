@@ -92,6 +92,9 @@
     Double_t xSection7TeVErrUp      = 2.18;
     Double_t xSection7TeVErrDown    = 2.18;
     // pp 8 TeV
+    Double_t xSection8TeVINEL       = 72.3*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/665
+    Double_t xSection8TeVINELErrUp  = 0.5;         // from https://aliceinfo.cern.ch/Notes/node/665
+    Double_t xSection8TeVINELErrDown= 0.5;         // from https://aliceinfo.cern.ch/Notes/node/665
     Double_t xSection8TeVV0AND      = 55.8*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/531
     Double_t xSection8TeVErrUp      = 1.6;         // from https://aliceinfo.cern.ch/Notes/node/531
     Double_t xSection8TeVErrDown    = 1.6;         // from https://aliceinfo.cern.ch/Notes/node/531
@@ -4018,6 +4021,9 @@
             } else if (selTrig == 2){
                 xSectionInt = xSection8TeVT0AND;
                 cout << "T0AND xSection taken: \t" << xSectionInt << endl;
+            } else if (selTrig == 3){
+                xSectionInt = xSection8TeVINEL;
+                cout << "INEL xSection taken: \t" << xSectionInt << endl;
             } else {
                 cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
             }
