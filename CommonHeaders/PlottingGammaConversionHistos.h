@@ -139,6 +139,23 @@
         gStyle->SetNumberContours(nCont);
     }
 
+    void DrawCanvasSettings( TCanvas* c1,
+                            Double_t leftMargin,
+                            Double_t rightMargin,
+                            Double_t topMargin,
+                            Double_t bottomMargin){
+
+        c1->SetTickx();
+        c1->SetTicky();
+        c1->SetGridx(0);
+        c1->SetGridy(0);
+        c1->SetLogy(0);
+        c1->SetLeftMargin(leftMargin);
+        c1->SetRightMargin(rightMargin);
+        c1->SetTopMargin(topMargin);
+        c1->SetBottomMargin(bottomMargin);
+        c1->SetFillColor(0);
+    }
 
     void DrawGammaSetMarker(    TH1* histo1, 
                                 Style_t markerStyle, 
