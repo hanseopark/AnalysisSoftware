@@ -161,7 +161,10 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     TString  nameMeasGlobal[11]                 = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
                                                     "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
                                                     "PCMOtherDataset"};
+    TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
+    TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
     TString  nameTrigger[3]                     = {"INT7", "EMC7", "EGA"};
+    TString  nameTriggerAlternative[3]          = {"MB trigger", "EMC-L0 trigger", "EMC-L1 trigger"};
 
     Color_t  colorDet[11];
     Color_t  colorDetMC[11];
@@ -202,32 +205,54 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         markerSizeDetMC[i]                      = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE)*2;
     }
 
+    Bool_t haveEffSecCorr[4][11]                    = { {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
+                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
+                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
+                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE} };
+    TGraphAsymmErrors* graphPi0EffSecCorrFromX[4][11]   = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
+                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
 
     //************************** Read data for PCM **************************************************
     TFile* filePCM                                          = new TFile(fileNamePCM.Data());
-    TH1D* histoPCMNumberOfEvents                            = (TH1D*)filePCM->Get("histoNumberOfEvents8TeV");
+    TH1D* histoPCMNumberOfEvents                            = (TH1D*)filePCM->Get("NEvents_MB");
     TDirectory* directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi08TeV");
-        TH1D* histoPCMPi0Mass                               = (TH1D*)directoryPCMPi0->Get("MassPi0");
-        TH1D* histoPCMPi0FWHMMeV                            = (TH1D*)directoryPCMPi0->Get("FWHMPi0MeV");
-        TH1D* histoPCMPi0TrueMass                           = (TH1D*)directoryPCMPi0->Get("TrueMassPi0");
-        TH1D* histoPCMPi0TrueFWHMMeV                        = (TH1D*)directoryPCMPi0->Get("TrueFWHMPi0MeV");
-        TH1D* histoPCMPi0Acc                                = (TH1D*)directoryPCMPi0->Get("AcceptancePi0");
-        TH1D* histoPCMPi0TrueEffPt                          = (TH1D*)directoryPCMPi0->Get("EfficiencyPi0");
-        TH1D* histoPCMPi0InvXSectionStat                    = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
-        histoPCMPi0InvXSectionStat->SetBinContent(1,0);
-        histoPCMPi0InvXSectionStat->SetBinError(1,1);
-        TGraphAsymmErrors* graphPCMPi0InvXSectionStat       = new TGraphAsymmErrors(histoPCMPi0InvXSectionStat);
-        //graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
-        graphPCMPi0InvXSectionStat->RemovePoint(0);
+        TH1D* histoPCMPi0Mass                               = (TH1D*)directoryPCMPi0->Get("Pi0_Mass_data_MB");
+        histoPCMPi0Mass                                     ->Scale(1000.);
+        TH1D* histoPCMPi0FWHMMeV                            = (TH1D*)directoryPCMPi0->Get("Pi0_Width_data_MB");
+        histoPCMPi0FWHMMeV                                  ->Scale(1000.);
+        TH1D* histoPCMPi0TrueMass                           = (TH1D*)directoryPCMPi0->Get("Pi0_Mass_MC_MB");
+        histoPCMPi0TrueMass                                 ->Scale(1000.);
+        TH1D* histoPCMPi0TrueFWHMMeV                        = (TH1D*)directoryPCMPi0->Get("Pi0_Width_MC_MB");
+        histoPCMPi0TrueFWHMMeV                              ->Scale(1000.);
+        TH1D* histoPCMPi0Acc                                = (TH1D*)directoryPCMPi0->Get("AcceptancePi0_MB");
+        TH1D* histoPCMPi0TrueEffPt                          = (TH1D*)directoryPCMPi0->Get("EfficiencyPi0_MB");
+
+        TGraphAsymmErrors* graphPCMPi0AccTimesEff      = (TGraphAsymmErrors*)directoryPCMPi0->Get("EffTimesAccPi0");
+        for (Int_t k = 0; k < 4; k++){
+            graphPi0EffSecCorrFromX[k][0]           = (TGraphAsymmErrors*)directoryPCMPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+            if (graphPi0EffSecCorrFromX[k][0]){
+                cout << nameSecPi0SourceRead[k].Data() << endl;
+                graphPi0EffSecCorrFromX[k][0]->Print();
+                Int_t nAboveZero                    = 0;
+                for (Int_t i = 0; i< graphPi0EffSecCorrFromX[k][0]->GetN(); i++){
+                    if(graphPi0EffSecCorrFromX[k][0]->GetY()[i] > 0) nAboveZero++;
+                }
+                if (nAboveZero>0){
+                    haveEffSecCorr[k][0]            = kTRUE;
+                } else {
+                    graphPi0EffSecCorrFromX[k][0]   = NULL;
+                }
+            }
+        }
+        TGraphAsymmErrors* graphPCMPi0InvXSectionStat  = (TGraphAsymmErrors*)directoryPCMPi0->Get("graphInvCrossSectionPi0");
+        TH1D* histoPCMPi0InvXSectionStat               = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
         cout << "Pi0 stat PCM" << endl;
         graphPCMPi0InvXSectionStat->Print();
-        TGraphAsymmErrors* graphPCMPi0InvXSectionSysA       = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0SysA");
-        TGraphAsymmErrors* graphPCMPi0InvXSectionSys        = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
-        //graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
-        graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
+        TGraphAsymmErrors* graphPCMPi0InvXSectionSys   = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
         cout << "Pi0 sys PCM" << endl;
         graphPCMPi0InvXSectionSys->Print();
-//      TGraphAsymmErrors* graphPCMPi0CorrYieldSysErr    = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0SystError");
 
         TH1D* histoPCMPi0AccTimesEff                        = (TH1D*)histoPCMPi0TrueEffPt->Clone("histoPCMPi0AccTimesEff");
         histoPCMPi0AccTimesEff->Multiply(histoPCMPi0Acc);
@@ -578,7 +603,6 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
     TFile* fileTheoryPythia8                                = new TFile(fileNameTheoryPythia8.Data());
     TFile* fileTheoryPythia8_4C                             = new TFile(fileNameTheoryPythia8_4C.Data());
-    TFile* fileTheorypp8TeVPi0DSS14                         = new TFile(fileNameTheoryPi0DSS14.Data());
     TFile* fileEtaToPi07000GeV                              = new TFile(fileNameEtaToPi07TeV.Data());
     TFile* fileEtaToPi02760GeV                              = new TFile(fileNameEtaToPi02760GeV.Data());
     TDirectory* directoryfileEtaToPi02760GeV                = (TDirectory*)fileEtaToPi02760GeV->Get("Eta2.76TeV");
@@ -586,8 +610,10 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryPythia8->Get("fHistInvXsec_Eta");
         TH1F* histoPythia8_4CInvXSection                    = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Pi0");
         TH1F* histoPythia8_4CInvXSectionEta                 = (TH1F*) fileTheoryPythia8_4C->Get("fHistInvXsec_Eta");
-        TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
-        for (int i=0;i<graphPi0DSS14->GetN();i++) graphPi0DSS14->GetY()[i] /= 2.;
+
+        TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvSecPi08000GeV");
+        while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > 42. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
+
         TGraph* graphEtaToPi07000GeV                        = (TGraph*) fileEtaToPi07000GeV->Get("EtaPi0Ratio7000GeV");
         TGraph* graphEtaToPi02760GeV                        = (TGraph*) directoryfileEtaToPi02760GeV->Get("graphRatioEtaToPi0Comb2760GeVTotErr");
 //        TH1F* histoPythia8InvXSection_VarBinning            = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec8000GeVVarBinning");

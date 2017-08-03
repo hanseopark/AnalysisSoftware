@@ -6030,7 +6030,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     graphEtaToPi07000GeV->Draw("same,p");
     graphEtaToPi02760GeV->Draw("same,p");
 
-    eta2pi0MtScaled->Draw("][ c same");
+    eta2pi0MtScaledTCM->Draw("][ c same");
 
     // plotting data
     graphCombEtaToPi0SysA->Draw("2,same");
