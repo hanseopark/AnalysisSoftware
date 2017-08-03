@@ -339,6 +339,8 @@ Color_t colorPhenix         = kBlack;
 
 Color_t colorCracow0010     = kOrange+6;
 Color_t colorCracow2050     = kAzure-4;//kCyan-9;
+Color_t colorBegun0010      = kOrange-2;
+Color_t colorBegun2050      = kAzure-9;//kCyan-9;
 
 Color_t colorEPOS0010       = kPink+5;
 Color_t colorEPOS2050       = kBlue;

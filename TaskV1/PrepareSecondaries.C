@@ -137,6 +137,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
 
     //***************************** Cocktail file *******************************************************************
+    if(nameFileCocktail.Contains("2050")) nameFileCocktail.ReplaceAll("2050","2040");
     TFile fileCocktail(nameFileCocktail.Data());
     TDirectoryFile* topDirCocktail                              = (TDirectoryFile*)fileCocktail.Get("HadronicCocktailMC");
     if (!topDirCocktail) {

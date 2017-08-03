@@ -4029,10 +4029,13 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         if (fPrefix.CompareTo("Pi0") == 0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
             //pi0 meson amplitude settings
             if(fMode == 0){
-                if(!(GetCentralityString(fEventCutSelection)).CompareTo("20-50%") && ((TString)fHistoMappingSignalInvMassPtBinSingle->GetName()).Contains("Left"))
+                if(((TString)fHistoMappingSignalInvMassPtBinSingle->GetName()).Contains("Left") && (GetCentralityString(fEventCutSelection)).CompareTo("20-50%")==0){
                     if(ptBin == 3) mesonAmplitudeMin = mesonAmplitude*80./100.;
-                else
-                    mesonAmplitudeMin = mesonAmplitude*98./100.;
+                    else  mesonAmplitudeMin = mesonAmplitude*98./100.;
+                } else {
+                    if(ptBin > 1) mesonAmplitudeMin = mesonAmplitude*98./100.;
+                    else  mesonAmplitudeMin = mesonAmplitude*80./100.;
+                }
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
             }
             if (fMode == 2 || fMode == 13 || fMode == 3) {
