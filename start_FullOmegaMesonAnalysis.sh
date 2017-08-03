@@ -15,6 +15,8 @@ PROGNAME=$0
 AdvMesonQA=""
 
 ONLYCORRECTION=0
+ONLYETA=0
+ONLYOMEGA=0
 ONLYRESULTS=0
 ONLYCUTS=0
 Suffix=eps
@@ -96,8 +98,8 @@ $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the fin
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
 $PROGNAME  *-*gammaOnly* \t\t\t gamma calculation only\n
-$PROGNAME  *-*OmegaOnly* \t\t\t\t Omega calculation only\n
-$PROGNAME  *-*OmegaetaOnly* \t\t\t Omega in eta binnin calculation only\n
+$PROGNAME  *-*omegaOnly* \t\t\t\t Omega calculation only\n
+$PROGNAME  *-*omegaetaOnly* \t\t\t Omega in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 
@@ -123,8 +125,8 @@ $PROGNAME -r data.root suffix \t\t\t Will only execute the production of the fin
 $PROGNAME data.root MC.root suffix \t \t Will execute Gamma Conversion Analysis for data.root file and MC.root file \n \t\t\t\t\t\t\t\t\t and produce the graphical output in the specified suffix-format.\n
 $PROGNAME  *-*gammaOff* \t\t\t gamma calculation switched off \n
 $PROGNAME  *-*gammaOnly* \t\t\t gamma calculation only\n
-$PROGNAME  *-*OmegaOnly* \t\t\t\t Omega calculation only\n
-$PROGNAME  *-*OmegaetaOnly* \t\t\t Omega in eta binnin calculation only\n
+$PROGNAME  *-*omegaOnly* \t\t\t\t omega calculation only\n
+$PROGNAME  *-*omegaetaOnly* \t\t\t omega in eta binnin calculation only\n
 $PROGNAME  *-*etaOnly* \t\t\t\t eta calculation only\n
 $PROGNAME  *-*etaOff* \t\t\t\t eta calculation switched off\n
 "
@@ -142,6 +144,44 @@ elif [[ "$1" == *-c* ]] ; then
     ONLYCORRECTION=1
     DataRootFile=$2
     Suffix=$3;
+elif [[ "$1" == "-omegaOnly" ]] ; then
+    ONLYOMEGA=1
+    DataRootFile=$2
+    MCRootFile=$3
+    Suffix=$4;
+    if [ -f $DataRootFile ]; then
+        dataFileOK=1
+        echo "The data file specified is $DataRootFile"
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+#    exit
+    fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+    else
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1
+        MCFILE=0
+    fi
+elif [[ "$1" == "-etaOnly" ]] ; then
+    ONLYETA=1
+    DataRootFile=$2
+    MCRootFile=$3
+    Suffix=$4;
+    if [ -f $DataRootFile ]; then
+        dataFileOK=1
+        echo "The data file specified is $DataRootFile"
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+#    exit
+    fi
+if [ -f $MCRootFile ]; then
+    echo "The MC file specified is $MCRootFile"
+else
+    echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+    PARTLY=1
+    MCFILE=0
+fi
 elif [[ "$1" == -d* ]] ; then
     ONLYCORRECTION=1
     ONLYCUTS=1
@@ -514,10 +554,19 @@ if [ $ONLYRESULTS = 0 ] ; then
 
             if [ $ONLYCORRECTION -eq 0 ]; then
                 echo "CutSelection is $cutSelection";
-                optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
-                if [ -f $DataRootFile ]; then
-                    ExtractSignal $optionsOmegaData
-                fi
+                optionsOmegaData=\"Omega\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode               
+                optionsEtaData=\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+   #             if [ -f $DataRootFile ]; then
+                if [ \( $ONLYOMEGA -eq 1 \) -a \( -f $DataRootFile \) ]; then
+                        echo "test"
+                        ExtractSignal $optionsOmegaData
+                    elif [ \( $ONLYETA -eq 1 \) -a \( -f $DataRootFile \) ]; then
+                        ExtractSignal $optionsEtaData
+                    else
+                        ExtractSignal $optionsEtaData
+                #        ExtractSignal $optionsOmegaData
+                    fi
+      #          fi
                 OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
                 if [ $MCFILE -eq 1 ]; then
                     optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode

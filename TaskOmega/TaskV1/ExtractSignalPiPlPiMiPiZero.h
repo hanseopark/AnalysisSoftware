@@ -495,4 +495,91 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
          }
 
     }
+    //****************************************************************************************************
+    // Initialization for Eta meson
+    //****************************************************************************************************
+    if (setPi0.CompareTo("Eta") == 0){
+
+        // set meson ID according to PDG
+        fMesonId                  = 221;
+
+        // set medium pt range (currently for all modes the same)
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+           fMidPt[0]                   = 1.5;
+           fMidPt[1]                   = 2.5;
+         }
+
+        // Initialize peak range
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+             fPeakRange[0]             = 0.48;
+             fPeakRange[1]             = 0.58;
+         }
+
+        // Initialze fit range
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+            fFitRange[0]             = 0.37;
+            fFitRange[1]             = 0.71;
+            fIntFixedRange[0]        = 0.48; // not yet implemented
+            fIntFixedRange[1]        = 0.58;  // not yet implemented
+        }
+
+        // Initialize default BG fit range right & left
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+            fBGFitRange[0]             = 0.57;
+            fBGFitRange[1]             = 0.61;
+            fBGFitRangeLeft[0]         = 0.46;
+            fBGFitRangeLeft[1]         = 0.505;
+        }
+
+        // Initialize default Plot range for meson
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+            fMesonPlotRange[0]         = 0.53;
+            fMesonPlotRange[1]         = 0.56;
+        }
+
+        // Initialize default Plot default integration ranges
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+            fMesonIntDeltaRange[0]      = -0.080;
+            fMesonIntDeltaRange[1]      =  0.040;
+            fMesonIntDeltaRangeWide[0]  = -0.100;
+            fMesonIntDeltaRangeWide[1]  =  0.060;
+            fMesonIntDeltaRangeNarrow[0]= -0.033;
+            fMesonIntDeltaRangeNarrow[1]=  0.012;
+        }
+
+        // Set meson mass ranges (here same for fitting and plotting)
+         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+             fMesonMassPlotRange[0]      = 0.47;
+             fMesonMassPlotRange[1]      = 0.61;
+             fMesonMassRange[0]          = 0.47;
+             fMesonMassRange[1]          = 0.65;
+         }
+
+         // Set meson fit range
+         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+             fMesonFitRange[0]           = 0.5;
+             fMesonFitRange[1]           = 0.6;
+         }
+
+         // Set remaining parameters for fitting
+         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+             fMesonWidthExpect           = 0.005;
+             fMesonWidthRange[0]         = 0.002;
+             fMesonWidthRange[1]         = 0.020;
+             fMesonLambdaTail            = 0.007;
+             fMesonLambdaTailRange[0]    = 0.004;
+             fMesonLambdaTailRange[1]    = 0.03;
+
+             fFullPt[0]                  = 0.4;
+             fFullPt[1]                  = 15;
+
+             // Settings for MC
+             fMesonLambdaTailMC    = fMesonLambdaTail;
+             fMesonWidthExpectMC   = fMesonWidthExpect;
+             fMesonWidthRangeMC[0] = fMesonWidthRange[0];
+             fMesonWidthRangeMC[1] = fMesonWidthRange[1];
+
+         }
+
+    }
 }

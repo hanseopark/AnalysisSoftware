@@ -334,12 +334,12 @@
     Int_t fBinsDirGamma7TeVEMCPtRebin[23]           = { 5, 5, 5, 5, 5, 4, 4, 3, 2, 2,
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
-    Double_t fBinsEtaPiPlPiMiPiZero7TeVPt[11] = 					{0.1, 2.5,3,3.5,
+    Double_t fBinsEtaPiPlPiMiPiZero7TeVPt[9] = 					{0.1, 2.5,3,3.5,
 
-                                                     4.0,4.5,5.0, 6.0, 10.,12.,15.};
+                                                     4.0,4.5,5.0, 6.0, 10.};
 
-    Int_t fBinsEtaPiPlPiMiPiZero7TeVPtRebin[10] = 					{2, 10,  10,10,
-                                                    10,10, 10,10,10,10};
+    Int_t fBinsEtaPiPlPiMiPiZero7TeVPtRebin[8] = 					{6, 6,  8,8,
+                                                    8,10, 10,10};
 
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[12] = 					{1,1.5,2,2.5,3,3.5,4,4.5,5,6.,8.,10.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[11]        = 					{16,16, 16,  10,
@@ -1259,7 +1259,10 @@
                     return 4;
                 else if (mode == 3 )
                     return 2;
-                else
+                else if (mode == 40){
+                    scaleFac        = 2.;
+                    return 6;
+               } else
                     return 6;
             } else if (energy.CompareTo("8TeV") == 0) {
                 if (mode == 0){             // PCM- PCM
@@ -2820,6 +2823,8 @@
                 } else if (modi == 4) {
                     fStartPtBin     = 6;
                 } else if (modi == 40 | modi == 41 || modi == 42 || modi== 44 || modi == 45){
+                    fColumn         = 3;
+                    fRow            = 3;
                     fStartPtBin     = 1;
                 }
 
