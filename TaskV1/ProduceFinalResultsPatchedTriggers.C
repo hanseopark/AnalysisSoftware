@@ -3708,6 +3708,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       }else if(mode == 4){
         minCorrYield       = 1e-8;
         maxCorrYield       = 0.2;
+      }else if(mode == 3){
+        minCorrYield       = 1e-7;
+        maxCorrYield       = 10;
       }
     }
 
@@ -5968,6 +5971,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }else if(mode == 4){
                 minCorrYieldEta     = 3e-9;
                 maxCorrYieldEta     = 7e-2;
+            }else if(mode == 3){
+                minCorrYieldEta     = 7e-6;
+                maxCorrYieldEta     = 0.3;
             }
         }
 
