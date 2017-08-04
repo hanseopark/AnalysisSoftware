@@ -325,10 +325,10 @@
     Double_t fBinsEtaPrim7TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
     Int_t fBinsEtaPrim7TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
 
-    Double_t fBinsDirGamma7TeVPt[24]                = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+    Double_t fBinsDirGamma7TeVPt[25]                = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,
                                                         4.5, 5.0, 6.0, 7.0, 9.0, 12., 16., 20.};
-    Int_t fBinsDirGamma7TeVPtRebin[23]              = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsDirGamma7TeVPtRebin[24]              = { 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
     Int_t fBinsDirGamma7TeVEMCPtRebin[23]           = { 5, 5, 5, 5, 5, 4, 4, 3, 2, 2,
@@ -552,10 +552,10 @@
                                                         16.,  17.,  18.,  19.,  20.,  22.,  24.,  26.,  28.,  30.,
                                                         35,   40,   45,   50,   55,   60,   65,   70,   75,   80,
                                                         85,   90,   95,   100 };
-    Double_t fBinsDirGamma8TeVPt[24]                = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+    Double_t fBinsDirGamma8TeVPt[25]                = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,
                                                         4.5, 5.0, 6.0, 7.0, 9.0, 12., 16., 20.};
-    Int_t fBinsDirGamma8TeVPtRebin[23]              = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsDirGamma8TeVPtRebin[24]              = { 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
     //****************************************************************************************************
@@ -1044,6 +1044,8 @@
                             return 33;      // EMC triggers
                             break;
                         case 81:
+                            return 34;      // EGA triggers
+                            break;
                         case 82:
                             return 40;      // EGA triggers
                             break;
@@ -1908,8 +1910,11 @@
                             }
                         }
                     }
-                    nIterBGFit                  = 10;
-                    fMaxYFracBGOverIntHist      = 20;
+                    nIterBGFit                  = 9;
+                    fMaxYFracBGOverIntHist      = 40;
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
                 }
             //*********************************************************************************************
             //********************************** Pi0 for pp 8TeV*******************************************
