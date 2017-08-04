@@ -479,6 +479,15 @@ void ClusterQA(
             const Int_t dim2D       = 9;
             Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.7,0.6,0.5,0.4,0.3};
             Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
+            } else if(DataSets[0].CompareTo("LHC13bc")==0){
+            doCellQA                = kTRUE;
+            cellQAData              = new CellQAObj();
+            setQAEnergy(cellQAData,0.065,0.205,0.045,0.23);
+            setQATime(cellQAData,0.05E-6,0.245E-6,0.4E-6,0.82E-6);
+            setQAHotCells1D(cellQAData,-500,14E3,0,1.5);
+            const Int_t dim2D       = 9;
+            Double_t min2D[dim2D]   = {0,2.0,1,0.7,0.6,0.5,0.3,0.3,0.25};
+            Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
             setQAHotCells2D(cellQAData,dim2D,min2D,max2D);
         } else if(CheckForData7TeV(DataSets[0])){
             doCellQA                = kTRUE;
