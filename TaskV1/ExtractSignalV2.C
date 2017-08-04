@@ -4176,6 +4176,11 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
       fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
+//         fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
+        fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.5,fMesonWidthRange[1]*2.);
+        if(ptBin >= 31) fFitReco->FixParameter(3,0.015);
+    }
 
 
 //     cout << mesonAmplitude << "\t boundaries \t"<< mesonAmplitudeMin << "\t" << mesonAmplitudeMax << "\t" << endl;

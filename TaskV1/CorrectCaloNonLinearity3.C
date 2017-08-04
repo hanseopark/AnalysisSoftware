@@ -45,6 +45,7 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
 TF1* FitBckg(TH1* fHisto, Double_t minFit, Double_t maxFit);
 TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection, Double_t constPar = -1);
 Float_t    FunctionNL_kSDM(Float_t e, Float_t p0, Float_t p1, Float_t p2);
+Float_t    FunctionNL_kLIN(Float_t e, Float_t p0, Float_t p1);
 template<class ForwardIt>
 
 void SetLogBinningXTH(ForwardIt* histoRebin){
@@ -115,6 +116,8 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         optionEnergy        = "pPb_5.023TeV";        
     } else  if (select.Contains("LHC15n")  ) {
         optionEnergy        = "5TeV";
+    } else  if (select.Contains("LHC15o")  ) {
+        optionEnergy        = "PbPb_5.02TeV";
     }
         
     if (select.Contains("ConvCalo") ){
@@ -122,12 +125,14 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         for (Int_t i = 0; i < 6; i++){
             dataMainDir[i]  = "GammaConvCalo";
             mcMainDir[i]    = "GammaConvCalo";
+            if(select.Contains("LHC15o")) { dataMainDir[i]  = "GammaConvCalo_202"; mcMainDir[i]    = "GammaConvCalo_202"; }
         }    
     } else if (select.Contains("Calo")){
         mode                = 4;
         for (Int_t i = 0; i < 6; i++){
             dataMainDir[i]  = "GammaCalo";
             mcMainDir[i]    = "GammaCalo";
+            if(select.Contains("LHC15o")) { dataMainDir[i]  = "GammaCalo_210"; mcMainDir[i]    = "GammaCalo_210"; }
         }    
     }
 
@@ -188,6 +193,16 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         startPtBin          = 3;
         endPtBin            = 20;
         exampleBin1         = 4;
+        exampleBin2         = 13;
+    } else if (select.Contains("ConvCalo") && select.Contains("LHC15o") ){
+        startPtBin          = 5;
+        endPtBin            = 18;
+        exampleBin1         = 4;
+        exampleBin2         = 18;
+    } else if (select.Contains("Calo") && select.Contains("LHC15o") ){
+        startPtBin          = 4;
+        endPtBin            = 17;
+        exampleBin1         = 5;
         exampleBin2         = 16;
     }
     
@@ -708,6 +723,20 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         mcCut[0]            = "00010113_00200009327000008250400000_1111100013032230000_0163103100000010";
 
         fPlot[0]            = "#frac{LHC16h8a & LHC16h8b}{LHC15n - INT7}";
+    } else if(select.CompareTo("LHC15o-Calo")==0){
+        strDataFile[0]      = "/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC15o_pass1_highIR_317_GammaCalo_210.root";
+        strMCFile[0]        = "/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC16g1abc_MERGED_GammaCalo_210.root";
+        dataCut[0]          = "50910113_1111100003032230000_0163103100000050";
+        mcCut[0]            = "50910113_1111100003032230000_0163103100000050";
+
+        fPlot[0]            = "#frac{LHC15o }{LHC16g1 - INT7}";
+    } else if(select.CompareTo("LHC15o-ConvCalo")==0){
+        strDataFile[0]      = "/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC15o_pass1_highIR_317_GammaConvCalo_202.root";
+        strMCFile[0]        = "/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC16g1_1c_5TeV_ancLHC15opass1_MinBias_594_GammaConvCalo_202.root";
+        dataCut[0]          = "50010113_00200009327000008250400000_1111100003032230000_0163103100000010";
+        mcCut[0]            = "50010113_00200009327000008250400000_1111100003032230000_0163103100000010";
+
+        fPlot[0]            = "#frac{LHC15o }{LHC16g1 - INT7}";
     } else{
         cout << "No valid selection '" << select.Data() << "'' given, returning..." << endl;
         return;
@@ -723,6 +752,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 
     Int_t numberOfTriggers      = 0;
     fPlot[0] = Form("#it{E}_{Cluster} < %0.1f GeV : %s",fBins[firstTriggerBin[0]],fPlot[0].Data());
+    if(select.Contains("LHC15o")) fPlot[0] = Form("#it{E}_{Cluster} #geq %0.1f GeV : %s",fBins[startPtBin],fPlot[0].Data());
     while (firstTriggerBin[numberOfTriggers]>-1){
         if (firstTriggerBin[numberOfTriggers+1]>-1)
             fPlot[numberOfTriggers+1] = Form("%0.1f GeV #leq #it{E}_{Cluster} < %0.1f GeV : %s",fBins[firstTriggerBin[numberOfTriggers]], fBins[firstTriggerBin[numberOfTriggers+1]],
@@ -1039,7 +1069,9 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                     sliceHist->Rebin(2);
                     sliceBGHist->Rebin(2);
                 }
-            
+            } else if(select.Contains("LHC15o")) {
+                   sliceHist->Rebin(5);
+                   sliceBGHist->Rebin(5);
             }
     //             else if(fBins[iClusterPt]>=8) sliceHist->Rebin(5);
     //             else sliceHist->Rebin(4);
@@ -1140,6 +1172,11 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
                 cout << minMax[0] << endl;
             }
             if( select.Contains("LHC12-JetJet-Calo")) minMax[0]+=0.01;
+            if( select.Contains("LHC15o-ConvCalo") && fBins[iClusterPt]<=2.0 ) { minMax[0]=0.1; minMax[1]=0.16;}
+            if( select.Contains("LHC15o-ConvCalo") && fBins[iClusterPt]==1.2 ) { minMax[0]=0.07; minMax[1]=0.17;}
+            if( select.Contains("LHC15o-ConvCalo") && fBins[iClusterPt]==2.4 ) { minMax[0]=0.09; minMax[1]=0.18;}
+            if( select.Contains("LHC15o-ConvCalo") && fBins[iClusterPt]==2.8 ) { minMax[0]=0.08; minMax[1]=0.23;}
+            if( select.Contains("LHC15o-ConvCalo") && fBins[iClusterPt]==3.2 ) { minMax[0]=0.08; minMax[1]=0.21;}
 
 //             fFitReco = FitRecursiveGaussian (sliceHist, precision, sigmaRangeAdjust, minMax[0], minMax[1]);
             fFitReco = FitExpPlusGaussian (sliceHist, minMax[0], minMax[1], mode);
@@ -1207,7 +1244,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     canvasMassPDG->SetLogy(0); 
   
     TH2F * histoDummyMeanMassVsPDG;
-    histoDummyMeanMassVsPDG = new TH2F("histoDummyMeanMassVsPDG","histoDummyMeanMassVsPDG",11000,0.5,fBins[endPtBin]*1.5,1000,0.89,1.1);
+    histoDummyMeanMassVsPDG = new TH2F("histoDummyMeanMassVsPDG","histoDummyMeanMassVsPDG",11000,0.5,fBins[endPtBin+2],1000,0.79,1.19);
     SetStyleHistoTH2ForGraphs(histoDummyMeanMassVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC/data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
     histoDummyMeanMassVsPDG->GetXaxis()->SetMoreLogLabels();
     histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(-0.01);
@@ -1285,6 +1322,10 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         startFit                    = 2.8;
     if(select.Contains("LHC12-JetJet-ConvCalo"))
         startFit                    = 5.0;
+    if(select.Contains("LHC15o"))
+        startFit                    = 3.0;
+    if(select.Contains("LHC15o-Calo"))
+        startFit                    = 1.0;
 
     TF1* fFitConst = new TF1("DataMCConst", "[0]" ,startFit,fBins[endPtBin]);
     histDataMCResults->Fit(fFitConst,"QRME0");
@@ -1293,7 +1334,11 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
         highPtConst = fFitConst->GetParameter(0);
     }
     
-    fFitMassPos = FitDataMC(histDataMCResults, fBins[startPtBin], fBins[endPtBin], select,  highPtConst);
+    if(select.Contains("LHC15o-Calo")) {
+      fFitMassPos = FitDataMC(histDataMCResults, fBins[startPtBin], fBins[endPtBin], select,  0.095);
+    }else{
+      fFitMassPos = FitDataMC(histDataMCResults, fBins[startPtBin], fBins[endPtBin], select,  highPtConst);
+    }
     TF1* fFitComposit = new TF1("fFitComposit", "([0] + [1]*pow(x,[2]))/([3] + [4]*pow(x,[5]))" ,fBins[startPtBin],fBins[endPtBin]);
     fFitComposit->SetParameter(0, fitMassMCVsPDG->GetParameter(0) );
     fFitComposit->SetParameter(1, fitMassMCVsPDG->GetParameter(1) );
@@ -1329,7 +1374,8 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     fFitCompositInvertedFitted->SetParameter(5, fFitCompositFitted->GetParameter(2) );
     
     histDataMCResults->GetYaxis()->SetRangeUser(minPlotY,1.05);
-    histDataMCResults->GetXaxis()->SetRangeUser(fBins[startPtBin],fBins[endPtBin]);
+    if (select.Contains("Calo") && select.Contains("LHC15o")  ) histDataMCResults->GetYaxis()->SetRangeUser(0.5,1.5);
+    histDataMCResults->GetXaxis()->SetRangeUser(0.5,fBins[endPtBin+2]);
 
     histDataMCResults->Write("MeanMassRatioMCData-noFit");
     fFitMassPos->Write("MeanMassRatioMCData-Fit");
@@ -1386,7 +1432,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     
     SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 1.,0.9);
     DrawGammaSetMarker(totalCorrection, 8, 1, kBlack, kBlack);
-    totalCorrection->GetYaxis()->SetRangeUser(minPlotY,1.1);
+    totalCorrection->GetYaxis()->SetRangeUser(0.81,1.19);
     SetLogBinningXTH(totalCorrection);
  
     for(Int_t iBin = 1; iBin < totalCorrection->GetNbinsX()+1; iBin++){
@@ -1396,6 +1442,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 //        if(select.Contains("-ConvCalo")) p0*= 0.995*0.9970;
 //        else if(select.Contains("-Calo"))p0*= 0.995*0.9981;
         factor /= FunctionNL_kSDM(e,p0,fFitMassPos->GetParameter(1),fFitMassPos->GetParameter(2));
+//         factor /= FunctionNL_kLIN(e,p0,fFitMassPos->GetParameter(1));
         totalCorrection->SetBinContent(iBin,factor);
     }
     totalCorrection->DrawCopy("p");
@@ -1439,6 +1486,9 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
 Float_t FunctionNL_kSDM(Float_t e, Float_t p0, Float_t p1, Float_t p2){
     return ( p0 + exp( p1 + ( p2 * e ) ) );
 }
+Float_t FunctionNL_kLIN(Float_t e, Float_t p0, Float_t p1){
+    return ( p0 + p1*e );
+}
 
 Double_t fitExcludeSignal(Double_t *x, Double_t *par)
 {
@@ -1466,14 +1516,14 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
         TF1* fFitReco = new TF1("DataMC", "[0]+exp([1]+([2]*x))" ,minFit,maxFit);
 
         fFitReco->SetParameter(0,1.);
-        fFitReco->SetParameter(1,-1.);
+        fFitReco->SetParameter(1,0.1);
         fFitReco->SetParameter(2,-0.5);
         if(constPar!=-1) fFitReco->FixParameter(0,constPar);
 //         if(constPar!=-1) fFitReco->FixParameter(1,-2.95303);
 //         if(constPar!=-1) fFitReco->FixParameter(2,-1.17524);
         fHisto->Fit(fFitReco,"QRME0");
 
-        fFitReco->SetLineColor(kRed);
+        fFitReco->SetLineColor(kBlack);
         fFitReco->SetLineWidth(2);
         fFitReco->SetLineStyle(1);
 
@@ -1526,14 +1576,14 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
     fFitReco->SetParameter(2, 0.01);
     fFitReco->SetParameter(3, 0.012);
 
-    fFitReco->SetParLimits(0, mesonAmplitudeMin, mesonAmplitudeMax);
+//     fFitReco->SetParLimits(0, mesonAmplitudeMin, mesonAmplitudeMax);
     if (mode == 4 || mode == 5){
-        fFitReco->SetParLimits(1, fMesonMassExpect*0.8, fMesonMassExpect*1.2);
+        fFitReco->SetParLimits(1, fMesonMassExpect*0.7, fMesonMassExpect*1.3);
     } else {
-        fFitReco->SetParLimits(1, fMesonMassExpect*0.9, fMesonMassExpect*1.1);
+        fFitReco->SetParLimits(1, fMesonMassExpect*0.8, fMesonMassExpect*1.2);
     }    
-    fFitReco->SetParLimits(2, 0.001, 0.05);
-    fFitReco->SetParLimits(3, 0.001, 0.09);
+    fFitReco->SetParLimits(2, 0.0001, 0.5);
+    fFitReco->SetParLimits(3, 0.0001, 0.9);
     
     histo->Fit(fFitReco,"QRME0");
     

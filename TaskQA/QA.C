@@ -962,8 +962,8 @@ void QA(    TString select          = "LHC11a",         // set selected
 		DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
 		plotDataSets[0]="LHC15o High IR"; plotDataSets[1]="LHC16g1";
 		labelData="LHC15o 0-90%";
-		pathDataSets[0]="/home/mike/2_EMCal_PbPb/1_data/170323_GammaCalo_GammaConvCalo_Data/GammaCalo_210_LHC15o_pass1_highIR.root";
-		pathDataSets[1]="/home/mike/2_EMCal_PbPb/1_data/170323_GammaCalo_GammaConvCalo_MC/LHC16g1_generalpurpose/GammaCalo_210_LHC16g1_5TeV_ancLHC15opass1_MinBias.root";
+		pathDataSets[0]="/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC15o_pass1_highIR_317_GammaCalo_210.root";
+		pathDataSets[1]="/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC16g1abc_MERGED_GammaCalo_210.root";
 		pathPhotonQA[0]="";
 		pathPhotonQA[1]="";
     }
