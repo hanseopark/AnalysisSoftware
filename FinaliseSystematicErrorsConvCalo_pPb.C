@@ -48,7 +48,8 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                             Float_t startPtSys            = 0,
                                             TString additionalName        = "pp",
                                             TString additionalNameOutput  = "",
-                                            TString suffix                = "eps"
+                                            TString suffix                = "eps",
+                                            Int_t mode                    = 1,
                                         ){
 
     // ***************************************************************************************************
@@ -344,8 +345,13 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
                 if ( meson.CompareTo("Pi0") == 0    ){
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] < 1.2) continue;
-                        Double_t error          = 1.0 + 0.06*ptBins[k] + 0.02*ptBins[k]*ptBins[k];
+                        Double_t error = 0;
+                        if (mode == 3){
+                             error          = 3.909 - 7.138e-01*ptBins[k] + 1.075e-01*ptBins[k]*ptBins[k];
+                        } else{
+                            if (ptBins[k] < 1.2) continue;
+                            error          = 1.0 + 0.06*ptBins[k] + 0.02*ptBins[k]*ptBins[k];
+                        }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
                         errorsMeanCorr[i][k]    = error;
@@ -378,15 +384,24 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             if (nameCutVariationSC[i].CompareTo("dEdxE")==0 ){
                 if ( meson.CompareTo("Pi0")== 0){
                     for (Int_t k = 0; k < nPtBins; k++){
-                        Double_t error          = 0.38;
-                        if (additionalNameOutput.CompareTo("")==0 ){
-                            error = 0.38;
-                        } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                            error = 0.7;
-                        } else if (additionalNameOutput.CompareTo("EG2")==0 ){
-                            error = 1.5;
-                        } else if (additionalNameOutput.CompareTo("EG1")==0){
-                            error = 2.5;
+                        Double_t error = 0;
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error          = 1.27503;
+                            } else{
+                                error = -3.7686975 + 0.84062*ptBins[k];
+                            }
+                        } else{
+                            error          = 0.38;
+                            if (additionalNameOutput.CompareTo("")==0 ){
+                                error = 0.38;
+                            } else if (additionalNameOutput.CompareTo("EMC7")==0){
+                                error = 0.7;
+                            } else if (additionalNameOutput.CompareTo("EG2")==0 ){
+                                error = 1.5;
+                            } else if (additionalNameOutput.CompareTo("EG1")==0){
+                                error = 2.5;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -396,15 +411,23 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 } else if (meson.CompareTo("Eta") == 0) {
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
-                        if (additionalNameOutput.CompareTo("")==0 ){
-                            error = 1.1;
-//                             error = 2.; // 2.76TeV
-                        } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                            error = 2.;
-                        } else if (additionalNameOutput.CompareTo("EG2")==0 ){
-                            error = 2.;
-                        } else if (additionalNameOutput.CompareTo("EG1")==0){
-                            error = 2.;
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error          = 1.27503;
+                            } else{
+                                error = -3.7686975 + 0.84062*ptBins[k];
+                            }
+                        } else{
+                            if (additionalNameOutput.CompareTo("")==0 ){
+                                error = 1.1;
+//                              error = 2.; // 2.76TeV
+                            } else if (additionalNameOutput.CompareTo("EMC7")==0){
+                                error = 2.;
+                            } else if (additionalNameOutput.CompareTo("EG2")==0 ){
+                                error = 2.;
+                            } else if (additionalNameOutput.CompareTo("EG1")==0){
+                                error = 2.;
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -414,15 +437,23 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
-                        if (additionalNameOutput.CompareTo("")==0 ){
-                            error = TMath::Sqrt(1.1*1.1+0.38*0.38);
-                        } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                            error = TMath::Sqrt(2.*2.+0.7*0.7);
-                        } else if (additionalNameOutput.CompareTo("EG2")==0 ){
-                            error = TMath::Sqrt(2.*2.+1.5*1.5);
-                        } else if (additionalNameOutput.CompareTo("EG1")==0){
-                            error = TMath::Sqrt(2.*2.+2.5*2.5);
-                        }
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error          = 1.27503;
+                            } else{
+                                error = -3.7686975 + 0.84062*ptBins[k];
+                            }
+                       } else{
+                            if (additionalNameOutput.CompareTo("")==0 ){
+                                error = TMath::Sqrt(1.1*1.1+0.38*0.38);
+                            } else if (additionalNameOutput.CompareTo("EMC7")==0){
+                                error = TMath::Sqrt(2.*2.+0.7*0.7);
+                            } else if (additionalNameOutput.CompareTo("EG2")==0 ){
+                                error = TMath::Sqrt(2.*2.+1.5*1.5);
+                            } else if (additionalNameOutput.CompareTo("EG1")==0){
+                                error = TMath::Sqrt(2.*2.+2.5*2.5);
+                            }
+                       }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -435,8 +466,15 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 if ( meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
-                        error   = 0.25+(-0.012)*ptBins[k]+(0.0089)*ptBins[k]*ptBins[k]; // parametrisation
-
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error   = 1.57926 - 7.64814e-01*ptBins[k] + 1.25515e-01*ptBins[k]*ptBins[k];
+                            } else{
+                                error = -4.859397 + 1.061386*ptBins[k];
+                            }
+                        } else{
+                            error   = 0.25+(-0.012)*ptBins[k]+(0.0089)*ptBins[k]*ptBins[k]; // parametrisation
+                        }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -445,7 +483,15 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 } else if ( meson.CompareTo("Eta") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 5;
-                        error   = 1.2+(-0.012)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k]; // parametrisation
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error   = 1.57926 - 7.64814e-01*ptBins[k] + 1.25515e-01*ptBins[k]*ptBins[k];
+                            } else{
+                                error = -4.859397 + 1.061386*ptBins[k];
+                            }
+                        } else{
+                            error   = 1.2+(-0.012)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k]; // parametrisation
+                        }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -454,7 +500,11 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 5;
-                        error   = 1.2+(-0.012)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k]; // parametrisation
+                        if (mode == 3){
+                            error = 3.89542;
+                        } else{
+                            error   = 1.2+(-0.012)*ptBins[k]+(0.025)*ptBins[k]*ptBins[k]; // parametrisation
+                        }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -466,13 +516,26 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             if (nameCutVariationSC[i].CompareTo("TPCCluster")==0 ){
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error          = 0.; // parametrisation
-                    if (additionalNameOutput.CompareTo("")==0 ){
-                        error = 0.4;
-                    } else if (additionalNameOutput.CompareTo("EMC7")==0 ||
+                    if (mode == 3){
+                        if(meson.CompareTo("Pi0")==0 || meson.CompareTo("Eta")==0){
+                            if(ptBins[k] < 6.){
+                                error = 9.9646e-01;
+                            } else{
+                                error = 0.6875*ptBins[k] - 3.125;
+                            }
+                        } else if(meson.CompareTo("EtaToPi0")==0){
+                        error =3.59627;
+                        }
+
+                    } else{
+                        if (additionalNameOutput.CompareTo("")==0 ){
+                            error = 0.4;
+                        } else if (additionalNameOutput.CompareTo("EMC7")==0 ||
                                 additionalNameOutput.CompareTo("EG2")==0 ||
                                 additionalNameOutput.CompareTo("EG1")==0
-                    ){
-                        error = 0.8;
+                        ){
+                            error = 0.8;
+                        }
                     }
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = error*0.01;
@@ -486,13 +549,22 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         if (ptBins[k] > 1.3){
                             Double_t error          = 0;
-                            if (additionalNameOutput.CompareTo("")==0 ||
-                                additionalNameOutput.CompareTo("EMC7")==0 ||
-                                additionalNameOutput.CompareTo("EG2")==0  ||
-                                additionalNameOutput.CompareTo("EG1")==0
-                            ){
-    //                             error   = 1.2+(-0.112)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
-                                error   = 0.2+(0.050)*ptBins[k]+(0.0001)*ptBins[k]*ptBins[k]; // parametrisation
+                            if (mode == 3){
+                                    if(ptBins[k] < 6){
+                                        error         = 1.51815;
+                                    }
+                                    else{
+                                        error = -2.5932375 + 0.68523125*ptBins[k];
+                                    }
+                            } else{
+                                if (additionalNameOutput.CompareTo("")==0 ||
+                                    additionalNameOutput.CompareTo("EMC7")==0 ||
+                                    additionalNameOutput.CompareTo("EG2")==0  ||
+                                    additionalNameOutput.CompareTo("EG1")==0
+                                ){
+    //                               error   = 1.2+(-0.112)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                                    error   = 0.2+(0.050)*ptBins[k]+(0.0001)*ptBins[k]*ptBins[k]; // parametrisation
+                                }
                             }
                             errorsMean[i][k]        = error;
                             errorsMeanErr[i][k]     = 0.01*error;
@@ -502,20 +574,41 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                     }
                 } else if(meson.Contains("Eta")){
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] > 1.7){
-                            Double_t error          = 0;
-                            if (additionalNameOutput.CompareTo("")==0 ||
-                                additionalNameOutput.CompareTo("EMC7")==0 ||
-                                additionalNameOutput.CompareTo("EG2")==0  ||
-                                additionalNameOutput.CompareTo("EG1")==0
-                            ){
-                                error   = 1.8+(0.008)*ptBins[k]*ptBins[k]; // parametrisation
+                        Double_t error          = 0;
+                        if (mode == 3){
+                            if (ptBins[k] > 1.3){
+                                 if(ptBins[k] < 6){
+                                        error         = 1.51815;
+                                } else{
+                                        error = -2.5932375 + 0.68523125*ptBins[k];
+                                }
                             }
-                            errorsMean[i][k]        = error;
-                            errorsMeanCorr[i][k]    = error;
-                            errorsMeanErr[i][k]     = 0.01*error;
-                            errorsMeanErrCorr[i][k] = 0.01*error;
+                        } else{
+                            if (ptBins[k] > 1.7){
+
+                                if (additionalNameOutput.CompareTo("")==0 ||
+                                        additionalNameOutput.CompareTo("EMC7")==0 ||
+                                        additionalNameOutput.CompareTo("EG2")==0  ||
+                                        additionalNameOutput.CompareTo("EG1")==0
+                                ){
+                                        error   = 1.8+(0.008)*ptBins[k]*ptBins[k]; // parametrisation
+                                }
+                            }
                         }
+                        errorsMean[i][k]        = error;
+                        errorsMeanCorr[i][k]    = error;
+                        errorsMeanErr[i][k]     = 0.01*error;
+                        errorsMeanErrCorr[i][k] = 0.01*error;
+                    }
+                } else if(meson.CompareTo("EtaToPi0")==0){
+                    for (Int_t k = 0; k < nPtBins; k++){
+                        if (mode == 3){
+                            error = 4.60365;
+                        }
+                    errorsMean[i][k]        = error;
+                    errorsMeanCorr[i][k]    = error;
+                    errorsMeanErr[i][k]     = 0.01*error;
+                    errorsMeanErrCorr[i][k] = 0.01*error;
                     }
                 }
             }
@@ -524,31 +617,58 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 if (meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 2; k < nPtBins; k++){
                         Double_t error          = 0;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0  ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
-                            error   = 0.7+(-0.13)*ptBins[k]+(0.022)*ptBins[k]*ptBins[k];
-//                             error   = 1.1+(-0.112)*ptBins[k]+(0.035)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error = 1.84131 - 6.15522e-01*ptBins[k] + 1.43332e-01*ptBins[k]*ptBins[k];
+                            } else{
+                                error = -3.9607725 + 1.21149*ptBins[k];
+                            }
+                        } else{
+                            if (additionalNameOutput.CompareTo("")==0 ||
+                                additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0  ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                            ){
+                                error   = 0.7+(-0.13)*ptBins[k]+(0.022)*ptBins[k]*ptBins[k];
+//                              error   = 1.1+(-0.112)*ptBins[k]+(0.035)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = error*0.01;
                     }
+                } else if (meson.CompareTo("Eta") == 0){
+                    for (Int_t k = 2; k < nPtBins; k++){
+                        if( mode == 3){
+                            if(ptBins[k] < 6){
+                                error = 1.84131 - 6.15522e-01*ptBins[k] + 1.43332e-01*ptBins[k]*ptBins[k];
+                            }
+                            else{
+                                error = -3.9607725 + 1.21149*ptBins[k];
+                            }
+                        }
+                    }
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
-//                         if(ptBins[k] < 2) continue;
-                        Double_t error          = 4;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0  ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
+//                  if(ptBins[k] < 2) continue;
+                    Double_t error          = 4;
+                        if (mode == 3){
+                            if(ptBins[k] < 6){
+                                error = 1.84131 - 6.15522e-01*ptBins[k] + 1.43332e-01*ptBins[k]*ptBins[k];
+                            } else{
+                                error = -3.9607725 + 1.21149*ptBins[k];
+                            }
+                        } else{
+                                if (additionalNameOutput.CompareTo("")==0 ||
+                                    additionalNameOutput.CompareTo("EMC7")==0 ||
+                                    additionalNameOutput.CompareTo("EG2")==0  ||
+                                    additionalNameOutput.CompareTo("EG1")==0
+                                ){
 
-                            error   = 1750*pow(0.02,ptBins[k])+2.+0.024*ptBins[k]*ptBins[k];
-//                             error   = 5.2+(-0.112)*ptBins[k]+(0.035)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                                    error   = 1750*pow(0.02,ptBins[k])+2.+0.024*ptBins[k]*ptBins[k];
+//                                  error   = 5.2+(-0.112)*ptBins[k]+(0.035)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                                }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -562,13 +682,17 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 if (meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0  ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
-                            error = 0.1+(0.05)*ptBins[k]+(0.015)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
-//                             error = 0.6+(0.1)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                        if (mode == 3){
+                            error = 8.374e-02 + 3.744e-01*ptBins[k];
+                        } else{
+                            if (additionalNameOutput.CompareTo("")==0 ||
+                                additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0  ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                            ){
+                                error = 0.1+(0.05)*ptBins[k]+(0.015)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+//                              error = 0.6+(0.1)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
@@ -578,13 +702,17 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 } else if (meson.CompareTo("Eta") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0  ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
-                            error = 1.1+(0.02)*ptBins[k]+(0.023)*ptBins[k]*ptBins[k]; // parametrisation
-//                             error = 5.5+(0.1)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                        if (mode == 3){
+                            error = 8.374e-02 + 3.744e-01*ptBins[k];
+                        } else{
+                            if (additionalNameOutput.CompareTo("")==0 ||
+                                additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0  ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                            ){
+                                error = 1.1+(0.02)*ptBins[k]+(0.023)*ptBins[k]*ptBins[k]; // parametrisation
+//                              error = 5.5+(0.1)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -594,12 +722,16 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0  ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
-                            error = 1.2+(0.02)*ptBins[k]+(0.024)*ptBins[k]*ptBins[k]; // parametrisation
+                        if (mode == 3){
+                            error =4.;
+                        } else{
+                            if (additionalNameOutput.CompareTo("")==0 ||
+                                additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0  ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                            ){
+                                error = 1.2+(0.02)*ptBins[k]+(0.024)*ptBins[k]*ptBins[k]; // parametrisation
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -612,18 +744,69 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             if (nameCutVariationSC[i].CompareTo("Alpha")==0 ){
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 0.;
-                    if (additionalNameOutput.CompareTo("")==0 ){
-                        error       = 0.25; // parametrisation
+                    if (mode == 3){
+                        if (meson.CompareTo("Pi0") == 0){
+                            if(ptBins[k] < 6.){
+                                error = 6.41109e-01 + 1.09246e-02*ptBins[k] + 4.53253e-02*ptBins[k]*ptBins[k];
+                            } else{
+                                error = 0.458*ptBins[k] - 0.412;
+                            }
+                        } else if(meson.CompareTo("Eta")==0){
+                            if(ptBins[k] < 6.){
+                                error = 2*(6.41109e-01 + 1.09246e-02*ptBins[k] + 4.53253e-02*ptBins[k]*ptBins[k]);
+                            } else{
+                                error = 2*(0.458*ptBins[k] - 0.412);
+                            }
+                        } else{
+                            error = 5.;
+                        }
+                    } else{
+                        if (additionalNameOutput.CompareTo("")==0 ){
+                            error       = 0.25; // parametrisation
 //                         error   = 0.5; // parametrisation
-                        if (meson.Contains("Eta"))
-                            error   = 1.5;
-                    } else if (additionalNameOutput.CompareTo("EMC7")==0 ||
-                               additionalNameOutput.CompareTo("EG2")==0  ||
-                               additionalNameOutput.CompareTo("EG1")==0
-                    ){
-                        error       = 0.; // parametrisation
+                            if (meson.Contains("Eta"))
+                                error   = 1.5;
+                        } else if (additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0  ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                        ){
+                            error       = 0.; // parametrisation
+                        }
                     }
 
+                    errorsMean[i][k]            = error;
+                    errorsMeanErr[i][k]         = 0.01*error;
+                    errorsMeanCorr[i][k]        = error;
+                    errorsMeanErrCorr[i][k]     = 0.01*error;
+                }
+            }
+            // manual smoothing for rapidity meson errors
+            if (nameCutVariationSC[i].CompareTo("Rapidity")==0 ){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    Double_t error              = 0.;
+                    if (mode == 3){
+                        if(meson.CompareTo("Pi0")==0){
+                            if(ptBins[k] < 6.){
+                                error = 1.40412;
+                            } else{
+                                error = 0.9495*ptBins[k] - 4.293;
+                            }
+                        } else if(meson.CompareTo("Eta")==0){
+                            cout<<"I am in variation 8"<<endl;
+                            if(ptBins[k] < 6.){
+                                error = 2*1.40412;
+                            }
+                            else{
+                                error = 2*(0.9495*ptBins[k] - 4.293);
+                            }
+                        } else{
+                            if(ptBins[k] < 6.){
+                                error = 1.40412;
+                            } else{
+                                error = 0.9495*ptBins[k] - 4.293;
+                            }
+                        }
+                    }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = 0.01*error;
                     errorsMeanCorr[i][k]        = error;
@@ -670,15 +853,41 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             }
             // manual smoothing for minimum cluster energy errors - variation 9
             if (nameCutVariationSC[i].CompareTo("ClusterMinEnergy")==0  ){
+                for (Int_t k = 0;k < nPtBins;k++){
                 Double_t error              = 0;
                 if(meson.CompareTo("EtaToPi0") == 0){
-                    error                   = TMath::Sqrt(1.2*1.2+0.6*0.6);
+                    if(mode==3){
+                        if(ptBins[k] < 6.){
+                                error = 1.79781 - 3.79188e-01*ptBins[k] + 7.31610e-02*ptBins[k]*ptBins[k];
+                            } else{
+                                error = 0.72369*ptBins[k] - 2.13167;
+                            }
+                    } else{
+                        error                   = TMath::Sqrt(1.2*1.2+0.6*0.6);
+                    }
                 } else if(meson.CompareTo("Pi0") == 0){
-                    error                   = 0.6;
+                    if (mode == 3){
+                            if(ptBins[k] < 6.){
+                                error = 1.79781 - 3.79188e-01*ptBins[k] + 7.31610e-02*ptBins[k]*ptBins[k];
+                            }
+                            else{
+                                error = 0.72369*ptBins[k] - 2.13167;
+                            }
+                    } else{
+                        error                   = 0.6;
+                    }
                 } else {
-                    error                   = 1.2;
+                    if (mode == 3){
+                            if(ptBins[k] < 6.){
+                                error = 1.79781 - 3.79188e-01*ptBins[k] + 7.31610e-02*ptBins[k]*ptBins[k];
+                            }
+                            else{
+                                error = 0.72369*ptBins[k] - 2.13167;
+                            }
+                    } else{
+                        error                   = 1.2;
+                    }
                 }
-                for (Int_t k = 0;k < nPtBins;k++){
                     errorsMean[i][k]        = error;
                     errorsMeanErr[i][k]     = 0.01*error;
                     errorsMeanCorr[i][k]    = error;
@@ -690,8 +899,24 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 0.23; // 2.76TeV
 //                     Double_t error              = 1.5; // 2.76TeV
-                    if (meson.CompareTo("EtaToPi0") == 0 )
-                        error                   = 0.23;
+                    if (mode == 3){
+                            if(meson.CompareTo("Pi0")==0){
+                                if (ptBins[k] < 3.) continue;
+                                error          = 0.818182*ptBins[k] - 1.45454545;
+                            } else if(meson.CompareTo("Eta")==0){
+                                if (ptBins[k] < 3.){
+                                    error = 84.0117 -157.56*ptBins[k] + 118.093*ptBins[k]*ptBins[k] - 39.2048*ptBins[k]*ptBins[k]*ptBins[k] + 4.76426*ptBins[k]*ptBins[k]*ptBins[k]*ptBins[k];
+                                }
+                                else{
+                                    error          = 0.818182*ptBins[k] - 1.45454545;
+                                }
+                            }else {
+                                error =9.;
+                            }
+                    } else{
+                        if (meson.CompareTo("EtaToPi0") == 0 )
+                            error                   = 0.23;
+                    }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -701,23 +926,35 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             // manual smoothing for energy calibration errors - variation 11
             if (nameCutVariationSC[i].CompareTo("ClusterNonLinearity")==0 ){ //&& meson.Contains("Pi0")
                 for (Int_t k = 0; k < nPtBins; k++){
-                    if ( ptBins[k] < 0.8 ) continue;
                     Double_t error              = 0;
-                    if (additionalNameOutput.CompareTo("")==0){
-                        error   = 0.5+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // non lin only
-                        error   = error+0.2*7.2;
-//                         error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // 2.76TeV
-                    } else if (additionalNameOutput.CompareTo("EMC7")==0 ||
+                    if (mode == 3){
+                        if(meson.CompareTo("Pi0")==0 || meson.CompareTo("Eta")==0){
+                            if(ptBins[k] < 6.){
+                                error = 1.63464;
+                            } else{
+                                error = 0.79567*ptBins[k] - 3.13938;
+                            }
+                        }else{
+                            error = 3.88174;
+                        }
+                    } else{
+                        if ( ptBins[k] < 0.8 ) continue;
+                            if (additionalNameOutput.CompareTo("")==0){
+                                error   = 0.5+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // non lin only
+                                error   = error+0.2*7.2;
+//                              error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // 2.76TeV
+                            } else if (additionalNameOutput.CompareTo("EMC7")==0 ||
                                additionalNameOutput.CompareTo("EG2")==0  ||
                                additionalNameOutput.CompareTo("EG1")==0
-                    ){
-                        error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
+                            ){
+                                error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
+                            }
+                            if (meson.Contains("Eta")){
+                                error   = 0.5+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // non lin only
+                                error   = 3*error +0.2*7.5;
+                            }
+    //                      Double_t error = 0.79-0.21*ptBins[k]+0.17*ptBins[k]*ptBins[k]-0.00058*ptBins[k]*ptBins[k]*ptBins[k]*ptBins[k]; // parametrisation with No NonLinearity in
                     }
-                    if (meson.Contains("Eta")){
-                        error   = 0.5+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // non lin only
-                        error   = 3*error +0.2*7.5;
-                    }
-    //              Double_t error = 0.79-0.21*ptBins[k]+0.17*ptBins[k]*ptBins[k]-0.00058*ptBins[k]*ptBins[k]*ptBins[k]*ptBins[k]; // parametrisation with No NonLinearity in
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -729,13 +966,18 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                 if ( meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0 ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
-                            error   = 0.25-(0.003)*ptBins[k]+(0.014)*ptBins[k]*ptBins[k]; // parametrisation
+                        if (mode == 3){
+                            if (ptBins[k] < 0.75) continue;
+                                error = 0.490577038 + 0.679245*ptBins[k];
+                        } else{
+                            if (additionalNameOutput.CompareTo("")==0 ||
+                                additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0 ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                            ){
+                                error   = 0.25-(0.003)*ptBins[k]+(0.014)*ptBins[k]*ptBins[k]; // parametrisation
 //                           error   = 0.5+(0.275)*ptBins[k]+(0.0045)*ptBins[k]*ptBins[k]; // parametrisation
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -744,15 +986,20 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                     }
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if ( ptBins[k] < 2.2 ) continue;
                         Double_t error          = 0;
-                        if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 ||
-                            additionalNameOutput.CompareTo("EG2")==0 ||
-                            additionalNameOutput.CompareTo("EG1")==0
-                        ){
-                          error   = 1.5-(0.001)*ptBins[k]+(0.024)*ptBins[k]*ptBins[k]   ; // parametrisation
-//                           error   = 4+(-0.2)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k]+12/pow(2,ptBins[k]); // parametrisation 2.76TeV
+                        if (mode == 3){
+                                if (ptBins[k] < 0.75) continue;
+                                error = 0.490577038 + 0.679245*ptBins[k];
+                        } else{
+                            if ( ptBins[k] < 2.2 ) continue;
+                            if (additionalNameOutput.CompareTo("")==0 ||
+                                additionalNameOutput.CompareTo("EMC7")==0 ||
+                                additionalNameOutput.CompareTo("EG2")==0 ||
+                                additionalNameOutput.CompareTo("EG1")==0
+                            ){
+                            error   = 1.5-(0.001)*ptBins[k]+(0.024)*ptBins[k]*ptBins[k]   ; // parametrisation
+//                              error   = 4+(-0.2)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k]+12/pow(2,ptBins[k]); // parametrisation 2.76TeV
+                            }
                         }
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -764,13 +1011,46 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
            // manual smoothing for cluster shape errors - variation 13
             if (nameCutVariationSC[i].CompareTo("ClusterM02")==0 ){ //&& meson.Contains("Pi0")
                 for (Int_t k = 0; k < nPtBins; k++){
-                    Double_t error              =  0.9+(-0.01)*ptBins[k]+(0.006)*ptBins[k]*ptBins[k];
-//                     Double_t error              =  1.2+(-0.01)*ptBins[k]+(0.015)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV;
-                    if ( meson.CompareTo("Eta") == 0 )
-                        error = error*2.2;
-                    if ( meson.CompareTo("EtaToPi0") == 0 )
-                        error = error*3;
+                    Double_t error =0;
+                    if (mode == 3){
+                        if(meson.CompareTo("Pi0")==0 || meson.CompareTo("Eta")==0){
+                            error                   =  3.4012;
+                        } else{
+                            error = 5;
+                        }
+                    } else{
+                        error              =  0.9+(-0.01)*ptBins[k]+(0.006)*ptBins[k]*ptBins[k];
+//                      Double_t error              =  1.2+(-0.01)*ptBins[k]+(0.015)*ptBins[k]*ptBins[k]; // parametrisation 2.76TeV;
+                        if ( meson.CompareTo("Eta") == 0 )
+                            error = error*2.2;
+                        if ( meson.CompareTo("EtaToPi0") == 0 )
+                            error = error*3;
+                    }
 
+                    errorsMean[i][k]            = error;
+                    errorsMeanErr[i][k]         = error*0.01;
+                    errorsMeanCorr[i][k]        = error;
+                    errorsMeanErrCorr[i][k]     = error*0.01;
+                }
+            }
+            // manual smoothing for opening angle errors -
+            if (nameCutVariationSC[i].CompareTo("OpeningAngle")==0 ){
+                for (Int_t k = 0; k < nPtBins; k++){
+                    Double_t error              =  0;
+                    if(mode == 3){
+                        if(meson.CompareTo("Pi0")==0){
+                            if(ptBins[k] < 6.){
+                                error = 1.65921 - 8.57363e-01*ptBins[k] + 1.33358e-01*ptBins[k]*ptBins[k];
+                            } else{
+                                error = 0.96049875*ptBins[k] - 4.4469825;
+                            }
+                        } else if(meson.CompareTo("Eta")==0){
+                            error =  4.21976;
+                        } else {
+                            error = 3.67369;
+                        }
+
+                    }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
