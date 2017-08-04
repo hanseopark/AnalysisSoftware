@@ -163,6 +163,20 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathPhotonQA[2] = "";
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC13bc-PHOSPHOS_QA")==0){
+        cutNr=0;
+        nSets = 2;
+        mode = 5;
+        fEnergyFlag = "pPb_5.023TeV";
+        pathDataSets[0] = "/home/liz/1_data/170510_pPb_TrackMatching/GammaCalo_LHC13b-pass2_LHC13c-pass2_301.root";
+        pathDataSets[1] = "/home/liz/1_data/170510_pPb_TrackMatching/GammaCalo_MC_LHC13b2_efix_p1_p2_p3_p4_301.root";
+        DataSets[0]="LHC13bc";
+        DataSets[1]="LHC13b2_efix_[1-4]";
+        plotDataSets[0]="LHC13bc";
+        plotDataSets[1]="DPMJET";
+        doExtQA = 2;
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC11a-kEMC1")==0){
     //LHC11a Trigger
         cutNr = 1;
