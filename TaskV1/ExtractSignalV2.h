@@ -1232,9 +1232,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 }
             }
         } else if (mode == 3) {
-            fMesonWidthExpect               = 0.015;
-            fMesonWidthRange[0]             = 0.006;
-            fMesonWidthRange[1]             = 0.022;
+            fMesonWidthExpect               = 0.018;
+            fMesonWidthRange[0]             = 0.012;
+            fMesonWidthRange[1]             = 0.025;
             fMesonLambdaTail                = 0.007;
             fMesonLambdaTailRange[0]        = 0.007;
             fMesonLambdaTailRange[1]        = 0.007;
