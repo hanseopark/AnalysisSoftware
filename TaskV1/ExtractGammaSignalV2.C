@@ -308,11 +308,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
         RebinSpectrum(fHistoGammaConvPt,"");
 
         // read dca tree for conversions
-        if(!addSig && !(mode == 4 || mode == 5)){ //data_InputPileUpPhotons.root
+        if(!addSig && !(mode == 4 || mode == 5)){
             if(option.Contains("PbPb_2.76TeV") && mode == 0){
                 // load specif file to load pile-up tree in PbPb
                 fForPileUp                                                      = new TFile(Form("%s/%s/%s_InputPileUpPhotons.root",fCutSelectionRead.Data(),option.Data(),fPrefix2.Data()));
-                if(fForPileUp->IsZombie()){ 
+                if(fForPileUp->IsZombie()){
                     pileUpCorrection                                         = kFALSE;
                     cout << "pile-up corr. file not found, no pile-up correction applied" << endl;
                 } else {
