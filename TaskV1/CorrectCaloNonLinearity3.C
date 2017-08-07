@@ -1218,6 +1218,7 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     cout << "-----------------------------------------------------" << endl;
 
     histDataMCResults->Divide(histMCResults,histDataResults,1,1);
+    if(mode == 2 || mode == 3) histDataMCResults->Multiply(histDataMCResults,histDataMCResults,1.,1.,"B");
     DrawGammaSetMarker(histDataMCResults, 24, 2, kBlack, kBlack);
 
     Double_t minPlotY = 0.95;
@@ -1258,6 +1259,10 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     TH1D* histDataResultsVsPDG =  (TH1D*)histDataResults->Clone("Mean mass data / mass PDG Pi0");
     histDataResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histDataResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
+    if(mode == 2 || mode == 3) {
+      histDataResultsVsPDG->Multiply(histDataResultsVsPDG,histDataResultsVsPDG,1.,1.,"B");
+      histDataResultsVsPDG->SetXTitle("#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (data)} #GT / M^{2}_{#pi^{0} (PDG)}");
+    }
     DrawGammaSetMarker(histDataResultsVsPDG, markerStyle[0], 1, color[0], color[0]);
     TF1* fitMassDataVsPDG = new TF1("fitMassDataVsPDG", "[0] + [1]*pow(x,[2])" ,fBins[startPtBin],fBins[endPtBin]);
     fitMassDataVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
@@ -1275,6 +1280,10 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     TH1D* histMCResultsVsPDG =  (TH1D*)histMCResults->Clone("Mean mass MC / mass PDG Pi0");
     histMCResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histMCResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
+    if(mode == 2 || mode == 3) {
+      histMCResultsVsPDG->Multiply(histMCResultsVsPDG,histMCResultsVsPDG,1.,1.,"B");
+      histMCResultsVsPDG->SetXTitle("#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / M^{2}_{#pi^{0} (PDG)}");
+    }
     DrawGammaSetMarker(histMCResultsVsPDG, markerStyle[1], 1, color[1], color[1]);
     TF1* fitMassMCVsPDG = new TF1("fitMassMCVsPDG", "[0] + [1]*pow(x,[2])" ,fBins[startPtBin],fBins[endPtBin]);
     fitMassMCVsPDG->SetParLimits(1, rangeMult[0], rangeMult[1]);
@@ -1405,7 +1414,8 @@ void CorrectCaloNonLinearity3(TString select = "LHC11a-Pythia-ConvCalo")
     canvasMassRatioMCData->SetLogx(1); 
     canvasMassRatioMCData->SetLogy(0); 
     
-    SetStyleHistoTH1ForGraphs(histDataMCResults, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT",0.035,0.043, 0.035,0.043, 1.,0.9);
+    if(mode == 2 || mode == 3) SetStyleHistoTH1ForGraphs(histDataMCResults, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT",0.035,0.043, 0.035,0.043, 1.,0.9);
+    else SetStyleHistoTH1ForGraphs(histDataMCResults, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT",0.035,0.043, 0.035,0.043, 1.,0.9);
     DrawGammaSetMarker(histDataMCResults, markerStyle[0], 1, color[0], color[0]);
     histDataMCResults->Draw();
     fFitComposit->SetLineColor(kGreen+2);

@@ -705,6 +705,7 @@ void CorrectCaloNonLinearityV4(
     cout << "-----------------------------------------------------" << endl;
 
     histDataMCResults->Divide(histMCResults,histDataResults,1,1);
+    if(mode == 2 || mode == 3) histDataMCResults->Multiply(histDataMCResults,histDataMCResults,1.,1.,"B");
     DrawGammaSetMarker(histDataMCResults, 24, 2, kBlack, kBlack);
 
     Double_t minPlotY = 0.93;
@@ -750,11 +751,19 @@ void CorrectCaloNonLinearityV4(
     TH1D* histDataResultsVsPDG =  (TH1D*)histDataResults->Clone("Mean mass data / mass PDG Pi0");
     histDataResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histDataResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
+    if(mode == 2 || mode == 3) {
+      histDataResultsVsPDG->Multiply(histDataResultsVsPDG,histDataResultsVsPDG,1.,1.,"B");
+      histDataResultsVsPDG->SetXTitle("#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (data)} #GT / M^{2}_{#pi^{0} (PDG)}");
+    }
     DrawGammaSetMarker(histDataResultsVsPDG, markerStyle[0], 1, color[0], color[0]);
     
     TH1D* histMCResultsVsPDG =  (TH1D*)histMCResults->Clone("Mean mass MC / mass PDG Pi0");
     histMCResultsVsPDG->Scale(1/massPi0);
     SetStyleHistoTH1ForGraphs(histMCResultsVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / M_{#pi^{0} (PDG)}",0.035,0.043, 0.035,0.043, 1.,1.);
+    if(mode == 2 || mode == 3) {
+      histMCResultsVsPDG->Multiply(histMCResultsVsPDG,histMCResultsVsPDG,1.,1.,"B");
+      histMCResultsVsPDG->SetXTitle("#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / M^{2}_{#pi^{0} (PDG)}");
+    }
     DrawGammaSetMarker(histMCResultsVsPDG, markerStyle[1], 1, color[1], color[1]);
     
     // fitting data mass positions
@@ -939,7 +948,8 @@ void CorrectCaloNonLinearityV4(
 
     TH2F * histoDummyDataMCRatio;
     histoDummyDataMCRatio = new TH2F("histoDummyDataMCRatio","histoDummyDataMCRatio", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, 0.93, 1.05);
-    SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
+    if(mode == 2 || mode == 3) SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
+    else SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyDataMCRatio->GetXaxis()->SetMoreLogLabels();
     histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(-0.01);
     histoDummyDataMCRatio->DrawCopy("");
