@@ -7466,8 +7466,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histoPi0InvMassSigPlusBGPCM[i]->SetLineWidth(1);
                 histoPi0InvMassSigPlusBGPCM[i]->Draw("hist,e,same");
                 DrawGammaSetMarker(histoPi0InvMassBGMixedPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoPi0InvMassBGMixedPCM[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoPi0InvMassBGMixedPCM[i]->Draw("same");
                 DrawGammaSetMarker(histoPi0InvMassRemBGPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoPi0InvMassRemBGPCM[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoPi0InvMassRemBGPCM[i]->Draw("same");
 
                 DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCM[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -7534,8 +7536,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histoEtaInvMassSigPlusBGPCM[i]->SetLineWidth(1);
                 histoEtaInvMassSigPlusBGPCM[i]->Draw("hist,e,same");
                 DrawGammaSetMarker(histoEtaInvMassBGMixedPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoEtaInvMassBGMixedPCM[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoEtaInvMassBGMixedPCM[i]->Draw("same");
                 DrawGammaSetMarker(histoEtaInvMassRemBGPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoEtaInvMassRemBGPCM[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoEtaInvMassRemBGPCM[i]->Draw("same");
 
                 DrawGammaSetMarker(histoEtaInvMassSigRemBGSubPCM[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -7603,8 +7607,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histoPi0InvMassSigPlusBGPCMEMCAL[i]->SetLineWidth(1);
                 histoPi0InvMassSigPlusBGPCMEMCAL[i]->Draw("hist,e,same");
                 DrawGammaSetMarker(histoPi0InvMassBGMixedPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoPi0InvMassBGMixedPCMEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoPi0InvMassBGMixedPCMEMCAL[i]->Draw("same");
                 DrawGammaSetMarker(histoPi0InvMassRemBGPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoPi0InvMassRemBGPCMEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoPi0InvMassRemBGPCMEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCMEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -7670,8 +7676,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histoEtaInvMassSigPlusBGPCMEMCAL[i]->SetLineWidth(1);
                 histoEtaInvMassSigPlusBGPCMEMCAL[i]->Draw("hist,e,same");
                 DrawGammaSetMarker(histoEtaInvMassBGMixedPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoEtaInvMassBGMixedPCMEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoEtaInvMassBGMixedPCMEMCAL[i]->Draw("same");
                 DrawGammaSetMarker(histoEtaInvMassRemBGPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoEtaInvMassRemBGPCMEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoEtaInvMassRemBGPCMEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoEtaInvMassSigRemBGSubPCMEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -7741,8 +7749,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histoPi0InvMassSigPlusBGEMCAL[i]->SetLineWidth(1);
                 histoPi0InvMassSigPlusBGEMCAL[i]->Draw("hist,e,same");
                 DrawGammaSetMarker(histoPi0InvMassBGMixedEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoPi0InvMassBGMixedEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoPi0InvMassBGMixedEMCAL[i]->Draw("same");
                 DrawGammaSetMarker(histoPi0InvMassRemBGEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoPi0InvMassRemBGEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoPi0InvMassRemBGEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoPi0InvMassSigRemBGSubEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -7794,7 +7804,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 legendInvMassEMCAL->Draw();
                 canvasInvMassSamplePlot->SaveAs(Form("%s/Pi0_InvMassBinEMC_%s.%s",outputDir.Data(), nameTrigger[i].Data(), suffix.Data()));
             } else {
-                cout << "missing partial input for invariant mass bin for PCM-EMC for trigger: " << nameTrigger[i].Data() << endl;
+                cout << "missing partial input for invariant mass bin for EMC for trigger: " << nameTrigger[i].Data() << endl;
             }
 
             if (haveAllEtaInvMassEMCAL[i]){
@@ -7808,8 +7818,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 histoEtaInvMassSigPlusBGEMCAL[i]->SetLineWidth(1);
                 histoEtaInvMassSigPlusBGEMCAL[i]->Draw("hist,e,same");
                 DrawGammaSetMarker(histoEtaInvMassBGMixedEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoEtaInvMassBGMixedEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoEtaInvMassBGMixedEMCAL[i]->Draw("same");
                 DrawGammaSetMarker(histoEtaInvMassRemBGEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoEtaInvMassRemBGEMCAL[i]->SetLineWidth(markerSizeInvMassMBG);
                 histoEtaInvMassRemBGEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoEtaInvMassSigRemBGSubEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -7861,7 +7873,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 legendInvMassEMCAL->Draw();
                 canvasInvMassSamplePlot->SaveAs(Form("%s/Eta_InvMassBinEMC_%s.%s",outputDir.Data(), nameTrigger[i].Data(), suffix.Data()));
             } else {
-                cout << "missing partial input for invariant mass bin for PCM-EMC for trigger: " << nameTrigger[i].Data() << endl;
+                cout << "missing partial input for invariant mass bin for EMC for trigger: " << nameTrigger[i].Data() << endl;
             }
         }
     }
@@ -7925,8 +7937,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       histoPCMSignalPlusBGPi0->SetLineWidth(1);
       histoPCMSignalPlusBGPi0->Draw("hist,e,same");
       DrawGammaSetMarker(histoPCMMixedBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+      histoPCMMixedBGPi0->SetLineWidth(markerSizeInvMassMBG);
       histoPCMMixedBGPi0->Draw("same");
       DrawGammaSetMarker(histoPi0InvMassRemBGPCM, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+      histoPi0InvMassRemBGPCM->SetLineWidth(markerSizeInvMassMBG);
       histoPi0InvMassRemBGPCM->Draw("same");
 
       DrawGammaSetMarker(histoPCMSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -8040,8 +8054,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       histoPCMSignalPlusBGEta->SetLineWidth(1);
       histoPCMSignalPlusBGEta->Draw("hist,e,same");
       DrawGammaSetMarker(histoPCMMixedBGEta, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+      histoPCMMixedBGEta->SetLineWidth(markerSizeInvMassMBG);
       histoPCMMixedBGEta->Draw("same");
       DrawGammaSetMarker(histoEtaInvMassRemBGPCM, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+      histoEtaInvMassRemBGPCM->SetLineWidth(markerSizeInvMassMBG);
       histoEtaInvMassRemBGPCM->Draw("same");
 
       DrawGammaSetMarker(histoPCMSignalEta, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -8127,8 +8143,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         histoPHOSSignalPlusBGPi0->SetLineWidth(1);
         histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
         DrawGammaSetMarker(histoPHOSCombBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+        histoPHOSCombBGPi0->SetLineWidth(markerSizeInvMassMBG);
         histoPHOSCombBGPi0->Draw("same");
         DrawGammaSetMarker(histoPHOSResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+        histoPHOSResiBGPi0->SetLineWidth(markerSizeInvMassMBG);
         histoPHOSResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
@@ -8214,8 +8232,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
         histoPHOSHighSignalPlusBGPi0->Draw("hist,e,same");
         DrawGammaSetMarker(histoPHOSHighCombBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+        histoPHOSHighCombBGPi0->SetLineWidth(markerSizeInvMassMBG);
         histoPHOSHighCombBGPi0->Draw("same");
         DrawGammaSetMarker(histoPHOSHighResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+        histoPHOSHighResiBGPi0->SetLineWidth(markerSizeInvMassMBG);
         histoPHOSHighResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
