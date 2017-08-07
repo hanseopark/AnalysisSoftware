@@ -3655,7 +3655,7 @@ Double_t fBinsEtapPb5TeVPCMPHOSPt[21]               = { 0., 0.3, 0.5, 0.7, 1.1, 
                         binning[i] = fBinsEta7TeVPt[i];
                     }
                 } else if ( mode == 40 | mode == 41 || mode == 42 || mode == 44 || mode == 45){
-                    maxNBins = 10;
+                    maxNBins = 8;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TeVPt[i];
                     }
