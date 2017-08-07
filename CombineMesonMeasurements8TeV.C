@@ -8132,6 +8132,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         histoPHOSResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPHOSSignalPi0->SetStats(kFALSE);
         histoPHOSSignalPi0->Draw("same");
         fitPHOSlow->SetLineWidth(1);
         fitPHOSlow->SetRange(0,0.255);
@@ -8218,6 +8219,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         histoPHOSHighResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
+        histoPHOSHighSignalPi0->SetStats(kFALSE);
         histoPHOSHighSignalPi0->Draw("same");
         fitPHOShigh->SetLineWidth(1);
         fitPHOShigh->SetRange(0,0.255);
