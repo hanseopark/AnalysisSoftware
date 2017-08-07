@@ -1603,7 +1603,7 @@ elif [[ "$1" == *-mAddSigPbPbLHC14a1abA* ]] ; then
         PARTLY=1
         MCFILE=0
     fi
-elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1aA* ]] ; then
+elif [[ "$1" == *-mAddSigPi0ForGammaPbPbLHC14a1aA* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
     Suffix=$3
@@ -1611,6 +1611,61 @@ elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1aA* ]] ; then
     MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1a_MC_A.root
     MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1a_MC_Pi0_A.root
     addedSig=1
+    DoPi0=1
+    DoEta=0
+    DoPi0InEtaBinning=0
+    DoGamma=0
+    if [ -f $DataRootFile ]; then
+        echo "The data file specified is $DataRootFile"
+        dataFileOK=1
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+    #  exit
+    fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+    else
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1
+        MCFILE=0
+    fi
+elif [[ "$1" == *-mAddSigPi0ForGammaPbPbLHC14a1bB* ]] ; then
+    MERGINGMC=1
+    DIRECTORY=$2
+    Suffix=$3
+    DataRootFile=$DIRECTORY/mergedMinBias/GammaConvV1Data_B.root
+    MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1b_MC_B.root
+    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1b_MC_Pi0_B.root
+    addedSig=1
+    DoPi0=1
+    DoEta=0
+    DoPi0InEtaBinning=0
+    DoGamma=0
+    if [ -f $DataRootFile ]; then
+        echo "The data file specified is $DataRootFile"
+        dataFileOK=1
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+    #  exit
+    fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+    else
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1
+        MCFILE=0
+    fi
+elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1aA* ]] ; then
+    MERGINGMC=0
+    DIRECTORY=$2
+    Suffix=$3
+    DataRootFile=$DIRECTORY/mergedMinBias/GammaConvV1Data_A.root
+    MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1a_MC_A.root
+    addedSig=0
+    DoPi0=0
+    DoEta=0
+    DoPi0InEtaBinning=0
+    DoGamma=1
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
@@ -1626,13 +1681,16 @@ elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1aA* ]] ; then
         MCFILE=0
     fi
 elif [[ "$1" == *-mAddSigForGammaPbPbLHC14a1bB* ]] ; then
-    MERGINGMC=1
+    MERGINGMC=0
     DIRECTORY=$2
     Suffix=$3
     DataRootFile=$DIRECTORY/mergedMinBias/GammaConvV1Data_B.root
     MCRootFile=$DIRECTORY/mergedMinBias/GammaConvV1_LHC14a1b_MC_B.root
-    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConvV1_LHC14a1b_MC_Pi0_B.root
-    addedSig=1
+    addedSig=0;
+    DoPi0=0
+    DoEta=0
+    DoPi0InEtaBinning=0
+    DoGamma=1
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
