@@ -7,12 +7,14 @@
 #include "EventQA.C"
 #include "PhotonQA.C"
 #include "ClusterQA.C"
+#include "PrimaryTrackQA.C"
 
 void QAV2(      TString configFileName  = "config.txt",         // set selected
                 Bool_t doEventQA        = kFALSE,           // switch on EventQA
                 Bool_t doPhotonQA       = kFALSE,           // switch on PCM-PhotonQA
                 Bool_t doClusterQA      = kFALSE,           // switch on ClusterQA
                 Bool_t doMergedQA       = kFALSE,           // switch on merged ClusterQA
+                Bool_t doPrimaryTrackQA = kFALSE,           // switch on primary electron and pion QA
                 Int_t doExtQA           = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
                 TString suffix          = "eps"             // output format of plots
          ){
@@ -239,6 +241,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
             ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     }
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);
+    if ( doPrimaryTrackQA ) PrimaryTrackQA (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     return;
 
 }
