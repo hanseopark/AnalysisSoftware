@@ -292,7 +292,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoPi0InvMassSigRemBGSubPCM[3];
         TH1D* histoPi0InvMassBGPCM[3];
         TH1D* histoPi0InvMassRemBGPCM[3];
-        TH1D* histoPi0InvMassBGTotPCM[3];
+        TH1D* histoPi0InvMassBGMixedPCM[3];
         TF1* fitPi0InvMassSigPCM[3];
         TF1* fitPi0InvMassBGPCM[3];
         Bool_t haveAllPi0InvMassPCM[3]                 = {kFALSE, kFALSE, kFALSE};
@@ -336,9 +336,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoPi0InvMassRemBGPCM[i]->SetBinContent(j,intLinearBack);
                         histoPi0InvMassRemBGPCM[i]->SetBinError(j,errorLinearBck);
                     }
-                    histoPi0InvMassBGTotPCM[i]         = (TH1D*)histoPi0InvMassBGPCM[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
-                    histoPi0InvMassBGTotPCM[i]->Sumw2();
-                    histoPi0InvMassBGTotPCM[i]->Add(histoPi0InvMassRemBGPCM[i]);
+                    histoPi0InvMassBGMixedPCM[i]         = (TH1D*)histoPi0InvMassBGPCM[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    //histoPi0InvMassBGMixedPCM[i]->Sumw2();
+                    //histoPi0InvMassBGMixedPCM[i]->Add(histoPi0InvMassRemBGPCM[i]);
                     histoPi0InvMassSigRemBGSubPCM[i]   = (TH1D*)histoPi0InvMassSigPCM[i]->Clone(Form("Pi0_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
                     histoPi0InvMassSigRemBGSubPCM[i]->Sumw2();
                     histoPi0InvMassSigRemBGSubPCM[i]->Add(histoPi0InvMassRemBGPCM[i],-1);
@@ -398,7 +398,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoEtaInvMassSigRemBGSubPCM[3];
         TH1D* histoEtaInvMassBGPCM[3];
         TH1D* histoEtaInvMassRemBGPCM[3];
-        TH1D* histoEtaInvMassBGTotPCM[3];
+        TH1D* histoEtaInvMassBGMixedPCM[3];
         TF1* fitEtaInvMassSigPCM[3];
         TF1* fitEtaInvMassBGPCM[3];
         Bool_t haveAllEtaInvMassPCM[3]                 = {kFALSE, kFALSE, kFALSE};
@@ -442,9 +442,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoEtaInvMassRemBGPCM[i]->SetBinContent(j,intLinearBack);
                         histoEtaInvMassRemBGPCM[i]->SetBinError(j,errorLinearBck);
                     }
-                    histoEtaInvMassBGTotPCM[i]         = (TH1D*)histoEtaInvMassBGPCM[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
-                    histoEtaInvMassBGTotPCM[i]->Sumw2();
-                    histoEtaInvMassBGTotPCM[i]->Add(histoEtaInvMassRemBGPCM[i]);
+                    histoEtaInvMassBGMixedPCM[i]         = (TH1D*)histoEtaInvMassBGPCM[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    //histoEtaInvMassBGMixedPCM[i]->Sumw2();
+                    //histoEtaInvMassBGMixedPCM[i]->Add(histoEtaInvMassRemBGPCM[i]);
                     histoEtaInvMassSigRemBGSubPCM[i]   = (TH1D*)histoEtaInvMassSigPCM[i]->Clone(Form("Eta_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
                     histoEtaInvMassSigRemBGSubPCM[i]->Sumw2();
                     histoEtaInvMassSigRemBGSubPCM[i]->Add(histoEtaInvMassRemBGPCM[i],-1);
@@ -503,7 +503,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoPi0InvMassSigRemBGSubPCMEMCAL[3];
         TH1D* histoPi0InvMassBGPCMEMCAL[3];
         TH1D* histoPi0InvMassRemBGPCMEMCAL[3];
-        TH1D* histoPi0InvMassBGTotPCMEMCAL[3];
+        TH1D* histoPi0InvMassBGMixedPCMEMCAL[3];
         TF1* fitPi0InvMassSigPCMEMCAL[3];
         TF1* fitPi0InvMassBGPCMEMCAL[3];
         Bool_t haveAllPi0InvMassPCMEMCAL[3]                 = {kFALSE, kFALSE, kFALSE};
@@ -547,9 +547,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoPi0InvMassRemBGPCMEMCAL[i]->SetBinContent(j,intLinearBack);
                         histoPi0InvMassRemBGPCMEMCAL[i]->SetBinError(j,errorLinearBck);
                     }
-                    histoPi0InvMassBGTotPCMEMCAL[i]         = (TH1D*)histoPi0InvMassBGPCMEMCAL[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
-                    histoPi0InvMassBGTotPCMEMCAL[i]->Sumw2();
-                    histoPi0InvMassBGTotPCMEMCAL[i]->Add(histoPi0InvMassRemBGPCMEMCAL[i]);
+                    histoPi0InvMassBGMixedPCMEMCAL[i]         = (TH1D*)histoPi0InvMassBGPCMEMCAL[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    //histoPi0InvMassBGMixedPCMEMCAL[i]->Sumw2();
+                    //histoPi0InvMassBGMixedPCMEMCAL[i]->Add(histoPi0InvMassRemBGPCMEMCAL[i]);
                     histoPi0InvMassSigRemBGSubPCMEMCAL[i]   = (TH1D*)histoPi0InvMassSigPCMEMCAL[i]->Clone(Form("Pi0_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
                     histoPi0InvMassSigRemBGSubPCMEMCAL[i]->Sumw2();
                     histoPi0InvMassSigRemBGSubPCMEMCAL[i]->Add(histoPi0InvMassRemBGPCMEMCAL[i],-1);
@@ -596,7 +596,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoEtaInvMassSigRemBGSubPCMEMCAL[3];
         TH1D* histoEtaInvMassBGPCMEMCAL[3];
         TH1D* histoEtaInvMassRemBGPCMEMCAL[3];
-        TH1D* histoEtaInvMassBGTotPCMEMCAL[3];
+        TH1D* histoEtaInvMassBGMixedPCMEMCAL[3];
         TF1* fitEtaInvMassSigPCMEMCAL[3];
         TF1* fitEtaInvMassBGPCMEMCAL[3];
         Bool_t haveAllEtaInvMassPCMEMCAL[3]                 = {kFALSE, kFALSE, kFALSE};
@@ -640,9 +640,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoEtaInvMassRemBGPCMEMCAL[i]->SetBinContent(j,intLinearBack);
                         histoEtaInvMassRemBGPCMEMCAL[i]->SetBinError(j,errorLinearBck);
                     }
-                    histoEtaInvMassBGTotPCMEMCAL[i]         = (TH1D*)histoEtaInvMassBGPCMEMCAL[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
-                    histoEtaInvMassBGTotPCMEMCAL[i]->Sumw2();
-                    histoEtaInvMassBGTotPCMEMCAL[i]->Add(histoEtaInvMassRemBGPCMEMCAL[i]);
+                    histoEtaInvMassBGMixedPCMEMCAL[i]         = (TH1D*)histoEtaInvMassBGPCMEMCAL[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    //histoEtaInvMassBGMixedPCMEMCAL[i]->Sumw2();
+                    //histoEtaInvMassBGMixedPCMEMCAL[i]->Add(histoEtaInvMassRemBGPCMEMCAL[i]);
                     histoEtaInvMassSigRemBGSubPCMEMCAL[i]   = (TH1D*)histoEtaInvMassSigPCMEMCAL[i]->Clone(Form("Eta_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
                     histoEtaInvMassSigRemBGSubPCMEMCAL[i]->Sumw2();
                     histoEtaInvMassSigRemBGSubPCMEMCAL[i]->Add(histoEtaInvMassRemBGPCMEMCAL[i],-1);
@@ -695,7 +695,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoPi0InvMassSigRemBGSubEMCAL[3];
         TH1D* histoPi0InvMassBGEMCAL[3];
         TH1D* histoPi0InvMassRemBGEMCAL[3];
-        TH1D* histoPi0InvMassBGTotEMCAL[3];
+        TH1D* histoPi0InvMassBGMixedEMCAL[3];
         TF1* fitPi0InvMassSigEMCAL[3];
         TF1* fitPi0InvMassBGEMCAL[3];
         Bool_t haveAllPi0InvMassEMCAL[3]                 = {kFALSE, kFALSE, kFALSE};
@@ -737,9 +737,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoPi0InvMassRemBGEMCAL[i]->SetBinContent(j,intLinearBack);
                         histoPi0InvMassRemBGEMCAL[i]->SetBinError(j,errorLinearBck);
                     }
-                    histoPi0InvMassBGTotEMCAL[i]         = (TH1D*)histoPi0InvMassBGEMCAL[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
-                    histoPi0InvMassBGTotEMCAL[i]->Sumw2();
-                    histoPi0InvMassBGTotEMCAL[i]->Add(histoPi0InvMassRemBGEMCAL[i]);
+                    histoPi0InvMassBGMixedEMCAL[i]         = (TH1D*)histoPi0InvMassBGEMCAL[i]->Clone(Form("Pi0_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    //histoPi0InvMassBGMixedEMCAL[i]->Sumw2();
+                    //histoPi0InvMassBGMixedEMCAL[i]->Add(histoPi0InvMassRemBGEMCAL[i]);
                     histoPi0InvMassSigRemBGSubEMCAL[i]   = (TH1D*)histoPi0InvMassSigEMCAL[i]->Clone(Form("Pi0_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
                     histoPi0InvMassSigRemBGSubEMCAL[i]->Sumw2();
                     histoPi0InvMassSigRemBGSubEMCAL[i]->Add(histoPi0InvMassRemBGEMCAL[i],-1);
@@ -787,7 +787,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TH1D* histoEtaInvMassSigRemBGSubEMCAL[3];
         TH1D* histoEtaInvMassBGEMCAL[3];
         TH1D* histoEtaInvMassRemBGEMCAL[3];
-        TH1D* histoEtaInvMassBGTotEMCAL[3];
+        TH1D* histoEtaInvMassBGMixedEMCAL[3];
         TF1* fitEtaInvMassSigEMCAL[3];
         TF1* fitEtaInvMassBGEMCAL[3];
         Bool_t haveAllEtaInvMassEMCAL[3]                 = {kFALSE, kFALSE, kFALSE};
@@ -829,9 +829,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
                         histoEtaInvMassRemBGEMCAL[i]->SetBinContent(j,intLinearBack);
                         histoEtaInvMassRemBGEMCAL[i]->SetBinError(j,errorLinearBck);
                     }
-                    histoEtaInvMassBGTotEMCAL[i]         = (TH1D*)histoEtaInvMassBGEMCAL[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
-                    histoEtaInvMassBGTotEMCAL[i]->Sumw2();
-                    histoEtaInvMassBGTotEMCAL[i]->Add(histoEtaInvMassRemBGEMCAL[i]);
+                    histoEtaInvMassBGMixedEMCAL[i]         = (TH1D*)histoEtaInvMassBGEMCAL[i]->Clone(Form("Eta_InvMassTotBG_Example_%s",nameTrigger[i].Data()));
+                    //histoEtaInvMassBGMixedEMCAL[i]->Sumw2();
+                    //histoEtaInvMassBGMixedEMCAL[i]->Add(histoEtaInvMassRemBGEMCAL[i]);
                     histoEtaInvMassSigRemBGSubEMCAL[i]   = (TH1D*)histoEtaInvMassSigEMCAL[i]->Clone(Form("Eta_InvMassSigRemBGSub_Example_%s",nameTrigger[i].Data()));
                     histoEtaInvMassSigRemBGSubEMCAL[i]->Sumw2();
                     histoEtaInvMassSigRemBGSubEMCAL[i]->Add(histoEtaInvMassRemBGEMCAL[i],-1);
@@ -7420,6 +7420,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
     Style_t markerStyleInvMassMBG       = 24;
     Size_t markerSizeInvMassMBG         = 1.5;
     Color_t markerColorInvMassMBG       = kGray+2;
+    Color_t markerColorInvMassMBG1      = kGray+3;
+    Color_t markerColorInvMassMBG2      = kGray+1;
     Style_t markerStyleInvMassBG        = 20;
     Size_t markerSizeInvMassBG          = 2;
     Color_t markerColorInvMassBG        = kBlack;
@@ -7463,8 +7465,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 DrawGammaSetMarker(histoPi0InvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoPi0InvMassSigPlusBGPCM[i]->SetLineWidth(1);
                 histoPi0InvMassSigPlusBGPCM[i]->Draw("hist,e,same");
-                DrawGammaSetMarker(histoPi0InvMassBGTotPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-                histoPi0InvMassBGTotPCM[i]->Draw("same");
+                DrawGammaSetMarker(histoPi0InvMassBGMixedPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoPi0InvMassBGMixedPCM[i]->Draw("same");
+                DrawGammaSetMarker(histoPi0InvMassRemBGPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoPi0InvMassRemBGPCM[i]->Draw("same");
 
                 DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCM[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
                 histoPi0InvMassSigRemBGSubPCM[i]->Draw("same");
@@ -7509,8 +7513,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCM->SetMargin(0.25);
                 legendInvMassPCM->AddEntry(histoPi0InvMassSigPlusBGPCM[i],"Raw real events","l");
-                legendInvMassPCM->AddEntry(histoPi0InvMassBGTotPCM[i],"Mixed event +","p");
-                legendInvMassPCM->AddEntry((TObject*)0,"remain. BG","");
+                legendInvMassPCM->AddEntry(histoPi0InvMassBGMixedPCM[i],"Mixed event BG","p");
+                legendInvMassPCM->AddEntry(histoPi0InvMassRemBGPCM[i],"Remain. BG","p");
                 legendInvMassPCM->AddEntry(histoPi0InvMassSigRemBGSubPCM[i],"BG subtracted","p");
                 legendInvMassPCM->AddEntry(fitPi0InvMassSigPCM[i], "Fit","l");
                 legendInvMassPCM->Draw();
@@ -7529,9 +7533,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGPCM[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGPCM[i]->SetLineWidth(1);
                 histoEtaInvMassSigPlusBGPCM[i]->Draw("hist,e,same");
-                DrawGammaSetMarker(histoEtaInvMassBGTotPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-                histoEtaInvMassBGTotPCM[i]->Draw("same");
-
+                DrawGammaSetMarker(histoEtaInvMassBGMixedPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoEtaInvMassBGMixedPCM[i]->Draw("same");
+                DrawGammaSetMarker(histoEtaInvMassRemBGPCM[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoEtaInvMassRemBGPCM[i]->Draw("same");
 
                 DrawGammaSetMarker(histoEtaInvMassSigRemBGSubPCM[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
                 histoEtaInvMassSigRemBGSubPCM[i]->Draw("same");
@@ -7576,8 +7581,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 TLegend* legendInvMassPCM  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCM->SetMargin(0.25);
                 legendInvMassPCM->AddEntry(histoEtaInvMassSigPlusBGPCM[i],"Raw real events","l");
-                legendInvMassPCM->AddEntry(histoEtaInvMassBGTotPCM[i],"Mixed event +","p");
-                legendInvMassPCM->AddEntry((TObject*)0,"remain. BG","");
+                legendInvMassPCM->AddEntry(histoEtaInvMassBGMixedPCM[i],"Mixed event BG","p");
+                legendInvMassPCM->AddEntry(histoEtaInvMassRemBGPCM[i],"Remain. BG","p");
                 legendInvMassPCM->AddEntry(histoEtaInvMassSigRemBGSubPCM[i],"BG subtracted","p");
                 legendInvMassPCM->AddEntry(fitEtaInvMassSigPCM[i], "Fit","l");
                 legendInvMassPCM->Draw();
@@ -7597,8 +7602,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 DrawGammaSetMarker(histoPi0InvMassSigPlusBGPCMEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoPi0InvMassSigPlusBGPCMEMCAL[i]->SetLineWidth(1);
                 histoPi0InvMassSigPlusBGPCMEMCAL[i]->Draw("hist,e,same");
-                DrawGammaSetMarker(histoPi0InvMassBGTotPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-                histoPi0InvMassBGTotPCMEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoPi0InvMassBGMixedPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoPi0InvMassBGMixedPCMEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoPi0InvMassRemBGPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoPi0InvMassRemBGPCMEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoPi0InvMassSigRemBGSubPCMEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
                 histoPi0InvMassSigRemBGSubPCMEMCAL[i]->Draw("same");
@@ -7642,8 +7649,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCMEMCAL->SetMargin(0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
-                legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassBGTotPCMEMCAL[i],"Mixed event +","p");
-                legendInvMassPCMEMCAL->AddEntry((TObject*)0,"remain. BG","");
+                legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassBGMixedPCMEMCAL[i],"Mixed event BG","p");
+                legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassRemBGPCMEMCAL[i],"Remain. BG","p");
                 legendInvMassPCMEMCAL->AddEntry(histoPi0InvMassSigRemBGSubPCMEMCAL[i],"BG subtracted","p");
                 legendInvMassPCMEMCAL->AddEntry(fitPi0InvMassSigPCMEMCAL[i], "Fit","l");
                 legendInvMassPCMEMCAL->Draw();
@@ -7662,9 +7669,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGPCMEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGPCMEMCAL[i]->SetLineWidth(1);
                 histoEtaInvMassSigPlusBGPCMEMCAL[i]->Draw("hist,e,same");
-                DrawGammaSetMarker(histoEtaInvMassBGTotPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-                histoEtaInvMassBGTotPCMEMCAL[i]->Draw("same");
-
+                DrawGammaSetMarker(histoEtaInvMassBGMixedPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoEtaInvMassBGMixedPCMEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoEtaInvMassRemBGPCMEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoEtaInvMassRemBGPCMEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoEtaInvMassSigRemBGSubPCMEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
                 histoEtaInvMassSigRemBGSubPCMEMCAL[i]->Draw("same");
@@ -7708,8 +7716,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 TLegend* legendInvMassPCMEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassPCMEMCAL->SetMargin(0.25);
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassSigPlusBGPCMEMCAL[i],"Raw real events","l");
-                legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassBGTotPCMEMCAL[i],"Mixed event +","p");
-                legendInvMassPCMEMCAL->AddEntry((TObject*)0,"remain. BG","");
+                legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassBGMixedPCMEMCAL[i],"Mixed event BG","p");
+                legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassRemBGPCMEMCAL[i],"Remain. BG","p");
                 legendInvMassPCMEMCAL->AddEntry(histoEtaInvMassSigRemBGSubPCMEMCAL[i],"BG subtracted","p");
                 legendInvMassPCMEMCAL->AddEntry(fitEtaInvMassSigPCMEMCAL[i], "Fit","l");
                 legendInvMassPCMEMCAL->Draw();
@@ -7732,8 +7740,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 DrawGammaSetMarker(histoPi0InvMassSigPlusBGEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoPi0InvMassSigPlusBGEMCAL[i]->SetLineWidth(1);
                 histoPi0InvMassSigPlusBGEMCAL[i]->Draw("hist,e,same");
-                DrawGammaSetMarker(histoPi0InvMassBGTotEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-                histoPi0InvMassBGTotEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoPi0InvMassBGMixedEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoPi0InvMassBGMixedEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoPi0InvMassRemBGEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoPi0InvMassRemBGEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoPi0InvMassSigRemBGSubEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
                 histoPi0InvMassSigRemBGSubEMCAL[i]->Draw("same");
@@ -7777,8 +7787,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassEMCAL->SetMargin(0.25);
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassSigPlusBGEMCAL[i],"Raw real events","l");
-                legendInvMassEMCAL->AddEntry(histoPi0InvMassBGTotEMCAL[i],"Mixed event +","p");
-                legendInvMassEMCAL->AddEntry((TObject*)0,"remain. BG","");
+                legendInvMassEMCAL->AddEntry(histoPi0InvMassBGMixedEMCAL[i],"Mixed event BG","p");
+                legendInvMassEMCAL->AddEntry(histoPi0InvMassRemBGEMCAL[i],"Remain. BG","p");
                 legendInvMassEMCAL->AddEntry(histoPi0InvMassSigRemBGSubEMCAL[i],"BG subtracted","p");
                 legendInvMassEMCAL->AddEntry(fitPi0InvMassSigEMCAL[i], "Fit","l");
                 legendInvMassEMCAL->Draw();
@@ -7797,8 +7807,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 DrawGammaSetMarker(histoEtaInvMassSigPlusBGEMCAL[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
                 histoEtaInvMassSigPlusBGEMCAL[i]->SetLineWidth(1);
                 histoEtaInvMassSigPlusBGEMCAL[i]->Draw("hist,e,same");
-                DrawGammaSetMarker(histoEtaInvMassBGTotEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-                histoEtaInvMassBGTotEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoEtaInvMassBGMixedEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+                histoEtaInvMassBGMixedEMCAL[i]->Draw("same");
+                DrawGammaSetMarker(histoEtaInvMassRemBGEMCAL[i], markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+                histoEtaInvMassRemBGEMCAL[i]->Draw("same");
 
                 DrawGammaSetMarker(histoEtaInvMassSigRemBGSubEMCAL[i], markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
                 histoEtaInvMassSigRemBGSubEMCAL[i]->Draw("same");
@@ -7842,8 +7854,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
                 TLegend* legendInvMassEMCAL  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
                 legendInvMassEMCAL->SetMargin(0.25);
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassSigPlusBGEMCAL[i],"Raw real events","l");
-                legendInvMassEMCAL->AddEntry(histoEtaInvMassBGTotEMCAL[i],"Mixed event +","p");
-                legendInvMassEMCAL->AddEntry((TObject*)0,"remain. BG","");
+                legendInvMassEMCAL->AddEntry(histoEtaInvMassBGMixedEMCAL[i],"Mixed event BG","p");
+                legendInvMassEMCAL->AddEntry(histoEtaInvMassRemBGEMCAL[i],"Remain. BG","p");
                 legendInvMassEMCAL->AddEntry(histoEtaInvMassSigRemBGSubEMCAL[i],"BG subtracted","p");
                 legendInvMassEMCAL->AddEntry(fitEtaInvMassSigEMCAL[i], "Fit","l");
                 legendInvMassEMCAL->Draw();
@@ -7868,7 +7880,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
     for(Int_t iBin=0; iBin<nPCMBins; iBin++){
       TH1D* histoPCMSignalPlusBGPi0                        = (TH1D*)directoryPCMPi0L->Get(Form("Pi0_InvMassSigPlusBG_%02i_MB",binN[iBin]));
-      TH1D* histoPCMTotalBGPi0                             = (TH1D*)directoryPCMPi0L->Get(Form("Pi0_InvMassBG_Example_%02i_MB",binN[iBin]));
+      TH1D* histoPCMMixedBGPi0                             = (TH1D*)directoryPCMPi0L->Get(Form("Pi0_InvMassBG_Example_%02i_MB",binN[iBin]));
       TH1D* histoPCMSignalPi0                              = (TH1D*)directoryPCMPi0L->Get(Form("Pi0_InvMassSig_%02i_MB",binN[iBin]));
       TF1* fitPCMlow                                       = (TF1*)directoryPCMPi0L->Get(Form("Pi0_InvMassSigFit_%02i_MB",binN[iBin]));
 
@@ -7885,7 +7897,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       Int_t nFreeParPCM                                      = fitPCMlow->GetNumberFreeParameters();
       double * covMatrixPCM                                  = fitterPCM->GetCovarianceMatrix();
 
-      TH1D* histoPi0InvMassRemBGPCM                             = (TH1D*)histoPCMTotalBGPi0->Clone(Form("Pi0_InvMassRemBG_Example_%i",iBin));
+      TH1D* histoPi0InvMassRemBGPCM                             = (TH1D*)histoPCMMixedBGPi0->Clone(Form("Pi0_InvMassRemBG_Example_%i",iBin));
       for (Int_t j = 1; j < histoPi0InvMassRemBGPCM->GetNbinsX()+1; j++){
           histoPi0InvMassRemBGPCM->SetBinContent(j,0);
           histoPi0InvMassRemBGPCM->SetBinError(j,0);
@@ -7902,7 +7914,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
           histoPi0InvMassRemBGPCM->SetBinContent(j,intLinearBack);
           histoPi0InvMassRemBGPCM->SetBinError(j,errorLinearBck);
       }
-      histoPCMTotalBGPi0->Add(histoPi0InvMassRemBGPCM);
+      //histoPCMMixedBGPi0->Add(histoPi0InvMassRemBGPCM);
       histoPCMSignalPi0->Add(histoPi0InvMassRemBGPCM,-1);
       fitPCMlow->SetParameter(4, 0);
       fitPCMlow->SetParameter(5, 0);
@@ -7912,8 +7924,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       DrawGammaSetMarker(histoPCMSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPCMSignalPlusBGPi0->SetLineWidth(1);
       histoPCMSignalPlusBGPi0->Draw("hist,e,same");
-      DrawGammaSetMarker(histoPCMTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-      histoPCMTotalBGPi0->Draw("same");
+      DrawGammaSetMarker(histoPCMMixedBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+      histoPCMMixedBGPi0->Draw("same");
+      DrawGammaSetMarker(histoPi0InvMassRemBGPCM, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+      histoPi0InvMassRemBGPCM->Draw("same");
 
       DrawGammaSetMarker(histoPCMSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
       histoPCMSignalPi0->Draw("same");
@@ -7957,8 +7971,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       TLegend* legendInvMassPCMl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
       legendInvMassPCMl->SetMargin(0.25);
       legendInvMassPCMl->AddEntry(histoPCMSignalPlusBGPi0,"Raw real events","l");
-      legendInvMassPCMl->AddEntry(histoPCMTotalBGPi0,"Mixed event +","p");
-      legendInvMassPCMl->AddEntry((TObject*)0,"remain. BG","");
+      legendInvMassPCMl->AddEntry(histoPCMMixedBGPi0,"Mixed event BG","p");
+      legendInvMassPCMl->AddEntry(histoPi0InvMassRemBGPCM,"Remain. BG","p");
       legendInvMassPCMl->AddEntry(histoPCMSignalPi0,"BG subtracted","p");
       legendInvMassPCMl->AddEntry(fitPCMlow, "Fit","l");
       legendInvMassPCMl->Draw();
@@ -7979,7 +7993,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
     for(Int_t iBin=0; iBin<nPCMEtaBins; iBin++){
       TH1D* histoPCMSignalPlusBGEta                        = (TH1D*)directoryPCMEtaL->Get(Form("Eta_InvMassSigPlusBG_%02i_MB",binNEta[iBin]));
-      TH1D* histoPCMTotalBGEta                             = (TH1D*)directoryPCMEtaL->Get(Form("Eta_InvMassBG_%02i_MB",binNEta[iBin]));
+      TH1D* histoPCMMixedBGEta                             = (TH1D*)directoryPCMEtaL->Get(Form("Eta_InvMassBG_%02i_MB",binNEta[iBin]));
       TH1D* histoPCMSignalEta                              = (TH1D*)directoryPCMEtaL->Get(Form("Eta_InvMassSig_%02i_MB",binNEta[iBin]));
       TF1* fitPCMlowEta                                    = (TF1*)directoryPCMEtaL->Get(Form("Eta_InvMassSigFit_%02i_MB",binNEta[iBin]));
 
@@ -7997,7 +8011,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         Int_t nFreeParPCM                                      = fitPCMlowEta->GetNumberFreeParameters();
         double * covMatrixPCM                                  = fitterPCM->GetCovarianceMatrix();
 
-        TH1D* histoEtaInvMassRemBGPCM                             = (TH1D*)histoPCMTotalBGEta->Clone(Form("Eta_InvMassRemBG_Example_%i",iBin));
+        TH1D* histoEtaInvMassRemBGPCM                             = (TH1D*)histoPCMMixedBGEta->Clone(Form("Eta_InvMassRemBG_Example_%i",iBin));
         for (Int_t j = 1; j < histoEtaInvMassRemBGPCM->GetNbinsX()+1; j++){
             histoEtaInvMassRemBGPCM->SetBinContent(j,0);
             histoEtaInvMassRemBGPCM->SetBinError(j,0);
@@ -8014,7 +8028,7 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
             histoEtaInvMassRemBGPCM->SetBinContent(j,intLinearBack);
             histoEtaInvMassRemBGPCM->SetBinError(j,errorLinearBck);
         }
-        histoPCMTotalBGEta->Add(histoEtaInvMassRemBGPCM);
+        //histoPCMMixedBGEta->Add(histoEtaInvMassRemBGPCM);
         histoPCMSignalEta->Add(histoEtaInvMassRemBGPCM,-1);
         fitPCMlowEta->SetParameter(4, 0);
         fitPCMlowEta->SetParameter(5, 0);
@@ -8025,8 +8039,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       DrawGammaSetMarker(histoPCMSignalPlusBGEta, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
       histoPCMSignalPlusBGEta->SetLineWidth(1);
       histoPCMSignalPlusBGEta->Draw("hist,e,same");
-      DrawGammaSetMarker(histoPCMTotalBGEta, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-      histoPCMTotalBGEta->Draw("same");
+      DrawGammaSetMarker(histoPCMMixedBGEta, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+      histoPCMMixedBGEta->Draw("same");
+      DrawGammaSetMarker(histoEtaInvMassRemBGPCM, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+      histoEtaInvMassRemBGPCM->Draw("same");
 
       DrawGammaSetMarker(histoPCMSignalEta, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
       histoPCMSignalEta->Draw("same");
@@ -8070,8 +8086,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
       TLegend* legendInvMassPCMl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
       legendInvMassPCMl->SetMargin(0.25);
       legendInvMassPCMl->AddEntry(histoPCMSignalPlusBGEta,"Raw real events","l");
-      legendInvMassPCMl->AddEntry(histoPCMTotalBGEta,"Mixed event +","p");
-      legendInvMassPCMl->AddEntry((TObject*)0,"remain. BG","");
+      legendInvMassPCMl->AddEntry(histoPCMMixedBGEta,"Mixed event BG","p");
+      legendInvMassPCMl->AddEntry(histoEtaInvMassRemBGPCM,"Remain. BG","p");
       legendInvMassPCMl->AddEntry(histoPCMSignalEta,"BG subtracted","p");
       legendInvMassPCMl->AddEntry(fitPCMlowEta, "Fit","l");
       legendInvMassPCMl->Draw();
@@ -8095,7 +8111,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
       for(Int_t iBin=0; iBin<nBins; iBin++){
         TH1D* histoPHOSSignalPlusBGPi0                        = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassSigPlusBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
-        TH1D* histoPHOSTotalBGPi0                             = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        TH1D* histoPHOSCombBGPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassCombBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        TH1D* histoPHOSResiBGPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassResiBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
         TH1D* histoPHOSSignalPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassSig_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
         TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get(Form("InvMassFinalFit_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
 
@@ -8109,8 +8126,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         DrawGammaSetMarker(histoPHOSSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
         histoPHOSSignalPlusBGPi0->SetLineWidth(1);
         histoPHOSSignalPlusBGPi0->Draw("hist,e,same");
-        DrawGammaSetMarker(histoPHOSTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-        histoPHOSTotalBGPi0->Draw("same");
+        DrawGammaSetMarker(histoPHOSCombBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+        histoPHOSCombBGPi0->Draw("same");
+        DrawGammaSetMarker(histoPHOSResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+        histoPHOSResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
         histoPHOSSignalPi0->Draw("same");
@@ -8154,8 +8173,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
         legendInvMassPHOSl->SetMargin(0.25);
         legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
-        legendInvMassPHOSl->AddEntry(histoPHOSTotalBGPi0,"Mixed event +","p");
-        legendInvMassPHOSl->AddEntry((TObject*)0,"remain. BG","");
+        legendInvMassPHOSl->AddEntry(histoPHOSCombBGPi0,"Mixed event BG","p");
+        legendInvMassPHOSl->AddEntry(histoPHOSResiBGPi0,"Remain. BG","p");
         legendInvMassPHOSl->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
         legendInvMassPHOSl->AddEntry(fitPHOSlow, "Fit","l");
         legendInvMassPHOSl->Draw();
@@ -8179,7 +8198,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
       for(Int_t iBin=0; iBin<nBinsTr; iBin++){
         TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassSigPlusBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
-        TH1D* histoPHOSHighTotalBGPi0                           = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        TH1D* histoPHOSHighCombBGPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassCombBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        TH1D* histoPHOSHighResiBGPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassResiBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
         TH1D* histoPHOSHighSignalPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassSig_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
         TF1* fitPHOShigh                                        = (TF1*)directoryPHOSPi0H->Get(Form("InvMassFinalFit_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
 
@@ -8192,8 +8212,10 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         DrawGammaSetMarker(histoPHOSHighSignalPlusBGPi0, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
         histoPHOSHighSignalPlusBGPi0->SetLineWidth(1);
         histoPHOSHighSignalPlusBGPi0->Draw("hist,e,same");
-        DrawGammaSetMarker(histoPHOSHighTotalBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG, markerColorInvMassMBG);
-        histoPHOSHighTotalBGPi0->Draw("same");
+        DrawGammaSetMarker(histoPHOSHighCombBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
+        histoPHOSHighCombBGPi0->Draw("same");
+        DrawGammaSetMarker(histoPHOSHighResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+        histoPHOSHighResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
         histoPHOSHighSignalPi0->Draw("same");
@@ -8237,8 +8259,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
         legendInvMassPHOSh->SetMargin(0.25);
         legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
-        legendInvMassPHOSh->AddEntry(histoPHOSHighTotalBGPi0,"Mixed event +","p");
-        legendInvMassPHOSh->AddEntry((TObject*)0,"remain. BG","");
+        legendInvMassPHOSh->AddEntry(histoPHOSHighCombBGPi0,"Mixed event BG","p");
+        legendInvMassPHOSh->AddEntry(histoPHOSHighResiBGPi0,"Remain. BG","p");
         legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPi0,"BG subtracted","p");
         legendInvMassPHOSh->AddEntry(fitPHOShigh, "Fit","l");
         legendInvMassPHOSh->Draw();
