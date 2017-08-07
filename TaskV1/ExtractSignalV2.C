@@ -2309,149 +2309,152 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
         }
 
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-          if(!fUseRPBackground){
-            //with ZM bins estimation
-            fHistoWeightsBGZbinVsMbin[iPt] = new  TH2F("BGWeights", "", fSparseMotherZM->GetAxis(2)->GetNbins(),  0, fSparseMotherZM->GetAxis(2)->GetNbins(),
-                                            fSparseMotherZM->GetAxis(3)->GetNbins(),  0, fSparseMotherZM->GetAxis(3)->GetNbins());
-            fHistoWeightsBGZbinVsMbin[iPt]->GetYaxis()->SetTitle("M-bins");
-            fHistoWeightsBGZbinVsMbin[iPt]->GetXaxis()->SetTitle("Z-bins");
-            fHistoWeightsBGZbinVsMbin[iPt]->Sumw2();
-            fHistoFillPerEventBGZbinVsMbin[iPt] = new  TH2F("BGPoolsFillstatus", "", fSparseMotherZM->GetAxis(2)->GetNbins(),  0, fSparseMotherZM->GetAxis(2)->GetNbins(),
+            cout << "Pt:"<< iPt << endl;
+            if(!fUseRPBackground){
+                //with ZM bins estimation
+                fHistoWeightsBGZbinVsMbin[iPt] = new  TH2F("BGWeights", "", fSparseMotherZM->GetAxis(2)->GetNbins(),  0, fSparseMotherZM->GetAxis(2)->GetNbins(),
                                                 fSparseMotherZM->GetAxis(3)->GetNbins(),  0, fSparseMotherZM->GetAxis(3)->GetNbins());
-            fHistoFillPerEventBGZbinVsMbin[iPt]->GetYaxis()->SetTitle("M-bins");
-            fHistoFillPerEventBGZbinVsMbin[iPt]->GetXaxis()->SetTitle("Z-bins");
-            fHistoFillPerEventBGZbinVsMbin[iPt]->Sumw2();
+                fHistoWeightsBGZbinVsMbin[iPt]->GetYaxis()->SetTitle("M-bins");
+                fHistoWeightsBGZbinVsMbin[iPt]->GetXaxis()->SetTitle("Z-bins");
+                fHistoWeightsBGZbinVsMbin[iPt]->Sumw2();
+                fHistoFillPerEventBGZbinVsMbin[iPt] = new  TH2F("BGPoolsFillstatus", "", fSparseMotherZM->GetAxis(2)->GetNbins(),  0, fSparseMotherZM->GetAxis(2)->GetNbins(),
+                                                    fSparseMotherZM->GetAxis(3)->GetNbins(),  0, fSparseMotherZM->GetAxis(3)->GetNbins());
+                fHistoFillPerEventBGZbinVsMbin[iPt]->GetYaxis()->SetTitle("M-bins");
+                fHistoFillPerEventBGZbinVsMbin[iPt]->GetXaxis()->SetTitle("Z-bins");
+                fHistoFillPerEventBGZbinVsMbin[iPt]->Sumw2();
 
-            for (Int_t z=0;z < fSparseMotherZM->GetAxis(2)->GetNbins();z++){
-                for (Int_t m = 0; m < fSparseMotherZM->GetAxis(3)->GetNbins(); m++){
-                    // pt
-                    fSparseMotherZM->GetAxis(1)->SetRange((fSparseMotherZM->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseMotherZM->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
-                    fSparseBckZM->GetAxis(1)->SetRange((fSparseBckZM->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseBckZM->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
-                    // z
-                    fSparseMotherZM->GetAxis(2)->SetRange(z, z);
-                    fSparseBckZM->GetAxis(2)->SetRange(z, z);
-                    // m
-                    fSparseMotherZM->GetAxis(3)->SetRange(m,m);
-                    fSparseBckZM->GetAxis(3)->SetRange(m,m);
+                for (Int_t z=0;z < fSparseMotherZM->GetAxis(2)->GetNbins();z++){
+                    for (Int_t m = 0; m < fSparseMotherZM->GetAxis(3)->GetNbins(); m++){
+                        // pt
+                        cout << m << "\t" << z << endl;
+                        fSparseMotherZM->GetAxis(1)->SetRange((fSparseMotherZM->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseMotherZM->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
+                        fSparseBckZM->GetAxis(1)->SetRange((fSparseBckZM->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseBckZM->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
+                        // z
+                        fSparseMotherZM->GetAxis(2)->SetRange(z, z);
+                        fSparseBckZM->GetAxis(2)->SetRange(z, z);
+                        // m
+                        fSparseMotherZM->GetAxis(3)->SetRange(m,m);
+                        fSparseBckZM->GetAxis(3)->SetRange(m,m);
 
-                    fHistoMotherZMProj = (TH1D*)fSparseMotherZM->Projection(0);
-                    fHistoMotherZMProj->Sumw2();
-                    fHistoBckZMProj = (TH1D*)fSparseBckZM->Projection(0);
-                    fHistoBckZMProj->Sumw2();
+                        fHistoMotherZMProj = (TH1D*)fSparseMotherZM->Projection(0);
+                        fHistoMotherZMProj->Sumw2();
+                        fHistoBckZMProj = (TH1D*)fSparseBckZM->Projection(0);
+                        fHistoBckZMProj->Sumw2();
 
-                    fScalingFactorBck[z][m]= 1./fBackgroundMultNumber;
-                    if (m==0 && z ==0){
-                        if(fHistoMappingBackInvMassPtBin[iPt]!= NULL){
-                            delete fHistoMappingBackInvMassPtBin[iPt];
-                            fHistoMappingBackInvMassPtBin[iPt]=NULL;
+                        fScalingFactorBck[z][m]= 1./fBackgroundMultNumber;
+                        if (m==0 && z ==0){
+                            if(fHistoMappingBackInvMassPtBin[iPt]!= NULL){
+                                delete fHistoMappingBackInvMassPtBin[iPt];
+                                fHistoMappingBackInvMassPtBin[iPt]=NULL;
+                            }
+                            fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
+                            fHistoMappingBackInvMassPtBin[iPt]= (TH1D*)fHistoBckZMProj->Clone(fNameHistoBack);
+                            fHistoMappingBackInvMassPtBin[iPt]->Sumw2();
+                            for (Int_t ii = 0; ii < fHistoBckZMProj->GetNbinsX()+1; ii++){
+                                fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
+                                fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,0.);
+                            }
                         }
-                        fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
-                        fHistoMappingBackInvMassPtBin[iPt]= (TH1D*)fHistoBckZMProj->Clone(fNameHistoBack);
-                        fHistoMappingBackInvMassPtBin[iPt]->Sumw2();
-                        for (Int_t ii = 0; ii < fHistoBckZMProj->GetNbinsX()+1; ii++){
-                            fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
-                            fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,0.);
+                        Int_t startBinIntegral = fHistoMotherZMProj->GetXaxis()->FindBin(fBGFitRange[0]);
+                        Int_t endBinIntegral = fHistoMotherZMProj->GetXaxis()->FindBin(fBGFitRange[1]);
+                        if (fHistoBckZMProj->Integral(startBinIntegral,endBinIntegral) != 0) {
+                            fScalingFactorBck[z][m] = fHistoMotherZMProj->Integral(startBinIntegral,endBinIntegral)/fHistoBckZMProj->Integral(startBinIntegral,endBinIntegral);
+                            if ( fScalingFactorBck[z][m]> (20./fBackgroundMultNumber) ){
+                                fScalingFactorBck[z][m]=1./fBackgroundMultNumber;
+                            }
                         }
+                        fHistoMappingBackInvMassPtBin[iPt]->Add(fHistoBckZMProj,fScalingFactorBck[z][m]);
+                        fHistoWeightsBGZbinVsMbin[iPt]->Fill(z+0.5,m+0.5,fScalingFactorBck[z][m]);
+                        fHistoFillPerEventBGZbinVsMbin[iPt]->Fill(z+0.5,m+0.5,fHistoBckZMProj->GetEntries());
+                        fHistoMotherZMProj->Clear();
+                        fHistoBckZMProj->Clear();
                     }
-                    Int_t startBinIntegral = fHistoMotherZMProj->GetXaxis()->FindBin(fBGFitRange[0]);
-                    Int_t endBinIntegral = fHistoMotherZMProj->GetXaxis()->FindBin(fBGFitRange[1]);
-                    if (fHistoBckZMProj->Integral(startBinIntegral,endBinIntegral) != 0) {
-                        fScalingFactorBck[z][m] = fHistoMotherZMProj->Integral(startBinIntegral,endBinIntegral)/fHistoBckZMProj->Integral(startBinIntegral,endBinIntegral);
-                        if ( fScalingFactorBck[z][m]> (20./fBackgroundMultNumber) ){
-                            fScalingFactorBck[z][m]=1./fBackgroundMultNumber;
-                        }
+                }
+                fHistoMappingBackInvMassPtBin[iPt]->Rebin(fNRebin[iPt]);
+                for (Int_t ii = 0; ii < fHistoMappingBackInvMassPtBin[iPt]->GetNbinsX()+1; ii++){
+                    if(fHistoMappingBackInvMassPtBin[iPt]->GetBinContent(ii) == 0){
+                        fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
+                        fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,1.);
                     }
-                    fHistoMappingBackInvMassPtBin[iPt]->Add(fHistoBckZMProj,fScalingFactorBck[z][m]);
-                    fHistoWeightsBGZbinVsMbin[iPt]->Fill(z+0.5,m+0.5,fScalingFactorBck[z][m]);
-                    fHistoFillPerEventBGZbinVsMbin[iPt]->Fill(z+0.5,m+0.5,fHistoBckZMProj->GetEntries());
-                    fHistoMotherZMProj->Clear();
-                    fHistoBckZMProj->Clear();
                 }
-            }
-            fHistoMappingBackInvMassPtBin[iPt]->Rebin(fNRebin[iPt]);
-            for (Int_t ii = 0; ii < fHistoMappingBackInvMassPtBin[iPt]->GetNbinsX()+1; ii++){
-                if(fHistoMappingBackInvMassPtBin[iPt]->GetBinContent(ii) == 0){
-                    fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
-                    fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,1.);
+                fFileDataLog << "Scaling Background factors for Pt bin " << iPt << " z m " << endl;
+                for (Int_t z=0; z < fSparseMotherZM->GetAxis(2)->GetNbins(); z++){
+                    fFileDataLog << fScalingFactorBck[z][0] << "\t" << fScalingFactorBck[z][1] << "\t" << fScalingFactorBck[z][2] << "\t" << fScalingFactorBck[z][3] << endl;
                 }
-            }
-            fFileDataLog << "Scaling Background factors for Pt bin " << iPt << " z m " << endl;
-            for (Int_t z=0; z < fSparseMotherZM->GetAxis(2)->GetNbins(); z++){
-                fFileDataLog << fScalingFactorBck[z][0] << "\t" << fScalingFactorBck[z][1] << "\t" << fScalingFactorBck[z][2] << "\t" << fScalingFactorBck[z][3] << endl;
-            }
 
-          } else {
-            //with ZPsi bins estimation
-            fHistoWeightsBGZbinVsPsibin[iPt] = new  TH2F("BGWeights", "", fSparseMotherZPsi->GetAxis(2)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(2)->GetNbins(),
-                                            fSparseMotherZPsi->GetAxis(3)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(3)->GetNbins());
-            fHistoWeightsBGZbinVsPsibin[iPt]->GetYaxis()->SetTitle("Psi-bins");
-            fHistoWeightsBGZbinVsPsibin[iPt]->GetXaxis()->SetTitle("Z-bins");
-            fHistoWeightsBGZbinVsPsibin[iPt]->Sumw2();
-            fHistoFillPerEventBGZbinVsPsibin[iPt] = new  TH2F("BGPoolsFillstatus", "", fSparseMotherZPsi->GetAxis(2)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(2)->GetNbins(),
+            } else {
+                //with ZPsi bins estimation
+                fHistoWeightsBGZbinVsPsibin[iPt] = new  TH2F("BGWeights", "", fSparseMotherZPsi->GetAxis(2)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(2)->GetNbins(),
                                                 fSparseMotherZPsi->GetAxis(3)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(3)->GetNbins());
-            fHistoFillPerEventBGZbinVsPsibin[iPt]->GetYaxis()->SetTitle("Psi-bins");
-            fHistoFillPerEventBGZbinVsPsibin[iPt]->GetXaxis()->SetTitle("Z-bins");
-            fHistoFillPerEventBGZbinVsPsibin[iPt]->Sumw2();
+                fHistoWeightsBGZbinVsPsibin[iPt]->GetYaxis()->SetTitle("Psi-bins");
+                fHistoWeightsBGZbinVsPsibin[iPt]->GetXaxis()->SetTitle("Z-bins");
+                fHistoWeightsBGZbinVsPsibin[iPt]->Sumw2();
+                fHistoFillPerEventBGZbinVsPsibin[iPt] = new  TH2F("BGPoolsFillstatus", "", fSparseMotherZPsi->GetAxis(2)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(2)->GetNbins(),
+                                                    fSparseMotherZPsi->GetAxis(3)->GetNbins(),  0, fSparseMotherZPsi->GetAxis(3)->GetNbins());
+                fHistoFillPerEventBGZbinVsPsibin[iPt]->GetYaxis()->SetTitle("Psi-bins");
+                fHistoFillPerEventBGZbinVsPsibin[iPt]->GetXaxis()->SetTitle("Z-bins");
+                fHistoFillPerEventBGZbinVsPsibin[iPt]->Sumw2();
 
-            for (Int_t z=0;z < fSparseMotherZPsi->GetAxis(2)->GetNbins();z++){
-                for (Int_t psi = 0; psi < fSparseMotherZPsi->GetAxis(3)->GetNbins(); psi++){
-                    // pt
-                    fSparseMotherZPsi->GetAxis(1)->SetRange((fSparseMotherZPsi->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseMotherZPsi->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
-                    fSparseBckZPsi->GetAxis(1)->SetRange((fSparseBckZPsi->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseBckZPsi->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
-                    // z
-                    fSparseMotherZPsi->GetAxis(2)->SetRange(z, z);
-                    fSparseBckZPsi->GetAxis(2)->SetRange(z, z);
-                    // psi
-                    fSparseMotherZPsi->GetAxis(3)->SetRange(psi,psi);
-                    fSparseBckZPsi->GetAxis(3)->SetRange(psi,psi);
+                for (Int_t z=0;z < fSparseMotherZPsi->GetAxis(2)->GetNbins();z++){
+                    for (Int_t psi = 0; psi < fSparseMotherZPsi->GetAxis(3)->GetNbins(); psi++){
+                        cout << "Z:"<<  z << "\t psi: " << psi << endl;
+                        // pt
+                        fSparseMotherZPsi->GetAxis(1)->SetRange((fSparseMotherZPsi->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseMotherZPsi->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
+                        fSparseBckZPsi->GetAxis(1)->SetRange((fSparseBckZPsi->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseBckZPsi->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
+                        // z
+                        fSparseMotherZPsi->GetAxis(2)->SetRange(z, z);
+                        fSparseBckZPsi->GetAxis(2)->SetRange(z, z);
+                        // psi
+                        fSparseMotherZPsi->GetAxis(3)->SetRange(psi,psi);
+                        fSparseBckZPsi->GetAxis(3)->SetRange(psi,psi);
 
-                    fHistoMotherZPsiProj = (TH1D*)fSparseMotherZPsi->Projection(0);
-                    fHistoMotherZPsiProj->Sumw2();
-                    fHistoBckZPsiProj = (TH1D*)fSparseBckZPsi->Projection(0);
-                    fHistoBckZPsiProj->Sumw2();
+                        fHistoMotherZPsiProj = (TH1D*)fSparseMotherZPsi->Projection(0);
+                        fHistoMotherZPsiProj->Sumw2();
+                        fHistoBckZPsiProj = (TH1D*)fSparseBckZPsi->Projection(0);
+                        fHistoBckZPsiProj->Sumw2();
 
-                    fScalingFactorBck[z][psi]= 1./fBackgroundMultNumber;
-                    if (psi==0 && z ==0){
-                        if(fHistoMappingBackInvMassPtBin[iPt]!= NULL){
-                            delete fHistoMappingBackInvMassPtBin[iPt];
-                            fHistoMappingBackInvMassPtBin[iPt]=NULL;
+                        fScalingFactorBck[z][psi]= 1./fBackgroundMultNumber;
+                        if (psi==0 && z ==0){
+                            if(fHistoMappingBackInvMassPtBin[iPt]!= NULL){
+                                delete fHistoMappingBackInvMassPtBin[iPt];
+                                fHistoMappingBackInvMassPtBin[iPt]=NULL;
+                            }
+                            fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
+                            fHistoMappingBackInvMassPtBin[iPt]= (TH1D*)fHistoBckZPsiProj->Clone(fNameHistoBack);
+                            fHistoMappingBackInvMassPtBin[iPt]->Sumw2();
+                            for (Int_t ii = 0; ii < fHistoBckZPsiProj->GetNbinsX()+1; ii++){
+                                fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
+                                fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,0.);
+                            }
                         }
-                        fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
-                        fHistoMappingBackInvMassPtBin[iPt]= (TH1D*)fHistoBckZPsiProj->Clone(fNameHistoBack);
-                        fHistoMappingBackInvMassPtBin[iPt]->Sumw2();
-                        for (Int_t ii = 0; ii < fHistoBckZPsiProj->GetNbinsX()+1; ii++){
-                            fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
-                            fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,0.);
+                        Int_t startBinIntegral = fHistoMotherZPsiProj->GetXaxis()->FindBin(fBGFitRange[0]);
+                        Int_t endBinIntegral = fHistoMotherZPsiProj->GetXaxis()->FindBin(fBGFitRange[1]);
+                        if (fHistoBckZPsiProj->Integral(startBinIntegral,endBinIntegral) != 0) {
+                            fScalingFactorBck[z][psi] = fHistoMotherZPsiProj->Integral(startBinIntegral,endBinIntegral)/fHistoBckZPsiProj->Integral(startBinIntegral,endBinIntegral);
+                            if ( fScalingFactorBck[z][psi]> (20./fBackgroundMultNumber) ){
+                                fScalingFactorBck[z][psi]=1./fBackgroundMultNumber;
+                            }
                         }
+                        fHistoMappingBackInvMassPtBin[iPt]->Add(fHistoBckZPsiProj,fScalingFactorBck[z][psi]);
+                        fHistoWeightsBGZbinVsPsibin[iPt]->Fill(z+0.5,psi+0.5,fScalingFactorBck[z][psi]);
+                        fHistoFillPerEventBGZbinVsPsibin[iPt]->Fill(z+0.5,psi+0.5,fHistoBckZPsiProj->GetEntries());
+                        fHistoMotherZPsiProj->Clear();
+                        fHistoBckZPsiProj->Clear();
                     }
-                    Int_t startBinIntegral = fHistoMotherZPsiProj->GetXaxis()->FindBin(fBGFitRange[0]);
-                    Int_t endBinIntegral = fHistoMotherZPsiProj->GetXaxis()->FindBin(fBGFitRange[1]);
-                    if (fHistoBckZPsiProj->Integral(startBinIntegral,endBinIntegral) != 0) {
-                        fScalingFactorBck[z][psi] = fHistoMotherZPsiProj->Integral(startBinIntegral,endBinIntegral)/fHistoBckZPsiProj->Integral(startBinIntegral,endBinIntegral);
-                        if ( fScalingFactorBck[z][psi]> (20./fBackgroundMultNumber) ){
-                            fScalingFactorBck[z][psi]=1./fBackgroundMultNumber;
-                        }
+                }
+                fHistoMappingBackInvMassPtBin[iPt]->Rebin(fNRebin[iPt]);
+                for (Int_t ii = 0; ii < fHistoMappingBackInvMassPtBin[iPt]->GetNbinsX()+1; ii++){
+                    if(fHistoMappingBackInvMassPtBin[iPt]->GetBinContent(ii) == 0){
+                        fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
+                        fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,1.);
                     }
-                    fHistoMappingBackInvMassPtBin[iPt]->Add(fHistoBckZPsiProj,fScalingFactorBck[z][psi]);
-                    fHistoWeightsBGZbinVsPsibin[iPt]->Fill(z+0.5,psi+0.5,fScalingFactorBck[z][psi]);
-                    fHistoFillPerEventBGZbinVsPsibin[iPt]->Fill(z+0.5,psi+0.5,fHistoBckZPsiProj->GetEntries());
-                    fHistoMotherZPsiProj->Clear();
-                    fHistoBckZPsiProj->Clear();
                 }
-            }
-            fHistoMappingBackInvMassPtBin[iPt]->Rebin(fNRebin[iPt]);
-            for (Int_t ii = 0; ii < fHistoMappingBackInvMassPtBin[iPt]->GetNbinsX()+1; ii++){
-                if(fHistoMappingBackInvMassPtBin[iPt]->GetBinContent(ii) == 0){
-                    fHistoMappingBackInvMassPtBin[iPt]->SetBinContent(ii,0.);
-                    fHistoMappingBackInvMassPtBin[iPt]->SetBinError(ii,1.);
+                fFileDataLog << "Scaling Background factors for Pt bin " << iPt << " z psi " << endl;
+                for (Int_t z=0; z < fSparseMotherZPsi->GetAxis(2)->GetNbins(); z++){
+                    fFileDataLog << fScalingFactorBck[z][0] << "\t" << fScalingFactorBck[z][1] << "\t" << fScalingFactorBck[z][2] << "\t" << fScalingFactorBck[z][3] << endl;
                 }
-            }
-            fFileDataLog << "Scaling Background factors for Pt bin " << iPt << " z psi " << endl;
-            for (Int_t z=0; z < fSparseMotherZPsi->GetAxis(2)->GetNbins(); z++){
-                fFileDataLog << fScalingFactorBck[z][0] << "\t" << fScalingFactorBck[z][1] << "\t" << fScalingFactorBck[z][2] << "\t" << fScalingFactorBck[z][3] << endl;
-            }
 
-          }
+            }
         }
 
         if(!fUseRPBackground){
@@ -4197,7 +4200,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
         } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (ptBin >= 20) ){//
             cout << "Skipping the vary option for this case" << endl;
-        } else {// ...do what you are supposed to....        
+        } else {// ...do what you are supposed to....
             if (!(fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1]) ){
                 fMesonLambdaTail = fFitReco->GetParameter(3);
                 if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && fPrefix.CompareTo("Eta") ==0){
@@ -4205,9 +4208,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                     fMesonLambdaTailRange[1] = 1.5*fFitReco->GetParameter(3);
                 } else {
                     fMesonLambdaTailRange[0] = 0.9*fFitReco->GetParameter(3);
-                    fMesonLambdaTailRange[1] = 1.1*fFitReco->GetParameter(3);                
+                    fMesonLambdaTailRange[1] = 1.1*fFitReco->GetParameter(3);
                 }
-            }    
+            }
             fMesonWidthExpect = fFitReco->GetParameter(2);
             fMesonWidthRange[0] = 0.5*fFitReco->GetParameter(2);
             fMesonWidthRange[1] = 1.5*fFitReco->GetParameter(2);

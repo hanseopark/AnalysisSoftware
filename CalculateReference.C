@@ -646,7 +646,9 @@ void CalculateReference (   TString configFile                  = "",
     }
 //     return;
 
-    Int_t nDataSetsMC = nDataSets;
+    Int_t nDataSetsMC       = nDataSets;
+    Int_t nMCBinsRemoved    = 0;
+    Int_t exampleBinMC      = exampleBin;
     if (haveMC[0]){
         if (nameFileMCRef.CompareTo("") != 0){
             inputFileMC[nDataSets]              = new TFile(nameFileMCRef);
@@ -657,14 +659,19 @@ void CalculateReference (   TString configFile                  = "",
                     haveMC[nDataSets]           = kTRUE;
                     graphMC[nDataSets]          = new TGraphAsymmErrors(histMC[nDataSets]);
                     while (graphMC[nDataSets]->GetX()[graphMC[nDataSets]->GetN()-1] > 30) graphMC[nDataSets]->RemovePoint(graphMC[nDataSets]->GetN()-1);
-                    while (graphMC[nDataSets]->GetX()[0] < 0.1) graphMC[nDataSets]->RemovePoint(0);
+                    while (graphMC[nDataSets]->GetX()[0] < 0.1){
+                        graphMC[nDataSets]->RemovePoint(0);
+                        nMCBinsRemoved++;
+                    }
                     fitCombMC[nDataSets]        = DoFitWithTsallis(graphMC[nDataSets],Form("fitCombMC_%d",nDataSets),meson.Data(), graphMC[nDataSets]->GetY()[0],7.,0.2);
                     energyIndName[nDataSets]    = finalEnergy;
                     energyInd[nDataSets]        = energy;
                 }
             }
         }
+        exampleBinMC        = histMC[0]->FindBin(graphCombReb[0]->GetX()[exampleBin])-nMCBinsRemoved;
     }
+
 
     //*************************************************************************************************
     //*************************** extrapolate spectra stat errors only ********************************
@@ -688,7 +695,7 @@ void CalculateReference (   TString configFile                  = "",
                 counter++;
             }
             PlotInterpolationPtBins(graphPtvsSqrtsMC,gPtvsEnergiesSystemMC,fPowerlawSystemMC,0x0, graphFinalEnergyMC,columns, rows, Form("%s/%s_%s_MC_Pt_vs_Sqrts.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
-            PlotInterpolationSinglePtBin(graphPtvsSqrtsMC[exampleBin+10],gPtvsEnergiesSystemMC[exampleBin+10], fPowerlawSystemMC[exampleBin+10], 0x0, graphFinalEnergyMC, exampleBin+10, Form("%s/%s_%s_MC_Pt_vs_Sqrts_SinglePtBin.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
+            PlotInterpolationSinglePtBin(graphPtvsSqrtsMC[exampleBinMC],gPtvsEnergiesSystemMC[exampleBinMC], fPowerlawSystemMC[exampleBinMC], 0x0, graphFinalEnergyMC, exampleBinMC, Form("%s/%s_%s_MC_Pt_vs_Sqrts_SinglePtBin.%s",outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
 
             splineAlphaMC                       = new TSpline5("alphaMCSpline",graphAlphaMC);
         } else {
