@@ -817,26 +817,32 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                     if (!cent.CompareTo("0-10%")){
                         adjustPtDependent               = kTRUE;
                         if (spectrumName.Contains("Ratio")){
-                            if (ptBins[k]<2)
-                                errorFixed      = 0.4+pow(ptBins[k]-2.5,2)*0.5;
+                            if (ptBins[k]<=2.5)
+                                errorFixed      = 0.6+pow(ptBins[k]-3,2)*0.4;
                             else
-                                errorFixed      = 0.2+pow(ptBins[k]-4,2)*0.02;
+                                errorFixed      = 0.6+pow(ptBins[k],1.7)*0.008;
                         } else if (spectrumName.Contains("Pi0")){
-                            if (ptBins[k]<2)
-                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.5;
+                            if (ptBins[k]<=2.5)
+                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.7;
                             else
-                                errorFixed      = 0.8+pow(ptBins[k]-2,2)*0.01;
+                                errorFixed      = 0.7;
                         } else {
-                            errorFixed      = 0.2+pow(ptBins[k],1.8)*0.025;
+                            errorFixed      = 0.2;
                         }
                     } else {
                         adjustPtDependent               = kTRUE;
                         if (spectrumName.Contains("Ratio")){
-                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.03;
+                            if (ptBins[k]<=2.5)
+                                errorFixed      = 0.4+pow(ptBins[k]-2.2,2)*0.5;
+                            else
+                                errorFixed      = 0.4+pow(ptBins[k],1.7)*0.02;
                         } else if (spectrumName.Contains("Pi0")){
-                            errorFixed      = 0.5+pow(ptBins[k],1.8)*0.015;
+                            if (ptBins[k]<=2.5)
+                                errorFixed      = 0.4+pow(ptBins[k]-2.2,2)*0.7;
+                            else
+                                errorFixed      = 0.5;
                         } else {
-                            errorFixed      = 0.3+pow(ptBins[k],1.8)*0.025;
+                            errorFixed      = 0.18+pow(ptBins[k],1.8)*0.02;
                         }
                     }
 
@@ -855,11 +861,11 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                     if (!cent.CompareTo("0-10%")){
                         adjustPtDependent               = kTRUE;
                         if (spectrumName.Contains("Ratio")){
-                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                            errorFixed                  = 0.65+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.009;
                         } else if (spectrumName.Contains("Pi0")){
-                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
+                            errorFixed                  = 0.3+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.007;
                         } else {
-                            errorFixed                  = 0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.013;
+                            errorFixed                  = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.009;
                         }
                     } else {
                         adjustPtDependent               = kTRUE;
@@ -868,7 +874,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                         } else if (spectrumName.Contains("Pi0")){
                             errorFixed                  = 0.2+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.01;
                         } else {
-                            errorFixed                  = 0.25+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.015;
+                            errorFixed                  = 0.17+0.05*ptBins[k]+pow(ptBins[k],2.)*0.02;
                         }
                     }
 
@@ -905,7 +911,12 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 for (Int_t k = 0; k < nPtBinsActive; k++){
                     adjustPtDependent               = kTRUE;
                     if (!cent.CompareTo("0-10%")){
-                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                        if (spectrumName.Contains("Ratio")){
+                            if (ptBins[k]<2)
+                                errorFixed      = 0.6+pow(ptBins[k]-2.,2)*0.9;
+                            else
+                                errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.02;
+                        } else if (spectrumName.Contains("Pi0")){
                             if (ptBins[k]<2)
                                 errorFixed      = 0.6+pow(ptBins[k]-2.5,2)*0.5;
                             else
@@ -915,9 +926,9 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                         }
                     } else {
                         if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
-                            errorFixed      = 0.2+pow(ptBins[k]-5,2)*0.03;
+                            errorFixed      = 0.2+pow(ptBins[k]-5,2)*0.025;
                         } else {
-                            errorFixed                  = 0.3;
+                            errorFixed                  = 0.2;
                         }
                     }
 
@@ -937,28 +948,28 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                     if (!cent.CompareTo("0-10%")){
                         if (spectrumName.Contains("Ratio")){
                             if (ptBins[k]<3)
-                                errorFixed      = 1.+pow(ptBins[k]-2.5,2)*0.5;
+                                errorFixed      = .8+pow(ptBins[k]-2.5,2)*0.8;
                             else
-                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                                errorFixed      = 0.55+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
                         } else if (spectrumName.Contains("Pi0")){
-                            if (ptBins[k]<3)
-                                errorFixed      = 1.+pow(ptBins[k]-2.5,2)*0.5;
+                            if (ptBins[k]<=2.5)
+                                errorFixed      = 1.+pow(ptBins[k]-2.5,2)*0.8;
                             else
-                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.)*0.001;
+                                errorFixed      = 0.7;
                         } else {
                             errorFixed          = 0.15;
                         }
                     } else {
                         if (spectrumName.Contains("Ratio")){
                             if (ptBins[k]<2.5)
-                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.5;
+                                errorFixed      = 0.7+pow(ptBins[k]-2.5,2)*0.7;
                             else
-                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                                errorFixed      = 0.5; //0.35+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
                         } else if (spectrumName.Contains("Pi0")){
                             if (ptBins[k]<2.5)
-                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.5;
+                                errorFixed      = 0.8+pow(ptBins[k]-2.5,2)*0.8;
                             else
-                                errorFixed      = 0.4+0.05*ptBins[k]+pow(ptBins[k],2.2)*0.001;
+                                errorFixed      = 0.45;
                         } else {
                             errorFixed          = 0.15;
                         }
@@ -979,30 +990,30 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                     if(!cent.CompareTo("0-10%")){
                         adjustPtDependent           = kTRUE;
                         if (spectrumName.Contains("Ratio")){
-                            if (ptBins[k]>2.5)
-                                errorFixed      = 0.5+pow(ptBins[k]-5,2)*0.03;
-                            else
-                                errorFixed      = -0.05+0.005*ptBins[k]+pow(ptBins[k]-6,2)*0.08;
+//                             if (ptBins[k]>2.5)
+                                errorFixed      = 1.5+pow(ptBins[k]-4,2)*0.03;
+//                             else
+//                                 errorFixed      = 0.005*ptBins[k]+pow(ptBins[k]-6,2)*0.08;
                         } else if (spectrumName.Contains("Pi0")){
-                            if (ptBins[k]<3.5)
-                                errorFixed      = 0.3+pow(ptBins[k]-6,2)*0.07;
-                            else
-                                errorFixed      = 0.7+pow(ptBins[k],1.3)*0.02;
+//                             if (ptBins[k]<3.5)
+//                                 errorFixed      = 0.7+pow(ptBins[k]-6,2)*0.07;
+//                             else
+//                                 errorFixed      = 1.2+pow(ptBins[k],1.3)*0.02;
+                                errorFixed      = 1.5+pow(ptBins[k]-5,2)*0.03;
                         } else {
-                            adjustPtDependent           = kFALSE;
-                            errorFixed              = 0.7;
+                            errorFixed      = 0.4+pow(ptBins[k],1.8)*0.015;
                         }
                     } else {
                         adjustPtDependent           = kTRUE;
                         if (spectrumName.Contains("Ratio")){
                             errorFixed      = 1.+pow(ptBins[k]-3,2)*0.02;
                         } else if (spectrumName.Contains("Pi0")){
-                            if (ptBins[k]<3.5)
-                                errorFixed      = 0.2+pow(ptBins[k]-6,2)*0.07;
-                            else
-                                errorFixed      = 0.7+pow(ptBins[k],1.3)*0.02;
+//                             if (ptBins[k]<3.5)
+//                                 errorFixed      = 0.2+pow(ptBins[k]-6,2)*0.07;
+//                             else
+                                errorFixed      = 1.2+pow(ptBins[k],1.3)*0.02;
                         } else {
-                            errorFixed      = 0.4+pow(ptBins[k],1.8)*0.02;
+                            errorFixed      = 0.4+pow(ptBins[k],1.8)*0.015;
                         }
                     }
                     if (errorFixed != -1){
@@ -1019,11 +1030,10 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 for (Int_t k = 0; k < nPtBinsActive; k++){
                     adjustPtDependent               = kTRUE;
                     if (!cent.CompareTo("0-10%")){
-
                         if (spectrumName.Contains("Ratio")){
-                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2)*0.01;
+                            errorFixed      = 0.3+0.05*ptBins[k]+pow(ptBins[k],2)*0.01;
                         } else if (spectrumName.Contains("Pi0")){
-                            errorFixed      = 0.25+0.05*ptBins[k]+pow(ptBins[k],2)*0.015;
+                            errorFixed      = 0.6+0.05*ptBins[k]+pow(ptBins[k],2)*0.01;
                         } else {
                             errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.0)*0.007;
                         }
@@ -1031,9 +1041,9 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                     } else {
 
                         if (spectrumName.Contains("Ratio")){
-                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2)*0.025;
+                            errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2)*0.02;
                         } else if (spectrumName.Contains("Pi0")){
-                            errorFixed      = 0.25+0.05*ptBins[k]+pow(ptBins[k],2)*0.015;
+                            errorFixed      = 0.5+0.05*ptBins[k]+pow(ptBins[k],2)*0.012;
                         } else {
                             errorFixed      = 0.15+0.05*ptBins[k]+pow(ptBins[k],2.0)*0.007;
                         }
@@ -1063,16 +1073,19 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 for (Int_t k = 0; k < nPtBinsActive; k++){
                     if(!cent.CompareTo("0-10%")){
                         if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
-                            adjustPtDependent           = kFALSE;
-                            errorFixed              = -1;
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.2+pow(ptBins[k],2)*0.01;
                         } else {
                             adjustPtDependent           = kTRUE;
                             errorFixed              = 0.05+pow(ptBins[k],2)*0.005;
                         }
                     } else {
-                        if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0")){
+                        if (spectrumName.Contains("Ratio")){
                             adjustPtDependent           = kTRUE;
-                            errorFixed              = 0.1+pow(ptBins[k],2)*0.005;
+                            errorFixed              = 0.1+pow(ptBins[k],2)*0.007;
+                        } else if (spectrumName.Contains("Pi0")){
+                            adjustPtDependent           = kTRUE;
+                            errorFixed              = 0.13+pow(ptBins[k],2)*0.01;
                         } else {
                             adjustPtDependent           = kTRUE;
                             errorFixed              = 0.05+pow(ptBins[k],2)*0.005;
@@ -1153,23 +1166,23 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
             if (!nameCutVariationString[i].CompareTo("BG")){
             }
 
-            // fix alpha sys #13
+            // fix conv phi sys #13
             if (!nameCutVariationString[i].CompareTo("ConvPhi")){
                 adjustPtDependent           = kTRUE;
                 for (Int_t k = 0; k < nPtBinsActive; k++){
                     if (!cent.CompareTo("0-10%")){
                         if (spectrumName.Contains("Ratio") || spectrumName.Contains("Pi0") )
-                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.02;
+                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.018;
                         else {
                             errorFixed      = -1;
                         }
                     } else {
                         if (spectrumName.Contains("Ratio") )
-                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.06;
+                            errorFixed      = 0.35+pow(ptBins[k],1.7)*0.018;
                         else if(spectrumName.Contains("Pi0"))
-                            errorFixed      = 0.2+pow(ptBins[k],1.7)*0.03;
+                            errorFixed      = 0.5+pow(ptBins[k],1.7)*0.02;
                         else
-                            errorFixed      = 0.1+pow(ptBins[k],2)*0.02;
+                            errorFixed      = 0.12+pow(ptBins[k],1.7)*0.012;
                     }
 
                     if (errorFixed != -1){

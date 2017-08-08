@@ -327,8 +327,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
                         cout<<"ERROR: TopDir for pile-up tree not Found"<<endl;
                         return;
                     }
-                    HistosGammaConversionForPileUp                              = (TList*)TopDirForPileUp->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
-                    DCAContainer                                                = (TList*)HistosGammaConversionForPileUp->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
+                    TString stdcut = "";
+                    if(fCutSelectionRead.BeginsWith("524")) stdcut = "52400013_00200009247002008850404000_0152501500000000";
+                    else stdcut = "52500013_00200009247002008850404000_0152501500000000";
+                    HistosGammaConversionForPileUp                              = (TList*)TopDirForPileUp->FindObject(Form("Cut Number %s",stdcut.Data()));
+                    DCAContainer                                                = (TList*)HistosGammaConversionForPileUp->FindObject(Form("%s Photon DCA tree",stdcut.Data()));
                 }
             } else DCAContainer                                                    = (TList*)HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
             if(DCAContainer){
