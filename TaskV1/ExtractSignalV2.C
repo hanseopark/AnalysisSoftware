@@ -101,9 +101,9 @@ void ExtractSignalV2(   TString meson                   = "",
     TString fClusterCutSelectionRead= fClusterCutSelection.Data();
     if (addSig) {
         if(directphotonPlots.CompareTo("directPhoton")==0){
-            cout << "running added Signal for photons" << endl;
+            cout << "running added Signal for photons, be careful" << endl;
             cout << fEventCutSelection.Data() << endl;
-            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"3");
+            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
             cout << fEventCutSelection.Data() << endl;
             fEventCutSelectionRead      = fEventCutSelection;
             fGammaCutSelectionRead      = fGammaCutSelection;
