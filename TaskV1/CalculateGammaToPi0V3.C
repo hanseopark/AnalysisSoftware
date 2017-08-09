@@ -500,7 +500,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         // Special PbPb setting for fits
         if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
             if(centCutNumberI<4){
-                fitNameGammaA                   = "QCD";
+                fitNameGammaA                   = "rad";
                 fitNameGammaB                   = "oHag";
                 fitMaxPt                        = 14;
             } else{
@@ -515,18 +515,25 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             fitOptions                          = "QNRME+";
         }
 
-        // Start fitting hagedorn and tsallis
+        cout<<"-----------------------------------------------------------------"<<endl;
+        cout<<"---------------------- Begin Fitting Gamma ----------------------"<<endl;
+        cout<<"-----------------------------------------------------------------"<<endl;
+
         fitGammaA                               = FitObject(fitNameGammaA,"fitGammaA","Pi0",histoGammaSpecCorrPurity,fitMinPt,fitMaxPt,NULL,fitOptions);
         DrawGammaSetMarkerTF1(fitGammaA, 1, 2.0, kBlue-2);
-        fileFinalResults << "CorrectedYieldTrueEff " << fitNameGammaA << endl;
+        fileFinalResults << "IncRatioPurity_trueEff " << fitNameGammaA << endl;
         forOutput                               = WriteParameterToFile(fitGammaA);
         fileFinalResults << forOutput.Data() << endl;
 
         fitGammaB                               = FitObject(fitNameGammaB,"fitGammaB","Pi0",histoGammaSpecCorrPurity,fitMinPt,fitMaxPt,NULL,fitOptions);
         DrawGammaSetMarkerTF1(fitGammaB, 2, 2.0, kRed-3);
-        fileFinalResults << "CorrectedYieldTrueEff " << fitNameGammaB << endl;
+        fileFinalResults << "IncRatioPurity_trueEff " << fitNameGammaB << endl;
         forOutput                               = WriteParameterToFile(fitGammaB);
         fileFinalResults << forOutput.Data() << endl;
+
+        cout<<"-----------------------------------------------------------------"<<endl;
+        cout<<"------------------------ End Fitting Gamma ----------------------"<<endl;
+        cout<<"-----------------------------------------------------------------"<<endl;
 
         fitGammaB->SetLineColor(2);
         fitGammaB->SetLineStyle(2);
@@ -560,8 +567,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             PlotLatexLegend(0.93, 0.95-0.045*2, 0.045,collisionSystem,detectionProcess,2,31);
             TLegend* legendGammaSpectraFits  = GetAndSetLegend2(0.7, 0.93-0.045*4, 0.9, 0.93-0.045*2, 0.045,1,"",42,0.2);
             legendGammaSpectraFits->AddEntry(histoGammaSpecCorrPurity,"#gamma data", "lp");
-            legendGammaSpectraFits->AddEntry(fitGammaA,"Hagedorn", "l");
-            legendGammaSpectraFits->AddEntry(fitGammaB,"Levy", "l");
+            legendGammaSpectraFits->AddEntry(fitGammaA,fitNameGammaA, "l");
+            legendGammaSpectraFits->AddEntry(fitGammaB,fitNameGammaB, "l");
             legendGammaSpectraFits->Draw();
 
         // Lower part of plot with ratio
@@ -710,9 +717,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
             TLegend* legendGammaSpectra       = GetAndSetLegend2(0.18, 0.05, 0.5, 0.05+0.045*4, 0.04,1,"",42,0.15);
             legendGammaSpectra->AddEntry(histoCorrectedPi0Yield[0],"#pi^{0} corr. yield","pl");
-            legendGammaSpectra->AddEntry(fitPi0YieldA,Form("Hagedorn: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
-            legendGammaSpectra->AddEntry(fitPi0YieldB,Form("Levy-Tsallis: %s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
-            legendGammaSpectra->AddEntry(fitPi0YieldC,Form("Mod. Hagedorn: %s #chi^{2}/ndf %.2f",fitPi0C.Data(),fitPi0YieldC->GetChisquare()/fitPi0YieldC->GetNDF()),"l");
+            legendGammaSpectra->AddEntry(fitPi0YieldA,Form("%s #chi^{2}/ndf %.2f",fitPi0A.Data(),fitPi0YieldA->GetChisquare()/fitPi0YieldA->GetNDF()),"l");
+            legendGammaSpectra->AddEntry(fitPi0YieldB,Form("%s #chi^{2}/ndf %.2f",fitPi0B.Data(),fitPi0YieldB->GetChisquare()/fitPi0YieldB->GetNDF()),"l");
+            legendGammaSpectra->AddEntry(fitPi0YieldC,Form("%s #chi^{2}/ndf %.2f",fitPi0C.Data(),fitPi0YieldC->GetChisquare()/fitPi0YieldC->GetNDF()),"l");
             legendGammaSpectra->Draw();
 
         // Plotting ratios of data and fits in lower pad

@@ -4113,7 +4113,7 @@
     // this function calculates the direct photon points and decides, whether
     // the point is a point or just an upper limit
     // *********************************************************************************************************
-    TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* spectrum, float iFlag, float ScaleArrowlength){
+    TGraphAsymmErrors *CalculateDirectPhotonPointsAndUpperLimits(TH1* error, TH1* spectrum, float iFlag, float ScaleArrowlength, Int_t offset = 0){
 
         const int kMaxPoints                = 50;
         int nPoints                         = 0;
@@ -4124,7 +4124,7 @@
         //  const float  ScaleArrowlength = 0.5;
         //  const float  ScaleArrowlength = 0.5;
 
-        for(int ib = 1;ib <= error->GetNbinsX();ib++){
+        for(int ib = 1+offset;ib <= error->GetNbinsX();ib++){
             float val                       = spectrum->GetBinContent(ib);
             float pt                        = spectrum->GetBinCenter(ib);
             float err                       = val - error->GetBinContent(ib);
@@ -4135,7 +4135,7 @@
             //float confi                   = 1.28; // 90%
             //float lowbound                = val - 1.28*abs(err); // 90% CL
             float lowbound                  = val - confi*abs(err); // 95% CL
-
+            //cout << "pt " << pt << " val " << val << " errt " << errt << " err " << err << " lowbound " << lowbound << endl;
             if(iFlag==0){ // points and errors > 0 syst
                 if(val>0&&errt>0){
                     x[nPoints]              = pt;
