@@ -1129,7 +1129,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     fitTCMDecomposedLPi0PP->SetParameters(graphPPCombPi0Stat->GetY()[2],0.3);
     graphPPCombPi0Stat->Fit(fitTCMDecomposedLPi0PP,"QNRMEX0+","",0.3,0.8);
     graphPPCombPi0Stat->Fit(fitTCMDecomposedHPi0PP,"QNRMEX0+","",3,20);
-    //     fitTCMDecomposedHPi0->SetParameters(graphCombPi0InvYieldTot->GetY()[2],0.8, 2);
+    fitTCMDecomposedHPi0PP->SetParameters(graphPPCombPi0Stat->GetY()[2],0.8, 2);
 
     cout << WriteParameterToFile(fitTCMDecomposedLPi0PP)<< endl;
     fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedLPi0PP)<< endl;
@@ -1144,6 +1144,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     cout << "fitting pp pi0 spectra" << endl;
     cout << WriteParameterToFile(fitTCMInvYieldPi0PP)<< endl;
     fileFitsOutput <<  WriteParameterToFile(fitTCMInvYieldPi0PP)<< endl;
+
+    TF1* fitTsallisInvYieldPi0PP                            = FitObject("l","fitTsallisInvYieldPi0PP5023GeV","Pi0",graphPPCombPi0Stat,0.3,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << "fitting pp pi0 spectra" << endl;
+    cout << WriteParameterToFile(fitTsallisInvYieldPi0PP)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitTsallisInvYieldPi0PP)<< endl;
 
     // *************************************************************************************************************
     // Shift graphs in Y direction as well if desired
@@ -1167,7 +1172,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             graphRatioPi0IndCombFitSysPP[i]                 = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSysPP[i], fitTCMInvYieldPi0PP);
         }
     }
-
 
     // **********************************************************************************************************************
     // ******************************************* Plot Ratio of Comb to Fit for pp *****************************************

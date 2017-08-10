@@ -432,6 +432,7 @@ void CalculateReference (   TString configFile                  = "",
                 }
             }
         } else if (!isHist[0][i] && !isHist[1][i]){
+            cout << "loading graph" <<  nameHist[0][i].Data() << endl;
             graphStat[i]                = (TGraphAsymmErrors*)inputFile[i]->Get(nameHist[0][i].Data());
             graphStat[i]->GetYaxis()->SetRangeUser(graphStat[i]->GetY()[graphStat[i]->GetN()-1], graphStat[i]->GetY()[0]);
             cout << "resetting y axis: " << graphStat[i]->GetY()[graphStat[i]->GetN()-1] << "\t" << graphStat[i]->GetY()[0] << endl;
@@ -439,6 +440,7 @@ void CalculateReference (   TString configFile                  = "",
             cout << "statistical graph" << endl;
             graphStat[i]->Print();
 
+            cout << "loading graph" <<  nameHist[1][i].Data() << endl;
             graphSyst[i]                = (TGraphAsymmErrors*)inputFile[i]->Get(nameHist[1][i].Data());
             graphSyst[i]->GetYaxis()->SetRangeUser(graphSyst[i]->GetY()[graphSyst[i]->GetN()-1], graphSyst[i]->GetY()[0]);
             cout << "resetting y axis: " << graphSyst[i]->GetY()[graphSyst[i]->GetN()-1] << "\t" << graphSyst[i]->GetY()[0] << endl;
@@ -447,6 +449,7 @@ void CalculateReference (   TString configFile                  = "",
             graphSyst[i]->Print();
 
             if (nameHist[2][i].CompareTo("bla")!= 0){
+                cout << "loading graph" <<  nameHist[2][i].Data() << endl;
                 graphComb[i]            = (TGraphAsymmErrors*)inputFile[i]->Get(nameHist[2][i].Data());
                 ScaleGraph(graphComb[i],scaleFactor[i]);
             } else {
