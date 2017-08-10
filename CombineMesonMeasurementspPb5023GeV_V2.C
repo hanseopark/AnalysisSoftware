@@ -100,6 +100,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         textALICE                               = "ALICE this thesis";
     //___________________________________ Declaration of files _____________________________________________
     TString collisionSystempPb                  = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
+    TString collisionSystempp                   = "pp, #sqrt{#it{s}} = 5.02 TeV";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurementspPb5023GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
 
     TString nameFinalResDat                     = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
@@ -1029,6 +1030,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TGraphAsymmErrors* graphPPCombPi0UncorrSys      = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionUnCorrSystErrComb_Pi0_5.023TeV");
         TGraphAsymmErrors* graphPPCombPi0FullSys        = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionSystErrComb_Pi0_5.023TeV");
         TGraphAsymmErrors* graphPPCombPi0InterSys       = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionInterpolSystErrComb_Pi0_5.023TeV");
+
         TGraphAsymmErrors* graphPPCombEtaStat           = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionStatErrComb_Eta_5.023TeV");
         TGraphAsymmErrors* graphPPCombEtaUncorrSys      = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionUnCorrSystErrComb_Eta_5.023TeV");
         TGraphAsymmErrors* graphPPCombEtaFullSys        = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionSystErrComb_Eta_5.023TeV");
@@ -1118,13 +1120,229 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TGraphAsymmErrors* graphPi0RpAErrEPS09sDSS5023GeV   = (TGraphAsymmErrors*)directoryMB->Get("graphPi0RpAAsymmErrEPS09sDSS5023GeV");
 
     // *******************************************************************************************************
+    // ************************** Comparison of different pp interpolated spectra ****************************
+    // *******************************************************************************************************
+    // fitting spectrum with intial parameters
+    // Two component model fit from Bylinkin
+    TF1* fitTCMDecomposedLPi0PP                             = FitObject("tcmlow","twoCompModelPi0_DecL_PP", "Pi0", NULL, 0.3, 2.);
+    TF1* fitTCMDecomposedHPi0PP                             = FitObject("tcmhigh","twoCompModelPi0_DecH_PP", "Pi0", NULL, 4, 50.);
+    fitTCMDecomposedLPi0PP->SetParameters(graphPPCombPi0Stat->GetY()[2],0.3);
+    graphPPCombPi0Stat->Fit(fitTCMDecomposedLPi0PP,"QNRMEX0+","",0.3,0.8);
+    graphPPCombPi0Stat->Fit(fitTCMDecomposedHPi0PP,"QNRMEX0+","",3,20);
+    //     fitTCMDecomposedHPi0->SetParameters(graphCombPi0InvYieldTot->GetY()[2],0.8, 2);
+
+    cout << WriteParameterToFile(fitTCMDecomposedLPi0PP)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedLPi0PP)<< endl;
+    cout << WriteParameterToFile(fitTCMDecomposedHPi0PP)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedHPi0PP)<< endl;
+
+    Double_t paramTCMPi0NewPP[5]                            = { fitTCMDecomposedLPi0PP->GetParameter(0),fitTCMDecomposedLPi0PP->GetParameter(1),
+                                                                fitTCMDecomposedHPi0PP->GetParameter(0),fitTCMDecomposedHPi0PP->GetParameter(1),fitTCMDecomposedHPi0PP->GetParameter(2)};
+
+    //Two component model from Bylinkin
+    TF1* fitTCMInvYieldPi0PP                                = FitObject("tcm","fitTCMInvYieldPi0PP5023GeV","Pi0",graphPPCombPi0Stat,0.3,20. ,paramTCMPi0NewPP,"QNRMEX0+","", kFALSE);
+    cout << "fitting pp pi0 spectra" << endl;
+    cout << WriteParameterToFile(fitTCMInvYieldPi0PP)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitTCMInvYieldPi0PP)<< endl;
+
+    // *************************************************************************************************************
+    // Shift graphs in Y direction as well if desired
+    // *************************************************************************************************************
+
+    TGraphAsymmErrors* graphRatioPi0IndCombFitStatPP[11]    = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphRatioPi0IndCombFitSysPP[11]     = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
+    TGraphAsymmErrors* graphRatioPi0CombToFitStatPP         = (TGraphAsymmErrors*)graphPPCombPi0Stat->Clone();
+    graphRatioPi0CombToFitStatPP                            = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitStatPP, fitTCMInvYieldPi0PP);
+    TGraphAsymmErrors* graphRatioPi0CombToFitSysPP          = (TGraphAsymmErrors*)graphPPCombPi0FullSys->Clone();
+    graphRatioPi0CombToFitSysPP                             = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitSysPP, fitTCMInvYieldPi0PP);
+
+    for (Int_t i= 0; i< 11; i++){
+        if (statErrorCollectionPi0PP[i]){
+            graphRatioPi0IndCombFitStatPP[i]                = (TGraphAsymmErrors*)statErrorCollectionPi0PP[i]->Clone(Form("RatioPi0%sToCombFitStatPP", nameMeasGlobalLabel[i].Data()));
+            graphRatioPi0IndCombFitStatPP[i]                = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStatPP[i], fitTCMInvYieldPi0PP);
+        }
+        if (systErrorCollectionPi0PP[i]){
+            graphRatioPi0IndCombFitSysPP[i]                 = (TGraphAsymmErrors*)systErrorCollectionPi0PP[i]->Clone(Form("RatioPi0%sToCombFitSystPP", nameMeasGlobalLabel[i].Data()));
+            graphRatioPi0IndCombFitSysPP[i]                 = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSysPP[i], fitTCMInvYieldPi0PP);
+        }
+    }
+
+
+    // **********************************************************************************************************************
+    // ******************************************* Plot Ratio of Comb to Fit for pp *****************************************
+    // **********************************************************************************************************************
+    Int_t textSizeLabelsPixel               = 54;
+    TCanvas* canvasRatioToCombFitPP         = new TCanvas("canvasRatioToCombFitPP","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasRatioToCombFitPP, 0.08, 0.01, 0.01, 0.125);
+    canvasRatioToCombFitPP->SetLogx();
+
+    Double_t textsizeLabelsPP      = 0;
+    Double_t textsizeFacPP         = 0;
+    if (canvasRatioToCombFitPP->XtoPixel(canvasRatioToCombFitPP->GetX2()) <canvasRatioToCombFitPP->YtoPixel(canvasRatioToCombFitPP->GetY1()) ){
+        textsizeLabelsPP           = (Double_t)textSizeLabelsPixel/canvasRatioToCombFitPP->XtoPixel(canvasRatioToCombFitPP->GetX2()) ;
+        textsizeFacPP              = (Double_t)1./canvasRatioToCombFitPP->XtoPixel(canvasRatioToCombFitPP->GetX2()) ;
+    } else {
+        textsizeLabelsPP           = (Double_t)textSizeLabelsPixel/canvasRatioToCombFitPP->YtoPixel(canvasRatioToCombFitPP->GetY1());
+        textsizeFacPP              = (Double_t)1./canvasRatioToCombFitPP->YtoPixel(canvasRatioToCombFitPP->GetY1());
+    }
+    cout << textsizeLabelsPP << endl;
+
+    TH2F * histo2DPi0RatioToCombFitPP;
+    histo2DPi0RatioToCombFitPP               = new TH2F("histo2DPi0RatioToCombFitPP","histo2DPi0RatioToCombFitPP",1000,0.23, 25.,1000,0.2,4.    );
+    SetStyleHistoTH2ForGraphs(histo2DPi0RatioToCombFitPP, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPP, textsizeLabelsPP,
+                              0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.65, 510, 505);
+    histo2DPi0RatioToCombFitPP->GetXaxis()->SetMoreLogLabels();
+    histo2DPi0RatioToCombFitPP->GetXaxis()->SetLabelOffset(-0.01);
+    //  histo2DPi0RatioToCombFitPP->GetYaxis()->SetRangeUser(-10,10);
+    histo2DPi0RatioToCombFitPP->GetYaxis()->SetRangeUser(0.2,1.82);
+    histo2DPi0RatioToCombFitPP->Draw("copy");
+
+    ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombToFitStatPP);
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombToFitSysPP, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
+    graphRatioPi0CombToFitSysPP->Draw("E2same");
+    DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombToFitStatPP, markerStyleComb, markerSizeComb, colorComb , colorComb);
+    graphRatioPi0CombToFitStatPP->Draw("p,same,z");
+
+    DrawGammaLines(0.23, 25. , 1., 1.,0.1, kGray+2);
+    DrawGammaLines(0.23, 25. , 1.1, 1.1,0.1, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.9, 0.9,0.1, kGray, 7);
+
+    TLatex *labelRatioToFitEnergyPP   = new TLatex(0.95, 0.92, collisionSystempp.Data());
+    SetStyleTLatex( labelRatioToFitEnergyPP, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+    labelRatioToFitEnergyPP->Draw();
+    TLatex *labelRatioToFitALICEPP    = new TLatex(0.95, 0.86, textALICE.Data());
+    SetStyleTLatex( labelRatioToFitALICEPP, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+    labelRatioToFitALICEPP->Draw();
+    TLatex *labelRatioToFitPi0PP      = new TLatex(0.12, 0.92, "#pi^{0} #rightarrow #gamma#gamma");
+    SetStyleTLatex( labelRatioToFitPi0PP, textSizeLabelsPixel, 4, 1, 43, kTRUE, 11);
+    labelRatioToFitPi0PP->Draw();
+
+    canvasRatioToCombFitPP->SaveAs(Form("%s/Pi0_RatioOfCombToCombFit_PP5023GeV.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // *******************************************Plot Ratio of Individual meas to Fit ******************************************
+    // **********************************************************************************************************************
+
+    canvasRatioToCombFitPP->cd();
+    histo2DPi0RatioToCombFitPP->Draw("copy");
+
+    for (Int_t i = 10; i > -1 ; i--){
+        if (graphRatioPi0IndCombFitSysPP[i]){
+            DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSysPP[i], markerStyleDet[i] ,markerSizeDet[i]*0.5, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
+            graphRatioPi0IndCombFitSysPP[i]->Draw("E2same");
+        }
+        if (graphRatioPi0IndCombFitStatPP[i]){
+            ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStatPP[i]);
+            DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStatPP[i], markerStyleDet[i] ,markerSizeDet[i]*0.5, colorDet[i], colorDet[i]);
+            graphRatioPi0IndCombFitStatPP[i]->Draw("p,same,z");
+        }
+    }
+    if (graphRatioPi0IndCombFitStatPP[4])graphRatioPi0IndCombFitStatPP[4]->Draw("p,same,z");
+
+    DrawGammaLines(0.23, 25. , 1., 1.,0.5, kGray+2);
+    DrawGammaLines(0.23, 25. , 1.1, 1.1,0.5, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.9, 0.9,0.5, kGray, 7);
+    DrawGammaLines(0.23, 25. , 1.2, 1.2,0.5, kGray, 9);
+    DrawGammaLines(0.23, 25. , 0.8, 0.8,0.5, kGray, 9);
+
+    labelRatioToFitEnergyPP->Draw();
+    labelRatioToFitALICEPP->Draw();
+    labelRatioToFitPi0PP->Draw();
+    histo2DPi0RatioToCombFitPP->Draw("same,axis");
+
+//     //****************************** Definition of the Legend ******************************************
+//     //**************** Row def ************************
+//     //         Double_t rowsLegendOnlyPi0Ratio[6]          = {0.92, 0.867, 0.807, 0.747, 0.687, 0.627};
+//     //         Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.02, 1.91, 1.8, 1.68, 1.56 };
+//     Double_t rowsLegendOnlyPi0Ratio[4]          = {0.30, 0.25, 0.20, 0.15};
+//     Double_t rowsLegendOnlyPi0RatioAbs[4]       = {0.92, 0.47, 0.38, 0.29 };
+//     //         Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.92, 2.18, 2.03, 1.87, 1.73, 1.56 };
+//     Double_t columnsLegendOnlyPi0Ratio[6]       = {0.14, 0.26, 0.35, 0.48, 0.7, 0.8};
+//     Double_t columnsLegendOnlyPi0RatioAbs[6]    = {0.215, 0.69, 0.95, 2, 6.6, 9.6};
+//     //         Double_t columnsLegendOnlyPi0Ratio[3]       = {0.115, 0.325, 0.41};
+//     //         Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1., 1.43};
+//     Double_t lengthBox                          = 0.2;
+//     Double_t heightBox                          = 0.06/2;
+//     //****************** first Column **************************************************
+//     TLatex *textPCMOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[1],nameMeasGlobalLabel[0]);
+//     SetStyleTLatex( textPCMOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textPCMOnlyRatioPi0->Draw();
+//     TLatex *textPHOSOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[2],nameMeasGlobalLabel[1]);
+//     SetStyleTLatex( textPHOSOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textPHOSOnlyRatioPi0->Draw();
+//     TLatex *textEMCALOnlyRatioPi0               = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[3],nameMeasGlobalLabel[2]);
+//     SetStyleTLatex( textEMCALOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textEMCALOnlyRatioPi0->Draw();
+//     TLatex *textPCMEMCALOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[3],rowsLegendOnlyPi0Ratio[1],nameMeasGlobalLabel[4]);
+//     SetStyleTLatex( textPCMEMCALOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textPCMEMCALOnlyRatioPi0->Draw();
+//     TLatex *textPCMPHOSOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[3],rowsLegendOnlyPi0Ratio[2],nameMeasGlobalLabel[3]);
+//     SetStyleTLatex( textPCMPHOSOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textPCMPHOSOnlyRatioPi0->Draw();
+//     TLatex *textDalitzOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[3],rowsLegendOnlyPi0Ratio[3],nameMeasGlobalLabel[5]);
+//     SetStyleTLatex( textDalitzOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textDalitzOnlyRatioPi0->Draw();
+//
+//     //****************** second Column *************************************************
+//     TLatex *textStatOnlyRatioPi0                = new TLatex(columnsLegendOnlyPi0Ratio[1],rowsLegendOnlyPi0Ratio[0] ,"stat");
+//     SetStyleTLatex( textStatOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textStatOnlyRatioPi0->Draw();
+//     TLatex *textSysOnlyRatioPi0                 = new TLatex(columnsLegendOnlyPi0Ratio[2] ,rowsLegendOnlyPi0Ratio[0],"syst");
+//     SetStyleTLatex( textSysOnlyRatioPi0, textSizeLabelsPixel,4, 1, 43);
+//     textSysOnlyRatioPi0->Draw();
+//     TLatex *textStatOnlyRatioPi02               = new TLatex(columnsLegendOnlyPi0Ratio[4],rowsLegendOnlyPi0Ratio[0] ,"stat");
+//     SetStyleTLatex( textStatOnlyRatioPi02, textSizeLabelsPixel,4, 1, 43);
+//     textStatOnlyRatioPi02->Draw();
+//     TLatex *textSysOnlyRatioPi02                = new TLatex(columnsLegendOnlyPi0Ratio[5] ,rowsLegendOnlyPi0Ratio[0],"syst");
+//     SetStyleTLatex( textSysOnlyRatioPi02, textSizeLabelsPixel,4, 1, 43);
+//     textSysOnlyRatioPi02->Draw();
+//
+//     TMarker* markerPCMPi0OnlyRatioPi0           = CreateMarkerFromGraph(graphRatioPi0IndCombFitSys[0],columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[1],1);
+//     markerPCMPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[1]);
+//     TMarker* markerPHOSPi0OnlyRatioPi0          = CreateMarkerFromGraph(graphRatioPi0IndCombFitSys[1], columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[2],1);
+//     markerPHOSPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[2]);
+//     TMarker* markerEMCALPi0OnlyRatioPi0         = CreateMarkerFromGraph(graphRatioPi0IndCombFitSys[2], columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[3],1);
+//     markerEMCALPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[3]);
+//     TMarker* markerPCMEMCALPi0OnlyRatioPi0      = CreateMarkerFromGraph(graphRatioPi0IndCombFitSys[4], columnsLegendOnlyPi0Ratio[3] ,rowsLegendOnlyPi0Ratio[1],1);
+//     markerPCMEMCALPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[4] ,rowsLegendOnlyPi0RatioAbs[1]);
+//     TMarker* markerPCMPHOSPi0OnlyRatioPi0      = CreateMarkerFromGraph(graphRatioPi0IndCombFitSys[3], columnsLegendOnlyPi0Ratio[3] ,rowsLegendOnlyPi0Ratio[2],1);
+//     markerPCMPHOSPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[4] ,rowsLegendOnlyPi0RatioAbs[2]);
+//     TMarker* markerDalitzPi0OnlyRatioPi0        = CreateMarkerFromGraph(graphRatioPi0IndCombFitSys[5], columnsLegendOnlyPi0Ratio[3] ,rowsLegendOnlyPi0Ratio[3],1);
+//     markerDalitzPi0OnlyRatioPi0->DrawMarker(columnsLegendOnlyPi0RatioAbs[4] ,rowsLegendOnlyPi0RatioAbs[3]);
+//
+//     TBox* boxPCMPi0OnlyRatioPi0                 = CreateBoxFromGraph(graphRatioPi0IndCombFitSys[0], columnsLegendOnlyPi0RatioAbs[2]-0.1*lengthBox , rowsLegendOnlyPi0RatioAbs[1]- heightBox,
+//                                                                      columnsLegendOnlyPi0RatioAbs[2]+ 1.7*lengthBox, rowsLegendOnlyPi0RatioAbs[1]+ heightBox);
+//     boxPCMPi0OnlyRatioPi0->Draw("l");
+//     TBox* boxPHOSPi0OnlyRatioPi0                = CreateBoxFromGraph(graphRatioPi0IndCombFitSys[1], columnsLegendOnlyPi0RatioAbs[2]-0.1*lengthBox , rowsLegendOnlyPi0RatioAbs[2]- heightBox,
+//                                                                      columnsLegendOnlyPi0RatioAbs[2]+ 1.7*lengthBox, rowsLegendOnlyPi0RatioAbs[2]+ heightBox);
+//     boxPHOSPi0OnlyRatioPi0->Draw("l");
+//     TBox* boxEMCALPi0OnlyRatioPi0               = CreateBoxFromGraph(graphRatioPi0IndCombFitSys[2], columnsLegendOnlyPi0RatioAbs[2]-0.1*lengthBox , rowsLegendOnlyPi0RatioAbs[3]- heightBox,
+//                                                                      columnsLegendOnlyPi0RatioAbs[2]+ 1.7*lengthBox, rowsLegendOnlyPi0RatioAbs[3]+ heightBox);
+//     boxEMCALPi0OnlyRatioPi0->Draw("l");
+//     TBox* boxPCMEMCALPi0OnlyRatioPi0            = CreateBoxFromGraph(graphRatioPi0IndCombFitSys[4], columnsLegendOnlyPi0RatioAbs[5]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[1]- heightBox,
+//                                                                      columnsLegendOnlyPi0RatioAbs[5]+ 18*lengthBox, rowsLegendOnlyPi0RatioAbs[1]+ heightBox);
+//     boxPCMEMCALPi0OnlyRatioPi0->Draw("l");
+//     TBox* boxPCMPHOSPi0OnlyRatioPi0             = CreateBoxFromGraph(graphRatioPi0IndCombFitSys[3], columnsLegendOnlyPi0RatioAbs[5]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[2]- heightBox,
+//                                                                      columnsLegendOnlyPi0RatioAbs[5]+ 18*lengthBox, rowsLegendOnlyPi0RatioAbs[2]+ heightBox);
+//     boxPCMPHOSPi0OnlyRatioPi0->Draw("l");
+//     TBox* boxDalitzPi0OnlyRatioPi0              = CreateBoxFromGraph(graphRatioPi0IndCombFitSys[5], columnsLegendOnlyPi0RatioAbs[5]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[3]- heightBox,
+//                                                                      columnsLegendOnlyPi0RatioAbs[5]+ 18*lengthBox, rowsLegendOnlyPi0RatioAbs[3]+ heightBox);
+//     boxDalitzPi0OnlyRatioPi0->Draw("l");
+
+    canvasRatioToCombFitPP->SaveAs(Form("%s/Pi0_RatioOfIndividualMeasToCombFit.%s",outputDir.Data(),suffix.Data()));
+
+    return;
+
+    // *******************************************************************************************************
     // ************************** Combination of different pi0 measurements **********************************
     // *******************************************************************************************************
     // REMARKS:
-    //      - order of measurements defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
+    //     - order of measurements defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
     //     - correlations are defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
-    //      - currently only PCM-EMCAL vs others fully implemeted energy independent
-    //      - extendable to other energies
+    //     - currently only PCM-EMCAL vs others fully implemeted energy independent
+    //     - extendable to other energies
     //     - offsets have to be determined manually, see cout's in shell from combination function, more can be uncommented
 
 
@@ -1493,7 +1711,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // **********************************************************************************************************************
     // ******************************************* Plotting weights method only EMC *****************************************
     // **********************************************************************************************************************
-    Int_t textSizeLabelsPixel           = 900*0.04;
+    textSizeLabelsPixel                 = 900*0.04;
 
     TCanvas* canvasWeights = new TCanvas("canvasWeights","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasWeights, 0.08, 0.02, 0.035, 0.09);
@@ -1971,7 +2189,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             fitTCMInvYieldPi0->Draw("same");
 
         canvasDummy2->Update();
-        canvasDummy2->Print(Form("%s/ComparisonShiftedPi0_PPb5023GeV.%s",outputDir.Data(),suffix.Data()));
+        canvasDummy2->Print(Form("%s/ComparisonShiftedPi0_PP5023GeV.%s",outputDir.Data(),suffix.Data()));
         delete canvasDummy2;
     }
 
@@ -2041,7 +2259,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     while(graphRatioPi0McGillToFit->GetX()[0] < 0.3)
         graphRatioPi0McGillToFit->RemovePoint(0);
 
-//
     TGraphAsymmErrors* graphRatioPi0IndCombFitStat[11]  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphRatioPi0IndCombFitSys[11]   = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
@@ -2276,21 +2493,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // *************************** RpPb calculation for pi0 **************************************************
     // *******************************************************************************************************
 
-//     TGraphAsymmErrors* graphPPCombPi0InterUncorrSys = (TGraphAsymmErrors*)graphPPCombPi0InterSys->Clone("graphPPCombPi0InterUncorrSys");
-//     graphPPCombPi0InterUncorrSys                    = AddErrorsQuadraticallyTGraph(graphPPCombPi0InterSys, graphPPCombPi0UncorrSys);
     TGraphAsymmErrors* graphRpPbCombStatPi0         = NULL;
     TGraphAsymmErrors* graphRpPbCombSystPi0         = NULL;
     TGraphAsymmErrors* graphRpPbCombCombPi0         = NULL;
-//     if(bWCorrection.Contains("Y") ){
-//         graphRpPbCombCombPi0                        = CalcRpPbV2(   graphPPCombPi0Stat,
-//                                                                     graphPPCombPi0InterUncorrSys,
-//                                                                     graphCombPi0InvYieldStat_yShifted,
-//                                                                     graphCombPi0InvYieldSys_yShifted,
-//                                                                     &graphRpPbCombStatPi0,
-//                                                                     &graphRpPbCombSystPi0,
-//                                                                     tpPb, tpPbErr, ptSysRemNames[0] );
-//         graphRpPbCombStatPi0->Print();
-//     }
 
     if(bWCorrection.Contains("Y") ){
         TString fileNamePi0RpPbOutputWeighting       = Form("%s/Pi0RpPb_WeightingMethod.dat",outputDir.Data());
@@ -2305,8 +2510,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
             return;
         }
-
-    //     return;
 
         while (graphRpPbCombStatPi0->GetX()[0] < 0.3){
             graphRpPbCombStatPi0->RemovePoint(0);

@@ -60,8 +60,8 @@ TF1* DoFitWithTCM(TGraph* graph, TString name, TString particle, Double_t p0, Do
 void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TF1** fPowerlawMC, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot);
 void PlotInterpolationSinglePtBin(TGraphErrors* gPtvSqrts,TGraphErrors* gPtvsEnergies, TF1* fPowerlaw, TF1* fPowerlawMC, TGraphAsymmErrors* gRpPb, Int_t ptBin, TString namePlot);
 void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TSpline* splineMC, TString method, TString thesisPlotLabel, TString namePlot);
-void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* graph, TGraphAsymmErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
-void PlotWithFit(TCanvas *canvas, TH2F* hist, TH2F* hist2, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
+void PlotWithFit(TCanvas* canvas, TCanvas* canvasRatio, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* graph, TGraphAsymmErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
+void PlotWithFit(TCanvas *canvas, TCanvas* canvasRatio, TH2F* hist, TH2F* hist2, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur);
 void PlotGraphsOfAllEnergies( TCanvas* canvas, TH2F* hist, Int_t nDataSets, TGraphAsymmErrors** graphs, TF1** fits, TString* energies, TString name, TString outputDir, TString suffix );
 
 void SetStyleTGraphErrorsForGraphs(TGraph* graph, TString XTitle, TString YTitle, Size_t xLableSize, Size_t xTitleSize, Size_t yLableSize, Size_t yTitleSize, Float_t xTitleOffset = 1, Float_t yTitleOffset = 1, Int_t xNDivisions = 510, Int_t yNDivisions = 510);
@@ -102,7 +102,8 @@ TGraphErrors** graphPtvsSqrtsSyst       = 0x0;
 TGraphErrors** gPtvsEnergiesSystemSyst  = 0x0;
 TF1** fPowerlawSystemSyst               = 0x0;
 TF1** fPowerlawSystemSystMC             = 0x0;
-
+TString detProcess                      = "";
+TString mesonString                     = "";
 
 void CalculateStatPlusSysErrors(TH1D* histStat, TH1D* histSys);
 TGraphAsymmErrors* CalculateStatPlusSysErrors(TGraphAsymmErrors* graphStat, TGraphAsymmErrors* graphSys);
@@ -135,10 +136,10 @@ void CalculateReference (   TString configFile                  = "",
 
     TString dateForOutput   = ReturnDateStringForOutput();
     TString modeName        = ReturnTextReconstructionProcess(mode);
-    TString mesonString     = ReturnMesonString (meson);
     TString collisionSystem = ReturnFullCollisionsSystem(finalEnergy);
-    TString collSystOut      = ReturnCollisionEnergyOutputString(finalEnergy);
-    TString detProcess      = ReturnFullTextReconstructionProcess(mode);
+    TString collSystOut     = ReturnCollisionEnergyOutputString(finalEnergy);
+    mesonString             = ReturnMesonString (meson);
+    detProcess              = ReturnFullTextReconstructionProcess(mode);
     TString outputDir       = Form("%s/%s/CalculateReference",suffix.Data(),dateForOutput.Data());
     TString outputDirPlots  = Form("%s/%s/CalculateReference/%s",suffix.Data(), dateForOutput.Data(), modeName.Data());
     gSystem->Exec("mkdir -p "+outputDirPlots);
@@ -233,9 +234,9 @@ void CalculateReference (   TString configFile                  = "",
     TH1D* histRelSystUncorr[5]          = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histRelSystCorr[5]            = {NULL, NULL, NULL, NULL, NULL};
     TH1D* histRelCombUncorr[5]          = {NULL, NULL, NULL, NULL, NULL};
-    TGraphAsymmErrors* graphStat[5]     = {NULL, NULL, NULL, NULL, NULL};
-    TGraphAsymmErrors* graphSyst[5]     = {NULL, NULL, NULL, NULL, NULL};
-    TGraphAsymmErrors* graphComb[5]     = {NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphStat[6]     = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphSyst[6]     = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphComb[6]     = {NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphStatReb[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphCombReb[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphSystReb[6]  = {NULL, NULL, NULL, NULL, NULL, NULL};
@@ -258,6 +259,9 @@ void CalculateReference (   TString configFile                  = "",
     }
     Double_t minY                       = 1e100;
     Double_t maxY                       = 0;
+    Double_t minX                       = 1e100;
+    Double_t maxX                       = 0;
+
 
     for (Int_t i = 0; i < nDataSets; i++){
         // read external detailed systematics file
@@ -536,6 +540,11 @@ void CalculateReference (   TString configFile                  = "",
             maxY        = graphComb[i]->GetY()[0];
         if (minY > graphComb[i]->GetY()[graphComb[i]->GetN()-1])
             minY        = graphComb[i]->GetY()[graphComb[i]->GetN()-1];
+        if (maxX < graphComb[i]->GetX()[graphComb[i]->GetN()-1])
+            maxX        = graphComb[i]->GetX()[graphComb[i]->GetN()-1];
+        if (minX > graphComb[i]->GetX()[0])
+            minX        = graphComb[i]->GetX()[0];
+
         //*************************************************************************************************
         //*************************** Fits
         //*************************************************************************************************
@@ -669,7 +678,7 @@ void CalculateReference (   TString configFile                  = "",
                 }
             }
         }
-        exampleBinMC        = histMC[0]->FindBin(graphCombReb[0]->GetX()[exampleBin])-nMCBinsRemoved;
+        exampleBinMC        = histMC[0]->FindBin(graphCombReb[0]->GetX()[exampleBin])-nMCBinsRemoved-1;
     }
 
 
@@ -851,6 +860,9 @@ void CalculateReference (   TString configFile                  = "",
 //     TF1* fitFinal                       = DoFitWithTCM(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7.,0.2,graphFinalEnergyCombWOCorr->GetY()[0]/10,0.3);
 
     graphCombReb[nDataSets]             = graphFinalEnergyCombWOCorr;
+    graphComb[nDataSets]                = graphFinalEnergyCombWOCorr;
+    graphStat[nDataSets]                = graphFinalEnergyStat;
+    graphSyst[nDataSets]                = graphFinalEnergySyst;
     fitComb[nDataSets]                  = fitFinal;
     energyIndName[nDataSets]            = finalEnergy;
     energyInd[nDataSets]                = energy;
@@ -858,6 +870,11 @@ void CalculateReference (   TString configFile                  = "",
         maxY        = graphFinalEnergyCombWOCorr->GetY()[0];
     if (minY > graphFinalEnergyCombWOCorr->GetY()[graphFinalEnergyCombWOCorr->GetN()-1])
         minY        = graphFinalEnergyCombWOCorr->GetY()[graphFinalEnergyCombWOCorr->GetN()-1];
+    if (maxX < graphFinalEnergyCombWOCorr->GetX()[graphFinalEnergyCombWOCorr->GetN()-1])
+        maxX        = graphFinalEnergyCombWOCorr->GetX()[graphFinalEnergyCombWOCorr->GetN()-1];
+    if (minX > graphFinalEnergyCombWOCorr->GetX()[0])
+        minX        = graphFinalEnergyCombWOCorr->GetX()[0];
+
 
     //*************************************************************************************************
     //*************************** plotting
@@ -868,24 +885,28 @@ void CalculateReference (   TString configFile                  = "",
         axisLabel       = "#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )";
         labelWriting    = "InvXSection";
     }
-    TCanvas* canvasDummy2 = new TCanvas("canvasDummy2","",200,10,1200,1100);  // gives the page size
+    TCanvas* canvasDummy2 = new TCanvas("canvasDummy2","",200,10,1200,1300);  // gives the page size
     DrawGammaCanvasSettings( canvasDummy2,  0.15, 0.01, 0.015, 0.08);
     canvasDummy2->SetLogy();
     canvasDummy2->SetLogx();
-    TH2F * histo2DDummy = new TH2F("histo2DDummy","histo2DDummy",1000,0.1,31.,1000,minY/10,maxY*10);
+    TCanvas* canvasDummy3 = new TCanvas("canvasDummy3","",200,10,1200,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasDummy3,  0.07, 0.01, 0.015, 0.08);
+    canvasDummy3->SetLogx();
+    TH2F * histo2DDummy = new TH2F("histo2DDummy","histo2DDummy",1000,minX/2,maxX*1.4,1000,minY/10,maxY*10);
     SetStyleHistoTH2ForGraphs(histo2DDummy, "#it{p}_{T} (GeV/#it{c})",axisLabel, 0.032,0.04, 0.032,0.04, 0.85,1.65);
     histo2DDummy->GetXaxis()->SetMoreLogLabels();
     histo2DDummy->GetXaxis()->SetLabelOffset(-0.008);
-    TH2F * histo2DDummy2 = new TH2F("histo2DDummy","histo2DDummy",1000,0.1,31.,1000, 0, 2);
-    SetStyleHistoTH2ForGraphs(histo2DDummy2, "#it{p}_{T} (GeV/#it{c})","data/fit", 0.032,0.04, 0.032,0.04, 0.85,1.65);
+    TH2F * histo2DDummy2 = new TH2F("histo2DDummy","histo2DDummy",1000,minX/2,maxX*1.4,1000, 0.5, 1.5);
+    SetStyleHistoTH2ForGraphs(histo2DDummy2, "#it{p}_{T} (GeV/#it{c})","data/fit", 0.032,0.04, 0.032,0.04, 0.85,0.9);
     histo2DDummy2->GetXaxis()->SetMoreLogLabels();
     histo2DDummy2->GetXaxis()->SetLabelOffset(-0.008);
 
     for (Int_t i = 0; i < nDataSets; i++){
-        PlotWithFit(canvasDummy2, histo2DDummy, histo2DDummy2, graphComb[i], graphCombReb[i], fitComb[i], Form("input_%s%s%s_withFit",meson.Data(), modeName.Data(), energyIndName[i].Data()), outputDirPlots, suffix, energyIndName[i]);
+        PlotWithFit(canvasDummy2, canvasDummy3, histo2DDummy, histo2DDummy2, graphComb[i], graphCombReb[i], fitComb[i], Form("input_%s%s%s_withFit",meson.Data(), modeName.Data(), ((TString)ReturnCollisionEnergyOutputString(energyIndName[i].Data())).Data()), outputDirPlots, suffix, energyIndName[i]);
     }
-    PlotWithFit(canvasDummy2, histo2DDummy, histo2DDummy2, graphFinalEnergyCombWOCorr, 0x0, fitFinal, Form("compare_%s%s%s_withFit", meson.Data(), modeName.Data(), collSystOut.Data()), outputDirPlots, suffix, energyIndName[nDataSets]);
+    PlotWithFit(canvasDummy2, canvasDummy3, histo2DDummy, histo2DDummy2, graphFinalEnergyCombWOCorr, 0x0, fitFinal, Form("compare_%s%s%s_withFit", meson.Data(), modeName.Data(), collSystOut.Data()), outputDirPlots, suffix, energyIndName[nDataSets]);
     PlotGraphsOfAllEnergies(canvasDummy2, histo2DDummy, nDataSets+1, graphCombReb, fitComb, energyIndName, Form("output%s%s_withFit",meson.Data(), modeName.Data()),  outputDirPlots, suffix);
+    PlotGraphsOfAllEnergies(canvasDummy2, histo2DDummy, nDataSets+1, graphComb, fitComb, energyIndName, Form("output_orgBins_%s%s_withFit",meson.Data(), modeName.Data()),  outputDirPlots, suffix);
 
     // **************************************************************************************************
     // ************************ prepare histos and graphs for writing ***********************************
@@ -1552,9 +1573,11 @@ TGraphAsymmErrors* CalculateStatPlusSysErrors(TGraphAsymmErrors* graphStat, TGra
 }
 
 //________________________________________________________________________________________________________________________
-void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* graph, TGraphAsymmErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur){
+void PlotWithFit(TCanvas* canvas, TCanvas* canvasRatio,
+                 TH2F* hist, TH2F* hist2,
+                 TGraphAsymmErrors* graph, TGraphAsymmErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur){
 
-    canvas->Clear();
+    canvas->cd();
     hist->DrawCopy();
 
     DrawGammaSetMarkerTGraphAsym(graph, GetDefaultMarkerStyle(energyCur.Data(),"", ""), GetDefaultMarkerSize(energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), 1.4, kTRUE);
@@ -1567,29 +1590,42 @@ void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* gr
     fit->SetLineColor(GetColorDefaultColor( energyCur.Data(),"", ""));
     fit->Draw("same");
 
+    TLatex *labelEnergy       = new TLatex(0.95,0.92, ((TString)ReturnFullCollisionsSystem(energyCur)).Data() );
+    SetStyleTLatex( labelEnergy, 0.035, 4, 1, 42, kTRUE, 31);
+    labelEnergy->Draw();
+    TLatex *labelProcess      = new TLatex(0.95,0.88,Form("%s, %s",mesonString.Data(), detProcess.Data()));
+    SetStyleTLatex( labelProcess, 0.035, 4, 1, 42, kTRUE, 31);
+    labelProcess->Draw();
+
     canvas->Update();
     canvas->Print(Form("%s/%s.%s",outputDir.Data(),name.Data(),suffix.Data()));
 
-    canvas->SetLogy(kFALSE);
     if(graphRebin){
-        canvas->Clear();
-        hist2->GetYaxis()->SetRangeUser(0.5,1.5);
+        canvasRatio->cd();
         hist2->DrawCopy();
 
-        TGraphAsymmErrors* graphRatio        = CalculateGraphErrRatioToFit (graph, fit);
-        TGraphAsymmErrors* graphRebinRatio   = CalculateGraphErrRatioToFit (graphRebin, fit);
+        TGraphAsymmErrors* graphRatio       = CalculateGraphErrRatioToFit (graph, fit);
+        TGraphAsymmErrors* graphRebinRatio  = CalculateGraphErrRatioToFit (graphRebin, fit);
+
+        TLegend* legendRatio                = GetAndSetLegend2(0.13, 0.12, 0.3, 0.12+(0.035*2), 32, 1, "", 43, 0.2);
 
         DrawGammaSetMarkerTGraphAsym(graphRatio, GetDefaultMarkerStyle(energyCur.Data(),"", ""), GetDefaultMarkerSize(energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), 1.4, kTRUE);
         graphRatio->Draw("pEsame");
+        legendRatio->AddEntry(graphRatio, "measured", "p");
+
         DrawGammaSetMarkerTGraphAsym(graphRebinRatio, GetDefaultMarkerStyle(energyCur.Data(),"MC", ""), GetDefaultMarkerSize(energyCur.Data(),"MC", ""), kGray+1, kGray+1, 1.4, kTRUE);
         graphRebinRatio->Draw("pEsame");
         DrawGammaLines(hist->GetXaxis()->GetBinCenter(1), hist->GetXaxis()->GetBinCenter(hist->GetNbinsX()) , 1.0, 1.0,0.1, kGray, 1);
+        legendRatio->AddEntry(graphRebinRatio, "calc. reb.", "p");
 
-        canvas->Update();
-        canvas->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
+        legendRatio->Draw();
+        labelEnergy->Draw();
+        labelProcess->Draw();
+
+        canvasRatio->Update();
+        canvasRatio->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
     } else {
-        canvas->Clear();
-        hist2->GetYaxis()->SetRangeUser(0,2.);
+        canvasRatio->Clear();
         hist2->DrawCopy();
 
         TGraphAsymmErrors* graphRatio       = CalculateGraphErrRatioToFit (graph, fit);
@@ -1597,17 +1633,23 @@ void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphAsymmErrors* gr
         DrawGammaSetMarkerTGraphAsym(graphRatio, GetDefaultMarkerStyle(energyCur.Data(),"", ""), GetDefaultMarkerSize(energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), 1.4, kTRUE);
         graphRatio->Draw("pEsame");
         DrawGammaLines(hist->GetXaxis()->GetBinCenter(1), hist->GetXaxis()->GetBinCenter(hist->GetNbinsX()) , 1.0, 1.0,0.1, kGray, 1);
+        labelEnergy->Draw();
+        labelProcess->Draw();
 
-        canvas->Update();
-        canvas->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
+        canvasRatio->Update();
+        canvasRatio->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
     }
-    canvas->SetLogy();
+
+    delete labelEnergy;
+    delete labelProcess;
 
     return;
 }
 
 //________________________________________________________________________________________________________________________
-void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur){
+void PlotWithFit(TCanvas* canvas, TCanvas* canvasRatio,
+                 TH2F* hist, TH2F* hist2,
+                 TGraphErrors* graph, TGraphErrors* graphRebin, TF1* fit, TString name, TString outputDir, TString suffix, TString energyCur){
 
     canvas->Clear();
     hist->DrawCopy();
@@ -1622,29 +1664,41 @@ void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphErrors* graph, 
     fit->SetLineColor(GetColorDefaultColor( energyCur.Data(),"", ""));
     fit->Draw("same");
 
+    TLatex *labelEnergy       = new TLatex(0.95,0.92, ((TString)ReturnFullCollisionsSystem(energyCur)).Data() );
+    SetStyleTLatex( labelEnergy, 0.035, 4, 1, 42, kTRUE, 31);
+    labelEnergy->Draw();
+    TLatex *labelProcess      = new TLatex(0.95,0.88,Form("%s, %s",mesonString.Data(), detProcess.Data()));
+    SetStyleTLatex( labelProcess, 0.035, 4, 1, 42, kTRUE, 31);
+    labelProcess->Draw();
+
     canvas->Update();
     canvas->Print(Form("%s/%s.%s",outputDir.Data(),name.Data(),suffix.Data()));
 
-    canvas->SetLogy(kFALSE);
     if(graphRebin){
-        canvas->Clear();
-        hist2->GetYaxis()->SetRangeUser(0.5,1.5);
+        canvasRatio->Clear();
         hist2->DrawCopy();
 
         TGraphErrors* graphRatio        = CalculateGraphErrRatioToFit (graph, fit);
         TGraphErrors* graphRebinRatio   = CalculateGraphErrRatioToFit (graphRebin, fit);
+        TLegend* legendRatio            = GetAndSetLegend2(0.18, 0.12, 0.3, 0.12+(0.035*2), 32, 1, "", 43, 0.2);
 
         DrawGammaSetMarkerTGraphErr(graphRatio, GetDefaultMarkerStyle(energyCur.Data(),"", ""), GetDefaultMarkerSize(energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), GetColorDefaultColor( energyCur.Data(),"", ""), 1.4, kTRUE);
         graphRatio->Draw("pEsame");
+        legendRatio->AddEntry(graphRatio, "measured", "p");
+
         DrawGammaSetMarkerTGraphErr(graphRebinRatio, GetDefaultMarkerStyle(energyCur.Data(),"MC", ""), GetDefaultMarkerSize(energyCur.Data(),"MC", ""), kGray+1, kGray+1, 1.4, kTRUE);
         graphRebinRatio->Draw("pEsame");
         DrawGammaLines(hist->GetXaxis()->GetBinCenter(1), hist->GetXaxis()->GetBinCenter(hist->GetNbinsX()) , 1.0, 1.0,0.1, kGray, 1);
+        legendRatio->AddEntry(graphRebinRatio, "calc. reb.", "p");
 
-        canvas->Update();
-        canvas->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
+        legendRatio->Draw();
+        labelEnergy->Draw();
+        labelProcess->Draw();
+
+        canvasRatio->Update();
+        canvasRatio->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
     } else {
         canvas->Clear();
-        hist2->GetYaxis()->SetRangeUser(0,2.);
         hist2->DrawCopy();
 
         TGraphErrors* graphRatio        = CalculateGraphErrRatioToFit (graph, fit);
@@ -1653,8 +1707,11 @@ void PlotWithFit(TCanvas* canvas, TH2F* hist, TH2F* hist2, TGraphErrors* graph, 
         graphRatio->Draw("pEsame");
         DrawGammaLines(hist->GetXaxis()->GetBinCenter(1), hist->GetXaxis()->GetBinCenter(hist->GetNbinsX()) , 1.0, 1.0,0.1, kGray, 1);
 
-        canvas->Update();
-        canvas->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
+        labelEnergy->Draw();
+        labelProcess->Draw();
+
+        canvasRatio->Update();
+        canvasRatio->Print(Form("%s/%s_ratio.%s",outputDir.Data(),name.Data(),suffix.Data()));
     }
     canvas->SetLogy();
 
@@ -1676,17 +1733,21 @@ void PlotGraphsOfAllEnergies( TCanvas* canvas,
     canvas->Clear();
     hist->DrawCopy();
 
-    TLegend* legendEnergies     = GetAndSetLegend2(0.18, 0.12, 0.5, 0.12+(0.035*nDataSets), 32, 2, "", 43, 0.2);
+    TLatex *labelProcess      = new TLatex(0.95,0.92,Form("%s, %s",mesonString.Data(), detProcess.Data()));
+    SetStyleTLatex( labelProcess, 0.035, 4, 1, 42, kTRUE, 31);
+
+    TLegend* legendEnergies     = GetAndSetLegend2(0.18, 0.12, 0.55, 0.12+(0.035*nDataSets), 0.035, 2, "", 42, 0.2);
     for (Int_t i = 0; i< nDataSets; i++){
         cout << energies[i].Data() << endl;
         DrawGammaSetMarkerTGraphAsym(graphs[i], GetDefaultMarkerStyle(energies[i].Data(),"", ""), GetDefaultMarkerSize(energies[i].Data(),"", ""), GetColorDefaultColor( energies[i].Data(),"", ""), GetColorDefaultColor( energies[i].Data(),"", ""), 1.4, kTRUE);
         graphs[i]->Draw("pEsame");
         fits[i]->SetLineColor(GetColorDefaultColor( energies[i].Data(),"", ""));
         fits[i]->Draw("same");
-        legendEnergies->AddEntry(graphs[i],energies[i],"pf");
+        legendEnergies->AddEntry(graphs[i], ((TString)ReturnFullCollisionsSystem(energies[i])).Data(),"pf");
         legendEnergies->AddEntry(fits[i],"fit","l");
     }
     legendEnergies->Draw();
+    labelProcess->Draw();
 
     canvas->Update();
     canvas->Print(Form("%s/%s.%s",outputDir.Data(),name.Data(),suffix.Data()));
