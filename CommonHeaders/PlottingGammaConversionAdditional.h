@@ -3699,6 +3699,36 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return kOrange+1;
                 } else return kBlue+1;
+            } else if (!generator.CompareTo("LHC16g1a")){
+                if (!centrality.CompareTo("0-10%")){
+                    return kBlue-4;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return kRed-7;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return kGreen+1;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kOrange+1;
+                } else return kMagenta+1;
+            } else if (!generator.CompareTo("LHC16g1b")){
+                if (!centrality.CompareTo("0-10%")){
+                    return kBlue-4;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return kRed-7;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return kGreen+1;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kOrange+1;
+                } else return kRed+2;
+            } else if (!generator.CompareTo("LHC16g1c")){
+                if (!centrality.CompareTo("0-10%")){
+                    return kBlue-4;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return kRed-7;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return kGreen+1;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kOrange+1;
+                } else return kCyan-3;
             }
         }
         cout << "GetColorDefaultColor(): no valid input parameters given..." << endl;
@@ -3888,6 +3918,36 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return 27;
                 } else return 28;
+            } else if (!generator.CompareTo("LHC16g1a")){
+                if (!centrality.CompareTo("0-10%")){
+                    return 25;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 24;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 30;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return 27;
+                } else return 2;
+            } else if (!generator.CompareTo("LHC16g1b")){
+                if (!centrality.CompareTo("0-10%")){
+                    return 25;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 24;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 30;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return 27;
+                } else return 3;
+            } else if (!generator.CompareTo("LHC16g1c")){
+                if (!centrality.CompareTo("0-10%")){
+                    return 25;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 24;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 30;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return 27;
+                } else return 5;
             }
         }
         cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;

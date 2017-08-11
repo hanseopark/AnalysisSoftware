@@ -843,21 +843,37 @@ void QA_Runwise(
       suffix="pdf";
     }
     //**************************************************************************************************************
+//     else if(select.CompareTo("LHC15o")==0){
+//       // PbPb 5.02TeV
+//       mode=0;
+//       fEnergyFlag = "PbPb_5.02TeV";
+//       nSets = 2;
+//       nData = 1;
+//       filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPbAOD/";
+//       filePathPhoton = "";
+//       fileName = "GammaConvV1_246.root";
+//       DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
+//       if(cutNr==0) {plotDataSets[0]="LHC15o 0-10%"; plotDataSets[1]="LHC16g1 0-10%";}
+//       if(cutNr==1) {plotDataSets[0]="LHC15o 10-20%"; plotDataSets[1]="LHC16g1 10-20%";}
+//       if(cutNr==2) {plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC16g1 20-50%";}
+//       if(cutNr==3) {plotDataSets[0]="LHC15o 50-90%"; plotDataSets[1]="LHC16g1 50-90%";}
+//       if(cutNr==4) {plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16g1 0-100%";}
+//       doEquidistantXaxis=kTRUE;
+//       markerSize = 1.0;
+//     }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC15o")==0){
       // PbPb 5.02TeV
-      mode=0;
+      mode=4;
       fEnergyFlag = "PbPb_5.02TeV";
-      nSets = 2;
+      nSets = 5;
       nData = 1;
-      filePath= "/home/meike/analysis/data/GridOutput/GammaConv/PbPbAOD/";
+      cutNr = 0;
+      filePath= "/home/mike/2_EMCal_PbPb/1_data/170807_GammaCalo_runwise/DataQA/Data/";
       filePathPhoton = "";
-      fileName = "GammaConvV1_246.root";
-      DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
-      if(cutNr==0) {plotDataSets[0]="LHC15o 0-10%"; plotDataSets[1]="LHC16g1 0-10%";}
-      if(cutNr==1) {plotDataSets[0]="LHC15o 10-20%"; plotDataSets[1]="LHC16g1 10-20%";}
-      if(cutNr==2) {plotDataSets[0]="LHC15o 20-50%"; plotDataSets[1]="LHC16g1 20-50%";}
-      if(cutNr==3) {plotDataSets[0]="LHC15o 50-90%"; plotDataSets[1]="LHC16g1 50-90%";}
-      if(cutNr==4) {plotDataSets[0]="LHC15o 0-100%"; plotDataSets[1]="LHC16g1 0-100%";}
+      fileName = "GammaCalo_210.root";
+      DataSets[0]="LHC15o"; DataSets[1]="LHC16g1"; DataSets[2]="LHC16g1a"; DataSets[3]="LHC16g1b"; DataSets[4]="LHC16g1c";
+      plotDataSets[0]="LHC15o"; plotDataSets[1]="LHC16g1"; plotDataSets[2]="LHC16g1a"; plotDataSets[3]="LHC16g1b"; plotDataSets[4]="LHC16g1c";
       doEquidistantXaxis=kTRUE;
       markerSize = 1.0;
     }

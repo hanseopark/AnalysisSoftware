@@ -16,60 +16,106 @@
 Bool_t readin(TString fileTxt, std::vector<TString> &vec);
 Bool_t copyAlien2Local(TString loc, TString rem);
 
-void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/data/work/pcgGit/AnalysisSoftware", Bool_t isJetJet=kFALSE)
+void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170807_GammaCalo_runwise", Bool_t isJetJet=kFALSE)
 {
     cout<<"Connecting to Alien..."<<endl;
     TGrid::Connect("alien://");
     cout<<"==============================="<<endl;
     cout<<"Successfully connected to Alien"<<endl;
     cout<<"==============================="<<endl;
+    
+//     //CALO + CONVCALO DATA + MC
+// 
+//     const Int_t nFiles = 2;
+//     TString Tag = "20170720";
+//     TString DataSetsFile[nFiles] = {"GammaCalo_210.root","GammaConvCalo_202.root"};
+//     
+//     const Int_t nSets = 1;
+//     TString DataSets[nSets]={"LHC15o"};
+//     TString DataSetsFolder[nSets]={"LHC15"};
+//     TString PrefixDataSets[nSets]={"/alice/data/2015/LHC15o/000"};
+//     TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_PbPb/317_20170724-1758/"};
+    
+//     //CONVCALO MC
+//     
+//     const Int_t nFiles = 1;
+//     TString Tag = "20170702";
+//     TString DataSetsFile[nFiles] = {"GammaConvCalo_202.root"};
+//     
+//     const Int_t nSets = 1;
+//     TString DataSets[nSets]={"LHC16g1"};
+//     TString DataSetsFolder[nSets]={"LHC16g1"};
+//     TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16g1/"};
+//     TString SuffixDataSets[nSets]={"/PWGGA/GA_PbPb_MC/594_20170721-1646/"};
+    
+//     //CALO MC
+//     
+//     const Int_t nFiles = 1;
+//     TString Tag = "20170702";
+//     TString DataSetsFile[nFiles] = {"GammaCalo_210.root"};
+//     
+//     const Int_t nSets = 1;
+//     TString DataSets[nSets]={"LHC16g1"};
+//     TString DataSetsFolder[nSets]={"LHC16g1"};
+//     TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16g1/"};
+//     TString SuffixDataSets[nSets]={"/PWGGA/GA_PbPb_MC/595_20170724-1907/"};
+    
+    //CALO MC a b c
+    
+    const Int_t nFiles = 1;
+    TString Tag = "20170702";
+    TString DataSetsFile[nFiles] = {"GammaCalo_210.root"};
+    
+    const Int_t nSets = 3;
+    TString DataSets[nSets]={"LHC16g1","LHC16g1","LHC16g1"};
+    TString DataSetsFolder[nSets]={"LHC16g1a","LHC16g1b","LHC16g1c"};
+    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16g1a/","/alice/sim/2016/LHC16g1b/","/alice/sim/2016/LHC16g1c/"};
+    TString SuffixDataSets[nSets]={"/PWGGA/GA_PbPb_MC/596_20170724-1805/",
+                                   "/PWGGA/GA_PbPb_MC/597_20170721-1608/",
+                                   "/PWGGA/GA_PbPb_MC/590_20170721-1605/"};
 
-    const Int_t nFiles = 2;
-    TString Tag = "20170324";
-    TString DataSetsFile[nFiles] = {"GammaCalo_201.root","GammaConvCalo_201.root"};
-
-    const Int_t nSets = 10;
-    TString DataSets[nSets]={"LHC10b_pass4",
-                             "LHC10c_pass4",
-                             "LHC10d_pass4",
-                             "LHC10e_pass4",
-                             "LHC10f_pass4",
-                             "LHC14j4b",
-                             "LHC14j4c",
-                             "LHC14j4d",
-                             "LHC14j4e",
-                             "LHC14j4f"};
-    TString DataSetsFolder[nSets]={"LHC10",
-                                   "LHC10",
-                                   "LHC10",
-                                   "LHC10",
-                                   "LHC10",
-                                   "LHC14j4",
-                                   "LHC14j4",
-                                   "LHC14j4",
-                                   "LHC14j4",
-                                   "LHC14j4"};
-    TString PrefixDataSets[nSets]={"/alice/data/2010/LHC10b/000",
-                                   "/alice/data/2010/LHC10c/000",
-                                   "/alice/data/2010/LHC10d/000",
-                                   "/alice/data/2010/LHC10e/000",
-                                   "/alice/data/2010/LHC10f/000",
-                                   "/alice/sim/2014/LHC14j4b/",
-                                   "/alice/sim/2014/LHC14j4c/",
-                                   "/alice/sim/2014/LHC14j4d/",
-                                   "/alice/sim/2014/LHC14j4e/",
-                                   "/alice/sim/2014/LHC14j4f/"};
-    TString SuffixDataSets[nSets]={"/pass4/PWGGA/GA_pp/2040_20170321-2035/",
-                                   "/pass4/PWGGA/GA_pp/2041_20170321-2035/",
-                                   "/pass4/PWGGA/GA_pp/2042_20170321-2036/",
-                                   "/pass4/PWGGA/GA_pp/2043_20170321-2036/",
-                                   "/pass4/PWGGA/GA_pp/2044_20170321-2036/",
-                                   "/PWGGA/GA_pp_MC/2816_20170321-2244/",
-                                   "/PWGGA/GA_pp_MC/2817_20170321-2224/",
-                                   "/PWGGA/GA_pp_MC/2818_20170321-2244/",
-                                   "/PWGGA/GA_pp_MC/2819_20170321-2244/",
-                                   "/PWGGA/GA_pp_MC/2820_20170321-2246/"
-                                  };
+//     const Int_t nSets = 10;
+//     TString DataSets[nSets]={"LHC10b_pass4",
+//                              "LHC10c_pass4",
+//                              "LHC10d_pass4",
+//                              "LHC10e_pass4",
+//                              "LHC10f_pass4",
+//                              "LHC14j4b",
+//                              "LHC14j4c",
+//                              "LHC14j4d",
+//                              "LHC14j4e",
+//                              "LHC14j4f"};
+//     TString DataSetsFolder[nSets]={"LHC10",
+//                                    "LHC10",
+//                                    "LHC10",
+//                                    "LHC10",
+//                                    "LHC10",
+//                                    "LHC14j4",
+//                                    "LHC14j4",
+//                                    "LHC14j4",
+//                                    "LHC14j4",
+//                                    "LHC14j4"};
+//     TString PrefixDataSets[nSets]={"/alice/data/2010/LHC10b/000",
+//                                    "/alice/data/2010/LHC10c/000",
+//                                    "/alice/data/2010/LHC10d/000",
+//                                    "/alice/data/2010/LHC10e/000",
+//                                    "/alice/data/2010/LHC10f/000",
+//                                    "/alice/sim/2014/LHC14j4b/",
+//                                    "/alice/sim/2014/LHC14j4c/",
+//                                    "/alice/sim/2014/LHC14j4d/",
+//                                    "/alice/sim/2014/LHC14j4e/",
+//                                    "/alice/sim/2014/LHC14j4f/"};
+//     TString SuffixDataSets[nSets]={"/pass4/PWGGA/GA_pp/2040_20170321-2035/",
+//                                    "/pass4/PWGGA/GA_pp/2041_20170321-2035/",
+//                                    "/pass4/PWGGA/GA_pp/2042_20170321-2036/",
+//                                    "/pass4/PWGGA/GA_pp/2043_20170321-2036/",
+//                                    "/pass4/PWGGA/GA_pp/2044_20170321-2036/",
+//                                    "/PWGGA/GA_pp_MC/2816_20170321-2244/",
+//                                    "/PWGGA/GA_pp_MC/2817_20170321-2224/",
+//                                    "/PWGGA/GA_pp_MC/2818_20170321-2244/",
+//                                    "/PWGGA/GA_pp_MC/2819_20170321-2244/",
+//                                    "/PWGGA/GA_pp_MC/2820_20170321-2246/"
+//                                   };
 
 	//pp LHC10 7 TeV PhotonQA
 //	const Int_t nFiles = 1;
