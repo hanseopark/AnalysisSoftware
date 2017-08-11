@@ -831,18 +831,20 @@
                                                         12.0, 15.0, 19.0};
     Int_t fBinsEtaPbPb2760GeVPtRebinLHC11hLessBins[14] = {    10,   8,   5,   5,   5,   5,   5,   8, 10, 10,
                                                         10, 10, 10, 10};
-    Double_t fBinsDirGammaPbPb2760GeVPtLHC11h[21]   = { 0.0, 0.4, 0.8, 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 3.,
-                                                        3.5, 4.,  5.,  6.,  8.,  10., 12., 14.};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebin[20] = {2, 2, 2, 2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
-                                                           2,   2,   4,   4,   4,   4,   8};
-    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[20] = {2, 2, 2, 2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
-                                                           2,   2,   4,   4,   4,   5,   5};
+
+    Double_t fBinsDirGammaPbPb2760GeVPtLHC11h[23]   = { 0.0, 0.4, 0.9, 1.1,  1.3,  1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 3.,
+                                                        3.3, 3.7, 4.1, 4.6,  5.4,  6.2,  7.,  8., 11., 14.};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebin[22] = {2,2, 2,  2, 2, 2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   4,   4};
+    Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[22] = {2, 2, 2, 2, 2, 2,    2,    2,   2,  2,  2,    2,   2,   2,  2,
+                                                           2,   2,   4,   4,   4,   4,   5};
     Double_t fBinsDirGammaPbPb2760GeVPtLHC11hVar2[19]   = {0.0, 0.4, 0.8, 1.,  1.2,  1.4, 1.6, 1.8, 2., 2.3, 2.6, 3.,
                                                             3.5, 4.,  5.,  6.,  8.,  10., 14.};
     Int_t fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[18] = {2, 2, 2, 2,   2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   4};
     Int_t fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[18] = {2, 2, 2, 2,    2,   2,  2,  2,    2,   2,   2,  2,
                                                            2,   2,   4,   4,   4,   5};
+
     Int_t fBinsPi0PbPb2760GeVPtLHC11hPCMEMCRebin[26]= { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4, 5,
                                                         5, 10, 10, 10, 10, 10 };
@@ -2366,16 +2368,28 @@
                     fStartPtBin     = 3;
                     fColumn         = 4;
                     fRow            = 4;
+                    if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
+                        fRow++;
+                    if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
+                        fColumn++;
 
-                    if (fNBinsPt > 21) {
+                    if (fNBinsPt > 22) {
                         cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
-                        fNBinsPt    = 21;
+                        fNBinsPt    = 22;
                     }
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPtLHC11hVar2[i];
-                        if (i < fNBinsPt+1){
-                            if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[i];
-                            else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[i];
+                        if(fNBinsPt==22){
+                            fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPtLHC11h[i];
+                            if (i < fNBinsPt+1){
+                                if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebin[i];
+                                else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebin[i];
+                            }
+                        } else {
+                            fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPtLHC11hVar2[i];
+                            if (i < fNBinsPt+1){
+                                if(centrality.CompareTo("20-40%")==0 || centrality.CompareTo("20-50%")==0) fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hSemicRebinVar2[i];
+                                else fNRebin[i] = fBinsDirGammaPbPb2760GeVPtLHC11hRebinVar2[i];
+                            }
                         }
                     }
                 } else {

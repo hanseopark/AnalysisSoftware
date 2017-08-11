@@ -232,15 +232,15 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     DrawGammaSetMarkerTGraphAsym(graphPublishedDoubleRatioSyst , 20, 2, kGray+1, kGray+1, 1, kTRUE);
 
 
-    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Gamma_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatio_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Pi0_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_07_14/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_07_14.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_Gamma_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_IncRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_IncRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
 
     // ******************************************************************
     // *********** reading systematic errors for double ratio ***********
@@ -446,21 +446,25 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     // ******************************************************************
     // ****************** reading theory graphs *************************
     // ******************************************************************
-    TGraphAsymmErrors *graphInvYieldPbPbTheoryCTEQ61EPS09         = NULL;
+    TString fileNameTheoryPbPb                                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
+    TFile* fileTheoryPbPb                           = new TFile( fileNameTheoryPbPb.Data());
+    TDirectory* directoryTheoryGamma                = (TDirectory*)fileTheoryPbPb->Get("DirectPhoton");
+
+    TGraphAsymmErrors *graphInvYieldPbPbTheoryCTEQ61EPS09       = NULL;
     TGraphAsymmErrors *graphInvYieldPPTheoryCT10BFG2_pdfErr     = NULL;
     TGraphAsymmErrors *graphInvYieldPbPbTheoryEPS09             = NULL;
-    TGraphAsymmErrors *graphInvYieldPPTheoryCT10BFG2_scale         = NULL;
-    TGraphAsymmErrors* graphDRPbPbCT10BFG2_pdfErr                 = NULL;
-    TGraphAsymmErrors* graphDRPbPbCTEQ61EPS09                     = NULL;
-    graphInvYieldPbPbTheoryCTEQ61EPS09                             = (TGraphAsymmErrors*)fileInput->Get("PbPb276CTEQ61EPS09BFG2_sum_pdferr_InvYield");
-    graphInvYieldPPTheoryCT10BFG2_pdfErr                         = (TGraphAsymmErrors*)fileInput->Get("pp276CT10BFG2_sum_pdferr_InvYield");
+    TGraphAsymmErrors *graphInvYieldPPTheoryCT10BFG2_scale      = NULL;
+    TGraphAsymmErrors* graphDRPbPbCT10BFG2_pdfErr               = NULL;
+    TGraphAsymmErrors* graphDRPbPbCTEQ61EPS09                   = NULL;
+    graphInvYieldPbPbTheoryCTEQ61EPS09                          = (TGraphAsymmErrors*)directoryTheoryGamma->Get("PbPb276CTEQ61EPS09BFG2_sum_pdferr_InvYield");
+    graphInvYieldPPTheoryCT10BFG2_pdfErr                        = (TGraphAsymmErrors*)directoryTheoryGamma->Get("pp276CT10BFG2_sum_pdferr_InvYield");
 
-    graphInvYieldPbPbTheoryEPS09                                 = (TGraphAsymmErrors*)fileInput->Get("PbPb276EPS09BFG2_sum_scale_InvYield");
-    graphInvYieldPPTheoryCT10BFG2_scale                         = (TGraphAsymmErrors*)fileInput->Get("pp276CT10BFG2_sum_scale_InvYield");
+    graphInvYieldPbPbTheoryEPS09                                = (TGraphAsymmErrors*)directoryTheoryGamma->Get("PbPb276EPS09BFG2_sum_scale_InvYield");
+    graphInvYieldPPTheoryCT10BFG2_scale                         = (TGraphAsymmErrors*)directoryTheoryGamma->Get("pp276CT10BFG2_sum_scale_InvYield");
 
-    Bool_t activateTheoryPbPb                                    = kFALSE;
+    Bool_t activateTheoryPbPb                                   = kFALSE;
     if (graphInvYieldPbPbTheoryCTEQ61EPS09 && graphInvYieldPPTheoryCT10BFG2_pdfErr && graphInvYieldPbPbTheoryEPS09 &&   graphInvYieldPPTheoryCT10BFG2_scale)
-        activateTheoryPbPb                                        = kTRUE;
+        activateTheoryPbPb                                      = kTRUE;
 //     graphInvYieldPbPbTheoryCTEQ61EPS09->RemovePoint(graphInvYieldPbPbTheoryCTEQ61EPS09->GetN()-1);
 //     graphInvYieldPPTheoryCT10BFG2_pdfErr->RemovePoint(graphInvYieldPPTheoryCT10BFG2_pdfErr->GetN()-1);
 //

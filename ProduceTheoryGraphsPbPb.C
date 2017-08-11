@@ -1815,7 +1815,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 
 
 	
-	TFile *fileTheoryGraphsPbPb = new TFile(Form("ExternalInputPbPb/Theory/TheoryCompilationPbPb%s.root",specifier.Data()),"RECREATE");
+	TFile *fileTheoryGraphsPbPb = new TFile(Form("ExternalInputPbPb/Theory/TheoryCompilationPbPb%s.root",specifier.Data()),"UPDATE");
         
         Vitev_Bas_Raa_0020->Write("graphVitevBasRAA0020");
         Vitev_Bas_Raa_0005->Write("graphVitevBasRAA0005");

@@ -798,6 +798,41 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldFragGam8TeV          = (TGraphAsymmErrors*)graphNLOCalcFragGam8TeV->Clone("graphNLOCalcInvYieldFragGam8TeV");
         graphNLOCalcInvYieldFragGam8TeV                             = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldFragGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
 
+
+        //******************************************************************************************************************
+        //*********************************************** JetPHOX **********************************************************
+        //******************************************************************************************************************
+
+        TFile *filepp276JetPHOX_PDFerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinPDFerrDSIGDPT.root");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_prompt_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_fragm_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_sum_pdferr");
+
+        TFile *filepp276JetPHOX_PDFerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinPDFerr.root");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_prompt_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_fragm_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_sum_pdferr");
+
+        TFile *filepp276JetPHOX_ScaleerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinScaleerrDSIGDPT.root");
+            TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_sum_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_sum_scalevar");
+
+        TFile *filepp276JetPHOX_Scaleerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinScaleerr.root");
+            TGraphAsymmErrors* pp276BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_sum_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_sum_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_sum_scalevar");
+
+
         //******************************************************************************************************************
         //************************************** Writing output for pp ***************************************************
         //******************************************************************************************************************
@@ -953,6 +988,28 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcInvYieldThermalAndPromptDirGam13TeV->Write("graphThermalAndPromptDirectPhotonNLOShenGaleInvYield_13TeV",TObject::kOverwrite);
+
+            pp276CT10BFG2_prompt_xsec->Write("pp276CT10BFG2_prompt_pdferr_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_xsec->Write("pp276CT10BFG2_fragm_pdferr_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_sum_xsec->Write("pp276CT10BFG2_sum_pdferr_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_prompt_invyield->Write("pp276CT10BFG2_prompt_pdferr_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_invyield->Write("pp276CT10BFG2_fragm_pdferr_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_sum_invyield->Write("pp276CT10BFG2_sum_pdferr_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_prompt_scale_xsec->Write("pp276MSTW08BFG2_prompt_scale_xsec",TObject::kOverwrite);
+            pp276MSTW08BFG2_fragm_scale_xsec->Write("pp276MSTW08BFG2_fragm_scale_xsec",TObject::kOverwrite);
+            pp276MSTW08BFG2_sum_scale_xsec->Write("pp276MSTW08BFG2_sum_scale_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_prompt_scale_xsec->Write("pp276CT10BFG2_prompt_scale_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_scale_xsec->Write("pp276CT10BFG2_fragm_scale_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_sum_scale_xsec->Write("pp276CT10BFG2_sum_scale_xsec",TObject::kOverwrite);
+            pp276BFG2_prompt_scale_invyield->Write("pp276BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            pp276BFG2_fragm_scale_invyield->Write("pp276BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            pp276BFG2_sum_scale_invyield->Write("pp276BFG2_sum_scale_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_prompt_scale_invyield->Write("pp276CT10BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_scale_invyield->Write("pp276CT10BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_sum_scale_invyield->Write("pp276CT10BFG2_sum_scale_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_prompt_scale_invyield->Write("pp276MSTW08BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_fragm_scale_invyield->Write("pp276MSTW08BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_sum_scale_invyield->Write("pp276MSTW08BFG2_sum_scale_InvYield",TObject::kOverwrite);
 
         fileTheoryGraphsPP->Close();
         delete fileTheoryGraphsPP;
@@ -1602,9 +1659,63 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         
         
         //******************************************************************************************************************
+        //*********************************************** JetPHOX **********************************************************
+        //******************************************************************************************************************
+
+        TFile *filePbPb276JetPHOX_PDFerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/PbPb276MartinPDFerrDSIGDPT.root");
+            TGraphAsymmErrors* PbPb276CTEQ61EPS09BFG2_prompt_xsec = (TGraphAsymmErrors*)filePbPb276JetPHOX_PDFerrDSIGDPT->Get("PbPb276CTEQ61EPS09BFG2_prompt_pdferr");
+            TGraphAsymmErrors* PbPb276CTEQ61EPS09BFG2_fragm_xsec = (TGraphAsymmErrors*)filePbPb276JetPHOX_PDFerrDSIGDPT->Get("PbPb276CTEQ61EPS09BFG2_fragm_pdferr");
+            TGraphAsymmErrors* PbPb276CTEQ61EPS09BFG2_sum_xsec = (TGraphAsymmErrors*)filePbPb276JetPHOX_PDFerrDSIGDPT->Get("PbPb276CTEQ61EPS09BFG2_sum_pdferr");
+
+        TFile *filePbPb276JetPHOX_PDFerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/PbPb276MartinPDFerr.root");
+            TGraphAsymmErrors* PbPb276CTEQ61EPS09BFG2_prompt_invyield = (TGraphAsymmErrors*)filePbPb276JetPHOX_PDFerr->Get("PbPb276CTEQ61EPS09BFG2_prompt_pdferr");
+            TGraphAsymmErrors* PbPb276CTEQ61EPS09BFG2_fragm_invyield = (TGraphAsymmErrors*)filePbPb276JetPHOX_PDFerr->Get("PbPb276CTEQ61EPS09BFG2_fragm_pdferr");
+            TGraphAsymmErrors* PbPb276CTEQ61EPS09BFG2_sum_invyield = (TGraphAsymmErrors*)filePbPb276JetPHOX_PDFerr->Get("PbPb276CTEQ61EPS09BFG2_sum_pdferr");
+
+        TFile *filePbPb276JetPHOX_scaleDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/PbPb276MartinScaleIndepDSIGDPT.root");
+            TGraphAsymmErrors* PbPb276EPS09BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filePbPb276JetPHOX_scaleDSIGDPT->Get("PbPb276EPS09BFG2_prompt_scalevarIndep");
+            TGraphAsymmErrors* PbPb276EPS09BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filePbPb276JetPHOX_scaleDSIGDPT->Get("PbPb276EPS09BFG2_fragm_scalevarIndep");
+            TGraphAsymmErrors* PbPb276EPS09BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filePbPb276JetPHOX_scaleDSIGDPT->Get("PbPb276EPS09BFG2_sum_scalevarIndep");
+
+        TFile *filePbPb276JetPHOX_scale = new TFile("ExternalInputPbPb/Theory/JetPHOX/PbPb276MartinScaleIndep.root");
+            TGraphAsymmErrors* PbPb276EPS09BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filePbPb276JetPHOX_scale->Get("PbPb276EPS09BFG2_prompt_scalevarIndep");
+            TGraphAsymmErrors* PbPb276EPS09BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filePbPb276JetPHOX_scale->Get("PbPb276EPS09BFG2_fragm_scalevarIndep");
+            TGraphAsymmErrors* PbPb276EPS09BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filePbPb276JetPHOX_scale->Get("PbPb276EPS09BFG2_sum_scalevarIndep");
+
+        TFile *filepp276JetPHOX_PDFerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinPDFerrDSIGDPT.root");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_prompt_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_fragm_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_sum_pdferr");
+
+        TFile *filepp276JetPHOX_PDFerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinPDFerr.root");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_prompt_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_fragm_pdferr");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_sum_pdferr");
+
+        TFile *filepp276JetPHOX_ScaleerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinScaleerrDSIGDPT.root");
+            TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_sum_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_sum_scalevar");
+
+        TFile *filepp276JetPHOX_Scaleerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinScaleerr.root");
+            TGraphAsymmErrors* pp276BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_sum_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276CT10BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_sum_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_prompt_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_fragm_scalevar");
+            TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_sum_scalevar");
+
+
+        //******************************************************************************************************************
         //************************************** Writing output for PbPb ***************************************************
         //******************************************************************************************************************
-        TFile *fileTheoryGraphsPbPb = new TFile("ExternalInputPbPb/Theory/TheoryCompilationPbPb.root","RECREATE");
+        TFile *fileTheoryGraphsPbPb = new TFile("ExternalInputPbPb/Theory/TheoryCompilationPbPb.root","UPDATE");
 
         
             fileTheoryGraphsPbPb->mkdir("DirectPhoton");
@@ -1680,7 +1791,42 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphDirectPhotonV2Holopainen0020->Write("graphDirectPhotonV2_Holopainen_0020", TObject::kOverwrite);
             graphDirectPhotonHolopainen2040->Write("graphDirectPhotonYield_Holopainen_2040", TObject::kOverwrite);
             graphDirectPhotonV2Holopainen2040->Write("graphDirectPhotonV2_Holopainen_2040", TObject::kOverwrite);
-            
+
+            PbPb276CTEQ61EPS09BFG2_prompt_xsec->Write("PbPb276CTEQ61EPS09BFG2_prompt_pdferr_xsec",TObject::kOverwrite);
+            PbPb276CTEQ61EPS09BFG2_fragm_xsec->Write("PbPb276CTEQ61EPS09BFG2_fragm_pdferr_xsec",TObject::kOverwrite);
+            PbPb276CTEQ61EPS09BFG2_sum_xsec->Write("PbPb276CTEQ61EPS09BFG2_sum_pdferr_xsec",TObject::kOverwrite);
+            PbPb276CTEQ61EPS09BFG2_prompt_invyield->Write("PbPb276CTEQ61EPS09BFG2_prompt_pdferr_InvYield",TObject::kOverwrite);
+            PbPb276CTEQ61EPS09BFG2_fragm_invyield->Write("PbPb276CTEQ61EPS09BFG2_fragm_pdferr_InvYield",TObject::kOverwrite);
+            PbPb276CTEQ61EPS09BFG2_sum_invyield->Write("PbPb276CTEQ61EPS09BFG2_sum_pdferr_InvYield",TObject::kOverwrite);
+            PbPb276EPS09BFG2_prompt_scale_xsec->Write("PbPb276EPS09BFG2_prompt_scale_xsec",TObject::kOverwrite);
+            PbPb276EPS09BFG2_fragm_scale_xsec->Write("PbPb276EPS09BFG2_fragm_scale_xsec",TObject::kOverwrite);
+            PbPb276EPS09BFG2_sum_scale_xsec->Write("PbPb276EPS09BFG2_sum_scale_xsec",TObject::kOverwrite);
+            PbPb276EPS09BFG2_prompt_scale_invyield->Write("PbPb276EPS09BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            PbPb276EPS09BFG2_fragm_scale_invyield->Write("PbPb276EPS09BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            PbPb276EPS09BFG2_sum_scale_invyield->Write("PbPb276EPS09BFG2_sum_scale_InvYield",TObject::kOverwrite);
+
+            pp276CT10BFG2_prompt_xsec->Write("pp276CT10BFG2_prompt_pdferr_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_xsec->Write("pp276CT10BFG2_fragm_pdferr_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_sum_xsec->Write("pp276CT10BFG2_sum_pdferr_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_prompt_invyield->Write("pp276CT10BFG2_prompt_pdferr_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_invyield->Write("pp276CT10BFG2_fragm_pdferr_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_sum_invyield->Write("pp276CT10BFG2_sum_pdferr_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_prompt_scale_xsec->Write("pp276MSTW08BFG2_prompt_scale_xsec",TObject::kOverwrite);
+            pp276MSTW08BFG2_fragm_scale_xsec->Write("pp276MSTW08BFG2_fragm_scale_xsec",TObject::kOverwrite);
+            pp276MSTW08BFG2_sum_scale_xsec->Write("pp276MSTW08BFG2_sum_scale_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_prompt_scale_xsec->Write("pp276CT10BFG2_prompt_scale_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_scale_xsec->Write("pp276CT10BFG2_fragm_scale_xsec",TObject::kOverwrite);
+            pp276CT10BFG2_sum_scale_xsec->Write("pp276CT10BFG2_sum_scale_xsec",TObject::kOverwrite);
+            pp276BFG2_prompt_scale_invyield->Write("pp276BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            pp276BFG2_fragm_scale_invyield->Write("pp276BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            pp276BFG2_sum_scale_invyield->Write("pp276BFG2_sum_scale_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_prompt_scale_invyield->Write("pp276CT10BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_fragm_scale_invyield->Write("pp276CT10BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            pp276CT10BFG2_sum_scale_invyield->Write("pp276CT10BFG2_sum_scale_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_prompt_scale_invyield->Write("pp276MSTW08BFG2_prompt_scale_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_fragm_scale_invyield->Write("pp276MSTW08BFG2_fragm_scale_InvYield",TObject::kOverwrite);
+            pp276MSTW08BFG2_sum_scale_invyield->Write("pp276MSTW08BFG2_sum_scale_InvYield",TObject::kOverwrite);
+
         fileTheoryGraphsPbPb->Close();
     }
         
