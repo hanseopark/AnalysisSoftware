@@ -3606,7 +3606,7 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if (mode == 0 ){ // PCM
-                    maxNBins = 33;
+                    maxNBins = 31;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0pPb5TeVPt[i];
                     }
@@ -3621,7 +3621,7 @@
                         binning[i] = fBinsPi0pPb5TeVEMCPt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
-                    maxNBins = 33;
+                    maxNBins = 32;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0pPb5TeVEMCPt[i];
                     }
@@ -3682,6 +3682,11 @@
                     maxNBins = 18;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtapPb5TeVEMCPt[i];
+                    }
+                } else if (mode == 3 ){
+                    maxNBins = 14;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEtapPb5TeVPCMPHOSPt[i];
                     }
                 } else if (mode == 4 || mode == 12 ){
                     maxNBins = 19;
@@ -3777,6 +3782,8 @@
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 6;
+                } else if ( mode == 3 ){
+                    startPtBin     = 3;
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 9;
                 } else if ( mode == 5){
@@ -3826,7 +3833,7 @@
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 5;
                 } else if ( mode == 3 ){
-                    startPtBin     = 7;
+                    startPtBin     = 4;
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 7;
                 } else if ( mode == 5){
