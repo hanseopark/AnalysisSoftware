@@ -1582,6 +1582,13 @@ void FillPtHistos()
             fHistoTrueSignMeson->SetBinError(iPt,fMesonTrueSignError[iPt-1]);
             fHistoTrueSBMeson->SetBinContent(iPt,fMesonTrueSB[iPt-1]);
             fHistoTrueSBMeson->SetBinError(iPt,fMesonTrueSBError[iPt-1]);
+
+            for (Int_t k = 0; k < 3; k++){
+                fHistoYieldTrueMeson[k]->SetBinContent(iPt,fMesonTrueYields[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMeson[k]->SetBinError(iPt,fMesonTrueYieldsError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMesonReweighted[k]->SetBinContent(iPt,fMesonTrueYieldsReweighted[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                fHistoYieldTrueMesonReweighted[k]->SetBinError(iPt,fMesonTrueYieldsReweightedError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            }
         }
 
         // filling histogram arrays for normal, wide, narrow, left, left wide, left narrow
@@ -1596,6 +1603,7 @@ void FillPtHistos()
             fHistoSigndefaultMeson[k]->SetBinError(iPt,fMesonSigndefaultError[k][iPt]-1);
             fHistoSBdefaultMeson[k]->SetBinContent(iPt,fMesonSBdefault[k][iPt]-1);
             fHistoSBdefaultMeson[k]->SetBinError(iPt,fMesonSBdefaultError[k][iPt]-1);
+
         }
         fHistoYieldMesonBackFit->SetBinContent(iPt,fMesonYieldsCorResidualBckFuncBackFit[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         fHistoYieldMesonBackFit->SetBinError(iPt,fMesonYieldsCorResidualBckFuncBackFitError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
@@ -2030,6 +2038,7 @@ TH1D* CalculateMesonEfficiency( TH1D* fMC_fMesonYieldsPt,
                                 TH1D* fHistoMCMesonWithinAccepPt,
                                 TString nameEfi
                               ){
+    cout << "---> Begin of CalculateMesonEfficiency " << endl;
     fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
 
     fHistoMCMesonEffiPt->Sumw2();
