@@ -124,6 +124,11 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     cocktailFitAllGammaForNLO->SetRange(0,20);
     cout << WriteParameterToFile(cocktailFitAllGammaForNLO)<< endl;
 
+    Double_t fNcoll    = 0;
+    Double_t fNcollErr = 0;
+        fNcoll                             = GetNCollFromCutNumber(cutSel,optionEnergy);
+        fNcollErr                          = GetNCollErrFromCutNumber(cutSel,optionEnergy);
+    cout << "Ncoll = " << fNcoll << " +/- " << fNcollErr << endl;
 
     TString PubCombGammaFileName = "FinalResults/Gamma_CombResults_PbPb_2.76TeV_20150729.root";
     TString PubPCMGammaFileName  = "FinalResults/Gamma_PCMResults_PbPb_2.76TeV_20150729.root";
@@ -450,6 +455,9 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TFile* fileTheoryPbPb                           = new TFile( fileNameTheoryPbPb.Data());
     TDirectory* directoryTheoryGamma                = (TDirectory*)fileTheoryPbPb->Get("DirectPhoton");
 
+    Double_t xSection2760GeV        = 55.416*1e-3;      // V0OR
+    Double_t recalcBarn             = 1e12; //NLO in pbarn!!!!
+    Double_t xSection2760GeVppINEL = 62.8*1e9;
     TGraphAsymmErrors *graphInvYieldPbPbTheoryCTEQ61EPS09       = NULL;
     TGraphAsymmErrors *graphInvYieldPPTheoryCT10BFG2_pdfErr     = NULL;
     TGraphAsymmErrors *graphInvYieldPbPbTheoryEPS09             = NULL;
@@ -457,10 +465,14 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TGraphAsymmErrors* graphDRPbPbCT10BFG2_pdfErr               = NULL;
     TGraphAsymmErrors* graphDRPbPbCTEQ61EPS09                   = NULL;
     graphInvYieldPbPbTheoryCTEQ61EPS09                          = (TGraphAsymmErrors*)directoryTheoryGamma->Get("PbPb276CTEQ61EPS09BFG2_sum_pdferr_InvYield");
+    graphInvYieldPbPbTheoryCTEQ61EPS09 = (TGraphAsymmErrors*)ScaleGraph(graphInvYieldPbPbTheoryCTEQ61EPS09, fNcoll/(recalcBarn*xSection2760GeV));
     graphInvYieldPPTheoryCT10BFG2_pdfErr                        = (TGraphAsymmErrors*)directoryTheoryGamma->Get("pp276CT10BFG2_sum_pdferr_InvYield");
+    graphInvYieldPPTheoryCT10BFG2_pdfErr = (TGraphAsymmErrors*)ScaleGraph(graphInvYieldPPTheoryCT10BFG2_pdfErr, fNcoll/(recalcBarn*xSection2760GeV));
 
     graphInvYieldPbPbTheoryEPS09                                = (TGraphAsymmErrors*)directoryTheoryGamma->Get("PbPb276EPS09BFG2_sum_scale_InvYield");
+    graphInvYieldPbPbTheoryEPS09 = (TGraphAsymmErrors*)ScaleGraph(graphInvYieldPbPbTheoryEPS09, fNcoll/(recalcBarn*xSection2760GeV));
     graphInvYieldPPTheoryCT10BFG2_scale                         = (TGraphAsymmErrors*)directoryTheoryGamma->Get("pp276CT10BFG2_sum_scale_InvYield");
+    graphInvYieldPPTheoryCT10BFG2_scale = (TGraphAsymmErrors*)ScaleGraph(graphInvYieldPPTheoryCT10BFG2_scale, fNcoll/(recalcBarn*xSection2760GeV));
 
     Bool_t activateTheoryPbPb                                   = kFALSE;
     if (graphInvYieldPbPbTheoryCTEQ61EPS09 && graphInvYieldPPTheoryCT10BFG2_pdfErr && graphInvYieldPbPbTheoryEPS09 &&   graphInvYieldPPTheoryCT10BFG2_scale)
@@ -493,12 +505,14 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
             Double_t DRtheo                 = 1 + (graphDRPbPbCTEQ61EPS09->GetY()[bin]/ cocktailIntegral);
             Double_t DRtheoErrDown        = graphDRPbPbCTEQ61EPS09->GetErrorYlow(bin)/ cocktailIntegral;
             Double_t DRtheoErrUp        = graphDRPbPbCTEQ61EPS09->GetErrorYhigh(bin)/ cocktailIntegral;
-    //         cout << graphDRPbPbCTEQ61EPS09->GetX()[bin]<< "\t" << cocktailIntegral << "\t" << DRtheo << "\t +" << DRtheoErrUp << "\t -" <<    DRtheoErrDown << endl;
+            cout << graphDRPbPbCTEQ61EPS09->GetY()[bin] << endl;
+            cout << graphDRPbPbCTEQ61EPS09->GetX()[bin]<< "\t" << cocktailIntegral << "\t" << DRtheo << "\t +" << DRtheoErrUp << "\t -" <<    DRtheoErrDown << endl;
             graphDRPbPbCTEQ61EPS09->SetPoint(bin, graphDRPbPbCTEQ61EPS09->GetX()[bin], DRtheo );
             graphDRPbPbCTEQ61EPS09->SetPointError(bin, graphDRPbPbCTEQ61EPS09->GetErrorXlow(bin), graphDRPbPbCTEQ61EPS09->GetErrorXhigh(bin), DRtheoErrDown, DRtheoErrUp );
         }
         graphDRPbPbCTEQ61EPS09->Print();
 
+        cout << "======================================================================= DR CT10BFG2 =================================================================" << endl;
         for(Int_t i = 0;i<graphInvYieldPPTheoryCT10BFG2_scale->GetN();i++){
             Double_t yerrlow1         = graphInvYieldPPTheoryCT10BFG2_pdfErr->GetErrorYlow(i);
             Double_t yerrlow2         = graphInvYieldPPTheoryCT10BFG2_scale->GetErrorYlow(i);
