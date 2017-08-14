@@ -1131,69 +1131,6 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	
 
 	//**********************************************************************************
-	//******************** InvMass Plot full pt range **********************************
-	//**********************************************************************************
-	TCanvas* canvasInvMassFull = new TCanvas("canvasInvMassFull","",200,10,1350,900);  // gives the page size
-	DrawGammaCanvasSettings( canvasInvMassFull, 0.13, 0.02, 0.06, 0.09);
-
-	Double_t widthMeV = histoMesonSignalFullPtInvMass->GetBinWidth(10)*1000;
-	cout << widthMeV << endl ;
-	DrawAutoGammaMesonHistos( histoMesonSignalFullPtInvMass, 
-								"", "M_{#pi^{+}#pi^{-}#pi^{0}} (GeV/c^{2})", Form("Counts/ %2.1e MeV/c^{2}",widthMeV), 
-								kTRUE, 1.1, 0., kFALSE,
-								kFALSE, 0., 0.7, 
-								kTRUE, 0., 25.);
-
-	DrawGammaSetMarker(histoMesonSignalFullPtInvMass, 20, 0.4, kBlack, kBlack);                               
-	histoMesonSignalFullPtInvMass->DrawCopy("e1");  
-	histoMesonBckNormFullPtInvMass->SetLineColor(kBlue);
-	histoMesonBckNormFullPtInvMass->SetLineWidth(0.99);
-	histoMesonBckNormFullPtInvMass->DrawCopy("same,hist");
-
-	TLatex* textPi0InvMass;
-	if (nameMeson.CompareTo("Pi0") == 0  || nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
-		textPi0InvMass = new TLatex(0.44,0.8+pictDrawingCoordinatesInv[3],"p_{T}^{#pi^{+}#pi^{-}#pi^{0}} > 0.4 GeV/c");
-	} else {
-		textPi0InvMass = new TLatex(0.44,0.8+pictDrawingCoordinatesInv[3],"p_{T}^{#pi^{+}#pi^{-}#pi^{0}} > 0.4 GeV/c");
-	}
-	textPi0InvMass->SetNDC();
-	textPi0InvMass->SetTextColor(1);
-	textPi0InvMass->SetTextSize(pictDrawingCoordinatesInv[7]);
-	textPi0InvMass->Draw();
-	canvasInvMassFull->Update();
-
-	canvasInvMassFull->SaveAs(Form("%s/%s_%s_InvMassFullPt_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
-	delete canvasInvMassFull;
-		
-	TCanvas* canvasInvMassFullWO = new TCanvas("canvasInvMassFullWO","",200,10,1350,900);  // gives the page size
-	DrawGammaCanvasSettings( canvasInvMassFullWO, 0.13, 0.02, 0.06, 0.09);  
-	DrawAutoGammaMesonHistos( histoMesonSignalFullPtInvMass, 
-								"", "M_{#pi^{+}#pi^{-}#pi^{0}} (GeV/c^{2})", Form("Counts/ %2.1e MeV/c^{2}",widthMeV), 
-								kTRUE, 1.1, 0., kFALSE,
-								kFALSE, 0., 0.7, 
-								kTRUE, 0., 25.);
-
-	DrawGammaSetMarker(histoMesonSignalFullPtInvMass, 20, 0.4, kBlack, kBlack);                               
-	histoMesonSignalFullPtInvMass->DrawCopy("e1");  
-		
-	if (nameMeson.CompareTo("Pi0") == 0  || nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
-		textPi0InvMass = new TLatex(0.44,0.8+pictDrawingCoordinatesInv[3],"p_{T}^{#pi^{+}#pi^{-}#pi^{0}} > 0.4 GeV/c");
-	} else {
-		textPi0InvMass = new TLatex(0.44,0.8+pictDrawingCoordinatesInv[3],"p_{T}^{#pi^{+}#pi^{-}#pi^{0}} > 0.4 GeV/c");
-	}
-	textPi0InvMass->SetNDC();
-	textPi0InvMass->SetTextColor(1);
-	textPi0InvMass->SetTextSize(pictDrawingCoordinatesInv[7]);
-	textPi0InvMass->Draw();
-
-	canvasInvMassFullWO->Update();
-
-	canvasInvMassFullWO->SaveAs(Form("%s/%s_%s_InvMassFullPtWithoutBG_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(), fCutSelection.Data(), suffix.Data()));
-	delete canvasInvMassFullWO;
-
-
-
-	//**********************************************************************************
 	//******************** RAW Yield spectrum ******************************************
 	//**********************************************************************************
 		
@@ -1500,18 +1437,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	}
 
 	Int_t nBinsPt =   histoCorrectedYieldTrue->GetNbinsX();
-	TH1D *histoCorrectedYieldTrueMt = NULL;
-	TH1D *histoCorrectedYieldTrueNarrowMt = NULL;
-	TH1D *histoCorrectedYieldTrueWideMt = NULL;
-	TH1D *histoCorrectedYieldTrueLeftMt = NULL;
-	TH1D *histoCorrectedYieldTrueLeftNarrowMt = NULL;
-	TH1D *histoCorrectedYieldTrueLeftWideMt = NULL;
-	TH1D *histoRatioTrueMt = NULL;
-	TH1D *histoRatioTrueWideMt = NULL;
-	TH1D *histoRatioTrueNarrowMt = NULL;
-	TH1D *histoRatioTrueLeftMt = NULL;
-	TH1D *histoRatioTrueLeftWideMt = NULL;
-	TH1D *histoRatioTrueLeftNarrowMt = NULL;
+
 	
 
 	if (!kDalitz){
@@ -1530,166 +1456,6 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 			cout << "recalculation pt to mt:    " << iPt<<"     pt      "<< histoCorrectedYieldTrue->GetXaxis()->GetBinUpEdge(iPt)<< "      mt    " << binsMt[iPt]<< endl;
 		}
 
-		TH1F *deltaMt =   new TH1F("deltaMt","",nBinsPt,binsMt);
-
-		histoCorrectedYieldTrueMt = new TH1D("CorrectedYieldTrueEff_Mt","",nBinsPt,binsMt);
-		histoCorrectedYieldTrueMt->SetName("CorrectedYieldTrueEff_Mt");
-		histoCorrectedYieldTrueNarrowMt = new TH1D("CorrectedYieldTrueEffNarrow_Mt","",nBinsPt,binsMt);
-		histoCorrectedYieldTrueNarrowMt->SetName("CorrectedYieldTrueEffNarrow_Mt");
-		histoCorrectedYieldTrueWideMt = new TH1D("CorrectedYieldTrueEffWide_Mt","",nBinsPt,binsMt);
-		histoCorrectedYieldTrueWideMt->SetName("CorrectedYieldTrueEffWide_Mt");
-
-		histoCorrectedYieldTrueLeftMt = new TH1D("CorrectedYieldTrueEffLeft_Mt","",nBinsPt,binsMt);
-		histoCorrectedYieldTrueLeftMt->SetName("CorrectedYieldTrueEffLeft_Mt");
-		histoCorrectedYieldTrueLeftNarrowMt = new TH1D("CorrectedYieldTrueEffLeftNarrow_Mt","",nBinsPt,binsMt);
-		histoCorrectedYieldTrueLeftNarrowMt->SetName("CorrectedYieldTrueEffLeftNarrow_Mt");
-		histoCorrectedYieldTrueLeftWideMt = new TH1D("CorrectedYieldTrueEffLeftWide_Mt","",nBinsPt,binsMt);
-		histoCorrectedYieldTrueLeftWideMt->SetName("CorrectedYieldTrueEffLeftWide_Mt");
-
-		for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-			deltaMt->SetBinContent(iPt,binsMt[iPt]-binsMt[iPt-1]);
-			deltaMt->SetBinError(iPt,0);
-		}
-
-		for(Int_t iPt=1;iPt<nBinsPt+1;iPt++){
-			histoCorrectedYieldTrueMt->SetBinContent(iPt,histoCorrectedYieldTrue->GetBinContent(iPt));
-			histoCorrectedYieldTrueMt->SetBinError(iPt,histoCorrectedYieldTrue->GetBinError(iPt));
-
-			histoCorrectedYieldTrueNarrowMt->SetBinContent(iPt,histoCorrectedYieldTrueNarrow->GetBinContent(iPt));
-			histoCorrectedYieldTrueNarrowMt->SetBinError(iPt,histoCorrectedYieldTrueNarrow->GetBinError(iPt));
-
-			histoCorrectedYieldTrueWideMt->SetBinContent(iPt,histoCorrectedYieldTrueWide->GetBinContent(iPt));
-			histoCorrectedYieldTrueWideMt->SetBinError(iPt,histoCorrectedYieldTrueWide->GetBinError(iPt));
-
-			histoCorrectedYieldTrueLeftMt->SetBinContent(iPt,histoCorrectedYieldTrueLeft->GetBinContent(iPt));
-			histoCorrectedYieldTrueLeftMt->SetBinError(iPt,histoCorrectedYieldTrueLeft->GetBinError(iPt));
-
-			histoCorrectedYieldTrueLeftNarrowMt->SetBinContent(iPt,histoCorrectedYieldTrueLeftNarrow->GetBinContent(iPt));
-			histoCorrectedYieldTrueLeftNarrowMt->SetBinError(iPt,histoCorrectedYieldTrueLeftNarrow->GetBinError(iPt));
-
-			histoCorrectedYieldTrueLeftWideMt->SetBinContent(iPt,histoCorrectedYieldTrueLeftWide->GetBinContent(iPt));
-			histoCorrectedYieldTrueLeftWideMt->SetBinError(iPt,histoCorrectedYieldTrueLeftWide->GetBinError(iPt));
-		}
-
-
-		histoRatioTrueMt = (TH1D*) histoCorrectedYieldTrueMt->Clone(); 
-		histoRatioTrueMt->Divide(histoRatioTrueMt,histoCorrectedYieldTrueMt,1.,1.,"");
-		histoRatioTrueWideMt = (TH1D*) histoCorrectedYieldTrueMt->Clone();   
-		histoRatioTrueWideMt->Divide(histoRatioTrueWideMt,histoCorrectedYieldTrueWideMt,1.,1.,"");
-		histoRatioTrueNarrowMt = (TH1D*) histoCorrectedYieldTrueMt->Clone(); 
-		histoRatioTrueNarrowMt->Divide(histoRatioTrueNarrowMt,histoCorrectedYieldTrueNarrowMt,1.,1.,"");
-		histoRatioTrueLeftMt = (TH1D*) histoCorrectedYieldTrueMt->Clone();   
-		histoRatioTrueLeftMt->Divide(histoRatioTrueMt,histoCorrectedYieldTrueLeftMt,1.,1.,"");
-		histoRatioTrueLeftWideMt = (TH1D*) histoCorrectedYieldTrueMt->Clone();  
-		histoRatioTrueLeftWideMt->Divide(histoRatioTrueLeftWideMt,histoCorrectedYieldTrueLeftWideMt,1.,1.,"");
-		histoRatioTrueLeftNarrowMt = (TH1D*) histoCorrectedYieldTrueMt->Clone();   
-		histoRatioTrueLeftNarrowMt->Divide(histoRatioTrueLeftNarrowMt,histoCorrectedYieldTrueLeftNarrowMt,1.,1.,"");
-
-		//*************************************************************************************************
-		//*********************** Plotting Corrected Yield in mt - bins normal eff ************************
-		//*************************************************************************************************
-
-		TCanvas* canvasCorrecftedYieldMt = new TCanvas("canvasCorrecftedYieldMt","",1350,1500);  // gives the page size
-		DrawGammaCanvasSettings( canvasCorrecftedYieldMt, 0.13, 0.02, 0.02, 0.09); 
-		canvasCorrecftedYieldMt->SetLogy(); 
-
-		TPad* padCorrectedYieldHistosMt = new TPad("padCorrectedYieldHistosMt", "", 0., 0.25, 1., 1.,-1, -1, -2);
-		DrawGammaPadSettings( padCorrectedYieldHistosMt, 0.12, 0.02, 0.02, 0.);
-		padCorrectedYieldHistosMt->Draw();
-
-		TPad* padCorrectedYieldRatiosMt = new TPad("padCorrectedYieldRatiosMt", "", 0., 0., 1., 0.25,-1, -1, -2);
-		DrawGammaPadSettings( padCorrectedYieldRatiosMt, 0.12, 0.02, 0., 0.2);
-		padCorrectedYieldRatiosMt->Draw();
-
-		padCorrectedYieldHistosMt->cd();
-		padCorrectedYieldHistosMt->SetLogy();     
-
-		
-		DrawAutoGammaMesonHistos( histoCorrectedYieldTrueMt, 
-									"", "m_{t} (GeV/c)", "#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{m_{t}dm_{t}dy} (c/GeV)^{2}", 
-									kTRUE, 3., 4e-10, kTRUE,
-									kFALSE, 0., 0.7, 
-									kFALSE, 0., 15.);
-		DrawGammaSetMarker(histoCorrectedYieldTrueMt, 22, 1., kBlack, kBlack);                              
-		histoCorrectedYieldTrueMt->DrawCopy("e1,same");    
-
-        //right Side Normalization narrow
-		DrawGammaSetMarker(histoCorrectedYieldTrueNarrowMt, 26, 1., kGray+1, kGray+1);                                 
-		histoCorrectedYieldTrueNarrowMt->DrawCopy("e1,same"); 
-
-        //right Side Normalization wide
-		DrawGammaSetMarker(histoCorrectedYieldTrueWideMt, 26, 1., kGray+3, kGray+3);                              
-		histoCorrectedYieldTrueWideMt->DrawCopy("e1,same"); 
-
-        //left Side Normalization
-		DrawGammaSetMarker(histoCorrectedYieldTrueLeftMt, 22, 1., kBlue, kBlue);                               
-		histoCorrectedYieldTrueLeftMt->DrawCopy("e1,same");   
-
-        //left Side Normalization narrow
-		DrawGammaSetMarker(histoCorrectedYieldTrueLeftNarrowMt, 26, 1., kBlue-5, kBlue-5);                                
-		histoCorrectedYieldTrueLeftNarrowMt->DrawCopy("e1,same"); 
-
-        //left Side Normalization wide
-		DrawGammaSetMarker(histoCorrectedYieldTrueLeftWideMt, 26, 1., kBlue+2, kBlue+2);                             
-		histoCorrectedYieldTrueLeftWideMt->DrawCopy("e1,same"); 
-
-
-		TLegend* legendYield_Mt = new TLegend(0.15,0.03,0.66,0.19);
-		legendYield_Mt->SetTextSize(0.02);        
-		legendYield_Mt->SetFillColor(0);
-		legendYield_Mt->AddEntry(histoCorrectedYieldTrueMt,"corr true /right norm");
-		legendYield_Mt->AddEntry(histoCorrectedYieldTrueWideMt,"corr true wide int /right norm");
-		legendYield_Mt->AddEntry(histoCorrectedYieldTrueNarrowMt,"corr true narrow int /right norm");
-		legendYield_Mt->AddEntry(histoCorrectedYieldTrueLeftMt,Form("corr true  /left+right norm"));
-		legendYield_Mt->AddEntry(histoCorrectedYieldTrueLeftWideMt,"corr true wide int /left+right norm");
-		legendYield_Mt->AddEntry(histoCorrectedYieldTrueLeftNarrowMt,"corr true narrow int /left+right norm");
-
-		legendYield_Mt->Draw();
-
-		padCorrectedYieldRatiosMt->cd();
-		histoRatioTrueMt->SetYTitle("#frac{standard}{modified}");   
-		histoRatioTrueMt->SetXTitle("m_{t} (GeV/c)");
-
-        if(nameMeson.CompareTo("Eta") == 0 ) histoRatioTrueMt->GetYaxis()->SetRangeUser(0.4,1.63);
-		if(nameMeson.CompareTo("Omega") == 0 ) histoRatioTrueMt->GetYaxis()->SetRangeUser(0.4,1.63);
-		histoRatioTrueMt->GetXaxis()->SetRangeUser(0.,15.);
-		histoRatioTrueMt->GetYaxis()->SetNdivisions(505);
-		histoRatioTrueMt->GetYaxis()->SetLabelSize(0.08);
-		histoRatioTrueMt->GetYaxis()->SetTitleSize(0.1);   
-		histoRatioTrueMt->GetYaxis()->SetDecimals();
-		histoRatioTrueMt->GetYaxis()->SetTitleOffset(0.42);
-		histoRatioTrueMt->GetXaxis()->SetTitleSize(0.11);  
-		histoRatioTrueMt->GetXaxis()->SetLabelSize(0.08);
-
-		DrawGammaSetMarker(histoRatioTrueMt, 22, 1., kBlack, kBlack);                              
-		histoRatioTrueMt->DrawCopy("e1");   
-
-        //right Side Normalization narrow
-		DrawGammaSetMarker(histoRatioTrueNarrowMt, 26, 1., kGray+1, kGray+1);                                 
-		histoRatioTrueNarrowMt->DrawCopy("e1,same"); 
-
-        //right Side Normalization wide
-		DrawGammaSetMarker(histoRatioTrueWideMt, 26, 1., kGray+3, kGray+3);                              
-		histoRatioTrueWideMt->DrawCopy("e1,same"); 
-
-        //left Side Normalization
-		DrawGammaSetMarker(histoRatioTrueLeftMt, 22, 1., kBlue, kBlue);                               
-		histoRatioTrueLeftMt->DrawCopy("e1,same");   
-
-        //left Side Normalization narrow
-		DrawGammaSetMarker(histoRatioTrueLeftNarrowMt, 26, 1., kBlue-5, kBlue-5);                                
-		histoRatioTrueLeftNarrowMt->DrawCopy("e1,same"); 
-
-        //left Side Normalization wide
-		DrawGammaSetMarker(histoRatioTrueLeftWideMt, 26, 1., kBlue+2, kBlue+2);                             
-		histoRatioTrueLeftWideMt->DrawCopy("e1,same"); 
-		DrawGammaLines(0., maxPtMeson,1., 1.,0.1);
-
-		canvasCorrecftedYieldMt->Update();
-
-		canvasCorrecftedYieldMt->SaveAs(Form("%s/%s_%s_CorrectedYield_Mtspectra_TrueEff_%s.%s", outputDir.Data(), nameMeson.Data() ,prefix2.Data() , fCutSelection.Data(), suffix.Data()));
-		delete canvasCorrecftedYieldMt;
-		delete legendYield_Mt;
 			
 		//***********************************************************************************************
 		//***************************  correction for yield in Xt bins **********************************
@@ -1962,15 +1728,6 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	histoCorrectedYieldTrueLeftWideFitted->Write();
 	histoCorrectedYieldTrueLeftNarrowFitted->Write();
 	
-	if (!kDalitz){
-		histoCorrectedYieldTrueMt->Write();
-		histoCorrectedYieldTrueNarrowMt->Write();
-		histoCorrectedYieldTrueWideMt->Write();
-		histoCorrectedYieldTrueLeftMt->Write();
-		histoCorrectedYieldTrueLeftWideMt->Write();
-		histoCorrectedYieldTrueLeftNarrowMt->Write();
-
-	}
 	
 	histoUnCorrectedYield->Write();
 
