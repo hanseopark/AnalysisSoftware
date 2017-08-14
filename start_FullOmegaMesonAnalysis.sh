@@ -55,13 +55,13 @@ function GiveBinningpPb()
 
 function ExtractSignal()
 {
-    root -l -b -q -x TaskOmega/TaskV1/ExtractSignalPiPlPiMiPiZero.C\+\+\($1\)
+    root -l -b -q -x TaskOmega/TaskV1/ExtractSignalPiPlPiMiPiZero.C\+\($1\)
     #root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)
 }
 
 function CorrectSignal()
 {
-    root -x -l -b -q TaskV1/CorrectSignalV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,kFALSE\,$mode\)
+    root -x -l -b -q TaskOmega/TaskV1/CorrectSignalPiPlPiMiPiZero.C\+\($1\)
 }
 
 
@@ -559,35 +559,79 @@ if [ $ONLYRESULTS = 0 ] ; then
                 if [ \( $ONLYOMEGA -eq 1 \) -a \( -f $DataRootFile \) ]; then
                         echo "test"
                         ExtractSignal $optionsOmegaData
-                    elif [ \( $ONLYETA -eq 1 \) -a \( -f $DataRootFile \) ]; then
+
+                        OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
+                elif [ \( $ONLYETA -eq 1 \) -a \( -f $DataRootFile \) ]; then
                         ExtractSignal $optionsEtaData
-                    else
+
+                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*.root`
+                else
+                        if [ -f $DataRootFile ]; then
                         ExtractSignal $optionsEtaData
                         ExtractSignal $optionsOmegaData
-                    fi
-                OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
+
+                        OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_*.root`
+                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*.root`
+                        fi
+                fi
+
                 if [ $MCFILE -eq 1 ]; then
                     optionsOmegaMC=\"Omega\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
-                    ExtractSignal $optionsOmegaMC
-                    OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
-                    OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+                    optionsEtaMC=\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtOmega\,kFALSE\,$mode
+
+                    if [ $ONLYOMEGA -eq 1 ]; then
+                        ExtractSignal $optionsOmegaMC
+
+                        OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
+                        OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+                    elif [ $ONLYETA -eq 1 ]; then
+                        ExtractSignal $optionsEtaMC
+
+                        EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
+                        EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+                    else
+                        ExtractSignal $optionsEtaMC
+                        ExtractSignal $optionsOmegaMC
+
+                        OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
+                        OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+                        EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
+                        EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+                    fi
                     #root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$OmegadataRAWFILE\"\,\"$OmegaMCRAWFILE\"\,\"$cutSelection\"\,\"Omega\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtOmega\,$mode\)
                 fi
             fi
 
-            OmegadataRAWFILE=`ls $cutSelection/$energy/Omega_data_GammaConvV1WithoutCorrection_$cutSelection.root`
-            OmegaMCRAWFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1WithoutCorrection_$cutSelection.root`
-            OmegaMCcorrectionFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+            optionsOmegaCorrection=\"$OmegadataRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,kFALSE\,$mode
+            optionsOmegaCorrectionMC=\"$OmegaMCRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,kFALSE\,$mode
 
-            if [ -f $OmegadataRAWFILE ] && [ -f $OmegaMCcorrectionFILE ]; then
-                echo "test"
-                #CorrectSignal $OmegadataRAWFILE $OmegaMCcorrectionFILE $cutSelection $Suffix Omega kFALSE $ESTIMATEPILEUP $directphoton
+            optionsEtaCorrection=\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,kFALSE\,$mode
+            optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,kFALSE\,$mode
+
+            if [[ -f $OmegadataRAWFILE  &&  -f $OmegaMCcorrectionFILE ]]; then
+
+                CorrectSignal $optionsOmegaCorrection
             else
                 PARTLY=1
             fi
-            if [ -f $OmegaMCRAWFILE ] && [ -f $OmegaMCcorrectionFILE ]; then
-                #CorrectSignal $OmegaMCRAWFILE $OmegaMCcorrectionFILE $cutSelection $Suffix Omega kTRUE $ESTIMATEPILEUP $directphoton
-                echo "test"
+
+            if [[ -f $EtadataRAWFILE  &&  $EtaMCcorrectionFILE ]]; then
+                echo "DID I JUMP HERE?"
+                CorrectSignal $optionsEtaCorrection
+            else
+                PARTLY=1
+            fi
+
+            if [[ -f $OmegaMCRAWFILE  &&   -f $OmegaMCcorrectionFILE ]]; then
+
+                CorrectSignal $optionsOmegaCorrectionMC
+            else
+                PARTLY=1
+            fi
+
+            if [[ -f $EtaMCRAWFILE  &&  -f $EtaMCcorrectionFILE  ]]; then
+
+                CorrectSignal $optionsEtaCorrectionMC
             else
                 PARTLY=1
             fi
