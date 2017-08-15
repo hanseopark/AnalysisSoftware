@@ -69,6 +69,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     TString date                            = ReturnDateString();
     TString dateForOutput                   = ReturnDateStringForOutput();
     TString collisionSystem                 = ReturnFullCollisionsSystem(energy);
+    TString detectionSystem                 = ReturnTextReconstructionProcess(4);
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
 
@@ -112,10 +113,10 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     Bool_t bsmoothMBPi0[12]                 = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 0 };
-    Bool_t bsmoothMBEta[12]                 = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBEta[12]                 = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 0 };
-    Bool_t bsmoothMBEtaToPi0[12]            = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBEtaToPi0[12]            = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 0 };
 
@@ -417,7 +418,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                     if (meson.CompareTo("Eta") == 0)        error   = 4.0;
                     if (meson.CompareTo("EtaToPi0")== 0)    error   = TMath::Sqrt(2*2+4*4);
                     errorsMean[i][k]            = error;
-                    errorsMeanErr[i][k]         = error*0.01;
+                    errorsMeanErr[i][k]          = error*0.01;
                     errorsMeanCorr[i][k]        = error;
                     errorsMeanErrCorr[i][k]     = error*0.01;
                 }
@@ -569,11 +570,11 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // plot labeling
         TLatex *labelMeson  = NULL;
         if (meson.CompareTo("EtaToPi0") == 0){
-            labelMeson= new TLatex(0.94,0.89,Form("#eta/#pi^{0} rec. #gamma_{calo}"));
+            labelMeson= new TLatex(0.94,0.89,Form("#eta/#pi^{0} %"),detectionSystem.Data());
         } else if (meson.Contains("Pi0")){
-            labelMeson= new TLatex(0.94,0.89,Form("#pi^{0} #rightarrow #gamma_{calo}#gamma_{calo}"));
+            labelMeson= new TLatex(0.94,0.89,Form("#pi^{0} %"),detectionSystem.Data());
         } else {
-            labelMeson= new TLatex(0.94,0.89,Form("#eta #rightarrow #gamma_{calo}#gamma_{calo}"));
+            labelMeson= new TLatex(0.94,0.89,Form("#eta  %"),detectionSystem.Data());
         }
         SetStyleTLatex( labelMeson, 0.038, 4, 1, 42, kTRUE, 31);
         labelMeson->Draw();
@@ -774,7 +775,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         if (meson.Contains("Pi0") ){
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
         } else {
-            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
+            histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
         }
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
