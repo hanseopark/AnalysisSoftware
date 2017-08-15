@@ -5150,7 +5150,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 //    if (fMode == 4 || fMode == 12) fFitReco->SetParLimits(1,fMesonMassExpect*0.97,fMesonMassExpect*1.05);
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"RME0");
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
     fFitReco->SetNpx(10000);
 //NOTE: add limits in cout
     //    cout << TString(gMinuit->fCstatu.Data()).Data() << endl;
