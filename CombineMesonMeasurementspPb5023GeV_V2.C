@@ -3985,7 +3985,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     TGraphAsymmErrors* graphCombEtaToPi0StatWOPE   = NULL;
     TGraphAsymmErrors* graphCombEtaToPi0SysWOPE    = NULL;
     TGraphAsymmErrors* graphCombEtaToPi0TotWOPE    = CombinePtPointsSpectraFullCorrMat(   statErrorCollectionEtaToPi0,    sysErrorCollectionEtaToPi0,
-                                                                                           xPtLimitsEta, maxNBinsEta-1,
+                                                                                           xPtLimitsEta, maxNBinsEta,
                                                                                            offSetsEtaToPi0, offSetsEtaToPi0Sys,
                                                                                            graphCombEtaToPi0StatWOPE, graphCombEtaToPi0SysWOPE,
                                                                                            fileNameEtaToPi0OutputWeightingWOPE,"2.76TeV", "EtaToPi0", kFALSE,
@@ -4079,7 +4079,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     TGraphAsymmErrors* graphCombEtaToPi0Stat       = NULL;
     TGraphAsymmErrors* graphCombEtaToPi0Sys        = NULL;
     TGraphAsymmErrors* graphCombEtaToPi0Tot        = CombinePtPointsSpectraFullCorrMat(   statErrorCollectionEtaToPi0,    sysErrorCollectionEtaToPi0,
-                                                                                            xPtLimitsEta, maxNBinsEta-1,
+                                                                                            xPtLimitsEta, maxNBinsEta,
                                                                                             offSetsEtaToPi0, offSetsEtaToPi0Sys,
                                                                                             graphCombEtaToPi0Stat, graphCombEtaToPi0Sys,
                                                                                             fileNameEtaToPi0OutputWeighting,"2.76TeV", "EtaToPi0", kFALSE,
@@ -4417,7 +4417,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TH2F * histo2DAllPi0Mass        = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 25., 1000., 120., 170);
         SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
                                   textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(126.5,150.8);
+        histo2DAllPi0Mass->GetYaxis()->SetRangeUser(125.5,162.8);
         histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
         histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
