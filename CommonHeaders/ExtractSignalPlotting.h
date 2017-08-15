@@ -2898,6 +2898,7 @@
 
                 }
                 if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                    fFitSignalInvMassPtBinPlot[iPt]->SetNpx(10000);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
@@ -3110,6 +3111,7 @@
                 for (Int_t m = 0; (m < nFits && m < 3); m++){
                     if (fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]){
     //                     cout << m << "\t"<< iPt << "\t" << fFitSigWithOtherBGInvMassPtBinPlot[m][iPt] << endl;
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetNpx(10000);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineColor(colorFit[m]);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineStyle(styleFit[m]);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(1.5);
@@ -3465,6 +3467,7 @@
 
                 }
                 if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                    fFitSignalInvMassPtBinPlot[iPt]->SetNpx(10000);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
@@ -3647,6 +3650,7 @@
                 fHistoMappingSignal[iPt]->DrawCopy("same,pe1");
 
                 if (fFitBGInvMassPtBinPlot[iPt]!=0x00){
+                    fFitBGInvMassPtBinPlot[iPt]->SetNpx(10000);
                     fFitBGInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitBGInvMassPtBinPlot[iPt]->SetLineWidth(1);
                     fFitBGInvMassPtBinPlot[iPt]->DrawCopy("same");
@@ -3795,6 +3799,7 @@
                     fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->DrawCopy("same");
                 }
                 if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
+                    fFitSignalInvMassPtBinPlot[iPt]->SetNpx(10000);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
