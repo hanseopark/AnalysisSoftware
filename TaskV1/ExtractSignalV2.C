@@ -4194,6 +4194,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
+    fFitReco->SetNpx(10000);
 
     if (vary && !fIsMC && (fMode == 0 || fMode == 9)){
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && fPrefix.CompareTo("Pi0") ==0 && ptBin >=17){
@@ -4398,6 +4399,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
+    fFitReco->SetNpx(10000);
 
     fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
@@ -4580,6 +4582,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
+    fFitReco->SetNpx(10000);
 
     fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
@@ -4762,6 +4765,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
+    fFitReco->SetNpx(10000);
 
     fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
@@ -4898,6 +4902,7 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
     fFitReco->SetLineColor(5);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
+    fFitReco->SetNpx(10000);
 
     fFitLinearBck->SetParameter(0,fFitReco->GetParameter(3));
     fFitLinearBck->SetParameter(1,fFitReco->GetParameter(4));
@@ -4994,7 +4999,8 @@ void GausFitSubtractedInvMassInPtBinsNew(TH1D* fHistoMappingSignalInvMassPtBinSi
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
-
+    fFitReco->SetNpx(10000);
+    
     fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
     fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
@@ -5144,8 +5150,9 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 //    if (fMode == 4 || fMode == 12) fFitReco->SetParLimits(1,fMesonMassExpect*0.97,fMesonMassExpect*1.05);
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
-
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"RME0");
+    fFitReco->SetNpx(10000);
+//NOTE: add limits in cout
     //    cout << TString(gMinuit->fCstatu.Data()).Data() << endl;
 
     if (vary && (fMode==9 || fMode ==0)){

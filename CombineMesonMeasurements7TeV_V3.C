@@ -69,9 +69,9 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
 }
 
 void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP_7TeV_20170718.root",
-                                        TString fileNameEMCAL   = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP_20170714.root",
-//                                         TString fileNameEMCAL   = "CombinationInput7TeV/pi0Specrtum7TeV_2011EMCAL_31Jan2017.root",
-                                        TString fileNameEMCAL2   = "CombinationInput7TeV/mesonSpecrta7TeV_2011EMCAL_2March2017.root",
+                                        // TString fileNameEMCAL   = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP_20170714.root",
+                                        TString fileNameEMCAL   = "CombinationInput7TeV/mesonSpecrta7TeV_2011EMCAL_2March2017.root",
+                                        TString fileNameEMCAL2   = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP_20170714.root",
                                         TString fileNamePHOS    = "/home/nschmidt/AnalysisResults/pp/7TeV/PHOS/pp7TeV_PHOS_20170418_etapi0.root",
                                         TString fileNamePCMPHOS = "CombinationInput7TeV/data_PCM-PHOSResultsFullCorrection_PP_NoBinShifting_v2.root",
 //                                         TString fileNamePCMEMCAL = "CombinationInput7TeV/data_PCM-EMCALResultsFullCorrection_PP.2.root",
@@ -82,7 +82,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                                         TString thesisPlots     = "",
                                         TString bWCorrection    ="",
                                         Int_t numbersofmeas     = 5,
-                                        Bool_t useDanielmeas    = kTRUE
+                                        Bool_t useDanielmeas    = kFALSE
                                     ){
 
     TString date                                = ReturnDateString();
@@ -186,15 +186,14 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         inputFile[2]                            = new TFile(fileNameEMCAL.Data());
         inputFile[3]                            = new TFile(fileNamePCMPHOS.Data());
         inputFile[4]                            = new TFile(fileNamePCMEMCAL.Data());
+        inputFile[5]                            = new TFile(fileNameEMCAL2.Data());
 
     TDirectory* directoryPi0[10];
     TDirectory* directoryEta[10];
-        for (Int_t i = 0; i < numbersofmeas; i++){
+        for (Int_t i = 0; i < numbersofmeas+1; i++){
             directoryPi0[i]                     = (TDirectory*)inputFile[i]->Get("Pi07TeV");
             directoryEta[i]                     = (TDirectory*)inputFile[i]->Get("Eta7TeV");
         }
-        inputFile[5]                            = new TFile(fileNameEMCAL2.Data());
-        directoryEta[5]                     = (TDirectory*)inputFile[5]->Get("Eta7TeV");
         
     TH1D* histoNumberOfEvents[10];
     TH1D* histoPi0Mass[10];
@@ -234,7 +233,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
     for (Int_t i = 0; i < numbersofmeas; i++){
         // LOAD PCM AND PHOS INPUT
-        if(i!=0 && i!=2 && i!=4){
+        if(i!=0 && i!=4 && !(useDanielmeas&&i==2)){
             histoNumberOfEvents[i]              = (TH1D*)inputFile[i]->Get("histoNumberOfEvents7TeV");
             // load invariant mass peak positions and widths
             histoPi0Mass[i]                     = (TH1D*)directoryPi0[i]->Get("MassPi0");
@@ -242,6 +241,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
             histoPi0TrueMass[i]                 = (TH1D*)directoryPi0[i]->Get("TrueMassPi0");
             histoPi0TrueFWHMMeV[i]              = (TH1D*)directoryPi0[i]->Get("TrueFWHMPi0MeV");
             histoPi0InvCrossSection[i]          = (TH1D*)directoryPi0[i]->Get("InvCrossSectionPi0");
+            if(i==3)
+              histoPi0InvCrossSection[5]          = (TH1D*)directoryPi0[5]->Get("InvCrossSectionPi0");
 
             // load acceptance and efficiency and calculate acc*eff*y*2pi
             histoPi0Acc[i]                      = (TH1D*)directoryPi0[i]->Get("AcceptancePi0");
@@ -267,6 +268,12 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 //                 graphPi0InvCrossSectionSys[i]      ->Print();
 
             graphPi0InvCrossSectionStat[i]      = new TGraphAsymmErrors(histoPi0InvCrossSection[i]);
+            if(i==3){
+              graphPi0InvCrossSectionSys[5]       = (TGraphAsymmErrors*)directoryPi0[5]->Get("InvCrossSectionPi0Sys");
+              graphPi0InvCrossSectionStat[5]      = new TGraphAsymmErrors(histoPi0InvCrossSection[5]);
+                              graphPi0InvCrossSectionStat[i]      ->Print();
+                              graphPi0InvCrossSectionSys[i]      ->Print();
+            }
             if((i==0 || i==3) && graphPi0InvCrossSectionStat[i])
                 graphPi0InvCrossSectionStat[i]  ->RemovePoint(0);
             cout << nameMeasGlobal[i].Data() << " stat:" << endl;
@@ -276,12 +283,21 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
             if(directoryEta[i]){
                 if(i==2||i==1){
                     histoEtaInvCrossSection[i]          = (TH1D*)directoryEta[i]->Get("InvCrossSectionEta");
+                    if(i==2 && !useDanielmeas)
+                      histoEtaInvCrossSection[i]          = (TH1D*)directoryEta[i]->Get("InvariantCrossSectionEta");
                     graphEtaInvCrossSectionStat[i]      = new TGraphAsymmErrors(histoEtaInvCrossSection[i]);
                     cout << nameMeasGlobal[i].Data() << " stat:" << endl;
 //                     graphEtaInvCrossSectionStat[i]      ->Print();
                     graphEtaInvCrossSectionSys[i]       = (TGraphAsymmErrors*)directoryEta[i]->Get("InvCrossSectionEtaSys");
                     cout << nameMeasGlobal[i].Data() << " sys:" << endl;
 //                     graphEtaInvCrossSectionSys[i]      ->Print();
+                    cout << __LINE__ << endl;
+                }
+                if(i==2){
+                    histoEtaInvCrossSection[5]          = (TH1D*)directoryEta[5]->Get("InvCrossSectionEta");
+                    graphEtaInvCrossSectionStat[5]      = new TGraphAsymmErrors(histoEtaInvCrossSection[5]);
+                    graphEtaInvCrossSectionSys[5]       = (TGraphAsymmErrors*)directoryEta[5]->Get("InvCrossSectionEtaSys");
+                    cout << __LINE__ << endl;
                 }
             
                 histoEtaMass[i]                 = (TH1D*)directoryEta[i]->Get("MassEta");
@@ -289,10 +305,11 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                 histoEtaTrueMass[i]             = (TH1D*)directoryEta[i]->Get("TrueMassEta");
                 histoEtaTrueFWHMMeV[i]          = (TH1D*)directoryEta[i]->Get("TrueFWHMEtaMeV");
                 if(i==2){
-                    histoEtaToPi0Stat[i]            = (TH1D*)directoryEta[5]->Get("EtaToPi0RatioEMCal");
+                    histoEtaToPi0Stat[i]            = (TH1D*)directoryEta[i]->Get("EtaToPi0RatioEMCal");
                     graphEtaToPi0Stat[i]            = new TGraphAsymmErrors(histoEtaToPi0Stat[i]);
+                    cout << __LINE__ << endl;
 //                     graphEtaToPi0Sys[i]            ->RemovePoint(0);
-                    graphEtaToPi0Sys[i]             = (TGraphAsymmErrors*)directoryEta[5]->Get("EtaToPi0RatioEMCalSys");
+                    graphEtaToPi0Sys[i]             = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToPi0RatioEMCalSys");
                     while(graphEtaToPi0Sys[i]->GetX()[graphEtaToPi0Sys[i]->GetN()-1] > 30.) graphEtaToPi0Sys[i]->RemovePoint(graphEtaToPi0Sys[i]->GetN()-1);
                     graphEtaToPi0Sys[i]            ->RemovePoint(0);
                     graphEtaToPi0Sys[i]            ->RemovePoint(0);
@@ -302,6 +319,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                     
                     graphEtaToPi0Stat[i]            ->Print();
                     graphEtaToPi0Sys[i]             ->Print();
+                    cout << __LINE__ << endl;
                 }
                 if(i==1){
                     histoEtaToPi0Stat[i]            = (TH1D*)directoryEta[i]->Get("RatioEtaPi0");
@@ -519,22 +537,40 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,14.,15., 16.0 ,18,
                                                     20.0,25.0,35.
                                                     };
+
+
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match
 //     Int_t offSets[11]                           =  {0,   8,     1,      2,        0,           0,   0,     0,      0,        0, 0};
 //     Int_t offSetsSys[11]                        =  {1,   8,    11,      3,        6,           0,   0,     0,      2,        0, 0};
     Int_t offSets[11]                           =  {0,   8,     1,      2,        0,           0,   0,     0,      0,        0, 0};
     Int_t offSetsSys[11]                        =  {1,   8,    11,      3,        6,           0,   0,     0,      2,        0, 0};
+    if(!useDanielmeas){
+      offSets[2]    = 4;
+      offSetsSys[2] = 4;
+    }
                                                 // pcm, phos, emcal, pcmphos, pcmemcal
                                                 //  0    1      2       3         4
     Int_t offSetsEta[11]                           =  {0,   4,     1,      2,        1,           0,   0,     0,      0,        0, 0};
     Int_t offSetsSysEta[11]                        =  {1,   4,    7,      3,        4,           0,   0,     0,      2,        0, 0};
+    if(!useDanielmeas){
+      offSetsEta[2]    = 2;
+      offSetsSysEta[2] = 2;
+    }
                                                     // pcm, phos, emcal, pcmphos, pcmemcal
                                                     //  0    1      2       3         4
     Int_t offSetsEtaToPi0[11]                      =  {0,   4,     1,      2,        1,           0,   0,     0,      0,        0, 0};
     Int_t offSetsSysEtaToPi0[11]                   =  {1,   4,    7,      3,        4,           0,   0,     0,      2,        0, 0};
-                                                    // pcm, phos, emcal, pcmphos, pcmemcal
-                                                    //  0    1      2       3         4
-
+    if(!useDanielmeas){
+      offSetsEtaToPi0[2]    = 4;
+      offSetsSysEtaToPi0[2] = 9;
+    }
+    
+    Int_t nBinsPi0 = 48;
+    if(!useDanielmeas)
+      nBinsPi0 = 48;
+    Int_t nBinsEta = 17;
+    if(!useDanielmeas)
+      nBinsEta = 23;
 
     //    **********************************************************************************************************************
     //    ******************************************* Calculation of spectrum including EMCal only *****************************
@@ -585,7 +621,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     TGraphAsymmErrors* graphCombPi0InvCrossSectionSysPCMEMCPHOS = NULL;
 //     TGraphAsymmErrors* graphCombPi0InvCrossSectionTot = NULL;
     TGraphAsymmErrors* graphCombPi0InvCrossSectionTot = CombinePtPointsSpectraFullCorrMat( statErrorCollection, sysErrorCollection,
-                                                                                                   xPtLimits, 48,
+                                                                                                   xPtLimits, nBinsPi0,
                                                                                                    offSets, offSetsSys,
                                                                                                    graphCombPi0InvCrossSectionStatPCMEMCPHOS, graphCombPi0InvCrossSectionSysPCMEMCPHOS,
 //                                                                                                    fileNameOutputWeighting,1
@@ -593,21 +629,21 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                                                                                                 0x0, fileInputCorrFactors
                                                                                                 );
 
-//     return;
+    // return;
 
     graphCombPi0InvCrossSectionStatPCMEMCPHOS->Print();
     
     TGraphAsymmErrors* graphCombEtaInvCrossSectionStatPCMEMCPHOS= NULL;
     TGraphAsymmErrors* graphCombEtaInvCrossSectionSysPCMEMCPHOS = NULL;
     TGraphAsymmErrors* graphCombEtaInvCrossSectionTot = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEta, sysErrorCollectionEta,
-                                                                                                   xPtLimitsEta, 17,
+                                                                                                   xPtLimitsEta, nBinsEta,
                                                                                                    offSetsEta, offSetsSysEta,
                                                                                                    graphCombEtaInvCrossSectionStatPCMEMCPHOS, graphCombEtaInvCrossSectionSysPCMEMCPHOS,
 //                                                                                                    fileNameOutputWeightingEta,1
                                                                                                    fileNameOutputWeightingEta,"7TeV", "Eta", kTRUE,
                                                                                                    0x0, fileInputCorrFactors
                                                                                                 );
-//     return;
+    // return;
 
     graphCombEtaInvCrossSectionStatPCMEMCPHOS->Print();
     
@@ -615,14 +651,14 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     TGraphAsymmErrors* graphCombEtaToPi0StatPCMEMCPHOS= NULL;
     TGraphAsymmErrors* graphCombEtaToPi0SysPCMEMCPHOS = NULL;
     TGraphAsymmErrors* graphCombEtaToPi0Tot = CombinePtPointsSpectraFullCorrMat( statErrorCollectionEtaToPi0, sysErrorCollectionEtaToPi0,
-                                                                                                   xPtLimitsEtaToPi0, 17,
+                                                                                                   xPtLimitsEtaToPi0, nBinsEta,
                                                                                                    offSetsEtaToPi0, offSetsSysEtaToPi0,
                                                                                                    graphCombEtaToPi0StatPCMEMCPHOS, graphCombEtaToPi0SysPCMEMCPHOS,
 //                                                                                                    fileNameOutputWeightingEtaToPi0,1
                                                                                                    fileNameOutputWeightingEtaToPi0,"7TeV", "EtaToPi0", kTRUE,
                                                                                                    0x0, fileInputCorrFactors
                                                                                                 );
-//     return;
+    // return;
 
     graphCombEtaToPi0StatPCMEMCPHOS->Print();
     
@@ -984,7 +1020,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
 //     fitInvCrossSectionPi07TeV = FitObject("l","fitInvCrossSectionPi07TeV","Pi0",graphCombPi0InvCrossSectionTot,0.4,50.,paramGraph,"QNRMEX0+");
     fitInvCrossSectionPi07TeV = FitObject("l","fitInvCrossSectionPi07TeV","Pi0",graphCombPi0InvCrossSectionTot,0.4,50. ,paramGraph,"QNRMEX0+");
-    fitInvCrossSectionEta7TeV = FitObject("l","fitInvCrossSectionEta7TeV","Eta",graphCombEtaInvCrossSectionTot,0.4,10. ,paramGraphEta,"QNRMEX0+");
+    fitInvCrossSectionEta7TeV = FitObject("l","fitInvCrossSectionEta7TeV","Eta",graphCombEtaInvCrossSectionTot,0.4,30. ,paramGraphEta,"QNRMEX0+");
 
     cout << "pi0 fit:" << endl << WriteParameterToFile(fitInvCrossSectionPi07TeV)<< endl;
     cout << "eta fit:" << endl << WriteParameterToFile(fitInvCrossSectionEta7TeV)<< endl;
@@ -1019,7 +1055,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
     TGraphAsymmErrors* graphRatioCombFitStat[10];
     TGraphAsymmErrors* graphRatioCombFitSys[10];
-    for (Int_t i = 0; i < numbersofmeas; i++){
+    for (Int_t i = 0; i < numbersofmeas+1; i++){
         graphRatioCombFitStat[i]                = (TGraphAsymmErrors*)graphPi0InvCrossSectionStat[i]->Clone();
         graphRatioCombFitStat[i]                = CalculateGraphErrRatioToFit(graphRatioCombFitStat[i], fitTCMInvCrossSectionPi07TeV);
         graphRatioCombFitSys[i]                 = (TGraphAsymmErrors*)graphPi0InvCrossSectionSys[i]->Clone();
@@ -1027,7 +1063,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     }
     TGraphAsymmErrors* graphRatioCombFitStatEta[10];
     TGraphAsymmErrors* graphRatioCombFitSysEta[10];
-    for (Int_t i = 0; i < numbersofmeas; i++){
+    for (Int_t i = 0; i < numbersofmeas+1; i++){
         if(i!=3){
             graphRatioCombFitStatEta[i]                = (TGraphAsymmErrors*)graphEtaInvCrossSectionStat[i]->Clone();
             graphRatioCombFitStatEta[i]                = CalculateGraphErrRatioToFit(graphRatioCombFitStatEta[i], fitInvCrossSectionEta7TeV);
@@ -1174,9 +1210,9 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         graphRatioCombFitStat[i]->Draw("p,same,e");
     }
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 29.9 , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 29.9 , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 29.9 , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitPi0->Draw();
@@ -1202,38 +1238,97 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         }
 
         //****************** second Column *************************************************
-        TLatex *textStatOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[1],rowsLegendOnlyPi0Ratio[0] ,"stat");
+        TLatex *textStatOnlyRatioPi0            = new TLatex(columnsLegendOnlyPi0Ratio[1]+0.03,rowsLegendOnlyPi0Ratio[0] ,"stat");
         SetStyleTLatex( textStatOnlyRatioPi0, 0.85*textSizeLabelsPixel,4);
         textStatOnlyRatioPi0->SetTextFont(43);
         textStatOnlyRatioPi0->Draw();
-        TLatex *textSysOnlyRatioPi0             = new TLatex(columnsLegendOnlyPi0Ratio[2] ,rowsLegendOnlyPi0Ratio[0],"syst");
+        TLatex *textSysOnlyRatioPi0             = new TLatex(columnsLegendOnlyPi0Ratio[2]+0.04 ,rowsLegendOnlyPi0Ratio[0],"syst");
         SetStyleTLatex( textSysOnlyRatioPi0, 0.85*textSizeLabelsPixel,4);
         textSysOnlyRatioPi0->SetTextFont(43);
         textSysOnlyRatioPi0->Draw();
 
         TMarker* markerPi0OnlyRatio[10];
         for (Int_t i = 0; i < numbersofmeas; i++){
-            markerPi0OnlyRatio[i]               = CreateMarkerFromGraph(graphRatioCombFitSys[i],columnsLegendOnlyPi0Ratio[1] ,rowsLegendOnlyPi0Ratio[i+1],1);
+            markerPi0OnlyRatio[i]               = CreateMarkerFromGraph(graphRatioCombFitSys[i],columnsLegendOnlyPi0Ratio[1]-0.1 ,rowsLegendOnlyPi0Ratio[i+1],1);
             if(i!=3)
-            markerPi0OnlyRatio[i]->DrawMarker(columnsLegendOnlyPi0RatioAbs[1] ,rowsLegendOnlyPi0RatioAbs[i+1]);
+            markerPi0OnlyRatio[i]->DrawMarker(columnsLegendOnlyPi0RatioAbs[1]-0.1 ,rowsLegendOnlyPi0RatioAbs[i+1]);
         }
 
         TBox* boxPi0OnlyRatio[10];
         for (Int_t i = 0; i < numbersofmeas; i++){
-            boxPi0OnlyRatio[i]                  = CreateBoxFromGraph(graphRatioCombFitSys[i], columnsLegendOnlyPi0RatioAbs[2]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[i+1]- heightBox,
-                                                        columnsLegendOnlyPi0RatioAbs[2]+ 3*lengthBox, rowsLegendOnlyPi0RatioAbs[i+1]+ heightBox);
+            boxPi0OnlyRatio[i]                  = CreateBoxFromGraph(graphRatioCombFitSys[i], columnsLegendOnlyPi0RatioAbs[2]-0.5*lengthBox-0.1 , rowsLegendOnlyPi0RatioAbs[i+1]- heightBox,
+                                                        columnsLegendOnlyPi0RatioAbs[2]+ 3*lengthBox-0.1, rowsLegendOnlyPi0RatioAbs[i+1]+ heightBox);
             if(i!=3)
             boxPi0OnlyRatio[i]->Draw("l");
         }
 
     canvasRatioToCombFit->SaveAs(Form("%s/RatioOfIndividualMeasToCombFit_PP7TeV.%s",outputDir.Data(),suffix.Data()));
+    //    **********************************************************************************************************************
+    //    ******************************************* Ratio of Individual meas to Fit ******************************************
+    //    **********************************************************************************************************************
+
+    canvasRatioToCombFit->cd();
+    TH2F * histo2DRatioToCombFitEviDaniel;
+    histo2DRatioToCombFitEviDaniel                       = new TH2F("histo2DRatioToCombFitEviDaniel","histo2DRatioToCombFitEviDaniel",1000,0.51,29.9,1000,0.2,4.    );
+    SetStyleHistoTH2ForGraphs(histo2DRatioToCombFitEviDaniel, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Comb Fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
+                            0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+    histo2DRatioToCombFitEviDaniel->GetXaxis()->SetMoreLogLabels();
+    histo2DRatioToCombFitEviDaniel->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DRatioToCombFitEviDaniel->GetYaxis()->SetRangeUser(0.61,1.65);
+    histo2DRatioToCombFitEviDaniel->Draw("copy");
+    Color_t colorEMCDaniel = kGreen-8;
+    DrawGammaSetMarkerTGraphAsym(graphRatioCombFitSys[5], markerStyleDet[5] ,markerSizeDet[5]*0.5, colorEMCDaniel, colorEMCDaniel, widthLinesBoxes, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphRatioCombFitStat[5], markerStyleDet[5] ,markerSizeDet[5]*0.5, colorEMCDaniel, colorEMCDaniel);
+            graphRatioCombFitSys[2]->Draw("E2same");
+            graphRatioCombFitSys[5]->Draw("E2same");
+
+        graphRatioCombFitStat[2]->Draw("p,same,e");
+        graphRatioCombFitStat[5]->Draw("p,same,e");
+
+        DrawGammaLines(0.51, 29.9 , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.51, 29.9 , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.51, 29.9 , 0.9, 0.9,0.5, kGray, 7);
+
+        labelRatioToFitEnergy->Draw();
+        labelRatioToFitPi0->Draw();
+
+      
+            textSingleMeasRatioPi0[2]           = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[0+1],"EMCal LHC11");
+              textSingleMeasRatioPi0[5]           = new TLatex(columnsLegendOnlyPi0Ratio[0],rowsLegendOnlyPi0Ratio[1+1],"EMCal LHC10");
+            SetStyleTLatex( textSingleMeasRatioPi0[2], 0.85*textSizeLabelsPixel,4);
+            textSingleMeasRatioPi0[2]->SetTextFont(43);
+            SetStyleTLatex( textSingleMeasRatioPi0[5], 0.85*textSizeLabelsPixel,4);
+            textSingleMeasRatioPi0[5]->SetTextFont(43);
+            textSingleMeasRatioPi0[2]->Draw();
+            textSingleMeasRatioPi0[5]->Draw();
+
+        //****************** second Column *************************************************;
+        textStatOnlyRatioPi0->Draw();
+        textSysOnlyRatioPi0->Draw();
+        Double_t rowsLegendOnlyPi0RatioAbsEMC[6]   = {0.91,1.53,1.48,2.0,1.95,1.9};
+        Double_t columnsLegendOnlyPi0RatioAbsEMC[3]= {0.15,1.8, 2.2};
+        Double_t lengthBoxEMC                      = 0.3/2;
+        Double_t heightBoxEMC                      = 0.04/2;
+            markerPi0OnlyRatio[7]               = CreateMarkerFromGraph(graphRatioCombFitSys[2],columnsLegendOnlyPi0Ratio[1]-0.1 ,rowsLegendOnlyPi0Ratio[0+1],1);
+            markerPi0OnlyRatio[7]->DrawMarker(columnsLegendOnlyPi0RatioAbsEMC[1]-0.1 ,rowsLegendOnlyPi0RatioAbsEMC[0+1]);
+            markerPi0OnlyRatio[8]               = CreateMarkerFromGraph(graphRatioCombFitSys[5],columnsLegendOnlyPi0Ratio[1]-0.1 ,rowsLegendOnlyPi0Ratio[1+1],1);
+            markerPi0OnlyRatio[8]->DrawMarker(columnsLegendOnlyPi0RatioAbsEMC[1]-0.1 ,rowsLegendOnlyPi0RatioAbsEMC[1+1]-0.01);
+
+            boxPi0OnlyRatio[7]                  = CreateBoxFromGraph(graphRatioCombFitSys[2], columnsLegendOnlyPi0RatioAbsEMC[2]-0.5*lengthBoxEMC-0.1 , rowsLegendOnlyPi0RatioAbsEMC[0+1]- heightBoxEMC,
+              columnsLegendOnlyPi0RatioAbsEMC[2]+ 3*lengthBoxEMC-0.1, rowsLegendOnlyPi0RatioAbsEMC[0+1]+ heightBoxEMC);
+            boxPi0OnlyRatio[7]->Draw("l");
+            boxPi0OnlyRatio[8]                  = CreateBoxFromGraph(graphRatioCombFitSys[5], columnsLegendOnlyPi0RatioAbsEMC[2]-0.5*lengthBoxEMC-0.1 , rowsLegendOnlyPi0RatioAbsEMC[1+1]- heightBoxEMC,
+              columnsLegendOnlyPi0RatioAbsEMC[2]+ 3*lengthBoxEMC-0.1, rowsLegendOnlyPi0RatioAbsEMC[1+1]+ heightBoxEMC);
+            boxPi0OnlyRatio[8]->Draw("l");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/RatioOfEMCMeasToCombFit_PP7TeV.%s",outputDir.Data(),suffix.Data()));
     
     //    **********************************************************************************************************************
     //    ******************* ETA ETA  ************* Ratio of Individual meas to Fit ***************** ETA  ETA ****************
     //    **********************************************************************************************************************
 
     canvasRatioToCombFit->cd();
-    histo2DRatioToCombFit->GetXaxis()->SetRangeUser(0.23,19.9);
+    histo2DRatioToCombFit->GetXaxis()->SetRangeUser(0.23,39.9);
     histo2DRatioToCombFit->Draw("copy");
 
     for (Int_t i = 0; i < numbersofmeas; i++){
@@ -1251,9 +1346,9 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         graphRatioCombFitStatEta[i]->Draw("p,same,e");
     }
 
-        DrawGammaLines(0.23, 70. , 1., 1.,0.5, kGray+2);
-        DrawGammaLines(0.23, 70. , 1.1, 1.1,0.5, kGray, 7);
-        DrawGammaLines(0.23, 70. , 0.9, 0.9,0.5, kGray, 7);
+        DrawGammaLines(0.23, 39.9 , 1., 1.,0.5, kGray+2);
+        DrawGammaLines(0.23, 39.9 , 1.1, 1.1,0.5, kGray, 7);
+        DrawGammaLines(0.23, 39.9 , 0.9, 0.9,0.5, kGray, 7);
 
         labelRatioToFitEnergy->Draw();
         labelRatioToFitEta->Draw();
@@ -1282,7 +1377,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 
         for (Int_t i = 0; i < numbersofmeas; i++){
             boxPi0OnlyRatio[i]                  = CreateBoxFromGraph(graphRatioCombFitSys[i], columnsLegendOnlyPi0RatioAbs[2]-0.5*lengthBox , rowsLegendOnlyPi0RatioAbs[i+1]- heightBox,
-                                                        columnsLegendOnlyPi0RatioAbs[2]+ 3*lengthBox, rowsLegendOnlyPi0RatioAbs[i+1]+ heightBox);
+                                                        columnsLegendOnlyPi0RatioAbs[2]+ 3*lengthBox+0.1, rowsLegendOnlyPi0RatioAbs[i+1]+ heightBox);
             if(i!=3)
             boxPi0OnlyRatio[i]->Draw("l");
         }

@@ -225,8 +225,8 @@
                                                         5, 5, 7, 5, 5, 5, 5, 5, 5, 5, 5, 5};
     Double_t fBinsEta5TeVEMCPt[23]                  = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 5.0, 6.0, 8., 10., 12., 14., 16., 18., 20., 25., 30., 35.};
-    Int_t fBinsEta5TeVEMCPtRebin[22]                = { 5, 8, 5, 5, 5, 4, 4, 5, 5, 5,
-                                                        5, 5, 7, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+    Int_t fBinsEta5TeVEMCPtRebin[22]                = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
     Double_t fBinsEta5TeVEMCPtTrigger1[30]          = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 5.0, 6.0, 7.0, 8., 9., 10., 11., 12., 13.,
                                                         14., 15., 16., 17., 18., 19., 20., 25., 30., 35.};
@@ -1262,7 +1262,7 @@
                 }
             } else if (energy.CompareTo("5TeV") == 0) {
               if (mode == 4 || mode == 12 )
-                return 15;
+                return 12;
               else
                 return 8;
             } else if (energy.CompareTo("7TeV") == 0) {
@@ -2771,6 +2771,10 @@
 
                 fColumn             = 5;
                 fRow                = 4;
+                if ((fNBinsPt-fStartPtBin) < 15)
+                  fColumn           = 4;
+                if ((fNBinsPt-fStartPtBin) < 11)
+                  fRow              = 3;
                 if (isDCA){
                     fColumn         = 3;
                     fRow            = 3;

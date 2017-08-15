@@ -74,6 +74,10 @@ function GiveBinning5TeV()
          echo "24 bins --> max p_t = XX GeV/c ...";
          correctPi0=1
         BinsPtPi0=24
+     elif [ $answer = 31 ]; then
+         echo "31 bins --> max p_t = XX GeV/c ...";
+         correctPi0=1
+        BinsPtPi0=31
      elif [ $answer = 32 ]; then
          echo "32 bins --> max p_t = XX GeV/c ...";
          correctPi0=1
@@ -121,6 +125,14 @@ function GiveBinning5TeV()
          echo "13 bins --> max p_t = XX GeV/c ...";
          correctEta=1
          BinsPtEta=13
+     elif [ $answer = 15 ]; then
+         echo "15 bins --> max p_t = XX GeV/c ...";
+         correctEta=1
+         BinsPtEta=15
+     elif [ $answer = 17 ]; then
+         echo "17 bins --> max p_t = XX GeV/c ...";
+         correctEta=1
+         BinsPtEta=17
      elif [ $answer = 19 ]; then
          echo "19 bins --> max p_t = XX GeV/c ...";
          correctEta=1
