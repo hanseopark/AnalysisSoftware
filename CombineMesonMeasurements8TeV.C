@@ -5006,7 +5006,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioPi0CombCombFitSysA->Draw("2,same");
         graphRatioPi0CombCombFitStatA_WOXErr->Draw("p,same");
 
-        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+2, 0.3, 1.-(0.0196 ), 0.35, 1.+(0.0196));
+        TBox* boxErrorSigmaRatio = CreateBoxConv(kGray+2, 0.3, 1.-(0.026 ), 0.35, 1.+(0.026));
         boxErrorSigmaRatio->SetLineWidth(8);
         boxErrorSigmaRatio->Draw();
         DrawGammaLines(0.23, 50.,1., 1.,0.5,kGray+2);
@@ -5023,7 +5023,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheorypp_3Parted->Draw();
 
         TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.91,0.59,0.96, 0.85* textSizeLabelsPixel);
-        legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+        legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
         legendRatioTheoryNormUnc->Draw();
 
         TLatex *labelRatioTheoryPPP   = new TLatex(0.268,0.73,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
@@ -5094,7 +5094,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendRatioTheorypp_3Parted2->Draw();
 
     TLegend* legendRatioTheoryNormUnc2 = GetAndSetLegend2(0.34,0.902,0.59,0.952, 0.85* textSizeLabelsPixel);
-    legendRatioTheoryNormUnc2->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+    legendRatioTheoryNormUnc2->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
     legendRatioTheoryNormUnc2->Draw();
 
     TLegend* legendRatioTheorypp_3Parted22= GetAndSetLegend2(0.15,0.14,0.4,0.18, 0.85* textSizeLabelsPixel);
@@ -5158,7 +5158,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendRatioTheorypp_3Parted3->Draw();
 
     TLegend* legendRatioTheoryNormUnc3 = GetAndSetLegend2(0.34,0.885,0.59,0.935, 0.85* textSizeLabelsPixel);
-    legendRatioTheoryNormUnc3->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+    legendRatioTheoryNormUnc3->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
     legendRatioTheoryNormUnc3->Draw();
 
     TLatex *labelRatioTheoryPPP22   = new TLatex(0.218,0.67,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
@@ -5231,7 +5231,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendRatioTheoryppEta_3Parted->Draw();
 
         TLegend* legendRatioTheoryNormUncEta = GetAndSetLegend2(0.31,0.91,0.56,0.96, 0.85* textSizeLabelsPixel);
-        legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+        legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
         legendRatioTheoryNormUncEta->Draw();
 
 //        TLatex *labelRatioTheoryPP_Paper2   = new TLatex(0.2,0.68,"0.5#it{p}_{T} < #mu < 2#it{p}_{T}");
@@ -5359,7 +5359,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaper->SetNColumns(1);
         legendXsectionPaper->SetMargin(0.2);
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","l");
+        legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
         legendXsectionPaper->AddEntry(fitTCMInvXSectionPi0Plot,"TCM fit","l");
         legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
 //        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, DSS14 ","f");
@@ -5398,7 +5398,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLO->DrawCopy();
 
 //        TLegend* legendXsectionPaperPi02     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-//        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","f");
+//        legendXsectionPaperPi02->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","f");
 //        legendXsectionPaperPi02->Draw();
 
 //        graphRatioPi0CombNLODSS14->RemovePoint(0);
@@ -5517,7 +5517,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperEta->SetNColumns(1);
         legendXsectionPaperEta->SetMargin(0.2);
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-        legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 2.9%", "l");
+        legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 2.6%", "l");
         legendXsectionPaperEta->AddEntry(fitTCMInvXSectionEta,"TCM fit","l");
         legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Tsallis fit","l");
         legendXsectionPaperEta->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2, Monash 2013","l");
@@ -5553,7 +5553,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         ratio2DNLOEta->DrawCopy();
 
 //        TLegend* legendXsectionPaperEta2     = GetAndSetLegend2(0.17, 0.8, 0.4, 0.83+0.05*1, textSizeLabelsPixel*0.8);
-//        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.9%","f");
+//        legendXsectionPaperEta2->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","f");
 //        legendXsectionPaperEta2->Draw();
 
         DrawGammaNLOTGraph( graphRatioEtaCombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
@@ -5717,7 +5717,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         TLatex *labelALICEXSectionPaperAll  = new TLatex(0.18,0.12+0.04*5,"ALICE");
         SetStyleTLatex( labelALICEXSectionPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEXSectionPaperAll->Draw();
-        TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.12+0.04*4+0.003,"norm. unc. 2.9%");
+        TLatex *labelALICENormUnPaperAll    = new TLatex(0.18,0.12+0.04*4+0.003,"norm. unc. 2.6%");
         SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICENormUnPaperAll->Draw();
 
