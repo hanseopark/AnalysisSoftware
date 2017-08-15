@@ -95,12 +95,12 @@
     Double_t xSection8TeVINEL       = 72.3*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/665
     Double_t xSection8TeVINELErrUp  = 0.5;         // from https://aliceinfo.cern.ch/Notes/node/665
     Double_t xSection8TeVINELErrDown= 0.5;         // from https://aliceinfo.cern.ch/Notes/node/665
-    Double_t xSection8TeVV0AND      = 55.8*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/531
-    Double_t xSection8TeVErrUp      = 1.6;         // from https://aliceinfo.cern.ch/Notes/node/531
-    Double_t xSection8TeVErrDown    = 1.6;         // from https://aliceinfo.cern.ch/Notes/node/531
-    Double_t xSection8TeVT0AND      = 25.5*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/531
-    Double_t xSection8TeVT0ErrUp    = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/531
-    Double_t xSection8TeVT0ErrDown  = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/531
+    Double_t xSection8TeVV0AND      = 55.8*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/583
+    Double_t xSection8TeVErrUp      = 1.45;        // from https://aliceinfo.cern.ch/Notes/node/583
+    Double_t xSection8TeVErrDown    = 1.45;        // from https://aliceinfo.cern.ch/Notes/node/583
+    Double_t xSection8TeVT0AND      = 25.5*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/583
+    Double_t xSection8TeVT0ErrUp    = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/583
+    Double_t xSection8TeVT0ErrDown  = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/583
     // pp 13 TeV  
     Double_t xSection13TeVV0AND      = 57.8*1e-3;   // 
     Double_t xSection13TeVErrUp      = 1.27;         // 
