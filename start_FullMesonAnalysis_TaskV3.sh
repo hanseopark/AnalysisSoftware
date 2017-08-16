@@ -184,12 +184,16 @@ function GiveBinningDirectPhoton5TeV()
 
 function GiveBinning13TeV()
 {
-    echo "How many p_T bins do you want to use for the Pi0? Max. 17 for 15f, 20 for 15fhi, 17 for low B 15g";
+    echo "How many p_T bins do you want to use for the Pi0?"
+    echo "For PCM: Max. 17 for 15f, 20 for 15fhi, 17 for low B 15g ";
+    echo "For other modes: max 37";
     read BinsPtPi0
     correctPi0=1
     echo "You have chosen $BinsPtPi0 bins";
 
-    echo "How many p_T bins do you want to use for the eta meson? Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
+    echo "How many p_T bins do you want to use for the eta meson?"
+    echo "For PCM: Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
+    echo "For other modes: max 24";
     read BinsPtEta
     correctEta=1
     echo "You have chosen $BinsPtEta bins";
@@ -1785,7 +1789,7 @@ elif [[ "$1" == *-mAddSigpPbHIJINGC* ]] ; then
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
         PARTLY=1
         MCFILE=0
-    fi                        
+    fi
 elif [[ "$1" == *-mAddSigpPb* ]] ; then
     MERGINGMC=1
     Suffix=$5
@@ -1797,7 +1801,7 @@ elif [[ "$1" == *-mAddSigpPb* ]] ; then
     if [ -f $DataRootFile ]; then
         echo "The data file specified is $DataRootFile"
         dataFileOK=1
-    else 
+    else
         echo "No data file specified, analysis can not be fullfiled."
     #  exit
     fi
@@ -1805,11 +1809,11 @@ elif [[ "$1" == *-mAddSigpPb* ]] ; then
         echo "The MC file specified is $MCRootFile"
         echo "The MC file specified is $MCRootFileAddSig"
         echo "The MC file specified is $MCRootFileAddSigEta"
-    else 
+    else
         echo "No MC file specified, analysis will only made paritally, please be careful with the results."
-        PARTLY=1 
+        PARTLY=1
         MCFILE=0
-    fi                    
+    fi
 elif [[ "$1" == *-mAddSig* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2
@@ -2398,6 +2402,22 @@ do
         else
             echo "Command not found. Please try again.";
         fi
+        if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                echo "Do you want to use THnSparse for the background? Yes/No?";
+                read answer
+                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                    echo "Will use THnSparse for the background ...";
+                    useTHnSparse=1
+                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                    echo "Will NOT use THnSparse for the background ...";
+                    useTHnSparse=0
+                else
+                    echo "Command not found. Please try again.";
+                fi
+            fi
+        fi
+
     elif [ $energy = "pPb_5.023TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
