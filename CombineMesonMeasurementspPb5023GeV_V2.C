@@ -6740,10 +6740,33 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasCompYield->Update();
     canvasCompYield->Print(Form("%s/ComparisonChargedKaonsToEtaComb_PPb5023GeV_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
 
+    // *********************************************************************************************************************
+    // ************************** Print relative statistical errors for reference and RpPA *********************************
+    // *********************************************************************************************************************
+    for (Int_t i = 0; i< 11; i++){
+        cout << "==============================================================================" << endl;
+        cout << nameMeasGlobal[i].Data() << endl;
 
- // **********************************************************************************************************************
- // ************************* Saving of final results ********************************************************************
- // **********************************************************************************************************************
+        if (statErrorCollectionPi0PP[i]){
+            cout << "Pi0 pp ref stat " << endl;
+            statErrorCollectionPi0PP[i]->Print();
+        }
+        if (graphRpPbIndStatPi0[i]){
+            cout << "Pi0 RpA stat " << endl;
+            graphRpPbIndStatPi0[i]->Print();
+        }
+        if (statErrorCollectionEtaPP[i]){
+            cout << "Eta pp ref stat " << endl;
+            statErrorCollectionEtaPP[i]->Print();
+        }
+        if (graphRpPbIndStatEta[i]){
+            cout << "Eta RpA stat " << endl;
+            graphRpPbIndStatEta[i]->Print();
+        }
+    }
+    // **********************************************************************************************************************
+    // ************************* Saving of final results ********************************************************************
+    // **********************************************************************************************************************
 
     TString nameOutputCommonFile    = Form("CombinedResultsPaperPPb5023GeV_%s.root", dateForOutput.Data());
 
