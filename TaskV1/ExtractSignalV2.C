@@ -4289,7 +4289,17 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
     }
     //--------------------------------------------------------------------------------------
-
+    fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if( fEnergyFlag.CompareTo("8TeV") == 0 && (fMode == 4 || fMode == 12 )){
+      fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+    }
+    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
+        fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
+        fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.5,fMesonWidthRange[1]*2.);
+        if(ptBin >= 31) {fFitReco->FixParameter(3,0.015); fFitReco->SetParameter(1,0.156); }
+    }
 
     //--------------------------------------------------------------------------------------
     //------------------------- start fitting & set style fit ------------------------------

@@ -1725,7 +1725,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TCanvas* canvasMass         = new TCanvas("canvasMass","",0,0,1000,900);// gives the page size
     DrawGammaCanvasSettings( canvasMass, 0.11, 0.017, 0.015, 0.08);
     Double_t minMassPi0         = 0.120;
-    Double_t maxMassPi0         = 0.160;
+    Double_t maxMassPi0         = 0.170;
     if(optionEnergy.CompareTo("8TeV")==0){
       if(mode == 2){
         minMassPi0              = 0.123;

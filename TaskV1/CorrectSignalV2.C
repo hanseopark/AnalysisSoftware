@@ -1629,7 +1629,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
-            if (mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.150);
+            if (mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.170);
             if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
             if (mode == 2 || mode == 13 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
