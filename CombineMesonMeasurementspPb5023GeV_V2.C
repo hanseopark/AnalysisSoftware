@@ -1956,8 +1956,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelSysErr->SetLogx();
 
     TH2F * histo2DRelSysErr;
-    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23, 25.,1000,0,39.5);
+    histo2DRelSysErr                    = new TH2F("histo2DRelSysErr","histo2DRelSysErr",11000,0.23, 25.,1000,0,50.0);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,39.5);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelSysErr->Draw("copy");
@@ -2029,8 +2030,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelStatErr->SetLogx();
 
     TH2F * histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23, 25.,1000,0,39.5);
+    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,0.23, 25.,1000,0,50.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelStatErr->GetYaxis()->SetRangeUser(0,39.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelStatErr->Draw("copy");
@@ -2100,8 +2102,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelTotErr->SetLogx();
 
     TH2F * histo2DRelTotErrPi0;
-    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23, 25.,1000,0,39.5);
+    histo2DRelTotErrPi0                 = new TH2F("histo2DRelTotErrPi0","histo2DRelTotErrPi0",11000,0.23, 25.,1000,0,50.0);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrPi0, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,39.5);
     histo2DRelTotErrPi0->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrPi0->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelTotErrPi0->Draw("copy");
@@ -2602,6 +2605,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     TGraphAsymmErrors* systErrorUnCorrInterCollectionPi0PP[11];
     TGraphAsymmErrors* graphRpPbIndCombPi0[11];
     TGraph* graphWeightsPi0RpPb[11];
+    TGraphAsymmErrors* statErrorRelCollectionPi0RpA[11];
+    TGraphAsymmErrors* sysErrorRelCollectionPi0RpA[11];
+
 
     for (Int_t i = 0; i < 11; i++){
         graphWeightsPi0RpPb[i]                              = NULL;
@@ -2610,6 +2616,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphRpPbIndSystPi0[i]                              = NULL;
         graphRpPbIndCombPi0[i]                              = NULL;
         systErrorUnCorrInterCollectionPi0PP[i]              = NULL;
+        statErrorRelCollectionPi0RpA[i]                     = NULL;
+        sysErrorRelCollectionPi0RpA[i]                      = NULL;
         if (haveRefPPPi0[i]  ){ //&& !( i == 3 )
             systErrorUnCorrInterCollectionPi0PP[i]          = (TGraphAsymmErrors*)systErrorInterCollectionPi0PP[i]->Clone(Form("graphPP%sPi0InterUncorrSyst",nameMeasGlobalLabel[i].Data()));
             systErrorUnCorrInterCollectionPi0PP[i]          = AddErrorsQuadraticallyTGraph(systErrorInterCollectionPi0PP[i], systErrorUnCorrCollectionPi0PP[i]);
@@ -2634,6 +2642,30 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
                     histRpPbIndStatPi0[i]->SetBinContent(bin,graphRpPbIndStatPi0[i]->GetY()[j]);
                     histRpPbIndStatPi0[i]->SetBinError(bin,graphRpPbIndStatPi0[i]->GetEYlow()[j]);
                 }
+            }
+
+            if (histRpPbIndStatPi0[i]){
+                statErrorRelCollectionPi0RpA[i]     = new TGraphAsymmErrors(histRpPbIndStatPi0[i]);
+                while (statErrorRelCollectionPi0RpA[i]->GetY()[0] == 0 && statErrorRelCollectionPi0RpA[i]->GetN() > 0 )
+                    statErrorRelCollectionPi0RpA[i]->RemovePoint(0);
+                while (statErrorRelCollectionPi0RpA[i]->GetY()[statErrorRelCollectionPi0RpA[i]->GetN()-1] == 0 && statErrorRelCollectionPi0RpA[i]->GetN() > 0 )
+                    statErrorRelCollectionPi0RpA[i]->RemovePoint(statErrorRelCollectionPi0RpA[i]->GetN()-1);
+                if (statErrorRelCollectionPi0RpA[i]->GetN() > 0 )
+                    statErrorRelCollectionPi0RpA[i] = CalculateRelErrUpAsymmGraph( statErrorRelCollectionPi0RpA[i], Form("relativeStatErrorPi0RpPb_%s", nameMeasGlobal[i].Data()));
+                else
+                    statErrorRelCollectionPi0RpA[i] = NULL;
+            }
+            if (graphRpPbIndSystPi0[i]){
+                sysErrorRelCollectionPi0RpA[i]      = (TGraphAsymmErrors*)graphRpPbIndSystPi0[i]->Clone(Form("relativeSysErrorPi0RpPb_%s", nameMeasGlobal[i].Data()));
+                while (sysErrorRelCollectionPi0RpA[i]->GetY()[0]== 0 && sysErrorRelCollectionPi0RpA[i]->GetN() > 0 )
+                    sysErrorRelCollectionPi0RpA[i]->RemovePoint(0);
+                while (sysErrorRelCollectionPi0RpA[i]->GetY()[sysErrorRelCollectionPi0RpA[i]->GetN()-1] == 0 && sysErrorRelCollectionPi0RpA[i]->GetN() > 0 )
+                    sysErrorRelCollectionPi0RpA[i]->RemovePoint(sysErrorRelCollectionPi0RpA[i]->GetN()-1);
+                if (sysErrorRelCollectionPi0RpA[i]->GetN() > 0 )
+                    sysErrorRelCollectionPi0RpA[i]  = CalculateRelErrUpAsymmGraph( graphRpPbIndSystPi0[i], Form("relativeSysErrorPi0RpPb_%s", nameMeasGlobal[i].Data()));
+                else
+                    sysErrorRelCollectionPi0RpA[i]  = NULL;
+
             }
         }
     }
@@ -2744,7 +2776,87 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             DrawGammaLines(0.23, 25. , 0.2, 0.2,0.1, kGray, 3);
 
         canvasWeights->SaveAs(Form("%s/Pi0RpPb_Weights.%s",outputDir.Data(),suffix.Data()));
+
+        //  *********************************************************************************************************************
+        //  ************************************ Visualize relative errors ******************************************************
+        //  *********************************************************************************************************************
+
+        canvasRelSysErr->cd();
+
+            histo2DRelSysErr->GetYaxis()->SetRangeUser(0,49.5);
+            histo2DRelSysErr->Draw("copy");
+            TLegend* legendRelSysErrRpPb       = GetAndSetLegend2(0.60, 0.92-(0.04*(nMeasSetPi0RpPb)/2), 0.95, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
+            for (Int_t i = 0; i < nMeasSetPi0RpPb; i++){
+                if (!sysErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]]) continue;
+                DrawGammaSetMarkerTGraph(sysErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]], markerStyleDet[availablePi0RpPbMeas[i]], markerSizeDet[availablePi0RpPbMeas[i]]*0.5,
+                                         colorDet[availablePi0RpPbMeas[i]], colorDet[availablePi0RpPbMeas[i]]);
+                sysErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]]->Draw("p,same,z");
+                legendRelSysErrRpPb->AddEntry(sysErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]],nameMeasGlobalLabel[availablePi0RpPbMeas[i]],"p");
+            }
+            legendRelSysErrRpPb->Draw();
+
+            labelRelSysErrEnergy->Draw();
+            TLatex *labelRelSysErrPi0pPb       = new TLatex(0.15,0.85,"#it{R}_{pPb}: #pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelRelSysErrPi0pPb, textSizeLabelsPixel, 4, 1, 43);
+            labelRelSysErrPi0pPb->Draw();
+
+        canvasRelSysErr->SaveAs(Form("%s/Pi0RpPb_RelSysErr_All.%s",outputDir.Data(),suffix.Data()));
+
+        //  *********************************************************************************************************************
+        //  ************************************ Visualize relative errors ******************************************************
+        //  *********************************************************************************************************************
+
+        canvasRelStatErr->cd();
+
+            histo2DRelStatErr->GetYaxis()->SetRangeUser(0,49.5);
+            histo2DRelStatErr->Draw("copy");
+            TLegend* legendRelStatErrRpPb       = GetAndSetLegend2(0.12, 0.92-(0.04*(nMeasSetPi0RpPb)/2), 0.45, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
+            for (Int_t i = 0; i < nMeasSetPi0RpPb; i++){
+                if (!statErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]]) continue;
+                DrawGammaSetMarkerTGraph(statErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]], markerStyleDet[availablePi0RpPbMeas[i]], markerSizeDet[availablePi0RpPbMeas[i]]*0.5,
+                                         colorDet[availablePi0RpPbMeas[i]], colorDet[availablePi0RpPbMeas[i]]);
+                statErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]]->Draw("p,same,z");
+                legendRelStatErrRpPb->AddEntry(statErrorRelCollectionPi0RpA[availablePi0RpPbMeas[i]],nameMeasGlobalLabel[availablePi0RpPbMeas[i]],"p");
+            }
+            legendRelStatErrRpPb->Draw();
+
+            labelRelStatErrEnergy->Draw();
+            TLatex *labelRelStatErrPi0RpPb      = new TLatex(0.95,0.85,"#it{R}_{pPb}: #pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelRelStatErrPi0RpPb, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+            labelRelStatErrPi0RpPb->Draw();
+
+        canvasRelStatErr->SaveAs(Form("%s/Pi0RpPb_RelStatErr_All.%s",outputDir.Data(),suffix.Data()));
+
+        //  *********************************************************************************************************************
+        //  ************************************ Visualize relative errors ******************************************************
+        //  *********************************************************************************************************************
+
+        TGraphAsymmErrors* graphCombPi0RpPbRelStat      = CalculateRelErrUpAsymmGraph( graphRpPbCombStatPi0, "relativeStatErrorPi0RpPb_MethodWPP");
+        TGraphAsymmErrors* graphCombPi0RpPbRelSys       = CalculateRelErrUpAsymmGraph( graphRpPbCombSystPi0, "relativeSysErrorPi0RpPb_MethodWPP");
+        TGraphAsymmErrors* graphCombPi0RpPbRelTot       = CalculateRelErrUpAsymmGraph( graphRpPbCombCombPi0, "relativeTotalErrorPi0RpPb_MethodWPP");
+
+        canvasRelTotErr->cd();
+
+            histo2DRelTotErrPi0->GetYaxis()->SetRangeUser(0,49.5);
+            histo2DRelTotErrPi0->Draw("copy");
+            DrawGammaSetMarkerTGraphAsym(graphCombPi0RpPbRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
+            graphCombPi0RpPbRelTot->Draw("p,same,z");
+            DrawGammaSetMarkerTGraphAsym(graphCombPi0RpPbRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+            graphCombPi0RpPbRelStat->Draw("l,x0,same,e1");
+            DrawGammaSetMarkerTGraphAsym(graphCombPi0RpPbRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+            graphCombPi0RpPbRelSys->SetLineStyle(7);
+            graphCombPi0RpPbRelSys->Draw("l,x0,same,e1");
+            legendRelTotErr3->Draw();
+
+            labelRelTotErrEnergy->Draw();
+            TLatex *labelRelTotErrPi0RpPb       = new TLatex(0.95,0.85,"#it{R}_{pPb}: #pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelRelTotErrPi0RpPb, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+            labelRelTotErrPi0RpPb->Draw();
+
+        canvasRelTotErr->SaveAs(Form("%s/Pi0RpPb_Reldecomp_All.%s",outputDir.Data(),suffix.Data()));
     }
+
+
 
     // *******************************************************************************************************
     // ************************** Combination of different eta measurements **********************************
@@ -3190,8 +3302,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelSysErr->cd();
 
     TH2F * histo2DRelSysErrEta;
-    histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.43, 25.,1000,0,48.5);
+    histo2DRelSysErrEta                 = new TH2F("histo2DRelSysErrEta","histo2DRelSysErrEta",11000,0.43, 25.,1000,0,70.5);
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelSysErrEta->GetYaxis()->SetRangeUser(0,48.5);
     histo2DRelSysErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErrEta->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelSysErrEta->Draw("copy");
@@ -3249,8 +3362,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasRelStatErr->cd();
 
     TH2F * histo2DRelStatErrEta;
-    histo2DRelStatErrEta                        = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.43, 25.,1000,0,48.5);
+    histo2DRelStatErrEta                        = new TH2F("histo2DRelStatErrEta","histo2DRelStatErrEta",11000,0.43, 25.,1000,0,70.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelStatErrEta->GetYaxis()->SetRangeUser(0,48.5);
     histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEta->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelStatErrEta->Draw("copy");
@@ -3317,8 +3431,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     cout << "plotting rel errors eta" << endl;
     canvasRelTotErr->cd();
     TH2F * histo2DRelTotErrEta;
-    histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.43, 25.,1000,0,48.5);
+    histo2DRelTotErrEta                 = new TH2F("histo2DRelTotErrEta","histo2DRelTotErrEta",11000,0.43, 25.,1000,0,70.5);
     SetStyleHistoTH2ForGraphs(histo2DRelTotErrEta, "#it{p}_{T} (GeV/#it{c})","tot Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,48.5);
     histo2DRelTotErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelTotErrEta->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelTotErrEta->Draw("copy");
@@ -3773,6 +3888,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     TGraphAsymmErrors* systErrorUnCorrInterCollectionEtaPP[11];
     TGraphAsymmErrors* graphRpPbIndCombEta[11];
     TGraph* graphWeightsEtaRpPb[11];
+    TGraphAsymmErrors* statErrorRelCollectionEtaRpA[11];
+    TGraphAsymmErrors* sysErrorRelCollectionEtaRpA[11];
+
     for (Int_t i = 0; i < 11; i++){
         graphWeightsEtaRpPb[i]                              = NULL;
         graphRpPbIndStatEta[i]                              = NULL;
@@ -3780,6 +3898,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphRpPbIndCombEta[i]                              = NULL;
         systErrorUnCorrInterCollectionEtaPP[i]              = NULL;
         histRpPbIndStatEta[i]                               = NULL;
+        statErrorRelCollectionEtaRpA[i]                     = NULL;
+        sysErrorRelCollectionEtaRpA[i]                      = NULL;
         cout << "testing for: " << nameMeasGlobalLabel[i].Data() << endl;
         if (haveRefPPEta[i] && graphIndEtaInvYieldStat_yShifted[i] ){ //&& !( i == 3 )
             cout << "running eta for: " << nameMeasGlobalLabel[i].Data() << endl;
@@ -3806,6 +3926,32 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
                     histRpPbIndStatEta[i]->SetBinContent(bin,graphRpPbIndStatEta[i]->GetY()[j]);
                     histRpPbIndStatEta[i]->SetBinError(bin,graphRpPbIndStatEta[i]->GetEYlow()[j]);
                 }
+
+                if (histRpPbIndStatEta[i]){
+                    statErrorRelCollectionEtaRpA[i]     = new TGraphAsymmErrors(histRpPbIndStatEta[i]);
+                    while (statErrorRelCollectionEtaRpA[i]->GetY()[0] == 0 && statErrorRelCollectionEtaRpA[i]->GetN() > 0 )
+                        statErrorRelCollectionEtaRpA[i]->RemovePoint(0);
+                    while (statErrorRelCollectionEtaRpA[i]->GetY()[statErrorRelCollectionEtaRpA[i]->GetN()-1] == 0 && statErrorRelCollectionEtaRpA[i]->GetN() > 0 )
+                        statErrorRelCollectionEtaRpA[i]->RemovePoint(statErrorRelCollectionEtaRpA[i]->GetN()-1);
+                    if (statErrorRelCollectionEtaRpA[i]->GetN() > 0 )
+                        statErrorRelCollectionEtaRpA[i] = CalculateRelErrUpAsymmGraph( statErrorRelCollectionEtaRpA[i], Form("relativeStatErrorEtaRpPb_%s", nameMeasGlobal[i].Data()));
+                    else
+                        statErrorRelCollectionEtaRpA[i] = NULL;
+                }
+                if (graphRpPbIndSystEta[i]){
+                    sysErrorRelCollectionEtaRpA[i]      = (TGraphAsymmErrors*)graphRpPbIndSystEta[i]->Clone(Form("relativeSysErrorEtaRpPb_%s", nameMeasGlobal[i].Data()));
+                    while (sysErrorRelCollectionEtaRpA[i]->GetY()[0]== 0 && sysErrorRelCollectionEtaRpA[i]->GetN() > 0 )
+                        sysErrorRelCollectionEtaRpA[i]->RemovePoint(0);
+                    while (sysErrorRelCollectionEtaRpA[i]->GetY()[sysErrorRelCollectionEtaRpA[i]->GetN()-1] == 0 && sysErrorRelCollectionEtaRpA[i]->GetN() > 0 )
+                        sysErrorRelCollectionEtaRpA[i]->RemovePoint(sysErrorRelCollectionEtaRpA[i]->GetN()-1);
+                    if (sysErrorRelCollectionEtaRpA[i]->GetN() > 0 )
+                        sysErrorRelCollectionEtaRpA[i]  = CalculateRelErrUpAsymmGraph( graphRpPbIndSystEta[i], Form("relativeSysErrorEtaRpPb_%s", nameMeasGlobal[i].Data()));
+                    else
+                        sysErrorRelCollectionEtaRpA[i]  = NULL;
+
+                }
+
+
             }
         }
     }
@@ -3915,6 +4061,83 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             DrawGammaLines(0.43, 25. , 0.2, 0.2,0.1, kGray, 3);
 
         canvasWeights->SaveAs(Form("%s/EtaRpPb_Weights.%s",outputDir.Data(),suffix.Data()));
+        //  *********************************************************************************************************************
+        //  ************************************ Visualize relative errors ******************************************************
+        //  *********************************************************************************************************************
+
+        canvasRelSysErr->cd();
+
+            histo2DRelSysErrEta->GetYaxis()->SetRangeUser(0,59.5);
+            histo2DRelSysErrEta->Draw("copy");
+            TLegend* legendRelSysErrRpPb       = GetAndSetLegend2(0.60, 0.92-(0.04*(nMeasSetEtaRpPb)/2), 0.95, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
+            for (Int_t i = 0; i < nMeasSetEtaRpPb; i++){
+                if (!sysErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]]) continue;
+                DrawGammaSetMarkerTGraph(sysErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]], markerStyleDet[availableEtaRpPbMeas[i]], markerSizeDet[availableEtaRpPbMeas[i]]*0.5,
+                                        colorDet[availableEtaRpPbMeas[i]], colorDet[availableEtaRpPbMeas[i]]);
+                sysErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]]->Draw("p,same,z");
+                legendRelSysErrRpPb->AddEntry(sysErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]],nameMeasGlobalLabel[availableEtaRpPbMeas[i]],"p");
+            }
+            legendRelSysErrRpPb->Draw();
+
+            labelRelSysErrEnergy->Draw();
+            TLatex *labelRelSysErrEtapPb       = new TLatex(0.15,0.85,"#it{R}_{pPb}: #eta #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelRelSysErrEtapPb, textSizeLabelsPixel, 4, 1, 43);
+            labelRelSysErrEtapPb->Draw();
+
+        canvasRelSysErr->SaveAs(Form("%s/EtaRpPb_RelSysErr_All.%s",outputDir.Data(),suffix.Data()));
+
+        //  *********************************************************************************************************************
+        //  ************************************ Visualize relative errors ******************************************************
+        //  *********************************************************************************************************************
+
+        canvasRelStatErr->cd();
+
+            histo2DRelStatErrEta->GetYaxis()->SetRangeUser(0,59.5);
+            histo2DRelStatErrEta->Draw("copy");
+            TLegend* legendRelStatErrRpPb       = GetAndSetLegend2(0.12, 0.92-(0.04*(nMeasSetEtaRpPb)/2), 0.45, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
+            for (Int_t i = 0; i < nMeasSetEtaRpPb; i++){
+                if (!statErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]]) continue;
+                DrawGammaSetMarkerTGraph(statErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]], markerStyleDet[availableEtaRpPbMeas[i]], markerSizeDet[availableEtaRpPbMeas[i]]*0.5,
+                                        colorDet[availableEtaRpPbMeas[i]], colorDet[availableEtaRpPbMeas[i]]);
+                statErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]]->Draw("p,same,z");
+                legendRelStatErrRpPb->AddEntry(statErrorRelCollectionEtaRpA[availableEtaRpPbMeas[i]],nameMeasGlobalLabel[availableEtaRpPbMeas[i]],"p");
+            }
+            legendRelStatErrRpPb->Draw();
+
+            labelRelStatErrEnergy->Draw();
+            TLatex *labelRelStatErrEtaRpPb      = new TLatex(0.95,0.85,"#it{R}_{pPb}: #eta #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelRelStatErrEtaRpPb, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+            labelRelStatErrEtaRpPb->Draw();
+
+        canvasRelStatErr->SaveAs(Form("%s/EtaRpPb_RelStatErr_All.%s",outputDir.Data(),suffix.Data()));
+
+        //  *********************************************************************************************************************
+        //  ************************************ Visualize relative errors ******************************************************
+        //  *********************************************************************************************************************
+
+        TGraphAsymmErrors* graphCombEtaRpPbRelStat      = CalculateRelErrUpAsymmGraph( graphRpPbCombStatEta, "relativeStatErrorEtaRpPb_MethodWPP");
+        TGraphAsymmErrors* graphCombEtaRpPbRelSys       = CalculateRelErrUpAsymmGraph( graphRpPbCombSystEta, "relativeSysErrorEtaRpPb_MethodWPP");
+        TGraphAsymmErrors* graphCombEtaRpPbRelTot       = CalculateRelErrUpAsymmGraph( graphRpPbCombCombEta, "relativeTotalErrorEtaRpPb_MethodWPP");
+
+        canvasRelTotErr->cd();
+
+            histo2DRelTotErrEta->GetYaxis()->SetRangeUser(0,59.5);
+            histo2DRelTotErrEta->Draw("copy");
+            DrawGammaSetMarkerTGraphAsym(graphCombEtaRpPbRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
+            graphCombEtaRpPbRelTot->Draw("p,same,z");
+            DrawGammaSetMarkerTGraphAsym(graphCombEtaRpPbRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+            graphCombEtaRpPbRelStat->Draw("l,x0,same,e1");
+            DrawGammaSetMarkerTGraphAsym(graphCombEtaRpPbRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+            graphCombEtaRpPbRelSys->SetLineStyle(7);
+            graphCombEtaRpPbRelSys->Draw("l,x0,same,e1");
+            legendRelTotErr3->Draw();
+
+            labelRelTotErrEnergy->Draw();
+            TLatex *labelRelTotErrEtaRpPb       = new TLatex(0.95,0.85,"#it{R}_{pPb}: #pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelRelTotErrEtaRpPb, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+            labelRelTotErrEtaRpPb->Draw();
+
+        canvasRelTotErr->SaveAs(Form("%s/EtaRpPb_Reldecomp_All.%s",outputDir.Data(),suffix.Data()));
     }
 
     // *******************************************************************************************************

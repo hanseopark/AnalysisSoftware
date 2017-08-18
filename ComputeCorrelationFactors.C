@@ -251,7 +251,7 @@ void ComputeCorrelationFactors(
 
     // canvas
     TCanvas* canvasWeights      = new TCanvas("canvasWeights","",200,10,1350,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasWeights, 0.06, 0.02, 0.05, 0.09);
+    DrawGammaCanvasSettings( canvasWeights, 0.07, 0.005, 0.05, 0.09);
     canvasWeights->SetLogx();
 
     Int_t plotErr               = 0;
@@ -278,13 +278,17 @@ void ComputeCorrelationFactors(
 
     // dummy hist
     histo2DPi0Weights           = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,minPt,maxPt,1000,minCorrYaxis,1.05);
-    SetStyleHistoTH2ForGraphs(histo2DPi0Weights, "#it{p}_{T} (GeV/#it{c})","#rho_{ij}",0.035,0.04, 0.035,0.04, 1.,0.7);
+    SetStyleHistoTH2ForGraphs(histo2DPi0Weights, "#it{p}_{T} (GeV/#it{c})","#rho_{ij}",0.04,0.045, 0.04,0.045, 0.85,0.73);
     histo2DPi0Weights->GetXaxis()->SetMoreLogLabels();
     histo2DPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
     histo2DPi0Weights->Draw("copy");
 
+    Int_t nRowsLabels           = 2;
+    if (modeOutput.CompareTo("Systems") != 0)
+        nRowsLabels++;
+
     // labels
-    TLatex *labelWeightsEnergy  = new TLatex(0.95,0.18,collisionSystem.Data());
+    TLatex *labelWeightsEnergy  = new TLatex(0.95,0.12+((nRowsLabels-1)*0.05),collisionSystem.Data());
     SetStyleTLatex( labelWeightsEnergy, textSizeLabelsPixel,4);
     labelWeightsEnergy->SetTextFont(43);
     labelWeightsEnergy->SetTextAlign(31);
@@ -292,16 +296,16 @@ void ComputeCorrelationFactors(
 
     TLatex *labelWeightsPi0     = 0x0;
     if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0)
-        labelWeightsPi0         = new TLatex(0.95,0.16,Form("%s",mesonPlot.Data()));
+        labelWeightsPi0         = new TLatex(0.95,0.12+((nRowsLabels-2)*0.05),Form("%s",mesonPlot.Data()));
     else
-        labelWeightsPi0         = new TLatex(0.95,0.13,Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
+        labelWeightsPi0         = new TLatex(0.95,0.12+((nRowsLabels-2)*0.05),Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
     SetStyleTLatex( labelWeightsPi0, textSizeLabelsPixel,4);
     labelWeightsPi0->SetTextFont(43);
     labelWeightsPi0->SetTextAlign(31);
     labelWeightsPi0->Draw();
 
     TLatex *labelWeightsDetectionProcess  = new TLatex(0.95,0.12,detectionProcess.Data());
-    SetStyleTLatex( labelWeightsDetectionProcess, 0.85*textSizeLabelsPixel,4);
+    SetStyleTLatex( labelWeightsDetectionProcess, textSizeLabelsPixel,4);
     labelWeightsDetectionProcess->SetTextFont(43);
     labelWeightsDetectionProcess->SetTextAlign(31);
     if (modeOutput.CompareTo("Systems") != 0)
@@ -320,9 +324,9 @@ void ComputeCorrelationFactors(
 
     // legend
     Int_t maxNLegendColumn      = 4;
-    TLegend* legendWeights      = GetAndSetLegend2(0.11, 0.11, 0.42, 0.1+(0.035*maxNLegendColumn), 32);
+    TLegend* legendWeights      = GetAndSetLegend2(0.11, 0.11, 0.42, 0.1+(0.04*maxNLegendColumn), textSizeLabelsPixel);
     legendWeights->SetMargin(0.15);
-    TLegend* legendWeightsTop   = GetAndSetLegend2(0.055, 0.95, 0.995, 0.995, 32, nMeasTot+1, "", 43, 0.02);
+    TLegend* legendWeightsTop   = GetAndSetLegend2(0.055, 0.95, 0.995, 0.995, textSizeLabelsPixel, nMeasTot+1, "", 43, 0.02);
     legendWeightsTop->AddEntry((TObject*)0, "i,j:","");
     //---------------------------------------------------------------------------------------------------------------
     //--------------------------------- calculate correlation factors
@@ -466,6 +470,7 @@ void ComputeCorrelationFactors(
                 if (iTrigg > maxNLegendColumn)     iColumnsLegend  = 2;
                 if (iTrigg > 2*maxNLegendColumn)   iColumnsLegend  = 3;
                 if (iTrigg > 3*maxNLegendColumn)   iColumnsLegend  = 4;
+                if (iTrigg > 4*maxNLegendColumn)   iColumnsLegend  = 5;
                 iTrigg++;
                 histoCorr->Draw("p,same");
                 legendWeights->SetNColumns(iColumnsLegend);
@@ -479,7 +484,7 @@ void ComputeCorrelationFactors(
     }
 
     legendWeights->SetX2(0.11+0.10*iColumnsLegend);
-    if(iTrigg < maxNLegendColumn)
+    if(iTrigg+1 < maxNLegendColumn)
         legendWeights->SetY2(0.1+(0.035*iTrigg));
     legendWeightsTop->Draw();
 
