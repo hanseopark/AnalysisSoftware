@@ -127,8 +127,8 @@ TGraphAsymmErrors* ApplyNSDSysError(TGraphAsymmErrors* graphMesonSystErr, Double
   return graphMesonSystErrClone1;
 }
 
-//const Int_t  Ntotal = 31;
-const Int_t  Ntotal = 28;
+const Int_t  Ntotal = 31;
+//const Int_t  Ntotal = 28;
 const Int_t  NtotalLow = 25;
 const Int_t  nPtLimits = Ntotal+1;
 const Int_t  nPtLimitsLow = NtotalLow+1;
@@ -167,26 +167,37 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   //TString fileNameNeutralPionDalitz                   = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170308.root";
-  TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170606_oldformat_WithSystematics.root";
+  TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_CatErrors_20170724.root";
+  //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170606_oldformat_WithSystematics.root";
+  
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResultsFullCorrection_pPb_20170602.root";
   //TString fileNameNeutralPionPCMOnlyErr               = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170606_oldformat_woEffiCorrection.root";
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResultsFullCorrection_pPb_20170606_woEffiCorrection.root";
   //TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160602_newhighptbinningPi0_pPb.root";
   //TString fileNameNeutralPionEMCal 		      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
   //TString fileNameNeutralPionEMCal		      = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170602_pPb.root";
-  TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
+  //TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
+  TString fileNameNeutralPionEMCal                    = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_20170811_2_pPb.root";
  
   //TString fileNamePCMEMCal			      = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
-  TString fileNamePCMEMCal                            = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_06_13.root";
+  
+  TString fileNamePCMEMCal                            = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_08_15.root";
+  
+  //TString fileNamePCMEMCal                            = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_06_13.root";
+  
+  
  // TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_160503_pPb.root"; 
  // TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161118_pPb.root";
   //TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_161124_pPb.root";
   					
-  TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
+//  TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
+  TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_20170811_2_pPb.root";
+  
+  
   TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
   TString fileNameChargedPions                        = "ExternalInputpPb/InputRpPb/pPb502.fullpT.INEL.20151204_mb_wo_V0Acorr.root";//Charged pion pPb spectrum 
-  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_06_14/mTScaling.root"; 
-  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_06_14/mTScaling_pp7TeV.root";
+  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_08_18/mTScaling.root"; 
+  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_08_18/mTScaling_pp7TeV.root";
   TString fileNameChargedPionsRatioPythia             = "ExternalInputpPb/Pythia6_pionRatio.root";
   
   
@@ -200,29 +211,50 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   //Correlation factors file for PCM and Dalitz
   //TString corrFactorsFile = "ExternalInputpPb/CorrelationFactors_PCM_Dalitz_2016_10_06_pPb_5.023TeV.root";
   TString corrFactorsFile = "ExternalInputpPb/CorrFactorsFiles/pPb5TeV_2017_01_17.root";
+  
+  ////////////////////////////////////Theory///////////////////////////////////////////////////////7
+  
+  
+  TString nameFileTheorypPb =  "ExternalInputpPb/Theory/TheoryCompilationPPb.root";
+  TString nameMcGillPiPlus  = "graphPiPlusSpecMcGill5023GeV";
+  TString nameMcGillPiMinus = "graphPiMinusSpecMcGill5023GeV";
+  TString nameMcGillPi0     = "graphPi0SpecMcGill5023GeV";
+  
+                                    //EPOS3
+  
+  TString nameFileTheoryEPOS3 = "ExternalInputpPb/Theory/pi0_charged_pions_eta_EPOS3.root";
+  TString namehistoPi0EPOS3        = "pi0_pt";
+  TString namehistoPiMinusEPOS3    = "pim_pt";
+  TString namehistoPiPlusEPOS3     = "pip_pt";
+  
+  
+  
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
     
     
   TString collisionSystempPb                          = "p-Pb #sqrt{s_{NN}} = 5.02 TeV"; 
     
     
 
-//   Double_t pTLimits[nPtLimits]                        = { 0.3, 0.4, 0.5, 0.6, 0.7, 
-// 							  0.8, 1.0, 1.2, 1.4, 1.6, 
-// 							  1.8, 2.0, 2.2, 2.4, 2.6,
-// 							  2.8, 3.0, 3.2, 3.4, 3.6,
-// 							  3.8, 4.0, 4.5, 5.0, 5.5,
-// 							  6.0, 7.0, 8.0, 10.0,12.0,
-// 							  16.0, 20.0};
-                                                          
-                                                          
-  
-  Double_t pTLimits[nPtLimits]                        = { 0.6, 0.7, 
+  Double_t pTLimits[nPtLimits]                        = { 0.3, 0.4, 0.5, 0.6, 0.7, 
 							  0.8, 1.0, 1.2, 1.4, 1.6, 
 							  1.8, 2.0, 2.2, 2.4, 2.6,
 							  2.8, 3.0, 3.2, 3.4, 3.6,
 							  3.8, 4.0, 4.5, 5.0, 5.5,
 							  6.0, 7.0, 8.0, 10.0,12.0,
 							  16.0, 20.0};
+                                                          
+                                                          
+  
+//   Double_t pTLimits[nPtLimits]                        = { 0.6, 0.7, 
+// 							  0.8, 1.0, 1.2, 1.4, 1.6, 
+// 							  1.8, 2.0, 2.2, 2.4, 2.6,
+// 							  2.8, 3.0, 3.2, 3.4, 3.6,
+// 							  3.8, 4.0, 4.5, 5.0, 5.5,
+// 							  6.0, 7.0, 8.0, 10.0,12.0,
+// 							  16.0, 20.0};
     
     
   Double_t pTLimitsLow[nPtLimitsLow]                        = {  1.0, 1.2, 1.4, 1.6, 
@@ -241,19 +273,19 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 								     5.0,6.0,8.0,10.0,12.0,
 								     16.0};
    
-  Int_t offSets[11]                                   =  { -4, 2, -4, 0, -4,  0, 0, 0, 0,  0, 0};
-  Int_t offSetsSys[11]                                =  {  0, 3,  5, 0,  2,   0, 0, 0, 0, 0, 0};
+  //Int_t offSets[11]                                   =  { -4, 2, -4, 0, -4,  0, 0, 0, 0,  0, 0};
+  //Int_t offSetsSys[11]                                =  {  0, 3,  5, 0,  2,   0, 0, 0, 0, 0, 0};
 
-  //Int_t offSets[11]                                   =  { -1, 5, -1, 0, -1,  3, 0, 0, 0,  0, 0};
-  //Int_t offSetsSys[11]                                =  {  0, 6,  8, 0, 5, 3, 0, 0, 0, 0, 0};   
+  Int_t offSets[11]                                   =  { -1, 5, -1, 0, -1,  3, 0, 0, 0,  0, 0};
+  Int_t offSetsSys[11]                                =  {  0, 6,  8, 0, 5, 3, 0, 0, 0, 0, 0};   
   
   
   Int_t offSetsLow[11]                                =  { -7, -1, -7, 0, 0,  -4, 0, 0, 0,  0, 0};
   Int_t offSetsSysLow[11]                             =  {  -6, 0,  2, 0, 0, -3, 0, 0, 0, 0, 0};  
   Int_t offSetsEta[11]                                =  { -3, 0, -3, 0, -3,  0, 0, 0, 0,  0, 0};
-  Int_t offSetsSysEta[11]                             =  {  0, 0,  5, 0, 2, 0, 0, 0, 0, 0, 0};
-  Int_t offSetsEtaPi0Ratio[11]                        =  { 0, 0, 5, 0, -3,  0, 0, 0, 0,  0, 0};
-  Int_t offSetsSysEtaPi0Ratio[11]                     =  {  0, 0,  5, 0, 2, 0, 0, 0, 0, 0, 0};
+  Int_t offSetsSysEta[11]                             =  {  0, 0,  4, 0, 2, 0, 0, 0, 0, 0, 0};
+  Int_t offSetsEtaPi0Ratio[11]                        =  { 0, 0, -3, 0, -3,  0, 0, 0, 0,  0, 0};
+  Int_t offSetsSysEtaPi0Ratio[11]                     =  {  0, 0,  4, 0, 2, 0, 0, 0, 0, 0, 0};
     
     
   TH1D* statErrorCollection[11];
@@ -285,6 +317,34 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   for (Int_t i = 0; i< 11; i++){
     sysErrorCollectionEtaPi0Ratio[i]                           = NULL;
   }    
+  
+  // ********************************************Define style variables*******************************************
+  // *************************************************************************************************************
+  
+  Color_t colorPCM   		= kBlack;
+  Color_t colorDalitz   	= kViolet; //kBlue+1;kViolet-4 
+  Color_t colorPHOS   		= kRed+1;
+  Color_t colorEMCal   		= kGreen+2;
+  Color_t colorPCMEMCal   	= kBlue+1;
+  Color_t colorCombYieldPi0   	= kBlue+2;
+  Color_t colorCombYieldEta 	= kGreen+3;
+  
+  Style_t markerStylePi0	= 20;
+  Style_t markerStyleEta	= 21;
+  Style_t markerStylePCM	= 20;
+  Style_t markerStylePHOS	= 21;
+  Style_t markerStyleEMCal 	= 33;
+  Style_t markerStyleDalitz	= 29;
+  Style_t markerStylePCMEMCal   = 34;
+  
+  Size_t  markerSizePCM=1.;	
+  Size_t  markerSizeDalitz=1.2;	
+  Size_t  markerSizePHOS=1.;	
+  Size_t  markerSizeEMCal=1.2;
+  Size_t  markerSizePCMEMCal=1.2;
+  
+  
+  
   // **************************************************************************************
   // ****************************** Reading Dalitz ****************************************
   // **************************************************************************************
@@ -353,12 +413,12 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   
    ///NOTE Temporal, start for 4 point
   
-  histoPCMYieldPi0pPbStat->SetBinContent(2,.0);
-  histoPCMYieldPi0pPbStat->SetBinContent(3,.0);
-  histoPCMYieldPi0pPbStat->SetBinContent(4,.0);  
-  histoPCMYieldPi0pPbStat->SetBinError(2,.0);
-  histoPCMYieldPi0pPbStat->SetBinError(3,.0);
-  histoPCMYieldPi0pPbStat->SetBinError(4,.0);
+//   histoPCMYieldPi0pPbStat->SetBinContent(2,.0);
+//   histoPCMYieldPi0pPbStat->SetBinContent(3,.0);
+//   histoPCMYieldPi0pPbStat->SetBinContent(4,.0);  
+//   histoPCMYieldPi0pPbStat->SetBinError(2,.0);
+//   histoPCMYieldPi0pPbStat->SetBinError(3,.0);
+//   histoPCMYieldPi0pPbStat->SetBinError(4,.0);
   
  
   for(Int_t iPoint = 1; iPoint < histoPCMYieldPi0pPbStat->GetNbinsX(); iPoint++) {
@@ -370,9 +430,9 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   
   TGraphAsymmErrors* graphPCMYieldPi0pPbSystErr       = (TGraphAsymmErrors*)directoryPCMPi0pPb->Get("Pi0SystError");
   
-  graphPCMYieldPi0pPbSystErr->RemovePoint(0);
-  graphPCMYieldPi0pPbSystErr->RemovePoint(0);
-  graphPCMYieldPi0pPbSystErr->RemovePoint(0);
+  //graphPCMYieldPi0pPbSystErr->RemovePoint(0);
+  //graphPCMYieldPi0pPbSystErr->RemovePoint(0);
+  //graphPCMYieldPi0pPbSystErr->RemovePoint(0);
   
   
   //cout<<"For temporal, start for 4 point"<<endl;
@@ -459,20 +519,23 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   // **************************************************************************************
   TFile* fileNeutralPionEMCal                         = new TFile(fileNameNeutralPionEMCal);
   TFile* fileNeutralPionEMCalEta                      = new TFile(fileNameNeutralPionEMCalEta);
-  TDirectory* directoryEMCalPi0pPb                    = (TDirectory*)fileNeutralPionEMCal->Get("Pi0_pPb_5.023TeV_0-100%");
+  TDirectory* directoryEMCalPi0pPb                    = (TDirectory*)fileNeutralPionEMCal->Get("Pi0pPb_5.023TeV");
+  
   if( ! directoryEMCalPi0pPb ){
-    cout<<"EMCal: The directory Pi0_pPb_5.023TeV_0-100% does not exist "<<endl; 
+    cout<<"EMCal: The directory Pi0pPb_5.023TeV does not exist "<<endl; 
     return;  
   }
-  TDirectory*	directoryEMCalEtapPb 	      	= (TDirectory*)fileNeutralPionEMCalEta->Get("Eta_pPb_5.023TeV_0-100%"); 
+  TDirectory*	directoryEMCalEtapPb 	      	= (TDirectory*)fileNeutralPionEMCalEta->Get("EtapPb_5.023TeV");
   if( ! directoryEMCalEtapPb  ){
-    cout<<"EMCal: The directory Eta_pPb_5.023TeV_0-100% does not exist "<<endl; 
+    cout<<"EMCal: The directory EtapPb_5.023TeV does not exist "<<endl; 
     return;  
-  }  TDirectory*	directoryEMCalPi0EtaBinningpPb 	      	= (TDirectory*)fileNeutralPionEMCal->Get("Pi0EtaBinning_pPb_5.023TeV_0-100%"); 
-  if( ! directoryEMCalPi0EtaBinningpPb  ){
-    cout<<"EMCal: The directory Pi0EtaBinning_pPb_5.023TeV_0-100% does not exist "<<endl; 
-    return;  
-  }
+  }  
+  
+  //TDirectory*	directoryEMCalPi0EtaBinningpPb 	      	= (TDirectory*)fileNeutralPionEMCal->Get("Pi0EtaBinning_pPb_5.023TeV_0-100%"); 
+  //if( ! directoryEMCalPi0EtaBinningpPb  ){
+   // cout<<"EMCal: The directory Pi0EtaBinning_pPb_5.023TeV_0-100% does not exist "<<endl; 
+    //return;  
+  //}
   //Pi0
   TH1D* histoEMCalYieldPi0pPbStat1                     = (TH1D*)directoryEMCalPi0pPb->Get(nameHistoEMCal.Data());
   TGraphAsymmErrors* graphEMCalYieldPi0pPbStatErr     =new TGraphAsymmErrors(histoEMCalYieldPi0pPbStat1);
@@ -496,16 +559,16 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   cout<<"/////////////////////////////"<<endl;
   //Eta
   TH1D*	histoEMCalYieldEtapPbStat 			= (TH1D*)directoryEMCalEtapPb->Get("CorrectedYieldEta");
-  TGraphAsymmErrors*	graphEMCalYieldEtapPbSystErr		= (TGraphAsymmErrors*)directoryEMCalEtapPb->Get("EtaSystError");
+  TGraphAsymmErrors*	graphEMCalYieldEtapPbSystErr		= (TGraphAsymmErrors*)directoryEMCalEtapPb->Get("graphCorrectedYieldEta");
   
   TGraphAsymmErrors* graphEMCalYieldEtapPb=new TGraphAsymmErrors(histoEMCalYieldEtapPbStat); 
 
   //Pi0EtaBinning
-  TH1D* histoEMCalYieldPi0EtaBinningpPbStat  = (TH1D*)directoryEMCalPi0EtaBinningpPb->Get("CorrectedYieldPi0EtaBinning");
-  TGraphAsymmErrors*   graphEMCalYieldPi0EtaBinningpPb=new TGraphAsymmErrors(histoEMCalYieldPi0EtaBinningpPbStat);
+  //TH1D* histoEMCalYieldPi0EtaBinningpPbStat  = (TH1D*)directoryEMCalPi0EtaBinningpPb->Get("CorrectedYieldPi0EtaBinning");
+ // TGraphAsymmErrors*   graphEMCalYieldPi0EtaBinningpPb=new TGraphAsymmErrors(histoEMCalYieldPi0EtaBinningpPbStat);
   //EtaPi0Ratio	
-  TH1D*	histoEMCalEtaPi0RatiopPb 			= (TH1D*)directoryEMCalEtapPb->Get("EtatoPi0Ratio");
-  TGraphAsymmErrors*	graphEMCalEtaPi0RatiopPbSystErr 	        = (TGraphAsymmErrors*)directoryEMCalEtapPb->Get("EtatoPi0RatioSys"); 
+  TH1D*	histoEMCalEtaPi0RatiopPb 			= (TH1D*)directoryEMCalEtapPb->Get("EtaToPi0YShiftedStatError");
+  TGraphAsymmErrors*	graphEMCalEtaPi0RatiopPbSystErr 	        = (TGraphAsymmErrors*)directoryEMCalEtapPb->Get("EtaToPi0YShiftedSystError"); 
   cout<<"EMCal Eta systematic"<<endl;
   graphEMCalYieldEtapPbSystErr->Print();
   cout<<"EMCal Eta statistical"<<endl;
@@ -564,6 +627,19 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
             graphPCMEMCalEtaPi0RatioSystErrYShift                 = (TGraphAsymmErrors*)directoryPCMEMCalEtapPb->Get("EtaToPi0SystError");
   } 
   
+  cout<<"Crosscheck EtatoPi ratio errors of PCMEMCal"<<endl;
+  
+  TGraphAsymmErrors* graphPCMEMCalEtaPi0RatioStatErrYShift = new TGraphAsymmErrors(histoPCMEMCalEtaPi0RatioStatErrYShift);
+  
+  cout<<"Stat err"<<endl;
+  
+  graphPCMEMCalEtaPi0RatioStatErrYShift->Print();
+  
+  cout<<"Syst err"<<endl;
+  
+  
+  graphPCMEMCalEtaPi0RatioSystErrYShift->Print();
+  
   
   TGraphAsymmErrors* graphRatioCombPCMEMCalSys        = (TGraphAsymmErrors*)graphPCMEMCalYieldPi0pPbSystErr->Clone();
   TH1D* histoRatioCombPCMEMCalStat                    = (TH1D*)histoPCMEMCalYieldPi0pPbStat->Clone();
@@ -597,6 +673,69 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   histoChargedPionspPbSystErr->Scale(0.5);
   TGraphAsymmErrors* graphChargedPionspPbSyst     =new TGraphAsymmErrors(histoChargedPionspPbSystErr);
   TGraphAsymmErrors* graphChargedPionspPbStat     =new TGraphAsymmErrors(histoChargedPionspPbStatErr);
+  // ******************************** Reading Hydro theory *******************************
+  // **************************************************************************************  
+ 
+  TFile* fileTheorypPb = new TFile(nameFileTheorypPb);
+  
+  if( ! fileTheorypPb ){
+      cout<<"The file does not exist "<<nameFileTheorypPb.Data()<<endl;
+  }
+  
+  TDirectory* directoryTheorypPb = (TDirectory*)fileTheorypPb->Get("pPb_5.023TeV");
+  
+  TGraphErrors* graphPiPlusSpecMcGill5023GeV       = (TGraphErrors*)directoryTheorypPb->Get(nameMcGillPiPlus.Data());
+  TGraphErrors* graphPiMinusSpecMcGill5023GeV      = (TGraphErrors*)directoryTheorypPb->Get(nameMcGillPiMinus.Data());
+  TGraphErrors* graphChargedPionsSpecMcGill5023GeV = (TGraphErrors*)graphPiPlusSpecMcGill5023GeV->Clone();
+  TGraphErrors* graphPi0SpecMcGill5023GeV     = (TGraphErrors*)directoryTheorypPb->Get(nameMcGillPi0.Data());
+  cout<<"Hydron before round "<<endl;
+  
+  cout<<"Pi + "<<endl;
+  graphPiPlusSpecMcGill5023GeV->Print();
+  cout<<"Pi - "<<endl;
+  graphPiMinusSpecMcGill5023GeV->Print();
+  cout<<"Pi0 "<<endl;
+  graphPi0SpecMcGill5023GeV->Print();
+  
+  
+  Double_t* YvalPiPlus  =  graphPiPlusSpecMcGill5023GeV->GetY();
+  Double_t* YerrPiPlus  =  graphPiPlusSpecMcGill5023GeV->GetEY();
+  Double_t* XvalPiPlus  =  graphPi0SpecMcGill5023GeV->GetX();
+  Double_t* XerrPiPlus  =  graphPi0SpecMcGill5023GeV->GetEX();
+  
+  Double_t* YvalPiMinus =  graphPiMinusSpecMcGill5023GeV->GetY();
+
+  Double_t* YerrPiMinus =  graphPiMinusSpecMcGill5023GeV->GetEY();
+  
+  for(Int_t iPoint = 0; iPoint < graphPi0SpecMcGill5023GeV->GetN(); iPoint++){
+      
+      Double_t val = (YvalPiPlus[iPoint] + YvalPiMinus[iPoint])/2;
+      Double_t err = TMath::Sqrt( TMath::Power( (YerrPiPlus[iPoint]/(YvalPiPlus[iPoint]*2)),2) + TMath::Power( (YerrPiMinus[iPoint]/(YvalPiMinus[iPoint]*2)),2) );
+      
+      err = val*err;
+      
+      graphChargedPionsSpecMcGill5023GeV->SetPoint(iPoint,XvalPiPlus[iPoint],val);
+      graphChargedPionsSpecMcGill5023GeV->SetPointError(iPoint,XerrPiPlus[iPoint],err);
+      
+  }
+  
+  for(Int_t iPoint = 0; iPoint < 5; iPoint++)
+      graphChargedPionsSpecMcGill5023GeV->RemovePoint(graphChargedPionsSpecMcGill5023GeV->GetN()-1);
+  
+ ////////////////////////////////Reading EPOS3 Theory //////////////////////////////////////
+  
+  TFile* fileTheoryEPOS3 = new TFile(nameFileTheoryEPOS3);
+  
+  if(   !fileTheoryEPOS3 ){
+      cout<<"The file does not exist "<<nameFileTheoryEPOS3.Data()<<endl;
+      return ;
+  }
+  
+  
+  TH1F* histoPi0EPOS3           = (TH1F*)fileTheoryEPOS3->Get(namehistoPi0EPOS3.Data());
+  TH1F* histoPiPlusEPOS3        = (TH1F*)fileTheoryEPOS3->Get(namehistoPiPlusEPOS3.Data());
+  TH1F* histoPiMinusEPOS3       = (TH1F*)fileTheoryEPOS3->Get(namehistoPiMinusEPOS3.Data());
+  
 
   // **************************************************************************************
   // ********************************* Combine Pi0 spectra ********************************
@@ -688,7 +827,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
  
   TF1* fitCombPi0pPb5023GeVPt;
   Double_t *ParameterspPb  = new Double_t[5];
-  Double_t minPt = 0.6; //0.3
+  Double_t minPt = 0.3; //0.3
   Double_t maxPt = 20.0;
   if (FittingType.CompareTo("Tsallis")==0){
     fitCombPi0pPb5023GeVPt = FitObject("l","fitInvCrossSectionPi0","Pi0");
@@ -1878,23 +2017,23 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   graphEMCalYieldEtapPb->RemovePoint(0);
   graphEMCalYieldEtapPb->RemovePoint(0);
   graphEMCalYieldEtapPb->RemovePoint(10);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
-  graphEMCalYieldPi0EtaBinningpPb->RemovePoint(10);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(0);
+  //graphEMCalYieldPi0EtaBinningpPb->RemovePoint(10);
   graphEMCalYieldEtapPb->Print();
-  graphEMCalYieldPi0EtaBinningpPb->Print();
+  //graphEMCalYieldPi0EtaBinningpPb->Print();
   
   TGraphAsymmErrors* graphEMCalYieldEtapPbYShift=(TGraphAsymmErrors*)graphEMCalYieldEtapPb->Clone("graphEMCalYieldEtapPbYShift");
-  TGraphAsymmErrors* graphEMCalYieldPi0EtaBinningpPbYShift=(TGraphAsymmErrors*)graphEMCalYieldPi0EtaBinningpPb->Clone("graphEMCalYieldPi0EtaBinningpPbYShift");
+  //TGraphAsymmErrors* graphEMCalYieldPi0EtaBinningpPbYShift=(TGraphAsymmErrors*)graphEMCalYieldPi0EtaBinningpPb->Clone("graphEMCalYieldPi0EtaBinningpPbYShift");
 
   graphEMCalYieldEtapPbYShift  = ApplyYshiftIndividualSpectra(graphEMCalYieldEtapPbYShift,fitCombEtapPb5023GeVPt); 
-  graphEMCalYieldPi0EtaBinningpPbYShift   = ApplyYshiftIndividualSpectra(graphEMCalYieldPi0EtaBinningpPbYShift,fitCombPi0pPb5023GeVPt );
+  //graphEMCalYieldPi0EtaBinningpPbYShift   = ApplyYshiftIndividualSpectra(graphEMCalYieldPi0EtaBinningpPbYShift,fitCombPi0pPb5023GeVPt );
   
   
   //PCM-EMCal:
@@ -1970,18 +2109,18 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   DrawGammaSetMarkerTGraphAsym(graphEMCalYieldEtapPbYShift,20,0.7, 2, 2, 1, kTRUE);  
   graphEMCalYieldEtapPbYShift->Draw("pe,same");
   
-  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0EtaBinningpPb,25,0.7, 4, 4, 1, kTRUE);  
-  graphEMCalYieldPi0EtaBinningpPb->Draw("pe,same");
+  //DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0EtaBinningpPb,25,0.7, 4, 4, 1, kTRUE);  
+  //graphEMCalYieldPi0EtaBinningpPb->Draw("pe,same");
  
-  DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0EtaBinningpPbYShift,24,0.7, 2, 2, 1, kTRUE);  
-  graphEMCalYieldPi0EtaBinningpPbYShift->Draw("pe,same");
+  //DrawGammaSetMarkerTGraphAsym(graphEMCalYieldPi0EtaBinningpPbYShift,24,0.7, 2, 2, 1, kTRUE);  
+  //graphEMCalYieldPi0EtaBinningpPbYShift->Draw("pe,same");
      
   TLegend* legendRpPbCombineYShiftEtaEMCal = new TLegend(0.23,0.2,0.65,0.40);
   legendRpPbCombineYShiftEtaEMCal->SetFillColor(0);
   legendRpPbCombineYShiftEtaEMCal->SetLineColor(0);
   legendRpPbCombineYShiftEtaEMCal->SetTextSize(0.03);
-  legendRpPbCombineYShiftEtaEMCal->AddEntry(graphEMCalYieldPi0EtaBinningpPb,"EMCal #pi^{0}","pef");
-  legendRpPbCombineYShiftEtaEMCal->AddEntry(graphEMCalYieldPi0EtaBinningpPbYShift,"EMCal #pi^{0} #it{y}-shifted","pef");
+  //legendRpPbCombineYShiftEtaEMCal->AddEntry(graphEMCalYieldPi0EtaBinningpPb,"EMCal #pi^{0}","pef");
+  //legendRpPbCombineYShiftEtaEMCal->AddEntry(graphEMCalYieldPi0EtaBinningpPbYShift,"EMCal #pi^{0} #it{y}-shifted","pef");
   legendRpPbCombineYShiftEtaEMCal->AddEntry(graphEMCalYieldEtapPb,"EMCal #eta","pef");
   legendRpPbCombineYShiftEtaEMCal->AddEntry(graphEMCalYieldEtapPbYShift,"EMCal #eta #it{y}-shifted","pef");
   if (FittingType.CompareTo("Tsallis")==0)  legendRpPbCombineYShiftEtaEMCal->AddEntry(fitCombEtapPb5023GeVPt,"Tsallis Fit","l");
@@ -1997,10 +2136,16 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   //******************************* Eta/Pi0 Ratio with Y-Shift ******************************************************
 
-  TGraphAsymmErrors* graphEMCalEtaPi0RatioStatErrYShift=  CalculateGraphErrRatioToOtherTGraphErr(graphEMCalYieldEtapPbYShift,graphEMCalYieldPi0EtaBinningpPbYShift,kTRUE); 
+ // TGraphAsymmErrors* graphEMCalEtaPi0RatioStatErrYShift=  //NOTE
+  
+  //CalculateGraphErrRatioToOtherTGraphErr(graphEMCalYieldEtapPbYShift,graphEMCalYieldPi0EtaBinningpPbYShift,kTRUE); 
+  
+  
+  
+  
   TGraphAsymmErrors* graphPCMEtaPi0RatioStatErrYShift=  CalculateGraphErrRatioToOtherTGraphErr(graphPCMYieldEtapPbYShift,graphPCMYieldPi0EtaBinningpPbYShift,kTRUE); 
   TGraphAsymmErrors* graphEMCalEtaPi0RatioSystErrYShift =(TGraphAsymmErrors*)graphEMCalEtaPi0RatiopPbSystErr->Clone("graphEMCalEtaPi0RatiopPbSystErrYShift");
-  TGraphAsymmErrors* graphPCMEtaPi0RatioSystErrYShift =(TGraphAsymmErrors*)graphPCMEtaPi0RatiopPbSystErr->Clone("graphPCMEtaPi0RatiopPbSystErrYShift");
+  TGraphAsymmErrors* graphPCMEtaPi0RatioSystErrYShift =(TGraphAsymmErrors*)graphPCMEtaPi0RatiopPbSystErr->Clone("graphPCMEtaPi0RatiopPbSystErrYShift"); //NOTE EMCAL changed
   graphEMCalEtaPi0RatiopPbSystErr->RemovePoint(10);
   graphEMCalEtaPi0RatiopPbSystErr->RemovePoint(10);
   graphEMCalEtaPi0RatiopPbSystErr->RemovePoint(10);
@@ -2010,20 +2155,24 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   Double_t* PCMY= graphPCMEtaPi0RatioStatErrYShift->GetY();
   Double_t* PCMX= graphPCMEtaPi0RatioStatErrYShift->GetX();
-  Double_t* EMCalY= graphEMCalEtaPi0RatioStatErrYShift->GetY();
-  Double_t* EMCalX= graphEMCalEtaPi0RatioStatErrYShift->GetX();
+  //Double_t* EMCalY= graphEMCalEtaPi0RatioStatErrYShift->GetY();
+  //Double_t* EMCalX= graphEMCalEtaPi0RatioStatErrYShift->GetX();
 
 
   for (Int_t j=0;j<graphPCMEtaPi0RatioSystErrYShift->GetN();j++){
     graphPCMEtaPi0RatioSystErrYShift->SetPoint(j,PCMX[j],PCMY[j]);
   }
-  for (Int_t k=0;k<graphEMCalEtaPi0RatiopPbSystErr->GetN();k++){
-    graphEMCalEtaPi0RatioSystErrYShift->SetPoint(k,EMCalX[k],EMCalY[k]);
-  }
+  
+  //for (Int_t k=0;k<graphEMCalEtaPi0RatiopPbSystErr->GetN();k++){
+    //graphEMCalEtaPi0RatioSystErrYShift->SetPoint(k,EMCalX[k],EMCalY[k]);
+  //}
  
 
   TH1D *histoPCMEtaPi0RatioStatErrYShift=GraphAsymErrorsToHist_withErrors(graphPCMEtaPi0RatioStatErrYShift,"histoPCMEtaPi0RatiopPbStatErrYShift");
-  TH1D *histoEMCalEtaPi0RatioStatErrYShift=GraphAsymErrorsToHist_withErrors(graphEMCalEtaPi0RatioStatErrYShift,"histoEMCalEtaPi0RatiopPbStatErrYShift");
+  TH1D *histoEMCalEtaPi0RatioStatErrYShift = (TH1D*)histoEMCalEtaPi0RatiopPb->Clone("histoEMCalEtaPi0RatiopPbStatErrYShift");
+  
+  
+  //GraphAsymErrorsToHist_withErrors(graphEMCalEtaPi0RatioStatErrYShift,"histoEMCalEtaPi0RatiopPbStatErrYShift"); //NOTE EMCAL changed
 
 
   TString fileNameOutputWeightingEtaPi0Ratio                 = Form("%s/WeightingEtaPi0Ratio.dat",outputDir.Data());
@@ -2069,20 +2218,32 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
       
 
 
-  DrawGammaSetMarkerTGraphAsym(graphPCMEtaPi0RatioStatErrYShift,20,0.7, 1, 1);  
+  DrawGammaSetMarkerTGraphAsym(graphPCMEtaPi0RatioStatErrYShift,markerStylePCM,markerSizePCM,colorPCM,colorPCM);  
   graphPCMEtaPi0RatioStatErrYShift->Draw("pe,same");
-  DrawGammaSetMarkerTGraphAsym(graphPCMEtaPi0RatioSystErrYShift,20,0.7, 1, 1, 1, kTRUE);  
+  DrawGammaSetMarkerTGraphAsym(graphPCMEtaPi0RatioSystErrYShift,markerStylePCM,markerSizePCM,colorPCM,colorPCM, 1, kTRUE);  
   graphPCMEtaPi0RatioSystErrYShift->Draw("E2,same");
  
-  DrawGammaSetMarkerTGraphAsym(graphEMCalEtaPi0RatioStatErrYShift,20,0.7, kGreen+2, kGreen+2);  
-  graphEMCalEtaPi0RatioStatErrYShift->Draw("pe,same");
-  DrawGammaSetMarkerTGraphAsym(graphEMCalEtaPi0RatioSystErrYShift,20,0.7, kGreen+2, kGreen+2, 1, kTRUE);  
+  //DrawGammaSetMarkerTGraphAsym(graphEMCalEtaPi0RatioStatErrYShift,markerStyleEMCal,markerSizeEMCal,colorEMCal,colorEMCal);  
+  //graphEMCalEtaPi0RatioStatErrYShift->Draw("pe,same");
+  DrawGammaSetMarkerTGraphAsym(graphEMCalEtaPi0RatioSystErrYShift,markerStyleEMCal,markerSizeEMCal,colorEMCal,colorEMCal, 1, kTRUE);  
   graphEMCalEtaPi0RatioSystErrYShift->Draw("E2,same");
   
-  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioStatpPb5023GeV,24,0.7,4, 4);  
+  DrawGammaSetMarkerTGraphAsym(graphPCMEMCalEtaPi0RatioStatErrYShift,markerStylePCMEMCal,markerSizePCMEMCal,colorPCMEMCal,colorPCMEMCal);  
+  graphPCMEMCalEtaPi0RatioStatErrYShift->Draw("pe,same");
+  DrawGammaSetMarkerTGraphAsym(graphPCMEMCalEtaPi0RatioSystErrYShift,markerStylePCMEMCal,markerSizePCMEMCal,colorPCMEMCal,colorPCMEMCal, 1, kTRUE);  
+  graphPCMEMCalEtaPi0RatioSystErrYShift->Draw("E2,same");
+  
+  
+  
+  
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioStatpPb5023GeV,markerStyleEta,0.7,colorCombYieldEta, colorCombYieldEta);  
   graphCombEtaPi0RatioStatpPb5023GeV->Draw("pe,same");
-  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioSyspPb5023GeV,24,0.7, 4, 4, 1, kTRUE);  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaPi0RatioSyspPb5023GeV,markerStyleEta,0.7, colorCombYieldEta, colorCombYieldEta, 1, kTRUE);  
   graphCombEtaPi0RatioSyspPb5023GeV->Draw("E2,same");
+  
+  
+  
   
  
      
@@ -2092,7 +2253,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   legendRpPbCombineYShiftEtaPi0Ratio->SetTextSize(0.04);
   legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphCombEtaPi0RatioSyspPb5023GeV,"#eta/#pi^{0} combined","pef");
   legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphPCMEtaPi0RatioSystErrYShift,"#eta/#pi^{0} PCM","pef");
-  legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphEMCalEtaPi0RatioSystErrYShift,"#eta/#pi^{0} EMCal","pef");
+  legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphEMCalEtaPi0RatioSystErrYShift,"#eta/#pi^{0} EMC","pef");
+  legendRpPbCombineYShiftEtaPi0Ratio->AddEntry(graphPCMEMCalEtaPi0RatioSystErrYShift,"#eta/#pi^{0} PCM-EMC","pef");
  
 
   
@@ -2336,9 +2498,90 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
       hPionRatio = (TH1F*)fileChargedPionsRatioPythia->Get("hPionRatio");
   }
   
+  ////////////////////////////////////////////////////////Hydro///////////////////////////////////////////////////
+  
+  
+ // TGraphErrors* hydro1 = NULL;
+ // TGraphErrors* hydro2 = NULL;
+ // TGraphErrors* hydro3 = NULL;
+ // TGraphErrors* hydro4 = NULL;
+
+ 
+  //TGraphErrors* graphRatioHydroPi0ChargedPions = CalculateRatioBetweenSpectraWithDifferentBinning(graphPi0SpecMcGill5023GeV,graphPi0SpecMcGill5023GeV,graphChargedPionsSpecMcGill5023GeV,graphChargedPionsSpecMcGill5023GeV,kTRUE,kTRUE,&hydro1,&hydro2,&hydro3,&hydro4);
+
+  //cout<<"Hydro charged "<<endl;
+  //graphChargedPionsSpecMcGill5023GeV->Print();
+  
+  //cout<<"22222"<<endl;
+  //graphPi0SpecMcGill5023GeV->Print();
   
   
   
+   TGraphErrors* graphRatioHydroPi0ChargedPions = CalculateGraphRatioToGraph( graphPi0SpecMcGill5023GeV,graphChargedPionsSpecMcGill5023GeV);
+  
+  
+  
+  ////////////////////////////////////////////////////EPOS3/////////////////////////////////////////
+   
+  TGraphErrors* graphAsymErrPi0EPOS3               =  new TGraphErrors(histoPi0EPOS3);
+  TGraphErrors* graphAsymErrPiPlusEPOS3            =  new TGraphErrors(histoPiPlusEPOS3);
+  TGraphErrors* graphAsymErrPiMinusEPOS3           =  new TGraphErrors(histoPiMinusEPOS3);
+  TGraphErrors* graphAsymErrChargedPionsEPOS3      =  (TGraphErrors*) graphAsymErrPiPlusEPOS3->Clone();
+  
+  Double_t *YvalChargedPionEPOS3        =  graphAsymErrChargedPionsEPOS3->GetY();
+  Double_t *YerrChargedPionsEPOS3    =  graphAsymErrChargedPionsEPOS3->GetEY();
+ // Double_t *YerrHighChargedPionsEPOS3   =  graphAsymErrChargedPionsEPOS3->GetEYhigh();
+  
+  for(Int_t iPoint = 0; iPoint < graphAsymErrChargedPionsEPOS3->GetN(); iPoint++){
+      
+         cout<<graphAsymErrPi0EPOS3->GetX()[iPoint] <<" "<<graphAsymErrChargedPionsEPOS3->GetX()[iPoint]<<" "<<graphAsymErrPi0EPOS3->GetX()[iPoint]-graphAsymErrChargedPionsEPOS3->GetX()[iPoint]<<endl;
+         YvalChargedPionEPOS3[iPoint] = (graphAsymErrPiPlusEPOS3->GetY()[iPoint] + graphAsymErrPiMinusEPOS3->GetY()[iPoint])/2;
+         
+         Double_t Yerr = TMath::Sqrt(  TMath::Power( ((graphAsymErrPiPlusEPOS3->GetEY()[iPoint]/graphAsymErrPiPlusEPOS3->GetY()[iPoint])/2),2) + TMath::Power( ((graphAsymErrPiMinusEPOS3->GetEY()[iPoint]/graphAsymErrPiMinusEPOS3->GetY()[iPoint])/2),2) );
+         
+        //Double_t YerrHigh = TMath::Sqrt( TMath::Power( ((graphAsymErrPiMinusEPOS3->GetErrorYhigh(iPoint)/graphAsymErrPiMinusEPOS3->GetY()[iPoint])/2),2) + TMath::Power( ((graphAsymErrPiMinusEPOS3->GetErrorYhigh(iPoint)/graphAsymErrPiMinusEPOS3->GetY()[iPoint])/2),2) );
+         
+        YerrChargedPionsEPOS3[iPoint]  = Yerr*YvalChargedPionEPOS3[iPoint];
+        //YerrHighChargedPionsEPOS3[iPoint] = YerrHigh*YvalChargedPionEPOS3[iPoint];
+        
+         
+  }
+      
+  
+  
+  TGraphErrors* Pi0EPOS3Stat = NULL;
+  TGraphErrors* Pi0EPOS3Syst = NULL;
+  TGraphErrors* ChargedPionsEPOS3Stat = NULL;
+  TGraphErrors* ChargedPionsEPOS3Syst = NULL;
+
+ 
+  //TGraphErrors* graphAsymChargedPionstoPi0EPOS3StatSyst = CalculateRatioBetweenSpectraWithDifferentBinning(graphAsymErrPi0EPOS3,graphAsymErrPi0EPOS3,graphAsymErrChargedPionsEPOS3,graphAsymErrChargedPionsEPOS3,kTRUE,kTRUE,&Pi0EPOS3Stat,&Pi0EPOS3Syst,&ChargedPionsEPOS3Stat,&ChargedPionsEPOS3Syst);
+
+  
+  TGraphErrors* graphAsymChargedPionstoPi0EPOS3Stat = CalculateGraphRatioToGraph( graphAsymErrPi0EPOS3,graphAsymErrChargedPionsEPOS3);
+  
+  
+  
+  cout<<"EPOS3 Pi0"<<endl;
+  
+   graphAsymErrPi0EPOS3->Print();
+  
+ // cout<<"EPOS3 Pi+"<<endl;
+ // graphAsymErrPiPlusEPOS3->Print();
+ // cout<<"EPOS Pi-"<<endl;
+ // graphAsymErrPiMinusEPOS3->Print();
+  cout<<"Charged pions"<<endl;
+  //ls 
+  graphAsymErrPi0EPOS3->Print();
+  
+  
+  
+  
+ 
+  
+
+ 
+ // TGraphErrors* graphRatioHydroPi0ChargedPions = CalculateRatioBetweenSpectraWithDifferentBinning(graphPi0SpecMcGill5023GeV,graphPi0SpecMcGill5023GeV,graphChargedPionsSpecMcGill5023GeV,graphChargedPionsSpecMcGill5023GeV,kTRUE,kTRUE,&hydro1,&hydro2,&hydro3,&hydro4);
   
   
   
@@ -2393,7 +2636,10 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   
   DrawGammaSetMarkerTGraphErr(graphRatioPi0ChargedPionsSystErr,20,1.0, kBlue, kBlue, 1, kTRUE);
   DrawGammaSetMarkerTGraphErr(graphRatioPi0ChargedPionsStatErr,20,1.0, kBlue, kBlue);
+  
+  DrawGammaSetMarkerTGraphErr(graphRatioHydroPi0ChargedPions,20,1.0,kViolet,kViolet,1,kTRUE);
 
+ DrawGammaSetMarkerTGraphErr(graphAsymChargedPionstoPi0EPOS3Stat,20,1.0,kGreen,kGreen,1,kTRUE);
   
   if( hPionRatio ) {
   DrawGammaSetMarker(hPionRatio,20,1.0, kRed, kRed);
@@ -2402,7 +2648,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   //  canvasRatioAllppreferences->SetLogy();
   TH2F * histoRatioPi0ChargedPions;
-  histoRatioPi0ChargedPions = new TH2F("histoRatioPi0ChargedPions","histo2DRatioAllppreferences",1000,.2,30.,1000,0.51,1.69);
+  histoRatioPi0ChargedPions = new TH2F("histoRatioPi0ChargedPions","histo2DRatioAllppreferences",1000,.2,30.,1000,0.41,2.45);
   SetStyleHistoTH2ForGraphs(histoRatioPi0ChargedPions, "#it{p}_{T} (GeV/#it{c})","pi^{0}/pi^{+/-}", 0.13,0.13, 0.13,0.13, 0.5,.5, 502, 505);
  
  
@@ -2422,6 +2668,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   
   if(hPionRatio)hPionRatio->Draw("p,same,e");
   
+  if(graphRatioHydroPi0ChargedPions)graphRatioHydroPi0ChargedPions->Draw("p,same,e");
+  graphAsymChargedPionstoPi0EPOS3Stat->Draw("p,same,e");
   
   
   TLegend* legendPi0ChargedPionsRatioPythia = new TLegend(0.2,0.22,0.5,0.4);
@@ -2431,8 +2679,15 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   legendPi0ChargedPionsRatioPythia->SetNColumns(2);
   legendPi0ChargedPionsRatioPythia->AddEntry(graphRatioPi0ChargedPionsSystErr,"Data","efp");
   if (hPionRatio) legendPi0ChargedPionsRatioPythia->AddEntry(hPionRatio,"Pythia","efp");
+  if(graphRatioHydroPi0ChargedPions) legendPi0ChargedPionsRatioPythia->AddEntry(graphRatioHydroPi0ChargedPions,"Hydro","efp");
   legendPi0ChargedPionsRatioPythia->Draw("same");
   
+   if(graphAsymChargedPionstoPi0EPOS3Stat) legendPi0ChargedPionsRatioPythia->AddEntry(graphAsymChargedPionstoPi0EPOS3Stat,"EPOS3","efp");
+  legendPi0ChargedPionsRatioPythia->Draw("same");
+  
+  
+
+  graphRatioHydroPi0ChargedPions->Print();
   
           
   CanvasRatioPi0ChargedPions->Print(Form("%s/Comparison_ChargedPions.%s",outputDir.Data(),suffix.Data()));
@@ -2512,6 +2767,28 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   
 
   fPaperPlots.Close();
+  
+  
+  TFile fCompareToChargedPions(Form("%s/CompareToChargedPions_%s.root",outputDir.Data(), dateForOutput.Data()),"RECREATE");
+  graphRatioPi0ChargedPionsSystErr->Write("graphRatioPi0ChargedPionsSystErr");
+  graphRatioPi0ChargedPionsStatErr->Write("graphRatioPi0ChargedPionsStatErr");
+  histoChargedPionspPbStatErr->Write("histoChargedPionspPbStatErr");
+  histoChargedPionspPbSystErr->Write("histoChargedPionspPbSystErr");
+  graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedCopy->Write("graphCombPi0pPbSyst");
+  histoCombPi0InvCrossSectionStatpPb5023GeVYShifted->Write("graphCombPi0pPbStat");
+  hPionRatio->Write("histoRatioPi0ChargedPionsPythia");
+  graphCombPi0InvCrossSectionStatpPb5023GeVYShiftedRebin->Write("graphCombPi0InvCrossSectionStatpPb5023GeVYShiftedRebin");
+  graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin->Write("graphCombPi0InvCrossSectionSyspPb5023GeVYShiftedRebin");
+  graphChargedPionspPbStatErrRebin->Write("graphChargedPionspPbStatErrRebin");
+  graphChargedPionspPbSystErrRebin->Write("graphChargedPionspPbSystErrRebin");
+  
+  
+  
+  
+  
+  fCompareToChargedPions.Close();
+  
+
 
   
   

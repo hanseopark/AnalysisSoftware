@@ -50,6 +50,7 @@ extern TSystem*    gSystem;
 extern TMinuit*      gMinuit;
 
 
+TGraphErrors* Eta2Pi0dAu();
 
 void SetEx(TGraphAsymmErrors* gae, Double_t Ex)
 {
@@ -66,8 +67,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   //input files
 							        //PaperPlots_Tsallis_2017_02_09.root
-  TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_06_14.root";
-  TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_06_14.root";
+  TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_08_18.root";
+  TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_06_19.root";
   TString fileNamePeaks                  = "InputMakePaperPlots/PaperPlotsPeaks_2016_11_28.root";
   TString fileNameEPOS3                  = "InputMakePaperPlots/pi0_eta_EPOS3.root";
   TString fileNameTAPS                   = "InputMakePaperPlots/TAPS_eta2pi0.root";
@@ -127,7 +128,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   
    
-  Double_t pi0PtMin =  0.6;
+  Double_t pi0PtMin =  0.3;
   Double_t pi0PtMax = 20.0;
   
   
@@ -366,6 +367,12 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
  TDirectoryFile* directoryRpPb = (TDirectoryFile*)fileCGC->Get("RpPb"); 
 
  TGraphAsymmErrors* graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14 = (TGraphAsymmErrors*)directoryRpPb->Get("graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14");
+ 
+ /////////////////////read eta2pi0_d-Au of PHENIX
+ 
+ TGraphErrors* graphEta2Pi0dAuPhenix = Eta2Pi0dAu();
+ 
+ 
   
  
  ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -947,7 +954,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   c4a->SetLogx(); 
   // c4a->SetLogy();
   TH2F * hist4a;
-  if (TAPS)   hist4a = new TH2F("hist4a","hist4a",1000,0.09,20.,1000,0.01,.99   );
+  if (TAPS)   hist4a = new TH2F("hist4a","hist4a",1000,0.09,20.,1000,0.01,1.2   );
 //else   hist4a = new TH2F("hist4a","hist4a",1000,0.6,20.,1000,0.0,.99   );
   else hist4a = new TH2F("hist4a","hist4a",1000,0.3,20.,1000,0.0,.99   );
   //  hist4a = new TH2F("hist4a","hist4a",1000,0.03,7.,1000,0.007,1.   );
@@ -972,6 +979,14 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   }  
   
    if (!EPOS || (EPOS && TAPS)) mTScaling->Draw("same"); //NOTE TEMP
+   
+   
+   if( graphEta2Pi0dAuPhenix ) {
+       
+        DrawGammaSetMarkerTGraphErr(graphEta2Pi0dAuPhenix, 24, 1.2,kRed, kRed);
+        graphEta2Pi0dAuPhenix->Draw("same,zp");
+       
+   }
  
    if (TAPS){
      DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.4,kGreen, kGreen);
@@ -1013,7 +1028,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   
   
-  TLatex * lt4a = new TLatex(.12,0.92,"ALICE");
+  TLatex * lt4a = new TLatex(.12,1.12,"ALICE");
   lt4a->SetTextColor(kBlack);
   lt4a->SetTextSize(TextSize);
   lt4a->SetTextFont(Font);
@@ -1048,7 +1063,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   if (TAPS) {
     
-     TLatex * lt4b = new TLatex(0.12,0.43,"CERES-TAPS #sqrt{#it{s}_{NN}} = 29.1 GeV");
+     TLatex * lt4b = new TLatex(0.12,0.53,"CERES-TAPS #sqrt{#it{s}_{NN}} = 29.1 GeV");
      lt4b->SetTextColor(kBlack);
      lt4b->SetTextSize(TextSize);
      lt4b->SetTextFont(Font);
@@ -1065,7 +1080,26 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
      leg4b->Draw("same");}
   }  
   
-  
+  if( graphEta2Pi0dAuPhenix ) {
+      
+      
+     TLatex * lt4c = new TLatex(2.2,1.12,"PHENIX");
+     lt4c->SetTextColor(kBlack);
+     lt4c->SetTextSize(TextSize);
+     lt4c->SetTextFont(Font);
+     lt4c->Draw();
+     
+     TLegend* leg4c;
+     leg4c = new TLegend(0.6,0.85,0.9,0.9);
+     leg4c->SetFillColor(0);
+     leg4c->SetLineColor(0);
+     leg4c->SetTextFont(Font);
+     leg4c->SetTextSize(0.041);
+     leg4c->AddEntry( graphEta2Pi0dAuPhenix,"d-Au, #sqrt{#it{s}_{NN}} = 200 GeV","p");  
+     leg4c->Draw("same");
+      
+      
+  }
 
 
 
@@ -2895,3 +2929,54 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	cout << "works!"<<endl;
 }
 
+
+TGraphErrors* Eta2Pi0dAu(){
+    
+    
+//     Centrality & $\pt$ (GeV/$c$) & $\eta/\pi^0$ & tot. err. & stat. err. + error A & error B & error C \\\hline
+//        & 2.25 & 0.420 & 0.038 & 0.028 & 0.025 & 0 \\
+//        & 2.75 & 0.472 & 0.044 & 0.033 & 0.028 & 0 \\
+//        & 3.25 & 0.383 & 0.045 & 0.039 & 0.023 & 0 \\
+//        & 3.75 & 0.472 & 0.034 & 0.018 & 0.028 & 0 \\
+//        & 4.25 & 0.478 & 0.033 & 0.017 & 0.029 & 0 \\
+//        & 4.75 & 0.483 & 0.035 & 0.020 & 0.029 & 0 \\
+// 0-88\% & 5.25 & 0.465 & 0.037 & 0.025 & 0.028 & 0 \\
+//  (MB)  & 5.75 & 0.510 & 0.043 & 0.030 & 0.031 & 0 \\
+//        & 6.5 & 0.552 & 0.048 & 0.034 & 0.033 & 0 \\
+//        & 7.5 & 0.478 & 0.070 & 0.064 & 0.029 & 0 \\
+//        & 8.5 & 0.499 & 0.092 & 0.087 & 0.030 & 0 \\
+//        & 9.5 & 0.677 & 0.118 & 0.111 & 0.041 & 0 \\
+//        & 11 & 0.609 & 0.124 & 0.119 & 0.037 & 0 \\ \hline
+//     
+     Int_t nPoints = 13;
+    
+     Double_t xval[] = { 2.25, 2.75, 3.25, 3.75, 4.25, 
+                         4.75, 5.25, 5.75, 6.5,  7.5,  
+                         8.5,  9.5,  11};
+                         
+     Double_t yval[] = { 0.420, 0.472, 0.383, 0.472, 0.478,
+                         0.483, 0.465, 0.510, 0.552, 0.478,
+                         0.499, 0.677, 0.609 };
+                         
+//      Double_t xErr[] = { 0.25, 0.25, 0.25, 0.25, 0.25,
+//                          0.25, 0.25, 0.25, 0.5,  0.5,
+//                          0.5,  0.5, 1.0 };
+//                          
+      Double_t xErr[] = { 0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0, 0.0, 0.0,
+                          0.0, 0.0, 0.0 };
+    
+     Double_t yErr[] = { 0.038, 0.044, 0.045, 0.034, 0.033,
+                         0.035, 0.037, 0.043, 0.048, 0.070,
+                         0.092, 0.118, 0.124 };
+     
+    
+ 
+    TGraphErrors* graphEta2Pi0Ratio = new TGraphErrors(nPoints,xval,yval,xErr,yErr);
+    
+    
+    
+    return graphEta2Pi0Ratio;
+    
+    
+}
