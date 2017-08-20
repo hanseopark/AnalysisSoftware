@@ -294,9 +294,12 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                     cout << __LINE__ << endl;
                 }
                 if(i==2){
+                  cout << __LINE__ << endl;
                     histoEtaInvCrossSection[5]          = (TH1D*)directoryEta[5]->Get("InvCrossSectionEta");
                     graphEtaInvCrossSectionStat[5]      = new TGraphAsymmErrors(histoEtaInvCrossSection[5]);
                     graphEtaInvCrossSectionSys[5]       = (TGraphAsymmErrors*)directoryEta[5]->Get("InvCrossSectionEtaSys");
+                    while(graphEtaInvCrossSectionSys[i]->GetX()[0] < 4.) graphEtaInvCrossSectionSys[i]->RemovePoint(0);
+                    while(graphEtaInvCrossSectionStat[i]->GetX()[0] < 4.) graphEtaInvCrossSectionStat[i]->RemovePoint(0);
                     cout << __LINE__ << endl;
                 }
             
@@ -311,11 +314,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
 //                     graphEtaToPi0Sys[i]            ->RemovePoint(0);
                     graphEtaToPi0Sys[i]             = (TGraphAsymmErrors*)directoryEta[i]->Get("EtaToPi0RatioEMCalSys");
                     while(graphEtaToPi0Sys[i]->GetX()[graphEtaToPi0Sys[i]->GetN()-1] > 30.) graphEtaToPi0Sys[i]->RemovePoint(graphEtaToPi0Sys[i]->GetN()-1);
-                    graphEtaToPi0Sys[i]            ->RemovePoint(0);
-                    graphEtaToPi0Sys[i]            ->RemovePoint(0);
-                    graphEtaToPi0Sys[i]            ->RemovePoint(0);
-                    graphEtaToPi0Sys[i]            ->RemovePoint(0);
-                    graphEtaToPi0Sys[i]            ->RemovePoint(0);
+                    
+                    
                     
                     graphEtaToPi0Stat[i]            ->Print();
                     graphEtaToPi0Sys[i]             ->Print();
@@ -496,7 +496,6 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
         if(i!=3)
         statErrorCollectionEtaToPi0[i]                  = (TH1D*)histoEtaToPi0Stat[i]->Clone(Form("statErr%sEtaToPi0",nameMeasGlobal[i].Data()));
     }
-
     // definition of array of TGraphAsymmErrors (NULL - means we have no measurement at this energy for this rec-method)
     // for systematic error from respective method
     TGraphAsymmErrors* sysErrorCollection[11];
@@ -529,10 +528,22 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                                                     10.0,11.0,12.0,13.0,14.0,16.0,18,
                                                     20.0,25.0
                                                     };
+  // with daniel
+    // Double_t xPtLimitsEta[51]                      =  { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
+    //                                                 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,14.,15., 16.0 ,18,
+    //                                                 20.0,25.0,35.
+    //                                                 };
+  // with Evi
     Double_t xPtLimitsEta[51]                      =  { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
-                                                    3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,14.,15., 16.0 ,18,
+                                                    3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,13.,14,15., 16.0 ,18,
                                                     20.0,25.0,35.
                                                     };
+  // with daniel
+    // Double_t xPtLimitsEtaToPi0[51]                      =  { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
+    //                                                 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,14.,15., 16.0 ,18,
+    //                                                 20.0,25.0,35.
+    //                                                 };
+  // with Evi
     Double_t xPtLimitsEtaToPi0[51]                      =  { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                     3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,14.,15., 16.0 ,18,
                                                     20.0,25.0,35.
@@ -553,8 +564,8 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
     Int_t offSetsEta[11]                           =  {0,   4,     1,      2,        1,           0,   0,     0,      0,        0, 0};
     Int_t offSetsSysEta[11]                        =  {1,   4,    7,      3,        4,           0,   0,     0,      2,        0, 0};
     if(!useDanielmeas){
-      offSetsEta[2]    = 2;
-      offSetsSysEta[2] = 2;
+      offSetsEta[2]    = 4;
+      offSetsSysEta[2] = 9;
     }
                                                     // pcm, phos, emcal, pcmphos, pcmemcal
                                                     //  0    1      2       3         4
@@ -570,7 +581,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
       nBinsPi0 = 48;
     Int_t nBinsEta = 17;
     if(!useDanielmeas)
-      nBinsEta = 23;
+      nBinsEta = 24;
 
     //    **********************************************************************************************************************
     //    ******************************************* Calculation of spectrum including EMCal only *****************************
@@ -643,7 +654,7 @@ void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM     = "CombinationIn
                                                                                                    fileNameOutputWeightingEta,"7TeV", "Eta", kTRUE,
                                                                                                    0x0, fileInputCorrFactors
                                                                                                 );
-    // return;
+    return;
 
     graphCombEtaInvCrossSectionStatPCMEMCPHOS->Print();
     

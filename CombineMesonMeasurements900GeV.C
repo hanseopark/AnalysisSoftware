@@ -69,7 +69,8 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
 }
 
 // void CombineMesonMeasurements900GeV_V3(   TString fileNamePCM     = "CombinationInput900GeV/data_PCMResultsFullCorrection_PP_NoBinShifting_newComb.root",
-void CombineMesonMeasurements900GeV(    TString fileNamePCM     = "/home/nschmidt/AnalysisResults/pp/900GeV/PCM/data_PCMResultsFullCorrection_PP_20170225.root",
+// void CombineMesonMeasurements900GeV(    TString fileNamePCM     = "/home/nschmidt/AnalysisResults/pp/900GeV/PCM/data_PCMResultsFullCorrection_PP_20170225.root",
+void CombineMesonMeasurements900GeV(    TString fileNamePCM     = "/home/nschmidt/AnalysisResults/pp/900GeV/PCM/data_PCMResultsFullCorrection_PP_20170817.root",
                                         TString fileNamePHOS    = "/home/nschmidt/AnalysisResults/pp/900GeV/PHOS/PHOS_pp_pi0_900GeV_noBWcorr_K0Scorr_20111206.root",
                                         TString fileNameEMCal   = "/home/nschmidt/AnalysisResults/pp/900GeV/EMCal/data_EMCAL-EMCALResultsFullCorrection_PP_20170420.root",
                                         TString fileNamePCMEMCal= "/home/nschmidt/AnalysisResults/pp/900GeV/PCM-EMC/data_PCM-EMCALResultsFullCorrection_PP_20170420.root",
