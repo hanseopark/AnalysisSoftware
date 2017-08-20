@@ -1525,8 +1525,8 @@
                 corrFracPCMPHOS_PCM_PCMPHOS         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_PCM-PCMPHOS");
                 corrFracPCMDal_PCMDal_PCMPHOS       = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMDalitz_PCMDalitz-PCMPHOS");
                 corrFracPCMPHOS_PCMDal_PCMPHOS      = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_PCMDalitz-PCMPHOS");
-                corrFracPHOS_PCMPHOS_PHOS           = 0.7;
-                corrFracPCMPHOS_PCMPHOS_PHOS        = 0.8;
+                corrFracPHOS_PCMPHOS_PHOS           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PHOS_PCMPHOS-PHOS");
+                corrFracPCMPHOS_PCMPHOS_PHOS        = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_PCMPHOS-PHOS");
                 if (mesonType.CompareTo("Pi0RpPb") == 0){
                     corrFracEMC_PCMPHOS_EMC         = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_EMC-PCMPHOS");
                     corrFracPCMPHOS_PCMPHOS_EMC     = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_EMC-PCMPHOS");

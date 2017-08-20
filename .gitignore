@@ -4,3 +4,12 @@
 *.config
 *.files
 *.includes
+eps/
+*/tmp/*
+*.rootmap
+DirectPhotonPlots/
+*.patch
+*.diff
+*.ods
+*.kate-swp
+*.eps

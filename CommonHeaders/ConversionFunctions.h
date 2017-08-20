@@ -3295,6 +3295,7 @@
                     unCorrSys.push_back(uncorr);
                     SysErrDatAverOut << uncorr << endl;
                 }
+                cout << "made it here: " << __LINE__ << endl;
                 SysErrDatAverOut.close();
             } else {
                 cout << "****************************************************************" << endl;
@@ -3306,6 +3307,7 @@
         }
 
         for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){
+            cout << "calculating point: "<< iPoint << "\t" << xBins[iPoint] << endl;
             RpPb[iPoint]            = ypPbBins[iPoint] / (tAA* yPPBins[iPoint]);
 
             (*graphRpPbSystErr)->SetPoint( iPoint, xBins[iPoint], RpPb[iPoint]);
@@ -3335,6 +3337,7 @@
             (*graphRpPbSystErr)->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYSystlow,errYSysthigh);
             graphRpPbCombErr->SetPointError(iPoint, xErrlow[iPoint],xErrhigh[iPoint],errYComblow,errYCombhigh);
         }
+        cout << "finished RpA calc" << endl;
 
         return graphRpPbCombErr;
 
@@ -4284,8 +4287,12 @@
     TGraphAsymmErrors* AddErrorsOfGraphsQuadratically (TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB){
         TGraphAsymmErrors* graphReturn      = (TGraphAsymmErrors*) graphA->Clone("summedErrors");
         for (Int_t i = 0; i < graphReturn->GetN(); i++){
-            Double_t newErrorH              = TMath::Sqrt(graphA->GetErrorYhigh(i)*graphA->GetErrorYhigh(i)+graphB->GetErrorYhigh(i)*graphB->GetErrorYhigh(i));
-            Double_t newErrorL              = TMath::Sqrt(graphA->GetErrorYlow(i)*graphA->GetErrorYlow(i)+graphB->GetErrorYlow(i)*graphB->GetErrorYlow(i));
+            Double_t err1H                  = graphA->GetErrorYhigh(i)/graphA->GetY()[i];
+            Double_t err2H                  = graphB->GetErrorYhigh(i)/graphB->GetY()[i];
+            Double_t err1L                  = graphA->GetErrorYlow(i)/graphA->GetY()[i];
+            Double_t err2L                  = graphB->GetErrorYlow(i)/graphB->GetY()[i];
+            Double_t newErrorH              = TMath::Sqrt(err1H*err1H+err2H*err2H)*graphReturn->GetY()[i];
+            Double_t newErrorL              = TMath::Sqrt(err1L*err1L+err2L*err2L)*graphReturn->GetY()[i];
             graphReturn->SetPointEYhigh(i, newErrorH);
             graphReturn->SetPointEYlow(i, newErrorL);
         }
@@ -4298,8 +4305,14 @@
     TGraphAsymmErrors* Add3ErrorsOfGraphsQuadratically (TGraphAsymmErrors* graphA, TGraphAsymmErrors* graphB, TGraphAsymmErrors* graphC){
         TGraphAsymmErrors* graphReturn      = (TGraphAsymmErrors*) graphA->Clone("summedErrors");
         for (Int_t i = 0; i < graphReturn->GetN(); i++){
-            Double_t newErrorH              = TMath::Sqrt(graphA->GetErrorYhigh(i)*graphA->GetErrorYhigh(i)+graphB->GetErrorYhigh(i)*graphB->GetErrorYhigh(i)+graphC->GetErrorYhigh(i)*graphC->GetErrorYhigh(i));
-            Double_t newErrorL              = TMath::Sqrt(graphA->GetErrorYlow(i)*graphA->GetErrorYlow(i)+graphB->GetErrorYlow(i)*graphB->GetErrorYlow(i)+graphC->GetErrorYlow(i)*graphC->GetErrorYlow(i));
+            Double_t err1H                  = graphA->GetErrorYhigh(i)/graphA->GetY()[i];
+            Double_t err2H                  = graphB->GetErrorYhigh(i)/graphB->GetY()[i];
+            Double_t err3H                  = graphC->GetErrorYhigh(i)/graphC->GetY()[i];
+            Double_t err1L                  = graphA->GetErrorYlow(i)/graphA->GetY()[i];
+            Double_t err2L                  = graphB->GetErrorYlow(i)/graphB->GetY()[i];
+            Double_t err3L                  = graphC->GetErrorYlow(i)/graphC->GetY()[i];
+            Double_t newErrorH              = TMath::Sqrt(err1H*err1H+err2H*err2H+err3H*err3H)*graphReturn->GetY()[i];
+            Double_t newErrorL              = TMath::Sqrt(err1L*err1L+err2L*err2L+err3L*err3L)*graphReturn->GetY()[i];
             graphReturn->SetPointEYhigh(i, newErrorH);
             graphReturn->SetPointEYlow(i, newErrorL);
         }

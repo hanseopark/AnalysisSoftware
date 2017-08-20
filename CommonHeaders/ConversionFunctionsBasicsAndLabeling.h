@@ -103,13 +103,12 @@
     Double_t xSection8TeVT0AND      = 25.5*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/583
     Double_t xSection8TeVT0ErrUp    = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/583
     Double_t xSection8TeVT0ErrDown  = 0.6;         // from https://aliceinfo.cern.ch/Notes/node/583
-    // pp 13 TeV  
+    // pp 13 TeV
     Double_t xSection13TeVV0AND     = 57.8*1e-3;   //
     Double_t xSection13TeVErrUp     = 1.27;         //
     Double_t xSection13TeVErrDown   = 1.27;         //
     Double_t xSection13TeVINEL      = 77.6*1e-3;   //
     Double_t xSection13TeVINELErr   = 1.0*1e-3;   //
-
 
     // pPb  5TeV
     Double_t xSection5023GeVINELpPb = 70*1e-3;
