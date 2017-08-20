@@ -50,46 +50,10 @@ function GiveBinning5TeV()
      echo "how many p_t bins do you want to use for the pi0? 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c)";
 
      read answer
-         if [ $answer = 19 ]; then
-         echo "19 bins --> max p_t = XX GeV/c ...";
+     if [ $answer -gt 19 ] && [ $answer -lt 40 ]; then
+       echo "$answer bins --> max p_t = XX GeV/c ...";
          correctPi0=1
-         BinsPtPi0=19
-     elif [ $answer = 20 ]; then
-         echo "20 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-         BinsPtPi0=20
-     elif [ $answer = 21 ]; then
-         echo "21 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=21
-     elif [ $answer = 22 ]; then
-         echo "22 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=22
-     elif [ $answer = 23 ]; then
-         echo "23 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=23
-     elif [ $answer = 24 ]; then
-         echo "24 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=24
-     elif [ $answer = 31 ]; then
-         echo "31 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=31
-     elif [ $answer = 32 ]; then
-         echo "32 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=32
-     elif [ $answer = 33 ]; then
-         echo "33 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=33
-     elif [ $answer = 34 ]; then
-         echo "34 bins --> max p_t = XX GeV/c ...";
-         correctPi0=1
-        BinsPtPi0=34
+         BinsPtPi0=$answer
      else
          echo "pi0 binning was not set correctly. please try again.";
          correctPi0=0
@@ -97,58 +61,10 @@ function GiveBinning5TeV()
 
      echo "how many p_t bins do you want to use for the eta? 7(XX GeV/c) - 13(XX GeV/c).. 19,20,21,22 (XX GeV/c)";
      read answer
-     if [ $answer = 7 ]; then
-         echo "7 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=7
-     elif [ $answer = 8 ]; then
-         echo "8 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=8
-     elif [ $answer = 9 ]; then
-         echo "9 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=9
-     elif [ $answer = 10 ]; then
-         echo "10 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=10
-     elif [ $answer = 11 ]; then
-         echo "11 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=11
-     elif [ $answer = 12 ]; then
-         echo "12 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=12
-     elif [ $answer = 13 ]; then
-         echo "13 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=13
-     elif [ $answer = 15 ]; then
-         echo "15 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=15
-     elif [ $answer = 17 ]; then
-         echo "17 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=17
-     elif [ $answer = 19 ]; then
-         echo "19 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=19
-     elif [ $answer = 20 ]; then
-         echo "20 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=20
-     elif [ $answer = 21 ]; then
-         echo "21 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=21
-     elif [ $answer = 22 ]; then
-         echo "22 bins --> max p_t = XX GeV/c ...";
-         correctEta=1
-         BinsPtEta=22
+     if [ $answer -gt 4 ] && [ $answer -lt 25 ]; then
+        echo "$answer bins --> max p_t = XX GeV/c ...";
+        correctEta=1
+        BinsPtEta=$answer
      else
         echo "eta binning was not set correctly. please try again.";
         correctEta=0
