@@ -496,7 +496,7 @@ void ProduceTheoryGraphsPP(){
     Double_t muOneEta5023GeV[200];
     Double_t muTwoEta5023GeV[200];
     Int_t nlinesNLOEta5023GeV                       = 0;
-    Bool_t fillAllMuScalesEta5023GeV                = kFALSE;
+    Bool_t fillAllMuScalesEta5023GeV                = kTRUE;
 
     TString fileNameNLOEta5023GeV                   = "ExternalInput/Theory/ALICENLOcalcEtaVogelsang5023GeV_AESSS_CT10.dat"; // currently only mu = 1pt
     ifstream  fileNLOEta5023GeV;

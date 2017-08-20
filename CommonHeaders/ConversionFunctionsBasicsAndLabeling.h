@@ -3972,8 +3972,9 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
-    Double_t ReturnCorrectXSection ( TString energy,
-                                    Int_t selTrig){
+    Double_t ReturnCorrectXSection (    TString energy,
+                                        Int_t selTrig
+                                   ){
 
         Double_t xSectionInt = 0;
         if(energy.CompareTo("900GeV") == 0){
@@ -3987,17 +3988,9 @@
                 xSectionInt = xSection900GeV;
                 cout << "V0OR xSection taken: \t" << xSectionInt << endl;
             }
-        } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 ){
-            if (selTrig == 1){
-                xSectionInt = xSection5023GeVV0AND;
-                cout << "V0AND xSection taken: \t" << xSectionInt << endl;
-            } else if (selTrig == 3){
-                xSectionInt = xSection5023GeVINELpPb;
-                cout << "INEL xSection taken: \t" << xSectionInt << endl;
-            }
         } else if(energy.CompareTo("2.76TeV") == 0){
             if (selTrig == 1){
-                xSectionInt = xSection2760GeVV0AND;
+                xSectionInt = xSection2760GeVErr;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
             } else if (selTrig == 3){
                 xSectionInt = xSection2760GeVINEL*1e-12;
@@ -4005,6 +3998,14 @@
             } else {
                 xSectionInt = xSection2760GeV;
                 cout << "V0OR xSection taken: \t" << xSectionInt << endl;
+            }
+        } else if( energy.CompareTo("5TeV") == 0 || energy.CompareTo("5.02TeV") == 0 || energy.CompareTo("5.023TeV") == 0 || energy.CompareTo("5023GeV") == 0 ){
+            if (selTrig == 1){
+                xSectionInt = xSection5023GeVV0AND;
+                cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+            } else if (selTrig == 3){
+                xSectionInt = xSection5023GeVINEL;
+                cout << "INEL xSection taken: \t" << xSectionInt << endl;
             }
         } else if(energy.CompareTo("7TeV") == 0){
             if (selTrig == 1){
@@ -4034,6 +4035,9 @@
             if (selTrig == 1){
                 xSectionInt = xSection13TeVV0AND;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
+            } else if (selTrig == 3){
+                xSectionInt = xSection13TeVINEL;
+                cout << "INEL xSection taken: \t" << xSectionInt << endl;
             } else {
                 cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
             }
@@ -4048,6 +4052,7 @@
         }
         return xSectionInt;
     }
+
 
     //************************************************************************************
     //* Decodes from the mode the respective reco process and return correct label + details
