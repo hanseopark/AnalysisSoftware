@@ -1020,6 +1020,201 @@ void ProduceTheoryGraphsPPb(){
         graphRpPbEPPS16_DSS14->SetPointError(iPt, 0.01, 0.01, errDown, errUp);
     }
     graphRpPbEPPS16_DSS14->Print();
+    
+    
+    //////////////////////////////////////////ColorGlassCondensate predictions for pi0 spectrum ///////////////////////////////
+    
+    //Predictions sent by Heikki Mäntysaari [heikki.mantysaari@jyu.fi]
+    
+    
+    
+    TString fileNameCGCPi0y0pA5020     				= "ExternalInputpPb/Theory/CGC/pA_pi0_y0_sqrts_5020";
+    
+    
+    ifstream 		inCGCPi0;
+         
+    inCGCPi0.open(fileNameCGCPi0y0pA5020.Data(),ios_base::in);
+    cout<<"*********************CGC spectrum******************"<<fileNameCGCPi0y0pA5020.Data()<<endl;
+    
+    
+    Int_t nlinesCGCPi0 = 0;
+    
+    Double_t xValue[100];
+    Double_t yValue[100];
+    
+    string currentline;
+    
+    while( getline(inCGCPi0, currentline) && nlinesCGCPi0 < 100 ) {
+        
+         TString temp1        = "";
+         TString temp2        = "";
+         //cout<<currentline<<" hola "<<nlinesCGCPi0<<endl;
+         istringstream cs(currentline); // controll stream
+         cs >> temp1>>temp2;
+         
+        if( !temp1.Contains("#") ) {
+            xValue[nlinesCGCPi0] = temp1.Atof();
+            yValue[nlinesCGCPi0] = temp2.Atof();
+            cout << nlinesCGCPi0 <<"\t"<<xValue[nlinesCGCPi0]<<"\t"<<yValue[nlinesCGCPi0]<<endl;
+            
+             nlinesCGCPi0++;
+            
+        }
+        
+       
+	
+    }
+    
+    TGraph* grahCGCPi0y0pA5020            = new TGraph(nlinesCGCPi0,xValue,yValue); 
+    
+    /*********************************************************************************************************************/
+    /* Reading theory from  Ilkka with ct14, epps16, dss14 ***************/
+    /* at 5.02 TeV in -0.335 < y_CM < 1.265 (|y_LAB|<0.8).
+    /* Calculations in NLO pQCD with CT14+EPPS16+DSS14, based on Nucl.Phys.B883 
+    /* (2014) 615-628 but with updated (n)PDFs and FFs. From I. Helenius*/
+    
+    
+
+  TString fileNameIlkkapPb5020_pi0[4] =  {"pPb5020_pi0_ct14_epps16_dss14_scale_err.dat","pPb5020_pi0_ct14_epps16_dss14_err.dat",
+                                          "pPb5020_pi0_ct14_epps16_err_dss14.dat","pPb5020_pi0_ct14_errSym_epps16_dss14.dat"};
+  
+  
+  Int_t iIlkkaFiles = 4;
+  Int_t currentIlkkaFile = 0;
+  Double_t xValueIlkka[4][100];
+  Double_t yValueIlkka[4][100];
+  Double_t xErrHighIlkka[4][100];
+  Double_t xErrLowIlkka[4][100];
+  Double_t yErrHighIlkka[4][100];
+  Double_t yErrLowIlkka[4][100];
+  
+  TGraphAsymmErrors* graphPi0NLOpQCDct14epps16dss14[4];
+  
+  
+  cout<<"****************************************Ilkka*************************************"<<endl;
+  while ( currentIlkkaFile < iIlkkaFiles) {
+      
+      
+    Int_t nlinesIlkkaPi0 = 0;
+    
+    TString currentfileNameIlkkaName      = Form("ExternalInputpPb/Theory/%s",fileNameIlkkapPb5020_pi0[currentIlkkaFile].Data());
+   
+      
+    ifstream 		inIlkkaPi0;
+         
+    inIlkkaPi0.open(currentfileNameIlkkaName.Data(),ios_base::in);
+    cout<<"*********************Ilkka NLO spectrum******************"<<currentfileNameIlkkaName.Data()<<endl;
+    
+    
+    string currentline;
+    
+    while( getline(inIlkkaPi0, currentline) && nlinesIlkkaPi0 < 100 ) {
+        
+         TString temp1        = "";
+         TString temp2        = "";
+         TString temp3        = "";
+         TString temp4        = "";
+        
+         
+         istringstream cs(currentline); // controll stream
+         cs >> temp1>>temp2>>temp3>>temp4;
+         
+        if( !temp1.Contains("#") ) {
+            
+            xValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp1.Atof();
+            yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp2.Atof();
+            xErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = 0.0;
+            xErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]  = 0.0;
+            yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp3.Atof();
+            
+            yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] - yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0];
+            
+            
+            yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp4.Atof();
+            yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0] = yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] - yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0];
+                        
+            
+            cout << nlinesIlkkaPi0 <<"\t"<<xValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<"\t"<<yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<
+            "\t"<<yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<"\t"<<yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<endl;
+            
+             nlinesIlkkaPi0++;
+            
+        }
+        
+       
+	
+    }
+
+    
+    graphPi0NLOpQCDct14epps16dss14[currentIlkkaFile] = new TGraphAsymmErrors(nlinesIlkkaPi0,xValueIlkka[currentIlkkaFile],yValueIlkka[currentIlkkaFile],xErrLowIlkka[currentIlkkaFile],xErrHighIlkka[currentIlkkaFile],yErrLowIlkka[currentIlkkaFile],yErrHighIlkka[currentIlkkaFile]);
+    
+    currentIlkkaFile++;
+      
+  }
+  
+  
+  
+  //Produce Graph with summ errors
+  
+  
+  TGraphAsymmErrors* graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)graphPi0NLOpQCDct14epps16dss14[0]->Clone();
+  
+   
+  
+    Int_t     nPointsIlkkaSumErr       = graphPi0NLOpQCDct14epps16dss14_sumerr->GetN();
+    Double_t *xValueIlkkaSumErr        = graphPi0NLOpQCDct14epps16dss14_sumerr->GetX();
+    Double_t *yErrLowIlkkaSumErr       = graphPi0NLOpQCDct14epps16dss14_sumerr->GetEYlow();
+    Double_t *yErrHighIlkkaSumErr      = graphPi0NLOpQCDct14epps16dss14_sumerr->GetEYhigh();
+    Double_t *yValueIlkkaSumErr        = graphPi0NLOpQCDct14epps16dss14_sumerr->GetY();
+    
+    
+    
+   
+   for(Int_t iPoint = 0;  iPoint < nPointsIlkkaSumErr; iPoint++){
+     
+   
+        Double_t yELow = 0;
+        Double_t yEHigh  = 0;
+         
+       
+         for(Int_t nHisto = 0; nHisto < 4; nHisto++) {
+             
+             yELow+=    TMath::Power( graphPi0NLOpQCDct14epps16dss14[nHisto]->GetErrorYlow(iPoint)/yValueIlkkaSumErr[iPoint]  , 2 );
+             yEHigh+=  TMath::Power( graphPi0NLOpQCDct14epps16dss14[nHisto]->GetErrorYhigh(iPoint)/yValueIlkkaSumErr[iPoint] , 2 );
+         }
+             
+         yELow  = TMath::Sqrt( yELow  );
+         yEHigh = TMath::Sqrt( yEHigh );
+    
+         yErrLowIlkkaSumErr[iPoint]  = yELow*yValueIlkkaSumErr[iPoint];
+         yErrHighIlkkaSumErr[iPoint] = yEHigh*yValueIlkkaSumErr[iPoint];
+     
+     
+   }
+  
+  
+  Double_t v0ANDxSection = 2.09; //barns
+  Double_t v0ANDxSectionNSD = v0ANDxSection / 0.964;
+  Double_t factorHelenius = 208;
+  
+  for(Int_t nGraph = 0; nGraph < 4; nGraph++) {
+             
+             graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],1/v0ANDxSectionNSD);
+             graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],1/recalcBarn);
+             graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],factorHelenius);
+  }
+  
+  
+  graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,1/v0ANDxSectionNSD);
+  graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,1/recalcBarn);
+  graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,factorHelenius);
+  
+   
+    
+    
+    
+    
+    
 
 
     //**********************************************************************************************************************
@@ -1133,6 +1328,22 @@ void ProduceTheoryGraphsPPb(){
 
             graphRpPbEPPS16_DSS14->Write("graphNLOCalcDSS14RpAPi05023GeV_EPPS16", TObject::kOverwrite);
             graphRpPbEPPS16_DSS14_muOne->Write("graphNLOCalcDSS14RpAPi05023GeV_muOne_EPPS16", TObject::kOverwrite);
+            
+            
+            //pi0 CGC
+             grahCGCPi0y0pA5020->Write("graphPi0SpecCGC5023GeV");
+        
+             //Pi0 NLO pQCD
+             if(graphPi0NLOpQCDct14epps16dss14_sumerr) graphPi0NLOpQCDct14epps16dss14_sumerr->Write("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr");
+             
+             if( graphPi0NLOpQCDct14epps16dss14[0] ) graphPi0NLOpQCDct14epps16dss14[0]->Write("graphNLOpQCDPi0_ct14_epps16_dss14_scale_err");
+             if( graphPi0NLOpQCDct14epps16dss14[1] ) graphPi0NLOpQCDct14epps16dss14[1]->Write("graphNLOpQCDPi0_ct14_epps16_dss14_err");
+             if( graphPi0NLOpQCDct14epps16dss14[2] ) graphPi0NLOpQCDct14epps16dss14[2]->Write("graphNLOpQCDPi0_ct14_epps16_err_dss14");
+             if( graphPi0NLOpQCDct14epps16dss14[3] ) graphPi0NLOpQCDct14epps16dss14[3]->Write("graphNLOpQCDPi0_ct14_errSym_epps16_dss14");
+            
+            
+            
+            
 
         // write McGill calc for different cents and particles
         for (Int_t iCent = 0; iCent < nCent; iCent++){
