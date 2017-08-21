@@ -27,7 +27,7 @@
 #include "TLegend.h"
 #include "TDatabasePDG.h"
 #include "TMinuit.h"
-#include "../../CommonHeaders/PlottingMeson.h"
+#include "../CommonHeaders/PlottingMeson.h"
 #include "TLatex.h"
 #include "TASImage.h"
 #include "TMath.h"
@@ -39,14 +39,14 @@
 #include "TMarker.h"
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
-#include "../../CommonHeaders/PlottingGammaConversionHistos.h"
-#include "../../CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "ExtractSignalPiPlPiMiPiZero.h"
-#include "../../CommonHeaders/ExtractSignalBinning.h"
-#include "../../CommonHeaders/FittingGammaConversion.h"
-#include "../../CommonHeaders/ConversionFunctions.h" // changed to standard CommonHeaders
-#include "../../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
-#include "../../CommonHeaders/ExtractSignalPlotting.h"
+#include "../CommonHeaders/ExtractSignalBinning.h"
+#include "../CommonHeaders/FittingGammaConversion.h"
+#include "../CommonHeaders/ConversionFunctions.h" // changed to standard CommonHeaders
+#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "THnSparse.h"
 
 Double_t FunctionBGExclusion(Double_t *x, Double_t *par){

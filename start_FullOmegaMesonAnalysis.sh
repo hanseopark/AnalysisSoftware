@@ -55,13 +55,13 @@ function GiveBinningpPb()
 
 function ExtractSignal()
 {
-    root -l -b -q -x TaskOmega/TaskV1/ExtractSignalPiPlPiMiPiZero.C\+\($1\)
+    root -l -b -q -x TaskV1/ExtractSignalPiPlPiMiPiZero.C\+\($1\)
     #root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\($1\,$mode\,0\)
 }
 
 function CorrectSignal()
 {
-    root -x -l -b -q TaskOmega/TaskV1/CorrectSignalPiPlPiMiPiZero.C\+\($1\)
+    root -x -l -b -q TaskV1/CorrectSignalPiPlPiMiPiZero.C\+\($1\)
 }
 
 
