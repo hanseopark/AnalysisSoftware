@@ -93,10 +93,9 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     TString fileNameTheory                      = "ExternalInput/Theory/TheoryCompilationPP.root";
     TString fileNameEtaToPi0WorldData           = "ExternalInput/WorldDataPi0Eta.root";
     TString fileNamePHOS                        = "ExternalInput/PHOS/2.76TeV/LHC11a_PHOS_pi0_pp2760_noBWCorr_FDcorr_20140218.root";
-    TString fileNamePCMEta                      = "FinalResults/data_PCMResultsFullCorrection_PP_NoBinShifting_usedTosvnEtapaper.root";
     TString fileNameChargedPionPP               = "ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_20_May_2015.root";
     TString fileNameChargedHadronPP             = "ExternalInput/UnidentifiedCharged/ChargedHadrinSpectraPP_2016_07_04.root";
-    TString fileNameOldPi0Publication           = "FinalResults/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014.root";
+    TString fileNameOldPi0Publication           = "ExternalInput/CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root";
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurements2760GeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
     if (flagMerged == 0){
       outputDir = outputDir+"_HaitaoMerged";
@@ -114,7 +113,6 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     cout << fileNamePCM.Data() << endl;
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputPCM.root", fileNamePCM.Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/InputPCMEta.root", fileNamePCMEta.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputPCMEMCAL.root", fileNamePCMEMCAL.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputPHOS.root", fileNamePHOS.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputEMCALLow.root", fileNameEMCALLow.Data(), outputDir.Data()));
@@ -258,153 +256,65 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     TH1D* histoPCMEtaToPi0Stat                      = NULL;
     TGraphAsymmErrors* graphPCMEtaToPi0Sys          = NULL;
 
-    if (!flagPCMfile){
-        filePCM                                     = new TFile(fileNamePCM.Data());
-        directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi02.76TeV");
-            TH1D* histoPCMPi0Mass                       = (TH1D*)directoryPCMPi0->Get("MassPi0");
-            TH1D* histoPCMPi0FWHMMeV                    = (TH1D*)directoryPCMPi0->Get("FWHMPi0MeV");
-            TH1D* histoPCMPi0TrueMass                   = (TH1D*)directoryPCMPi0->Get("TrueMassPi0");
-            TH1D* histoPCMPi0TrueFWHMMeV                = (TH1D*)directoryPCMPi0->Get("TrueFWHMPi0MeV");
-            TH1D* histoPCMPi0Acc                        = (TH1D*)directoryPCMPi0->Get("AcceptancePi0");
-            TH1D* histoPCMPi0TrueEffPt                  = (TH1D*)directoryPCMPi0->Get("EfficiencyPi0");
-            histoPCMPi0InvXSectionStat                  = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
-            graphPCMPi0InvXSectionStat                  = new TGraphAsymmErrors(histoPCMPi0InvXSectionStat);
-            graphPCMPi0InvXSectionStat->RemovePoint(graphPCMPi0InvXSectionStat->GetN()-1);
-            graphPCMPi0InvXSectionStat->RemovePoint(0);
-            graphPCMPi0InvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
-            graphPCMPi0InvXSectionSys->RemovePoint(graphPCMPi0InvXSectionSys->GetN()-1);
-            TH1D* histoPCMPi0AccTimesEff                = (TH1D*)histoPCMPi0TrueEffPt->Clone("histoPCMPi0AccTimesEff");
-            histoPCMPi0AccTimesEff->Multiply(histoPCMPi0Acc);
-            // normalize to full acceptance (delta y and phi)
-            histoPCMPi0AccTimesEff->Scale(2*TMath::Pi()*1.6);
-            histoPCMPi0Mass->Scale(1000.);
-            histoPCMPi0TrueMass->Scale(1000.);
-
-            graphPCMPi0Mass                             = new TGraphAsymmErrors(histoPCMPi0Mass);
-            graphPCMPi0FWHM                             = new TGraphAsymmErrors(histoPCMPi0FWHMMeV);
-            graphPCMPi0MassMC                           = new TGraphAsymmErrors(histoPCMPi0TrueMass);
-            graphPCMPi0FWHMMC                           = new TGraphAsymmErrors(histoPCMPi0TrueFWHMMeV);
-            graphPCMPi0Acc                              = new TGraphAsymmErrors(histoPCMPi0Acc);
-            graphPCMPi0EffPt                            = new TGraphAsymmErrors(histoPCMPi0TrueEffPt);
-            graphPCMPi0AccTimesEff                      = new TGraphAsymmErrors(histoPCMPi0AccTimesEff);
-
-            while(graphPCMPi0AccTimesEff->GetY()[0] == 0){
-                graphPCMPi0Mass->RemovePoint(0);
-                graphPCMPi0FWHM->RemovePoint(0);
-                graphPCMPi0MassMC->RemovePoint(0);
-                graphPCMPi0FWHMMC->RemovePoint(0);
-                graphPCMPi0Acc->RemovePoint(0);
-                graphPCMPi0EffPt->RemovePoint(0);
-                graphPCMPi0AccTimesEff->RemovePoint(0);
-            }
-
-        TFile* filePCMEta                           = new TFile(fileNamePCMEta.Data());
-        directoryPCMEta                             = (TDirectory*)filePCMEta->Get("Eta2.76TeV");
-            TH1D* histoPCMEtaMass                       = (TH1D*)directoryPCMEta->Get("MassEta");
-            TH1D* histoPCMEtaFWHMMeV                    = (TH1D*)directoryPCMEta->Get("FWHMEtaMeV");
-            TH1D* histoPCMEtaTrueMass                   = (TH1D*)directoryPCMEta->Get("TrueMassEta");
-            TH1D* histoPCMEtaTrueFWHMMeV                = (TH1D*)directoryPCMEta->Get("TrueFWHMEtaMeV");
-            TH1D* histoPCMEtaAcc                        = (TH1D*)directoryPCMEta->Get("AcceptanceEta");
-            TH1D* histoPCMEtaTrueEffPt                  = (TH1D*)directoryPCMEta->Get("EfficiencyEta");
-            histoPCMEtaInvXSectionStat                  = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
-            graphPCMEtaInvXSectionStat                  = new TGraphAsymmErrors(histoPCMEtaInvXSectionStat);
-            graphPCMEtaInvXSectionStat->RemovePoint(0);
-
-            TH1D* histoPCMEtaAccTimesEff                = (TH1D*)histoPCMEtaTrueEffPt->Clone("histoPCMEtaAccTimesEff");
-            histoPCMEtaAccTimesEff->Multiply(histoPCMEtaAcc);
-            // normalize to full acceptance (delta y and phi)
-            histoPCMEtaAccTimesEff->Scale(2*TMath::Pi()*1.6);
-            histoPCMEtaMass->Scale(1000.);
-            histoPCMEtaTrueMass->Scale(1000.);
-
-            graphPCMEtaMass                             = new TGraphAsymmErrors(histoPCMEtaMass);
-            graphPCMEtaFWHM                             = new TGraphAsymmErrors(histoPCMEtaFWHMMeV);
-            graphPCMEtaMassMC                           = new TGraphAsymmErrors(histoPCMEtaTrueMass);
-            graphPCMEtaFWHMMC                           = new TGraphAsymmErrors(histoPCMEtaTrueFWHMMeV);
-            graphPCMEtaAcc                              = new TGraphAsymmErrors(histoPCMEtaAcc);
-            graphPCMEtaEffPt                            = new TGraphAsymmErrors(histoPCMEtaTrueEffPt);
-            graphPCMEtaAccTimesEff                      = new TGraphAsymmErrors(histoPCMEtaAccTimesEff);
-
-            while(graphPCMEtaAccTimesEff->GetY()[0] == 0){
-                graphPCMEtaMass->RemovePoint(0);
-                graphPCMEtaFWHM->RemovePoint(0);
-                graphPCMEtaMassMC->RemovePoint(0);
-                graphPCMEtaFWHMMC->RemovePoint(0);
-                graphPCMEtaAcc->RemovePoint(0);
-                graphPCMEtaEffPt->RemovePoint(0);
-                graphPCMEtaAccTimesEff->RemovePoint(0);
-            }
-
-
-            graphPCMEtaInvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
-            histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShifted");
-            graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtatoPi0RatioConversionBinShiftedSys");
-    } else {
-        filePCM                                     = new TFile(fileNamePCM.Data());
-        directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi02.76TeV");
-            graphPCMPi0Mass                             = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_data");
-            graphPCMPi0Mass                             = ScaleGraph(graphPCMPi0Mass, 1000.);
-            graphPCMPi0FWHM                             = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_data");
-            graphPCMPi0FWHM                             = ScaleGraph(graphPCMPi0FWHM, 1000.);
-            graphPCMPi0MassMC                           = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_MC");
-            graphPCMPi0MassMC                           = ScaleGraph(graphPCMPi0MassMC, 1000.);
-            graphPCMPi0FWHMMC                           = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_MC");
-            graphPCMPi0FWHMMC                           = ScaleGraph(graphPCMPi0FWHMMC, 1000.);
-            graphPCMPi0Acc                              = (TGraphAsymmErrors*)directoryPCMPi0->Get("AcceptancePi0");
-            graphPCMPi0EffPt                            = (TGraphAsymmErrors*)directoryPCMPi0->Get("EfficiencyPi0");
-            graphPCMPi0InvXSectionStat                  = (TGraphAsymmErrors*)directoryPCMPi0->Get("graphInvCrossSectionPi0");
-            histoPCMPi0InvXSectionStat                  = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
-            cout << "Pi0 stat PCM" << endl;
-            graphPCMPi0InvXSectionStat->Print();
-            graphPCMPi0InvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
-            cout << "Pi0 sys PCM" << endl;
-            graphPCMPi0InvXSectionSys->Print();
-            graphPCMPi0AccTimesEff                      = (TGraphAsymmErrors*)directoryPCMPi0->Get("EffTimesAccPi0");
-            for (Int_t k = 0; k < 4; k++){
-                graphPi0EffSecCorrFromX[k][0]           = (TGraphAsymmErrors*)directoryPCMPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
-                if (graphPi0EffSecCorrFromX[k][0]){
-                    cout << nameSecPi0SourceRead[k].Data() << endl;
-                    graphPi0EffSecCorrFromX[k][0]->Print();
-                    Int_t nAboveZero                    = 0;
-                    for (Int_t i = 0; i< graphPi0EffSecCorrFromX[k][0]->GetN(); i++){
-                        if(graphPi0EffSecCorrFromX[k][0]->GetY()[i] > 0) nAboveZero++;
-                    }
-                    if (nAboveZero>0){
-                        haveEffSecCorr[k][0]            = kTRUE;
-                    } else {
-                        graphPi0EffSecCorrFromX[k][0]   = NULL;
-                    }
+    filePCM                                     = new TFile(fileNamePCM.Data());
+    directoryPCMPi0                             = (TDirectory*)filePCM->Get("Pi02.76TeV");
+        graphPCMPi0Mass                             = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_data");
+        graphPCMPi0Mass                             = ScaleGraph(graphPCMPi0Mass, 1000.);
+        graphPCMPi0FWHM                             = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_data");
+        graphPCMPi0FWHM                             = ScaleGraph(graphPCMPi0FWHM, 1000.);
+        graphPCMPi0MassMC                           = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_MC");
+        graphPCMPi0MassMC                           = ScaleGraph(graphPCMPi0MassMC, 1000.);
+        graphPCMPi0FWHMMC                           = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_MC");
+        graphPCMPi0FWHMMC                           = ScaleGraph(graphPCMPi0FWHMMC, 1000.);
+        graphPCMPi0Acc                              = (TGraphAsymmErrors*)directoryPCMPi0->Get("AcceptancePi0");
+        graphPCMPi0EffPt                            = (TGraphAsymmErrors*)directoryPCMPi0->Get("EfficiencyPi0");
+        graphPCMPi0InvXSectionStat                  = (TGraphAsymmErrors*)directoryPCMPi0->Get("graphInvCrossSectionPi0");
+        histoPCMPi0InvXSectionStat                  = (TH1D*)directoryPCMPi0->Get("InvCrossSectionPi0");
+        cout << "Pi0 stat PCM" << endl;
+        graphPCMPi0InvXSectionStat->Print();
+        graphPCMPi0InvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMPi0->Get("InvCrossSectionPi0Sys");
+        cout << "Pi0 sys PCM" << endl;
+        graphPCMPi0InvXSectionSys->Print();
+        graphPCMPi0AccTimesEff                      = (TGraphAsymmErrors*)directoryPCMPi0->Get("EffTimesAccPi0");
+        for (Int_t k = 0; k < 4; k++){
+            graphPi0EffSecCorrFromX[k][0]           = (TGraphAsymmErrors*)directoryPCMPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+            if (graphPi0EffSecCorrFromX[k][0]){
+                cout << nameSecPi0SourceRead[k].Data() << endl;
+                graphPi0EffSecCorrFromX[k][0]->Print();
+                Int_t nAboveZero                    = 0;
+                for (Int_t i = 0; i< graphPi0EffSecCorrFromX[k][0]->GetN(); i++){
+                    if(graphPi0EffSecCorrFromX[k][0]->GetY()[i] > 0) nAboveZero++;
+                }
+                if (nAboveZero>0){
+                    haveEffSecCorr[k][0]            = kTRUE;
+                } else {
+                    graphPi0EffSecCorrFromX[k][0]   = NULL;
                 }
             }
+        }
 
 
-        directoryPCMEta                                 = (TDirectory*)filePCM->Get("Eta2.76TeV");
-            graphPCMEtaMass                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_data");
-            graphPCMEtaMass                             = ScaleGraph(graphPCMEtaMass, 1000.);
-            graphPCMEtaFWHM                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Width_data");
-            graphPCMEtaFWHM                             = ScaleGraph(graphPCMEtaFWHM, 1000.);
-            graphPCMEtaMassMC                           = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_MC");
-            graphPCMEtaMassMC                           = ScaleGraph(graphPCMEtaMassMC, 1000.);
-            graphPCMEtaFWHMMC                           = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Width_MC");
-            graphPCMEtaFWHMMC                           = ScaleGraph(graphPCMEtaFWHMMC, 1000.);
-            graphPCMEtaAcc                              = (TGraphAsymmErrors*)directoryPCMEta->Get("AcceptanceEta");
-            graphPCMEtaEffPt                            = (TGraphAsymmErrors*)directoryPCMEta->Get("EfficiencyEta");
-            graphPCMEtaAccTimesEff                      = (TGraphAsymmErrors*)directoryPCMEta->Get("EffTimesAccEta");
-            histoPCMEtaInvXSectionStat                  = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
-            graphPCMEtaInvXSectionStat                  = (TGraphAsymmErrors*)directoryPCMEta->Get("graphInvCrossSectionEta");
-            cout << "Eta stat PCM-EMC" << endl;
-            graphPCMEtaInvXSectionStat->Print();
-            graphPCMEtaInvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
-            cout << "Eta sys PCM-EMC" << endl;
-            graphPCMEtaInvXSectionSys->Print();
-            histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtaToPi0YShiftedStatError");
-            graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaToPi0YShiftedSystError");
-
-//             histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtaToPi0StatError");
-//             graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaToPi0SystError");
-    }
-
-
+    directoryPCMEta                                 = (TDirectory*)filePCM->Get("Eta2.76TeV");
+        graphPCMEtaMass                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_data");
+        graphPCMEtaMass                             = ScaleGraph(graphPCMEtaMass, 1000.);
+        graphPCMEtaFWHM                             = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Width_data");
+        graphPCMEtaFWHM                             = ScaleGraph(graphPCMEtaFWHM, 1000.);
+        graphPCMEtaMassMC                           = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Mass_MC");
+        graphPCMEtaMassMC                           = ScaleGraph(graphPCMEtaMassMC, 1000.);
+        graphPCMEtaFWHMMC                           = (TGraphAsymmErrors*)directoryPCMEta->Get("Eta_Width_MC");
+        graphPCMEtaFWHMMC                           = ScaleGraph(graphPCMEtaFWHMMC, 1000.);
+        graphPCMEtaAcc                              = (TGraphAsymmErrors*)directoryPCMEta->Get("AcceptanceEta");
+        graphPCMEtaEffPt                            = (TGraphAsymmErrors*)directoryPCMEta->Get("EfficiencyEta");
+        graphPCMEtaAccTimesEff                      = (TGraphAsymmErrors*)directoryPCMEta->Get("EffTimesAccEta");
+        histoPCMEtaInvXSectionStat                  = (TH1D*)directoryPCMEta->Get("InvCrossSectionEta");
+        graphPCMEtaInvXSectionStat                  = (TGraphAsymmErrors*)directoryPCMEta->Get("graphInvCrossSectionEta");
+        cout << "Eta stat PCM-EMC" << endl;
+        graphPCMEtaInvXSectionStat->Print();
+        graphPCMEtaInvXSectionSys                   = (TGraphAsymmErrors*)directoryPCMEta->Get("InvCrossSectionEtaSys");
+        cout << "Eta sys PCM-EMC" << endl;
+        graphPCMEtaInvXSectionSys->Print();
+        histoPCMEtaToPi0Stat                        = (TH1D*)directoryPCMEta->Get("EtaToPi0YShiftedStatError");
+        graphPCMEtaToPi0Sys                         = (TGraphAsymmErrors*)directoryPCMEta->Get("EtaToPi0YShiftedSystError");
 
     //************************** Read data for PCMEMCAL **************************************************
     TFile* filePCMEMCAL                                     = new TFile(fileNamePCMEMCAL.Data());

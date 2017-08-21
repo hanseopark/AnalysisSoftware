@@ -183,8 +183,8 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     TString collisionSystemRHIC2040                             = "20-40% Au-Au #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
 
 
-    TString PubCombGammaFileName = "FinalResults/Gamma_CombResults_PbPb_2.76TeV_20150729.root";
-    TString PubPCMGammaFileName  = "FinalResults/Gamma_PCMResults_PbPb_2.76TeV_20150729.root";
+    TString PubCombGammaFileName = "ExternalInputPbPb/CombDirGamma/Gamma_CombResults_PbPb_2.76TeV_20150729_Pub2015.root";
+    TString PubPCMGammaFileName  = "ExternalInputPbPb/PCM/Gamma_PCMResults_PbPb_2.76TeV_20150729_Pub2015.root";
     TFile *filePubGammaPCM       = new TFile(PubPCMGammaFileName.Data());
     TFile *filePubGammaComb      = new TFile(PubCombGammaFileName.Data());
     if (filePubGammaPCM->IsZombie() || filePubGammaComb->IsZombie()) {

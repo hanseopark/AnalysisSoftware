@@ -471,9 +471,9 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     //WITHOUT common errors
     graphInvSectionEMCalSysEta2760GeVforRAA = new TGraphAsymmErrors(etaEMCalbins,xetaWCommonErr,yetaWCommonErr,xetaErrWCommonErr,xetaErrWCommonErr,yetarelErrorWOCommonErr,yetarelErrorWOCommonErr);
 
-	TFile* fileCombinedpp 				= new TFile("FinalResults/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014.root ");
+    TFile* fileCombinedpp 				= new TFile("ExternalInput/CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root");
 	TGraphAsymmErrors* graphCombEtaToPi0Ratiopp7TeV =         (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVStat");
-	TGraphAsymmErrors* graphCombEtaToPi0RatioSysErrpp7TeV=    (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVSys"); 
+	TGraphAsymmErrors* graphCombEtaToPi0RatioSysErrpp7TeV=    (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVSys");
 	TGraphAsymmErrors* graphCombEtaToPi0Ratiopp7TeVNoXErrors = (TGraphAsymmErrors*)graphCombEtaToPi0Ratiopp7TeV->Clone();
 
 
@@ -544,7 +544,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0005   = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0005->Get("Pi0RAA");
     TH1D* histoPCMPi0RAAStatPbPb2760GeV_0005 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_0005,14,"histoPCMPi0RAAStatPbPb2760GeV_0005");
     TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_0005    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0005->Get("Pi0RAASys");
-    
+
     TDirectoryFile* directoryPCMPi0PbPb2760GeV_0510         = (TDirectoryFile*)filePCM->Get("Pi0_PbPb_2.76TeV_5-10%");
     TH1D* histoPCMPi0InvYieldPbPb2760GeV_0510                   = (TH1D*)directoryPCMPi0PbPb2760GeV_0510->Get("CorrectedYieldPi0");
     TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_0510  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeV_0510);
@@ -559,7 +559,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_0510   = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0510->Get("Pi0RAA");
     TH1D* histoPCMPi0RAAStatPbPb2760GeV_0510 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_0510,14,"histoPCMPi0RAAStatPbPb2760GeV_0510");
     TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_0510    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0510->Get("Pi0RAASys");
-    
+
     TDirectoryFile* directoryPCMPi0PbPb2760GeV_0010         = (TDirectoryFile*)filePCM->Get("Pi0_PbPb_2.76TeV_0-10%");
     TH1D* histoPCMPi0InvYieldPbPb2760GeV_0010                   = (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("CorrectedYieldPi0");
     TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_0010  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeV_0010);
@@ -841,7 +841,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         graphPHOSPi0InvYieldStatPbPb2760GeV_0010->Write("graphInvYieldPi0PHOSPbPb2760GeVStatErr_0010");
         graphPHOSPi0InvYieldSysPbPb2760GeV_0010->Write("graphInvYieldPi0PHOSPbPb2760GeVSysErr_0010");
         graphSysErrRAAYieldPi0PHOSPbPb0010->Write("graphInvYieldPi0PHOSPbPb2760GeVSysErr_forRAA_0010");
-        
+
         //Pi0 PCM
         histoPCMPi0InvYieldPbPb2760GeV_0005->Write("histoInvYieldPi0PCMPbPb2760GeVStatErr_0005");
         graphPCMPi0InvYieldStatPbPb2760GeV_0005->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_0005");
@@ -860,7 +860,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         histoPCMPi0RAAStatPbPb2760GeV_0510->Write("histoRAAPi0PCMPbPb2760GeVStatErr_0510");
         graphPCMPi0RAAStatPbPb2760GeV_0510->Write("graphRAAPi0PCMPbPb2760GeVStatErr_0510");
         graphPCMPi0RAASysPbPb2760GeV_0510->Write("graphRAAPi0PCMPbPb2760GeVSysErr_0510");
-        
+
         histoPCMPi0InvYieldPbPb2760GeV_0010->Write("histoInvYieldPi0PCMPbPb2760GeVStatErr_0010");
         graphPCMPi0InvYieldStatPbPb2760GeV_0010->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_0010");
         graphPCMPi0InvYieldSysPbPb2760GeV_0010->Write("graphInvYieldPi0PCMPbPb2760GeVSysErr_0010");
@@ -988,10 +988,10 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
 
       TDirectoryFile* directoryNeutralMesonPP7TeV = (TDirectoryFile*)fInputFilePbPb2760GeV->Get("NeutralMesons_PP_7TeV");
       fInputFilePbPb2760GeV->cd("NeutralMesons_PP_7TeV");
-      
+
         graphCombEtaToPi0Ratiopp7TeVNoXErrors->Write("graphCombEtaToPi0Ratiopp7TeVNoXErrors");
         graphCombEtaToPi0RatioSysErrpp7TeV->Write("graphCombEtaToPi0RatioSysErrpp7TeV");
-        
+
       TDirectoryFile* directoryNeutralMesonPP = (TDirectoryFile*)fInputFilePbPb2760GeV->Get("NeutralMesons_PP_2.76TeV");
       fInputFilePbPb2760GeV->cd("NeutralMesons_PP_2.76TeV");
 
