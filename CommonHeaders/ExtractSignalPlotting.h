@@ -471,6 +471,8 @@
         TString methodStrOut            = ReturnTextReconstructionProcessWrite(detMode);
         if (addSig)
             methodStrOut                = methodStrOut+"AddSig";
+
+        TString titleInvMassSignalWithBG =(TString) histoInvMassSignalWithBG->GetName();
         TH1D* histoPi0InvMassSigPlusBG;
         TH1D* histoPi0InvMassSig;
         TH1D* histoPi0InvMassSigRemBG;
@@ -481,6 +483,7 @@
         TF1* fitPi0InvMassSig;
         TF1* fitPi0InvMassSigRemBG;
         TF1* fitPi0InvMassBG;
+        cout << "histoInvMassSubtracted" <<histoInvMassSubtracted << endl;
         histoPi0InvMassSig               = (TH1D*)histoInvMassSubtracted->Clone("InvMassSig_PtBin07");
         histoPi0InvMassSigRemBG          = (TH1D*)histoInvMassSubtracted->Clone("InvMassSigPlRemBG_PtBin07");
         histoPi0InvMassSigPlusBG         = (TH1D*)histoInvMassSignalWithBG->Clone("InvMassSigPlusBG_PtBin07");
@@ -521,7 +524,13 @@
                 histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
             }
         } else if(fMesonType.CompareTo("Eta") == 0){
-            for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.30); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.70)+1; j++){
+            Double_t lowBin = 0.30;
+            Double_t highBin = 0.70;
+            if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+              lowBin-=0.134;
+              highBin-=0.134;
+            }
+            for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
                 Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
@@ -533,8 +542,14 @@
                 histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
                 histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
             }
-         } else { //omega
-            for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(0.645); j < histoPi0InvMassSig->GetXaxis()->FindBin(0.9)+1; j++){
+        } else { //omega
+          Double_t lowBin = 0.645;
+          Double_t highBin = 0.9;
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            lowBin-=0.134;
+            highBin-=0.134;
+          }
+            for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
                 Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
                 Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
                 Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
@@ -594,23 +609,42 @@
             textsizeFacInvMass          = (Double_t)1./canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1());
         }
 
+        TString xlabel;
+         if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+           xlabel = Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data());
+         } else{
+           xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
+         }
         TH1F * histo1DInvMassDummy;
         if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy,xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            if(titleInvMassSignalWithBG.Contains("SubPiZero")){
+              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35-0.134,0.695-0.134);
+              SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            } else{
+              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
+              SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            }
+
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
-            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          } else{
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          }
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         }
@@ -626,12 +660,22 @@
             fitPi0InvMassSigRemBG->SetRange(0,0.255);
         } else if(fMesonType.CompareTo("Eta") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-            fitPi0InvMassSig->SetRange(0.35,0.695);
-            fitPi0InvMassSigRemBG->SetRange(0.35,0.695);
+            if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+              fitPi0InvMassSig->SetRange(0.35-0.134,0.695-0.134);
+              fitPi0InvMassSigRemBG->SetRange(0.35-0.134,0.695-0.134);
+            } else{
+              fitPi0InvMassSig->SetRange(0.35,0.695);
+              fitPi0InvMassSigRemBG->SetRange(0.35,0.695);
+            }
         } else { // omega
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-            fitPi0InvMassSig->SetRange(0.645,0.89);
-            fitPi0InvMassSigRemBG->SetRange(0.645,0.89);
+           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+              fitPi0InvMassSig->SetRange(0.645-0.134,0.89-0.134);
+              fitPi0InvMassSigRemBG->SetRange(0.645-0.134,0.89-0.134);
+            } else{
+              fitPi0InvMassSig->SetRange(0.645,0.89);
+              fitPi0InvMassSigRemBG->SetRange(0.645,0.89);
+            }
         }
         // Set fit colors
         fitPi0InvMassSig->SetNpx(10000);
@@ -721,8 +765,13 @@
         legendInvMass->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
 
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
-
+       if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin_SubPiZero%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
+        }else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin_FixedPzPiZero%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
+        }else{
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBin%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
+        }
         canvasInvMassSamplePlot->cd();
 
         if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb") ){
@@ -753,6 +802,10 @@
         Double_t mass = fMesonMass[exampleBin];
         Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
         Double_t intRangeHigh           = mass + fMesonIntDeltaRange[1];
+        if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+          intRangeLow-=0.134;
+          intRangeHigh-=0.134;
+        }
         Double_t normalLow              = intRangeLow-(intRangeLow-histoPi0InvMassSigPlusBG->GetXaxis()->GetBinLowEdge(histoPi0InvMassSigPlusBG->GetXaxis()->FindBin(intRangeLow)));
         Double_t normalUp               = intRangeHigh+(histoPi0InvMassSigPlusBG->GetXaxis()->GetBinUpEdge(histoPi0InvMassSigPlusBG->GetXaxis()->FindBin(intRangeHigh))-intRangeHigh);
 
@@ -761,8 +814,13 @@
         DrawGammaLines(normalUp, normalUp, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
         histo1DInvMassDummy->Draw("AXIS,same");
 
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
-
+       if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange_SubPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
+        } else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange_FixedPzPiPZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
+        } else{
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinSigIntRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(), suffix.Data()));
+        }
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->Draw();
         histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.15*histoPi0InvMassSigPlusBG->GetMaximum());
@@ -813,8 +871,14 @@
         legendInvMass2->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
 
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+       if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit_SubPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        } else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        } else{
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
 
+        }
         // Plot Invariant mass sample bin with linear BG in Signal
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->Draw();
@@ -862,8 +926,13 @@
         legendInvMass3->AddEntry((TObject*)0,"linear BG fit","");
         legendInvMass3->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
-
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+       if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit_SubPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        } else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        } else{
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGInFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        }
 
     }
 
@@ -910,7 +979,7 @@
             histoOmegaInvMassBG[k] = (TH1D*)histoInvMassSignalBckGroups[k][fExampleBin]->Clone(Form("InvMassNormBG_%i",k));
         }
 
-
+        TString titleInvMassSignalWithBG =(TString) histoInvMassSignalWithBG->GetName();
         Double_t textSizeLabelsPixel                 = 100*3/5;
         TCanvas* canvasInvMassSamplePlot             = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
         DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.09, 0.012, 0.035, 0.08);
@@ -955,17 +1024,31 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35-0.134,0.695-0.134);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          } else{
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          }
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
+
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          } else{
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
-            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          }
+
+          histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+          histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         }
 
         TString ptLabel         =  "#it{p}_{T} ";
@@ -1108,6 +1191,7 @@
         fitOmegaInvMassBGConfidence      = (TH1D*)fitInvMassBGConfidence->Clone("InvMassBGConfidence_PtBin07"); // This histogram is used to plot an errorband
         fitPi0InvMassSig                 = (TF1*)fitSignal->Clone("FitInvMassSig_PtBin07"); // Fit of Signal
 
+        TString titleInvMassSignalWithBG = (TString) histoInvMassSignalWithBG->GetName();
         fitPi0InvMassSig->SetParameter(4, 0);
         fitPi0InvMassSig->SetParameter(5, 0);
 
@@ -1155,17 +1239,29 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35-0.134,0.695-0.134);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          }else{
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          }
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          } else{
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645,0.89);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
-                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
-            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+          }
+          histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+          histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         }
 
         TString ptLabel         =  "#it{p}_{T} ";
@@ -1178,12 +1274,21 @@
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             fitPi0InvMassSig->SetRange(0,0.255);
         } else if(fMesonType.CompareTo("Eta") == 0){
-            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+          labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            fitPi0InvMassSig->SetRange(0.35-0.134,0.695-0.134);
+          } else{
             fitPi0InvMassSig->SetRange(0.35,0.695);
+          }
         } else { // omega
-            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+          labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+          if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+            fitPi0InvMassSig->SetRange(0.645-0.134,0.89-0.134);
+            fitOmegaInvMassBG->SetRange(0.645-0.134,0.89-0.134);
+          }else{
             fitPi0InvMassSig->SetRange(0.645,0.89);
             fitOmegaInvMassBG->SetRange(0.645,0.89);
+          }
         }
         // Scaling
         histoPi0InvMassSig->Scale(scaleFacSignal);
@@ -1273,7 +1378,14 @@
         legendInvMass2->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
 
-        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBckFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBckFit_SubPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        } else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBckFit_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        } else{
+          canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBckFit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+        }
+
     }
 
 
@@ -1600,24 +1712,43 @@
                 TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
                 if (isVsPtConv)
                     titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+
+                TString xlabel;
+                TString ylabel;
+
+                if(namePlot.Contains("SubPiZero") == kTRUE){
+                  xlabel = Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data());
+                  ylabel = Form("dN_{%s}/d#it{M}_{#pi^{+} #pi^{-}}",decayChannel.Data());
+                } else{
+                  xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
+                  ylabel = Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data());
+                }
+
                 DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
                                 titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                xlabel.Data(), ylabel.Data(),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
     //             cout << "here" << endl;
                 for(Int_t k=0;k<5;k++){
                     if(fHistoMappingBackNormInvMassPtBinPlot[k][iPt]==NULL) continue;
                     DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[k][iPt],
                                     titlePt,
-                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                    xlabel.Data(), ylabel.Data(),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],k+1);
                }
     //             cout << "here" << endl;
                 Double_t fBGFitRangeLow     = fBGFitRange[0];
                 Double_t fBGFitRangeHigh    = fBGFitRange[1];
                 if (namePlot.Contains("Left")){
-                    fBGFitRangeLow          = fBGFitRangeLeft[0];
-                    fBGFitRangeHigh         = fBGFitRangeLeft[1];
+                  fBGFitRangeLow          = fBGFitRangeLeft[0];
+                  fBGFitRangeHigh         = fBGFitRangeLeft[1];
+
+                } else if (namePlot.Contains("SubPiZero")){
+                  fBGFitRangeLow          = fBGFitRange_SubPiZero[0];
+                  fBGFitRangeHigh         = fBGFitRange_SubPiZero[1];
+                } else if (namePlot.Contains("FixedPzPiZero")){
+                  fBGFitRangeLow          = fBGFitRange_FixedPzPiZero[0];
+                  fBGFitRangeHigh         = fBGFitRange_FixedPzPiZero[1];
                 }
                 TBox *box               = new TBox(fBGFitRangeLow,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.93,fBGFitRangeHigh,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.91);
                 box->SetFillStyle(1001);
@@ -1753,9 +1884,23 @@
                 Size_t linesize         = fHistoMappingBackNormInvMassPtBinPlot[iPt]->GetLineWidth();
                 fHistoMappingBackNormInvMassPtBinPlot[iPt]->SetLineWidth(5*linesize);
                 if(BckNmb==0){
+                  if(namePlot.Contains("SubPiZero") == kTRUE){
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s} - #it{M}_{#pi^{0}}",decayChannel.Data()),"l");
+
+                  } else if(namePlot.Contains("FixedPzPiZero") == kTRUE){
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s} (p_{z} of #pi^{0} fixed)",decayChannel.Data()),"l");
+
+                  } else{
                     legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s}",decayChannel.Data()),"l");
+                  }
                 } else{
+                  if(namePlot.Contains("SubPiZero") == kTRUE){
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s} - #it{M}_{#pi^{0}} group %d",decayChannel.Data(),BckNmb),"l");
+                  } else if(namePlot.Contains("FixedPzPiZero") == kTRUE){
+                    legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s} group %d (p_{z} of #pi^{0} fixed)",decayChannel.Data(),BckNmb),"l");
+                  } else{
                     legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[iPt],Form("mixed evt. #it{M}_{%s} group %d",decayChannel.Data(),BckNmb),"l");
+                  }
                 }
                 legendData->Draw();
             } else {
@@ -1772,21 +1917,41 @@
                 TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
                 if (isVsPtConv)
                     titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
-                DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
-                                titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
-                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
-    //             cout << "here" << endl;
-                DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
-                                titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
-                                fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
-    //             cout << "here" << endl;
+                if(namePlot.Contains("SubPiZero") == kTRUE){
+                  DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
+                                  titlePt,
+                                  Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+                  //             cout << "here" << endl;
+                  DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
+                                  titlePt,
+                                  Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
+                  //             cout << "here" << endl;
+                } else{
+                  DrawGammaHisto( fHistoMappingGGInvMassPtBinPlot[iPt],
+                                  titlePt,
+                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
+                  //             cout << "here" << endl;
+                  DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
+                                  titlePt,
+                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
+                  //             cout << "here" << endl;
+                }
                 Double_t fBGFitRangeLow     = fBGFitRange[0];
                 Double_t fBGFitRangeHigh    = fBGFitRange[1];
                 if (namePlot.Contains("Left")){
-                    fBGFitRangeLow          = fBGFitRangeLeft[0];
-                    fBGFitRangeHigh         = fBGFitRangeLeft[1];
+                  fBGFitRangeLow          = fBGFitRangeLeft[0];
+                  fBGFitRangeHigh         = fBGFitRangeLeft[1];
+
+                } else if (namePlot.Contains("SubPiZero")){
+                  fBGFitRangeLow          = fBGFitRange_SubPiZero[0];
+                  fBGFitRangeHigh         = fBGFitRange_SubPiZero[1];
+                } else if (namePlot.Contains("FixedPzPiZero")){
+                  fBGFitRangeLow          = fBGFitRange_FixedPzPiZero[0];
+                  fBGFitRangeHigh         = fBGFitRange_FixedPzPiZero[1];
                 }
                 TBox *box               = new TBox(fBGFitRangeLow,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.93,fBGFitRangeHigh,fHistoMappingGGInvMassPtBinPlot[iPt]->GetMaximum()*0.91);
                 box->SetFillStyle(1001);
@@ -2026,35 +2191,45 @@
                         l3b->SetLineWidth(1);
                         l3b->Draw("same");
                 }
+                TString xlabel;
+                TString ylabel;
+
+                if(namePlot.Contains("SubPiZero") == kTRUE){
+                  xlabel = Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data());
+                  ylabel = Form("dN_{%s}/d#it{M}_{#pi^{+} #pi^{-}}", decayChannel.Data());
+                } else{
+                  xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
+                  ylabel = Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data());
+                }
                 DrawGammaHisto( fHistoMappingBackNormInvMassPtBinPlot[iPt],
                                 titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                xlabel.Data(),ylabel.Data(),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],-1);
     //             cout << "here" << endl;
                 DrawGammaHisto( fHistoMappingTrueAllBackNormInvMassPtBinPlot[iPt],
                                 titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                xlabel.Data(),ylabel.Data(),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],1);
     //             cout << "here" << endl;
                 DrawGammaHisto( fHistoMappingTrueGGBackNormInvMassPtBinPlot[iPt],
                                 titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                xlabel.Data(),ylabel.Data(),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],3);
     //             cout << "here" << endl;
                 DrawGammaHisto( fHistoMappingTrueContBackNormInvMassPtBinPlot[iPt],
                                 titlePt,
-                                Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                xlabel.Data(),ylabel.Data(),
                                 fPlottingRangeMeson[0],fPlottingRangeMeson[1],4);
                 if(fHistoMappingTrueMesonContainedInvMassPtBins[iPt]){
                   DrawGammaHisto( fHistoMappingTrueMesonContainedInvMassPtBins[iPt],
                                   titlePt,
-                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  xlabel,ylabel.Data(),
                                   fPlottingRangeMeson[0],fPlottingRangeMeson[1],5);
                 }
                 if(fHistoMappingTrueAsymEClusInvMassPtBins[iPt]){
                   DrawGammaHisto( fHistoMappingTrueAsymEClusInvMassPtBins[iPt],
                                   titlePt,
-                                  Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                  xlabel.Data(),ylabel.Data(),
                                   fPlottingRangeMeson[0],fPlottingRangeMeson[1],6);
                 }
     //             cout << "here" << endl;
@@ -2732,19 +2907,28 @@
                 if (remaining > 0) padDataFit->cd(place)->SetLeftMargin(0.15);
                 else padDataFit->cd(place)->SetLeftMargin(0.25);
 
+                TString xlabel;
+                TString ylabel;
 
+                if(namePlot.Contains("SubPiZero") == kTRUE){
+                  xlabel = Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data());
+                  ylabel = Form("dN_{%s}/d#it{M}_{#pi^{+} #pi^{-}}", decayChannel.Data());
+                } else{
+                  xlabel = Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data());
+                  ylabel = Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data());
+                }
 
                 if (labelData) {
                     TString titlePt = Form("%3.2f GeV/#it{c} < #it{p}_{T} < %3.2f GeV/#it{c}",startPt,endPt);
                     if (isVsPtConv)
                         titlePt     = Form("%3.2f GeV/#it{c} < #it{p}_{T,#gamma_{conv}} < %3.2f GeV/#it{c}",startPt,endPt);
+
                     DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
                                     titlePt,
-                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                    xlabel.Data(), ylabel.Data(),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
-                    DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
-                                    titlePt,
-                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                    DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],titlePt,
+                                    xlabel.Data(),ylabel.Data(),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                     if (fHistoMappingSignalInvMassPtBinPlot[iPt]!=0x00){
 
@@ -2808,7 +2992,7 @@
                     }
                     DrawGammaHisto( fHistoMappingSignalInvMassPtBinPlot[iPt],
                                     titlePt,
-                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                    xlabel.Data(), ylabel.Data(),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                     if(fMonteCarloInfo && fHistoMappingTrueMesonInvMassPtBinsPlot){
                         fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->SetMarkerColor(kRed+2);
@@ -2823,11 +3007,11 @@
 
                     DrawGammaHisto( fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],
                                     titlePt,
-                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                    xlabel.Data(),ylabel.Data(),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],0);
                     DrawGammaHisto( fHistoMappingTrueMesonInvMassPtBinsPlot[iPt],
                                     titlePt,
-                                    Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()), Form("dN_{%s}/d#it{M}_{%s}",decayChannel.Data(), decayChannel.Data()),
+                                    xlabel.Data(),ylabel.Data(),
                                     fPlottingRangeMeson[0],fPlottingRangeMeson[1],2);
                     if (fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]!=0x00){
                             TString nameOfPlot = fHistoMappingTrueMesonInvMassPtBinsPlot[iPt]->GetName();
