@@ -39,7 +39,9 @@
 #include "TFitResult.h"
 
 
-void WorldDataPi0Eta(TString nameFile8TeV   = ""){
+void WorldDataPi0Eta( TString nameFile8TeV      = "",
+                      TString nameFile2760GeV   = "CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root"
+                    ){
 
 // 	 	const int N_hh = 18*2;
 // 	TString files_hh[N_hh] = {
@@ -78,6 +80,8 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
     // Create 1 graph containing all point above 4 GeV
     vector<Double_t> *valuesEtaToPi0            = new vector<Double_t>[4];     // iCent x iParticle x nMeasurements matrix with theory curves
     Int_t currentNumberOfPoint                  = 0;
+    vector<Double_t> *valuesEtaToPi0ALICE       = new vector<Double_t>[4];     // iCent x iParticle x nMeasurements matrix with theory curves
+    Int_t currentNumberOfPointALICE             = 0;
 
     //Donaldson100GeV
     ifstream Donaldson100GeV;
@@ -586,6 +590,7 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
     // Published in PL B717,162 (DOI:10.1016/j.physletb.2012.09.015)
     // Preprinted as CERN-PH-EP-2012-001
     // Archived as: ARXIV:1205.5724
+    cout << "7TeV measurements" << endl;
     double Alice7TeV_xval[] = { 0.55, 0.85, 1.2, 1.6, 2.0, 2.4, 2.8, 3.25, 3.75,
         5.0, 7.0, 9.0, 12.5 };
     double Alice7TeV_xerrminus[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -605,7 +610,6 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
     int Alice7TeV_numpoints = 13;
     TGraphAsymmErrors* Alice7TeVGraph = new TGraphAsymmErrors(Alice7TeV_numpoints, Alice7TeV_xval, Alice7TeV_yval, Alice7TeV_xerrminus, Alice7TeV_xerrplus, Alice7TeV_yerrminus, Alice7TeV_yerrplus);
     Alice7TeVGraph->SetName("Alice7TeV");
-
     TFile* file7TeVAlice                                    = new TFile("CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root");
     TGraphAsymmErrors* Alice7TeVGraphStat                   = (TGraphAsymmErrors*)file7TeVAlice->Get("graphEtaToPi0Comb7TeVStat");
     TGraphAsymmErrors* Alice7TeVGraphSys                    = (TGraphAsymmErrors*)file7TeVAlice->Get("graphEtaToPi0Comb7TeVSys");
@@ -618,9 +622,16 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
             valuesEtaToPi0[2].push_back(Alice7TeVGraph->GetEYlow()[i]);
             valuesEtaToPi0[3].push_back(Alice7TeVGraph->GetEYhigh()[i]);
             currentNumberOfPoint++;
+            valuesEtaToPi0ALICE[0].push_back(Alice7TeVGraph->GetX()[i]);
+            valuesEtaToPi0ALICE[1].push_back(Alice7TeVGraph->GetY()[i]);
+            valuesEtaToPi0ALICE[2].push_back(Alice7TeVGraph->GetEYlow()[i]);
+            valuesEtaToPi0ALICE[3].push_back(Alice7TeVGraph->GetEYhigh()[i]);
+            currentNumberOfPointALICE++;
+            cout << "adding points" << endl;
         }
     }
     cout << "Number of pT bins: "<< currentNumberOfPoint <<  endl;
+    cout << "Number of pT bins ALICE: "<< currentNumberOfPointALICE <<  endl;
 
     // eta/pi0 2.76TeV ALICE
     // Experiment: CERN-LHC-ALICE (ALICE)
@@ -642,13 +653,12 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
     //         Reportnumber             = {CERN-EP-2017-019},
     //         Slaccitation             = {%%CITATION = ARXIV:1702.00917;%%}
     //     }
-
-    TString name2760File                        = "CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
     TGraphAsymmErrors* Alice2760GeVGraph        = NULL;
     TGraphAsymmErrors* Alice2760GeVGraphStat    = NULL;
     TGraphAsymmErrors* Alice2760GeVGraphSys     = NULL;
-    if (name2760File.CompareTo("") ){
-        TFile* file2760GeVAlice                 = new TFile(name2760File.Data());
+    if (nameFile2760GeV.CompareTo("") ){
+        cout << "2.76TeV measurements" << endl;
+        TFile* file2760GeVAlice                 = new TFile(nameFile2760GeV.Data());
         Alice2760GeVGraph                       = (TGraphAsymmErrors*)file2760GeVAlice->Get("Eta2.76TeV/graphRatioEtaToPi0Comb2760GeVTotErr");
         Alice2760GeVGraphStat                   = (TGraphAsymmErrors*)file2760GeVAlice->Get("Eta2.76TeV/graphRatioEtaToPi0Comb2760GeVStatErr");
         Alice2760GeVGraphSys                    = (TGraphAsymmErrors*)file2760GeVAlice->Get("Eta2.76TeV/graphRatioEtaToPi0Comb2760GeVSysErr");
@@ -662,9 +672,16 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
                 valuesEtaToPi0[2].push_back(Alice2760GeVGraph->GetEYlow()[i]);
                 valuesEtaToPi0[3].push_back(Alice2760GeVGraph->GetEYhigh()[i]);
                 currentNumberOfPoint++;
+                valuesEtaToPi0ALICE[0].push_back(Alice2760GeVGraph->GetX()[i]);
+                valuesEtaToPi0ALICE[1].push_back(Alice2760GeVGraph->GetY()[i]);
+                valuesEtaToPi0ALICE[2].push_back(Alice2760GeVGraph->GetEYlow()[i]);
+                valuesEtaToPi0ALICE[3].push_back(Alice2760GeVGraph->GetEYhigh()[i]);
+                currentNumberOfPointALICE++;
+
             }
         }
         cout << "Number of pT bins: "<< currentNumberOfPoint <<  endl;
+        cout << "Number of pT bins ALICE: "<< currentNumberOfPointALICE <<  endl;
     }
 
 
@@ -672,6 +689,7 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
     TGraphAsymmErrors* Alice8TeVGraphStat    = NULL;
     TGraphAsymmErrors* Alice8TeVGraphSys     = NULL;
     if (nameFile8TeV.CompareTo("") ){
+        cout << "8TeV measurements" << endl;
         TFile* file8TeVAlice                 = new TFile(nameFile8TeV.Data());
         Alice8TeVGraph                       = (TGraphAsymmErrors*)file8TeVAlice->Get("Eta8TeV/graphRatioEtaToPi0Comb8TeVTotErr");
         Alice8TeVGraphStat                   = (TGraphAsymmErrors*)file8TeVAlice->Get("Eta8TeV/graphRatioEtaToPi0Comb8TeVStatErr");
@@ -686,9 +704,15 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
                 valuesEtaToPi0[2].push_back(Alice8TeVGraph->GetEYlow()[i]);
                 valuesEtaToPi0[3].push_back(Alice8TeVGraph->GetEYhigh()[i]);
                 currentNumberOfPoint++;
+                valuesEtaToPi0ALICE[0].push_back(Alice8TeVGraph->GetX()[i]);
+                valuesEtaToPi0ALICE[1].push_back(Alice8TeVGraph->GetY()[i]);
+                valuesEtaToPi0ALICE[2].push_back(Alice8TeVGraph->GetEYlow()[i]);
+                valuesEtaToPi0ALICE[3].push_back(Alice8TeVGraph->GetEYhigh()[i]);
+                currentNumberOfPointALICE++;
             }
         }
         cout << "Number of pT bins: "<< currentNumberOfPoint <<  endl;
+        cout << "Number of pT bins ALICE: "<< currentNumberOfPointALICE <<  endl;
     }
 
 
@@ -707,9 +731,28 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
     graphWorldHigh->Fit(etaToPi0ConstData,"QRME0","",4,20);
 
     cout  << "***********************************************************************************************************" << endl;
+    cout  << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
     cout  << "***********************************************************************************************************" << endl;
     cout  << "***********************************************************************************************************" << endl;
-    cout  << "high pt eta/pi0 - data, stat: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+
+    TGraphAsymmErrors* graphWorldHighALICE               = new TGraphAsymmErrors(currentNumberOfPointALICE);
+    graphWorldHighALICE->SetName("AllWorldDataAbove4GeVALICE");
+    for (Int_t k = 0; k< currentNumberOfPointALICE; k++){
+        graphWorldHighALICE->SetPoint(k, valuesEtaToPi0ALICE[0].at(k), valuesEtaToPi0ALICE[1].at(k));
+        graphWorldHighALICE->SetPointError(k, 0.00, 0.00, valuesEtaToPi0ALICE[2].at(k), valuesEtaToPi0ALICE[3].at(k));
+    }
+    graphWorldHighALICE->Print();
+    graphWorldHighALICE->Sort();
+    cout << "after sorting" << endl;
+    graphWorldHighALICE->Print();
+
+    TF1* etaToPi0ConstDataALICE  = new TF1("etaToPi0ConstDataALICE","[0]",4,20);
+    graphWorldHighALICE->Fit(etaToPi0ConstDataALICE,"QRME0","",4,20);
+
+    cout  << "***********************************************************************************************************" << endl;
+    cout  << "ALICE high pt eta/pi0 - data, tot: " << etaToPi0ConstDataALICE->GetParameter(0) << "+-"<< etaToPi0ConstDataALICE->GetParError(0) << endl;
+    cout  << "***********************************************************************************************************" << endl;
+    cout  << "***********************************************************************************************************" << endl;
 
     const char* OutputNameWorld ="WorldDataPi0Eta.root";
     TFile* WorldData = new TFile(OutputNameWorld,"RECREATE");
@@ -741,8 +784,13 @@ void WorldDataPi0Eta(TString nameFile8TeV   = ""){
         if (Alice8TeVGraph) Alice8TeVGraph->Write();
         if (Alice8TeVGraphStat) Alice8TeVGraphStat->Write();
         if (Alice8TeVGraphSys) Alice8TeVGraphSys->Write();
-
+        // high pt graphs
         graphWorldHigh->Write();
+        etaToPi0ConstData->Write();
+        // high pt graphs ALICE
+        graphWorldHighALICE->Write();
+        etaToPi0ConstDataALICE->Write();
+
     WorldData->Write();
     WorldData->Close();
 
