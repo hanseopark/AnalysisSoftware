@@ -84,6 +84,18 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     Int_t currentNumberOfPointALICE             = 0;
 
     //Donaldson100GeV
+//         @article{Donaldson:1977jt,
+//             author         = "Donaldson, G. J. and others",
+//             title          = "{Inclusive eta Production at Large Transverse Momenta}",
+//             journal        = "Phys. Rev. Lett.",
+//             volume         = "40",
+//             year           = "1978",
+//             pages          = "684",
+//             doi            = "10.1103/PhysRevLett.40.684",
+//             reportNumber   = "BNL-23702",
+//             SLACcitation   = "%%CITATION = PRLTA,40,684;%%"
+//         }
+
     ifstream Donaldson100GeV;
     Donaldson100GeV.open("OtherExperiments/donaldson78_pp_plab100GeV_eta_pi0_ratio.txt");
     cout << "donaldson78_pp_plab100GeV_eta_pi0_ratio.txt" << endl;
@@ -142,6 +154,19 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
 
     // 		"bonesi89_pp_plab280GeV_wa70_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 23 GeV)",
+//     @article{Bonesini:1988rd,
+//         author         = "Bonesini, M. and others",
+//         title          = "{High Transverse Momentum $\eta$ Production in $\pi^- p$,
+//         $\pi^+ p$ and $p p$ Interactions at 280-{GeV}/$c$}",
+//         collaboration  = "WA70",
+//         journal        = "Z. Phys.",
+//         volume         = "C42",
+//         year           = "1989",
+//         pages          = "527",
+//         doi            = "10.1007/BF01557657",
+//         reportNumber   = "CERN-EP/88-178",
+//         SLACcitation   = "%%CITATION = ZEPYA,C42,527;%%"
+//     }
     ifstream Bonesi280GeV;
     Bonesi280GeV.open("OtherExperiments/bonesi89_pp_plab280GeV_wa70_eta_pi0_ratio.txt");
     cout << "bonesi89_pp_plab280GeV_wa70_eta_pi0_ratio.txt" << endl;
@@ -170,6 +195,21 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
 
 // 		"antille87_pp_24.3GeV_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 24.3 GeV)",
+//     @article{Antille:1987kr,
+//         author         = "Antille, J. and others",
+//         title          = "{A Measurement of the Inclusive $\pi^0$ and $\eta$
+//         Production Cross-sections at High $p_T$ in $p \bar{p}$ and
+//         $p p$ Collisions at $\sqrt{s}=24$.3-{GeV}}",
+//         collaboration  = "CERN-Lausanne-Michigan-Rockefeller, UA6",
+//         journal        = "Phys. Lett.",
+//         volume         = "B194",
+//         year           = "1987",
+//         pages          = "568",
+//         doi            = "10.1016/0370-2693(87)90236-X",
+//         reportNumber   = "CERN-EP-87-121",
+//         SLACcitation   = "%%CITATION = PHLTA,B194,568;%%"
+//     }
+
     ifstream Antille87pp;
     Antille87pp.open("OtherExperiments/antille87_pp_24.3GeV_eta_pi0_ratio.txt");
     cout << "antille87_pp_24.3GeV_eta_pi0_ratio.txt" << endl;
@@ -224,6 +264,18 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     cout << "Number of pT bins: "<< currentNumberOfPoint <<  endl;
 
     // 		"aguilar91_pp_plab400GeV_na27_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 27.5 GeV)",
+//     @article{AguilarBenitez:1991yy,
+//         author         = "Aguilar-Benitez, M. and others",
+//         title          = "{Inclusive particle production in 400-GeV/c p p
+//         interactions}",
+//         journal        = "Z. Phys.",
+//         volume         = "C50",
+//         year           = "1991",
+//         pages          = "405-426",
+//         doi            = "10.1007/BF01551452",
+//         reportNumber   = "CERN-PPE-91-21, EXP-CERN-NA27",
+//         SLACcitation   = "%%CITATION = ZEPYA,C50,405;%%"
+//     }
     ifstream Aguilar400GeV;
     Aguilar400GeV.open("OtherExperiments/aguilar91_pp_plab400GeV_na27_eta_pi0_ratio.txt");
     cout << "aguilar91_pp_plab400GeV_na27_eta_pi0_ratio.txt" << endl;
@@ -251,6 +303,17 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     cout << "Number of pT bins: "<< currentNumberOfPoint <<  endl;
 
 // 		"amaldi79_pp_30.6GeV_isr_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 30.6 GeV)",
+//     @article{Amaldi:1979zk,
+//         author         = "Amaldi, E. and others",
+//         title          = "{INCLUSIVE ETA PRODUCTION IN P P COLLISION AT ISR
+//         ENERGIES}",
+//         journal        = "Nucl. Phys.",
+//         volume         = "B158",
+//         year           = "1979",
+//         pages          = "1-10",
+//         doi            = "10.1016/0550-3213(79)90183-4",
+//         SLACcitation   = "%%CITATION = NUPHA,B158,1;%%"
+//     }
     ifstream Amaldi79pp;
     Amaldi79pp.open("OtherExperiments/amaldi79_pp_30.6GeV_isr_eta_pi0_ratio.txt");
     cout << "amaldi79_pp_30.6GeV_isr_eta_pi0_ratio.txt" << endl;
@@ -279,6 +342,30 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
 
 // 		"kourkou79_pp_30.6GeV_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 30.6 GeV)",
+
+//     @article{Kourkoumelis:1979tr,
+//         author         = "Kourkoumelis, C. and others",
+//         title          = "{Inclusive $\pi^0$ Production at Very Large $p_T$ at the
+//         {ISR}}",
+//         journal        = "Phys. Lett.",
+//         volume         = "84B",
+//         year           = "1979",
+//         pages          = "271-276",
+//         doi            = "10.1016/0370-2693(79)90301-0",
+//         reportNumber   = "CERN-EP-79-29, BNL-26126",
+//         SLACcitation   = "%%CITATION = PHLTA,84B,271;%%"
+//     }
+//     @article{Kourkoumelis:1979ts,
+//         author         = "Kourkoumelis, C. and others",
+//         title          = "{Inclusive $\eta$ Production at High $p_T$ at the {ISR}}",
+//         journal        = "Phys. Lett.",
+//         volume         = "84B",
+//         year           = "1979",
+//         pages          = "277-280",
+//         doi            = "10.1016/0370-2693(79)90302-2",
+//         reportNumber   = "CERN-EP-79-30",
+//         SLACcitation   = "%%CITATION = PHLTA,84B,277;%%"
+//     }
     ifstream Kourkou79pp;
     Kourkou79pp.open("OtherExperiments/kourkou79_pp_30.6GeV_eta_pi0_ratio.txt");
     cout << "kourkou79_pp_30.6GeV_eta_pi0_ratio.txt" << endl;
@@ -311,7 +398,23 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     Apana530GeV.open("OtherExperiments/apana02_pp_plab530GeV_fnal706_eta_pi0_ratio.txt");
     cout << "apana02_pp_plab530GeV_fnal706_eta_pi0_ratio.txt" << endl;
     lines = 0;
-
+//     @article{Apanasevich:2002wt,
+//         author         = "Apanasevich, L. and others",
+//         title          = "{Production of pi0 and eta mesons at large transverse
+//         momenta in pp and p Be interactions at 530-GeV/c and
+//         800-GeV/c}",
+//         collaboration  = "Fermilab E706",
+//         journal        = "Phys. Rev.",
+//         volume         = "D68",
+//         year           = "2003",
+//         pages          = "052001",
+//         doi            = "10.1103/PhysRevD.68.052001",
+//         eprint         = "hep-ex/0204031",
+//         archivePrefix  = "arXiv",
+//         primaryClass   = "hep-ex",
+//         reportNumber   = "FERMILAB-PUB-01-021-E",
+//         SLACcitation   = "%%CITATION = HEP-EX/0204031;%%"
+//     }
     while(!Apana530GeV.eof()){
         Apana530GeV >> pt[lines] >> value[lines] >> totErr[lines];
         xErr[lines] = 0.;
@@ -390,6 +493,19 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
 
 // 		"akesson85_pbarp_53GeV_eta_pi0_ratio.txt","#bar{p}+p (#sqrt{#it{s}}= 53 GeV)",
+//     @article{Akesson:1985za,
+//         author         = "Akesson, T. and others",
+//         title          = "{A comparison of direct photon, pi0, and eta production
+//         in p anti-p and pp interactions at the CERN ISR}",
+//         collaboration  = "Axial Field Spectrometer",
+//         journal        = "Phys. Lett.",
+//         volume         = "158B",
+//         year           = "1985",
+//         pages          = "282-288",
+//         doi            = "10.1016/0370-2693(85)90971-2",
+//         reportNumber   = "CERN-EP-85-55",
+//         SLACcitation   = "%%CITATION = PHLTA,158B,282;%%"
+//     }
     ifstream Akesson53GeVppbar;
     Akesson53GeVppbar.open("OtherExperiments/akesson85_pbarp_53GeV_eta_pi0_ratio.txt");
     cout << "akesson85_pbarp_53GeV_eta_pi0_ratio.txt" << endl;
@@ -418,6 +534,22 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
 
     // 		"akesson85_pp_53GeV_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 53 GeV)",
+//     @article{Akesson:1986nx,
+//         author         = "Akesson, T. and others",
+//         title          = "{Inclusive $\eta$ Production at Low Transverse Momentum
+//         in 63-{GeV} $p p$ Collisions at the {CERN} Intersecting
+//         Storage Rings}",
+//         booktitle      = "{Proceedings, 23RD International Conference on High
+//         Energy Physics, JULY 16-23, 1986, Berkeley, CA}",
+//         collaboration  = "Axial Field Spectrometer",
+//         journal        = "Phys. Lett.",
+//         volume         = "B178",
+//         year           = "1986",
+//         pages          = "447",
+//         doi            = "10.1016/0370-2693(86)91409-7",
+//         reportNumber   = "CERN-EP-86-84",
+//         SLACcitation   = "%%CITATION = PHLTA,B178,447;%%"
+//     }
     ifstream Akesson53GeVpp;
     Akesson53GeVpp.open("OtherExperiments/akesson85_pp_53GeV_eta_pi0_ratio.txt");
     cout << "akesson85_pp_53GeV_eta_pi0_ratio.txt" << endl;
@@ -505,6 +637,19 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     Akesson63GeVpp.open("OtherExperiments/akesson83_pp_63GeV_eta_pi0_ratio.txt");
     cout << "akesson83_pp_63GeV_eta_pi0_ratio.txt" << endl;
     lines = 0;
+//     @article{Akesson:1983xq,
+//         author         = "Akesson, T. and others",
+//         title          = "{Production of $\pi^0$ and Eta0 at 11-degrees in $p p$
+//         Collisions at $\sqrt{s}=63$-{GeV}}",
+//         collaboration  = "Axial Field Spectrometer",
+//         journal        = "Z. Phys.",
+//         volume         = "C18",
+//         year           = "1983",
+//         pages          = "5",
+//         doi            = "10.1007/BF01571698",
+//         reportNumber   = "CERN-EP-83-17",
+//         SLACcitation   = "%%CITATION = ZEPYA,C18,5;%%"
+//     }
     while(!Akesson63GeVpp.eof()){
         Akesson63GeVpp >> a >> b >> value[lines] >> totErr[lines];
         pt[lines]   = (a+b)/2;
@@ -530,6 +675,22 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
 
     // 		"phenix_pp_200GeV_eta_pi0_ratio.txt","p+p (#sqrt{#it{s}}= 200 GeV)",
+//     @Article{Adler:2006bv,
+//         Title                    = {{High transverse momentum $\eta$ meson production in $p^+ p$, $d^+$ Au and Au+Au collisions at $\sqrt{s_{\mbox{\tiny NN}}}$ = 200 GeV}},
+//         Author                   = {Adler, S.S. and others},
+//         Journal                  = {Phys.Rev.},
+//         Year                     = {2007},
+//         Pages                    = {024909},
+//         Volume                   = {C75},
+//
+//         Archiveprefix            = {arXiv},
+//         Collaboration            = {PHENIX Collaboration},
+//         Doi                      = {10.1103/PhysRevC.75.024909},
+//         Eprint                   = {nucl-ex/0611006},
+//         Primaryclass             = {nucl-ex},
+//         Slaccitation             = {%%CITATION = NUCL-EX/0611006;%%}
+//     }
+//
     ifstream Phenix200GeV;
     Phenix200GeV.open("OtherExperiments/phenix_pp_200GeV_eta_pi0_ratio.txt");
     cout << "phenix_pp_200GeV_eta_pi0_ratio.txt" << endl;
@@ -558,6 +719,20 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     }
 
     // 		"banner85_ppbar_540GeV_UA2_eta_pi0_ratio.txt","#bar{p}+p (#sqrt{#it{s}}= 540 GeV)",
+//     @article{Banner:1984wh,
+//         author         = "Banner, M. and others",
+//         title          = "{Inclusive Particle Production in the Transverse Momentum
+//         Range Between 0.25-{GeV}/$c$ and 40-{GeV}/$c$ at the
+//         {CERN} S $p \bar{p}$ S Collider}",
+//         collaboration  = "UA2, Bern-CERN-Copenhagen-Orsay-Pavia-Saclay",
+//         journal        = "Z. Phys.",
+//         volume         = "C27",
+//         year           = "1985",
+//         pages          = "329",
+//         doi            = "10.1007/BF01548636",
+//         reportNumber   = "SACLAY-DPHPE-84-07",
+//         SLACcitation   = "%%CITATION = ZEPYA,C27,329;%%"
+//     }
     ifstream Banner540GeV;
     Banner540GeV.open("OtherExperiments/banner85_ppbar_540GeV_UA2_eta_pi0_ratio.txt");
     cout << "banner85_ppbar_540GeV_UA2_eta_pi0_ratio.txt" << endl;
@@ -590,6 +765,22 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
     // Published in PL B717,162 (DOI:10.1016/j.physletb.2012.09.015)
     // Preprinted as CERN-PH-EP-2012-001
     // Archived as: ARXIV:1205.5724
+//     @Article{Abelev:2012cn,
+//         Title                    = {{Neutral pion and $\eta$ meson production in proton-proton collisions at $\sqrt{s}=0.9$ TeV and $\sqrt{s}=7$ TeV}},
+//         Author                   = {Abelev, B. and others},
+//         Journal                  = {Phys.Lett.},
+//         Year                     = {2012},
+//         Pages                    = {162-172},
+//         Volume                   = {B717},
+//
+//         Archiveprefix            = {arXiv},
+//         Collaboration            = {ALICE Collaboration},
+//         Doi                      = {10.1016/j.physletb.2012.09.015},
+//         Eprint                   = {1205.5724},
+//         Primaryclass             = {hep-ex},
+//         Reportnumber             = {CERN-PH-EP-2012-001},
+//         Slaccitation             = {%%CITATION = ARXIV:1205.5724;%%}
+//     }
     cout << "7TeV measurements" << endl;
     double Alice7TeV_xval[] = { 0.55, 0.85, 1.2, 1.6, 2.0, 2.4, 2.8, 3.25, 3.75,
         5.0, 7.0, 9.0, 12.5 };
@@ -793,7 +984,4 @@ void WorldDataPi0Eta( TString nameFile8TeV      = "",
 
     WorldData->Write();
     WorldData->Close();
-
-
-
 }
