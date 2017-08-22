@@ -524,8 +524,12 @@
                 histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
             }
         } else if(fMesonType.CompareTo("Eta") == 0){
-            Double_t lowBin = 0.30;
+            Double_t lowBin  = 0.30;
             Double_t highBin = 0.70;
+            if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+              lowBin  = 0.46;
+              highBin = 0.70;
+            }
             if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
               lowBin-=0.134;
               highBin-=0.134;
@@ -624,11 +628,17 @@
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
             if(titleInvMassSignalWithBG.Contains("SubPiZero")){
-              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35-0.134,0.695-0.134);
+              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.46-0.134,0.70-0.134);
               SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             } else{
-              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
+              Double_t lowBin  = 0.35;
+              Double_t highBin = 0.695;
+              if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+                lowBin  = 0.46;
+                highBin = 0.70;
+              }
+              histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
               SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
             }
@@ -661,11 +671,17 @@
         } else if(fMesonType.CompareTo("Eta") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-              fitPi0InvMassSig->SetRange(0.35-0.134,0.695-0.134);
-              fitPi0InvMassSigRemBG->SetRange(0.35-0.134,0.695-0.134);
+              fitPi0InvMassSig->SetRange(0.46-0.134,0.695-0.134);
+              fitPi0InvMassSigRemBG->SetRange(0.46-0.134,0.695-0.134);
             } else{
-              fitPi0InvMassSig->SetRange(0.35,0.695);
-              fitPi0InvMassSigRemBG->SetRange(0.35,0.695);
+              Double_t lowBin  = 0.35;
+              Double_t highBin = 0.695;
+              if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+                lowBin  = 0.46;
+                highBin = 0.70;
+              }
+              fitPi0InvMassSig->SetRange(lowBin,highBin);
+              fitPi0InvMassSigRemBG->SetRange(lowBin,highBin);
             }
         } else { // omega
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
@@ -1025,11 +1041,17 @@
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35-0.134,0.695-0.134);
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.46-0.134,0.695-0.134);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
           } else{
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
+            Double_t lowBin  = 0.35;
+            Double_t highBin = 0.695;
+            if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}")==0){
+              lowBin  = 0.46;
+              highBin = 0.70;
+            }
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
           }
@@ -1239,12 +1261,19 @@
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else if(fMesonType.CompareTo("Eta") == 0){
+
           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35-0.134,0.695-0.134);
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.46-0.134,0.70-0.134);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} - #it{M}_{#pi^{0}} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
           }else{
-            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
+            Double_t lowBin   = 0.35;
+            Double_t highBin  = 0.695;
+            if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+              lowBin  = 0.46;
+              highBin = 0.70;
+            }
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                       0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
           }

@@ -781,11 +781,11 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonMassPlotRange_FixedPzPiZero[0]  = 0.47;
              fMesonMassPlotRange_FixedPzPiZero[1]  = 0.61;
              fMesonMassRange[0]                    = 0.47;
-             fMesonMassRange[1]                    = 0.65;
+             fMesonMassRange[1]                    = 0.70;
              fMesonMassRange_SubPiZero[0]          = 0.47-0.134;
-             fMesonMassRange_SubPiZero[1]          = 0.65-0.134;
+             fMesonMassRange_SubPiZero[1]          = 0.70-0.134;
              fMesonMassRange_FixedPzPiZero[0]      = 0.47;
-             fMesonMassRange_FixedPzPiZero[1]      = 0.65;
+             fMesonMassRange_FixedPzPiZero[1]      = 0.70;
          }
 
          // Set meson fit range
