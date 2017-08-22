@@ -1361,9 +1361,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         return;
     }
     // remove bin from 0-0.3 (should have been done automatically in principle)
-    graphCombPi0InvXSectionStatA->RemovePoint(0);
-    graphCombPi0InvXSectionSysA->RemovePoint(0);
-    graphCombPi0InvXSectionTotA->RemovePoint(0);
+//    graphCombPi0InvXSectionStatA->RemovePoint(0);
+//    graphCombPi0InvXSectionSysA->RemovePoint(0);
+//    graphCombPi0InvXSectionTotA->RemovePoint(0);
     cout << __LINE__ << endl;
     graphCombPi0InvXSectionTotA->Print();
 //     return;
@@ -1888,6 +1888,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TF1* fitPowInvXSectionPi0Stat   = FitObject("powPure","fitPowInvXSectionPi08TeVStat","Pi0",graphCombPi0InvXSectionStatA,3.5,35. ,paramPi0Power,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionPi0Stat)<< endl;
 
+    Double_t paramPi0HageDorn[5] = {1E11,0.3,-0.1,0.5,5.95};
+    TF1* fitOHagInvYieldPi0Tot   = FitObject("oHag","fitOHagInvYieldPi08TeV","Pi0",graphCombPi0InvXSectionTotA,0.3,35. ,paramPi0HageDorn,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitOHagInvYieldPi0Tot)<< endl;
+
     TF1* fitPCMTCMInvXSectionPi0    = FitObject("tcm","fitPCMTCMInvCrossSectionPi08TeV","Pi0",graphPCMPi0InvXSectionStat,0.3,8. ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
     //cout << WriteParameterToFile(fitPCMTCMInvXSectionPi0)<< endl;
 
@@ -1899,6 +1903,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fLog << "Pi0 - TCM" << endl;
     fLog << WriteParameterToFile(fitTCMInvXSectionPi0) << endl;
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Pi0 - Hagedorn" << endl;
+    fLog << WriteParameterToFile(fitOHagInvYieldPi0Tot) << endl;
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fLog << "Pi0 - PowerLaw" << endl;
     fLog << WriteParameterToFile(fitPowInvXSectionPi0) << endl;
@@ -1993,12 +2000,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TGraphAsymmErrors* graphRatioPi0CombCombFitSysA     = (TGraphAsymmErrors*)graphCombPi0InvXSectionSysA->Clone();
     graphRatioPi0CombCombFitSysA                        = CalculateGraphErrRatioToFit(graphRatioPi0CombCombFitSysA, fitTCMInvXSectionPi0Plot);
 
-    TGraphAsymmErrors* graphRatioPi0CombTsallisFitStatA   = (TGraphAsymmErrors*)graphCombPi0InvXSectionStatA->Clone();
-    graphRatioPi0CombTsallisFitStatA                      = CalculateGraphErrRatioToFit(graphRatioPi0CombTsallisFitStatA, fitInvXSectionPi0);
-    TGraphAsymmErrors* graphRatioPi0CombPowerFitStatA     = (TGraphAsymmErrors*)graphCombPi0InvXSectionStatA->Clone();
-    graphRatioPi0CombPowerFitStatA                        = CalculateGraphErrRatioToFit(graphRatioPi0CombPowerFitStatA, fitPowInvXSectionPi0);
+    TGraphAsymmErrors* graphRatioPi0CombTsallisFitStatA  = (TGraphAsymmErrors*)graphCombPi0InvXSectionStatA->Clone();
+    graphRatioPi0CombTsallisFitStatA                     = CalculateGraphErrRatioToFit(graphRatioPi0CombTsallisFitStatA, fitInvXSectionPi0);
+    TGraphAsymmErrors* graphRatioPi0CombHagedornFitStatA = (TGraphAsymmErrors*)graphCombPi0InvXSectionStatA->Clone();
+    graphRatioPi0CombHagedornFitStatA                    = CalculateGraphErrRatioToFit(graphRatioPi0CombHagedornFitStatA, fitOHagInvYieldPi0Tot);
+    TGraphAsymmErrors* graphRatioPi0CombPowerFitStatA    = (TGraphAsymmErrors*)graphCombPi0InvXSectionStatA->Clone();
+    graphRatioPi0CombPowerFitStatA                       = CalculateGraphErrRatioToFit(graphRatioPi0CombPowerFitStatA, fitPowInvXSectionPi0);
     TGraphAsymmErrors* graphRatioPi0CombTsallisFitSysA   = (TGraphAsymmErrors*)graphCombPi0InvXSectionSysA->Clone();
     graphRatioPi0CombTsallisFitSysA                      = CalculateGraphErrRatioToFit(graphRatioPi0CombTsallisFitSysA, fitInvXSectionPi0);
+    TGraphAsymmErrors* graphRatioPi0CombHagedornFitSysA  = (TGraphAsymmErrors*)graphCombPi0InvXSectionSysA->Clone();
+    graphRatioPi0CombHagedornFitSysA                     = CalculateGraphErrRatioToFit(graphRatioPi0CombHagedornFitSysA, fitOHagInvYieldPi0Tot);
     TGraphAsymmErrors* graphRatioPi0CombPowerFitSysA     = (TGraphAsymmErrors*)graphCombPi0InvXSectionSysA->Clone();
     graphRatioPi0CombPowerFitSysA                        = CalculateGraphErrRatioToFit(graphRatioPi0CombPowerFitSysA, fitPowInvXSectionPi0);
 
@@ -2028,6 +2039,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TGraphAsymmErrors* graphRatioPi0CombTsallisFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioPi0CombTsallisFitStatA->Clone("graphRatioPi0CombTsallisFitStatA_WOXErr");
     ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombTsallisFitStatA_WOXErr);
+    TGraphAsymmErrors* graphRatioPi0CombHagedornFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioPi0CombHagedornFitStatA->Clone("graphRatioPi0CombHagedornFitStatA_WOXErr");
+    ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombHagedornFitStatA_WOXErr);
     TGraphAsymmErrors* graphRatioPi0CombPowerFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioPi0CombPowerFitStatA->Clone("graphRatioPi0CombPowerFitStatA_WOXErr");
     ProduceGraphAsymmWithoutXErrors(graphRatioPi0CombPowerFitStatA_WOXErr);
 
@@ -2101,20 +2114,31 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
 
     histo2DPi0RatioToCombFit->SetYTitle("Data/fit");
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
     histo2DPi0RatioToCombFit->Draw("copy");
 
-        graphRatioPi0CombCombFitSysA->Draw("E2same");
-        graphRatioPi0CombCombFitStatA_WOXErr->Draw("p,same,z");
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombTsallisFitSysA, markerTrigg[4], markerSizeComb, colorTrigg[4], colorTrigg[4], widthLinesBoxes, kTRUE);
+    while (graphRatioPi0CombPowerFitSysA->GetX()[0] < 1.6) graphRatioPi0CombPowerFitSysA->RemovePoint(0);
+    while (graphRatioPi0CombPowerFitStatA_WOXErr->GetX()[0] < 1.6) graphRatioPi0CombPowerFitStatA_WOXErr->RemovePoint(0);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombPowerFitSysA, 33, markerSizeComb*2, kAzure+2 , kAzure+2, widthLinesBoxes, kTRUE);
+        graphRatioPi0CombPowerFitSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombPowerFitStatA_WOXErr, 33, markerSizeComb*2, kAzure+2 , kAzure+2);
+        graphRatioPi0CombPowerFitStatA_WOXErr->Draw("p,same,z");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombTsallisFitSysA, 25, markerSizeComb, colorTrigg[1], colorTrigg[1], widthLinesBoxes, kTRUE);
         graphRatioPi0CombTsallisFitSysA->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombTsallisFitStatA_WOXErr, markerTrigg[4], markerSizeComb, colorTrigg[4] , colorTrigg[4]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombTsallisFitStatA_WOXErr, 25, markerSizeComb, colorTrigg[1] , colorTrigg[1]);
         graphRatioPi0CombTsallisFitStatA_WOXErr->Draw("p,same,z");
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombPowerFitSysA, markerTrigg[3], markerSizeComb, colorTrigg[3] , colorTrigg[3], widthLinesBoxes, kTRUE);
-        graphRatioPi0CombPowerFitSysA->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombPowerFitStatA_WOXErr, markerTrigg[3], markerSizeComb, colorTrigg[3] , colorTrigg[3]);
-        graphRatioPi0CombPowerFitStatA_WOXErr->Draw("p,same,z");
+        graphRatioPi0CombCombFitSysA->SetMarkerColor(kGray+2);
+        graphRatioPi0CombCombFitSysA->Draw("E2same");
+        graphRatioPi0CombCombFitStatA_WOXErr->SetMarkerColor(kGray+2);
+        graphRatioPi0CombCombFitStatA_WOXErr->Draw("p,same,z");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombHagedornFitSysA, 24, markerSizeComb+0.2, colorTrigg[2], colorTrigg[2], widthLinesBoxes, kTRUE);
+        graphRatioPi0CombHagedornFitSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombHagedornFitStatA_WOXErr, 24, markerSizeComb+0.2, colorTrigg[2] , colorTrigg[2]);
+        graphRatioPi0CombHagedornFitStatA_WOXErr->Draw("p,same,z");
 
         DrawGammaLines(0.23, 50. , 1., 1.,0.1, kGray+2);
         DrawGammaLines(0.23, 50. , 1.1, 1.1,0.1, kGray, 7);
@@ -2124,11 +2148,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelRatioToFitALICE->Draw();
         labelRatioToFitPi0->Draw();
 
-        TLegend* legendFits        = GetAndSetLegend2(0.2, 0.92-(0.05*2), 0.45, 0.92, 38);
-        legendFits->AddEntry(graphRatioPi0CombCombFitSysA,"TCM, 0.3-35");
-        legendFits->AddEntry(graphRatioPi0CombTsallisFitSysA,"Levy-Tsallis, 0.3-35");
-        legendFits->AddEntry(graphRatioPi0CombPowerFitSysA,"pure powerlaw, 3.5-35");
-        legendFits->Draw("");
+        TLegend* legendRatioPi0Fits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendRatioPi0Fits->AddEntry(graphRatioPi0CombCombFitSysA,"TCM","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0CombTsallisFitSysA,"Levy-Tsallis","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0CombHagedornFitSysA,"mod. Hagedorn","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0CombPowerFitSysA,"pure powerlaw, 3.5-35 GeV/#it{c}","p");
+        legendRatioPi0Fits->Draw();
 
     canvasRatioToCombFit->SaveAs(Form("%s/Pi0_RatioOfCombToDifferentFits_PP8TeV.%s",outputDir.Data(),suffix.Data()));
     histo2DPi0RatioToCombFit->SetYTitle("Data/TCM fit");
@@ -3102,6 +3127,10 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TF1* fitPowInvXSectionEta   = FitObject("powPure","fitPowInvXSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,3.5,35. ,paramEtaPower,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionEta)<< endl;
 
+    Double_t paramEtaHageDorn[5] = {1E11,0.3,-0.1,0.5,5.95};
+    TF1* fitOHagInvYieldEtaTot   = FitObject("oHag","fitOHagInvYieldEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.3,35. ,paramEtaHageDorn,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitOHagInvYieldEtaTot)<< endl;
+
     TF1* fitPowInvXSectionEtaStat   = FitObject("powPure","fitPowInvXSectionEta8TeVStat","Eta",graphCombEtaInvXSectionStatA,3.5,35. ,paramEtaPower,"QNRMEX0+","", kFALSE);
     cout << WriteParameterToFile(fitPowInvXSectionEtaStat)<< endl;
 
@@ -3111,6 +3140,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fLog << "Eta - TCM" << endl;
     fLog << WriteParameterToFile(fitTCMInvXSectionEta) << endl;
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "Eta - Hagedorn" << endl;
+    fLog << WriteParameterToFile(fitOHagInvYieldEtaTot) << endl;
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fLog << "Eta - PowerLaw" << endl;
     fLog << WriteParameterToFile(fitPowInvXSectionEta) << endl;
@@ -3364,12 +3396,16 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TGraphAsymmErrors* graphRatioEtaCombCombFitSysA     = (TGraphAsymmErrors*)graphCombEtaInvXSectionSysA->Clone();
     graphRatioEtaCombCombFitSysA                        = CalculateGraphErrRatioToFit(graphRatioEtaCombCombFitSysA, fitTCMInvXSectionEta);
 
-    TGraphAsymmErrors* graphRatioEtaCombTsallisFitStatA   = (TGraphAsymmErrors*)graphCombEtaInvXSectionStatA->Clone();
-    graphRatioEtaCombTsallisFitStatA                      = CalculateGraphErrRatioToFit(graphRatioEtaCombTsallisFitStatA, fitInvXSectionEta);
-    TGraphAsymmErrors* graphRatioEtaCombPowerFitStatA     = (TGraphAsymmErrors*)graphCombEtaInvXSectionStatA->Clone();
-    graphRatioEtaCombPowerFitStatA                        = CalculateGraphErrRatioToFit(graphRatioEtaCombPowerFitStatA, fitPowInvXSectionEta);
+    TGraphAsymmErrors* graphRatioEtaCombTsallisFitStatA  = (TGraphAsymmErrors*)graphCombEtaInvXSectionStatA->Clone();
+    graphRatioEtaCombTsallisFitStatA                     = CalculateGraphErrRatioToFit(graphRatioEtaCombTsallisFitStatA, fitInvXSectionEta);
+    TGraphAsymmErrors* graphRatioEtaCombHagedornFitStatA = (TGraphAsymmErrors*)graphCombEtaInvXSectionStatA->Clone();
+    graphRatioEtaCombHagedornFitStatA                    = CalculateGraphErrRatioToFit(graphRatioEtaCombHagedornFitStatA, fitOHagInvYieldEtaTot);
+    TGraphAsymmErrors* graphRatioEtaCombPowerFitStatA    = (TGraphAsymmErrors*)graphCombEtaInvXSectionStatA->Clone();
+    graphRatioEtaCombPowerFitStatA                       = CalculateGraphErrRatioToFit(graphRatioEtaCombPowerFitStatA, fitPowInvXSectionEta);
     TGraphAsymmErrors* graphRatioEtaCombTsallisFitSysA   = (TGraphAsymmErrors*)graphCombEtaInvXSectionSysA->Clone();
     graphRatioEtaCombTsallisFitSysA                      = CalculateGraphErrRatioToFit(graphRatioEtaCombTsallisFitSysA, fitInvXSectionEta);
+    TGraphAsymmErrors* graphRatioEtaCombHagedornFitSysA  = (TGraphAsymmErrors*)graphCombEtaInvXSectionSysA->Clone();
+    graphRatioEtaCombHagedornFitSysA                     = CalculateGraphErrRatioToFit(graphRatioEtaCombHagedornFitSysA, fitOHagInvYieldEtaTot);
     TGraphAsymmErrors* graphRatioEtaCombPowerFitSysA     = (TGraphAsymmErrors*)graphCombEtaInvXSectionSysA->Clone();
     graphRatioEtaCombPowerFitSysA                        = CalculateGraphErrRatioToFit(graphRatioEtaCombPowerFitSysA, fitPowInvXSectionEta);
 
@@ -3406,6 +3442,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     TGraphAsymmErrors* graphRatioEtaCombTsallisFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioEtaCombTsallisFitStatA->Clone("graphRatioEtaCombTsallisFitStatA_WOXErr");
     ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombTsallisFitStatA_WOXErr);
+    TGraphAsymmErrors* graphRatioEtaCombHagedornFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioEtaCombHagedornFitStatA->Clone("graphRatioEtaCombHagedornFitStatA_WOXErr");
+    ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombHagedornFitStatA_WOXErr);
     TGraphAsymmErrors* graphRatioEtaCombPowerFitStatA_WOXErr = (TGraphAsymmErrors*) graphRatioEtaCombPowerFitStatA->Clone("graphRatioEtaCombPowerFitStatA_WOXErr");
     ProduceGraphAsymmWithoutXErrors(graphRatioEtaCombPowerFitStatA_WOXErr);
 
@@ -3462,21 +3500,31 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
 
     histo2DEtaRatioToCombFit->SetYTitle("Data/fit");
-    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.1,2.1);
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.1,2.45);
     histo2DEtaRatioToCombFit->Draw("copy");
 
-        graphRatioEtaCombCombFitSysA->Draw("E2same");
-        graphRatioEtaCombCombFitStatA_WOXErr->Draw("p,same,z");
+    while (graphRatioEtaCombPowerFitSysA->GetX()[0] < 1.6) graphRatioEtaCombPowerFitSysA->RemovePoint(0);
+    while (graphRatioEtaCombPowerFitStatA_WOXErr->GetX()[0] < 1.6) graphRatioEtaCombPowerFitStatA_WOXErr->RemovePoint(0);
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombTsallisFitSysA, markerTrigg[4], markerSizeComb, colorTrigg[4], colorTrigg[4], widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombPowerFitSysA, 33, markerSizeComb*2, kAzure+2 , kAzure+2, widthLinesBoxes, kTRUE);
+        graphRatioEtaCombPowerFitSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombPowerFitStatA_WOXErr, 33, markerSizeComb*2, kAzure+2 , kAzure+2);
+        graphRatioEtaCombPowerFitStatA_WOXErr->Draw("p,same,z");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombTsallisFitSysA, 25, markerSizeComb, colorTrigg[1], colorTrigg[1], widthLinesBoxes, kTRUE);
         graphRatioEtaCombTsallisFitSysA->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombTsallisFitStatA_WOXErr, markerTrigg[4], markerSizeComb, colorTrigg[4] , colorTrigg[4]);
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombTsallisFitStatA_WOXErr, 25, markerSizeComb, colorTrigg[1] , colorTrigg[1]);
         graphRatioEtaCombTsallisFitStatA_WOXErr->Draw("p,same,z");
 
-        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombPowerFitSysA, markerTrigg[3], markerSizeComb, colorTrigg[3] , colorTrigg[3], widthLinesBoxes, kTRUE);
-        graphRatioEtaCombPowerFitSysA->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombPowerFitStatA_WOXErr, markerTrigg[3], markerSizeComb, colorTrigg[3] , colorTrigg[3]);
-        graphRatioEtaCombPowerFitStatA_WOXErr->Draw("p,same,z");
+        graphRatioEtaCombCombFitSysA->SetMarkerColor(kGray+2);
+        graphRatioEtaCombCombFitSysA->Draw("E2same");
+        graphRatioEtaCombCombFitStatA_WOXErr->SetMarkerColor(kGray+2);
+        graphRatioEtaCombCombFitStatA_WOXErr->Draw("p,same,z");
+
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombHagedornFitSysA, 24, markerSizeComb+0.2, colorTrigg[2], colorTrigg[2], widthLinesBoxes, kTRUE);
+        graphRatioEtaCombHagedornFitSysA->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRatioEtaCombHagedornFitStatA_WOXErr, 24, markerSizeComb+0.2, colorTrigg[2] , colorTrigg[2]);
+        graphRatioEtaCombHagedornFitStatA_WOXErr->Draw("p,same,z");
 
         DrawGammaLines(0.33, 50. , 1., 1.,0.1, kGray+2);
         DrawGammaLines(0.33, 50. , 1.1, 1.1,0.1, kGray, 7);
@@ -3486,11 +3534,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         labelRatioToFitALICE2->Draw();
         labelRatioToFitEta->Draw();
 
-        TLegend* legendFitsEta        = GetAndSetLegend2(0.2, 0.92-(0.05*2), 0.45, 0.92, 38);
-        legendFitsEta->AddEntry(graphRatioEtaCombCombFitSysA,"TCM, 0.3-35");
-        legendFitsEta->AddEntry(graphRatioEtaCombTsallisFitSysA,"Levy-Tsallis, 0.3-35");
-        legendFitsEta->AddEntry(graphRatioEtaCombPowerFitSysA,"pure powerlaw, 3.5-35");
-        legendFitsEta->Draw("");
+        TLegend* legendRatioEtaFits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
+        legendRatioEtaFits->AddEntry(graphRatioEtaCombCombFitSysA,"TCM","p");
+        legendRatioEtaFits->AddEntry(graphRatioEtaCombTsallisFitSysA,"Levy-Tsallis","p");
+        legendRatioEtaFits->AddEntry(graphRatioEtaCombHagedornFitSysA,"mod. Hagedorn","p");
+        legendRatioEtaFits->AddEntry(graphRatioEtaCombPowerFitSysA,"pure powerlaw, 3.5-35 GeV/#it{c}","p");
+        legendRatioEtaFits->Draw();
 
     canvasRatioToCombFit->SaveAs(Form("%s/Eta_RatioOfCombToDifferentFits_PP8TeV.%s",outputDir.Data(),suffix.Data()));
     histo2DEtaRatioToCombFit->SetYTitle("Data/TCM fit");
