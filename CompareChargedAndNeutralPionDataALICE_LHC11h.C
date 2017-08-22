@@ -1219,8 +1219,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	histo2DCompCombinedRatioLHC11hEta->GetXaxis()->SetLabelOffset(-0.0105);
 	histo2DCompCombinedRatioLHC11hEta->GetYaxis()->SetRangeUser(0.6,2.1);
 	histo2DCompCombinedRatioLHC11hEta->GetXaxis()->SetRangeUser(.0,20.);
-
-    histo2DCompCombinedRatioLHC11hEta2->GetXaxis()->SetRangeUser(0.7,15.);
+    histo2DCompCombinedRatioLHC11hEta2->GetXaxis()->SetRangeUser(0.5,15.);
     histo2DCompCombinedRatioLHC11hEta2->GetYaxis()->SetRangeUser(0.,2.2);
     histo2DCompCombinedRatioLHC11hEta2->DrawCopy();
 
@@ -1243,7 +1242,7 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
     pad6PartCompChargedIndPionsLHC11h1->Update();
     pad6PartCompChargedIndPionsLHC11h3->cd();
     pad6PartCompChargedIndPionsLHC11h3->SetLogx();
-    histo2DCompCombinedRatioLHC11hEta->GetXaxis()->SetRangeUser(0.7,15.);
+    histo2DCompCombinedRatioLHC11hEta->GetXaxis()->SetRangeUser(0.5,15.);
     histo2DCompCombinedRatioLHC11hEta->GetYaxis()->SetRangeUser(0.,2.2);
     histo2DCompCombinedRatioLHC11hEta->DrawCopy();
 

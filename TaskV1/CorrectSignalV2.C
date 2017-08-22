@@ -1263,7 +1263,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                                             "HistDCAZTrueBackgroundAllCat_AllPt" };
     TString nameDiffCatDecompPlot[7]                    = { "Total MC", "Prim", "Dalitz", "Sec. #pi^{0} from K^{0}_{s}", "Sec. #pi^{0} from X", "garbage", "#gamma#gamma BG" };
 
-    Color_t colorDiffCatDecomp[7]                       = {kGray, kRed+2, kGreen+2, 807, kViolet+2, kCyan+2, kPink+2};
+    Color_t colorDiffCatDecomp[7]                       = {kGray+1, kRed+2, kGreen+2, 807, kViolet+2, kCyan+2, kPink+2};
     Style_t markerStyleCatDecomp[7]                     = {24, 20, 20, 20, 20, 20, 20};
     Size_t markerSizeCatDecomp[7]                       = {1, 1, 1, 1, 1, 1, 1};
 
@@ -1292,7 +1292,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaCanvasSettings( canvasDCAMCComponents, 0.08, 0.02, 0.02, 0.09);
         canvasDCAMCComponents->SetLogy();
 
-            TLegend* legendDCAMCComponents0 = GetAndSetLegend2(0.7,0.7,0.85,0.95, 0.04*900,1);
+            TLegend* legendDCAMCComponents0 = GetAndSetLegend2(0.7,0.64,0.85,0.94, 0.04*900,1);
             if (histoDCAZUnderMesonAllCat_AllPt){
                 DrawAutoGammaMesonHistos( histoDCAZUnderMesonAllCat_AllPt,
                                 "","dca_{z} #gamma (cm)", "d(dca_{z})/#it{N}_{evt}",
@@ -1312,7 +1312,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 }
             }
 
-            TLatex *labelEnergy = new TLatex(0.11,0.9,Form("%s",collisionSystem.Data()));
+            TLatex *labelEnergy = new TLatex(0.13,0.9,Form("%s",collisionSystem.Data()));
             SetStyleTLatex( labelEnergy, 0.04,4);
             labelEnergy->Draw();
             legendDCAMCComponents0->Draw();

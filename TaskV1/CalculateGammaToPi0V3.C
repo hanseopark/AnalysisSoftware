@@ -499,12 +499,12 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         // Special PbPb setting for fits
         if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
-            if(centCutNumberI<4){
-                fitNameGammaA                   = "rad";
-                fitNameGammaB                   = "oHag";
+            if(centrality.CompareTo("0-10%")==0){
+                fitNameGammaA                   = "xqcd";
+                fitNameGammaB                   = "rad";
                 fitMaxPt                        = 14;
             } else{
-                fitNameGammaA                   = "QCD";
+                fitNameGammaA                   = "rad";
                 fitNameGammaB                   = "oHag";
                 fitMaxPt                        = 14;
             }
@@ -581,7 +581,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             histoRatioFitGammaB                     = CalculateHistoRatioToFit(histoRatioFitGammaB,fitGammaB);
             textSizeSpectra                         = 0.1;
 
-            TH1D* dummy                             = new TH1D("dummy", "dummy",1000, 0.12, 20);
+            TH1D* dummy                             = new TH1D("dummy", "dummy",1000, 0.2, 20);
             SetStyleHistoTH1ForGraphs(dummy, "#it{p}_{T} (GeV/#it{c})", "data/fit", textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
             dummy->GetYaxis()->SetRangeUser(0.5, 1.55);
             dummy->GetXaxis()->SetLabelOffset(-0.02);
@@ -628,14 +628,14 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         // Special fitting fEnergys for PbPb
         if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
-            if(centCutNumberI<4){
+            if(centrality.CompareTo("0-10%")==0){
                 fitPi0A                         = "oHag";
-                fitPi0B                         = "qcd";
-                fitPi0C                         = "rad";
+                fitPi0B                         = "rad";
+                fitPi0C                         = "xqcd";
             } else{
                 fitPi0A                         = "oHag";
-                fitPi0B                         = "qcd";
-                fitPi0C                         = "rad";
+                fitPi0B                         = "rad";
+                fitPi0C                         = "qcd";
             }
         } else{
             fitPi0A                             = "h";
@@ -656,7 +656,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fitPi0YieldA                            = FitObject(fitPi0A,"fitPi0YieldA","Pi0",histoCorrectedPi0Yield[0],fitMinPt,fitMaxPt,NULL,fitOptions);
         fitPi0YieldA->SetRange(fitMinPt,fitMaxPt);
         DrawGammaSetMarkerTF1(fitPi0YieldA, 1, 2.0, kBlue+1);
-        fileFinalResults << "CorrectedYieldTrueEff hagedorn" << endl;
+        fileFinalResults << "CorrectedYieldTrueEff " << fitPi0A << endl;
         forOutput                               = WriteParameterToFile(fitPi0YieldA);
         fileFinalResults << forOutput.Data() << endl;
 
@@ -664,7 +664,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fitPi0YieldB                            = FitObject(fitPi0B,"fitPi0YieldB","Pi0",histoCorrectedPi0Yield[0],fitMinPt,fitMaxPt,NULL,fitOptions);
         DrawGammaSetMarkerTF1(fitPi0YieldB, 2, 2.0, kRed+1);
         fitPi0YieldB->SetRange(fitMinPt,fitMaxPt);
-        fileFinalResults << "CorrectedYieldTrueEff Levy" << endl;
+        fileFinalResults << "CorrectedYieldTrueEff " << fitPi0B << endl;
         forOutput                               = WriteParameterToFile(fitPi0YieldB);
         fileFinalResults << forOutput.Data() << endl;
 
@@ -672,7 +672,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fitPi0YieldC                            = FitObject(fitPi0C,"fitPi0YieldC","Pi0",histoCorrectedPi0Yield[0],fitMinPt,fitMaxPt,NULL,fitOptions);
         DrawGammaSetMarkerTF1(fitPi0YieldC, 3, 2.0, kGreen+1);
         fitPi0YieldC->SetRange(fitMinPt,fitMaxPt);
-        fileFinalResults << "CorrectedYieldTrueEff modified Hagedorn" << endl;
+        fileFinalResults << "CorrectedYieldTrueEff " << fitPi0C << endl;
         forOutput                               = WriteParameterToFile(fitPi0YieldC);
         fileFinalResults << forOutput.Data() << endl;
 
@@ -767,8 +767,18 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             histoIncRatioFitPurity[k]           = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("histoIncRatioFitPurity%s",nameIntRanges[k].Data()));
             // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldC (Tsallis fit)
             for(Int_t bin = 1; bin<histoIncRatioFitPurity[k]->GetNbinsX()+1; bin++){
-                histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
-                histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
+                    if(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin) <=3.5){
+                        histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldB->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin)));
+                        histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                    } else {
+                        histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin)));
+                        histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                    }
+                } else {
+                    histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
+                    histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                }
             }
             histoIncRatioFitPurity[k]->Divide( histoGammaSpecCorrPurity, histoIncRatioFitPurity[k]);
         }
@@ -849,8 +859,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             DrawGammaSetMarker(cocktailPi0, 20, 2.0,kRed+2,kRed+2);
             cocktailPi0->DrawCopy("e1,same");
 
-            fitPi0YieldB->SetLineColor(1);
-            fitPi0YieldB->DrawCopy("same");
+            fitPi0YieldC->SetLineColor(1);
+            fitPi0YieldC->DrawCopy("same");
 
             DrawGammaSetMarker(histoCorrectedPi0Yield[0], 4, 2.0, 1, 1);
             histoCorrectedPi0Yield[0]->Draw("e1,same");
@@ -872,7 +882,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
             TLegend* legendMesonSpectra                 = GetAndSetLegend2(0.19, 0.11, 0.45, 0.11+0.045*(3+nCocktails), 0.045,1,"",42,0.22);
             legendMesonSpectra->AddEntry(cocktailPi0,"Cocktail #pi^{0}");
             legendMesonSpectra->AddEntry(histoCorrectedPi0Yield[0],"#pi^{0} data");
-            legendMesonSpectra->AddEntry(fitPi0YieldB,"fit to #pi^{0} data","l");
+            legendMesonSpectra->AddEntry(fitPi0YieldC,"fit to #pi^{0} data","l");
             if (haveEta){
                 if(cocktailEta)legendMesonSpectra->AddEntry(cocktailEta,"Cocktail #eta");
                 legendMesonSpectra->AddEntry(histoCorrectedEtaYield,"#eta data");

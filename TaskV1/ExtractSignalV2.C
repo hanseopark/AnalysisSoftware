@@ -2320,7 +2320,7 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
         }
 
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-            cout << "Pt:"<< iPt << endl;
+            //cout << "Pt:"<< iPt << endl;
             if(!fUseRPBackground){
                 //with ZM bins estimation
                 fHistoWeightsBGZbinVsMbin[iPt] = new  TH2F("BGWeights", "", fSparseMotherZM->GetAxis(2)->GetNbins(),  0, fSparseMotherZM->GetAxis(2)->GetNbins(),
@@ -2337,7 +2337,7 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
                 for (Int_t z=0;z < fSparseMotherZM->GetAxis(2)->GetNbins();z++){
                     for (Int_t m = 0; m < fSparseMotherZM->GetAxis(3)->GetNbins(); m++){
                         // pt
-                        cout << m << "\t" << z << endl;
+                        //cout << m << "\t" << z << endl;
                         fSparseMotherZM->GetAxis(1)->SetRange((fSparseMotherZM->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseMotherZM->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
                         fSparseBckZM->GetAxis(1)->SetRange((fSparseBckZM->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseBckZM->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
                         // z
@@ -2408,7 +2408,7 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
 
                 for (Int_t z=0;z < fSparseMotherZPsi->GetAxis(2)->GetNbins();z++){
                     for (Int_t psi = 0; psi < fSparseMotherZPsi->GetAxis(3)->GetNbins(); psi++){
-                        cout << "Z:"<<  z << "\t psi: " << psi << endl;
+                        //cout << "Z:"<<  z << "\t psi: " << psi << endl;
                         // pt
                         fSparseMotherZPsi->GetAxis(1)->SetRange((fSparseMotherZPsi->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseMotherZPsi->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
                         fSparseBckZPsi->GetAxis(1)->SetRange((fSparseBckZPsi->GetAxis(1))->FindBin(fBinsPt[iPt]+0.001),(fSparseBckZPsi->GetAxis(1))->FindBin(fBinsPt[iPt+1]-0.001));
