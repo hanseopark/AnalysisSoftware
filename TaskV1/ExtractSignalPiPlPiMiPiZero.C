@@ -287,7 +287,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
     ProduceBckWithoutWeighting(fBckInvMassVSPt,fBckInvMassVSPt_SubPiZero,fBckInvMassVSPt_FixedPzPiZero); //background without weighting because THSparse wasn't used
 
-
     if(fIsMC){
         cout<<"STARTED BLOCK fIsMC"<<endl;
         TList *MCContainer                  = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
@@ -338,6 +337,90 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         fHistoTrueMesonInvMassVSPtReweighted->Multiply(fProfileTrueMesonInvMassVSPtWeights);
         FillMassMCTrueMesonHistosArray(fHistoTrueMesonInvMassVSPt);
         FillMassMCTrueReweightedMesonHistosArray(fHistoTrueMesonInvMassVSPtReweighted);
+
+        // Get True background histos
+
+        // Get True backround histos in which PiPlPiMi have same mother
+        TString ObjectNameTruePiPlPiMiSameMother           = "ESD_TruePiPlPiMiSameMother_InvMassPt";
+        TString ObjectNameTruePiPlPiMiGroups[6]          = { "ESD_TruePiPlPiMiSameMotherFromEta_InvMassPt",
+                                                             "ESD_TruePiPlPiMiSameMotherFromOmega_InvMassPt",
+                                                             "ESD_TruePiPlPiMiSameMotherFromRho_InvMassPt",
+                                                             "ESD_TruePiPlPiMiSameMotherFromEtaPrime_InvMassPt",
+                                                             "ESD_TruePiPlPiMiSameMotherFromK0s_InvMassPt",
+                                                             "ESD_TruePiPlPiMiSameMotherFromK0l_InvMassPt"
+                                          };
+
+        for(Int_t k=0;k<6;k++){
+           hist_true_PiPlPiMi_SameMother[k]                       = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiMiGroups[k].Data());
+        }
+        for(Int_t k=1;k<7;k++){
+            fTruePiPlPiMiSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiPlPiMi_SameMother[k-1]->Clone(ObjectNameTruePiPlPiMiGroups[k-1]);
+        }
+
+        fTruePiPlPiMiSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiPlPiMiSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiPlPiMiSameMother);
+        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[2]);
+        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[3]);
+        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[4]);
+        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[5]);
+        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[6]);
+
+        // Get True backround histos in which PiMi and PiZero have same mother
+        TString ObjectNameTruePiMiPiZeroSameMother           = "ESD_TruePiMiPiZeroSameMother_InvMassPt";
+        TString ObjectNameTruePiMiPiZeroGroups[4]          = { "ESD_TruePiMiPiZeroSameMotherFromEta_InvMassPt",
+                                                             "ESD_TruePiMiPiZeroSameMotherFromOmega_InvMassPt",
+                                                             "ESD_TruePiMiPiZeroSameMotherFromRho_InvMassPt",
+                                                             "ESD_TruePiMiPiZeroSameMotherFromK0l_InvMassPt"
+                                          };
+
+        for(Int_t k=0;k<4;k++){
+           hist_true_PiMiPiZero_SameMother[k]                       = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiMiPiZeroGroups[k].Data());
+        }
+        for(Int_t k=1;k<5;k++){
+           fTruePiMiPiZeroSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiMiPiZero_SameMother[k-1]->Clone(ObjectNameTruePiMiPiZeroGroups[k-1]);
+        }
+
+        fTruePiMiPiZeroSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiMiPiZeroSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiMiPiZeroSameMother);
+        fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[2]);
+        fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[3]);
+        fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[4]);
+
+        // Get True backround histos in which PiPl and PiZero have same mother
+        TString ObjectNameTruePiPlPiZeroSameMother           = "ESD_TruePiPlPiZeroSameMother_InvMassPt";
+        TString ObjectNameTruePiPlPiZeroGroups[4]          = { "ESD_TruePiPlPiZeroSameMotherFromEta_InvMassPt",
+                                                             "ESD_TruePiPlPiZeroSameMotherFromOmega_InvMassPt",
+                                                             "ESD_TruePiPlPiZeroSameMotherFromRho_InvMassPt",
+                                                             "ESD_TruePiPlPiZeroSameMotherFromK0l_InvMassPt"
+                                          };
+
+        for(Int_t k=0;k<4;k++){
+           hist_true_PiPlPiZero_SameMother[k]                       = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiZeroGroups[k].Data());
+        }
+        for(Int_t k=1;k<5;k++){
+           fTruePiPlPiZeroSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiPlPiZero_SameMother[k-1]->Clone(ObjectNameTruePiPlPiZeroGroups[k-1]);
+        }
+
+        fTruePiPlPiZeroSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiPlPiZeroSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiPlPiZeroSameMother);
+        fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[2]);
+        fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[3]);
+        fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[4]);
+
+        // Get True combinatorical histo and True Contamination Histo
+        TString ObjectNameTruePiPlPiMiPiZeroPureCombinatorical = "ESD_TruePiPlPiMiPiZeroPureCombinatorical_InvMassPt";
+        TString ObjectNameTruePiPlPiMiPiZeroContamination = "ESD_TruePiPlPiMiPiZeroContamination_InvMassPt";
+
+        fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt =  (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiMiPiZeroPureCombinatorical.Data());
+        fTruePiPlPiMiPiZeroContamination_InvMassPt =  (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiMiPiZeroContamination.Data());
+
+        // Get Projections in pT Bins
+        for(Int_t k=0;k<7;k++){
+          ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiSameMotherInvMassVSPt[k],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k]);
+          if(k<5){
+             ProduceBckWithoutWeightingMinimal(fTruePiPlPiZeroSameMotherInvMassVSPt[k],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k]);
+             ProduceBckWithoutWeightingMinimal(fTruePiMiPiZeroSameMotherInvMassVSPt[k],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k]);
+          }
+        }
+        ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt,fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin);
+        ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiPiZeroContamination_InvMassPt,fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin);
     }
 
     fMesonMassExpect = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
@@ -1619,7 +1702,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     nameCanvas          = "MesonWithBckCanvas";
     namePad             = "MesonWithBckPad";
     PlotInvMassInPtBinsBckGroups(fHistoMappingGGInvMassPtBin_FixedPzPiZero, fHistoMappingBackNormInvMassPtBin_FixedPzPiZero, nameMeson, nameCanvas, namePad, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcess, fCollisionSystem);
-
     // Meson Subtracted
     TString nameMesonSub        = Form("%s/%s_%s_MesonSubtracted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
     TString nameCanvasSub       = "MesonCanvasSubtracted";
@@ -1771,6 +1853,33 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_FixedPzPiZero,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                                     fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroups_FixedPzPiZero");
 
+
+    if(fIsMC){
+      // Example bin for debugging changed to fStartPTBin
+      TString HistosLegendsTitlesPiPlPiMi[7] = { "True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-} same mother from #eta","True #pi^{+}#pi^{-} same mother from #omega","True #pi^{+}#pi^{-} same mother from #rho","True #pi^{+}#pi^{-} same mother from #eta '","True #pi^{+}#pi^{-} same mother from K^{0}_{s}","True #pi^{+}#pi^{-} same mother from K^{0}_{l}"};
+      PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin,1,7,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiMi[0],HistosLegendsTitlesPiPlPiMi,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMi_Contributions",kFALSE,6.);
+
+      TString HistosLegendsTitlesPiPlPiZero[5] = { "True #pi^{+}#pi^{0} same mother","True #pi^{+}#pi^{0} same mother from #eta","True #pi^{+}#pi^{0} same mother from #omega","True #pi^{+}#pi^{0} same mother from #rho","True #pi^{+}#pi^{0} same mother from K^{0}_{l}"};
+      PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiZero[0],HistosLegendsTitlesPiPlPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiZero_Contributions",kFALSE,6.);
+      TString HistosLegendsTitlesPiMiPiZero[5] = { "True #pi^{-}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother from #eta","True #pi^{-}#pi^{0} same mother from #omega","True #pi^{-}#pi^{0} same mother from #rho","True #pi^{-}#pi^{0} same mother from K^{0}_{l}"};
+      PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiMiPiZero[0],HistosLegendsTitlesPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiMiPiZero_Contributions",kFALSE,6.);
+
+      // pi+pi-pi0 contributions
+      TH1D** tempPlotArray[6] = {NULL,NULL,NULL,NULL,NULL,NULL}; // temporary array serving as a plotting container
+      tempPlotArray[0] = fHistoMappingTrueMesonInvMassPtBins;
+      tempPlotArray[1] = fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0];
+      tempPlotArray[2] = fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0];
+      tempPlotArray[3] = fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0];
+      tempPlotArray[4] = fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin;
+      tempPlotArray[5] = fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin;
+      TString HistosLegendsTitlesPiPlPiMiPiZero[6] = {"True #pi^{+}#pi^{-}#pi^{0} from #eta or #omega","True #pi^{+}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother","True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-}#pi^{0} pure combinatorical","#pi^{+}#pi^{-}#pi^{0} contamination"};
+      PlotExampleInvMassSingleHistAndArray(fHistoMappingGGInvMassPtBin[fStartPtBin],tempPlotArray,0,6,fMesonMassRange[0],fMesonMassRange[1],fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,"Signal+Background",HistosLegendsTitlesPiPlPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMiPiZero_Contributions",kFALSE,2.);
+
+    }
     // Background groups scaled with same factor in example bin
     PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingBackSameNormInvMassPtBin,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                                     fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale");
@@ -1786,7 +1895,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         TString nameMesonTrue   = Form("%s/%s_%s_TrueMesonFitted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
         TString nameCanvasTrue  = "TrueMesonCanvasFitted";
         TString namePadTrue     = "TrueMesonPadFitted";
-        PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueMesonInvMassPtBins, fFitTrueSignalInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}");
+        PlotWithFitSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins, fHistoMappingTrueMesonInvMassPtBins, fFitTrueSignalInvMassPtBin, nameMesonTrue, nameCanvasTrue, namePadTrue, fMesonMassRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}");  
     }
 
     CreatePtHistos();
@@ -2350,9 +2459,11 @@ void ProduceBckWithoutWeighting(TH2D **fBckInvMassVSPtDummy,TH2D **fBckInvMassVS
     }
 }
 
-void ProduceBckWithoutWeightingMinimal(TH2D *fBckInvMassVSPtDummy,TH1D **fHistoMappingBackGroupInvMassPtBin){ // Produce Background in bins without midPt and without fullPt without weighting
+void ProduceBckWithoutWeightingMinimal(TH2D *fBckInvMassVSPtDummy, TH1D **fHistoMappingBackGroupInvMassPtBin){ // Produce Background in bins without midPt and without fullPt without weighting
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
+
         fNameHistoBack = Form("Mapping_Back_InvMass_in_Pt_Bin%02d", iPt);
+
         if(fHistoMappingBackGroupInvMassPtBin[iPt]!= NULL){
             delete fHistoMappingBackGroupInvMassPtBin[iPt];
             fHistoMappingBackGroupInvMassPtBin[iPt]=NULL;
@@ -3309,6 +3420,24 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
             fHistoMappingBackNormInvMassPtBin[k][ii]->Write(nameHistoBckNorm.Data());
         }
     }
+    // Loop over TruePiPiSame Mother histos
+    if(optionMC){
+      TString nameMappingTruePiPlPiMi[7]   = {"HistoMappingTruePiPlPiMiSameMother","HistoMappingTruePiPlPiMiSameMother_FromEta","HistoMappingTruePiPlPiMiSameMother_FromOmega","HistoMappingTruePiPlPiMiSameMother_FromRho",
+                                              "HistoMappingTruePiPlPiMiSameMother_FromEtaPrime","HistoMappingTruePiPlPiMiSameMother_FromK0s","HistoMappingTruePiPlPiMiSameMother_FromK0l"};
+      TString nameMappingTruePiMiPiZero[5] = {"HistoMappingTruePiMiPiZeroSameMother","HistoMappingTruePiMiPiZeroSameMother_FromEta","HistoMappingTruePiMiPiZeroSameMother_FromOmega","HistoMappingTruePiMiPiZeroSameMother_FromRho",
+                                              "HistoMappingTruePiMiPiZeroSameMother_FromK0l"};
+      TString nameMappingTruePiPlPiZero[5] = {"HistoMappingTruePiPlPiZeroSameMother","HistoMappingTruePiPlPiZeroSameMother_FromEta","HistoMappingTruePiPlPiZeroSameMother_FromOmega","HistoMappingTruePiPlPiZeroSameMother_FromRho",
+                                              "HistoMappingTruePiPlPiZeroSameMother_FromK0l"};
+      for(Int_t k=0;k<7;k++){
+        for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
+          fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiPlPiMi[k].Data(),ii));
+          if(k<5){
+            fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiMiPiZero[k].Data(),ii));
+            fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiPlPiZero[k].Data(),ii));
+          }
+        }
+      }
+    }
     for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
         fHistoMappingGGInvMassPtBin[ii]->Write();
         fHistoMappingGGInvMassPtBin_SubPiZero[ii]->Write();
@@ -3345,6 +3474,8 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             fHistoMappingTrueMesonInvMassPtBins[ii]->Write();
             fHistoMappingTrueMesonInvMassPtReweightedBins[ii]->Write();
+            fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[ii]->Write(Form("HistoMappingTruePiPlPiMiPiZeroCombinatorical_in_Pt_Bin%02d",ii));
+            fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[ii]->Write(Form("HistoMappingTruePiPlPiMiPiZeroContamination_in_Pt_Bin%02d",ii));
             if (fFitTrueSignalInvMassPtBin[ii]!=0x00) fFitTrueSignalInvMassPtBin[ii]->Write();
             if (fFitTrueSignalInvMassPtReweightedBin[ii]!=0x00) fFitTrueSignalInvMassPtReweightedBin[ii]->Write();
         }
@@ -3618,6 +3749,9 @@ void Initialize(TString setPi0, Int_t numberOfBins){
     fHistoMappingGGInvMassPtBin_SubPiZero = 				new TH1D*[fNBinsPt];
     fHistoMappingGGInvMassPtBin_FixedPzPiZero =				new TH1D*[fNBinsPt];
 
+    fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin =	new TH1D*[fNBinsPt];
+    fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin =  	new TH1D*[fNBinsPt];
+
     fHistoMappingGGInvMassBackFitPtBin =					new TH1D*[fNBinsPt];
     fHistoMappingGGInvMassBackFitPtBin_SubPiZero =   		new TH1D*[fNBinsPt];
     fHistoMappingGGInvMassBackFitPtBin_FixedPzPiZero =		new TH1D*[fNBinsPt];
@@ -3625,6 +3759,20 @@ void Initialize(TString setPi0, Int_t numberOfBins){
     fHistoMappingSignalInvMassPtBin =				    new TH1D*[fNBinsPt];
     fHistoMappingSignalInvMassPtBin_SubPiZero =		    new TH1D*[fNBinsPt];
     fHistoMappingSignalInvMassPtBin_FixedPzPiZero =	    new TH1D*[fNBinsPt];
+    for(Int_t k = 0; k<7; k++){
+      fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k] =        new TH1D*[fNBinsPt];
+      if(k<5){
+        fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k] =    new TH1D*[fNBinsPt];
+        fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k] =    new TH1D*[fNBinsPt];
+        for(Int_t i = 0;i<fNBinsPt; i++){
+          fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][i] = NULL;
+          fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][i] = NULL;
+        }
+      }
+      for(Int_t i = 0;i<fNBinsPt; i++){
+        fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][i] = NULL;
+      }
+    }
     for(Int_t k = 0; k<5; k++){
         fHistoMappingBackInvMassPtBin[k] = 						new TH1D*[fNBinsPt];
         fHistoMappingBackInvMassPtBin_SubPiZero[k] =			new TH1D*[fNBinsPt];
@@ -3703,9 +3851,11 @@ void Initialize(TString setPi0, Int_t numberOfBins){
         fHistoMappingGGInvMassPtBin_FixedPzPiZero[i] =				NULL;
         fHistoMappingGGInvMassBackFitPtBin[i] = 					NULL;
         fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i] = 		NULL;
+        fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[i] =		NULL;
+        fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[i] = 		NULL;
         fBackgroundFitPol[i] = 										NULL;
-        fBackgroundFitPol_SubPiZero[i] = 										NULL;
-        fBackgroundFitPol_FixedPzPiZero[i] = 										NULL;
+        fBackgroundFitPol_SubPiZero[i] = 							NULL;
+        fBackgroundFitPol_FixedPzPiZero[i] =                        NULL;
 
         fFitSignalInvMassPtBin[i] = 								NULL;
         fFitSignalInvMassPtBin_SubPiZero[i] =						NULL;
@@ -3946,6 +4096,8 @@ void Delete(){
     if (fHistoMappingGGInvMassPtBin)                   delete fHistoMappingGGInvMassPtBin;
     if (fHistoMappingGGInvMassPtBin_SubPiZero)         delete fHistoMappingGGInvMassPtBin_SubPiZero;
     if (fHistoMappingGGInvMassPtBin_FixedPzPiZero)     delete fHistoMappingGGInvMassPtBin_FixedPzPiZero;
+    if (fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin)     delete fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin;
+    if (fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin)     delete fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin;
     for (Int_t k = 0; k< 5; k++){
         if (fHistoMappingBackInvMassPtBin[k])               delete fHistoMappingBackInvMassPtBin[k];
         if (fHistoMappingBackInvMassPtBin_SubPiZero[k])     delete fHistoMappingBackInvMassPtBin_SubPiZero[k];

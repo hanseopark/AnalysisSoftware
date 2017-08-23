@@ -1166,6 +1166,212 @@
         canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_%s%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(),fileName.Data() ,methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
     }
 
+    // Plotting function to plot a single invmass histogram and a bunch of other invmass histograms contained in a array [k][pT]
+    // in an example bin
+    void PlotExampleInvMassSingleHistAndArray(TH1D* histoSingle,
+                                    TH1D*** histoArray,
+                                    Int_t arrayBegin,
+                                    Int_t arrayEnd,
+                                    Double_t xAxisMin,
+                                    Double_t xAxisMax,
+                                    Int_t exampleBin,
+                                    TString outputDir,
+                                    TString suffix,
+                                    Double_t* fPlottingRangeMeson,
+                                    Float_t* pictDrawingCoordinatesDummy,
+                                    Double_t fNumberOfEvents,
+                                    TString dateDummy,
+                                    TString fMesonType,
+                                    TString fSimulation,
+                                    TString fPlottingType,
+                                    TString fCollisionSystemDummy,
+                                    Double_t* fRangeBinsPt,
+                                    TString decayChannel,
+                                    TString  singleHistoLegend,
+                                    TString* arrayHistoLegend, // Array of TStrings for labeling histos in array
+                                    TString detectionChannel                = "",
+                                    Int_t triggerSet                        = 0,
+                                    Double_t scaleFacSignal                 = 1.0,
+                                    Int_t detMode                           = 0,
+                                    Bool_t addSig                           = kFALSE,
+                                    TString fileName                        = "InvMassBinBckGroups",
+                                    Bool_t isVsPtConv                       = kFALSE,
+                                    Double_t RebinFac                       = 1.
+                                ){
+
+        cout << "Trigger set: " << triggerSet << endl;
+        cout << "fCollisionSystemDummy: " << fCollisionSystemDummy << endl;
+        TString triggerStr2             = ReturnTriggerName(triggerSet,fCollisionSystemDummy);
+        TString triggerStr              = Form("%s triggered", triggerStr2.Data());
+        TString methodStr               = ReturnTextReconstructionProcess(detMode);
+        TString methodStrOut            = ReturnTextReconstructionProcessWrite(detMode);
+        if (addSig)
+            methodStrOut                = methodStrOut+"AddSig";
+
+        TH1D* histoInvMassSingle;
+        TH1D* histoInvMassArray[7]; // Array containing all background contributions
+        histoInvMassSingle         = (TH1D*)histoSingle->Clone("InvMassSigPlusBG_PtBin07"); // Signal + Background
+        if(RebinFac>1){
+          histoInvMassSingle->Rebin(RebinFac);
+          histoInvMassSingle->Scale(1.,"width");
+        }
+        for(Int_t k=arrayBegin;k<arrayEnd;k++){
+            histoInvMassArray[k] = (TH1D*)histoArray[k][exampleBin]->Clone(Form("InvMassNormBG_%i",k));
+            if(RebinFac>1){
+              histoInvMassArray[k]->Rebin(RebinFac);
+              histoInvMassArray[k]->Scale(1.,"width");
+            }
+        }
+
+        TString titleSingleHisto =(TString) histoSingle->GetName();
+        Double_t textSizeLabelsPixel                 = 100*3/5;
+        TCanvas* canvasInvMassSamplePlot             = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
+        DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.09, 0.012, 0.035, 0.08);
+
+        Double_t startPt                    = fRangeBinsPt[exampleBin];
+        Double_t endPt                      = fRangeBinsPt[exampleBin+1];
+
+        Style_t markerStyleInvMassSGBG      = 0;
+        Size_t markerSizeInvMassSGBG        = 0;
+        Color_t markerColorInvMassSGBG      = kBlack;
+        Style_t markerStyleInvMassMBG       = 24;
+        Size_t markerSizeInvMassMBG         = 1.5;
+        Color_t markerColorInvMassMBG       = kGray+2;
+        Color_t markerColorInvMassMBG1      = kGray+3;
+        Color_t markerColorInvMassMBG2      = kGray+1;
+        Style_t markerStyleInvMassBG[7]        = {20,25,28,27,30,20,20};
+        Size_t markerSizeInvMassBG          = 2;
+        Color_t markerColorInvMassBG[7]        = {kGreen+1,kRed+1,kBlue-2,kOrange+7,kMagenta+3,kCyan+3,kYellow-3};
+        Style_t markerStyleInvMassSG        = 20;
+        Size_t markerSizeInvMassSG          = 3;
+        Color_t markerColorInvMassSG        = kRed+2;
+        Color_t fitColorInvMassSG           = kAzure+2;
+        Color_t fitColorInvMassSG2          = kGreen+3;
+
+        Double_t textsizeLabelsPP       = 0.04;
+        Double_t marginInvMass          = 0.1*1500;
+        Double_t textsizeLabelsInvMass  = 0;
+        Double_t textsizeFacInvMass     = 0;
+        if (canvasInvMassSamplePlot->XtoPixel(canvasInvMassSamplePlot->GetX2()) < canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1())){
+            textsizeLabelsInvMass       = (Double_t)textSizeLabelsPixel/canvasInvMassSamplePlot->XtoPixel(canvasInvMassSamplePlot->GetX2()) ;
+            textsizeFacInvMass          = (Double_t)1./canvasInvMassSamplePlot->XtoPixel(canvasInvMassSamplePlot->GetX2()) ;
+        } else {
+            textsizeLabelsInvMass       = (Double_t)textSizeLabelsPixel/canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1());
+            textsizeFacInvMass          = (Double_t)1./canvasInvMassSamplePlot->YtoPixel(canvasInvMassSamplePlot->GetY1());
+        }
+
+        TH1F * histo1DInvMassDummy;
+        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                    0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else if(fMesonType.CompareTo("Eta") == 0){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,xAxisMin,xAxisMax);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else { // omega
+
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,xAxisMin,xAxisMax);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+
+          histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+          histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        }
+
+        TString ptLabel         =  "#it{p}_{T} ";
+        if (isVsPtConv)
+            ptLabel             =  "#it{p}_{T,#gamma_{conv}}";
+
+        // Set range for fits and labels
+        TLatex *labelInvMassPtRange;
+        if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        } else if(fMesonType.CompareTo("Eta") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        } else { // omega
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        }
+
+        // Start Drawing
+        TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
+        labelALICE->SetTextFont(43);
+        labelALICE->Draw();
+
+        TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
+        SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
+        labelInvMassEnergy->SetTextFont(43);
+        labelInvMassEnergy->Draw();
+
+        TLatex *labelTrigger  = new TLatex(0.135,0.9-2*0.9*textsizeLabelsPP,triggerStr.Data());
+        SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4);
+        labelTrigger->SetTextFont(43);
+        labelTrigger->Draw();
+
+        TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, methodStr);
+        SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
+        labelInvMassReco->SetTextFont(43);
+        labelInvMassReco->Draw();
+
+        SetStyleTLatex( labelInvMassPtRange, 0.85*textSizeLabelsPixel,4);
+        labelInvMassPtRange->SetTextAlign(31);
+        labelInvMassPtRange->SetTextFont(43);
+        labelInvMassPtRange->Draw();
+        canvasInvMassSamplePlot->cd();
+        histo1DInvMassDummy->Draw();
+
+        Double_t minimum = histoInvMassSingle->GetMinimum();
+        if (minimum < 0) minimum = 1.3*minimum;
+        else minimum = 0.7*minimum;
+        histo1DInvMassDummy->GetYaxis()->SetRangeUser(minimum,1.7*histoInvMassSingle->GetMaximum());
+        if (fMesonType.Contains("Pi0") && fCollisionSystemDummy.Contains("p-Pb")){
+            histo1DInvMassDummy->GetXaxis()->SetRangeUser(0.02,0.255);
+            histo1DInvMassDummy->GetXaxis()->SetNdivisions(510);
+        }
+
+        histo1DInvMassDummy->Draw("AXIS");
+
+        DrawGammaSetMarker(histoInvMassSingle, markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
+        histoInvMassSingle->SetLineWidth(1);
+        histoInvMassSingle->Draw("hist,e,same");
+
+        Int_t StyleAndColorCounter = 0;
+        for(Int_t k=arrayBegin;k<arrayEnd;k++){
+            if(StyleAndColorCounter>6) StyleAndColorCounter=0;
+            DrawGammaSetMarker(histoInvMassArray[k], markerStyleInvMassBG[StyleAndColorCounter], markerSizeInvMassBG, markerColorInvMassBG[StyleAndColorCounter], markerColorInvMassBG[StyleAndColorCounter]);
+            histoInvMassArray[k]->Draw("hist,pe,same");
+            StyleAndColorCounter++;
+        }
+        Int_t nLegendLines      = 6;
+
+        labelALICE->Draw();
+        labelInvMassEnergy->Draw();
+        labelTrigger->Draw();
+        labelInvMassReco->Draw();
+        labelInvMassPtRange->Draw();
+        // 0.67
+        TLegend* legendInvMass2  = GetAndSetLegend2(0.35, 0.87-nLegendLines*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel);
+        legendInvMass2->SetMargin(0.25);
+        if(fSimulation.CompareTo("MC")==0){
+          legendInvMass2->AddEntry(histoInvMassSingle,singleHistoLegend.Data(),"le");
+        }else{
+          legendInvMass2->AddEntry(histoInvMassSingle,"Raw real events","le");
+        }
+        for(Int_t k=arrayBegin;k<arrayEnd;k++){
+          legendInvMass2->AddEntry(histoInvMassArray[k],arrayHistoLegend[k],"lpe");
+        }
+        legendInvMass2->Draw();
+        histo1DInvMassDummy->Draw("AXIS,same");
+
+        canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_%s%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(),fileName.Data() ,methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+    }
+
     //_______________________ Plotting Invariant mass with fitted BG and subtraction in a single p_t bin __________________________________
     void PlotExampleInvMassBinsBckFit(TH1D* histoInvMassSignalWithBG,
                                     TH1D* histoInvMassSignal,

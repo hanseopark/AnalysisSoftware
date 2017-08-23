@@ -154,9 +154,17 @@ TH1D** 	fHistoMappingGGInvMassBackFitPtBin=					NULL;
 TH1D** 	fHistoMappingGGInvMassBackFitPtBin_SubPiZero=		NULL;
 TH1D** 	fHistoMappingGGInvMassBackFitPtBin_FixedPzPiZero=	NULL;
 TH1D** 	fHistoMappingGGInvMassBackFitWithoutSignalPtBin=	NULL;
-TH1D** 	fHistoMappingBackInvMassPtBin[5]=				   {NULL,NULL,NULL,NULL,NULL};
-TH1D** 	fHistoMappingBackInvMassPtBin_SubPiZero[5]=		   {NULL,NULL,NULL,NULL,NULL};
-TH1D** 	fHistoMappingBackInvMassPtBin_FixedPzPiZero[5]=	   {NULL,NULL,NULL,NULL,NULL};
+TH1D**  fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin= NULL;
+TH1D**  fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin=  NULL;
+
+TH1D** 	fHistoMappingBackInvMassPtBin[5]=				      {NULL,NULL,NULL,NULL,NULL};
+TH1D** 	fHistoMappingBackInvMassPtBin_SubPiZero[5]=		      {NULL,NULL,NULL,NULL,NULL};
+TH1D** 	fHistoMappingBackInvMassPtBin_FixedPzPiZero[5]=	      {NULL,NULL,NULL,NULL,NULL};
+
+TH1D** 	fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[7]  = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+TH1D** 	fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[5]= {NULL,NULL,NULL,NULL,NULL};
+TH1D** 	fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[5]= {NULL,NULL,NULL,NULL,NULL};
+
 TH1D** 	fHistoMappingBackNormInvMassPtBin[5]=			   {NULL,NULL,NULL,NULL,NULL};
 TH1D** 	fHistoMappingBackNormInvMassPtBin_SubPiZero[5]=	   {NULL,NULL,NULL,NULL,NULL};
 TH1D** 	fHistoMappingBackNormInvMassPtBin_FixedPzPiZero[5]={NULL,NULL,NULL,NULL,NULL};
@@ -490,12 +498,28 @@ TH2D*	fGammaGammaInvMassVSPt=								NULL;
 TH2D*	fGammaGammaInvMassVSPt_SubPiZero=					NULL;
 TH2D*	fGammaGammaInvMassVSPt_FixedPzPiZero=				NULL;
 TH2D*   hist_bck[4]=                                        {NULL,NULL,NULL,NULL};
+TH2D*   hist_true_PiPlPiMi_SameMother[6]=                   {NULL,NULL,NULL,NULL,NULL,NULL};
+TH2D*   hist_true_PiMiPiZero_SameMother[4]=                   {NULL,NULL,NULL,NULL};
+TH2D*   hist_true_PiPlPiZero_SameMother[4]=                   {NULL,NULL,NULL,NULL};
 TH2D*   hist_bck_SubPiZero[4]=                              {NULL,NULL,NULL,NULL};
-TH2D*   hist_bck_FixedPzPiZero[4]=                                        {NULL,NULL,NULL,NULL};
+TH2D*   hist_bck_FixedPzPiZero[4]=                          {NULL,NULL,NULL,NULL};
 TH2D*	fBckInvMassVSPt[5]=									{NULL,NULL,NULL,NULL,NULL}; // 0: Background summed 1: Background Group 1 2: Background Group 2 ...
-TH2D*	fBckInvMassVSPt_SubPiZero[5]=									{NULL,NULL,NULL,NULL,NULL}; // 0: Background summed 1: Background Group 1 2: Background Group 2 ...
-TH2D*	fBckInvMassVSPt_FixedPzPiZero[5]=									{NULL,NULL,NULL,NULL,NULL}; // 0: Background summed 1: Background Group 1 2: Background Group 2 ...
+TH2D*	fBckInvMassVSPt_SubPiZero[5]=			            {NULL,NULL,NULL,NULL,NULL}; // 0: Background summed 1: Background Group 1 2: Background Group 2 ...
+TH2D*	fBckInvMassVSPt_FixedPzPiZero[5]=                 	{NULL,NULL,NULL,NULL,NULL}; // 0: Background summed 1: Background Group 1 2: Background Group 2 ...
 
+TH2D*	fTruePiPlPiMiSameMotherInvMassVSPt[7]=				{NULL,NULL,NULL,NULL,NULL,NULL,NULL}; // 0: True PiPlPiMi have same mother
+                                                                                                  // 1: True PiPlPiMi have same mother (which is an Eta)
+                                                                                                  // 2: True PiPlPiMi have same mother (which is a Omega)
+                                                                                                  // 3: True PiPlPiMi have same mother (which is a Rho)
+                                                                                                  // 4: True PiPlPiMi have same mother (which is a EtaPrime)
+                                                                                                  // 5: True PiPlPiMi have same mother (which is a K0s)
+                                                                                                  // 6: True PiPlPiMi have same mother (which is a K0l)
+TH2D*	fTruePiMiPiZeroSameMotherInvMassVSPt[5]=              {NULL,NULL,NULL,NULL,NULL};           // 0: True PiMiPiZero have same mother
+                                                                                                  // 1: eta 2: omega: 3: rho 4:K0l
+TH2D*	fTruePiPlPiZeroSameMotherInvMassVSPt[5]=              {NULL,NULL,NULL,NULL,NULL};           // 0: True PiPlPiZero have same mother
+                                                                                                  // 1: eta 2: omega: 3: rho 4:K0l
+TH2D*   fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt=    NULL;
+TH2D*   fTruePiPlPiMiPiZeroContamination_InvMassPt=    NULL;
 TH2F**	fHistoWeightsBGZbinVsMbin = 						0x0;
 TH2F**	fHistoFillPerEventBGZbinVsMbin = 					0x0;
 
@@ -532,7 +556,7 @@ void FitTrueInvMassInPtBins(TH1D * , Double_t *fMesonIntDeltaRangeFit, Int_t, Bo
 void FitCBSubtractedInvMassInPtBins(TH1D * , Double_t *fMesonIntDeltaRangeFit, Int_t, Bool_t , TString , Int_t InvMassType);  // Fits the Invariant Mass histos with a given function;
 void FitWithPol2ForBG(TH1D*, Double_t*fMesonFitRangeCur, Int_t, Bool_t,Int_t);
 // void ProduceBckProperWeighting(TList*, TList* );
-void ProduceBckWithoutWeighting(TH2D **, TH2D **fBckInvMassVSPtDummy_SubPiZero, TH2D **fBckInvMassVSPtDummy_FixedPzPiZero);
+void ProduceBckWithoutWeighting(TH2D **, TH2D **fBckInvMassVSPtDummy_SubPiZero = NULL, TH2D **fBckInvMassVSPtDummy_FixedPzPiZero = NULL);
 void ProduceBckWithoutWeightingMinimal(TH2D *,TH1D **);
 void IntegrateHistoInvMassStream(TH1D * , Double_t *);
 void IntegrateHistoInvMass(TH1D * , Double_t *);
