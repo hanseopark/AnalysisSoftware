@@ -41,8 +41,8 @@
 #include "TFitResult.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "ExtractSignalPiPlPiMiPiZero.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
+#include "ExtractSignalPiPlPiMiPiZero.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctions.h" // changed to standard CommonHeaders
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"

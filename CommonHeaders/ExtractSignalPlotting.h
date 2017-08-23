@@ -8,7 +8,6 @@
     TString     backgroundExtractionMethod[3]                           = {"std", "var1", "var2"};
     Color_t     backgroundColor[3]                                      = {kBlue+2, kGreen+3, kGray+2};
 
-
     void     PlotDCAzInPtBinsWithBack           (   TH1D**      ESDGammaPtDCAzBins,
                                                     TH1D**      ESDGammaPtDCAzBinsBack,
                                                     TH1D**      ESDGammaPtDCAzBinsBackB,

@@ -31,8 +31,6 @@ Double_t *fFitRange;
 Double_t *fFitRange_SubPiZero;
 Double_t *fFitRange_FixedPzPiZero;
 Double_t *fBGFitRange                                       = NULL;
-Double_t *fBGFitRange_SubPiZero                             = NULL;
-Double_t *fBGFitRange_FixedPzPiZero                         = NULL;
 Double_t *fMesonIntRange                                    = NULL;
 
 // TSring
@@ -585,8 +583,6 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
     fFitRange_SubPiZero                = new Double_t[2];
     fFitRange_FixedPzPiZero            = new Double_t[2];
     fBGFitRange                        = new Double_t[2];
-    fBGFitRange_SubPiZero              = new Double_t[2];
-    fBGFitRange_FixedPzPiZero          = new Double_t[2];
     fBGFitRangeLeft                    = new Double_t[2];
     fBGFitRangeLeft_SubPiZero          = new Double_t[2];
     fBGFitRangeLeft_FixedPzPiZero      = new Double_t[2];
