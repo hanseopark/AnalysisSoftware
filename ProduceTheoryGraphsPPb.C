@@ -87,15 +87,15 @@ TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
     return returnGraph;
 }
 
-
+//**********************************************************************************************************
+// Combine graphs from different muo scales into 1 accordingly
+//**********************************************************************************************************
 TGraphAsymmErrors* CombineMuScales( Int_t nPoints,
                                     Double_t* pt,
                                     Double_t* mu,
                                     Double_t* muHalf,
                                     Double_t* muTwo
                                   ){
-
-
     Double_t yValue[400];
     Double_t yErrorHigh[400];
     Double_t yErrorLow[400];
@@ -115,6 +115,47 @@ TGraphAsymmErrors* CombineMuScales( Int_t nPoints,
     TGraphAsymmErrors* graphReturn = new TGraphAsymmErrors(nPoints, pt, yValue, ptErr, ptErr, yErrorLow, yErrorHigh);
     return graphReturn;
 }
+
+//**********************************************************************************************************
+// Combine graphs from different muo scales into 1 accordingly
+//**********************************************************************************************************
+TGraphAsymmErrors* CombineMuScales( TGraph* mu,
+                                    TGraph* muHalf,
+                                    TGraph* muTwo
+){
+    cout << "combining different mu scales" << endl;
+    Int_t nPoints               = mu->GetN();
+    Double_t* pt                = mu->GetX();
+    Double_t yValue[400];
+    Double_t yErrorHigh[400];
+    Double_t yErrorLow[400];
+    Double_t ptErr[400];
+
+    for (Int_t i = 0; i< nPoints; i++){
+        if (pt[i] == mu->GetX()[i] && pt[i] == muHalf->GetX()[i] && pt[i] == muTwo->GetX()[i] ){
+            yValue[i]   = mu->GetY()[i];
+            ptErr[i]    = 0;
+            if (muHalf->GetY()[i] < mu->GetY()[i] && muHalf->GetY()[i] != 0){
+                yErrorLow[i]    = TMath::Abs(mu->GetY()[i]-muHalf->GetY()[i]);
+                yErrorHigh[i]   = TMath::Abs(muTwo->GetY()[i]-mu->GetY()[i]);
+            } else {
+                yErrorLow[i]    = TMath::Abs(mu->GetY()[i]-muTwo->GetY()[i]);
+                yErrorHigh[i]   = TMath::Abs(muHalf->GetY()[i]-mu->GetY()[i]);
+            }
+        } else {
+            cout << "*************************************************************" << endl;
+            cout << "********** ATTENTION mismatching x values *******************" << endl;
+            cout << mu->GetX()[i] << "\t" << muHalf->GetX()[i]  << "\t" << muTwo->GetX()[i] << endl;
+            cout << "*************************************************************" << endl;
+            yValue[i]           = 0;
+            yErrorLow[i]        = 0;
+            yErrorHigh[i]       = 0;
+        }
+    }
+    TGraphAsymmErrors* graphReturn = new TGraphAsymmErrors(nPoints, pt, yValue, ptErr, ptErr, yErrorLow, yErrorHigh);
+    return graphReturn;
+}
+
 
 //**********************************************************************************************************
 // Calculates the ratio of two error graphs
@@ -669,7 +710,7 @@ void ProduceTheoryGraphsPPb(){
     graphNLOCalcInvSecEtaMuOne5023GeV               = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muOneEta5023GeV);
     graphNLOCalcInvSecEtaMuOne5023GeV->Print();
     // fill yield graph for default mu
-    graphNLOCalcInvYieldEtaMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecEtaMuOne5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    graphNLOCalcInvYieldEtaMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecEtaMuOne5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
     graphNLOCalcInvYieldEtaMuOnepp5023GeV           = ScaleGraph(graphNLOCalcInvSecEtaMuOne5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
 
     if (fillAllMuScalesEta5023GeV){
@@ -678,14 +719,14 @@ void ProduceTheoryGraphsPPb(){
         graphNLOCalcInvSecEtaMuHalf5023GeV->RemovePoint(0);
         graphNLOCalcInvSecEtaMuTwo5023GeV           = new TGraph(nlinesNLOEta5023GeV,ptNLOEta5023GeV,muTwoEta5023GeV);
         // fill yield graphs for mu variations
-        graphNLOCalcInvYieldEtaMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecEtaMuHalf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
-        graphNLOCalcInvYieldEtaMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecEtaMuTwo5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldEtaMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecEtaMuHalf5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldEtaMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecEtaMuTwo5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
         graphNLOCalcInvYieldEtaMuHalfpp5023GeV      = ScaleGraph(graphNLOCalcInvSecEtaMuHalf5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
         graphNLOCalcInvYieldEtaMuTwopp5023GeV       = ScaleGraph(graphNLOCalcInvSecEtaMuTwo5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
     }
     // combine all mu scales into 1 graph for eventual plotting
     TGraphAsymmErrors* graphNLOCalcInvSecEta5023GeV     = CombineMuScales(nlinesNLOEta5023GeV, ptNLOEta5023GeV, muOneEta5023GeV, muHalfEta5023GeV, muTwoEta5023GeV);
-    TGraphAsymmErrors* graphNLOCalcInvYieldEtapPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecEta5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEtapPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecEta5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
     TGraphAsymmErrors* graphNLOCalcInvYieldEtapp5023GeV = ScaleGraphAsym(graphNLOCalcInvSecEta5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
 
     //*********************************************************
@@ -716,15 +757,15 @@ void ProduceTheoryGraphsPPb(){
     TGraph* graphNLOCalcInvSecPi0MuOne5023GeV       = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muOnePi05023GeV);
     TGraph* graphNLOCalcInvSecPi0MuTwo5023GeV       = new TGraph(nlinesNLOPi05023GeV,ptNLOPi05023GeV,muTwoPi05023GeV);
     // fill yield graphs
-    TGraph* graphNLOCalcInvYieldPi0MuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0MuHalf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
-    TGraph* graphNLOCalcInvYieldPi0MuOnepPb5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0MuOne5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
-    TGraph* graphNLOCalcInvYieldPi0MuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0MuTwo5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraph* graphNLOCalcInvYieldPi0MuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0MuHalf5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
+    TGraph* graphNLOCalcInvYieldPi0MuOnepPb5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0MuOne5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
+    TGraph* graphNLOCalcInvYieldPi0MuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0MuTwo5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
     TGraph* graphNLOCalcInvYieldPi0MuHalfpp5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0MuHalf5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuOnepp5023GeV       = ScaleGraph(graphNLOCalcInvSecPi0MuOne5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuTwopp5023GeV       = ScaleGraph(graphNLOCalcInvSecPi0MuTwo5023GeV, 1/(xSection5023GeVINEL*recalcBarn));
     // combine all mu scales into 1 graph for eventual plotting
     TGraphAsymmErrors* graphNLOCalcInvSecPi05023GeV     = CombineMuScales(nlinesNLOPi05023GeV, ptNLOPi05023GeV, muOnePi05023GeV, muHalfPi05023GeV, muTwoPi05023GeV);
-    TGraphAsymmErrors* graphNLOCalcInvYieldPi0pPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecPi05023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi0pPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecPi05023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
     TGraphAsymmErrors* graphNLOCalcInvYieldPi0pp5023GeV = ScaleGraphAsym(graphNLOCalcInvSecPi05023GeV, 1/(xSection5023GeVINEL*recalcBarn));
     //*********************************************************
     // Eta/Pi0 Vogelsang FF pi0: DSS14, FF eta: AESSS, PDF: CT10
@@ -826,7 +867,7 @@ void ProduceTheoryGraphsPPb(){
     graphNLOCalcInvSecEtanPDFMuOne5023GeV               = new TGraph(nlinesNLOEtanPDF5023GeV,ptNLOEtanPDF5023GeV,muOneEtanPDF5023GeV);
     graphNLOCalcInvSecEtanPDFMuOne5023GeV->Print();
     // fill yield graph for default mu
-    graphNLOCalcInvYieldEtanPDFMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecEtanPDFMuOne5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    graphNLOCalcInvYieldEtanPDFMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecEtanPDFMuOne5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
 
     if (fillAllMuScalesEtanPDF5023GeV){
         // fill x-section graphs for mu variations
@@ -834,13 +875,13 @@ void ProduceTheoryGraphsPPb(){
         graphNLOCalcInvSecEtanPDFMuHalf5023GeV->RemovePoint(0);
         graphNLOCalcInvSecEtanPDFMuTwo5023GeV           = new TGraph(nlinesNLOEtanPDF5023GeV,ptNLOEtanPDF5023GeV,muTwoEtanPDF5023GeV);
         // fill yield graphs for mu variations
-        graphNLOCalcInvYieldEtanPDFMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecEtanPDFMuHalf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
-        graphNLOCalcInvYieldEtanPDFMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecEtanPDFMuTwo5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldEtanPDFMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecEtanPDFMuHalf5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldEtanPDFMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecEtanPDFMuTwo5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
 
     }
     // combine all mu scales into 1 graph for eventual plotting
     TGraphAsymmErrors* graphNLOCalcInvSecEtanPDF5023GeV     = CombineMuScales(nlinesNLOEtanPDF5023GeV, ptNLOEtanPDF5023GeV, muOneEtanPDF5023GeV, muHalfEtanPDF5023GeV, muTwoEtanPDF5023GeV);
-    TGraphAsymmErrors* graphNLOCalcInvYieldEtanPDFpPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecEtanPDF5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEtanPDFpPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecEtanPDF5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
 
     //*********************************************************
     // pi0 Vogelsang - FF: DSS14, PDF:  nPDF: nCTEQ
@@ -883,7 +924,7 @@ void ProduceTheoryGraphsPPb(){
     graphNLOCalcInvSecPi0nPDFMuOne5023GeV               = new TGraph(nlinesNLOPi0nPDF5023GeV,ptNLOPi0nPDF5023GeV,muOnePi0nPDF5023GeV);
     graphNLOCalcInvSecPi0nPDFMuOne5023GeV->Print();
     // fill yield graph for default mu
-    graphNLOCalcInvYieldPi0nPDFMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecPi0nPDFMuOne5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    graphNLOCalcInvYieldPi0nPDFMuOnepPb5023GeV          = ScaleGraph(graphNLOCalcInvSecPi0nPDFMuOne5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
 
     if (fillAllMuScalesPi0nPDF5023GeV){
         // fill x-section graphs for mu variations
@@ -891,13 +932,13 @@ void ProduceTheoryGraphsPPb(){
         graphNLOCalcInvSecPi0nPDFMuHalf5023GeV->RemovePoint(0);
         graphNLOCalcInvSecPi0nPDFMuTwo5023GeV           = new TGraph(nlinesNLOPi0nPDF5023GeV,ptNLOPi0nPDF5023GeV,muTwoPi0nPDF5023GeV);
         // fill yield graphs for mu variations
-        graphNLOCalcInvYieldPi0nPDFMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0nPDFMuHalf5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
-        graphNLOCalcInvYieldPi0nPDFMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0nPDFMuTwo5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldPi0nPDFMuHalfpPb5023GeV     = ScaleGraph(graphNLOCalcInvSecPi0nPDFMuHalf5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
+        graphNLOCalcInvYieldPi0nPDFMuTwopPb5023GeV      = ScaleGraph(graphNLOCalcInvSecPi0nPDFMuTwo5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
 
     }
     // combine all mu scales into 1 graph for eventual plotting
     TGraphAsymmErrors* graphNLOCalcInvSecPi0nPDF5023GeV     = CombineMuScales(nlinesNLOPi0nPDF5023GeV, ptNLOPi0nPDF5023GeV, muOnePi0nPDF5023GeV, muHalfPi0nPDF5023GeV, muTwoPi0nPDF5023GeV);
-    TGraphAsymmErrors* graphNLOCalcInvYieldPi0nPDFpPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecPi0nPDF5023GeV, 1/(xSection5023GeVINELpPb*recalcBarn)*ncollpPb5023GeV);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi0nPDFpPb5023GeV= ScaleGraphAsym(graphNLOCalcInvSecPi0nPDF5023GeV, 1/(xSection5023GeVINEL*recalcBarn)*ncollpPb5023GeV);
 
     //*********************************************************
     // Eta/Pi0 Vogelsang FF pi0: DSS14, FF eta: AESSS,  nPDF: nCTEQ
@@ -965,9 +1006,21 @@ void ProduceTheoryGraphsPPb(){
     TGraphAsymmErrors* graphRpANLOPi0nCTEQ              = CalculateGraphRatioToGraphAsym(graphNLOCalcInvYieldPi0nPDFpPb5023GeV,graphNLOCalcInvYieldPi0pPb5023GeV);
     TGraphAsymmErrors* graphRpANLOPi0nCTEQ_diffMuOne    = CalculateGraphRatioToGraphAsym2(graphNLOCalcInvYieldPi0nPDFpPb5023GeV,graphNLOCalcInvYieldPi0MuOnepPb5023GeV);
     TGraph* graphRpANLOPi0nCTEQ_muOne                   = CalculateGraphRatioToGraph(graphNLOCalcInvYieldPi0nPDFMuOnepPb5023GeV,graphNLOCalcInvYieldPi0MuOnepPb5023GeV);
+    graphRpANLOPi0nCTEQ_muOne->RemovePoint(0);
+    TGraph* graphRpANLOPi0nCTEQ_muHalf                  = CalculateGraphRatioToGraph(graphNLOCalcInvYieldPi0nPDFMuHalfpPb5023GeV,graphNLOCalcInvYieldPi0MuHalfpPb5023GeV);
+    TGraph* graphRpANLOPi0nCTEQ_muTwo                   = CalculateGraphRatioToGraph(graphNLOCalcInvYieldPi0nPDFMuTwopPb5023GeV,graphNLOCalcInvYieldPi0MuTwopPb5023GeV);
+    graphRpANLOPi0nCTEQ_muTwo->RemovePoint(0);
+
+    TGraphAsymmErrors* graphRpANLOPi0nCTEQSepCalc       = CombineMuScales(graphRpANLOPi0nCTEQ_muOne, graphRpANLOPi0nCTEQ_muHalf, graphRpANLOPi0nCTEQ_muTwo);
+
     TGraphAsymmErrors* graphRpANLOEtanCTEQ              = CalculateGraphRatioToGraphAsym(graphNLOCalcInvYieldEtanPDFpPb5023GeV,graphNLOCalcInvYieldEtapPb5023GeV);
     TGraphAsymmErrors* graphRpANLOEtanCTEQ_diffMuOne    = CalculateGraphRatioToGraphAsym2(graphNLOCalcInvYieldEtanPDFpPb5023GeV,graphNLOCalcInvYieldEtaMuOnepPb5023GeV);
     TGraph* graphRpANLOEtanCTEQ_muOne                   = CalculateGraphRatioToGraph(graphNLOCalcInvYieldEtanPDFMuOnepPb5023GeV,graphNLOCalcInvYieldEtaMuOnepPb5023GeV);
+    graphRpANLOEtanCTEQ_muOne->RemovePoint(0);
+    TGraph* graphRpANLOEtanCTEQ_muHalf                  = CalculateGraphRatioToGraph(graphNLOCalcInvYieldEtanPDFMuHalfpPb5023GeV,graphNLOCalcInvYieldEtaMuHalfpPb5023GeV);
+    TGraph* graphRpANLOEtanCTEQ_muTwo                   = CalculateGraphRatioToGraph(graphNLOCalcInvYieldEtanPDFMuTwopPb5023GeV,graphNLOCalcInvYieldEtaMuTwopPb5023GeV);
+    graphRpANLOEtanCTEQ_muTwo->RemovePoint(0);
+    TGraphAsymmErrors* graphRpANLOEtanCTEQSepCalc       = CombineMuScales(graphRpANLOEtanCTEQ_muOne, graphRpANLOEtanCTEQ_muHalf, graphRpANLOEtanCTEQ_muTwo);
 
     //*********************************************************
     // EPPS16+DSS14 pi0 RpPb
@@ -1020,202 +1073,126 @@ void ProduceTheoryGraphsPPb(){
         graphRpPbEPPS16_DSS14->SetPointError(iPt, 0.01, 0.01, errDown, errUp);
     }
     graphRpPbEPPS16_DSS14->Print();
-    
-    
+
+
     //////////////////////////////////////////ColorGlassCondensate predictions for pi0 spectrum ///////////////////////////////
-    
     //Predictions sent by Heikki Mäntysaari [heikki.mantysaari@jyu.fi]
-    
-    
-    
-    TString fileNameCGCPi0y0pA5020     				= "ExternalInputpPb/Theory/CGC/pA_pi0_y0_sqrts_5020";
-    
-    
-    ifstream 		inCGCPi0;
-         
+    TString fileNameCGCPi0y0pA5020          = "ExternalInputpPb/Theory/CGC/pA_pi0_y0_sqrts_5020";
+    ifstream inCGCPi0;
+
     inCGCPi0.open(fileNameCGCPi0y0pA5020.Data(),ios_base::in);
     cout<<"*********************CGC spectrum******************"<<fileNameCGCPi0y0pA5020.Data()<<endl;
-    
-    
     Int_t nlinesCGCPi0 = 0;
-    
     Double_t xValue[100];
     Double_t yValue[100];
-    
+
     string currentline;
-    
     while( getline(inCGCPi0, currentline) && nlinesCGCPi0 < 100 ) {
-        
-         TString temp1        = "";
-         TString temp2        = "";
-         //cout<<currentline<<" hola "<<nlinesCGCPi0<<endl;
-         istringstream cs(currentline); // controll stream
-         cs >> temp1>>temp2;
-         
+        TString temp1        = "";
+        TString temp2        = "";
+        //cout<<currentline<<" hola "<<nlinesCGCPi0<<endl;
+        istringstream cs(currentline); // controll stream
+        cs >> temp1>>temp2;
+
         if( !temp1.Contains("#") ) {
             xValue[nlinesCGCPi0] = temp1.Atof();
             yValue[nlinesCGCPi0] = temp2.Atof();
             cout << nlinesCGCPi0 <<"\t"<<xValue[nlinesCGCPi0]<<"\t"<<yValue[nlinesCGCPi0]<<endl;
-            
-             nlinesCGCPi0++;
-            
+            nlinesCGCPi0++;
         }
-        
-       
-	
     }
-    
-    TGraph* grahCGCPi0y0pA5020            = new TGraph(nlinesCGCPi0,xValue,yValue); 
-    
+
+    TGraph* grahCGCPi0y0pA5020              = new TGraph(nlinesCGCPi0,xValue,yValue);
+
     /*********************************************************************************************************************/
     /* Reading theory from  Ilkka with ct14, epps16, dss14 ***************/
     /* at 5.02 TeV in -0.335 < y_CM < 1.265 (|y_LAB|<0.8).
-    /* Calculations in NLO pQCD with CT14+EPPS16+DSS14, based on Nucl.Phys.B883 
+    /* Calculations in NLO pQCD with CT14+EPPS16+DSS14, based on Nucl.Phys.B883
     /* (2014) 615-628 but with updated (n)PDFs and FFs. From I. Helenius*/
-    
-    
 
-  TString fileNameIlkkapPb5020_pi0[4] =  {"pPb5020_pi0_ct14_epps16_dss14_scale_err.dat","pPb5020_pi0_ct14_epps16_dss14_err.dat",
-                                          "pPb5020_pi0_ct14_epps16_err_dss14.dat","pPb5020_pi0_ct14_errSym_epps16_dss14.dat"};
-  
-  
-  Int_t iIlkkaFiles = 4;
-  Int_t currentIlkkaFile = 0;
-  Double_t xValueIlkka[4][100];
-  Double_t yValueIlkka[4][100];
-  Double_t xErrHighIlkka[4][100];
-  Double_t xErrLowIlkka[4][100];
-  Double_t yErrHighIlkka[4][100];
-  Double_t yErrLowIlkka[4][100];
-  
-  TGraphAsymmErrors* graphPi0NLOpQCDct14epps16dss14[4];
-  
-  
-  cout<<"****************************************Ilkka*************************************"<<endl;
-  while ( currentIlkkaFile < iIlkkaFiles) {
-      
-      
-    Int_t nlinesIlkkaPi0 = 0;
-    
-    TString currentfileNameIlkkaName      = Form("ExternalInputpPb/Theory/%s",fileNameIlkkapPb5020_pi0[currentIlkkaFile].Data());
-   
-      
-    ifstream 		inIlkkaPi0;
-         
-    inIlkkaPi0.open(currentfileNameIlkkaName.Data(),ios_base::in);
-    cout<<"*********************Ilkka NLO spectrum******************"<<currentfileNameIlkkaName.Data()<<endl;
-    
-    
-    string currentline;
-    
-    while( getline(inIlkkaPi0, currentline) && nlinesIlkkaPi0 < 100 ) {
-        
-         TString temp1        = "";
-         TString temp2        = "";
-         TString temp3        = "";
-         TString temp4        = "";
-        
-         
-         istringstream cs(currentline); // controll stream
-         cs >> temp1>>temp2>>temp3>>temp4;
-         
-        if( !temp1.Contains("#") ) {
-            
-            xValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp1.Atof();
-            yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp2.Atof();
-            xErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = 0.0;
-            xErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]  = 0.0;
-            yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp3.Atof();
-            
-            yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] - yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0];
-            
-            
-            yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp4.Atof();
-            yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0] = yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] - yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0];
-                        
-            
-            cout << nlinesIlkkaPi0 <<"\t"<<xValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<"\t"<<yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<
-            "\t"<<yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<"\t"<<yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<endl;
-            
-             nlinesIlkkaPi0++;
-            
+    TString fileNameIlkkapPb5020_pi0[4]     =  {"pPb5020_pi0_ct14_epps16_dss14_scale_err.dat","pPb5020_pi0_ct14_epps16_dss14_err.dat",
+                                                "pPb5020_pi0_ct14_epps16_err_dss14.dat","pPb5020_pi0_ct14_errSym_epps16_dss14.dat"};
+    Int_t iIlkkaFiles                       = 4;
+    Int_t currentIlkkaFile = 0;
+    Double_t xValueIlkka[4][100];
+    Double_t yValueIlkka[4][100];
+    Double_t xErrHighIlkka[4][100];
+    Double_t xErrLowIlkka[4][100];
+    Double_t yErrHighIlkka[4][100];
+    Double_t yErrLowIlkka[4][100];
+    TGraphAsymmErrors* graphPi0NLOpQCDct14epps16dss14[4];
+    TGraph* graphPi0NLOpQCDct14epps16dss14_muOne            = NULL;
+    cout<<"****************************************Ilkka*************************************"<<endl;
+    while ( currentIlkkaFile < iIlkkaFiles) {
+        Int_t nlinesIlkkaPi0                    = 0;
+        TString currentfileNameIlkkaName        = Form("ExternalInputpPb/Theory/%s",fileNameIlkkapPb5020_pi0[currentIlkkaFile].Data());
+        ifstream         inIlkkaPi0;
+
+        inIlkkaPi0.open(currentfileNameIlkkaName.Data(),ios_base::in);
+        cout<<"*********************Ilkka NLO spectrum******************"<<currentfileNameIlkkaName.Data()<<endl;
+        string currentline;
+        while( getline(inIlkkaPi0, currentline) && nlinesIlkkaPi0 < 100 ) {
+            TString temp1        = "";
+            TString temp2        = "";
+            TString temp3        = "";
+            TString temp4        = "";
+            istringstream cs(currentline); // controll stream
+            cs >> temp1>>temp2>>temp3>>temp4;
+            if( !temp1.Contains("#") ) {
+                xValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]   = temp1.Atof();
+                yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]   = temp2.Atof();
+                xErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = 0.0;
+                xErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]  = 0.0;
+                yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = temp3.Atof();
+                yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] = yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0] - yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0];
+                yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]  = temp4.Atof();
+                yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]  = yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0] - yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0];
+
+                cout << nlinesIlkkaPi0 <<"\t"<<xValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<"\t"<<yValueIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<
+                "\t"<<yErrHighIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<"\t"<<yErrLowIlkka[currentIlkkaFile][nlinesIlkkaPi0]<<endl;
+                nlinesIlkkaPi0++;
+            }
         }
-        
-       
-	
+        graphPi0NLOpQCDct14epps16dss14[currentIlkkaFile]        = new TGraphAsymmErrors(nlinesIlkkaPi0, xValueIlkka[currentIlkkaFile], yValueIlkka[currentIlkkaFile],
+                                                                                        xErrLowIlkka[currentIlkkaFile], xErrHighIlkka[currentIlkkaFile],
+                                                                                        yErrLowIlkka[currentIlkkaFile], yErrHighIlkka[currentIlkkaFile]);
+        if (currentIlkkaFile == 0){
+            graphPi0NLOpQCDct14epps16dss14_muOne                = new TGraph(nlinesIlkkaPi0, xValueIlkka[0], yValueIlkka[0]);
+        }
+        currentIlkkaFile++;
+    }
+    //Produce Graph with summ errors
+
+    TGraphAsymmErrors* graphPi0NLOpQCDct14epps16dss14_sumerr    = (TGraphAsymmErrors*)graphPi0NLOpQCDct14epps16dss14[0]->Clone();
+
+    Int_t     nPointsIlkkaSumErr        = graphPi0NLOpQCDct14epps16dss14_sumerr->GetN();
+    Double_t *xValueIlkkaSumErr         = graphPi0NLOpQCDct14epps16dss14_sumerr->GetX();
+    Double_t *yErrLowIlkkaSumErr        = graphPi0NLOpQCDct14epps16dss14_sumerr->GetEYlow();
+    Double_t *yErrHighIlkkaSumErr       = graphPi0NLOpQCDct14epps16dss14_sumerr->GetEYhigh();
+    Double_t *yValueIlkkaSumErr         = graphPi0NLOpQCDct14epps16dss14_sumerr->GetY();
+
+    for(Int_t iPoint = 0;  iPoint < nPointsIlkkaSumErr; iPoint++){
+        Double_t yELow                  = 0;
+        Double_t yEHigh                 = 0;
+        for(Int_t nHisto = 0; nHisto < 4; nHisto++) {
+            yELow                       += TMath::Power( graphPi0NLOpQCDct14epps16dss14[nHisto]->GetErrorYlow(iPoint)/yValueIlkkaSumErr[iPoint]  , 2 );
+            yEHigh                      +=  TMath::Power( graphPi0NLOpQCDct14epps16dss14[nHisto]->GetErrorYhigh(iPoint)/yValueIlkkaSumErr[iPoint] , 2 );
+        }
+        yELow                           = TMath::Sqrt( yELow  );
+        yEHigh                          = TMath::Sqrt( yEHigh );
+        yErrLowIlkkaSumErr[iPoint]      = yELow*yValueIlkkaSumErr[iPoint];
+        yErrHighIlkkaSumErr[iPoint]     = yEHigh*yValueIlkkaSumErr[iPoint];
     }
 
-    
-    graphPi0NLOpQCDct14epps16dss14[currentIlkkaFile] = new TGraphAsymmErrors(nlinesIlkkaPi0,xValueIlkka[currentIlkkaFile],yValueIlkka[currentIlkkaFile],xErrLowIlkka[currentIlkkaFile],xErrHighIlkka[currentIlkkaFile],yErrLowIlkka[currentIlkkaFile],yErrHighIlkka[currentIlkkaFile]);
-    
-    currentIlkkaFile++;
-      
-  }
-  
-  
-  
-  //Produce Graph with summ errors
-  
-  
-  TGraphAsymmErrors* graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)graphPi0NLOpQCDct14epps16dss14[0]->Clone();
-  
-   
-  
-    Int_t     nPointsIlkkaSumErr       = graphPi0NLOpQCDct14epps16dss14_sumerr->GetN();
-    Double_t *xValueIlkkaSumErr        = graphPi0NLOpQCDct14epps16dss14_sumerr->GetX();
-    Double_t *yErrLowIlkkaSumErr       = graphPi0NLOpQCDct14epps16dss14_sumerr->GetEYlow();
-    Double_t *yErrHighIlkkaSumErr      = graphPi0NLOpQCDct14epps16dss14_sumerr->GetEYhigh();
-    Double_t *yValueIlkkaSumErr        = graphPi0NLOpQCDct14epps16dss14_sumerr->GetY();
-    
-    
-    
-   
-   for(Int_t iPoint = 0;  iPoint < nPointsIlkkaSumErr; iPoint++){
-     
-   
-        Double_t yELow = 0;
-        Double_t yEHigh  = 0;
-         
-       
-         for(Int_t nHisto = 0; nHisto < 4; nHisto++) {
-             
-             yELow+=    TMath::Power( graphPi0NLOpQCDct14epps16dss14[nHisto]->GetErrorYlow(iPoint)/yValueIlkkaSumErr[iPoint]  , 2 );
-             yEHigh+=  TMath::Power( graphPi0NLOpQCDct14epps16dss14[nHisto]->GetErrorYhigh(iPoint)/yValueIlkkaSumErr[iPoint] , 2 );
-         }
-             
-         yELow  = TMath::Sqrt( yELow  );
-         yEHigh = TMath::Sqrt( yEHigh );
-    
-         yErrLowIlkkaSumErr[iPoint]  = yELow*yValueIlkkaSumErr[iPoint];
-         yErrHighIlkkaSumErr[iPoint] = yEHigh*yValueIlkkaSumErr[iPoint];
-     
-     
-   }
-  
-  
-  Double_t v0ANDxSection = 2.09; //barns
-  Double_t v0ANDxSectionNSD = v0ANDxSection / 0.964;
-  Double_t factorHelenius = 208;
-  
-  for(Int_t nGraph = 0; nGraph < 4; nGraph++) {
-             
-             graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],1/v0ANDxSectionNSD);
-             graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],1/recalcBarn);
-             graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],factorHelenius);
-  }
-  
-  
-  graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,1/v0ANDxSectionNSD);
-  graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,1/recalcBarn);
-  graphPi0NLOpQCDct14epps16dss14_sumerr = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,factorHelenius);
-  
-   
-    
-    
-    
-    
-    
+    Double_t v0ANDxSection = 2.09; //barns
+    Double_t v0ANDxSectionNSD = v0ANDxSection / 0.964;
+    Double_t factorHelenius = 208;
 
+    for(Int_t nGraph = 0; nGraph < 4; nGraph++) {
+        graphPi0NLOpQCDct14epps16dss14[nGraph] = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14[nGraph],factorHelenius/(v0ANDxSectionNSD*recalcBarn));
+    }
+    graphPi0NLOpQCDct14epps16dss14_muOne        = (TGraph*)ScaleGraph(graphPi0NLOpQCDct14epps16dss14_muOne,factorHelenius/(v0ANDxSectionNSD*recalcBarn));
+    graphPi0NLOpQCDct14epps16dss14_sumerr       = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,factorHelenius/(v0ANDxSectionNSD*recalcBarn));
 
     //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pPb ********************************
@@ -1238,8 +1215,6 @@ void ProduceTheoryGraphsPPb(){
 
         // write MB calcs
         fileTheoryGraphsPPb.cd("pPb_5.023TeV");
-            // pi0 CGC RpPb
-            graphPi0RpACGC->Write("graphPi0RpACGC5023GeV", TObject::kOverwrite);
             // pi0 EPS09 with old FFs RpPb
             graphPi0RpAEPS09sKKP->Write("graphPi0RpAEPS09sKKP5023GeV", TObject::kOverwrite);
             graphPi0RpAEPS09sAKK->Write("graphPi0RpAEPS09sAKK5023GeV", TObject::kOverwrite);
@@ -1322,28 +1297,34 @@ void ProduceTheoryGraphsPPb(){
             graphRpANLOPi0nCTEQ->Write("graphNLOCalcDSS14RpAPi05023GeV_nCTEQ", TObject::kOverwrite);
             graphRpANLOPi0nCTEQ_diffMuOne->Write("graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_onlypPbErrs", TObject::kOverwrite);
             graphRpANLOPi0nCTEQ_muOne->Write("graphNLOCalcDSS14RpAPi05023GeV_muOne_nCTEQ", TObject::kOverwrite);
+            graphRpANLOPi0nCTEQ_muHalf->Write("graphNLOCalcDSS14RpAPi05023GeV_muHalf_nCTEQ", TObject::kOverwrite);
+            graphRpANLOPi0nCTEQ_muTwo->Write("graphNLOCalcDSS14RpAPi05023GeV_muTwo_nCTEQ", TObject::kOverwrite);
+            graphRpANLOPi0nCTEQSepCalc->Write("graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc", TObject::kOverwrite);
+
             graphRpANLOEtanCTEQ->Write("graphNLOCalcAESSSRpAEta5023GeV_nCTEQ", TObject::kOverwrite);
             graphRpANLOEtanCTEQ_diffMuOne->Write("graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_onlypPbErrs", TObject::kOverwrite);
             graphRpANLOEtanCTEQ_muOne->Write("graphNLOCalcAESSSRpAEta5023GeV_muOne_nCTEQ", TObject::kOverwrite);
+            graphRpANLOEtanCTEQ_muHalf->Write("graphNLOCalcAESSSRpAEta5023GeV_muHalf_nCTEQ", TObject::kOverwrite);
+            graphRpANLOEtanCTEQ_muTwo->Write("graphNLOCalcAESSSRpAEta5023GeV_muTwo_nCTEQ", TObject::kOverwrite);
+            graphRpANLOEtanCTEQSepCalc->Write("graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc", TObject::kOverwrite);
 
             graphRpPbEPPS16_DSS14->Write("graphNLOCalcDSS14RpAPi05023GeV_EPPS16", TObject::kOverwrite);
             graphRpPbEPPS16_DSS14_muOne->Write("graphNLOCalcDSS14RpAPi05023GeV_muOne_EPPS16", TObject::kOverwrite);
-            
-            
+
+            // pi0 CGC RpPb
+            graphPi0RpACGC->Write("graphPi0RpACGC5023GeV", TObject::kOverwrite);
             //pi0 CGC
-             grahCGCPi0y0pA5020->Write("graphPi0SpecCGC5023GeV");
-        
-             //Pi0 NLO pQCD
-             if(graphPi0NLOpQCDct14epps16dss14_sumerr) graphPi0NLOpQCDct14epps16dss14_sumerr->Write("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr");
-             
-             if( graphPi0NLOpQCDct14epps16dss14[0] ) graphPi0NLOpQCDct14epps16dss14[0]->Write("graphNLOpQCDPi0_ct14_epps16_dss14_scale_err");
-             if( graphPi0NLOpQCDct14epps16dss14[1] ) graphPi0NLOpQCDct14epps16dss14[1]->Write("graphNLOpQCDPi0_ct14_epps16_dss14_err");
-             if( graphPi0NLOpQCDct14epps16dss14[2] ) graphPi0NLOpQCDct14epps16dss14[2]->Write("graphNLOpQCDPi0_ct14_epps16_err_dss14");
-             if( graphPi0NLOpQCDct14epps16dss14[3] ) graphPi0NLOpQCDct14epps16dss14[3]->Write("graphNLOpQCDPi0_ct14_errSym_epps16_dss14");
-            
-            
-            
-            
+            grahCGCPi0y0pA5020->Write("graphPi0SpecCGC5023GeV", TObject::kOverwrite);
+            grahCGCPi0y0pA5020->Print();
+            //Pi0 NLO pQCD
+            if(graphPi0NLOpQCDct14epps16dss14_sumerr) graphPi0NLOpQCDct14epps16dss14_sumerr->Write("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr", TObject::kOverwrite);
+            if(graphPi0NLOpQCDct14epps16dss14_muOne) graphPi0NLOpQCDct14epps16dss14_muOne->Write("graphNLOpQCDPi0_ct14_epps16_dss14_muOne", TObject::kOverwrite);
+            if( graphPi0NLOpQCDct14epps16dss14[0] ) graphPi0NLOpQCDct14epps16dss14[0]->Write("graphNLOpQCDPi0_ct14_epps16_dss14_scale_err", TObject::kOverwrite);
+            if( graphPi0NLOpQCDct14epps16dss14[1] ) graphPi0NLOpQCDct14epps16dss14[1]->Write("graphNLOpQCDPi0_ct14_epps16_dss14_err", TObject::kOverwrite);
+            if( graphPi0NLOpQCDct14epps16dss14[2] ) graphPi0NLOpQCDct14epps16dss14[2]->Write("graphNLOpQCDPi0_ct14_epps16_err_dss14", TObject::kOverwrite);
+            if( graphPi0NLOpQCDct14epps16dss14[3] ) graphPi0NLOpQCDct14epps16dss14[3]->Write("graphNLOpQCDPi0_ct14_errSym_epps16_dss14", TObject::kOverwrite);
+
+            graphPi0NLOpQCDct14epps16dss14_muOne->Print();
 
         // write McGill calc for different cents and particles
         for (Int_t iCent = 0; iCent < nCent; iCent++){
