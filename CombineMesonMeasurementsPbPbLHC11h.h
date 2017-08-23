@@ -338,14 +338,15 @@ Color_t colorPhenix         = kBlack;
 //eta raa in phenix central kOrange+1, semicentral kGreen+2 nad kGreen-6
 
 Color_t colorCracow0010     = kOrange+6;
-Color_t colorCracow2050     = kAzure-4;//kCyan-9;
-Color_t colorBegun0010      = kOrange-2;
-Color_t colorBegun2050      = kAzure-9;//kCyan-9;
+Color_t colorCracow2050     = kAzure-9;//kCyan-9;
+Color_t colorBegun0010      = kRed-6;
+Color_t colorBegun2050      = kAzure-4;//kCyan-9;
 
 Color_t colorEPOS0010       = kPink+5;
 Color_t colorEPOS2050       = kBlue;
 
 Color_t colorCracowRatio    = kSpring+9;
+Color_t colorBegunRatio     = kCyan-3;
 Color_t colorEPOSRatio      = kViolet+6;
 
 Color_t colorNLO            = kGray;

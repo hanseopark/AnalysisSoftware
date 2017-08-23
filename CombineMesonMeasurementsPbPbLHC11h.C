@@ -304,6 +304,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     TGraphAsymmErrors* TheoryCracowEtaToPi0LowPt_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowEtaToPi0LowPt_2050");
     TGraphAsymmErrors *TheoryCracowChargedPionLowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowChargedPionLowPt_0010");
     TGraphAsymmErrors *TheoryCracowChargedKaonLowPt_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryCracowChargedKaonLowPt_0010");
+    while(TheoryCracowPi0LowPt_0010->GetX()[TheoryCracowPi0LowPt_0010->GetN()-1]>3.) TheoryCracowPi0LowPt_0010->RemovePoint(TheoryCracowPi0LowPt_0010->GetN()-1);
+    while(TheoryCracowPi0LowPt_2050->GetX()[TheoryCracowPi0LowPt_2050->GetN()-1]>3.) TheoryCracowPi0LowPt_2050->RemovePoint(TheoryCracowPi0LowPt_2050->GetN()-1);
+    while(TheoryCracowEtaLowPt_0010->GetX()[TheoryCracowEtaLowPt_0010->GetN()-1]>3.) TheoryCracowEtaLowPt_0010->RemovePoint(TheoryCracowEtaLowPt_0010->GetN()-1);
+    while(TheoryCracowEtaLowPt_2050->GetX()[TheoryCracowEtaLowPt_2050->GetN()-1]>3.) TheoryCracowEtaLowPt_2050->RemovePoint(TheoryCracowEtaLowPt_2050->GetN()-1);
+    while(TheoryCracowEtaToPi0LowPt_0010->GetX()[TheoryCracowEtaToPi0LowPt_0010->GetN()-1]>3.) TheoryCracowEtaToPi0LowPt_0010->RemovePoint(TheoryCracowEtaToPi0LowPt_0010->GetN()-1);
+    while(TheoryCracowEtaToPi0LowPt_2050->GetX()[TheoryCracowEtaToPi0LowPt_2050->GetN()-1]>3.) TheoryCracowEtaToPi0LowPt_2050->RemovePoint(TheoryCracowEtaToPi0LowPt_2050->GetN()-1);
+
     TGraphAsymmErrors *TheoryBegunEQPi0_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryBegunEQPi0_0010");
     TGraphAsymmErrors *TheoryBegunEQPi0_2050 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryBegunEQPi0_2050");
     TGraphAsymmErrors *TheoryBegunEQEta_0010 = (TGraphAsymmErrors*)fileTheoryGraphs->Get("TheoryBegunEQEta_0010");
@@ -4045,9 +4052,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         DrawGammaSetMarkerTGraphAsym(TheoryBegunEQ_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
         TheoryBegunEQ_0010ScaledforPlot->Draw("l,same");
         TheoryBegunEQ_2050->Draw("l,same");
-
-//         TheoryCracowLowPtScaledforPlot_0010->Draw("l,same");
-//         TheoryCracowLowPt_2050->Draw("l,same");
         
         graphEPOSpredScaledforPlot_0010->Draw("same,l,x");
         graphEPOSpred_2050->Draw("same,l,x");
@@ -4058,39 +4062,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         graphCombInvYieldSysPbPb2760GeV_2050->Draw("E2same");
         graphCombInvYieldStatPbPb2760GeV_2050->Draw("p,same");
 
-//         TLegend* legtheory = new TLegend(0.2,0.26-(0.04*3.7),0.6,0.26);
-//         legtheory->SetFillColor(0);
-//         legtheory->SetLineColor(0);
-//         legtheory->SetTextFont(42);
-//         legtheory->SetTextSize(FontSize);
-//         legtheory->SetHeader(" SHM - PRC 90, 014906 (2014)");
-//         legtheory->SetNColumns(2);
-// //         legtheory->SetMargin(0.17);
-//         legtheory->AddEntry((TObject*)0,cent0010.Data(),"");
-//         legtheory->AddEntry((TObject*)0,cent2050.Data(),"");
-//         legtheory->AddEntry(TheoryCracowLowPtScaledforPlot_0010,"NEQ", "l");
-//         legtheory->AddEntry(TheoryBegunEQ_0010ScaledforPlot,"EQ", "l");
-//         legtheory->AddEntry(TheoryCracowLowPt_2050,"NEQ", "l");
-//         legtheory->AddEntry(TheoryBegunEQ_2050,"EQ", "l");
-//         legtheory->Draw("same");
-
-        TLegend* legtheory = new TLegend(0.2,0.26-(0.04*3.7),0.6,0.22);
-        legtheory->SetFillColor(0);
-        legtheory->SetLineColor(0);
-        legtheory->SetTextFont(42);
-        legtheory->SetTextSize(FontSize);
-        legtheory->SetHeader("PRC 90, 014906 (2014)");
-//         legtheory->SetNColumns(2);
-        legtheory->SetMargin(0.17);
-//         legtheory->AddEntry((TObject*)0,cent0010.Data(),"");
-//         legtheory->AddEntry((TObject*)0,cent2050.Data(),"");
-//         legtheory->AddEntry(TheoryCracowLowPtScaledforPlot_0010,"NEQ", "l");
-        legtheory->AddEntry(TheoryBegunEQ_0010ScaledforPlot,"EQ SHM 0#font[122]{-}10%", "l");
-//         legtheory->AddEntry(TheoryCracowLowPt_2050,"NEQ", "l");
-        legtheory->AddEntry(TheoryBegunEQ_2050,"EQ SHM 20#font[122]{-}50%", "l");
-        legtheory->Draw("same");
-
-        TLegend* legtheory2 = new TLegend(0.2,0.23,0.52,0.34);
+        TLegend* legtheory2 = new TLegend(0.2,0.12,0.52,0.12+(0.04*2.7));
         legtheory2->SetFillColor(0);
         legtheory2->SetLineColor(0);
         legtheory2->SetTextFont(42);
@@ -4100,24 +4072,129 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         legtheory2->AddEntry(graphEPOSpred_2050,"EPOS 20#font[122]{-}50%", "l");
         legtheory2->Draw("same");
 
+        TLegend* legtheoryEQ = new TLegend(0.2,0.24,0.6,0.24+(0.04*3));
+        legtheoryEQ->SetFillColor(0);
+        legtheoryEQ->SetLineColor(0);
+        legtheoryEQ->SetTextFont(42);
+        legtheoryEQ->SetTextSize(FontSize);
+        legtheoryEQ->SetHeader("PRC 90, 014906 (2014)");
+        legtheoryEQ->AddEntry(TheoryBegunEQ_0010ScaledforPlot,"EQ SHM 0#font[122]{-}10%", "l");
+        legtheoryEQ->AddEntry(TheoryBegunEQ_2050,"EQ SHM 20#font[122]{-}50%", "l");
+        legtheoryEQ->Draw("same");
+
         legendInvYieldSectionPi0LHC11h_WitPP->Draw();
-        if(thesisPlotting){
-//           if(meson.CompareTo("Pi0")==0){     labelFactorLowerOnlyPbPb = new TLatex(0.89,0.15,"#times 4");}
-//           else if(meson.CompareTo("Eta")==0){labelFactorLowerOnlyPbPb = new TLatex(0.86,0.25,"#times 4");}
-//           SetStyleTLatex( labelFactorLowerOnlyPbPb,FontSize,4,colorCombo0010);
-        }
+        labelFactorLowerOnlyPbPb->Draw();
+        labelSyst->Draw();
+
+        TLatex *thesisLabelModel = new TLatex(0.73,0.927,"(this thesis)");
+        SetStyleTLatex( thesisLabelModel,FontSize,4);
+        if(thesisPlotting) thesisLabelModel->Draw();
+
+    canvasInvariantYield->Update();
+    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsandEQ.%s",outputDir.Data(),meson.Data(),suffix.Data()));
+    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsandEQ.%s",PubNotePlots.Data(),meson.Data(),suffix.Data()));
+
+
+    canvasInvariantYield->cd();
+        histo2DInvariantYield->DrawCopy();
+
+        TheoryCracowLowPtScaledforPlot_0010->Draw("l,same");
+        TheoryCracowLowPt_2050->Draw("l,same");
+
+        graphEPOSpredScaledforPlot_0010->Draw("same,l,x");
+        graphEPOSpred_2050->Draw("same,l,x");
+
+        graphCombInvYieldSysPbPb2760GeVScaled_0010->Draw("E2same");
+        graphCombInvYieldStatPbPb2760GeVScaled_0010->Draw("p,same");
+
+        graphCombInvYieldSysPbPb2760GeV_2050->Draw("E2same");
+        graphCombInvYieldStatPbPb2760GeV_2050->Draw("p,same");
+
+        legtheory2->Draw("same");
+
+        TLegend* legtheoryNEQ = new TLegend(0.2,0.24,0.6,0.24+(0.04*3));
+        legtheoryNEQ->SetFillColor(0);
+        legtheoryNEQ->SetLineColor(0);
+        legtheoryNEQ->SetTextFont(42);
+        legtheoryNEQ->SetTextSize(FontSize);
+        legtheoryNEQ->SetHeader("PRC 90, 014906 (2014)");
+        legtheoryNEQ->AddEntry(TheoryCracowLowPtScaledforPlot_0010,"NEQ SHM 0#font[122]{-}10%", "l");
+        legtheoryNEQ->AddEntry(TheoryCracowLowPt_2050,"NEQ SHM 20#font[122]{-}50%", "l");
+        legtheoryNEQ->Draw("same");
+
+        legendInvYieldSectionPi0LHC11h_WitPP->Draw();
+        labelFactorLowerOnlyPbPb->Draw();
+        labelSyst->Draw();
+
+        if(thesisPlotting) thesisLabelModel->Draw();
+
+    canvasInvariantYield->Update();
+    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsandNEQ.%s",outputDir.Data(),meson.Data(),suffix.Data()));
+    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsandNEQ.%s",PubNotePlots.Data(),meson.Data(),suffix.Data()));
+
+
+    canvasInvariantYield->cd();
+        histo2DInvariantYield->DrawCopy();
+
+        TheoryCracowLowPtScaledforPlot_0010->Draw("l,same");
+        TheoryCracowLowPt_2050->Draw("l,same");
+
+//         SetStyleGammaNLOTGraphWithBand( TheoryBegunEQ_0010ScaledforPlot, 1.0, 1, colorBegun0010, 3001, colorBegun0010, 0);
+        DrawGammaSetMarkerTGraphAsym(TheoryBegunEQ_0010ScaledforPlot, 0, 0, colorBegun0010,colorBegun0010, 5, kTRUE, colorBegun0010);
+        TheoryBegunEQ_0010ScaledforPlot->SetLineStyle(9);
+        DrawGammaSetMarkerTGraphAsym(TheoryBegunEQ_2050, 0, 0, colorBegun2050,colorBegun2050, 5, kTRUE,colorBegun2050);
+        TheoryBegunEQ_2050->SetLineStyle(9);
+        TheoryBegunEQ_0010ScaledforPlot->Draw("3pl,same");
+        TheoryBegunEQ_2050->Draw("l,same");
+
+        graphEPOSpredScaledforPlot_0010->Draw("same,l,x");
+        graphEPOSpred_2050->Draw("same,l,x");
+
+        graphCombInvYieldSysPbPb2760GeVScaled_0010->Draw("E2same");
+        graphCombInvYieldStatPbPb2760GeVScaled_0010->Draw("p,same");
+
+        graphCombInvYieldSysPbPb2760GeV_2050->Draw("E2same");
+        graphCombInvYieldStatPbPb2760GeV_2050->Draw("p,same");
+
+        TLegend* legtheoryBothSHM = new TLegend(0.2,0.12,0.6,0.12+(0.04*3.7));
+        legtheoryBothSHM->SetFillColor(0);
+        legtheoryBothSHM->SetLineColor(0);
+        legtheoryBothSHM->SetTextFont(42);
+        legtheoryBothSHM->SetTextSize(FontSize);
+        legtheoryBothSHM->SetHeader("SHM - PRC 90, 014906 (2014)");
+        legtheoryBothSHM->SetNColumns(2);
+//         legtheoryBothSHM->SetMargin(0.17);
+        legtheoryBothSHM->AddEntry((TObject*)0,cent0010.Data(),"");
+        legtheoryBothSHM->AddEntry((TObject*)0,cent2050.Data(),"");
+        legtheoryBothSHM->AddEntry(TheoryCracowLowPtScaledforPlot_0010,"NEQ", "l");
+        legtheoryBothSHM->AddEntry(TheoryBegunEQ_0010ScaledforPlot,"EQ", "l");
+        legtheoryBothSHM->AddEntry(TheoryCracowLowPt_2050,"NEQ", "l");
+        legtheoryBothSHM->AddEntry(TheoryBegunEQ_2050,"EQ", "l");
+        legtheoryBothSHM->Draw("same");
+
+        TLegend* legtheoryEPOS = new TLegend(0.2,0.27,0.52,0.27+(0.04*2.7));
+        legtheoryEPOS->SetFillColor(0);
+        legtheoryEPOS->SetLineColor(0);
+        legtheoryEPOS->SetTextFont(42);
+        legtheoryEPOS->SetTextSize(FontSize);
+        legtheoryEPOS->SetHeader("PRC 85, 064907 (2012)");
+        legtheoryEPOS->AddEntry(graphEPOSpred_0010,"EPOS 0#font[122]{-}10%", "l");
+        legtheoryEPOS->AddEntry(graphEPOSpred_2050,"EPOS 20#font[122]{-}50%", "l");
+        legtheoryEPOS->Draw("same");
+
+        legendInvYieldSectionPi0LHC11h_WitPP->Draw();
         labelFactorLowerOnlyPbPb->Draw();
         labelSyst->Draw();
 //      labelPreliminary->Draw();
 
-        if(thesisPlotting){
-          thesisLabelHighRight->Draw();
-        }
+        if(thesisPlotting)thesisLabelModel->Draw();
+
 
     canvasInvariantYield->Update();
-    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModels.%s",outputDir.Data(),meson.Data(),suffix.Data()));
-//     canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModels.%s",paperPlots.Data(),meson.Data(),suffix.Data()));
-    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModels.%s",PubNotePlots.Data(),meson.Data(),suffix.Data()));
+    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsV2.%s",outputDir.Data(),meson.Data(),suffix.Data()));
+//     canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsV2.%s",paperPlots.Data(),meson.Data(),suffix.Data()));
+    canvasInvariantYield->SaveAs(Form("%s/%s_YieldCombinedLHC11h_DataWithModelsV2.%s",PubNotePlots.Data(),meson.Data(),suffix.Data()));
+
 
     canvasInvariantYield->cd();
     histo2DInvariantYieldwithPP->Draw("copy");
@@ -4159,7 +4236,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         graphEPOSpredScaledforPlot_0010->Draw("same,l,x");
         graphEPOSpred_2050->Draw("same,l,x");
 
-        legtheory->Draw("same");
+        legtheoryEQ->Draw("same");
         legtheory2->Draw("same");
 
     canvasInvariantYield->Update();
@@ -4634,19 +4711,23 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         ////////// Begun EQ
             TGraphAsymmErrors* graphRatioBegunEQPi0_0010 = (TGraphAsymmErrors*)TheoryBegunEQPi0_0010->Clone();
             graphRatioBegunEQPi0_0010 = CalculateGraphErrRatioToFit(graphRatioBegunEQPi0_0010, fitPi0InvYieldPbPb2760GeV_0010);
-            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQPi0_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
+            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQPi0_0010, 0, 0, colorBegunRatio, colorBegunRatio, 5, kTRUE, colorBegunRatio);
+            graphRatioBegunEQPi0_0010->SetLineStyle(9);
 
             TGraphAsymmErrors* graphRatioBegunEQPi0_2050 = (TGraphAsymmErrors*)TheoryBegunEQPi0_2050->Clone();
             graphRatioBegunEQPi0_2050 = CalculateGraphErrRatioToFit(graphRatioBegunEQPi0_2050, fitPi0InvYieldPbPb2760GeV_2050);
-            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQPi0_2050, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
+            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQPi0_2050, 0, 0, colorBegunRatio, colorBegunRatio, 5, kTRUE, colorBegunRatio);
+            graphRatioBegunEQPi0_2050->SetLineStyle(9);
 
             TGraphAsymmErrors* graphRatioBegunEQEta_0010 = (TGraphAsymmErrors*)TheoryBegunEQEta_0010->Clone();
             graphRatioBegunEQEta_0010 = CalculateGraphErrRatioToFit(graphRatioBegunEQEta_0010, fitEtaInvYieldPbPb2760GeV_0010);
-            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQEta_0010, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
+            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQEta_0010, 0, 0, colorBegunRatio, colorBegunRatio, 5, kTRUE, colorBegunRatio);
+            graphRatioBegunEQEta_0010->SetLineStyle(9);
 
             TGraphAsymmErrors* graphRatioBegunEQEta_2050 = (TGraphAsymmErrors*)TheoryBegunEQEta_2050->Clone();
             graphRatioBegunEQEta_2050 = CalculateGraphErrRatioToFit(graphRatioBegunEQEta_2050, fitEtaInvYieldPbPb2760GeV_2050);
-            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQEta_2050, 0, 0, colorCracowRatio, colorCracowRatio, 5, kTRUE, colorCracowRatio);
+            DrawGammaSetMarkerTGraphAsym(graphRatioBegunEQEta_2050, 0, 0, colorBegunRatio, colorBegunRatio, 5, kTRUE, colorBegunRatio);
+            graphRatioBegunEQEta_2050->SetLineStyle(9);
 
         ////////// EPOS
             TGraphErrors* graphRatioEPOSToFitPi0_0010 = (TGraphErrors*) graphEPOSPi0_0010->Clone();
@@ -4745,10 +4826,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 ratio2DUpPad1OnlyRatio->DrawCopy();
                 DrawGammaLines(minX,maxX,1., 1.,0.1,kGray);
 
-//                     for(Int_t a=0; a<4; a++){
-//                         graphRatioLowPtPi0_0010->RemovePoint(0);
-//                     }
-//                     graphRatioLowPtPi0_0010->Draw("l,same");
+                    graphRatioLowPtPi0_0010->Draw("l,same");
                     graphRatioBegunEQPi0_0010->Draw("l,same");
                     graphRatioEPOSToFitPi0_0010->Draw("same,l,x");
 
@@ -4765,8 +4843,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                     SetStyleTLatex( labelThesis4Pad, 1.1*textsizeLabelsXSecDown,4);
                     labelThesis4Pad->Draw();
 
-                    TLegend* legen4PadOnlyRatiosTheory = GetAndSetLegend2(0.2, 0.2-2*0.08, 0.5, 0.2, 0.85* textSizeLabelsPixel4pads);
-//                     legen4PadOnlyRatiosTheory->AddEntry(graphRatioCombLowPtPbPb2760GeV_0010,"NEQ SHM","l");
+                    TLegend* legen4PadOnlyRatiosTheory = GetAndSetLegend2(0.77, 0.67, 0.98, 0.67+(3*0.08), 0.85* textSizeLabelsPixel4pads);
+                    legen4PadOnlyRatiosTheory->AddEntry(graphRatioCombLowPtPbPb2760GeV_0010,"NEQ SHM","l");
                     legen4PadOnlyRatiosTheory->AddEntry(graphRatioBegunEQPi0_0010,"EQ SHM","l");
                     legen4PadOnlyRatiosTheory->AddEntry(graphRatioEPOSToFitPbPb2760GeV_0010,"EPOS","l");
                     legen4PadOnlyRatiosTheory->Draw();
@@ -4777,11 +4855,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 ratio2DLowerPad1OnlyRatio->DrawCopy();
                 DrawGammaLines(minX,maxX,1., 1.,0.1,kGray);
 
-//                     graphRatioLowPtEta_0010->RemovePoint(0);
-//                     graphRatioLowPtEta_0010->RemovePoint(0);
-//                     graphRatioLowPtEta_0010->RemovePoint(0);
-//                     graphRatioLowPtEta_0010->RemovePoint(0);
-//                     graphRatioLowPtEta_0010->Draw("l,same");
+                    graphRatioLowPtEta_0010->Draw("l,same");
                     graphRatioBegunEQEta_0010->Draw("l,same");
                     graphRatioEPOSToFitEta_0010->Draw("same,l,x");
 
@@ -4804,11 +4878,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 ratio2DUpPad1OnlyRatio->DrawCopy();
                 DrawGammaLines(minX,maxX,1., 1.,0.1,kGray);
 
-//                     graphRatioLowPtPi0_2050->RemovePoint(0);
-//                     graphRatioLowPtPi0_2050->RemovePoint(0);
-//                     graphRatioLowPtPi0_2050->RemovePoint(0);
-//                     graphRatioLowPtPi0_2050->RemovePoint(0);
-//                     graphRatioLowPtPi0_2050->Draw("l,same");
+                    graphRatioLowPtPi0_2050->Draw("l,same");
                     graphRatioBegunEQPi0_2050->Draw("l,same");
                     graphRatioEPOSToFitPi0_2050->Draw("same,l");
 
@@ -4831,11 +4901,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 ratio2DLowerPad1OnlyRatio->DrawCopy();
                 DrawGammaLines(minX,maxX,1., 1.,0.1,kGray);
 
-//                     graphRatioLowPtEta_2050->RemovePoint(0);
-//                     graphRatioLowPtEta_2050->RemovePoint(0);
-//                     graphRatioLowPtEta_2050->RemovePoint(0);
-//                     graphRatioLowPtEta_2050->RemovePoint(0);
-//                     graphRatioLowPtEta_2050->Draw("l,same");
+                    graphRatioLowPtEta_2050->Draw("l,same");
                     graphRatioBegunEQEta_2050->Draw("l,same");
                     graphRatioEPOSToFitEta_2050->Draw("same,l,x");
 
@@ -7461,21 +7527,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphEPOSEtaToPi0_0010->GetXaxis()->SetRangeUser(0,13);
             graphEPOSEtaToPi0_0010->Draw("same,l,x");
 
-            DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
-//             TheoryCracowEtaToPi0LowPt_0010->Draw("l,same");
-            
             DrawGammaSetMarkerTGraphAsym(TheoryBegunEQEtaToPi0_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
+            TheoryBegunEQEtaToPi0_0010->SetLineStyle(9);
             TheoryBegunEQEtaToPi0_0010->Draw("l,same");
 
             graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
             graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
 
-//          graphCombEtatoPi0SysPbPb2760GeV_2050->Draw("E2same");
-//          if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0StatPbPb2760GeV_2050);
-//          graphCombEtatoPi0StatPbPb2760GeV_2050->Draw("p,same");
-
-//           labelEtaToPi0Energy->Draw();
-          
             TLegend* legendEtatoPi0combo_onlyPbPb2;
             if(thesisPlotting)legendEtatoPi0combo_onlyPbPb2 = new TLegend(0.13,0.8,0.53,0.9);
             else legendEtatoPi0combo_onlyPbPb2 = new TLegend(0.13,0.83,0.53,0.93);
@@ -7509,17 +7567,94 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRatioALICE3A->AddEntry(graphEPOSEtaToPi0_0010,"0#font[122]{-}10% EPOS", "l");
             legendRatioALICE3A->AddEntry((TObject*)0,"PRC 85, 064907 (2012)","");
             legendRatioALICE3A->Draw();
-            TLegend* legendRatioALICE3B = new TLegend(0.54,0.12,0.92,0.22);
-            legendRatioALICE3B->SetFillColor(0);
-            legendRatioALICE3B->SetLineColor(0);
-            legendRatioALICE3B->SetTextFont(42);
-            legendRatioALICE3B->SetTextSize(0.037);
-            legendRatioALICE3B->SetMargin(0.17);
-    //           legendRatioALICE3B->SetHeader("NEQ SHM");
-//             legendRatioALICE3B->AddEntry(TheoryCracowEtaToPi0LowPt_0010,"0#font[122]{-}10% NEQ SHM","l");
-            legendRatioALICE3B->AddEntry(TheoryBegunEQEtaToPi0_0010,"0#font[122]{-}10% EQ SHM","l");
-            legendRatioALICE3B->AddEntry((TObject*)0,"PRC 90, 014906 (2014)","");
-            legendRatioALICE3B->Draw();
+
+            TLegend* legendRatioALICE3BEQ = new TLegend(0.54,0.12,0.92,0.22);
+            legendRatioALICE3BEQ->SetFillColor(0);
+            legendRatioALICE3BEQ->SetLineColor(0);
+            legendRatioALICE3BEQ->SetTextFont(42);
+            legendRatioALICE3BEQ->SetTextSize(0.037);
+            legendRatioALICE3BEQ->SetMargin(0.17);
+    //           legendRatioALICE3BEQ->SetHeader("NEQ SHM");
+//             legendRatioALICE3BEQ->AddEntry(TheoryCracowEtaToPi0LowPt_0010,"0#font[122]{-}10% NEQ SHM","l");
+            legendRatioALICE3BEQ->AddEntry(TheoryBegunEQEtaToPi0_0010,"0#font[122]{-}10% EQ SHM","l");
+            legendRatioALICE3BEQ->AddEntry((TObject*)0,"PRC 90, 014906 (2014)","");
+            legendRatioALICE3BEQ->Draw();
+
+            if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsEQ_0010.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsEQ_0010.%s",paperPlots.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsEQ_0010.%s",PubNotePlots.Data(),suffix.Data()));
+
+        canvasEtatoPi0combo->cd();
+            histo2DEtatoPi0combo->Draw("copy");
+
+            DrawGammaSetMarkerTGraphAsym(graphEtaToPi0JetQuenching_0010, 0, 0, colorNLO0010,colorNLO0010, widthLinesBoxes, kTRUE, colorNLO0010);
+            graphEtaToPi0JetQuenching_0010->Draw("3,same");
+
+            graphEPOSEtaToPi0_0010->GetXaxis()->SetRangeUser(0,13);
+            graphEPOSEtaToPi0_0010->Draw("same,l,x");
+
+            DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
+            TheoryCracowEtaToPi0LowPt_0010->Draw("l,same");
+
+            graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
+            graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
+
+            legendEtatoPi0combo_onlyPbPb2->Draw();
+            legendRatioALICE2->Draw();
+
+            legendRatioALICE3A->Draw();
+
+            TLegend* legendRatioALICE3BNEQ = new TLegend(0.54,0.12,0.92,0.22);
+            legendRatioALICE3BNEQ->SetFillColor(0);
+            legendRatioALICE3BNEQ->SetLineColor(0);
+            legendRatioALICE3BNEQ->SetTextFont(42);
+            legendRatioALICE3BNEQ->SetTextSize(0.037);
+            legendRatioALICE3BNEQ->SetMargin(0.17);
+            legendRatioALICE3BNEQ->AddEntry(TheoryCracowEtaToPi0LowPt_0010,"0#font[122]{-}10% NEQ SHM","l");
+            legendRatioALICE3BNEQ->AddEntry((TObject*)0,"PRC 90, 014906 (2014)","");
+            legendRatioALICE3BNEQ->Draw();
+
+            if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsNEQ_0010.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsNEQ_0010.%s",paperPlots.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsNEQ_0010.%s",PubNotePlots.Data(),suffix.Data()));
+
+        canvasEtatoPi0combo->cd();
+            histo2DEtatoPi0combo->Draw("copy");
+
+            DrawGammaSetMarkerTGraphAsym(graphEtaToPi0JetQuenching_0010, 0, 0, colorNLO0010,colorNLO0010, widthLinesBoxes, kTRUE, colorNLO0010);
+            graphEtaToPi0JetQuenching_0010->Draw("3,same");
+
+            graphEPOSEtaToPi0_0010->GetXaxis()->SetRangeUser(0,13);
+            graphEPOSEtaToPi0_0010->Draw("same,l,x");
+
+            DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_0010, 0, 0, colorCracow0010,colorCracow0010, 5, kTRUE,colorCracow0010);
+            TheoryCracowEtaToPi0LowPt_0010->Draw("l,same");
+            DrawGammaSetMarkerTGraphAsym(TheoryBegunEQEtaToPi0_0010, 0, 0, colorBegun0010,colorBegun0010, 5, kTRUE,colorBegun0010);
+            TheoryBegunEQEtaToPi0_0010->SetLineStyle(9);
+            TheoryBegunEQEtaToPi0_0010->Draw("l,same");
+
+            graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
+            graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
+
+            legendEtatoPi0combo_onlyPbPb2->Draw();
+            legendRatioALICE2->Draw();
+            legendRatioALICE3A->Draw();
+
+            TLegend* legendRatioSHM = new TLegend(0.5,0.12,0.95,0.22);
+            legendRatioSHM->SetFillColor(0);
+            legendRatioSHM->SetLineColor(0);
+            legendRatioSHM->SetTextFont(42);
+            legendRatioSHM->SetTextSize(0.037);
+            legendRatioSHM->SetMargin(0.17);
+            legendRatioSHM->SetNColumns(2);
+            legendRatioSHM->SetHeader("SHM - PRC 90, 014906 (2014)");
+            legendRatioSHM->AddEntry(TheoryCracowEtaToPi0LowPt_0010,"0#font[122]{-}10% NEQ","l");
+            legendRatioSHM->AddEntry(TheoryBegunEQEtaToPi0_0010,"0#font[122]{-}10% EQ","l");
+            legendRatioSHM->Draw();
 
             if(thesisPlotting)          thesisLabelHighLeft2->Draw();
 
@@ -7536,10 +7671,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphEPOSEtaToPi0_2050->GetXaxis()->SetRangeUser(0,13);
             graphEPOSEtaToPi0_2050->Draw("same,l,x");
 
-            DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
-//             TheoryCracowEtaToPi0LowPt_2050->Draw("l,same");
-               DrawGammaSetMarkerTGraphAsym(TheoryBegunEQEtaToPi0_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
-            TheoryBegunEQEtaToPi0_2050->Draw("l,same");            
+            DrawGammaSetMarkerTGraphAsym(TheoryBegunEQEtaToPi0_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
+            TheoryBegunEQEtaToPi0_2050->SetLineStyle(9);
+            TheoryBegunEQEtaToPi0_2050->Draw("l,same");
 
             graphCombEtatoPi0SysPbPb2760GeV_2050->Draw("E2same");
             graphCombEtatoPi0StatPbPb2760GeV_2050->Draw("p,same");
@@ -7566,17 +7700,82 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRatioEtaPi0RatioEpos->AddEntry(graphEPOSEtaToPi0_2050,"20#font[122]{-}50% EPOS", "l");
             legendRatioEtaPi0RatioEpos->AddEntry((TObject*)0,"PRC 85, 064907 (2012)","");
             legendRatioEtaPi0RatioEpos->Draw();
+            TLegend* legendEtaPi0RatioEQ = new TLegend(0.54,0.12,0.92,0.22);
+            legendEtaPi0RatioEQ->SetFillColor(0);
+            legendEtaPi0RatioEQ->SetLineColor(0);
+            legendEtaPi0RatioEQ->SetTextFont(42);
+            legendEtaPi0RatioEQ->SetTextSize(0.037);
+            legendEtaPi0RatioEQ->SetMargin(0.17);
+            legendEtaPi0RatioEQ->AddEntry(TheoryBegunEQEtaToPi0_2050,"20#font[122]{-}50% EQ SHM","l");
+            legendEtaPi0RatioEQ->AddEntry((TObject*)0,"PRC 90, 014906 (2014)","");
+            legendEtaPi0RatioEQ->Draw();
+
+            if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsEQ_2050.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsEQ_2050.%s",PubNotePlots.Data(),suffix.Data()));
+
+        canvasEtatoPi0combo->cd();
+            histo2DEtatoPi0combo->Draw("copy");
+
+            DrawGammaSetMarkerTGraphErr(graphEPOSEtaToPi0_2050,0,0,colorEPOS2050,colorEPOS2050,2,kTRUE,colorEPOS2050);
+            graphEPOSEtaToPi0_2050->SetLineStyle(5);
+            graphEPOSEtaToPi0_2050->GetXaxis()->SetRangeUser(0,13);
+            graphEPOSEtaToPi0_2050->Draw("same,l,x");
+
+            DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
+            TheoryCracowEtaToPi0LowPt_2050->Draw("l,same");
+
+            graphCombEtatoPi0SysPbPb2760GeV_2050->Draw("E2same");
+            graphCombEtatoPi0StatPbPb2760GeV_2050->Draw("p,same");
+
+            legendEtatoPi0combo_onlyPbPb3->Draw();
+            legendRatioEtaPi0RatioEpos->Draw();
             TLegend* legendEtaPi0RatioNEQ = new TLegend(0.54,0.12,0.92,0.22);
             legendEtaPi0RatioNEQ->SetFillColor(0);
             legendEtaPi0RatioNEQ->SetLineColor(0);
             legendEtaPi0RatioNEQ->SetTextFont(42);
             legendEtaPi0RatioNEQ->SetTextSize(0.037);
             legendEtaPi0RatioNEQ->SetMargin(0.17);
-    //           legendEtaPi0RatioNEQ->SetHeader("NEQ SHM");
-//             legendEtaPi0RatioNEQ->AddEntry(TheoryCracowEtaToPi0LowPt_2050,"20#font[122]{-}50% NEQ SHM","l");
-            legendEtaPi0RatioNEQ->AddEntry(TheoryBegunEQEtaToPi0_2050,"20#font[122]{-}50% EQ SHM","l");
+            legendEtaPi0RatioNEQ->AddEntry(TheoryCracowEtaToPi0LowPt_2050,"20#font[122]{-}50% NEQ SHM","l");
             legendEtaPi0RatioNEQ->AddEntry((TObject*)0,"PRC 90, 014906 (2014)","");
             legendEtaPi0RatioNEQ->Draw();
+
+            if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsNEQ_2050.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModelsNEQ_2050.%s",PubNotePlots.Data(),suffix.Data()));
+
+        canvasEtatoPi0combo->cd();
+            histo2DEtatoPi0combo->Draw("copy");
+
+            DrawGammaSetMarkerTGraphErr(graphEPOSEtaToPi0_2050,0,0,colorEPOS2050,colorEPOS2050,2,kTRUE,colorEPOS2050);
+            graphEPOSEtaToPi0_2050->SetLineStyle(5);
+            graphEPOSEtaToPi0_2050->GetXaxis()->SetRangeUser(0,13);
+            graphEPOSEtaToPi0_2050->Draw("same,l,x");
+
+            DrawGammaSetMarkerTGraphAsym(TheoryCracowEtaToPi0LowPt_2050, 0, 0, colorCracow2050,colorCracow2050, 5, kTRUE,colorCracow2050);
+            TheoryCracowEtaToPi0LowPt_2050->Draw("l,same");
+            DrawGammaSetMarkerTGraphAsym(TheoryBegunEQEtaToPi0_2050, 0, 0, colorBegun2050,colorBegun2050, 5, kTRUE,colorBegun2050);
+            TheoryBegunEQEtaToPi0_2050->SetLineStyle(9);
+            TheoryBegunEQEtaToPi0_2050->Draw("l,same");
+
+            graphCombEtatoPi0SysPbPb2760GeV_2050->Draw("E2same");
+            graphCombEtatoPi0StatPbPb2760GeV_2050->Draw("p,same");
+
+            legendEtatoPi0combo_onlyPbPb3->Draw();
+            legendRatioEtaPi0RatioEpos->Draw();
+            TLegend* legendEtaPi0RatioSHM = new TLegend(0.5,0.12,0.95,0.22);
+            legendEtaPi0RatioSHM->SetFillColor(0);
+            legendEtaPi0RatioSHM->SetLineColor(0);
+            legendEtaPi0RatioSHM->SetTextFont(42);
+            legendEtaPi0RatioSHM->SetTextSize(0.037);
+            legendEtaPi0RatioSHM->SetMargin(0.17);
+            legendEtaPi0RatioSHM->SetNColumns(2);
+            legendEtaPi0RatioSHM->SetHeader("SHM - PRC 90, 014906 (2014)");
+            legendEtaPi0RatioSHM->AddEntry(TheoryCracowEtaToPi0LowPt_2050,"20#font[122]{-}50% NEQ","l");
+            legendEtaPi0RatioSHM->AddEntry(TheoryBegunEQEtaToPi0_2050,"20#font[122]{-}50% EQ","l");
+            legendEtaPi0RatioSHM->Draw();
 
             if(thesisPlotting)          thesisLabelHighLeft2->Draw();
 
