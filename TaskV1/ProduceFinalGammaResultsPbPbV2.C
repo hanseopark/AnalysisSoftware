@@ -1174,7 +1174,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
             if(graphDirGammaSpectrumSummedUL)        graphDirGammaSpectrumSummedUL->Write("graphDirGammaSpectrumSummedUL",TObject::kOverwrite);
             if(graphDirGammaSpectrumSummedAr)        graphDirGammaSpectrumSummedAr->Write("graphDirGammaSpectrumSummedAr",TObject::kOverwrite);
             if(graphDirGammaSpectrumSummedULConfi)    graphDirGammaSpectrumSummedULConfi->Write("graphDirGammaSpectrumSummedULConfi",TObject::kOverwrite);
-            if(graphDirGammaSpectrumSummedArConfi)    graphDirGammaSpectrumSummedArConfi->Write("graphDirGammaSpectrumSummedAr",TObject::kOverwrite);
+            if(graphDirGammaSpectrumSummedArConfi)    graphDirGammaSpectrumSummedArConfi->Write("graphDirGammaSpectrumSummedArConfi",TObject::kOverwrite);
             if(graphDirGammaSpectrumSystwoMat)         graphDirGammaSpectrumSystwoMat->Write("graphDirGammaSpectrumSystWOMat",TObject::kOverwrite);
 
             fileGammaSpectrum->mkdir("Theory");
