@@ -155,15 +155,15 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	// PRC 90, 014906 (2014)
     // columns in the file represent:  nBin p_{T} [GeV/c]  p_{T} [GeV/c]_[MIN]   p_{T} [GeV/c]_[MAX]    dN/(2 #pi p_{T} dp_{T} dy)    dN/(2 #pi p_{T} dp_{T} dy)_[ERROR]
 	
-	const Int_t MaxNPtBins = 15; //instead of 25 for the full pt range, the theory guys asked us to stop at 3 Gev/c
+	const Int_t MaxNPtBins = 25; //the theory guys asked us to stop at 3 Gev/c
 	Int_t nbins;
 	Double_t BinLowerEdge, BinUpperEdge;
 
-	Double_t ptPi0LowPtNonEq_0010[15];    
-	Double_t yieldPi0LowPtNonEq_0010[15];    
-	Double_t yieldErrPi0LowPtNonEq_0010[15];    
-	Double_t Pi0LowErr_0010[15];
-	Double_t Pi0HighErr_0010[15];
+	Double_t ptPi0LowPtNonEq_0010[25];
+	Double_t yieldPi0LowPtNonEq_0010[25];
+	Double_t yieldErrPi0LowPtNonEq_0010[25];
+	Double_t Pi0LowErr_0010[25];
+	Double_t Pi0HighErr_0010[25];
 
 	TString fileNamePi0LowPtNonEq_0010 = "ExternalInputPbPb/Theory/CracowModel/lowPt-chem-non-equilibrium_15Oct2015/pion0-10.txt";
 	ifstream  filePi0LowPtNonEq_0010;
@@ -182,13 +182,13 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	}
 	filePi0LowPtNonEq_0010.close();
     
-    Double_t ptEtaLowPtNonEq_0010[15];    
-    Double_t yieldEtaLowPtNonEq_0010[15];    
-    Double_t yieldErrEtaLowPtNonEq_0010[15];    
-    Double_t EtaLowErr_0010[15];
-    Double_t EtaHighErr_0010[15];
+    Double_t ptEtaLowPtNonEq_0010[25];
+    Double_t yieldEtaLowPtNonEq_0010[25];
+    Double_t yieldErrEtaLowPtNonEq_0010[25];
+    Double_t EtaLowErr_0010[25];
+    Double_t EtaHighErr_0010[25];
 
-    Double_t ratioEtaPi0LowPtNonEq_0010[15];    
+    Double_t ratioEtaPi0LowPtNonEq_0010[25];
 
     TString fileNameEtaLowPtNonEq_0010 = "ExternalInputPbPb/Theory/CracowModel/lowPt-chem-non-equilibrium_15Oct2015/eta0-10.txt";
     ifstream  fileEtaLowPtNonEq_0010;
@@ -213,11 +213,11 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     fileEtaLowPtNonEq_0010.close();
     
 	
-	Double_t ptPi0LowPtNonEq_2050[15];    
-	Double_t yieldPi0LowPtNonEq_2050[15];    
-	Double_t yieldErrPi0LowPtNonEq_2050[15];    
-	Double_t Pi0LowErr_2050[15];
-	Double_t Pi0HighErr_2050[15];
+	Double_t ptPi0LowPtNonEq_2050[25];
+	Double_t yieldPi0LowPtNonEq_2050[25];
+	Double_t yieldErrPi0LowPtNonEq_2050[25];
+	Double_t Pi0LowErr_2050[25];
+	Double_t Pi0HighErr_2050[25];
 
 	TString fileNamePi0LowPtNonEq_2050 = "ExternalInputPbPb/Theory/CracowModel/lowPt-chem-non-equilibrium_15Oct2015/pion20-50.txt";
 	ifstream  filePi0LowPtNonEq_2050;
@@ -237,13 +237,13 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	filePi0LowPtNonEq_2050.close();
     
 	
-    Double_t ptEtaLowPtNonEq_2050[15];    
-    Double_t yieldEtaLowPtNonEq_2050[15];    
-    Double_t yieldErrEtaLowPtNonEq_2050[15];    
-    Double_t EtaLowErr_2050[15];
-    Double_t EtaHighErr_2050[15];
+    Double_t ptEtaLowPtNonEq_2050[25];
+    Double_t yieldEtaLowPtNonEq_2050[25];
+    Double_t yieldErrEtaLowPtNonEq_2050[25];
+    Double_t EtaLowErr_2050[25];
+    Double_t EtaHighErr_2050[25];
 
-    Double_t ratioEtaPi0LowPtNonEq_2050[15];    
+    Double_t ratioEtaPi0LowPtNonEq_2050[25];
 
     TString fileNameEtaLowPtNonEq_2050 = "ExternalInputPbPb/Theory/CracowModel/lowPt-chem-non-equilibrium_15Oct2015/eta20-50.txt";
     ifstream  fileEtaLowPtNonEq_2050;
@@ -285,7 +285,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     cout << fileNameChargedPionsKaonsLowPtNonEq_0010 << endl;
     
     nlinesLowPt = 0;
-    while(!fileChargedPionsKaonsLowPtNonEq_0010.eof() && nlinesLowPt < MaxNPtBins){
+    while(!fileChargedPionsKaonsLowPtNonEq_0010.eof() && nlinesLowPt < 15){
         fileChargedPionsKaonsLowPtNonEq_0010 >> ptChargedLowPtNonEq_0010[nlinesLowPt] >> yieldChargedPionLowPtNonEq_0010[nlinesLowPt] >> yieldChargedKaonLowPtNonEq_0010[nlinesLowPt] >> ratioKaonsToPionsLowPtNonEq_0010[nlinesLowPt]; 
         cout << nlinesLowPt << "\t " << ptChargedLowPtNonEq_0010[nlinesLowPt] << "\t pions: "  << yieldChargedPionLowPtNonEq_0010[nlinesLowPt] << "\t kaons:"  << yieldChargedKaonLowPtNonEq_0010[nlinesLowPt] << "\t kaons/pions:"  << ratioKaonsToPionsLowPtNonEq_0010[nlinesLowPt] << endl;
         
@@ -301,8 +301,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     TGraphAsymmErrors *TheoryCracowEtaToPi0LowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptEtaLowPtNonEq_0010, ratioEtaPi0LowPtNonEq_0010, 0, 0, 0, 0);
 
 	TGraphAsymmErrors *TheoryCracowPi0LowPt_2050 = new TGraphAsymmErrors(MaxNPtBins, ptPi0LowPtNonEq_2050, yieldPi0LowPtNonEq_2050, 0, 0, Pi0LowErr_2050, Pi0HighErr_2050);
-    TGraphAsymmErrors *TheoryCracowEtaLowPt_2050 = new TGraphAsymmErrors(MaxNPtBins, ptEtaLowPtNonEq_2050, yieldEtaLowPtNonEq_2050, 0, 0, EtaLowErr_2050, EtaHighErr_2050);
-    TGraphAsymmErrors *TheoryCracowEtaToPi0LowPt_2050 = new TGraphAsymmErrors(MaxNPtBins, ptEtaLowPtNonEq_2050, ratioEtaPi0LowPtNonEq_2050, 0, 0, 0, 0);
+    TGraphAsymmErrors *TheoryCracowEtaLowPt_2050 = new TGraphAsymmErrors(MaxNPtBins-1, ptEtaLowPtNonEq_2050, yieldEtaLowPtNonEq_2050, 0, 0, EtaLowErr_2050, EtaHighErr_2050);
+    TGraphAsymmErrors *TheoryCracowEtaToPi0LowPt_2050 = new TGraphAsymmErrors(MaxNPtBins-1, ptEtaLowPtNonEq_2050, ratioEtaPi0LowPtNonEq_2050, 0, 0, 0, 0);
 
     TGraphAsymmErrors *TheoryCracowChargedPionLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptChargedLowPtNonEq_0010, yieldChargedPionLowPtNonEq_0010, 0, 0, ChargedPionLowErr_0010, ChargedPionHighErr_0010);
     TGraphAsymmErrors *TheoryCracowChargedKaonLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptChargedLowPtNonEq_0010, yieldChargedKaonLowPtNonEq_0010, 0, 0, ChargedPionLowErr_0010, ChargedPionHighErr_0010);
