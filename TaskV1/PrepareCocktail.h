@@ -28,13 +28,14 @@ TString     motherParticlesLatex[nMotherParticles]          = {"#pi^{0}","#eta",
 Int_t       motherParticleDec[nMotherParticles]             = {1,2,16,8,4,8192,16384,32,64,2048,4096,1024,512,128,256,65536,131072};
 Color_t     cocktailColor[nMotherParticles]                 = {kRed+2,kBlue+1,kOrange+1,kYellow+2,kAzure-2,kGreen+2,kRed-2,kViolet,kMagenta,kViolet+2,kBlue-3,kTeal+9,kCyan+2,kMagenta+2,kCyan+4,
                                                                 kViolet+4,kAzure-4};
-                                                                
+
 Style_t     cocktailMarker[nMotherParticles]                = {20,21,24,25,20,21,24,25,20,21,24,25,20,21,24,25,20};
 TString     decayChannelsLatex[nMotherParticles][18];
 Double_t    decayChannelsBR[nMotherParticles][18];
 
 const Int_t nCocktailInputMethods                           = 7;
 TString     cocktailInputMethods[nCocktailInputMethods]     = {"Comb", "PCM", "EMCal", "PHOS", "PCMEMCal", "PCMPHOS", "EMCalMerged"};
+TString     cocktailInputMethodsLabels[nCocktailInputMethods]= {"Comb", "PCM", "EMC", "PHOS", "PCM-EMC", "PCM-PHOS", "mEMC"};
 Style_t     cocktailInputMarker[nCocktailInputMethods]      = {24,25,27,28,24,25,27};
 Size_t      cocktailInputMarkerSize[nCocktailInputMethods]  = {1.0,1.0,2.0,2.0,1.0,1.0,2.0};
 Color_t     cocktailInputMarkerColor[nCocktailInputMethods] = {kBlue-2,kGreen+3,kRed+1,kOrange+2,kBlue+2,kCyan+2,kMagenta+2};

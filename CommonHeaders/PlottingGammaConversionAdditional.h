@@ -4075,7 +4075,7 @@
                 return kViolet-4;
             } else if (detector.CompareTo("EMCal high pT") == 0){
                 return kOrange+1;
-            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                 return kCyan-6;
             }	else {
                 return kCyan-6;
@@ -4107,7 +4107,7 @@
                 }  else if (detector.CompareTo("EMCal high pT") == 0){
                     if(isHighPt) return 807;
                         else return 806;
-                } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+                } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                     if(isHighPt) return kCyan+2;
                         else return kCyan-6;
                 } else {
@@ -4129,7 +4129,7 @@
                     return kViolet-4;
                 }  else if (detector.CompareTo("EMCal high pT") == 0){
                     return 806;
-                } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+                } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                     return kCyan-6;
                 } else {
                     return kCyan-6;
@@ -4158,7 +4158,7 @@
                 return 30;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 28;
-            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                 return 30;
             } else if (detector.CompareTo("Comb") == 0){
                 return 20;
@@ -4180,7 +4180,7 @@
                 return 29;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 34;
-            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                 return 29;
             } else if (detector.CompareTo("Comb") == 0){
                 return 20;
@@ -4208,7 +4208,7 @@
                 return 2.2;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                 return 2.6;
             } else {
                 return 2.2;
@@ -4228,7 +4228,7 @@
                 return 2.2;
             }  else if (detector.CompareTo("EMCal high pT") == 0){
                 return 2.2;
-            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0){
+            } else if (detector.CompareTo("EMCal merged") == 0 || detector.CompareTo("EMC merged") == 0 || detector.CompareTo("mEMC") == 0){
                 return 2.6;
             } else {
                 return 2.2;

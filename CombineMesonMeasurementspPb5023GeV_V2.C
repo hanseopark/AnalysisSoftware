@@ -1234,12 +1234,12 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         while(graphPi0RpAErrnEPPS16DSS14Center->GetX()[graphPi0RpAErrnEPPS16DSS14Center->GetN()-1] < 25)
             graphPi0RpAErrnEPPS16DSS14Center->RemovePoint(graphPi0RpAErrnEPPS16DSS14Center->GetN()-1);
         // loading EPPS16, pi0 DSS spectrum calc
-        TGraphAsymmErrors* graphPi0nEPPS16DSS14             = (TGraphAsymmErrors*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr");
-        while(graphPi0nEPPS16DSS14->GetX()[graphPi0nEPPS16DSS14->GetN()-1] < 25)
-            graphPi0nEPPS16DSS14->RemovePoint(graphPi0nEPPS16DSS14->GetN()-1);
-        TGraph* graphPi0nEPPS16DSS14Center                  = (TGraph*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_muOne");
-        while(graphPi0nEPPS16DSS14Center->GetX()[graphPi0nEPPS16DSS14Center->GetN()-1] < 25)
-            graphPi0nEPPS16DSS14Center->RemovePoint(graphPi0nEPPS16DSS14Center->GetN()-1);
+        TGraphAsymmErrors* graphNLODSS14nPDFEPPS16Pi0             = (TGraphAsymmErrors*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr");
+        while(graphNLODSS14nPDFEPPS16Pi0->GetX()[graphNLODSS14nPDFEPPS16Pi0->GetN()-1] < 25)
+            graphNLODSS14nPDFEPPS16Pi0->RemovePoint(graphNLODSS14nPDFEPPS16Pi0->GetN()-1);
+        TGraph* graphNLODSS14nPDFEPPS16Pi0Center                  = (TGraph*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_muOne");
+        while(graphNLODSS14nPDFEPPS16Pi0Center->GetX()[graphNLODSS14nPDFEPPS16Pi0Center->GetN()-1] < 25)
+            graphNLODSS14nPDFEPPS16Pi0Center->RemovePoint(graphNLODSS14nPDFEPPS16Pi0Center->GetN()-1);
 
 
 
@@ -2632,9 +2632,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     graphRatioPi0NLODSS14nPDF                           = CalculateGraphErrRatioToFit(graphRatioPi0NLODSS14nPDF, fitTCMInvYieldPi0);
     TGraph* graphRatioPi0NLODSS14nPDFCenter             = (TGraph*)graphNLODSS14nPDFPi0Center->Clone("graphRatioPi0NLODSS14nPDFCenterToFit");
     graphRatioPi0NLODSS14nPDFCenter                     = CalculateGraphRatioToFit(graphRatioPi0NLODSS14nPDFCenter, fitTCMInvYieldPi0);
-    TGraphAsymmErrors* graphRatioPi0NLODSS14nPDFEPPS16  = (TGraphAsymmErrors*)graphPi0nEPPS16DSS14->Clone("graphRatioPi0NLODSS14nPDFEPPS16ToFit");
+    TGraphAsymmErrors* graphRatioPi0NLODSS14nPDFEPPS16  = (TGraphAsymmErrors*)graphNLODSS14nPDFEPPS16Pi0->Clone("graphRatioPi0NLODSS14nPDFEPPS16ToFit");
     graphRatioPi0NLODSS14nPDFEPPS16                     = CalculateGraphErrRatioToFit(graphRatioPi0NLODSS14nPDFEPPS16, fitTCMInvYieldPi0);
-    TGraph* graphRatioPi0NLODSS14nPDFEPPS16Center       = (TGraph*)graphPi0nEPPS16DSS14Center->Clone("graphRatioPi0NLODSS14nPDFEPPS16CenterToFit");
+    TGraph* graphRatioPi0NLODSS14nPDFEPPS16Center       = (TGraph*)graphNLODSS14nPDFEPPS16Pi0Center->Clone("graphRatioPi0NLODSS14nPDFEPPS16CenterToFit");
     graphRatioPi0NLODSS14nPDFEPPS16Center               = CalculateGraphRatioToFit(graphRatioPi0NLODSS14nPDFEPPS16Center, fitTCMInvYieldPi0);
 
 
@@ -5817,6 +5817,56 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     delete canvasEffectiveSecCorr;
 
+    fileFitsOutput << "*******************************************************************************************" << endl;
+    fileFitsOutput << "****************************** Power law fit pi0 ******************************************" << endl;
+    fileFitsOutput << "*******************************************************************************************" << endl;
+    TF1* fitPowInvYieldPi0Tot   = FitObject("powPure","fitPowInvYieldPi02760GeVTot","Pi0",graphCombPi0InvYieldTotWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldPi0Tot)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldPi0Tot)<< endl;
+    TF1* fitPowInvYieldPi0Stat   = FitObject("powPure","fitPowInvYieldPi02760GeV","Pi0",graphCombPi0InvYieldStatWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldPi0Stat)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldPi0Stat)<< endl;
+    TF1* fitOHagInvYieldPi0Tot   = FitObject("oHag","fitOHagInvYieldPi02760GeV","Pi0",graphCombPi0InvYieldTotWPP,0.3,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitOHagInvYieldPi0Tot)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitOHagInvYieldPi0Tot)<< endl;
+
+    fileFitsOutput << "NLO pp" << endl;
+    TF1* fitPowInvYieldPi0NLOPP         = FitObject("powPure","fitPowInvYieldPi0NLOPP","Pi0",graphNLODSS14Pi0PP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    fileFitsOutput << WriteParameterToFile(fitPowInvYieldPi0NLOPP)<< endl;
+
+    fileFitsOutput << "NLO pPb nCTEQ" << endl;
+    TF1* fitPowInvYieldPi0NLOPPbnCTEQ   = FitObject("powPure","fitPowInvYieldPi0NLOPPbnCTEQ","Pi0",graphNLODSS14nPDFPi0,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    fileFitsOutput << WriteParameterToFile(fitPowInvYieldPi0NLOPPbnCTEQ)<< endl;
+
+    fileFitsOutput << "NLO pp EPPS16" << endl;
+    TF1* fitPowInvYieldPi0NLOPPbEPPS    = FitObject("powPure","fitPowInvYieldPi0NLOPPbEPPS","Pi0",graphNLODSS14nPDFEPPS16Pi0,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    fileFitsOutput << WriteParameterToFile(fitPowInvYieldPi0NLOPPbEPPS)<< endl;
+
+    fileFitsOutput << "*******************************************************************************************" << endl;
+    fileFitsOutput << "****************************** Power law fit eta ******************************************" << endl;
+    fileFitsOutput << "*******************************************************************************************" << endl;
+
+    TF1* fitPowInvYieldEtaTot   = FitObject("powPure","fitPowInvYieldEta2760GeVTot","Eta",graphCombEtaInvYieldTotWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldEtaTot)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldEtaTot)<< endl;
+    TF1* fitPowInvYieldEtaStat   = FitObject("powPure","fitPowInvYieldEta2760GeVStat","Eta",graphCombEtaInvYieldStatWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitPowInvYieldEtaStat)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldEtaStat)<< endl;
+    TF1* fitOHagInvYieldEtaTot   = FitObject("oHag","fitOHagInvYieldEta2760GeV","Eta",graphCombEtaInvYieldTotWPP,0.7,20. ,NULL,"QNRMEX0+","", kFALSE);
+    cout << WriteParameterToFile(fitOHagInvYieldEtaTot)<< endl;
+    fileFitsOutput <<  WriteParameterToFile(fitOHagInvYieldEtaTot)<< endl;
+
+    fileFitsOutput << "NLO pp" << endl;
+    TF1* fitPowInvYieldEtaNLOPP         = FitObject("powPure","fitPowInvYieldEtaNLOPP","Eta",graphNLOAESSSEtaPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    fileFitsOutput << WriteParameterToFile(fitPowInvYieldEtaNLOPP)<< endl;
+    fileFitsOutput << "NLO pPb nCTEQ" << endl;
+    TF1* fitPowInvYieldEtaNLOPPbnCTEQ   = FitObject("powPure","fitPowInvYieldEtaNLOPPbnCTEQ","Eta",graphNLOAESSSnPDFEta,4,20. ,NULL,"QNRMEX0+","", kFALSE);
+    fileFitsOutput << WriteParameterToFile(fitPowInvYieldEtaNLOPPbnCTEQ)<< endl;
+
+    fileFitsOutput << "*******************************************************************************************" << endl;
+    fileFitsOutput << "*******************************************************************************************" << endl;
+    fileFitsOutput << "*******************************************************************************************" << endl;
+
 
     // **********************************************************************************************************************
     // ******************************************* Comparison to theory calculations Pi0 ************************************
@@ -6180,8 +6230,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphNLODSS14Pi0PP->Draw("3,same");
         DrawGammaSetMarkerTGraphAsym(graphNLODSS14nPDFPi0, 0, 0, colorDSSnPDFBand, colorDSSnPDFBand, widthLinesBoxes, kTRUE, colorDSSnPDFBand, kTRUE);
         graphNLODSS14nPDFPi0->Draw("3,same");
-        DrawGammaSetMarkerTGraphAsym(graphPi0nEPPS16DSS14, 0, 0, colorDSSnPDFEPPSBand, colorDSSnPDFEPPSBand, widthLinesBoxes, kTRUE, colorDSSnPDFEPPSBand, kTRUE);
-        graphPi0nEPPS16DSS14->Draw("3,same");
+        DrawGammaSetMarkerTGraphAsym(graphNLODSS14nPDFEPPS16Pi0, 0, 0, colorDSSnPDFEPPSBand, colorDSSnPDFEPPSBand, widthLinesBoxes, kTRUE, colorDSSnPDFEPPSBand, kTRUE);
+        graphNLODSS14nPDFEPPS16Pi0->Draw("3,same");
 
         DrawGammaNLOTGraph( graphNLODSS14Pi0Center, widthCommonFit, styleLineDSS, colorDSS);
         graphNLODSS14Pi0Center->Draw("same,c");
@@ -6189,8 +6239,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphPi0CGC5023GeV->Draw("same,c");
         DrawGammaNLOTGraph( graphNLODSS14Pi0PPCenter, widthCommonFit, styleLineDSS, colorDSS);
         graphNLODSS14Pi0PPCenter->Draw("same,c");
-        DrawGammaNLOTGraph( graphPi0nEPPS16DSS14Center, widthCommonFit, styleLineDSSnPDFEPPS, colorDSSnPDFEPPS);
-        graphPi0nEPPS16DSS14Center->Draw("same,c");
+        DrawGammaNLOTGraph( graphNLODSS14nPDFEPPS16Pi0Center, widthCommonFit, styleLineDSSnPDFEPPS, colorDSSnPDFEPPS);
+        graphNLODSS14nPDFEPPS16Pi0Center->Draw("same,c");
         DrawGammaNLOTGraph( graphNLODSS14nPDFPi0Center, widthCommonFit, styleLineDSSnPDF, colorDSSnPDF);
         graphNLODSS14nPDFPi0Center->Draw("same,c");
 
@@ -6207,6 +6257,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         DrawGammaSetMarkerTGraphAsym(graphPPInvYieldCombPi0StatWOXErr, markerStyleComb+4, markerSizeComb+0.2, kGray+1, kGray+1);
         graphPPInvYieldCombPi0StatWOXErr->Draw("p,same,z");
 
+//         DrawGammaSetMarkerTF1( fitPowInvYieldPi0NLOPPbnCTEQ, 7, 4, kOrange);
+//         fitPowInvYieldPi0NLOPPbnCTEQ->Draw("same");
 
         DrawGammaSetMarkerTF1( fitTCMInvYieldPi0, 7, 2, kGray+2);
         fitTCMInvYieldPi0->Draw("same");
@@ -6225,7 +6277,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendPaperPi0WithNLO->AddEntry(graphPi0CGC5023GeV,"CGC","l");
         legendPaperPi0WithNLO->AddEntry(graphNLODSS14Pi0,"NLO, PDF: CT10, FF: DSS14","f");
         legendPaperPi0WithNLO->AddEntry(graphNLODSS14nPDFPi0,"NLO, nPDF: nCTEQ, FF: DSS14","f");
-        legendPaperPi0WithNLO->AddEntry(graphPi0nEPPS16DSS14,"NLO, nPDF: EPPS16, FF: DSS14","f");
+        legendPaperPi0WithNLO->AddEntry(graphNLODSS14nPDFEPPS16Pi0,"NLO, nPDF: EPPS16, FF: DSS14","f");
         legendPaperPi0WithNLO->Draw();
 
         DrawGammaLines(0.30, 0.385, 9.85e-8, 9.85e-8, widthCommonFit, colorDSS, styleLineDSS);
@@ -6622,6 +6674,45 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
 
     // ***************************************************************************************************************
+    // ******************************** fitting eta/pi0 **************************************************************
+    // ***************************************************************************************************************
+    TGraphAsymmErrors* graphCombEtaToPi0StatWOXErr = (TGraphAsymmErrors*)graphCombEtaToPi0Stat->Clone("graphCombEtaToPi0StatWOXErr");
+    ProduceGraphAsymmWithoutXErrors(graphCombEtaToPi0StatWOXErr);
+
+    TF1* etaToPi0ConstData      = new TF1("etaToPi0ConstData","[0]",4,20);
+    TF1* etaToPi0ConstDataStat  = new TF1("etaToPi0ConstData","[0]",4,20);
+    TF1* etaToPi0ConstMC        = new TF1("etaToPi0ConstMC","[0]",4,20);
+    TF1* etaToPi0ConstMC2       = new TF1("etaToPi0ConstMC","[0]",4,20);
+    graphCombEtaToPi0StatWOXErr->Fit(etaToPi0ConstDataStat,"QRME0","",4,20);
+    graphCombEtaToPi0Tot->Fit(etaToPi0ConstData,"QRME0","",4,20);
+    histoDPMJetEtaToPi0->Fit(etaToPi0ConstMC,"QRME0","",4,20);
+    histoHIJINGEtaToPi0->Fit(etaToPi0ConstMC2,"QRME0","",4,20);
+
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "high pt eta/pi0 - data, stat: " << etaToPi0ConstDataStat->GetParameter(0) << "+-"<< etaToPi0ConstDataStat->GetParError(0) << endl;
+
+    cout << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    cout << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+    cout << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2->GetParameter(0) << "+-"<< etaToPi0ConstMC2->GetParError(0) << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+    cout << "***********************************************************************************************************" << endl;
+
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "high pt eta/pi0 - data, stat: " << etaToPi0ConstDataStat->GetParameter(0) << "+-"<< etaToPi0ConstDataStat->GetParError(0) << endl;
+    fileFitsOutput << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
+    fileFitsOutput << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
+    fileFitsOutput << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2->GetParameter(0) << "+-"<< etaToPi0ConstMC2->GetParError(0) << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+    fileFitsOutput << "***********************************************************************************************************" << endl;
+
+
+    // ***************************************************************************************************************
     // ******************************* Plotting eta/pi0 ratio for single measurements ********************************
     // ***************************************************************************************************************
     textSizeLabelsPixel                 = 54;
@@ -6691,9 +6782,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // ******************************* Plotting eta/pi0 ratio for combined measurement *******************************
     // ***************************************************************************************************************
     histo2DEtatoPi0combo->Draw("copy");
-
-        TGraphAsymmErrors* graphCombEtaToPi0StatWOXErr = (TGraphAsymmErrors*)graphCombEtaToPi0Stat->Clone("graphCombEtaToPi0StatWOXErr");
-        ProduceGraphAsymmWithoutXErrors(graphCombEtaToPi0StatWOXErr);
 
         // plotting data
         graphCombEtaToPi0Stat->Print();
@@ -6765,6 +6853,19 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // ***************************************************************************************************************
     histo2DEtatoPi0combo->Draw("copy");
 
+        Double_t totErrRelEtaToPi0          = etaToPi0ConstData->GetParError(0)/etaToPi0ConstData->GetParameter(0);
+        Double_t totErrEtaToPi0             = totErrRelEtaToPi0*etaToPi0ConstDataStat->GetParameter(0);
+        Double_t statErrRelEtaToPi0         = etaToPi0ConstDataStat->GetParError(0)/etaToPi0ConstDataStat->GetParameter(0);
+        Double_t statErrEtaToPi0            = etaToPi0ConstDataStat->GetParError(0);
+        Double_t sysErrRelEtaToPi0          = TMath::Sqrt(pow(totErrRelEtaToPi0,2)-pow(statErrRelEtaToPi0,2));
+        Double_t sysErrEtaToPi0             = sysErrRelEtaToPi0*etaToPi0ConstDataStat->GetParameter(0);
+
+        TBox* boxHighPtFit                  = CreateBoxConv(kGray, 4,etaToPi0ConstDataStat->GetParameter(0)-totErrEtaToPi0, 25, etaToPi0ConstDataStat->GetParameter(0)+totErrEtaToPi0);
+        boxHighPtFit->Draw();
+        TGraphErrors* dummyHighPt           = new TGraphErrors(1);
+        dummyHighPt->SetPoint(0,1,0.0251);
+        DrawGammaSetMarkerTGraphErr(dummyHighPt, 0, 0, kGray, kGray, widthLinesBoxes, kTRUE, kGray);
+
         DrawGammaSetMarkerTGraphAsym(graphNLOEtaToPi0, 0, 0, colorDSSBand, colorDSSBand, widthLinesBoxes, kTRUE, colorDSSBand);
         graphNLOEtaToPi0->Draw("3,same");
         DrawGammaSetMarkerTGraphAsym(graphNLOnPDFEtaToPi0, 0, 0, colorDSSnPDFBand, colorDSSnPDFBand, widthLinesBoxes, kTRUE, colorDSSnPDFBand, kTRUE);
@@ -6781,12 +6882,22 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         labelEnergyEtaToPi0->Draw();
         labelALICEEtaToPi0->Draw();
 
+        DrawGammaSetMarkerTF1( etaToPi0ConstDataStat, 7, 2, kGray+2);
+        etaToPi0ConstDataStat->SetRange(4,25);
+        etaToPi0ConstDataStat->Draw("same");
+
+        TLegend* legendEtaToPi0TheoryHighpt = GetAndSetLegend2(0.13, 0.92-(3*textsizeLabelsEtaToPi0*1.05), 0.53, 0.92-(1*textsizeLabelsEtaToPi0), textSizeLabelsPixel*0.85, 1, "", 43, 0.14);
+        legendEtaToPi0TheoryHighpt->AddEntry(dummyHighPt, "high #it{p}_{T} average","f");
+        legendEtaToPi0TheoryHighpt->AddEntry((TObject*)0, Form ("%2.3f #pm %1.3f^{stat} #pm %1.3f^{sys}", etaToPi0ConstDataStat->GetParameter(0), statErrEtaToPi0, sysErrRelEtaToPi0),"");
+        legendEtaToPi0TheoryHighpt->Draw();
+
         TLegend* legendEtaToPi0TheoryNLO = GetAndSetLegend2(0.50, 0.15+(textsizeLabelsEtaToPi0*3*0.9), 0.9, 0.15, textSizeLabelsPixel*0.85, 1, "", 43, 0.14);
         legendEtaToPi0TheoryNLO->AddEntry(graphNLOEtaToPi0,"NLO, PDF: CT10","pf");
         legendEtaToPi0TheoryNLO->AddEntry(graphNLOnPDFEtaToPi0,"NLO, nPDF: nCTEQ","pf");
         legendEtaToPi0TheoryNLO->AddEntry((TObject*)0,"#pi^{0} FF: DSS14, #eta FF: AESSS","");
         legendEtaToPi0TheoryNLO->Draw();
 
+        DrawGammaLines(0.514, 0.615 , 0.818, 0.818 ,widthCommonFit, kGray+2, 7);
         DrawGammaLines(2.79, 3.35 , 0.19, 0.19 ,widthCommonFit, colorDSS, styleLineDSS);
         DrawGammaLines(2.79, 3.35 , 0.128, 0.128 ,widthCommonFit, colorDSSnPDF, styleLineDSSnPDF);
 
@@ -6845,40 +6956,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     canvasEtatoPi0combo->Update();
     canvasEtatoPi0combo->SaveAs(Form("%s/EtaToPi0_WorldData_Paper.%s",outputDir.Data(), suffix.Data()));
 
-    // ***************************************************************************************************************
-    // ******************************** fitting eta/pi0 **************************************************************
-    // ***************************************************************************************************************
-    TF1* etaToPi0ConstData  = new TF1("etaToPi0ConstData","[0]",4,20);
-    TF1* etaToPi0ConstMC    = new TF1("etaToPi0ConstMC","[0]",4,20);
-    TF1* etaToPi0ConstMC2   = new TF1("etaToPi0ConstMC","[0]",4,20);
-    graphCombEtaToPi0StatWOXErr->Fit(etaToPi0ConstData,"QRME0","",4,20);
-    histoDPMJetEtaToPi0->Fit(etaToPi0ConstMC,"QRME0","",4,20);
-    histoHIJINGEtaToPi0->Fit(etaToPi0ConstMC2,"QRME0","",4,20);
-
-    cout << "***********************************************************************************************************" << endl;
-    cout << "***********************************************************************************************************" << endl;
-    cout << "***********************************************************************************************************" << endl;
-    cout << "high pt eta/pi0 - data, stat: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
-    graphCombEtaToPi0Tot->Fit(etaToPi0ConstData,"QRME0","",4,20);
-    cout << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
-    cout << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
-    cout << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2->GetParameter(0) << "+-"<< etaToPi0ConstMC2->GetParError(0) << endl;
-    cout << "***********************************************************************************************************" << endl;
-    cout << "***********************************************************************************************************" << endl;
-    cout << "***********************************************************************************************************" << endl;
-
-    fileFitsOutput << "***********************************************************************************************************" << endl;
-    fileFitsOutput << "***********************************************************************************************************" << endl;
-    fileFitsOutput << "***********************************************************************************************************" << endl;
-    graphCombEtaToPi0StatWOXErr->Fit(etaToPi0ConstData,"QRME0","",4,20);
-    fileFitsOutput << "high pt eta/pi0 - data, stat: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
-    graphCombEtaToPi0Tot->Fit(etaToPi0ConstData,"QRME0","",4,20);
-    fileFitsOutput << "high pt eta/pi0 - data, tot: " << etaToPi0ConstData->GetParameter(0) << "+-"<< etaToPi0ConstData->GetParError(0) << endl;
-    fileFitsOutput << "high pt eta/pi0 - DPMJet: " << etaToPi0ConstMC->GetParameter(0) << "+-"<< etaToPi0ConstMC->GetParError(0) << endl;
-    fileFitsOutput << "high pt eta/pi0 - HIJING: " << etaToPi0ConstMC2->GetParameter(0) << "+-"<< etaToPi0ConstMC2->GetParError(0) << endl;
-    fileFitsOutput << "***********************************************************************************************************" << endl;
-    fileFitsOutput << "***********************************************************************************************************" << endl;
-    fileFitsOutput << "***********************************************************************************************************" << endl;
 
     canvasXSectionPi0->cd();
     TH2F * histo2DXSectionWithEtaAndPi0;
@@ -6978,27 +7055,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     canvasXSectionPi0->SaveAs(Form("%s/InvYield_Pi0_Eta_Theory.%s",outputDir.Data(),suffix.Data()));
 
-
-    TF1* fitPowInvYieldPi0Tot   = FitObject("powPure","fitPowInvYieldPi02760GeVTot","Pi0",graphCombPi0InvYieldTotWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPowInvYieldPi0Tot)<< endl;
-    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldPi0Tot)<< endl;
-    TF1* fitPowInvYieldPi0Stat   = FitObject("powPure","fitPowInvYieldPi02760GeV","Pi0",graphCombPi0InvYieldStatWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPowInvYieldPi0Stat)<< endl;
-    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldPi0Stat)<< endl;
-    TF1* fitOHagInvYieldPi0Tot   = FitObject("oHag","fitOHagInvYieldPi02760GeV","Pi0",graphCombPi0InvYieldTotWPP,0.3,20. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitOHagInvYieldPi0Tot)<< endl;
-    fileFitsOutput <<  WriteParameterToFile(fitOHagInvYieldPi0Tot)<< endl;
-
-
-    TF1* fitPowInvYieldEtaTot   = FitObject("powPure","fitPowInvYieldEta2760GeVTot","Eta",graphCombEtaInvYieldTotWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPowInvYieldEtaTot)<< endl;
-    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldEtaTot)<< endl;
-    TF1* fitPowInvYieldEtaStat   = FitObject("powPure","fitPowInvYieldEta2760GeVStat","Eta",graphCombEtaInvYieldStatWPP,4,20. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitPowInvYieldEtaStat)<< endl;
-    fileFitsOutput <<  WriteParameterToFile(fitPowInvYieldEtaStat)<< endl;
-    TF1* fitOHagInvYieldEtaTot   = FitObject("oHag","fitOHagInvYieldEta2760GeV","Eta",graphCombEtaInvYieldTotWPP,0.7,20. ,NULL,"QNRMEX0+","", kFALSE);
-    cout << WriteParameterToFile(fitOHagInvYieldEtaTot)<< endl;
-    fileFitsOutput <<  WriteParameterToFile(fitOHagInvYieldEtaTot)<< endl;
 
     canvasXSectionPi0->cd();
     histo2DYieldPi0->Draw("copy");
