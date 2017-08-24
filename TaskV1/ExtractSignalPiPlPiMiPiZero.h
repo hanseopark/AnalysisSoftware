@@ -105,6 +105,17 @@ TH1D*   fHistoYieldMeson[6]                                 = {NULL, NULL, NULL,
 TH1D*   fHistoYieldMesonBackFit                             = NULL;
 TH1D*   fHistoYieldMesonPerEvent[6]                         = {NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*   fHistoYieldMesonPerEventBackFit                     = NULL;
+
+// True Yield histos for BG Analysis
+TH1D*   fHistoYieldsMappingGGInvMass                           = NULL;
+TH1D*   fHistoYieldsMappingTrueMeson                         = NULL;
+TH1D*   fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical    = NULL;
+TH1D*   fHistoYieldsMappingTruePiPlPiMiPiZeroContamination     = NULL;
+TH1D*   fHistoYieldsMappingTruePiPlPiMiSameMother[7]           = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+TH1D*   fHistoYieldsMappingTruePiPlPiZeroSameMother[5]         = {NULL,NULL,NULL,NULL,NULL};
+TH1D*   fHistoYieldsMappingTruePiMiPiZeroSameMother[5]         = {NULL,NULL,NULL,NULL,NULL};
+
+
 TH1D*   fHistoSBdefaultMeson[6]                             = { NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*   fHistoSigndefaultMeson[6]                           = { NULL, NULL, NULL, NULL, NULL, NULL};
 TH1D*   fHistoTrueSignMeson                                 = NULL;
@@ -333,6 +344,19 @@ Double_t* fMesonYieldsPerEvent_FixedPzPiZero[6]=			{NULL, NULL, NULL, NULL, NULL
 Double_t* fMesonYieldsPerEventBackFit= 						NULL;
 Double_t* fMesonYieldsPerEventBackFit_SubPiZero= 			NULL;
 Double_t* fMesonYieldsPerEventBackFit_FixedPzPiZero=		NULL;
+
+// True yields for bck contribution comparison
+Double_t* fYieldsMappingTruePiPlPiMiSameMother[7]=          {NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+Double_t* fYieldsMappingTruePiPlPiMiSameMotherError[7]=          {NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+Double_t* fYieldsMappingTruePiMiPiZeroSameMother[5]= 		{NULL, NULL, NULL, NULL, NULL};
+Double_t* fYieldsMappingTruePiMiPiZeroSameMotherError[5]= 		{NULL, NULL, NULL, NULL, NULL};
+Double_t* fYieldsMappingTruePiPlPiZeroSameMother[5]= 		{NULL, NULL, NULL, NULL, NULL};
+Double_t* fYieldsMappingTruePiPlPiZeroSameMotherError[5]= 		{NULL, NULL, NULL, NULL, NULL};
+Double_t* fYieldsMappingTruePiPlPiMiPiZeroCombinatorical=         NULL;
+Double_t* fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError=   NULL;
+Double_t* fYieldsMappingTruePiPlPiMiPiZeroContamination=          NULL;
+Double_t* fYieldsMappingTruePiPlPiMiPiZeroContaminationError=    NULL;
+
 Double_t* fMesonMass= 										NULL;
 Double_t* fMesonMass_SubPiZero= 							NULL;
 Double_t* fMesonMass_FixedPzPiZero=							NULL;

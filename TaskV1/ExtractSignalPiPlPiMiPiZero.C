@@ -1535,6 +1535,31 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             fMesonYieldsPerEvent_FixedPzPiZero[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError_FixedPzPiZero[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k+3][iPt]/fNEvents;
         }
+        // Integrate TrueHistos
+        if(fIsMC){
+            for(Int_t k = 0; k< 7;k++){
+              IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
+              fYieldsMappingTruePiPlPiMiSameMother[k][iPt]           = fYields;
+              fYieldsMappingTruePiPlPiMiSameMotherError[k][iPt]      = fYieldsError;
+              //cout << "------------------------------------> fYieldsMappingTruePiPlPiMiSameMother k=" << k << " pT=" << iPt << "  VALUE=" << fYieldsMappingTruePiPlPiMiSameMother[k][iPt] << endl;
+              if(k<5){
+                IntegrateHistoInvMass(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
+                fYieldsMappingTruePiMiPiZeroSameMother[k][iPt]       = fYields;
+                fYieldsMappingTruePiMiPiZeroSameMotherError[k][iPt]  = fYieldsError;
+                IntegrateHistoInvMass(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
+                fYieldsMappingTruePiPlPiZeroSameMother[k][iPt] = fYields;
+                fYieldsMappingTruePiPlPiZeroSameMotherError[k][iPt]  = fYieldsError;
+              }
+            }
+
+            IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[iPt],fMesonCurIntRange[0]);
+            fYieldsMappingTruePiPlPiMiPiZeroCombinatorical[iPt]      = fYields;
+            fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError[iPt] = fYieldsError;
+
+            IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[iPt],fMesonCurIntRange[0]);
+            fYieldsMappingTruePiPlPiMiPiZeroContamination[iPt]       = fYields;
+            fYieldsMappingTruePiPlPiMiPiZeroContaminationError[iPt]  = fYieldsError;
+        }
     }
 
     //******************** Data OUTPUTFILE ***************************************************
@@ -2741,6 +2766,36 @@ void CreatePtHistos(){
         fHistoSBdefaultMeson[k]->Sumw2();
     }
 
+    if(fIsMC){
+      // Create True Pt histsos for Background distributions
+      fHistoYieldsMappingGGInvMass =                                    new TH1D("histoYieldsMappingGGInvMass","",fNBinsPt,fBinsPt);
+      fHistoYieldsMappingTrueMeson =                                    new TH1D("histoYieldsMappingTrueMeson","",fNBinsPt,fBinsPt);
+      fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical = 			new TH1D("histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical","",fNBinsPt,fBinsPt);
+      fHistoYieldsMappingTruePiPlPiMiPiZeroContamination =          	new TH1D("histoYieldsMappingTruePiPlPiMiPiZeroContamination","",fNBinsPt,fBinsPt);
+
+      fHistoYieldsMappingGGInvMass->Sumw2();
+      fHistoYieldsMappingTrueMeson->Sumw2();
+      fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->Sumw2();
+      fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->Sumw2();
+      TString fNamesYieldsMappingTruePiPlPiMiSameMother[7]   = {"histoYieldsMappingTruePiPlPiMiSameMother","histoYieldsMappingTruePiPlPiMiSameMotherFromEta","histoYieldsMappingTruePiPlPiMiSameMotherFromOmega","histoYieldsMappingTruePiPlPiMiSameMotherFromRho",
+                                                                "histoYieldsMappingTruePiPlPiMiSameMotherFromEtaPrime","histoYieldsMappingTruePiPlPiMiSameMotherFromK0s","histoYieldsMappingTruePiPlPiMiSameMotherFromK0l"};
+      TString fNamesYieldsMappingTruePiPlPiZeroSameMother[5] = {"histoYieldsMappingTruePiPlPiZeroSameMother","histoYieldsMappingTruePiPlPiZeroSameMotherFromEta","histoYieldsMappingTruePiPlPiZeroSameMotherFromOmega","histoYieldsMappingTruePiPlPiZeroSameMotherFromRho",
+                                                                "histoYieldsMappingTruePiPlPiZeroSameMotherFromK0l"};
+      TString fNamesYieldsMappingTruePiMiPiZeroSameMother[5] = {"histoYieldsMappingTruePiMiPiZeroSameMother","histoYieldsMappingTruePiMiPiZeroSameMotherFromEta","histoYieldsMappingTruePiMiPiZeroSameMotherFromOmega","histoYieldsMappingTruePiMiPiZeroSameMotherFromRho",
+                                                                "histoYieldsMappingTruePiMiPiZeroSameMotherFromK0l"};
+
+      for(Int_t k=0; k<7; k++){
+        fHistoYieldsMappingTruePiPlPiMiSameMother[k] = new TH1D(fNamesYieldsMappingTruePiPlPiMiSameMother[k],"",fNBinsPt,fBinsPt);
+        fHistoYieldsMappingTruePiPlPiMiSameMother[k]->Sumw2();
+        if(k<5){
+          fHistoYieldsMappingTruePiMiPiZeroSameMother[k] = new TH1D(fNamesYieldsMappingTruePiMiPiZeroSameMother[k],"",fNBinsPt,fBinsPt);
+          fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->Sumw2();
+          fHistoYieldsMappingTruePiPlPiZeroSameMother[k] = new TH1D(fNamesYieldsMappingTruePiPlPiZeroSameMother[k],"",fNBinsPt,fBinsPt);
+          fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->Sumw2();
+        }
+      }
+    }
+
     fHistoYieldMesonPerEventBackFit = 	new TH1D("histoYieldMesonPerEventBackFit","",fNBinsPt,fBinsPt);
     fHistoMassMeson = 			new TH1D("histoMassMeson","",fNBinsPt,fBinsPt);
     fHistoWidthMeson = 			new TH1D("histoWidthMeson","",fNBinsPt,fBinsPt);
@@ -2824,6 +2879,29 @@ void FillPtHistos()
         fHistoMassMesonLeft->SetBinError(iPt,fMesonMassLeftError[iPt-1]);
         fHistoFWHMMesonLeft->SetBinContent(iPt,fMesonFWHMLeft[iPt-1]);
         fHistoFWHMMesonLeft->SetBinError(iPt,fMesonFWHMLeftError[iPt-1]);
+
+        // Fill true histos for Background contributions
+        if(fIsMC){
+          fHistoYieldsMappingGGInvMass->SetBinContent(iPt,fGGYields[0][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingGGInvMass->SetBinError(iPt,fGGYieldsError[0][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingTrueMeson->SetBinContent(iPt,fMesonTrueYields[0][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingTrueMeson->SetBinError(iPt,fMesonTrueYieldsError[0][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiPiZeroCombinatorical[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->SetBinError(iPt,fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiPiZeroContamination[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->SetBinError(iPt,fYieldsMappingTruePiPlPiMiPiZeroContaminationError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+
+          for(Int_t k = 0; k < 7; k++){
+            fHistoYieldsMappingTruePiPlPiMiSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            fHistoYieldsMappingTruePiPlPiMiSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiPlPiMiSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            if(k<5){
+              fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiPlPiZeroSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+              fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiPlPiZeroSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+              fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiMiPiZeroSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+              fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiMiPiZeroSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+            }
+          }
+        }
     }
 }
 
@@ -3470,6 +3548,19 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
             if (fHistoYieldTrueMesonReweighted[k])  fHistoYieldTrueMesonReweighted[k]->Write();
         }
 
+        // Write true histos for background contribution
+        if(fHistoYieldsMappingGGInvMass!=NULL)                          fHistoYieldsMappingGGInvMass->Write();
+        if(fHistoYieldsMappingTrueMeson!=NULL)                          fHistoYieldsMappingTrueMeson->Write();
+        if(fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical!=NULL)   fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->Write();
+        if(fHistoYieldsMappingTruePiPlPiMiPiZeroContamination!=NULL)    fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->Write();
+
+        for (Int_t k = 0; k < 7; k++){
+          if(fHistoYieldsMappingTruePiPlPiMiSameMother[k]!=NULL)        fHistoYieldsMappingTruePiPlPiMiSameMother[k]->Write();
+          if(k<5){
+            if(fHistoYieldsMappingTruePiPlPiZeroSameMother[k]!=NULL)        fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->Write();
+            if(fHistoYieldsMappingTruePiMiPiZeroSameMother[k]!=NULL)        fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->Write();
+          }
+        }
         fHistoTrueMesonInvMassVSPt->Write();
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             fHistoMappingTrueMesonInvMassPtBins[ii]->Write();
@@ -3609,6 +3700,17 @@ void Initialize(TString setPi0, Int_t numberOfBins){
         fMesonYieldsPerEventError_SubPiZero[k] =				new Double_t[fNBinsPt];
         fMesonYieldsPerEventError_FixedPzPiZero[k] =			new Double_t[fNBinsPt];
     }
+    // initialize yields for background contribution
+    for (Int_t k = 0; k < 7; k++){
+        fYieldsMappingTruePiPlPiMiSameMother[k] = 				new Double_t[fNBinsPt];
+        fYieldsMappingTruePiPlPiMiSameMotherError[k] = 		    new Double_t[fNBinsPt];
+        if(k<5){
+          fYieldsMappingTruePiMiPiZeroSameMother[k] =           new Double_t[fNBinsPt];
+          fYieldsMappingTruePiMiPiZeroSameMotherError[k] =      new Double_t[fNBinsPt];
+          fYieldsMappingTruePiPlPiZeroSameMother[k] =           new Double_t[fNBinsPt];
+          fYieldsMappingTruePiPlPiZeroSameMotherError[k] =      new Double_t[fNBinsPt];
+        }
+    }
 
     // initialize variable for different integration windows: normal, wide, narrow
     for (Int_t k = 0; k < 3; k++ ){
@@ -3643,6 +3745,12 @@ void Initialize(TString setPi0, Int_t numberOfBins){
     fMesonYieldsPerEventBackFit = 							new Double_t[fNBinsPt];
     fMesonYieldsPerEventBackFit_SubPiZero = 				new Double_t[fNBinsPt];
     fMesonYieldsPerEventBackFit_FixedPzPiZero =				new Double_t[fNBinsPt];
+
+    fYieldsMappingTruePiPlPiMiPiZeroCombinatorical =		new Double_t[fNBinsPt];
+    fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError =	new Double_t[fNBinsPt];
+    fYieldsMappingTruePiPlPiMiPiZeroContamination =  		new Double_t[fNBinsPt];
+    fYieldsMappingTruePiPlPiMiPiZeroContaminationError = 	new Double_t[fNBinsPt];
+
     fMesonMass = 											new Double_t[fNBinsPt];
     fMesonMass_SubPiZero =									new Double_t[fNBinsPt];
     fMesonMass_FixedPzPiZero =								new Double_t[fNBinsPt];
@@ -4026,6 +4134,17 @@ void Delete(){
         if (fMesonYieldsCorResidualBckFuncError_SubPiZero[k])     delete fMesonYieldsCorResidualBckFuncError_SubPiZero[k];
         if (fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k]) delete fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k];
     }
+    for (Int_t k = 0; k< 7; k++){
+      if (fYieldsMappingTruePiPlPiMiSameMother[k])                          delete fYieldsMappingTruePiPlPiMiSameMother[k];
+      if (fYieldsMappingTruePiPlPiMiSameMotherError[k])                     delete fYieldsMappingTruePiPlPiMiSameMotherError[k];
+      if(k<5){
+        if (fYieldsMappingTruePiMiPiZeroSameMother[k])                      delete fYieldsMappingTruePiMiPiZeroSameMother[k];
+        if (fYieldsMappingTruePiMiPiZeroSameMotherError[k])                 delete fYieldsMappingTruePiMiPiZeroSameMotherError[k];
+        if (fYieldsMappingTruePiPlPiZeroSameMother[k])                      delete fYieldsMappingTruePiPlPiZeroSameMother[k];
+        if (fYieldsMappingTruePiPlPiZeroSameMotherError[k])                 delete fYieldsMappingTruePiPlPiZeroSameMotherError[k];
+      }
+
+    }
     for (Int_t k = 0; k< 3; k++){
         if (fMesonTrueYields[k])            delete fMesonTrueYields[k];
         if (fMesonTrueYieldsReweighted[k])  delete fMesonTrueYieldsReweighted[k];
@@ -4045,6 +4164,10 @@ void Delete(){
     if (fMesonYieldsPerEventBackFit)                          delete fMesonYieldsPerEventBackFit;
     if (fMesonYieldsPerEventBackFit_SubPiZero)                delete fMesonYieldsPerEventBackFit_SubPiZero;
     if (fMesonYieldsPerEventBackFit_FixedPzPiZero)            delete fMesonYieldsPerEventBackFit_FixedPzPiZero;
+    if (fYieldsMappingTruePiPlPiMiPiZeroCombinatorical)       delete fYieldsMappingTruePiPlPiMiPiZeroCombinatorical;
+    if (fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError)  delete fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError;
+    if (fYieldsMappingTruePiPlPiMiPiZeroContamination)        delete fYieldsMappingTruePiPlPiMiPiZeroContamination;
+    if (fYieldsMappingTruePiPlPiMiPiZeroContaminationError)   delete fYieldsMappingTruePiPlPiMiPiZeroContaminationError;
     if (fMesonMass)                             delete fMesonMass;
     if (fMesonMass_SubPiZero)                   delete fMesonMass_SubPiZero;
     if (fMesonMass_FixedPzPiZero)               delete fMesonMass_FixedPzPiZero;
