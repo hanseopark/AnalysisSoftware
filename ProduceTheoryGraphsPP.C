@@ -180,6 +180,9 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphNLOCalcInvYieldEtaMuOne900GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuOne900GeV, 1/(xSection900GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldEtaMuTwo900GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuTwo900GeV, 1/(xSection900GeV*recalcBarn));
 
+    TGraphAsymmErrors* graphNLOCalcInvSecEta900GeV     = CombineMuScales(nlinesNLOEta900GeV, ptNLOEta900GeV, muOneEta900GeV, muHalfEta900GeV, muTwoEta900GeV);
+    graphNLOCalcInvSecEta900GeV->RemovePoint(0);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEta900GeV   = ScaleGraphAsym(graphNLOCalcInvSecEta900GeV, 1/(xSection900GeV*recalcBarn));
 
     Double_t       ptNLOPi0900GeV[100];
     Double_t       muHalfPi0900GeV[100];
@@ -209,6 +212,10 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphNLOCalcInvYieldPi0MuHalf900GeV = ScaleGraph(graphNLOCalcInvSecPi0MuHalf900GeV, 1/(xSection900GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuOne900GeV =  ScaleGraph(graphNLOCalcInvSecPi0MuOne900GeV, 1/(xSection900GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuTwo900GeV =  ScaleGraph(graphNLOCalcInvSecPi0MuTwo900GeV, 1/(xSection900GeV*recalcBarn));
+
+    TGraphAsymmErrors* graphNLOCalcInvSecPi0900GeV     = CombineMuScales(nlinesNLOPi0900GeV, ptNLOPi0900GeV, muOnePi0900GeV, muHalfPi0900GeV, muTwoPi0900GeV);
+    graphNLOCalcInvSecPi0900GeV->RemovePoint(0);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi0900GeV   = ScaleGraphAsym(graphNLOCalcInvSecPi0900GeV, 1/(xSection900GeV*recalcBarn));
 
     Double_t       ptNLOPi0900GeVBKK[100];
     Double_t       muTwoPi0900GeVBKK[100];
@@ -483,6 +490,7 @@ void ProduceTheoryGraphsPP(){
     fileNLODSS14Pi02760GeV.close();
     TGraphAsymmErrors* graphNLOCalcDSS14InvSecPi02760GeV = new TGraphAsymmErrors(nlinesNLODSS14Pi02760GeV, ptNLODSS14Pi02760GeV, muOneDSS14Pi02760GeV, ptErrNLODSS14Pi02760GeV, ptErrNLODSS14Pi02760GeV,
                                                                                 muOneErrDSS14Pi02760GeV, muOneErrDSS14Pi02760GeV);
+    graphNLOCalcDSS14InvSecPi02760GeV->RemovePoint(0); //remove first zero bin
     TGraphAsymmErrors* graphNLOCalcDSS14InvYieldPi02760GeV = ScaleGraphAsym(graphNLOCalcDSS14InvSecPi02760GeV, 1/(xSection2760GeV*recalcBarn));
 
     //**********************************************************************************************************************
@@ -675,6 +683,10 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphNLOCalcInvYieldEtaMuOne7000GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuOne7000GeV, 1/(xSection7000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldEtaMuTwo7000GeV =  ScaleGraph(graphNLOCalcInvSecEtaMuTwo7000GeV, 1/(xSection7000GeV*recalcBarn));
 
+    TGraphAsymmErrors* graphNLOCalcInvSecEta7000GeV     = CombineMuScales(nlinesNLOEta7000GeV, ptNLOEta7000GeV, muOneEta7000GeV, muHalfEta7000GeV, muTwoEta7000GeV);
+    graphNLOCalcInvSecEta7000GeV->RemovePoint(0);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEta7000GeV   = ScaleGraphAsym(graphNLOCalcInvSecEta7000GeV, 1/(xSection7000GeV*recalcBarn));
+
     Double_t       ptNLOPi07000GeV[100];
     Double_t       muHalfPi07000GeV[100];
     Double_t       muOnePi07000GeV[100];
@@ -703,6 +715,10 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphNLOCalcInvYieldPi0MuHalf7000GeV = ScaleGraph(graphNLOCalcInvSecPi0MuHalf7000GeV, 1/(xSection7000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuOne7000GeV =  ScaleGraph(graphNLOCalcInvSecPi0MuOne7000GeV, 1/(xSection7000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuTwo7000GeV =  ScaleGraph(graphNLOCalcInvSecPi0MuTwo7000GeV, 1/(xSection7000GeV*recalcBarn));
+
+    TGraphAsymmErrors* graphNLOCalcInvSecPi07000GeV     = CombineMuScales(nlinesNLOPi07000GeV, ptNLOPi07000GeV, muOnePi07000GeV, muHalfPi07000GeV, muTwoPi07000GeV);
+    graphNLOCalcInvSecPi07000GeV->RemovePoint(0);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi07000GeV   = ScaleGraphAsym(graphNLOCalcInvSecPi07000GeV, 1/(xSection7000GeV*recalcBarn));
 
 
     // BKK
@@ -857,6 +873,7 @@ void ProduceTheoryGraphsPP(){
     fileNLODSS14Pi07000GeV.close();
     TGraphAsymmErrors* graphNLOCalcDSS14InvSecPi07000GeV = new TGraphAsymmErrors(nlinesNLODSS14Pi07000GeV, ptNLODSS14Pi07000GeV, muOneDSS14Pi07000GeV, ptErrNLODSS14Pi07000GeV, ptErrNLODSS14Pi07000GeV,
                                                                                 muOneErrDSS14Pi07000GeV, muOneErrDSS14Pi07000GeV);
+    graphNLOCalcDSS14InvSecPi07000GeV->RemovePoint(0); //remove first zero bin
     TGraphAsymmErrors* graphNLOCalcDSS14InvYieldPi07000GeV = ScaleGraphAsym(graphNLOCalcDSS14InvSecPi07000GeV, 1/(xSection7000GeV*recalcBarn));
 
     //**************************************************************************************************
@@ -906,6 +923,7 @@ void ProduceTheoryGraphsPP(){
 
     TGraphAsymmErrors* graphNLOCalcInvSecEta8000GeV     = CombineMuScales(nlinesNLOEta8000GeV, ptNLOEta8000GeV, muOneEta8000GeV, muHalfEta8000GeV, muTwoEta8000GeV);
     graphNLOCalcInvSecEta8000GeV->RemovePoint(0);
+    TGraphAsymmErrors* graphNLOCalcInvYieldEta8000GeV   = ScaleGraphAsym(graphNLOCalcInvSecEta8000GeV, 1/(xSection8000GeV*recalcBarn));
 
     Double_t       ptNLOPi08000GeV[100];
     Double_t       muHalfPi08000GeV[100];
@@ -935,6 +953,10 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphNLOCalcInvYieldPi0MuHalf8000GeV = ScaleGraph(graphNLOCalcInvSecPi0MuHalf8000GeV, 1/(xSection8000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuOne8000GeV =  ScaleGraph(graphNLOCalcInvSecPi0MuOne8000GeV, 1/(xSection8000GeV*recalcBarn));
     TGraph* graphNLOCalcInvYieldPi0MuTwo8000GeV =  ScaleGraph(graphNLOCalcInvSecPi0MuTwo8000GeV, 1/(xSection8000GeV*recalcBarn));
+
+    TGraphAsymmErrors* graphNLOCalcInvSecPi08000GeV     = CombineMuScales(nlinesNLOPi08000GeV, ptNLOPi08000GeV, muOnePi08000GeV, muHalfPi08000GeV, muTwoPi08000GeV);
+    graphNLOCalcInvSecPi08000GeV->RemovePoint(0);
+    TGraphAsymmErrors* graphNLOCalcInvYieldPi08000GeV   = ScaleGraphAsym(graphNLOCalcInvSecPi08000GeV, 1/(xSection8000GeV*recalcBarn));
 
     Double_t* valueNLOMuHalfEta8000GeV  = graphNLOCalcInvSecEtaMuHalf8000GeV->GetY();
     Double_t* valueNLOMuOneEta8000GeV   = graphNLOCalcInvSecEtaMuOne8000GeV->GetY();
@@ -985,11 +1007,11 @@ void ProduceTheoryGraphsPP(){
 
     TString fileNameTheoryPi0DSS14                    = "ExternalInput/Theory/pp8TeV_NLO_Pi0_DSS14.root";
     TFile* fileTheorypp8TeVPi0DSS14                   = new TFile(fileNameTheoryPi0DSS14.Data());
-    TGraphAsymmErrors* graphNLOCalcInvSecPi08000GeV   = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
+    TGraphAsymmErrors* graphNLOCalcDSS14InvSecPi08000GeV   = (TGraphAsymmErrors*)fileTheorypp8TeVPi0DSS14->Get("fGraphInvXsec_Pi0");
     //scale errors 1/2 mu to 2 mu are given by errors of TGraphAsymmErrors
 
     //fix normalization problem since factor 2 was missing:
-    for (int i=0;i<graphNLOCalcInvSecPi08000GeV->GetN();i++) graphNLOCalcInvSecPi08000GeV->GetY()[i] /= 2.;
+    for (int i=0;i<graphNLOCalcDSS14InvSecPi08000GeV->GetN();i++) graphNLOCalcDSS14InvSecPi08000GeV->GetY()[i] /= 2.;
 
     //**************************************************************************************************
     //********************** 8TeV Pythia 8 MC spectra and ratio ****************************************
@@ -1268,9 +1290,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecPi0MuHalf900GeV->Write("graphNLOCalcInvSecPi0MuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuOne900GeV->Write("graphNLOCalcInvSecPi0MuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuTwo900GeV->Write("graphNLOCalcInvSecPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi0900GeV->Write("graphNLOCalcDSS07InvSecPi0900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuHalf900GeV->Write("graphNLOCalcInvYieldPi0MuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne900GeV->Write("graphNLOCalcInvYieldPi0MuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo900GeV->Write("graphNLOCalcInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi0900GeV->Write("graphNLOCalcDSS07InvYieldPi0900GeV", TObject::kOverwrite);
         // pi0 INCNLO FF:BKK, DSS07
         graphNLOCalcBKKInvSecPi0MuTwo900GeV->Write("graphNLOCalcBKKInvSecPi0MuTwo900GeV", TObject::kOverwrite);
         graphNLOCalcBKKInvYieldPi0MuTwo900GeV->Write("graphNLOCalcBKKInvYieldPi0MuTwo900GeV", TObject::kOverwrite);
@@ -1280,9 +1304,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecEtaMuHalf900GeV->Write("graphNLOCalcInvSecEtaMuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne900GeV->Write("graphNLOCalcInvSecEtaMuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuTwo900GeV->Write("graphNLOCalcInvSecEtaMuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta900GeV->Write("graphNLOCalcDSS07InvSecEta900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuHalf900GeV->Write("graphNLOCalcInvYieldEtaMuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne900GeV->Write("graphNLOCalcInvYieldEtaMuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo900GeV->Write("graphNLOCalcInvYieldEtaMuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEta900GeV->Write("graphNLOCalcDSS07InvYieldEta900GeV", TObject::kOverwrite);
         // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
         graphEtaToPi0NLOMuHalf900GeV->Write("graphNLOCalcEtaOverPi0MuHalf900GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne900GeV->Write("graphNLOCalcEtaOverPi0MuOne900GeV", TObject::kOverwrite);
@@ -1393,9 +1419,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecPi0MuHalf7000GeV->Write("graphNLOCalcInvSecPi0MuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuOne7000GeV->Write("graphNLOCalcInvSecPi0MuOne7000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuTwo7000GeV->Write("graphNLOCalcInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi07000GeV->Write("graphNLOCalcDSS07InvSecPi07000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuHalf7000GeV->Write("graphNLOCalcInvYieldPi0MuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne7000GeV->Write("graphNLOCalcInvYieldPi0MuOne7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo7000GeV->Write("graphNLOCalcInvYieldPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi07000GeV->Write("graphNLOCalcDSS07InvYieldPi07000GeV", TObject::kOverwrite);
         // pi0 INCNLO FF:BKK, DSS07
         graphNLOCalcBKKInvSecPi0MuTwo7000GeV->Write("graphNLOCalcBKKInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
         graphNLOCalcDSSInvSecPi0MuTwo7000GeV->Write("graphNLOCalcDSSInvSecPi0MuTwo7000GeV", TObject::kOverwrite);
@@ -1405,9 +1433,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecEtaMuHalf7000GeV->Write("graphNLOCalcInvSecEtaMuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne7000GeV->Write("graphNLOCalcInvSecEtaMuOne7000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuTwo7000GeV->Write("graphNLOCalcInvSecEtaMuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta7000GeV->Write("graphNLOCalcAESSSInvSecEta7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuHalf7000GeV->Write("graphNLOCalcInvYieldEtaMuHalf7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne7000GeV->Write("graphNLOCalcInvYieldEtaMuOne7000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo7000GeV->Write("graphNLOCalcInvYieldEtaMuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEta7000GeV->Write("graphNLOCalcAESSSInvYieldEta7000GeV", TObject::kOverwrite);
         // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
         graphEtaToPi0NLOMuHalf7TeV->Write("graphNLOCalcEtaOverPi0MuHalf7000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne7TeV->Write("graphNLOCalcEtaOverPi0MuOne7000GeV", TObject::kOverwrite);
@@ -1443,9 +1473,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecPi0MuHalf8000GeV->Write("graphNLOCalcInvSecPi0MuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuOne8000GeV->Write("graphNLOCalcInvSecPi0MuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvSecPi0MuTwo8000GeV->Write("graphNLOCalcInvSecPi0MuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecPi08000GeV->Write("graphNLOCalcDSS07InvSecPi08000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuHalf8000GeV->Write("graphNLOCalcInvYieldPi0MuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuOne8000GeV->Write("graphNLOCalcInvYieldPi0MuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldPi0MuTwo8000GeV->Write("graphNLOCalcInvYieldPi0MuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldPi08000GeV->Write("graphNLOCalcDSS07InvYieldPi08000GeV", TObject::kOverwrite);
         // pi0 INCNLO FF:BKK, DSS07
         // eta Vogelsang PDF: CT10, FF AESSS
         graphNLOCalcInvSecEtaMuHalf8000GeV->Write("graphNLOCalcInvSecEtaMuHalf8000GeV", TObject::kOverwrite);
@@ -1455,13 +1487,14 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvYieldEtaMuHalf8000GeV->Write("graphNLOCalcInvYieldEtaMuHalf8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne8000GeV->Write("graphNLOCalcInvYieldEtaMuOne8000GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo8000GeV->Write("graphNLOCalcInvYieldEtaMuTwo8000GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEta8000GeV->Write("graphNLOCalcAESSSInvYieldEta8000GeV", TObject::kOverwrite);
         // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
         graphEtaToPi0NLOMuHalf8TeV->Write("graphNLOCalcEtaOverPi0MuHalf8000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne8TeV->Write("graphNLOCalcEtaOverPi0MuOne8000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo8TeV->Write("graphNLOCalcEtaOverPi0MuTwo8000GeV", TObject::kOverwrite);
         graphNLOCalcEtaToPi08000GeV->Write("graphNLOCalcEtaOverPi08000GeV_AESSS_DSS07",TObject::kOverwrite);
         // pi0 Stratmann PDF: CT10, FF: DSS14,
-        graphNLOCalcInvSecPi08000GeV->Write("graphNLOCalcDSS14InvSecPi08000GeV", TObject::kOverwrite);
+        graphNLOCalcDSS14InvSecPi08000GeV->Write("graphNLOCalcDSS14InvSecPi08000GeV", TObject::kOverwrite);
         // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013 (Satoshi)
         histoPi0Pythia8MonashInvSec8TeV->Write("histoInvSecPythia8Monash2013Pi08TeV", TObject::kOverwrite);
         histoEtaPythia8MonashInvSec8TeV->Write("histoInvSecPythia8Monash2013Eta8TeV", TObject::kOverwrite);
