@@ -4320,7 +4320,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
       }
     }
     if(fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Eta") ==0 )){
-      fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
+      if(fMode == 3){ 
+        fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
+      }
     }
 
     //--------------------------------------------------------------------------------------
