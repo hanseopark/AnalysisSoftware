@@ -1437,6 +1437,7 @@ void CombineMesonMeasurementsPP()
     for(Int_t i=0;i<numActiveMeas;i++){
         padRatios[i]->cd();
         padRatios[i]->SetLogx(1);
+        histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data, Theory}{TCM fit}");
         histoRatiosDummy[i]->DrawCopy();
     }
     padCounter = 0;
@@ -2099,6 +2100,7 @@ void CombineMesonMeasurementsPP()
     for(Int_t i=0;i<numActiveMeas;i++){
         padRatios[i]->cd();
         padRatios[i]->SetLogx(1);
+        histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data, Theory}{TCM fit}");
         histoRatiosDummy[i]->DrawCopy();
     }
     padCounter = 0;
