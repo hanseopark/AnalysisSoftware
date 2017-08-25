@@ -54,7 +54,7 @@ void drawMarker(TH1D* histoDummy, Double_t column, Double_t row, Double_t marker
     Color_t colorNLO     = kAzure-4;
 
     Width_t widthLinesBoxes                     = 1.4;
-    Width_t widthCommonFit                      = 1.7;
+    Width_t widthCommonFit                      = 2.;
 
 void LoadColorsMarkersAndSizes(){
     for (Int_t i = 0; i < 11; i++){

@@ -1489,6 +1489,15 @@
         }
     }
 
+    void DrawGammaNLOTGraphAsymm( TGraphAsymmErrors* graph,
+                                  Width_t lineWidth,
+                                  Style_t lineStyle,
+                                  Color_t lineColor){
+        graph->SetLineWidth(lineWidth);
+        graph->SetLineColor(lineColor);
+        graph->SetLineStyle(lineStyle);
+    }
+
     void DrawGammaNLOTGraph( TGraph* graph,
                             Width_t lineWidth,
                             Style_t lineStyle,
