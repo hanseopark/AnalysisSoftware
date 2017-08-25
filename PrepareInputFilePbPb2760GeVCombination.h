@@ -81,6 +81,84 @@ TH1D *GraphAsymErrorsToHist(TGraphAsymmErrors *graph,Int_t maxPt = 50, TString n
 }
 
 
+TF1* DivideTF1(TF1* f1, TF1* f2, TString name) {
+
+        if (!f1 || !f2) return NULL;
+
+        Double_t xmin, xmax;
+        f1->GetRange(xmin, xmax);
+        Int_t nPar1                         = f1->GetNpar();
+        Int_t nPar2                         = f2->GetNpar();
+        TString formula1                    = f1->GetExpFormula();
+        TString formula2                    = f2->GetExpFormula();
+
+        for (Int_t i = 0; i< nPar2; i++){
+            formula2.ReplaceAll(Form("[%d]",i), Form("[%d]",i+nPar1));
+        }
+
+        TF1* result = new TF1(name.Data(),Form("(%s)/(%s)",formula1.Data(), formula2.Data()), xmin, xmax);
+        for (Int_t i = 0; i < nPar1; i++ ){
+            result->SetParameter(i, f1->GetParameter(i));
+        }
+        for (Int_t j = 0; j < nPar2; j++ ){
+            result->SetParameter(nPar1+j, f2->GetParameter(j));
+        }
+
+        return result;
+}
+
+
+TF1* MtScaledParam(TF1* param, Int_t particlePDG, Int_t particleBasePDG, Double_t scaleFactor, Bool_t isInvYield = kTRUE, Bool_t doAdditionalScaling = kFALSE) {
+
+        if (!param || particlePDG==0 || particleBasePDG==0 || !scaleFactor || scaleFactor<0) return NULL;
+
+        Double_t mass                   = TDatabasePDG::Instance()->GetParticle(particlePDG)->Mass();
+        Double_t massBase               = TDatabasePDG::Instance()->GetParticle(particleBasePDG)->Mass();
+
+        if (!mass || !massBase)
+            return NULL;
+
+        Double_t xMin, xMax;
+        param->GetRange(xMin, xMax);
+        TString paramPi0Formula         = param->GetExpFormula();
+        //cout << "input parametrization : " << paramPi0Formula.Data() << endl;
+
+        // check for cut off when m(particleBasePDG) > m(particlePDG)
+        if ( (xMin*xMin + mass*mass - massBase*massBase) < 0 ) xMin = TMath::Sqrt(xMin*xMin + massBase*massBase - mass*mass);
+
+        TString mT                      = Form("TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
+        TString pTovermT                = Form("x/TMath::Sqrt(x*x + %f * %f - %f * %f)",mass,mass,massBase,massBase);
+        TString mTScaledFormula         = paramPi0Formula.ReplaceAll("exp", "placeholder");
+        TString dummyFormula            = mTScaledFormula.ReplaceAll("x",mT.Data() );
+        mTScaledFormula                 = dummyFormula.ReplaceAll("placeholder","exp");
+        //cout << "output parametrization in mT: " << mTScaledFormula.Data() << endl;
+
+        Double_t paramEvaluated         = param->Eval(5.)/param->Eval(TMath::Sqrt(25. + mass*mass - massBase*massBase));
+        if (doAdditionalScaling)
+            scaleFactor                 = scaleFactor * paramEvaluated;
+
+        TString         outputFormula   = "";
+        if (isInvYield) outputFormula   = Form("%f * (%s)",scaleFactor,mTScaledFormula.Data());
+        else            outputFormula   = Form("%f * (%s) * (%s)",scaleFactor,pTovermT.Data(),mTScaledFormula.Data());
+        //cout << "output formula : " << outputFormula.Data() << endl;
+
+        TF1* scaledParam                = new TF1("scaledParam",outputFormula.Data(),xMin, xMax);
+        Int_t nPar = param->GetNpar();
+        for (Int_t i = 0; i< nPar; i++){
+            scaledParam->SetParameter(i,param->GetParameter(i));
+        }
+
+        return scaledParam;
+}
+
+TF1* MtScaledParam(TF1* param, Int_t particlePDG, Double_t scaleFactor, Bool_t isInvYield = kTRUE, Bool_t doAdditionalScaling = kFALSE) {
+
+        // wrapper for direct use with pi0 as a basis for the scaling (implemented to prevent break due to use of old function status before 22.03.2017)
+
+        return MtScaledParam(param, particlePDG, 111, scaleFactor, isInvYield, doAdditionalScaling);
+}
+
+
 
 //WITHOUT material budget
 TGraphAsymmErrors* graphCombInvYieldStatPbPb2760GeVA_0010   = NULL;

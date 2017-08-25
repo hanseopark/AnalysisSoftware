@@ -944,13 +944,15 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     canvasGammas->SetLogy();
     canvasGammas->SetLogx();
     
-    TLegend* legendGammas                                       = GetAndSetLegend2(0.2, 0.98-(0.05*nRows), 0.95, 0.98, 40, 6);
+    TLegend* legendGammas                                       = GetAndSetLegend2(0.2, 0.96-(0.05*nRows), 0.95, 0.96, 40, 6);
     legendGammas->SetBorderSize(0);
     legendGammas->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
     SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-9, histoGammaSumPtOrBin->GetMaximum()*100, 1.0, 1.5);
     dummyHist->SetLabelOffset(-0.015, "X");
     dummyHist->SetTitleOffset(0.8, "X");
+    dummyHist->GetYaxis()->SetTitleFont(62);
+    dummyHist->GetXaxis()->SetTitleFont(62);
     dummyHist->Draw();
     
     DrawGammaSetMarker(     histoGammaSumPtOrBin, 20, 1, kBlack,  kBlack);
@@ -989,6 +991,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#gamma_{decay} / #pi^{0}", 1e-6, 5e2, 1.0, 1.3);
     dummyHist->SetLabelOffset(-0.015, "X");
     dummyHist->SetTitleOffset(0.8, "X");
+    dummyHist->GetYaxis()->SetTitleFont(62);
+    dummyHist->GetXaxis()->SetTitleFont(62);
     dummyHist->Draw();
 
     TH1F* tempRatioGammas                                       = (TH1F*)histoGammaSumPtOrBin->Clone("tempRatioGammas");
@@ -1028,13 +1032,15 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     canvasGammasRatio2->SetLogy();
     canvasGammasRatio2->SetLogx();
     
-    TLegend* legendGammasRatio2                                 = GetAndSetLegend2(0.2, 0.98-(0.05*nRows), 0.95, 0.98, 40, 6);
+    TLegend* legendGammasRatio2                                 = GetAndSetLegend2(0.2, 0.95-(0.05*nRows), 0.95, 0.95, 40, 6);
     legendGammasRatio2->SetBorderSize(0);
     legendGammasRatio2->SetHeader("#gamma from");
     dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
     SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#gamma_{source} / #gamma_{decay}", 1e-6, 5e2, 1.0, 1.3);
     dummyHist->SetLabelOffset(-0.015, "X");
     dummyHist->SetTitleOffset(0.8, "X");
+    dummyHist->GetYaxis()->SetTitleFont(62);
+    dummyHist->GetXaxis()->SetTitleFont(62);
     dummyHist->Draw();
 
     TH1F* tempRatioGammas2                                      = NULL;
@@ -1297,12 +1303,14 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         padSpectrum->cd();
 
-        TLegend* legendPi0                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
+        TLegend* legendPi0                                          = GetAndSetLegend2(0.7, 0.92-(0.045*2), 0.85, 0.92, 40);
         legendPi0->SetBorderSize(0);
         dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0InvYieldData->GetMinimum(0)*0.1, histoPi0InvYieldData->GetMaximum()*2, 1.0, 1.7);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoPi0InvYieldData->GetMinimum(0)*0.1, histoPi0InvYieldData->GetMaximum()*2, 1.0, 1.9);
         dummyHist->SetLabelOffset(-0.015, "X");
-        dummyHist->SetTitleOffset(0.8, "X");
+        dummyHist->SetTitleOffset(0.9, "X");
+        dummyHist->GetYaxis()->SetTitleSize(0.05);
+        dummyHist->GetYaxis()->SetTitleFont(62);
         dummyHist->Draw();
 
         DrawGammaSetMarker(histoPi0InvYieldData,    24, 1, kBlack,  kBlack);
@@ -1315,17 +1323,18 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         histoGammaMotherPt[0]->Draw("same");
         legendPi0->Draw("same");
 
-        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.17, 0.038, cent, textMeasurement, "", 42, 0.038);
         if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
-        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.12, 0.038, 0.03, 1.25, 42);
 
         padRatio->cd();
         dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{gen.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{cocktail}", 0.12, 0.12, 0.12, 0.12, .9, 0.6, 510, 505);
         dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
-        dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
+        dummyHistRatio->GetXaxis()->SetTickLength(0.06);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.5,1.5);
         dummyHistRatio->Draw();
-        DrawGammaLines(ptPlotMin,ptPlotMax,1.8,1.8,0.1, kGray+1, 8);
+        DrawGammaLines(ptPlotMin,ptPlotMax,0.8,0.8,0.1, kGray+1, 8);
         DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);
         DrawGammaLines(ptPlotMin,ptPlotMax,1.0,1.0,0.1, kGray+1, 1);
         DrawGammaLines(ptPlotMin,ptPlotMax,1.1,1.1,0.1, kGray+1, 7);
@@ -1376,12 +1385,14 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
 
         padSpectrumEta->cd();
 
-        TLegend* legendEta                                          = GetAndSetLegend2(0.7, 0.95-(0.045*2), 0.85, 0.95, 40);
+        TLegend* legendEta                                          = GetAndSetLegend2(0.7, 0.92-(0.045*2), 0.85, 0.92, 40);
         legendEta->SetBorderSize(0);
         dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, ptPlotMax);
-        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoEtaInvYieldData->GetMinimum(0)*0.1, histoEtaInvYieldData->GetMaximum()*2, 1.0, 1.7);
+        SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{1}{2#pi#it{p}_{T}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", histoEtaInvYieldData->GetMinimum(0)*0.1, histoEtaInvYieldData->GetMaximum()*5, 1.0, 1.9);
         dummyHist->SetLabelOffset(-0.015, "X");
-        dummyHist->SetTitleOffset(0.8, "X");
+        dummyHist->SetTitleOffset(0.9, "X");
+        dummyHist->GetYaxis()->SetTitleSize(0.05);
+        dummyHist->GetYaxis()->SetTitleFont(62);
         dummyHist->Draw();
 
         DrawGammaSetMarker(histoEtaInvYieldData,   24, 1, kBlack,  kBlack);
@@ -1394,15 +1405,16 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         histoGeneratedEtaPt->Draw("same");
         legendEta->Draw("same");
 
-        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.22, 0.03, cent, textMeasurement, "", 42, 0.03);
+        PutProcessLabelAndEnergyOnPlot(                 0.22, 0.17, 0.038, cent, textMeasurement, "", 42, 0.038);
         if (producePlotsForThesis) PutThisThesisLabel(  0.22, 0.17, 0.032, 0.03, 1.25, 42);
-        else PutALICESimulationLabel(                   0.22, 0.17, 0.032, 0.03, 1.25, 42);
+        else PutALICESimulationLabel(                   0.22, 0.12, 0.038, 0.03, 1.25, 42);
 
         padRatioEta->cd();
         dummyHistRatio                                              = new TH1D("dummyHistRatio", "", 1000, ptPlotMin, ptPlotMax);
-        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{gen.}", 0.12, 0.1, 0.12, 0.1, 1.1, 0.6, 510, 505);
+        SetStyleHistoTH1ForGraphs(dummyHistRatio, "#it{p}_{T} (GeV/#it{c})","#frac{data}{cocktail}", 0.12, 0.12, 0.12, 0.12, 0.9, .6, 510, 505);
         dummyHistRatio->GetXaxis()->SetLabelOffset(-0.025);
-        dummyHistRatio->GetYaxis()->SetRangeUser(0.65,1.55);
+        dummyHistRatio->GetXaxis()->SetTickLength(0.06);
+        dummyHistRatio->GetYaxis()->SetRangeUser(0.5,1.5);
         dummyHistRatio->Draw();
         DrawGammaLines(ptPlotMin,ptPlotMax,0.8,0.8,0.1, kGray+1, 8);
         DrawGammaLines(ptPlotMin,ptPlotMax,0.9,0.9,0.1, kGray+1, 7);

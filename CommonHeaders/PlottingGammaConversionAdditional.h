@@ -4758,7 +4758,7 @@
         if ( variationName.CompareTo("Alpha") == 0 )
             return "#alpha meson";
         if ( variationName.CompareTo("Asym") == 0 )
-            return "Asymmetry";
+            return "asymmetry";
         if ( variationName.CompareTo("Rapidity") == 0 )
             return "rapidity";
         if ( variationName.CompareTo("ConvPhi") == 0 )

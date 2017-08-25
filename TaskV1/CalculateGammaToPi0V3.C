@@ -913,6 +913,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         cocktailAllGammaNLO                     = (TH1D*) cocktailAllGamma->Clone("cocktailAllGammaNLO");
         graphDirectPhotonNLOCopy                = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLOCalcCopy");
 
+        Double_t* yValNLO                       = graphDirectPhotonNLO->GetY();
         Double_t* xVal                          = graphDirectPhotonNLOCopy->GetX();
         Double_t* xErr                          = graphDirectPhotonNLOCopy->GetEX();
         Double_t* yVal                          = graphDirectPhotonNLOCopy->GetY();
@@ -928,7 +929,11 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fitCocktailAllGammaForNLO               = (TF1*)FitObject(cocktailFit,"cocktailFit","Pi0",cocktailAllGammaNLO,2.0,16,NULL,fitOptions);
 
         for (Int_t bin=0; bin<graphDirectPhotonNLOCopy->GetN(); bin++) {
-            yVal[bin]                           = (1 + ( yVal[bin] / (fitCocktailAllGammaForNLO->Eval(xVal[bin]))));
+            Double_t cocktailIntegral           = fitCocktailAllGammaForNLO->Integral(graphDirectPhotonNLOCopy->GetX()[bin]-graphDirectPhotonNLOCopy->GetErrorXlow(bin),
+                                                                                      graphDirectPhotonNLOCopy->GetX()[bin]+graphDirectPhotonNLOCopy->GetErrorXhigh(bin))                                        /(graphDirectPhotonNLOCopy->GetErrorXlow(bin)+graphDirectPhotonNLOCopy->GetErrorXhigh(bin));
+            yVal[bin]                           = (1 + ( yValNLO[bin] / cocktailIntegral));
+            yErrUp[bin]                         = yErrUp[bin]/cocktailIntegral;
+            yErrDown[bin]                       = yErrDown[bin]/cocktailIntegral;
         }
 
         // ------------------------------ NLO Calculations -----------------------------
@@ -936,7 +941,6 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         graphNLODoubleRatio->SetName("graphNLODoubleRatio");
         graphNLODirGammaSpectra                 = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLODirGammaSpectra");
     }
-
 
     //**********************************************************************************
     //***                      Double Ratios                                         ***

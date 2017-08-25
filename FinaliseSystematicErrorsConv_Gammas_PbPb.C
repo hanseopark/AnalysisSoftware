@@ -1398,8 +1398,8 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     Double_t heightLegend   = 1.12* 0.035 * (nCutsActive+1);
     Int_t nColumnsLegend    = 1;
     if ( nCutsActive+1 > 7){
-        widthLegend         = 0.5;
-        heightLegend        = 1.05* 0.035 * (nCutsActive/1.5+1);
+        widthLegend         = 0.55;
+        heightLegend        = 0.035 * (nCutsActive/1.5+1);
         nColumnsLegend      = 2;
     }
 
@@ -1433,6 +1433,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
 
     canvasNewSysErrMean->cd();
 
+        if(spectrumName.CompareTo("Pi0")==0) yRangesSysPlotting[1] = yRangesSysPlotting[1]+5;
         TH2F * histo2DNewSysErrMean;
         histo2DNewSysErrMean                = new TH2F("histo2DNewSysErrMean", "histo2DNewSysErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07,1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]), 1000.,
                                                        yRangesSysPlotting[0], yRangesSysPlotting[1]);
@@ -1443,8 +1444,11 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         histo2DNewSysErrMean->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo2DNewSysErrMean->DrawCopy();
 
+        TLatex *labelThesis = new TLatex(minXLegend,maxYLegend-0.03,"This thesis");
+        SetStyleTLatex( labelThesis, 0.85*textSizeLabelsRelmean,4);
+        labelThesis->Draw();
         // create legend
-        TLegend* legendMeanNew              = GetAndSetLegend2(minXLegend, maxYLegend-heightLegend, minXLegend+widthLegend, maxYLegend, 40, nColumnsLegend, "", 43, 0.1);
+        TLegend* legendMeanNew              = GetAndSetLegend2(minXLegend, maxYLegend-heightLegend-0.04, minXLegend+widthLegend, maxYLegend-0.05, 40, nColumnsLegend, "", 43, 0.1);
         for(Int_t i = 0;i< nCuts ;i++){
             if (benable[i]){
 //                 if(!spectrumName.CompareTo("Gamma")||i!=7){
@@ -1456,8 +1460,8 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         }
 
         DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "Material" ), 1.,GetColorSystematics( "Material" ),GetColorSystematics( "Material" ));
-        graphMaterialError->Draw("p,csame");
-        legendMeanNew->AddEntry(graphMaterialError,"Material","p");
+        graphMaterialError->Draw("px0,csame");
+        legendMeanNew->AddEntry(graphMaterialError,"material","p");
 
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");

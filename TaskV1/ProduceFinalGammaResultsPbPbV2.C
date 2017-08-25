@@ -70,12 +70,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     Int_t nLinesNLOLegends  = 2;
     if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0)
         nLinesNLOLegends    = 3;
-    Double_t minPt   = 0.6;
+    Double_t minPt   = 0.;
     Double_t maxPt   = 40.;
     Double_t minYDR  = 0.75;
     Double_t maxYDR  = 2.;
     Double_t minYIR  = 0.;
-    Double_t maxYIR  = 2.;
+    Double_t maxYIR  = 1.6;
 
     Int_t binOffset = 4;
 
@@ -202,13 +202,20 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TGraphAsymmErrors* graphPublishedInclRatioSpectrumSyst          = NULL;
     TGraphAsymmErrors* graphPublishedDoubleRatioStat                 = NULL;
     TGraphAsymmErrors* graphPublishedDoubleRatioSyst                 = NULL;
+    TGraphAsymmErrors* graphPublishedCombDirGammaSpectrumStat            = NULL;
+    TGraphAsymmErrors* graphPublishedCombDirGammaSpectrumSyst           = NULL;
+    TGraphAsymmErrors* graphPublishedCombInclGammaSpectrumStat            = NULL;
+    TGraphAsymmErrors* graphPublishedCombInclGammaSpectrumSyst           = NULL;
+    TGraphAsymmErrors* graphPublishedCombDoubleRatioStat                 = NULL;
+    TGraphAsymmErrors* graphPublishedCombDoubleRatioSyst                 = NULL;
     if(centrality.CompareTo("0-10%")==0){
-//         graphPublishedDirGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubPCMDirGammaSpectrumStat_0020->Clone("graphPublishedDirGammaSpectrumStat");
-//         graphPublishedDirGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubPCMDirGammaSpectrumSyst_0020->Clone("graphPublishedDirGammaSpectrumSyst");
-//         graphPublishedInclGammaSpectrumStat                          = (TGraphAsymmErrors*)graphPubPCMInclGammaSpectrumStat_0020->Clone("graphPublishedInclGammaSpectrumStat");
-//         graphPublishedInclGammaSpectrumSyst                         = (TGraphAsymmErrors*)graphPubPCMInclGammaSpectrumSyst_0020->Clone("graphPublishedInclGammaSpectrumSyst");
-//         graphPublishedDoubleRatioStat                                = (TGraphAsymmErrors*)graphPubPCMDoubleRatioStat_0020->Clone("graphPublishedDoubleRatioStat");
-//         graphPublishedDoubleRatioSyst                                = (TGraphAsymmErrors*)graphPubPCMDoubleRatioSyst_0020->Clone("graphPublishedDoubleRatioSyst");
+        graphPublishedCombDirGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubCombDirGammaSpectrumStat_0020->Clone("graphPublishedDirGammaSpectrumStat");
+        graphPublishedCombDirGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubCombDirGammaSpectrumSyst_0020->Clone("graphPublishedDirGammaSpectrumSyst");
+        graphPublishedCombInclGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubCombInclGammaSpectrumStat_0020->Clone("graphPublishedInclGammaSpectrumStat");
+        graphPublishedCombInclGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubCombInclGammaSpectrumSyst_0020->Clone("graphPublishedInclGammaSpectrumSyst");
+        graphPublishedCombDoubleRatioStat                                = (TGraphAsymmErrors*)graphPubCombDoubleRatioStat_0020->Clone("graphPublishedDoubleRatioStat");
+        graphPublishedCombDoubleRatioSyst                                = (TGraphAsymmErrors*)graphPubCombDoubleRatioSyst_0020->Clone("graphPublishedDoubleRatioSyst");
+
         graphPublishedDirGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubPCMDirGammaSpectrumStat_0010->Clone("graphPublishedDirGammaSpectrumStat");
         graphPublishedDirGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubPCMDirGammaSpectrumSyst_0010->Clone("graphPublishedDirGammaSpectrumSyst");
         graphPublishedInclGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubPCMInclGammaSpectrumStat_0010->Clone("graphPublishedInclGammaSpectrumStat");
@@ -218,6 +225,13 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         graphPublishedDoubleRatioStat                                = (TGraphAsymmErrors*)graphPubPCMDoubleRatioStat_0010->Clone("graphPublishedDoubleRatioStat");
         graphPublishedDoubleRatioSyst                                = (TGraphAsymmErrors*)graphPubPCMDoubleRatioSyst_0010->Clone("graphPublishedDoubleRatioSyst");
     } else {
+        graphPublishedCombDirGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubCombDirGammaSpectrumStat_2040->Clone("graphPublishedDirGammaSpectrumStat");
+        graphPublishedCombDirGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubCombDirGammaSpectrumSyst_2040->Clone("graphPublishedDirGammaSpectrumSyst");
+        graphPublishedCombInclGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubCombInclGammaSpectrumStat_2040->Clone("graphPublishedInclGammaSpectrumStat");
+        graphPublishedCombInclGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubCombInclGammaSpectrumSyst_2040->Clone("graphPublishedInclGammaSpectrumSyst");
+        graphPublishedCombDoubleRatioStat                                = (TGraphAsymmErrors*)graphPubCombDoubleRatioStat_2040->Clone("graphPublishedDoubleRatioStat");
+        graphPublishedCombDoubleRatioSyst                                = (TGraphAsymmErrors*)graphPubCombDoubleRatioSyst_2040->Clone("graphPublishedDoubleRatioSyst");
+
         graphPublishedDirGammaSpectrumStat                           = (TGraphAsymmErrors*)graphPubPCMDirGammaSpectrumStat_2040->Clone("graphPublishedDirGammaSpectrumStat");
         graphPublishedDirGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubPCMDirGammaSpectrumSyst_2040->Clone("graphPublishedDirGammaSpectrumSyst");
         graphPublishedInclGammaSpectrumSyst                          = (TGraphAsymmErrors*)graphPubPCMInclGammaSpectrumSyst_2040->Clone("graphPublishedInclGammaSpectrumStat");
@@ -235,6 +249,13 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     DrawGammaSetMarkerTGraphAsym(graphPublishedInclRatioSpectrumSyst , 20, 2, kGray+1, kGray+1, 1, kTRUE);
     DrawGammaSetMarkerTGraphAsym(graphPublishedDoubleRatioStat , 20,2, kGray+1, kGray+1, 1, kTRUE);
     DrawGammaSetMarkerTGraphAsym(graphPublishedDoubleRatioSyst , 20, 2, kGray+1, kGray+1, 1, kTRUE);
+
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombDirGammaSpectrumStat , 20,2, kBlack, kBlack, 1, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombDirGammaSpectrumSyst , 20, 2, kBlack, kBlack, 1, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombInclGammaSpectrumStat , 20,2, kBlack, kBlack, 1, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombInclGammaSpectrumSyst , 20, 2, kBlack, kBlack, 1, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombDoubleRatioStat , 20,2, kBlack, kBlack, 1, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombDoubleRatioSyst , 20, 2, kBlack, kBlack, 1, kTRUE);
 
 
     TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
@@ -599,10 +620,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     //******************* draw double ratio with pi0 fitted **********************
     //****************************************************************************
     TCanvas *canvasDoubleRatio = GetAndSetCanvas("canvasDoubleRatioFinal");
-    TH2D *dummyDR = new TH2D("dummyDR", "dummyDR", 120, 0., 16, 1000., minYDR, maxYDR);
+    TH2D *dummyDR = new TH2D("dummyDR", "dummyDR", 120, 0., maxPt, 1000., minYDR, maxYDR);
     SetStyleHistoTH2ForGraphs( dummyDR, "#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 0.85);
-    dummyDR->GetXaxis()->SetRangeUser(minPt, maxPt);
+    dummyDR->GetXaxis()->SetRangeUser(minPt, 15.5);
     dummyDR->DrawCopy();
 
 //     for (Int_t i = 1; i< histoDRFit->GetNbinsX()+1; i++){
@@ -663,6 +684,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 
     graphPublishedDoubleRatioSyst->Draw("E2same");
     graphPublishedDoubleRatioStat->Draw("p,e1,same");
+    graphPublishedCombDoubleRatioSyst->Draw("E2same");
+    graphPublishedCombDoubleRatioStat->Draw("p,e1,same");
 
     TLegend* legendDoubleRatioWP = GetAndSetLegend(0.15,0.75,4);
     legendDoubleRatioWP->AddEntry(graphDoubleRatioSysErr,Form("PCM, %s",collisionSystem.Data()),"pf");
@@ -709,9 +732,9 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     // ******************** plotting inclusive ratio ****************************
     // **************************************************************************
     TCanvas *canvasIncRatio = GetAndSetCanvas("canvasIncRatioFinal");
-    TH2D *dummyIncR = new TH2D("dummyIncR", "dummyIncR", 120, 0., 16, 1000., minYIR, maxYIR);
+    TH2D *dummyIncR = new TH2D("dummyIncR", "dummyIncR", 120, 0., 15.5, 1000., minYIR, maxYIR);
     SetStyleHistoTH2ForGraphs( dummyIncR, "#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}",0.045, 0.05, 0.045, 0.05, 0.85, 0.85);
-    dummyIncR->GetXaxis()->SetRangeUser(minPt, maxPt);
+    dummyIncR->GetXaxis()->SetRangeUser(minPt, 15.5);
     dummyIncR->DrawCopy();
 
     DrawGammaSetMarker(histoIncRatio, 20, 2., colorCentNotPi0Fitted, colorCentNotPi0Fitted);
@@ -748,14 +771,20 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TCanvas *canvasIncRatioPi0Fit = GetAndSetCanvas("canvasIncRatioPi0FitFinal");
     dummyIncR->DrawCopy();
 
+        TLatex *thesisLabel = new TLatex(0.15,0.89,"This thesis");
+        SetStyleTLatex( thesisLabel,0.04,4);
+        thesisLabel->Draw();
+
+
     DrawGammaSetMarker(histoIncRatioPi0Fit, 20, 2., colorCent, colorCent);
     DrawGammaSetMarkerTGraphAsym(graphIncRatioFitPi0SysErr , 20, 2, colorCent, colorCent, 1, kTRUE);
     graphIncRatioFitPi0SysErr->Draw("E2same");
     histoIncRatioPi0Fit->DrawCopy("same");
 
-    TLegend* legendIncRatioFit = GetAndSetLegend(0.12,0.2,1.5);
-    legendIncRatioFit->AddEntry(graphIncRatioFitPi0SysErr,Form("PCM, %s",collisionSystem.Data()),"pf");
-    legendIncRatioFit->Draw();
+        TLegend* legendIncRatioFit = GetAndSetLegend(0.15,0.15,2.2);
+        legendIncRatioFit->SetHeader(collisionSystem.Data());
+        legendIncRatioFit->AddEntry(graphIncRatioFitPi0SysErr,centrality.Data(),"pf");
+        legendIncRatioFit->Draw();
 
     canvasIncRatioPi0Fit->Print(Form("%s/IncRatioPi0Fitted_%s.eps",outputDir.Data(),centrality.Data()));
 
@@ -771,7 +800,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     SetStyleHistoTH2ForGraphs( dummyPi0, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
     dummyPi0->GetXaxis()->SetLabelOffset(-0.015);
-    dummyPi0->GetXaxis()->SetRangeUser(minPt+0.3, maxPt+2);
+    dummyPi0->GetXaxis()->SetRangeUser(minPt+0.5, maxPt+2);
     dummyPi0->DrawCopy();
 
     DrawGammaSetMarker(histoPi0Spectrum, 20, 2., colorCentNotPi0Fitted, colorCentNotPi0Fitted);
@@ -812,14 +841,13 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     canvasIncGamma->SetLogx();
 
     TH2D *dummyGamma ;
-    dummyGamma = new TH2D("dummyGamma", "dummyGamma", 120, 0., 16, 1000.,1e-10,1e4);
+    dummyGamma = new TH2D("dummyGamma", "dummyGamma", 120, 0., maxPt, 1000.,1e-10,1e4);
     SetStyleHistoTH2ForGraphs( dummyGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
     dummyGamma->GetXaxis()->SetLabelOffset(-0.015);
-    dummyGamma->GetXaxis()->SetRangeUser(minPt, maxPt);
+    dummyGamma->GetXaxis()->SetRangeUser(minPt, 15.5);
     dummyGamma->GetYaxis()->SetRangeUser(1e-6,1e2);
     dummyGamma->DrawCopy();
-
 
     DrawGammaSetMarker(histoIncGamma, 20, 2., colorCent, colorCent);
     DrawGammaSetMarkerTGraphAsym(graphIncGammaSysErr , 20, 2, colorCent, colorCent, 1, kTRUE);
@@ -840,6 +868,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 
     graphPublishedInclGammaSpectrumSyst->Draw("E2same");
     graphPublishedInclGammaSpectrumStat->Draw("p,same,e1");
+    graphPublishedCombInclGammaSpectrumSyst->Draw("E2same");
+    graphPublishedCombInclGammaSpectrumStat->Draw("p,same,e1");
 
     TLegend* legendIncGammaWP = GetAndSetLegend(0.18,0.2,1.5);
     legendIncGammaWP->AddEntry(graphIncGammaSysErr,Form("#gamma_{inc} PCM, %s",collisionSystem.Data()),"pf");
@@ -1088,6 +1118,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 
         graphPublishedDirGammaSpectrumSyst->Draw("Z2,same");
         graphPublishedDirGammaSpectrumStat->Draw("zp,same,e1");
+        graphPublishedCombDirGammaSpectrumSyst->Draw("Z2,same");
+        graphPublishedCombDirGammaSpectrumStat->Draw("zp,same,e1");
 
         TLegend* legendDirGammaWP = GetAndSetLegend(0.18,0.2,1.5);
         legendDirGammaWP->AddEntry(graphDirGammaSpectrumSyst,Form("#gamma_{dir} PCM, %s",collisionSystem.Data()),"pf");

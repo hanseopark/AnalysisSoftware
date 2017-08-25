@@ -1092,10 +1092,10 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     TBox* boxErrorNorm0005_Single          = CreateBoxConv(colorCombPbPb0005, 0.2, 1.-normErr0005 , 0.4, 1.+normErr0005);
     TBox* boxErrorNorm0510_Single          = CreateBoxConv(colorCombPbPb0510, 0.2, 1.-normErr0510 , 0.4, 1.+normErr0510);
     TBox* boxErrorNorm2040V2          = CreateBoxConv(colorCombPbPb4060, 0.6, 1.-normErr2040 , 0.8, 1.+normErr2040);
-    TBox* boxErrorNorm2040          = CreateBoxConv(kAzure-4, 0.5, 1.-normErr2040 , 0.75, 1.+normErr2040);
+    TBox* boxErrorNorm2040          = CreateBoxConv(colorCombPbPb4060, 0.5, 1.-normErr2040 , 0.75, 1.+normErr2040);
     TBox* boxErrorNorm2050          = CreateBoxConv(kAzure-4, 0.5, 1.-normErr2050 , 0.75, 1.+normErr2050);
     TBox* boxErrorNorm0010_Single   = CreateBoxConv(colorComb0005Box, 0.12, 1.-normErr0010 , 0.42, 1.+normErr0010);
-    TBox* boxErrorNorm2040_Single   = CreateBoxConv(colorCombo2050, 0.12, 1.-normErr2040 , 0.42, 1.+normErr2040);
+    TBox* boxErrorNorm2040_Single   = CreateBoxConv(colorCombPbPb4060, 0.12, 1.-normErr2040 , 0.42, 1.+normErr2040);
     TBox* boxErrorNorm2040V2_Single   = CreateBoxConv(colorCombPbPb4060, 0.12, 1.-normErr2040 , 0.42, 1.+normErr2040);
     TBox* boxErrorNorm2050_Single   = CreateBoxConv(colorCombo2050, 0.12, 1.-normErr2050 , 0.42, 1.+normErr2050);
     TBox* boxErrorNorm0010Only      = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
@@ -4048,7 +4048,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
             graphPCMEtaToPi0RatioSysErrPbPb0010->Draw("E2same");
             graphPCMEtaToPi0RatioPbPb0010->Draw("p,same");
 
-        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscalingWithPPandKaons_0010.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscalingandKaons_0010.%s",outputDir.Data(),suffix.Data()));
 
         canvasEtatoPi0combo->cd();
             histo2DEtatoPi0combo->Draw("copy");
@@ -4180,7 +4180,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
             graphPCMEtaToPi0RatioSysErrPbPb2040->Draw("E2same");
             graphPCMEtaToPi0RatioPbPb2040->Draw("p,same");
 
-        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscalingWithPPandKaons_2040.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscalingandKaons_2040.%s",outputDir.Data(),suffix.Data()));
 
 
         canvasEtatoPi0combo->cd();
@@ -4243,7 +4243,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
             graphPCMEtaToPi0RatioSysErrPbPb2050->Draw("E2same");
             graphPCMEtaToPi0RatioPbPb2050->Draw("p,same");
 
-        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscalingWithPPandKaons_2050.%s",outputDir.Data(),suffix.Data()));
+        canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_mtscalingandKaons_2050.%s",outputDir.Data(),suffix.Data()));
 
         canvasEtatoPi0combo->cd();
             TH2F * histo2DEtatoPi0DataMt = new TH2F("histo2DEtatoPi0DataMt","histo2DEtatoPi0DataMt",11000,0.,11,1000,0.01,2.4);
@@ -5282,7 +5282,7 @@ void CombineNeutralPionResultsLHC11h(TString suffix = "pdf",
     legendEtaAndChargedRAA_2050->Draw();
 
         thesisLabel3->Draw();
-        boxErrorNorm2040_Single->Draw();
+        boxErrorNorm2050_Single->Draw();
         DrawGammaLines(0., 11, 1, 1 ,1,kGray,2);
         histo2DRAA->Draw("axis,same");
     canvasRAA->Update();

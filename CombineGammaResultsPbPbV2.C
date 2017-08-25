@@ -48,6 +48,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
                                 TString inputFileNamePHOS   = "ExternalInputPbPb/PHOS/PHOS_GammaDir_final_09022015.root",
                                 TString suffix              = "eps",
                                 TString label               = "",
+                                Bool_t enablepValueCalcPCM  = kFALSE,
                                 Bool_t enablepValueCalc     = kFALSE
                             ){
 
@@ -81,11 +82,13 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     Double_t doubleRatio[2];
     Double_t indMeasRatio[2];
 //     Double_t incRatio[2];
+    Double_t incSpectraX[2];
     Double_t doubleRatioX[2];
     Double_t doubleRatioXpp[2];
     doubleRatio[0]      = 0.75;     doubleRatio[1]      = 1.95;
     indMeasRatio[0]     = 0.65;     indMeasRatio[1]     = 1.45;
 //  incRatio[0]         = 0.0;      incRatio[1]         = 1.7;
+    incSpectraX[0]      = 0.5;      incSpectraX[1]      = 20.;
     doubleRatioX[0]     = 0.7;      doubleRatioX[1]     = 16;
     doubleRatioXpp[0]   = 0.23;     doubleRatioXpp[1]   = 23;
 
@@ -147,6 +150,10 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     Color_t colorComb0010                                       = GetColorDefaultColor("PbPb_2.76TeV", "", "0-10%");
     Color_t colorComb2040                                       = GetColorDefaultColor("PbPb_2.76TeV", "", "20-40%");
     Color_t colorComb2050                                       = GetColorDefaultColor("PbPb_2.76TeV", "", "20-50%");
+    Style_t colorCombNotFit0010                                 = GetColorDefaultColor("PbPb_2.76TeV", "", "0-10%")-7;
+    Style_t colorCombNotFit2040                                 = GetColorDefaultColor("PbPb_2.76TeV", "", "20-40%")-7;
+    Style_t colorCombNotFit2050                                 = GetColorDefaultColor("PbPb_2.76TeV", "", "20-50%")-7;
+
     Color_t colorComb0010Box                                    = GetColorDefaultColor("PbPb_2.76TeV", "", "0-10%", kTRUE);
     Color_t colorComb2040Box                                    = GetColorDefaultColor("PbPb_2.76TeV", "", "20-40%", kTRUE);
     Color_t colorComb2050Box                                    = GetColorDefaultColor("PbPb_2.76TeV", "", "20-50%", kTRUE);
@@ -160,6 +167,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     Style_t markerStyleComb0010                                 = GetDefaultMarkerStyle("PbPb_2.76TeV", "", "0-10%");
     Style_t markerStyleComb2040                                 = GetDefaultMarkerStyle("PbPb_2.76TeV", "", "20-40%");
     Style_t markerStyleComb2050                                 = GetDefaultMarkerStyle("PbPb_2.76TeV", "", "20-50%");
+
     Style_t markerStyleCombpPb                                  = GetDefaultMarkerStyle("pPb_5.023TeV", "", "");
     Style_t markerStyleCombpp7TeV                               = GetDefaultMarkerStyle("7TeV", "", "");
     Style_t markerStyleCombpp2760GeV                            = GetDefaultMarkerStyle("2.76TeV", "", "");
@@ -183,10 +191,19 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     TString collisionSystemRHIC0010                             = "0-10% Au-Au #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
     TString collisionSystemRHIC2040                             = "20-40% Au-Au #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
 
-    TLatex *labelScalingDirGamma0010 = new TLatex(11.2,1.3E-3,"x 10^{2}");
-    TLatex *labelScalingDirGamma2040 = new TLatex(11.2,6.0E-5,"x 10^{1}");
+    TString cent0010 = "0#font[122]{-}10%";
+    TString cent2050 = "20#font[122]{-}50%";
+    TString cent2040 = "20#font[122]{-}40%";
+
+    TLatex *labelScalingDirGamma0010 = new TLatex(11.2,/*1.3*/2.5E-3/*3*/,"5 x 10^{2}");
+    TLatex *labelScalingDirGamma2040 = new TLatex(11.2,/*6.0*/2.5E-4/*5*/,"5 x 10^{1}");
     TLatex *labelScalingDirGamma2050 = new TLatex(11.2,7.5E-7,"x 10^{0}");
     TLatex *labelDirGammaColl = new TLatex(0.25,0.94,Form("%s",collisionSystem.Data()));
+
+    TLatex *labelThesisHighLeft = new TLatex(0.15,0.9,"This thesis");
+    SetStyleTLatex( labelThesisHighLeft, 0.04,4);
+    TLatex *labelThesisHighRight = new TLatex(0.82,0.83,"This thesis");
+    SetStyleTLatex( labelThesisHighRight, 0.04,4);
 
     TString PubCombGammaFileName = "ExternalInputPbPb/CombDirGamma/Gamma_CombResults_PbPb_2.76TeV_20150729_Pub2015.root";
     TString PubPCMGammaFileName  = "ExternalInputPbPb/PCM/Gamma_PCMResults_PbPb_2.76TeV_20150729_Pub2015.root";
@@ -346,18 +363,27 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     TFile* filePCMGamma                             = new TFile( inputFileNamePCM.Data());
     //________________________________________________ Load PCM 0-10% ___________________________________________________________________________
     TDirectory* directoryPCMGamma0010               = (TDirectory*)filePCMGamma->Get("Gamma_PbPb_2.76TeV_0-10%");
+        TH1D* histoPCMDRStatErr0010                             = (TH1D*) directoryPCMGamma0010->Get("DoubleRatioStatError");
+        TGraphAsymmErrors* graphPCMDRSysErr0010                 = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("DoubleRatioSystError");
         TH1D* histoPCMDRPi0FitStatErr0010                       = (TH1D*) directoryPCMGamma0010->Get("DoubleRatioPi0FitStatError");
+        TGraphAsymmErrors* graphPCMDRPi0FitStatErr0010        = new TGraphAsymmErrors(histoPCMDRPi0FitStatErr0010);
         TGraphAsymmErrors* graphPCMDRPi0FitSysErr0010           = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("DoubleRatioPi0FitSystError");
         TGraphAsymmErrors* graphPCMDRPi0FitSysAErr0010          = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("DoubleRatioPi0FitSystErrorA");
         TGraphAsymmErrors* graphPCMDRPi0FitSysBErr0010          = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("DoubleRatioPi0FitSystErrorB");
         TGraphAsymmErrors* graphPCMDRPi0FitSysCErr0010          = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("DoubleRatioPi0FitSystErrorC");
-//         TH1D* histoPCMIncRStatErr0010                        = (TH1D*) directoryPCMGamma0010->Get("IncRatioStatError");
-//         TGraphAsymmErrors* graphPCMIncRSysErr0010            = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioSystError");
+        TH1D* histoPCMIncRStatErr0010                        = (TH1D*) directoryPCMGamma0010->Get("IncRatioStatError");
+        TGraphAsymmErrors* graphPCMIncRStatErr0010        = new TGraphAsymmErrors(histoPCMIncRStatErr0010);
+        TGraphAsymmErrors* graphPCMIncRSysErr0010            = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioSystError");
+        while(graphPCMIncRStatErr0010->GetY()[0]==0) graphPCMIncRStatErr0010->RemovePoint(0);
+        while(graphPCMIncRSysErr0010->GetY()[0]==0) graphPCMIncRSysErr0010->RemovePoint(0);
 //         TGraphAsymmErrors* graphPCMIncRSysAErr0010           = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioSystErrorA");
 //         TGraphAsymmErrors* graphPCMIncRSysBErr0010           = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioSystErrorB");
 //         TGraphAsymmErrors* graphPCMIncRSysCErr0010           = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioSystErrorC");
-//         TH1D* histoPCMIncRPi0FitStatErr0010                  = (TH1D*) directoryPCMGamma0010->Get("IncRatioPi0FitStatError");
-//         TGraphAsymmErrors* graphPCMIncRFitPi0SysErr0010      = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioPi0FitSystError");
+        TH1D* histoPCMIncRPi0FitStatErr0010                     = (TH1D*) directoryPCMGamma0010->Get("IncRatioPi0FitStatError");
+        TGraphAsymmErrors* graphPCMIncRFitPi0StatErr0010        = new TGraphAsymmErrors(histoPCMIncRPi0FitStatErr0010);
+        TGraphAsymmErrors* graphPCMIncRFitPi0SysErr0010         = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioPi0FitSystError");
+        while(graphPCMIncRFitPi0StatErr0010->GetY()[0]==0) graphPCMIncRFitPi0StatErr0010->RemovePoint(0);
+        while(graphPCMIncRFitPi0SysErr0010->GetY()[0]==0) graphPCMIncRFitPi0SysErr0010->RemovePoint(0);
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysAErr0010     = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioPi0FitSystErrorA");
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysBErr0010     = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioPi0FitSystErrorB");
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysCErr0010     = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("IncRatioPi0FitSystErrorC");
@@ -387,23 +413,30 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         graphPCMDirGammaSumErrAr0010                            = (TGraphAsymmErrors*) directoryPCMGamma0010->Get("graphDirGammaSpectrumSummedAr");
     //________________________________________________ Load PCM 20-40% __________________________________________________________________________
     TDirectory* directoryPCMGamma2040               = (TDirectory*)filePCMGamma->Get("Gamma_PbPb_2.76TeV_20-40%");
-//         TH1D* histoPCMDRStatErr2040                          = (TH1D*) directoryPCMGamma2040->Get("DoubleRatioStatError");
-//         TGraphAsymmErrors* graphPCMDRSysErr2040              = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioSystError");
+        TH1D* histoPCMDRStatErr2040                          = (TH1D*) directoryPCMGamma2040->Get("DoubleRatioStatError");
+        TGraphAsymmErrors* graphPCMDRSysErr2040              = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioSystError");
 //         TGraphAsymmErrors* graphPCMDRSysAErr2040             = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioSystErrorA");
 //         TGraphAsymmErrors* graphPCMDRSysBErr2040             = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioSystErrorB");
 //         TGraphAsymmErrors* graphPCMDRSysCErr2040             = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioSystErrorC");
         TH1D* histoPCMDRPi0FitStatErr2040                       = (TH1D*) directoryPCMGamma2040->Get("DoubleRatioPi0FitStatError");
+        TGraphAsymmErrors* graphPCMDRPi0FitStatErr2040        = new TGraphAsymmErrors(histoPCMDRPi0FitStatErr2040);
         TGraphAsymmErrors* graphPCMDRPi0FitSysErr2040           = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioPi0FitSystError");
         TGraphAsymmErrors* graphPCMDRPi0FitSysAErr2040          = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioPi0FitSystErrorA");
         TGraphAsymmErrors* graphPCMDRPi0FitSysBErr2040          = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioPi0FitSystErrorB");
         TGraphAsymmErrors* graphPCMDRPi0FitSysCErr2040          = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("DoubleRatioPi0FitSystErrorC");
-//         TH1D* histoPCMIncRStatErr2040                        = (TH1D*) directoryPCMGamma2040->Get("IncRatioStatError");
-//         TGraphAsymmErrors* graphPCMIncRSysErr2040            = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioSystError");
+        TH1D* histoPCMIncRStatErr2040                        = (TH1D*) directoryPCMGamma2040->Get("IncRatioStatError");
+        TGraphAsymmErrors* graphPCMIncRStatErr2040        = new TGraphAsymmErrors(histoPCMIncRStatErr2040);
+        TGraphAsymmErrors* graphPCMIncRSysErr2040            = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioSystError");
+        while(graphPCMIncRStatErr2040->GetY()[0]==0) graphPCMIncRStatErr2040->RemovePoint(0);
+        while(graphPCMIncRSysErr2040->GetY()[0]==0) graphPCMIncRSysErr2040->RemovePoint(0);
 //         TGraphAsymmErrors* graphPCMIncRSysAErr2040           = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioSystErrorA");
 //         TGraphAsymmErrors* graphPCMIncRSysBErr2040           = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioSystErrorB");
 //         TGraphAsymmErrors* graphPCMIncRSysCErr2040           = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioSystErrorC");
-//         TH1D* histoPCMIncRPi0FitStatErr2040                  = (TH1D*) directoryPCMGamma2040->Get("IncRatioPi0FitStatError");
-//         TGraphAsymmErrors* graphPCMIncRFitPi0SysErr2040      = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioPi0FitSystError");
+        TH1D* histoPCMIncRPi0FitStatErr2040                     = (TH1D*) directoryPCMGamma2040->Get("IncRatioPi0FitStatError");
+        TGraphAsymmErrors* graphPCMIncRFitPi0StatErr2040        = new TGraphAsymmErrors(histoPCMIncRPi0FitStatErr2040);
+        TGraphAsymmErrors* graphPCMIncRFitPi0SysErr2040         = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioPi0FitSystError");
+        while(graphPCMIncRFitPi0StatErr2040->GetY()[0]==0) graphPCMIncRFitPi0StatErr2040->RemovePoint(0);
+        while(graphPCMIncRFitPi0SysErr2040->GetY()[0]==0) graphPCMIncRFitPi0SysErr2040->RemovePoint(0);
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysAErr2040     = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioPi0FitSystErrorA");
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysBErr2040     = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioPi0FitSystErrorB");
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysCErr2040     = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("IncRatioPi0FitSystErrorC");
@@ -427,23 +460,30 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         graphPCMDirGammaSumErrUL2040                            = (TGraphAsymmErrors*) directoryPCMGamma2040->Get("graphDirGammaSpectrumSummedUL");
     //________________________________________________ Load PCM 20-50% __________________________________________________________________________
     TDirectory* directoryPCMGamma2050               = (TDirectory*)filePCMGamma->Get("Gamma_PbPb_2.76TeV_20-50%");
-//         TH1D* histoPCMDRStatErr2050                          = (TH1D*) directoryPCMGamma2050->Get("DoubleRatioStatError");
-//         TGraphAsymmErrors* graphPCMDRSysErr2050              = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioSystError");
+        TH1D* histoPCMDRStatErr2050                          = (TH1D*) directoryPCMGamma2050->Get("DoubleRatioStatError");
+        TGraphAsymmErrors* graphPCMDRSysErr2050              = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioSystError");
 //         TGraphAsymmErrors* graphPCMDRSysAErr2050             = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioSystErrorA");
 //         TGraphAsymmErrors* graphPCMDRSysBErr2050             = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioSystErrorB");
 //         TGraphAsymmErrors* graphPCMDRSysCErr2050             = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioSystErrorC");
         TH1D* histoPCMDRPi0FitStatErr2050                       = (TH1D*) directoryPCMGamma2050->Get("DoubleRatioPi0FitStatError");
-        TGraphAsymmErrors* graphPCMDRPi0FitSysErr2050           = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystError");
-        TGraphAsymmErrors* graphPCMDRPi0FitSysAErr2050          = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystErrorA");
-        TGraphAsymmErrors* graphPCMDRPi0FitSysBErr2050          = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystErrorB");
-        TGraphAsymmErrors* graphPCMDRPi0FitSysCErr2050          = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystErrorC");
-//         TH1D* histoPCMIncRStatErr2050                        = (TH1D*) directoryPCMGamma2050->Get("IncRatioStatError");
-//         TGraphAsymmErrors* graphPCMIncRSysErr2050            = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioSystError");
+        TGraphAsymmErrors* graphPCMDRPi0FitStatErr2050        = new TGraphAsymmErrors(histoPCMDRPi0FitStatErr2050);
+        TGraphAsymmErrors* graphPCMDRPi0FitSysErr2050         = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystError");
+        TGraphAsymmErrors* graphPCMDRPi0FitSysAErr2050        = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystErrorA");
+        TGraphAsymmErrors* graphPCMDRPi0FitSysBErr2050        = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystErrorB");
+        TGraphAsymmErrors* graphPCMDRPi0FitSysCErr2050        = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("DoubleRatioPi0FitSystErrorC");
+        TH1D* histoPCMIncRStatErr2050                         = (TH1D*) directoryPCMGamma2050->Get("IncRatioStatError");
+        TGraphAsymmErrors* graphPCMIncRStatErr2050            = new TGraphAsymmErrors(histoPCMIncRStatErr2050);
+        TGraphAsymmErrors* graphPCMIncRSysErr2050             = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioSystError");
+        while(graphPCMIncRStatErr2050->GetY()[0]==0) graphPCMIncRStatErr2050->RemovePoint(0);
+        while(graphPCMIncRSysErr2050->GetY()[0]==0) graphPCMIncRSysErr2050->RemovePoint(0);
 //         TGraphAsymmErrors* graphPCMIncRSysAErr2050           = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioSystErrorA");
 //         TGraphAsymmErrors* graphPCMIncRSysBErr2050           = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioSystErrorB");
 //         TGraphAsymmErrors* graphPCMIncRSysCErr2050           = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioSystErrorC");
-//         TH1D* histoPCMIncRPi0FitStatErr2050                  = (TH1D*) directoryPCMGamma2050->Get("IncRatioPi0FitStatError");
-//         TGraphAsymmErrors* graphPCMIncRFitPi0SysErr2050      = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioPi0FitSystError");
+        TH1D* histoPCMIncRPi0FitStatErr2050                     = (TH1D*) directoryPCMGamma2050->Get("IncRatioPi0FitStatError");
+        TGraphAsymmErrors* graphPCMIncRFitPi0StatErr2050        = new TGraphAsymmErrors(histoPCMIncRPi0FitStatErr2050);
+        TGraphAsymmErrors* graphPCMIncRFitPi0SysErr2050         = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioPi0FitSystError");
+        while(graphPCMIncRFitPi0StatErr2050->GetY()[0]==0) graphPCMIncRFitPi0StatErr2050->RemovePoint(0);
+        while(graphPCMIncRFitPi0SysErr2050->GetY()[0]==0) graphPCMIncRFitPi0SysErr2050->RemovePoint(0);
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysAErr2050     = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioPi0FitSystErrorA");
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysBErr2050     = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioPi0FitSystErrorB");
 //         TGraphAsymmErrors* graphPCMIncRFitPi0SysCErr2050     = (TGraphAsymmErrors*) directoryPCMGamma2050->Get("IncRatioPi0FitSystErrorC");
@@ -1764,7 +1804,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
 
     //_______________________________________________________________ 0-10% dummy upper panel ___________________________________________________
     TH2D *dummyDR1 ;
-    dummyDR1 = new TH2D("dummyDR1", "dummyDR1", 1000, 0., 22, 1000., doubleRatio[0], doubleRatio[1]);
+    dummyDR1 = new TH2D("dummyDR1", "dummyDR1", 1000, 0., 22, 1000., doubleRatio[0]+0.05, doubleRatio[1]);
     SetStyleHistoTH2ForGraphs( dummyDR1, "#it{p}_{T} (GeV/#it{c})", "",
                             0.85*textsizeLabelsPad1, textsizeLabelsPad1, 0.85*textsizeLabelsPad1, textsizeLabelsPad1, 0.95,0.10/(textsizeFacPad1*margin), 510, 505);
     dummyDR1->GetXaxis()->SetLabelOffset(-0.015);
@@ -1774,7 +1814,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
 
     //_______________________________________________________________ 20-40% dummy middle panel _________________________________________________
     TH2D *dummyDR2 ;
-    dummyDR2 = new TH2D("dummyDR2", "dummyDR2", 1000, 0., 22, 1000., doubleRatio[0], doubleRatio[1]);
+    dummyDR2 = new TH2D("dummyDR2", "dummyDR2", 1000, 0., 22, 1000., doubleRatio[0]+0.05, doubleRatio[1]);
     SetStyleHistoTH2ForGraphs( dummyDR2, "#it{p}_{T} (GeV/#it{c})", "#it{R}_{#gamma}", // = (#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})
                             0.85*textsizeLabelsPad2, textsizeLabelsPad2, 0.85*textsizeLabelsPad2, textsizeLabelsPad2, 0.95,0.10/(textsizeFacPad2*margin), 510, 505);
     dummyDR2->GetXaxis()->SetLabelOffset(-0.015);
@@ -1785,7 +1825,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
 
     //_______________________________________________________________ 20-50% dummy lower panel __________________________________________________
     TH2D *dummyDR3 ;
-    dummyDR3 = new TH2D("dummyDR3", "dummyDR3", 1000, 0., 22, 1000., doubleRatio[0], doubleRatio[1]);
+    dummyDR3 = new TH2D("dummyDR3", "dummyDR3", 1000, 0., 22, 1000., doubleRatio[0]+0.05, doubleRatio[1]);
     SetStyleHistoTH2ForGraphs( dummyDR3, "#it{p}_{T} (GeV/#it{c})", "",
                             0.85*textsizeLabelsPad3, textsizeLabelsPad3, 0.85*textsizeLabelsPad3, textsizeLabelsPad3, 0.92,0.10/(textsizeFacPad3*margin), 510, 505);
     dummyDR3->GetXaxis()->SetLabelOffset(-0.015);
@@ -1876,6 +1916,195 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     //*******************************************************************************************************************************************
     //********************************************** DR plot with PCM measurement + NLO  ********************************************************
     //*******************************************************************************************************************************************
+   canvasRatioIndDR->cd();
+    padPartRatioInDR1->Draw();
+    padPartRatioInDR2->Draw();
+    padPartRatioInDR3->Draw();
+    //_______________________________________________________________ 0-10% panel _______________________________________________________________
+    padPartRatioInDR1->cd();
+    padPartRatioInDR1->SetLogx(1);
+        dummyDR1->Draw("");
+        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRPi0FitSysErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010,widthLinesBoxes, kTRUE);
+        graphPCMDRPi0FitSysErr0010->Draw("E2same");
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010);
+        histoPCMDRPi0FitStatErr0010->Draw("p,same,e0,X0");
+
+        TLegend* legendDRPCM0010 = new TLegend(0.12,0.82-1.1*0.85*textsizeLabelsPad1*1.,0.5,0.82);
+        legendDRPCM0010->SetFillStyle(0);
+        legendDRPCM0010->SetFillColor(0);
+        legendDRPCM0010->SetLineColor(0);
+        legendDRPCM0010->SetTextSize(0.85*textsizeLabelsPad1);
+        legendDRPCM0010->SetMargin(0.2);
+        legendDRPCM0010->SetTextFont(42);
+        legendDRPCM0010->AddEntry(graphPCMDRPi0FitSysErr0010,"PCM (this thesis)","pf");
+//         legendDRPCM0010->AddEntry(graphTheoryNLODR0010,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+//         legendDRPCM0010->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+        legendDRPCM0010->Draw();
+
+        labelDRCent0010->Draw();
+
+    //_______________________________________________________________ 20-40% panel _______________________________________________________________
+    padPartRatioInDR2->cd();
+    padPartRatioInDR2->SetLogx(1);
+        dummyDR2->Draw("");
+        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRPi0FitSysErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040);
+        graphPCMDRPi0FitSysErr2040->Draw("E2same");
+        histoPCMDRPi0FitStatErr2040->Draw("p,same,e0,X0");
+
+        TLegend* legendDRPCM2040 = new TLegend(0.12,0.85-1.1*0.85*textsizeLabelsPad2*1.,0.5,0.85);
+        legendDRPCM2040->SetFillStyle(0);
+        legendDRPCM2040->SetFillColor(0);
+        legendDRPCM2040->SetLineColor(0);
+        legendDRPCM2040->SetTextSize(0.85*textsizeLabelsPad2);
+        legendDRPCM2040->SetMargin(0.2);
+        legendDRPCM2040->SetTextFont(42);
+        legendDRPCM2040->AddEntry(graphPCMDRPi0FitSysErr2040,"PCM (this thesis)","pf");
+//         legendDRPCM2040->AddEntry(graphTheoryNLODR2040,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+//         legendDRPCM2040->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+        legendDRPCM2040->Draw();
+        labelDRCent2040->Draw();
+
+    //_______________________________________________________________ 20-50% panel _______________________________________________________________
+    padPartRatioInDR3->cd();
+    padPartRatioInDR3->SetLogx(1);
+        dummyDR3->Draw("");
+        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRPi0FitSysErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050);
+        graphPCMDRPi0FitSysErr2050->Draw("E2same");
+        histoPCMDRPi0FitStatErr2050->Draw("p,same,e0,X0");
+
+
+        TLegend* legendDRPCM2050 = new TLegend(0.12,0.87-1.1*0.85*textsizeLabelsPad3*1.,0.5,0.87);
+        legendDRPCM2050->SetFillStyle(0);
+        legendDRPCM2050->SetFillColor(0);
+        legendDRPCM2050->SetLineColor(0);
+        legendDRPCM2050->SetTextSize(0.85*textsizeLabelsPad3);
+        legendDRPCM2050->SetMargin(0.2);
+        legendDRPCM2050->SetTextFont(42);
+        legendDRPCM2050->AddEntry(graphPCMDRPi0FitSysErr2050,"PCM (this thesis)","pf");
+//         legendDRPCM2050->AddEntry(graphTheoryNLODR2050,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+//         legendDRPCM2050->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+        legendDRPCM2050->Draw();
+
+        labelDRCent2050->Draw();
+
+    canvasRatioIndDR->SaveAs(Form("%s/DR_PCMMeasurement.%s", outputDir.Data(), suffix.Data()));
+
+   canvasRatioIndDR->cd();
+    padPartRatioInDR1->Draw();
+    padPartRatioInDR2->Draw();
+    padPartRatioInDR3->Draw();
+    //_______________________________________________________________ 0-10% panel _______________________________________________________________
+    padPartRatioInDR1->cd();
+    padPartRatioInDR1->SetLogx(1);
+        dummyDR1->Draw("");
+        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRPi0FitSysErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010);
+        graphPCMDRPi0FitSysErr0010->Draw("E2same");
+        histoPCMDRPi0FitStatErr0010->Draw("p,same,e0,X0");
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRSysErr0010, markerStyleComb0010, markerSizeComb0010, colorCombNotFit0010 , colorCombNotFit0010,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRStatErr0010, markerStyleComb0010, markerSizeComb0010, colorCombNotFit0010 , colorCombNotFit0010);
+        graphPCMDRSysErr0010->Draw("E2same");
+        histoPCMDRStatErr0010->Draw("p,same,e0,X0");
+
+        TLatex *labelThesisPad1 = new TLatex(0.82,0.07,"This thesis");
+        SetStyleTLatex( labelThesisPad1, 0.85*textsizeLabelsPad1*1.05,4);
+        labelThesisPad1->Draw();
+
+        TLegend* legendDRPCMCompToFit0010 = new TLegend(0.12,0.82-1.1*0.85*textsizeLabelsPad1*2.7,0.5,0.82);
+        legendDRPCMCompToFit0010->SetFillStyle(0);
+        legendDRPCMCompToFit0010->SetFillColor(0);
+        legendDRPCMCompToFit0010->SetLineColor(0);
+        legendDRPCMCompToFit0010->SetTextSize(0.85*textsizeLabelsPad1);
+        legendDRPCMCompToFit0010->SetMargin(0.2);
+        legendDRPCMCompToFit0010->SetTextFont(42);
+        legendDRPCMCompToFit0010->AddEntry(graphPCMDRPi0FitSysErr0010,"#pi^{0} fitted","pf");
+        legendDRPCMCompToFit0010->AddEntry(graphPCMDRSysErr0010,"#pi^{0} measured","pf");
+//         legendDRPCMCompToFit0010->AddEntry(graphTheoryNLODR0010,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+//         legendDRPCMCompToFit0010->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+        legendDRPCMCompToFit0010->Draw();
+        labelDRCent0010->Draw();
+
+    //_______________________________________________________________ 20-40% panel _______________________________________________________________
+    padPartRatioInDR2->cd();
+    padPartRatioInDR2->SetLogx(1);
+        dummyDR2->Draw("");
+        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRPi0FitSysErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040);
+        graphPCMDRPi0FitSysErr2040->Draw("E2same");
+        histoPCMDRPi0FitStatErr2040->Draw("p,same,e0,X0");
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRSysErr2040, markerStyleComb2040, markerSizeComb2040, colorCombNotFit2040 , colorCombNotFit2040,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr2040, markerStyleComb2040, markerSizeComb2040, colorCombNotFit2040 , colorCombNotFit2040);
+        graphPCMDRSysErr2040->Draw("E2same");
+        histoPCMDRStatErr2040->Draw("p,same,e0,X0");
+
+        TLatex *labelThesisPad2 = new TLatex(0.82,0.07,"This thesis");
+        SetStyleTLatex( labelThesisPad2, 0.85*textsizeLabelsPad2*1.05,4);
+        labelThesisPad2->Draw();
+
+        TLegend* legendDRPCMCompToFit2040 = new TLegend(0.12,0.85-1.1*0.85*textsizeLabelsPad2*2.7,0.5,0.85);
+        legendDRPCMCompToFit2040->SetFillStyle(0);
+        legendDRPCMCompToFit2040->SetFillColor(0);
+        legendDRPCMCompToFit2040->SetLineColor(0);
+        legendDRPCMCompToFit2040->SetTextSize(0.85*textsizeLabelsPad2);
+        legendDRPCMCompToFit2040->SetMargin(0.2);
+        legendDRPCMCompToFit2040->SetTextFont(42);
+        legendDRPCMCompToFit2040->AddEntry(graphPCMDRPi0FitSysErr2040,"#pi^{0} fitted","pf");
+        legendDRPCMCompToFit2040->AddEntry(graphPCMDRSysErr2040,"#pi^{0} measured","pf");
+//         legendDRPCMCompToFit2040->AddEntry(graphTheoryNLODR2040,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+//         legendDRPCMCompToFit2040->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+        legendDRPCMCompToFit2040->Draw();
+        labelDRCent2040->Draw();
+
+    //_______________________________________________________________ 20-50% panel _______________________________________________________________
+    padPartRatioInDR3->cd();
+    padPartRatioInDR3->SetLogx(1);
+        dummyDR3->Draw("");
+        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRPi0FitSysErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRPi0FitStatErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050);
+        graphPCMDRPi0FitSysErr2050->Draw("E2same");
+        histoPCMDRPi0FitStatErr2050->Draw("p,same,e0,X0");
+        DrawGammaSetMarkerTGraphAsym(graphPCMDRSysErr2050, markerStyleComb2050, markerSizeComb2050, colorCombNotFit2050 , colorCombNotFit2050,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarker(histoPCMDRStatErr2050, markerStyleComb2050, markerSizeComb2050, colorCombNotFit2050 , colorCombNotFit2050);
+        graphPCMDRSysErr2050->Draw("E2same");
+        histoPCMDRStatErr2050->Draw("p,same,e0,X0");
+
+        TLatex *labelThesisPad3 = new TLatex(0.82,0.23,"This thesis");
+        SetStyleTLatex( labelThesisPad3, 0.85*textsizeLabelsPad3*1.05,4);
+        labelThesisPad3->Draw();
+
+        TLegend* legendDRPCMCompToFit2050 = new TLegend(0.12,0.87-1.1*0.85*textsizeLabelsPad3*2.7,0.5,0.87);
+        legendDRPCMCompToFit2050->SetFillStyle(0);
+        legendDRPCMCompToFit2050->SetFillColor(0);
+        legendDRPCMCompToFit2050->SetLineColor(0);
+        legendDRPCMCompToFit2050->SetTextSize(0.85*textsizeLabelsPad3);
+        legendDRPCMCompToFit2050->SetMargin(0.2);
+        legendDRPCMCompToFit2050->SetTextFont(42);
+        legendDRPCMCompToFit2050->AddEntry(graphPCMDRPi0FitSysErr2050,"#pi^{0} fitted","pf");
+        legendDRPCMCompToFit2050->AddEntry(graphPCMDRSysErr2050,"#pi^{0} measured","pf");
+//         legendDRPCMCompToFit2050->AddEntry(graphTheoryNLODR2050,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+//         legendDRPCMCompToFit2050->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+        legendDRPCMCompToFit2050->Draw();
+        labelDRCent2050->Draw();
+
+    canvasRatioIndDR->SaveAs(Form("%s/DR_PCMMeasurement_Pi0MeasAndFit.%s", outputDir.Data(), suffix.Data()));
+
+
     canvasRatioIndDR->cd();
     padPartRatioInDR1->Draw();
     padPartRatioInDR2->Draw();
@@ -1898,14 +2127,14 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         DrawGammaSetMarker(histoPCMDRPi0FitStatErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010);
         histoPCMDRPi0FitStatErr0010->Draw("p,same,e0,X0");
 
-        TLegend* legendDRPCMNLO0010 = new TLegend(0.15,0.82-1.1*0.85*textsizeLabelsPad1*4.7,0.5,0.82);
+        TLegend* legendDRPCMNLO0010 = new TLegend(0.12,0.82-1.1*0.85*textsizeLabelsPad1*4.7,0.5,0.82);
         legendDRPCMNLO0010->SetFillStyle(0);
         legendDRPCMNLO0010->SetFillColor(0);
         legendDRPCMNLO0010->SetLineColor(0);
         legendDRPCMNLO0010->SetTextSize(0.85*textsizeLabelsPad1);
         legendDRPCMNLO0010->SetMargin(0.2);
         legendDRPCMNLO0010->SetTextFont(42);
-        legendDRPCMNLO0010->AddEntry(graphPCMDRPi0FitSysErr0010,"PCM","pf");
+        legendDRPCMNLO0010->AddEntry(graphPCMDRPi0FitSysErr0010,"PCM (this thesis)","pf");
 //         legendDRPCMNLO0010->AddEntry(graphTheoryNLODR0010,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
 //         legendDRPCMNLO0010->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
         legendDRPCMNLO0010->AddEntry(graphTheoryNLODR0010,"NLO pQCD PDF: CTEQ6M5 FF: GRV ","l");
@@ -1934,14 +2163,14 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         graphPCMDRPi0FitSysErr2040->Draw("E2same");
         histoPCMDRPi0FitStatErr2040->Draw("p,same,e0,X0");
 
-        TLegend* legendDRPCMNLO2040 = new TLegend(0.15,0.85-1.1*0.85*textsizeLabelsPad2*4.7,0.5,0.85);
+        TLegend* legendDRPCMNLO2040 = new TLegend(0.12,0.85-1.1*0.85*textsizeLabelsPad2*4.7,0.5,0.85);
         legendDRPCMNLO2040->SetFillStyle(0);
         legendDRPCMNLO2040->SetFillColor(0);
         legendDRPCMNLO2040->SetLineColor(0);
         legendDRPCMNLO2040->SetTextSize(0.85*textsizeLabelsPad2);
         legendDRPCMNLO2040->SetMargin(0.2);
         legendDRPCMNLO2040->SetTextFont(42);
-        legendDRPCMNLO2040->AddEntry(graphPCMDRPi0FitSysErr2040,"PCM","pf");
+        legendDRPCMNLO2040->AddEntry(graphPCMDRPi0FitSysErr2040,"PCM (this thesis)","pf");
 //         legendDRPCMNLO2040->AddEntry(graphTheoryNLODR2040,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
 //         legendDRPCMNLO2040->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
         legendDRPCMNLO2040->AddEntry(graphTheoryNLODR2040,"NLO pQCD PDF: CTEQ6M5 FF: GRV ","l");
@@ -1971,14 +2200,14 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         histoPCMDRPi0FitStatErr2050->Draw("p,same,e0,X0");
 
 
-        TLegend* legendDRPCMNLO2050 = new TLegend(0.15,0.87-1.1*0.85*textsizeLabelsPad3*4.7,0.5,0.87);
+        TLegend* legendDRPCMNLO2050 = new TLegend(0.12,0.87-1.1*0.85*textsizeLabelsPad3*4.7,0.5,0.87);
         legendDRPCMNLO2050->SetFillStyle(0);
         legendDRPCMNLO2050->SetFillColor(0);
         legendDRPCMNLO2050->SetLineColor(0);
         legendDRPCMNLO2050->SetTextSize(0.85*textsizeLabelsPad3);
         legendDRPCMNLO2050->SetMargin(0.2);
         legendDRPCMNLO2050->SetTextFont(42);
-        legendDRPCMNLO2050->AddEntry(graphPCMDRPi0FitSysErr2050,"PCM","pf");
+        legendDRPCMNLO2050->AddEntry(graphPCMDRPi0FitSysErr2050,"PCM (this thesis)","pf");
 //         legendDRPCMNLO2050->AddEntry(graphTheoryNLODR2050,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
 //         legendDRPCMNLO2050->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
         legendDRPCMNLO2050->AddEntry(graphTheoryNLODR2050,"NLO pQCD PDF: CTEQ6M5 FF: GRV ","l");
@@ -2020,7 +2249,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     SetStyleHistoTH2ForGraphs( dummyGammaIndMeas, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}_{#gamma_{inc}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                             0.85*textsizeLabelsIncGamma, textsizeLabelsIncGamma, 0.85*textsizeLabelsIncGamma, textsizeLabelsIncGamma, 0.75, 1.6);
     dummyGammaIndMeas->GetXaxis()->SetLabelOffset(-0.015);
-    dummyGammaIndMeas->GetXaxis()->SetRangeUser(doubleRatioX[0],doubleRatioX[1]);
+    dummyGammaIndMeas->GetXaxis()->SetRangeUser(incSpectraX[0],incSpectraX[1]);
 //     dummyGammaIndMeas->GetXaxis()->SetRangeUser(0,16);
     dummyGammaIndMeas->DrawCopy();
 
@@ -2049,26 +2278,226 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
 
     TLatex *labelScalingIncGamma2050 = new TLatex(11.25,2E-6,"x 10^{0}");
     SetStyleTLatex( labelScalingIncGamma2050, 0.85*textsizeLabelsIncGamma,4,colorComb2050,42,kFALSE);
-    labelScalingIncGamma2050->Draw();
+//     labelScalingIncGamma2050->Draw();
 
     TLatex *labelIncGammaColl = new TLatex(0.6,0.91,collisionSystem.Data());
     SetStyleTLatex( labelIncGammaColl, 0.85*textsizeLabelsIncGamma,4);
-    labelIncGammaColl->Draw();
+//     labelIncGammaColl->Draw();
+    TLatex *labelIncGammaThesis = new TLatex(0.6,0.93,"This thesis");
+    SetStyleTLatex( labelIncGammaThesis, 0.85*textsizeLabelsIncGamma,4);
+    labelIncGammaThesis->Draw();
 
-    TLegend* legendIncGammaOnlyPCM = new TLegend(0.6,0.9-1.*0.85*textsizeLabelsIncGamma*3,0.9,0.9);
+    TLegend* legendIncGammaOnlyPCM = new TLegend(0.6,0.92-1.*0.85*textsizeLabelsIncGamma*4,0.9,0.92);
     legendIncGammaOnlyPCM->SetFillStyle(0);
     legendIncGammaOnlyPCM->SetFillColor(0);
     legendIncGammaOnlyPCM->SetLineColor(0);
     legendIncGammaOnlyPCM->SetTextSize(0.85*textsizeLabelsIncGamma);
     legendIncGammaOnlyPCM->SetMargin(0.2);
     legendIncGammaOnlyPCM->SetTextFont(42);
-    legendIncGammaOnlyPCM->AddEntry(graphPCMIncGammaSysErr0010Plot,"  0-10% PCM","pf");
-    legendIncGammaOnlyPCM->AddEntry(graphPCMIncGammaSysErr2040Plot,"20-40% PCM","pf");
-    legendIncGammaOnlyPCM->AddEntry(graphPCMIncGammaSysErr2050Plot,"20-50% PCM","pf");
+    legendIncGammaOnlyPCM->SetHeader(collisionSystem.Data());
+    legendIncGammaOnlyPCM->AddEntry(graphPCMIncGammaSysErr0010Plot,"  0-10%","pf");
+    legendIncGammaOnlyPCM->AddEntry(graphPCMIncGammaSysErr2040Plot,cent2040.Data(),"pf");
+    legendIncGammaOnlyPCM->AddEntry(graphPCMIncGammaSysErr2050Plot,cent2050.Data(),"pf");
 //     legendIncGammaOnlyPCM->AddEntry(histoFitDummyPlotting,"Fits to #gamma_{inc}","l");
     legendIncGammaOnlyPCM->Draw();
 
     canvasIncGammaIndMeas->Print(Form("%s/IncGammaSpectrumPCMOnly.%s",outputDir.Data(),suffix.Data()));
+
+
+    cout << "Plotting inc gamma ratio PCM only " << __LINE__ << endl;
+    // **************************************************************************
+    // ****************** plotting inclusive ratio with pi0 fitted **************
+    // **************************************************************************
+    TCanvas *canvasIncRatio = GetAndSetCanvas("canvasIncRatioFinal");
+    TH2D *dummyIncR = new TH2D("dummyIncR", "dummyIncR", 120, 0., 15.5, 1000., 0., 1.6);
+    SetStyleHistoTH2ForGraphs( dummyIncR, "#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}",0.045, 0.05, 0.045, 0.05, 0.85, 0.85);
+    dummyIncR->GetXaxis()->SetRangeUser(0., 15.5);
+    dummyIncR->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRFitPi0SysErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRFitPi0StatErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010);
+        graphPCMIncRFitPi0SysErr0010->Draw("E2same");
+        graphPCMIncRFitPi0StatErr0010->Draw("p,E1Z,same");
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRFitPi0SysErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRFitPi0StatErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040);
+        graphPCMIncRFitPi0SysErr2040->Draw("E2same");
+        graphPCMIncRFitPi0StatErr2040->Draw("p,E1Z,same");
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRFitPi0SysErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRFitPi0StatErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050);
+        graphPCMIncRFitPi0SysErr2050->Draw("E2same");
+        graphPCMIncRFitPi0StatErr2050->Draw("p,E1Z,same");
+
+        TLatex *labelIncGammaRatioThesis = new TLatex(0.7,0.9,"This thesis");
+        SetStyleTLatex( labelIncGammaRatioThesis, 0.9*textsizeLabelsIncGamma,4);
+        labelIncGammaRatioThesis->Draw();
+
+        TLegend* legendIncGammaRatioOnlyPCM = new TLegend(0.7,0.89-1.*0.9*textsizeLabelsIncGamma*4,0.9,0.89);
+        legendIncGammaRatioOnlyPCM->SetFillStyle(0);
+        legendIncGammaRatioOnlyPCM->SetFillColor(0);
+        legendIncGammaRatioOnlyPCM->SetLineColor(0);
+        legendIncGammaRatioOnlyPCM->SetTextSize(0.9*textsizeLabelsIncGamma);
+        legendIncGammaRatioOnlyPCM->SetMargin(0.2);
+        legendIncGammaRatioOnlyPCM->SetTextFont(42);
+        legendIncGammaRatioOnlyPCM->SetHeader(collisionSystem.Data());
+        legendIncGammaRatioOnlyPCM->AddEntry(graphPCMIncRFitPi0SysErr0010,cent0010.Data(),"pf");
+        legendIncGammaRatioOnlyPCM->AddEntry(graphPCMIncRFitPi0SysErr2040,cent2040.Data(),"pf");
+        legendIncGammaRatioOnlyPCM->AddEntry(graphPCMIncRFitPi0SysErr2050,cent2050.Data(),"pf");
+        legendIncGammaRatioOnlyPCM->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_Pi0Fit_AllCent.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        graphPCMIncRFitPi0SysErr0010->Draw("E2same");
+        graphPCMIncRFitPi0StatErr0010->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatioFit_0010 = GetAndSetLegend(0.15,0.15,2.2);
+        legendIncRatioFit_0010->SetHeader(collisionSystem.Data());
+        legendIncRatioFit_0010->AddEntry(graphPCMIncRFitPi0SysErr0010,Form("%s (#pi^{0} fitted)",cent0010.Data()),"pf");
+        legendIncRatioFit_0010->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_Pi0Fit_0010.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        graphPCMIncRFitPi0SysErr2040->Draw("E2same");
+        graphPCMIncRFitPi0StatErr2040->Draw("p,E1Z,same");
+        graphPCMIncRFitPi0SysErr2050->Draw("E2same");
+        graphPCMIncRFitPi0StatErr2050->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatioFit_SC = GetAndSetLegend(0.15,0.15,3.2);
+        legendIncRatioFit_SC->SetHeader(collisionSystem.Data());
+        legendIncRatioFit_SC->AddEntry(graphPCMIncRFitPi0SysErr2040,Form("%s (#pi^{0} fitted)",cent2040.Data()),"pf");
+        legendIncRatioFit_SC->AddEntry(graphPCMIncRFitPi0SysErr2050,Form("%s (#pi^{0} fitted)",cent2050.Data()),"pf");
+        legendIncRatioFit_SC->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_Pi0Fit_SC.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRSysErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRStatErr0010, markerStyleComb0010, markerSizeComb0010, colorComb0010 , colorComb0010);
+        graphPCMIncRSysErr0010->Draw("E2same");
+        graphPCMIncRStatErr0010->Draw("p,E1Z,same");
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRSysErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRStatErr2040, markerStyleComb2040, markerSizeComb2040, colorComb2040 , colorComb2040);
+        graphPCMIncRSysErr2040->Draw("E2same");
+        graphPCMIncRStatErr2040->Draw("p,E1Z,same");
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRSysErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRStatErr2050, markerStyleComb2050, markerSizeComb2050, colorComb2050 , colorComb2050);
+        graphPCMIncRSysErr2050->Draw("E2same");
+        graphPCMIncRStatErr2050->Draw("p,E1Z,same");
+
+        labelIncGammaRatioThesis->Draw();
+        legendIncGammaRatioOnlyPCM->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_AllCent.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        graphPCMIncRSysErr0010->Draw("E2same");
+        graphPCMIncRStatErr0010->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatio_0010 = GetAndSetLegend(0.15,0.15,2.2);
+        legendIncRatio_0010->SetHeader(collisionSystem.Data());
+        legendIncRatio_0010->AddEntry(graphPCMIncRSysErr0010,cent0010.Data(),"pf");
+        legendIncRatio_0010->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_0010.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        graphPCMIncRSysErr2040->Draw("E2same");
+        graphPCMIncRStatErr2040->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatio_2040 = GetAndSetLegend(0.15,0.15,2.2);
+        legendIncRatio_2040->SetHeader(collisionSystem.Data());
+        legendIncRatio_2040->AddEntry(graphPCMIncRSysErr2040,cent2040.Data(),"pf");
+        legendIncRatio_2040->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_2040.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        graphPCMIncRSysErr2050->Draw("E2same");
+        graphPCMIncRStatErr2050->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatioFit_2050 = GetAndSetLegend(0.15,0.15,2.2);
+        legendIncRatioFit_2050->SetHeader(collisionSystem.Data());
+        legendIncRatioFit_2050->AddEntry(graphPCMIncRSysErr2050,cent2050.Data(),"pf");
+        legendIncRatioFit_2050->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_2050.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRSysErr0010, markerStyleComb0010, markerSizeComb0010, colorCombNotFit0010 , colorCombNotFit0010,widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRStatErr0010, markerStyleComb0010, markerSizeComb0010, colorCombNotFit0010 , colorCombNotFit0010);
+        graphPCMIncRSysErr0010->Draw("E2same");
+        graphPCMIncRStatErr0010->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatioCompFit_0010 = GetAndSetLegend(0.15,0.75,3.2);
+        legendIncRatioCompFit_0010->SetHeader(collisionSystem.Data());
+        legendIncRatioCompFit_0010->AddEntry(graphPCMIncRSysErr0010,cent0010.Data(),"pf");
+        legendIncRatioCompFit_0010->AddEntry(graphPCMIncRFitPi0SysErr0010,Form("%s (#pi^{0} fitted)",cent0010.Data()),"pf");
+        legendIncRatioCompFit_0010->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_compPi0MeasAndFit_0010.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRSysErr2040, markerStyleComb2040, markerSizeComb2040, colorCombNotFit2040 , colorCombNotFit2040, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRStatErr2040, markerStyleComb2040, markerSizeComb2040, colorCombNotFit2040 , colorCombNotFit2040);
+        graphPCMIncRSysErr2040->Draw("E2same");
+        graphPCMIncRStatErr2040->Draw("p,E1Z,same");
+        graphPCMIncRFitPi0SysErr2040->Draw("E2same");
+        graphPCMIncRFitPi0StatErr2040->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatioCompFit_2040 = GetAndSetLegend(0.15,0.75,3.2);
+        legendIncRatioCompFit_2040->SetHeader(collisionSystem.Data());
+        legendIncRatioCompFit_2040->AddEntry(graphPCMIncRSysErr2040,cent2040.Data(),"pf");
+        legendIncRatioCompFit_2040->AddEntry(graphPCMIncRFitPi0SysErr2040,Form("%s (#pi^{0} fitted)",cent2040.Data()),"pf");
+        legendIncRatioCompFit_2040->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_compPi0MeasAndFit_2040.%s",outputDir.Data(),suffix.Data()));
+
+    canvasIncRatio->cd();
+    dummyIncR->DrawCopy();
+
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRSysErr2050, markerStyleComb2050, markerSizeComb2050, colorCombNotFit2050 , colorCombNotFit2050, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphPCMIncRStatErr2050, markerStyleComb2050, markerSizeComb2050, colorCombNotFit2050 , colorCombNotFit2050);
+        graphPCMIncRSysErr2050->Draw("E2same");
+        graphPCMIncRStatErr2050->Draw("p,E1Z,same");
+        graphPCMIncRFitPi0SysErr2050->Draw("E2same");
+        graphPCMIncRFitPi0StatErr2050->Draw("p,E1Z,same");
+
+        labelThesisHighLeft->Draw();
+        TLegend* legendIncRatioCompFit_2050 = GetAndSetLegend(0.15,0.75,3.2);
+        legendIncRatioCompFit_2050->SetHeader(collisionSystem.Data());
+        legendIncRatioCompFit_2050->AddEntry(graphPCMIncRSysErr2050,cent2050.Data(),"pf");
+        legendIncRatioCompFit_2050->AddEntry(graphPCMIncRFitPi0SysErr2050,Form("%s (#pi^{0} fitted)",cent2050.Data()),"pf");
+        legendIncRatioCompFit_2050->Draw();
+
+    canvasIncRatio->Print(Form("%s/IncGammaRatioPCMOnly_compPi0MeasAndFit_2050.%s",outputDir.Data(),suffix.Data()));
 
 
     cout << "Plotting direct gamma PCM only " << __LINE__ << endl;
@@ -2078,17 +2507,17 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     TGraphAsymmErrors* graphPCMDirGammaSpectrumStatErr0010Plot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSystErr0010Plot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSumErr0010ArPlot = NULL;
-    if (graphPCMDirGammaStatErr0010) graphPCMDirGammaSpectrumStatErr0010Plot         = ScaleGraph(graphPCMDirGammaStatErr0010,100);
-    if (graphPCMDirGammaSysErr0010) graphPCMDirGammaSpectrumSystErr0010Plot         = ScaleGraph(graphPCMDirGammaSysErr0010,100);
-    if (graphPCMDirGammaSumErrAr0010) graphPCMDirGammaSpectrumSumErr0010ArPlot     = ScaleGraph(graphPCMDirGammaSumErrAr0010,100);
+    if (graphPCMDirGammaStatErr0010) graphPCMDirGammaSpectrumStatErr0010Plot         = ScaleGraph(graphPCMDirGammaStatErr0010,500);
+    if (graphPCMDirGammaSysErr0010) graphPCMDirGammaSpectrumSystErr0010Plot         = ScaleGraph(graphPCMDirGammaSysErr0010,500);
+    if (graphPCMDirGammaSumErrAr0010) graphPCMDirGammaSpectrumSumErr0010ArPlot     = ScaleGraph(graphPCMDirGammaSumErrAr0010,500);
     TGraphAsymmErrors* graphPCMDirGammaSpectrumStatErr2040Plot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSystErr2040Plot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSumErr2040ArPlot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSumErr2040ULPlot = NULL;
-    if (graphPCMDirGammaStatErr2040) graphPCMDirGammaSpectrumStatErr2040Plot         = ScaleGraph(graphPCMDirGammaStatErr2040,10);
-    if (graphPCMDirGammaSysErr2040) graphPCMDirGammaSpectrumSystErr2040Plot         = ScaleGraph(graphPCMDirGammaSysErr2040,10);
-    if (graphPCMDirGammaSumErrAr2040) graphPCMDirGammaSpectrumSumErr2040ArPlot     = ScaleGraph(graphPCMDirGammaSumErrAr2040,10);
-    if (graphPCMDirGammaSumErrUL2040) graphPCMDirGammaSpectrumSumErr2040ULPlot     = ScaleGraph(graphPCMDirGammaSumErrUL2040,10);
+    if (graphPCMDirGammaStatErr2040) graphPCMDirGammaSpectrumStatErr2040Plot         = ScaleGraph(graphPCMDirGammaStatErr2040,50);
+    if (graphPCMDirGammaSysErr2040) graphPCMDirGammaSpectrumSystErr2040Plot         = ScaleGraph(graphPCMDirGammaSysErr2040,50);
+    if (graphPCMDirGammaSumErrAr2040) graphPCMDirGammaSpectrumSumErr2040ArPlot     = ScaleGraph(graphPCMDirGammaSumErrAr2040,50);
+    if (graphPCMDirGammaSumErrUL2040) graphPCMDirGammaSpectrumSumErr2040ULPlot     = ScaleGraph(graphPCMDirGammaSumErrUL2040,50);
     TGraphAsymmErrors* graphPCMDirGammaSpectrumStatErr2050Plot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSystErr2050Plot = NULL;
     TGraphAsymmErrors* graphPCMDirGammaSpectrumSumErr2050ArPlot = NULL;
@@ -2112,7 +2541,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         textsizeLabelsDirGamma = (Double_t)textSizeLabelsPixelDirGam/canvasDirGammaIndMeas->YtoPixel(canvasDirGammaIndMeas->GetY1());
     }
 
-        TH2D *dummyDirGammaIndMeas = new TH2D("dummyDirGammaIndMeas", "dummyDirGammaIndMeas", 1000, 0., 30, 1000., 1.e-7,1.5e5);
+        TH2D *dummyDirGammaIndMeas = new TH2D("dummyDirGammaIndMeas", "dummyDirGammaIndMeas", 1000, 0., 30, 1000., 1.e-7,5e4);
         SetStyleHistoTH2ForGraphs( dummyDirGammaIndMeas, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}_{#gamma_{dir}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.75, 1.65);
         dummyDirGammaIndMeas->GetXaxis()->SetLabelOffset(-0.015);
@@ -2172,8 +2601,8 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         SetStyleTLatex( labelDirGammaColl, 0.85*textsizeLabelsDirGamma,4);
         labelScalingDirGamma0010->Draw();
         labelScalingDirGamma2040->Draw();
-        labelScalingDirGamma2050->Draw();
-        labelDirGammaColl->Draw();
+//         labelScalingDirGamma2050->Draw();
+//         labelDirGammaColl->Draw();
 
         TLegend* legendDirGammaPCMOnly = new TLegend(0.24,0.93-1.*0.85*textsizeLabelsDirGamma*3,0.24+0.21,0.93);
         legendDirGammaPCMOnly->SetFillStyle(0);
@@ -2185,10 +2614,26 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendDirGammaPCMOnly->AddEntry(graphPCMDirGammaSpectrumSystErr0010Plot,"  0-10% PCM","pf");
         legendDirGammaPCMOnly->AddEntry(graphPCMDirGammaSpectrumSystErr2040Plot,"20-40% PCM","pf");
         legendDirGammaPCMOnly->AddEntry(graphPCMDirGammaSpectrumSystErr2050Plot,"20-50% PCM","pf");
-        legendDirGammaPCMOnly->Draw();
+//         legendDirGammaPCMOnly->Draw();
+        TLegend* legendDirGammaPCMOnlyForThesis = new TLegend(0.63,0.93-1.*0.85*textsizeLabelsDirGamma*4,0.9,0.93);
+        legendDirGammaPCMOnlyForThesis->SetFillStyle(0);
+        legendDirGammaPCMOnlyForThesis->SetFillColor(0);
+        legendDirGammaPCMOnlyForThesis->SetLineColor(0);
+        legendDirGammaPCMOnlyForThesis->SetTextSize(0.85*textsizeLabelsDirGamma);
+        legendDirGammaPCMOnlyForThesis->SetMargin(0.25);
+        legendDirGammaPCMOnlyForThesis->SetTextFont(42);
+        legendDirGammaPCMOnlyForThesis->SetHeader(collisionSystem.Data());
+        legendDirGammaPCMOnlyForThesis->AddEntry(graphPCMDirGammaSpectrumSystErr0010Plot,"  0-10%","pf");
+        legendDirGammaPCMOnlyForThesis->AddEntry(graphPCMDirGammaSpectrumSystErr2040Plot,"20-40%","pf");
+        legendDirGammaPCMOnlyForThesis->AddEntry(graphPCMDirGammaSpectrumSystErr2050Plot,"20-50%","pf");
+        legendDirGammaPCMOnlyForThesis->Draw();
+
+        TLatex *labelThesisDG = new TLatex(0.63,0.94,"This thesis");
+        SetStyleTLatex( labelThesisDG, 1.*0.85*textsizeLabelsDirGamma,4);
+        labelThesisDG->Draw();
 
     canvasDirGammaIndMeas->Print(Form("%s/DirGammaSpectrumPCMonly.%s",outputDir.Data(),suffix.Data()));
-
+return;
     canvasDirGammaIndMeas->cd();
     dummyDirGammaIndMeas->DrawCopy();
 
@@ -2527,7 +2972,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
 //         legendDirGammaExpFit->SetMargin(0.3);
 //         legendDirGammaExpFit->SetTextFont(42);
 //         legendDirGammaExpFit->AddEntry(histoFitThermalGamma0010Stat,"  0-10%","l");
-//         legendDirGammaExpFit->AddEntry(histoFitThermalGamma2040Stat,"20-40%","l");
+//         legendDirGammaExpFit->AddEntry(histoFitThermalGamma2040Stat,cent2040.Data(),"l");
 //         legendDirGammaExpFit->Draw();
 //
 //         histoFitThermalGamma0010Stat->Draw("same,l");
@@ -2838,7 +3283,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     canvasDoubleRatio->SetLogx();
 
     TH2D *dummyDR ;
-    dummyDR = new TH2D("dummyDR", "dummyDR", 1000, 0., 16, 1000., doubleRatio[0], doubleRatio[1]);
+    dummyDR = new TH2D("dummyDR", "dummyDR", 1000, 0., 16, 1000., doubleRatio[0]+0.1, doubleRatio[1]);
     SetStyleHistoTH2ForGraphs( dummyDR, "#it{p}_{T} (GeV/#it{c})", "#it{R}_{#gamma} = (#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})",
                             0.045, 0.05, 0.045, 0.05, 0.85, 0.85);
     dummyDR->GetXaxis()->SetLabelOffset(-0.015);
@@ -2854,8 +3299,10 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         graphPCMDRPi0FitSysErr2050->Draw("E2same");
         histoPCMDRPi0FitStatErr2050->Draw("p,same,e0,X0");
 
+        labelThesisHighLeft->Draw();
 
-        TLegend* legendDRAllCentPCM = GetAndSetLegend(0.15,0.75,4);
+        TLegend* legendDRAllCentPCM = GetAndSetLegend(0.15,0.67,5);
+        legendDRAllCentPCM->SetHeader(collisionSystem.Data());
         legendDRAllCentPCM->AddEntry(graphPCMDRPi0FitSysErr0010,"  0-10% PCM","pf");
         legendDRAllCentPCM->AddEntry(graphPCMDRPi0FitSysErr2040,"20-40% PCM","pf");
         legendDRAllCentPCM->AddEntry(graphPCMDRPi0FitSysErr2050,"20-50% PCM","pf");
@@ -2863,7 +3310,6 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendDRAllCentPCM->Draw();
 
     canvasDoubleRatio->Print(Form("%s/DR_PCMMeasurementAllCentsInOne.%s", outputDir.Data(), suffix.Data()));
-
 
     cout << "Plotting PHOS DR with NLO at " << __LINE__ << endl;
     //*******************************************************************************************************************************************
@@ -2960,7 +3406,6 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     //********************************************** DR plot with PHOS measurements all cents in one plot  ***************************************
     //*******************************************************************************************************************************************
     canvasDoubleRatio->cd();
-
     dummyDR->DrawCopy();
 
         DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
@@ -2972,20 +3417,349 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         graphPHOSDRPi0FitSysErr2050->Draw("E2same");
         histoPHOSDRPi0FitStatErr2050->Draw("p,same,e0,X0");
 
-
         TLegend* legendDRAllCentPHOS = GetAndSetLegend(0.15,0.75,4);
         legendDRAllCentPHOS->AddEntry(graphPHOSDRPi0FitSysErr0010,"  0-10% PHOS","pf");
         legendDRAllCentPHOS->AddEntry(graphPHOSDRPi0FitSysErr2040,"20-40% PHOS","pf");
         legendDRAllCentPHOS->AddEntry(graphPHOSDRPi0FitSysErr2050,"20-50% PHOS","pf");
-
         legendDRAllCentPHOS->Draw();
 
     canvasDoubleRatio->Print(Form("%s/DR_PHOSMeasurementAllCentsInOne.%s", outputDir.Data(), suffix.Data()));
 
 
+
+    if (enablepValueCalcPCM){
+
+        //*********************************************************************************
+        // Calculating Significance of combined double ratio for 0-10%
+        //*********************************************************************************
+        Int_t minBinSig0010 = 0;
+        Int_t maxBinSig0010 = 5;
+        const Int_t nPointSig0010 = maxBinSig0010-minBinSig0010 +1;
+
+        // filling of graphs
+        TGraph* graphAbsTypeAPlusStatErr0010                     = new TGraph(nPointSig0010);
+        TGraph* graphRelTypeAPlusStatErr0010                     = new TGraph(nPointSig0010);
+        TGraph* graphRelTypeBErr0010                             = new TGraph(nPointSig0010);
+        TGraphErrors* graphDoubleRatioTypeAPlusStatErr0010       = new TGraphErrors(nPointSig0010);
+        for (Int_t i = 0; i < nPointSig0010; i++){
+            Double_t pt             = graphPCMDRPi0FitSysBErr0010->GetX()[minBinSig0010+i];
+            Double_t R              = graphPCMDRPi0FitSysBErr0010->GetY()[minBinSig0010+i];
+            Double_t statErr        = graphPCMDRPi0FitStatErr0010->GetEYlow()[minBinSig0010+i];
+            Double_t sysAErr        = graphPCMDRPi0FitSysAErr0010->GetEYlow()[minBinSig0010+i];
+            Double_t relErrSysA     = sysAErr/ R;
+            Double_t statSysAErr    = TMath::Sqrt(statErr*statErr+sysAErr*sysAErr);
+            Double_t relErrStatSysA = statSysAErr/ R;
+            Double_t relErrSysB        = graphPCMDRPi0FitSysBErr0010->GetEYlow()[minBinSig0010+i]/ graphPCMDRPi0FitSysBErr0010->GetY()[minBinSig0010+i];
+
+            graphAbsTypeAPlusStatErr0010->SetPoint(i, pt, statSysAErr);
+            graphRelTypeAPlusStatErr0010->SetPoint(i, pt, relErrStatSysA);
+            graphRelTypeBErr0010->SetPoint(i, pt, relErrSysB);
+            graphDoubleRatioTypeAPlusStatErr0010->SetPoint(i, pt, R);
+            graphDoubleRatioTypeAPlusStatErr0010->SetPointError(i,0,statSysAErr);
+        }
+        Double_t relErrSysC0010 = graphPCMDRPi0FitSysCErr0010->GetEYlow()[minBinSig0010]/ graphPCMDRPi0FitSysCErr0010->GetY()[minBinSig0010];
+
+        // Generating pseudo data
+        TH1F* histoChi2NullHypo0010 = new TH1F("histoChi2NullHypo0010", "histoChi2NullHypo0010", 3000, 0., 1500);
+        FillChi2HistForNullHypo(100000000, histoChi2NullHypo0010, graphRelTypeAPlusStatErr0010, graphRelTypeBErr0010, relErrSysC0010, kFALSE);
+
+        // calculating significance
+        Double_t chi2Data0010     = Chi2ForNullHypo(graphDoubleRatioTypeAPlusStatErr0010);
+        Int_t binChi2Data0010     = histoChi2NullHypo0010->FindBin(chi2Data0010);
+        Int_t binFirst0010         = 1;
+        Int_t binLast0010        = histoChi2NullHypo0010->GetNbinsX();
+        Double_t intTot0010        = histoChi2NullHypo0010->Integral(binFirst0010, binLast0010);
+        Double_t intData0010    = histoChi2NullHypo0010->Integral(binChi2Data0010, binLast0010);
+        Double_t pValue0010        = intData0010/ intTot0010;
+        Double_t nSigma0010        = PValueToNSigma(pValue0010);
+
+        cout << "0-10%: chi2data =" << chi2Data0010 << "\t, pVal = " << pValue0010 << "\t, nSigma = " << nSigma0010 << endl;
+
+        // preparing histo for drawing
+        TH1F* histoChi2NullData0010 = (TH1F*)histoChi2NullHypo0010->Clone("histoChi2NullData0010");
+        for (Int_t i = 1; i < binChi2Data0010; i++ ){
+            histoChi2NullData0010->SetBinContent(i,-1);
+        }
+        for (Int_t i = 1; i < binLast0010; i++ ){
+            histoChi2NullData0010->SetBinError(i,0);
+        }
+
+        //*********************************************************************************
+        // Calculating Significance of combined double ratio for 20-40%
+        //*********************************************************************************
+        Int_t minBinSig2040 = 0;
+        Int_t maxBinSig2040 = 5;
+        const Int_t nPointSig2040 = maxBinSig2040- minBinSig2040 +1;
+
+        // filling of graphs
+        TGraph* graphAbsTypeAPlusStatErr2040                     = new TGraph(nPointSig2040);
+        TGraph* graphRelTypeAPlusStatErr2040                     = new TGraph(nPointSig2040);
+        TGraph* graphRelTypeBErr2040                             = new TGraph(nPointSig2040);
+        TGraphErrors* graphDoubleRatioTypeAPlusStatErr2040         = new TGraphErrors(nPointSig2040);
+
+        for (Int_t i = 0; i < nPointSig2040; i++){
+            Double_t pt             = graphPCMDRPi0FitSysBErr2040->GetX()[minBinSig2040+i];
+            Double_t R                = graphPCMDRPi0FitSysBErr2040->GetY()[minBinSig2040+i];
+            Double_t statErr        = graphPCMDRPi0FitStatErr2040->GetEYlow()[minBinSig2040+i];
+            Double_t sysAErr        = graphPCMDRPi0FitSysAErr2040->GetEYlow()[minBinSig2040+i];
+            Double_t relErrSysA     = sysAErr/ R;
+            Double_t statSysAErr    = TMath::Sqrt(statErr*statErr+sysAErr*sysAErr);
+            Double_t relErrStatSysA = statSysAErr/ R;
+            Double_t relErrSysB        = graphPCMDRPi0FitSysBErr2040->GetEYlow()[minBinSig2040+i]/ graphPCMDRPi0FitSysBErr2040->GetY()[minBinSig2040+i];
+
+            graphAbsTypeAPlusStatErr2040->SetPoint(i, pt, statSysAErr);
+            graphRelTypeAPlusStatErr2040->SetPoint(i, pt, relErrStatSysA);
+            graphRelTypeBErr2040->SetPoint(i, pt, relErrSysB);
+            graphDoubleRatioTypeAPlusStatErr2040->SetPoint(i, pt, R);
+            graphDoubleRatioTypeAPlusStatErr2040->SetPointError(i,0,statSysAErr);
+        }
+        Double_t relErrSysC2040 = graphPCMDRPi0FitSysCErr2040->GetEYlow()[minBinSig2040]/ graphPCMDRPi0FitSysCErr2040->GetY()[minBinSig2040];
+
+        // Generating pseudo data
+        TH1F* histoChi2NullHypo2040 = new TH1F("histoChi2NullHypo2040", "histoChi2NullHypo2040", 3000, 0., 1500);
+        FillChi2HistForNullHypo(100000000, histoChi2NullHypo2040, graphRelTypeAPlusStatErr2040, graphRelTypeBErr2040, relErrSysC2040, kFALSE);
+
+        // calculating significance
+        Double_t chi2Data2040     = Chi2ForNullHypo(graphDoubleRatioTypeAPlusStatErr2040);
+        Int_t binChi2Data2040     = histoChi2NullHypo2040->FindBin(chi2Data2040);
+        Int_t binFirst2040         = 1;
+        Int_t binLast2040        = histoChi2NullHypo2040->GetNbinsX();
+        Double_t intTot2040        = histoChi2NullHypo2040->Integral(binFirst2040, binLast2040);
+        Double_t intData2040    = histoChi2NullHypo2040->Integral(binChi2Data2040, binLast2040);
+        Double_t pValue2040        = intData2040/ intTot2040;
+        Double_t nSigma2040        = PValueToNSigma(pValue2040);
+
+        cout << "20-40%:  chi2data =" << chi2Data2040 << "\t, pVal = " << pValue2040 << "\t, nSigma = " << nSigma2040 << endl;
+
+        // preparing histo for drawing
+        TH1F* histoChi2NullData2040 = (TH1F*)histoChi2NullHypo2040->Clone("histoChi2NullData2040");
+        for (Int_t i = 1; i < binChi2Data2040; i++ ){
+            histoChi2NullData2040->SetBinContent(i,-1);
+        }
+        for (Int_t i = 1; i < binLast2040; i++ ){
+            histoChi2NullData2040->SetBinError(i,0);
+        }
+
+        //*********************************************************************************
+        // Calculating Significance of combined double ratio for 20-50%
+        //*********************************************************************************
+
+        Int_t minBinSig2050 = 0;
+        Int_t maxBinSig2050 = 5;
+        const Int_t nPointSig2050 = maxBinSig2050- minBinSig2050 +1;
+
+        // filling of graphs
+        TGraph* graphAbsTypeAPlusStatErr2050                     = new TGraph(nPointSig2050);
+        TGraph* graphRelTypeAPlusStatErr2050                     = new TGraph(nPointSig2050);
+        TGraph* graphRelTypeBErr2050                             = new TGraph(nPointSig2050);
+        TGraphErrors* graphDoubleRatioTypeAPlusStatErr2050         = new TGraphErrors(nPointSig2050);
+
+        for (Int_t i = 0; i < nPointSig2050; i++){
+            Double_t pt             = graphPCMDRPi0FitSysBErr2050->GetX()[minBinSig2050+i];
+            Double_t R                = graphPCMDRPi0FitSysBErr2050->GetY()[minBinSig2050+i];
+            Double_t statErr        = graphPCMDRPi0FitStatErr2050->GetEYlow()[minBinSig2050+i];
+            Double_t sysAErr        = graphPCMDRPi0FitSysAErr2050->GetEYlow()[minBinSig2050+i];
+            Double_t relErrSysA     = sysAErr/ R;
+            Double_t statSysAErr    = TMath::Sqrt(statErr*statErr+sysAErr*sysAErr);
+            Double_t relErrStatSysA = statSysAErr/ R;
+            Double_t relErrSysB        = graphPCMDRPi0FitSysBErr2050->GetEYlow()[minBinSig2050+i]/ graphPCMDRPi0FitSysBErr2050->GetY()[minBinSig2050+i];
+
+            graphAbsTypeAPlusStatErr2050->SetPoint(i, pt, statSysAErr);
+            graphRelTypeAPlusStatErr2050->SetPoint(i, pt, relErrStatSysA);
+            graphRelTypeBErr2050->SetPoint(i, pt, relErrSysB);
+            graphDoubleRatioTypeAPlusStatErr2050->SetPoint(i, pt, R);
+            graphDoubleRatioTypeAPlusStatErr2050->SetPointError(i,0,statSysAErr);
+        }
+        Double_t relErrSysC2050 = graphPCMDRPi0FitSysCErr2050->GetEYlow()[minBinSig2050]/ graphPCMDRPi0FitSysCErr2050->GetY()[minBinSig2050];
+
+        // Generating pseudo data
+        TH1F* histoChi2NullHypo2050 = new TH1F("histoChi2NullHypo2050", "histoChi2NullHypo2050", 3000, 0., 1500);
+        FillChi2HistForNullHypo(100000000, histoChi2NullHypo2050, graphRelTypeAPlusStatErr2050, graphRelTypeBErr2050, relErrSysC2050, kFALSE);
+
+        // calculating significance
+        Double_t chi2Data2050     = Chi2ForNullHypo(graphDoubleRatioTypeAPlusStatErr2050);
+        Int_t binChi2Data2050     = histoChi2NullHypo2050->FindBin(chi2Data2050);
+        Int_t binFirst2050         = 1;
+        Int_t binLast2050        = histoChi2NullHypo2050->GetNbinsX();
+        Double_t intTot2050        = histoChi2NullHypo2050->Integral(binFirst2050, binLast2050);
+        Double_t intData2050    = histoChi2NullHypo2050->Integral(binChi2Data2050, binLast2050);
+        Double_t pValue2050        = intData2050/ intTot2050;
+        Double_t nSigma2050        = PValueToNSigma(pValue2050);
+        cout << "20-50%:  chi2data =" << chi2Data2050 << "\t, pVal = " << pValue2050 << "\t, nSigma = " << nSigma2050 << endl;
+
+        // preparing histo for drawing
+        TH1F* histoChi2NullData2050 = (TH1F*)histoChi2NullHypo2050->Clone("histoChi2NullData2050");
+        for (Int_t i = 1; i < binChi2Data2050; i++ ){
+            histoChi2NullData2050->SetBinContent(i,-1);
+        }
+        for (Int_t i = 1; i < binLast2050; i++ ){
+            histoChi2NullData2050->SetBinError(i,0);
+        }
+
+        //*********************************************************************************
+        // Plotting Significance of combined double ratio for 0-10%
+        //*********************************************************************************
+
+        TCanvas* canvasSignificance = new TCanvas("canvasSignificance","",200,10,1400,1100);  // gives the page size
+        DrawGammaCanvasSettings( canvasSignificance,  0.09, 0.01, 0.015, 0.1);
+        canvasSignificance->SetLogy(1);
+
+        Int_t textSizeLabelsPixelSignificance = 48;
+        Double_t textsizeLabelsSignificance = 0;
+        if (canvasSignificance->XtoPixel(canvasSignificance->GetX2()) < canvasSignificance->YtoPixel(canvasSignificance->GetY1())){
+            textsizeLabelsSignificance = (Double_t)textSizeLabelsPixelSignificance/canvasSignificance->XtoPixel(canvasSignificance->GetX2()) ;
+        } else {
+            textsizeLabelsSignificance = (Double_t)textSizeLabelsPixelSignificance/canvasSignificance->YtoPixel(canvasSignificance->GetY1());
+        }
+
+        SetStyleHistoTH1ForGraphs(histoChi2NullHypo0010, "Test statistics #it{t}","Counts",
+                                0.85*textsizeLabelsSignificance, textsizeLabelsSignificance,
+                                0.85*textsizeLabelsSignificance, textsizeLabelsSignificance,
+                                0.95, 1., 510, 510);
+        histoChi2NullHypo0010->GetYaxis()->SetLabelOffset(0.005);
+
+        Int_t firstAbove0010 = histoChi2NullHypo0010->FindFirstBinAbove();
+        Int_t lastAbove0010 = histoChi2NullHypo0010->FindLastBinAbove();
+
+        histoChi2NullHypo0010->GetXaxis()->SetRange(1,lastAbove0010+1);
+        DrawGammaSetMarker(histoChi2NullHypo0010, 1, 0.1, kGray+2 , kGray+2);
+        histoChi2NullHypo0010->DrawCopy("");
+
+        DrawGammaSetMarker(histoChi2NullData0010, 1, 0.1, colorComb0010Box , colorComb0010Box);
+        histoChi2NullData0010->SetFillColor(colorComb0010Box);
+        histoChi2NullData0010->SetFillStyle(3356);
+        histoChi2NullData0010->Draw("same,lf");
+        histoChi2NullHypo0010->DrawCopy("same");
+        histoChi2NullHypo0010->DrawCopy("same,axis");
+
+            TLatex *labelSignificanceEnergy0010 = new TLatex(0.58,0.92,collisionSystemCent0010.Data());
+            SetStyleTLatex( labelSignificanceEnergy0010, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceEnergy0010->Draw();
+
+            TLatex *labelSignificanceALICE = new TLatex(0.58,0.87,"ALICE pseudo data");
+            SetStyleTLatex( labelSignificanceALICE, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceALICE->Draw();
+
+            DrawGammaLines(chi2Data0010, chi2Data0010, 0, histoChi2NullHypo0010->GetMaximum()*0.1, 3, colorComb0010, 7);
+
+            TLatex *labelTData0010 = new TLatex(chi2Data0010+10,histoChi2NullHypo0010->GetMaximum()*0.1,"#it{t}_{data}");
+            SetStyleTLatex( labelTData0010, 0.85*textsizeLabelsSignificance,4,colorComb0010,42,kFALSE);
+            labelTData0010->Draw();
+
+            TLatex *labelSignificancePValue0010 = new TLatex(0.48,0.57,Form("#it{p}-value = %1.4f",pValue0010));
+            SetStyleTLatex( labelSignificancePValue0010, 0.85*textsizeLabelsSignificance,4);
+            labelSignificancePValue0010->Draw();
+            TLatex *labelSignificanceNSigma0010 = new TLatex(0.48,0.53,Form("%1.2f #sigma",nSigma0010));
+            SetStyleTLatex( labelSignificanceNSigma0010, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceNSigma0010->Draw();
+
+
+        canvasSignificance->Update();
+        canvasSignificance->Print(Form("%s/DirGammaSignificanceTest_0010.%s",outputDir.Data(),suffix.Data()));
+
+        //*********************************************************************************
+        // Plotting Significance of combined double ratio for 20-40%
+        //*********************************************************************************
+
+        SetStyleHistoTH1ForGraphs(histoChi2NullHypo2040, "Test statistics #it{t}","Counts",
+                                0.85*textsizeLabelsSignificance, textsizeLabelsSignificance,
+                                0.85*textsizeLabelsSignificance, textsizeLabelsSignificance,
+                                0.95, 1., 510, 510);
+        histoChi2NullHypo2040->GetYaxis()->SetLabelOffset(0.005);
+
+        Int_t firstAbove2040 = histoChi2NullHypo2040->FindFirstBinAbove();
+        Int_t lastAbove2040 = histoChi2NullHypo2040->FindLastBinAbove();
+
+        histoChi2NullHypo2040->GetXaxis()->SetRange(1,lastAbove2040+1);
+        DrawGammaSetMarker(histoChi2NullHypo2040, 1, 0.1, kGray+2 , kGray+2);
+        histoChi2NullHypo2040->DrawCopy("");
+
+        DrawGammaSetMarker(histoChi2NullData2040, 1, 0.1, colorComb2040Box , colorComb2040Box);
+        histoChi2NullData2040->SetFillColor(colorComb2040Box);
+        histoChi2NullData2040->SetFillStyle(3356);
+        histoChi2NullData2040->Draw("same,lf");
+        histoChi2NullHypo2040->DrawCopy("same");
+        histoChi2NullHypo2040->DrawCopy("same,axis");
+
+            TLatex *labelSignificanceEnergy2040 = new TLatex(0.58,0.92,collisionSystemCent2040.Data());
+            SetStyleTLatex( labelSignificanceEnergy2040, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceEnergy2040->Draw();
+
+            labelSignificanceALICE->Draw();
+
+            DrawGammaLines(chi2Data2040, chi2Data2040, 0, histoChi2NullHypo2040->GetMaximum()*0.5, 3, colorComb2040, 7);
+
+            TLatex *labelTData2040 = new TLatex(chi2Data2040+10,histoChi2NullHypo2040->GetMaximum()*0.5,"#it{t}_{data}");
+            SetStyleTLatex( labelTData2040, 0.85*textsizeLabelsSignificance,4,colorComb2040,42,kFALSE);
+            labelTData2040->Draw();
+
+            TLatex *labelSignificancePValue2040 = new TLatex(0.48,0.57,Form("#it{p}-value = %1.4f",pValue2040));
+            SetStyleTLatex( labelSignificancePValue2040, 0.85*textsizeLabelsSignificance,4);
+            labelSignificancePValue2040->Draw();
+            TLatex *labelSignificanceNSigma2040 = new TLatex(0.48,0.53,Form("%1.2f #sigma",nSigma2040));
+            SetStyleTLatex( labelSignificanceNSigma2040, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceNSigma2040->Draw();
+
+
+        canvasSignificance->Update();
+        canvasSignificance->Print(Form("%s/DirGammaSignificanceTest_2040.%s",outputDir.Data(),suffix.Data()));
+
+        //*********************************************************************************
+        // Plotting Significance of combined double ratio for 20-50%
+        //*********************************************************************************
+
+        SetStyleHistoTH1ForGraphs(histoChi2NullHypo2050, "Test statistics #it{t}","Counts",
+                                0.85*textsizeLabelsSignificance, textsizeLabelsSignificance,
+                                0.85*textsizeLabelsSignificance, textsizeLabelsSignificance,
+                                0.95, 1., 510, 510);
+        histoChi2NullHypo2050->GetYaxis()->SetLabelOffset(0.005);
+
+        Int_t firstAbove2050 = histoChi2NullHypo2050->FindFirstBinAbove();
+        Int_t lastAbove2050 = histoChi2NullHypo2050->FindLastBinAbove();
+
+        histoChi2NullHypo2050->GetXaxis()->SetRange(1,lastAbove2050+1);
+        histoChi2NullHypo2050->GetYaxis()->SetRangeUser(1, 10*histoChi2NullHypo2050->GetMaximum());
+        DrawGammaSetMarker(histoChi2NullHypo2050, 1, 0.1, kGray+2 , kGray+2);
+        histoChi2NullHypo2050->DrawCopy("");
+
+        DrawGammaSetMarker(histoChi2NullData2050, 1, 0.1, colorComb2050Box , colorComb2050Box);
+        histoChi2NullData2050->SetFillColor(colorComb2050Box);
+        histoChi2NullData2050->SetFillStyle(3356);
+        histoChi2NullData2050->Draw("same,lf");
+        histoChi2NullHypo2050->DrawCopy("same");
+        histoChi2NullHypo2050->DrawCopy("same,axis");
+
+            TLatex *labelSignificanceEnergy2050 = new TLatex(0.58,0.92,collisionSystemCent2050.Data());
+            SetStyleTLatex( labelSignificanceEnergy2050, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceEnergy2050->Draw();
+
+            labelSignificanceALICE->Draw();
+
+            DrawGammaLines(chi2Data2050, chi2Data2050, 0, histoChi2NullHypo2050->GetMaximum()*0.2, 3, colorComb2050, 7);
+
+            TLatex *labelTData2050 = new TLatex(chi2Data2050+10,histoChi2NullHypo2050->GetMaximum()*0.2,"#it{t}_{data}");
+            SetStyleTLatex( labelTData2050, 0.85*textsizeLabelsSignificance,4,colorComb2050,42,kFALSE);
+            labelTData2050->Draw();
+
+            TLatex *labelSignificancePValue2050 = new TLatex(0.48,0.57,Form("#it{p}-value = %1.4f",pValue2050));
+            SetStyleTLatex( labelSignificancePValue2050, 0.85*textsizeLabelsSignificance,4);
+            labelSignificancePValue2050->Draw();
+            TLatex *labelSignificanceNSigma2050 = new TLatex(0.48,0.53,Form("%1.2f #sigma",nSigma2050));
+            SetStyleTLatex( labelSignificanceNSigma2050, 0.85*textsizeLabelsSignificance,4);
+            labelSignificanceNSigma2050->Draw();
+
+
+        canvasSignificance->Update();
+        canvasSignificance->Print(Form("%s/DirGammaSignificanceTest_2050.%s",outputDir.Data(),suffix.Data()));
+
+    }
+
+
+
     const char* fileNameOutputCompPCM = "Gamma_PCMOnlyResults_PbPb_2.76TeV.root";
-    TFile* fileGammaSpectrumPCMOnly = new TFile(fileNameOutputCompPCM,"UPDATE");
+    TFile* fileGammaSpectrumPCMOnly = new TFile(fileNameOutputCompPCM,"RECREATE");
         fileGammaSpectrumPCMOnly->mkdir("Gamma_PbPb_2.76TeV_0-10%");
+        TDirectoryFile* directoryGammaPCMOnly_0010 = (TDirectoryFile*)fileGammaSpectrumPCMOnly->Get("Gamma_PbPb_2.76TeV_0-10%");
         fileGammaSpectrumPCMOnly->cd("Gamma_PbPb_2.76TeV_0-10%");
 
             if (histoPCMIncGammaStatErr0010) histoPCMIncGammaStatErr0010->Write("hIncGammaSpec_PCM_StatErr",TObject::kOverwrite);
@@ -2999,6 +3773,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
             if (graphPCMDRPi0FitSysCErr0010) graphPCMDRPi0FitSysCErr0010->Write("DR_PCM_SysCErr",TObject::kOverwrite);
 
         fileGammaSpectrumPCMOnly->mkdir("Gamma_PbPb_2.76TeV_20-40%");
+        TDirectoryFile* directoryGammaPCMOnly_2040 = (TDirectoryFile*)fileGammaSpectrumPCMOnly->Get("Gamma_PbPb_2.76TeV_20-40%");
         fileGammaSpectrumPCMOnly->cd("Gamma_PbPb_2.76TeV_20-40%");
 
             if (histoPCMIncGammaStatErr2040) histoPCMIncGammaStatErr2040->Write("hIncGammaSpec_PCM_StatErr",TObject::kOverwrite);
@@ -3012,6 +3787,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
             if (graphPCMDRPi0FitSysCErr2040) graphPCMDRPi0FitSysCErr2040->Write("DR_PCM_SysCErr",TObject::kOverwrite);
 
         fileGammaSpectrumPCMOnly->mkdir("Gamma_PbPb_2.76TeV_20-50%");
+        TDirectoryFile* directoryGammaPCMOnly_2050 = (TDirectoryFile*)fileGammaSpectrumPCMOnly->Get("Gamma_PbPb_2.76TeV_20-50%");
         fileGammaSpectrumPCMOnly->cd("Gamma_PbPb_2.76TeV_20-50%");
 
             if (histoPCMIncGammaStatErr2050) histoPCMIncGammaStatErr2050->Write("hIncGammaSpec_PCM_StatErr",TObject::kOverwrite);
@@ -4135,7 +4911,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendDirGammaExpFit->SetMargin(0.3);
         legendDirGammaExpFit->SetTextFont(42);
         legendDirGammaExpFit->AddEntry(histoFitThermalGamma0010Stat,"  0-10%","l");
-        legendDirGammaExpFit->AddEntry(histoFitThermalGamma2040Stat,"20-40%","l");
+        legendDirGammaExpFit->AddEntry(histoFitThermalGamma2040Stat,cent2040.Data(),"l");
         legendDirGammaExpFit->Draw();
 
         histoFitThermalGamma0010Stat->Draw("same,l");
