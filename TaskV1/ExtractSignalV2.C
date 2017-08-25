@@ -4102,7 +4102,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             if ( fMode == 0) {                                      // PCM
                 mesonAmplitudeMin = mesonAmplitude*92./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
-            } else if ( fMode == 2 || fMode == 13 || fMode == 3) {  // PCM-EMC, PCM-DMC, PCM-PHOS
+            } else if ( fMode == 2 || fMode == 13) {  // PCM-EMC, PCM-DMC
                 mesonAmplitudeMin = mesonAmplitude*98./100.;
                 mesonAmplitudeMax = mesonAmplitude*600./100.;
                 if(fBinsPt[ptBin] >= 3.0 ) {
@@ -4114,6 +4114,20 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                         fMesonLambdaTail            = 0.0095;
                         fMesonLambdaTailRange[0]    = 0.0095;
                         fMesonLambdaTailRange[1]    = 0.0095;
+                    }
+                }
+            } else if (fMode == 3) {  // PCM-PHOS
+                mesonAmplitudeMin = mesonAmplitude*90./100.;
+                mesonAmplitudeMax = mesonAmplitude*120./100.;
+                if(fBinsPt[ptBin] >= 4.0 ) {
+                    if (fIsMC == 0){
+                        fMesonLambdaTail            = 0.007;
+                        fMesonLambdaTailRange[0]    = 0.007;
+                        fMesonLambdaTailRange[1]    = 0.007;
+                    } else {
+                        fMesonLambdaTail            = 0.007;
+                        fMesonLambdaTailRange[0]    = 0.007;
+                        fMesonLambdaTailRange[1]    = 0.007;
                     }
                 }
             } else if (fMode == 4 || fMode == 12 || fMode == 5) {   // EMC, DMC, PHOS
@@ -4139,9 +4153,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             } else if ( fMode == 3) {                               // PCM-PHOS
                 mesonAmplitudeMin = mesonAmplitude*0.1/100.;
                 if (fBinsPt[ptBin] < 2.)
-                    mesonAmplitudeMax = mesonAmplitude*150./100.;
+                    mesonAmplitudeMax = mesonAmplitude*105./100.;
                 else
-                    mesonAmplitudeMax = mesonAmplitude*400./100.;
+                    mesonAmplitudeMax = mesonAmplitude*110./100.;
             } else if (fMode == 4 || fMode == 12 || fMode == 5) {   //EMC, DMC, PHOS
                 mesonAmplitudeMin = mesonAmplitude*0.1/100.;
                 mesonAmplitudeMax = mesonAmplitude*300./100.;
@@ -4295,10 +4309,18 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
       fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
-    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
+    if(fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
+      if(fMode == 4) {
         fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
         fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.5,fMesonWidthRange[1]*2.);
         if(ptBin >= 31) {fFitReco->FixParameter(3,0.015); fFitReco->SetParameter(1,0.156); }
+      }else if(fMode == 3) {
+        if (fBinsPt[ptBin] > 7. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.995,fMesonMassExpect*1.15);
+        if (fBinsPt[ptBin] > 9. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.2);
+      }
+    }
+    if(fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Eta") ==0 )){
+      fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
     }
 
     //--------------------------------------------------------------------------------------

@@ -995,6 +995,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonWidthRange[1]             = 0.040;
             fMesonLambdaTailRange[0]        = 0.001;
             fMesonLambdaTailRange[1]        = 0.03;
+        } else if (mode == 3){
+            fMesonWidthExpect           = 0.006;
+            fMesonLambdaTail            = 0.012;
+            fMesonWidthRange[0]         = 0.001;
+            fMesonWidthRange[1]         = 0.015;
+            fMesonLambdaTailRange[0]    = 0.001;
+            fMesonLambdaTailRange[1]    = 0.02;
         } else {                                                    // default
             fMesonWidthExpect           = 0.003;
             fMesonLambdaTail            = 0.012;
@@ -1281,6 +1288,14 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonLambdaTail                = 0.007;
             fMesonLambdaTailRange[0]        = 0.007;
             fMesonLambdaTailRange[1]        = 0.007;
+            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) {
+              fMesonWidthExpect           = 0.017;
+              fMesonWidthRange[0]         = 0.004;
+              fMesonWidthRange[1]         = 0.032;
+              fMesonLambdaTail                = 0.007;
+              fMesonLambdaTailRange[0]        = 0.006;
+              fMesonLambdaTailRange[1]        = 0.009;
+            }
         } else if (mode == 4 || mode == 12 ) {
             if (fEnergyFlag.CompareTo("2.76TeV") == 0 || fEnergyFlag.CompareTo("7TeV") == 0 || fEnergyFlag.CompareTo("8TeV") == 0 ){
                 fMesonWidthExpect           = 0.025;
