@@ -68,7 +68,7 @@ function CorrectSignal()
 function CreateFinalResults()
 {
     if [ $mode != 2 ] && [ $mode != 4 ]; then
-        root -x -l -b -q TaskV1/ProduceFinalResultsV2.C\+\($1,\"\"\,\"kTRUE\"\,kFALSE\,$mode\)
+        root -l -b -x -q TaskV1/ProduceFinalResultsPiPlPiMiPiZero.C+\($1\)
     fi
 }
 
@@ -608,6 +608,12 @@ if [ $ONLYRESULTS = 0 ] ; then
             optionsEtaCorrection=\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
             optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
 
+            OmegaMCcorrectionFullFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1Correction_$cutSelection.root`
+            EtaMCcorrectionFullFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1Correction_$cutSelection.root`
+
+            optionsOmegaFinalResults=\"configurationFile5TeVEMC.txt\"\,$mode\,1\,\"$Suffix\"\,\"data\"\,\"$energy\"\,\"LHC10b\"\,kTRUE\,10\,kFALSE\,kTRUE\,10\,kFALSE\,kFALSE\,\"\"\,kFALSE
+            optionsOmegaFinalResultsMC=\"configurationFile5TeVEMC.txt\"\,$mode\,1\,\"$Suffix\"\,\"MC\"\,\"$energy\"\,\"LHC10b\"\,kTRUE\,10\,kFALSE\,kTRUE\,10\,kFALSE\,kFALSE\,\"\"\,kFALSE
+
             if [[ -f $OmegadataRAWFILE  &&  -f $OmegaMCcorrectionFILE ]]; then
 
                 CorrectSignal $optionsOmegaCorrection
@@ -615,7 +621,7 @@ if [ $ONLYRESULTS = 0 ] ; then
                 PARTLY=1
             fi
 
-            if [[ -f $EtadataRAWFILE  &&  $EtaMCcorrectionFILE ]]; then
+            if [[ -f $EtadataRAWFILE  &&  -f $EtaMCcorrectionFILE ]]; then
                 echo "DID I JUMP HERE?"
                 CorrectSignal $optionsEtaCorrection
             else
@@ -635,6 +641,9 @@ if [ $ONLYRESULTS = 0 ] ; then
             else
                 PARTLY=1
             fi
+
+                CreateFinalResults $optionsOmegaFinalResults
+                CreateFinalResults $optionsOmegaFinalResultsMC
 
         fi
         NORMALCUTS=`expr $NORMALCUTS + 1`
