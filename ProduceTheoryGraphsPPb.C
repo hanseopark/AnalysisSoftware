@@ -1194,6 +1194,27 @@ void ProduceTheoryGraphsPPb(){
     graphPi0NLOpQCDct14epps16dss14_muOne        = (TGraph*)ScaleGraph(graphPi0NLOpQCDct14epps16dss14_muOne,factorHelenius/(v0ANDxSectionNSD*recalcBarn));
     graphPi0NLOpQCDct14epps16dss14_sumerr       = (TGraphAsymmErrors*)ScaleGraphAsym(graphPi0NLOpQCDct14epps16dss14_sumerr,factorHelenius/(v0ANDxSectionNSD*recalcBarn));
 
+    // **********************************************************************************************************************
+    // Load cocktail for pPb pure mt-scaling
+    // **********************************************************************************************************************
+    TString nameCocktailFileMtScaling       = "CocktailInput/GammaCocktail_pPb_MB_pureMT.root";
+    TFile* fileCockailPureMtScaling         = new TFile(nameCocktailFileMtScaling.Data());
+    TH1D* histoPi0PureMtScaling             = (TH1D*)fileCockailPureMtScaling->Get("Pi0_Pt_OrBin");
+    TH1D* histoEtaPureMtScaling             = (TH1D*)fileCockailPureMtScaling->Get("Eta_Pt_OrBin");
+    for (Int_t i = 1; i < histoPi0PureMtScaling->GetNbinsX()+1; i++){
+        histoPi0PureMtScaling->SetBinContent(i, histoPi0PureMtScaling->GetBinContent(i)/(histoPi0PureMtScaling->GetBinCenter(i) *2* TMath::Pi()) );
+        histoPi0PureMtScaling->SetBinError(i, histoPi0PureMtScaling->GetBinError(i)/(histoPi0PureMtScaling->GetBinCenter(i)*2* TMath::Pi()));
+    }
+    histoPi0PureMtScaling->GetXaxis()->SetRangeUser(0,50);
+    for (Int_t i = 1; i < histoEtaPureMtScaling->GetNbinsX()+1; i++){
+        histoEtaPureMtScaling->SetBinContent(i, histoEtaPureMtScaling->GetBinContent(i)/(histoEtaPureMtScaling->GetBinCenter(i) *2* TMath::Pi()) );
+        histoEtaPureMtScaling->SetBinError(i, histoEtaPureMtScaling->GetBinError(i)/(histoEtaPureMtScaling->GetBinCenter(i)*2* TMath::Pi()));
+    }
+    histoEtaPureMtScaling->GetXaxis()->SetRangeUser(0,50);
+    TH1D* histoEtaPi0PureMtScaling          = (TH1D*)histoEtaPureMtScaling->Clone("histoEtaPi0PureMtScaling");
+    histoEtaPi0PureMtScaling->Divide(histoEtaPi0PureMtScaling,histoPi0PureMtScaling);
+
+
     //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pPb ********************************
     //**********************************************************************************************************************
@@ -1325,6 +1346,10 @@ void ProduceTheoryGraphsPPb(){
             if( graphPi0NLOpQCDct14epps16dss14[3] ) graphPi0NLOpQCDct14epps16dss14[3]->Write("graphNLOpQCDPi0_ct14_errSym_epps16_dss14", TObject::kOverwrite);
 
             graphPi0NLOpQCDct14epps16dss14_muOne->Print();
+
+            histoEtaPi0PureMtScaling->GetYaxis()->SetTitle("#eta/#pi^{0}");
+            histoEtaPi0PureMtScaling->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            histoEtaPi0PureMtScaling->Write("histoEtaPi0PureMtScaling_ALICECombPi0", TObject::kOverwrite);
 
         // write McGill calc for different cents and particles
         for (Int_t iCent = 0; iCent < nCent; iCent++){

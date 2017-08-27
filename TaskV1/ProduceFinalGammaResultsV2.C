@@ -41,49 +41,109 @@
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 
-void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009847005008750404000_0152501500000000",
-                                    TString optionEnergy    = "PbPb_2.76TeV",
-                                    TString suffix          = "eps",
-                                    Int_t mode              = 0
+void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configurationFileName.txt",
+                                    TString optionEnergy            = "",
+                                    TString suffix                  = "eps",
+                                    Int_t mode                      = 0
                                 ){
 
     StyleSettingsThesis();
     SetPlotStyle();
 
+
+    ifstream in(configurationFileName.Data());
+    cout<<"Available Triggers:"<<endl;
+    TString fCutNumber                  = "";
+    TString nameSysFiles[3]             = {""};
+    Int_t doSys                         = 0;
+    Bool_t doSysGamma                   = 0;
+    Bool_t doSysIncGammaToPi0           = 0;
+    Bool_t doSysDR                      = 0;
+    Bool_t doTheo                       = kFALSE;
+    TString nameTheoryFile              = "";
+    TString nameTheoryGraphsErr         = "";
+    TString nameTheoryGraphsCenter      = "";
+    Bool_t doDirGamma                   = kFALSE;
+    Int_t lines                         = 0;
+    while(!in.eof() && lines < 1){
+        TString doTheoString            = "";
+        TString doDirGammaString        = "";
+        in >> fCutNumber >> nameSysFiles[0] >>nameSysFiles[1] >> nameSysFiles[2]    >> doTheoString    >> nameTheoryFile >> nameTheoryGraphsErr >> nameTheoryGraphsCenter >> doDirGammaString;
+        cout << fCutNumber.Data() << endl;
+        if ( nameSysFiles[0].CompareTo("bla") != 0 ){
+            doSys                       = doSys+100;
+            doSysGamma                  = kTRUE;
+        }
+        if ( nameSysFiles[1].CompareTo("bla") != 0 ){
+            doSys                       = doSys+10;
+            doSysIncGammaToPi0          = kTRUE;
+        }
+        if ( nameSysFiles[2].CompareTo("bla") != 0 ){
+            doSys                       = doSys+1;
+            doSysDR                     = kTRUE;
+        }
+        if (doSys == 111)
+            cout << "will do full sys: \t" << nameSysFiles[0].Data() <<  "\t" << nameSysFiles[1].Data() << "\t" << nameSysFiles[2].Data() << endl;
+        else if (doSys > 0)
+            cout << "will do part of sys: \t" << nameSysFiles[0].Data() <<  "\t" << nameSysFiles[1].Data() << "\t" << nameSysFiles[2].Data() << endl;
+        else
+            cout << "no sys has been defined" <<endl;
+        cout<< "theo: " << doTheoString << endl;
+        if (doTheoString.CompareTo("kTRUE") == 0)
+            doTheo                      = kTRUE;
+        if (doTheo){
+            cout << "trying to read theo" << endl;
+            cout << "path: " << nameTheoryFile.Data() << endl;
+            cout << "path: " << nameTheoryGraphsErr.Data() << endl;
+            cout << "path: " << nameTheoryGraphsCenter.Data() << endl;
+            if (nameTheoryFile.CompareTo("bla") == 0){
+                doTheo      = kFALSE;
+                cout << "theory file not correctly specified" << endl;
+            }
+        }
+        if (doDirGammaString.CompareTo("kTRUE") == 0)
+            doDirGamma                  = kTRUE;
+        if (doDirGamma)
+            cout << "will calculate dir gamma spectra" << endl;
+        lines++;
+    }
+
     TString dateForOutput           = ReturnDateStringForOutput();
     TString collisionSystem         = ReturnFullCollisionsSystem(optionEnergy);
     TString collisionSystemOutput   = ReturnCollisionEnergyOutputString(optionEnergy);
-    TString centrality              = GetCentralityString(cutSel);
-    TString centralityW0Per         = GetCentralityStringWoPer(cutSel);
+    TString centrality              = GetCentralityString(fCutNumber);
+    TString centralityW0Per         = GetCentralityStringWoPer(fCutNumber);
     if (centrality.CompareTo("pp") == 0 || centrality.CompareTo("0-100%") == 0 ) {
         centrality                  = "";
         centralityW0Per             = "";
-    }    
+    }
     TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
 
     TString system                  = "PCM";
-    if (mode == 2) system           = "PCM-EMCAL";
+    if (mode == 2) system           = "PCM-EMC";
     if (mode == 3) system           = "PCM-PHOS";
-    if (mode == 4) system           = "EMCAL-EMCAL";
-    if (mode == 5) system           = "PHOS-PHOS";
-    if (mode == 10) system          = "EMC-merged";
-    if (mode == 11) system          = "PHOS-merged";
-    
+    if (mode == 4) system           = "EMC";
+    if (mode == 5) system           = "PHOS";
+    if (mode == 10) system          = "mEMC";
+    if (mode == 11) system          = "mPHOS";
+
     // defining output directory
     TString outputDir       = Form("%s/%s/FinalGammaResults_%s_%s%s", suffix.Data(), dateForOutput.Data(), system.Data(),centralityW0Per.Data(), collisionSystemOutput.Data() );
     gSystem->Exec("mkdir -p "+outputDir);
 
+
+
     //*************************************************************************************************
     //******************** read from input files ******************************************************
     //*************************************************************************************************
-    TString inputFileName               = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root", cutSel.Data(), optionEnergy.Data());
+    TString inputFileName               = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root", fCutNumber.Data(), optionEnergy.Data());
     cout << "trying to read: " << inputFileName.Data() << endl;
     TFile *fileInput                    = new TFile(inputFileName.Data());
     if (fileInput->IsZombie()) {
         cout << "file couldn't be read, aborting....";
         return;
-    }    
-    
+    }
+
     // read stat error hists
     TH1D* histoIncGamma                     = (TH1D*) fileInput->Get("histoGammaSpecCorrPurity");
     TH1D* histoPi0Spectrum                  = (TH1D*) fileInput->Get("CorrectedYieldTrueEff");
@@ -91,45 +151,136 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
     TH1D* histoIncRatioPi0Fit               = (TH1D*) fileInput->Get("histoIncRatioFitPurity");
     TH1D* histoDR                           = (TH1D*) fileInput->Get("DoubleRatioTrueEffPurity");
     TH1D* histoDRFit                        = (TH1D*) fileInput->Get("DoubleRatioFitPurity");
-    TH1D* histoDirGamma                     = (TH1D*) fileInput->Get("histoDirectPhotonSpectrum");
-    // read sys error graphs
-    TGraphAsymmErrors* graphIncGammaSysErr      = (TGraphAsymmErrors*) fileInput->Get("histoGammaSpecCorrPurity_SystErr");
-    TGraphAsymmErrors* graphIncRatioSysErr      = (TGraphAsymmErrors*) fileInput->Get("IncRatioPurity_trueEff_SystErr");
-    TGraphAsymmErrors* graphIncRatioPi0FitSysErr= (TGraphAsymmErrors*) fileInput->Get("histoIncRatioFitPurity_SystErr");
-    TGraphAsymmErrors* graphDRSysErr            = (TGraphAsymmErrors*) fileInput->Get("DoubleRatioTrueEffPurity_SystErr");
-    TGraphAsymmErrors* graphDRPi0FitSysErr      = (TGraphAsymmErrors*) fileInput->Get("DoubleRatioFitPurity_SystErr");
+
+
+    // calculate sys error graphs
+    TGraphAsymmErrors* graphIncGammaSysErr      =  NULL;
+    TGraphAsymmErrors* graphIncRatioSysErr      =  NULL;
+    TGraphAsymmErrors* graphIncRatioPi0FitSysErr=  NULL;
+    TGraphAsymmErrors* graphDRSysErr            =  NULL;
+    TGraphAsymmErrors* graphDRPi0FitSysErr      =  NULL;
+
+    if (doSysGamma){
+        ifstream fileSysErrGamma;
+        Int_t nPointsGamma                                          = 0;
+        Double_t ptSysGamma[50];
+        Double_t relSystErrorGammaUp[50];
+        Double_t relSystErrorGammaDown[50];
+        Double_t relSystErrorWOMaterialGammaUp[50];
+        Double_t relSystErrorWOMaterialGammaDown[50];
+        fileSysErrGamma.open(nameSysFiles[0].Data(),ios_base::in);
+        cout << nameSysFiles[0].Data() << endl;
+
+        while(!fileSysErrGamma.eof() && nPointsGamma < 100){
+            fileSysErrGamma >> ptSysGamma[nPointsGamma] >> relSystErrorGammaDown[nPointsGamma] >> relSystErrorGammaUp[nPointsGamma]>>    relSystErrorWOMaterialGammaDown[nPointsGamma] >> relSystErrorWOMaterialGammaUp[nPointsGamma];
+            cout << nPointsGamma << "\t"  << relSystErrorGammaDown[nPointsGamma] << "\t"  <<relSystErrorGammaUp[nPointsGamma] << "\t" << relSystErrorWOMaterialGammaDown[nPointsGamma] << "\t"  <<relSystErrorWOMaterialGammaUp[nPointsGamma] << endl;;
+            nPointsGamma++;
+        }
+        fileSysErrGamma.close();
+        nPointsGamma                = nPointsGamma-1;
+        graphIncGammaSysErr         = CalculateSysErrFromRelSysHistoWithPtBins( histoIncGamma, "GammaSystError",
+                                                                            relSystErrorGammaDown, relSystErrorGammaUp, ptSysGamma, nPointsGamma);
+    }
+
+    if (doSysIncGammaToPi0) {
+        ifstream fileSysErrInclRatio;
+        Int_t nPointsInclRatio                                      = 0;
+        Double_t ptSysInclRatioFit[50];
+        Double_t ptSysInclRatio[50];
+        Double_t relSystErrorInclRatioUp[50];
+        Double_t relSystErrorInclRatioDown[50];
+        Double_t relSystErrorWOMaterialInclRatioUp[50];
+        Double_t relSystErrorWOMaterialInclRatioDown[50];
+
+        fileSysErrInclRatio.open(nameSysFiles[1].Data(),ios_base::in);
+        cout << nameSysFiles[1].Data() << endl;
+
+        while(!fileSysErrInclRatio.eof() && nPointsInclRatio < 100){
+            fileSysErrInclRatio >> ptSysInclRatio[nPointsInclRatio] >> relSystErrorInclRatioDown[nPointsInclRatio] >> relSystErrorInclRatioUp[nPointsInclRatio]>>    relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] >> relSystErrorWOMaterialInclRatioUp[nPointsInclRatio];
+            cout << nPointsInclRatio << "\t"  << relSystErrorInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorInclRatioUp[nPointsInclRatio] << "\t" << relSystErrorWOMaterialInclRatioDown[nPointsInclRatio] << "\t"  <<relSystErrorWOMaterialInclRatioUp[nPointsInclRatio] << endl;;
+            nPointsInclRatio++;
+        }
+        fileSysErrInclRatio.close();
+        nPointsInclRatio            = nPointsInclRatio-1;
+        graphIncRatioSysErr         = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatio, "InclRatioSysError",
+                                                                                relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
+        graphIncRatioPi0FitSysErr   = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatioPi0Fit, "InclRatioSysError",
+                                                                                relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
+    }
+
+    if (doSysDR){
+        ifstream fileSysErrDoubleRatio;
+        Int_t nPointsDoubleRatio                                    = 0;
+        Double_t ptSysDoubleRatio[50];
+        Double_t relSystErrorDoubleRatioUp[50];
+        Double_t relSystErrorDoubleRatioDown[50];
+        Double_t relSystErrorWOMaterialDoubleRatioUp[50];
+        Double_t relSystErrorWOMaterialDoubleRatioDown[50];
+
+        fileSysErrDoubleRatio.open(nameSysFiles[2].Data(),ios_base::in);
+        cout << nameSysFiles[2].Data() << endl;
+
+        while(!fileSysErrDoubleRatio.eof() && nPointsDoubleRatio < 100){
+            fileSysErrDoubleRatio >> ptSysDoubleRatio[nPointsDoubleRatio] >> relSystErrorDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorDoubleRatioUp[nPointsDoubleRatio]>>    relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] >> relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio];
+            cout << nPointsDoubleRatio << "\t"  << relSystErrorDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorDoubleRatioUp[nPointsDoubleRatio] << "\t" << relSystErrorWOMaterialDoubleRatioDown[nPointsDoubleRatio] << "\t"  <<relSystErrorWOMaterialDoubleRatioUp[nPointsDoubleRatio] << endl;;
+            nPointsDoubleRatio++;
+        }
+        fileSysErrDoubleRatio.close();
+        nPointsDoubleRatio          = nPointsDoubleRatio-1;
+
+        graphDRSysErr               = CalculateSysErrFromRelSysHistoWithPtBins( histoDR, "DRSysError",
+                                                                                relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
+        graphDRPi0FitSysErr         = CalculateSysErrFromRelSysHistoWithPtBins( histoDRFit, "DRSysError",
+                                                                                relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
+
+    }
+
     // read theory graphs
-    TGraphAsymmErrors* graphNLODR               = (TGraphAsymmErrors*) fileInput->Get("graphNLODoubleRatio");
-    TGraphAsymmErrors* graphNLOGammaDir         = (TGraphAsymmErrors*) fileInput->Get("graphNLODirGamma");
-    TGraphAsymmErrors* graphNLOGammaPrompt      = (TGraphAsymmErrors*) fileInput->Get("graphPromptPhotonNLO");
-    TGraphAsymmErrors* graphNLOGammaFrag        = (TGraphAsymmErrors*) fileInput->Get("graphFragmentationPhotonNLO");
-    
-    
+    TGraphAsymmErrors* graphNLODR           = NULL;
+    TGraph* graphNLODRCenter                = NULL;
+    if (doTheo ){
+        TFile* fileTheo                     = new TFile(nameTheoryFile.Data());
+        if (fileTheo->IsZombie()) {
+            cout << "couldn't read theo file, jumping....";
+            doTheo                          = kFALSE;
+        } else {
+            if (nameTheoryGraphsErr.CompareTo("bla") != 0){
+                graphNLODR                  = (TGraphAsymmErrors*)fileTheo->Get(nameTheoryGraphsErr.Data());
+            }
+            if (nameTheoryGraphsCenter.CompareTo("bla") != 0){
+                graphNLODRCenter            = (TGraph*)fileTheo->Get(nameTheoryGraphsCenter.Data());
+            }
+            if (!graphNLODR && !graphNLODRCenter)
+                doTheo                      = kFALSE;
+
+        }
+
+    }
     //***************************************************************************************************
     //***************************************************************************************************
     //***************************************************************************************************
     Int_t nLinesNLOLegends  = 2;
-    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0) 
+    if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0)
         nLinesNLOLegends    = 3;
     Double_t minPt                              = 0.2;
     Double_t maxPtLog                        = 40.;
-    Double_t minY                            = 0.85;
+    Double_t minY                            = 0.75;
     Double_t maxY                            = 1.65;
     if(mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
         maxY                                 = 2.;
-        minY                                 = 0.75;        
+        minY                                 = 0.75;
     } else if (mode==4) {
         minPt                                = 1.5;
         minY                                 = 0.5;
     }
-    
+
     TCanvas *canvasDoublRatioNLO = new TCanvas("canvasDoublRatioNLO","",0.095,0.09,1000,815);
     DrawGammaCanvasSettings( canvasDoublRatioNLO, 0.09, 0.02, 0.02, 0.09);
     canvasDoublRatioNLO->cd();
     canvasDoublRatioNLO->SetLogx();
-            
+
     TH2F * histo2DDoubleRatioPlotting       = new TH2F("histo2DDoubleRatioPlotting","histo2DDoubleRatioPlotting",1000,minPt,maxPtLog,1000,minY,maxY);
-    SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})", 0.04,0.04, 0.04,0.04, 1.,1.);
+    SetStyleHistoTH2ForGraphs(histo2DDoubleRatioPlotting, "#it{p}_{T} (GeV/#it{c})","R_{#gamma}", 0.04,0.04, 0.04,0.04, 1.,1.);
     if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0)
         histo2DDoubleRatioPlotting->GetXaxis()->SetRangeUser(0.4,histoDR->GetXaxis()->GetBinUpEdge(histoDR->GetNbinsX())*1.5);
     else
@@ -138,33 +289,46 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
     histo2DDoubleRatioPlotting->GetYaxis()->SetTitleFont(62);
     histo2DDoubleRatioPlotting->GetXaxis()->SetLabelOffset(-1e-2);
     histo2DDoubleRatioPlotting->DrawCopy();
- 
-        histo2DDoubleRatioPlotting->DrawCopy();
-            DrawGammaLines(0., histoDR->GetXaxis()->GetBinUpEdge(histoDR->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
-            graphNLODR->Draw("lp3");
 
+        histo2DDoubleRatioPlotting->DrawCopy();
+            if (doTheo && graphNLODR) {
+                DrawGammaSetMarkerTGraphAsym(graphNLODR, 0, 0, kAzure-9, kAzure-9, 0.2, kTRUE, kAzure-9);
+                graphNLODR->Draw("3,same");
+            }
+            if (doTheo && graphNLODRCenter){
+                DrawGammaNLOTGraph( graphNLODRCenter, 2, 7, kAzure+2);
+                graphNLODRCenter->Draw("lc,same");
+            }
+            if (graphDRPi0FitSysErr){
+                DrawGammaSetMarkerTGraphAsym(graphDRPi0FitSysErr,26,0,kBlue-8,kBlue-8,2,kTRUE);
+                graphDRPi0FitSysErr->Draw("p,2,same");
+            }
+            if (graphDRSysErr){
+                DrawGammaSetMarkerTGraphAsym(graphDRSysErr,26,0,kGray+2,kGray+2,2,kTRUE);
+                graphDRSysErr->Draw("p,2,same");
+            }
             DrawGammaSetMarker(histoDR, 20, 2.0, kBlack, kBlack);
             DrawGammaSetMarker(histoDRFit, 20, 2.0, kBlue+2, kBlue+2);
+            DrawGammaLines(0., histoDR->GetXaxis()->GetBinUpEdge(histoDR->GetNbinsX())*1.5, 1.0, 1.0,2.0, kGray+2 ,7);
+
             histoDR->DrawCopy("same");
             histoDRFit->DrawCopy("same");
-            if (graphDRSysErr)     graphDRSysErr->Draw("p,2,same");
-            if (graphDRPi0FitSysErr)  graphDRPi0FitSysErr->Draw("p,2,same");
-            
-            TLegend* legendDoubleConversionFitNLO = GetAndSetLegend2(0.14,0.93-(nLinesNLOLegends+1+0.5)*0.045,0.5,0.93,0.045,1,"",42,0.2); 
+
+            TLegend* legendDoubleConversionFitNLO = GetAndSetLegend2(0.14,0.93-(nLinesNLOLegends+1+0.5)*0.045,0.5,0.93,0.045,1,"",42,0.2);
             legendDoubleConversionFitNLO->AddEntry(histoDR,"Data","p");
             legendDoubleConversionFitNLO->AddEntry(histoDRFit,"Data, fitted #pi^{0}","p");
-            if(optionEnergy.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO->AddEntry(graphNLODR,"pp #gamma_{dir} NLO #sqrt{s} = 2.76 TeV","l");
-            else if(optionEnergy.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO->AddEntry(graphNLODR,"pp #gamma_{dir} NLO #sqrt{s} = 5.02 TeV ","l");
-            else                                             legendDoubleConversionFitNLO->AddEntry(graphNLODR,"pp NLO Direct Photon","l");
-            if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0) legendDoubleConversionFitNLO->AddEntry((TObject*)0,"scaled by N_{coll}","");
-
+            if (doTheo && graphNLODR){
+                if(optionEnergy.CompareTo("PbPb_2.76TeV") == 0)       legendDoubleConversionFitNLO->AddEntry(graphNLODR,"pp #gamma_{dir} NLO #sqrt{s} = 2.76 TeV","f");
+                else if(optionEnergy.CompareTo("pPb_5.023TeV") == 0)  legendDoubleConversionFitNLO->AddEntry(graphNLODR,"pp #gamma_{dir} NLO #sqrt{s} = 5.02 TeV ","f");
+                else                                             legendDoubleConversionFitNLO->AddEntry(graphNLODR,"pp NLO Direct Photon","f");
+                if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("pPb_5.023TeV") == 0) legendDoubleConversionFitNLO->AddEntry((TObject*)0,"scaled by N_{coll}","");
+            }
             legendDoubleConversionFitNLO->Draw();
 
-//             PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
-        
-        canvasDoublRatioNLO->Print(Form("%s/DoubleRatioComparison_NLO.%s",outputDir.Data(),suffix.Data()));
+        histo2DDoubleRatioPlotting->Draw("same,axis");
+    canvasDoublRatioNLO->Print(Form("%s/DoubleRatioComparison_NLO.%s",outputDir.Data(),suffix.Data()));
 
-    
+
     //*************************************************************************************************
     // put everything in common output per system
     //*************************************************************************************************
@@ -172,28 +336,28 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
     TString fileNameOutputComp          = Form("%s_%sResultsFullCorrection_PP.root","data",system.Data());
     if (optionEnergy.Contains("pPb")){
         fileNameOutputComp              = Form("%s_%sResultsFullCorrection_pPb.root","data",system.Data());
-        optionOutput                    = "pPb";    
+        optionOutput                    = "pPb";
     } else if (optionEnergy.Contains("PbPb")){
         fileNameOutputComp              = Form("%s_%sResultsFullCorrection_PbPb.root","data",system.Data());
-        optionOutput                    = "PbPb";    
+        optionOutput                    = "PbPb";
     }
     TFile* fileGammaFinal               = new TFile(fileNameOutputComp,"UPDATE");
-    
+
         // create subdirectory for respective energy
-        TDirectoryFile* directoryGamma      = (TDirectoryFile*)fileGammaFinal->Get(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() )); 
+        TDirectoryFile* directoryGamma      = (TDirectoryFile*)fileGammaFinal->Get(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() ));
         if (!directoryGamma){
             fileGammaFinal->mkdir(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() ));
-            directoryGamma      = (TDirectoryFile*)fileGammaFinal->Get(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() )); 
+            directoryGamma      = (TDirectoryFile*)fileGammaFinal->Get(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() ));
             fileGammaFinal->cd(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() ));
         } else {
             fileGammaFinal->cd(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() ));
         }
-    
+
             // writing double ratio quantities
             if (histoDR){
                 SetHistogramm(histoDR,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
                 histoDR->Write("DoubleRatioStatError",TObject::kOverwrite);
-            }    
+            }
             if (graphDRSysErr) graphDRSysErr->Write("DoubleRatioSystError",TObject::kOverwrite);
 
             if (histoDRFit){
@@ -206,7 +370,7 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
             if (histoIncRatio){
                 SetHistogramm(histoIncRatio,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
                 histoIncRatio->Write("IncRatioStatError",TObject::kOverwrite);
-            }    
+            }
             if (graphIncRatioSysErr) graphIncRatioSysErr->Write("IncRatioSystError",TObject::kOverwrite);
 
             if (histoIncRatioPi0Fit){
@@ -219,7 +383,7 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
             if (histoIncGamma){
                 SetHistogramm(histoIncGamma,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
                 histoIncGamma->Write("IncGammaStatError",TObject::kOverwrite);
-            }    
+            }
             if (graphIncGammaSysErr) graphIncGammaSysErr->Write("IncGammaSystError",TObject::kOverwrite);
 
             // writing pi0 used pi0 spectrum
@@ -227,9 +391,9 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
                 SetHistogramm(histoPi0Spectrum,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
                 histoPi0Spectrum->Write("Pi0StatError",TObject::kOverwrite);
             }
-            // writing direct photon spectrum
-            if(histoDirGamma)            histoDirGamma->Write("DirGammaUpperLimits",TObject::kOverwrite);
-                
+//             // writing direct photon spectrum
+//             if(histoDirGamma)            histoDirGamma->Write("DirGammaUpperLimits",TObject::kOverwrite);
+
 //             if (histoCocktailAllGamma)histoCocktailAllGamma->Write("CocktailSumGamma",TObject::kOverwrite);
 //             if (histoCocktailPi0Gamma)histoCocktailPi0Gamma->Write("CocktailPi0Gamma",TObject::kOverwrite);
 //             if (histoCocktailEtaGamma)histoCocktailEtaGamma->Write("CocktailEtaGamma",TObject::kOverwrite);
@@ -238,18 +402,9 @@ void ProduceFinalGammaResultsV2(    TString cutSel          = "50100013_00200009
 //             if (histoCocktailPhiGamma)histoCocktailPhiGamma->Write("CocktailPhiGamma",TObject::kOverwrite);
 //             if (histoCocktailRhoGamma)histoCocktailRhoGamma->Write("CocktailRhoGamma",TObject::kOverwrite);
 //             if (histoCocktailSigmaGamma)histoCocktailSigmaGamma->Write("CocktailSigmaGamma",TObject::kOverwrite);
-                
-        fileGammaFinal->mkdir("Theory");
-        fileGammaFinal->cd("Theory");
-            if (graphNLODR) graphNLODR->Write(Form("NLODoubleRatio_%s%s",centrality.Data(),collisionSystemOutput.Data()),TObject::kOverwrite);
-            if (graphNLOGammaDir) graphNLOGammaDir->Write(Form("NLOGammaDir_%s%s",centrality.Data(),collisionSystemOutput.Data()),TObject::kOverwrite);
-            if (graphNLOGammaPrompt) graphNLOGammaPrompt->Write(Form("NLOGammaPrompt_%s%s",centrality.Data(),collisionSystemOutput.Data()),TObject::kOverwrite);
-            if (graphNLOGammaFrag) graphNLOGammaFrag->Write(Form("NLOGammaFrag_%s%s",centrality.Data(),collisionSystemOutput.Data()),TObject::kOverwrite);
-                    
 
-    
     fileGammaFinal->Write();
     fileGammaFinal->Close();
- 
+
 }
 
