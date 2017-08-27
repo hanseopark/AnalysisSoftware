@@ -1083,28 +1083,6 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TGraphErrors* graphPHENIXEtaToPi0dAu200GeV          = (TGraphErrors*)fileEtaToPi0CompilationPPb->Get("PhenixdAu200GeV");
 
     // *******************************************************************************************************
-    // ************************** Load cocktail inputs *******************************************************
-    // *******************************************************************************************************
-    TFile* fileCocktail                                     = new TFile("CocktailInput/cocktail_PbPb_0020c_dmtsallis_MTEta.root");
-        TDirectory* directoryCocktailMtScaledEta            = (TDirectory*) fileCocktail->Get("cocktail_PbPb_0020c_dmtsallis_MTEta");
-        TH1D* cocktailPi0                                   = (TH1D* )directoryCocktailMtScaledEta->Get("ptPi0");
-        TH1D* cocktailEta_MtScaled                          = (TH1D* )directoryCocktailMtScaledEta->Get("ptEta");
-        cocktailPi0->Sumw2();
-        cocktailEta_MtScaled->Sumw2();
-
-        // rebin cocktail input
-        TH1D* cocktailPi0_Reb                               = (TH1D* )cocktailPi0->Rebin(maxNBinsEta,"ptPionReb",xPtLimitsEta);
-        TH1D* cocktailEta_MtScaledReb                       = (TH1D* )cocktailEta_MtScaled->Rebin(maxNBinsEta,"ptEtaMTScaledRebinned",xPtLimitsEta);
-
-        // calculate eta/pi0 ratio
-        TH1D* cocktailEtaToPi0_MtScaled                     = (TH1D* )cocktailEta_MtScaled->Clone("EtaToPi0_MtScaled");
-        cocktailEtaToPi0_MtScaled->Sumw2();
-        cocktailEtaToPi0_MtScaled->Divide(cocktailEtaToPi0_MtScaled,cocktailPi0);
-        TH1D* cocktailEtaToPi0_MtScaledReb                  = (TH1D* )cocktailEta_MtScaledReb->Clone("EtaToPi0_MtScaledRebinned");
-        cocktailEtaToPi0_MtScaledReb->Sumw2();
-        cocktailEtaToPi0_MtScaledReb->Divide(cocktailEtaToPi0_MtScaledReb,cocktailPi0_Reb);
-
-    // *******************************************************************************************************
     // ************************** Loading theory calculations ************************************************
     // *******************************************************************************************************
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
@@ -1234,13 +1212,15 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         while(graphPi0RpAErrnEPPS16DSS14Center->GetX()[graphPi0RpAErrnEPPS16DSS14Center->GetN()-1] < 25)
             graphPi0RpAErrnEPPS16DSS14Center->RemovePoint(graphPi0RpAErrnEPPS16DSS14Center->GetN()-1);
         // loading EPPS16, pi0 DSS spectrum calc
-        TGraphAsymmErrors* graphNLODSS14nPDFEPPS16Pi0             = (TGraphAsymmErrors*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr");
+        TGraphAsymmErrors* graphNLODSS14nPDFEPPS16Pi0       = (TGraphAsymmErrors*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_sumerr");
         while(graphNLODSS14nPDFEPPS16Pi0->GetX()[graphNLODSS14nPDFEPPS16Pi0->GetN()-1] < 25)
             graphNLODSS14nPDFEPPS16Pi0->RemovePoint(graphNLODSS14nPDFEPPS16Pi0->GetN()-1);
-        TGraph* graphNLODSS14nPDFEPPS16Pi0Center                  = (TGraph*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_muOne");
+        TGraph* graphNLODSS14nPDFEPPS16Pi0Center            = (TGraph*)directoryMB->Get("graphNLOpQCDPi0_ct14_epps16_dss14_muOne");
         while(graphNLODSS14nPDFEPPS16Pi0Center->GetX()[graphNLODSS14nPDFEPPS16Pi0Center->GetN()-1] < 25)
             graphNLODSS14nPDFEPPS16Pi0Center->RemovePoint(graphNLODSS14nPDFEPPS16Pi0Center->GetN()-1);
 
+        // calculate eta/pi0 ratio
+        TH1D* cocktailEtaToPi0_MtScaled                     = (TH1D*)directoryMB->Get("histoEtaPi0PureMtScaling_ALICECombPi0");
 
 
     // *******************************************************************************************************
@@ -6781,6 +6761,22 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // ***************************************************************************************************************
     // ******************************* Plotting eta/pi0 ratio for combined measurement *******************************
     // ***************************************************************************************************************
+    // eta/pi0 mt-scaled
+    TH1F *eta2pi0MtScaledTCM = new TH1F("eta2pi0MtScaledTCM","#eta/#pi^{0} from m_{T} scaling",5000,0.4,25.);
+    eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
+    eta2pi0MtScaledTCM->SetLineWidth(2.);
+
+    Double_t eta2Pi0Const   = etaToPi0ConstDataStat->GetParameter(0);
+    Double_t mPi0           = 0.134977;
+    Double_t mEta           = 0.547853;
+    for (Int_t i=1; i<=eta2pi0MtScaledTCM->GetNbinsX(); i++) {
+        Double_t ptPi0          = eta2pi0MtScaledTCM->GetBinCenter(i);
+        if (ptPi0 < 0.3) continue;
+        Double_t mtEta          = TMath::Sqrt(mEta*mEta + ptPi0*ptPi0);
+        Double_t ptEta          = TMath::Sqrt(mtEta*mtEta - mPi0*mPi0);
+        Double_t Reta2pi0TCM    = fitTCMInvYieldPi0->Eval(ptEta) / fitTCMInvYieldPi0->Eval(ptPi0) * eta2Pi0Const;
+        eta2pi0MtScaledTCM->SetBinContent(i,Reta2pi0TCM);
+    }
     histo2DEtatoPi0combo->Draw("copy");
 
         // plotting data
@@ -6816,8 +6812,11 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphEPOS3EtaToPi0_Reb->Draw("3,same");
 
 
-        SetStyleHisto(cocktailEtaToPi0_MtScaledReb, widthCommonFit*1.5, 1, kRed+2);
-        cocktailEtaToPi0_MtScaledReb->Draw("same,hist,l");
+//         SetStyleHisto(cocktailEtaToPi0_MtScaled, widthCommonFit*1.5, 1, kRed+2);
+//         cocktailEtaToPi0_MtScaled->Draw("same,hist,l");
+
+        SetStyleHisto(eta2pi0MtScaledTCM, widthCommonFit*1.5, 1, kRed+2);
+        eta2pi0MtScaledTCM->Draw("same,hist,l");
 
         SetStyleHisto(histoDPMJetEtaToPi0, widthCommonFit*1.5, styleLineDPMJet, colorDPMJet );
         histoDPMJetEtaToPi0->Draw("same,hist,l");
@@ -6833,8 +6832,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         labelEnergyEtaToPi0->Draw();
         labelALICEEtaToPi0->Draw();
 
-        TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.48, 0.15+(textsizeLabelsEtaToPi0*3*0.9), 0.9, 0.15, textSizeLabelsPixel*0.85, 2, "", 43, 0.25);
-        legendEtaToPi0Theory->AddEntry(cocktailEtaToPi0_MtScaledReb,"#eta from #it{m}_{_{T}} scaled #pi^{0}","l");
+        TLegend* legendEtaToPi0Theory = GetAndSetLegend2(0.48, 0.15+(textsizeLabelsEtaToPi0*3*0.9), 0.88, 0.15, textSizeLabelsPixel*0.85, 2, "", 43, 0.2625);
+        legendEtaToPi0Theory->AddEntry(eta2pi0MtScaledTCM,"#eta from #it{m}_{_{T}} scaled #pi^{0}","l");
         legendEtaToPi0Theory->AddEntry((TObject*)0,"","");
         legendEtaToPi0Theory->AddEntry(histoDPMJetEtaToPi0,"DPMJet","l");
         legendEtaToPi0Theory->AddEntry(histoEPOS3EtaToPi0_Reb,"EPOS3","l");
@@ -7989,7 +7988,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0CombpPb5023GeVTotErr");
         graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0CombpPb5023GeVStatErr");
         graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0CombpPb5023GeVSysErr");
-
+        eta2pi0MtScaledTCM->Write("histoRatioEtaToPi0MtScaled");
 
         directoryEta->mkdir("Supporting");
         directoryEta->cd("Supporting");
