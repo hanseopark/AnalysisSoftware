@@ -141,10 +141,12 @@
     Int_t fBinsPi0EtaBinning2760GeVPCMEMCPtTrig11aRebin[13] = {4, 2, 2, 2, 2, 2, 2, 2, 2, 4,
                                                         4, 5, 5 };
 
-    Double_t fBinsDirGamma2760GeVPt[16]             = { 0.0, 0.3, 0.6, 0.8, 1.0, 1.2, 1.5, 1.8, 2.3, 2.8,
-                                                        3.3, 3.9, 4.5, 5.5, 7.0, 10.0};
-    Int_t fBinsDirGamma2760GeVPtRebin[15]           = { 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 4, 4, 4};
+    Double_t fBinsDirGamma2760GeVPt[25]             = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0,
+                                                        12.0, 15.0, 20., 25., 30.};
+    Int_t fBinsDirGamma2760GeVPtRebin[24]           = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 4, 4, 4, 8,
+                                                        8, 8, 8, 8};
     Int_t fNBinsCluster2760GeVPt                    =  64;
     Double_t fBinsCluster2760GeVPt[65]              = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
                                                         1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9,
@@ -1631,7 +1633,10 @@
                     fColumn         = 5;
                     fRow            = 5;
 
-                    if (fNBinsPt > 21) {
+                    if (fNBinsPt > 14 && isDCA) {
+                        cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
+                        fNBinsPt    = 14;
+                    } else if (fNBinsPt > 21) {
                         cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
                         fNBinsPt    = 21;
                     }
@@ -1703,7 +1708,7 @@
                         fRow        = 3;
                     }
                     if (fNBinsPt > 14 && isDCA) {
-                        cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 19" << endl;
+                        cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
                         fNBinsPt    = 14;
                     } else if (fNBinsPt > 19 && ( modi == 0 || modi == 1) && specialTrigg < 1) {
                         cout << "You have chosen to have more than 19 bins, this is not possible, it will be reduced to 19" << endl;

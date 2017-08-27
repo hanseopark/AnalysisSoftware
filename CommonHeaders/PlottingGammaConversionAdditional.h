@@ -3214,6 +3214,7 @@
         legend->SetFillColor(0);
         legend->SetFillStyle(0);
         legend->SetLineStyle(0);
+        legend->SetBorderSize(0);
         legend->SetTextFont(textFont);
         legend->SetTextSize(textSize);
         if (margin != 0) legend->SetMargin(margin);
@@ -3225,10 +3226,12 @@
     void SetHistogramm( TH1 *hist,
                         TString xLabel,
                         TString yLabel,
-                        Double_t rangeYlow = -99.,
+                        Double_t rangeYlow  = -99.,
                         Double_t rangeYhigh = -99.,
-                        Double_t xOffset = 1.0,
-                        Double_t yOffset = 1.15){
+                        Double_t xOffset    = 1.0,
+                        Double_t yOffset    = 1.15,
+                        Font_t font         = 42
+                      ){
 
         Double_t scale = 1./gPad->GetAbsHNDC();
         //hist->GetXaxis()->SetRangeUser(rangeX[0],rangeX[1]);
@@ -3243,8 +3246,8 @@
         hist->GetYaxis()->SetTitleSize(0.04*scale);
         hist->GetXaxis()->SetLabelSize(0.035*scale);
         hist->GetYaxis()->SetLabelSize(0.035*scale);
-        hist->GetXaxis()->SetLabelFont(42);
-        hist->GetYaxis()->SetLabelFont(42);
+        hist->GetXaxis()->SetLabelFont(font);
+        hist->GetYaxis()->SetLabelFont(font);
         hist->SetMarkerSize(1.);
         hist->SetMarkerStyle(20);
     }
@@ -3350,7 +3353,7 @@
         if (textFont == 63 || textFont == 43)
             differenceText        = textHeightRel*textHeightFac;
 
-        TString labelString     = "- this thesis -";
+        TString labelString     = "ALICE this thesis";
         TLatex *label           = new TLatex(startTextX, (startTextY-differenceText), labelString);
 
         if(!alignLeft) label->SetTextAlign(31);
@@ -4539,9 +4542,9 @@
                                     TString mode            = ""
                                 ){
 
-        if ( variationName.Contains("BGEstimateIterations") || variationName.CompareTo("PileupDCA") == 0 )
+        if ( variationName.Contains("BGEstimateIterations") || variationName.CompareTo("PileupDCA") == 0 || variationName.CompareTo("OOBPileupPi0") == 0)
             return kTeal+3;
-        if ( variationName.Contains("BGEstimate")  || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+        if ( variationName.Contains("BGEstimate")  || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 || variationName.CompareTo("OOBPileupGamma") == 0 )
             return kTeal-5;
         if ( variationName.CompareTo("BG") == 0 )
             return 800;
@@ -4618,7 +4621,7 @@
         if ( variationName.CompareTo("CellMinE") == 0 )
             return kSpring-6;
         if ( variationName.CompareTo("Cocktail") == 0 )
-            return 404;
+            return kRed-6;
 
         cout << "GetColorSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
         return kBlack;
@@ -4631,9 +4634,9 @@
                                         TString mode            = ""
                                     ){
 
-        if ( variationName.Contains("BGEstimateIterations") || variationName.CompareTo("PileupDCA") == 0)
+        if ( variationName.Contains("BGEstimateIterations") || variationName.CompareTo("PileupDCA") == 0 || variationName.CompareTo("OOBPileupPi0") == 0)
             return 25;
-        if ( variationName.Contains("BGEstimate")  || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
+        if ( variationName.Contains("BGEstimate")  || variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 || variationName.CompareTo("OOBPileupGamma") == 0  )
             return 24;
         if ( variationName.CompareTo("BG") == 0 )
             return 28;
@@ -4723,6 +4726,10 @@
 
         if ( variationName.CompareTo("PileupDCA") == 0 || variationName.Contains("BGEstimateIterations") )
             return "OB pile-up B";
+        if ( variationName.CompareTo("OOBPileupGamma") == 0)
+            return "OB pile-up #gamma";
+        if ( variationName.CompareTo("OOBPileupPi0") == 0)
+            return "OB pile-up #pi^{0}";
         if ( variationName.Contains("BGEstimate") )
             return "OB pile-up A";
         if ( variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )

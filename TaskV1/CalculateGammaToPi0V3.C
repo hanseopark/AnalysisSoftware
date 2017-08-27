@@ -89,7 +89,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                             ){
     // switch systematics on/off
     Bool_t doSysErr                             = kFALSE;
-    if ((!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || !fEnergy.CompareTo("pPb_5.023TeV") ||
+    if ((!fEnergy.CompareTo("900GeV") || !fEnergy.CompareTo("2.76TeV") || !fEnergy.CompareTo("7TeV") || !fEnergy.CompareTo("8TeV") || //!fEnergy.CompareTo("pPb_5.023TeV") ||
         !fEnergy.CompareTo("PbPb_2.76TeV") ) && mode == 0) //
         doSysErr                                = kTRUE;
 
@@ -110,6 +110,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     } else if(fEnergy.Contains("pPb") && !centrality.Contains("0-100")){
         collisionSystem                          = Form("%s %s", centrality.Data(), collisionSystem.Data());
     }
+    TString centralityString2                    = GetCentralityString(fEventCutSelection);
 
     // Creating output directory and output file
     cout << "Output directory with plots:" << endl;
@@ -140,6 +141,10 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
     for (Int_t k = 0; k < 6; k++){
         histoCorrectedPi0Yield[k]               = (TH1D*)filePi0->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[k].Data()));
     }
+    graphSysPi0PileUpOptions                    = (TGraphAsymmErrors*)filePi0->Get(Form("Pi0_SystErrorRel_BGEstimate_%s",centralityString2.Data()));
+    graphSysPi0PileUpIterations                 = (TGraphAsymmErrors*)filePi0->Get(Form("Pi0_SystErrorRel_BGEstimateIterations_%s",centralityString2.Data()));
+
+
     histoMCYieldMeson                           = (TH1D*)filePi0->Get("MCYield_Meson");
     histoMCYieldMesonOldBin                     = (TH1D*)filePi0->Get("MCYield_Meson_oldBin");
 
@@ -196,9 +201,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_8TeV_2017_08_12.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_8TeV_2017_08_12.dat";
     } else if(fEnergy.CompareTo("pPb_5.023TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_pPb5TeV_2017_04_11.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_pPb5TeV_2017_04_11.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_pPb5TeV_2017_04_11.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_pPb5TeV_2017_08_26.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_pPb5TeV_2017_08_26.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_pPb5TeV_2017_08_26.dat";
     } else if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_08_11.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_08_11.dat";
@@ -1302,6 +1307,10 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         for (Int_t k = 0; k< 6; k++){
             histoCorrectedPi0Yield[k]->Write( histoCorrectedPi0Yield[k]->GetName(),  TObject::kOverwrite);
         }
+        // pi0 syst related to OOB pileup
+        graphSysPi0PileUpOptions->Write("Pi0_SystErrorRel_OOBPileup_Options",  TObject::kOverwrite);
+        graphSysPi0PileUpIterations->Write("Pi0_SystErrorRel_OOBPileup_Iterations",  TObject::kOverwrite);
+
         // gamma quantities
         if (fitGammaA)                  fitGammaA->Write(                   fitGammaA->GetName(),                   TObject::kOverwrite);
         if (histoDirectPhotonSpectrum)  histoDirectPhotonSpectrum->Write(   histoDirectPhotonSpectrum->GetName(),   TObject::kOverwrite);

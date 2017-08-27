@@ -5,7 +5,7 @@
 
     // photon categories for plotting DCA
     TString     categoryName[4]                                         = {"all", "cat1", "cat2", "cat3"};
-    TString     backgroundExtractionMethod[3]                           = {"std", "var1", "var2"};
+    TString     backgroundExtractionMethod[5]                           = {"std", "var1", "var2", "var3", "var4"};
     Color_t     backgroundColor[3]                                      = {kBlue+2, kGreen+3, kGray+2};
 
     void     PlotDCAzInPtBinsWithBack           (   TH1D**      ESDGammaPtDCAzBins,

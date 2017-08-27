@@ -31,12 +31,14 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
+
+TGraphAsymmErrors* graphPi0BGEstimateError              = NULL;
 
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
@@ -49,18 +51,18 @@ struct SysErrorConversion {
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
-void PlotCanvas( Int_t i, 
-                 Int_t number, 
-                 TCanvas *canvas, 
-                 TH1D *spectrum, 
-                 TLegend *legend, 
-                 TCanvas *ratiocanvas, 
-                 TH1D *ratio, 
-                 TLegend *ratiolegend, 
-                 TString cutSelection, 
-                 TF1 *OneA = NULL, 
+void PlotCanvas( Int_t i,
+                 Int_t number,
+                 TCanvas *canvas,
+                 TH1D *spectrum,
+                 TLegend *legend,
+                 TCanvas *ratiocanvas,
+                 TH1D *ratio,
+                 TLegend *ratiolegend,
+                 TString cutSelection,
+                 TF1 *OneA = NULL,
                  TF1 *OneB = NULL){
-   
+
 
     if(spectrum->GetMinimum()<=0.0)
         spectrum->SetMinimum(spectrum->GetBinContent(spectrum->GetNbinsX())/10.);
@@ -89,22 +91,25 @@ void PlotCanvas( Int_t i,
     else ratio->DrawCopy("e1same][");
     ratiolegend->AddEntry(ratio,cutSelection,"p");
     if(i==number-1) ratiolegend->Draw();
-   
+
 }
 
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
-void CalculateSystematicsGraphs( TH1D** histoArray, 
-                                 TH1D**histoArrayBound, 
+void CalculateSystematicsGraphs( TH1D** histoArray,
+                                 TH1D** histoArrayBound,
                                  TString* cutSelectionOut,
-                                 Int_t numberOfCuts, 
-                                 TString prefix, TString prefixCommonSysFile, 
+                                 Int_t numberOfCuts,
+                                 TString prefix, TString prefixCommonSysFile,
                                  TString outputDir, TString outputFileDir,
-                                 TString cutVariationName
+                                 TString cutVariationName,
+                                 TGraphAsymmErrors* sysRelGammaOOBPileupDown     = NULL,
+                                 TGraphAsymmErrors* sysRelGammaOOBPileupUp       = NULL,
+                                 TGraphAsymmErrors* sysRelPi0OOBPileup           = NULL
                                ){
     if (numberOfCuts<2) return;
-    
+
     Int_t NBinsPt = histoArray[0]->GetNbinsX();
     const Int_t NBinstPtConst       = NBinsPt+1;
 
@@ -153,7 +158,7 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
     Double_t RelDifferenceCutGamma[ConstNumberOfCuts][NBinstPtConst];
     Double_t RelDifferenceErrorCutGamma[ConstNumberOfCuts][NBinstPtConst];
     Double_t RelDifferenceRawCut[ConstNumberOfCuts][NBinstPtConst];
-            
+
     for (Int_t j = 1; j < numberOfCuts; j++){
         for ( Int_t i = 1; i < NBinstPtConst; i++) {
             DifferenceCutGamma[j][i]=0.;
@@ -185,7 +190,7 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
             } else {
                 RelDifferenceRawCut[j][i] = -10000.;
             }
-                    
+
             if(DifferenceCutGamma[j][i] < 0){
                 if (TMath::Abs(LargestDiffGammaNeg[i]) < TMath::Abs(DifferenceCutGamma[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                 LargestDiffGammaNeg[i] = DifferenceCutGamma[j][i];
@@ -193,8 +198,8 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
                 }
             }else{
                 if (TMath::Abs(LargestDiffGammaPos[i]) < TMath::Abs(DifferenceCutGamma[j][i]) && RelDifferenceRawCut[j][i] > -75.){
-                LargestDiffGammaPos[i] = DifferenceCutGamma[j][i];
-                LargestDiffGammaErrorPos[i] = DifferenceErrorCutGamma[j][i];
+                    LargestDiffGammaPos[i] = DifferenceCutGamma[j][i];
+                    LargestDiffGammaErrorPos[i] = DifferenceErrorCutGamma[j][i];
                 }
             }
         }
@@ -210,18 +215,18 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
         if (l == 0) {
             SysErrDatGamma << endl <<"Bin" << "\t" << cutSelectionOut[l] << "\t" <<endl;
             for(Int_t i = 1; i < (NBinsPt +1); i++){
-                SysErrDatGamma << BinsXCenter[i] << "\t" << SysErrCutGamma[l][i].value << "\t" << SysErrCutGamma[l][i].error << endl;   
+                SysErrDatGamma << BinsXCenter[i] << "\t" << SysErrCutGamma[l][i].value << "\t" << SysErrCutGamma[l][i].error << endl;
             }
         } else{
             SysErrDatGamma << endl <<"Bin" << "\t" << cutSelectionOut[l] << "\t" << "Error " << "\t Dif to Cut1" << endl;
             for(Int_t i = 1; i < (NBinsPt +1); i++){
                 if (RelDifferenceRawCut[l][i] > -75.){
                     SysErrDatGamma  << BinsXCenter[i] << "\t" << SysErrCutGamma[l][i].value << "\t" << SysErrCutGamma[l][i].error << "\t" <<  DifferenceCutGamma[l][i] << "\t"
-                                    << DifferenceErrorCutGamma[l][i] << "\t"<< RelDifferenceCutGamma[l][i] <<  "\t" << RelDifferenceErrorCutGamma[l][i] <<"\t" 
+                                    << DifferenceErrorCutGamma[l][i] << "\t"<< RelDifferenceCutGamma[l][i] <<  "\t" << RelDifferenceErrorCutGamma[l][i] <<"\t"
                                     << RelDifferenceRawCut[l][i]<< endl;
                 } else {
                     SysErrDatGamma  << BinsXCenter[i] << "\t" << SysErrCutGamma[l][i].value << "\t" << SysErrCutGamma[l][i].error << "\t" <<  DifferenceCutGamma[l][i] << "\t"
-                                    << DifferenceErrorCutGamma[l][i] << "\t"<< RelDifferenceCutGamma[l][i] <<  "\t" << RelDifferenceErrorCutGamma[l][i] <<"\t" 
+                                    << DifferenceErrorCutGamma[l][i] << "\t"<< RelDifferenceCutGamma[l][i] <<  "\t" << RelDifferenceErrorCutGamma[l][i] <<"\t"
                                     << RelDifferenceRawCut[l][i]  <<"\t not considered in largest dev" <<endl;
                 }
             }
@@ -242,8 +247,8 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
             LargestDiffGammaRelPos[i] = LargestDiffGammaPos[i]/SysErrCutGamma[0][i].value*100.;
             LargestDiffGammaRelErrorNeg[i] = - LargestDiffGammaErrorNeg[i]/SysErrCutGamma[0][i].value*100.;
             LargestDiffGammaRelErrorPos[i] = LargestDiffGammaErrorPos[i]/SysErrCutGamma[0][i].value*100.;
-            if (i > 0) SysErrDatGamma   << BinsXCenter[i] << "\t" << LargestDiffGammaNeg[i]/SysErrCutGamma[0][i].value*100. << "\t" 
-                                        << LargestDiffGammaErrorNeg[i]/SysErrCutGamma[0][i].value*100. << "\t" << LargestDiffGammaPos[i]/SysErrCutGamma[0][i].value*100. << "\t" 
+            if (i > 0) SysErrDatGamma   << BinsXCenter[i] << "\t" << LargestDiffGammaNeg[i]/SysErrCutGamma[0][i].value*100. << "\t"
+                                        << LargestDiffGammaErrorNeg[i]/SysErrCutGamma[0][i].value*100. << "\t" << LargestDiffGammaPos[i]/SysErrCutGamma[0][i].value*100. << "\t"
                                         << LargestDiffGammaErrorPos[i]/SysErrCutGamma[0][i].value*100.<<endl;
         } else {
             LargestDiffGammaRelNeg[i] = 0.;
@@ -254,34 +259,43 @@ void CalculateSystematicsGraphs( TH1D** histoArray,
     }
 
     SysErrDatGamma.close();
-                
+
+    // create output graphs
     TGraphAsymmErrors* SystErrGraphNegGamma = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffGammaRelNeg, BinsXWidth, BinsXWidth, LargestDiffGammaRelErrorNeg, LargestDiffGammaRelErrorNeg);
     SystErrGraphNegGamma->SetName(Form("%s_SystErrorRelNeg_%s", prefix.Data(), cutVariationName.Data()));
     TGraphAsymmErrors* SystErrGraphPosGamma = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffGammaRelPos, BinsXWidth, BinsXWidth, LargestDiffGammaRelErrorPos, LargestDiffGammaRelErrorPos);
     SystErrGraphPosGamma->SetName(Form("%s_SystErrorRelPos_%s", prefix.Data(), cutVariationName.Data()));
     const char* Outputname = Form("%s/%s_SystematicErrorCuts.root", outputFileDir.Data(), prefixCommonSysFile.Data());
+    // write to output file
     TFile* SystematicErrorFile = new TFile(Outputname,"UPDATE");
-    SystErrGraphPosGamma->Write(Form("%s_SystErrorRelPos_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
-    SystErrGraphNegGamma->Write(Form("%s_SystErrorRelNeg_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        SystErrGraphPosGamma->Write(Form("%s_SystErrorRelPos_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        SystErrGraphNegGamma->Write(Form("%s_SystErrorRelNeg_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelPi0OOBPileup) sysRelPi0OOBPileup->Write(Form("%s_SystErrorRelNeg_OOBPileupPi0_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelPi0OOBPileup) sysRelPi0OOBPileup->Write(Form("%s_SystErrorRelPos_OOBPileupPi0_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelGammaOOBPileupDown) sysRelGammaOOBPileupDown->Write(Form("%s_SystErrorRelNeg_OOBPileupGamma_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelGammaOOBPileupUp) sysRelGammaOOBPileupUp->Write(Form("%s_SystErrorRelPos_OOBPileupGamma_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
     SystematicErrorFile->Write();
     SystematicErrorFile->Close();
-        
+
     delete SystErrGraphNegGamma;
     delete SystErrGraphPosGamma;
     delete SystematicErrorFile;
 
     return;
-}    
+}
 
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
 //***********************************************************************************************************************************************
-void CalculateSystematicsGraphsWOBound( TH1D** histoArray, 
+void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
                                         TString* cutSelectionOut,
-                                        Int_t numberOfCuts, 
-                                        TString prefix, TString prefixCommonSysFile, 
+                                        Int_t numberOfCuts,
+                                        TString prefix, TString prefixCommonSysFile,
                                         TString outputDir, TString outputFileDir,
-                                        TString cutVariationName
+                                        TString cutVariationName,
+                                        TGraphAsymmErrors* sysRelGammaOOBPileupDown     = NULL,
+                                        TGraphAsymmErrors* sysRelGammaOOBPileupUp       = NULL,
+                                        TGraphAsymmErrors* sysRelPi0OOBPileup           = NULL
 ){
     if (numberOfCuts<2) return;
     Int_t NBinsPt = histoArray[0]->GetNbinsX();
@@ -328,7 +342,7 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
 
     Double_t RelDifferenceCutGamma[ConstNumberOfCuts][NBinstPtConst];
     Double_t RelDifferenceErrorCutGamma[ConstNumberOfCuts][NBinstPtConst];
-            
+
     for (Int_t j = 1; j < numberOfCuts; j++){
         for ( Int_t i = 1; i < NBinstPtConst; i++) {
             DifferenceCutGamma[j][i]=0.;
@@ -354,7 +368,7 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
                 RelDifferenceCutGamma[j][i] = -10000.;
                 RelDifferenceErrorCutGamma[j][i] = 100. ;
             }
-                    
+
             if(DifferenceCutGamma[j][i] < 0){
                 if (TMath::Abs(LargestDiffGammaNeg[i]) < TMath::Abs(DifferenceCutGamma[j][i])){
                 LargestDiffGammaNeg[i] = DifferenceCutGamma[j][i];
@@ -380,7 +394,7 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
         if (l == 0) {
             SysErrDatGamma << endl <<"Bin" << "\t" << cutSelectionOut[l] << "\t" <<endl;
             for(Int_t i = 1; i < (NBinsPt +1); i++){
-                SysErrDatGamma << BinsXCenter[i] << "\t" << SysErrCutGamma[l][i].value << "\t" << SysErrCutGamma[l][i].error << endl;   
+                SysErrDatGamma << BinsXCenter[i] << "\t" << SysErrCutGamma[l][i].value << "\t" << SysErrCutGamma[l][i].error << endl;
             }
         } else{
             SysErrDatGamma << endl <<"Bin" << "\t" << cutSelectionOut[l] << "\t" << "Error " << "\t Dif to Cut1" << endl;
@@ -405,8 +419,8 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
             LargestDiffGammaRelPos[i] = LargestDiffGammaPos[i]/SysErrCutGamma[0][i].value*100.;
             LargestDiffGammaRelErrorNeg[i] = - LargestDiffGammaErrorNeg[i]/SysErrCutGamma[0][i].value*100.;
             LargestDiffGammaRelErrorPos[i] = LargestDiffGammaErrorPos[i]/SysErrCutGamma[0][i].value*100.;
-            if (i > 0) SysErrDatGamma   << BinsXCenter[i] << "\t" << LargestDiffGammaNeg[i]/SysErrCutGamma[0][i].value*100. << "\t" 
-                                        << LargestDiffGammaErrorNeg[i]/SysErrCutGamma[0][i].value*100. << "\t" << LargestDiffGammaPos[i]/SysErrCutGamma[0][i].value*100. << "\t" 
+            if (i > 0) SysErrDatGamma   << BinsXCenter[i] << "\t" << LargestDiffGammaNeg[i]/SysErrCutGamma[0][i].value*100. << "\t"
+                                        << LargestDiffGammaErrorNeg[i]/SysErrCutGamma[0][i].value*100. << "\t" << LargestDiffGammaPos[i]/SysErrCutGamma[0][i].value*100. << "\t"
                                         << LargestDiffGammaErrorPos[i]/SysErrCutGamma[0][i].value*100.<<endl;
         } else {
             LargestDiffGammaRelNeg[i] = 0.;
@@ -417,52 +431,56 @@ void CalculateSystematicsGraphsWOBound( TH1D** histoArray,
     }
 
     SysErrDatGamma.close();
-                
+
     TGraphAsymmErrors* SystErrGraphNegGamma = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffGammaRelNeg, BinsXWidth, BinsXWidth, LargestDiffGammaRelErrorNeg, LargestDiffGammaRelErrorNeg);
     SystErrGraphNegGamma->SetName(Form("%s_SystErrorRelNeg_%s", prefix.Data(), cutVariationName.Data()));
     TGraphAsymmErrors* SystErrGraphPosGamma = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffGammaRelPos, BinsXWidth, BinsXWidth, LargestDiffGammaRelErrorPos, LargestDiffGammaRelErrorPos);
     SystErrGraphPosGamma->SetName(Form("%s_SystErrorRelPos_%s", prefix.Data(), cutVariationName.Data()));
     const char* Outputname = Form("%s/%s_SystematicErrorCuts.root",outputFileDir.Data(),prefixCommonSysFile.Data());
     TFile* SystematicErrorFile = new TFile(Outputname,"UPDATE");
-    SystErrGraphPosGamma->Write(Form("%s_SystErrorRelPos_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
-    SystErrGraphNegGamma->Write(Form("%s_SystErrorRelNeg_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
-    SystematicErrorFile->Write();
+        SystErrGraphPosGamma->Write(Form("%s_SystErrorRelPos_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        SystErrGraphNegGamma->Write(Form("%s_SystErrorRelNeg_%s_%s",prefix.Data(), cutVariationName.Data(),(GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelPi0OOBPileup) sysRelPi0OOBPileup->Write(Form("%s_SystErrorRelNeg_OOBPileupPi0_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelPi0OOBPileup) sysRelPi0OOBPileup->Write(Form("%s_SystErrorRelPos_OOBPileupPi0_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelGammaOOBPileupDown) sysRelGammaOOBPileupDown->Write(Form("%s_SystErrorRelNeg_OOBPileupGamma_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        if (sysRelGammaOOBPileupUp) sysRelGammaOOBPileupUp->Write(Form("%s_SystErrorRelPos_OOBPileupGamma_%s",prefix.Data(), (GetCentralityString(cutSelectionOut[0])).Data()),TObject::kOverwrite);
+        SystematicErrorFile->Write();
     SystematicErrorFile->Close();
-        
+
     delete SystErrGraphNegGamma;
     delete SystErrGraphPosGamma;
     delete SystematicErrorFile;
 
     return;
-}    
+}
 
 //***********************************************************************************************************************************************
 //*********************************** CutVariation studies for photons- main routing ************************************************************
 //***********************************************************************************************************************************************
 void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TString cutVariationName ="",TString suffix = "eps", Int_t mode = 9){
-    
+
     //****************************************************************************************
     //*************************** Catch old versions *****************************************
     //****************************************************************************************
     if (mode == 1 || mode > 5){
         cout << "ERROR: This macro isn't designed to run for Dalitz or the old software version" << endl;
         return;
-    } else if (mode == 2 || mode == 3 ){    
-        cout << "WARNING: running hybrid mode, this macro is still under construction for this mode" << endl;    
+    } else if (mode == 2 || mode == 3 ){
+        cout << "WARNING: running hybrid mode, this macro is still under construction for this mode" << endl;
     } else if ( mode == 4 || mode == 5){
         cout << "This macro can't yet deal with these modi" << endl;
         return;
     }
-    
+
     //*****************************************************************************************
     //*************************** Flag for processing *****************************************
     //*****************************************************************************************
     Bool_t haveOutputGammaToPi0 = 1;
-    
+
     //*****************************************************************************************
     //************************** Set general style settings ***********************************
     //*****************************************************************************************
-    StyleSettingsThesis();  
+    StyleSettingsThesis();
     SetPlotStyle();
 
     //*****************************************************************************************
@@ -476,26 +494,26 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     //*******************************************************************************************
     //************************ More specific styling and labeling issues ************************
     //*******************************************************************************************
-    TString collisionSystem     = ReturnFullCollisionsSystem(energy);   
+    TString collisionSystem     = ReturnFullCollisionsSystem(energy);
     if (collisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
-        return;     
+        return;
     }
     TString detectionProcess    = ReturnFullTextReconstructionProcess(mode);
     TString process             = "#gamma";
 
-    Color_t color[20]           = { kBlack, kAzure, kGreen+2, kOrange+2, kRed, 
-                                    kViolet, kBlue-9, kSpring+10, kCyan+3, kCyan-10, 
-                                    kCyan, kGreen+4, kGreen-9, kGreen,  kYellow+4, 
-                                    kYellow+3, kMagenta+4, kMagenta-8, kGray, kGray+3    
+    Color_t color[20]           = { kBlack, kAzure, kGreen+2, kOrange+2, kRed,
+                                    kViolet, kBlue-9, kSpring+10, kCyan+3, kCyan-10,
+                                    kCyan, kGreen+4, kGreen-9, kGreen,  kYellow+4,
+                                    kYellow+3, kMagenta+4, kMagenta-8, kGray, kGray+3
                                   };
     Int_t markerType            = 24;
-    
+
     TF1 *One                    = new TF1("One","1",0,25);
     One->SetLineWidth(1.2);
     One->SetLineColor(1);
     TString nameIntRanges[6]    = {"","Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
-    
+
     //*******************************************************************************************
     //************************** Initialization of variables ************************************
     //*******************************************************************************************
@@ -504,8 +522,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     cout<<endl;
     TString cutStringsName          [50];
     TString cutSelection            [50];
-    
-    
+
+
     //*******************************************************************************************
     //**************************** Reading and deciphering cutstrings ***************************
     //*******************************************************************************************
@@ -557,10 +575,15 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     TH1D **histoGammaConvProbRatio              = new TH1D*[number];
     TH1D **histoGammaCorrFac                    = new TH1D*[number];
     TH1D **histoGammaCorrFacRatio               = new TH1D*[number];
-    
+    TGraphAsymmErrors* sysOOBPi01               = NULL;
+    TGraphAsymmErrors* sysOOBPi02               = NULL;
+    TGraphAsymmErrors* sysOOBPi0Tot             = NULL;
+    TGraphAsymmErrors* sysOOBGammaUp            = NULL;
+    TGraphAsymmErrors* sysOOBGammaDown          = NULL;
+
     TFile **fileCurrentFinal                    = new TFile*[number];
     TFile **fileCurrentCorrection               = new TFile*[number];
-    
+
     if(!cutVariationName.CompareTo("Cocktail")){
         specialString[0]="std";
         specialString[1]="linA";
@@ -597,7 +620,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     }
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
-    //*******************************************************************************************    
+    //*******************************************************************************************
     TCanvas *canvasGammaSpectrum                = GetAndSetCanvas("GammaSpectra", 0.09, 0.08);canvasGammaSpectrum->SetLogy();
     TCanvas *canvasPi0Spectrum                  = GetAndSetCanvas("Pi0Spectra", 0.09, 0.08);canvasPi0Spectrum->SetLogy();
     TCanvas *canvasPi0SpectrumFit               = GetAndSetCanvas("Pi0FitSpectra", 0.09, 0.08);canvasPi0SpectrumFit->SetLogy();
@@ -613,7 +636,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     TCanvas *canvasIncGammaToPi0RatioFitRatio   = GetAndSetCanvas("InclusiveRatiosFitRatio", 0.09, 0.09);
     TCanvas *canvasDRRatio                      = GetAndSetCanvas("DoubleRatiosRatio", 0.09, 0.09);
     TCanvas *canvasDRFitRatio                   = GetAndSetCanvas("DoubleRatiosFitRatio", 0.09, 0.09);
-    
+
     TCanvas *canvasRawGamma                     = GetAndSetCanvas("RawGamma", 0.08, 0.08);canvasRawGamma->SetLogy();
     TCanvas *canvasRawGammaRatio                = GetAndSetCanvas("RawGammaRatio", 0.09, 0.09);
     TCanvas *canvasPurity                       = GetAndSetCanvas("Purity", 0.09, 0.08);
@@ -628,52 +651,52 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     TCanvas *canvasGammaResolCorrRatio          = GetAndSetCanvas("GammaResolCorrRatio", 0.09, 0.09);
     TCanvas *canvasGammaCorrFac                 = GetAndSetCanvas("GammaCorrFac", 0.08, 0.08);
     TCanvas *canvasGammaCorrFacRatio            = GetAndSetCanvas("GammaCorrFacRatio", 0.09, 0.09);
-    
+
     //*******************************************************************************************
     //*****************************Initialization of Canvases ***********************************
-    //*******************************************************************************************        
+    //*******************************************************************************************
     Double_t textSizeLegend = 0.04;
     if (number > 5) textSizeLegend = 0.03;
     Int_t numberLegendShortened = (Int_t((number+1)/2 + 0.5));
     cout << numberLegendShortened << endl;
-    
+
     TLegend *legendGammaSpectrum                = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaSpectrumRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaSpectrumRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
     TLegend *legendPi0Spectrum                  = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendPi0SpectrumRatio             = GetAndSetLegend(0.15,0.75,number);
     TLegend *legendPi0SpectrumFit               = GetAndSetLegend(0.3,0.7,number);
     TLegend *legendPi0SpectrumFitRatio          = GetAndSetLegend(0.15,0.75,number);
     TLegend *legendPurity                       = GetAndSetLegend2(0.2, 0.15, 0.93, 0.15+textSizeLegend*numberLegendShortened, textSizeLegend, 2, "", 42,0.1);
-    TLegend *legendPurityRatio                  = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendPurityRatio                  = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
     TLegend *legendGammaEff                     = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaEffRatio                = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaEffRatio                = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
     TLegend *legendGammaEffRecPt                = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaEffRecPtRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
+    TLegend *legendGammaEffRecPtRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
     TLegend *legendGammaConvProb                = GetAndSetLegend2(0.3, 0.15, 0.45, 0.15+textSizeLegend*number, textSizeLegend, 1, "", 42);
-    TLegend *legendGammaConvProbRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendGammaResolCorr               = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/1), 0.33, 0.93, textSizeLegend, 1, "", 42); 
-    TLegend *legendGammaResolCorrRatio          = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendGammaCorrFac                 = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendGammaCorrFacRatio            = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1); 
-    TLegend *legendIncGammaToPi0Ratio           = GetAndSetLegend2(0.13+0.1, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendIncGammaToPi0RatioRatio      = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendIncGammaToPi0RatioFit        = GetAndSetLegend2(0.13+0.1, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendIncGammaToPi0RatioFitRatio   = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendDR                           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendDRRatio                      = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendDRFit                        = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
-    TLegend *legendDRFitRatio                   = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1); 
+    TLegend *legendGammaConvProbRatio           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendGammaResolCorr               = GetAndSetLegend2(0.13, 0.93-textSizeLegend*(number/1), 0.33, 0.93, textSizeLegend, 1, "", 42);
+    TLegend *legendGammaResolCorrRatio          = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendGammaCorrFac                 = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendGammaCorrFacRatio            = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42,0.1);
+    TLegend *legendIncGammaToPi0Ratio           = GetAndSetLegend2(0.13+0.1, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendIncGammaToPi0RatioRatio      = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendIncGammaToPi0RatioFit        = GetAndSetLegend2(0.13+0.1, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendIncGammaToPi0RatioFitRatio   = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendDR                           = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendDRRatio                      = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendDRFit                        = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
+    TLegend *legendDRFitRatio                   = GetAndSetLegend2(0.13, 0.93-textSizeLegend*numberLegendShortened, 0.93, 0.93, textSizeLegend, 2, "", 42, 0.1);
     TLegend *legendRawGamma                     = GetAndSetLegend2(0.45, 0.93-textSizeLegend*(number/1), 0.6, 0.93, textSizeLegend, 1, "", 42);
     TLegend *legendRawGammaRatio                = GetAndSetLegend2(0.13, 0.15, 0.93, 0.15+textSizeLegend*numberLegendShortened, textSizeLegend, 2, "", 42,0.1);
 
     //********************************************************************************************
     //***************************** Reading histos from file *************************************
     //********************************************************************************************
-    for(Int_t i = 0; i<number; i++){    
+    for(Int_t i = 0; i<number; i++){
         TString fEventCutSelection;
         TString fGammaCutSelection;
         TString fElectronCutSelection;
-        TString fMesonCutSelection;    
+        TString fMesonCutSelection;
         TString fClusterCutSelection;
         ReturnSeparatedCutNumberAdvanced(cutSelection[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
 
@@ -690,7 +713,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             TString fV0Reader = fGammaCutSelection(GetPhotonV0FinderCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalyseV0ReaderCut(CutNumberToInteger(fV0Reader));
         } else if (cutVariationName.Contains("Eta")){
-            TString fEtaCut = fGammaCutSelection(GetPhotonEtaCutPosition(fGammaCutSelection),1);    
+            TString fEtaCut = fGammaCutSelection(GetPhotonEtaCutPosition(fGammaCutSelection),1);
             cout << fGammaCutSelection.Data() << "\t"<<fEtaCut.Data() << endl;
             cutStringsName[i] = AnalyseEtaCut(CutNumberToInteger(fEtaCut));
         } else if (cutVariationName.Contains("RCut")){
@@ -703,13 +726,13 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             TString fClusterCut = fGammaCutSelection(GetPhotonClsTPCCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
             cout << i << "\t" << fClusterCut.Data() << "\t" << cutStringsName[i].Data()<< endl;
-        } else if (cutVariationName.Contains("dEdxE")){  
+        } else if (cutVariationName.Contains("dEdxE")){
             TString fdEdxCut = fGammaCutSelection(GetPhotonEDedxSigmaCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
-        } else if (cutVariationName.Contains("dEdxPi")){    
+        } else if (cutVariationName.Contains("dEdxPi")){
             TString fdEdxCut = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
             cutStringsName[i] = fdEdxCut;
-//             cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());      
+//             cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());
         } else if (cutVariationName.Contains("Qt")){
             TString fQtCut = fGammaCutSelection(GetPhotonQtMaxCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalyseQtMaxCut(CutNumberToInteger(fQtCut));
@@ -725,7 +748,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             TString fPsiPairCut = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
             TString fChi2Cut = fGammaCutSelection(GetPhotonChi2GammaCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalysePsiPair(CutNumberToInteger(fPsiPairCut),CutNumberToInteger(fChi2Cut));
-        } else if (cutVariationName.Contains("DCAZPhoton")){   
+        } else if (cutVariationName.Contains("DCAZPhoton")){
             TString fDCAZCut = fGammaCutSelection(GetPhotonDcaZPrimVtxCutPosition(fGammaCutSelection),1);
             cutStringsName[i] = AnalyseDCAZPhotonCut(CutNumberToInteger(fDCAZCut));
         } else if (cutVariationName.Contains("CosPoint")){
@@ -736,7 +759,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             cutStringsName[i] = AnalysePhotonQuality(CutNumberToInteger(fPhotonQuality));
         } else if (cutVariationName.Contains("BG")){
             TString fBGCut = fMesonCutSelection(GetMesonBGSchemeCutPosition(),3);
-            cutStringsName[i] = AnalyseBackgroundScheme(fBGCut.Data());   
+            cutStringsName[i] = AnalyseBackgroundScheme(fBGCut.Data());
         } else if (cutVariationName.Contains("Rapidity")){
             TString fRapidityCut = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
             cutStringsName[i] = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
@@ -770,15 +793,23 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root",folderName[i].Data(),energy.Data());
         fileCurrentFinal[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentFinal[i]->IsZombie()) haveOutputGammaToPi0=0;
-        
+
         if (haveOutputGammaToPi0){
+            if (i == 0){
+                sysOOBPi01       = (TGraphAsymmErrors*) fileCurrentFinal[i]->Get("Pi0_SystErrorRel_OOBPileup_Options");
+                sysOOBPi02       = (TGraphAsymmErrors*) fileCurrentFinal[i]->Get("Pi0_SystErrorRel_OOBPileup_Iterations");
+                if (sysOOBPi01 && sysOOBPi02){
+                    sysOOBPi0Tot = AddErrorsQuadraticallyTGraph(sysOOBPi01, sysOOBPi02);
+                }
+            }
+
             histoIncGamma[i] = (TH1D*) fileCurrentFinal[i]->Get("histoGammaSpecCorrPurity");
             histoIncGamma[i]->SetTitle("");
             DrawGammaSetMarker(histoIncGamma[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaRatio[i] = (TH1D*) histoIncGamma[i]->Clone(Form("histoIncGammaRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaRatio[i]->Divide(histoIncGammaRatio[i],histoIncGamma[0],1,1,"b");
             SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.45,1.55);
-            
+
             histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("IncRatioPurity_trueEff%s",nameIntRanges[i].Data()));
             histoIncGammaToPi0Ratio[i]->SetTitle("");
@@ -786,7 +817,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaToPi0RatioRatio[i]->Divide(histoIncGammaToPi0RatioRatio[i],histoIncGammaToPi0Ratio[0],1,1,"b");
             SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.45,1.55);
-            
+
             histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEff");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[i].Data()));
             histoPi0Spectrum[i]->SetTitle("");
@@ -866,15 +897,20 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             PlotCanvas(i,number,canvasDRFit,histoDRFit[i],legendDRFit,canvasDRFitRatio,histoDRFitRatio[i],legendDRFitRatio,cutStringsName[i],One,One);
         } else {
             cout << "WARNING: I had to shrink the output to basics, the output of CalculateGammaToPi0 was missing" << endl;
-        }   
-        
+        }
+
         nameCurrentCorrectedFile = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root",folderName[i].Data(),energy.Data(),cutSelection[i].Data());
         fileCurrentCorrection[i] = new TFile(nameCurrentCorrectedFile);
         if (fileCurrentCorrection[i]->IsZombie()){
             cout << "ERROR: you are missing even the basic files" << endl;
             return;
         }
-        
+
+        if ( i== 0){
+            sysOOBGammaUp   = (TGraphAsymmErrors*) fileCurrentCorrection[i]->Get("Gamma_OOBPileupSysUp");
+            sysOOBGammaDown = (TGraphAsymmErrors*) fileCurrentCorrection[i]->Get("Gamma_OOBPileupSysDown");
+        }
+
         histoRawGamma[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaRaw_Pt");
         histoRawGamma[i]->SetTitle("");
         DrawGammaSetMarker(histoRawGamma[i], markerType, 2.0, color[i], color[i]);
@@ -895,7 +931,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         histoGammaConvProbRatio[i] = (TH1D*) histoGammaConvProb[i]->Clone(Form("histoConvProbRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
         histoGammaConvProbRatio[i]->Divide(histoGammaConvProbRatio[i],histoGammaConvProb[0],1,1,"b");
         SetHistogramm(histoGammaConvProbRatio[i],"#it{p}_{T} (GeV/c)","Ratios of P_{conv}",0.8,1.2);
-        
+
         histoGammaEff[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaRecoEff_MCPt");
         histoGammaEff[i]->SetTitle("");
         histoGammaEff[i]->GetYaxis()->SetRangeUser(0,1);
@@ -914,7 +950,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         histoGammaEffRecPtRatio[i]->Divide(histoGammaEffRecPtRatio[i],histoGammaEffRecPt[0],1,1,"b");
         SetHistogramm(histoGammaEffRecPtRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Efficiencies inc resol corr",0.5,1.8);
 
-        
+
         histoGammaResolCorr[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaResolCorrUnfold_Pt");
         histoGammaResolCorr[i]->SetTitle("");
         histoGammaResolCorr[i]->GetXaxis()->SetRangeUser(0,histoGammaEff[0]->GetXaxis()->GetBinUpEdge(histoGammaEff[0]->GetNbinsX()));
@@ -934,7 +970,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         histoGammaCorrFacRatio[i]->Divide(histoGammaCorrFacRatio[i],histoGammaCorrFac[0],1,1,"b");
         SetHistogramm(histoGammaCorrFacRatio[i],"#it{p}_{T} (GeV/c)","Ratios of correction factors",0,2);
 
-        
+
         PlotCanvas(i,number,canvasRawGamma,histoRawGamma[i],legendRawGamma,canvasRawGammaRatio,histoRawGammaRatio[i],legendRawGammaRatio,cutStringsName[i],One);
         PlotCanvas(i,number,canvasPurity,histoPurity[i],legendPurity,canvasPurityRatio,histoPurityRatio[i],legendPurityRatio,cutStringsName[i],One);
         PlotCanvas(i,number,canvasGammaConvProb,histoGammaConvProb[i],legendGammaConvProb,canvasGammaConvProbRatio,histoGammaConvProbRatio[i],legendGammaConvProbRatio,cutStringsName[i],One);
@@ -944,7 +980,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
                    cutStringsName[i],One);
         PlotCanvas(i,number,canvasGammaCorrFac,histoGammaCorrFac[i],legendGammaCorrFac,canvasGammaCorrFacRatio,histoGammaCorrFacRatio[i],legendGammaCorrFacRatio,
                    cutStringsName[i],One);
-        
+
         if (!haveOutputGammaToPi0){
             histoIncGamma[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaCorrUnfold_Pt");
             histoIncGamma[i]->SetTitle("");
@@ -952,10 +988,10 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             histoIncGammaRatio[i] = (TH1D*) histoIncGamma[i]->Clone(Form("histoIncGammaRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaRatio[i]->Divide(histoIncGammaRatio[i],histoIncGamma[0],1,1,"b");
             SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.8,1.2);
-            
+
             PlotCanvas(i,number,canvasGammaSpectrum,histoIncGamma[i],legendGammaSpectrum,canvasGammaSpectrumRatio,histoIncGammaRatio[i],legendGammaSpectrumRatio,cutStringsName[i],One);
-        }    
-        
+        }
+
     }
 
     if (haveOutputGammaToPi0){
@@ -972,11 +1008,11 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         canvasDRFit->SaveAs(Form("%s/DoubleRatiosFit_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
         canvasDRFitRatio->SaveAs(Form("%s/DoubleRatiosFitRatios_%s.eps",outputDir.Data(), (GetCentralityStringOutput(cutSelection[0])).Data()));
     }
-    
+
     canvasGammaSpectrum->SaveAs(Form("%s/GammaSpectra_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaSpectrumRatio->SaveAs(Form("%s/GammaSpectraRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasRawGamma->SaveAs(Form("%s/GammaRaw_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
-    canvasRawGammaRatio->SaveAs(Form("%s/GammaRawRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));    
+    canvasRawGammaRatio->SaveAs(Form("%s/GammaRawRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasPurity->SaveAs(Form("%s/GammaPurity_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasPurityRatio->SaveAs(Form("%s/GammaPurityRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaEff->SaveAs(Form("%s/GammaEff_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
@@ -989,19 +1025,19 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     canvasGammaConvProbRatio->SaveAs(Form("%s/GammaConvProbRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaCorrFac->SaveAs(Form("%s/GammaCorrFac_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaCorrFacRatio->SaveAs(Form("%s/GammaCorrFacRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
-    
-    CalculateSystematicsGraphs( histoIncGamma, histoRawGamma, cutSelection, number, "Gamma", "Gamma", outputDir, outputFileDir, cutVariationName);
+
+    CalculateSystematicsGraphs( histoIncGamma, histoRawGamma, cutSelection, number, "Gamma", "Gamma", outputDir, outputFileDir, cutVariationName, sysOOBGammaDown, sysOOBGammaUp);
 
     if (haveOutputGammaToPi0){
         //*************************************************************************************************
         //******************** Output of the systematic Error due to Signal extraction for DoubleRatio ****
         //*************************************************************************************************
         Int_t NumberOfCutsDoubleRatio = number;
-        if  (   cutVariationName.CompareTo("CocktailEtaNorm") == 0 || 
-                cutVariationName.CompareTo("CocktailEta") == 0 || 
-                cutVariationName.Contains("CocktailParam") || 
-                cutVariationName.CompareTo("Yield") == 0 || 
-                cutVariationName.Contains("Fit") || 
+        if  (   cutVariationName.CompareTo("CocktailEtaNorm") == 0 ||
+                cutVariationName.CompareTo("CocktailEta") == 0 ||
+                cutVariationName.Contains("CocktailParam") ||
+                cutVariationName.CompareTo("Yield") == 0 ||
+                cutVariationName.Contains("Fit") ||
                 cutVariationName.CompareTo("Purity") == 0
             ){
             NumberOfCutsDoubleRatio = 3;
@@ -1010,18 +1046,18 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             NumberOfCutsDoubleRatio = 2;
         }
         CalculateSystematicsGraphsWOBound (histoDR, cutSelection, NumberOfCutsDoubleRatio, "DoubleRatio", "Gamma", outputDir, outputFileDir, cutVariationName);
-        
+
         //*************************************************************************************************
         //***************** Output of the systematic Error due to Signal extraction for DoubleRatioFit ****
         //*************************************************************************************************
         CalculateSystematicsGraphsWOBound (histoDRFit, cutSelection, NumberOfCutsDoubleRatio, "DoubleRatioFit", "Gamma", outputDir, outputFileDir, cutVariationName);
-        
+
         //*************************************************************************************************
         //******************** Output of the systematic Error due to Signal extraction for IncRatio ****
         //*************************************************************************************************
         Int_t NumberOfCutsIncRatio = number;
-        if  (   cutVariationName.CompareTo("Yield") == 0 || 
-                cutVariationName.Contains("Fit") || 
+        if  (   cutVariationName.CompareTo("Yield") == 0 ||
+                cutVariationName.Contains("Fit") ||
                 cutVariationName.CompareTo("Purity") == 0
             ){
             NumberOfCutsIncRatio = 3;
@@ -1033,20 +1069,20 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         //*************************************************************************************************
 
         CalculateSystematicsGraphsWOBound (histoIncGammaToPi0RatioFit, cutSelection, NumberOfCutsIncRatio, "IncRatioFit", "Gamma", outputDir, outputFileDir, cutVariationName);
-        
+
         //*************************************************************************************************
         //******************** Output of the systematic Error due to Signal extraction for Pi0 ****
         //*************************************************************************************************
 
         Int_t NumberOfCutsPi0 = number;
-        if  (   cutVariationName.CompareTo("Yield") == 0 || 
-                cutVariationName.Contains("Fit") || 
+        if  (   cutVariationName.CompareTo("Yield") == 0 ||
+                cutVariationName.Contains("Fit") ||
                 cutVariationName.CompareTo("Purity") == 0
             ){
             NumberOfCutsPi0 = 3;
         }
-        CalculateSystematicsGraphsWOBound (histoPi0Spectrum, cutSelection, NumberOfCutsPi0, "Pi0", "Gamma", outputDir, outputFileDir, cutVariationName);
-        
+        CalculateSystematicsGraphsWOBound (histoPi0Spectrum, cutSelection, NumberOfCutsPi0, "Pi0", "Gamma", outputDir, outputFileDir, cutVariationName, NULL, NULL,  sysOOBPi0Tot);
+
         //*************************************************************************************************
         //******************** Output of the systematic Error due to Signal extraction for Pi0Fit ****
         //*************************************************************************************************

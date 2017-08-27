@@ -1607,24 +1607,26 @@
                                     Size_t xTitleSize,
                                     Size_t yLableSize,
                                     Size_t yTitleSize,
-                                    Float_t xTitleOffset = 1,
-                                    Float_t yTitleOffset = 1,
-                                    Int_t xNDivisions = 510,
-                                    Int_t yNDivisions = 510){
+                                    Float_t xTitleOffset    = 1,
+                                    Float_t yTitleOffset    = 1,
+                                    Int_t xNDivisions       = 510,
+                                    Int_t yNDivisions       = 510,
+                                    Font_t textFontLabel    = 42,
+                                    Font_t textFontTitle    = 62
+                                  ){
         histo->SetXTitle(XTitle);
         histo->SetYTitle(YTitle);
         histo->SetTitle("");
+
+        histo->GetXaxis()->SetLabelFont(textFontLabel);
+        histo->GetYaxis()->SetLabelFont(textFontLabel);
+        histo->GetXaxis()->SetTitleFont(textFontTitle);
+        histo->GetYaxis()->SetTitleFont(textFontTitle);
 
         histo->GetXaxis()->SetLabelSize(xLableSize);
         histo->GetXaxis()->SetTitleSize(xTitleSize);
         histo->GetXaxis()->SetTitleOffset(xTitleOffset);
         histo->GetXaxis()->SetNdivisions(xNDivisions,kTRUE);
-
-        histo->GetXaxis()->SetLabelFont(42);
-        histo->GetYaxis()->SetLabelFont(42);
-        histo->GetXaxis()->SetTitleFont(62);
-        histo->GetYaxis()->SetTitleFont(62);
-
 
         histo->GetYaxis()->SetDecimals();
         histo->GetYaxis()->SetLabelSize(yLableSize);
@@ -1640,19 +1642,21 @@
                                     Size_t xTitleSize,
                                     Size_t yLableSize,
                                     Size_t yTitleSize,
-                                    Float_t xTitleOffset = 1,
-                                    Float_t yTitleOffset = 1,
-                                    Int_t xNDivisions = 510,
-                                    Int_t yNDivisions = 510){
+                                    Float_t xTitleOffset    = 1,
+                                    Float_t yTitleOffset    = 1,
+                                    Int_t xNDivisions       = 510,
+                                    Int_t yNDivisions       = 510,
+                                    Font_t textFontLabel    = 42,
+                                    Font_t textFontTitle    = 62
+                                  ){
         histo->SetXTitle(XTitle);
         histo->SetYTitle(YTitle);
         histo->SetTitle("");
 
-        histo->GetYaxis()->SetLabelFont(42);
-        histo->GetXaxis()->SetLabelFont(42);
-        histo->GetYaxis()->SetTitleFont(62);
-        histo->GetXaxis()->SetTitleFont(62);
-
+        histo->GetYaxis()->SetLabelFont(textFontLabel);
+        histo->GetXaxis()->SetLabelFont(textFontLabel);
+        histo->GetYaxis()->SetTitleFont(textFontTitle);
+        histo->GetXaxis()->SetTitleFont(textFontTitle);
 
         histo->GetXaxis()->SetLabelSize(xLableSize);
         histo->GetXaxis()->SetTitleSize(xTitleSize);

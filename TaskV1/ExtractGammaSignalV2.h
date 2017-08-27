@@ -53,7 +53,9 @@
 
     // ShowBackground arguments
     Int_t       nIterationsShowBackground[4]                            = {0};
-    TString     optionShowBackground[3]                                 = {""};
+    TString     optionShowBackground[5]                                 = {""};
+    Int_t       fNOOBEstMethods                                         = 5;
+    Int_t       fNOOBCat                                                = 3;
 
     // binning
     TH1D*       fDeltaPtDummy                                           = NULL;
@@ -199,6 +201,9 @@
 
     TH1D**      fESDGammaPileUpCorrFactorAllCat                                                     = NULL;
     TH1D**      fESDGammaPileUpCorrFactor                                                           = NULL;
+    TGraphAsymmErrors* sysErrOOBPileupDown                                                          = NULL;
+    TGraphAsymmErrors* sysErrOOBPileupUp                                                            = NULL;
+
     TH1D*       fMCrecGammaPileUpCorrFactorAllCat                                                   = NULL;
     TH1D*       fMCrecGammaPileUpCorrFactor                                                         = NULL;
     TH1D*       fTruePrimaryConvGammaPileUpCorrFactorAllCat                                         = NULL;
@@ -353,7 +358,7 @@
     TFile* fForPileUp                       = NULL;
     TString autoDetectedMainDirForPileUp    = "";
     TList *TopDirForPileUp                  = NULL;
-    TList* HistosGammaConversionForPileUp   = NULL;    
+    TList* HistosGammaConversionForPileUp   = NULL;
 
 
     //******************** Definition of functions ****************************

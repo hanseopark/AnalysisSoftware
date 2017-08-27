@@ -23,7 +23,11 @@
     Double_t fitMaxPt                                           = 0;
     TString forOutput                                           = "";
     TString nameIntRanges[6]                                    = {"","Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
-
+    TString fEventCutSelection                                  = "";
+    TString fGammaCutSelection                                  = "";
+    TString fClusterCutSelection                                = "";
+    TString fElectronCutSelection                               = "";
+    TString fMesonCutSelection                                  = "";
 
     //***********************************************************************************************
     //**********************  NLO file reading  *****************************************************
@@ -48,6 +52,8 @@
     //***********************************************************************************************
     TFile *filePi0                                              = NULL;
     TH1D *histoCorrectedPi0Yield[6]                             = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphSysPi0PileUpOptions                 = NULL;
+    TGraphAsymmErrors* graphSysPi0PileUpIterations              = NULL;
     TH1D *histoMCYieldMeson                                     = NULL;
     TH1D *histoMCYieldMesonOldBin                               = NULL;
     TFile *fileEta                                              = NULL;
@@ -167,11 +173,6 @@
     //***********************************************************************************************
     void SeparateCutnumberString(TString cutSelStr, Int_t mode, TString energy){
         TString fCutSelection                       = cutSelStr;
-        TString fEventCutSelection                  = "";
-        TString fGammaCutSelection                  = "";
-        TString fClusterCutSelection                = "";
-        TString fElectronCutSelection               = "";
-        TString fMesonCutSelection                  = "";
         if (mode == 9){
             ReturnSeparatedCutNumber(fCutSelection, fGammaCutSelection, fElectronCutSelection,fMesonCutSelection);
             fEventCutSelection                      = fGammaCutSelection(0,7);
@@ -219,9 +220,9 @@
                             Int_t align               = 11
                         )
     {
-        TLatex* labelPi0Plot    = NULL; 
+        TLatex* labelPi0Plot    = NULL;
         TLatex* labelEnergyPlot = NULL;
-        TLatex* labelDetProcPlot= NULL; 
+        TLatex* labelDetProcPlot= NULL;
 
         if(labelNums<3){
             labelEnergyPlot = new TLatex(xPosition, yPosition+0.85*textSizeSpectra,collisionSystem.Data());
