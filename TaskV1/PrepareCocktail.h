@@ -87,7 +87,6 @@ TH1F**      histoGammaMotherPhiOrBin                        = NULL;
 TH2F**      histoGammaMotherPtGammaPt                       = NULL;
 TH1F**      histoGammaMotherPtGammaOrBin                    = NULL;
 TH1F**      histoGammaMotherPtGamma                         = NULL;
-
 TH1F*       histoGeneratedEtaPt                             = NULL;
 
 TH1D*       histoPi0YieldData                               = NULL;
@@ -99,6 +98,12 @@ TH1D*       ratioEtaDataCocktail                            = NULL;
 
 TH1F**      histoPi0CocktailInput                           = NULL;
 TH1F**      histoEtaCocktailInput                           = NULL;
+
+const Int_t nGammaPtSlices                                  = 10;
+TH1F**      histoGammaMotherPtAtGammaPt[nGammaPtSlices]     = { NULL, NULL, NULL, NULL, NULL,
+                                                                NULL, NULL, NULL, NULL, NULL };
+Int_t       minPtGammaSlice[nGammaPtSlices]                 = {300, 600, 1000, 1500, 2000, 3000, 5000, 8000, 10000, 15000 };
+Int_t        maxPtGammaSlice[nGammaPtSlices]                = {400, 700, 1100, 1600, 2200, 3500, 5500, 9000, 12000, 20000 };
 
 //************************** Cocktail input ***********************************************
 TFile*      cocktailInputFile                               = NULL;
