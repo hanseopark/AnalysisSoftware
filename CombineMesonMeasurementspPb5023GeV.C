@@ -167,7 +167,9 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   //TString fileNameNeutralPionDalitz                   = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20151111_standard_CatErrors.root";
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170308.root";
-  TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_CatErrors_20170724.root";
+  //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_CatErrors_20170724.root";
+  TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_FinalResult_20170821_V2.root";
+  
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170606_oldformat_WithSystematics.root";
 
   //TString fileNameNeutralPionPCM                      = "ExternalInputpPb/PCM/data_PCMResultsFullCorrection_pPb_20170602.root";
@@ -196,8 +198,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
   TString fileNameChargedPions                        = "ExternalInputpPb/InputRpPb/pPb502.fullpT.INEL.20151204_mb_wo_V0Acorr.root";//Charged pion pPb spectrum
-  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_08_18/mTScaling.root";
-  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_08_18/mTScaling_pp7TeV.root";
+  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_08_25/mTScaling.root";
+  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_08_25/mTScaling_pp7TeV.root";
   TString fileNameChargedPionsRatioPythia             = "ExternalInputpPb/Pythia6_pionRatio.root";
 
 
@@ -537,24 +539,25 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
     //return;
   //}
   //Pi0
-  TH1D* histoEMCalYieldPi0pPbStat1                     = (TH1D*)directoryEMCalPi0pPb->Get(nameHistoEMCal.Data());
-  TGraphAsymmErrors* graphEMCalYieldPi0pPbStatErr     =new TGraphAsymmErrors(histoEMCalYieldPi0pPbStat1);
+  //TH1D* histoEMCalYieldPi0pPbStat1                     = (TH1D*)directoryEMCalPi0pPb->Get(nameHistoEMCal.Data());
+  TH1D* histoEMCalYieldPi0pPbStat                      = (TH1D*)directoryEMCalPi0pPb->Get(nameHistoEMCal.Data());
+ // TGraphAsymmErrors* graphEMCalYieldPi0pPbStatErr     =new TGraphAsymmErrors(histoEMCalYieldPi0pPbStat1);
 
   cout <<"EMCal StatErr"<<endl;
 
  // for(Int_t iPoint = 0; iPoint < 9; iPoint++)
       //graphEMCalYieldPi0pPbStatErr->RemovePoint(0);
   //graphEMCalYieldPi0pPbStatErr->Print();
-  graphEMCalYieldPi0pPbStatErr->RemovePoint(31);
-  graphEMCalYieldPi0pPbStatErr->Print();
-  TH1D* histoEMCalYieldPi0pPbStat=GraphAsymErrorsToHist_withErrors(graphEMCalYieldPi0pPbStatErr, "histoEMCalYieldPi0pPbStat");
+  //graphEMCalYieldPi0pPbStatErr->RemovePoint(31);
+  //graphEMCalYieldPi0pPbStatErr->Print();
+  //TH1D* histoEMCalYieldPi0pPbStat=GraphAsymErrorsToHist_withErrors(graphEMCalYieldPi0pPbStatErr, "histoEMCalYieldPi0pPbStat");
   TGraphAsymmErrors* graphEMCalYieldPi0pPbSystErr     = (TGraphAsymmErrors*)directoryEMCalPi0pPb->Get(nameHistoEMCalSysErrors.Data());
   cout<<"EMCal SystErr"<<endl;
   //graphEMCalYieldPi0pPbSystErr->Print();
-  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
-  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
-  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
-  graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  //graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  //graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  //graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
+  //graphEMCalYieldPi0pPbSystErr->RemovePoint(22);
   graphEMCalYieldPi0pPbSystErr->Print();
   cout<<"/////////////////////////////"<<endl;
   //Eta
@@ -2329,7 +2332,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   cocktailEtaToPi0Ratio_MtScaledRebinned->Sumw2();
   cocktailEtaToPi0Ratio_MtScaledRebinned->Divide(cocktailEtaToPi0Ratio_MtScaledRebinned,cocktailPi0_MtScaledRebinned);
 
-  TFile* fileCombinedpp 				= new TFile("CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root");
+  TFile* fileCombinedpp 				= new TFile("ExternalInput/CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root");
   // 	TFile* fileCombinedpp 				= new TFile("CombinedResultsPaperX_18_Feb_2014.root");
   TGraphAsymmErrors* graphCombEtaToPi0Ratiopp7TeV =         (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVStat");
   TGraphAsymmErrors* graphCombEtaToPi0RatioSysErrpp7TeV=    (TGraphAsymmErrors*)fileCombinedpp->Get("graphEtaToPi0Comb7TeVSys");

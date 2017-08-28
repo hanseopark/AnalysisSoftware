@@ -131,18 +131,21 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
     //Input Files GA
     TString fileNameNeutralPionCombResultsPP7TeV     = "ExternalInput/CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root";
-    TString fileNameNeutralPionCombResultsPP2760GeV  = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10.root";
+    TString fileNameNeutralPionCombResultsPP2760GeV  = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
 
     TString fileNameNeutralPionEMCalResultsPP        = "ExternalInput/EMCAL/data_EMCAL-EMCALResultsFullCorrection_PP2760_PaperInput_Pub2017.root";
     TString fileNameNeutralPionEMCalResultsPP7TeV    = "ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root";
 
 
     TString fileNameNeutralPionPHOSResultsPP7TeV     = "ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
-    TString fileNameNeutralPionPHOSResultsPP2760GeV  = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10.root";
+    TString fileNameNeutralPionPHOSResultsPP2760GeV  = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
 
-    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_06_14.root";
+    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_08_25.root";
 
-    TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResultsFullCorrection_pPb_20170606_woEffiCorrection.root";
+   // TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResultsFullCorrection_pPb_20170606_woEffiCorrection.root";
+    
+     
+    TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResults_pPb_FinalResult_20170821_V2.root";
 
     //TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170308.root";
 
@@ -150,16 +153,20 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TString fileNameNeutralPionDalitzResultspPb      = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20170606.root";//
     //TString fileNameNeutralPionDalitzResultspPb      = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";
     //data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
-    TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
+ //   TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
+    TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_20170811_2_pPb.root";
     //TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170314_pPb.root";
+    
 
     TString fileNameNeutralPionPHOSResultspPb       = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//InvariantYield_Pi0_pPb_Graph_PHOS_20160415.root";
     TString fileNameRpPbPHOS                        = "ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
     TString fileNamePHOSSystErrCancellation         = "ExternalInputpPb/PHOS/ComponentCancelSys.root";
     //TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
-    TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_06_13.root";
-
-    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_06_14.root");
+   // TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_06_13.root";
+    
+    TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_08_15.root";
+    
+    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_08_25.root");
 
     TString nameRebinSpectraFitsDat                 = Form("%s/RebinSpectraFitsParam.dat",outputDir.Data());
     fstream  fileRebinSpectraFits;
@@ -208,7 +215,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphInvYieldPi0pPb5023GeVComplErr->Print();
     } else if (System.CompareTo("PCM")==0) {
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionPCMResultspPb.Data());
-        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0pPb_5.023TeV");
+        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0_pPb_5.023TeV_0-100%");
         if( ! fNeutralPionResultspPbContainer ) {cout<<"TList Pi0pPb_5.023TeV does not exist: "<<endl; return;}
 
         histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
@@ -268,45 +275,65 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphInvYieldPi0pPb5023GeVComplErr->Print();
     } else if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ){
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionEMCalResultspPb.Data());
-        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0_pPb_5.023TeV_0-100%");
+        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0pPb_5.023TeV");
         if(!fNeutralPionResultspPbContainer) {cout<<"TList fNeutralPionResultspPbContainer does not exist: "<<endl; return;}
-
+        
+        
+        
         histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
+	graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
+	for(Int_t iPoint = 0; iPoint<9; iPoint++)
+	graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+
         graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0SystError");
         graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0ComplError");
-        graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
+
+	if( !graphInvYieldPi0pPb5023GeVComplErr ){
+
+	  graphInvYieldPi0pPb5023GeVComplErr = CalculateCombinedSysAndStatError(graphInvYieldPi0pPb5023GeVStatErr,graphInvYieldPi0pPb5023GeVSystErr);
+
+	}
+
+        //histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
+        //graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0SystError");
+        //graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0ComplError");
+        //graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
         cout<<"EMCal test"<<endl;
         graphInvYieldPi0pPb5023GeVStatErr->Print();
+        cout<<"//////////////////"<<endl;
         graphInvYieldPi0pPb5023GeVSystErr->Print();
+        cout<<"//////////////////"<<endl;
         graphInvYieldPi0pPb5023GeVComplErr->Print();
 
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(23);
-        graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(22); //remove last pT bin
-
-        graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-        graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-        graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-        graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(23);
-        graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(22); //remove last pT bin
-
-        graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
-        graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
-        graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
-        graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(23);
-        graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(22); //remove last pT bin
-        cout<<"EMCal test"<<endl;
-        graphInvYieldPi0pPb5023GeVStatErr->Print();
-        graphInvYieldPi0pPb5023GeVSystErr->Print();
-        graphInvYieldPi0pPb5023GeVComplErr->Print();
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(23);
+//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(22); //remove last pT bin
+// 
+//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
+//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
+//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
+//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(23);
+//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(22); //remove last pT bin
+// 
+//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
+//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
+//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
+//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(23);
+//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(22); //remove last pT bin
+//         cout<<"EMCal test"<<endl;
+//         graphInvYieldPi0pPb5023GeVStatErr->Print();
+//         graphInvYieldPi0pPb5023GeVSystErr->Print();
+//         graphInvYieldPi0pPb5023GeVComplErr->Print();
+        
+        
     } else if (System.CompareTo("PHOS")==0   ){
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionPHOSResultspPb.Data());
         filePHOSSystErrCancellation         = new TFile(fileNamePHOSSystErrCancellation.Data());
