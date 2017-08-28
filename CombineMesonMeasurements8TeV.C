@@ -6113,7 +6113,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TLegend* legendXsectionPaperEtaToPiRatio     = GetAndSetLegend2(0.11, 0.86, 0.96, 0.96, 0.85*textSizeLabelsPixel);
     legendXsectionPaperEtaToPiRatio->SetNColumns(2);
     legendXsectionPaperEtaToPiRatio->SetMargin(0.15);
-    legendXsectionPaperEtaToPiRatio->AddEntry(graphRatioForMt_sys,"ALICE pp, #sqrt{#it{s}} = 8 TeV - (#eta/#pi^{0})_{m_{T}}/(#eta/#pi^{0})_{data}","pf");
+    legendXsectionPaperEtaToPiRatio->AddEntry(graphRatioForMt_sys,"ALICE pp, #sqrt{#it{s}} = 8 TeV - (#eta/#pi^{0})_{data}/(#eta/#pi^{0})_{m_{T}}","pf");
     legendXsectionPaperEtaToPiRatio->Draw();
 
     DrawGammaLines(0.33, 32. , 1., 1.,0.5, kGray+2);
