@@ -101,6 +101,11 @@ void CombineMesonMeasurementsPP()
     }
     gSystem->Exec(Form("cp %s %s/Theory.root",fileNameTheory.Data(),  outputDir.Data()));
 
+    fstream fLog;
+    fLog.open(Form("%s/CombineMesonPP.log",outputDir.Data()), ios::out);
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << dateForOutput.Data() << endl;
+
     //__________________________________________ Loading input files and directories
     for(Int_t i=0; i<6; i++){
         if(includeEnergy[i]){
@@ -545,8 +550,8 @@ void CombineMesonMeasurementsPP()
     for (Int_t i = 0; i < 6; i++){
         if(includeEnergy[i]){
             if(graphPi0InvariantCrossSectionTot[i][10]){
-                cout << "TCM - " << nameEnergyGlobal2[i].Data() << endl;
-                cout << endl;
+                fLog << "TCM - " << nameEnergyGlobal2[i].Data() << endl;
+                fLog << endl;
                 if(i == 1){
                   Double_t paramTCMPi0New[5]  = { 703678218.2483119965,0.5727060723,
                                                   68561118949.5456314087,0.4481417931,3.0869940568};
@@ -561,13 +566,13 @@ void CombineMesonMeasurementsPP()
                 fitTCMInvCrossSectionPi0CombPlot[i]->SetParErrors(fitTCMInvCrossSectionPi0Comb[i]->GetParErrors());
                 DrawGammaSetMarkerTF1( fitTCMInvCrossSectionPi0CombPlot[i], 7, 2, kGray+2);
 
-                cout << WriteParameterToFile(fitTCMInvCrossSectionPi0Comb[i]) << endl;
+                fLog << WriteParameterToFile(fitTCMInvCrossSectionPi0Comb[i]) << endl;
             }
 
 
             if(graphEtaInvariantCrossSectionTot[i][10]){
-                cout << "TCM - " << nameEnergyGlobal2[i].Data() << endl;
-                cout << endl;
+                fLog << "TCM - " << nameEnergyGlobal2[i].Data() << endl;
+                fLog << endl;
                 if(i==3){
                   Double_t paramTCMComb[5]  = { graphEtaInvariantCrossSectionTot[i][10]->GetY()[1],0.1,graphEtaInvariantCrossSectionTot[i][10]->GetY()[2],0.6,3.0};
                   fitTCMInvCrossSectionEtaComb[i]   = FitObject("tcm",Form("fitTCMInvCrossSectionEtaComb_%s",nameEnergyGlobal2[i].Data()),"Eta",graphEtaInvariantCrossSectionTot[i][10],minXSpectraEta[i][10],maxXSpectraEta[i][10] ,paramTCMComb,"QNRMEX0+","", kFALSE);
@@ -581,7 +586,7 @@ void CombineMesonMeasurementsPP()
                 fitTCMInvCrossSectionEtaCombPlot[i]->SetParErrors(fitTCMInvCrossSectionEtaComb[i]->GetParErrors());
                 DrawGammaSetMarkerTF1( fitTCMInvCrossSectionEtaCombPlot[i], 7, 2, kGray+2);
 
-                cout << WriteParameterToFile(fitTCMInvCrossSectionEtaComb[i]) << endl;
+                fLog << WriteParameterToFile(fitTCMInvCrossSectionEtaComb[i]) << endl;
             }
         }
     }
@@ -595,18 +600,18 @@ void CombineMesonMeasurementsPP()
     for (Int_t i = 0; i < 6; i++){
         if(includeEnergy[i]){
             if(graphPi0InvariantCrossSectionTot[i][10]){
-                cout << "Tsallis - " << nameEnergyGlobal2[i].Data() << endl;
-                cout << endl;
+                fLog << "Tsallis - " << nameEnergyGlobal2[i].Data() << endl;
+                fLog << endl;
                 Double_t paramTsallisComb[3]    = {5e11, 6., 0.13};
                 fitTsallisInvCrossSectionPi0Comb[i] = FitObject("l",Form("fitInvCrossSectionPi08TeV_%s",nameEnergyGlobal2[i].Data()),"Pi0",graphPi0InvariantCrossSectionTot[i][10],minXSpectra[i][10],maxXSpectra[i][10],paramTsallisComb,"QNRMEX0+");
                 DrawGammaSetMarkerTF1( fitTsallisInvCrossSectionPi0Comb[i], 3, 2, kGray+1);
 
-                cout << WriteParameterToFile(fitTsallisInvCrossSectionPi0Comb[i]) << endl;
+                fLog << WriteParameterToFile(fitTsallisInvCrossSectionPi0Comb[i]) << endl;
             }
 
             if(graphEtaInvariantCrossSectionTot[i][10]){
-              cout << "Tsallis - Eta -" << nameEnergyGlobal2[i].Data() << endl;
-              cout << endl;
+              fLog << "Tsallis - Eta -" << nameEnergyGlobal2[i].Data() << endl;
+              fLog << endl;
               if(i==0){
                 fitTsallisInvCrossSectionEtaComb[i] = new TF1(Form("fitInvCrossSectionEta8TeV_%s",nameEnergyGlobal2[i].Data()),Form("[0] / ( 2 * TMath::Pi())*([1]-1.)*([1]-2.) / ([1]*[2]*([1]*[2]+%.10f*([1]-2.)))  * pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",mesonMassExpectEta,mesonMassExpectEta,mesonMassExpectEta,mesonMassExpectEta));
                 fitTsallisInvCrossSectionEtaComb[i]->SetRange(minXSpectraEta[i][10],maxXSpectraEta[i][10]);
@@ -620,7 +625,7 @@ void CombineMesonMeasurementsPP()
               }
               DrawGammaSetMarkerTF1( fitTsallisInvCrossSectionEtaComb[i], 3, 2, kGray+1);
 
-              cout << WriteParameterToFile(fitTsallisInvCrossSectionEtaComb[i]) << endl;
+              fLog << WriteParameterToFile(fitTsallisInvCrossSectionEtaComb[i]) << endl;
             }
         }
     }
