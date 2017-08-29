@@ -3991,7 +3991,7 @@
             }
         } else if(energy.CompareTo("2.76TeV") == 0){
             if (selTrig == 1){
-                xSectionInt = xSection2760GeVErr;
+                xSectionInt = xSection2760GeVV0AND;
                 cout << "V0AND xSection taken: \t" << xSectionInt << endl;
             } else if (selTrig == 3){
                 xSectionInt = xSection2760GeVINEL*1e-12;
