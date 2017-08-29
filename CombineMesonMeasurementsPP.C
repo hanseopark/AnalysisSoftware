@@ -73,6 +73,8 @@ void CombineMesonMeasurementsPP()
     Int_t includeEnergy[6]                      = {1,1,0,1,1,0};
     Int_t numActiveMeas                         = 4;
 
+    Double_t xSections[6];
+
     gROOT->Reset();
     gROOT->SetStyle("Plain");
 
@@ -118,7 +120,10 @@ void CombineMesonMeasurementsPP()
               if(!directoryEta[i]) directoryEta[i] = NULL;
               else                 cout << "--> Found directory " << Form("Eta%s",nameEnergyGlobal[i].Data()) << endl;
             exampleActiveMeas                   = i;
-        }
+
+            xSections[i] = ReturnCorrectXSection(nameEnergyGlobal[i].Data(),1);
+            xSections[i] *= recalcBarn;
+        }else xSections[i] = 0.;
     }
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
 
@@ -253,6 +258,47 @@ void CombineMesonMeasurementsPP()
 //                  graphNameModifier[j]               = "A";
 //                }
             }
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------------------------
+    //---------------------------- Build invariant yields from input spectra ----------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+
+    TGraphAsymmErrors* graphPi0InvYieldStat[6];
+    TGraphAsymmErrors* graphPi0InvYieldSys[6];
+    TGraphAsymmErrors* graphEtaInvYieldStat[6];
+    TGraphAsymmErrors* graphEtaInvYieldSys[6];
+
+    for (Int_t i = 0; i < 6; i++){
+        if(includeEnergy[i]){
+          if(graphPi0InvariantCrossSectionStat[i][10]) {
+            graphPi0InvYieldStat[i] = ScaleGraph(graphPi0InvariantCrossSectionStat[i][10],1/xSections[i]);
+            ProduceGraphAsymmWithoutXErrors(graphPi0InvYieldStat[i]);
+            DrawGammaSetMarkerTGraph(graphPi0InvYieldStat[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i]);
+          }
+
+          if(graphPi0InvariantCrossSectionSys[i][10]){
+            graphPi0InvYieldSys[i] = ScaleGraph(graphPi0InvariantCrossSectionSys[i][10],1/xSections[i]);
+            DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldSys[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
+          }
+
+          if(graphEtaInvariantCrossSectionStat[i][10]){
+            graphEtaInvYieldStat[i] = ScaleGraph(graphEtaInvariantCrossSectionStat[i][10],1/xSections[i]);
+            ProduceGraphAsymmWithoutXErrors(graphEtaInvYieldStat[i]);
+            DrawGammaSetMarkerTGraph(graphEtaInvYieldStat[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i]);
+          }
+
+          if(graphEtaInvariantCrossSectionSys[i][10]){
+            graphEtaInvYieldSys[i] = ScaleGraph(graphEtaInvariantCrossSectionSys[i][10],1/xSections[i]);
+            DrawGammaSetMarkerTGraphAsym(graphEtaInvYieldSys[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
+          }
+
+        }else{
+          graphPi0InvYieldStat[i] = 0x0;
+          graphPi0InvYieldSys[i] = 0x0;
+          graphEtaInvYieldStat[i] = 0x0;
+          graphEtaInvYieldSys[i] = 0x0;
         }
     }
 
@@ -1197,6 +1243,48 @@ void CombineMesonMeasurementsPP()
     //-------------------------------Plotting -----------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------------------------
 
+    DrawGammaCanvasSettings( canvasXSectionPi0, 0.16, 0.01, 0.01, 0.08);
+    canvasXSectionPi0->SetLogx();
+    canvasXSectionPi0->SetLogy();
+    TH2F* histoInvYieldDummy                           = new TH2F("histoInvYieldDummy","histoInvYieldDummy",11000,xRangeMinXSec,xRangeMaxXSec,1000,1e-11,20);
+    SetStyleHistoTH2ForGraphs(histoInvYieldDummy, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
+                            0.85*textsizeLabelsXSec[0],textsizeLabelsXSec[0], 0.85*textsizeLabelsXSec[0], textsizeLabelsXSec[0], 1,0.2/(textsizeFacXSec[0]*marginXSec)+0.2);
+    histoInvYieldDummy->GetXaxis()->SetMoreLogLabels();
+    histoInvYieldDummy->GetXaxis()->SetNoExponent(kTRUE);
+    histoInvYieldDummy->GetXaxis()->SetLabelOffset(+0.01);
+    histoInvYieldDummy->Draw();
+    for (Int_t i = 0; i < 6; i++){
+        if(includeEnergy[i]){
+            if(graphPi0InvYieldSys[i]&&graphPi0InvYieldStat[i]){
+              graphPi0InvYieldSys[i]->Draw("E2same");
+              graphPi0InvYieldStat[i]->Draw("p,same,z");
+            }
+        }
+    }
+    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+
+    TLegend* legendInvYieldPi02    = GetAndSetLegend2(0.2, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    legendInvYieldPi02->SetNColumns(1);
+    legendInvYieldPi02->SetMargin(0.2);
+    legendRunningIndex = numActiveMeas-1;
+    for (Int_t i = 5; i > -1; i--){
+        if(includeEnergy[i]){
+            legendInvYieldPi02->AddEntry(graphPi0InvYieldSys[i],Form("pp, %s",energyLatex[i].Data()),"pf");
+            legendRunningIndex-=1;
+        }
+    }
+    legendInvYieldPi02->Draw();
+
+    canvasXSectionPi0->Print(Form("%s/Pi0_InvYield.%s",outputDir.Data(),suffix.Data()));
+    DrawGammaCanvasSettings( canvasXSectionPi0, 0.14, 0.01, 0.01, 0.07);
+    canvasXSectionPi0->SetLogx();
+    canvasXSectionPi0->SetLogy();
+
+    //---------------------------------------------------------------------------------------------------------------
+    //-------------------------------Plotting -----------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+
     histoXSecDummy[0]->Draw();
     for (Int_t i = 0; i < 6; i++){
         if(includeEnergy[i]){
@@ -1929,6 +2017,49 @@ void CombineMesonMeasurementsPP()
     legendInvariantCrossSectionEta2->Draw();
 
     canvasXSectionEta->Print(Form("%s/Eta_XSec.%s",outputDir.Data(),suffix.Data()));
+
+    //---------------------------------------------------------------------------------------------------------------
+    //-------------------------------Plotting -----------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+
+    DrawGammaCanvasSettings( canvasXSectionEta, 0.16, 0.01, 0.01, 0.08);
+    canvasXSectionEta->SetLogx();
+    canvasXSectionEta->SetLogy();
+    histoInvYieldDummy                           = new TH2F("histoInvYieldDummy","histoInvYieldDummy",11000,xRangeMinXSec,xRangeMaxXSec,1000,8e-11,0.3);
+    SetStyleHistoTH2ForGraphs(histoInvYieldDummy, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
+                            0.85*textsizeLabelsXSec[0],textsizeLabelsXSec[0], 0.85*textsizeLabelsXSec[0], textsizeLabelsXSec[0], 1,0.2/(textsizeFacXSec[0]*marginXSec)+0.2);
+    histoInvYieldDummy->GetXaxis()->SetMoreLogLabels();
+    histoInvYieldDummy->GetXaxis()->SetNoExponent(kTRUE);
+    histoInvYieldDummy->GetXaxis()->SetLabelOffset(+0.01);
+    histoInvYieldDummy->Draw();
+
+    for (Int_t i = 0; i < 6; i++){
+        if(includeEnergy[i]){
+            if(graphEtaInvYieldSys[i]&&graphEtaInvYieldStat[i]){
+              graphEtaInvYieldSys[i]->Draw("E2same");
+              graphEtaInvYieldStat[i]->Draw("p,same,z");
+            }
+        }
+    }
+    drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+
+    TLegend* legendInvYieldEta2    = GetAndSetLegend2(0.2, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    legendInvYieldEta2->SetNColumns(1);
+    legendInvYieldEta2->SetMargin(0.2);
+    legendRunningIndex = numActiveMeas-1;
+    for (Int_t i = 5; i > -1; i--){
+        if(includeEnergy[i]){
+            legendInvYieldEta2->AddEntry(graphEtaInvYieldSys[i],Form("pp, %s",energyLatex[i].Data()),"pf");
+            legendRunningIndex-=1;
+        }
+    }
+    legendInvYieldEta2->Draw();
+
+    canvasXSectionEta->Print(Form("%s/Eta_InvYield.%s",outputDir.Data(),suffix.Data()));
+    DrawGammaCanvasSettings( canvasXSectionEta, 0.14, 0.01, 0.01, 0.07);
+    canvasXSectionEta->SetLogx();
+    canvasXSectionEta->SetLogy();
 
     //---------------------------------------------------------------------------------------------------------------
     //-------------------------------Plotting -----------------------------------------------------------------------
