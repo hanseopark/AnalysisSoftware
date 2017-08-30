@@ -3446,6 +3446,8 @@
                 return kBlue;
             } else if (!generator.CompareTo("LHC16k5b")) {
                 return kRed;
+            } else if (!generator.CompareTo("LHC17e2")) {
+                return kGreen+2;
             } else {
                 return kOrange-9;
             }
@@ -3770,6 +3772,8 @@
             } else if(generator.Contains("LHC16k5a")){
                 return 30;
             } else if(generator.Contains("LHC16k5b")){
+                return 28;
+            } else if(generator.Contains("LHC17e2")){
                 return 28;
             } else {
                 return 24;
