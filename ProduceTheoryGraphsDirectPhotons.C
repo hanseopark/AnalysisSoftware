@@ -1932,14 +1932,14 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // **********************************************************************************************************************
         // Load cocktail for pPb pure mt-scaling
         // **********************************************************************************************************************
-        TString nameCocktailFileMtScaling       = "CocktailInput/GammaCocktail_pPb_MB_pureMT.root";
-        TFile* fileCockailPureMtScaling         = new TFile(nameCocktailFileMtScaling.Data());
-        TH1D* histoGammaDecayPureMtScaling     = (TH1D*)fileCockailPureMtScaling->Get("Gamma_Pt_OrBin");
-        for (Int_t i = 1; i < histoGammaDecayPureMtScaling->GetNbinsX()+1; i++){
-            histoGammaDecayPureMtScaling->SetBinContent(i, histoGammaDecayPureMtScaling->GetBinContent(i)/(histoGammaDecayPureMtScaling->GetBinCenter(i) *2* TMath::Pi()) );
-            histoGammaDecayPureMtScaling->SetBinError(i, histoGammaDecayPureMtScaling->GetBinError(i)/(histoGammaDecayPureMtScaling->GetBinCenter(i)*2* TMath::Pi()));
+        TString nameCocktailFileComb        = "CocktailInput/GammaCocktail_pPb5TeV_MB_comb.root";
+        TFile* fileCockailComb              = new TFile(nameCocktailFileComb.Data());
+        TH1D* histoGammaDecayComb           = (TH1D*)fileCockailComb->Get("Gamma_Pt_OrBin");
+        for (Int_t i = 1; i < histoGammaDecayComb->GetNbinsX()+1; i++){
+            histoGammaDecayComb->SetBinContent(i, histoGammaDecayComb->GetBinContent(i)/(histoGammaDecayComb->GetBinCenter(i) *2* TMath::Pi()) );
+            histoGammaDecayComb->SetBinError(i, histoGammaDecayComb->GetBinError(i)/(histoGammaDecayComb->GetBinCenter(i)*2* TMath::Pi()));
         }
-        histoGammaDecayPureMtScaling->GetXaxis()->SetRangeUser(0,30);
+        histoGammaDecayComb->GetXaxis()->SetRangeUser(0,30);
 
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 5TeV *******************************************
@@ -2171,7 +2171,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcRGammaALICECocktail          = (TGraphAsymmErrors*)graphNLOCalcInvYieldINT7DirGampPb5TeV->Clone("graphNLOCalcRGammaALICECocktail");
         TGraph* graphNLOCalcRGammaALICECocktailCenter               = new TGraph(graphNLOCalcRGammaALICECocktail->GetN());
         for (Int_t i = 0; i < graphNLOCalcRGammaALICECocktail->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphNLOCalcRGammaALICECocktail->GetX()[i]);
+            Double_t decayGamma                                     = histoGammaDecayComb->Interpolate(graphNLOCalcRGammaALICECocktail->GetX()[i]);
             Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktail->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
             Double_t relErrUp                                       = graphNLOCalcRGammaALICECocktail->GetEYhigh()[i]/theoGamma;
@@ -2239,7 +2239,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphErrors* graphMCGillRGammaALICECocktail                = (TGraphErrors*)graphGammaV2McGill5023GeV->Clone("graphMCGillRGammaALICECocktail");
         TGraph* graphMCGillRGammaALICECocktailCenter                = new TGraph(graphMCGillRGammaALICECocktail->GetN());
         for (Int_t i = 0; i < graphMCGillRGammaALICECocktail->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphMCGillRGammaALICECocktail->GetX()[i]);
+            Double_t decayGamma                                     = histoGammaDecayComb->Interpolate(graphMCGillRGammaALICECocktail->GetX()[i]);
             Double_t theoGamma                                      = graphMCGillRGammaALICECocktail->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
             Double_t relErrUp                                       = 0;
@@ -2350,7 +2350,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
             DrawGammaSetMarkerTGraphErr(graphGammaSpecMcGill5023GeV, 20, 1., kGreen+2, kGreen+2);
 
-            histoGammaDecayPureMtScaling->SetLineColor(kOrange);
+            histoGammaDecayComb->SetLineColor(kOrange);
 
             cout << __LINE__ << ": start fitting to NLO calculations" << endl;
             TF1* fitNLODirectPhoton                      = FitObject("m","fitNLODirectPhoton","Pi0",graphNLOCalcInvYieldINT7DirGampPb5TeV,1.5,25.);                    // mod power law
@@ -2367,14 +2367,14 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             fitNLOFragmentationPhoton->Draw("same");
             graphNLOCalcInvYieldINT7FragGampPb5TeV->Draw("p,same");
             graphGammaSpecMcGill5023GeV->Draw("same,l");
-            histoGammaDecayPureMtScaling->Draw("same,hist,l");
+            histoGammaDecayComb->Draw("same,hist,l");
             // Create legend
             TLegend* legendNLOCalculations          = GetAndSetLegend2(0.6, 0.95-(5*32*1.3/(1350*0.75)), 0.75, 0.95, 32, 1, "", 43, 0.2);
             legendNLOCalculations->AddEntry(graphNLOCalcInvYieldINT7DirGampPb5TeV,       "#gamma_{dir} NLO Calc", "lep");
             legendNLOCalculations->AddEntry(graphNLOCalcInvYieldINT7PromGampPb5TeV,      "#gamma_{prompt} NLO Calc", "lep");
             legendNLOCalculations->AddEntry(graphNLOCalcInvYieldINT7FragGampPb5TeV,      "#gamma_{frag} NLO Calc", "lep");
             legendNLOCalculations->AddEntry(graphGammaSpecMcGill5023GeV,                 "#gamma_{dir} McGill", "l");
-            legendNLOCalculations->AddEntry(histoGammaDecayPureMtScaling,                "#gamma_{decay} from #it{m}_{T} scaled", "l");
+            legendNLOCalculations->AddEntry(histoGammaDecayComb,                         "#gamma_{decay} from ALICE cocktail", "l");
             legendNLOCalculations->Draw();
 
         // Calculating ratio
@@ -2447,6 +2447,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphNLOCalcRGammaALICECocktailCenter->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 graphNLOCalcRGammaALICECocktailCenter->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10_ALICECocktail_Center",TObject::kOverwrite);
 
+                histoGammaDecayComb->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                histoGammaDecayComb->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+                histoGammaDecayComb->Write("histoALICECombCocktailGammas");
                 // writing McGill calcs
                 graphGammaSpecMcGill5023GeV->Write("graphDirectPhotonSpecMcGill5023GeV", TObject::kOverwrite);
                 graphMCGillRGammaALICECocktail->GetYaxis()->SetTitle("R_{#gamma}");

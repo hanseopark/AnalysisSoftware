@@ -52,7 +52,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                 TString file                = "",
                                 TString cutSelection        = "",
                                 TString suffix              = "",
-                                TString optionMC                = "",
+                                TString optionMC            = "",
                                 TString option              = "",
                                 TString directphotonPlots   = "",
                                 TString period              = "",
@@ -99,7 +99,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     //************************************ Set global variables ****************************************
     fDate                                                                       = ReturnDateString();
     fDirectPhoton                                                               = directphotonPlots;
-    if (directphotonPlots.CompareTo("No") != 0)
+    if (directphotonPlots.CompareTo("No") != 0 && directphotonPlots.CompareTo("directPhotonA") != 0 )
         fDirectPhoton                                                           = "directPhoton";
     fEnergyFlag                                                                 = option;
     fPrefix                                                                     = meson;
@@ -2732,7 +2732,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
     }
 
     // initialize ShowBackground for DCAz distributions
-    if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    if ((fEnergyFlag.CompareTo("13TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 13;
         nIterationsShowBackground[1]                    = 13;
         nIterationsShowBackground[2]                    = 18;
@@ -2742,7 +2742,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
         optionShowBackground[3]                         = "BackDecreasingWindow";                   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow";                   // standard
-    } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("7TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 11;
         nIterationsShowBackground[1]                    = 11;
         nIterationsShowBackground[2]                    = 16;
@@ -2752,7 +2752,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
-    } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("8TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 9;
         nIterationsShowBackground[1]                    = 9;
         nIterationsShowBackground[2]                    = 14;
@@ -2772,7 +2772,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";
         optionShowBackground[3]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow";   // standard
-    } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fDirectPhoton.CompareTo("directPhoton") == 0)) {
+    } else if ((fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0) && (fDirectPhoton.Contains("directPhoton") )) {
         nIterationsShowBackground[0]                    = 15;
         nIterationsShowBackground[1]                    = 14;
         nIterationsShowBackground[2]                    = 17;

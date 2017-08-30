@@ -186,6 +186,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             cout << "requested out-of-bunch pileup correction for calo mode, skipping" << endl;
             kDoPileup               = kFALSE;
         }
+    } else if ( mode == 2 || mode == 3 ) {
+        kDoPileup                   = kTRUE;
     }
 
     //******************************************************************************************

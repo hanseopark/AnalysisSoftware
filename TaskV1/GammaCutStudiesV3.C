@@ -465,9 +465,9 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     if (mode == 1 || mode > 5){
         cout << "ERROR: This macro isn't designed to run for Dalitz or the old software version" << endl;
         return;
-    } else if (mode == 2 || mode == 3 ){
+    } else if (mode == 2 || mode == 3 || mode == 4 || mode == 5){
         cout << "WARNING: running hybrid mode, this macro is still under construction for this mode" << endl;
-    } else if ( mode == 4 || mode == 5){
+    } else {
         cout << "This macro can't yet deal with these modi" << endl;
         return;
     }
@@ -709,71 +709,120 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             TString minMult                                     = fEventCutSelection(GetEventCentralityMinCutPosition(),1);
             TString maxMult                                     = fEventCutSelection(GetEventCentralityMaxCutPosition(),1);
             cutStringsName[i]                                   = AnalysePPMultiplicityCut(CutNumberToInteger(minMult),CutNumberToInteger(maxMult));
+
         } else if (cutVariationName.Contains("V0Reader")){
-            TString fV0Reader = fGammaCutSelection(GetPhotonV0FinderCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseV0ReaderCut(CutNumberToInteger(fV0Reader));
+            TString fV0Reader                                   = fGammaCutSelection(GetPhotonV0FinderCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseV0ReaderCut(CutNumberToInteger(fV0Reader));
+        } else if (cutVariationName.Contains("RapidityAndEtaClus")){
+            TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
+            TString rapidString                                 = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
+            TString etaCaloString                               = AnalyseEtaCalo(fClusterCutSelection);
+            cutStringsName[i]                                   = Form("%s, %s", etaCaloString.Data(), rapidString.Data() );
         } else if (cutVariationName.Contains("Eta")){
-            TString fEtaCut = fGammaCutSelection(GetPhotonEtaCutPosition(fGammaCutSelection),1);
-            cout << fGammaCutSelection.Data() << "\t"<<fEtaCut.Data() << endl;
-            cutStringsName[i] = AnalyseEtaCut(CutNumberToInteger(fEtaCut));
+            TString fEtaCut                                     = fGammaCutSelection(GetPhotonEtaCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseEtaCut(CutNumberToInteger(fEtaCut));
+        } else if (cutVariationName.Contains("RCutAndPhotonQuality")){
+            TString fRCut                                       = fGammaCutSelection(GetPhotonMinRCutPosition(fGammaCutSelection),1);
+            TString fPhotonQuality                              = fGammaCutSelection(GetPhotonSharedElectronCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseRCutAndQuality(CutNumberToInteger(fRCut), CutNumberToInteger(fPhotonQuality));
         } else if (cutVariationName.Contains("RCut")){
-            TString fRCut = fGammaCutSelection(GetPhotonMinRCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseRCut(CutNumberToInteger(fRCut));
+            TString fRCut                                       = fGammaCutSelection(GetPhotonMinRCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseRCut(CutNumberToInteger(fRCut));
         } else if (cutVariationName.Contains("SinglePt")){
-            TString fSinglePtCut = fGammaCutSelection(GetPhotonSinglePtCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseSinglePtCut(CutNumberToInteger(fSinglePtCut));
-        } else if (cutVariationName.Contains("Cluster")){
-            TString fClusterCut = fGammaCutSelection(GetPhotonClsTPCCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
-            cout << i << "\t" << fClusterCut.Data() << "\t" << cutStringsName[i].Data()<< endl;
+            TString fSinglePtCut                                = fGammaCutSelection(GetPhotonSinglePtCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseSinglePtCut(CutNumberToInteger(fSinglePtCut));
+        } else if (cutVariationName.Contains("TPCCluster")){
+            TString fClusterCut                                 = fGammaCutSelection(GetPhotonClsTPCCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
         } else if (cutVariationName.Contains("dEdxE")){
-            TString fdEdxCut = fGammaCutSelection(GetPhotonEDedxSigmaCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
+            TString fdEdxCut                                    = fGammaCutSelection(GetPhotonEDedxSigmaCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
         } else if (cutVariationName.Contains("dEdxPi")){
-            TString fdEdxCut = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
-            cutStringsName[i] = fdEdxCut;
-//             cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());
+            TString fdEdxCut                                    = fGammaCutSelection(GetPhotonPiDedxSigmaCutPosition(fGammaCutSelection),3);
+            cutStringsName[i]                                   = fdEdxCut.Data();
+            cout << fdEdxCut.Data() << "\t" << cutStringsName[i].Data() << endl;
+            //             cutStringsName[i]                                   = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());
+        } else if (cutVariationName.Contains("TOF")){
+            TString fTOFelectronPIDCut                          = fGammaCutSelection(GetPhotonTOFelectronPIDCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTOFelectronPIDCut(CutNumberToInteger(fTOFelectronPIDCut));
         } else if (cutVariationName.Contains("Qt")){
-            TString fQtCut = fGammaCutSelection(GetPhotonQtMaxCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseQtMaxCut(CutNumberToInteger(fQtCut));
+            TString fQtCut                                      = fGammaCutSelection(GetPhotonQtMaxCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseQtMaxCut(CutNumberToInteger(fQtCut));
         } else if (cutVariationName.Contains("Chi2")){
-            TString fChi2Cut = fGammaCutSelection(GetPhotonChi2GammaCutPosition(fGammaCutSelection),1);
-            TString fPsiPairCut = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseChi2GammaCut(CutNumberToInteger(fChi2Cut),CutNumberToInteger(fPsiPairCut));
+            TString fChi2Cut                                    = fGammaCutSelection(GetPhotonChi2GammaCutPosition(fGammaCutSelection),1);
+            TString fPsiPairCut                                 = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseChi2GammaCut(CutNumberToInteger(fChi2Cut), CutNumberToInteger(fPsiPairCut));
         } else if (cutVariationName.Contains("PsiPairAndR")){
-            TString fPsiPairCut = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
-            TString fRCut = fGammaCutSelection(GetPhotonMinRCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalysePsiPairAndR(CutNumberToInteger(fPsiPairCut),CutNumberToInteger(fRCut));
+            TString fPsiPairCut                                 = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
+            TString fRCut                                       = fGammaCutSelection(GetPhotonMinRCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalysePsiPairAndR(CutNumberToInteger(fPsiPairCut), CutNumberToInteger(fRCut));
         } else if (cutVariationName.Contains("PsiPair")){
-            TString fPsiPairCut = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
-            TString fChi2Cut = fGammaCutSelection(GetPhotonChi2GammaCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalysePsiPair(CutNumberToInteger(fPsiPairCut),CutNumberToInteger(fChi2Cut));
+            TString fPsiPairCut                                 = fGammaCutSelection(GetPhotonPsiPairCutPosition(fGammaCutSelection),1);
+            TString fChi2Cut                                    = fGammaCutSelection(GetPhotonChi2GammaCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalysePsiPair(CutNumberToInteger(fPsiPairCut), CutNumberToInteger(fChi2Cut));
         } else if (cutVariationName.Contains("DCAZPhoton")){
-            TString fDCAZCut = fGammaCutSelection(GetPhotonDcaZPrimVtxCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseDCAZPhotonCut(CutNumberToInteger(fDCAZCut));
+            TString fDCAZCut                                    = fGammaCutSelection(GetPhotonDcaZPrimVtxCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseDCAZPhotonCut(CutNumberToInteger(fDCAZCut));
         } else if (cutVariationName.Contains("CosPoint")){
-            TString fCosPoint = fGammaCutSelection(GetPhotonCosinePointingAngleCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalyseCosPointCut(CutNumberToInteger(fCosPoint));
+            TString fCosPoint                                   = fGammaCutSelection(GetPhotonCosinePointingAngleCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalyseCosPointCut(CutNumberToInteger(fCosPoint));
         } else if (cutVariationName.Contains("PhotonQuality")){
-            TString fPhotonQuality = fGammaCutSelection(GetPhotonSharedElectronCutPosition(fGammaCutSelection),1);
-            cutStringsName[i] = AnalysePhotonQuality(CutNumberToInteger(fPhotonQuality));
+            TString fPhotonQuality                              = fGammaCutSelection(GetPhotonSharedElectronCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalysePhotonQuality(CutNumberToInteger(fPhotonQuality));
+        } else if (cutVariationName.Contains("ConvPhi")){
+            cutStringsName[i]                                   = AnalyseConvPhiExclusionCut(fGammaCutSelection);
         } else if (cutVariationName.Contains("BG")){
-            TString fBGCut = fMesonCutSelection(GetMesonBGSchemeCutPosition(),3);
-            cutStringsName[i] = AnalyseBackgroundScheme(fBGCut.Data());
+            TString fBGCut                                      = fMesonCutSelection(GetMesonBGSchemeCutPosition(),3);
+            cutStringsName[i]                                   = AnalyseBackgroundScheme(fBGCut.Data());
         } else if (cutVariationName.Contains("Rapidity")){
-            TString fRapidityCut = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
-            cutStringsName[i] = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
+            TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
+            cutStringsName[i]                                   = AnalyseRapidityMesonCut(CutNumberToInteger(fRapidityCut));
         } else if (cutVariationName.Contains("Alpha")){
-            TString fAlphaCut = fMesonCutSelection(GetMesonAlphaCutPosition(),1);
-            cutStringsName[i] = AnalyseAlphaMesonCut(CutNumberToInteger(fAlphaCut));
+            TString fAlphaCut                                   = fMesonCutSelection(GetMesonAlphaCutPosition(),1);
+            cutStringsName[i]                                   = AnalyseAlphaMesonCut(CutNumberToInteger(fAlphaCut));
+        } else if (cutVariationName.Contains("OpeningAngle")){
+            TString fMesonOpeningAngleCut                         = fMesonCutSelection(GetMesonOpeningAngleCutPosition(),1);
+            cutStringsName[i]                                     = AnalyseMesonOpeningAngleCut(CutNumberToInteger(fMesonOpeningAngleCut));
         } else if (cutVariationName.Contains("Cent")){
-            cutStringsName[i] = GetCentralityString(fGammaCutSelection.Data());
+            cutStringsName[i]                                   = GetCentralityString(fEventCutSelection.Data());
         } else if (cutVariationName.Contains("DiffRapWindow")){
-            TString fRapidityCut = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
-            cutStringsName[i] = AnalyseRapidityMesonCutpPb(CutNumberToInteger(fRapidityCut));
+            TString fRapidityCut                                = fMesonCutSelection(GetMesonRapidityCutPosition(),1);
+            cutStringsName[i]                                   = AnalyseRapidityMesonCutpPb(CutNumberToInteger(fRapidityCut));
         } else if (cutVariationName.Contains("MCSmearing")){
-            TString fMCSmearing = fMesonCutSelection(GetMesonUseMCPSmearingCutPosition(),1);
-            cutStringsName[i] = AnalyseMCSmearingCut(CutNumberToInteger(fMCSmearing));
+            TString fMCSmearing                                 = fMesonCutSelection(GetMesonUseMCPSmearingCutPosition(),1);
+            cutStringsName[i]                                   = AnalyseMCSmearingCut(CutNumberToInteger(fMCSmearing));
+        } else if (cutVariationName.Contains("ClusterTrackMatchingCalo")){
+            TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
+            TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTrackMatchingCaloCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
+        } else if (cutVariationName.Contains("ClusterTrackMatching")){
+            TString fTrackMatching                              = fClusterCutSelection(GetClusterTrackMatchingCutPosition(fClusterCutSelection),1);
+            TString fClusterType                                = fClusterCutSelection(GetClusterTypeCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseTrackMatchingCut(CutNumberToInteger(fTrackMatching), CutNumberToInteger(fClusterType));
+        } else if (cutVariationName.Contains("ClusterMaterialTRD")){
+            TString fMinPhi                                     = fClusterCutSelection(GetClusterPhiMinCutPosition(fClusterCutSelection),1);
+            TString fMaxPhi                                     = fClusterCutSelection(GetClusterPhiMaxCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseAcceptanceCutPhiCluster(CutNumberToInteger(fMinPhi), CutNumberToInteger(fMaxPhi));
+        } else if (cutVariationName.Contains("ClusterM02")){
+            TString fMinM02Cut                                  = fClusterCutSelection(GetClusterMinM02CutPosition(fClusterCutSelection),1);
+            TString fMaxM02Cut                                  = fClusterCutSelection(GetClusterMaxM02CutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseM02Cut(CutNumberToInteger(fMinM02Cut), CutNumberToInteger(fMaxM02Cut));
+        } else if (cutVariationName.Contains("ClusterNCells")){
+            TString fNCellsCut                                  = fClusterCutSelection(GetClusterMinNCellsCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseNCellsCut(CutNumberToInteger(fNCellsCut));
+        } else if (cutVariationName.Contains("ClusterMinEnergy")){
+            TString fMinEnergyCut                               = fClusterCutSelection(GetClusterMinEnergyCutPosition(fClusterCutSelection),1);
+            cout << fMinEnergyCut << "\t" << GetClusterMinEnergyCutPosition(fClusterCutSelection) << "\t"<< fClusterCutSelection.Length()<<endl;
+            cutStringsName[i]                                   = AnalyseMinEnergyCut(CutNumberToInteger(fMinEnergyCut));
+        } else if (cutVariationName.Contains("ClusterTiming")){
+            TString fTimingCut                                  = fClusterCutSelection(GetClusterTimingCutPosition(fClusterCutSelection),1);
+            cutStringsName[i]                                   = AnalyseClusterTimingCut(CutNumberToInteger(fTimingCut));
+        } else if (cutVariationName.Contains("ClusterNonLinearity")){
+            TString fClusterNonLinearity                          = fClusterCutSelection(GetClusterNonLinearityCutPosition(fClusterCutSelection),2);
+            cutStringsName[i]                                     = AnalyseClusterNonLinearityCut(CutNumberToInteger(fClusterNonLinearity));
+        } else if (cutVariationName.Contains("PhotonAsymmetry")){
+            TString fPhotonAsymmetry                            = fGammaCutSelection(GetPhotonDoPhotonAsymmetryCutPosition(fGammaCutSelection),1);
+            cutStringsName[i]                                   = AnalysePhotonAsymmetry(CutNumberToInteger(fPhotonAsymmetry));
         } else if (cutVariationName.Contains("IntRange")){
             if (i==0) cutStringsName[i] = "standard #pi^{0} integration range";
             if (i==1) cutStringsName[i] = "wide #pi^{0} integration range";
@@ -925,12 +974,14 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         histoPurityRatio[i]->Divide(histoPurityRatio[i],histoPurity[0],1,1,"b");
         SetHistogramm(histoPurityRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Purities",0.8,1.2);
 
-        histoGammaConvProb[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaConvProb_Pt");
-        histoGammaConvProb[i]->SetTitle("");
-        DrawGammaSetMarker(histoGammaConvProb[i], markerType, 2.0, color[i], color[i]);
-        histoGammaConvProbRatio[i] = (TH1D*) histoGammaConvProb[i]->Clone(Form("histoConvProbRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
-        histoGammaConvProbRatio[i]->Divide(histoGammaConvProbRatio[i],histoGammaConvProb[0],1,1,"b");
-        SetHistogramm(histoGammaConvProbRatio[i],"#it{p}_{T} (GeV/c)","Ratios of P_{conv}",0.8,1.2);
+        if (!(mode == 4 || mode == 5)){
+            histoGammaConvProb[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaConvProb_Pt");
+            histoGammaConvProb[i]->SetTitle("");
+            DrawGammaSetMarker(histoGammaConvProb[i], markerType, 2.0, color[i], color[i]);
+            histoGammaConvProbRatio[i] = (TH1D*) histoGammaConvProb[i]->Clone(Form("histoConvProbRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
+            histoGammaConvProbRatio[i]->Divide(histoGammaConvProbRatio[i],histoGammaConvProb[0],1,1,"b");
+            SetHistogramm(histoGammaConvProbRatio[i],"#it{p}_{T} (GeV/c)","Ratios of P_{conv}",0.8,1.2);
+        }
 
         histoGammaEff[i] = (TH1D*) fileCurrentCorrection[i]->Get("GammaRecoEff_MCPt");
         histoGammaEff[i]->SetTitle("");
@@ -973,7 +1024,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
 
         PlotCanvas(i,number,canvasRawGamma,histoRawGamma[i],legendRawGamma,canvasRawGammaRatio,histoRawGammaRatio[i],legendRawGammaRatio,cutStringsName[i],One);
         PlotCanvas(i,number,canvasPurity,histoPurity[i],legendPurity,canvasPurityRatio,histoPurityRatio[i],legendPurityRatio,cutStringsName[i],One);
-        PlotCanvas(i,number,canvasGammaConvProb,histoGammaConvProb[i],legendGammaConvProb,canvasGammaConvProbRatio,histoGammaConvProbRatio[i],legendGammaConvProbRatio,cutStringsName[i],One);
+        if (!(mode == 4 || mode == 5))
+            PlotCanvas(i,number,canvasGammaConvProb,histoGammaConvProb[i],legendGammaConvProb,canvasGammaConvProbRatio,histoGammaConvProbRatio[i],legendGammaConvProbRatio,cutStringsName[i],One);
         PlotCanvas(i,number,canvasGammaEff,histoGammaEff[i],legendGammaEff,canvasGammaEffRatio,histoGammaEffRatio[i],legendGammaEffRatio,cutStringsName[i],One);
         PlotCanvas(i,number,canvasGammaEffRecPt,histoGammaEffRecPt[i],legendGammaEffRecPt,canvasGammaEffRecPtRatio,histoGammaEffRecPtRatio[i],legendGammaEffRecPtRatio,cutStringsName[i],One);
         PlotCanvas(i,number,canvasGammaResolCorr,histoGammaResolCorr[i],legendGammaResolCorr,canvasGammaResolCorrRatio,histoGammaResolCorrRatio[i],legendGammaResolCorrRatio,
@@ -1021,7 +1073,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     canvasGammaEffRecPtRatio->SaveAs(Form("%s/GammaEffRatiosRecPt_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaResolCorr->SaveAs(Form("%s/GammaResolCorr_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaResolCorrRatio->SaveAs(Form("%s/GammaResolCorrRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
-    canvasGammaConvProb->SaveAs(Form("%s/GammaConvProb_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
+    if (!(mode == 4 || mode == 5)) canvasGammaConvProb->SaveAs(Form("%s/GammaConvProb_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaConvProbRatio->SaveAs(Form("%s/GammaConvProbRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaCorrFac->SaveAs(Form("%s/GammaCorrFac_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));
     canvasGammaCorrFacRatio->SaveAs(Form("%s/GammaCorrFacRatios_%s.eps",outputDir.Data(),(GetCentralityStringOutput(cutSelection[0])).Data()));

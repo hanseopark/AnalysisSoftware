@@ -44,6 +44,7 @@ MaxPtToy=50
 MaxPtToyLambda=90
 ExtInputFile=""
 BinsPtGamma=0
+energy=""
 
 function GiveBinning5TeV()
 {
@@ -1083,7 +1084,11 @@ function CreateGammaFinalResults()
 
 function CreateGammaFinalResultsV3()
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    if [ $energy = "2.76TeV" ] || [ $energy = "pPb_5.023TeV" ] ; then
+        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    else
+        root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    fi
 }
 
 
@@ -2352,6 +2357,21 @@ do
             else
                 correct=1
             fi
+        elif [ $answer = "YesPCMEMC" ] || [ $answer = "YPCMEMC" ] || [ $answer = "yPCMEMC" ] || [ $answer = "yesPCMEMC" ]; then
+            echo "Will produce Direct Photon plots with special PCMEMC binning...";
+            directphoton="directPhotonA"
+            if [ $ONLYRESULTS -eq 0 ]; then
+                GiveBinningpPbDirGamma
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
@@ -2521,7 +2541,7 @@ do
     fi
 done
 
-if [ $mode -eq 0 ] || [ $mode -eq 9 ]; then
+if [ $mode -eq 0 ] || [ $mode -eq 9 ] ; then
     correct=0
     while [ $correct -eq 0 ]
     do
@@ -2658,7 +2678,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                                 fi
                             fi
 
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtPi0\,$mode\)
                         fi
                     fi
                     if [ $DoGamma -eq 1 ]; then
@@ -2710,7 +2730,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                                 fi
                             fi
 
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0EtadataRAWFILE\"\,\"$Pi0EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0EtadataRAWFILE\"\,\"$Pi0EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
                         fi
                     fi
                     if [ $DoEta -eq 1 ]; then
@@ -2743,7 +2763,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                                     root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Eta\",\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrectionFILE\"\,\"$EtaMCcorrectionBCFILE\",\"$EtaMCcorrectionDFILE\"\)
                                 fi
                             fi
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
                         fi
                     fi
                 fi
@@ -2804,9 +2824,6 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                     else
                         CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $cutSelection $Suffix Pi0 kTRUE;
                     fi
-    #                Pi0MCCorr=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
-    #                GammaPi0MCCorr=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
-    #                CreateGammaFinalResults $GammaPi0MCCorr $Pi0MCCorr $cutSelection $Suffix Pi0 kTRUE;
                 fi
 
                 if [ $DoPi0InEtaBinning -eq 1 ]; then
@@ -2996,63 +3013,3 @@ fi
 if [ $mode = 10 ] || [ $mode = 11 ]; then
     exit;
 fi
-
-# if [ "$energy" != "PbPb_2.76TeV" ] && [ "$energy" != "PbPb_5.02TeV" ]; then
-#     if [ "$energy" != "pPb_5.023TeV" ]; then
-#         Pi0dataCorr=`ls $standardCutMeson/$energy/Pi0_data_GammaConvV1Correction_*.root`
-#         Pi0MCCorr=`ls $standardCutMeson/$energy/Pi0_MC_GammaConvV1Correction_*.root`
-#         GammaPi0dataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
-#         GammaPi0MCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
-#
-#         if [ $DoPi0InEtaBinning -eq 1 ]; then
-#             Pi0EtadataCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_data_GammaConvV1Correction_*.root`
-#             Pi0EtaMCCorr=`ls $standardCutMeson/$energy/Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
-#             GammaPi0EtadataCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_data_GammaConvV1Correction_*.root`
-#             GammaPi0EtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Pi0EtaBinning_MC_GammaConvV1Correction_*.root`
-#         fi
-#         if [ $DoEta -eq 1 ]; then
-#             EtadataCorr=`ls $standardCutMeson/$energy/Eta_data_GammaConvV1Correction_*.root`
-#             EtaMCCorr=`ls $standardCutMeson/$energy/Eta_MC_GammaConvV1Correction_*.root`
-#             GammaEtadataCorr=`ls $standardCutGamma/$energy/Gamma_Eta_data_GammaConvV1Correction_*.root`
-#             GammaEtaMCCorr=`ls $standardCutGamma/$energy/Gamma_Eta_MC_GammaConvV1Correction_*.root`
-#         fi
-#
-#         CallPi0Data=\"$Pi0dataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-#         CallPi0MC=\"$Pi0MCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-#         CallPi0EtaData=\"$Pi0EtadataCorr\"\,\"$EtadataCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kFALSE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-#         CallPi0EtaMC=\"$Pi0EtaMCCorr\"\,\"$EtaMCCorr\"\,\"$standardCutMeson\"\,\"$Suffix\"\,\"kTRUE\"\,\"Levy\"\,\"same\"\,\"$energy\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"$ESTIMATEPILEUP\"
-#
-#         if [ $ONLYCUTS -eq 0 ]; then
-#             if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtadataCorr ] && [ -f $Pi0dataCorr ] && [ -f $SysErrFiledata ]; then
-#                 CreateFinalResults $CallPi0Data ;
-#                 if [ $DoGamma -eq 1 ]; then
-#                     if [ $NEWGammaMacros == 0 ]; then
-#                         CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $standardCutMeson $Suffix Pi0 kFALSE;
-#                     fi
-#                 fi
-#             else
-#                 PARTLY=1
-#             fi
-#
-#             echo "have done this"
-#
-#             if [ $DoPi0 -eq 1 ] && [ $DoEta -eq 1 ] && [ -f $EtaMCCorr ] && [ -f $Pi0MCCorr ] && [ -f $SysErrFileMC ]; then
-#                 CreateFinalResults $CallPi0MC
-#             else
-#                 PARTLY=1
-#             fi
-#             if [ $DoPi0InEtaBinning -eq 1 ] && [ $DoEta -eq 1 ]; then
-#                 if [ -f $EtadataCorr ] && [ -f $Pi0EtadataCorr ] && [ -f $SysErrFiledata ] ; then
-#                     CreateFinalResults $CallPi0EtaData
-#                 else
-#                     PARTLY=1
-#                 fi
-#                 if [ -f $EtaMCCorr ] && [ -f $Pi0EtaMCCorr ] && [ -f $SysErrFileMC ]; then
-#                     CreateFinalResults $CallPi0EtaMC
-#                 else
-#                     PARTLY=1
-#                 fi
-#             fi
-#         fi
-#     fi
-# fi

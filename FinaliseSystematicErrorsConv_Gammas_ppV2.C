@@ -55,10 +55,10 @@
 //*********** Main function to calculate gamma errors for conversion measurements in pp collisions ************
 //*************************************************************************************************************
 void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      = "",
-                                                TString energy                  = "", 
-                                                TString spectrumName            = "", 
+                                                TString energy                  = "",
+                                                TString spectrumName            = "",
                                                 Int_t numberCutStudies          = 1,
-                                                Double_t minPt                  = 0, 
+                                                Double_t minPt                  = 0,
                                                 Double_t maxPt                  = 10,
                                                 TString suffix                  = "pdf",
                                                 Int_t mode                      = 0
@@ -92,7 +92,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         labelSpectrum                           = new TLatex(0.95,0.84,"#gamma_{inc}");
     SetStyleTLatex( labelSpectrum, 0.038,4);
     labelSpectrum->SetTextAlign(31);
-    
+
 
     //**************************************************************
     // setup to read different error sources from root file
@@ -113,13 +113,13 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     if (energy.CompareTo("2.76TeV") == 0 ){
         if (spectrumName.Contains("Gamma"))
             yRangesSysPlotting[1]               = 15.5;
-        else 
-            yRangesSysPlotting[1]               = 28.5;    
-    } 
-    
+        else
+            yRangesSysPlotting[1]               = 28.5;
+    }
+
     // Set names of cut variations for file input
     TString nameCutVariationSC[16]              = {"dEdxE", "TPCCluster", "SinglePt", "Chi2" , "Qt" ,
-                                                    "DoubleCount" ,"BG" ,"Periods" ,"SPD" ,"Pileup",
+                                                    "DoubleCount" ,"BG" ,"Periods" ,"SPD" ,"OOBPileupGamma",
                                                     "CosPoint","dEdxPi", "Alpha" ,"Cocktail","RCut",
                                                     "IntRange" };
 
@@ -128,16 +128,19 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     Color_t markerStyle[20];
     // Set names of cut variations for legends
     TString nameCutVariation[16];
-    
+
+    if(!energy.CompareTo("2.76TeV"))
+        nameCutVariationSC[7]                   = "OOBPileupPi0";
+
     for (Int_t k =0; k<nCuts; k++ ){
         cout << "variation: " << nameCutVariationSC[k].Data() << endl;
-        color[k]                                = GetColorSystematics( nameCutVariationSC[k] ); 
-        markerStyle[k]                          = GetMarkerStyleSystematics( nameCutVariationSC[k] );     
+        color[k]                                = GetColorSystematics( nameCutVariationSC[k] );
+        markerStyle[k]                          = GetMarkerStyleSystematics( nameCutVariationSC[k] );
         nameCutVariation[k]                     = GetSystematicsName(nameCutVariationSC[k]);
         cout << "name for writing: " << nameCutVariation[k].Data() << "\t"<< color[k]  << "\t" << markerStyle[k] << endl;
     }
 
-                                                    
+
     // adapt some cut name for different energies
     if(!energy.CompareTo("7TeV"))
         nameCutVariationSC[7]                   = "7TeVPeriods";
@@ -145,124 +148,124 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         nameCutVariationSC[7]                   = "8TeVPeriods";
     if(!energy.CompareTo("900GeV"))
         nameCutVariationSC[7]                   = "BG";
-    
-    
+
+
     // Create output folder
     gSystem->Exec("mkdir -p GammaSystematicErrorsCalculated");
 
     // ***************************************************************************************************
     // ******************************** Booleans for enabling systematic errors **************************
     // ***************************************************************************************************
-    Bool_t benable[16]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 
+    Bool_t benable[16]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t benableIncGamma900GeV[16]            = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1, 
+    Bool_t benableIncGamma900GeV[16]            = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1,
                                                     1, 1, 1, 0, 0,  0 };
-    Bool_t benableIncRatio900GeV[16]            = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1, 
+    Bool_t benableIncRatio900GeV[16]            = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1,
                                                     1, 1, 1, 0, 0,  0 };
-    Bool_t benableDR900GeV[16]                  = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1, 
+    Bool_t benableDR900GeV[16]                  = { 1, 1, 1, 1, 1,  1, 1, 0, 1, 1,
                                                     1, 1, 1, 1, 0,  0 };
-    Bool_t benableIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1, 
+    Bool_t benableIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1,
                                                     0, 1, 0, 0, 0,  0 };
-    Bool_t benableIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+    Bool_t benableIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 1, 1, 1,
                                                     0, 1, 1, 0, 0,  1 };
-    Bool_t benableDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+    Bool_t benableDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 1, 1, 1,
                                                     0, 1, 1, 1, 0,  1 };
-    Bool_t benableIncGamma7TeV[16]              = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 
+    Bool_t benableIncGamma7TeV[16]              = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t benableIncRatio7TeV[16]              = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 
+    Bool_t benableIncRatio7TeV[16]              = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t benableDR7TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 
+    Bool_t benableDR7TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 0,  0 };
-    Bool_t benableIncGamma8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 
+    Bool_t benableIncGamma8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                     1, 1, 1, 0, 0,  0 };
-    Bool_t benableIncRatio8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 
+    Bool_t benableIncRatio8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                     1, 1, 1, 0, 0,  0 };
-    Bool_t benableDR8TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 
-                                                    1, 1, 1, 1, 0,  0 };    
-    
+    Bool_t benableDR8TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
+                                                    1, 1, 1, 1, 0,  0 };
+
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[16]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 
+    Bool_t bsmooth[16]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncGamma900GeV[16]            = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1, 
+    Bool_t bsmoothIncGamma900GeV[16]            = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatio900GeV[16]            = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1, 
+    Bool_t bsmoothIncRatio900GeV[16]            = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothDR900GeV[16]                  = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1, 
+    Bool_t bsmoothDR900GeV[16]                  = { 0, 0, 0, 0, 1,  0, 0, 0, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1, 
+    Bool_t bsmoothIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1,
                                                     0, 1, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+    Bool_t bsmoothIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1,
                                                     0, 1, 1, 0, 0,  0 };
-    Bool_t bsmoothDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1, 
+    Bool_t bsmoothDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 0, 1, 1,
                                                     0, 1, 1, 0, 0,  0 };
-    Bool_t bsmoothIncGamma7TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
+    Bool_t bsmoothIncGamma7TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatio7TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
+    Bool_t bsmoothIncRatio7TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothDR7TeV[16]                    = { 0, 0, 1, 1, 1,  0, 0, 1, 1, 1, 
+    Bool_t bsmoothDR7TeV[16]                    = { 0, 0, 1, 1, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncGamma8TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
+    Bool_t bsmoothIncGamma8TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatio8TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
+    Bool_t bsmoothIncRatio8TeV[16]              = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothDR8TeV[16]                    = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1, 
+    Bool_t bsmoothDR8TeV[16]                    = { 0, 0, 0, 0, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    
+
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("900GeV") == 0){
             if(!spectrumName.CompareTo("IncRatio")){
-                bsmooth[i]                      = bsmoothIncRatio900GeV[i];            
-                benable[i]                      = benableIncRatio900GeV[i];            
+                bsmooth[i]                      = bsmoothIncRatio900GeV[i];
+                benable[i]                      = benableIncRatio900GeV[i];
             } else if(!spectrumName.CompareTo("DoubleRatio")){
-                bsmooth[i]                      = bsmoothIncRatio900GeV[i];            
-                benable[i]                      = benableIncRatio900GeV[i];            
+                bsmooth[i]                      = bsmoothIncRatio900GeV[i];
+                benable[i]                      = benableIncRatio900GeV[i];
             } else if(!spectrumName.CompareTo("Gamma")){
-                bsmooth[i]                      = bsmoothIncGamma900GeV[i];            
-                benable[i]                      = benableIncGamma900GeV[i];            
+                bsmooth[i]                      = bsmoothIncGamma900GeV[i];
+                benable[i]                      = benableIncGamma900GeV[i];
             }
         } else if (energy.CompareTo("2.76TeV") == 0){
             if(!spectrumName.CompareTo("IncRatio")){
-                bsmooth[i]                      = bsmoothIncRatio2760GeV[i];            
-                benable[i]                      = benableIncRatio2760GeV[i];            
+                bsmooth[i]                      = bsmoothIncRatio2760GeV[i];
+                benable[i]                      = benableIncRatio2760GeV[i];
             } else if(!spectrumName.CompareTo("DoubleRatio")){
-                bsmooth[i]                      = bsmoothDR2760GeV[i];            
-                benable[i]                      = benableDR2760GeV[i];            
+                bsmooth[i]                      = bsmoothDR2760GeV[i];
+                benable[i]                      = benableDR2760GeV[i];
             } else if(!spectrumName.CompareTo("Gamma")){
-                bsmooth[i]                      = bsmoothIncGamma2760GeV[i];            
-                benable[i]                      = benableIncGamma2760GeV[i];      
-            }    
+                bsmooth[i]                      = bsmoothIncGamma2760GeV[i];
+                benable[i]                      = benableIncGamma2760GeV[i];
+            }
         } else if (energy.CompareTo("7TeV") == 0){
             if(!spectrumName.CompareTo("IncRatio")){
-                bsmooth[i]                      = bsmoothIncRatio7TeV[i];            
-                benable[i]                      = benableIncRatio7TeV[i];      
+                bsmooth[i]                      = bsmoothIncRatio7TeV[i];
+                benable[i]                      = benableIncRatio7TeV[i];
             } else if(!spectrumName.CompareTo("DoubleRatio")){
-                bsmooth[i]                      = bsmoothDR7TeV[i];            
-                benable[i]                      = benableDR7TeV[i];            
+                bsmooth[i]                      = bsmoothDR7TeV[i];
+                benable[i]                      = benableDR7TeV[i];
             } else if(!spectrumName.CompareTo("Gamma")){
-                bsmooth[i]                      = bsmoothIncGamma7TeV[i];            
-                benable[i]                      = benableIncGamma7TeV[i];      
-            }    
+                bsmooth[i]                      = bsmoothIncGamma7TeV[i];
+                benable[i]                      = benableIncGamma7TeV[i];
+            }
         } else if (energy.CompareTo("8TeV") == 0){
             if(!spectrumName.CompareTo("IncRatio")){
-                bsmooth[i]                      = bsmoothIncRatio8TeV[i];            
-                benable[i]                      = benableIncRatio8TeV[i];      
+                bsmooth[i]                      = bsmoothIncRatio8TeV[i];
+                benable[i]                      = benableIncRatio8TeV[i];
             } else if(!spectrumName.CompareTo("DoubleRatio")){
-                bsmooth[i]                      = bsmoothDR8TeV[i];            
-                benable[i]                      = benableDR8TeV[i];            
+                bsmooth[i]                      = bsmoothDR8TeV[i];
+                benable[i]                      = benableDR8TeV[i];
             } else if(!spectrumName.CompareTo("Gamma")){
-                bsmooth[i]                      = bsmoothIncGamma8TeV[i];            
-                benable[i]                      = benableIncGamma8TeV[i];            
-            }    
+                bsmooth[i]                      = bsmoothIncGamma8TeV[i];
+                benable[i]                      = benableIncGamma8TeV[i];
+            }
         }
         if (!benable[i]) nCutsActive--;
-    }                      
+    }
 
-    
+
     // ***************************************************************************************************
     // ****************************** Initialize error vectors & graphs **********************************
-    // ***************************************************************************************************                                               
+    // ***************************************************************************************************
     Double_t* errorsNeg[nCuts];
     Double_t errorsNegCorr[nCuts][nPtBins];
     Double_t errorsNegSummed[nPtBins];
@@ -329,20 +332,32 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 errorsMean[i][l]                = 0;
                 errorsMeanErr[i][l]             = 0.0;
                 errorsMeanCorr[i][l]            = 0;
-                errorsMeanErrCorr[i][l]         = 0.0;                
+                errorsMeanErrCorr[i][l]         = 0.0;
             }
             continue;
-        }    
-            
+        }
+
         TGraphAsymmErrors* graphPosErrors       = NULL;
         TGraphAsymmErrors* graphNegErrors       = NULL;
 
         // Set currently undetermined uncertainties
-        if ( nameCutVariationSC[i].CompareTo("Pileup")==0 || (nameCutVariationSC[i].CompareTo("SPD")==0 && !energy.CompareTo("2.76TeV")) ){
+        if ( (nameCutVariationSC[i].CompareTo("SPD")==0 && !energy.CompareTo("2.76TeV")) ){
             TString nameGraphPos;
             TString nameGraphNeg;
             nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data()  );
             nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data()  );
+            cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+            graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+        } else if ( nameCutVariationSC[i].CompareTo("OOBPileupPi0")==0 ){
+            TString nameGraphPos                = Form("Pi0_SystErrorRelPos_%s_pp",nameCutVariationSC[i].Data());
+            TString nameGraphNeg                = Form("Pi0_SystErrorRelNeg_%s_pp",nameCutVariationSC[i].Data());
+            cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
+            graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+        } else if ( nameCutVariationSC[i].CompareTo("OOBPileupGamma")==0 ){
+            TString nameGraphPos                = Form("Gamma_SystErrorRelPos_%s_pp",nameCutVariationSC[i].Data());
+            TString nameGraphNeg                = Form("Gamma_SystErrorRelNeg_%s_pp",nameCutVariationSC[i].Data());
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -368,17 +383,17 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 graphNegErrors->SetPoint(k, graphNegErrors->GetX()[k],0);
                 graphNegErrors->SetPointEYhigh (k, 0);
                 graphNegErrors->SetPointEYlow (k, 0);
-            }    
+            }
         }
-        
+
         // Remove first points depending on chosen offset
         while (graphPosErrors->GetX()[0] < minPt ){
             graphPosErrors->RemovePoint(0);
             graphNegErrors->RemovePoint(0);
-        } 
+        }
         while (graphPosErrors->GetX()[graphPosErrors->GetN()-1] > maxPt){
             graphPosErrors->RemovePoint(graphPosErrors->GetN()-1);
-            graphNegErrors->RemovePoint(graphNegErrors->GetN()-1);            
+            graphNegErrors->RemovePoint(graphNegErrors->GetN()-1);
         }
         if (i == 0) {
             nPtBinsActive                       = graphNegErrors->GetN();
@@ -410,11 +425,11 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     adjustPtDependent               = kTRUE;
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (!energy.CompareTo("2.76TeV")){
-                            errorFixed              = 1.05+pow(ptBins[k],2.5)*0.05;
-                        } else { 
+                            errorFixed              = 1.05+pow(ptBins[k],2.7)*0.045;
+                        } else {
                             errorFixed              = 0.25+pow(ptBins[k]-2.0,2)*0.7;
                         }
-                        
+
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
                             errorsMeanErr[i][k]     = errorFixed*0.01;
@@ -425,8 +440,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 } else {
                     if (!energy.CompareTo("2.76TeV")){
                         errorFixed                  = 0.45;
-                    }    
-                }    
+                    }
+                }
             }
 
             // fix Single pt sys #1
@@ -436,24 +451,24 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                         adjustPtDependent               = kTRUE;
                         for (Int_t k = 0; k < nPtBinsActive; k++){
                             errorFixed          = 0.4+pow(ptBins[k],2.5)*0.045+0.2*ptBins[k];
-                            
+
                             if (errorFixed != -1){
                                 errorsMean[i][k]        = errorFixed;
                                 errorsMeanErr[i][k]     = errorFixed*0.01;
                                 errorsMeanCorr[i][k]    = errorFixed;
                                 errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    } else {    
-                        errorFixed                  = 0.3;                        
-                    }    
+                            }
+                        }
+                    } else {
+                        errorFixed                  = 0.3;
+                    }
                 } else {
                     if (!energy.CompareTo("2.76TeV")){
-                        errorFixed                  = 0.2;                        
+                        errorFixed                  = 0.2;
                     }
                 }
             }
-            
+
             // fix Single pt sys #2
             if (!nameCutVariationSC[i].CompareTo("SinglePt")){
                 if (spectrumName.Contains("Ratio")){
@@ -464,22 +479,22 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                         for (Int_t k = 0; k < nPtBinsActive; k++){
                             if (ptBins[k] > 0.8)
                                 errorFixed              = 0.5+pow(ptBins[k]+2.8,1.8)*0.05;
-                            
+
                             if (errorFixed != -1){
                                 errorsMean[i][k]        = errorFixed;
                                 errorsMeanErr[i][k]     = errorFixed*0.01;
                                 errorsMeanCorr[i][k]    = errorFixed;
                                 errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    } else {    
-                        errorFixed                  = 0.3;                        
-                    }    
+                            }
+                        }
+                    } else {
+                        errorFixed                  = 0.3;
+                    }
                 } else {
                     if (!energy.CompareTo("2.76TeV")||!energy.CompareTo("7TeV")||!energy.CompareTo("8TeV")){
                         errorFixed                  = 0.25;
-                    }    
-                }    
+                    }
+                }
             }
 
             // fix Chi2/psi pair uncertainties #3
@@ -496,30 +511,30 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                         } else {
                             errorFixed              = 0.2+pow(ptBins[k],2)*0.025;
                         }
-                        
+
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
                             errorsMeanErr[i][k]     = errorFixed*0.01;
                             errorsMeanCorr[i][k]    = errorFixed;
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }    
+                        }
                     }
                 } else {
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (!energy.CompareTo("2.76TeV")||!energy.CompareTo("7TeV")||!energy.CompareTo("8TeV"))
                             errorFixed              = 0.2+pow(ptBins[k],1.9)*0.02+0.1*ptBins[k];
-                        
+
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
                             errorsMeanErr[i][k]     = errorFixed*0.01;
                             errorsMeanCorr[i][k]    = errorFixed;
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }    
+                        }
                     }
-                }    
+                }
             }
-            
+
             // fix Qt sys #4
             if (!nameCutVariationSC[i].CompareTo("Qt")){
                 adjustPtDependent               = kTRUE;
@@ -530,34 +545,34 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                 errorFixed      = 0.5+pow(ptBins[k],2.5)*0.04+0.5*ptBins[k];
                         } else {
                             errorFixed      = 0.15+pow(ptBins[k],2.0)*0.003+0.15*ptBins[k];
-                        }    
-                    } else {    
+                        }
+                    } else {
                         if (ptBins[k] > 3.0)
                             errorFixed          = 0.2+pow(ptBins[k]+3,2)*0.027;
                     }
-                    
+
                     if (errorFixed != -1){
                         errorsMean[i][k]        = errorFixed;
                         errorsMeanErr[i][k]     = errorFixed*0.01;
                         errorsMeanCorr[i][k]    = errorFixed;
                         errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                    }    
+                    }
                 }
             }
-            
+
             // fix double counting sys #5
             if (!nameCutVariationSC[i].CompareTo("DoubleCount")){
                 adjustPtDependent               = kTRUE;
                 for (Int_t k = 0; k < nPtBinsActive; k++){
                     if (!energy.CompareTo("8TeV")){
                         errorFixed              = 0.01+pow(ptBins[k]-0.5,2)*0.027;
-                    } 
+                    }
                     if (errorFixed != -1){
                         errorsMean[i][k]        = errorFixed;
                         errorsMeanErr[i][k]     = errorFixed*0.01;
                         errorsMeanCorr[i][k]    = errorFixed;
                         errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                    }    
+                    }
                 }
             }
 
@@ -571,7 +586,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     }
                 }
             }
-            
+
             // fix periods sys #7
             if (!nameCutVariationSC[i].CompareTo("7TeVPeriods")||!nameCutVariationSC[i].CompareTo("8TeVPeriods")){
                 for (Int_t k = 0; k < nPtBinsActive; k++){
@@ -582,12 +597,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     }
                 }
             }
-            
+
             // fix SPD pileup sys #8
             if (!nameCutVariationSC[i].CompareTo("SPD")){
                 if (!energy.CompareTo("2.76TeV")){
                     errorFixed                  = 0.25;
-                } else {    
+                } else {
                     adjustPtDependent               = kTRUE;
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (ptBins[k] > 12.0)
@@ -599,19 +614,29 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
                         }
                     }
-                }    
+                }
             }
             // fix out-of-bunch sys #9
-            if (!nameCutVariationSC[i].CompareTo("Pileup")){
+            if ( !nameCutVariationSC[i].CompareTo("OOBPileupGamma") ){
                 if (!energy.CompareTo("2.76TeV")){
-                    errorFixed                      = 2.0;
+                    adjustPtDependent               = kTRUE;
+                    for (Int_t k = 0; k < nPtBinsActive; k++){
+                        if (ptBins[k] > 5)
+                            errorFixed              = 1.5;
+                        if (errorFixed != -1){
+                            errorsMean[i][k]        = errorFixed;
+                            errorsMeanErr[i][k]     = errorFixed*0.01;
+                            errorsMeanCorr[i][k]    = errorFixed;
+                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                        }
+                    }
                 } else {
                     errorFixed                      = 1.0;
-                }    
+                }
             }
 
             // fix cosPoint sys #10
-            
+
             // fix dEdxPi sys #11
             if (!nameCutVariationSC[i].CompareTo("dEdxPi")){
                 if (spectrumName.Contains("Ratio")){
@@ -619,38 +644,38 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                         adjustPtDependent               = kTRUE;
                         for (Int_t k = 0; k < nPtBinsActive; k++){
                                 errorFixed              = 0.9+pow(ptBins[k],2.7)*0.04+ptBins[k]*0.1;
-                            
+
                             if (errorFixed != -1){
                                 errorsMean[i][k]        = errorFixed;
                                 errorsMeanErr[i][k]     = errorFixed*0.01;
                                 errorsMeanCorr[i][k]    = errorFixed;
                                 errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    }   
+                            }
+                        }
+                    }
                 } else {
                     if (!energy.CompareTo("2.76TeV")){
                         adjustPtDependent               = kTRUE;
                         for (Int_t k = 0; k < nPtBinsActive; k++){
                             errorFixed                  = 0.2+pow(ptBins[k],2.5)*0.005+0.05*ptBins[k];
-                            
+
                             if (errorFixed != -1){
                                 errorsMean[i][k]        = errorFixed;
                                 errorsMeanErr[i][k]     = errorFixed*0.01;
                                 errorsMeanCorr[i][k]    = errorFixed;
                                 errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
-                        }                           
-                    }                       
-                }    
+                            }
+                        }
+                    }
+                }
             }
-                
+
             // fix alpha uncertainties #12
             if (!nameCutVariationSC[i].CompareTo("Alpha")){
                 if (!spectrumName.CompareTo("IncRatio")){
                     if (!energy.CompareTo("2.76TeV"))
                         errorFixed              = 1.;
-                }    
+                }
                 if (!spectrumName.CompareTo("DoubleRatio")){
                     if (!energy.CompareTo("2.76TeV")){
                         errorFixed              = 1;
@@ -663,19 +688,19 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                 errorsMeanErr[i][k]     = errorFixed*0.01;
                                 errorsMeanCorr[i][k]    = errorFixed;
                                 errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                            }    
+                            }
                         }
-                    }    
-                }    
+                    }
+                }
             }
-            
+
             // fix Cocktail sys #13
             if (!nameCutVariationSC[i].CompareTo("Cocktail")){
                 if (!spectrumName.CompareTo("DoubleRatio")){
-                    errorFixed                  = 1.0;                        
-                }    
+                    errorFixed                  = 1.0;
+                }
             }
-            
+
             // fix Rconv uncertainties #14
             if (!nameCutVariationSC[i].CompareTo("Rcut")){
                 if (!spectrumName.CompareTo("DoubleRatio")){
@@ -687,10 +712,10 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                             errorsMeanErr[i][k]     = errorFixed*0.01;
                             errorsMeanCorr[i][k]    = errorFixed;
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }    
+                        }
                     }
-                }    
-            }    
+                }
+            }
 
             // fix IntRange sys #15
             if (!nameCutVariationSC[i].CompareTo("IntRange")){
@@ -701,17 +726,17 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                             if (ptBins[k] > 8.0)
                                 errorFixed          = 3;
                         }
-                        
+
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
                             errorsMeanErr[i][k]     = errorFixed*0.01;
                             errorsMeanCorr[i][k]    = errorFixed;
                             errorsMeanErrCorr[i][k] = errorFixed*0.01;
-                        }    
+                        }
                     }
-                }    
+                }
             }
-            
+
             // put fixed values for pt independent errors, which were adjusted
             if (!adjustPtDependent && errorFixed != -1){
                 for (Int_t k = 0; k < nPtBinsActive; k++){
@@ -720,9 +745,9 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     errorsMeanCorr[i][k]    = errorFixed;
                     errorsMeanErrCorr[i][k] = errorFixed*0.01;
                 }
-            }    
-        }    
-        
+            }
+        }
+
 
         // Add systematic error contribution from current cutvariation to total summed error
         for (Int_t l = 0; l < nPtBinsActive; l++){
@@ -800,7 +825,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     Double_t textSizeLabelsPixelmean        = 55;
     Double_t textSizeLabelsRelmean          = 55./1200;
 
-        TH2D *histo2DSysErrMean                     = new TH2D("histo2DSysErrMean", "histo2DSysErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07,1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]), 1000, 
+        TH2D *histo2DSysErrMean                     = new TH2D("histo2DSysErrMean", "histo2DSysErrMean",1000, ptBins[0]-(ptBins[1]-ptBins[0])/2-0.07,1.2*(ptBins[nPtBinsActive-1]+ptBinsErr[nPtBinsActive-1]), 1000,
                                                                yRangesSysPlotting[0], yRangesSysPlotting[1]);
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %",
                                     0.85*textSizeLabelsRelmean, textSizeLabelsRelmean, 0.85*textSizeLabelsRelmean, textSizeLabelsRelmean, 0.9, 0.75);//(#times #epsilon_{pur})
@@ -814,7 +839,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 DrawGammaSetMarkerTGraphErr(meanErrors[i], markerStyle[i], 1.,color[i],color[i]);
                 meanErrors[i]->Draw("p,csame");
                 legendMean->AddEntry(meanErrors[i],nameCutVariation[i].Data(),"p");
-            }    
+            }
         }
 
         DrawGammaSetMarkerTGraphErr(meanErrorsSummed, 20, 1.,1,1);
@@ -846,17 +871,16 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
         for(Int_t i = 0;i< nCuts ;i++){
             if (benable[i]){
-                if(!spectrumName.CompareTo("Gamma")||i!=7){
-                    DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], markerStyle[i], 1.,color[i],color[i]);
-                    meanErrorsCorr[i]->Draw("pX0,csame");
-                    legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");
-                }
-            }    
+                DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], markerStyle[i], 1.,color[i],color[i]);
+                meanErrorsCorr[i]->Draw("pX0,csame");
+                legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");
+
+            }
         }
-        
+
         DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "Material" ), 1.,GetColorSystematics( "Material" ),GetColorSystematics( "Material" ));
         graphMaterialError->Draw("p,csame");
-        legendMeanNew->AddEntry(graphMaterialError,"Material","p");
+        legendMeanNew->AddEntry(graphMaterialError,"material","p");
 
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
@@ -930,9 +954,9 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         //"4 Qt"
         //"5 DoubleCount"
         //"6 BG"
-        //"7 Periods"
+        //"7 Periods" // "OOBPileupPi0"
         //"8 SPD"
-        //"9 Pileup"
+        //"9 OOBPileupGamma"
         //"10 CosPoint"
         //"11 dEdxPi"
         //"12 Alpha"
@@ -944,11 +968,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         errorsMeanCorrSignalExtraction[l]       =   TMath::Sqrt(pow(errorsMeanCorr[12][l],2)+   // Alpha
                                                                 pow(errorsMeanCorr[6][l],2)+    // BG
                                                                 pow(errorsMeanCorr[15][l],2));  // Pi0 Yield Extraction
-        
+
         // Pileup:  SPD, Out-of-bunch, Out-of-bunch pi0?
-        errorsMeanCorrPileup[l]                 =   TMath::Sqrt(pow(errorsMeanCorr[8][l],2)+    // SPD
-                                                                pow(errorsMeanCorr[9][l],2));   // Pileup
-        
+        errorsMeanCorrPileup[l]                 =   TMath::Sqrt(pow(errorsMeanCorr[7][l],2)+    // OOBPileupPi0
+                                                                pow(errorsMeanCorr[8][l],2)+    // SPD
+                                                                pow(errorsMeanCorr[9][l],2));   // OOBPileupGamma
+
         // PID: dEdxE, dEdxPi
         errorsMeanCorrPID[l]                    =   TMath::Sqrt(pow(errorsMeanCorr[0][l],2)+    // dEdxE
                                                                 pow(errorsMeanCorr[11][l],2));  // dEdxPi
@@ -999,29 +1024,29 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         legendSummedMeanNew->SetNColumns(2);
         legendSummedMeanNew->SetMargin(0.1);
         Size_t markersizeSummed     = 1.3;
-        
+
         // Signal extraction error
-        if (benable[12] || benable[6] || benable[15]){  
+        if (benable[12] || benable[6] || benable[15]){
             DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, 20, markersizeSummed,color[0],color[0]);
             meanErrorsSignalExtraction->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Extraction #pi^{0}","p");
         }
-        if (benable[0] || benable[11]){  
+        if (benable[0] || benable[11]){
             DrawGammaSetMarkerTGraphErr(meanErrorsPID, 21, markersizeSummed,color[1],color[1]);
             meanErrorsPID->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPID,"Electron PID","p");
         }
-        if (benable[1] || benable[2]){  
+        if (benable[1] || benable[2]){
             DrawGammaSetMarkerTGraphErr(meanErrorsTrackReco, 22, markersizeSummed,color[2],color[2]);
             meanErrorsTrackReco->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"Track Reco.","p");
         }
-        if (benable[3] || benable[4] || benable[5] || benable[10]){  
+        if (benable[3] || benable[4] || benable[5] || benable[10]){
             DrawGammaSetMarkerTGraphErr(meanErrorsPhotonReco, 23, markersizeSummed,color[3],color[3]);
             meanErrorsPhotonReco->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reco.","p");
         }
-        if (benable[9] || benable[8]){
+        if (benable[9] || benable[8] || benable[7] ){
             DrawGammaSetMarkerTGraphErr(meanErrorsPileup, 25, markersizeSummed,color[5],color[5]);
             meanErrorsPileup->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pileup","p");
@@ -1029,7 +1054,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         if (benable[13]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[13], markerStyle[13], markersizeSummed,color[13],color[13]);
             meanErrorsCorr[13]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[13],"Cocktail","p");        
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[13],"Cocktail","p");
         }
         DrawGammaSetMarkerTGraphErr(graphMaterialError,  GetMarkerStyleSystematics( "Material" ), 1.,GetColorSystematics( "Material" ),GetColorSystematics( "Material" ));
         graphMaterialError->Draw("p,csame");

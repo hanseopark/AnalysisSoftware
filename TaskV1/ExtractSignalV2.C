@@ -81,8 +81,6 @@ void ExtractSignalV2(   TString meson                   = "",
     //         12// new output DCal-DCal
     //         13// new output PCM-DCal
 
-    if(directphotonPlots){}
-
     if(optionAdvancedMesonQA.Contains("AdvancedMesonQA")){fAdvancedMesonQA = kTRUE;}
 
     fCutSelection = cutSelection;
@@ -4320,7 +4318,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
       }
     }
     if(fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Eta") ==0 )){
-      if(fMode == 3){ 
+      if(fMode == 3){
         fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
       }
     }

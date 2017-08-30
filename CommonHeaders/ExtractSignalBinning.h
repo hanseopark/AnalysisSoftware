@@ -792,20 +792,18 @@
     Int_t fBinsEtapPb5TeVPt3BodyRebin[14]           = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                                         5, 5, 5, 5};
 
-    Double_t fBinsDirGammapPb5TeVPt[24]             = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,
-                                                        1.8, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0, 4.8, 5.6, 6.4,
-                                                        7.2, 8.0, 10.0, 14.0};
-    Int_t fBinsDirGammapPb5TeVPtRebin[23]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+    Double_t fBinsDirGammapPb5TeVPt[26]             = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,
+                                                        1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.8,
+                                                        5.6, 6.4, 7.2, 8.0, 10.0, 14.0};
+    Int_t fBinsDirGammapPb5TeVPtRebin[25]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
+                                                        2, 2, 4, 4, 4};
+    Double_t fBinsDirGammapPb5TeVPCMEMCPt[29]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,
+                                                        1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.2,
+                                                        3.6, 4.0, 4.8, 5.6, 6.4, 7.2, 8.0, 10.0, 14.0};
+    Int_t fBinsDirGammapPb5TeVPCMEMCPtRebin[28]     = { 10, 4, 4, 2, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
-                                                        4, 4, 4};
-    Double_t fBinsDirGammapPb5TeVPCMEMCPt[40]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,
-                                                        1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
-                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,
-                                                        8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 26.0, 30.0};
-    Int_t fBinsDirGammapPb5TeVPCMEMCPtRebin[39]     = { 10, 4, 4, 2, 1, 1, 1, 1, 1, 1,
-                                                        1, 1, 1, 1, 1, 1, 1, 2, 2, 2,
-                                                        2, 4, 4, 5, 5, 5, 8, 8, 8, 8,
-                                                        8, 8, 8, 8, 8, 8, 10, 10};
+                                                        2, 4, 4, 4, 4, 5, 5, 5 };
 
     //****************************************************************************************************
     //***************************** Pt binning for PbPb 2010, 2.76 TeV ***********************************
@@ -1848,9 +1846,6 @@
                       fRow            = 6;
                     }
 
-
-
-
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         if (isDCA) {
                             fBinsPt[i]         = fBinsPi05TeVPtDCA[i];
@@ -2286,24 +2281,30 @@
                     specialTrigg        = triggerSet;
                 }
 
-                if (directPhoton.CompareTo("directPhoton") == 0 ){
+                if (directPhoton.Contains("directPhoton") ){
                     fStartPtBin     = 1;
                     fColumn         = 5;
-                    fRow            = 4;
-                    if (modi == 2){
+                    fRow            = 5;
+                    if (modi == 2 && directPhoton.CompareTo("directPhoton") == 0){
                         fStartPtBin     = 1;
                         fColumn         = 6;
+                    } else if (modi == 2 && directPhoton.CompareTo("directPhotonA") == 0){
+                        fStartPtBin     = 8;
+                        fExampleBin     = 10;
+                    } else if (modi == 4){
+                        fStartPtBin     = 8;
+                        fExampleBin     = 13;
                     }
                     Int_t nBinsPlot = fColumn*fRow -1;
                     if (fNBinsPt-fStartPtBin > nBinsPlot) fColumn++;
                     nBinsPlot       = fColumn*fRow -1;
                     if (fNBinsPt-fStartPtBin > nBinsPlot) fRow++;
 
-                    if (specialTrigg == 0 && ( modi == 2 || modi == 4 ) && fNBinsPt > 39 ){
-                        cout << "You have chosen to have more than 43 bins, this is not possible, it will be reduced to 39 for calo analysis" << endl;
-                        fNBinsPt    = 39;
-                    } else if ( !( modi == 2 || modi == 4 ) && fNBinsPt > 23) {
-                        cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                    if (specialTrigg == 0 && ( modi == 2 || modi == 4 ) && fNBinsPt > 28 ){
+                        cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28 for calo analysis" << endl;
+                        fNBinsPt    = 28;
+                    } else if ( !( modi == 2 || modi == 4 ) && fNBinsPt > 25) {
+                        cout << "You have chosen Direct Photon Plots and more than 25 bins, this is not possible, it will be reduced to 25 bins." << endl;
                         fNBinsPt    = 23;
                     }
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
@@ -2315,6 +2316,10 @@
                             fBinsPt[i]  = fBinsDirGammapPb5TeVPCMEMCPt[i];
                             if (i < fNBinsPt+1)
                                 fNRebin[i]  = fBinsDirGammapPb5TeVPCMEMCPtRebin[i];
+                        } else if (modi == 4){
+                            fBinsPt[i]  = fBinsDirGammapPb5TeVPt[i];
+                            if (i < fNBinsPt+1)
+                                fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
                         } else {
                             fBinsPt[i]  = fBinsDirGammapPb5TeVPt[i];
                             if (i < fNBinsPt+1)

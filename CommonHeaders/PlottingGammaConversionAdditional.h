@@ -4608,7 +4608,7 @@
             return kPink-6;
         if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )
             return 860;
-        if ( variationName.CompareTo("ClusterTime") == 0 || variationName.CompareTo("TOF") == 0)
+        if ( variationName.CompareTo("ClusterTime") == 0 || variationName.CompareTo("TOF") == 0 || variationName.CompareTo("ClusterTiming") == 0 )
             return kBlue-4;
         if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
             return kRed-4;
@@ -4700,7 +4700,7 @@
             return 23;
         if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )
             return 20;
-        if ( variationName.CompareTo("ClusterTime") == 0 )
+        if ( variationName.CompareTo("ClusterTime") == 0 || variationName.CompareTo("ClusterTiming") == 0)
             return 25;
         if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
             return 24;
@@ -4806,7 +4806,7 @@
             return "yield extraction #pi^{0}";
         if ( variationName.CompareTo("YieldExtractionEta") == 0 )
             return "yield extraction #eta";
-        if ( variationName.CompareTo("ClusterTime") == 0 )
+        if ( variationName.CompareTo("ClusterTime") == 0 || variationName.CompareTo("ClusterTiming") == 0)
             return "clu. timing";
         if ( variationName.CompareTo("ClusterizationEnergy") == 0 )
             return "clusterization energy";
