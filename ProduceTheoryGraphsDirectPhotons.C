@@ -2206,7 +2206,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // read direct photon spectra
         ifstream inMCGillGamma;
         Int_t nlinesGammaMCGill     = 0;
-        Double_t xPtGammaMCGill[100], xPtErrGammaMCGill[0], yYieldGammaMCGill[100], yYieldErrGammaMCGill[100];
+        Double_t xPtGammaMCGill[100], xPtErrGammaMCGill[100], yYieldGammaMCGill[100], yYieldErrGammaMCGill[100];
 
         inMCGillGamma.open("ExternalInputpPb/Theory/McGill/direct_photon_sp.dat",ios_base::in);
         while(!inMCGillGamma.eof()){
@@ -2254,7 +2254,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
         //*****************************************************
         // read decay photon spectra
-        Int_t nParticles                    = 7;
+        const Int_t nParticles                    = 7;
         TString particleNames[nParticles]   = {"eta", "etap", "omega", "phi", "pi0",
                                             "rho0", "Sigma0"};
         TString particleNamesOut[nParticles]= {"eta", "etap", "omega", "phi", "pi0",
