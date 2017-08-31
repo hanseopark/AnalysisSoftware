@@ -886,6 +886,9 @@
         legendInvMass2->Draw();
         histo1DInvMassDummy->Draw("AXIS,same");
 
+        DrawGammaLines(normalLow, normalLow, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
+        DrawGammaLines(normalUp, normalUp, minimum, 0.2*histoPi0InvMassSigPlusBG->GetMaximum(), 5, kGray+2,7);
+
        if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
         canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit_SubPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
         } else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){

@@ -566,7 +566,7 @@
             case 0:
                 return "PCM";
             case 1:
-                return "PCM-Dal";
+                return "PCM-#gamma^{*}#gamma";
             case 2:
                 return "PCM-EMC";
             case 3:
@@ -576,9 +576,9 @@
             case 5:
                 return "PHOS";
             case 6:
-                return "EMC-Dal";
+                return "EMC-#gamma^{*}#gamma";
             case 7:
-                return "PHOS-Dal";
+                return "PHOS-#gamma^{*}#gamma";
             case 10:
                 return "mEMC";
             case 11:
