@@ -151,6 +151,33 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     TH1D* histoIncRatioPi0Fit               = (TH1D*) fileInput->Get("histoIncRatioFitPurity");
     TH1D* histoDR                           = (TH1D*) fileInput->Get("DoubleRatioTrueEffPurity");
     TH1D* histoDRFit                        = (TH1D*) fileInput->Get("DoubleRatioFitPurity");
+    TH1D* histococktailAllGamma             = (TH1D*) fileInput->Get("Gamma_Pt");
+    
+    TString inputFileNameAdditional               = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root", fCutNumber.Data(), optionEnergy.Data(), fCutNumber.Data());
+    cout << "trying to read: " << inputFileNameAdditional.Data() << endl;
+    TFile *fileInputAdditional                    = new TFile(inputFileNameAdditional.Data());
+    if (fileInputAdditional->IsZombie()) {
+        cout << "file couldn't be read, aborting....";
+        return;
+    }
+
+    // read stat error hists
+    TH1D* histoPileupCorrection             = (TH1D*) fileInputAdditional->Get("PileUpCorrectionFactor");
+    TH1D* histoGammaRawYields               = (TH1D*) fileInputAdditional->Get("GammaRaw_Pt");
+    
+    
+    TString inputFileNameAdditional2               = Form("%s/%s/Pi0_MC_GammaConvV1CorrectionHistos_%s.root", fCutNumber.Data(), optionEnergy.Data(), fCutNumber.Data());
+    cout << "trying to read: " << inputFileNameAdditional2.Data() << endl;
+    TFile *fileInputAdditional2                    = new TFile(inputFileNameAdditional2.Data());
+    if (fileInputAdditional2->IsZombie()) {
+        cout << "file couldn't be read, aborting....";
+        return;
+    }
+
+    // read stat error hists
+    TH1D* histoGammaPurity                  = (TH1D*) fileInputAdditional2->Get("GammaTruePurity_Pt");
+    TH1D* histoGammaConvProb                = (TH1D*) fileInputAdditional2->Get("GammaConvProb_MCPt");
+    TH1D* histoGammaRecoEff                 = (TH1D*) fileInputAdditional2->Get("GammaRecoEff_Pt");
 
 
     // calculate sys error graphs
@@ -328,6 +355,48 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         histo2DDoubleRatioPlotting->Draw("same,axis");
     canvasDoublRatioNLO->Print(Form("%s/DoubleRatioComparison_NLO.%s",outputDir.Data(),suffix.Data()));
 
+    //*************************************************************************************************
+    // calculate the direct photon spectrum
+    //*************************************************************************************************
+    TH1D* histoDirectPhotonSpectrum = NULL;
+    TH1D* histoDoubleRatioUpperLimits= NULL;
+    TH1D* histoDirectPhotonSpectrumFit= NULL;
+    TH1D* histoDoubleRatioUpperLimitsFit= NULL;
+    if(doDirGamma){
+      cout << __LINE__ << endl;
+        // calculation for non-fitted pi0 double ratio
+        if(graphDRSysErr&&histoIncGamma&&histoDR){
+          cout << __LINE__ << endl;
+            histoDirectPhotonSpectrum            = (TH1D*)histoIncGamma->Clone("histoDirectPhotonSpectrum");
+            histoDoubleRatioUpperLimits          = GetUpperLimitsHisto(histoDR,  graphDRSysErr, 0.95, 1e-6, 1e4);
+            Double_t binContent                  = -1;
+            Double_t binError                    = -1;
+            for (Int_t i=1; i<histoDirectPhotonSpectrum->GetNbinsX()+1; i++) {
+                if (!histoDirectPhotonSpectrum->GetBinContent(i)) continue;
+                binContent                       = histoDirectPhotonSpectrum->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimits->GetBinContent(i));
+                binError                         = 0.;
+                histoDirectPhotonSpectrum->SetBinContent(i, binContent);
+                histoDirectPhotonSpectrum->SetBinError(  i, binError);
+            }
+            cout << __LINE__ << endl;
+        }
+        // calculation for fitted pi0 double ratio
+        if(graphDRPi0FitSysErr&&histoIncGamma&&histoDRFit){
+          cout << __LINE__ << endl;
+            histoDirectPhotonSpectrumFit        = (TH1D*)histoIncGamma->Clone("histoDirectPhotonSpectrumFit");
+            histoDoubleRatioUpperLimitsFit      = GetUpperLimitsHisto(histoDRFit,  graphDRPi0FitSysErr, 0.95, 1e-6, 1e4);
+            Double_t binContent                  = -1;
+            Double_t binError                    = -1;
+            for (Int_t i=1; i<histoDirectPhotonSpectrumFit->GetNbinsX()+1; i++) {
+                if (!histoDirectPhotonSpectrumFit->GetBinContent(i)) continue;
+                binContent                      = histoDirectPhotonSpectrumFit->GetBinContent(i) * (1 - 1/histoDoubleRatioUpperLimitsFit->GetBinContent(i));
+                binError                        = 0.;
+                histoDirectPhotonSpectrumFit->SetBinContent(i, binContent);
+                histoDirectPhotonSpectrumFit->SetBinError(  i, binError);
+            }
+            cout << __LINE__ << endl;
+        }
+    }
 
     //*************************************************************************************************
     // put everything in common output per system
@@ -391,17 +460,42 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
                 SetHistogramm(histoPi0Spectrum,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
                 histoPi0Spectrum->Write("Pi0StatError",TObject::kOverwrite);
             }
-//             // writing direct photon spectrum
-//             if(histoDirGamma)            histoDirGamma->Write("DirGammaUpperLimits",TObject::kOverwrite);
+            // // writing direct photon spectrum
+            if(histoDirectPhotonSpectrum)            histoDirectPhotonSpectrum->Write("DirectPhotonSpectrum",TObject::kOverwrite);
+            if(histoDirectPhotonSpectrumFit)            histoDirectPhotonSpectrumFit->Write("DirectPhotonSpectrumFit",TObject::kOverwrite);
 
-//             if (histoCocktailAllGamma)histoCocktailAllGamma->Write("CocktailSumGamma",TObject::kOverwrite);
-//             if (histoCocktailPi0Gamma)histoCocktailPi0Gamma->Write("CocktailPi0Gamma",TObject::kOverwrite);
-//             if (histoCocktailEtaGamma)histoCocktailEtaGamma->Write("CocktailEtaGamma",TObject::kOverwrite);
-//             if (histoCocktailOmegaGamma)histoCocktailOmegaGamma->Write("CocktailOmegaGamma",TObject::kOverwrite);
-//             if (histoCocktailEtapGamma)histoCocktailEtapGamma->Write("CocktailEtapGamma",TObject::kOverwrite);
-//             if (histoCocktailPhiGamma)histoCocktailPhiGamma->Write("CocktailPhiGamma",TObject::kOverwrite);
-//             if (histoCocktailRhoGamma)histoCocktailRhoGamma->Write("CocktailRhoGamma",TObject::kOverwrite);
-//             if (histoCocktailSigmaGamma)histoCocktailSigmaGamma->Write("CocktailSigmaGamma",TObject::kOverwrite);
+
+          if(histoPileupCorrection)            histoPileupCorrection->Write("PileUpCorrectionFactor",TObject::kOverwrite);
+          if(histoGammaRawYields)            histoGammaRawYields->Write("GammaRawYields",TObject::kOverwrite);
+          if(histoGammaPurity)            histoGammaPurity->Write("GammaTruePurity",TObject::kOverwrite);
+          if(histoGammaConvProb)            histoGammaConvProb->Write("GammaConversionProbability",TObject::kOverwrite);
+          if(histoGammaRecoEff)            histoGammaRecoEff->Write("GammaRecoEfficiency",TObject::kOverwrite);
+
+      // Cocktail histograms
+      directoryGamma->mkdir("Cocktail");
+      TDirectoryFile* directoryCocktail = (TDirectoryFile*)directoryGamma->Get("Cocktail");
+      directoryGamma->cd("Cocktail");
+      if(histococktailAllGamma) histococktailAllGamma->Write(histococktailAllGamma->GetName(),TObject::kOverwrite);
+      TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
+      TH1D* dummyCocktailHist;
+      TH1D* dummyGammaCocktailHist;
+      TH1D* dummyGammaRatioCocktailHist;
+      for(Int_t i=0; i<14;i++){
+          dummyCocktailHist             = NULL;
+          dummyGammaCocktailHist        = NULL;
+          dummyGammaRatioCocktailHist   = NULL;
+          dummyCocktailHist             = (TH1D* )fileInput->Get(Form("%s_Pt",particlesInCocktail[i].Data()));
+          dummyGammaCocktailHist        = (TH1D* )fileInput->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
+          if(dummyCocktailHist) dummyCocktailHist->Write(dummyCocktailHist->GetName(),TObject::kOverwrite);
+          if(dummyGammaCocktailHist){
+              dummyGammaCocktailHist->Write(dummyGammaCocktailHist->GetName(),TObject::kOverwrite);
+              if(histococktailAllGamma){
+                  dummyGammaRatioCocktailHist = (TH1D* )fileInput->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
+                  dummyGammaRatioCocktailHist->Divide(histococktailAllGamma);
+                  dummyGammaRatioCocktailHist->Write(Form("Gamma_From_%s_Ratio_To_All",particlesInCocktail[i].Data()), TObject::kOverwrite);
+              }
+          }
+      }
 
     fileGammaFinal->Write();
     fileGammaFinal->Close();

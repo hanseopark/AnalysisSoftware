@@ -68,7 +68,10 @@
     Double_t            bin_shift_x(TF1 *, Double_t , Double_t , Double_t );
     Int_t               GetBinning(TObject *, Double_t* );
     TString             AutoDetectMainTList(Int_t);
-
+    TH1D*               GetUpperLimitsHisto(  TH1D*, TGraphAsymmErrors*, Double_t, Double_t, Int_t );
+    Double_t            GetUpperLimit( Double_t, Double_t, Double_t, Double_t, Double_t&, Double_t, Int_t );
+    void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*&, TGraph*&, Double_t&, Bool_t ,Bool_t ,TString);
+    Double_t            Chi2ForNullHypoPValue(TGraphErrors*, TGraphAsymmErrors* ,  Bool_t , TString );
     // ****************************************************************************************************************
     // ********************** definition of functions defined in this header ******************************************
     // ****************************************************************************************************************
@@ -4559,5 +4562,178 @@
         }
         return graphR;
     }
+    
+    
+    //************ Wrapper function to extract the direct photon spectrum upper limit ***************
+    //**    - extracts the direct photon signal upper limits based on statistical error            **
+    //**      given in a histogram and systematic errors in a graphs                               **
+    //**    - confidence level can be varied as well as the accuracy and the number of iterations  **
+    //***********************************************************************************************
+    TH1D* GetUpperLimitsHisto(  TH1D* histo,
+                                TGraphAsymmErrors* sysErrGraph,
+                                Double_t confidenceLevel,
+                                Double_t accuracy,
+                                Int_t maxNIterations
+                            ) {
 
+        cout << endl;
+        cout << "*************************************************************" << endl;
+        cout << "**                                                         **" << endl;
+        cout << "**      STARTING UPPER LIMIT CALCULATION                   **" << endl;
+        cout << "**                                                         **" << endl;
+        cout << "*************************************************************" << endl;
+        cout << endl;
+
+        // upper limits histo
+        TH1D*       upperLimits             = (TH1D*)histo->Clone("upperLimits");
+
+        // get graph quantities
+        Int_t       nBinsGraph              = sysErrGraph->GetN();
+        Double_t*   xValueGraph             = sysErrGraph->GetX();
+        Double_t*   yErrorLowGraph          = sysErrGraph->GetEYlow();
+        Double_t*   yErrorHighGraph         = sysErrGraph->GetEYhigh();
+
+        // fill upper limits histo
+        for (Int_t i=1; i<histo->GetNbinsX()+1; i++) {
+            if (!histo->GetBinContent(i)) {
+                upperLimits->SetBinContent( i, 0);
+                upperLimits->SetBinError(   i, 0);
+            } else {
+                for (Int_t j=0; j<sysErrGraph->GetN(); j++) {
+                    if (xValueGraph[j] == histo->GetBinCenter(i)) {
+
+                        Double_t reached    = 0.;
+
+                        upperLimits->SetBinContent( i, GetUpperLimit(histo->GetBinContent(i),histo->GetBinError(i),(yErrorLowGraph[j]+yErrorHighGraph[j])/2,confidenceLevel,reached,accuracy,maxNIterations));
+                        upperLimits->SetBinError(   i, 0);
+
+                        cout << "p_T = " << histo->GetBinCenter(i) << ":\t" << histo->GetBinContent(i) << " ( +/- " << TMath::Sqrt(histo->GetBinError(i)*histo->GetBinError(i) + (yErrorLowGraph[j]+yErrorHighGraph[j])/2*(yErrorLowGraph[j]+yErrorHighGraph[j])/2) << " )\t->\t" << upperLimits->GetBinContent(i) << "\tat CL = " << reached*100 << "%" << endl;
+                    }
+                }
+            }
+        }
+
+        cout << endl;
+        cout << "*************************************************************" << endl;
+        cout << "**                                                         **" << endl;
+        cout << "**      DONE WITH UPPER LIMIT CALCULATION                  **" << endl;
+        cout << "**                                                         **" << endl;
+        cout << "*************************************************************" << endl;
+        cout << endl;
+
+        return upperLimits;
+    }
+    
+    //***********************************************************************************************
+    //**  function to return upper limit on photon excess, using a Bayesian approach               **
+    //**  with the heaviside function used as prior (excluding R_gamma < 1)                        **
+    //***********************************************************************************************
+    Double_t GetUpperLimit( Double_t mean, Double_t statErr, Double_t sysErr,
+                            Double_t confidenceLevel, Double_t& confidenceLevelReached,
+                            Double_t accuracy , Int_t maxNIterations
+                        ) {
+
+        // R_gamma limits
+        Double_t    minRGamma           = 1.;
+        Double_t    maxRGamma           = 10.;
+
+        // total uncertainty
+        Double_t    sigmaTot            = TMath::Sqrt(statErr*statErr + sysErr*sysErr);
+
+        // cond. prob norm
+        Double_t    condProbNorm        = TMath::Erf( (mean - 1)/(TMath::Sqrt(2)*sigmaTot) ) + 1;   // - 1 term from limit erf(-inf)
+
+        // cond. prob
+        TF1         condProb("condProb", Form("[0] * ( TMath::Erf( ([1] - 1)/(TMath::Sqrt(2)*[2]) ) - TMath::Erf( ([1] - x)/(TMath::Sqrt(2)*[2]) ) )"), minRGamma, maxRGamma);
+        condProb.SetParameter(0, 1./condProbNorm);
+        condProb.SetParameter(1, mean);
+        condProb.SetParameter(2, sigmaTot);
+
+        // iteratively find upper limit (interval bisection)
+        Double_t    upperLimit          = (maxRGamma-1)/2;
+        Double_t    upperLimitPrev      = upperLimit;
+        Double_t    step                = 0.;
+        Int_t       nIterations         = 0;
+        while (((condProb.Eval(upperLimit) < (confidenceLevel-accuracy)) || condProb.Eval(upperLimit) > (confidenceLevel+accuracy)) && nIterations < maxNIterations) {
+
+            if (condProb.Eval(upperLimit) > confidenceLevel)
+                step                    = - TMath::Abs(upperLimit-1)/2;
+            else
+                step                    = TMath::Abs(upperLimitPrev-upperLimit)/2;
+            upperLimitPrev              = upperLimit;
+            upperLimit                  = upperLimit + step;
+
+            //if ( !(nIterations%10) ) cout << "   condProb.Eval( " << upperLimit << ") = " << condProb.Eval(upperLimit) << endl;
+
+            nIterations++;
+        }
+
+        confidenceLevelReached          = condProb.Eval(upperLimit);
+        return upperLimit;
+    }
+
+    //*************************************************************************************************************
+    // Fill chi2 histogram for null hypothesis
+    //*************************************************************************************************************
+    void FillChi2HistForNullHypoPValue    (  ULong64_t    n_pseudo_exp,
+                                    TGraphAsymmErrors*    graphTrue,
+                                    TH1D*    &histo,
+                                    TGraph*  &g_rel_stat_plus_type_a_error,
+                                    TGraph*  &g_rel_type_b_error,
+                                    Double_t &rel_type_c_error,
+                                    Bool_t   anti_corr_type_b,
+                                    Bool_t useFixedValue,
+                                    TString energy
+                                          ) {
+
+        // null hypothesis:
+        Double_t R_true                             = 1.0;
+        if(useFixedValue){
+            cout << "expected value is " << R_true << endl;
+        }
+
+        // random numbers
+        TRandom rndm;
+
+        for (ULong64_t i_pseudo_exp=0; i_pseudo_exp<n_pseudo_exp; i_pseudo_exp++) {
+            Double_t sumsq                          = 0;
+            // create pseudo data set
+            for (Int_t ip=0; ip<g_rel_type_b_error->GetN(); ip++) {
+                Double_t rel_type_b_error           = g_rel_type_b_error->GetY()[ip];
+                Double_t R_mod                      = R_true;
+                if(graphTrue && !useFixedValue){
+                    R_true                          = graphTrue->Eval(g_rel_stat_plus_type_a_error->GetX()[ip]);
+                    R_mod                           = R_true;
+                }
+                Double_t rel_stat_plus_type_a_err   = g_rel_stat_plus_type_a_error->GetY()[ip];
+                Double_t abs_stat_plus_type_a_err_scaled    = R_mod * rel_stat_plus_type_a_err;
+
+                Double_t y                          = rndm.Gaus(R_mod, abs_stat_plus_type_a_err_scaled);
+                Double_t nsig                       = (y - R_true)/(R_true * rel_stat_plus_type_a_err);
+                sumsq                               += nsig*nsig;
+            }
+            histo->Fill(sumsq);
+        }
+    }
+
+    Double_t Chi2ForNullHypoPValue(TGraphErrors* g, TGraphAsymmErrors*    graphTrue,  Bool_t useFixedValue, TString energy) {
+        Double_t R_true                             = 1.0;
+        if(useFixedValue){
+            cout << "expected value is " << R_true << endl;
+        }
+        Double_t sumsq                              = 0;
+
+        for (Int_t i=0; i<g->GetN(); i++) {
+            if(graphTrue && !useFixedValue){
+                    R_true                          = graphTrue->Eval(g->GetX()[i]);
+                }
+            Double_t y                              = g->GetY()[i];
+            Double_t y_sig                          = g->GetEY()[i];
+            Double_t y_sig_rel                      = y_sig/y;
+            Double_t nsig                           = TMath::Abs(y-R_true)/(y_sig);
+            sumsq                                   += nsig*nsig;
+            cout << "ytrue: " << R_true << " ymeas: " << y << " y_sig: " << y_sig << " y_sig_rel: " << y_sig_rel << " nsig: " << nsig << endl;
+        }
+        return sumsq;
+    }
 #endif

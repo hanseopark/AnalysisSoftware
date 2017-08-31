@@ -844,8 +844,19 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         histoMCIncRatio->Write(             histoMCIncRatio->GetName(),             TObject::kOverwrite);
 
         // cocktail
-        cocktailAllGamma->Write(cocktailAllGamma->GetName(),    TObject::kOverwrite);
-        cocktailPi0->Write(     cocktailPi0->GetName(),         TObject::kOverwrite);
+        cocktailAllGamma->Write(cocktailAllGamma->GetName(),    TObject::kOverwrite);        
+        
+        TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
+        TH1D* dummyCocktailHist;
+        TH1D* dummyGammaCocktailHist;
+        for(Int_t i=0; i<14;i++){
+            dummyCocktailHist             = NULL;
+            dummyGammaCocktailHist        = NULL;
+            dummyCocktailHist             = (TH1D* )cocktailFile->Get(Form("%s_Pt",particlesInCocktail[i].Data()));
+            dummyGammaCocktailHist        = (TH1D* )cocktailFile->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
+            if(dummyCocktailHist) dummyCocktailHist->Write(     dummyCocktailHist->GetName(),         TObject::kOverwrite);
+            if(dummyGammaCocktailHist) dummyGammaCocktailHist->Write(     dummyGammaCocktailHist->GetName(),         TObject::kOverwrite);
+        }
 
         fileCorrectedOutput->Close();
         delete fileCorrectedOutput;
