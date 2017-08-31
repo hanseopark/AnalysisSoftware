@@ -855,33 +855,59 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         //******************************************************************************************************************
 
         TFile *filepp276JetPHOX_PDFerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinPDFerrDSIGDPT.root");
-            TGraphAsymmErrors* pp276CT10BFG2_prompt_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_prompt_pdferr");
-            TGraphAsymmErrors* pp276CT10BFG2_fragm_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_fragm_pdferr");
-            TGraphAsymmErrors* pp276CT10BFG2_sum_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_sum_pdferr");
+        TGraphAsymmErrors* pp276CT10BFG2_prompt_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_prompt_pdferr");
+        TGraphAsymmErrors* pp276CT10BFG2_fragm_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_fragm_pdferr");
+        TGraphAsymmErrors* pp276CT10BFG2_sum_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerrDSIGDPT->Get("pp276CT10BFG2_sum_pdferr");
 
         TFile *filepp276JetPHOX_PDFerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinPDFerr.root");
-            TGraphAsymmErrors* pp276CT10BFG2_prompt_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_prompt_pdferr");
-            TGraphAsymmErrors* pp276CT10BFG2_fragm_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_fragm_pdferr");
-            TGraphAsymmErrors* pp276CT10BFG2_sum_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_sum_pdferr");
+        TGraphAsymmErrors* pp276CT10BFG2_prompt_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_prompt_pdferr");
+        TGraphAsymmErrors* pp276CT10BFG2_fragm_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_fragm_pdferr");
+        TGraphAsymmErrors* pp276CT10BFG2_sum_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_PDFerr->Get("pp276CT10BFG2_sum_pdferr");
 
         TFile *filepp276JetPHOX_ScaleerrDSIGDPT = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinScaleerrDSIGDPT.root");
-            TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_prompt_scalevar");
-            TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_fragm_scalevar");
-            TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_sum_scalevar");
-            TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_prompt_scalevar");
-            TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_fragm_scalevar");
-            TGraphAsymmErrors* pp276CT10BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_sum_scalevar");
+        TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_prompt_scalevar");
+        TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_fragm_scalevar");
+        TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276MSTW08BFG2_sum_scalevar");
+        TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_prompt_scalevar");
+        TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_fragm_scalevar");
+        TGraphAsymmErrors* pp276CT10BFG2_sum_scale_xsec = (TGraphAsymmErrors*)filepp276JetPHOX_ScaleerrDSIGDPT->Get("pp276CT10BFG2_sum_scalevar");
 
         TFile *filepp276JetPHOX_Scaleerr = new TFile("ExternalInputPbPb/Theory/JetPHOX/pp276MartinScaleerr.root");
-            TGraphAsymmErrors* pp276BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_prompt_scalevar");
-            TGraphAsymmErrors* pp276BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_fragm_scalevar");
-            TGraphAsymmErrors* pp276BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_sum_scalevar");
-            TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_prompt_scalevar");
-            TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_fragm_scalevar");
-            TGraphAsymmErrors* pp276CT10BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_sum_scalevar");
-            TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_prompt_scalevar");
-            TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_fragm_scalevar");
-            TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_sum_scalevar");
+        TGraphAsymmErrors* pp276BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_prompt_scalevar");
+        TGraphAsymmErrors* pp276BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_fragm_scalevar");
+        TGraphAsymmErrors* pp276BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276BFG2_sum_scalevar");
+        TGraphAsymmErrors* pp276CT10BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_prompt_scalevar");
+        TGraphAsymmErrors* pp276CT10BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_fragm_scalevar");
+        TGraphAsymmErrors* pp276CT10BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276CT10BFG2_sum_scalevar");
+        TGraphAsymmErrors* pp276MSTW08BFG2_prompt_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_prompt_scalevar");
+        TGraphAsymmErrors* pp276MSTW08BFG2_fragm_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_fragm_scalevar");
+        TGraphAsymmErrors* pp276MSTW08BFG2_sum_scale_invyield = (TGraphAsymmErrors*)filepp276JetPHOX_Scaleerr->Get("pp276MSTW08BFG2_sum_scalevar");
+
+
+        //**************************************************************************************************
+        //****************************** read in Powheg Direct Photon predictions **************************
+        //****************************** contact person: Hendrik Poppenborg       **************************
+        //**************************************************************************************************
+
+        if ( !(infile_powheg_pp = TFile::Open("ExternalInputpPb/Theory/powheg_direct_photons/powheg_direct_photons.root")) ) {
+            printf("--------------------------------------------------------------------\n");
+            printf( Form("input file open failed in line %ld\n", __LINE__) );
+            return;
+        }
+        if ( !(gae_gamma_pt_powheg_pp5020_ncteq15  = (TGraphAsymmErrors*)infile_powheg_pp->Get("gae_gamma_pt_powheg_pp5020_ncteq15")) ||
+             !(gae_gamma_pt_powheg_pp5020_epps16   = (TGraphAsymmErrors*)infile_powheg_pp->Get("gae_gamma_pt_powheg_pp5020_epps16")) ){
+            printf("--------------------------------------------------------------------\n");
+            printf( Form("picking up TGraphAsymmErrors failed in line %ld\n", __LINE__) );
+            return ;
+        }
+
+        gae_gamma_pt_powheg_pp5020_ncteq15->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+        gae_gamma_pt_powheg_pp5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+        gae_gamma_pt_powheg_pp5020_ncteq15->SetTitle("direct photons for |#eta| < 0.9, no errors yet");
+
+        gae_gamma_pt_powheg_pp5020_epps16->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+        gae_gamma_pt_powheg_pp5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+        gae_gamma_pt_powheg_pp5020_epps16->SetTitle("direct photons for |#eta| < 0.9, no errors yet");
 
 
         //******************************************************************************************************************
@@ -951,6 +977,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivTot5TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_5TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivFrag5TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_5TeV",TObject::kOverwrite);
             fitPromptDivFragGamma5TeV->Write("ratioFitNLOPromptDivFragGamma5TeV", TObject::kOverwrite);
+            gae_gamma_pt_powheg_pp5020_ncteq15->Write("gaePowhegDirectPhotonInvXSec_pp5020_nteq15", TObject::kOverwrite);
+            gae_gamma_pt_powheg_pp5020_epps16->Write("gaePowhegDirectPhotonInvXSec_pp5020_epps16", TObject::kOverwrite);
 
             // writing 7TeV Gammas
             graphNLOCalcDirGam7TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
@@ -1108,6 +1136,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         delete graphNLOCalcInvYieldPromptDirGam13TeV;
         delete graphNLOCalcThermalAndPromptDirGam13TeV;
         delete graphNLOCalcInvYieldThermalAndPromptDirGam13TeV;
+        delete gae_gamma_pt_powheg_pp5020_ncteq15;
+        delete gae_gamma_pt_powheg_pp5020_epps16;
         delete fileTheoryGraphsPP;
     }
 
@@ -1932,14 +1962,14 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // **********************************************************************************************************************
         // Load cocktail for pPb pure mt-scaling
         // **********************************************************************************************************************
-        TString nameCocktailFileComb        = "CocktailInput/GammaCocktail_pPb5TeV_MB_comb.root";
-        TFile* fileCockailComb              = new TFile(nameCocktailFileComb.Data());
-        TH1D* histoGammaDecayComb           = (TH1D*)fileCockailComb->Get("Gamma_Pt_OrBin");
-        for (Int_t i = 1; i < histoGammaDecayComb->GetNbinsX()+1; i++){
-            histoGammaDecayComb->SetBinContent(i, histoGammaDecayComb->GetBinContent(i)/(histoGammaDecayComb->GetBinCenter(i) *2* TMath::Pi()) );
-            histoGammaDecayComb->SetBinError(i, histoGammaDecayComb->GetBinError(i)/(histoGammaDecayComb->GetBinCenter(i)*2* TMath::Pi()));
+        TString nameCocktailFileMtScaling       = "CocktailInput/GammaCocktail_pPb_MB_pureMT.root";
+        TFile* fileCockailPureMtScaling         = new TFile(nameCocktailFileMtScaling.Data());
+        TH1D* histoGammaDecayPureMtScaling     = (TH1D*)fileCockailPureMtScaling->Get("Gamma_Pt_OrBin");
+        for (Int_t i = 1; i < histoGammaDecayPureMtScaling->GetNbinsX()+1; i++){
+            histoGammaDecayPureMtScaling->SetBinContent(i, histoGammaDecayPureMtScaling->GetBinContent(i)/(histoGammaDecayPureMtScaling->GetBinCenter(i) *2* TMath::Pi()) );
+            histoGammaDecayPureMtScaling->SetBinError(i, histoGammaDecayPureMtScaling->GetBinError(i)/(histoGammaDecayPureMtScaling->GetBinCenter(i)*2* TMath::Pi()));
         }
-        histoGammaDecayComb->GetXaxis()->SetRangeUser(0,30);
+        histoGammaDecayPureMtScaling->GetXaxis()->SetRangeUser(0,30);
 
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 5TeV *******************************************
@@ -2171,7 +2201,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcRGammaALICECocktail          = (TGraphAsymmErrors*)graphNLOCalcInvYieldINT7DirGampPb5TeV->Clone("graphNLOCalcRGammaALICECocktail");
         TGraph* graphNLOCalcRGammaALICECocktailCenter               = new TGraph(graphNLOCalcRGammaALICECocktail->GetN());
         for (Int_t i = 0; i < graphNLOCalcRGammaALICECocktail->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayComb->Interpolate(graphNLOCalcRGammaALICECocktail->GetX()[i]);
+            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphNLOCalcRGammaALICECocktail->GetX()[i]);
             Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktail->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
             Double_t relErrUp                                       = graphNLOCalcRGammaALICECocktail->GetEYhigh()[i]/theoGamma;
@@ -2239,7 +2269,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphErrors* graphMCGillRGammaALICECocktail                = (TGraphErrors*)graphGammaV2McGill5023GeV->Clone("graphMCGillRGammaALICECocktail");
         TGraph* graphMCGillRGammaALICECocktailCenter                = new TGraph(graphMCGillRGammaALICECocktail->GetN());
         for (Int_t i = 0; i < graphMCGillRGammaALICECocktail->GetN(); i++){
-            Double_t decayGamma                                     = histoGammaDecayComb->Interpolate(graphMCGillRGammaALICECocktail->GetX()[i]);
+            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphMCGillRGammaALICECocktail->GetX()[i]);
             Double_t theoGamma                                      = graphMCGillRGammaALICECocktail->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
             Double_t relErrUp                                       = 0;
@@ -2350,7 +2380,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
             DrawGammaSetMarkerTGraphErr(graphGammaSpecMcGill5023GeV, 20, 1., kGreen+2, kGreen+2);
 
-            histoGammaDecayComb->SetLineColor(kOrange);
+            histoGammaDecayPureMtScaling->SetLineColor(kOrange);
 
             cout << __LINE__ << ": start fitting to NLO calculations" << endl;
             TF1* fitNLODirectPhoton                      = FitObject("m","fitNLODirectPhoton","Pi0",graphNLOCalcInvYieldINT7DirGampPb5TeV,1.5,25.);                    // mod power law
@@ -2367,14 +2397,14 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             fitNLOFragmentationPhoton->Draw("same");
             graphNLOCalcInvYieldINT7FragGampPb5TeV->Draw("p,same");
             graphGammaSpecMcGill5023GeV->Draw("same,l");
-            histoGammaDecayComb->Draw("same,hist,l");
+            histoGammaDecayPureMtScaling->Draw("same,hist,l");
             // Create legend
             TLegend* legendNLOCalculations          = GetAndSetLegend2(0.6, 0.95-(5*32*1.3/(1350*0.75)), 0.75, 0.95, 32, 1, "", 43, 0.2);
             legendNLOCalculations->AddEntry(graphNLOCalcInvYieldINT7DirGampPb5TeV,       "#gamma_{dir} NLO Calc", "lep");
             legendNLOCalculations->AddEntry(graphNLOCalcInvYieldINT7PromGampPb5TeV,      "#gamma_{prompt} NLO Calc", "lep");
             legendNLOCalculations->AddEntry(graphNLOCalcInvYieldINT7FragGampPb5TeV,      "#gamma_{frag} NLO Calc", "lep");
             legendNLOCalculations->AddEntry(graphGammaSpecMcGill5023GeV,                 "#gamma_{dir} McGill", "l");
-            legendNLOCalculations->AddEntry(histoGammaDecayComb,                         "#gamma_{decay} from ALICE cocktail", "l");
+            legendNLOCalculations->AddEntry(histoGammaDecayPureMtScaling,                "#gamma_{decay} from #it{m}_{T} scaled", "l");
             legendNLOCalculations->Draw();
 
         // Calculating ratio
@@ -2399,8 +2429,29 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         delete legendNLOCalculations;
         delete canvasNLOCalculations;
 
+        //**************************************************************************************************
+        //****************************** read in Powheg Direct Photon predictions **************************
+        //****************************** contact person: Hendrik Poppenborg       **************************
+        //**************************************************************************************************
+//TODO documentation
+        if ( !(infile_powheg_pPb = TFile::Open("ExternalInputpPb/Theory/powheg_direct_photons/powheg_direct_photons.root")) ) {
+            printf("--------------------------------------------------------------------\n");
+            printf( Form("input file open failed in line %ld\n", __LINE__) );
+            return;
+        }
+        if ( !(gae_gamma_pt_powheg_pPb5020_ncteq15 = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_gamma_pt_powheg_pPb5020_ncteq15")) ||
+             !(gae_gamma_pt_powheg_pPb5020_epps16  = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_gamma_pt_powheg_pPb5020_epps16")) ||
+             !(gae_gamma_pt_powheg_pp5020_ncteq15  = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_gamma_pt_powheg_pp5020_ncteq15")) ||
+             !(gae_gamma_pt_powheg_pp5020_epps16   = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_gamma_pt_powheg_pp5020_epps16")) ||
+             !(gae_rpPb_powheg_pPb5020_ncteq15     = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_rpPb_pPb5020_ncteq15")) ||
+             !(gae_rpPb_powheg_pPb5020_epps16      = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_rpPb_pPb5020_epps16")) ){
+            printf("--------------------------------------------------------------------\n");
+            printf( Form("picking up TGraphAsymmErrors failed in line %ld\n", __LINE__) );
+            return ;
+        }
+
         //******************************************************************************************************************
-        //************************************** Writing output for pp ***************************************************
+        //************************************** Writing output for pPb ***************************************************
         //******************************************************************************************************************
         TFile *fileTheoryGraphsPPb   = new TFile("ExternalInputpPb/Theory/TheoryCompilationPPb.root","UPDATE");
 
@@ -2447,9 +2498,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphNLOCalcRGammaALICECocktailCenter->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 graphNLOCalcRGammaALICECocktailCenter->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10_ALICECocktail_Center",TObject::kOverwrite);
 
-                histoGammaDecayComb->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                histoGammaDecayComb->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
-                histoGammaDecayComb->Write("histoALICECombCocktailGammas");
                 // writing McGill calcs
                 graphGammaSpecMcGill5023GeV->Write("graphDirectPhotonSpecMcGill5023GeV", TObject::kOverwrite);
                 graphMCGillRGammaALICECocktail->GetYaxis()->SetTitle("R_{#gamma}");
@@ -2467,20 +2515,59 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                     cout << __LINE__ << endl;
                 }
                 cout << __LINE__ << endl;
-        fileTheoryGraphsPPb->Close();
 
-        delete graphNLOCalcDirGampPb5TeV;
-        delete graphNLOCalcInvYieldINT7DirGampPb5TeV;
-        delete graphNLOCalcPromGampPb5TeV;
-        delete graphNLOCalcInvYieldINT7PromGampPb5TeV;
-        delete graphNLOCalcFragGampPb5TeV;
-        delete graphNLOCalcInvYieldINT7FragGampPb5TeV;
-        delete graphGammaSpecMcGill5023GeV;
-        delete graphGammaV2McGill5023GeV;
-        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+                // writing powheg calcs
+                gae_gamma_pt_powheg_pPb5020_ncteq15->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                gae_gamma_pt_powheg_pPb5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                gae_gamma_pt_powheg_pPb5020_ncteq15->SetTitle("direct photons for |#eta| < 0.9, errors are nPDF uncertainties");
+                gae_gamma_pt_powheg_pPb5020_ncteq15->Write("gaePowhegDirectPhotonInvXSec_pPb5020_nteq15", TObject::kOverwrite);
+
+                gae_gamma_pt_powheg_pPb5020_epps16->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                gae_gamma_pt_powheg_pPb5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                gae_gamma_pt_powheg_pPb5020_epps16->SetTitle("direct photons for |#eta| < 0.9, errors are nPDF uncertainties");
+                gae_gamma_pt_powheg_pPb5020_epps16->Write("gaePowhegDirectPhotonInvXSec_pPb5020_epps16", TObject::kOverwrite);
+
+                gae_gamma_pt_powheg_pp5020_ncteq15->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                gae_gamma_pt_powheg_pp5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                gae_gamma_pt_powheg_pp5020_ncteq15->SetTitle("direct photons for |#eta| < 0.9");
+                gae_gamma_pt_powheg_pp5020_ncteq15->Write("gaePowhegDirectPhotonInvXSec_pp5020_nteq15", TObject::kOverwrite);
+
+                gae_gamma_pt_powheg_pp5020_epps16->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                gae_gamma_pt_powheg_pp5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                gae_gamma_pt_powheg_pp5020_epps16->SetTitle("direct photons for |#eta| < 0.9");
+                gae_gamma_pt_powheg_pp5020_epps16->Write("gaePowhegDirectPhotonInvXSec_pp5020_epps16", TObject::kOverwrite);
+
+                gae_rpPb_powheg_pPb5020_ncteq15->GetYaxis()->SetTitle("R_{pPb}");
+                gae_rpPb_powheg_pPb5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                gae_rpPb_powheg_pPb5020_ncteq15->SetTitle("direct photon R_{pPb} for |#eta| < 0.9, errors are nPDF uncertainties");
+                gae_rpPb_powheg_pPb5020_ncteq15->Write("gaePowhegDirectPhotonRpPb_pPb5020_nteq15", TObject::kOverwrite);
+
+                gae_rpPb_powheg_pPb5020_epps16->GetYaxis()->SetTitle("R_{pPb}");
+                gae_rpPb_powheg_pPb5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                gae_rpPb_powheg_pPb5020_epps16->SetTitle("direct photon R_{pPb} for |#eta| < 0.9, errors are nPDF uncertainties");
+                gae_rpPb_powheg_pPb5020_epps16->Write("gaePowhegDirectPhotonRpPb_pPb5020_epps16", TObject::kOverwrite);
+
+                fileTheoryGraphsPPb->Close();
+
+                delete graphNLOCalcDirGampPb5TeV;
+                delete graphNLOCalcInvYieldINT7DirGampPb5TeV;
+                delete graphNLOCalcPromGampPb5TeV;
+                delete graphNLOCalcInvYieldINT7PromGampPb5TeV;
+                delete graphNLOCalcFragGampPb5TeV;
+                delete graphNLOCalcInvYieldINT7FragGampPb5TeV;
+                delete graphGammaSpecMcGill5023GeV;
+                delete graphGammaV2McGill5023GeV;
+
+                delete gae_gamma_pt_powheg_pPb5020_ncteq15;
+                delete gae_gamma_pt_powheg_pPb5020_epps16;
+                delete gae_gamma_pt_powheg_pp5020_ncteq15;
+                delete gae_gamma_pt_powheg_pp5020_epps16;
+                delete gae_rpPb_powheg_pPb5020_ncteq15;
+                delete gae_rpPb_powheg_pPb5020_epps16;
+
+                for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
             if (graphDecayPhotonSpectraMcGill5023GeV[iParticle]) delete graphDecayPhotonSpectraMcGill5023GeV[iParticle];
         }
 //         delete fileTheoryGraphsPPb;
-
     }
 }
