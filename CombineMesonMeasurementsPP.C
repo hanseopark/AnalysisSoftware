@@ -73,7 +73,12 @@ void CombineMesonMeasurementsPP()
     Int_t includeEnergy[6]                      = {1,1,0,1,1,0};
     Int_t numActiveMeas                         = 4;
 
-    Double_t xSections[6];
+    Double_t xSectionsINEL[6]                   = {   52.5*1e9,
+                                                      62.8*1e9,
+                                                      67.6*1e9,
+                                                      73.2*1e9,
+                                                      74.7*1e9, //TOTEM https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.111.012001
+                                                      77.6*1e9};
 
     gROOT->Reset();
     gROOT->SetStyle("Plain");
@@ -120,10 +125,7 @@ void CombineMesonMeasurementsPP()
               if(!directoryEta[i]) directoryEta[i] = NULL;
               else                 cout << "--> Found directory " << Form("Eta%s",nameEnergyGlobal[i].Data()) << endl;
             exampleActiveMeas                   = i;
-
-            xSections[i] = ReturnCorrectXSection(nameEnergyGlobal[i].Data(),1);
-            xSections[i] *= recalcBarn;
-        }else xSections[i] = 0.;
+        }
     }
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
 
@@ -273,24 +275,24 @@ void CombineMesonMeasurementsPP()
     for (Int_t i = 0; i < 6; i++){
         if(includeEnergy[i]){
           if(graphPi0InvariantCrossSectionStat[i][10]) {
-            graphPi0InvYieldStat[i] = ScaleGraph(graphPi0InvariantCrossSectionStat[i][10],1/xSections[i]);
+            graphPi0InvYieldStat[i] = ScaleGraph(graphPi0InvariantCrossSectionStat[i][10],1/xSectionsINEL[i]);
             ProduceGraphAsymmWithoutXErrors(graphPi0InvYieldStat[i]);
             DrawGammaSetMarkerTGraph(graphPi0InvYieldStat[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i]);
           }
 
           if(graphPi0InvariantCrossSectionSys[i][10]){
-            graphPi0InvYieldSys[i] = ScaleGraph(graphPi0InvariantCrossSectionSys[i][10],1/xSections[i]);
+            graphPi0InvYieldSys[i] = ScaleGraph(graphPi0InvariantCrossSectionSys[i][10],1/xSectionsINEL[i]);
             DrawGammaSetMarkerTGraphAsym(graphPi0InvYieldSys[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
           }
 
           if(graphEtaInvariantCrossSectionStat[i][10]){
-            graphEtaInvYieldStat[i] = ScaleGraph(graphEtaInvariantCrossSectionStat[i][10],1/xSections[i]);
+            graphEtaInvYieldStat[i] = ScaleGraph(graphEtaInvariantCrossSectionStat[i][10],1/xSectionsINEL[i]);
             ProduceGraphAsymmWithoutXErrors(graphEtaInvYieldStat[i]);
             DrawGammaSetMarkerTGraph(graphEtaInvYieldStat[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i]);
           }
 
           if(graphEtaInvariantCrossSectionSys[i][10]){
-            graphEtaInvYieldSys[i] = ScaleGraph(graphEtaInvariantCrossSectionSys[i][10],1/xSections[i]);
+            graphEtaInvYieldSys[i] = ScaleGraph(graphEtaInvariantCrossSectionSys[i][10],1/xSectionsINEL[i]);
             DrawGammaSetMarkerTGraphAsym(graphEtaInvYieldSys[i], markerStyleEnergy[i], markerSizeEnergy[i], colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
           }
 
@@ -1264,7 +1266,7 @@ void CombineMesonMeasurementsPP()
     drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
-    TLegend* legendInvYieldPi02    = GetAndSetLegend2(0.2, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    TLegend* legendInvYieldPi02    = GetAndSetLegend2(0.2, 0.12, 0.5, 0.12+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvYieldPi02->SetNColumns(1);
     legendInvYieldPi02->SetMargin(0.2);
     legendRunningIndex = numActiveMeas-1;
@@ -2044,7 +2046,7 @@ void CombineMesonMeasurementsPP()
     drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
-    TLegend* legendInvYieldEta2    = GetAndSetLegend2(0.2, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    TLegend* legendInvYieldEta2    = GetAndSetLegend2(0.2, 0.12, 0.5, 0.12+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvYieldEta2->SetNColumns(1);
     legendInvYieldEta2->SetMargin(0.2);
     legendRunningIndex = numActiveMeas-1;
