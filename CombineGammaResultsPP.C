@@ -2314,7 +2314,11 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     padInvSectionNLORatio->cd();
     padInvSectionNLORatio->SetLogx(1);
         TH2F * ratio8TeVdummy               = new TH2F("ratio8TeVdummy","ratio8TeVdummy",1000,0.23,maxX,1000,0.6,1.95);
+        if(plotTheorycurves)
         SetStyleHistoTH2ForGraphs(ratio8TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{TCM fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
+                                  0.85*textsizeLabelsXSecMiddle,0.9*textsizeLabelsXSecMiddle, 1,0.23/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+                                  else
+        SetStyleHistoTH2ForGraphs(ratio8TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{TCM fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
                                   0.85*textsizeLabelsXSecMiddle,0.9*textsizeLabelsXSecMiddle, 1,0.23/(textsizeFacXSecMiddle*marginXSec), 510, 505);
         ratio8TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
         ratio8TeVdummy->GetYaxis()->SetNdivisions(505);
@@ -2375,7 +2379,11 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
         TH2F * ratio7TeVdummy               = new TH2F("ratio7TeVdummy","ratio7TeVdummy",1000,0.23,maxX,1000,0.6,1.95);
+        if(plotTheorycurves)
         SetStyleHistoTH2ForGraphs(ratio7TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{TCM fit}", 0.85*textsizeLabelsXSecDown, 0.8*textsizeLabelsXSecDown,
+                                  0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.23/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+                                  else
+        SetStyleHistoTH2ForGraphs(ratio7TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{TCM fit}", 0.85*textsizeLabelsXSecDown, 0.8*textsizeLabelsXSecDown,
                                   0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.23/(textsizeFacXSecMiddle*marginXSec), 510, 505);
         ratio7TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
         ratio7TeVdummy->GetYaxis()->SetNdivisions(505);
@@ -2435,7 +2443,11 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     padInvSection2760GeVRatio->cd();
     padInvSection2760GeVRatio->SetLogx(1);
         TH2F * ratio276TeVdummy               = new TH2F("ratio276TeVdummy","ratio276TeVdummy",1000,0.23,maxX,1000,0.6,1.95);
+        if(plotTheorycurves)
         SetStyleHistoTH2ForGraphs(ratio276TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{TCM fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
+                                  0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.23/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+                                  else
+        SetStyleHistoTH2ForGraphs(ratio276TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{TCM fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                                   0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.23/(textsizeFacXSecMiddle*marginXSec), 510, 505);
         ratio276TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
         ratio276TeVdummy->GetYaxis()->SetNdivisions(505);
@@ -2495,7 +2507,11 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     padInvSection900GeVRatio->cd();
     padInvSection900GeVRatio->SetLogx(1);
         TH2F * ratio900GeVdummy            = new TH2F("ratio900GeVdummy","ratio900GeVdummy",1000,0.23,maxX,1000,0.6,1.95);
+        if(plotTheorycurves)
         SetStyleHistoTH2ForGraphs(ratio900GeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown2, textsizeLabelsXSecDown2,
+                                  0.85*textsizeLabelsXSecDown2,0.9*textsizeLabelsXSecDown2, 0.9,0.23/(textsizeFacXSecDown2*marginXSec), 510, 505);
+                                  else
+        SetStyleHistoTH2ForGraphs(ratio900GeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown2, textsizeLabelsXSecDown2,
                                   0.85*textsizeLabelsXSecDown2,0.9*textsizeLabelsXSecDown2, 0.9,0.23/(textsizeFacXSecDown2*marginXSec), 510, 505);
         ratio900GeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
         ratio900GeVdummy->GetYaxis()->SetNdivisions(505);
@@ -3519,7 +3535,11 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     padInvSectionNLORatio->cd();
     padInvSectionNLORatio->SetLogx(1);
     TH2F * ratio8TeVdummy               = new TH2F("ratio8TeVdummy","ratio8TeVdummy",1000,0.33,maxX,1000,-10.01,5);
-    SetStyleHistoTH2ForGraphs(ratio8TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
+    if(plotTheorycurves)
+      SetStyleHistoTH2ForGraphs(ratio8TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
+                            0.85*textsizeLabelsXSecMiddle,0.9*textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+    else
+      SetStyleHistoTH2ForGraphs(ratio8TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
                             0.85*textsizeLabelsXSecMiddle,0.9*textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
     ratio8TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
     ratio8TeVdummy->GetYaxis()->SetNdivisions(505);
@@ -3583,8 +3603,13 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     padInvSectionPythiaRatio->cd();
     padInvSectionPythiaRatio->SetLogx(1);
     TH2F * ratio7TeVdummy               = new TH2F("ratio7TeVdummy","ratio7TeVdummy",1000,0.33,maxX,1000,-1.01,5);
+    if(plotTheorycurves)
     SetStyleHistoTH2ForGraphs(ratio7TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                             0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+    else                             
+    SetStyleHistoTH2ForGraphs(ratio7TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
+                            0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+    
     ratio7TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
     ratio7TeVdummy->GetYaxis()->SetNdivisions(505);
     ratio7TeVdummy->GetYaxis()->SetNoExponent(kTRUE);
@@ -3648,7 +3673,11 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     padInvSection2760GeVRatio->cd();
     padInvSection2760GeVRatio->SetLogx(1);
     TH2F * ratio276TeVdummy               = new TH2F("ratio276TeVdummy","ratio276TeVdummy",1000,0.33,maxX,1000,yrangeLowRatio,yrangeHighRatio);
+    if(plotTheorycurves)
     SetStyleHistoTH2ForGraphs(ratio276TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
+                              0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
+    else                            
+    SetStyleHistoTH2ForGraphs(ratio276TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                               0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
     ratio276TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
     ratio276TeVdummy->GetYaxis()->SetNdivisions(505);
@@ -3682,7 +3711,11 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     padInvSection900GeVRatio->cd();
     padInvSection900GeVRatio->SetLogx(1);
     TH2F * ratio900GeVdummy            = new TH2F("ratio900GeVdummy","ratio900GeVdummy",1000,0.33,maxX,1000,-1.01,5.);
+    if(plotTheorycurves)
     SetStyleHistoTH2ForGraphs(ratio900GeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown2, textsizeLabelsXSecDown2,
+                            0.85*textsizeLabelsXSecDown2,0.9*textsizeLabelsXSecDown2, 0.9,0.2/(textsizeFacXSecDown2*marginXSec), 510, 505);
+                            else
+    SetStyleHistoTH2ForGraphs(ratio900GeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown2, textsizeLabelsXSecDown2,
                             0.85*textsizeLabelsXSecDown2,0.9*textsizeLabelsXSecDown2, 0.9,0.2/(textsizeFacXSecDown2*marginXSec), 510, 505);
     ratio900GeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
     ratio900GeVdummy->GetYaxis()->SetNdivisions(505);

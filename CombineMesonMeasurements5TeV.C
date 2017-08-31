@@ -76,9 +76,9 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
 
 void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
                                         TString fileNamePHOS    = "",
-                                        TString fileNameEMCal   = "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_23/FinalResultsTriggersPatched_EMC/data_EMCAL-EMCALResultsFullCorrection_PP.root",
+                                        TString fileNameEMCal   = "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_31/FinalResultsTriggersPatched_EMC_27/data_EMCAL-EMCALResultsFullCorrection_PP.root",
                                         TString fileNamePCMPHOS = "",
-                                        TString fileNamePCMEMCal= "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_24/FinalResultsTriggersPatched_PCMEMC/data_PCM-EMCALResultsFullCorrection_PP.root",
+                                        TString fileNamePCMEMCal= "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_31/FinalResultsTriggersPatched_PCMEMC_27/data_PCM-EMCALResultsFullCorrection_PP.root",
                                         TString fileNameInterpolation = "/home/nschmidt/AnalysisSoftware/CombinationInput5TeV/Interpolation.root",
                                         TString suffix          = "pdf",
                                         Int_t numbersofmeas     = 5
