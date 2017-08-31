@@ -76,9 +76,9 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
 
 void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
                                         TString fileNamePHOS    = "",
-                                        TString fileNameEMCal   = "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_19/FinalResultsTriggersPatched_EMC/data_EMCAL-EMCALResultsFullCorrection_PP.root",
+                                        TString fileNameEMCal   = "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_23/FinalResultsTriggersPatched_EMC/data_EMCAL-EMCALResultsFullCorrection_PP.root",
                                         TString fileNamePCMPHOS = "",
-                                        TString fileNamePCMEMCal= "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_20/FinalResultsTriggersPatched/data_PCM-EMCALResultsFullCorrection_PP.root",
+                                        TString fileNamePCMEMCal= "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_24/FinalResultsTriggersPatched_PCMEMC/data_PCM-EMCALResultsFullCorrection_PP.root",
                                         TString fileNameInterpolation = "/home/nschmidt/AnalysisSoftware/CombinationInput5TeV/Interpolation.root",
                                         TString suffix          = "pdf",
                                         Int_t numbersofmeas     = 5
@@ -106,11 +106,11 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
     if(fileNamePHOS.CompareTo(""))
       gSystem->Exec(Form("cp %s %s/InputPHOS.root", fileNamePHOS.Data(), outputDir.Data()));
     if(fileNameEMCal.CompareTo(""))
-      gSystem->Exec(Form("cp %s %s/InputEMCal.root", fileNameEMCal.Data(), outputDir.Data()));
+      gSystem->Exec(Form("cp %s %s/InputEMC.root", fileNameEMCal.Data(), outputDir.Data()));
     if(fileNamePCMPHOS.CompareTo(""))
       gSystem->Exec(Form("cp %s %s/InputPCMPHOS.root", fileNamePCMPHOS.Data(), outputDir.Data()));
     if(fileNamePCMEMCal.CompareTo(""))
-      gSystem->Exec(Form("cp %s %s/InputPCMEMCal.root", fileNamePCMEMCal.Data(), outputDir.Data()));
+      gSystem->Exec(Form("cp %s %s/InputPCMEMC.root", fileNamePCMEMCal.Data(), outputDir.Data()));
     if(fileNameInterpolation.CompareTo(""))
       gSystem->Exec(Form("cp %s %s/InputInterpolation.root", fileNameInterpolation.Data(), outputDir.Data()));
 
@@ -180,6 +180,10 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
     TH1D* histoEtaAccTimesEff[10];
     TH1D* histoPi0InvCrossSection[10];
     TH1D* histoEtaInvCrossSection[10];
+    TH1D* histoPi0RawYields[10];
+    TH1D* histoEtaRawYields[10];
+    TGraphAsymmErrors* graphPi0RawYields[10];
+    TGraphAsymmErrors* graphEtaRawYields[10];
     TGraphAsymmErrors* graphPi0InvCrossSectionSys[10];
     TGraphAsymmErrors* graphPi0InvCrossSectionStat[10];
     TGraphAsymmErrors* graphEtaInvCrossSectionStat[10];
@@ -218,7 +222,9 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
       else
         cout << "loading  histos for " << nameMeasGlobal[i] << endl;
         
-    //______________________________ Neutral pion cross section
+    //______________________________ Neutral pion cross section and raw yield
+      histoPi0RawYields[i]          = (TH1D*)directoryPi0[i]->Get("RAWYieldPerEventsPi0_INT7");
+      graphPi0RawYields[i]      = new TGraphAsymmErrors(histoPi0RawYields[i]);
       graphPi0InvCrossSectionSys[i]       = (TGraphAsymmErrors*)directoryPi0[i]->Get("InvCrossSectionPi0Sys");
       histoPi0InvCrossSection[i]          = (TH1D*)directoryPi0[i]->Get("InvCrossSectionPi0");
       graphPi0InvCrossSectionStat[i]      = new TGraphAsymmErrors(histoPi0InvCrossSection[i]);
@@ -277,6 +283,8 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
       }
 
       //______________________________ Eta meson invariant cross section
+        histoEtaRawYields[i]          = (TH1D*)directoryEta[i]->Get("RAWYieldPerEventsEta_INT7");
+        graphEtaRawYields[i]      = new TGraphAsymmErrors(histoEtaRawYields[i]);
         histoEtaInvCrossSection[i]        = (TH1D*)directoryEta[i]->Get("InvCrossSectionEta");
         graphEtaInvCrossSectionStat[i]    = (TGraphAsymmErrors*)directoryEta[i]->Get("graphInvCrossSectionEta");
         graphEtaInvCrossSectionSys[i]     = (TGraphAsymmErrors*)directoryEta[i]->Get("InvCrossSectionEtaSys");
@@ -446,17 +454,17 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
         TLegend* legendCrossSectionPi0           = GetAndSetLegend2(0.18, 0.13, 0.43, 0.13+(3.5*textSizeLabelsRel),textSizeLabelsPixel);
         
         Int_t scalingFactor = pow(10,totalMeasAvail-1);
-        // Int_t legendScalingFactor = totalMeasAvail-1;
-        Int_t legendScalingFactor = 0;
+        Int_t legendScalingFactor = totalMeasAvail-1;
+        // Int_t legendScalingFactor = 0;
         for(Int_t i=numbersofmeas;i>-1;i--){
           if(availableMeas[i]){
             graphPi0InvCrossSectionSysClone[i]= (TGraphAsymmErrors*)graphPi0InvCrossSectionSys[i]->Clone(Form("csSys%d",i)) ;
             graphPi0InvCrossSectionStatClone[i]= (TGraphAsymmErrors*)graphPi0InvCrossSectionStat[i]->Clone(Form("csStat%d",i)) ;
-            // for (int j=0;j<graphPi0InvCrossSectionSysClone[i]->GetN();j++){
-            //     graphPi0InvCrossSectionSysClone[i]->GetY()[j] *= scalingFactor;
-            //     graphPi0InvCrossSectionSysClone[i]->GetEYhigh()[j] *= scalingFactor;
-            //     graphPi0InvCrossSectionSysClone[i]->GetEYlow()[j] *= scalingFactor;
-            // }
+            for (int j=0;j<graphPi0InvCrossSectionSysClone[i]->GetN();j++){
+                graphPi0InvCrossSectionSysClone[i]->GetY()[j] *= scalingFactor;
+                graphPi0InvCrossSectionSysClone[i]->GetEYhigh()[j] *= scalingFactor;
+                graphPi0InvCrossSectionSysClone[i]->GetEYlow()[j] *= scalingFactor;
+            }
             // DrawGammaSetMarkerTGraphAsym(graphPi0InvCrossSectionSysInterpolation[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDetMC[i] , colorDetMC[i], widthLinesBoxes, kTRUE);
             // graphPi0InvCrossSectionSysInterpolation[i]     ->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphPi0InvCrossSectionSysClone[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i], widthLinesBoxes, kTRUE);
@@ -464,17 +472,17 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
             legendCrossSectionPi0->AddEntry(graphPi0InvCrossSectionSysClone[i],Form("%s x10^{%d}",nameMeasGlobal[i].Data(),legendScalingFactor),"pf");
 
             // statistics
-            // for (int j=0;j<graphPi0InvCrossSectionStatClone[i]->GetN();j++){
-            //     graphPi0InvCrossSectionStatClone[i]->GetY()[j] *= scalingFactor;
-            //     graphPi0InvCrossSectionStatClone[i]->GetEYhigh()[j] *= scalingFactor;
-            //     graphPi0InvCrossSectionStatClone[i]->GetEYlow()[j] *= scalingFactor;
-            // }
+            for (int j=0;j<graphPi0InvCrossSectionStatClone[i]->GetN();j++){
+                graphPi0InvCrossSectionStatClone[i]->GetY()[j] *= scalingFactor;
+                graphPi0InvCrossSectionStatClone[i]->GetEYhigh()[j] *= scalingFactor;
+                graphPi0InvCrossSectionStatClone[i]->GetEYlow()[j] *= scalingFactor;
+            }
             // DrawGammaSetMarkerTGraph(graphPi0InvCrossSectionStatInterpolation[i],  markerStyleDet[i], markerSizeDet[i]*0.55, colorDetMC[i] , colorDetMC[i]);
             // graphPi0InvCrossSectionStatInterpolation[i]->Draw("p,same,z");
             DrawGammaSetMarkerTGraph(graphPi0InvCrossSectionStatClone[i],  markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
             graphPi0InvCrossSectionStatClone[i]->Draw("p,same,z");
             scalingFactor/=10;
-            // legendScalingFactor--;
+            legendScalingFactor--;
           }
         }
         legendCrossSectionPi0->Draw();
@@ -492,6 +500,8 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
     canvasCrossSectionPi0->Update();
     canvasCrossSectionPi0->Print(Form("%s/Pi0_InvariantCrossSectionMeas.%s",outputDir.Data(),suffix.Data()));
     
+    
+
     // **********************************************************************************************************************
     // ******************************************* Pi0 invariant cross section            ****************************************
     // **********************************************************************************************************************
@@ -518,29 +528,29 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
         TLegend* legendCrossSectionEta           = GetAndSetLegend2(0.18, 0.13, 0.43, 0.13+(3.5*textSizeLabelsRel),textSizeLabelsPixel);
         
         scalingFactor = pow(10,totalMeasAvail-1);
-        // Int_t legendScalingFactor = totalMeasAvail-1;
-        legendScalingFactor = 0;
+        legendScalingFactor = totalMeasAvail-1;
+        // legendScalingFactor = 0;
         for(Int_t i=numbersofmeas;i>-1;i--){
           if(availableMeas[i]){
             graphEtaInvCrossSectionSysClone[i]= (TGraphAsymmErrors*)graphEtaInvCrossSectionSys[i]->Clone(Form("csSys%d",i)) ;
             graphEtaInvCrossSectionStatClone[i]= (TGraphAsymmErrors*)graphEtaInvCrossSectionStat[i]->Clone(Form("csStat%d",i)) ;
-            // for (int j=0;j<graphEtaInvCrossSectionSysClone[i]->GetN();j++){
-            //     graphEtaInvCrossSectionSysClone[i]->GetY()[j] *= scalingFactor;
-            //     graphEtaInvCrossSectionSysClone[i]->GetEYhigh()[j] *= scalingFactor;
-            //     graphEtaInvCrossSectionSysClone[i]->GetEYlow()[j] *= scalingFactor;
-            // }
-            DrawGammaSetMarkerTGraphAsym(graphEtaInvCrossSectionSysInterpolation[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDetMC[i] , colorDetMC[i], widthLinesBoxes, kTRUE);
-            graphEtaInvCrossSectionSysInterpolation[i]     ->Draw("E2same");
+            for (int j=0;j<graphEtaInvCrossSectionSysClone[i]->GetN();j++){
+                graphEtaInvCrossSectionSysClone[i]->GetY()[j] *= scalingFactor;
+                graphEtaInvCrossSectionSysClone[i]->GetEYhigh()[j] *= scalingFactor;
+                graphEtaInvCrossSectionSysClone[i]->GetEYlow()[j] *= scalingFactor;
+            }
+            // DrawGammaSetMarkerTGraphAsym(graphEtaInvCrossSectionSysInterpolation[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDetMC[i] , colorDetMC[i], widthLinesBoxes, kTRUE);
+            // graphEtaInvCrossSectionSysInterpolation[i]     ->Draw("E2same");
             DrawGammaSetMarkerTGraphAsym(graphEtaInvCrossSectionSysClone[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i], widthLinesBoxes, kTRUE);
             graphEtaInvCrossSectionSysClone[i]     ->Draw("E2same");
             legendCrossSectionEta->AddEntry(graphEtaInvCrossSectionSysClone[i],Form("%s x10^{%d}",nameMeasGlobal[i].Data(),legendScalingFactor),"pf");
               
             // statistics
-            // for (int j=0;j<graphEtaInvCrossSectionStatClone[i]->GetN();j++){
-            //     graphEtaInvCrossSectionStatClone[i]->GetY()[j] *= scalingFactor;
-            //     graphEtaInvCrossSectionStatClone[i]->GetEYhigh()[j] *= scalingFactor;
-            //     graphEtaInvCrossSectionStatClone[i]->GetEYlow()[j] *= scalingFactor;
-            // }
+            for (int j=0;j<graphEtaInvCrossSectionStatClone[i]->GetN();j++){
+                graphEtaInvCrossSectionStatClone[i]->GetY()[j] *= scalingFactor;
+                graphEtaInvCrossSectionStatClone[i]->GetEYhigh()[j] *= scalingFactor;
+                graphEtaInvCrossSectionStatClone[i]->GetEYlow()[j] *= scalingFactor;
+            }
             DrawGammaSetMarkerTGraph(graphEtaInvCrossSectionStatClone[i],  markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
             graphEtaInvCrossSectionStatClone[i]->Draw("p,same,z");
             scalingFactor/=10;
@@ -563,6 +573,75 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
     canvasCrossSectionPi0->Update();
     canvasCrossSectionPi0->Print(Form("%s/Eta_InvariantCrossSectionMeas.%s",outputDir.Data(),suffix.Data()));
     
+    // **********************************************************************************************************************
+    // ******************************************* RAW YIELDS                        ****************************************
+    // **********************************************************************************************************************
+    
+    TH2F * histoDummyPi0RawYields;
+        histoDummyPi0RawYields                = new TH2F("histoDummyPi0RawYields", "histoDummyPi0RawYields",1000, minX,  maxX, 1000, 2e-9, 8e-2 );
+    SetStyleHistoTH2ForGraphs( histoDummyPi0RawYields, "#it{p}_{T} (GeV/#it{c})", "RAW Yield per Event",
+                            0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.4);//(#times #epsilon_{pur})
+    
+    histoDummyPi0RawYields->GetYaxis()->SetLabelOffset(0.001);
+    histoDummyPi0RawYields->GetXaxis()->SetLabelOffset(-0.01);
+    histoDummyPi0RawYields->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histoDummyPi0RawYields->DrawCopy();
+    scalingFactor = pow(10,totalMeasAvail-1);
+    legendScalingFactor = totalMeasAvail-1;
+    for(Int_t i=numbersofmeas;i>-1;i--){
+      if(availableMeas[i]){
+        // statistics
+        for (int j=0;j<graphPi0RawYields[i]->GetN();j++){
+            graphPi0RawYields[i]->GetY()[j] *= scalingFactor;
+            graphPi0RawYields[i]->GetEYhigh()[j] *= scalingFactor;
+            graphPi0RawYields[i]->GetEYlow()[j] *= scalingFactor;
+        }
+        DrawGammaSetMarkerTGraph(graphPi0RawYields[i],  markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+        graphPi0RawYields[i]->Draw("p,same,z");
+        scalingFactor/=10;
+        legendScalingFactor--;
+      }
+    }
+    legendCrossSectionPi0->Draw();
+    drawLatexAdd("ALICE",0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(collisionSystem5TeV,0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    histoDummyPi0RawYields->Draw("sameaxis");
+    canvasCrossSectionPi0->Update();
+    canvasCrossSectionPi0->Print(Form("%s/Pi0_RawYields.%s",outputDir.Data(),suffix.Data()));
+    
+    TH2F * histoDummyEtaRawYields;
+        histoDummyEtaRawYields                = new TH2F("histoDummyEtaRawYields", "histoDummyEtaRawYields",1000, minX,  maxX, 1000, 2e-8, 2e-3 );
+    SetStyleHistoTH2ForGraphs( histoDummyEtaRawYields, "#it{p}_{T} (GeV/#it{c})", "RAW Yield per Event",
+                            0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.4);//(#times #epsilon_{pur})
+    
+    histoDummyEtaRawYields->GetYaxis()->SetLabelOffset(0.001);
+    histoDummyEtaRawYields->GetXaxis()->SetLabelOffset(-0.01);
+    histoDummyEtaRawYields->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histoDummyEtaRawYields->DrawCopy();
+    scalingFactor = pow(10,totalMeasAvail-1);
+    legendScalingFactor = totalMeasAvail-1;
+    for(Int_t i=numbersofmeas;i>-1;i--){
+      if(availableMeas[i]){
+        // statistics
+        for (int j=0;j<graphEtaRawYields[i]->GetN();j++){
+            graphEtaRawYields[i]->GetY()[j] *= scalingFactor;
+            graphEtaRawYields[i]->GetEYhigh()[j] *= scalingFactor;
+            graphEtaRawYields[i]->GetEYlow()[j] *= scalingFactor;
+        }
+        DrawGammaSetMarkerTGraph(graphEtaRawYields[i],  markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+        graphEtaRawYields[i]->Draw("p,same,z");
+        scalingFactor/=10;
+        legendScalingFactor--;
+      }
+    }
+    legendCrossSectionPi0->Draw();
+    drawLatexAdd("ALICE",0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd(collisionSystem5TeV,0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#eta #rightarrow #gamma#gamma",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    histoDummyEtaRawYields->Draw("sameaxis");
+    canvasCrossSectionPi0->Update();
+    canvasCrossSectionPi0->Print(Form("%s/Eta_RawYields.%s",outputDir.Data(),suffix.Data()));
     
     // **********************************************************************************************************************
     // ******************************************* Compare to Interpolation           ****************************************
@@ -607,7 +686,7 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
 
     drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.92,textSizeLabelsRel,kFALSE,kFALSE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.87,textSizeLabelsRel,kFALSE,kFALSE);
-    drawLatexAdd("EMCal",0.15,0.82,textSizeLabelsRel,kFALSE,kFALSE);
+    drawLatexAdd("EMC",0.15,0.82,textSizeLabelsRel,kFALSE,kFALSE);
 
     canvasRatioToCombFit->SaveAs(Form("%s/InterpolationRatioPi0EMC.%s",outputDir.Data(),suffix.Data()));
     
@@ -628,7 +707,7 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
       
       drawLatexAdd(collisionSystem5TeV.Data(),0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
       drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
-      drawLatexAdd("PCM-EMCal",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+      drawLatexAdd("PCM-EMC",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
       
       canvasRatioToCombFit->SaveAs(Form("%s/InterpolationRatioPi0PCMEMC.%s",outputDir.Data(),suffix.Data()));
       
@@ -657,7 +736,7 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
       
       drawLatexAdd(collisionSystem5TeV.Data(),0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
       drawLatexAdd("#eta #rightarrow #gamma#gamma",0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
-      drawLatexAdd("PCM-EMCal",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+      drawLatexAdd("PCM-EMC",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
       canvasRatioToCombFit->SaveAs(Form("%s/InterpolationRatioEtaPCMEMC.%s",outputDir.Data(),suffix.Data()));
       
       
@@ -679,7 +758,7 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
       
       drawLatexAdd(collisionSystem5TeV.Data(),0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
       drawLatexAdd("#eta #rightarrow #gamma#gamma",0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
-      drawLatexAdd("EMCal",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+      drawLatexAdd("EMC",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
       canvasRatioToCombFit->SaveAs(Form("%s/InterpolationRatioEtaEMC.%s",outputDir.Data(),suffix.Data()));
       
       
@@ -711,13 +790,13 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
       DrawGammaLines(minX,maxX , 0.9, 0.9,0.1, kGray, 7);
       
       TLegend* legendCrossSectionPi0Compare           = GetAndSetLegend2(0.35, 0.86, 0.63, 0.86+(2*textSizeLabelsRel),0.8*textSizeLabelsPixel);
-      legendCrossSectionPi0Compare->AddEntry(interpolationRatioEMCToComb,"EMCal","p");
-      legendCrossSectionPi0Compare->AddEntry(interpolationRatioPCMEMCToComb,"PCM-EMCal","p");
+      legendCrossSectionPi0Compare->AddEntry(interpolationRatioEMCToComb,"EMC","p");
+      legendCrossSectionPi0Compare->AddEntry(interpolationRatioPCMEMCToComb,"PCM-EMC","p");
       legendCrossSectionPi0Compare->Draw();
       
       drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.92,textSizeLabelsRel,kFALSE,kFALSE);
       drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.87,textSizeLabelsRel,kFALSE,kFALSE);
-      // drawLatexAdd("EMCal",0.15,0.82,textSizeLabelsRel,kFALSE,kFALSE);
+      // drawLatexAdd("EMC",0.15,0.82,textSizeLabelsRel,kFALSE,kFALSE);
       
       canvasRatioToCombFit->SaveAs(Form("%s/InterpolationRatioPi0ToCombined.%s",outputDir.Data(),suffix.Data()));
       
@@ -752,7 +831,7 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
       legendCrossSectionPi0Compare->Draw();
       drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.92,textSizeLabelsRel,kFALSE,kFALSE);
       drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.15,0.87,textSizeLabelsRel,kFALSE,kFALSE);
-      // drawLatexAdd("EMCal",0.15,0.82,textSizeLabelsRel,kFALSE,kFALSE);
+      // drawLatexAdd("EMC",0.15,0.82,textSizeLabelsRel,kFALSE,kFALSE);
       
       canvasRatioToCombFit->SaveAs(Form("%s/InterpolationRatioEtaToCombined.%s",outputDir.Data(),suffix.Data()));
       

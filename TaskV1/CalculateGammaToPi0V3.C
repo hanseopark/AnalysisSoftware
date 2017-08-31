@@ -780,6 +780,8 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
                         histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin)));
                         histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
                     }
+                } else if(!fEnergy.CompareTo("900GeV")){
+                    histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldB->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin))); //nschmidt2017 levy for 900 GeV
                 } else {
                     histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin))); //nschmidt2016 changed to hagedorn
                     histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));

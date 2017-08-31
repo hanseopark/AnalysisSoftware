@@ -202,9 +202,9 @@
                                                         4, 4, 4, 4, 4,
                                                         4, 4, 8, 16};
 
-    Int_t fBinsPi05TeVPCMEMCPtRebin[34]             = { 2, 2, 2, 2, 2, 2, 4, 2, 2, 2,
+    Int_t fBinsPi05TeVPCMEMCPtRebin[34]             = { 2, 2, 2, 2, 2, 2, 5, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 4, 4, 4, 4, 4, 8,
+                                                        2, 2, 2, 2, 2, 2, 4, 8, 16, 16,
                                                         2, 2, 2, 2};
     Int_t fBinsPi05TeVEMCPtRebin[34]                = { 2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -1054,6 +1054,8 @@
                     return 7;
                 }
             } else if (energy.CompareTo("5TeV") == 0) {
+                if ( mode == 2 )
+                    return 9;
                 if ( mode == 4 )
                     return 24;
                 if ( mode == 12 )
@@ -1299,8 +1301,10 @@
                     return 4;
                 }
             } else if (energy.CompareTo("5TeV") == 0) {
-              if (mode == 4 || mode == 12 )
-                return 12;
+              if (mode == 2 )
+                return 8;
+              else if (mode == 4 || mode == 12 )
+                return 9;
               else
                 return 8;
             } else if (energy.CompareTo("7TeV") == 0) {

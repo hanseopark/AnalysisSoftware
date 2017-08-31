@@ -2389,7 +2389,12 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 canvasCompEffSimple->SaveAs(Form("%s/%s_EffiCompW0Weighting%sRatio_%s.%s",outputDir.Data(),nameMeson.Data(),nameIntRange[k].Data(),fCutSelection.Data(),suffix.Data()));
 
                 // correct true effi to normal effi
-                histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
+                histoTrueEffiPt[k]->Sumw2();
+                // histoRatioEffWOWeightingEffCFPol1[k]->Sumw2();
+                if(!optionEnergy.CompareTo("900GeV"))
+                  histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol0[k]);
+                else
+                  histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
             }
 
             // plotting of final comparison
