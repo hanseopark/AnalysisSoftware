@@ -1900,7 +1900,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
       tempPlotArray[3] = fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0];
       tempPlotArray[4] = fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin;
       tempPlotArray[5] = fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin;
-      TString HistosLegendsTitlesPiPlPiMiPiZero[6] = {"True #pi^{+}#pi^{-}#pi^{0} from #eta or #omega","True #pi^{+}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother","True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-}#pi^{0} pure combinatorical","#pi^{+}#pi^{-}#pi^{0} contamination"};
+      TString HistosLegendsTitlesPiPlPiMiPiZero[6] = {"True #pi^{+}#pi^{-}#pi^{0} from #eta or #omega","True #pi^{+}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother","True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-}#pi^{0} pure combinatorial","#pi^{+}#pi^{-}#pi^{0} contamination"};
       PlotExampleInvMassSingleHistAndArray(fHistoMappingGGInvMassPtBin[fStartPtBin],tempPlotArray,0,6,fMesonMassRange[0],fMesonMassRange[1],fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                                       fThesis, fCollisionSystem, fBinsPt, fDecayChannel,"Signal+Background",HistosLegendsTitlesPiPlPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMiPiZero_Contributions",kFALSE,2.);
 
@@ -2085,8 +2085,19 @@ void ProcessEM( TH1D* fGammaGamma,
     fBck->Sumw2();
     fBckNorm->Sumw2();
 
-    Double_t 	r= fGammaGamma->Integral(fGammaGamma->GetXaxis()->FindBin(fBGFitRangeEM[0]),fGammaGamma->GetXaxis()->FindBin(fBGFitRangeEM[1]));
-    Double_t 	b= fBck->Integral(fBck->GetXaxis()->FindBin(fBGFitRangeEM[0]),fBck->GetXaxis()->FindBin(fBGFitRangeEM[1]));
+    // Check if you try to use the overflowbin as a range
+    Int_t minbin = fGammaGamma->GetXaxis()->FindBin(fBGFitRangeEM[0]);
+    Int_t maxbin = fGammaGamma->GetXaxis()->FindBin(fBGFitRangeEM[1]);
+    if(maxbin==fGammaGamma->GetXaxis()->GetNbins()+1) maxbin--;
+
+    Double_t 	r= fGammaGamma->Integral(minbin,maxbin);
+
+    // Check if you try to use the overflowbin as a range
+    minbin = fBck->GetXaxis()->FindBin(fBGFitRangeEM[0]);
+    maxbin = fBck->GetXaxis()->FindBin(fBGFitRangeEM[1]);
+    if(maxbin==fBck->GetXaxis()->GetNbins()+1) maxbin--;
+
+    Double_t 	b= fBck->Integral(minbin,maxbin);
 
     if(b != 0) fNorm = r/b;
 
@@ -2131,11 +2142,32 @@ void ProcessEMLeftRight(    TH1D* fFgr,
 
     Double_t 	norm = 1;
 
-    Double_t 	r= fFgr->Integral(fFgr->GetXaxis()->FindBin(fBGFitRangeEMLeft[0]),fFgr->GetXaxis()->FindBin(fBGFitRangeEMLeft[1]));
-    Double_t 	b= fBck->Integral(fBck->GetXaxis()->FindBin(fBGFitRangeEMLeft[0]),fBck->GetXaxis()->FindBin(fBGFitRangeEMLeft[1]));
+    // Check if you try to use the overflowbin as a range
+    Int_t minbin = fFgr->GetXaxis()->FindBin(fBGFitRangeEMLeft[0]);
+    Int_t maxbin = fFgr->GetXaxis()->FindBin(fBGFitRangeEMLeft[1]);
+    if(maxbin==fFgr->GetXaxis()->GetNbins()+1) maxbin--;
 
-    r+= fFgr->Integral(fFgr->GetXaxis()->FindBin(fBGFitRangeEMRight[0]),fFgr->GetXaxis()->FindBin(fBGFitRangeEMRight[1]));
-    b+= fBck->Integral(fBck->GetXaxis()->FindBin(fBGFitRangeEMRight[0]),fBck->GetXaxis()->FindBin(fBGFitRangeEMRight[1]));
+    Double_t 	r= fFgr->Integral(minbin,maxbin);
+
+    // Check if you try to use the overflowbin as a range
+    minbin = fBck->GetXaxis()->FindBin(fBGFitRangeEMLeft[0]);
+    maxbin = fBck->GetXaxis()->FindBin(fBGFitRangeEMLeft[1]);
+    if(maxbin==fBck->GetXaxis()->GetNbins()+1) maxbin--;
+
+    Double_t 	b= fBck->Integral(minbin,maxbin);
+
+    // Check if you try to use the overflowbin as a range
+    minbin = fFgr->GetXaxis()->FindBin(fBGFitRangeEMRight[0]);
+    maxbin = fFgr->GetXaxis()->FindBin(fBGFitRangeEMRight[1]);
+    if(maxbin==fFgr->GetXaxis()->GetNbins()+1) maxbin--;
+
+    r+= fFgr->Integral(minbin,maxbin);
+
+    // Check if you try to use the overflowbin as a range
+    minbin = fBck->GetXaxis()->FindBin(fBGFitRangeEMRight[0]);
+    maxbin = fBck->GetXaxis()->FindBin(fBGFitRangeEMRight[1]);
+    if(maxbin==fBck->GetXaxis()->GetNbins()+1) maxbin--;
+    b+= fBck->Integral(minbin,maxbin);
 
     if(b != 0) norm = r/b;
 
@@ -2933,10 +2965,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
     } else {
-        mesonAmplitudeMin = mesonAmplitude*50./100.;
-        mesonAmplitudeMax = mesonAmplitude*120./100.;
+        mesonAmplitudeMin = mesonAmplitude*98./100.;
+        mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
-            mesonAmplitudeMin = mesonAmplitude*10./100.;
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
         }
     }
     Double_t FitRangeTmp[2];
@@ -2962,6 +2994,15 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fFitLinearBck = NULL;
     fFitLinearBck = new TF1("Linear","[0]+[1]*x",FitRangeTmp[0],FitRangeTmp[1]);
 
+    // Fit with linear back only first
+    fFitLinearBckExcl = NULL;
+    fFitLinearBckExcl = new TF1("LinearEx",LinearBGExclusion,FitRangeTmp[0],FitRangeTmp[1],2);
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitLinearBckExcl,"RME0");
+    // Set Results as start parameters
+    fFitReco->FixParameter(4,fFitLinearBckExcl->GetParameter(0));
+    fFitReco->FixParameter(5,fFitLinearBckExcl->GetParameter(1));
+    //fFitReco->SetParError(4,fFitLinearBckExcl->GetParError(0));
+    //fFitReco->SetParError(5,fFitLinearBckExcl->GetParError(1));
 
     fFitReco->SetParameter(0,mesonAmplitude);
 
@@ -2972,25 +3013,24 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     }
 
     fFitReco->SetParameter(2,fMesonWidthExpect);
-    //    if(vary){
+
+    if((fMesonLambdaTail==fMesonLambdaTailRange[0])&&(fMesonLambdaTailRange[0] == fMesonLambdaTailRange[1])){
+        fFitReco->FixParameter(3,fMesonLambdaTail);
+    } else{
         fFitReco->SetParameter(3,fMesonLambdaTail);
-    //    } else {
-    //       fFitReco->FixParameter(3,fMesonLambdaTail);
-    //    }
+        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+    }
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-    //    fFitReco->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
      if(InvMassType == 1){
        fFitReco->SetParLimits(1,(fMesonMassExpect-0.134)*0.9,(fMesonMassExpect-0.134)*1.15);
      } else{
-       fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+       fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
      }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
-    //    if(vary){
-        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
-    // }
 
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"RME0");
+    //fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
 
 
     fFitReco->SetLineColor(3);
@@ -4042,6 +4082,20 @@ void CalculateFWHM(TF1 * fFunc, Double_t* InputMesonFitRange){
 
 }
 
+//****************************************************************************
+//******************** Definition of linear BG fit with expluded  ************
+//******************** region fBGFitRangeLeft[1]-fBGFitRange[0] **************
+//*******parameters are:                                                *****
+//*******               - 0 constant BG                                 *****
+//*******               - 1 linear BG                                   *****
+//****************************************************************************
+Double_t LinearBGExclusion(Double_t *x, Double_t *par) {
+    if (x[0] > fBGFitRangeLeft[1] && x[0] < fBGFitRange[0]) {
+        TF1::RejectPoint();
+        return 0;
+    }
+    return par[0] + par[1]*x[0];
+}
 //Crystal ball function for signal +linear background, parameters are 0:normalization,1:mean,2:sigma,3:n,4:alpha;
 Double_t CrystalBallBck(Double_t *x,Double_t *par) {
 

@@ -71,7 +71,7 @@ void CorrectYield(TH1D* histoCorrectedYield,TH1D* histoEffiPt, TH1D* histoAccept
     Double_t branchingRatio = 1.;
 
     if (nameMeson.CompareTo("Eta") == 0){
-        branchingRatio = TDatabasePDG::Instance()->GetParticle(221)->DecayChannel(DecayChannelIndex)->BranchingRatio();
+        branchingRatio = TDatabasePDG::Instance()->GetParticle(221)->DecayChannel(2)->BranchingRatio();
     }else if (nameMeson.CompareTo("Omega") == 0){
         branchingRatio = TDatabasePDG::Instance()->GetParticle(223)->DecayChannel(DecayChannelIndex)->BranchingRatio();
     }else{
@@ -87,7 +87,7 @@ void CompileFullCorrectionFactor(TH1D* histoEffiPt, TH1D* histoAcceptance, Doubl
 }
 
 
-void ScaleMCYield(TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t scaling, Double_t nEvtMC, TString nameMeson, Bool_t optionDalitz ){
+void ScaleMCYield(TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t scaling, Double_t nEvtMC, TString nameMeson, Bool_t optionDalitz,Int_t DecayChannelIndex = 0 ){
 	histoCorrectedToBeScaled->Sumw2();
 	histoCorrectedToBeScaled->Scale(1./deltaRapid);
 	histoCorrectedToBeScaled->Scale(scaling);
@@ -98,20 +98,18 @@ void ScaleMCYield(TH1D* histoCorrectedToBeScaled, Double_t deltaRapid, Double_t 
 		histoCorrectedToBeScaled->SetBinContent(i,newBinContent);
 		histoCorrectedToBeScaled->SetBinError(i,newBinError);
 	}
-	if (nameMeson.CompareTo("Pi0") == 0 ||nameMeson.CompareTo("Pi0EtaBinning") == 0 ){
-		if (!optionDalitz){
-			histoCorrectedToBeScaled->Scale(1./0.98798);
-		} else {
-			histoCorrectedToBeScaled->Scale(1./0.01198);
-		}
-	}else{
-		if (!optionDalitz){
-			histoCorrectedToBeScaled->Scale(1./0.3931);
-		} else {
-			histoCorrectedToBeScaled->Scale(1./6.8e-5);
-		}
-		
-	}
+    // Scale by Branching Ratio
+    Double_t branchingRatio = 1.;
+
+    if (nameMeson.CompareTo("Eta") == 0){
+        branchingRatio = TDatabasePDG::Instance()->GetParticle(221)->DecayChannel(2)->BranchingRatio();
+        cout << "BRANCHING RATIO ETA=" << branchingRatio << endl;
+    }else if (nameMeson.CompareTo("Omega") == 0){
+        branchingRatio = TDatabasePDG::Instance()->GetParticle(223)->DecayChannel(DecayChannelIndex)->BranchingRatio();
+    }else{
+        cout << "Branching Ratio not found, will be scaled with 1!" << endl;
+    }
+     histoCorrectedToBeScaled->Scale(1./branchingRatio);
 }
 
 
@@ -682,16 +680,16 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
     //**********************************************************************************
     if(isMC){
       TCanvas* canvasContributions = new TCanvas("canvasContributions","",200,10,1350,900);  // gives the page size
-      DrawGammaCanvasSettings( canvasContributions, 0.13, 0.02, 0.02, 0.09);
+      DrawGammaCanvasSettings( canvasContributions, 0.13, 0.02, 0.02, 0.12);
 
-
-      DrawAutoGammaMesonHistos( histoYieldsMappingGGInvMassFraction,
+      DrawAutoGammaMesonHistos( histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction,
                                   "", "p_{T} (GeV/c)","N_{x}/N_{S+B}",
                                   kFALSE, 0., 0.7, kFALSE,
-                                  kFALSE, 0., 0.7,
-                                  kTRUE, 0., 25.);
-      DrawGammaSetMarker(histoYieldsMappingGGInvMassFraction, styleCat[0], 0.8, colorCat[0], colorCat[0]);
-      histoYieldsMappingGGInvMassFraction->DrawCopy("same,e1,p");
+                                  kFALSE, 0., 1.1,
+                                  kFALSE, 3., 15.,62,0.05,42,0.04,0.9,0.9);
+
+      DrawGammaSetMarker(histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction, styleCat[6], 0.8, colorCat[6], colorCat[6]);
+      histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction->DrawCopy("same,e1,p");
 
       DrawGammaSetMarker(histoYieldsMappingTrueMesonFraction, styleCat[1], 0.8, colorCat[1], colorCat[1]);
       histoYieldsMappingTrueMesonFraction->DrawCopy("same,e1,p");
@@ -708,21 +706,17 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
       DrawGammaSetMarker(histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction, styleCat[5], 0.8, colorCat[5], colorCat[5]);
       histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction->DrawCopy("same,e1,p");
 
-      DrawGammaSetMarker(histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction, styleCat[6], 0.8, colorCat[6], colorCat[6]);
-      histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction->DrawCopy("same,e1,p");
-
-      TLegend* legendContribution = new TLegend(0.2,0.75,0.48,0.9);
+      TLegend* legendContribution = new TLegend(0.15,0.55,0.48,0.80);
       legendContribution->SetHeader("x=");
-      legendContribution->SetTextSize(0.02);
+      legendContribution->SetTextSize(0.04);
       legendContribution->SetFillColor(0);
       legendContribution->SetFillStyle(0);
       legendContribution->SetLineColor(0);
-      legendContribution->AddEntry(histoYieldsMappingGGInvMassFraction,"Signal+Background","lep");
       legendContribution->AddEntry(histoYieldsMappingTrueMesonFraction,"True reconstructed #eta or #omega","lep");
       legendContribution->AddEntry(histoYieldsMappingTruePiPlPiMiSameMotherFraction[0],"#pi^{+} #pi^{-} have same mother","lep");
       legendContribution->AddEntry(histoYieldsMappingTruePiMiPiZeroSameMotherFraction[0],"#pi^{0} #pi^{-} have same mother","lep");
       legendContribution->AddEntry(histoYieldsMappingTruePiPlPiZeroSameMotherFraction[0],"#pi^{0} #pi^{+} have same mother","lep");
-      legendContribution->AddEntry(histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction,"pure combinatorical","lep");
+      legendContribution->AddEntry(histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction,"pure combinatorial","lep");
       legendContribution->AddEntry(histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction,"wrong identifications","lep");
 
       legendContribution->Draw();

@@ -2041,7 +2041,7 @@
     //     cout << fMesonType.Data() << endl;
         Int_t place                     = 0;
         for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
-    //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
+       //     cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
             Double_t startPt            = fRangeBinsPt[iPt];
             Double_t endPt              = fRangeBinsPt[iPt+1];
 
@@ -2146,7 +2146,7 @@
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
                 padDataSpectra->cd(place)->SetRightMargin(0.02);
-    //             cout << "place: " << place << endl;
+    //            cout << "place: " << place << endl;
                 int remaining           = (place-1)%fColumnPlot;
                 if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
                 else padDataSpectra->cd(place)->SetLeftMargin(0.25);

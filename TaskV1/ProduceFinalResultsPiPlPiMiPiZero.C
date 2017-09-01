@@ -1838,7 +1838,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     labelDetProcRawUnscaled->Draw();
 
     canvasRawUnscaled->Update();
-    canvasRawUnscaled->SaveAs(Form("%s/Omega_%s_RawYieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+    canvasRawUnscaled->SaveAs(Form("%s/Omega_%s_RawYieldUnscaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
     if (!enableEta) delete canvasRawUnscaled;
 
     //***************************************************************************************************************
@@ -4115,7 +4115,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
           legendBinShift2->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftEta = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+          TLatex *labelBinShiftEta = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
           SetStyleTLatex( labelBinShiftEta, 0.85*textSizeSpectra,4);
           labelBinShiftEta->Draw();
           labelDetProcEffi->Draw();
@@ -4204,7 +4204,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         legendEffiEta->Draw();
 
         labelEnergyEffi->Draw();
-        TLatex *labelEtaEffi = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaEffi = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
         SetStyleTLatex( labelEtaEffi, 0.85*textSizeSpectra,4);
         labelEtaEffi->Draw();
         labelDetProcEffi->Draw();
@@ -4364,7 +4364,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         legendMassEta->Draw();
         labelEnergyMass->Draw();
 
-        TLatex *labelEtaMass = new TLatex(0.14, 0.85+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaMass = new TLatex(0.14, 0.85+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
         SetStyleTLatex( labelEtaMass, 0.85*textSizeSpectra,4);
         labelEtaMass->Draw();
         labelDetProcMass->Draw();
@@ -4433,7 +4433,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         legendWidthEta->Draw();
         labelEnergyWidth->Draw();
 
-        TLatex *labelEtaWidth = new TLatex(0.14, 0.84+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaWidth = new TLatex(0.14, 0.84+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
         SetStyleTLatex( labelEtaWidth, 0.85*textSizeSpectra,4);
         labelEtaWidth->Draw();
         labelDetProcWidth->Draw();
@@ -4509,13 +4509,13 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         }
         legendRawUnscaled->Draw();
         labelEnergyRawUnscaled->Draw();
-        TLatex *labelEtaRawUnscaled     = new TLatex(0.2, 0.12+textSizeSpectra*0.85*0.75,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaRawUnscaled     = new TLatex(0.2, 0.12+textSizeSpectra*0.85*0.75,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
         SetStyleTLatex( labelEtaRawUnscaled, 0.85*textSizeSpectra,4);
         labelEtaRawUnscaled->Draw();
         labelDetProcRawUnscaled->Draw();
 
         canvasRawUnscaled->Update();
-        canvasRawUnscaled->SaveAs(Form("%s/Eta_%s_RawYieldUnscaledTrigg.%s",outputDir.Data(),isMC.Data(),suffix.Data()));
+        canvasRawUnscaled->SaveAs(Form("%s/Eta_%s_RawYieldUnscaledTrigg_%i.%s",outputDir.Data(),isMC.Data(),mode,suffix.Data()));
         delete canvasRawUnscaled;
 
         //***************************************************************************************************************
@@ -4565,7 +4565,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         legendUnscaledEta->Draw();
 
         labelEnergyUnscaled->Draw();
-        TLatex *labelEtaUnscaled = new TLatex(0.2, 0.12+textSizeSpectra*0.85*0.75,"#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaUnscaled = new TLatex(0.2, 0.12+textSizeSpectra*0.85*0.75,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
         SetStyleTLatex( labelEtaUnscaled, 0.85*textSizeSpectra,4);
         labelEtaUnscaled->Draw();
         labelDetProcUnscaled->Draw();
@@ -5092,7 +5092,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
                 labelWeightsEnergy->SetTextFont(43);
                 labelWeightsEnergy->Draw();
-                TLatex *labelWeightsEta = new TLatex(0.7,0.20,"#eta #rightarrow #gamma#gamma");
+                TLatex *labelWeightsEta = new TLatex(0.7,0.20,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
                 SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4);
                 labelWeightsEta->SetTextFont(43);
                 labelWeightsEta->Draw();
@@ -5157,7 +5157,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                 SetStyleTLatex( labelRelErrEnergy, 0.85*textSizeLabelsPixel,4);
                 labelRelErrEnergy->SetTextFont(43);
                 labelRelErrEnergy->Draw();
-                TLatex *labelRelErrEta       = new TLatex(0.15,0.85,"#eta #rightarrow #gamma#gamma");
+                TLatex *labelRelErrEta       = new TLatex(0.15,0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
                 SetStyleTLatex( labelRelErrEta, 0.85*textSizeLabelsPixel,4);
                 labelRelErrEta->SetTextFont(43);
                 labelRelErrEta->Draw();
@@ -5416,7 +5416,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
                     SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
                     labelEnergySysDetailed->Draw();
 
-                    TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+                    TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
                     labelEtaSysDetailed->SetTextAlign(31);
                     SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
                     labelEtaSysDetailed->Draw();
@@ -5628,7 +5628,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4);
             labelEnergyEffiWOTrigg->Draw();
 
-            TLatex *labelEtaEffiWOTrigg = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+            TLatex *labelEtaEffiWOTrigg = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
             SetStyleTLatex( labelEtaEffiWOTrigg, 0.85*textSizeSpectra,4);
             labelEtaEffiWOTrigg->Draw();
 
@@ -5656,7 +5656,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             SetStyleTLatex( labelEnergyAcc, 0.85*textSizeSpectra,4);
             labelEnergyAcc->Draw();
 
-            TLatex *labelEtaAcc = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+            TLatex *labelEtaAcc = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
             SetStyleTLatex( labelEtaAcc, 0.85*textSizeSpectra,4);
             labelEtaAcc->Draw();
 
@@ -5894,7 +5894,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
         labelEnergyRatio->Draw();
 
-        TLatex *labelEtaRatio = new TLatex(0.6, 0.93-textSizeSpectra*0.85*1.04, "#eta #rightarrow #gamma#gamma");
+        TLatex *labelEtaRatio = new TLatex(0.6, 0.93-textSizeSpectra*0.85*1.04, "#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}");
         SetStyleTLatex( labelEtaRatio, 0.85*textSizeSpectra,4);
         labelEtaRatio->Draw();
 

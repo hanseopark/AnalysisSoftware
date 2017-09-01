@@ -33,6 +33,8 @@
     Double_t fBGFitRange_SubPiZero[2]                                   = {0,0};
     Double_t fBGFitRange_FixedPzPiZero[2]                               = {0,0};
 
+    Int_t GetStartBin(TString meson = "Pi0",TString energy = "2.76TeV", Int_t mode= 2);
+
 
     //****************************************************************************************************
     //******************** Pt binning for pp, 0.9 TeV ****************************************************
@@ -346,36 +348,35 @@
                                                         5, 5, 5};
 
     // Eta->pi+pi-pi0
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[12]  = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]= {6,6,6,6,6,8,8,8,10,10,10};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {10,10,10,10,8,10,10,10,10,16,16};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[11]      = {1,1.5,2,2.5,3,4,5,6.,8.,10.,12.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[10]    = {16,16,16,10,10,10, 10,10,10,10};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {10,10,10,10,10,10,10,10,10,10,16,16};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtEMC[16]         = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,7.,8.,9.,10.,15,20};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {16,16, 16,10,10,10,10,10,10,10,10,10,10,10,10};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtEMC[16]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12,14,16,20.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {10,10,10,10,10,10,10,10,10,10,10,10,8,10,10};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[13]     = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,8.,10.,15};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[12]   = {16,16, 16,10,10,10,10,10,10,10,10,10};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {10,10,10,10,10,8,8,10,10,10,12};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[14]        = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,7,8.,9,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[13]      = {16,16,16,10,10,10,10,10,10,10,10,10,10};
-
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,14.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[12]       = {10,10,10,10,10,10,8,8,10,10,13,12};
     // omega->pi+pi-pi0
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[12]         = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,8.,10.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {16,16,16,10,10,10,10,10,10,10,12};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {10,10,5,5,5,5,5,5,5,10,13};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[11]      = {1,1.5,2,2.5,3,4,5,6.,8.,10.,12.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[10]    = {16,16,16,10,10,10, 10,10,10,10};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {10,10,10,10,10,10,9,9,5,5,8,10};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtEMC[16]         = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,7.,8.,9.,10.,15,20};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {16,16, 16,10,10,10,10,10,10,10,10,10,10,10,10};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtEMC[16]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12,14,16,20.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {10,10,10,10,10,10,8,8,10,10,10,10,8,10,10};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[13]     = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,8.,10.,15};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[12]   = {16,16, 16,10,10,10,10,10,10,10,10,10};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {5,5,5,8,8,8,8,8,8,16,16};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[14]        = {1,1.5,2,2.5,3,3.5,4,4.5,5,6.,7,8.,9,10.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[13]      = {16,16,16,10,10,10,10,10,10,10,10,10,10};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,14.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[12]       = {10,10,10,10,8,8,8,8,8,8,8,8};
 
 
     //****************************************************************************************************
@@ -1315,19 +1316,19 @@
 
               } else if(mode == 40){
                 scaleFac        = 2.;
-                return 6;
+                return 4;
               } else if(mode == 41){
                 scaleFac        = 1.;
-                return 7;
+                return 11;
               } else if(mode == 42){
                 scaleFac        = 1.;
-                return 8;
+                return 7;
               } else if(mode == 44){
                 scaleFac        = 1.;
-                return 13;
+                return 11;
               } else if(mode == 45){
                 scaleFac        = 1.;
-                return 7;
+                return 9;
               } else
                 return 6;
         } else if (energy.CompareTo("8TeV") == 0) {
@@ -1471,20 +1472,20 @@
             return 3;
         } else if (meson.Contains("Omega")) {
             if(mode == 40){
-                scaleFac        = 2.;
-                return 6;
+                scaleFac        = 4.;
+                return 4;
             } else if(mode == 41){
                 scaleFac        = 1.;
-                return 7;
+                return 10;
             } else if(mode == 42){
                 scaleFac        = 1.;
-                return 8;
+                return 7;
             } else if(mode == 44){
                 scaleFac        = 1.;
-                return 13;
+                return 11;
             } else if(mode == 45){
                 scaleFac        = 1.;
-                return 7;
+                return 10;
             } else{
                 scaleFac        = 2.;
                 return 2;
@@ -2928,6 +2929,8 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("7TeV") == 0) {
                 fStartPtBin         = 1;
+                if(modi == 40 || modi == 41 || modi == 42 || modi == 44 || modi == 45) fStartPtBin     = GetStartBin("Eta","7TeV",modi);
+
                 fColumn             = 5;
                 fRow                = 3;
                 if (fNBinsPt > 15) fRow = 4;
@@ -2992,7 +2995,6 @@
                     } else if(modi == 41){
                       fColumn         = 3;
                       fRow            = 3;
-                      fStartPtBin = 3;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[i];
                         if (i < fNBinsPt+1)
@@ -3001,7 +3003,6 @@
                     } else if(modi == 42){
                       fColumn         = 3;
                       fRow            = 4;
-                      fStartPtBin = 3;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                         if (i < fNBinsPt+1)
@@ -3010,7 +3011,6 @@
                     } else if(modi == 44){
                       fColumn         = 3;
                       fRow            = 3;
-                      fStartPtBin = 9;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtEMC[i];
                         if (i < fNBinsPt+1)
@@ -3019,7 +3019,6 @@
                     } else if(modi == 45){
                       fColumn         = 3;
                       fRow            = 3;
-                      fStartPtBin     = 6;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
                         if (i < fNBinsPt+1)
@@ -3602,7 +3601,7 @@
         //*************************************************************************************************
         } else if (setPi0.CompareTo("Omega") == 0) {
             fNBinsPt = 		numberOfBins;
-            fBinsPt= 			new Double_t[20];
+            fBinsPt= 	        new Double_t[20];
             fNRebin = 		new Int_t[19];
             fStartPtBin     = 0;
             fColumn         = 5;
@@ -3613,11 +3612,11 @@
                     cout << "You have chosen to have more than 15 bins for Omega, this is not possible, it will be reduced to 12" << endl;
                     fNBinsPt = 19;
                 }
+                fStartPtBin     = GetStartBin("Omega","7TeV",modi);
 
                 if(modi == 40){
-                    fColumn         = 3;
-                    fRow            =3;
-                    fStartPtBin     = 3;
+                    fColumn         = 4;
+                    fRow             =3;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCM[i];
                         if (i < fNBinsPt+1)
@@ -3626,7 +3625,6 @@
                 } else if(modi == 41){
                     fColumn         = 3;
                     fRow            = 3;
-                    fStartPtBin = 3;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[i];
                         if (i < fNBinsPt+1)
@@ -3634,8 +3632,7 @@
                     }
                 } else if(modi == 42){
                     fColumn         = 3;
-                    fRow            = 4;
-                    fStartPtBin = 3;
+                    fRow            = 3;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                         if (i < fNBinsPt+1)
@@ -3644,7 +3641,6 @@
                 } else if(modi == 44){
                     fColumn         = 3;
                     fRow            = 3;
-                    fStartPtBin = 9;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                         if (i < fNBinsPt+1)
@@ -3652,8 +3648,7 @@
                     }
                 } else if(modi == 45){
                     fColumn         = 3;
-                    fRow            = 3;
-                    fStartPtBin     = 6;
+                    fRow            = 2;
                     for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[i];
                         if (i < fNBinsPt+1)
@@ -3871,7 +3866,7 @@
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtEMC[i];
                     }
                 } else if(mode == 45){
-                    maxNBins = 13;
+                    maxNBins = 12;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
                     }
@@ -3939,7 +3934,7 @@
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                    }
                } else if(mode == 45){
-                   maxNBins = 13;
+                   maxNBins = 12;
                    for(Int_t i = 0; i < maxNBins+1; i++){
                        binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[i];
                    }
@@ -3952,9 +3947,9 @@
     //*************************************************************************************************
     //******************** GetBinning for general combination *****************************************
     //*************************************************************************************************
-    Int_t GetStartBin(  TString   meson   = "Pi0",
-                        TString   energy  = "2.76TeV",
-                        Int_t     mode    = 2
+    Int_t GetStartBin(  TString   meson,
+                        TString   energy,
+                        Int_t     mode
                     ){
 
         Int_t startPtBin = 0;
@@ -4058,14 +4053,30 @@
                     startPtBin     = 3;
                 }
             } else if (energy.CompareTo("7TeV") == 0){
-                if (mode == 40 | mode == 41 || mode == 42 || mode == 44 || mode == 45){
-                    startPtBin     = 0;
+                if (mode == 40){
+                    startPtBin     = 3;
+                } else if (mode == 41){
+                    startPtBin     = 6;
+                } else if (mode == 42){
+                    startPtBin     = 4;
+                } else if (mode == 44){
+                    startPtBin     = 9;
+                } else if (mode == 45){
+                    startPtBin     = 7;
                 }
             }
         } else if (meson.CompareTo("Omega") == 0){
             if (energy.CompareTo("7TeV") == 0){
-                if (mode == 40 | mode == 41 || mode == 42 || mode == 44 || mode == 45){
-                    startPtBin     = 0;
+                if (mode == 40){
+                    startPtBin     = 3;
+                } else if (mode == 41){
+                    startPtBin     = 6;
+                } else if (mode == 42){
+                    startPtBin     = 4;
+                } else if (mode == 44){
+                    startPtBin     = 9;
+                } else if (mode == 45){
+                    startPtBin     = 7;
                 }
             }
         }

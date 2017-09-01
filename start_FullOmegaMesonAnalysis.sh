@@ -611,9 +611,6 @@ if [ $ONLYRESULTS = 0 ] ; then
             OmegaMCcorrectionFullFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1Correction_$cutSelection.root`
             EtaMCcorrectionFullFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1Correction_$cutSelection.root`
 
-            optionsOmegaFinalResults=\"configurationFile5TeVEMC.txt\"\,$mode\,1\,\"$Suffix\"\,\"data\"\,\"$energy\"\,\"LHC10b\"\,kTRUE\,10\,kFALSE\,kTRUE\,10\,kFALSE\,kFALSE\,\"\"\,kFALSE
-            optionsOmegaFinalResultsMC=\"configurationFile5TeVEMC.txt\"\,$mode\,1\,\"$Suffix\"\,\"MC\"\,\"$energy\"\,\"LHC10b\"\,kTRUE\,10\,kFALSE\,kTRUE\,10\,kFALSE\,kFALSE\,\"\"\,kFALSE
-
             if [[ -f $OmegadataRAWFILE  &&  -f $OmegaMCcorrectionFILE ]]; then
 
                 CorrectSignal $optionsOmegaCorrection
@@ -641,10 +638,6 @@ if [ $ONLYRESULTS = 0 ] ; then
             else
                 PARTLY=1
             fi
-
-                CreateFinalResults $optionsOmegaFinalResults
-                CreateFinalResults $optionsOmegaFinalResultsMC
-
         fi
         NORMALCUTS=`expr $NORMALCUTS + 1`
     done
