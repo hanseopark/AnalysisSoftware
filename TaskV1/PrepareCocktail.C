@@ -731,6 +731,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             DrawGammaSetMarker(         histoGammaMotherPtOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
             legendMothers->AddEntry(    histoGammaMotherPtOrBin[i], Form("%s", motherParticlesLatex[i].Data()), "l");
             histoGammaMotherPtOrBin[i]->SetLineWidth(2);
+            if (i > 10 && i%1==0) histoGammaMotherPtOrBin[i]->SetLineStyle(5);
+            if(i!=0 && i%2==0) histoGammaMotherPtOrBin[i]->SetLineStyle(7);
             histoGammaMotherPtOrBin[i]->Draw("csamehist");
         }
     }
@@ -739,8 +741,33 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     PutProcessLabelAndEnergyOnPlot(                 0.19, 0.185, 40, cent, textMeasurement, "", 43, 0.03);
     if (producePlotsForThesis) PutThisThesisLabel(  0.19, 0.15, 40, 0.03, 1.25, 43);
     else PutALICESimulationLabel(                   0.19, 0.15, 40, 0.03, 1.25, 43);
+    dummyHist->Draw("same,axis");
 
     canvasMothers->SaveAs(Form("%s/CocktailMothers_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
+
+    canvasMothers->cd();
+
+    dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, 50);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})", 1e-8, 6e2, 1.0, 1.65);
+    dummyHist->SetLabelOffset(-0.015, "X");
+    dummyHist->SetTitleOffset(0.8, "X");
+    dummyHist->Draw();
+
+    for (Int_t i=0; i<nMotherParticles; i++) {
+        if (histoGammaMotherPtOrBin[i]) {
+            DrawGammaSetMarker(         histoGammaMotherPtOrBin[i], cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
+            histoGammaMotherPtOrBin[i]->SetLineWidth(2);
+            histoGammaMotherPtOrBin[i]->Draw("csamehist");
+        }
+    }
+    legendMothers->Draw("same");
+
+    PutProcessLabelAndEnergyOnPlot(                 0.19, 0.185, 40, cent, textMeasurement, "", 43, 0.03);
+    if (producePlotsForThesis) PutThisThesisLabel(  0.19, 0.15, 40, 0.03, 1.25, 43);
+    else PutALICESimulationLabel(                   0.19, 0.15, 40, 0.03, 1.25, 43);
+    dummyHist->Draw("same,axis");
+
+    canvasMothers->SaveAs(Form("%s/CocktailMothers_woPtCut_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
 
     for (Int_t k = 0; k < nGammaPtSlices; k++){
         dummyHist                                                   = new TH1D("dummyHist", "", 1000, ptPlotMin, 50);
@@ -930,6 +957,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     else PutALICESimulationLabel(                   0.95, 0.15, 40, 0.03, 1.25, 43, 1, kFALSE);
 
     canvasMothersRatio->SaveAs(Form("%s/CocktailMothersRatio_%s_%s.%s",outputDir.Data(),rapidityForOut.Data(),cutSelection.Data(),suffix.Data()));
+
     delete tempRatio;
     delete legendMothersRatio;
     delete canvasMothersRatio;
@@ -1080,7 +1108,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             DrawGammaSetMarker(             tempRatioGammas, cocktailMarker[i], 1, cocktailColor[i],  cocktailColor[i]);
             legendGammasRatio->AddEntry(    tempRatioGammas, motherParticlesLatex[i].Data(), "l");
             tempRatioGammas->SetLineWidth(2);
-            if(i!=0 && i%2==0) tempRatioGammas->SetLineStyle(9);
+            if (i > 10 && i%1==0) tempRatioGammas->SetLineStyle(5);
+            if(i!=0 && i%2==0) tempRatioGammas->SetLineStyle(7);
             tempRatioGammas->Draw("csamehist");
         }
     }
@@ -1121,6 +1150,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             legendGammasRatio2->AddEntry(   tempRatioGammas2, motherParticlesLatex[i].Data(), "l");
             tempRatioGammas2->SetLineWidth(2);
             if(i!=0 && i%2==0) tempRatioGammas2->SetLineStyle(9);
+            cout << motherParticlesLatex[i].Data() <<  "\t" << tempRatioGammas2->GetBinContent(tempRatioGammas2->FindBin(0.5))<<"\t" << tempRatioGammas2->GetBinContent(tempRatioGammas2->FindBin(1.)) << "\t" << tempRatioGammas2->GetBinContent(tempRatioGammas2->FindBin(12.)) << endl;
             tempRatioGammas2->Draw("csamehist");
         }
     }

@@ -31,7 +31,7 @@
 #include "TPostScript.h"
 #include "TGraphErrors.h"
 #include "TArrow.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TGaxis.h"
 #include "TMarker.h"
 #include "CommonHeaders/PlottingGammaConversionHistos.h"
@@ -40,28 +40,28 @@
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "CommonHeaders/ConversionFunctions.h"
 
-void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "", 
-                                            TString energy                = "", 
-                                            TString meson                 = "", 
-                                            Int_t numberOfPtBins          = 1, 
-                                            Int_t numberCutStudies        = 1, 
-                                            Float_t startPtSys            = 0, 
-                                            TString additionalName        = "pp", 
-                                            TString additionalNameOutput  = "", 
+void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
+                                            TString energy                = "",
+                                            TString meson                 = "",
+                                            Int_t numberOfPtBins          = 1,
+                                            Int_t numberCutStudies        = 1,
+                                            Float_t startPtSys            = 0,
+                                            TString additionalName        = "pp",
+                                            TString additionalNameOutput  = "",
                                             TString suffix                = "eps"
                                         ){
 
     // ***************************************************************************************************
     // ****************************** General style settings *********************************************
     // ***************************************************************************************************
-    StyleSettingsThesis();	
+    StyleSettingsThesis();
     SetPlotStyle();
-    
+
     // ***************************************************************************************************
     // ****************************** Create output directory ********************************************
-    // ***************************************************************************************************    
+    // ***************************************************************************************************
     gSystem->Exec("mkdir -p SystematicErrorsCalculatedConvCalo");
-    
+
     // ***************************************************************************************************
     // ***************************** labeling and color settings *****************************************
     // ***************************************************************************************************
@@ -70,8 +70,8 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     TString collisionSystem                 = ReturnFullCollisionsSystem(energy);
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
-    
-    
+
+
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
     // ***************************************************************************************************
@@ -81,20 +81,20 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     Double_t* ptBinsErr;
     TString nameCutVariation[19];
     TString nameCutVariationSC[19];
-    
+
     TString nameCutVariationSC2760GeV[19] = {"YieldExtraction", "dEdxE", "dEdxPi", "TPCCluster", "SinglePt",
                                             "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                             "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                             "ClusterMaterialTRD", "Trigger", "Efficiency", "YieldExtractionPi0"};
 
-    Color_t color[20]; 
+    Color_t color[20];
     Style_t markerStyle[20];
-    
+
     for (Int_t k = 0; k < 19; k++){
-        color[k]        = GetColorSystematics( nameCutVariationSC2760GeV[k], 2); 
-        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 2); 
+        color[k]        = GetColorSystematics( nameCutVariationSC2760GeV[k], 2);
+        markerStyle[k]  = GetMarkerStyleSystematics( nameCutVariationSC2760GeV[k], 2);
     }
-    
+
     for (Int_t i = 0; i < numberCutStudies; i++){
         nameCutVariation[i]     = GetSystematicsName(nameCutVariationSC2760GeV[i]);
         nameCutVariationSC[i]   = nameCutVariationSC2760GeV[i];
@@ -102,7 +102,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     if (meson.CompareTo("EtaToPi0") == 0){
         nameCutVariation[0]     = "Yield extraction #eta";
     }
-    
+
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
@@ -110,7 +110,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                                         0, 0, 0, 0, 0,
                                         0, 0, 0, 0, 0,
                                         0, 0, 0, 0 };
-    // minimum bias trigger                      
+    // minimum bias trigger
     Bool_t bsmoothMBPi0[19]         = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
@@ -188,47 +188,47 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1 };
-                          
+
     for (Int_t i = 0; i < numberCutStudies; i++){
-        if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){ 
-            bsmooth[i] = bsmoothMBPi0[i];  
-        } else if (additionalNameOutput.CompareTo("INT7") == 0 && meson.CompareTo("Pi0")==0){ 
-            bsmooth[i] = bsmoothINT7Pi0[i];  
-        } else if (additionalNameOutput.CompareTo("EMC1") == 0 && meson.CompareTo("Pi0")==0){ 
-            bsmooth[i] = bsmoothEMC1Pi0[i];  
-        } else if (additionalNameOutput.CompareTo("EMC7") == 0 && meson.CompareTo("Pi0")==0){ 
-            bsmooth[i] = bsmoothEMC7Pi0[i];  
-        } else if (additionalNameOutput.CompareTo("EG2") == 0 && meson.CompareTo("Pi0")==0){ 
-            bsmooth[i] = bsmoothEG2Pi0[i];  
-        } else if (additionalNameOutput.CompareTo("EG1") == 0 && meson.CompareTo("Pi0")==0){ 
-            bsmooth[i] = bsmoothEG1Pi0[i];  
-        } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){ 
-            bsmooth[i] = bsmoothMBEta[i];  
-        } else if (additionalNameOutput.CompareTo("INT7") == 0 && meson.CompareTo("Eta")==0){ 
-            bsmooth[i] = bsmoothINT7Eta[i];  
-        } else if (additionalNameOutput.CompareTo("EMC1") == 0 && meson.CompareTo("Eta")==0){ 
-            bsmooth[i] = bsmoothEMC1Eta[i];  
-        } else if (additionalNameOutput.CompareTo("EMC7") == 0 && meson.CompareTo("Eta")==0){ 
-            bsmooth[i] = bsmoothEMC7Eta[i];  
-        } else if (additionalNameOutput.CompareTo("EG2") == 0 && meson.CompareTo("Eta")==0){ 
-            bsmooth[i] = bsmoothEG2Eta[i];  
-        } else if (additionalNameOutput.CompareTo("EG1") == 0 && meson.CompareTo("Eta")==0){ 
-            bsmooth[i] = bsmoothEG1Eta[i];  
-        } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("EtaToPi0")==0){ 
-            bsmooth[i] = bsmoothMBEtaToPi0[i];  
-        } else if (additionalNameOutput.CompareTo("INT7") == 0 && meson.CompareTo("EtaToPi0")==0){ 
-            bsmooth[i] = bsmoothINT7EtaToPi0[i];  
-        } else if (additionalNameOutput.CompareTo("EMC1") == 0 && meson.CompareTo("EtaToPi0")==0){ 
-            bsmooth[i] = bsmoothEMC1EtaToPi0[i];  
-        } else if (additionalNameOutput.CompareTo("EMC7") == 0 && meson.CompareTo("EtaToPi0")==0){ 
-            bsmooth[i] = bsmoothEMC7EtaToPi0[i];  
-        } else if (additionalNameOutput.CompareTo("EG2") == 0 && meson.CompareTo("EtaToPi0")==0){ 
-            bsmooth[i] = bsmoothEG2EtaToPi0[i];  
-        } else if (additionalNameOutput.CompareTo("EG1") == 0 && meson.CompareTo("EtaToPi0")==0){ 
-            bsmooth[i] = bsmoothEG1EtaToPi0[i];  
+        if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){
+            bsmooth[i] = bsmoothMBPi0[i];
+        } else if (additionalNameOutput.CompareTo("INT7") == 0 && meson.CompareTo("Pi0")==0){
+            bsmooth[i] = bsmoothINT7Pi0[i];
+        } else if (additionalNameOutput.CompareTo("EMC1") == 0 && meson.CompareTo("Pi0")==0){
+            bsmooth[i] = bsmoothEMC1Pi0[i];
+        } else if (additionalNameOutput.CompareTo("EMC7") == 0 && meson.CompareTo("Pi0")==0){
+            bsmooth[i] = bsmoothEMC7Pi0[i];
+        } else if (additionalNameOutput.CompareTo("EG2") == 0 && meson.CompareTo("Pi0")==0){
+            bsmooth[i] = bsmoothEG2Pi0[i];
+        } else if (additionalNameOutput.CompareTo("EG1") == 0 && meson.CompareTo("Pi0")==0){
+            bsmooth[i] = bsmoothEG1Pi0[i];
+        } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){
+            bsmooth[i] = bsmoothMBEta[i];
+        } else if (additionalNameOutput.CompareTo("INT7") == 0 && meson.CompareTo("Eta")==0){
+            bsmooth[i] = bsmoothINT7Eta[i];
+        } else if (additionalNameOutput.CompareTo("EMC1") == 0 && meson.CompareTo("Eta")==0){
+            bsmooth[i] = bsmoothEMC1Eta[i];
+        } else if (additionalNameOutput.CompareTo("EMC7") == 0 && meson.CompareTo("Eta")==0){
+            bsmooth[i] = bsmoothEMC7Eta[i];
+        } else if (additionalNameOutput.CompareTo("EG2") == 0 && meson.CompareTo("Eta")==0){
+            bsmooth[i] = bsmoothEG2Eta[i];
+        } else if (additionalNameOutput.CompareTo("EG1") == 0 && meson.CompareTo("Eta")==0){
+            bsmooth[i] = bsmoothEG1Eta[i];
+        } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("EtaToPi0")==0){
+            bsmooth[i] = bsmoothMBEtaToPi0[i];
+        } else if (additionalNameOutput.CompareTo("INT7") == 0 && meson.CompareTo("EtaToPi0")==0){
+            bsmooth[i] = bsmoothINT7EtaToPi0[i];
+        } else if (additionalNameOutput.CompareTo("EMC1") == 0 && meson.CompareTo("EtaToPi0")==0){
+            bsmooth[i] = bsmoothEMC1EtaToPi0[i];
+        } else if (additionalNameOutput.CompareTo("EMC7") == 0 && meson.CompareTo("EtaToPi0")==0){
+            bsmooth[i] = bsmoothEMC7EtaToPi0[i];
+        } else if (additionalNameOutput.CompareTo("EG2") == 0 && meson.CompareTo("EtaToPi0")==0){
+            bsmooth[i] = bsmoothEG2EtaToPi0[i];
+        } else if (additionalNameOutput.CompareTo("EG1") == 0 && meson.CompareTo("EtaToPi0")==0){
+            bsmooth[i] = bsmoothEG1EtaToPi0[i];
         }
     }
-    
+
     // ***************************************************************************************************
     // ****************************** Initialize error vectors & graphs **********************************
     // ***************************************************************************************************
@@ -238,35 +238,35 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     Double_t errorsNegSummed                [nPtBins];
     Double_t errorsNegCorrSummed            [nPtBins];
     Double_t errorsNegCorrMatSummed         [nPtBins];
-    
+
     Double_t* errorsNegErr                  [nCuts];
     Double_t errorsNegErrCorr               [nCuts][nPtBins];
     Double_t errorsNegErrSummed             [nPtBins];
     Double_t errorsNegErrCorrSummed         [nPtBins];
-    
+
     Double_t* errorsPos                     [nCuts];
     Double_t errorsPosCorr                  [nCuts][nPtBins];
     Double_t errorsPosSummed                [nPtBins];
     Double_t errorsPosCorrSummed            [nPtBins];
     Double_t errorsPosCorrMatSummed         [nPtBins];
-    
+
     Double_t* errorsPosErr                  [nCuts];
     Double_t errorsPosErrSummed             [nPtBins];
     Double_t errorsPosErrCorr               [nCuts][nPtBins];
     Double_t errorsPosErrCorrSummed         [nPtBins];
-    
+
     Double_t errorsMean                     [nCuts][nPtBins];
     Double_t errorsMeanCorr                 [nCuts][nPtBins];
     Double_t errorsMeanSummed               [nPtBins];
     Double_t errorsMeanCorrSummed           [nPtBins];
     Double_t errorsMeanCorrMatSummed        [nPtBins];
-    
+
     Double_t errorsMeanErr                  [nCuts][nPtBins];
     Double_t errorsMeanErrCorr              [nCuts][nPtBins];
     Double_t errorsMeanErrSummed            [nPtBins];
     Double_t errorsMeanErrCorrSummed        [nPtBins];
     Double_t errorsMeanErrCorrMatSummed     [nPtBins];
-    
+
     TGraphErrors* negativeErrors            [nCuts];
     TGraphErrors* positiveErrors            [nCuts];
     TGraphErrors* negativeErrorsCorr        [nCuts];
@@ -281,7 +281,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     TGraphErrors* meanErrorsSummed;
     TGraphErrors* meanErrorsCorrSummed;
     TGraphErrors* meanErrorsCorrSummedIncMat;
-    
+
     for (Int_t l = 0; l < nPtBins; l++){
         errorsPosSummed[l]              = 0.;
         errorsNegSummed[l]              = 0.;
@@ -289,15 +289,15 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         errorsPosCorrSummed[l]          = 0.;
         errorsNegCorrSummed[l]          = 0.;
         errorsMeanCorrSummed[l]         = 0.;
-    } 
+    }
 
     // ***************************************************************************************************
     // ****************************** Read & process data from file **************************************
     // ***************************************************************************************************
     TFile* fileErrorInput= new TFile(nameDataFileErrors.Data());
-    
+
     for (Int_t i = 0; i < nCuts; i++){
-        
+
         // read data
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
@@ -307,7 +307,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
                 nameGraphPos    = Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),additionalName.Data() );
-                nameGraphNeg    = Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),additionalName.Data() );                
+                nameGraphNeg    = Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(),additionalName.Data() );
             } else {
                 nameGraphPos    = Form("Eta_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
                 nameGraphNeg    = Form("Eta_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );
@@ -321,7 +321,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-        } else if (i == 18){ // special treatment for eta to pi0 ratio    
+        } else if (i == 18){ // special treatment for eta to pi0 ratio
             TString nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
             TString nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
@@ -334,7 +334,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         }
-        
+
         // take out offsets
         while (graphPosErrors->GetX()[0] < startPtSys){
             graphPosErrors->RemovePoint(0);
@@ -349,10 +349,10 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         errorsNegErr[i] = graphNegErrors->GetEYhigh();
         errorsPos[i]    = graphPosErrors->GetY();
         errorsPosErr[i] = graphPosErrors->GetEYhigh();
-        
+
         cout << nameCutVariationSC[i].Data() << endl;
         // Averaging of upper and lower errors
-        CalculateMeanSysErr(errorsMean[i], errorsMeanErr[i], errorsPos[i], errorsNeg[i], nPtBins);	
+        CalculateMeanSysErr(errorsMean[i], errorsMeanErr[i], errorsPos[i], errorsNeg[i], nPtBins);
         // Automatic smoothing of 0 bins according to adjoining bins
         CorrectSystematicErrorsWithMean(errorsPos[i],errorsPosErr[i], errorsPosCorr[i], errorsPosErrCorr[i], nPtBins);
         CorrectSystematicErrorsWithMean(errorsNeg[i],errorsNegErr[i], errorsNegCorr[i], errorsNegErrCorr[i], nPtBins);
@@ -374,8 +374,8 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                                 errorsMeanCorr[i][k]    = error;
                                 errorsMeanErrCorr[i][k] = error*0.01;
                             }
-                        }    
-                    } else {    
+                        }
+                    } else {
                         for (Int_t k = 0; k < nPtBins; k++){
                             if (ptBins[k] < 1) continue;
                             Double_t error          = 2.;
@@ -384,7 +384,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                             errorsMeanCorr[i][k]    = error;
                             errorsMeanErrCorr[i][k] = error*0.01;
                         }
-                    }    
+                    }
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
                         if ( additionalNameOutput.CompareTo("EG1")==0 || additionalNameOutput.CompareTo("EG2")==0 || additionalNameOutput.CompareTo("EMC1")==0 || additionalNameOutput.CompareTo("EMC7")==0){
@@ -400,13 +400,13 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                             Double_t error          = 8;
                             if (additionalNameOutput.CompareTo("")==0 || additionalNameOutput.CompareTo("INT7")==0){
                                 error               = 10;
-                            }  
-                                
+                            }
+
                             errorsMean[i][k]        = error;
                             errorsMeanErr[i][k]     = error*0.01;
                             errorsMeanCorr[i][k]    = error;
                             errorsMeanErrCorr[i][k] = error*0.01;
-                        }    
+                        }
                     }
                 }
             }
@@ -418,7 +418,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         if (additionalNameOutput.CompareTo("")==0 || additionalNameOutput.CompareTo("INT7")==0){
                             error = 0.38;
                         } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                            error = 0.7;    
+                            error = 0.7;
                         } else if (additionalNameOutput.CompareTo("EMC1")==0 || additionalNameOutput.CompareTo("EG2")==0 ){
                             error = 1.5;
                         } else if (additionalNameOutput.CompareTo("EG1")==0){
@@ -435,7 +435,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         if (additionalNameOutput.CompareTo("")==0 || additionalNameOutput.CompareTo("INT7")==0){
                             error = 2.;
                         } else if (additionalNameOutput.CompareTo("EMC7")==0){
-                            error = 2.;    
+                            error = 2.;
                         } else if (additionalNameOutput.CompareTo("EMC1")==0 || additionalNameOutput.CompareTo("EG2")==0 ){
                             error = 2.;
                         } else if (additionalNameOutput.CompareTo("EG1")==0){
@@ -471,7 +471,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
                         error   = 0.5+(-0.012)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k]; // parametrisation
-                        
+
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
@@ -485,7 +485,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
-                    } 
+                    }
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 5;
@@ -494,7 +494,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
-                    } 
+                    }
                 }
             }
             // manual smoothing for TPC cluster related errors - variation 3
@@ -681,7 +681,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
                     }
-                } 
+                }
             }
             // manual smoothing for alpha meson errors - variation 7
             if (nameCutVariationSC[i].CompareTo("Alpha")==0 ){
@@ -699,7 +699,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     ){
                         error   = 0.; // parametrisation
                     }
-                    
+
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = 0.01*error;
                     errorsMeanCorr[i][k]        = error;
@@ -718,7 +718,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                             error   = 0.5; // parametrisation
                         } else if (additionalNameOutput.CompareTo("EMC1")==0    ||
                                    additionalNameOutput.CompareTo("EG2")==0    ||
-                                   additionalNameOutput.CompareTo("EG1")==0    
+                                   additionalNameOutput.CompareTo("EG1")==0
                         ){
                             error   = 1.8; // parametrisation
                         }
@@ -731,13 +731,13 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0.;
                         if (additionalNameOutput.CompareTo("")==0       ||
-                            additionalNameOutput.CompareTo("INT7")==0   
+                            additionalNameOutput.CompareTo("INT7")==0
                         ){
                             error   = 1.; // parametrisation
                         } else if ( additionalNameOutput.CompareTo("EMC7")==0    ||
                                     additionalNameOutput.CompareTo("EMC1")==0    ||
                                     additionalNameOutput.CompareTo("EG2")==0     ||
-                                    additionalNameOutput.CompareTo("EG1")==0    
+                                    additionalNameOutput.CompareTo("EG1")==0
                         ){
                             error   = 3.5; // parametrisation
                         }
@@ -751,7 +751,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             // manual smoothing for minimum cluster energy errors - variation 9
             if (nameCutVariationSC[i].CompareTo("ClusterMinEnergy")==0  ){
                 if(meson.CompareTo("EtaToPi0") == 0){
-                    Double_t error              = TMath::Sqrt(2.2*2.2+1.13*1.13);                 
+                    Double_t error              = TMath::Sqrt(2.2*2.2+1.13*1.13);
                     for (Int_t k = 0;k < nPtBins;k++){
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
@@ -775,10 +775,10 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                 }
             }
             // manual smoothing for minimum number of cells in cluster errors - variation 10
-            if (nameCutVariationSC[i].CompareTo("ClusterNCells")==0 ){ 
+            if (nameCutVariationSC[i].CompareTo("ClusterNCells")==0 ){
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 1.5;
-                    if (meson.CompareTo("EtaToPi0") == 0 ) 
+                    if (meson.CompareTo("EtaToPi0") == 0 )
                         error                   = TMath::Sqrt(1.5*1.5+1.5*1.5);
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
@@ -795,18 +795,18 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
                     } else if (additionalNameOutput.CompareTo("INT7")==0){
                         error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
-                    } else if (additionalNameOutput.CompareTo("EMC1")==0 || 
+                    } else if (additionalNameOutput.CompareTo("EMC1")==0 ||
                                additionalNameOutput.CompareTo("EMC7")==0 ||
                                additionalNameOutput.CompareTo("EG2")==0  ||
-                               additionalNameOutput.CompareTo("EG1")==0 
+                               additionalNameOutput.CompareTo("EG1")==0
                     ){
                         error   = 2.+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
                     }
                     if (meson.CompareTo("Eta") == 0)
                         error   = 1.5* error;
-                    if (meson.CompareTo("EtaToPi0") == 0) 
+                    if (meson.CompareTo("EtaToPi0") == 0)
                         error   = 2*error;
-    //              Double_t error = 0.79-0.21*ptBins[k]+0.17*ptBins[k]*ptBins[k]-0.00058*ptBins[k]*ptBins[k]*ptBins[k]*ptBins[k]; // parametrisation with No NonLinearity in 
+    //              Double_t error = 0.79-0.21*ptBins[k]+0.17*ptBins[k]*ptBins[k]-0.00058*ptBins[k]*ptBins[k]*ptBins[k]*ptBins[k]; // parametrisation with No NonLinearity in
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -821,7 +821,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         if (additionalNameOutput.CompareTo("")==0 ||
                             additionalNameOutput.CompareTo("INT7")==0 ||
                             additionalNameOutput.CompareTo("EMC1")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 || 
+                            additionalNameOutput.CompareTo("EMC7")==0 ||
                             additionalNameOutput.CompareTo("EG2")==0 ||
                             additionalNameOutput.CompareTo("EG1")==0
                         ){
@@ -841,7 +841,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         if (additionalNameOutput.CompareTo("")==0 ||
                             additionalNameOutput.CompareTo("INT7")==0 ||
                             additionalNameOutput.CompareTo("EMC1")==0 ||
-                            additionalNameOutput.CompareTo("EMC7")==0 || 
+                            additionalNameOutput.CompareTo("EMC7")==0 ||
                             additionalNameOutput.CompareTo("EG2")==0 ||
                             additionalNameOutput.CompareTo("EG1")==0
                         ){
@@ -880,7 +880,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     errorsMeanErrCorr[i][k]     = error*0.01;
                 }
             }
-            
+
             // manual smoothing for Material infront of EMC - variation 15
             if (nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0 ){
                 Double_t error                  = 4.24; //(3% for TRD mat, 3% for TOF mat added in quadrature)
@@ -893,13 +893,13 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     errorsMeanErrCorr[i][k]     = error*0.01;
                 }
             }
-           
+
             // manual smoothing for Trigger normalization uncertainties - variation 16
             if (nameCutVariationSC[i].CompareTo("Trigger") == 0){
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 0.;
                     if (additionalNameOutput.CompareTo("")==0 ||
-                        additionalNameOutput.CompareTo("INT7")==0 
+                        additionalNameOutput.CompareTo("INT7")==0
                     ){
                         error   = 0.;
                     } else if (additionalNameOutput.CompareTo("EMC1")==0){
@@ -919,16 +919,16 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     errorsMeanCorr[i][k]        = error;
                     errorsMeanErrCorr[i][k]     = error*0.01;
                 }
-                
+
             }
-           
+
             // manual smoothing for Efficiency uncertainties - variation 17
             if (nameCutVariationSC[i].CompareTo("Efficiency") == 0){
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 3.0;
                     if (meson.CompareTo("Pi0") == 0){
                         if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("INT7")==0 
+                            additionalNameOutput.CompareTo("INT7")==0
                         ){
                             error   = 2.;
                         } else if (additionalNameOutput.CompareTo("EMC1")==0){
@@ -942,7 +942,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         }
                     } else if (meson.CompareTo("Eta") == 0){
                         if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("INT7")==0 
+                            additionalNameOutput.CompareTo("INT7")==0
                         ){
                             error   = 5.;
                         } else if (additionalNameOutput.CompareTo("EMC1")==0){
@@ -957,7 +957,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                     } else {
                         Double_t error1 = 0;
                         if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("INT7")==0 
+                            additionalNameOutput.CompareTo("INT7")==0
                         ){
                             error1  = 2.;
                         } else if (additionalNameOutput.CompareTo("EMC1")==0){
@@ -971,7 +971,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                         }
                         Double_t error2 = 0;
                         if (additionalNameOutput.CompareTo("")==0 ||
-                            additionalNameOutput.CompareTo("INT7")==0 
+                            additionalNameOutput.CompareTo("INT7")==0
                         ){
                             error2  = 5.;
                         } else if (additionalNameOutput.CompareTo("EMC1")==0){
@@ -984,8 +984,8 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                             error2  = 200*pow(0.7,ptBins[k]+0.2)+5.;
                         }
                         error = TMath::Sqrt(error1*error1+error2*error2);
-                        cout << error << endl;                        
-                    }    
+                        cout << error << endl;
+                    }
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -993,7 +993,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                 }
             }
 
-            
+
         } else {
             for (Int_t k = 0; k < nPtBins; k++){
                 errorsMeanErr[i][k]         = 0.03;
@@ -1011,7 +1011,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                 errorsNegCorrSummed[l]  = errorsNegCorrSummed[l] +pow(errorsNegCorr[i][l],2);
                 errorsMeanCorrSummed[l] = errorsMeanCorrSummed[l]+ pow(errorsMeanCorr[i][l],2);
             }
-        }	
+        }
         // fill error graphs for plotting
         negativeErrors[i]       = new TGraphErrors(nPtBins,ptBins ,errorsNeg[i] ,ptBinsErr ,errorsNegErr[i] );
         meanErrors[i]           = new TGraphErrors(nPtBins,ptBins ,errorsMean[i] ,ptBinsErr ,errorsMeanErr[i] );
@@ -1019,25 +1019,25 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         negativeErrorsCorr[i]   = new TGraphErrors(nPtBins,ptBins ,errorsNegCorr[i] ,ptBinsErr ,errorsNegErrCorr[i] );
         meanErrorsCorr[i]       = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorr[i] ,ptBinsErr ,errorsMeanErrCorr[i] );
         positiveErrorsCorr[i]   = new TGraphErrors(nPtBins,ptBins ,errorsPosCorr[i] ,ptBinsErr ,errorsPosErrCorr[i] );
-        
+
     }
-    
+
     // Error for inner material budget
     Double_t errorMaterial  = 4.50;
-    if (meson.CompareTo("EtaToPi0") == 0) 
+    if (meson.CompareTo("EtaToPi0") == 0)
         errorMaterial       = 0.;
-    
+
     Int_t nMaterialError    = -1;
     for (Int_t j = 0; j < nCuts; j++){
        if (nameCutVariationSC[j].CompareTo("ClusterMaterialTRD")==0)
            nMaterialError   = j;
-    }    
+    }
     if ( nMaterialError == -1) {
         cout << "ERROR: couldn't find material error related to TRD, aborting" << endl;
         return;
     }
-    
-    // Calculate sqrt of summed errors for final errors, add material budget errors 
+
+    // Calculate sqrt of summed errors for final errors, add material budget errors
     for (Int_t l = 0; l < nPtBins; l++){
         errorsPosSummed[l]              = pow(errorsPosSummed[l],0.5);
         errorsMeanSummed[l]             = pow(errorsMeanSummed[l],0.5);
@@ -1050,7 +1050,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         errorsPosCorrMatSummed[l]       = pow(errorsPosCorrSummed[l]+ pow(errorMaterial ,2.) + pow(errorsPosCorr[nMaterialError][l],2) ,0.5);
         errorsMeanCorrMatSummed[l]      = pow(errorsMeanCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsMeanCorr[nMaterialError][l],2),0.5);
         errorsNegCorrMatSummed[l]       = -pow(errorsNegCorrSummed[l]+ pow(errorMaterial ,2.)+ pow(errorsNegCorr[nMaterialError][l],2),0.5);
-        
+
         errorsPosCorrSummed[l]          = pow(errorsPosCorrSummed[l],0.5);
         errorsMeanCorrSummed[l]         = pow(errorsMeanCorrSummed[l],0.5);
         errorsPosErrCorrSummed[l]       = errorsPosCorrSummed[l]*0.001;
@@ -1059,17 +1059,17 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         errorsNegCorrSummed[l]          = -pow(errorsNegCorrSummed[l],0.5);
         errorsNegErrCorrSummed[l]       = errorsNegCorrSummed[l]*0.001;
     }
-    
+
     // Create material graph
     Double_t ptBinsMaterial [nPtBins];
     Double_t errorsMat      [nPtBins];
     for (Int_t l = 0; l < nPtBins; l++){
         errorsMat[l]            = errorMaterial;
         ptBinsMaterial[l]       = ptBins[l]+0.05;
-        
+
     }
     TGraphErrors* graphMaterialError    = new TGraphErrors(nPtBins,ptBinsMaterial ,errorsMat ,ptBinsErr ,errorsMeanErrSummed );
-    
+
     // Create all other summed graphs
     cout << __LINE__ << endl;
     negativeErrorsSummed        = new TGraphErrors(nPtBins,ptBins ,errorsNegSummed ,ptBinsErr ,errorsNegErrSummed );
@@ -1080,8 +1080,8 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     meanErrorsCorrSummed        = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrSummed ,ptBinsErr ,errorsMeanErrCorrSummed );
     meanErrorsCorrSummedIncMat  = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrMatSummed ,ptBinsErr ,errorsMeanErrCorrMatSummed );
 
-    
-    
+
+
     cout << __LINE__ << endl;
 
     // Give legend position for plotting
@@ -1091,19 +1091,19 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         minXLegend          = 0.23;
     }
     Double_t widthLegend    = 0.25;
-    if (numberCutStudies> 9)  
+    if (numberCutStudies> 9)
         widthLegend         = 0.5;
     Double_t heightLegend   = 1.02 * 0.035 * (numberCutStudies+1);
-    if (numberCutStudies> 9)  
+    if (numberCutStudies> 9)
         heightLegend        = 1.02 * 0.035 * (numberCutStudies/2+1);
-    
+
     // ***************************************************************************************************
     // ****************************** Plot all mean erros separately *************************************
     // ***************************************************************************************************
-    
+
     TCanvas* canvasSysErrMean = new TCanvas("canvasSysErrMean","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasSysErrMean, 0.08, 0.01, 0.015, 0.09);
- 
+
         // create dummy histo
         TH2D *histo2DSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
@@ -1114,11 +1114,11 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         SetStyleHistoTH2ForGraphs( histo2DSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
         histo2DSysErrMean->Draw();
-        
+
         // create legend
         TLegend* legendMean = GetAndSetLegend2(minXLegend,maxYLegend-heightLegend,minXLegend+widthLegend,maxYLegend, 30);
         if (numberCutStudies> 9) legendMean->SetNColumns(2);
-        
+
         for(Int_t i = 0; i< numberCutStudies ; i++){
             // ClusterMaterialTRD - 15, Trigger - 16
             if ( meson.CompareTo("EtaToPi0") == 0 && (i == 15 || i == 16 || i == 14) ){
@@ -1134,11 +1134,11 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             if (!(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") == 0 ) ) {
                 if ( i == 7 ){
                     cout << "not drawing: "<< nameCutVariation[i].Data() << endl;
-                    continue;    
+                    continue;
                 }
             }
 
-            
+
             DrawGammaSetMarkerTGraphErr(meanErrors[i], markerStyle[i], 1.,color[i],color[i]);
             meanErrors[i]->Draw("pE0,csame");
             legendMean->AddEntry(meanErrors[i],nameCutVariation[i].Data(),"p");
@@ -1183,24 +1183,24 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         }
         SetStyleTLatex( labelTrig, 0.038,4);
         labelTrig->Draw();
-        
+
     canvasSysErrMean->Update();
     canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
-    
+
     delete canvasSysErrMean;
-    
-    
+
+
     // ***************************************************************************************************
     // ********************* Plot all mean erros separately after smoothing ******************************
-    // ***************************************************************************************************    
+    // ***************************************************************************************************
     TCanvas* canvasNewSysErrMean = new TCanvas("canvasNewSysErrMean","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasNewSysErrMean, 0.08, 0.01, 0.015, 0.09);
-    
+
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
-        } else { 
+        } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
@@ -1223,7 +1223,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             if (!(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") == 0) ) {
                 if ( i == 7 ){
                     cout << "not drawing: "<< nameCutVariation[i].Data() << endl;
-                    continue;    
+                    continue;
                 }
             }
             // ClusterMaterialTRD - 15, Trigger - 16
@@ -1234,7 +1234,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
 
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[i], markerStyle[i], 1.,color[i],color[i]);
             meanErrorsCorr[i]->Draw("pX0,csame");
-            legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");	
+            legendMeanNew->AddEntry(meanErrorsCorr[i],nameCutVariation[i].Data(),"p");
         }
 
         // PCM material
@@ -1243,12 +1243,12 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             graphMaterialError->Draw("pX0,csame");
             legendMeanNew->AddEntry(graphMaterialError,"Inner Material","p");
         }
-        
+
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
         legendMeanNew->AddEntry(meanErrorsCorrSummedIncMat,"quad. sum.","p");
         legendMeanNew->Draw();
-        
+
         // labeling
         labelMeson->Draw();
         labelCentrality->Draw();
@@ -1256,12 +1256,12 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
 
     canvasNewSysErrMean->Update();
     canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
-    
+
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
-    // ***************************************************************************************************    
+    // ***************************************************************************************************
     for (Int_t cut =0 ; cut < numberCutStudies; cut++ ){
-        
+
         canvasNewSysErrMean->cd();
         histo2DNewSysErrMean->Draw();
 
@@ -1280,7 +1280,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             TF1* pol4 = new TF1("pol4","[0]+[1]*x+[2]*x*x+[3]*x*x*x*x",minPt,maxPt); //
             pol4->SetParLimits(3,0,10);
             if (cut == 13) pol2->SetParLimits(2,0,0.1);
-                
+
             meanErrorsCorr[cut]->Fit(pol4,"NRMEX0+","",minPt,maxPt);
             meanErrorsCorr[cut]->Fit(pol2,"NRMEX0+","",minPt,maxPt);
             meanErrorsCorr[cut]->Fit(pol1,"NRMEX0+","",minPt,maxPt);
@@ -1289,20 +1289,20 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             pol2->SetLineColor(kBlue+2);
             pol1->SetLineColor(kCyan+2);
             pol0->SetLineColor(kBlack);
-            
+
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[cut], 20+cut, 1.,color[cut],color[cut]);
             meanErrorsCorr[cut]->Draw("p,csame");
             pol4->Draw("same");
             pol2->Draw("same");
             pol1->Draw("same");
             pol0->Draw("same");
-        
+
         canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
-    }	
-        
+    }
+
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
-    // ***************************************************************************************************    
+    // ***************************************************************************************************
     const char *SysErrDatname = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorPCMEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDat;
     cout << SysErrDatname << endl;
@@ -1322,16 +1322,16 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     }
 
     SysErrDatAver.close();
-    
+
     const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedSinglePCMEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
-    SysErrDatAverSingle << "Pt bin\t" ; 
+    SysErrDatAverSingle << "Pt bin\t" ;
     for (Int_t i= 0; i< numberCutStudies; i++){
         SysErrDatAverSingle << nameCutVariationSC[i] << "\t";
     }
-    SysErrDatAverSingle << "InnerMaterial" << endl; 
+    SysErrDatAverSingle << "InnerMaterial" << endl;
     for (Int_t l=0;l< nPtBins;l++){
         SysErrDatAverSingle << ptBins[l] << "\t";
         for (Int_t i= 0; i< numberCutStudies; i++){
@@ -1339,55 +1339,55 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         }
         SysErrDatAverSingle << errorsMat[l] << "\t" << errorsMeanCorrMatSummed[l] << endl;
     }
-    
-    
+
+
     SysErrDatAverSingle.close();
 
-    
+
     // ***************************************************************************************************
     // ********************* Group errors according to topic *********************************************
-    // ***************************************************************************************************    
-    Double_t errorsMeanCorrPID[nPtBins];	
-    Double_t errorsMeanCorrSignalExtraction[nPtBins];	
-    Double_t errorsMeanCorrTrackReco[nPtBins];	
-    Double_t errorsMeanCorrPhotonReco[nPtBins];	
-    Double_t errorsMeanCorrClusterDescription[nPtBins];	
-    
+    // ***************************************************************************************************
+    Double_t errorsMeanCorrPID[nPtBins];
+    Double_t errorsMeanCorrSignalExtraction[nPtBins];
+    Double_t errorsMeanCorrTrackReco[nPtBins];
+    Double_t errorsMeanCorrPhotonReco[nPtBins];
+    Double_t errorsMeanCorrClusterDescription[nPtBins];
+
     for (Int_t l=0; l< nPtBins; l++){
-        // "YieldExtraction"-0,"dEdxE"-1,"dEdxPi"-2, "TPCCluster"-3, "SinglePt"-4, "Chi2"-5, "Qt"-6, "Alpha"-7, "ConvPhi"-8, "ClusterMinEnergy"-9, "ClusterNCells"-10, 
+        // "YieldExtraction"-0,"dEdxE"-1,"dEdxPi"-2, "TPCCluster"-3, "SinglePt"-4, "Chi2"-5, "Qt"-6, "Alpha"-7, "ConvPhi"-8, "ClusterMinEnergy"-9, "ClusterNCells"-10,
         // "NonLinearity"-11, "ClusterTrackMatching" -12, "ClusterM02" -13, "CellTiming" -14,"ClusterMaterialTRD" -15
         // grouping:
-        // Signal extraction: Yield extraction 0, Alpha 7 
+        // Signal extraction: Yield extraction 0, Alpha 7
         if (numberCutStudies>8){
-            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]);	
+            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]);
         } else {
             errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]);
         }
         if (meson.CompareTo("EtaToPi0") == 0){ // add also YieldExtraction error of pi0 to visualization
-            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]+errorsMeanCorr[18][l]*errorsMeanCorr[18][l);	
-        }    
+            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]+errorsMeanCorr[18][l]*errorsMeanCorr[18][l);
+        }
         // PID: dEdxE 1, dEdxPi 2
         errorsMeanCorrPID[l] =TMath::Sqrt(errorsMeanCorr[1][l]*errorsMeanCorr[1][l]+ errorsMeanCorr[2][l]*errorsMeanCorr[2][l]);
         // photon reco: Chi2 5, Qt 6
         errorsMeanCorrPhotonReco[l] =TMath::Sqrt( errorsMeanCorr[5][l]* errorsMeanCorr[5][l]+errorsMeanCorr[6][l]*errorsMeanCorr[6][l]);
         // track reconstruction: TPCCluster 3, Single pt 4, ConvPhi 8
-        errorsMeanCorrTrackReco[l] = TMath::Sqrt(errorsMeanCorr[3][l]*errorsMeanCorr[3][l]+errorsMeanCorr[4][l]*errorsMeanCorr[4][l]+errorsMeanCorr[8][l]*errorsMeanCorr[8][l]);				
+        errorsMeanCorrTrackReco[l] = TMath::Sqrt(errorsMeanCorr[3][l]*errorsMeanCorr[3][l]+errorsMeanCorr[4][l]*errorsMeanCorr[4][l]+errorsMeanCorr[8][l]*errorsMeanCorr[8][l]);
         // cluster description in MC: ClusterMinEnergy 9, ClusterNCells 10, ClusterM02 13
         errorsMeanCorrClusterDescription[l] = TMath::Sqrt(errorsMeanCorr[9][l]*errorsMeanCorr[9][l]+errorsMeanCorr[10][l]*errorsMeanCorr[10][l]+errorsMeanCorr[13][l]*errorsMeanCorr[13][l]);
     }
-        
-        
+
+
     TGraphErrors* meanErrorsPID = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPID ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsPhotonReco = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrPhotonReco ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsSignalExtraction = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsTrackReco = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsClusterDescrip = new TGraphErrors(nPtBins,ptBins ,errorsMeanCorrClusterDescription ,ptBinsErr ,errorsMeanErrCorrSummed );
-    
+
     cout << __LINE__ << endl;
 
     // ***************************************************************************************************
     // ********************* Plot grouped errors for better understanding ********************************
-    // ***************************************************************************************************    
+    // ***************************************************************************************************
     Double_t minXLegend2 = 0.13;
     Double_t maxYLegend2 = 0.95;
     if (meson.CompareTo("Eta") == 0){
@@ -1395,13 +1395,13 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
     }
     Double_t widthLegend2 = 0.52;
     Double_t heightLegend2 = 0.25;
-    
+
     TCanvas* canvasSummedErrMean = new TCanvas("canvasSummedErrMean","",200,10,1350,900);  // gives the page size
     DrawGammaCanvasSettings( canvasSummedErrMean, 0.08, 0.01, 0.015, 0.09);
 
         // create dummy histo
         TH2D *histo2DSummedErrMean ;
-        if ( meson.CompareTo("Pi0") == 0 ){	
+        if ( meson.CompareTo("Pi0") == 0 ){
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
         } else {
             histo2DSummedErrMean = new TH2D("histo2DSummedErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,65.);
@@ -1409,12 +1409,12 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         SetStyleHistoTH2ForGraphs( histo2DSummedErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
         histo2DSummedErrMean->Draw();
-    
+
         // create legend
         TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 30);
         legendSummedMeanNew->SetNColumns(2);
         legendSummedMeanNew->SetMargin(0.1);
-    
+
         // Signal extraction error
         DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, 20, 1.,color[0],color[0]);
         meanErrorsSignalExtraction->Draw("pX0,csame");
@@ -1435,7 +1435,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[15], 21, 1.,color[7],color[7]);
             meanErrorsCorr[15]->Draw("pX0,csame");
         }
-        // PCM Material budget 
+        // PCM Material budget
         if (meson.CompareTo("EtaToPi0") != 0){
             DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "InnerMaterial", 2), 1.,GetColorSystematics( "InnerMaterial", 2),GetColorSystematics( "InnerMaterial", 2));
             graphMaterialError->Draw("pX0,csame");
@@ -1451,7 +1451,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[17], 20, 1.,color[12],color[12]);
             meanErrorsCorr[17]->Draw("pX0,csame");
         }
-        
+
         if (meson.CompareTo("EtaToPi0") != 0){
             // Cell time - 14
             if (numberCutStudies>14){
@@ -1463,9 +1463,9 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
                 DrawGammaSetMarkerTGraphErr(meanErrorsCorr[16], 25, 1.,color[14],color[14]);
                 meanErrorsCorr[16]->Draw("pX0,csame");
             }
-            
+
         }
-        
+
         legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Extraction","p");
         legendSummedMeanNew->AddEntry(meanErrorsPID,"Electron PID","p");
         legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"Track Reconstruction","p");
@@ -1482,25 +1482,25 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
         }
         if (numberCutStudies>17) legendSummedMeanNew->AddEntry(meanErrorsCorr[17],"Efficiency","p");
         if (meson.CompareTo("EtaToPi0") != 0){
-            if (numberCutStudies>16 && !(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 )) 
+            if (numberCutStudies>16 && !(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 ))
                 legendSummedMeanNew->AddEntry(meanErrorsCorr[16],"Trigger normalization","p");
         }
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
         legendSummedMeanNew->AddEntry(meanErrorsCorrSummedIncMat,"quad. sum.","p");
         legendSummedMeanNew->Draw();
-        
+
         labelMeson->Draw();
         labelCentrality->Draw();
         labelTrig->Draw();
-    
+
     canvasSummedErrMean->Update();
     canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
-    
+
     delete canvasSummedErrMean;
-// 
-// 	
-// 	
+//
+//
+//
 // 	const char *SysErrDatnameMeanPaper = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedPaper_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
 // 	fstream SysErrDatAverPaper;
 // 	cout << SysErrDatnameMeanPaper << endl;
@@ -1509,7 +1509,7 @@ void FinaliseSystematicErrorsConvCalo_pp(   TString nameDataFileErrors    = "",
 // 	for (Int_t l=0; l< nPtBins; l++){
 // 		SysErrDatAverPaper << ptBins[l] <<"\t" << errorMaterial*2 << "\t" << errorsMeanCorrSignalExtraction[l] << "\t" << errorsMeanCorrPID[l]<< "\t" << errorsMeanCorrPhotonReco[l]<< "\t" <<errorsMeanCorrTrackReco[l] <<"\t" << errorsMeanCorrMatSummed[l]<< endl;
 // 	}
-// 
+//
 // 	SysErrDatAverPaper.close();
-	
+
 }

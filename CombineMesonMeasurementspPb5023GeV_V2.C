@@ -8070,6 +8070,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             if(graphPHOSPi0AccTimesEff)graphPHOSPi0AccTimesEff->Write("Pi0CorrectionFactorPHOS");
             graphEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorEMCAL");
             graphPCMEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorPCMEMCAL");
+            graphPCMPHOSPi0AccTimesEff->Write("Pi0CorrectionFactorPCMPHOS");
             graphDalitzPi0AccTimesEff->Write("Pi0CorrectionFactorDalitz");
 
             graphPCMPi0Mass->Write("Pi0MassDataPCM");
@@ -8080,6 +8081,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             graphEMCALPi0MassMC->Write("Pi0MassMCEMCAL");
             graphPCMEMCALPi0Mass->Write("Pi0MassDataPCMEMCAL");
             graphPCMEMCALPi0MassMC->Write("Pi0MassMCPCMEMCAL");
+            graphPCMPHOSPi0Mass->Write("Pi0MassDataPCMPHOS");
+            graphPCMPHOSPi0MassMC->Write("Pi0MassMCPCMPHOS");
             graphDalitzPi0Mass->Write("Pi0MassDataDalitz");
             graphDalitzPi0MassMC->Write("Pi0MassMCDalitz");
 
@@ -8091,6 +8094,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             graphEMCALPi0FWHMMC->Write("Pi0WidthMCEMCAL");
             graphPCMEMCALPi0FWHM->Write("Pi0WidthDataPCMEMCAL");
             graphPCMEMCALPi0FWHMMC->Write("Pi0WidthMCPCMEMCAL");
+            graphPCMPHOSPi0FWHM->Write("Pi0WidthDataPCMPHOS");
+            graphPCMPHOSPi0FWHMMC->Write("Pi0WidthMCPCMPHOS");
             graphDalitzPi0FWHM->Write("Pi0WidthDataDalitz");
             graphDalitzPi0FWHMMC->Write("Pi0WidthMCDalitz");
 
@@ -8129,6 +8134,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphEMCALEtaToPi0Sys->Write("graphRatioEtaToPi0EMCALpPb5023GeVSysErr");
         histoPCMEMCALEtaToPi0Stat->Write("histoRatioEtaToPi0PCMEMCALpPb5023GeVStatErr");
         graphPCMEMCALEtaToPi0Sys->Write("graphRatioEtaToPi0PCMEMCALpPb5023GeVSysErr");
+        histoPCMPHOSEtaToPi0Stat->Write("histoRatioEtaToPi0PCMPHOSpPb5023GeVStatErr");
+        graphPCMPHOSEtaToPi0Sys->Write("graphRatioEtaToPi0PCMPHOSpPb5023GeVSysErr");
         graphCombEtaToPi0TotWPP->Write("graphRatioEtaToPi0CombpPb5023GeVTotErr");
         graphCombEtaToPi0StatWPP->Write("graphRatioEtaToPi0CombpPb5023GeVStatErr");
         graphCombEtaToPi0SysWPP->Write("graphRatioEtaToPi0CombpPb5023GeVSysErr");
@@ -8140,6 +8147,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             graphPCMEtaAccTimesEff->Write("EtaCorrectionFactorPCM");
             graphEMCALEtaAccTimesEff->Write("EtaCorrectionFactorEMCAL");
             graphPCMEMCALEtaAccTimesEff->Write("EtaCorrectionFactorPCMEMCAL");
+            graphPCMPHOSEtaAccTimesEff->Write("EtaCorrectionFactorPCMPHOS");
 
             graphPCMEtaMass->Write("EtaMassDataPCM");
             graphPCMEtaMassMC->Write("EtaMassMCPCM");
@@ -8147,6 +8155,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             graphEMCALEtaMassMC->Write("EtaMassMCEMCAL");
             graphPCMEMCALEtaMass->Write("EtaMassDataPCMEMCAL");
             graphPCMEMCALEtaMassMC->Write("EtaMassMCPCMEMCAL");
+            graphPCMPHOSEtaMass->Write("EtaMassDataPCMPHOS");
+            graphPCMPHOSEtaMassMC->Write("EtaMassMCPCMPHOS");
 
             graphPCMEtaFWHM->Write("EtaWidthDataPCM");
             graphPCMEtaFWHMMC->Write("EtaWidthMCPCM");
@@ -8154,6 +8164,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             graphEMCALEtaFWHMMC->Write("EtaWidthMCEMCAL");
             graphPCMEMCALEtaFWHM->Write("EtaWidthDataPCMEMCAL");
             graphPCMEMCALEtaFWHMMC->Write("EtaWidthMCPCMEMCAL");
+            graphPCMPHOSEtaFWHM->Write("EtaWidthDataPCMPHOS");
+            graphPCMPHOSEtaFWHMMC->Write("EtaWidthMCPCMPHOS");
 
     fCombResults.Close();
 

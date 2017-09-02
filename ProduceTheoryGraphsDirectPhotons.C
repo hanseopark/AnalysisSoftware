@@ -105,6 +105,18 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 2.76TeV *******************************************
         // **********************************************************************************************************************
+        // **********************************************************************************************************************
+        // Load cocktail for pp 2.76TeV comb
+        // **********************************************************************************************************************
+        TString nameCocktailFilePP2760GeVComb   = "CocktailInput/cocktail_pp2760GeV_MB_comb.root";
+        TFile* fileCockailPP2760GeVComb         = new TFile(nameCocktailFilePP2760GeVComb.Data());
+        TH1D* histoGammaDecayCombPP2760GeV      = (TH1D*)fileCockailPP2760GeVComb->Get("Gamma_Pt_OrBin");
+        for (Int_t i = 1; i < histoGammaDecayCombPP2760GeV->GetNbinsX()+1; i++){
+            histoGammaDecayCombPP2760GeV->SetBinContent(i, histoGammaDecayCombPP2760GeV->GetBinContent(i)/(histoGammaDecayCombPP2760GeV->GetBinCenter(i) *2* TMath::Pi()) );
+            histoGammaDecayCombPP2760GeV->SetBinError(i, histoGammaDecayCombPP2760GeV->GetBinError(i)/(histoGammaDecayCombPP2760GeV->GetBinCenter(i)*2* TMath::Pi()));
+        }
+        histoGammaDecayCombPP2760GeV->GetXaxis()->SetRangeUser(0,30);
+
 
         TString fileNameNLOPhotonHalf2760GeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmuhalf.dat";
         TString fileNameNLOPhotonOne2760GeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
@@ -171,15 +183,66 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
         for (Int_t i = 0; i < nlinesNLOTwo2760GeV; i++){
             cout << ptNLOPhotonHalf2760GeV[i] << "\t" << muHalfDF2760GeV[i] << "\t" << muOneDF2760GeV[i] << "\t" << muTwoDF2760GeV[i] << endl;
-            gammaValue2760GeV[i]           = muOneDF2760GeV[i];
-            gammaErrUp2760GeV[i]           = muHalfDF2760GeV[i]-muOneDF2760GeV[i];
-            gammaErrDown2760GeV[i]         = muOneDF2760GeV[i]-muTwoDF2760GeV[i];
-            fragGammaValue2760GeV[i]       = muOneF2760GeV[i];
-            fragGammaErrUp2760GeV[i]       = muHalfF2760GeV[i]-muOneF2760GeV[i];
-            fragGammaErrDown2760GeV[i]     = muOneF2760GeV[i]-muTwoF2760GeV[i];
+            gammaValue2760GeV[i]               = muOneDF2760GeV[i];
+            if (muHalfDF2760GeV[i] > muOneDF2760GeV[i]){
+                gammaErrUp2760GeV[i]           = muHalfDF2760GeV[i]-muOneDF2760GeV[i];
+                if (muOneDF2760GeV[i]-muTwoDF2760GeV[i] < 0){
+                    gammaErrDown2760GeV[i]     = 0;
+                    if (gammaErrUp2760GeV[i] < TMath::Abs(muOneDF2760GeV[i]-muTwoDF2760GeV[i]))
+                        gammaErrUp2760GeV[i]   = TMath::Abs(muOneDF2760GeV[i]-muTwoDF2760GeV[i]);
+                } else {
+                    gammaErrDown2760GeV[i]     = muOneDF2760GeV[i]-muTwoDF2760GeV[i];
+                }
+            } else {
+                gammaErrUp2760GeV[i]           = muTwoDF2760GeV[i]-muOneDF2760GeV[i];
+                if (muOneDF2760GeV[i]-muHalfDF2760GeV[i] < 0){
+                    gammaErrDown2760GeV[i]     = 0;
+                    if (gammaErrUp2760GeV[i] < TMath::Abs(muOneDF2760GeV[i]-muHalfDF2760GeV[i]))
+                        gammaErrUp2760GeV[i]   = TMath::Abs(muOneDF2760GeV[i]-muHalfDF2760GeV[i]);
+                } else {
+                    gammaErrDown2760GeV[i]     = muOneDF2760GeV[i]-muHalfDF2760GeV[i];
+                }
+            }
+            fragGammaValue2760GeV[i]           = muOneF2760GeV[i];
+            if (muHalfF2760GeV[i] > muOneF2760GeV[i]){
+                fragGammaErrUp2760GeV[i]           = muHalfF2760GeV[i]-muOneF2760GeV[i];
+                if (muOneF2760GeV[i]-muTwoF2760GeV[i] < 0){
+                    fragGammaErrDown2760GeV[i]     = 0;
+                    if (fragGammaErrUp2760GeV[i] < TMath::Abs(muOneF2760GeV[i]-muTwoF2760GeV[i]))
+                        fragGammaErrUp2760GeV[i]   = TMath::Abs(muOneF2760GeV[i]-muTwoF2760GeV[i]);
+                } else {
+                    fragGammaErrDown2760GeV[i]     = muOneF2760GeV[i]-muTwoF2760GeV[i];
+                }
+            } else {
+                fragGammaErrUp2760GeV[i]           = muTwoF2760GeV[i]-muOneF2760GeV[i];
+                if (muOneF2760GeV[i]-muHalfF2760GeV[i] < 0){
+                    fragGammaErrDown2760GeV[i]     = 0;
+                    if (fragGammaErrUp2760GeV[i] < TMath::Abs(muOneF2760GeV[i]-muHalfF2760GeV[i]))
+                        fragGammaErrUp2760GeV[i]   = TMath::Abs(muOneF2760GeV[i]-muHalfF2760GeV[i]);
+                } else {
+                    fragGammaErrDown2760GeV[i]     = muOneF2760GeV[i]-muHalfF2760GeV[i];
+                }
+            }
             promptGammaValue2760GeV[i]     = muOneD2760GeV[i];
-            promptGammaErrUp2760GeV[i]     = muHalfD2760GeV[i]-muOneD2760GeV[i];
-            promptGammaErrDown2760GeV[i]   = muOneD2760GeV[i]-muTwoD2760GeV[i];
+            if (muHalfD2760GeV[i] > muOneD2760GeV[i]){
+                promptGammaErrUp2760GeV[i]           = muHalfD2760GeV[i]-muOneD2760GeV[i];
+                if (muOneD2760GeV[i]-muTwoD2760GeV[i] < 0){
+                    promptGammaErrDown2760GeV[i]     = 0;
+                    if (promptGammaErrUp2760GeV[i] < TMath::Abs(muOneD2760GeV[i]-muTwoD2760GeV[i]))
+                        promptGammaErrUp2760GeV[i]   = TMath::Abs(muOneD2760GeV[i]-muTwoD2760GeV[i]);
+                } else {
+                    promptGammaErrDown2760GeV[i]     = muOneD2760GeV[i]-muTwoD2760GeV[i];
+                }
+            } else {
+                promptGammaErrUp2760GeV[i]           = muTwoD2760GeV[i]-muOneD2760GeV[i];
+                if (muOneD2760GeV[i]-muHalfD2760GeV[i] < 0){
+                    promptGammaErrDown2760GeV[i]     = 0;
+                    if (promptGammaErrUp2760GeV[i] < TMath::Abs(muOneD2760GeV[i]-muHalfD2760GeV[i]))
+                        promptGammaErrUp2760GeV[i]   = TMath::Abs(muOneD2760GeV[i]-muHalfD2760GeV[i]);
+                } else {
+                    promptGammaErrDown2760GeV[i]     = muOneD2760GeV[i]-muHalfD2760GeV[i];
+                }
+            }
         }
 
         TGraphAsymmErrors *graphNLOCalcDirGam2760GeV       = new TGraphAsymmErrors(nlinesNLOTwo2760GeV,ptNLOPhotonTwo2760GeV,gammaValue2760GeV,ptNLOPhotonTwo2760GeVErr,ptNLOPhotonTwo2760GeVErr,gammaErrDown2760GeV,gammaErrUp2760GeV);
@@ -801,6 +864,23 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1FragGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcFragGam2760GeV->Clone("graphNLOCalcInvYieldINT1FragGam2760GeV");
         graphNLOCalcInvYieldINT1FragGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1FragGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 0));
 
+        //******************************************************************************************************************
+        //************************************** Calculate RGamma based on ALICE cocktail **********************************
+        //******************************************************************************************************************
+        TGraphAsymmErrors* graphNLOCalcRGammaALICECocktailPP2760GeV = (TGraphAsymmErrors*)graphNLOCalcInvYieldINT1DirGam2760GeV->Clone("graphNLOCalcRGammaALICECocktailPP2760GeV");
+        TGraph* graphNLOCalcRGammaALICECocktailPP2760GeVCenter      = new TGraph(graphNLOCalcRGammaALICECocktailPP2760GeV->GetN());
+        for (Int_t i = 0; i < graphNLOCalcRGammaALICECocktailPP2760GeV->GetN(); i++){
+            Double_t decayGamma                                     = histoGammaDecayCombPP2760GeV->Interpolate(graphNLOCalcRGammaALICECocktailPP2760GeV->GetX()[i]);
+            Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktailPP2760GeV->GetY()[i];
+            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
+            Double_t relErrUp                                       = graphNLOCalcRGammaALICECocktailPP2760GeV->GetEYhigh()[i]/theoGamma;
+            Double_t relErrDown                                     = graphNLOCalcRGammaALICECocktailPP2760GeV->GetEYlow()[i]/theoGamma;
+            graphNLOCalcRGammaALICECocktailPP2760GeV->SetPoint(i, graphNLOCalcRGammaALICECocktailPP2760GeV->GetX()[i], drtheoGamma);
+            graphNLOCalcRGammaALICECocktailPP2760GeVCenter->SetPoint(i, graphNLOCalcRGammaALICECocktailPP2760GeV->GetX()[i], drtheoGamma);
+            graphNLOCalcRGammaALICECocktailPP2760GeV->SetPointError(i, graphNLOCalcRGammaALICECocktailPP2760GeV->GetEXlow()[i], graphNLOCalcRGammaALICECocktailPP2760GeV->GetEXhigh()[i],
+                                                           drtheoGamma*relErrDown, drtheoGamma*relErrUp);
+        }
+
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam2760GeV    = (TGraphAsymmErrors*)graphNLOCalcDirGam2760GeV->Clone("graphNLOCalcInvYieldINT7DirGam2760GeV");
         graphNLOCalcInvYieldINT7DirGam2760GeV                       = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 1));
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcPromGam2760GeV->Clone("graphNLOCalcInvYieldINT7PromGam2760GeV");
@@ -953,6 +1033,18 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivFrag2760GeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_2760GeV",TObject::kOverwrite);
             fitPromptDivFragGamma2760GeV->Write("ratioFitNLOPromptDivFragGamma2760GeV", TObject::kOverwrite);
             fitTheoryDirectMcGill2760GeV->Write("fitYieldDirectPhotonNLOPaquett_2760GeV",TObject::kOverwrite);
+
+            graphNLOCalcRGammaALICECocktailPP2760GeV
+            graphNLOCalcRGammaALICECocktailPP2760GeV->GetYaxis()->SetTitle("R_{#gamma}");
+            graphNLOCalcRGammaALICECocktailPP2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcRGammaALICECocktailPP2760GeV->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT1_pp2760GeV_CT10_ALICECocktail",TObject::kOverwrite);
+            graphNLOCalcRGammaALICECocktailPP2760GeVCenter->GetYaxis()->SetTitle("R_{#gamma}");
+            graphNLOCalcRGammaALICECocktailPP2760GeVCenter->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcRGammaALICECocktailPP2760GeVCenter->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT1_pp2760GeV_CT10_ALICECocktail_Center",TObject::kOverwrite);
+
+            histoGammaDecayCombPP2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            histoGammaDecayCombPP2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            histoGammaDecayCombPP2760GeV->Write("histoALICECombCocktailGammasPP2760GeV");
 
             // writing 5TeV Gammas
             graphNLOCalcDirGam5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");

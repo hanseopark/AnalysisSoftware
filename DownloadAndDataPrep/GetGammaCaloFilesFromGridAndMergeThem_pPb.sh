@@ -101,18 +101,21 @@ HAVELHC13b2efixp2=1
 HAVELHC13b2efixp3=1
 HAVELHC13b2efixp4=1
 HAVELHC13e7=1
-
+HAVETOBUILDMC=0
+HAVETOBUILDData=0
 # default trainconfigurations
 LHC13bData="";
 LHC13cData=""; #ESD
 LHC13dData=""; #ESD
 LHC13eData=""; #ESD
 LHC13fData=""; #ESD
+LHC13bcData="";
 LHC13e7MC="";
 LHC13b2_efix_p1MC="";
 LHC13b2_efix_p2MC="";
 LHC13b2_efix_p3MC="" ;
 LHC13b2_efix_p4MC="";
+LHC13b2_efix_MC="";
 
 passNr="2";
 
@@ -282,12 +285,18 @@ TRAINDIR=Legotrain-vAN20170525FF-newDefaultPlusSys
 # LHC13b2_efix_p2MC="982";
 # LHC13b2_efix_p3MC="980";
 # LHC13b2_efix_p4MC="981";
-LHC13b2_efix_p1MC="1026";
-LHC13b2_efix_p2MC="1046";
-LHC13b2_efix_p3MC="1047";
-LHC13b2_efix_p4MC="1048";
-LHC13bData="660"; #pass 3
-LHC13cData="661"; #pass 2
+# LHC13b2_efix_p1MC="1026";
+# LHC13b2_efix_p2MC="1046";
+# LHC13b2_efix_p3MC="1047";
+# LHC13b2_efix_p4MC="1048";
+# LHC13bData="660"; #pass 3
+# LHC13cData="661"; #pass 2
+# LHC13b2_efix_MC="1065"
+LHC13b2_efix_MC="1066"
+LHC13b2_efix_p1MC="child_1";
+LHC13b2_efix_p2MC="child_2";
+LHC13b2_efix_p3MC="child_3";
+LHC13b2_efix_p4MC="child_4";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -308,6 +317,9 @@ fi
 if [ "$LHC13fData" = "" ]; then
     HAVELHC13f=0;
 fi
+if [ "$LHC13bcData" != "" ]; then
+    HAVETOBUILDData=1;
+fi
 
 if [ "$LHC13b2_efix_p1MC" = "" ]; then
     HAVELHC13b2efixp1=0;
@@ -320,6 +332,9 @@ if [ "$LHC13b2_efix_p3MC" = "" ]; then
 fi
 if [ "$LHC13b2_efix_p4MC" = "" ]; then
     HAVELHC13b2efixp4=0;
+fi
+if [ "$LHC13b2_efix_MC" != "" ]; then
+    HAVETOBUILDMC=1;
 fi
 if [ "$LHC13e7MC" = "" ]; then
     HAVELHC13e7=0;
@@ -367,36 +382,76 @@ if [ $HAVELHC13f == 1 ]; then
 fi
 
 if [ $HAVELHC13b2efixp1 == 1 ]; then
-    LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p1MC\_`
-    if [ "$LHC13b2_efix_p1MC" == "" ]; then
-        HAVELHC13b2efixp1=0;
+    if [ $HAVETOBUILDMC == 1 ]; then
+         LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_MC\_ | grep $LHC13b2_efix_p1MC `
+        if [ "$LHC13b2_efix_p1MC" == "" ]; then
+            HAVELHC13b2efixp1=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p1=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p1MC
+        fi
     else
-        OUTPUTDIR_LHC13b2_efix_p1=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p1MC
+        LHC13b2_efix_p1MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p1MC\_`
+        if [ "$LHC13b2_efix_p1MC" == "" ]; then
+            HAVELHC13b2efixp1=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p1=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p1MC
+        fi
     fi
+    echo $OUTPUTDIR_LHC13b2_efix_p1
 fi
 if [ $HAVELHC13b2efixp2 == 1 ]; then
-    LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p2MC\_`
-    if [ "$LHC13b2_efix_p2MC" == "" ]; then
-        HAVELHC13b2efixp2=0;
+    if [ $HAVETOBUILDMC == 1 ]; then
+         LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_MC\_ | grep $LHC13b2_efix_p2MC `
+        if [ "$LHC13b2_efix_p2MC" == "" ]; then
+            HAVELHC13b2efixp2=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p2=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p2MC
+        fi
     else
-        OUTPUTDIR_LHC13b2_efix_p2=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p2MC
+        LHC13b2_efix_p2MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p2MC\_`
+        if [ "$LHC13b2_efix_p2MC" == "" ]; then
+            HAVELHC13b2efixp2=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p2=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p2MC
+        fi
     fi
+    echo $OUTPUTDIR_LHC13b2_efix_p2
 fi
 if [ $HAVELHC13b2efixp3 == 1 ]; then
-    LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p3MC\_`
-    if [ "$LHC13b2_efix_p3MC" == "" ]; then
-        HAVELHC13b2efixp3=0;
+    if [ $HAVETOBUILDMC == 1 ]; then
+         LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_MC\_ | grep $LHC13b2_efix_p3MC `
+        if [ "$LHC13b2_efix_p3MC" == "" ]; then
+            HAVELHC13b2efixp3=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p3=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p3MC
+        fi
     else
-        OUTPUTDIR_LHC13b2_efix_p3=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p3MC
+        LHC13b2_efix_p3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p3MC\_`
+        if [ "$LHC13b2_efix_p3MC" == "" ]; then
+            HAVELHC13b2efixp3=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p3=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p3MC
+        fi
     fi
+    echo $OUTPUTDIR_LHC13b2_efix_p3
 fi
 if [ $HAVELHC13b2efixp4 == 1 ]; then
-    LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p4MC\_`
-    if [ "$LHC13b2_efix_p4MC" == "" ]; then
-        HAVELHC13b2efixp4=0;
+    if [ $HAVETOBUILDMC == 1 ]; then
+         LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_MC\_ | grep $LHC13b2_efix_p4MC `
+        if [ "$LHC13b2_efix_p4MC" == "" ]; then
+            HAVELHC13b2efixp4=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p4=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p4MC
+        fi
     else
-        OUTPUTDIR_LHC13b2_efix_p4=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p4MC
+        LHC13b2_efix_p4MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13b2_efix_p4MC\_`
+        if [ "$LHC13b2_efix_p4MC" == "" ]; then
+            HAVELHC13b2efixp4=0;
+        else
+            OUTPUTDIR_LHC13b2_efix_p4=$BASEDIR/$TRAINDIR/GA_pPb_MC-$LHC13b2_efix_p4MC
+        fi
     fi
+    echo $OUTPUTDIR_LHC13b2_efix_p4
 fi
 if [ $HAVELHC13e7 == 1 ]; then
     LHC13e7MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC13e7MC\_`
@@ -411,8 +466,6 @@ mkdir -p $OUTPUTDIR/CutSelections
 
 
 if [ $CLEANUPMAYOR == 0 ]; then
-
-
     if [ $HAVELHC13b == 1 ]; then
         echo "downloading LHC13b"
         if [ $SINGLERUN == 1 ]; then

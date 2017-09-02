@@ -5236,6 +5236,9 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
             if( fEnergyFlag.CompareTo("8TeV") == 0 ){
               mesonAmplitudeMin                     = mesonAmplitude*80./100.;
               mesonAmplitudeMax                     = mesonAmplitude*1000./100.;
+            } else if( fEnergyFlag.CompareTo("2.76TeV") == 0 ){
+                  mesonAmplitudeMin                 = mesonAmplitude*80./100.;
+                  mesonAmplitudeMax                 = mesonAmplitude*1000./100.;
             } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
                 mesonAmplitudeMin                   = mesonAmplitude*90./100.;
                 if(fBinsPt[ptBin] >= 12.0 && fPrefix.Contains("Pi0")) {
@@ -5345,6 +5348,8 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     cout << "amp range: " << mesonAmplitude  << "\t" << mesonAmplitudeMin << "\t" << mesonAmplitudeMax << endl;
     cout << "width range params: " << fMesonWidthExpect  << "\t" << fMesonWidthRangeMC[0] << "\t" << fMesonWidthRangeMC[1] << endl;
     if ( (fMode == 2 || fMode == 4 || fMode == 12 || fMode == 13) && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 )
+        fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
+    else if ( fMode == 2  && fEnergyFlag.CompareTo("2.76TeV") == 0 )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
     else
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");

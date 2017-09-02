@@ -755,6 +755,13 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
             histoDoubleRatioTrueEffPurity[0]->DrawCopy("same,E1");
             PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
 
+            TF1* fitRGamma          = new TF1("fitRGamma","[0]",1,3);
+            TF1* fitRGammaFitPi0    = new TF1("fitRGammaFitPi0","[0]",1,3);
+            histoDoubleRatioFitPi0YieldPurity[0]->Fit(fitRGammaFitPi0,"QRME0","",1,3);
+            histoDoubleRatioTrueEffPurity[0]->Fit(fitRGamma,"QRME0","",1,3);
+            fileStatErrorCheck << "std.: " << fitRGamma->GetParameter(0) << "+-" << fitRGamma->GetParError(0) << endl;
+            fileStatErrorCheck << "fitted.: " << fitRGammaFitPi0->GetParameter(0) << "+-" << fitRGammaFitPi0->GetParError(0) << endl;
+
             TLegend* legendDoubleConversionFit3       = GetAndSetLegend2(0.14,0.93-1*0.045,0.5,0.93,0.045,1,"",42,0.2);
             legendDoubleConversionFit3->AddEntry(histoDoubleRatioTrueEffPurity[0],"Data","p");
             legendDoubleConversionFit3->Draw();

@@ -1635,6 +1635,8 @@
                     fStartPtBin     = 1;
                     fColumn         = 5;
                     fRow            = 5;
+                    if (modi == 2)
+                        fStartPtBin = 3;
 
                     if (fNBinsPt > 14 && isDCA) {
                         cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;

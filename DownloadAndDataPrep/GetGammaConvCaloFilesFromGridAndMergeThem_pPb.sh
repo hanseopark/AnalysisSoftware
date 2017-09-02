@@ -530,7 +530,6 @@ LHC13e7MC="977";
 # LHC13bData="660"; #pass 3
 # LHC13cData="661"; #pass 2
 
-
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections
 

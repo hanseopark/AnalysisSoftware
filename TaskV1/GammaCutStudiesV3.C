@@ -467,6 +467,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
         return;
     } else if (mode == 2 || mode == 3 || mode == 4 || mode == 5){
         cout << "WARNING: running hybrid mode, this macro is still under construction for this mode" << endl;
+    } else if (mode == 0 || mode == 9 ){
+        cout << "INFO: you are running with mode: " << mode << endl;
     } else {
         cout << "This macro can't yet deal with these modi" << endl;
         return;
