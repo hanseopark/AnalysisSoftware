@@ -1853,8 +1853,9 @@ void CombineMesonMeasurementsPP()
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvariantCrossSectionEta->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
-            legendRunningIndex-=1;
+          if(i==0) legendInvariantCrossSectionEta->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s (Prelim.)",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+          else legendInvariantCrossSectionEta->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+          legendRunningIndex-=1;
         }
     }
     legendInvariantCrossSectionEta->AddEntry(fitTCMInvCrossSectionEtaCombPlot[exampleActiveMeas],"TCM fit","l");
@@ -1905,8 +1906,9 @@ void CombineMesonMeasurementsPP()
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvariantXSecEta->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
-            legendRunningIndex-=1;
+          if(i==0) legendInvariantXSecEta->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s (Prelim.)",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+          else legendInvariantXSecEta->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+          legendRunningIndex-=1;
         }
     }
     legendInvariantXSecEta->AddEntry(fitTCMInvCrossSectionEtaCombPlot[exampleActiveMeas],"TCM fit","l");
@@ -2075,7 +2077,8 @@ void CombineMesonMeasurementsPP()
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvariantCrossSectionEta2->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+            if(i==0) legendInvariantCrossSectionEta2->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s (Prelim.)",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+            else legendInvariantCrossSectionEta2->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
             legendRunningIndex-=1;
         }
     }
@@ -2117,7 +2120,8 @@ void CombineMesonMeasurementsPP()
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvYieldEta2->AddEntry(graphEtaInvYieldSys[i],Form("pp, %s",energyLatex[i].Data()),"pf");
+            if(i==0) legendInvYieldEta2->AddEntry(graphEtaInvYieldSys[i],Form("pp, %s (Prelim.)",energyLatex[i].Data()),"pf");
+            else legendInvYieldEta2->AddEntry(graphEtaInvYieldSys[i],Form("pp, %s",energyLatex[i].Data()),"pf");
             legendRunningIndex-=1;
         }
     }
@@ -2154,8 +2158,9 @@ void CombineMesonMeasurementsPP()
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvariantCrossSectionEta3->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
-            legendRunningIndex-=1;
+          if(i==0) legendInvariantCrossSectionEta3->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s (Prelim.)",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+          else legendInvariantCrossSectionEta3->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+          legendRunningIndex-=1;
         }
     }
     legendInvariantCrossSectionEta3->AddEntry(fitTCMInvCrossSectionEtaCombPlot[exampleActiveMeas],"TCM fit","l");
@@ -2291,7 +2296,8 @@ void CombineMesonMeasurementsPP()
                 else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
                 legendRatiosEnergy[i]->SetNColumns(1);
                 legendRatiosEnergy[i]->SetMargin(0.2);
-                legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
+                if(i==0) legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s (Prelim.)",energyLatex[i].Data()),"pf");
+                else legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
                 legendRatiosEnergy[i]->Draw();
                 graphRatioIndivMeasToCombFitEtaSys[i][10]->Draw("2,same");
                 graphRatioIndivMeasToCombFitEtaStat_woXErr[i][10]->Draw("p,same");
@@ -2337,8 +2343,10 @@ void CombineMesonMeasurementsPP()
             if(graphEtaInvariantCrossSectionSys[i][10]&&graphEtaInvariantCrossSectionStat[i][10]){
               graphRatioPythiaToCombFitEta[i]->Draw("3,same");
               histoRatioPythiaToCombFitEta[i]->Draw("same,hist,l");
-              if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.6, 0.81, 0.95, 0.76+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
-              else legendRatiosEnergy[i] = GetAndSetLegend2(0.6, 0.75, 0.95, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              if(i==0) {
+                legendRatiosEnergy[i] = GetAndSetLegend2(0.6, 0.81, 0.95, 0.76+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+                drawLatexAdd("(Prelim.)",rightalignDouble+0.02,0.75,2.5*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              }else legendRatiosEnergy[i] = GetAndSetLegend2(0.6, 0.75, 0.95, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosEnergy[i]->SetNColumns(1);
               legendRatiosEnergy[i]->SetMargin(0.2);
               legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
@@ -2413,7 +2421,8 @@ void CombineMesonMeasurementsPP()
               else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
               legendRatiosEnergy[i]->SetNColumns(1);
               legendRatiosEnergy[i]->SetMargin(0.2);
-              legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
+              if(i==0) legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s (Prelim.)",energyLatex[i].Data()),"pf");
+              else legendRatiosEnergy[i]->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
               legendRatiosEnergy[i]->Draw();
             }
             padCounter+=1;
@@ -2469,7 +2478,8 @@ void CombineMesonMeasurementsPP()
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvariantEtaToPi0->AddEntry(graphEtaToPi0RatioSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
+            if(i==0) legendInvariantEtaToPi0->AddEntry(graphEtaToPi0RatioSys[i][10],Form("pp, %s (Prelim.)",energyLatex[i].Data()),"pf");
+            else legendInvariantEtaToPi0->AddEntry(graphEtaToPi0RatioSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
             legendRunningIndex-=1;
         }
     }
@@ -2486,7 +2496,7 @@ void CombineMesonMeasurementsPP()
 
     TH2F * histo2DEtatoPi0ratio;
     histo2DEtatoPi0ratio               = new TH2F("histo2DEtatoPi0ratio","histo2DEtatoPi0ratio",1000,0.33,32.,1000,-0.05,1.95    );
-    SetStyleHistoTH2ForGraphs(histo2DEtatoPi0ratio, "#it{p}_{T} (GeV/#it{c})","ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
+    SetStyleHistoTH2ForGraphs(histo2DEtatoPi0ratio, "#it{p}_{T} (GeV/#it{c})","Ratio", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
                               0.85*textsizeLabelsEtaToPi0,textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
     histo2DEtatoPi0ratio->GetXaxis()->SetMoreLogLabels();
     histo2DEtatoPi0ratio->GetXaxis()->SetNoExponent(kTRUE);
@@ -2504,13 +2514,14 @@ void CombineMesonMeasurementsPP()
         }
     }
 
-    TLegend* legendInvariantEtaToPi02    = GetAndSetLegend2(0.58, 0.15, 0.95, 0.15+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    TLegend* legendInvariantEtaToPi02    = GetAndSetLegend2(0.43, 0.15, 0.95, 0.15+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
     legendInvariantEtaToPi02->SetNColumns(1);
     legendInvariantEtaToPi02->SetMargin(0.2);
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-            legendInvariantEtaToPi02->AddEntry(graphEtaToPi0RatioSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
+            if(i==0) legendInvariantEtaToPi02->AddEntry(graphEtaToPi0RatioSys[i][10],Form("pp, %s (Prelim.)",energyLatex[i].Data()),"pf");
+            else legendInvariantEtaToPi02->AddEntry(graphEtaToPi0RatioSys[i][10],Form("pp, %s",energyLatex[i].Data()),"pf");
             legendRunningIndex-=1;
         }
     }
