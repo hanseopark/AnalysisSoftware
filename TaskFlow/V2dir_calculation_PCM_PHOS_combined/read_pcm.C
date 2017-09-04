@@ -31,16 +31,16 @@ void read_pcm() {
 
   // loop over centralities
   // centrality, 0-20% = cen6, 20-40% = cen3, 40-80% = cen8
-  const Int_t n_centr = 3;
-  TString centr[n_centr] = {"020", "2040", "4080"};
-  TString centr_out[n_centr] = {"00-20", "20-40", "40-80"};
-  TString centr_cocktail[n_centr] = {"cen6", "cen3", "cen8"};
-  TString centr_Rgamma[n_centr] = {"0-20%", "20-40%", "40-80%"};
+  const Int_t n_centr = 2;
+  TString centr[n_centr] = {"020", "2040"};
+  TString centr_out[n_centr] = {"00-20", "20-40"};
+  TString centr_cocktail[n_centr] = {"cen6", "cen3"};
+  TString centr_Rgamma[n_centr] = {"0-20%", "20-40%"};
 
   for (Int_t i_centr=0; i_centr<n_centr; i_centr++) {
 
     // open v2 inc file
-    TString filename_v2inc = "data_pcm/PCM_InclusivePhotonFlow_Syst_" + centr[i_centr] + ".root";
+    TString filename_v2inc = "data_pcm/PCM_InclusivePhotonFlow_Syst_" + centr[i_centr] + "_170508.root";
     TFile file_v2inc(filename_v2inc);
 
     // get graphs / histograms
