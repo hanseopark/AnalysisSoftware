@@ -152,17 +152,17 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     Bool_t benable[14]              = { 0, 0, 0, 0, 0,
                                         0, 0, 0, 0, 0,
                                         0, 0, 0, 0};
-    Bool_t benableIncGamma[14]      = { 1, 1, 1, 1, 1,
-                                        1, 1, 1, 1, 1,
+    Bool_t benableIncGamma[14]      = { 1, 1, 0, 1, 1,
+                                        1, 1, 0, 1, 1,
                                         0, 0, 0, 1};
-    Bool_t benableIncRatio[14]      = { 1, 1, 1, 1, 1,
-                                        1, 1, 1, 1, 1,
+    Bool_t benableIncRatio[14]      = { 1, 1, 0, 1, 1,
+                                        1, 1, 0, 1, 1,
                                         1, 0, 0, 1};
-    Bool_t benableDoubleRatio[14]   = { 1, 1, 1, 1, 1,
-                                        1, 1, 1, 1, 1,
+    Bool_t benableDoubleRatio[14]   = { 1, 1, 0, 1, 1,
+                                        1, 1, 0, 1, 1,
                                         1, 0, 0, 1};
-    Bool_t benablePi0[14]           = { 1, 1, 1, 1, 1,
-                                        1, 1, 1, 1, 1,
+    Bool_t benablePi0[14]           = { 1, 1, 0, 1, 1,
+                                        1, 1, 0, 1, 1,
                                         1, 0, 0, 1};
 
     // ***************************************************************************************************
@@ -225,45 +225,12 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     Double_t errorsNegCorrSummedTypeA[nPtBins];
     Double_t errorsNegCorrSummedTypeB[nPtBins];
     Double_t errorsNegCorrSummedTypeC[nPtBins];
-    Double_t errorsNegCorrMatSummed[nPtBins];
+    Double_t* errorsNegCorrMatSummed = new Double_t[nCuts];
 
     Double_t* errorsNegErr[nCuts];
     Double_t errorsNegErrCorr[nCuts][nPtBins];
     Double_t errorsNegErrSummed[nPtBins];
     Double_t errorsNegErrCorrSummed[nPtBins];
-
-    Double_t errorsPosErrSummedTypeA[nCuts];
-    Double_t errorsMeanErrSummedTypeA[nCuts];
-    Double_t errorsNegErrSummedTypeA[nCuts];
-    Double_t errorsPosCorrMatSummedTypeA[nCuts];
-    Double_t errorsMeanCorrMatSummedTypeA[nCuts];
-    Double_t errorsNegCorrMatSummedTypeA[nCuts];
-    Double_t errorsPosErrCorrSummedTypeA[nCuts];
-    Double_t errorsMeanErrCorrSummedTypeA[nCuts];
-    Double_t errorsMeanErrCorrMatSummedTypeA[nCuts];
-    Double_t errorsNegErrCorrSummedTypeA[nCuts];
-
-    Double_t errorsPosErrSummedTypeB[nCuts];
-    Double_t errorsMeanErrSummedTypeB[nCuts];
-    Double_t errorsNegErrSummedTypeB[nCuts];
-    Double_t errorsPosCorrMatSummedTypeB[nCuts];
-    Double_t errorsMeanCorrMatSummedTypeB[nCuts];
-    Double_t errorsNegCorrMatSummedTypeB[nCuts];
-    Double_t errorsPosErrCorrSummedTypeB[nCuts];
-    Double_t errorsMeanErrCorrSummedTypeB[nCuts];
-    Double_t errorsMeanErrCorrMatSummedTypeB[nCuts];
-    Double_t errorsNegErrCorrSummedTypeB[nCuts];
-
-    Double_t errorsPosErrSummedTypeC[nCuts];
-    Double_t errorsMeanErrSummedTypeC[nCuts];
-    Double_t errorsNegErrSummedTypeC[nCuts];
-    Double_t errorsPosCorrMatSummedTypeC[nCuts];
-    Double_t errorsMeanCorrMatSummedTypeC[nCuts];
-    Double_t errorsNegCorrMatSummedTypeC[nCuts];
-    Double_t errorsPosErrCorrSummedTypeC[nCuts];
-    Double_t errorsMeanErrCorrSummedTypeC[nCuts];
-    Double_t errorsMeanErrCorrMatSummedTypeC[nCuts];
-    Double_t errorsNegErrCorrSummedTypeC[nCuts];
 
     Double_t* errorsPos[nCuts];
     Double_t errorsPosCorr[nCuts][nPtBins];
@@ -296,14 +263,71 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
 
     Double_t errorsMeanErr[nCuts][nPtBins];
     Double_t errorsMeanErrCorr[nCuts][nPtBins];
-    Double_t errorsMeanErrSummed[nPtBins];
-    Double_t errorsMeanErrCorrSummed[nPtBins];
-    Double_t errorsMeanErrCorrMatSummed[nPtBins];
+    Double_t* errorsMeanErrSummed = new Double_t[nCuts];
+    Double_t* errorsMeanErrCorrSummed = new Double_t[nCuts];
+    Double_t* errorsMeanErrCorrMatSummed = new Double_t[nCuts];
 
     Double_t errorsMeanNotSmooth[nCuts][nPtBins];
     Double_t errorsMeanErrNotSmooth[nCuts][nPtBins];
     Double_t errorsMeanCorrNotSmooth[nCuts][nPtBins];
     Double_t errorsMeanErrCorrNotSmooth[nCuts][nPtBins];
+
+    Double_t* errorsPosErrSummedTypeA = new Double_t[nCuts];
+    Double_t* errorsMeanErrSummedTypeA = new Double_t[nCuts];
+    Double_t* errorsNegErrSummedTypeA = new Double_t[nCuts];
+    Double_t* errorsPosErrCorrSummedTypeA = new Double_t[nCuts];
+    Double_t* errorsMeanErrCorrSummedTypeA = new Double_t[nCuts];
+    Double_t* errorsNegErrCorrSummedTypeA = new Double_t[nCuts];
+
+    Double_t* errorsPosErrSummedTypeB = new Double_t[nCuts];
+    Double_t* errorsMeanErrSummedTypeB = new Double_t[nCuts];
+    Double_t* errorsNegErrSummedTypeB = new Double_t[nCuts];
+    Double_t* errorsPosErrCorrSummedTypeB = new Double_t[nCuts];
+    Double_t* errorsMeanErrCorrSummedTypeB = new Double_t[nCuts];
+    Double_t* errorsNegErrCorrSummedTypeB = new Double_t[nCuts];
+
+    Double_t* errorsPosErrSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsMeanErrSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsNegErrSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsPosCorrMatSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsMeanCorrMatSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsNegCorrMatSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsPosErrCorrSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsMeanErrCorrSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsMeanErrCorrMatSummedTypeC = new Double_t[nCuts];
+    Double_t* errorsNegErrCorrSummedTypeC = new Double_t[nCuts];
+
+
+    for (Int_t l = 0; l < nPtBins; l++){
+        errorsPosSummed[l]                      = 0.;
+        errorsNegSummed[l]                      = 0.;
+        errorsMeanSummed[l]                     = 0.;
+        errorsPosCorrSummed[l]                  = 0.;
+        errorsNegCorrSummed[l]                  = 0.;
+        errorsMeanCorrSummed[l]                 = 0.;
+
+        errorsPosSummedTypeA[l]                      = 0.;
+        errorsNegSummedTypeA[l]                      = 0.;
+        errorsMeanSummedTypeA[l]                     = 0.;
+        errorsPosCorrSummedTypeA[l]                  = 0.;
+        errorsNegCorrSummedTypeA[l]                  = 0.;
+        errorsMeanCorrSummedTypeA[l]                 = 0.;
+
+        errorsPosSummedTypeB[l]                      = 0.;
+        errorsNegSummedTypeB[l]                      = 0.;
+        errorsMeanSummedTypeB[l]                     = 0.;
+        errorsPosCorrSummedTypeB[l]                  = 0.;
+        errorsNegCorrSummedTypeB[l]                  = 0.;
+        errorsMeanCorrSummedTypeB[l]                 = 0.;
+
+        errorsPosSummedTypeC[l]                      = 0.;
+        errorsNegSummedTypeC[l]                      = 0.;
+        errorsMeanSummedTypeC[l]                     = 0.;
+        errorsPosCorrSummedTypeC[l]                  = 0.;
+        errorsNegCorrSummedTypeC[l]                  = 0.;
+        errorsMeanCorrSummedTypeC[l]                 = 0.;
+
+    }
 
     TGraphErrors* negativeErrors[nCuts];
     TGraphErrors* negativeErrorsSummed;
@@ -340,37 +364,6 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     TGraphErrors* meanErrorsCorrSummedTypeAIncMat;
     TGraphErrors* meanErrorsCorrSummedTypeBIncMat;
     TGraphErrors* meanErrorsCorrSummedTypeCIncMat;
-
-    for (Int_t l = 0; l < nPtBins; l++){
-        errorsPosSummed[l]                      = 0.;
-        errorsNegSummed[l]                      = 0.;
-        errorsMeanSummed[l]                     = 0.;
-        errorsPosCorrSummed[l]                  = 0.;
-        errorsNegCorrSummed[l]                  = 0.;
-        errorsMeanCorrSummed[l]                 = 0.;
-
-        errorsPosSummedTypeA[l]                      = 0.;
-        errorsNegSummedTypeA[l]                      = 0.;
-        errorsMeanSummedTypeA[l]                     = 0.;
-        errorsPosCorrSummedTypeA[l]                  = 0.;
-        errorsNegCorrSummedTypeA[l]                  = 0.;
-        errorsMeanCorrSummedTypeA[l]                 = 0.;
-
-        errorsPosSummedTypeB[l]                      = 0.;
-        errorsNegSummedTypeB[l]                      = 0.;
-        errorsMeanSummedTypeB[l]                     = 0.;
-        errorsPosCorrSummedTypeB[l]                  = 0.;
-        errorsNegCorrSummedTypeB[l]                  = 0.;
-        errorsMeanCorrSummedTypeB[l]                 = 0.;
-
-        errorsPosSummedTypeC[l]                      = 0.;
-        errorsNegSummedTypeC[l]                      = 0.;
-        errorsMeanSummedTypeC[l]                     = 0.;
-        errorsPosCorrSummedTypeC[l]                  = 0.;
-        errorsNegCorrSummedTypeC[l]                  = 0.;
-        errorsMeanCorrSummedTypeC[l]                 = 0.;
-
-    }
 
     for (Int_t i = 0; i < nCuts; i++){
         if (!benable[i]) {
@@ -802,7 +795,8 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                     errorsMeanErrCorr[i][k] = errorFixed*0.01;
                 }
             }
-        } else  if (bsmooth[i] && addedSig){
+        }
+        else  if (bsmooth[i] && addedSig){
 
             for (Int_t k = 0; k < nPtBinsActive; k++){
                 errorsMeanNotSmooth[i][k]        = errorsMean[i][k];
@@ -1220,7 +1214,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         for (Int_t l = 0; l < nPtBinsActive; l++){
             if( nameCutVariationString[i].CompareTo("Chi2") == 0 || nameCutVariationString[i].CompareTo("dEdxE") == 0 || nameCutVariationString[i].CompareTo("PsiPair") == 0  ||
             nameCutVariationString[i].CompareTo("TPCCluster") == 0 || nameCutVariationString[i].CompareTo("IntRange") == 0 ||
-            nameCutVariationString[i].CompareTo("TOF") == 0 || nameCutVariationString[i].CompareTo("SinglePt") == 0 || nameCutVariationString[i].CompareTo("ConvPhi") == 0 ){
+            nameCutVariationString[i].CompareTo("TOF") == 0 || nameCutVariationString[i].CompareTo("SinglePt") == 0 ){
                 errorsPosSummedTypeA[l]         = errorsPosSummedTypeA[l]+pow(errorsPos[i][l],2);
                 errorsNegSummedTypeA[l]         = errorsNegSummedTypeA[l]+ pow(errorsNeg[i][l],2);
                 errorsMeanSummedTypeA[l]        = errorsMeanSummedTypeA[l]+ pow(errorsMean[i][l],2);
@@ -1230,7 +1224,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
 
             }
             if( nameCutVariationString[i].CompareTo("Qt") == 0 || nameCutVariationString[i].CompareTo("dEdxPi") == 0 ||
-            nameCutVariationString[i].CompareTo("Asym") == 0){
+            nameCutVariationString[i].CompareTo("Asym") == 0 || nameCutVariationString[i].CompareTo("Cocktail") == 0){
                 errorsPosSummedTypeB[l]         = errorsPosSummedTypeB[l]+pow(errorsPos[i][l],2);
                 errorsNegSummedTypeB[l]         = errorsNegSummedTypeB[l]+ pow(errorsNeg[i][l],2);
                 errorsMeanSummedTypeB[l]        = errorsMeanSummedTypeB[l]+ pow(errorsMean[i][l],2);
@@ -1239,7 +1233,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
                 errorsMeanCorrSummedTypeB[l]    = errorsMeanCorrSummedTypeB[l]+ pow(errorsMeanCorr[i][l],2);
 
             }
-            if(nameCutVariationString[i].CompareTo("Cocktail") == 0){
+            if(nameCutVariationString[i].CompareTo("ConvPhi") == 0 ){
                 errorsPosSummedTypeC[l]         = errorsPosSummedTypeC[l]+pow(errorsPos[i][l],2);
                 errorsNegSummedTypeC[l]         = errorsNegSummedTypeC[l]+ pow(errorsNeg[i][l],2);
                 errorsMeanSummedTypeC[l]        = errorsMeanSummedTypeC[l]+ pow(errorsMean[i][l],2);
@@ -1291,15 +1285,11 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         errorsMeanErrSummedTypeA[l]                  = errorsMeanSummedTypeA[l]*0.001;
         errorsNegSummedTypeA[l]                      = -pow(errorsNegSummedTypeA[l],0.5);
         errorsNegErrSummedTypeA[l]                   = errorsNegSummedTypeA[l]*0.001;
-        errorsPosCorrMatSummedTypeA[l]               = pow(errorsPosCorrSummedTypeA[l]+ pow(errorMaterial ,2.),0.5);
-        errorsMeanCorrMatSummedTypeA[l]              = pow(errorsMeanCorrSummedTypeA[l]+ pow(errorMaterial ,2.),0.5);
-        errorsNegCorrMatSummedTypeA[l]               = -pow(errorsNegCorrSummedTypeA[l]+ pow(errorMaterial ,2.),0.5);
 
         errorsPosCorrSummedTypeA[l]                  = pow(errorsPosCorrSummedTypeA[l],0.5);
         errorsMeanCorrSummedTypeA[l]                 = pow(errorsMeanCorrSummedTypeA[l],0.5);
         errorsPosErrCorrSummedTypeA[l]               = errorsPosCorrSummedTypeA[l]*0.001;
         errorsMeanErrCorrSummedTypeA[l]              = errorsMeanCorrSummedTypeA[l]*0.001;
-        errorsMeanErrCorrMatSummedTypeA[l]           = errorsMeanCorrMatSummedTypeA[l]*0.001;
         errorsNegCorrSummedTypeA[l]                  = -pow(errorsNegCorrSummedTypeA[l],0.5);
         errorsNegErrCorrSummedTypeA[l]               = errorsNegCorrSummedTypeA[l]*0.001;
 
@@ -1309,15 +1299,11 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         errorsMeanErrSummedTypeB[l]                  = errorsMeanSummedTypeB[l]*0.001;
         errorsNegSummedTypeB[l]                      = -pow(errorsNegSummedTypeB[l],0.5);
         errorsNegErrSummedTypeB[l]                   = errorsNegSummedTypeB[l]*0.001;
-        errorsPosCorrMatSummedTypeB[l]               = pow(errorsPosCorrSummedTypeB[l]+ pow(errorMaterial ,2.),0.5);
-        errorsMeanCorrMatSummedTypeB[l]              = pow(errorsMeanCorrSummedTypeB[l]+ pow(errorMaterial ,2.),0.5);
-        errorsNegCorrMatSummedTypeB[l]               = -pow(errorsNegCorrSummedTypeB[l]+ pow(errorMaterial ,2.),0.5);
 
         errorsPosCorrSummedTypeB[l]                  = pow(errorsPosCorrSummedTypeB[l],0.5);
         errorsMeanCorrSummedTypeB[l]                 = pow(errorsMeanCorrSummedTypeB[l],0.5);
         errorsPosErrCorrSummedTypeB[l]               = errorsPosCorrSummedTypeB[l]*0.001;
         errorsMeanErrCorrSummedTypeB[l]              = errorsMeanCorrSummedTypeB[l]*0.001;
-        errorsMeanErrCorrMatSummedTypeB[l]           = errorsMeanCorrMatSummedTypeB[l]*0.001;
         errorsNegCorrSummedTypeB[l]                  = -pow(errorsNegCorrSummedTypeB[l],0.5);
         errorsNegErrCorrSummedTypeB[l]               = errorsNegCorrSummedTypeB[l]*0.001;
 
@@ -1340,11 +1326,11 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
         errorsNegErrCorrSummedTypeC[l]               = errorsNegCorrSummedTypeC[l]*0.001;
 
 
-            cout  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l]
-                                        << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]
-                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l]
-                                        << "\t"  << "-"<< errorsMeanCorrMatSummedTypeB[l] << "\t" <<errorsMeanCorrMatSummedTypeB[l]
-                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;
+        cout  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l]
+                                   << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]
+                                   << "\t" << "-"<< errorsMeanCorrSummedTypeA[l] << "\t" <<errorsMeanCorrSummedTypeA[l]
+                                   << "\t"  << "-"<< errorsMeanCorrSummedTypeB[l] << "\t" <<errorsMeanCorrSummedTypeB[l]
+                                   << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;
     }
 
     Double_t errorsMat[nPtBinsActive];
@@ -1366,8 +1352,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     positiveErrorsCorrSummedTypeA               = new TGraphErrors(nPtBinsActive,ptBins ,errorsPosCorrSummedTypeA ,ptBinsErr ,errorsPosErrCorrSummedTypeA );
     meanErrorsSummedTypeA                       = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanSummedTypeA ,ptBinsErr ,errorsMeanErrSummedTypeA );
     meanErrorsCorrSummedTypeA                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrSummedTypeA ,ptBinsErr ,errorsMeanErrCorrSummedTypeA );
-    meanErrorsCorrSummedTypeAIncMat             = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrMatSummedTypeA ,ptBinsErr ,errorsMeanErrCorrMatSummedTypeA );
-    meanErrorsCorrSummedTypeAIncMat->Print();
+    //meanErrorsCorrSummedTypeA->Print();
 
     negativeErrorsSummedTypeB                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegSummedTypeB ,ptBinsErr ,errorsNegErrSummedTypeB );
     negativeErrorsCorrSummedTypeB               = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegCorrSummedTypeB ,ptBinsErr ,errorsNegErrCorrSummedTypeB );
@@ -1375,7 +1360,7 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     positiveErrorsCorrSummedTypeB               = new TGraphErrors(nPtBinsActive,ptBins ,errorsPosCorrSummedTypeB ,ptBinsErr ,errorsPosErrCorrSummedTypeB );
     meanErrorsSummedTypeB                       = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanSummedTypeB ,ptBinsErr ,errorsMeanErrSummedTypeB );
     meanErrorsCorrSummedTypeB                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrSummedTypeB ,ptBinsErr ,errorsMeanErrCorrSummedTypeB );
-    meanErrorsCorrSummedTypeBIncMat             = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrMatSummedTypeB ,ptBinsErr ,errorsMeanErrCorrMatSummedTypeB );
+    //meanErrorsCorrSummedTypeB->Print();
 
     negativeErrorsSummedTypeC                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegSummedTypeC ,ptBinsErr ,errorsNegErrSummedTypeC );
     negativeErrorsCorrSummedTypeC               = new TGraphErrors(nPtBinsActive,ptBins ,errorsNegCorrSummedTypeC ,ptBinsErr ,errorsNegErrCorrSummedTypeC );
@@ -1384,7 +1369,8 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     meanErrorsSummedTypeC                       = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanSummedTypeC ,ptBinsErr ,errorsMeanErrSummedTypeC );
     meanErrorsCorrSummedTypeC                   = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrSummedTypeC ,ptBinsErr ,errorsMeanErrCorrSummedTypeC );
     meanErrorsCorrSummedTypeCIncMat             = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrMatSummedTypeC ,ptBinsErr ,errorsMeanErrCorrMatSummedTypeC );
-
+    //meanErrorsCorrSummedTypeCIncMat->Print();
+    //return;
 
     //++++++++++++++++++++++++++++++ PLOTTING OF SYSMEAN +++++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1554,22 +1540,23 @@ void FinaliseSystematicErrorsConv_Gammas_PbPb(   TString nameDataFileErrors     
     cout << SysErrDatnameMeanSepType << endl;
     SysErrDatAverSepType.open(SysErrDatnameMeanSepType, ios::out);
     for (Int_t l=0; l< nPtBinsActive; l++){
-        if(!spectrumName.CompareTo("Pi0")){
-            SysErrDatAverSepType  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l] << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
+        if(spectrumName.CompareTo("Pi0")==0){
+            SysErrDatAverSepType  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l]
+                                               << "\t" << "-"<< errorsMeanCorrSummed[l]    << "\t" <<errorsMeanCorrSummed[l]  << endl;
             cout  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l]
-                                        << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]  << endl;
+                               << "\t" << "-"<< errorsMeanCorrSummed[l]    << "\t" <<errorsMeanCorrSummed[l]  << endl;
         } else {
             SysErrDatAverSepType  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l]
-                                        << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]
-                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l]
-                                        << "\t"  << "-"<< errorsMeanCorrSummedTypeB[l] << "\t" <<errorsMeanCorrSummedTypeB[l]
-                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;
+                                               << "\t" << "-"<< errorsMeanCorrSummed[l]    << "\t" <<errorsMeanCorrSummed[l]
+                                               << "\t" << "-"<< errorsMeanCorrSummedTypeA[l] << "\t" <<errorsMeanCorrSummedTypeA[l]
+                                               << "\t" << "-"<< errorsMeanCorrSummedTypeB[l] << "\t" <<errorsMeanCorrSummedTypeB[l]
+                                               << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;
 
             cout  << ptBins[l] << "\t" << "-"<< errorsMeanCorrMatSummed[l] << "\t" <<errorsMeanCorrMatSummed[l]
-                                        << "\t"  << "-"<< errorsMeanCorrSummed[l] << "\t" <<errorsMeanCorrSummed[l]
-                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeA[l] << "\t" <<errorsMeanCorrMatSummedTypeA[l]
-                                        << "\t"  << "-"<< errorsMeanCorrMatSummedTypeB[l] << "\t" <<errorsMeanCorrMatSummedTypeB[l]
-                                        << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;
+                                               << "\t" << "-"<< errorsMeanCorrSummed[l]    << "\t" <<errorsMeanCorrSummed[l]
+                                               << "\t" << "-"<< errorsMeanCorrSummedTypeA[l] << "\t" <<errorsMeanCorrSummedTypeA[l]
+                                               << "\t" << "-"<< errorsMeanCorrSummedTypeB[l] << "\t" <<errorsMeanCorrSummedTypeB[l]
+                                               << "\t" << "-"<< errorsMeanCorrMatSummedTypeC[l] << "\t" <<errorsMeanCorrMatSummedTypeC[l] << "\t"  << endl;
         }
     }
     SysErrDatAverSepType.close();

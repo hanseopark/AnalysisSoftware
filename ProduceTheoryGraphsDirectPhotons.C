@@ -1279,6 +1279,83 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphErrors* graphPromptPhotonMCGill2040   = new TGraphErrors(nlinesMCGillPrompt2040-1,ptMCGillPrompt2040,yieldMCGillPrompt2040, errYieldXMCGillPrompt2040, errYieldMCGillPrompt2040);
 
 
+
+        //#p_T[GeV] dN/(2*pi*p_T dp_T dy)[GeV^-2] statistical_error[same units] //the spectra "dN/(2*pi*p_T dp_T dy)" is at mid-rapidity (y=0)
+        //direct photon calculations include thermal photons (computed with thermal rates and a hydrodynamic simulation of Pb-Pb collisions) and also prompt photons
+        Double_t ptMCGill0005           [70];
+        Double_t yieldMCGill0005        [70];
+        Double_t errYieldMCGill0005     [70];
+        Double_t errYieldXMCGill0005    [70];
+        Int_t nlinesMCGill0005                      = 0;
+
+        TString fileNameMCGill0005                  = "ExternalInputPbPb/Theory/McGill/direct_photons_LHC2760GeV_cent0005_McGill.dat";
+        ifstream  fileMCGill0005;
+        fileMCGill0005.open(fileNameMCGill0005,ios_base::in);
+        cout << fileNameMCGill0005 << endl;
+
+        while(!fileMCGill0005.eof() && nlinesMCGill0005< 70){
+            fileMCGill0005 >> ptMCGill0005[nlinesMCGill0005] >> yieldMCGill0005[nlinesMCGill0005];
+            cout << nlinesMCGill0005 << "\t"  << ptMCGill0005[nlinesMCGill0005] << "\t"  << yieldMCGill0005[nlinesMCGill0005] << endl;;
+            errYieldMCGill0005[nlinesMCGill0005]    = 0;
+            errYieldXMCGill0005[nlinesMCGill0005]   = 0;
+            nlinesMCGill0005++;
+        }
+        fileMCGill0005.close();
+        TGraphErrors* graphDirectPhotonMCGill0005   = new TGraphErrors(nlinesMCGill0005-1,ptMCGill0005,yieldMCGill0005, errYieldXMCGill0005, errYieldMCGill0005);
+
+        Double_t ptMCGill0510           [70];
+        Double_t yieldMCGill0510        [70];
+        Double_t errYieldMCGill0510     [70];
+        Double_t errYieldXMCGill0510    [70];
+        Int_t nlinesMCGill0510                      = 0;
+
+        Double_t yieldMCGill0010        [70];
+        Double_t errYieldMCGill0010     [70];
+        Double_t errYieldXMCGill0010    [70];
+
+        TString fileNameMCGill0510                  = "ExternalInputPbPb/Theory/McGill/direct_photons_LHC2760GeV_cent0510_McGill.dat";
+        ifstream  fileMCGill0510;
+        fileMCGill0510.open(fileNameMCGill0510,ios_base::in);
+        cout << fileNameMCGill0510 << endl;
+
+        while(!fileMCGill0510.eof() && nlinesMCGill0510< 70){
+            fileMCGill0510 >> ptMCGill0510[nlinesMCGill0510] >> yieldMCGill0510[nlinesMCGill0510];
+            cout << nlinesMCGill0510 << "\t"  << ptMCGill0510[nlinesMCGill0510] << "\t"  << yieldMCGill0510[nlinesMCGill0510] << endl;;
+            errYieldMCGill0510[nlinesMCGill0510]    = 0;
+            errYieldXMCGill0510[nlinesMCGill0510]   = 0;
+
+            yieldMCGill0010[nlinesMCGill0510]       = (yieldMCGill0510[nlinesMCGill0510] + yieldMCGill0005[nlinesMCGill0510])/2;
+            errYieldMCGill0010[nlinesMCGill0510]    = 0;
+            errYieldXMCGill0010[nlinesMCGill0510]   = 0;
+
+            nlinesMCGill0510++;
+        }
+        fileMCGill0510.close();
+        TGraphErrors* graphDirectPhotonMCGill0510   = new TGraphErrors(nlinesMCGill0510-1,ptMCGill0510,yieldMCGill0510, errYieldXMCGill0510, errYieldMCGill0510);
+        TGraphErrors* graphDirectPhotonMCGill0010   = new TGraphErrors(nlinesMCGill0510-1,ptMCGill0510,yieldMCGill0010, errYieldXMCGill0010, errYieldMCGill0010);
+
+        Double_t ptMCGill2050           [70];
+        Double_t yieldMCGill2050        [70];
+        Double_t errYieldMCGill2050     [70];
+        Double_t errYieldXMCGill2050    [70];
+        Int_t nlinesMCGill2050                      = 0;
+
+        TString fileNameMCGill2050                  = "ExternalInputPbPb/Theory/McGill/direct_photons_LHC2760GeV_cent2050_McGill.dat";
+        ifstream  fileMCGill2050;
+        fileMCGill2050.open(fileNameMCGill2050,ios_base::in);
+        cout << fileNameMCGill2050 << endl;
+
+        while(!fileMCGill2050.eof() && nlinesMCGill2050< 70){
+            fileMCGill2050 >> ptMCGill2050[nlinesMCGill2050] >> yieldMCGill2050[nlinesMCGill2050];
+            cout << nlinesMCGill2050 << "\t"  << ptMCGill2050[nlinesMCGill2050] << "\t"  << yieldMCGill2050[nlinesMCGill2050] << endl;;
+            errYieldMCGill2050[nlinesMCGill2050]    = 0;
+            errYieldXMCGill2050[nlinesMCGill2050]   = 0;
+            nlinesMCGill2050++;
+        }
+        fileMCGill2050.close();
+        TGraphErrors* graphDirectPhotonMCGill2050   = new TGraphErrors(nlinesMCGill2050-1,ptMCGill2050,yieldMCGill2050, errYieldXMCGill2050, errYieldMCGill2050);
+
+>>>>>>> Added plots for meson and photon analysis in PbPb
         //******************************************************************************************************************
         //*********************************PHSD arXiv:1504.05699 [nucl-th], O. Linnyk **************************************
         //******************************************************************************************************************
@@ -1315,6 +1392,33 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphErrors* graphDirectPhotonPHSD2040     = new TGraphErrors(nlinesPHSD-1,ptPHSD,yieldPHSD2040, errXPHSD, errPHSD2040);
         TGraphErrors* graphDirectPhotonPHSD0040     = new TGraphErrors(nlinesPHSD-1,ptPHSD,yieldPHSD0040, errXPHSD, errPHSD0040);
         TGraphErrors* graphDirectPhotonPHSD4080     = new TGraphErrors(nlinesPHSD-1,ptPHSD,yieldPHSD4080, errXPHSD, errPHSD4080);
+
+
+        // this calculation is missing the prompt photon contribution! needs to be added
+        Double_t ptPHSDnew          [27];
+        Double_t yieldPHSD0010      [27];
+        Double_t yieldPHSD2050      [27];
+        Double_t errPHSD0010        [27];
+        Double_t errPHSD2050        [27];
+        nlinesPHSD = 0;
+
+        TString fileNamePHSDnew                        = "ExternalInputPbPb/Theory/PHSD/4ALICE_PbPb_276TeV-PHSD_forRead.dat";
+        ifstream  filePHSDnew;
+        filePHSDnew.open(fileNamePHSDnew,ios_base::in);
+        cout << fileNamePHSDnew << endl;
+
+        while(!filePHSDnew.eof() && nlinesPHSD< 27){
+            filePHSDnew >> ptPHSDnew[nlinesPHSD] >> yieldPHSD0010[nlinesPHSD] >> yieldPHSD2050[nlinesPHSD];
+            cout << nlinesPHSD << "\t"  << ptPHSDnew[nlinesPHSD] << "\t"  << yieldPHSD0010[nlinesPHSD]<< "\t"  << yieldPHSD2050[nlinesPHSD] << endl;;
+            errPHSD0010[nlinesPHSD]                 = 0;
+            errPHSD2050[nlinesPHSD]                 = 0;
+            errXPHSD[nlinesPHSD]                    = 0;
+            nlinesPHSD++;
+        }
+        filePHSDnew.close();
+        TGraphErrors* graphDirectPhotonPHSD0010     = new TGraphErrors(nlinesPHSD-1,ptPHSDnew,yieldPHSD0010, errXPHSD, errPHSD0010);
+        TGraphErrors* graphDirectPhotonPHSD2050     = new TGraphErrors(nlinesPHSD-1,ptPHSDnew,yieldPHSD2050, errXPHSD, errPHSD2050);
+
 
         //******************************************************************************************************************
         //*********************************Fireball He et al. PRC85(2012)044911 ********************************************
@@ -1365,11 +1469,12 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         Double_t yieldThermalChatterjee0010     [20];
         Double_t yieldPromptChatterjee0010      [20];
         Double_t yieldChatterjee0010            [20];
+        Double_t yieldSummedChatterjee0010      [20];
         Double_t errYieldChatterjee0010         [20];
         Double_t errYieldXChatterjee0010        [20];
         Int_t nlinesChatterjee0010                  = 0;
 
-        TString fileNameChatterjee0010              = "ExternalInputPbPb/Theory/Chatterjee/dirphoton_0010.txt";
+        TString fileNameChatterjee0010              = "ExternalInputPbPb/Theory/Chatterjee/0_10_directphoton_2.76PbPb_forReading.dat";
         ifstream  fileChatterjee0010;
         fileChatterjee0010.open(fileNameChatterjee0010,ios_base::in);
         cout << fileNameChatterjee0010 << endl;
@@ -1377,34 +1482,38 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         while(!fileChatterjee0010.eof() && nlinesChatterjee0010< 20){
             fileChatterjee0010 >> ptChatterjee0010[nlinesChatterjee0010] >> yieldChatterjee0010[nlinesChatterjee0010] >> yieldThermalChatterjee0010[nlinesChatterjee0010] >> yieldPromptChatterjee0010[nlinesChatterjee0010];
             cout << nlinesChatterjee0010 << "\t"  << ptChatterjee0010[nlinesChatterjee0010] << "\t"  << yieldChatterjee0010[nlinesChatterjee0010] << "\t"  << yieldThermalChatterjee0010[nlinesChatterjee0010] << "\t"  << yieldPromptChatterjee0010[nlinesChatterjee0010] << endl;;
+            yieldSummedChatterjee0010[nlinesChatterjee0010] = yieldThermalChatterjee0010[nlinesChatterjee0010] + yieldPromptChatterjee0010[nlinesChatterjee0010];
             errYieldChatterjee0010[nlinesChatterjee0010]    = 0;
             errYieldXChatterjee0010[nlinesChatterjee0010]   = 0;
             nlinesChatterjee0010++;
         }
         fileChatterjee0010.close();
-        TGraphErrors* graphDirectPhotonChatterjee0010           = new TGraphErrors(nlinesChatterjee0010-1,ptChatterjee0010,yieldChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
-        while (graphDirectPhotonChatterjee0010->GetY()[0] == 0)
-            graphDirectPhotonChatterjee0010->RemovePoint(0);
-        while (graphDirectPhotonChatterjee0010->GetY()[graphDirectPhotonChatterjee0010->GetN()-1] == 0)
-            graphDirectPhotonChatterjee0010->RemovePoint(graphDirectPhotonChatterjee0010->GetN()-1);
 
-        TGraphErrors* graphDirectPhotonThermalChatterjee0010    = new TGraphErrors(nlinesChatterjee0010-1,ptChatterjee0010,yieldThermalChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
-        while (graphDirectPhotonThermalChatterjee0010->GetY()[graphDirectPhotonThermalChatterjee0010->GetN()-1] == 0)
-            graphDirectPhotonThermalChatterjee0010->RemovePoint(graphDirectPhotonThermalChatterjee0010->GetN()-1);
+        TGraphErrors* graphDirectPhotonSummedChatterjee0010 = new TGraphErrors(nlinesChatterjee0010,ptChatterjee0010,yieldSummedChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
+            while (graphDirectPhotonSummedChatterjee0010->GetY()[0] == 0) graphDirectPhotonSummedChatterjee0010->RemovePoint(0);
+            while (graphDirectPhotonSummedChatterjee0010->GetY()[graphDirectPhotonSummedChatterjee0010->GetN()-1] == 0) graphDirectPhotonSummedChatterjee0010->RemovePoint(graphDirectPhotonSummedChatterjee0010->GetN()-1);
 
-        TGraphErrors* graphDirectPhotonPromptChatterjee0010     = new TGraphErrors(nlinesChatterjee0010-1,ptChatterjee0010,yieldPromptChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
-        while (graphDirectPhotonPromptChatterjee0010->GetY()[0] == 0)
-            graphDirectPhotonPromptChatterjee0010->RemovePoint(0);
+        TGraphErrors* graphDirectPhotonChatterjee0010 = new TGraphErrors(nlinesChatterjee0010,ptChatterjee0010,yieldChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
+            while (graphDirectPhotonChatterjee0010->GetY()[0] == 0) graphDirectPhotonChatterjee0010->RemovePoint(0);
+            while (graphDirectPhotonChatterjee0010->GetY()[graphDirectPhotonChatterjee0010->GetN()-1] == 0) graphDirectPhotonChatterjee0010->RemovePoint(graphDirectPhotonChatterjee0010->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonThermalChatterjee0010 = new TGraphErrors(nlinesChatterjee0010,ptChatterjee0010,yieldThermalChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
+            while (graphDirectPhotonThermalChatterjee0010->GetY()[graphDirectPhotonThermalChatterjee0010->GetN()-1] == 0)
+                graphDirectPhotonThermalChatterjee0010->RemovePoint(graphDirectPhotonThermalChatterjee0010->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonPromptChatterjee0010 = new TGraphErrors(nlinesChatterjee0010,ptChatterjee0010,yieldPromptChatterjee0010, errYieldXChatterjee0010, errYieldChatterjee0010);
+            while (graphDirectPhotonPromptChatterjee0010->GetY()[0] == 0) graphDirectPhotonPromptChatterjee0010->RemovePoint(0);
 
         Double_t ptChatterjee2050               [20];
         Double_t yieldThermalChatterjee2050     [20];
         Double_t yieldPromptChatterjee2050      [20];
         Double_t yieldChatterjee2050            [20];
+        Double_t yieldSummedChatterjee2050      [20];
         Double_t errYieldChatterjee2050         [20];
         Double_t errYieldXChatterjee2050        [20];
         Int_t nlinesChatterjee2050                  = 0;
 
-        TString fileNameChatterjee2050              = "ExternalInputPbPb/Theory/Chatterjee/dirphoton_2050.txt";
+        TString fileNameChatterjee2050              = "ExternalInputPbPb/Theory/Chatterjee/20_50_directphoton_2.76PbPb_forReading.dat";
         ifstream  fileChatterjee2050;
         fileChatterjee2050.open(fileNameChatterjee2050,ios_base::in);
         cout << fileNameChatterjee2050 << endl;
@@ -1412,22 +1521,28 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         while(!fileChatterjee2050.eof() && nlinesChatterjee2050< 20){
             fileChatterjee2050 >> ptChatterjee2050[nlinesChatterjee2050] >> yieldChatterjee2050[nlinesChatterjee2050] >> yieldThermalChatterjee2050[nlinesChatterjee2050] >> yieldPromptChatterjee2050[nlinesChatterjee2050];
             cout << nlinesChatterjee2050 << "\t"  << ptChatterjee2050[nlinesChatterjee2050] << "\t"  << yieldChatterjee2050[nlinesChatterjee2050] << "\t"  << yieldThermalChatterjee2050[nlinesChatterjee2050] << "\t"  << yieldPromptChatterjee2050[nlinesChatterjee2050] << endl;;
+            yieldSummedChatterjee2050[nlinesChatterjee2050] = yieldThermalChatterjee2050[nlinesChatterjee2050] + yieldPromptChatterjee2050[nlinesChatterjee2050];
             errYieldChatterjee2050[nlinesChatterjee2050]    = 0;
             errYieldXChatterjee2050[nlinesChatterjee2050]   = 0;
             nlinesChatterjee2050++;
         }
         fileChatterjee2050.close();
-        TGraphErrors* graphDirectPhotonChatterjee2050           = new TGraphErrors(nlinesChatterjee2050-1,ptChatterjee2050,yieldChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
+
+        TGraphErrors* graphDirectPhotonSummedChatterjee2050 = new TGraphErrors(nlinesChatterjee2050,ptChatterjee2050,yieldSummedChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
+            while (graphDirectPhotonSummedChatterjee2050->GetY()[0] == 0) graphDirectPhotonSummedChatterjee2050->RemovePoint(0);
+            while (graphDirectPhotonSummedChatterjee2050->GetY()[graphDirectPhotonSummedChatterjee2050->GetN()-1] == 0) graphDirectPhotonSummedChatterjee2050->RemovePoint(graphDirectPhotonSummedChatterjee2050->GetN()-1);
+
+        TGraphErrors* graphDirectPhotonChatterjee2050           = new TGraphErrors(nlinesChatterjee2050,ptChatterjee2050,yieldChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
         while (graphDirectPhotonChatterjee2050->GetY()[0] == 0)
             graphDirectPhotonChatterjee2050->RemovePoint(0);
         while (graphDirectPhotonChatterjee2050->GetY()[graphDirectPhotonChatterjee2050->GetN()-1] == 0)
             graphDirectPhotonChatterjee2050->RemovePoint(graphDirectPhotonChatterjee2050->GetN()-1);
 
-        TGraphErrors* graphDirectPhotonThermalChatterjee2050    = new TGraphErrors(nlinesChatterjee2050-1,ptChatterjee2050,yieldThermalChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
+        TGraphErrors* graphDirectPhotonThermalChatterjee2050    = new TGraphErrors(nlinesChatterjee2050,ptChatterjee2050,yieldThermalChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
         while (graphDirectPhotonThermalChatterjee2050->GetY()[graphDirectPhotonThermalChatterjee2050->GetN()-1] == 0)
             graphDirectPhotonThermalChatterjee2050->RemovePoint(graphDirectPhotonThermalChatterjee2050->GetN()-1);
 
-        TGraphErrors* graphDirectPhotonPromptChatterjee2050     = new TGraphErrors(nlinesChatterjee2050-1,ptChatterjee2050,yieldPromptChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
+        TGraphErrors* graphDirectPhotonPromptChatterjee2050     = new TGraphErrors(nlinesChatterjee2050,ptChatterjee2050,yieldPromptChatterjee2050, errYieldXChatterjee2050, errYieldChatterjee2050);
         while (graphDirectPhotonPromptChatterjee2050->GetY()[0] == 0)
             graphDirectPhotonPromptChatterjee2050->RemovePoint(0);
 
@@ -1853,10 +1968,18 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphPromptPhotonMCGill0020->Write("graphPromptPhotonYield_McGill_0020", TObject::kOverwrite);
             graphPromptPhotonMCGill2040->Write("graphPromptPhotonYield_McGill_2040", TObject::kOverwrite);
 
+            // sligtly different underlying hydro compared to older one (preliminary reuslts)
+            graphDirectPhotonMCGill0005->Write("graphDirectPhotonYield_McGill_0005", TObject::kOverwrite);
+            graphDirectPhotonMCGill0510->Write("graphDirectPhotonYield_McGill_0510", TObject::kOverwrite);
+            graphDirectPhotonMCGill0010->Write("graphDirectPhotonYield_McGill_0010", TObject::kOverwrite);
+            graphDirectPhotonMCGill2050->Write("graphDirectPhotonYield_McGill_2050", TObject::kOverwrite);
+
             graphDirectPhotonPHSD0020->Write("graphDirectPhotonYield_PHSD_0020", TObject::kOverwrite);
             graphDirectPhotonPHSD0040->Write("graphDirectPhotonYield_PHSD_0040", TObject::kOverwrite);
             graphDirectPhotonPHSD2040->Write("graphDirectPhotonYield_PHSD_2040", TObject::kOverwrite);
             graphDirectPhotonPHSD4080->Write("graphDirectPhotonYield_PHSD_4080", TObject::kOverwrite);
+            graphDirectPhotonPHSD0010->Write("graphDirectPhotonYield_PHSD_0010", TObject::kOverwrite);
+            graphDirectPhotonPHSD2050->Write("graphDirectPhotonYield_PHSD_2050", TObject::kOverwrite);
 
             graphDirectPhotonHe0020->Write("graphDirectPhotonYield_He_0020", TObject::kOverwrite);
     //         graphDirectPhotonHe0040->Write("graphDirectPhotonYield_He_0040", TObject::kOverwrite);
@@ -1864,9 +1987,11 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphDirectPhotonHe4080->Write("graphDirectPhotonYield_He_4080", TObject::kOverwrite);
 
             graphDirectPhotonChatterjee0010->Write("graphDirectPhotonYield_Chatterjee_0010", TObject::kOverwrite);
+            graphDirectPhotonSummedChatterjee0010->Write("graphDirectPhotonSummedYield_Chatterjee_0010", TObject::kOverwrite);
             graphDirectPhotonThermalChatterjee0010->Write("graphDirectPhotonThermalYield_Chatterjee_0010", TObject::kOverwrite);
             graphDirectPhotonPromptChatterjee0010->Write("graphDirectPhotonPromptYield_Chatterjee_0010", TObject::kOverwrite);
             graphDirectPhotonChatterjee2050->Write("graphDirectPhotonYield_Chatterjee_2050", TObject::kOverwrite);
+            graphDirectPhotonSummedChatterjee2050->Write("graphDirectPhotonSummedYield_Chatterjee_2050", TObject::kOverwrite);
             graphDirectPhotonThermalChatterjee2050->Write("graphDirectPhotonThermalYield_Chatterjee_2050", TObject::kOverwrite);
             graphDirectPhotonPromptChatterjee2050->Write("graphDirectPhotonPromptYield_Chatterjee_2050", TObject::kOverwrite);
 

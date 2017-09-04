@@ -205,9 +205,9 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_pPb5TeV_2017_08_26.dat";
         fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_DoubleRatio_pPb5TeV_2017_08_26.dat";
     } else if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
-        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_08_11.dat";
-        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_08_11.dat";
-        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_08_11.dat";
+        fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_Gamma_PbPb2760GeV0-10_2017_08_28.dat";
+        fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_IncRatio_PbPb2760GeV0-10_2017_08_28.dat";
+        fileNameSysErrDoubleRatio               = "GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_DoubleRatio_PbPb2760GeV0-10_2017_08_28.dat";
     } else {
         fileNameSysErrGamma                     = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_Gamma_7TeV_2016_12_15.dat";
         fileNameSysErrInclRatio                 = "GammaSystematicErrorsCalculated/SystematicErrorAveraged_IncRatio_7TeV_2016_12_15.dat";
@@ -936,11 +936,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
         fitCocktailAllGammaForNLO               = (TF1*)FitObject(cocktailFit,"cocktailFit","Pi0",cocktailAllGammaNLO,2.0,16,NULL,fitOptions);
 
         for (Int_t bin=0; bin<graphDirectPhotonNLOCopy->GetN(); bin++) {
-            Double_t cocktailIntegral           = fitCocktailAllGammaForNLO->Integral(graphDirectPhotonNLOCopy->GetX()[bin]-graphDirectPhotonNLOCopy->GetErrorXlow(bin),
-                                                                                      graphDirectPhotonNLOCopy->GetX()[bin]+graphDirectPhotonNLOCopy->GetErrorXhigh(bin))                                        /(graphDirectPhotonNLOCopy->GetErrorXlow(bin)+graphDirectPhotonNLOCopy->GetErrorXhigh(bin));
-            yVal[bin]                           = (1 + ( yValNLO[bin] / cocktailIntegral));
-            yErrUp[bin]                         = yErrUp[bin]/cocktailIntegral;
-            yErrDown[bin]                       = yErrDown[bin]/cocktailIntegral;
+            yVal[bin]                           = (1 + ( yValNLO[bin] / (fitCocktailAllGammaForNLO->Eval(xVal[bin]))));
         }
 
         // ------------------------------ NLO Calculations -----------------------------
@@ -1342,6 +1338,7 @@ void  CalculateGammaToPi0V3(    TString nameFileGamma   = "",
 
         // cocktail
         cocktailAllGamma->Write(cocktailAllGamma->GetName(),    TObject::kOverwrite);
+        cocktailAllGammaPi0->Write(cocktailAllGammaPi0->GetName(),    TObject::kOverwrite);
         cocktailPi0->Write(     cocktailPi0->GetName(),         TObject::kOverwrite);
 
         //NLO

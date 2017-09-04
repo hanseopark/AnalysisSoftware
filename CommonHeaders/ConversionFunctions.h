@@ -3074,6 +3074,53 @@
         }
     }
 
+    // ****************************************************************************************************************
+    // ***** Calculation of RAA of a theroy curve to a theory function as replacement for pp reference ****************
+    // ****************************************************************************************************************
+    void CalcRaaTheoryWithTheoryFit(  TF1* fitTheory,                                                 // Theory fit
+                                      TGraphErrors* graphTheoryPbPb,                                  // Theory graph
+                                      TGraphErrors** graphRAA,                                        // RAA return graphs
+                                      Double_t* binningX                      = NULL,                 // binning
+                                      Int_t nBins                             = 0                     // number of bins
+                                    ){
+
+        cout << "PbPb theory calc: " << endl;
+        graphTheoryPbPb->Print();
+
+        Double_t* xBinsPbPb         = graphTheoryPbPb->GetX();
+        Double_t* yPbPb             = graphTheoryPbPb->GetY();
+        Int_t firstBinPbPb          = 0;
+        (*graphRAA)                 = new TGraphErrors(graphTheoryPbPb->GetN()-firstBinPbPb);
+
+        for(Int_t i=firstBinPbPb; i<(*graphRAA)->GetN(); i++){
+            Double_t pp = 0;
+            if (yPbPb[i] != 0. && xBinsPbPb[i] > 0.) {
+                pp                  = fitTheory->Eval(xBinsPbPb[i]);
+            } else {
+                if (binningX){
+                    Int_t currentBin    = 0;
+                    while (binningX[currentBin] < xBinsPbPb[i] && currentBin< nBins )  currentBin++;
+                    cout << binningX[currentBin-1] << "\t" << binningX[currentBin] << "\t" << xBinsPbPb[i] << endl;
+                    pp                  = fitTheory->Integral(binningX[currentBin-1], binningX[currentBin])/(binningX[currentBin]-binningX[currentBin-1]);
+                } else {
+                    cout << "calculation failed, no binning given!" << endl;
+                    return;
+                }
+            }
+            Double_t rAA            = yPbPb[i]/pp;
+            (*graphRAA)->SetPoint(i,xBinsPbPb[i],rAA);
+            Double_t errX       = 0;
+            Double_t errY       = 0;
+            (*graphRAA)->SetPointError(i, errX, errY);
+
+        }
+
+        Int_t b                     = 0;
+        while (yPbPb[b] == 0){
+            (*graphRAA)->RemovePoint(0);
+            b++;
+        }
+    }
 
     // ****************************************************************************************************************
     // ********************** Calculation of RpA with Graphs in same binning ******************************************

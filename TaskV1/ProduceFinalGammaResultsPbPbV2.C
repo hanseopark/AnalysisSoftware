@@ -70,8 +70,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     Int_t nLinesNLOLegends  = 2;
     if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0)
         nLinesNLOLegends    = 3;
-    Double_t minPt   = 0.;
-    Double_t maxPt   = 40.;
+    Double_t minPt   = 0.5;
+    Double_t maxPt   = 16.;
     Double_t minYDR  = 0.75;
     Double_t maxYDR  = 2.;
     Double_t minYIR  = 0.;
@@ -116,6 +116,13 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TH1D *histoPi0SpectrumFitB                  = (TH1D*) fileInput->Get("fitPi0YieldB");
     TH1D *histoPi0SpectrumFitC                  = (TH1D*) fileInput->Get("fitPi0YieldC");
 
+    TH1D *cocktailAllGammaPi0                   = (TH1D*) fileInput->Get("Gamma_From_Pi0_Pt");
+
+    Bool_t PHOSbinning = kFALSE;
+    if(histoIncGamma->GetNbinsX()>18){
+        PHOSbinning = kTRUE;
+    }
+
     TH1D *histoCocktailAllGamma                 = (TH1D*) fileInput->Get("Gamma_Pt");
     Double_t paramsCocktail[6];
     GetFitParameter("qcd",GetCentralityString(cutSel),paramsCocktail);
@@ -123,6 +130,52 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TF1 *cocktailFitAllGammaForNLO                                 = (TF1*)  FitObject("qcd","cocktailFit","Pi0",histoCocktailAllGamma,2.0,11,paramsCocktail,"QNRME+");
     cocktailFitAllGammaForNLO->SetRange(0,20);
     cout << WriteParameterToFile(cocktailFitAllGammaForNLO)<< endl;
+
+    Double_t maxPtThermal = 2.;
+    if(centrality.CompareTo("20-40%")==0) maxPtThermal = 3.;
+    TF1 *cocktailFitAllGammaForModelsLow                              = (TF1*)  FitObject("e","cocktailFitModelsLow","Photon",histoCocktailAllGamma,0.,maxPtThermal,NULL,"NRME+");
+    cocktailFitAllGammaForModelsLow->SetRange(0,20);
+    cout << WriteParameterToFile(cocktailFitAllGammaForModelsLow)<< endl;
+    TF1 *cocktailFitAllGammaForModelsHigh                              = (TF1*)  FitObject("qcd","cocktailFitModelsHigh","Photon",histoCocktailAllGamma,1.,14.,paramsCocktail,"NRME+");
+    cocktailFitAllGammaForModelsHigh->SetRange(0,20);
+    cout << WriteParameterToFile(cocktailFitAllGammaForModelsHigh)<< endl;
+    //TF1 *cocktailFunction = new TF1("cocktailFunction","1.71876e+01*TMath::Power(x,-1*(6.34649-3.19121e-02/(TMath::Power(x,1.90929e-02)-9.95386e-01)))",0.,20.); //[0] = 6.19294
+
+    // **************************************************************************
+    // ******************** plotting pi0 spectrum *******************************
+    // **************************************************************************
+    TCanvas *canvasCocktailFit = GetAndSetCanvas("canvasCocktailFit");
+    canvasCocktailFit->SetLeftMargin(0.14);
+    canvasCocktailFit->SetLogy();
+    canvasCocktailFit->SetLogx();
+
+    TH2D *dummyCocktailFit = new TH2D("dummyCocktailFit", "dummyCocktailFit", 120, 0., 20., 1000.,1e-7,1e3);
+    SetStyleHistoTH2ForGraphs( dummyCocktailFit, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
+                               0.045, 0.05, 0.045, 0.05, 0.85, 1.2);
+    dummyCocktailFit->GetXaxis()->SetLabelOffset(-0.015);
+    dummyCocktailFit->GetXaxis()->SetRangeUser(0.7, 20.);
+    dummyCocktailFit->DrawCopy();
+
+    DrawGammaSetMarker(histoCocktailAllGamma, 20, 2., colorCentNotPi0Fitted, colorCentNotPi0Fitted);
+    histoCocktailAllGamma->DrawCopy("same");
+
+    cocktailFitAllGammaForNLO->SetLineColor(kBlack);
+    cocktailFitAllGammaForModelsLow->SetLineColor(kRed+1);
+    cocktailFitAllGammaForModelsHigh->SetLineColor(kGreen+2);
+    cocktailFitAllGammaForNLO->DrawCopy("same");
+    cocktailFitAllGammaForModelsLow->DrawCopy("same");
+    cocktailFitAllGammaForModelsHigh->DrawCopy("same");
+    //cocktailFunction->SetLineColor(kOrange-3);
+    //cocktailFunction->DrawCopy("same");
+
+    TLegend* legendCocktailFit = GetAndSetLegend(0.18,0.2,4.);
+    legendCocktailFit->SetHeader(collisionSystem.Data());
+    legendCocktailFit->AddEntry(cocktailFitAllGammaForNLO,"qcd fit","l");
+    legendCocktailFit->AddEntry(cocktailFitAllGammaForModelsLow,"exponential fit","l");
+    legendCocktailFit->AddEntry(cocktailFitAllGammaForModelsHigh,"qcd fit","l");
+    legendCocktailFit->Draw();
+
+    canvasCocktailFit->Print(Form("%s/cocktailFit%s.eps",outputDir.Data(),centrality.Data()));
 
     Double_t fNcoll    = 0;
     Double_t fNcollErr = 0;
@@ -161,12 +214,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         TH1D *histoPubPCMInclGammaSpectrumStat_0020                 = (TH1D*)directoryPCMGamma_0020->Get("IncGammaStatError");
         TGraphAsymmErrors* graphPubPCMInclGammaSpectrumStat_0020    = new TGraphAsymmErrors(histoPubPCMInclGammaSpectrumStat_0020);
         TGraphAsymmErrors* graphPubPCMInclGammaSpectrumSyst_0020    = (TGraphAsymmErrors*)directoryPCMGamma_0020->Get("IncGammaSystError");
-        TH1D *histoPubPCMInclRatioSpectrumStat_0020                 = (TH1D*)directoryPCMGamma_0020->Get("IncRatioStatError");
+        TH1D *histoPubPCMInclRatioSpectrumStat_0020                 = (TH1D*)directoryPCMGamma_0020->Get("IncRatioPi0FitStatError");
         TGraphAsymmErrors* graphPubPCMInclRatioSpectrumStat_0020    = new TGraphAsymmErrors(histoPubPCMInclRatioSpectrumStat_0020);
-        TGraphAsymmErrors* graphPubPCMInclRatioSpectrumSyst_0020    = (TGraphAsymmErrors*)directoryPCMGamma_0020->Get("IncRatioSystError");
-        TH1D *histoPubPCMDoubleRatioStat_0020                       = (TH1D*)directoryPCMGamma_0020->Get("DoubleRatioStatError");
+        TGraphAsymmErrors* graphPubPCMInclRatioSpectrumSyst_0020    = (TGraphAsymmErrors*)directoryPCMGamma_0020->Get("IncRatioPi0FitSystError");
+        TH1D *histoPubPCMDoubleRatioStat_0020                       = (TH1D*)directoryPCMGamma_0020->Get("DoubleRatioPi0FitStatError");
         TGraphAsymmErrors* graphPubPCMDoubleRatioStat_0020          = new TGraphAsymmErrors(histoPubPCMDoubleRatioStat_0020);
-        TGraphAsymmErrors* graphPubPCMDoubleRatioSyst_0020          = (TGraphAsymmErrors*)directoryPCMGamma_0020->Get("DoubleRatioSystError");
+        TGraphAsymmErrors* graphPubPCMDoubleRatioSyst_0020          = (TGraphAsymmErrors*)directoryPCMGamma_0020->Get("DoubleRatioPi0FitSystError");
 
     TDirectoryFile* directoryPCMGamma_0010                         = (TDirectoryFile*)filePubGammaPCM->Get("Gamma_PbPb_2.76TeV_0-10%");
         TGraphAsymmErrors* graphPubPCMDirGammaSpectrumStat_0010    = (TGraphAsymmErrors*)directoryPCMGamma_0010->Get("graphDirGammaSpectrumStat");
@@ -174,12 +227,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         TH1D *histoPubPCMInclGammaSpectrumStat_0010                 = (TH1D*)directoryPCMGamma_0010->Get("IncGammaStatError");
         TGraphAsymmErrors* graphPubPCMInclGammaSpectrumStat_0010    = new TGraphAsymmErrors(histoPubPCMInclGammaSpectrumStat_0010);
         TGraphAsymmErrors* graphPubPCMInclGammaSpectrumSyst_0010    = (TGraphAsymmErrors*)directoryPCMGamma_0010->Get("IncGammaSystError");
-        TH1D *histoPubPCMInclRatioSpectrumStat_0010                 = (TH1D*)directoryPCMGamma_0010->Get("IncRatioStatError");
+        TH1D *histoPubPCMInclRatioSpectrumStat_0010                 = (TH1D*)directoryPCMGamma_0010->Get("IncRatioPi0FitStatError");
         TGraphAsymmErrors* graphPubPCMInclRatioSpectrumStat_0010    = new TGraphAsymmErrors(histoPubPCMInclRatioSpectrumStat_0010);
-        TGraphAsymmErrors* graphPubPCMInclRatioSpectrumSyst_0010    = (TGraphAsymmErrors*)directoryPCMGamma_0010->Get("IncRatioSystError");
-        TH1D *histoPubPCMDoubleRatioStat_0010                       = (TH1D*)directoryPCMGamma_0010->Get("DoubleRatioStatError");
+        TGraphAsymmErrors* graphPubPCMInclRatioSpectrumSyst_0010    = (TGraphAsymmErrors*)directoryPCMGamma_0010->Get("IncRatioPi0FitSystError");
+        TH1D *histoPubPCMDoubleRatioStat_0010                       = (TH1D*)directoryPCMGamma_0010->Get("DoubleRatioPi0FitStatError");
         TGraphAsymmErrors* graphPubPCMDoubleRatioStat_0010          = new TGraphAsymmErrors(histoPubPCMDoubleRatioStat_0010);
-        TGraphAsymmErrors* graphPubPCMDoubleRatioSyst_0010          = (TGraphAsymmErrors*)directoryPCMGamma_0010->Get("DoubleRatioSystError");
+        TGraphAsymmErrors* graphPubPCMDoubleRatioSyst_0010          = (TGraphAsymmErrors*)directoryPCMGamma_0010->Get("DoubleRatioPi0FitSystError");
 
     TDirectoryFile* directoryPCMGamma_2040                         = (TDirectoryFile*)filePubGammaPCM->Get("Gamma_PbPb_2.76TeV_20-40%");
         TGraphAsymmErrors* graphPubPCMDirGammaSpectrumStat_2040    = (TGraphAsymmErrors*)directoryPCMGamma_2040->Get("graphDirGammaSpectrumStat");
@@ -187,12 +240,12 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         TH1D *histoPubPCMInclGammaSpectrumStat_2040                 = (TH1D*)directoryPCMGamma_2040->Get("IncGammaStatError");
         TGraphAsymmErrors* graphPubPCMInclGammaSpectrumStat_2040    = new TGraphAsymmErrors(histoPubPCMInclGammaSpectrumStat_2040);
         TGraphAsymmErrors* graphPubPCMInclGammaSpectrumSyst_2040    = (TGraphAsymmErrors*)directoryPCMGamma_2040->Get("IncGammaSystError");
-        TH1D *histoPubPCMInclRatioSpectrumStat_2040                 = (TH1D*)directoryPCMGamma_2040->Get("IncRatioStatError");
+        TH1D *histoPubPCMInclRatioSpectrumStat_2040                 = (TH1D*)directoryPCMGamma_2040->Get("IncRatioPi0FitStatError");
         TGraphAsymmErrors* graphPubPCMInclRatioSpectrumStat_2040    = new TGraphAsymmErrors(histoPubPCMInclRatioSpectrumStat_2040);
-        TGraphAsymmErrors* graphPubPCMInclRatioSpectrumSyst_2040    = (TGraphAsymmErrors*)directoryPCMGamma_2040->Get("IncRatioSystError");
-        TH1D *histoPubPCMDoubleRatioStat_2040                       = (TH1D*)directoryPCMGamma_2040->Get("DoubleRatioStatError");
+        TGraphAsymmErrors* graphPubPCMInclRatioSpectrumSyst_2040    = (TGraphAsymmErrors*)directoryPCMGamma_2040->Get("IncRatioPi0FitSystError");
+        TH1D *histoPubPCMDoubleRatioStat_2040                       = (TH1D*)directoryPCMGamma_2040->Get("DoubleRatioPi0FitStatError");
         TGraphAsymmErrors* graphPubPCMDoubleRatioStat_2040          = new TGraphAsymmErrors(histoPubPCMDoubleRatioStat_2040);
-        TGraphAsymmErrors* graphPubPCMDoubleRatioSyst_2040          = (TGraphAsymmErrors*)directoryPCMGamma_2040->Get("DoubleRatioSystError");
+        TGraphAsymmErrors* graphPubPCMDoubleRatioSyst_2040          = (TGraphAsymmErrors*)directoryPCMGamma_2040->Get("DoubleRatioPi0FitSystError");
 
     TGraphAsymmErrors* graphPublishedDirGammaSpectrumStat            = NULL;
     TGraphAsymmErrors* graphPublishedDirGammaSpectrumSyst           = NULL;
@@ -258,15 +311,15 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     DrawGammaSetMarkerTGraphAsym(graphPublishedCombDoubleRatioSyst , 20, 2, kBlack, kBlack, 1, kTRUE);
 
 
-    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_Gamma_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_IncRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_IncRatio_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    //= Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
-    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_08_11/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_08_11.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatio       = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    TString fileNameSysErrDoubleRatioPi0Fit = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_DoubleRatio_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_DoubleRatioPi0Fit_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncGamma          = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_Gamma_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatio          = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_IncRatio_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    TString fileNameSysErrIncRatioPi0Fit    = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_IncRatio_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    //= Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_IncRatioPi0Fit_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
+    TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
 
     // ******************************************************************
     // *********** reading systematic errors for double ratio ***********
@@ -470,6 +523,16 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     fileSysErrPi0Fit.close();
 
     // ******************************************************************
+    // ***** read NL0 calculations and put them in proper format ********
+    // ******************************************************************
+    TGraphErrors *NLODoubleRatio     = (TGraphErrors*) fileInput->Get("graphNLODoubleRatio");
+    TGraphErrors *NLO                = (TGraphErrors*) fileInput->Get("graphNLODirGamma");
+    SetStyleGammaNLOTGraphWithBand( NLODoubleRatio, 3.0, 1, colorNLOcalc, 1001, colorNLOcalc, 0);
+    SetStyleGammaNLOTGraphWithBand( NLO, 3.0, 1, colorNLOcalc, 1001, colorNLOcalc, 0);
+
+    TGraphAsymmErrors* graphDRPbPbNLO = NULL;
+
+    // ******************************************************************
     // ****************** reading theory graphs *************************
     // ******************************************************************
     TString fileNameTheoryPbPb                                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
@@ -494,6 +557,74 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     graphInvYieldPbPbTheoryEPS09 = (TGraphAsymmErrors*)ScaleGraph(graphInvYieldPbPbTheoryEPS09, fNcoll/(recalcBarn*xSection2760GeV));
     graphInvYieldPPTheoryCT10BFG2_scale                         = (TGraphAsymmErrors*)directoryTheoryGamma->Get("pp276CT10BFG2_sum_scale_InvYield");
     graphInvYieldPPTheoryCT10BFG2_scale = (TGraphAsymmErrors*)ScaleGraph(graphInvYieldPPTheoryCT10BFG2_scale, fNcoll/(recalcBarn*xSection2760GeV));
+
+    TF1* fitTheoryPromptMcGill  = new TF1 ("fitTheoryPromptMcGill","[0]/64.*1e-9*TMath::Exp(16.20-3.94*TMath::Log(x)-0.269*TMath::Log(x)**2)*1./(0.865779/TMath::Power(4,0.0694875))",0.1, 20);
+    fitTheoryPromptMcGill->SetParameter(0,fNcoll);
+    TH1D *histoTheoryPromptMcGill = (TH1D*)fitTheoryPromptMcGill->GetHistogram();
+    TGraphErrors *graphTheoryPromptMcGill = new TGraphErrors(histoTheoryPromptMcGill);
+
+
+
+    TGraphErrors* graphDRPbPbMcGillfromTF1 = NULL;
+    TGraphErrors* graphDRPbPbMcGill = NULL;
+    TGraphErrors* graphDRPbPbRapp = NULL;
+    TGraphErrors* graphDRPbPbChatterjee = NULL;
+    TGraphErrors* graphDRPbPbChatterjeeSummed = NULL;
+    TGraphErrors* graphDRPbPbChatterjeePrompt = NULL;
+    TGraphErrors* graphDRPbPbChatterjeeThermal = NULL;
+    TGraphErrors* graphDRPbPbPHSD = NULL;
+    TGraphErrors* graphTheoryMcGillfromTF1 = NULL;
+    TGraphErrors* graphTheoryMcGill = NULL;
+    TGraphErrors* graphTheoryRapp = NULL;
+    TGraphErrors* graphTheoryChatterjee = NULL;
+    TGraphErrors* graphTheoryChatterjeeSummed = NULL;
+    TGraphErrors* graphTheoryChatterjeePrompt = NULL;
+    TGraphErrors* graphTheoryChatterjeeThermal = NULL;
+    TGraphErrors* graphTheoryPHSD = NULL;
+    if(centrality.CompareTo("0-10%")==0){
+
+        graphTheoryMcGillfromTF1        = (TGraphErrors*) graphTheoryPromptMcGill->Clone("graphPromptPhotonMcGill_0010");
+        graphTheoryMcGill               = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_McGill_0010");
+        graphTheoryRapp                 = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonRapp276GeV_0010");
+        graphTheoryChatterjee           = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_Chatterjee_0010");
+        graphTheoryChatterjeeSummed     = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonSummedYield_Chatterjee_0010");
+        graphTheoryChatterjeePrompt     = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonPromptYield_Chatterjee_0010");
+        graphTheoryChatterjeeThermal    = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonThermalYield_Chatterjee_0010");
+        graphTheoryPHSD                 = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_PHSD_0010");
+        graphTheoryPHSD->RemovePoint(0);
+        Double_t* xValue = graphTheoryPHSD->GetX();
+        Double_t* yValue = graphTheoryPHSD->GetY();
+        for(Int_t i = 0; i < graphTheoryPHSD->GetN(); i++){
+                Double_t newyValue = yValue[i] + fitTheoryPromptMcGill->Eval(xValue[i]);
+                graphTheoryPHSD->SetPoint(i,xValue[i],newyValue);
+        }
+
+    } if(centrality.CompareTo("20-40%")==0){
+
+        graphTheoryMcGillfromTF1        = (TGraphErrors*) graphTheoryPromptMcGill->Clone("graphPromptPhotonMcGill_2040");
+        graphTheoryMcGill               = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_McGill_2040");
+        graphTheoryRapp                 = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonRapp276GeV_2040");
+        graphTheoryChatterjee           = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_Chatterjee_2040_2");
+        graphTheoryPHSD                 = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_PHSD_2040");
+
+    } else if(centrality.CompareTo("20-50%")==0){
+
+        graphTheoryMcGillfromTF1        = (TGraphErrors*) graphTheoryPromptMcGill->Clone("graphPromptPhotonMcGill_2050");
+        graphTheoryMcGill               = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_McGill_2050");
+        graphTheoryChatterjee           = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_Chatterjee_2050");
+        graphTheoryChatterjeeSummed     = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonSummedYield_Chatterjee_2050");
+        graphTheoryChatterjeePrompt     = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonPromptYield_Chatterjee_2050");
+        graphTheoryChatterjeeThermal    = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonThermalYield_Chatterjee_2050");
+        graphTheoryPHSD                 = (TGraphErrors*) directoryTheoryGamma->Get("graphDirectPhotonYield_PHSD_2050");
+        graphTheoryPHSD->RemovePoint(0);
+        Double_t* xValue = graphTheoryPHSD->GetX();
+        Double_t* yValue = graphTheoryPHSD->GetY();
+        for(Int_t i = 0; i < graphTheoryPHSD->GetN(); i++){
+                Double_t newyValue = yValue[i] + fitTheoryPromptMcGill->Eval(xValue[i]);
+                graphTheoryPHSD->SetPoint(i,xValue[i],newyValue);
+        }
+    }
+//     return;
 
     Bool_t activateTheoryPbPb                                   = kFALSE;
     if (graphInvYieldPbPbTheoryCTEQ61EPS09 && graphInvYieldPPTheoryCT10BFG2_pdfErr && graphInvYieldPbPbTheoryEPS09 &&   graphInvYieldPPTheoryCT10BFG2_scale)
@@ -558,15 +689,138 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
             graphDRPbPbCT10BFG2_pdfErr->SetPointError(bin, graphDRPbPbCT10BFG2_pdfErr->GetErrorXlow(bin), graphDRPbPbCT10BFG2_pdfErr->GetErrorXhigh(bin), DRtheoErrDown, DRtheoErrUp );
         }
         graphDRPbPbCT10BFG2_pdfErr->Print();
+
+
+        cout << "======================================================================= DR NLO =================================================================" << endl;
+        graphDRPbPbNLO                   = (TGraphAsymmErrors*)NLO->Clone("graphDRPbPbNLO");
+        for (Int_t bin = 0; bin < graphDRPbPbNLO->GetN(); bin++){
+            Double_t cocktailIntegral     = cocktailFitAllGammaForNLO->Integral(graphDRPbPbNLO->GetX()[bin]-graphDRPbPbNLO->GetErrorXlow(bin),
+                                                                            graphDRPbPbNLO->GetX()[bin]+graphDRPbPbNLO->GetErrorXhigh(bin))
+                                        /(graphDRPbPbNLO->GetErrorXlow(bin)+graphDRPbPbNLO->GetErrorXhigh(bin));
+            Double_t DRtheo                 = 1 + (graphDRPbPbNLO->GetY()[bin]/ cocktailIntegral);
+            Double_t DRtheoErrDown        = graphDRPbPbNLO->GetErrorYlow(bin)/ cocktailIntegral;
+            Double_t DRtheoErrUp        = graphDRPbPbNLO->GetErrorYhigh(bin)/ cocktailIntegral;
+            cout << graphDRPbPbNLO->GetY()[bin] << endl;
+            cout << graphDRPbPbNLO->GetX()[bin]<< "\t" << cocktailIntegral << "\t" << DRtheo << "\t +" << DRtheoErrUp << "\t -" <<    DRtheoErrDown << endl;
+            graphDRPbPbNLO->SetPoint(bin, graphDRPbPbNLO->GetX()[bin], DRtheo );
+            graphDRPbPbNLO->SetPointError(bin, graphDRPbPbNLO->GetErrorXlow(bin), graphDRPbPbNLO->GetErrorXhigh(bin), DRtheoErrDown, DRtheoErrUp );
+        }
+        graphDRPbPbNLO->Print();
+
+        cout << "=========================================================== DR PHSD ===========================================================" << endl;
+        graphDRPbPbPHSD                   = (TGraphErrors*)graphTheoryPHSD->Clone("graphDRPbPbPHSD");
+        for (Int_t bin = 0; bin < graphDRPbPbPHSD->GetN(); bin++){
+            Double_t DRtheo = 0;
+            if(graphTheoryPHSD->GetX()[bin] <= 2.)
+                DRtheo = 1 + (graphTheoryPHSD->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryPHSD->GetX()[bin])));
+            else
+                DRtheo = 1 + (graphTheoryPHSD->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryPHSD->GetX()[bin])));
+            graphDRPbPbPHSD->SetPoint(bin, graphDRPbPbPHSD->GetX()[bin], DRtheo );
+
+        }
+        graphDRPbPbPHSD->Print();
+
+        cout << "=========================================================== DR McGill ===========================================================" << endl;
+        graphDRPbPbMcGill                   = (TGraphErrors*)graphTheoryMcGill->Clone("graphDRPbPbMcGill");
+        graphDRPbPbMcGill->Print();
+        for (Int_t bin = 0; bin < graphDRPbPbMcGill->GetN(); bin++){
+            Double_t DRtheo = 0;
+            if(graphTheoryMcGill->GetX()[bin] <= 2.)
+                DRtheo = 1 + (graphTheoryMcGill->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryMcGill->GetX()[bin])));
+            else
+                DRtheo = 1 + (graphTheoryMcGill->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryMcGill->GetX()[bin])));
+            graphDRPbPbMcGill->SetPoint(bin, graphDRPbPbMcGill->GetX()[bin], DRtheo );
+            graphDRPbPbMcGill->SetPointError(bin, 0., 0.);
+        }
+        graphDRPbPbMcGill->Print();
+
+        graphDRPbPbMcGillfromTF1                   = (TGraphErrors*)graphTheoryMcGillfromTF1->Clone("graphDRPbPbMcGillfromTF1");
+        for (Int_t bin = 0; bin < graphDRPbPbMcGillfromTF1->GetN(); bin++){
+            Double_t DRtheo = 0;
+            if(graphTheoryMcGillfromTF1->GetX()[bin] <= 2.)
+                DRtheo = 1 + (graphTheoryMcGillfromTF1->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryMcGillfromTF1->GetX()[bin])));
+            else
+                DRtheo = 1 + (graphTheoryMcGillfromTF1->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryMcGillfromTF1->GetX()[bin])));
+            graphDRPbPbMcGillfromTF1->SetPoint(bin, graphDRPbPbMcGillfromTF1->GetX()[bin], DRtheo );
+            graphDRPbPbMcGillfromTF1->SetPointError(bin, 0., 0.);
+        }
+        graphDRPbPbMcGillfromTF1->Print();
+
+        cout << "=========================================================== DR Rapp ===========================================================" << endl;
+        if(graphTheoryRapp){
+            graphDRPbPbRapp                   = (TGraphErrors*)graphTheoryRapp->Clone("graphDRPbPbRapp");
+            for (Int_t bin = 0; bin < graphDRPbPbRapp->GetN(); bin++){
+                Double_t DRtheo = 0;
+                if(graphTheoryRapp->GetX()[bin] <= 2.)
+                    DRtheo = 1 + (graphTheoryRapp->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryRapp->GetX()[bin])));
+                else
+                    DRtheo = 1 + (graphTheoryRapp->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryRapp->GetX()[bin])));
+                graphDRPbPbRapp->SetPoint(bin, graphDRPbPbRapp->GetX()[bin], DRtheo );
+            }
+            graphDRPbPbRapp->Print();
+        }
+
+        cout << "=========================================================== DR Chatterjee ===========================================================" << endl;
+        graphDRPbPbChatterjee                   = (TGraphErrors*)graphTheoryChatterjee->Clone("graphDRPbPbChatterjee");
+        for (Int_t bin = 0; bin < graphDRPbPbChatterjee->GetN(); bin++){
+                Double_t DRtheo = 0;
+                if(graphTheoryChatterjee->GetX()[bin] <= 2.)
+                    DRtheo = 1 + (graphTheoryChatterjee->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryChatterjee->GetX()[bin])));
+                else
+                    DRtheo = 1 + (graphTheoryChatterjee->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryChatterjee->GetX()[bin])));
+            graphDRPbPbChatterjee->SetPoint(bin, graphDRPbPbChatterjee->GetX()[bin], DRtheo );
+        }
+        graphDRPbPbChatterjee->Print();
+
+        if(graphTheoryChatterjeeSummed){
+            graphDRPbPbChatterjeeSummed                   = (TGraphErrors*)graphTheoryChatterjeeSummed->Clone("graphDRPbPbChatterjee");
+            graphDRPbPbChatterjeeSummed->Print();
+            for (Int_t bin = 0; bin < graphDRPbPbChatterjeeSummed->GetN(); bin++){
+                Double_t DRtheo = 0;
+                if(graphTheoryChatterjeeSummed->GetX()[bin] <= 2.)
+                    DRtheo = 1 + (graphTheoryChatterjeeSummed->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryChatterjeeSummed->GetX()[bin])));
+                else
+                    DRtheo = 1 + (graphTheoryChatterjeeSummed->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryChatterjeeSummed->GetX()[bin])));
+                graphDRPbPbChatterjeeSummed->SetPoint(bin, graphDRPbPbChatterjeeSummed->GetX()[bin], DRtheo );
+
+//                 cout << "pt " << graphTheoryChatterjeeSummed->GetX()[bin] << endl;
+//                 cout << "yield: " << graphTheoryChatterjeeSummed->GetY()[bin] << endl;
+//                 cout << "cocktail: " << cocktailFitAllGammaForModelsHigh->Eval(graphTheoryChatterjeeSummed->GetX()[bin]) << endl;
+//                 cout << "DR: " << graphDRPbPbChatterjeeSummed->GetY()[bin] << endl;
+
+            }
+            graphDRPbPbChatterjeeSummed->Print();
+        }
+//         return;
+
+        if(graphTheoryChatterjeePrompt){
+            graphDRPbPbChatterjeePrompt                   = (TGraphErrors*)graphTheoryChatterjeePrompt->Clone("graphDRPbPbChatterjeePrompt");
+            for (Int_t bin = 0; bin < graphDRPbPbChatterjeePrompt->GetN(); bin++){
+                Double_t DRtheo = 0;
+                if(graphTheoryChatterjeePrompt->GetX()[bin] <= 2.)
+                    DRtheo = 1 + (graphTheoryChatterjeePrompt->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryChatterjeePrompt->GetX()[bin])));
+                else
+                    DRtheo = 1 + (graphTheoryChatterjeePrompt->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryChatterjeePrompt->GetX()[bin])));
+                graphDRPbPbChatterjeePrompt->SetPoint(bin, graphDRPbPbChatterjeePrompt->GetX()[bin], DRtheo );
+            }
+            graphDRPbPbChatterjeePrompt->Print();
+        }
+
+        if(graphTheoryChatterjeeThermal){
+            graphDRPbPbChatterjeeThermal                   = (TGraphErrors*)graphTheoryChatterjeeThermal->Clone("graphDRPbPbChatterjeeThermal");
+            for (Int_t bin = 0; bin < graphDRPbPbChatterjeeThermal->GetN(); bin++){
+                Double_t DRtheo = 0;
+                if(graphTheoryChatterjeeThermal->GetX()[bin] <= 2.)
+                    DRtheo = 1 + (graphTheoryChatterjeeThermal->GetY()[bin]/ (cocktailFitAllGammaForModelsLow->Eval(graphTheoryChatterjeeThermal->GetX()[bin])));
+                else
+                    DRtheo = 1 + (graphTheoryChatterjeeThermal->GetY()[bin]/ (cocktailFitAllGammaForModelsHigh->Eval(graphTheoryChatterjeeThermal->GetX()[bin])));
+                graphDRPbPbChatterjeeThermal->SetPoint(bin, graphDRPbPbChatterjeeThermal->GetX()[bin], DRtheo );
+            }
+            graphDRPbPbChatterjeeThermal->Print();
+        }
+
     }
 
-    // ******************************************************************
-    // ***** read NL0 calculations and put them in proper format ********
-    // ******************************************************************
-    TGraphErrors *NLODoubleRatio     = (TGraphErrors*) fileInput->Get("graphNLODoubleRatio");
-    TGraphErrors *NLO                = (TGraphErrors*) fileInput->Get("graphNLODirGamma");
-    SetStyleGammaNLOTGraphWithBand( NLODoubleRatio, 3.0, 1, colorNLOcalc, 1001, colorNLOcalc, 0);
-    SetStyleGammaNLOTGraphWithBand( NLO, 3.0, 1, colorNLOcalc, 1001, colorNLOcalc, 0);
 
     // **************************************************************************
     // ******************** Draw Final Gamma Pictures ***************************
@@ -634,7 +888,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     DrawGammaSetMarker(histoDRFit, 20, 2., colorCent, colorCent);
     DrawGammaSetMarkerTGraphAsym(graphDoubleRatioFitPi0SysErr , 20, 2, colorCent, colorCent, 1, kTRUE);
     lineOne->Draw("same");
-    NLODoubleRatio->Draw("p3lsame");
+//     NLODoubleRatio->Draw("p3lsame");
+    graphDRPbPbNLO->Draw("p3lsame");
 
     graphDoubleRatioFitPi0SysErr->Draw("E2same");
     histoDRFit->DrawCopy("same");
@@ -654,7 +909,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     dummyDR->DrawCopy();
 
     lineOne->Draw("same");
-    NLODoubleRatio->Draw("p3lsame");
+//     NLODoubleRatio->Draw("p3lsame");
+    graphDRPbPbNLO->Draw("p3lsame");
 
     DrawGammaSetMarker(histoDR, 20, 2., colorCentNotPi0Fitted, colorCentNotPi0Fitted);
     DrawGammaSetMarkerTGraphAsym(graphDoubleRatioSysErr , 20, 2, colorCentNotPi0Fitted, colorCentNotPi0Fitted, 1, kTRUE);
@@ -680,12 +936,13 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     histoDR->DrawCopy("same");
 
     lineOne->Draw("same");
-    NLODoubleRatio->Draw("p3lsame");
+//     NLODoubleRatio->Draw("p3lsame");
+    graphDRPbPbNLO->Draw("p3lsame");
 
     graphPublishedDoubleRatioSyst->Draw("E2same");
     graphPublishedDoubleRatioStat->Draw("p,e1,same");
-    graphPublishedCombDoubleRatioSyst->Draw("E2same");
-    graphPublishedCombDoubleRatioStat->Draw("p,e1,same");
+//     graphPublishedCombDoubleRatioSyst->Draw("E2same");
+//     graphPublishedCombDoubleRatioStat->Draw("p,e1,same");
 
     TLegend* legendDoubleRatioWP = GetAndSetLegend(0.15,0.75,4);
     legendDoubleRatioWP->AddEntry(graphDoubleRatioSysErr,Form("PCM, %s",collisionSystem.Data()),"pf");
@@ -705,7 +962,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     dummyDR->DrawCopy();
 
     lineOne->Draw("same");
-    NLODoubleRatio->Draw("p3lsame");
+//     NLODoubleRatio->Draw("p3lsame");
+    graphDRPbPbNLO->Draw("p3lsame");
     histoDRFit->DrawCopy("same");
     DrawGammaSetMarkerTGraphAsym(graphDoubleRatioFitPi0SysErrA , 20, 1, colorErrA, colorErrA, 1, kTRUE);
     DrawGammaSetMarkerTGraphAsym(graphDoubleRatioFitPi0SysErrB , 20, 1, colorErrB, colorErrB, 1, kTRUE);
@@ -780,6 +1038,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     DrawGammaSetMarkerTGraphAsym(graphIncRatioFitPi0SysErr , 20, 2, colorCent, colorCent, 1, kTRUE);
     graphIncRatioFitPi0SysErr->Draw("E2same");
     histoIncRatioPi0Fit->DrawCopy("same");
+    cocktailAllGammaPi0->DrawCopy("l,c,same");
 
         TLegend* legendIncRatioFit = GetAndSetLegend(0.15,0.15,2.2);
         legendIncRatioFit->SetHeader(collisionSystem.Data());
@@ -1030,13 +1289,13 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TGraphAsymmErrors *graphDirGammaSpectrumSyst = CalculateDirectPhotonPointsAndUpperLimits(histoDirGammaSpectrumErrorSyst,histoDirGammaSpectrumStat,0,0.5,3);
     if(graphDirGammaSpectrumSyst){
         graphDirGammaSpectrumSyst->SetName("graphDirGammaSpectrumSyst");
-        graphDirGammaSpectrumSyst->Print();
+        //graphDirGammaSpectrumSyst->Print();
     }
     // purely calculating points based on statistical errors
     TGraphAsymmErrors *graphDirGammaSpectrumStat = CalculateDirectPhotonPointsAndUpperLimits(histoDirGammaSpectrumErrorStat,histoDirGammaSpectrumStat,0,0.5,3);
     if(graphDirGammaSpectrumStat){
         graphDirGammaSpectrumStat->SetName("graphDirGammaSpectrumStat");
-        graphDirGammaSpectrumStat->Print();
+        //graphDirGammaSpectrumStat->Print();
     }
     // purely calculating points based on all systematic + statistical errors
     TGraphAsymmErrors *graphDirGammaSpectrumSummed = CalculateDirectPhotonPointsAndUpperLimits(histoDirGammaSpectrumErrorSummed,histoDirGammaSpectrumStat,0,0.5,3);
@@ -1051,7 +1310,16 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         DrawGammaSetMarkerTGraphAsym(graphDirGammaSpectrumSummedUL , 20, 0, colorCent, colorCent, 1, kTRUE);
         graphDirGammaSpectrumSummedUL->Draw("||");
         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphDirGammaSpectrumSummedUL);
-        graphDirGammaSpectrumSummedUL->Print();
+        if(centrality.CompareTo("20-50%")==0){
+            graphDirGammaSpectrumSummedUL->RemovePoint(0);
+            graphDirGammaSpectrumSummedUL->RemovePoint(0);
+            if(PHOSbinning)graphDirGammaSpectrumSummedUL->RemovePoint(0);
+        } else if(PHOSbinning && centrality.CompareTo("20-40%")==0){
+            graphDirGammaSpectrumSummedUL->RemovePoint(0);
+            graphDirGammaSpectrumSummedUL->RemovePoint(0);
+            graphDirGammaSpectrumSummedUL->RemovePoint(1);
+        }
+        //graphDirGammaSpectrumSummedUL->Print();
     }
     // calculate arrows for points with 0, error summed
     TGraphAsymmErrors *graphDirGammaSpectrumSummedAr = CalculateDirectPhotonPointsAndUpperLimits(histoDirGammaSpectrumErrorSummed,histoDirGammaSpectrumStat,5,0.5,3);
@@ -1060,8 +1328,18 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         DrawGammaSetMarkerTGraphAsym(graphDirGammaSpectrumSummedAr , 1, 2, colorCent, colorCent, 1, kTRUE);
         graphDirGammaSpectrumSummedAr->Draw("|>");
         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphDirGammaSpectrumSummedAr);
-        graphDirGammaSpectrumSummedAr->Print();
+        if(centrality.CompareTo("20-50%")==0){
+            graphDirGammaSpectrumSummedAr->RemovePoint(0);
+            graphDirGammaSpectrumSummedAr->RemovePoint(0);
+            if(PHOSbinning)graphDirGammaSpectrumSummedAr->RemovePoint(0);
+        } else if(PHOSbinning && centrality.CompareTo("20-40%")==0){
+            graphDirGammaSpectrumSummedAr->RemovePoint(0);
+            graphDirGammaSpectrumSummedAr->RemovePoint(0);
+            graphDirGammaSpectrumSummedAr->RemovePoint(1);
+        }
+        //graphDirGammaSpectrumSummedAr->Print();
     }
+
     // calculate points below confidence level summed errors
     TGraphAsymmErrors *graphDirGammaSpectrumSummedULConfi = CalculateDirectPhotonPointsAndUpperLimits(histoDirGammaSpectrumErrorSummed,histoDirGammaSpectrumStat,6,0.5,3);
     if(graphDirGammaSpectrumSummedULConfi) graphDirGammaSpectrumSummedULConfi->SetName("graphDirGammaSpectrumSummedULConfi");
@@ -1072,7 +1350,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
         DrawGammaSetMarkerTGraphAsym(graphDirGammaSpectrumSummedArConfi , 1, 2, colorCent, colorCent, 1, kTRUE);
         graphDirGammaSpectrumSummedArConfi->Draw("|>");
         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphDirGammaSpectrumSummedArConfi);
-        graphDirGammaSpectrumSummedArConfi->Print();
+        //graphDirGammaSpectrumSummedArConfi->Print();
     }
     // purely calculating points based on systematic errors without material budget
     TGraphAsymmErrors *graphDirGammaSpectrumSystwoMat = CalculateDirectPhotonPointsAndUpperLimits(histoDirGammaSpectrumErrorSystWithoutMat,histoDirGammaSpectrumStat,0,0.5,3);
@@ -1130,11 +1408,15 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 
     canvasDirGamma->cd();
     dummyDirGamma->DrawCopy();
-
+    cout << "Plotting upper limits:" << endl;
         graphDirGammaSpectrumSyst->Draw("Z2,same");
         graphDirGammaSpectrumStat->Draw("zpE1,same");
-        if(graphDirGammaSpectrumSummedUL)graphDirGammaSpectrumSummedUL->Draw("||,same");
-        if(graphDirGammaSpectrumSummedAr)graphDirGammaSpectrumSummedAr->Draw("|>,same");
+        if(!PHOSbinning && centrality.CompareTo("20-40%")==0){
+            cout << "Not plotting upper limits" <<endl;
+        } else {
+            if(graphDirGammaSpectrumSummedUL) graphDirGammaSpectrumSummedUL->Draw("||,same");
+            if(graphDirGammaSpectrumSummedAr) graphDirGammaSpectrumSummedAr->Draw("|>,same");
+        }
 
         TLegend* legendDirGammaUL = GetAndSetLegend(0.18,0.2,1.5);
         legendDirGammaUL->AddEntry(graphDirGammaSpectrumSyst,Form("#gamma_{dir} PCM, %s",collisionSystem.Data()),"pf");
@@ -1182,6 +1464,8 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
             graphIncRatioFitPi0SysErrB->Write("IncRatioPi0FitSystErrorB",TObject::kOverwrite);
             graphIncRatioFitPi0SysErrC->Write("IncRatioPi0FitSystErrorC",TObject::kOverwrite);
 
+            if(cocktailAllGammaPi0) cocktailAllGammaPi0->Write("IncRatioCocktail",TObject::kOverwrite);
+
             histoIncGamma->SetName("IncGammaStatError");
             SetHistogramm(histoIncGamma,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
             histoIncGamma->Write("IncGammaStatError",TObject::kOverwrite);
@@ -1208,6 +1492,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
             if(graphDirGammaSpectrumSummedULConfi)    graphDirGammaSpectrumSummedULConfi->Write("graphDirGammaSpectrumSummedULConfi",TObject::kOverwrite);
             if(graphDirGammaSpectrumSummedArConfi)    graphDirGammaSpectrumSummedArConfi->Write("graphDirGammaSpectrumSummedArConfi",TObject::kOverwrite);
             if(graphDirGammaSpectrumSystwoMat)         graphDirGammaSpectrumSystwoMat->Write("graphDirGammaSpectrumSystWOMat",TObject::kOverwrite);
+            if(histoDirGammaSpectrumErrorSummed)       histoDirGammaSpectrumErrorSummed->Write("histoDirGammaSpectrumErrorSummed",TObject::kOverwrite);
 
             fileGammaSpectrum->mkdir("Theory");
             fileGammaSpectrum->cd("Theory");
@@ -1215,10 +1500,29 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
                     else NLODoubleRatio->Write(Form("NLODoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
                 if (optionOutput.CompareTo("pp") == 0 ) NLO->Write(Form("NLO_%s_%s",optionEnergy.Data(),GetCentralityString(cutSel).Data()),TObject::kOverwrite);
                     else NLO->Write(Form("NLO_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if (graphDRPbPbNLO) graphDRPbPbNLO->Write(Form("NLODoubleRatiowithErr_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
                 if (graphInvYieldPbPbTheoryCTEQ61EPS09) graphInvYieldPbPbTheoryCTEQ61EPS09->Write(Form("EPS09_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
                 if (graphInvYieldPPTheoryCT10BFG2_pdfErr) graphInvYieldPPTheoryCT10BFG2_pdfErr->Write(Form("CT10BF_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
                 if (graphDRPbPbCTEQ61EPS09) graphDRPbPbCTEQ61EPS09->Write(Form("EPS09DoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
                 if (graphDRPbPbCT10BFG2_pdfErr) graphDRPbPbCT10BFG2_pdfErr->Write(Form("CT10BFDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+
+                if(graphTheoryChatterjee)graphTheoryChatterjee->Write(Form("Chatterjee_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryChatterjeeSummed)graphTheoryChatterjeeSummed->Write(Form("ChatterjeeSummed_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryChatterjeePrompt)graphTheoryChatterjeePrompt->Write(Form("ChatterjeePromt_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryChatterjeeThermal)graphTheoryChatterjeeThermal->Write(Form("ChatterjeeThermal_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryMcGillfromTF1)graphTheoryMcGillfromTF1->Write(Form("McGillfromTF1_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryMcGill)graphTheoryMcGill->Write(Form("McGill_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryRapp)graphTheoryRapp->Write(Form("Rapp_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphTheoryPHSD)graphTheoryPHSD->Write(Form("PHSD_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbMcGill)graphDRPbPbMcGill->Write(Form("McGillDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbMcGillfromTF1)graphDRPbPbMcGillfromTF1->Write(Form("McGillfromTF1DoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbRapp) graphDRPbPbRapp->Write(Form("RappDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbChatterjee) graphDRPbPbChatterjee->Write(Form("ChatterjeeDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbChatterjeeSummed) graphDRPbPbChatterjeeSummed->Write(Form("ChatterjeeSummedDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbChatterjeePrompt) graphDRPbPbChatterjeePrompt->Write(Form("ChatterjeePromptDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbChatterjeeThermal) graphDRPbPbChatterjeeThermal->Write(Form("ChatterjeeThermalDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+                if(graphDRPbPbPHSD) graphDRPbPbPHSD->Write(Form("PHSDDoubleRatio_%s",GetCentralityString(cutSel).Data()),TObject::kOverwrite);
+
     fileGammaSpectrum->Write();
     fileGammaSpectrum->Close();
 
