@@ -817,7 +817,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         graphPHOSPi0InvYieldStat->RemovePoint(0);
         while (graphPHOSPi0InvYieldStat->GetX()[graphPHOSPi0InvYieldStat->GetN()-1] > 20) graphPHOSPi0InvYieldStat->RemovePoint(graphPHOSPi0InvYieldStat->GetN()-1);
         graphPHOSPi0InvYieldStat->Print();
-        TH1D* histoPHOSPi0InvYieldSys               = (TH1D*)directoryPHOSPi0->Get("hPHOS_pi0_pPb_cen00-100_SystGamma");
+        TH1D* histoPHOSPi0InvYieldSys               = (TH1D*)directoryPHOSPi0->Get("hPHOS_pi0_pPb_cen00-100_SystTotal");
         graphPHOSPi0InvYieldSys                     = new TGraphAsymmErrors(histoPHOSPi0InvYieldSys);
         graphPHOSPi0InvYieldSys->RemovePoint(0);
         while (graphPHOSPi0InvYieldSys->GetX()[graphPHOSPi0InvYieldSys->GetN()-1] > 20) graphPHOSPi0InvYieldSys->RemovePoint(graphPHOSPi0InvYieldSys->GetN()-1);
