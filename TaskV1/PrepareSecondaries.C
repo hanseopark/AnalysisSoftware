@@ -285,7 +285,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     
     Double_t scalingEta                                         = 1.;
     Double_t scalingPhi                                         = 1.;
-    if (isCalo) {
+    if (isCalo && !isPCM) {
         scalingEta                                              = deltaEtaCalo/deltaEta;
         scalingPhi                                              = deltaPhiCalo/deltaPhi;
     }
@@ -297,11 +297,11 @@ void PrepareSecondaries(    TString     meson                       = "",
     cout << "deltaPt          = "     << ptMax - ptMin  << endl;
     if (isPCM)
         cout << "deltaEta         = "     << deltaEta       << endl;
-    if (isCalo)
+    if (isCalo && !isPCM)
         cout << "deltaEtaCalo     = " << deltaEtaCalo   << endl;
     if (isPCM)
         cout << "deltaPhi         = "     << deltaPhi       << endl;
-    if (isCalo)
+    if (isCalo && !isPCM)
         cout << "deltaPhiCalo     = " << deltaPhiCalo   << endl;
     cout << "add. scaling eta = "     << scalingEta     << " (for photons only)" << endl;
     cout << "add. scaling phi = "     << scalingPhi     << " (for photons only)" << endl;
