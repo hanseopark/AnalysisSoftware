@@ -1452,7 +1452,7 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
             histo2DEtaInvMassDummy->DrawCopy();
 
             // TLatex *labelInvMassPtRange = new TLatex(0.945,0.9,Form("#pi^{0}: %s GeV/#it{c} < #it{p}_{T} < %s GeV/#it{c}",strLowerEdgeExampleEta[i].Data(),strUpperEdgeExampleEta[i].Data()));
-            TLatex *labelInvMassPtRange = new TLatex(0.945,0.9,Form("#pi^{0}: %s",histoEtaInvMassSigRemBGSub[i]->GetTitle()));
+            TLatex *labelInvMassPtRange = new TLatex(0.945,0.9,Form("#eta: %s",histoEtaInvMassSigRemBGSub[i]->GetTitle()));
 
             DrawGammaSetMarker(histoEtaInvMassSigPlusBG[i], markerStyleInvMassSGBG, markerSizeInvMassSGBG, markerColorInvMassSGBG, markerColorInvMassSGBG);
             histoEtaInvMassSigPlusBG[i]->SetLineWidth(1);

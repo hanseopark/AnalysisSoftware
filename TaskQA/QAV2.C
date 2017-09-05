@@ -124,7 +124,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
             diffPhotonQAPath            = kTRUE;
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
-                if (!((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     pathPhotonQA[i-1]   = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else
                     i                   = tempArr->GetEntries();

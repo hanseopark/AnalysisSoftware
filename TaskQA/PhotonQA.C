@@ -194,12 +194,8 @@ void PhotonQA(
     TCanvas* cvsQuadratic = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
     Double_t leftMargin = 0.09; Double_t rightMargin = 0.02; Double_t topMargin = 0.04; Double_t bottomMargin = 0.09;
 	DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
-    Double_t xPosLabel1D = 0.82;
-    Double_t xPosLabel2D = 0.65;
-    if(fEnergyFlag.Contains("PbPb")){
-      xPosLabel1D = 0.76;
-      xPosLabel2D = 0.58;
-    }
+    Double_t xPosLabel1D = 0.95;
+    Double_t xPosLabel2D = 0.85;
 
 	for(Int_t i=0; i<nSets; i++)
 	{
@@ -873,7 +869,7 @@ void PhotonQA(
         if(fHistGammaChi2PsiPair){
           fHistGammaChi2PsiPair->Sumw2();
           fHistGammaChi2PsiPair->Scale(1./nGammas);
-          GetMinMaxBin(fHistGammaChi2PsiPair,minB,maxB); maxB+=5;
+          GetMinMaxBin(fHistGammaChi2PsiPair,minB,maxB);
           GetMinMaxBinY(fHistGammaChi2PsiPair,minYB,maxYB); minYB-=5; maxYB+=5;
           SetXRange(fHistGammaChi2PsiPair,minB,maxB);
           SetYRange(fHistGammaChi2PsiPair,minYB,maxYB);
