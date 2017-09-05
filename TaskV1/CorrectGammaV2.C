@@ -291,9 +291,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         maxPtGamma                              = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
         if(energy.Contains("PbPb"))
             minPtGamma                          = histoESDConvGammaPt->GetXaxis()->GetBinLowEdge(1);
+    } else if (isPCM && isCalo){
+        maxPtGamma                              = histoESDConvGammaPt->GetXaxis()->GetBinUpEdge(histoESDConvGammaPt->GetNbinsX());
+    } else if (isCalo && !isPCM){
+        maxPtGamma                              = histoESDCaloGammaPt->GetXaxis()->GetBinUpEdge(histoESDCaloGammaPt->GetNbinsX());
     }
-    if (isCalo && !isPCM)   maxPtGamma                              = histoESDCaloGammaPt->GetXaxis()->GetBinUpEdge(histoESDCaloGammaPt->GetNbinsX());
-
     //******************* Primary gamma correction factors (PCM and Calo) **********************
     TH1D*   histoGammaPurity_Pt                                     = NULL;
     TH1D*   histoGammaTruePurity_Pt                                 = NULL;
@@ -494,7 +496,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (k < 3){
                 histoGammaTrueSecCocktailGammaFromX_Pt[k]          = (TH1D*)fileUnCorrected->Get(Form("CocktailSecondaryGammaFromX%s_Pt",nameSecondaries[k].Data()));
                 histoGammaTrueSecCocktailGammaFromX_PtOrBin[k]     = (TH1D*)fileUnCorrected->Get(Form("CocktailSecondaryGammaFromX%s_PtOrBin",nameSecondaries[k].Data()));
-            } else if ( isPCM && !isCalo ) {
+            } else if ( isPCM ) {
                 histoGammaTrueSecCocktailGammaFromX_Pt[k]          = (TH1D*)fileCorrections->Get("TrueSecondaryConvGammaFromXFromRest_Pt");
                 histoGammaTrueSecCocktailGammaFromX_PtOrBin[k]     = (TH1D*)fileCorrections->Get("TrueSecondaryConvGammaFromXFromRest_Pt_OriginalBinning");
             } else if ( isCalo && !isPCM ) {
@@ -893,7 +895,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     TH2D* histoGammaTrueSecondaryFromX_MCPt_recPt[3]                = { NULL, NULL, NULL };
     TH2D* histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[3]          = { NULL, NULL, NULL };
     // PCM
-    if ( hasCocktailInput && isPCM && !isCalo ) {
+    if ( hasCocktailInput && isPCM ) {
         for (Int_t k = 0; k <3; k++){
             histoGammaTrueSecondaryFromX_MCPt_recPt[k]              = (TH2D*)fileCorrections->Get(Form("TrueSecondaryConvGammaFromXFrom%s_MCPt_recPt",nameSecondaries[k].Data()));
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[k]        = (TH2D*)fileCorrections->Get(Form("TrueSecondaryConvGammaFromXFrom%s_MCPt_recPt_orBin",nameSecondaries[k].Data()));
@@ -924,7 +926,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->Sumw2();
         }
 
-        if ( isPCM && !isCalo ) {
+        if ( isPCM ) {
             // K0s: calculate raw yield
             if (useUnfoldingForCocktailSecondaries) {
                 hasCocktailInput                                    = ConvertCocktailSecondaryToRaw(histoGammaSecGammaFromX_Cocktail_Raw_Pt[0], histoGammaSecondaryFromXConvProb_MCPt[0],
@@ -980,7 +982,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************************************************************************************
     TH1D* histoFracAllGammaToSecFromX_Cocktail_Pt[4]                = { NULL, NULL, NULL, NULL };
     TH1D* histoFracAllGammaToSecFromX_Cocktail_PtOrBin[3]           = { NULL, NULL, NULL };
-    if ( hasCocktailInput && isPCM && !isCalo ) {
+    if ( hasCocktailInput && isPCM ) {
         cout << "calculating secondary fractions from cocktail" << endl;
         for (Int_t k = 0; k < 3; k++){
             histoFracAllGammaToSecFromX_Cocktail_Pt[k]              = (TH1D*)histoESDConvGammaPt->Clone(Form("FracAllGammaToSecFromXFrom%s", nameSecondaries[k].Data()));
@@ -1184,7 +1186,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             histoSecondaryGammaFromXSpecPt[k]->Scale(scaleFactorsSec[k]);
 
             // scale reconstructed gamma with secondaries
-            if (!isRunMC && isPCM && !isCalo) {
+            if (!isRunMC && isPCM ) {
                 histoGammaTrueSecConvGammaFromX_Pt[k]->Multiply(histoFracAllGammaToSecFromX_Pt[k]);
                 histoGammaTrueSecConvGammaFromX_Pt[k]->Scale(1./nEvtMC);
             } else if (!isRunMC && isCalo && !isPCM) {
@@ -1193,7 +1195,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             }
         } else {
             histoSecondaryGammaFromXSpecPt[k]                       = NULL;
-            if (!isRunMC && isPCM && !isCalo)
+            if (!isRunMC && isPCM )
                 histoGammaTrueSecConvGammaFromX_Pt[k]               = NULL;
             else if (!isRunMC && isCalo && !isPCM)
                 histoGammaTrueSecCaloGammaFromX_Pt[k]               = NULL;
@@ -1665,7 +1667,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         if ( isPCM || isCalo ){
             for (Int_t k = 0; k < 3; k++){
-                if (isPCM && !isCalo) SetHistogramm(histoGammaSecFromXRecoEff_RecPt[k],"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
+                if (isPCM ) SetHistogramm(histoGammaSecFromXRecoEff_RecPt[k],"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",eta), 0., 1.0);
                 if (isCalo && !isPCM) SetHistogramm(histoGammaSecFromXRecoEff_RecPt[k],"#it{p}_{T} (GeV/#it{c})",Form("#epsilon_{eff,#gamma} in |#eta| < %g",etaCalo), 0., 2.0);
                 DrawGammaSetMarker(histoGammaSecFromXRecoEff_RecPt[k], markerStyleSecWithToy[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                 histoGammaSecFromXRecoEff_RecPt[k]->Draw("same");
@@ -2086,6 +2088,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         legendCompRecoEff->Draw();
 
         PutProcessLabelAndEnergyOnPlot( 0.935, 0.95, 0.035, cent, detectionProcess2, "", 42, 0.03,"",1,1.25,31);
+        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     }
 
     TH1D* histoGammaCaloResolCorrEff_Pt = NULL;
@@ -2102,7 +2105,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
         DrawGammaLines(minPtGamma, maxPtGamma,1, 1,0.5,kGray+2,2);
 
-        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloRecEff_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
+        canvasCompRecoEff ->SaveAs(Form("%s/%s_CompCaloResolCorr_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
     }
 
     delete padCompRecoEff;
@@ -2895,11 +2898,21 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                                                                                                                             TObject::kOverwrite);
             if (histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k])   histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->Write(histoGammaSecGammaFromX_Cocktail_Raw_Pt_OrBin[k]->GetName(),
                                                                                                                             TObject::kOverwrite);
-            if (histoGammaTrueSecCocktailGammaFromX_Pt[k])          histoGammaTrueSecCocktailGammaFromX_Pt[k]->Write(       Form("histoGammaTrueSecCocktailGammaFromXFrom%s_Pt", nameSecondaries[k].Data()),
-                                                                                                                            TObject::kOverwrite);
+            if (histoGammaTrueSecCocktailGammaFromX_Pt[k])          histoGammaTrueSecCocktailGammaFromX_Pt[k]->Write(       Form("histoGammaTrueSecCocktailGammaFromXFrom%s_Pt",
+                                                                                                                            nameSecondaries[k].Data()), TObject::kOverwrite);
             if (histoSecondaryGammaFromXSpecPt[k])                  histoSecondaryGammaFromXSpecPt[k]->Write(               Form("histoSecondaryGammaFromXFrom%sSpecPt", nameSecondaries[k].Data()),
                                                                                                                             TObject::kOverwrite);
+            if (histoFracAllGammaToSecFromX_Cocktail_Pt[k])         histoFracAllGammaToSecFromX_Cocktail_Pt[k]->Write(      Form("histoSecCocktailGammaFromXFrom%sEffCorr",
+                                                                                                                            nameSecondaries[k].Data()),TObject::kOverwrite);
+            if (histoFracAllGammaToSecFromX_Pt[k])                  histoFracAllGammaToSecFromX_Pt[k]->Write(               Form("histoSecondaryGammaFromXFrom%sEffCorr", nameSecondaries[k].Data()),
+                                                                                                                            TObject::kOverwrite);
+
+
         }
+        if (histoFracAllGammaToSecFromX_Cocktail_Pt[3])         histoFracAllGammaToSecFromX_Cocktail_Pt[3]->Write( Form("histoSecCocktailGammaFromXFrom%sEffCorr", nameSecondaries[3].Data()),
+                                                                                                                   TObject::kOverwrite);
+        if (histoFracAllGammaToSecFromX_Pt[3])                  histoFracAllGammaToSecFromX_Pt[3]->Write(   Form("histoSecondaryGammaFromXFrom%sEffCorr", nameSecondaries[3].Data()),
+                                                                                                            TObject::kOverwrite);
 
         //_________________________ writing correction factors to file _________________________
         // photon purity without secondary subtraction

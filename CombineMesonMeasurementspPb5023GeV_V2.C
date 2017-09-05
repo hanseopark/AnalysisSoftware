@@ -66,7 +66,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
                                                 TString fileNameEMCAL           = "",
                                                 Bool_t flagEMCfile              = 0,
                                                 TString fileNamePHOS            = "",
-                                                Bool_t flagPHOSfile             = 0,
+                                                Int_t flagPHOSfile              = 0,
                                                 TString fileNameDalitz          = "",
                                                 Bool_t flagDalitzfile           = 0,
                                                 TString fileNamePCMEMCAL        = "",
@@ -771,6 +771,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     //************************** Read data for PHOS *****************************************************
 
     TH1D* histoPHOSPi0InvYieldStat                  = NULL;
+    TH1D* histoPHOSPi0InvYieldSys                   = NULL;
     TGraphAsymmErrors* graphPHOSPi0InvYieldStat     = NULL;
     TGraphAsymmErrors* graphPHOSPi0InvYieldSys      = NULL;
     TH1D* histoPHOSPi0Mass                          = NULL;
@@ -779,9 +780,9 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     TH1D* histoPHOSPi0TrueFWHMMeV                   = NULL;
     TGraphAsymmErrors* graphPHOSPi0AccTimesEff      = NULL;
     TFile* filePHOS                                 = new TFile(fileNamePHOS);
-    if (!flagPHOSfile){
+    if ( flagPHOSfile == 0){
         histoPHOSPi0InvYieldStat                    = (TH1D*)filePHOS->Get("hCor_stat");
-        TH1D* histoPHOSPi0InvYieldSys               = (TH1D*)filePHOS->Get("hCor_syst");
+        histoPHOSPi0InvYieldSys                     = (TH1D*)filePHOS->Get("hCor_syst");
         graphPHOSPi0InvYieldStat                    = new TGraphAsymmErrors(histoPHOSPi0InvYieldStat);
         graphPHOSPi0InvYieldStat->RemovePoint(0);
         graphPHOSPi0InvYieldStat->Print();
@@ -791,7 +792,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         histoPHOSPi0FWHMMeV                         = (TH1D*)filePHOS->Get("Gsigma_Real");
         histoPHOSPi0TrueMass                        = (TH1D*)filePHOS->Get("Gmean_MC");
         histoPHOSPi0TrueFWHMMeV                     = (TH1D*)filePHOS->Get("Gsigma_MC");
-    } else {
+    } else if ( flagPHOSfile == 1){
         TDirectory* directoryPHOSPi0                = (TDirectory*)filePHOS->Get("Pi0pPb_5.023TeV");
         histoPHOSPi0InvYieldStat                    = (TH1D*)directoryPHOSPi0->Get("CorrectedYieldPi0");
         graphPHOSPi0InvYieldStat                    = new TGraphAsymmErrors(histoPHOSPi0InvYieldStat);
@@ -805,6 +806,26 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         histoPHOSPi0TrueMass                        = (TH1D*)directoryPHOSPi0->Get("Pi0_Mass_MC");
         histoPHOSPi0TrueFWHMMeV                     = (TH1D*)directoryPHOSPi0->Get("Pi0_Width_MC");
         TH1D* histoPHOSPi0AccTimesEff               = (TH1D*)directoryPHOSPi0->Get("EffTimesAccPi0");
+        histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
+        graphPHOSPi0AccTimesEff                     = new TGraphAsymmErrors(histoPHOSPi0AccTimesEff);
+        while (graphPHOSPi0AccTimesEff->GetX()[0] < 1.) graphPHOSPi0AccTimesEff->RemovePoint(0);
+        while (graphPHOSPi0AccTimesEff->GetX()[graphPHOSPi0AccTimesEff->GetN()-1] > 20) graphPHOSPi0AccTimesEff->RemovePoint(graphPHOSPi0AccTimesEff->GetN()-1);
+    } else { // Dmitri's file
+        TDirectory* directoryPHOSPi0                = (TDirectory*)filePHOS->Get("PHOS_pPb_502_Centrality_00-100");
+        histoPHOSPi0InvYieldStat                    = (TH1D*)directoryPHOSPi0->Get("hPHOS_pi0_pPb_cen00-100_Stat");
+        graphPHOSPi0InvYieldStat                    = new TGraphAsymmErrors(histoPHOSPi0InvYieldStat);
+        graphPHOSPi0InvYieldStat->RemovePoint(0);
+        while (graphPHOSPi0InvYieldStat->GetX()[graphPHOSPi0InvYieldStat->GetN()-1] > 20) graphPHOSPi0InvYieldStat->RemovePoint(graphPHOSPi0InvYieldStat->GetN()-1);
+        graphPHOSPi0InvYieldStat->Print();
+        TH1D* histoPHOSPi0InvYieldSys               = (TH1D*)directoryPHOSPi0->Get("hPHOS_pi0_pPb_cen00-100_SystGamma");
+        graphPHOSPi0InvYieldSys                     = new TGraphAsymmErrors(histoPHOSPi0InvYieldSys);
+        graphPHOSPi0InvYieldSys->RemovePoint(0);
+        while (graphPHOSPi0InvYieldSys->GetX()[graphPHOSPi0InvYieldSys->GetN()-1] > 20) graphPHOSPi0InvYieldSys->RemovePoint(graphPHOSPi0InvYieldSys->GetN()-1);
+        histoPHOSPi0Mass                            = (TH1D*)directoryPHOSPi0->Get("mass_data_GS_All");
+        histoPHOSPi0FWHMMeV                         = (TH1D*)directoryPHOSPi0->Get("width_data_GS_All");
+        histoPHOSPi0TrueMass                        = (TH1D*)directoryPHOSPi0->Get("mass_MC_GS_All");
+        histoPHOSPi0TrueFWHMMeV                     = (TH1D*)directoryPHOSPi0->Get("width_MC_GS_All");
+        TH1D* histoPHOSPi0AccTimesEff               = (TH1D*)directoryPHOSPi0->Get("hefficiency_GS_All");
         histoPHOSPi0AccTimesEff->Scale(2*TMath::Pi());
         graphPHOSPi0AccTimesEff                     = new TGraphAsymmErrors(histoPHOSPi0AccTimesEff);
         while (graphPHOSPi0AccTimesEff->GetX()[0] < 1.) graphPHOSPi0AccTimesEff->RemovePoint(0);

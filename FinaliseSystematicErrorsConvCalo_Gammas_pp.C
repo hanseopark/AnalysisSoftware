@@ -128,18 +128,18 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
     }
 
     // Set names of cut variations for file input
-    TString nameCutVariationSC[23]              = { "dEdxE", "dEdxPi","TPCCluster", "SinglePt", "Chi2",
+    TString nameCutVariationSC[24]              = { "dEdxE", "dEdxPi","TPCCluster", "SinglePt", "Chi2",
                                                     "Qt" , "CosPoint", "ToCloseV0s", "ConvPhi", "ClusterNonLinearity",
                                                     "ClusterM02", "ClusterMinEnergy", "ClusterTrackMatching", "ClusterTiming", "ClusterNCells",
                                                     "ClusterMaterialTRD",  "OOBPileupGamma", "SPD", "BG","Alpha" ,
-                                                    "Cocktail", "Material", "IntRange"
+                                                    "Cocktail", "Material", "IntRange", "Efficiency"
                                                   };
 
     // Set colors and markers
-    Color_t color[23];
-    Color_t markerStyle[23];
+    Color_t color[24];
+    Color_t markerStyle[24];
     // Set names of cut variations for legends
-    TString nameCutVariation[23];
+    TString nameCutVariation[24];
 
     for (Int_t k =0; k<nCuts; k++ ){
         cout << "variation: " << nameCutVariationSC[k].Data() << endl;
@@ -155,34 +155,34 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
     // ***************************************************************************************************
     // ******************************** Booleans for enabling systematic errors **************************
     // ***************************************************************************************************
-    Bool_t benable[23]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+    Bool_t benable[24]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
-                                                    0, 0, 0  };
-    Bool_t benableIncGamma2760GeV[23]           = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 0,
+                                                    0, 0, 0, 0  };
+    Bool_t benableIncGamma2760GeV[24]           = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 0,
                                                     0, 0, 0, 0, 0,  0, 1, 1, 0, 0,
-                                                    0, 1, 0  };
-    Bool_t benableIncRatio2760GeV[23]           = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
+                                                    0, 1, 0, 0  };
+    Bool_t benableIncRatio2760GeV[24]           = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    0, 0, 1  };
-    Bool_t benableDR2760GeV[23]                 = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
+                                                    0, 0, 1, 1  };
+    Bool_t benableDR2760GeV[24]                 = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    1, 0, 1  };
+                                                    1, 0, 1, 1  };
 
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
     // ***************************************************************************************************
-    Bool_t bsmooth[23]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
+    Bool_t bsmooth[24]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
-                                                    0, 0, 0  };
-    Bool_t bsmoothIncGamma2760GeV[23]           = { 1, 1, 0, 0, 1,  1, 0, 0, 1, 0,
+                                                    0, 0, 0, 0  };
+    Bool_t bsmoothIncGamma2760GeV[24]           = { 1, 1, 0, 0, 1,  1, 0, 0, 1, 0,
                                                     0, 0, 0, 0, 0,  0, 1, 1, 0, 0,
-                                                    0, 1, 0  };
-    Bool_t bsmoothIncRatio2760GeV[23]           = { 1, 1, 0, 1, 1,  1, 0, 0, 1, 1,
+                                                    0, 1, 0, 1  };
+    Bool_t bsmoothIncRatio2760GeV[24]           = { 1, 1, 0, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    0, 0, 0  };
-    Bool_t bsmoothDR2760GeV[23]                 = { 1, 1, 0, 1, 1,  1, 0, 0, 1, 1,
+                                                    0, 0, 0, 1  };
+    Bool_t bsmoothDR2760GeV[24]                 = { 1, 1, 0, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    0, 0, 0  };
+                                                    0, 0, 0, 1  };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -279,7 +279,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
         TGraphAsymmErrors* graphNegErrors       = NULL;
 
         // Set currently undetermined uncertainties
-        if ( nameCutVariationSC[i].CompareTo("SPD")==0  || nameCutVariationSC[i].CompareTo("Material")==0 ){
+        if ( nameCutVariationSC[i].CompareTo("SPD")==0  || nameCutVariationSC[i].CompareTo("Material")==0 || nameCutVariationSC[i].CompareTo("Efficiency")==0){
             TString nameGraphPos;
             TString nameGraphNeg;
             nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data());
@@ -612,6 +612,10 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                     }
                 }
             }
+            // fix Efficiency uncertainties #23
+            if (!nameCutVariationSC[i].CompareTo("Efficiency")){
+                errorFixed                  = 2.0;
+            }
 
 
             // put fixed values for pt independent errors, which were adjusted
@@ -830,7 +834,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
     TGraphErrors* meanErrorsSignalExtraction    = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrSignalExtraction ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsPileup              = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrPileup ,ptBinsErr ,errorsMeanErrCorrSummed );
     TGraphErrors* meanErrorsTrackReco           = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
-    TGraphErrors* meanErrorsClusterProp         = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrTrackReco ,ptBinsErr ,errorsMeanErrCorrSummed );
+    TGraphErrors* meanErrorsClusterProp         = new TGraphErrors(nPtBinsActive,ptBins ,errorsMeanCorrClusterProp ,ptBinsErr ,errorsMeanErrCorrSummed );
 
     //++++++++++++++++++++++++ PLOTTING OF SYSERRORSUMMEDVISU ++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -925,6 +929,11 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
             meanErrorsCorr[12]->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsCorr[12],"track match. cl.","p");
         }
+        if (benable[23]){
+            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[23], markerStyle[23], markersizeSummed,color[23],color[23]);
+            meanErrorsCorr[23]->Draw("p,csame");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[23],"efficiency","p");
+        }
         if (benable[20]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[20], markerStyle[20], markersizeSummed,color[20],color[20]);
             meanErrorsCorr[20]->Draw("p,csame");
@@ -948,10 +957,51 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
         legendSummedMeanNew->Draw();
 
         labelGamma->Draw();
+        if (spectrumName.Contains("Ratio")) labelPi0->Draw();
         labelEnergy->Draw();
         labelSpectrum->Draw();
 
     canvasSummedErrMean->Update();
     canvasSummedErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysErrorSummedVisuPCMEMC_%s_%s_%s.%s",spectrumName.Data(), energyForOutput.Data(), dateForOutput.Data(),suffix.Data()));
     delete canvasSummedErrMean;
+
+    //+++++++++++++++++++++++++ SAVING DETAILED SYSTEMATICS ++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    const char *SysErrDatnameMeanSinglePaperErr      = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedSinglePaperPCMEMC_%s_%s_%s.dat", spectrumName.Data(),energyForOutput.Data(), dateForOutput.Data());
+    fstream SysErrDatAverSinglePaper;
+    cout << SysErrDatnameMeanSinglePaperErr << endl;
+    SysErrDatAverSinglePaper.open(SysErrDatnameMeanSinglePaperErr, ios::out);
+    SysErrDatAverSinglePaper << "Pt bin\t" ;
+    if (benable[22] || benable[18] || benable[19])                          SysErrDatAverSinglePaper << "SignalExtraction" << "\t";
+    if (benable[0] || benable[1])                                           SysErrDatAverSinglePaper << "ElectronPID" << "\t";
+    if (benable[2] || benable[3])                                           SysErrDatAverSinglePaper << "TrackReco" << "\t";
+    if (benable[4] || benable[5] || benable[6] || benable[7] || benable[8]) SysErrDatAverSinglePaper << "PhotonReco" << "\t";
+    if (benable[16] || benable[17] )                                        SysErrDatAverSinglePaper << "Pileup" << "\t";
+    if (benable[10] || benable[11] || benable[13] || benable[14] )          SysErrDatAverSinglePaper << "ClusterProp" << "\t";
+    if (benable[9])                                                         SysErrDatAverSinglePaper << "ClusterEnergyScale" << "\t";
+    if (benable[12])                                                        SysErrDatAverSinglePaper << "ClusterTM" << "\t";
+    if (benable[23])                                                        SysErrDatAverSinglePaper << "Efficiency" << "\t";
+    if (benable[20])                                                        SysErrDatAverSinglePaper << "Cocktail" << "\t";
+    if (benable[15])                                                        SysErrDatAverSinglePaper << "OuterMaterial" << "\t";
+    if (benable[21])                                                        SysErrDatAverSinglePaper << "InnerMaterial" << "\t";
+    SysErrDatAverSinglePaper << endl;
+
+    for (Int_t l=0;l< nPtBinsActive;l++){
+        SysErrDatAverSinglePaper << ptBins[l] << "\t";
+        if (benable[22] || benable[18] || benable[19])                          SysErrDatAverSinglePaper << errorsMeanCorrSignalExtraction[l] << "\t";
+        if (benable[0] || benable[1])                                           SysErrDatAverSinglePaper << errorsMeanCorrPID[l] << "\t";
+        if (benable[2] || benable[3])                                           SysErrDatAverSinglePaper << errorsMeanCorrTrackReco[l] << "\t";
+        if (benable[4] || benable[5] || benable[6] || benable[7] || benable[8]) SysErrDatAverSinglePaper << errorsMeanCorrPhotonReco[l] << "\t";
+        if (benable[16] || benable[17] )                                        SysErrDatAverSinglePaper << errorsMeanCorrPileup[l] << "\t";
+        if (benable[10] || benable[11] || benable[13] || benable[14] )          SysErrDatAverSinglePaper << errorsMeanCorrClusterProp[l] << "\t";
+        if (benable[9])                                                         SysErrDatAverSinglePaper << errorsMeanCorr[9][l] << "\t";
+        if (benable[12])                                                        SysErrDatAverSinglePaper << errorsMeanCorr[12][l] << "\t";
+        if (benable[23])                                                        SysErrDatAverSinglePaper << errorsMeanCorr[23][l] << "\t";
+        if (benable[20])                                                        SysErrDatAverSinglePaper << errorsMeanCorr[20][l] << "\t";
+        if (benable[15])                                                        SysErrDatAverSinglePaper << errorsMeanCorr[15][l] << "\t";
+        if (benable[21])                                                        SysErrDatAverSinglePaper << errorsMeanCorr[21][l] << "\t";
+        SysErrDatAverSinglePaper << errorsMeanCorrSummed[l] << endl;
+    }
+    SysErrDatAverSinglePaper.close();
 }
+

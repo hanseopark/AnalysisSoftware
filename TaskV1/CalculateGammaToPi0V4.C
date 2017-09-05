@@ -851,8 +851,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         histoMCIncRatio->Write(             histoMCIncRatio->GetName(),             TObject::kOverwrite);
 
         // cocktail
-        cocktailAllGamma->Write(cocktailAllGamma->GetName(),    TObject::kOverwrite);        
-        
+        cocktailAllGamma->Write(cocktailAllGamma->GetName(),    TObject::kOverwrite);
+
         TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
         TH1D* dummyCocktailHist;
         TH1D* dummyGammaCocktailHist;

@@ -859,7 +859,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGamma[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaRatio[i] = (TH1D*) histoIncGamma[i]->Clone(Form("histoIncGammaRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaRatio[i]->Divide(histoIncGammaRatio[i],histoIncGamma[0],1,1,"b");
-            SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.45,1.55);
+            SetHistogramm(histoIncGammaRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma Spectra",0.8,1.2);
 
             histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("IncRatioPurity_trueEff%s",nameIntRanges[i].Data()));
@@ -867,7 +867,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGammaToPi0Ratio[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaToPi0RatioRatio[i]->Divide(histoIncGammaToPi0RatioRatio[i],histoIncGammaToPi0Ratio[0],1,1,"b");
-            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.45,1.55);
+            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.8,1.2);
 
             histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEff");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[i].Data()));
@@ -875,7 +875,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoPi0Spectrum[i], markerType, 2.0, color[i], color[i]);
             histoPi0SpectrumRatio[i] = (TH1D*) histoPi0Spectrum[i]->Clone(Form("histoPi0SpectrumRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoPi0SpectrumRatio[i]->Divide(histoPi0SpectrumRatio[i],histoPi0Spectrum[0],1,1,"b");
-            SetHistogramm(histoPi0SpectrumRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.45,1.55);
+            SetHistogramm(histoPi0SpectrumRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.8,1.2);
 //missing
            /* histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0Fit");
             if(i == 1 && cutVariationName.Contains("IntRange")) histoPi0SpectrumFit[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEffPi0FitWide");
@@ -886,13 +886,6 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             histoPi0SpectrumFitRatio[i]->Divide(histoPi0SpectrumFitRatio[i],histoPi0SpectrumFit[0],1,1,"b");
             SetHistogramm(histoPi0SpectrumFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #pi^{0} Spectra",0.0,2.0);
             */
-            histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get("IncRatioPurity_trueEff");
-            if(i > 0 && cutVariationName.Contains("IntRange")) histoIncGammaToPi0Ratio[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("IncRatioPurity_trueEff%s",nameIntRanges[i].Data()));
-            histoIncGammaToPi0Ratio[i]->SetTitle("");
-            DrawGammaSetMarker(histoIncGammaToPi0Ratio[i], markerType, 2.0, color[i], color[i]);
-            histoIncGammaToPi0RatioRatio[i] = (TH1D*) histoIncGammaToPi0Ratio[i]->Clone(Form("histoIncGammaToPi0RatioRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
-            histoIncGammaToPi0RatioRatio[i]->Divide(histoIncGammaToPi0RatioRatio[i],histoIncGammaToPi0Ratio[0],1,1,"b");
-            SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.45,1.55);
 
             histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get("histoIncRatioFitPurity");
             if(i > 0 && cutVariationName.Contains("IntRange"))  histoIncGammaToPi0RatioFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("histoIncRatioFitPurity%s",nameIntRanges[i].Data()));
@@ -903,7 +896,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoIncGammaToPi0RatioFit[i], markerType, 2.0, color[i], color[i]);
             histoIncGammaToPi0RatioFitRatio[i] = (TH1D*) histoIncGammaToPi0RatioFit[i]->Clone(Form("histoIncGammaToPi0RatioFitRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoIncGammaToPi0RatioFitRatio[i]->Divide(histoIncGammaToPi0RatioFitRatio[i],histoIncGammaToPi0RatioFit[0],1,1,"b");
-            SetHistogramm(histoIncGammaToPi0RatioFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0}_{Fit} Ratios",0.45,1.55);
+            SetHistogramm(histoIncGammaToPi0RatioFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0}_{Fit} Ratios",0.8,1.2);
 
             histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioTrueEffPurity");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioTrueEffPurity%s",nameIntRanges[i].Data()));
@@ -918,7 +911,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoDR[i], markerType, 2.0, color[i], color[i]);
             histoDRRatio[i] = (TH1D*) histoDR[i]->Clone(Form("histoDRRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoDRRatio[i]->Divide(histoDRRatio[i],histoDR[0],1,1,"b");
-            SetHistogramm(histoDRRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.45,1.55);
+            SetHistogramm(histoDRRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.8,1.2);
 
             histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioFitPurity");
             if(i > 0 && cutVariationName.Contains("IntRange")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioFitPurity%s",nameIntRanges[i].Data()));
@@ -935,7 +928,7 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             DrawGammaSetMarker(histoDRFit[i], markerType, 2.0, color[i], color[i]);
             histoDRFitRatio[i] = (TH1D*) histoDRFit[i]->Clone(Form("histoDRFitRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoDRFitRatio[i]->Divide(histoDRFitRatio[i],histoDRFit[0],1,1,"b");
-            SetHistogramm(histoDRFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.45,1.55);
+            SetHistogramm(histoDRFitRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.8,1.2);
 
             PlotCanvas(i,number,canvasGammaSpectrum,histoIncGamma[i],legendGammaSpectrum,canvasGammaSpectrumRatio,histoIncGammaRatio[i],legendGammaSpectrumRatio,cutStringsName[i],One);
             PlotCanvas(i,number,canvasPi0Spectrum,histoPi0Spectrum[i],legendPi0Spectrum,canvasPi0SpectrumRatio,histoPi0SpectrumRatio[i],legendPi0SpectrumRatio,cutStringsName[i],One);
@@ -1045,7 +1038,6 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
 
             PlotCanvas(i,number,canvasGammaSpectrum,histoIncGamma[i],legendGammaSpectrum,canvasGammaSpectrumRatio,histoIncGammaRatio[i],legendGammaSpectrumRatio,cutStringsName[i],One);
         }
-
     }
 
     if (haveOutputGammaToPi0){

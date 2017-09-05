@@ -4,14 +4,14 @@
 #ifndef GAMMACONV_Fitting
 #define GAMMACONV_Fitting
 
-    TF1* FitObject( TString type, 
-                    TString FunctionName, 
-                    TString mesonType       = "Pi0", 
-                    TObject *Obj_Dummy      = NULL,  
-                    Double_t xmin           = 0., 
+    TF1* FitObject( TString type,
+                    TString FunctionName,
+                    TString mesonType       = "Pi0",
+                    TObject *Obj_Dummy      = NULL,
+                    Double_t xmin           = 0.,
                     Double_t xmax           = 10.,
-                    Double_t Parameter[]    = NULL, 
-                    TString FitOptions      = "IQNRME+", 
+                    Double_t Parameter[]    = NULL,
+                    TString FitOptions      = "IQNRME+",
                     TString fixingPar       = "",
                     Bool_t limitPar         = kTRUE
                 ){
@@ -45,6 +45,9 @@
         } else if (mesonType.CompareTo("Lambda")==0){
             mass = TDatabasePDG::Instance()->GetParticle(3122)->Mass();
             cout <<"Baryon Mass: "<< mass << endl;
+        } else if (mesonType.CompareTo("Gamma")==0){
+            mass = 0;
+            cout <<"Photon Mass: "<< mass << endl;
         } else {
             mass = 0;
             cout <<"Meson Mass: "<< mass << endl;
@@ -175,7 +178,7 @@
                 TF1 *TwoCompModel_Dummy = new TF1("twoCompModelLow_Dummy",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",mass,mass,mass));
                 if (mesonType.CompareTo("Pi0")==0){
                     TwoCompModel_Dummy->SetParameters(450.,0.3); // standard parameter optimize if necessary
-                } else if (mesonType.CompareTo("Eta")==0){    
+                } else if (mesonType.CompareTo("Eta")==0){
                     TwoCompModel_Dummy->SetParameters(450.,0.3); // standard parameter optimize if necessary
                 }
                 TwoCompModel_Dummy->SetParNames("Ae","Te");
@@ -186,7 +189,7 @@
                 TF1 *TwoCompModel_Dummy = new TF1("twoCompModelHigh_Dummy","[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]) )");
                 if (mesonType.CompareTo("Pi0")==0){
                     TwoCompModel_Dummy->SetParameters(1,0.3,8.); // standard parameter optimize if necessary
-                } else if (mesonType.CompareTo("Eta")==0){    
+                } else if (mesonType.CompareTo("Eta")==0){
                     TwoCompModel_Dummy->SetParameters(1,0.3,8.); // standard parameter optimize if necessary
                 }
                 TwoCompModel_Dummy->SetParNames("A","T","n");
@@ -197,7 +200,7 @@
                 TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
                 if (mesonType.CompareTo("Pi0")==0){
                     TwoCompModel_Dummy->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
-                } else if (mesonType.CompareTo("Eta")==0){    
+                } else if (mesonType.CompareTo("Eta")==0){
                     TwoCompModel_Dummy->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
                 }
                 TwoCompModel_Dummy->SetParNames("Ae","Te","A","T","n");
@@ -208,19 +211,19 @@
                 TF1 *TwoCompModel_Dummy = new TF1("twoCompModel_Dummy",Form("x*[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + x*[2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mass,mass,mass));
                 if (mesonType.CompareTo("Pi0")==0){
                     TwoCompModel_Dummy->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
-                } else if (mesonType.CompareTo("Eta")==0){    
+                } else if (mesonType.CompareTo("Eta")==0){
                     TwoCompModel_Dummy->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
                 }
                 TwoCompModel_Dummy->SetParNames("Ae","Te","A","T","n");
                 TwoCompModel_Dummy->SetName(FunctionName);
                 return TwoCompModel_Dummy;
             }
-            
+
         }
 
         TF1 *FitFunction = new TF1();
         TString ClassName = Obj_Dummy->ClassName();
-        
+
         if(ClassName.BeginsWith("TH1")){
             TH1D *Obj = (TH1D*)Obj_Dummy;
             if(type.BeginsWith("xqcd") || type.BeginsWith("XQCD")){
@@ -366,7 +369,7 @@
                 if (mesonType.CompareTo("Pi0")==0){
                     if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
                     else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2],Parameter[3],Parameter[4]);
-                } else if (mesonType.CompareTo("Eta")==0){    
+                } else if (mesonType.CompareTo("Eta")==0){
                     if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
                     else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2],Parameter[3],Parameter[4]);
                 }
@@ -654,17 +657,17 @@
                 } else {
                     if(FunctionName.Contains("0010") && limitPar){
                         FitFunction->SetParLimits(0,0,100);
-                        FitFunction->SetParLimits(2,0,100);   
+                        FitFunction->SetParLimits(2,0,100);
                     } else if(FunctionName.Contains("2050") && limitPar){
                         FitFunction->SetParLimits(0,0,100);
-                        FitFunction->SetParLimits(2,0,100);   
+                        FitFunction->SetParLimits(2,0,100);
                     }
                 }
                 if (limitPar){
                     FitFunction->SetParLimits(1,0,10000);
                     FitFunction->SetParLimits(3,0,10000);
                     FitFunction->SetParLimits(4,0,10);
-                }    
+                }
                 Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
             } else if(type.BeginsWith("tcmpt") || type.BeginsWith("TCMPT")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
                 cout <<Form("fitting %s with two component model by Bylinkin multiplied by pT",FunctionName.Data()) << endl;
@@ -736,7 +739,7 @@
                     FitFunction->SetParLimits(1,0,10000);
                     FitFunction->SetParLimits(3,0,10000);
                     FitFunction->SetParLimits(4,0,10);
-                }    
+                }
                 Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
             } else if(type.BeginsWith("Lowtcm") || type.BeginsWith("LOWTCM")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
                 cout <<Form("fitting %s with low pt component of Bylinkin",FunctionName.Data()) << endl;
@@ -807,7 +810,7 @@
                 return FitFunction;
             } else if(type.CompareTo("ptredt")==0 || type.CompareTo("ptredt")==0){
                 cout <<Form("fitting %s with Tsallis (*Pt)",FunctionName.Data()) << endl;
-                TF1 *Levy_Dummy = new TF1("Levy_Dummy",Form("[0] / ( 2 * TMath::Pi())*([1]-1.)*([1]-2.) / ([1]*[2]*([1]*[2]+%.10f*([1]-2.)))  * pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",mass,mass,mass,mass)); 
+                TF1 *Levy_Dummy = new TF1("Levy_Dummy",Form("[0] / ( 2 * TMath::Pi())*([1]-1.)*([1]-2.) / ([1]*[2]*([1]*[2]+%.10f*([1]-2.)))  * pow(1.+(sqrt(x*x+%.10f*%.10f)-%.10f)/([1]*[2]), -[1])",mass,mass,mass,mass));
                 FitFunction = (TF1*)Levy_Dummy->Clone(FunctionName);
                 FitFunction->SetRange(xmin, xmax);
                 if(Parameter == NULL)FitFunction->SetParameters(2.,5.,0.18); // standard parameter optimize if necessary
@@ -819,7 +822,7 @@
                 FitFunction->SetParNames("dN/dy","n","T_{Levy} (GeV/c)");
                 Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
             }
-        
+
         }
 
         if(ClassName.CompareTo("TGraph") == 0){
@@ -908,7 +911,7 @@
                 if (mesonType.CompareTo("Pi0")==0){
                     if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
                     else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2],Parameter[3],Parameter[4]);
-                } else if (mesonType.CompareTo("Eta")==0){ 
+                } else if (mesonType.CompareTo("Eta")==0){
                     if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.); // 450.,0.01,1,0.3,.5)
                     else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2],Parameter[3],Parameter[4]);
                 }
@@ -916,7 +919,7 @@
                     FitFunction->SetParLimits(1,0,10000);
                     FitFunction->SetParLimits(3,0,10000);
                     FitFunction->SetParLimits(4,0,10);
-                }    
+                }
                 FitFunction->SetParNames("Ae","Te","A","T","n");
                 Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
             } else if(type.BeginsWith("tcmpt") || type.BeginsWith("TCMPT")){ // Two component model fit [A. Bylinkin and A. Rostovtsev, Phys. Atom. Nucl 75 (2012) 999-1005]
@@ -928,14 +931,14 @@
                     if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.); // standard parameter optimize if necessary
                     else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2],Parameter[3],Parameter[4]);
                 } else if (mesonType.CompareTo("Eta")==0){
-                    if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.); 
+                    if(Parameter == NULL)FitFunction->SetParameters(450.,0.3,1,0.3,8.);
                     else FitFunction->SetParameters(Parameter[0],Parameter[1],Parameter[2],Parameter[3],Parameter[4]);
                 }
                 if (limitPar){
                     FitFunction->SetParLimits(1,0,10000);
                     FitFunction->SetParLimits(3,0,10000);
                     FitFunction->SetParLimits(4,0,10);
-                }    
+                }
                 FitFunction->SetParNames("Ae","Te","A","T","n");
                 Obj->Fit(FitFunction,FitOptions,"",xmin,xmax);
             } else if(type.BeginsWith("rad") || type.BeginsWith("RAD")){
@@ -1075,7 +1078,7 @@
             f1->SetRange(ymin,ymax);
             histo->Fit(f1,"0RMEQ");
             Double_t rp2 = f1->GetParameter(2);
-            if (rp2>rp){ deviation = rp2-rp;} 
+            if (rp2>rp){ deviation = rp2-rp;}
                 else {deviation = rp -rp2 ;}
             rp = rp2 ;
             mp = f1->GetParameter(1);
@@ -1088,18 +1091,18 @@
     }
 
 
-    void ResolutionFitting( TH2* histoRebinned, 
-                            TH1D** histoArray, 
+    void ResolutionFitting( TH2* histoRebinned,
+                            TH1D** histoArray,
                             TF1** fitArray,
-                            Int_t nBins, 
-                            TH1F* histoMean, 
-                            TH1F* histoSigma, 
-                            TString fitName, 
+                            Int_t nBins,
+                            TH1F* histoMean,
+                            TH1F* histoSigma,
+                            TString fitName,
                             Double_t rangeMin,
-                            Double_t rangeMax, 
-                            Double_t precision, 
+                            Double_t rangeMax,
+                            Double_t precision,
                             TString defaultName){
-        
+
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             fitArray[i-1] = 0x00;
             histoArray[i-1] = histoRebinned->ProjectionY(Form("%s_%i",defaultName.Data(),i-1), i, i);
@@ -1138,10 +1141,10 @@
                 if (fitName.CompareTo("gaus(0)+gaus(3)")!=0){
                     while(deviation > precision && counter < 100){
                         fitArray[i-1]->SetRange(ymin,ymax);
-                        
+
                         histoArray[i-1]->Fit(fitArray[i-1],"0RMEQ");
                         Double_t rp2 = fitArray[i-1]->GetParameter(2);
-                        if (rp2>rp){ deviation = rp2-rp;} 
+                        if (rp2>rp){ deviation = rp2-rp;}
                             else {deviation = rp -rp2 ;}
                         rp = rp2 ;
                         mp = fitArray[i-1]->GetParameter(1);
@@ -1156,12 +1159,12 @@
                 Double_t meanE;
                 Double_t sigma;
                 Double_t sigmaE;
-                
+
                 mean = fitArray[i-1]->GetParameter(1);
                 meanE = fitArray[i-1]->GetParError(1);
                 sigma = fitArray[i-1]->GetParameter(2);
                 sigmaE = fitArray[i-1]->GetParError(2);
-                
+
                 histoMean->SetBinContent(i, mean);
                 histoMean->SetBinError(i, meanE);
                 histoSigma->SetBinContent(i, sigma);
@@ -1173,7 +1176,7 @@
                 histoSigma->SetBinContent(i, 0);
                 histoSigma->SetBinError(i, 0);
             }
-        } //end of fitting 
+        } //end of fitting
     }
 
     void ResolutionFittingNormalized( TH2* histoRebinned, TH1D** histoArray, TF1** fitArray , TH1D* histoNorm, Int_t nBins, TH1F* histoMean, TH1F* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, TString defaultName){
@@ -1191,7 +1194,7 @@
                 } else {
                     f0 = new TF1("f0", fitName.Data() , rangeMin ,rangeMax);
                 }
-                        
+
                 if (fitName.CompareTo("gaus")==0){
                     f0->SetParameter(0,1.5*histoArray[i-1]->GetMaximum());
                     f0->SetParameter(0,0.);
@@ -1220,10 +1223,10 @@
                 if (fitName.CompareTo("gaus(0)+gaus(3)")!=0){
                     while(deviation > precision && counter < 100){
                         fitArray[i-1]->SetRange(ymin,ymax);
-                        
+
                         histoArray[i-1]->Fit(fitArray[i-1],"0RMEQ");
                         Double_t rp2 = fitArray[i-1]->GetParameter(2);
-                        if (rp2>rp){ deviation = rp2-rp;} 
+                        if (rp2>rp){ deviation = rp2-rp;}
                             else {deviation = rp -rp2 ;}
                         rp = rp2 ;
                         mp = fitArray[i-1]->GetParameter(1);
@@ -1238,12 +1241,12 @@
                 Double_t meanE;
                 Double_t sigma;
                 Double_t sigmaE;
-                
+
                 mean = fitArray[i-1]->GetParameter(1);
                 meanE = fitArray[i-1]->GetParError(1);
                 sigma = fitArray[i-1]->GetParameter(2);
                 sigmaE = fitArray[i-1]->GetParError(2);
-                
+
                 histoMean->SetBinContent(i, mean);
                 histoMean->SetBinError(i, meanE);
                 histoSigma->SetBinContent(i, sigma);
@@ -1255,22 +1258,22 @@
                 histoSigma->SetBinContent(i, 0);
                 histoSigma->SetBinError(i, 0);
             }
-        } //end of fitting 
+        } //end of fitting
     }
 
 
-    void ResolutionFittingRebined( TH2* histo, 
-                                TH1D** histoArray, 
-                                TF1** fitArray ,  
+    void ResolutionFittingRebined( TH2* histo,
+                                TH1D** histoArray,
+                                TF1** fitArray ,
                                 Int_t nBins,
                                 Double_t* ptRanges,
-                                Int_t* rebin, 
-                                TH1F* histoMean, 
-                                TH1F* histoSigma, 
-                                TString fitName, 
-                                Double_t rangeMin, 
-                                Double_t rangeMax, 
-                                Double_t precision, 
+                                Int_t* rebin,
+                                TH1F* histoMean,
+                                TH1F* histoSigma,
+                                TString fitName,
+                                Double_t rangeMin,
+                                Double_t rangeMax,
+                                Double_t precision,
                                 TString defaultName){
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             cout << "Bin \t" << i-1 << "\t pt range: "<< ptRanges[i-1]<< " - " << ptRanges[i] <<  endl;
@@ -1287,7 +1290,7 @@
                 } else {
                     f0 = new TF1("f0", fitName.Data() , rangeMin ,rangeMax);
                 }
-                        
+
                 if (fitName.CompareTo("gaus")==0){
                     f0->SetParameter(0,1.5*histoArray[i-1]->GetMaximum());
                     f0->SetParameter(1,0.);
@@ -1317,10 +1320,10 @@
                 if (fitName.CompareTo("gaus(0)+gaus(3)")!=0){
                     while(deviation > precision && counter < 100){
                         fitArray[i-1]->SetRange(ymin,ymax);
-                        
+
                         histoArray[i-1]->Fit(fitArray[i-1],"0RMEQ");
                         Double_t rp2 = fitArray[i-1]->GetParameter(2);
-                        if (rp2>rp){ deviation = rp2-rp;} 
+                        if (rp2>rp){ deviation = rp2-rp;}
                             else {deviation = rp -rp2 ;}
                         rp = rp2 ;
                         mp = fitArray[i-1]->GetParameter(1);
@@ -1335,7 +1338,7 @@
                 Double_t meanE;
                 Double_t sigma;
                 Double_t sigmaE;
-                
+
                 mean = fitArray[i-1]->GetParameter(1);
                 meanE = fitArray[i-1]->GetParError(1);
                 sigma = fitArray[i-1]->GetParameter(2);
@@ -1352,7 +1355,7 @@
                 histoSigma->SetBinContent(i, 0);
                 histoSigma->SetBinError(i, 0);
             }
-        } //end of fitting 
+        } //end of fitting
     }
 
     void ResolutionFittingArray(TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1F* histoMean, TH1F* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, Double_t meanInput =0., Double_t sigmaInput=0.5, Double_t offsetMean = 0, Double_t fractionSecondGauss=0.5){
@@ -1393,10 +1396,10 @@
                 if (fitName.CompareTo("gaus(0)+gaus(3)")!=0){
                     while(deviation > precision && counter < 100){
                         fitArray[i-1]->SetRange(ymin,ymax);
-                        
+
                         histoArray[i-1]->Fit(fitArray[i-1],"0RMEQ");
                         Double_t rp2 = fitArray[i-1]->GetParameter(2);
-                        if (rp2>rp){ deviation = rp2-rp;} 
+                        if (rp2>rp){ deviation = rp2-rp;}
                             else {deviation = rp -rp2 ;}
                         rp = rp2 ;
                         mp = fitArray[i-1]->GetParameter(1);
@@ -1411,14 +1414,14 @@
                 Double_t meanE;
                 Double_t sigma;
                 Double_t sigmaE;
-                
+
                 mean = fitArray[i-1]->GetParameter(1);
                 meanE = fitArray[i-1]->GetParError(1);
                 sigma = fitArray[i-1]->GetParameter(2);
                 sigmaE = fitArray[i-1]->GetParError(2);
-                
+
                 fitArray[i-1]->SetRange(rangeMin, rangeMax);
-                
+
                 histoMean->SetBinContent(i, mean);
                 histoMean->SetBinError(i, meanE);
                 histoSigma->SetBinContent(i, sigma);
@@ -1430,7 +1433,7 @@
                 histoSigma->SetBinContent(i, 0);
                 histoSigma->SetBinError(i, 0);
             }
-        } //end of fitting 
+        } //end of fitting
     }
 
     void ResolutionFittingArrayTH1D(TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1D* histoMean, TH1D* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, Double_t meanInput =0., Double_t sigmaInput=0.5, Double_t offsetMean = 0, Double_t fractionSecondGauss=0.5){
@@ -1471,10 +1474,10 @@
                 if (fitName.CompareTo("gaus(0)+gaus(3)")!=0){
                     while(deviation > precision && counter < 100){
                         fitArray[i-1]->SetRange(ymin,ymax);
-                        
+
                         histoArray[i-1]->Fit(fitArray[i-1],"0RMEQ");
                         Double_t rp2 = fitArray[i-1]->GetParameter(2);
-                        if (rp2>rp){ deviation = rp2-rp;} 
+                        if (rp2>rp){ deviation = rp2-rp;}
                             else {deviation = rp -rp2 ;}
                         rp = rp2 ;
                         mp = fitArray[i-1]->GetParameter(1);
@@ -1489,14 +1492,14 @@
                 Double_t meanE;
                 Double_t sigma;
                 Double_t sigmaE;
-                
+
                 mean = fitArray[i-1]->GetParameter(1);
                 meanE = fitArray[i-1]->GetParError(1);
                 sigma = fitArray[i-1]->GetParameter(2);
                 sigmaE = fitArray[i-1]->GetParError(2);
-                
+
                 fitArray[i-1]->SetRange(rangeMin, rangeMax);
-                
+
                 histoMean->SetBinContent(i, mean);
                 histoMean->SetBinError(i, meanE);
                 histoSigma->SetBinContent(i, sigma);
@@ -1508,7 +1511,7 @@
                 histoSigma->SetBinContent(i, 0);
                 histoSigma->SetBinError(i, 0);
             }
-        } //end of fitting 
+        } //end of fitting
     }
 
     void ResolutionFittingTH1D( TH2* histoRebinned, TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1D* histoMean, TH1D* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, TString defaultName){
@@ -1550,10 +1553,10 @@
                 if (fitName.CompareTo("gaus(0)+gaus(3)")!=0){
                     while(deviation > precision && counter < 100){
                         fitArray[i-1]->SetRange(ymin,ymax);
-                        
+
                         histoArray[i-1]->Fit(fitArray[i-1],"0RMEQ");
                         Double_t rp2 = fitArray[i-1]->GetParameter(2);
-                        if (rp2>rp){ deviation = rp2-rp;} 
+                        if (rp2>rp){ deviation = rp2-rp;}
                             else {deviation = rp -rp2 ;}
                         rp = rp2 ;
                         mp = fitArray[i-1]->GetParameter(1);
@@ -1568,12 +1571,12 @@
                 Double_t meanE;
                 Double_t sigma;
                 Double_t sigmaE;
-                
+
                 mean = fitArray[i-1]->GetParameter(1);
                 meanE = fitArray[i-1]->GetParError(1);
                 sigma = fitArray[i-1]->GetParameter(2);
                 sigmaE = fitArray[i-1]->GetParError(2);
-                
+
                 histoMean->SetBinContent(i, mean);
                 histoMean->SetBinError(i, meanE);
                 histoSigma->SetBinContent(i, sigma);
@@ -1585,7 +1588,7 @@
                 histoSigma->SetBinContent(i, 0);
                 histoSigma->SetBinError(i, 0);
             }
-        } //end of fitting 
+        } //end of fitting
     }
 
     //*****************************************************************/
@@ -1596,7 +1599,7 @@
     Boltzmann_Func(const Double_t *x, const Double_t *p)
     {
     /* dN/dpt */
-    
+
     Double_t pt = x[0];
     Double_t mass = p[0];
     Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
@@ -1609,7 +1612,7 @@
     TF1 *
     Boltzmann(const Char_t *name, Double_t mass, Double_t T = 0.1, Double_t norm = 1.)
     {
-    
+
     TF1 *fBoltzmann = new TF1(name, Boltzmann_Func, 0., 10., 3);
     fBoltzmann->SetParameters(mass, T, norm);
     fBoltzmann->SetParNames("mass", "T", "norm");
@@ -1625,7 +1628,7 @@
     LevyTsallis_Func(const Double_t *x, const Double_t *p)
     {
     /* dN/dpt */
-    
+
     Double_t pt = x[0];
     Double_t mass = p[0];
     Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
@@ -1644,7 +1647,7 @@
     TF1 *
     LevyTsallis(const Char_t *name, Double_t mass, Double_t n = 5., Double_t C = 0.1, Double_t norm = 1.)
     {
-    
+
     TF1 *fLevyTsallis = new TF1(name, LevyTsallis_Func, 0., 10., 4);
     fLevyTsallis->SetParameters(mass, n, C, norm);
     fLevyTsallis->SetParNames("mass", "n", "C", "norm");
@@ -1660,8 +1663,8 @@
     Double_t
     BGBlastWave_Integrand(const Double_t *x, const Double_t *p)
     {
-    
-    /* 
+
+    /*
         x[0] -> r (radius)
         p[0] -> mT (transverse mass)
         p[1] -> pT (transverse momentum)
@@ -1669,7 +1672,7 @@
         p[3] -> T (freezout temperature)
         p[4] -> n (velocity profile)
     */
-    
+
     Double_t r = x[0];
     Double_t mt = p[0];
     Double_t pt = p[1];
@@ -1686,14 +1689,14 @@
     //  if (argI0 > 100 || argI0 < -100)
     //    printf("r=%f, pt=%f, beta_max=%f, temp=%f, n=%f, mt=%f, beta=%f, rho=%f, argI0=%f, argK1=%f\n", r, pt, beta_max, 1. / temp_1, n, mt, beta, rho, argI0, argK1);
     return r * mt * TMath::BesselI0(argI0) * TMath::BesselK1(argK1);
-    
+
     }
 
     Double_t
     BGBlastWave_Func(const Double_t *x, const Double_t *p)
     {
     /* dN/dpt */
-    
+
     Double_t pt = x[0];
     Double_t mass = p[0];
     Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
@@ -1701,7 +1704,7 @@
     Double_t temp = p[2];
     Double_t n = p[3];
     Double_t norm = p[4];
-    
+
     if (!fBGBlastWave_Integrand)
         fBGBlastWave_Integrand = new TF1("fBGBlastWave_Integrand", BGBlastWave_Integrand, 0., 1., 5);
     fBGBlastWave_Integrand->SetParameters(mt, pt, beta_max, temp, n);
@@ -1713,7 +1716,7 @@
     BGBlastWave_Func_OneOverPt(const Double_t *x, const Double_t *p)
     {
     /* 1/pt dN/dpt */
-    
+
     Double_t pt = x[0];
     Double_t mass = p[0];
     Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
@@ -1721,7 +1724,7 @@
     Double_t temp = p[2];
     Double_t n = p[3];
     Double_t norm = p[4];
-    
+
     if (!fBGBlastWave_Integrand)
         fBGBlastWave_Integrand = new TF1("fBGBlastWave_Integrand", BGBlastWave_Integrand, 0., 1., 5);
     fBGBlastWave_Integrand->SetParameters(mt, pt, beta_max, temp, n);
@@ -1734,7 +1737,7 @@
     TF1 *
     BGBlastWave(const Char_t *name, Double_t mass, Double_t xmin = 0, Double_t xmax = 10,Double_t beta_max = 0.9, Double_t temp = 0.1, Double_t n = 1., Double_t norm = 1.e6)
     {
-    
+
     TF1 *fBGBlastWave = new TF1(name, BGBlastWave_Func, xmin, xmax, 5);
     fBGBlastWave->SetParameters(mass, beta_max, temp, n, norm);
     fBGBlastWave->SetParNames("mass", "beta_max", "T", "n", "norm");
@@ -1747,7 +1750,7 @@
 
     TF1 * BGBlastWave_OneOverPT(const Char_t *name, Double_t mass, Double_t xmin = 0, Double_t xmax = 1, Double_t beta_max = 0.9, Double_t temp = 0.1, Double_t n = 1., Double_t norm = 1.e6)
     {
-    
+
     TF1 *fBGBlastWave = new TF1(name, BGBlastWave_Func_OneOverPt, xmin, xmax, 5);
     fBGBlastWave->SetParameters(mass, beta_max, temp, n, norm);
     fBGBlastWave->SetParNames("mass", "beta_max", "T", "n", "norm");
@@ -1766,7 +1769,7 @@
     Double_t
     TsallisBlastWave_Integrand_r(const Double_t *x, const Double_t *p)
     {
-    /* 
+    /*
         x[0] -> r (radius)
         p[0] -> mT (transverse mass)
         p[1] -> pT (transverse momentum)
@@ -1777,7 +1780,7 @@
         p[6] -> y (rapidity)
         p[7] -> phi (azimuthal angle)
     */
-    
+
     Double_t r = x[0];
     Double_t mt = p[0];
     Double_t pt = p[1];
@@ -1792,7 +1795,7 @@
 
     Double_t beta = beta_max * TMath::Power(r, n);
     Double_t rho = TMath::ATanH(beta);
-    
+
     Double_t part1 = mt * TMath::CosH(y) * TMath::CosH(rho);
     Double_t part2 = pt * TMath::SinH(rho) * TMath::Cos(phi);
     Double_t part3 = part1 - part2;
@@ -1808,7 +1811,7 @@
     Double_t
     TsallisBlastWave_Integrand_phi(const Double_t *x, const Double_t *p)
     {
-    /* 
+    /*
         x[0] -> phi (azimuthal angle)
     */
     if(p){};
@@ -1822,7 +1825,7 @@
     Double_t
     TsallisBlastWave_Integrand_y(const Double_t *x, const Double_t *p)
     {
-    /* 
+    /*
         x[0] -> y (rapidity)
     */
     if(p){};
@@ -1836,7 +1839,7 @@
     TsallisBlastWave_Func(const Double_t *x, const Double_t *p)
     {
     /* dN/dpt */
-    
+
     Double_t pt = x[0];
     Double_t mass = p[0];
     Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
@@ -1861,7 +1864,7 @@
     TF1 *
     TsallisBlastWave(const Char_t *name, Double_t mass, Double_t xmin =0., Double_t xmax = 10.,  Double_t beta_max = 0.9, Double_t temp = 0.1, Double_t n = 1., Double_t q = 2., Double_t norm = 1.e6)
     {
-    
+
     TF1 *fTsallisBlastWave = new TF1(name, TsallisBlastWave_Func, xmin, xmax, 6);
     fTsallisBlastWave->SetParameters(mass, beta_max, temp, n, q, norm);
     fTsallisBlastWave->SetParNames("mass", "beta_max", "T", "n", "q", "norm");
@@ -1887,7 +1890,7 @@
     //   h->Fit(f);
     h->Fit(f, opt);
     return f;
-    
+
     }
 
     TF1 *
@@ -1899,7 +1902,7 @@
     //   h->Fit(f);
     h->Fit(f, opt);
     return f;
-    
+
     }
 
 
@@ -1927,12 +1930,12 @@
         Obj->Fit(f, opt);
     }
     return f;
-    
+
     }
 
     void GetYieldAndMean(TH1 *h, TF1 *f, Double_t &yield, Double_t &yielderr, Double_t &yielderrcorr, Double_t &mean, Double_t &meanerr, Double_t &meanerrcorr, Double_t min, Double_t max, Double_t *partyield, Double_t *partyielderr, Double_t *partyielderrcorr)
     {
-    
+
     /* find lowest edge in histo */
     Int_t binlo = 0;
     Double_t lo = 0;
@@ -1943,7 +1946,7 @@
         break;
         }
     }
-    
+
     /* find highest edge in histo */
     Int_t binhi = 0;
     Double_t hi = 0;
@@ -1954,7 +1957,7 @@
         break;
         }
     }
-    
+
     /* integrate the data */
     Double_t cont, err, width, cent, integral_data = 0., integralerr_data = 0., integralerrcorr_data = 0., meanintegral_data = 0., meanintegralerr_data = 0., meanintegralerrcorr_data = 0.;
     for (Int_t ibin = binlo; ibin < binhi; ibin++) {
@@ -1984,13 +1987,13 @@
     }
     integralerr_data = TMath::Sqrt(integralerr_data);
     meanintegralerr_data = TMath::Sqrt(meanintegralerr_data);
-    
+
     /* integrate below the data */
     Double_t integral_lo = min < lo ? f->Integral(min, lo) : 0.;
     Double_t integralerr_lo = min < lo ? f->IntegralError(min, lo, 0, 0, 1.e-6) : 0.;
     Double_t meanintegral_lo = min < lo ? f->Mean(min, lo) * integral_lo : 0.;
     Double_t meanintegralerr_lo = min < lo ? f->Mean(min, lo) * integralerr_lo : 0.;
-    
+
     /* integrate above the data */
     Double_t integral_hi = max > hi ? f->Integral(hi, max) : 0.;
     Double_t integralerr_hi = max > hi ? f->IntegralError(hi, max, 0, 0, 1.e-6) : 0.;
@@ -1999,20 +2002,20 @@
 
     /* compute integrated yield */
     yield = integral_data + integral_lo + integral_hi;
-    yielderr = TMath::Sqrt(integralerr_data * integralerr_data + 
-            integralerr_lo * integralerr_lo + 
+    yielderr = TMath::Sqrt(integralerr_data * integralerr_data +
+            integralerr_lo * integralerr_lo +
             integralerr_hi * integralerr_hi);
-    yielderrcorr = TMath::Sqrt(integralerrcorr_data * integralerrcorr_data + 
-                integralerr_lo * integralerr_lo + 
+    yielderrcorr = TMath::Sqrt(integralerrcorr_data * integralerrcorr_data +
+                integralerr_lo * integralerr_lo +
                 integralerr_hi * integralerr_hi);
-    
+
     /* compute integrated mean */
     mean = (meanintegral_data + meanintegral_lo + meanintegral_hi) / yield;
-    meanerr = TMath::Sqrt(meanintegralerr_data * meanintegralerr_data + 
-            meanintegralerr_lo * meanintegralerr_lo + 
+    meanerr = TMath::Sqrt(meanintegralerr_data * meanintegralerr_data +
+            meanintegralerr_lo * meanintegralerr_lo +
             meanintegralerr_hi * meanintegralerr_hi) / yield;
-    meanerrcorr = TMath::Sqrt(meanintegralerrcorr_data * meanintegralerrcorr_data + 
-                meanintegralerr_lo * meanintegralerr_lo + 
+    meanerrcorr = TMath::Sqrt(meanintegralerrcorr_data * meanintegralerrcorr_data +
+                meanintegralerr_lo * meanintegralerr_lo +
                 meanintegralerr_hi * meanintegralerr_hi) / yield;
 
     /* set partial yields */
@@ -2046,11 +2049,11 @@
     printf("dN/dy (data) = %f +- %f (%f)\n", partyield[0], partyielderr[0], partyielderrcorr[0]);
     printf("dN/dy (low)  = %f +- %f (%f)\n", partyield[1], partyielderr[1], partyielderrcorr[1]);
     printf("dN/dy (high) = %f +- %f (%f)\n", partyield[2], partyielderr[2], partyielderrcorr[2]);
-        
+
     //  printf("----\n");
     //  printf("dN/dy (func) = %f +- %f\n", fint, finte);
     //  printf("<pT> (func)  = %f +- %f\n", fmean, 0.);
-    
+
     //  TH1 *hr = (TH1 *)h->Clone("hr");
     //  hr->Divide(f);
     //  new TCanvas;
@@ -2065,12 +2068,12 @@
 
     /*****************************************************************/
 
-    Double_t 
+    Double_t
     y2eta(Double_t pt, Double_t mass, Double_t y){
     Double_t mt = TMath::Sqrt(mass * mass + pt * pt);
     return TMath::ASinH(mt / pt * TMath::SinH(y));
     }
-    Double_t 
+    Double_t
     eta2y(Double_t pt, Double_t mass, Double_t eta){
     Double_t mt = TMath::Sqrt(mass * mass + pt * pt);
     return TMath::ASinH(pt / mt * TMath::SinH(eta));
@@ -2275,7 +2278,7 @@
         }
         if(!type.CompareTo("dmtsal")){
             params[0] = 2.09114;
-            params[1] = 2.7482; 
+            params[1] = 2.7482;
             params[2] = 6.911;
             params[3] = 51.1383;
             params[4] = -10.6896;

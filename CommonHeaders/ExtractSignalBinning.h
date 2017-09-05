@@ -3942,12 +3942,53 @@
                    }
                }
             }
+        } else if (meson.CompareTo("Gamma") == 0){
+            if (energy.CompareTo("2.76TeV") == 0){
+                if (mode == 0 || mode == 2){
+                    maxNBins = 18;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i]  = fBinsDirGamma2760GeVPt[i];
+                    }
+                } else if (mode == 4){
+                    maxNBins = 19;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsDirGamma2760GeVPt[i];
+                    }
+                } else if (mode == 20) {
+                    maxNBins = 19;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsDirGamma2760GeVPt[i];
+                    }
+                }
+            } else if (energy.CompareTo("pPb_5.023TeV") == 0){
+                if (mode == 0){
+                    maxNBins = 25;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i]  = fBinsDirGammapPb5TeVPt[i];
+                    }
+                } else if (mode == 2){
+                    maxNBins = 28;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsDirGammapPb5TeVPCMEMCPt[i];
+                    }
+                } else if (mode == 4){
+                    maxNBins = 25;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsDirGammapPb5TeVPt[i];
+                    }
+                } else if (mode == 20) {
+                    maxNBins = 28;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsDirGammapPb5TeVPCMEMCPt[i];
+                    }
+                }
+            }
         }
         return maxNBins;
     }
 
     //*************************************************************************************************
-    //******************** GetBinning for general combination *****************************************
+    //******************** GetStartBin for general combination *****************************************
     //*************************************************************************************************
     Int_t GetStartBin(  TString   meson,
                         TString   energy,

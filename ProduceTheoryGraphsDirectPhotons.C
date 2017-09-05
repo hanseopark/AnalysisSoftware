@@ -108,7 +108,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // **********************************************************************************************************************
         // Load cocktail for pp 2.76TeV comb
         // **********************************************************************************************************************
-        TString nameCocktailFilePP2760GeVComb   = "CocktailInput/cocktail_pp2760GeV_MB_comb.root";
+        TString nameCocktailFilePP2760GeVComb   = "CocktailInput/GammaCocktail_pp2760GeV_MB_comb.root";
         TFile* fileCockailPP2760GeVComb         = new TFile(nameCocktailFilePP2760GeVComb.Data());
         TH1D* histoGammaDecayCombPP2760GeV      = (TH1D*)fileCockailPP2760GeVComb->Get("Gamma_Pt_OrBin");
         for (Int_t i = 1; i < histoGammaDecayCombPP2760GeV->GetNbinsX()+1; i++){
@@ -968,16 +968,18 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         //****************************** read in Powheg Direct Photon predictions **************************
         //****************************** contact person: Hendrik Poppenborg       **************************
         //**************************************************************************************************
-
+        TFile* infile_powheg_pp;
+        TGraphAsymmErrors* gae_gamma_pt_powheg_pp5020_ncteq15;
+        TGraphAsymmErrors* gae_gamma_pt_powheg_pp5020_epps16;
         if ( !(infile_powheg_pp = TFile::Open("ExternalInputpPb/Theory/powheg_direct_photons/powheg_direct_photons.root")) ) {
             printf("--------------------------------------------------------------------\n");
-            printf( Form("input file open failed in line %ld\n", __LINE__) );
+            printf( "input file open failed in line \n");
             return;
         }
         if ( !(gae_gamma_pt_powheg_pp5020_ncteq15  = (TGraphAsymmErrors*)infile_powheg_pp->Get("gae_gamma_pt_powheg_pp5020_ncteq15")) ||
              !(gae_gamma_pt_powheg_pp5020_epps16   = (TGraphAsymmErrors*)infile_powheg_pp->Get("gae_gamma_pt_powheg_pp5020_epps16")) ){
             printf("--------------------------------------------------------------------\n");
-            printf( Form("picking up TGraphAsymmErrors failed in line %ld\n", __LINE__) );
+            printf( "picking up TGraphAsymmErrors failed in line \n" );
             return ;
         }
 
@@ -994,7 +996,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         //************************************** Writing output for pp ***************************************************
         //******************************************************************************************************************
         TFile *fileTheoryGraphsPP   = new TFile("ExternalInput/Theory/TheoryCompilationPP.root","UPDATE");
-
 
             fileTheoryGraphsPP->mkdir("DirectPhoton");
             TDirectoryFile* directoryGamma = (TDirectoryFile*)fileTheoryGraphsPP->Get("DirectPhoton");
@@ -1034,7 +1035,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             fitPromptDivFragGamma2760GeV->Write("ratioFitNLOPromptDivFragGamma2760GeV", TObject::kOverwrite);
             fitTheoryDirectMcGill2760GeV->Write("fitYieldDirectPhotonNLOPaquett_2760GeV",TObject::kOverwrite);
 
-            graphNLOCalcRGammaALICECocktailPP2760GeV
             graphNLOCalcRGammaALICECocktailPP2760GeV->GetYaxis()->SetTitle("R_{#gamma}");
             graphNLOCalcRGammaALICECocktailPP2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcRGammaALICECocktailPP2760GeV->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT1_pp2760GeV_CT10_ALICECocktail",TObject::kOverwrite);
@@ -1044,7 +1044,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
             histoGammaDecayCombPP2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             histoGammaDecayCombPP2760GeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
-            histoGammaDecayCombPP2760GeV->Write("histoALICECombCocktailGammasPP2760GeV");
+            histoGammaDecayCombPP2760GeV->Write("histoALICECombCocktailGammasPP2760GeV",TObject::kOverwrite);
 
             // writing 5TeV Gammas
             graphNLOCalcDirGam5TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
@@ -2650,10 +2650,17 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         //****************************** read in Powheg Direct Photon predictions **************************
         //****************************** contact person: Hendrik Poppenborg       **************************
         //**************************************************************************************************
-//TODO documentation
+        //TODO documentation
+        TFile* infile_powheg_pPb;
+        TGraphAsymmErrors* gae_gamma_pt_powheg_pPb5020_ncteq15;
+        TGraphAsymmErrors* gae_gamma_pt_powheg_pPb5020_epps16;
+        TGraphAsymmErrors* gae_gamma_pt_powheg_pp5020_ncteq15;
+        TGraphAsymmErrors* gae_gamma_pt_powheg_pp5020_epps16;
+        TGraphAsymmErrors* gae_rpPb_powheg_pPb5020_ncteq15;
+        TGraphAsymmErrors* gae_rpPb_powheg_pPb5020_epps16;
         if ( !(infile_powheg_pPb = TFile::Open("ExternalInputpPb/Theory/powheg_direct_photons/powheg_direct_photons.root")) ) {
             printf("--------------------------------------------------------------------\n");
-            printf( Form("input file open failed in line %ld\n", __LINE__) );
+            printf("input file open failed in line \n" );
             return;
         }
         if ( !(gae_gamma_pt_powheg_pPb5020_ncteq15 = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_gamma_pt_powheg_pPb5020_ncteq15")) ||
@@ -2663,7 +2670,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
              !(gae_rpPb_powheg_pPb5020_ncteq15     = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_rpPb_pPb5020_ncteq15")) ||
              !(gae_rpPb_powheg_pPb5020_epps16      = (TGraphAsymmErrors*)infile_powheg_pPb->Get("gae_rpPb_pPb5020_epps16")) ){
             printf("--------------------------------------------------------------------\n");
-            printf( Form("picking up TGraphAsymmErrors failed in line %ld\n", __LINE__) );
+            printf("picking up TGraphAsymmErrors failed in line \n");
             return ;
         }
 

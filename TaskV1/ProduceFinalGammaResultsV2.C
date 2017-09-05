@@ -152,7 +152,7 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     TH1D* histoDR                           = (TH1D*) fileInput->Get("DoubleRatioTrueEffPurity");
     TH1D* histoDRFit                        = (TH1D*) fileInput->Get("DoubleRatioFitPurity");
     TH1D* histococktailAllGamma             = (TH1D*) fileInput->Get("Gamma_Pt");
-    
+
     TString inputFileNameAdditional               = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root", fCutNumber.Data(), optionEnergy.Data(), fCutNumber.Data());
     cout << "trying to read: " << inputFileNameAdditional.Data() << endl;
     TFile *fileInputAdditional                    = new TFile(inputFileNameAdditional.Data());
@@ -164,8 +164,15 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     // read stat error hists
     TH1D* histoPileupCorrection             = (TH1D*) fileInputAdditional->Get("PileUpCorrectionFactor");
     TH1D* histoGammaRawYields               = (TH1D*) fileInputAdditional->Get("GammaRaw_Pt");
-    
-    
+    TH1D* histoSecEffCorr[4]                = {NULL, NULL, NULL, NULL};
+    TString nameSecondaryMother[4]          = {"K0s", "K0l", "Lambda", "Rest"};
+    for (Int_t k = 0; k < 4; k++){
+        if (k < 3)
+            histoSecEffCorr[k]              = (TH1D*) fileInputAdditional->Get(Form("histoSecCocktailGammaFromXFrom%sEffCorr",nameSecondaryMother[k].Data()));
+        else
+            histoSecEffCorr[k]              = (TH1D*) fileInputAdditional->Get(Form("histoSecCocktailGammaFromXFrom%sEffCorr",nameSecondaryMother[k].Data()));
+    }
+
     TString inputFileNameAdditional2               = Form("%s/%s/Pi0_MC_GammaConvV1CorrectionHistos_%s.root", fCutNumber.Data(), optionEnergy.Data(), fCutNumber.Data());
     cout << "trying to read: " << inputFileNameAdditional2.Data() << endl;
     TFile *fileInputAdditional2                    = new TFile(inputFileNameAdditional2.Data());
@@ -422,80 +429,84 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
             fileGammaFinal->cd(Form("Gamma_%s%s",collisionSystemOutput.Data(), centrality.Data() ));
         }
 
-            // writing double ratio quantities
-            if (histoDR){
-                SetHistogramm(histoDR,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
-                histoDR->Write("DoubleRatioStatError",TObject::kOverwrite);
+        // writing double ratio quantities
+        if (histoDR){
+            SetHistogramm(histoDR,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
+            histoDR->Write("DoubleRatioStatError",TObject::kOverwrite);
+        }
+        if (graphDRSysErr) graphDRSysErr->Write("DoubleRatioSystError",TObject::kOverwrite);
+
+        if (histoDRFit){
+            SetHistogramm(histoDRFit,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
+            histoDRFit->Write("DoubleRatioPi0FitStatError",TObject::kOverwrite);
+        }
+        if(graphDRPi0FitSysErr) graphDRPi0FitSysErr->Write("DoubleRatioPi0FitSystError",TObject::kOverwrite);
+
+        // writing inclusive ratio quantities
+        if (histoIncRatio){
+            SetHistogramm(histoIncRatio,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
+            histoIncRatio->Write("IncRatioStatError",TObject::kOverwrite);
+        }
+        if (graphIncRatioSysErr) graphIncRatioSysErr->Write("IncRatioSystError",TObject::kOverwrite);
+
+        if (histoIncRatioPi0Fit){
+            SetHistogramm(histoIncRatioPi0Fit,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
+            histoIncRatioPi0Fit->Write("IncRatioPi0FitStatError",TObject::kOverwrite);
+        }
+        if(graphIncRatioPi0FitSysErr) graphIncRatioPi0FitSysErr->Write("IncRatioPi0FitSystError",TObject::kOverwrite);
+
+        // writing inclusive gamma spectrum
+        if (histoIncGamma){
+            SetHistogramm(histoIncGamma,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
+            histoIncGamma->Write("IncGammaStatError",TObject::kOverwrite);
+        }
+        if (graphIncGammaSysErr) graphIncGammaSysErr->Write("IncGammaSystError",TObject::kOverwrite);
+
+        // writing pi0 used pi0 spectrum
+        if (histoPi0Spectrum){
+            SetHistogramm(histoPi0Spectrum,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
+            histoPi0Spectrum->Write("Pi0StatError",TObject::kOverwrite);
+        }
+        // // writing direct photon spectrum
+        if(histoDirectPhotonSpectrum)            histoDirectPhotonSpectrum->Write("DirectPhotonSpectrum",TObject::kOverwrite);
+        if(histoDirectPhotonSpectrumFit)            histoDirectPhotonSpectrumFit->Write("DirectPhotonSpectrumFit",TObject::kOverwrite);
+
+
+        if(histoPileupCorrection)           histoPileupCorrection->Write("PileUpCorrectionFactor",TObject::kOverwrite);
+        if(histoGammaRawYields)             histoGammaRawYields->Write("GammaRawYields",TObject::kOverwrite);
+        if(histoGammaPurity)                histoGammaPurity->Write("GammaTruePurity",TObject::kOverwrite);
+        if(histoGammaConvProb)              histoGammaConvProb->Write("GammaConversionProbability",TObject::kOverwrite);
+        if(histoGammaRecoEff)               histoGammaRecoEff->Write("GammaRecoEfficiency",TObject::kOverwrite);
+
+        for (Int_t k = 0; k < 4; k++){
+            if (histoSecEffCorr[k])         histoSecEffCorr[k]->Write(Form("GammaEffectiveSecondaryCorr_%s", nameSecondaryMother[k].Data()),TObject::kOverwrite);
+        }
+
+        // Cocktail histograms
+        directoryGamma->mkdir("Cocktail");
+        TDirectoryFile* directoryCocktail = (TDirectoryFile*)directoryGamma->Get("Cocktail");
+        directoryGamma->cd("Cocktail");
+        if(histococktailAllGamma) histococktailAllGamma->Write(histococktailAllGamma->GetName(),TObject::kOverwrite);
+        TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
+        TH1D* dummyCocktailHist;
+        TH1D* dummyGammaCocktailHist;
+        TH1D* dummyGammaRatioCocktailHist;
+        for(Int_t i=0; i<14;i++){
+            dummyCocktailHist             = NULL;
+            dummyGammaCocktailHist        = NULL;
+            dummyGammaRatioCocktailHist   = NULL;
+            dummyCocktailHist             = (TH1D* )fileInput->Get(Form("%s_Pt",particlesInCocktail[i].Data()));
+            dummyGammaCocktailHist        = (TH1D* )fileInput->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
+            if(dummyCocktailHist) dummyCocktailHist->Write(dummyCocktailHist->GetName(),TObject::kOverwrite);
+            if(dummyGammaCocktailHist){
+                dummyGammaCocktailHist->Write(dummyGammaCocktailHist->GetName(),TObject::kOverwrite);
+                if(histococktailAllGamma){
+                    dummyGammaRatioCocktailHist = (TH1D* )fileInput->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
+                    dummyGammaRatioCocktailHist->Divide(histococktailAllGamma);
+                    dummyGammaRatioCocktailHist->Write(Form("Gamma_From_%s_Ratio_To_All",particlesInCocktail[i].Data()), TObject::kOverwrite);
+                }
             }
-            if (graphDRSysErr) graphDRSysErr->Write("DoubleRatioSystError",TObject::kOverwrite);
-
-            if (histoDRFit){
-                SetHistogramm(histoDRFit,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
-                histoDRFit->Write("DoubleRatioPi0FitStatError",TObject::kOverwrite);
-            }
-            if(graphDRPi0FitSysErr) graphDRPi0FitSysErr->Write("DoubleRatioPi0FitSystError",TObject::kOverwrite);
-
-            // writing inclusive ratio quantities
-            if (histoIncRatio){
-                SetHistogramm(histoIncRatio,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
-                histoIncRatio->Write("IncRatioStatError",TObject::kOverwrite);
-            }
-            if (graphIncRatioSysErr) graphIncRatioSysErr->Write("IncRatioSystError",TObject::kOverwrite);
-
-            if (histoIncRatioPi0Fit){
-                SetHistogramm(histoIncRatioPi0Fit,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
-                histoIncRatioPi0Fit->Write("IncRatioPi0FitStatError",TObject::kOverwrite);
-            }
-            if(graphIncRatioPi0FitSysErr) graphIncRatioPi0FitSysErr->Write("IncRatioPi0FitSystError",TObject::kOverwrite);
-
-            // writing inclusive gamma spectrum
-            if (histoIncGamma){
-                SetHistogramm(histoIncGamma,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
-                histoIncGamma->Write("IncGammaStatError",TObject::kOverwrite);
-            }
-            if (graphIncGammaSysErr) graphIncGammaSysErr->Write("IncGammaSystError",TObject::kOverwrite);
-
-            // writing pi0 used pi0 spectrum
-            if (histoPi0Spectrum){
-                SetHistogramm(histoPi0Spectrum,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
-                histoPi0Spectrum->Write("Pi0StatError",TObject::kOverwrite);
-            }
-            // // writing direct photon spectrum
-            if(histoDirectPhotonSpectrum)            histoDirectPhotonSpectrum->Write("DirectPhotonSpectrum",TObject::kOverwrite);
-            if(histoDirectPhotonSpectrumFit)            histoDirectPhotonSpectrumFit->Write("DirectPhotonSpectrumFit",TObject::kOverwrite);
-
-
-          if(histoPileupCorrection)            histoPileupCorrection->Write("PileUpCorrectionFactor",TObject::kOverwrite);
-          if(histoGammaRawYields)            histoGammaRawYields->Write("GammaRawYields",TObject::kOverwrite);
-          if(histoGammaPurity)            histoGammaPurity->Write("GammaTruePurity",TObject::kOverwrite);
-          if(histoGammaConvProb)            histoGammaConvProb->Write("GammaConversionProbability",TObject::kOverwrite);
-          if(histoGammaRecoEff)            histoGammaRecoEff->Write("GammaRecoEfficiency",TObject::kOverwrite);
-
-      // Cocktail histograms
-      directoryGamma->mkdir("Cocktail");
-      TDirectoryFile* directoryCocktail = (TDirectoryFile*)directoryGamma->Get("Cocktail");
-      directoryGamma->cd("Cocktail");
-      if(histococktailAllGamma) histococktailAllGamma->Write(histococktailAllGamma->GetName(),TObject::kOverwrite);
-      TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
-      TH1D* dummyCocktailHist;
-      TH1D* dummyGammaCocktailHist;
-      TH1D* dummyGammaRatioCocktailHist;
-      for(Int_t i=0; i<14;i++){
-          dummyCocktailHist             = NULL;
-          dummyGammaCocktailHist        = NULL;
-          dummyGammaRatioCocktailHist   = NULL;
-          dummyCocktailHist             = (TH1D* )fileInput->Get(Form("%s_Pt",particlesInCocktail[i].Data()));
-          dummyGammaCocktailHist        = (TH1D* )fileInput->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
-          if(dummyCocktailHist) dummyCocktailHist->Write(dummyCocktailHist->GetName(),TObject::kOverwrite);
-          if(dummyGammaCocktailHist){
-              dummyGammaCocktailHist->Write(dummyGammaCocktailHist->GetName(),TObject::kOverwrite);
-              if(histococktailAllGamma){
-                  dummyGammaRatioCocktailHist = (TH1D* )fileInput->Get(Form("Gamma_From_%s_Pt",particlesInCocktail[i].Data()));
-                  dummyGammaRatioCocktailHist->Divide(histococktailAllGamma);
-                  dummyGammaRatioCocktailHist->Write(Form("Gamma_From_%s_Ratio_To_All",particlesInCocktail[i].Data()), TObject::kOverwrite);
-              }
-          }
-      }
+        }
 
     fileGammaFinal->Write();
     fileGammaFinal->Close();
