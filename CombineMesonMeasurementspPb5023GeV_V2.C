@@ -1098,6 +1098,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         TGraphErrors* graphPHENIXEtaToPi0200GeV             = (TGraphErrors*)fileEtaToPi0CompilationPP->Get("Phenix200GeV");
         TGraphAsymmErrors* graphALICEEtaToPi07TeV           = (TGraphAsymmErrors*)fileEtaToPi0CompilationPP->Get("Alice7TeV");
         TGraphAsymmErrors* graphALICEEtaToPi02760GeV        = (TGraphAsymmErrors*)fileEtaToPi0CompilationPP->Get("Alice2760GeV");
+        TGraphAsymmErrors* graphALICEEtaToPi08TeV           = (TGraphAsymmErrors*)fileEtaToPi0CompilationPP->Get("Alice8TeV");
     TFile* fileEtaToPi0CompilationPPb                       = new TFile(fileNameEtaToPi0WorldDataPPb.Data());
         TGraphErrors* graphCERESEtaToPi0pAu29100MeV         = (TGraphErrors*)fileEtaToPi0CompilationPPb->Get("AgakishievpAu29100MeV");
         TGraphErrors* graphCERESEtaToPi0pBe29100MeV         = (TGraphErrors*)fileEtaToPi0CompilationPPb->Get("AgakishievpBe29100MeV");
