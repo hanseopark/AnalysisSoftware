@@ -70,8 +70,9 @@
     TString             AutoDetectMainTList(Int_t);
     TH1D*               GetUpperLimitsHisto(  TH1D*, TGraphAsymmErrors*, Double_t, Double_t, Int_t );
     Double_t            GetUpperLimit( Double_t, Double_t, Double_t, Double_t, Double_t&, Double_t, Int_t );
-    void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*&, TGraph*&, Double_t&, Bool_t ,Bool_t ,TString);
+    void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*& ,Bool_t ,TString);
     Double_t            Chi2ForNullHypoPValue(TGraphErrors*, TGraphAsymmErrors* ,  Bool_t , TString );
+
     // ****************************************************************************************************************
     // ********************** definition of functions defined in this header ******************************************
     // ****************************************************************************************************************
@@ -4725,10 +4726,7 @@
     void FillChi2HistForNullHypoPValue    (  ULong64_t    n_pseudo_exp,
                                     TGraphAsymmErrors*    graphTrue,
                                     TH1D*    &histo,
-                                    TGraph*  &g_rel_stat_plus_type_a_error,
-                                    TGraph*  &g_rel_type_b_error,
-                                    Double_t &rel_type_c_error,
-                                    Bool_t   anti_corr_type_b,
+                                    TGraph*  &graphRelStatPlusSysError,
                                     Bool_t useFixedValue,
                                     TString energy
                                           ) {
@@ -4745,14 +4743,13 @@
         for (ULong64_t i_pseudo_exp=0; i_pseudo_exp<n_pseudo_exp; i_pseudo_exp++) {
             Double_t sumsq                          = 0;
             // create pseudo data set
-            for (Int_t ip=0; ip<g_rel_type_b_error->GetN(); ip++) {
-                Double_t rel_type_b_error           = g_rel_type_b_error->GetY()[ip];
+            for (Int_t ip=0; ip<graphRelStatPlusSysError->GetN(); ip++) {
                 Double_t R_mod                      = R_true;
                 if(graphTrue && !useFixedValue){
-                    R_true                          = graphTrue->Eval(g_rel_stat_plus_type_a_error->GetX()[ip]);
+                    R_true                          = graphTrue->Eval(graphRelStatPlusSysError->GetX()[ip]);
                     R_mod                           = R_true;
                 }
-                Double_t rel_stat_plus_type_a_err   = g_rel_stat_plus_type_a_error->GetY()[ip];
+                Double_t rel_stat_plus_type_a_err   = graphRelStatPlusSysError->GetY()[ip];
                 Double_t abs_stat_plus_type_a_err_scaled    = R_mod * rel_stat_plus_type_a_err;
 
                 Double_t y                          = rndm.Gaus(R_mod, abs_stat_plus_type_a_err_scaled);

@@ -837,6 +837,164 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
       
       
     // **********************************************************************************************************************
+    // ******************************************* NONLINEARITY COMPARISONS ***************************************
+    // **********************************************************************************************************************
+  
+    Double_t minXNL = 0.45;
+    Double_t maxXNL = 29;
+    cout << "plotting Nonlinearity parameterizations" << endl;
+    canvasRatioToCombFit->cd();
+    TH2F * histo2DNonlinearityComp;
+    histo2DNonlinearityComp                       = new TH2F("histo2DNonlinearityComp","histo2DNonlinearityComp",1000,minXNL,maxXNL,1000,0.955,1.055    );
+    SetStyleHistoTH2ForGraphs(histo2DNonlinearityComp, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
+                            0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+    histo2DNonlinearityComp->GetXaxis()->SetMoreLogLabels();
+    histo2DNonlinearityComp->GetXaxis()->SetLabelOffset(-0.01);
+
+    histo2DNonlinearityComp->Draw("copy");
+    TF1* fitDataMass2760GeV       = new TF1("fitDataMass2760GeV", "[0] + [1]*pow(x,[2])" ,minXNL,maxXNL);
+    fitDataMass2760GeV->SetParameter(0, 1.1673716264 );
+    fitDataMass2760GeV->SetParameter(1, -0.1853095466 );
+    fitDataMass2760GeV->SetParameter(2, -0.0848801702 );
+    // fitDataMass2760GeV->SetParameter(0, 1.0443938253 );
+    // fitDataMass2760GeV->SetParameter(1, -0.0691830812 );
+    // fitDataMass2760GeV->SetParameter(2, -0.1247555443 );
+    DrawGammaSetMarkerTF1( fitDataMass2760GeV, 7, 2, kMagenta+2);
+    fitDataMass2760GeV->Draw("same");
+    
+    TF1* fitDataMass5023GeV       = new TF1("fitDataMass5023GeV", "[0] + [1]*pow(x,[2])" ,minXNL,maxXNL);
+    fitDataMass5023GeV->SetParameter(0, 1.1237705555 );
+    fitDataMass5023GeV->SetParameter(1, -0.1328806845 );
+    fitDataMass5023GeV->SetParameter(2, -0.1064755375 );
+    // fitDataMass5023GeV->SetParameter(0, 1.0825118468 );
+    // fitDataMass5023GeV->SetParameter(1, -0.1079736424 );
+    // fitDataMass5023GeV->SetParameter(2, -0.0800008954 );
+    // fitDataMass5023GeV->SetParameter(0, 1.1818406492 ); // after fix
+    // fitDataMass5023GeV->SetParameter(1, -0.1999998957 );// after fix
+    // fitDataMass5023GeV->SetParameter(2, -0.1434322871 );// after fix
+    // fitDataMass5023GeV->SetParameter(0, 1.1497456392 );// after fix
+    // fitDataMass5023GeV->SetParameter(1, -0.1999999732 );// after fix
+    // fitDataMass5023GeV->SetParameter(2, -0.0839303140 );// after fix
+    DrawGammaSetMarkerTF1( fitDataMass5023GeV, 8, 2, kOrange+2);
+    fitDataMass5023GeV->Draw("same");
+    
+    TF1* fitDataMass7000GeV       = new TF1("fitDataMass7000GeV", "[0] + [1]*pow(x,[2])" ,minXNL,maxXNL);
+    fitDataMass7000GeV->SetParameter(0, 1.1850179319 );
+    fitDataMass7000GeV->SetParameter(1, -0.1999999950 );
+    fitDataMass7000GeV->SetParameter(2, -0.0863054172 );
+    // fitDataMass7000GeV->SetParameter(0, 1.1082846035 );
+    // fitDataMass7000GeV->SetParameter(1, -0.1369968318 );
+    // fitDataMass7000GeV->SetParameter(2, -0.0800000002 );
+    DrawGammaSetMarkerTF1( fitDataMass7000GeV, 3, 2, kGreen+2);
+    fitDataMass7000GeV->Draw("same");
+    
+    TF1* fitDataMass8000GeV       = new TF1("fitDataMass8000GeV", "[0] + [1]*pow(x,[2])" ,minXNL,maxXNL);
+    fitDataMass8000GeV->SetParameter(0, 1.1814766150 );
+    fitDataMass8000GeV->SetParameter(1, -0.1980098061 );
+    fitDataMass8000GeV->SetParameter(2, -0.0854569214 );
+    // fitDataMass8000GeV->SetParameter(0, 1.0654169768 );
+    // fitDataMass8000GeV->SetParameter(1, -0.0935785719 );
+    // fitDataMass8000GeV->SetParameter(2, -0.1137883054 );
+    DrawGammaSetMarkerTF1( fitDataMass8000GeV, 2, 2, kBlue+2);
+    fitDataMass8000GeV->Draw("same");
+
+    TF1* fitDataMass5000GeVpPb       = new TF1("fitDataMass5000GeVpPb", "[0]-TMath::Exp(-[1]*x+[2])" ,minXNL,maxXNL);
+    fitDataMass5000GeVpPb->SetParameter(0, 1.0255088817 );
+    fitDataMass5000GeVpPb->SetParameter(1, 0.3070452373 );
+    fitDataMass5000GeVpPb->SetParameter(2, -2.9149185308 );
+    // fitDataMass5000GeVpPb->SetParameter(0, 0.9910691195 );
+    // fitDataMass5000GeVpPb->SetParameter(1, 0.4901455923 );
+    // fitDataMass5000GeVpPb->SetParameter(2, -3.6647921806 );
+    DrawGammaSetMarkerTF1( fitDataMass5000GeVpPb, 4, 2, kCyan+2);
+    fitDataMass5000GeVpPb->Draw("same");
+    
+    
+  
+    TLegend* legendNLPCMEMC           = GetAndSetLegend2(0.15, 0.76-textSizeLabelsRel, 0.53, 0.76+(4.5*textSizeLabelsRel),0.8*textSizeLabelsPixel);
+    legendNLPCMEMC->AddEntry(fitDataMass8000GeV,"pp, #sqrt{#it{s}} = 8 TeV","l");
+    legendNLPCMEMC->AddEntry(fitDataMass7000GeV,"pp, #sqrt{#it{s}} = 7 TeV","l");
+    legendNLPCMEMC->AddEntry(fitDataMass5023GeV,"pp, #sqrt{#it{s}} = 5.02TeV","l");
+    legendNLPCMEMC->AddEntry(fitDataMass2760GeV,"pp, #sqrt{#it{s}} = 2.76 TeV","l");
+    legendNLPCMEMC->AddEntry(fitDataMass5000GeVpPb,"p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV","l");
+    legendNLPCMEMC->Draw();
+    
+    
+    DrawGammaLines(minXNL,maxXNL , 1., 1.,0.1, kGray+2, 7);
+    // DrawGammaLines(minXNL,maxXNL , 1.1, 1.1,0.1, kGray, 7);
+    // DrawGammaLines(minXNL,maxXNL , 0.9, 0.9,0.1, kGray, 7);
+    
+    drawLatexAdd("ALICE",0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("PCM-EMC",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    canvasRatioToCombFit->SaveAs(Form("%s/NonlinearityComparisonsPCMEMC.%s",outputDir.Data(),suffix.Data()));
+    
+    
+    histo2DNonlinearityComp                       = new TH2F("histo2DNonlinearityComp","histo2DNonlinearityComp",1000,minXNL,maxXNL,1000,0.905,1.105    );
+    SetStyleHistoTH2ForGraphs(histo2DNonlinearityComp, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (data)} #GT / M_{#pi^{0} (PDG)}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
+                            0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
+    histo2DNonlinearityComp->GetXaxis()->SetMoreLogLabels();
+    histo2DNonlinearityComp->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DNonlinearityComp->Draw("copy");
+    
+    fitDataMass2760GeV->SetParameter(0, 1.0383412435 );
+    fitDataMass2760GeV->SetParameter(1, -0.0851830429 );
+    fitDataMass2760GeV->SetParameter(2, -0.4999999996 );
+    // fitDataMass2760GeV->SetParameter(0, 0.9980625418 );
+    // fitDataMass2760GeV->SetParameter(1, -0.0564782662 );
+    // fitDataMass2760GeV->SetParameter(2, -0.5 );
+    DrawGammaSetMarkerTF1( fitDataMass2760GeV, 7, 2, kMagenta+2);
+    fitDataMass2760GeV->Draw("same");
+    
+    fitDataMass5023GeV->SetParameter(0, 1.0434825769 );
+    fitDataMass5023GeV->SetParameter(1, -0.0788025699 );
+    fitDataMass5023GeV->SetParameter(2, -0.5000000000 );
+    // fitDataMass5023GeV->SetParameter(0, 1.0194962801 );
+    // fitDataMass5023GeV->SetParameter(1, -0.0830205281 );
+    // fitDataMass5023GeV->SetParameter(2, -0.4628036411 );
+    DrawGammaSetMarkerTF1( fitDataMass5023GeV, 8, 2, kOrange+2);
+    fitDataMass5023GeV->Draw("same");
+    
+    fitDataMass7000GeV->SetParameter(0, 1.1224162203 );
+    fitDataMass7000GeV->SetParameter(1, -0.1586806096 );
+    fitDataMass7000GeV->SetParameter(2, -0.2458351112 );
+    // fitDataMass7000GeV->SetParameter(0, 1.0074002842 );
+    // fitDataMass7000GeV->SetParameter(1, -0.0682543971 );
+    // fitDataMass7000GeV->SetParameter(2, -0.4509341085 );
+    DrawGammaSetMarkerTF1( fitDataMass7000GeV, 3, 2, kGreen+2);
+    fitDataMass7000GeV->Draw("same");
+    
+    fitDataMass8000GeV->SetParameter(0, 1.1603460704 );
+    fitDataMass8000GeV->SetParameter(1, -0.1999999989 );
+    fitDataMass8000GeV->SetParameter(2, -0.2194447313 );
+    // fitDataMass8000GeV->SetParameter(0, 1.1389201636 );
+    // fitDataMass8000GeV->SetParameter(1, -0.1999994717 );
+    // fitDataMass8000GeV->SetParameter(2, -0.1622237979 );
+    DrawGammaSetMarkerTF1( fitDataMass8000GeV, 2, 2, kBlue+2);
+    fitDataMass8000GeV->Draw("same");
+    
+    fitDataMass5000GeVpPb->SetParameter(0, 1.0165873637 );
+    fitDataMass5000GeVpPb->SetParameter(1, 0.6999387334 );
+    fitDataMass5000GeVpPb->SetParameter(2, -2.1324782465 );
+    // fitDataMass5000GeVpPb->SetParameter(0, 0.9795532189 );
+    // fitDataMass5000GeVpPb->SetParameter(1, 0.8578583955 );
+    // fitDataMass5000GeVpPb->SetParameter(2, -2.3447892540 );
+    DrawGammaSetMarkerTF1( fitDataMass5000GeVpPb, 4, 2, kCyan+2);
+    fitDataMass5000GeVpPb->Draw("same");
+    
+    
+    
+    legendNLPCMEMC->Draw();
+    
+    
+    DrawGammaLines(minXNL,maxXNL , 1., 1.,0.1, kGray+2, 7);
+    // DrawGammaLines(minXNL,maxXNL , 1.1, 1.1,0.1, kGray, 7);
+    // DrawGammaLines(minXNL,maxXNL , 0.9, 0.9,0.1, kGray, 7);
+    
+    drawLatexAdd("ALICE",0.93,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.93,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    drawLatexAdd("EMCal",0.93,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+    canvasRatioToCombFit->SaveAs(Form("%s/NonlinearityComparisonsEMC.%s",outputDir.Data(),suffix.Data()));
+    // **********************************************************************************************************************
     // ******************************************* Mass and width for pi0            ****************************************
     // **********************************************************************************************************************
     cout << "plotting pi0 mass" << endl;
@@ -1347,5 +1505,7 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
             cout << "missing partial input for invariant mass bin for eta for meas: " << nameMeasGlobal[i].Data() << endl;
         }
     }
+    
+    
 
 }

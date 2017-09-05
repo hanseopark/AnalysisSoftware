@@ -104,94 +104,136 @@ TGraphAsymmErrors* CombineMuScales( Int_t nPoints,
 void plotLuminosity (Double_t ymin, Double_t ymax, TString ylabel,TString plotName){
     TH1D* histoData[5];
     TH1D* histoData2[7];
-    TGraph *graphAliceLuminosity2010[5];
+    TGraph *graphAliceLuminosity2010[6];
+    TGraph *graphAliceLuminosity2011;
     TGraph *graphAliceLuminosity2012[7];
-    graphAliceLuminosity2010[0] = new TGraph("ThesisQAInputAllEnergies/LumiInput/lumi10c900g","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
-    graphAliceLuminosity2010[1] = new TGraph("ThesisQAInputAllEnergies/LumiInput/lumi10b","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
-    graphAliceLuminosity2010[2] = new TGraph("ThesisQAInputAllEnergies/LumiInput/lumi10c","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
-    graphAliceLuminosity2010[3] = new TGraph("ThesisQAInputAllEnergies/LumiInput/lumi10d","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
-    graphAliceLuminosity2010[4] = new TGraph("ThesisQAInputAllEnergies/LumiInput/lumi10e","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
-    graphAliceLuminosity2010[5] = new TGraph("ThesisQAInputAllEnergies/LumiInput/lumi10f","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
-    graphAliceLuminosity2012[0] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12a.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
-    graphAliceLuminosity2012[1] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12b.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
-    graphAliceLuminosity2012[2] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12c.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
-    graphAliceLuminosity2012[3] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12d.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
-    graphAliceLuminosity2012[4] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12f.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
-    graphAliceLuminosity2012[5] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12h.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
-    graphAliceLuminosity2012[6] = new TGraph("ThesisQAInputAllEnergies/LumiInput/Lumi12i.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2010[0] = new TGraph("CombinationInputGammaPP/LumiInput/lumi10c900g","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
+    graphAliceLuminosity2010[1] = new TGraph("CombinationInputGammaPP/LumiInput/lumi10b","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
+    graphAliceLuminosity2010[2] = new TGraph("CombinationInputGammaPP/LumiInput/lumi10c","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
+    graphAliceLuminosity2010[3] = new TGraph("CombinationInputGammaPP/LumiInput/lumi10d","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
+    graphAliceLuminosity2010[4] = new TGraph("CombinationInputGammaPP/LumiInput/lumi10e","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
+    graphAliceLuminosity2010[5] = new TGraph("CombinationInputGammaPP/LumiInput/lumi10f","%lg %*lg %*lg %*lg %*lg %*lg %lg %*lg %*lg");
+    graphAliceLuminosity2011    = new TGraph("CombinationInputGammaPP/LumiInput/luminosity2011","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[0] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12a.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[1] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12b.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[2] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12c.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[3] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12d.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[4] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12f.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[5] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12h.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
+    graphAliceLuminosity2012[6] = new TGraph("CombinationInputGammaPP/LumiInput/Lumi12i.txt","%lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %*lg %lg");
 
-    // for( Int_t i = 0; i<7; i++){
-    //     histoData2[i]      = new TH1D(graphAliceLuminosity2012[i]);
-    //     if(i<5)
-    //     histoData[i]      = new TH1D(graphAliceLuminosity2010[i]);
-    // }
 
     Double_t textSizeLabelsPixel                = 48;
-    Double_t arrayBoundariesX1_4[3];
-    Double_t arrayBoundariesY1_4[2];
-    Double_t relativeMarginsX[3];
+    Double_t arrayBoundariesX1_4[10];
+    Double_t arrayBoundariesY1_4[3];
+    Double_t relativeMarginsX[10];
     Double_t relativeMarginsY[3];
-    TGaxis::SetMaxDigits(6);
-    TCanvas* canvasDummy     = new TCanvas("canvasDummy","",0,0,1650,900);  // gives the page size
-    DrawGammaCanvasSettings( canvasDummy,  0., 0., 0., 0.0);
+    Double_t maxX = 19.9;
+    ReturnCorrectValuesForCanvasScaling(2350,1250, 9, 1,0.017, 0.005,0.005,0.085,
+      arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
 
-    TPad* pad900and7               = new TPad("pad900and7", "",0, 0, 0.5, 1,-1, -1, -2);
-    DrawGammaPadSettings( pad900and7, 0.12, 0.,           0.02, 0.07);
-    //                                       ^rechts     ^oben
-    pad900and7->Draw();
+    TCanvas* canvasLuminosity     = new TCanvas("canvasLuminosity","",0,0,2350,1250);  // gives the page size
+    DrawGammaCanvasSettings( canvasLuminosity,  0.05, 0.02, 0.03, 0.06);
 
-    TPad* pad8                = new TPad("pad8", "", 0.5, 0, 1,1,-1, -1, -2);
-    DrawGammaPadSettings( pad8, 0, 0.01, 0.02, 0.07);
-    pad8->Draw();
+    TPad* padLumi900and7               = new TPad("padLumi900and7", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[3], arrayBoundariesY1_4[0],-1, -1, -2);
+    DrawGammaPadSettings( padLumi900and7, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[2]);
+    padLumi900and7->Draw();
+
+
+    TPad* padLumi2760               = new TPad("padLumi2760", "", arrayBoundariesX1_4[3], arrayBoundariesY1_4[1], arrayBoundariesX1_4[6], arrayBoundariesY1_4[0],-1, -1, -2);
+    DrawGammaPadSettings( padLumi2760, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[2]);
+    padLumi2760->Draw();
+
+
+    TPad* padLumi8               = new TPad("padLumi8", "", arrayBoundariesX1_4[6], arrayBoundariesY1_4[1], arrayBoundariesX1_4[9], arrayBoundariesY1_4[0],-1, -1, -2);
+    DrawGammaPadSettings( padLumi8, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[0], relativeMarginsY[2]);
+    padLumi8->Draw();
+
+    // TPad* padMassLegend1            = new TPad("padMassLegend1", "", 0.13, 0.32, 0.52, 0.52,-1, -1, -2);
+    // DrawGammaPadSettings( padMassLegend1, 0., 0., 0., 0.);
+    // padMassLegend1->SetFillStyle(0);
+    // padMassLegend1->Draw();
+    // TGaxis::SetMaxDigits(6);
+    // TCanvas* canvasDummy     = new TCanvas("canvasDummy","",0,0,1650,900);  // gives the page size
+    // DrawGammaCanvasSettings( canvasDummy,  0., 0., 0., 0.0);
+    // 
+    // TPad* pad900and7               = new TPad("pad900and7", "",0, 0, 0.5, 1,-1, -1, -2);
+    // DrawGammaPadSettings( pad900and7, 0.12, 0.,           0.02, 0.07);
+    // //                                       ^rechts     ^oben
+    // pad900and7->Draw();
+    // 
+    // TPad* pad8                = new TPad("pad8", "", 0.5, 0, 1,1,-1, -1, -2);
+    // DrawGammaPadSettings( pad8, 0, 0.01, 0.02, 0.07);
+    // pad8->Draw();
 
 
     Double_t textsizeLabelsPP = 0;
     Double_t textsizeFacPP= 0;
-    if (pad900and7->XtoPixel(pad900and7->GetX2()) <pad900and7->YtoPixel(pad900and7->GetY1()) ){
-        textsizeLabelsPP = (Double_t)textSizeLabelsPixel/pad900and7->XtoPixel(pad900and7->GetX2()) ;
-        textsizeFacPP = (Double_t)1./pad900and7->XtoPixel(pad900and7->GetX2()) ;
+    if (padLumi900and7->XtoPixel(padLumi900and7->GetX2()) <padLumi900and7->YtoPixel(padLumi900and7->GetY1()) ){
+        textsizeLabelsPP = (Double_t)textSizeLabelsPixel/padLumi900and7->XtoPixel(padLumi900and7->GetX2()) ;
+        textsizeFacPP = (Double_t)1./padLumi900and7->XtoPixel(padLumi900and7->GetX2()) ;
     } else {
-        textsizeLabelsPP = (Double_t)textSizeLabelsPixel/pad900and7->YtoPixel(pad900and7->GetY1());
-        textsizeFacPP = (Double_t)1./pad900and7->YtoPixel(pad900and7->GetY1());
+        textsizeLabelsPP = (Double_t)textSizeLabelsPixel/padLumi900and7->YtoPixel(padLumi900and7->GetY1());
+        textsizeFacPP = (Double_t)1./padLumi900and7->YtoPixel(padLumi900and7->GetY1());
     }
 
-    pad900and7->cd();
-    pad900and7->SetLogy();
+    padLumi900and7->cd();
+    padLumi900and7->SetLogy();
     TH2F * histoPlottingDummy;
     histoPlottingDummy                       = new TH2F("histoPlottingDummy","histoPlottingDummy",1000,950,1449,1000,ymin,ymax   );
-    SetStyleHistoTH2ForGraphs(histoPlottingDummy, "",ylabel.Data(), 0.55*textsizeLabelsPP, 0.85*textsizeLabelsPP,
-                              0.65*textsizeLabelsPP,0.8*textsizeLabelsPP, 0.4, 1.15, 80511, 508);
+    SetStyleHistoTH2ForGraphs(histoPlottingDummy, "",ylabel.Data(), 0.75*textsizeLabelsPP, textsizeLabelsPP,
+                              0.8*textsizeLabelsPP,textsizeLabelsPP, 0.4, 1., 80511, 508);
+                              // x number size, x label size, y number size, y label size
     histoPlottingDummy->Draw("copy");
     // Data 900 GeV
-    DrawGammaSetMarkerTGraph(graphAliceLuminosity2010[0], 34 ,2, kRed+2, kRed+2);
+    DrawGammaSetMarkerTGraph(graphAliceLuminosity2010[0], 34 ,3.5, kRed+2, kRed+2);
     graphAliceLuminosity2010[0]->Draw("p,same,e");
 
     // Data 7 TeV
     for (Int_t i = 1; i < 6; i++){
-        DrawGammaSetMarkerTGraph(graphAliceLuminosity2010[i], 20 ,1.8, kBlue+2, kBlue+2);
+      if(graphAliceLuminosity2010[i]){
+        cout << "plotting graph " << i << " of 2010" << endl;
+        DrawGammaSetMarkerTGraph(graphAliceLuminosity2010[i], 20 ,3.5, kBlue+2, kBlue+2);
         graphAliceLuminosity2010[i]->Draw("p,same,e");
+      }else
+        cout << "graph " << i << " for 2010 not found" << endl;
     }
-    TLegend* legend7900           = GetAndSetLegend2(0.15, 0.81, 0.43, 0.81+2*textsizeLabelsPP,42);
+    TLegend* legend7900           = GetAndSetLegend2(0.19, 0.84, 0.49, 0.84+2*textsizeLabelsPP,50);
                 legend7900->AddEntry(graphAliceLuminosity2010[0],nameMeasGlobal[0].Data(),"p");
                 legend7900->AddEntry(graphAliceLuminosity2010[1],nameMeasGlobal[1].Data(),"p");
         legend7900->Draw();
-    pad8->cd();
-    pad8->SetLogy();
+        
+    padLumi2760->cd();
+    padLumi2760->SetLogy();
+    TH2F * histoPlottingDummy276;
+    histoPlottingDummy276                       = new TH2F("histoPlottingDummy276","histoPlottingDummy276",1000,1609,1655,1000,ymin,ymax    );
+    SetStyleHistoTH2ForGraphs(histoPlottingDummy276, "","", 0.75*textsizeLabelsPP, textsizeLabelsPP,
+                              0*textsizeLabelsPP,0.85*textsizeLabelsPP, 0.7, 0.95, 80509, 555);
+    histoPlottingDummy276->Draw("copy");
+    DrawGammaSetMarkerTGraph(graphAliceLuminosity2011, 29 ,4, kMagenta+2,kMagenta+2);
+    graphAliceLuminosity2011->Draw("p,same,e");
+    TLegend* legend2760           = GetAndSetLegend2(0.07, 0.84+textsizeLabelsPP, 0.37, 0.84+2*textsizeLabelsPP,50);
+                legend2760->AddEntry(graphAliceLuminosity2011,nameMeasGlobal[3].Data(),"p");
+        legend2760->Draw();
+  
+  
+    padLumi8->cd();
+    padLumi8->SetLogy();
     TH2F * histoPlottingDummy2;
     histoPlottingDummy2                       = new TH2F("histoPlottingDummy2","histoPlottingDummy2",1000,2401,3529,1000,ymin,ymax    );
-    SetStyleHistoTH2ForGraphs(histoPlottingDummy2, "fill number","", 0.55*textsizeLabelsPP, 0.75*textsizeLabelsPP,
+    SetStyleHistoTH2ForGraphs(histoPlottingDummy2, "fill number","", 0.75*textsizeLabelsPP, textsizeLabelsPP,
                               0*textsizeLabelsPP,0.85*textsizeLabelsPP, 0.7, 0.95, 80509, 508);
     histoPlottingDummy2->Draw("copy");
     // Data 8 TeV
     for (Int_t i = 0; i < 7; i++){
-        DrawGammaSetMarkerTGraph(graphAliceLuminosity2012[i], 29 ,2, kGreen+2, kGreen+2);
+        DrawGammaSetMarkerTGraph(graphAliceLuminosity2012[i], 33 ,3.5, kGreen+2, kGreen+2);
         graphAliceLuminosity2012[i]->Draw("p,same,e");
     }
-    TLegend* legend8           = GetAndSetLegend2(0.55, 0.13, 0.93, 0.13+textsizeLabelsPP,42);
+    TLegend* legend8           = GetAndSetLegend2(0.07, 0.84+textsizeLabelsPP, 0.37, 0.84+2*textsizeLabelsPP,50);
                 legend8->AddEntry(graphAliceLuminosity2012[2],nameMeasGlobal[2].Data(),"p");
         legend8->Draw();
 
-    canvasDummy->SaveAs(Form("%s/%s.%s",outputDir.Data(),plotName.Data(),suffix.Data()));
+    canvasLuminosity->SaveAs(Form("%s/%s.%s",outputDir.Data(),plotName.Data(),suffix.Data()));
 }
 void plotHistograms (TH1D* histoData[], TH1D* histoMC[], Double_t ymin, Double_t ymax, TString ylabel,TString plotName){
     Double_t textSizeLabelsPixel                = 48;
@@ -4238,7 +4280,7 @@ void plotDoubleRatio(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSy
     ratio7TeVdummy->GetYaxis()->SetLabelOffset(+0.01);
     ratio7TeVdummy->GetXaxis()->SetTickLength(0.07);
     ratio7TeVdummy->DrawCopy();
-/*
+    /*
     TString fileNameDoubleRatioPass2            = "ExternalInput/PCM/Gamma_PCMResults_pp.root";
     TFile* fileGammasPass2                            = new TFile(fileNameDoubleRatioPass2.Data());
     DoubleRatioStatError                       = (TH1D*)fileGammasPass2->Get("Gamma_7TeV_pp/DoubleRatioStatError");
@@ -4252,7 +4294,7 @@ void plotDoubleRatio(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSy
     DrawGammaSetMarkerTGraphAsym(graphDoubleRatioStatError, 24, markersizeFULL[1], pass2DRcolor, pass2DRcolor, widthLinesBoxes, kFALSE);
     graphDoubleRatioStatError->SetLineWidth(widthLinesBoxes);
     //     graphDoubleRatioStatError->Draw("p,same");
-*/
+    */
 
     while(graphNLODoubleRatio[1]->GetX()[graphNLODoubleRatio[1]->GetN()-1] > 18.) graphNLODoubleRatio[1]->RemovePoint(graphNLODoubleRatio[1]->GetN()-1);
     // while(graphNLODoubleRatio[4]->GetX()[graphNLODoubleRatio[4]->GetN()-1] > 18.) graphNLODoubleRatio[4]->RemovePoint(graphNLODoubleRatio[4]->GetN()-1);
@@ -6358,5 +6400,5 @@ void CombineGammaResultsPP(
     // plotEverything(GammaspectraRatios, 0.78, 1.04,0, "8 to 7 TeV Ratio", "GammaRatio7to8TeV");
 
 
-//     plotLuminosity(2e-4,100,"Peak Luminosity [Hz/#mub]","Luminosity");
+    plotLuminosity(2e-4,99,"Peak Luminosity [Hz/#mub]","Luminosity");
 }

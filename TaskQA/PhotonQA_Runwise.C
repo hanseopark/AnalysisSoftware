@@ -120,6 +120,8 @@ void PhotonQA_Runwise(
     cutTreeProjection = "0004314141";
     if(fEnergyFlag.CompareTo("8TeV")==0){cutTreeProjection = "0005314140"; cutTreeStdCut = kFALSE;}
     if(fEnergyFlag.CompareTo("PbPb_2.76TeV")==0){cutTreeProjection = "0005310040"; cutTreeStdCut = kFALSE;}
+    if(fEnergyFlag.CompareTo("pPb_5.023TeV")==0){cutTreeProjection = "0005314140"; cutTreeStdCut = kFALSE;} //with chi2 and psipair
+    // if(fEnergyFlag.CompareTo("pPb_5.023TeV")==0){cutTreeProjection = "0000004140"; cutTreeStdCut = kFALSE;} //without chi2 and psipair
 
 	cout << endl;
     cout << "long cutnumber for PhotonQA: '" << nameCutsPQA << "'\nevent cutnumber for PhotonQA: '"<< nameCutsPQAshort << "'" << endl;
