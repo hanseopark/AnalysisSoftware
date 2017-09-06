@@ -131,6 +131,10 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
     if(!energy.CompareTo("2.76TeV"))
         nameCutVariationSC[7]                   = "OOBPileupPi0";
+    if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))
+        nameCutVariationSC[14]                   = "OOBPileupPi0";
+    if((!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))&&!spectrumName.CompareTo("Gamma"))
+        nameCutVariationSC[10]                   = "Cocktail";
 
     for (Int_t k =0; k<nCuts; k++ ){
         cout << "variation: " << nameCutVariationSC[k].Data() << endl;
