@@ -54,7 +54,6 @@
 //*************************************************************************************************************
 void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      = "",
                                                 TString energy                  = "",
-                                                TString cent                    = "0-100%",
                                                 TString spectrumName            = "",
                                                 Int_t numberCutStudies          = 1,
                                                 Double_t minPt                  = 0,
@@ -76,11 +75,6 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
 
     TString dateForOutput                       = ReturnDateStringForOutput();
     TString energyForOutput                     = ReturnCollisionEnergyOutputString(energy);
-    TString centForOutput                       = cent;
-    centForOutput.ReplaceAll("%","");
-    if (centForOutput.CompareTo("0-100") == 0)
-        centForOutput                           = "";
-
 
     TLatex *labelGamma                          = new TLatex(0.95,0.88,detectionProcess);
     SetStyleTLatex( labelGamma, 0.038,4);
@@ -167,12 +161,12 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
     // ***************************************************************************************************
     Bool_t bsmooth[15]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0 };
-    Bool_t bsmoothIncGammapp2760GeV[15]         = { 0, 0, 0, 0, 0,  0, 1, 1, 0, 0,
-                                                    0, 0, 0, 0, 0};
-    Bool_t bsmoothIncRatiopp2760GeV[15]         = { 0, 0, 0, 0, 0,  0, 1, 1, 0, 0,
-                                                    0, 0, 0, 0, 0 };
-    Bool_t bsmoothDRpp2760GeV[15]               = { 0, 0, 0, 0, 0,  0, 1, 1, 0, 0,
-                                                    0, 0, 0, 0, 0};
+    Bool_t bsmoothIncGammapp2760GeV[15]         = { 1, 0, 1, 1, 1,  1, 1, 1, 0, 0,
+                                                    0, 0, 1, 0, 0};
+    Bool_t bsmoothIncRatiopp2760GeV[15]         = { 1, 0, 1, 1, 1,  1, 1, 1, 0, 1,
+                                                    0, 0, 1, 1, 0 };
+    Bool_t bsmoothDRpp2760GeV[15]               = { 1, 0, 1, 1, 1,  1, 1, 1, 0, 1,
+                                                    0, 0, 1, 1, 0};
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -269,18 +263,19 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
         TGraphAsymmErrors* graphNegErrors       = NULL;
 
         // Set currently undetermined uncertainties
-        if ( nameCutVariationSC[i].CompareTo("SPD")==0  || nameCutVariationSC[i].CompareTo("Efficiency")==0 || nameCutVariationSC[i].CompareTo("ClusterTiming")==0){
+        if (    nameCutVariationSC[i].CompareTo("SPD")==0  || nameCutVariationSC[i].CompareTo("Efficiency")==0 || nameCutVariationSC[i].CompareTo("ClusterTiming")==0 ||
+                nameCutVariationSC[i].CompareTo("Alpha")==0 || nameCutVariationSC[i].CompareTo("Rapidity")==0){
             TString nameGraphPos;
             TString nameGraphNeg;
-            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), cent.Data());
-            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[0].Data(), cent.Data()  );
+            nameGraphPos                        = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data());
+            nameGraphNeg                        = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[0].Data());
             cout << "Cutstudies " << i << "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<< "\t fixing" <<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else {
             // Load input graphs from systematics file
-            TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), cent.Data() );
-            TString nameGraphNeg                = Form("%s_SystErrorRelNeg_%s_%s",spectrumName.Data(),nameCutVariationSC[i].Data(), cent.Data() );
+            TString nameGraphPos                = Form("%s_SystErrorRelPos_%s_pp",spectrumName.Data(),nameCutVariationSC[i].Data());
+            TString nameGraphNeg                = Form("%s_SystErrorRelNeg_%s_pp",spectrumName.Data(),nameCutVariationSC[i].Data());
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                      = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -326,7 +321,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
                         errorFixed              = 1.2+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // non lin only
-                        errorFixed              = errorFixed+0.2*7.2;
+                        errorFixed              = errorFixed+0.1*7;
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;
@@ -337,8 +332,8 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                 } else {
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
-                        errorFixed              = 1.05+(0.01)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k]; // non lin only
-                        errorFixed              = errorFixed+0.2*7.2;
+                        errorFixed              = 0.65+(0.02)*ptBins[k]+(0.01)*ptBins[k]*ptBins[k];
+                        errorFixed              = errorFixed+0.1*7;
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;
@@ -384,7 +379,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                 if (spectrumName.Contains("Ratio")){
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
-                        errorFixed                  = 0.4+55/pow(6.4,ptBins[k]);   ;
+                        errorFixed                  = 0.8+55/pow(6.4,ptBins[k]);   ;
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;
@@ -402,8 +397,8 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                 if (spectrumName.Contains("Ratio")){
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] > 3.0)
-                            errorFixed                  = 0.95+(0.003)*ptBins[k]+(0.014)*ptBins[k]*ptBins[k]; // parametrisation
+                        if (ptBins[k] > 1.6)
+                            errorFixed                  = 0.65+(0.003)*ptBins[k]+(0.014)*ptBins[k]*ptBins[k]; // parametrisation
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;
@@ -414,8 +409,8 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                 } else {
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] > 3.0)
-                            errorFixed              =  0.95;
+                        if (ptBins[k] > 1.6)
+                            errorFixed              =  0.65;
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;
@@ -625,11 +620,11 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
         labelSpectrum->Draw();
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMeanNewWithMeanEMC_%s_%s%s_%s.%s",spectrumName.Data(), energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMeanNewWithMeanEMC_%s_%s_%s.%s",spectrumName.Data(), energyForOutput.Data(), dateForOutput.Data(),suffix.Data()));
 
     //+++++++++++++++++++++++++ SAVING SYSTEMATICS TO DAT FILE +++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatname                   = Form("GammaSystematicErrorsCalculated/SystematicErrorEMC_%s_%s%s_%s.dat",spectrumName.Data(), energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatname                   = Form("GammaSystematicErrorsCalculated/SystematicErrorEMC_%s_%s_%s.dat",spectrumName.Data(), energyForOutput.Data(), dateForOutput.Data());
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
@@ -640,7 +635,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
 
     //+++++++++++++++++++++++++ SAVING AVERAGE SYSTEMATICS TO DAT ++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatnameMean               = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedEMC_%s_%s%s_%s.dat", spectrumName.Data(), energyForOutput.Data(), centForOutput.Data(),  dateForOutput.Data());
+    const char *SysErrDatnameMean               = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedEMC_%s_%s_%s.dat", spectrumName.Data(), energyForOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -651,7 +646,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
 
     //+++++++++++++++++++++++++ SAVING DETAILED SYSTEMATICS ++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatnameMeanSingleErr      = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedSingleEMC_%s_%s%s_%s.dat", spectrumName.Data(),energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatnameMeanSingleErr      = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedSingleEMC_%s_%s_%s.dat", spectrumName.Data(),energyForOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
@@ -801,14 +796,14 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
         labelSpectrum->Draw();
 
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysErrorSummedVisuEMC_%s_%s%s_%s.%s",spectrumName.Data(), energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data(),suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysErrorSummedVisuEMC_%s_%s_%s.%s",spectrumName.Data(), energyForOutput.Data(), dateForOutput.Data(),suffix.Data()));
     delete canvasSummedErrMean;
 
 
     //+++++++++++++++++++++++++ SAVING DETAILED SYSTEMATICS ++++++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatnameMeanSinglePaperErr      = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedSinglePaperEMC_%s_%s%s_%s.dat", spectrumName.Data(),
-                                                            energyForOutput.Data(), centForOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatnameMeanSinglePaperErr      = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedSinglePaperEMC_%s_%s_%s.dat", spectrumName.Data(),
+                                                            energyForOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAverSinglePaper;
     cout << SysErrDatnameMeanSinglePaperErr << endl;
     SysErrDatAverSinglePaper.open(SysErrDatnameMeanSinglePaperErr, ios::out);

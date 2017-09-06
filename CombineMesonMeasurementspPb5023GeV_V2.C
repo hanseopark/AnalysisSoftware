@@ -7075,7 +7075,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     // **************** Plotting eta/pi0 ratio for combined measurement + Theory + other energies ********************
     // ***************************************************************************************************************
     canvasEtatoPi0combo->cd();
-    TH2F * histo2DEtatoPi0WD           = new TH2F("histo2DEtatoPi0WD","histo2DEtatoPi0WD",1000,0.04,25.,1000,-0.18,1.02    );
+    TH2F * histo2DEtatoPi0WD           = new TH2F("histo2DEtatoPi0WD","histo2DEtatoPi0WD",1000,0.04,35.,1000,-0.25,1.02    );
     SetStyleHistoTH2ForGraphs(histo2DEtatoPi0WD, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
                               0.85*textsizeLabelsEtaToPi0,1.1*textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
     histo2DEtatoPi0WD->GetXaxis()->SetMoreLogLabels();
@@ -7094,6 +7094,12 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi02760GeVWOXErr, 25, 2.2, kBlue-6, kBlue-6, widthLinesBoxes, kFALSE);
         graphALICEEtaToPi02760GeVWOXErr->Draw("p,same");
 
+        TGraphAsymmErrors* graphALICEEtaToPi08TeVWOXErr = (TGraphAsymmErrors*)graphALICEEtaToPi08TeV->Clone("graphALICEEtaToPi08TeVWOXErr");
+        ProduceGraphAsymmWithoutXErrors(graphALICEEtaToPi08TeVWOXErr);
+        DrawGammaSetMarkerTGraphAsym(graphALICEEtaToPi08TeVWOXErr, kOpenDiamond, 3.0, kBlue-6, kBlue-6, widthLinesBoxes, kFALSE);
+        graphALICEEtaToPi08TeVWOXErr->Draw("p,same");
+
+
         DrawGammaSetMarkerTGraphErr(graphCERESEtaToPi0pAu29100MeV, 24, 2.5, kGreen-6, kGreen-6, widthLinesBoxes, kFALSE);
         graphCERESEtaToPi0pAu29100MeV->Draw("p,same");
         DrawGammaSetMarkerTGraphErr(graphCERESEtaToPi0pBe29100MeV, 25, 2., kGreen-6, kGreen-6, widthLinesBoxes, kFALSE);
@@ -7110,7 +7116,8 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
         legendEtaToPi0Theory2->AddEntry(graphCERESEtaToPi0pBe29100MeV,"TAPS/CERES, p-Be, #sqrt{#it{s}_{_{NN}}} = 29.1 GeV","p");
         legendEtaToPi0Theory2->Draw();
 
-        TLegend* legendEtaToPi0WorldData = GetAndSetLegend2(0.53, 0.145+(textsizeLabelsEtaToPi0*3*0.9), 0.9, 0.145, textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        TLegend* legendEtaToPi0WorldData = GetAndSetLegend2(0.53, 0.145+(textsizeLabelsEtaToPi0*4*0.9), 0.9, 0.145, textSizeLabelsPixel*0.85, 1, "", 43, 0.16);
+        legendEtaToPi0WorldData->AddEntry(graphALICEEtaToPi08TeVWOXErr,"ALICE, pp, #sqrt{#it{s}} = 8 TeV","p");
         legendEtaToPi0WorldData->AddEntry(graphALICEEtaToPi07TeV,"ALICE, pp, #sqrt{#it{s}} = 7 TeV","p");
         legendEtaToPi0WorldData->AddEntry(graphALICEEtaToPi02760GeVWOXErr,"ALICE, pp, #sqrt{#it{s}} = 2.76 TeV","p");
         legendEtaToPi0WorldData->AddEntry(graphPHENIXEtaToPi0200GeV,"PHENIX, pp, #sqrt{#it{s}} = 0.2 TeV", "p");
