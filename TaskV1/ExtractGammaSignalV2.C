@@ -2150,23 +2150,23 @@ void CalculatePileUpBackground(Bool_t doMC){
                   
                   drawLatexAdd(Form("%.1f < #it{p}_{T} < %.1f GeV/#it{c}",fBinsPtDummy[bin-1],fBinsPtDummy[bin]),0.94,0.92,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
                   drawLatexAdd(fCollisionSystem.Data(),0.94,0.87,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
-                  drawLatexAdd("ALICE",0.94,0.82,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
                   Style_t markerstylesPlot[6]                         ={20,24,29,24,30,26};
                   Size_t markersizePlot[5]                        ={1.5,2,2.,2};
-                  Color_t colorDataPlot[6]                        ={kRed+2, kBlue+1,800,kRed-2,kRed+2};
+                  Color_t colorDataPlot[6]                        ={kRed+2, kBlue+1,kRed-7,kRed-2,kRed+2};
                   DrawGammaSetMarker(histoDCAdata[0], markerstylesPlot[0], markersizePlot[0], colorDataPlot[0] , colorDataPlot[0]);
                   histoDCAdata[0]->Draw("same");
                   DrawGammaSetMarker(histoDCAdata[1], markerstylesPlot[1], markersizePlot[1], colorDataPlot[1] , colorDataPlot[1]);
                   histoDCAdata[1]->Draw("same");
-                  DrawGammaSetMarker(histoDCABG, markerstylesPlot[2], markersizePlot[2], colorDataPlot[0] , colorDataPlot[0]);
+                  DrawGammaSetMarker(histoDCABG, markerstylesPlot[2], markersizePlot[2], colorDataPlot[2] , colorDataPlot[2]);
+                  histoDCABG->SetLineWidth(2);
                   histoDCABG->Draw("same");
                   DrawGammaSetMarker(histoDCAdata[2], markerstylesPlot[3], markersizePlot[3], colorDataPlot[3] , colorDataPlot[3]);
                   histoDCAdata[2]->Draw("same");
                   TLegend* legendCatCompare           = GetAndSetLegend2(0.13, 0.81-1*textSizeLabelsRel, 0.42, 0.81+(3*textSizeLabelsRel),0.8*55);
-                  legendCatCompare->AddEntry(histoDCAdata[0],"data DCAz cat. 1","p");
+                  legendCatCompare->AddEntry(histoDCAdata[0],"Data DCAz cat. 1","p");
                   legendCatCompare->AddEntry(histoDCABG,"Estimated Pileup cat. 1","l");
                   legendCatCompare->AddEntry(histoDCAdata[2],"Pileup Subtracted cat. 1","p");
-                  legendCatCompare->AddEntry(histoDCAdata[1],"data DCAz cat. 3","p");
+                  legendCatCompare->AddEntry(histoDCAdata[1],"Data DCAz cat. 3","p");
                   legendCatCompare->Draw();
                   canvasDummy->Update();
                   canvasDummy->Print(Form("%s/Monitoring/Gamma_data_DCAz_CatCompare_%.1f_%.1f.%s",fOutputDir.Data(),fBinsPtDummy[bin-1],fBinsPtDummy[bin],fSuffix.Data()));
