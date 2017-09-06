@@ -7511,13 +7511,13 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
             DrawGammaNLOTGraph( graphPi0RpAErrnCTEQDSS14Center, widthCommonFit*2, styleLineDSSnPDF, colorDSSnPDF);
             DrawGammaNLOTGraph( graphPi0RpAErrnEPPS16DSS14Center, widthCommonFit*2, styleLineDSSnPDFEPPS, colorDSSnPDFEPPS);
 
-            TLegend* legendRpPbPi0Theory    = GetAndSetLegend2(0.32, 0.102, 0.96 , 0.102+0.04*5, textSizeLabelsPixel*0.85,2, "", 43, 0.1875);
+            TLegend* legendRpPbPi0Theory    = GetAndSetLegend2(0.22, 0.102, 0.96 , 0.102+0.04*5, textSizeLabelsPixel*0.85,2, "", 43, 0.19);
             legendRpPbPi0Theory->SetTextAlign(13);
             legendRpPbPi0Theory->AddEntry((TObject*)0,"      ","");
             legendRpPbPi0Theory->AddEntry(graphPi0RpAErrnCTEQDSS14,"NLO, nPDF: nCTEQ,","f");
             legendRpPbPi0Theory->AddEntry((TObject*)0,"      ","");
             legendRpPbPi0Theory->AddEntry((TObject*)0,"         PDF: CT10","");
-            legendRpPbPi0Theory->AddEntry(graphPi0RpACGC5023GeV,"CGC      ","l");
+            legendRpPbPi0Theory->AddEntry(graphPi0RpACGC5023GeV,"CGC             ","l");
             legendRpPbPi0Theory->AddEntry(graphPi0RpAErrnEPPS16DSS14,"NLO, nPDF: EPPS16,","f");
             legendRpPbPi0Theory->AddEntry((TObject*)0,"      ","");
             legendRpPbPi0Theory->AddEntry((TObject*)0,"         PDF: CT14","");
