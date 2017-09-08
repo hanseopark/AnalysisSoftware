@@ -349,19 +349,20 @@
 
     // Eta->pi+pi-pi0
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {10,10,10,10,8,10,10,10,10,16,16};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {4,4,4,4,4,4,4,4,4,4,4};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {10,10,10,10,10,10,10,10,10,10,16,16};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {1,1,1,1,1,1,1,1,1,1,1,1};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtEMC[16]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12,14,16,20.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {10,10,10,10,10,10,10,10,10,10,10,10,8,10,10};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {10,10,10,10,10,8,8,10,10,10,12};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {1,1,1,1,1,1,1,1,1,1,1};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,14.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[12]       = {10,10,10,10,10,10,8,8,10,10,13,12};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[12]       = {1,1,1,1,1,1,1,1,1,1,1,1};
+
     // omega->pi+pi-pi0
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {10,10,5,5,5,5,5,5,5,10,13};
@@ -1315,11 +1316,11 @@
                 return 2;
 
               } else if(mode == 40){
-                scaleFac        = 2.;
+                scaleFac        = 4.;
                 return 4;
               } else if(mode == 41){
                 scaleFac        = 1.;
-                return 11;
+                return 10;
               } else if(mode == 42){
                 scaleFac        = 1.;
                 return 7;
@@ -1328,7 +1329,7 @@
                 return 11;
               } else if(mode == 45){
                 scaleFac        = 1.;
-                return 9;
+                return 10;
               } else
                 return 6;
         } else if (energy.CompareTo("8TeV") == 0) {
@@ -2948,7 +2949,6 @@
                 } else if (modi == 40 | modi == 41 || modi == 42 || modi== 44 || modi == 45){
                     fColumn         = 3;
                     fRow            = 3;
-                    fStartPtBin     = 1;
                 }
 
 
@@ -2986,9 +2986,8 @@
                       if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEta7TeVPHOSPtRebin[i];
                     }else if(modi == 40){
-                      fColumn         = 3;
-                      fRow            =3;
-                      fStartPtBin     = 3;
+                      fColumn         = 4;
+                      fRow            = 3;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCM[i];
                         if (i < fNBinsPt+1)
@@ -3004,7 +3003,7 @@
                       }
                     } else if(modi == 42){
                       fColumn         = 3;
-                      fRow            = 4;
+                      fRow            = 3;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[i];
                         if (i < fNBinsPt+1)
@@ -3020,7 +3019,7 @@
                       }
                     } else if(modi == 45){
                       fColumn         = 3;
-                      fRow            = 3;
+                      fRow            = 2;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
                         if (i < fNBinsPt+1)

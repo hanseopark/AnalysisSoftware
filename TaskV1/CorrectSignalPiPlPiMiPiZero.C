@@ -223,26 +223,29 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		
 	//Variable defintion
 	Double_t scaling = 1./(2.*TMath::Pi());
+
+    // Variable to quickly change which type of yield is used
+    TString InvMassTypeEnding = "_FixedPzPiZero";
 	
 	// File definitions
 	TFile fileUncorrected(fileNameUnCorrectedFile.Data());  
 	if (fileUncorrected.IsZombie()) return;
 	TH1F *histoNumberOfGoodESDTracksVtx =  (TH1F*)fileUncorrected.Get("GoodESDTracks");
 	TH1D *histoEventQuality =        (TH1D*)fileUncorrected.Get("NEvents");
-	TH1D *histoUnCorrectedYield =       (TH1D*)fileUncorrected.Get("histoYieldMeson");
-	TH1D *histoUnCorrectedYieldWide =      (TH1D*)fileUncorrected.Get("histoYieldMesonWide");
-	TH1D *histoUnCorrectedYieldNarrow = (TH1D*)fileUncorrected.Get("histoYieldMesonNarrow");
-	TH1D *histoUnCorrectedYieldLeft =      (TH1D*)fileUncorrected.Get("histoYieldMesonLeft");
-	TH1D *histoUnCorrectedYieldLeftWide =  (TH1D*)fileUncorrected.Get("histoYieldMesonLeftWide");
-	TH1D *histoUnCorrectedYieldLeftNarrow = (TH1D*)fileUncorrected.Get("histoYieldMesonLeftNarrow");
-	TH1D *histoFWHMMeson =           (TH1D*)fileUncorrected.Get("histoFWHMMeson");
-	TH1D *histoFWHMMesonLeft =          (TH1D*)fileUncorrected.Get("histoFWHMMesonLeft");
+    TH1D *histoUnCorrectedYield =       (TH1D*)fileUncorrected.Get(Form("histoYieldMeson%s",InvMassTypeEnding.Data()));
+    TH1D *histoUnCorrectedYieldWide =      (TH1D*)fileUncorrected.Get(Form("histoYieldMesonWide%s",InvMassTypeEnding.Data()));
+    TH1D *histoUnCorrectedYieldNarrow = (TH1D*)fileUncorrected.Get(Form("histoYieldMesonNarrow%s",InvMassTypeEnding.Data()));
+    TH1D *histoUnCorrectedYieldLeft =      (TH1D*)fileUncorrected.Get(Form("histoYieldMesonLeft%s",InvMassTypeEnding.Data()));
+    TH1D *histoUnCorrectedYieldLeftWide =  (TH1D*)fileUncorrected.Get(Form("histoYieldMesonLeftWide%s",InvMassTypeEnding.Data()));
+    TH1D *histoUnCorrectedYieldLeftNarrow = (TH1D*)fileUncorrected.Get(Form("histoYieldMesonLeftNarrow%s",InvMassTypeEnding.Data()));
+    TH1D *histoFWHMMeson =           (TH1D*)fileUncorrected.Get(Form("histoFWHMMeson%s",InvMassTypeEnding.Data()));
+    TH1D *histoFWHMMesonLeft =          (TH1D*)fileUncorrected.Get(Form("histoFWHMMesonLeft%s",InvMassTypeEnding.Data()));
 	
-	TH1D *histoMassMeson =           (TH1D*)fileUncorrected.Get("histoMassMeson");
-	TH1D *histoMassMesonLeft =          (TH1D*)fileUncorrected.Get("histoMassMesonLeft");
+    TH1D *histoMassMeson =           (TH1D*)fileUncorrected.Get(Form("histoMassMeson%s",InvMassTypeEnding.Data()));
+    TH1D *histoMassMesonLeft =          (TH1D*)fileUncorrected.Get(Form("histoMassMesonLeft%s",InvMassTypeEnding.Data()));
 	
-	TH1D *histoMesonSignalFullPtInvMass=   (TH1D*)fileUncorrected.Get("Mapping_GG_InvMass_FullPt");
-	TH1D *histoMesonBckNormFullPtInvMass=  (TH1D*)fileUncorrected.Get("Mapping_BackNorm_InvMass_FullPt");
+    TH1D *histoMesonSignalFullPtInvMass=   (TH1D*)fileUncorrected.Get(Form("Mapping_GG_InvMass%s_FullPt",InvMassTypeEnding.Data()));
+    TH1D *histoMesonBckNormFullPtInvMass=  (TH1D*)fileUncorrected.Get(Form("Mapping_BackNorm_InvMass%s_FullPt",InvMassTypeEnding.Data()));
 
     // Get background contribution true histos
     TH1D *histoYieldsMappingTruePiPlPiMiSameMother[7]      = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
@@ -324,23 +327,23 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	TFile* fileCorrections =         new TFile(fileNameCorrectionFile.Data());
 	if (fileCorrections->IsZombie()) return;
 	TH1F *histoEventQualityMC =         (TH1F*)fileCorrections->Get("NEvents");
-	TH1D *histoEffiPt =  (TH1D*)fileCorrections->Get("MesonEffiPt"); //not yet correct MesonEffiPt
-	TH1D *histoEffiNarrowPt = (TH1D*)fileCorrections->Get("MesonNarrowEffiPt");
-	TH1D *histoEffiWidePt = (TH1D*)fileCorrections->Get("MesonWideEffiPt");
-	TH1D *histoEffiLeftPt = (TH1D*)fileCorrections->Get("MesonLeftEffiPt");
-	TH1D *histoEffiLeftNarrowPt = (TH1D*)fileCorrections->Get("MesonLeftNarrowEffiPt");
-	TH1D *histoEffiLeftWidePt = (TH1D*)fileCorrections->Get("MesonLeftWideEffiPt");
+    TH1D *histoEffiPt =  (TH1D*)fileCorrections->Get(Form("MesonEffiPt%s",InvMassTypeEnding.Data())); //not yet correct MesonEffiPt
+    TH1D *histoEffiNarrowPt = (TH1D*)fileCorrections->Get(Form("MesonNarrowEffiPt%s",InvMassTypeEnding.Data()));
+    TH1D *histoEffiWidePt = (TH1D*)fileCorrections->Get(Form("MesonWideEffiPt%s",InvMassTypeEnding.Data()));
+    TH1D *histoEffiLeftPt = (TH1D*)fileCorrections->Get(Form("MesonLeftEffiPt%s",InvMassTypeEnding.Data()));
+    TH1D *histoEffiLeftNarrowPt = (TH1D*)fileCorrections->Get(Form("MesonLeftNarrowEffiPt%s",InvMassTypeEnding.Data()));
+    TH1D *histoEffiLeftWidePt = (TH1D*)fileCorrections->Get(Form("MesonLeftWideEffiPt%s",InvMassTypeEnding.Data()));
 	TH1D *histoAcceptance=              (TH1D*)fileCorrections->Get("fMCMesonAccepPt");
 	
 	TH1D *histoTrueEffiPt = NULL;
 	TH1D *histoTrueEffiNarrowPt = NULL;
 	TH1D *histoTrueEffiWidePt = NULL;
-	histoTrueEffiPt =             (TH1D*)fileCorrections->Get("TrueMesonEffiPt"); 
-	histoTrueEffiNarrowPt =       (TH1D*)fileCorrections->Get("TrueMesonNarrowEffiPt");
-	histoTrueEffiWidePt =         (TH1D*)fileCorrections->Get("TrueMesonWideEffiPt");
+    histoTrueEffiPt =             (TH1D*)fileCorrections->Get(Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data()));
+    histoTrueEffiNarrowPt =       (TH1D*)fileCorrections->Get(Form("TrueMesonNarrowEffiPt%s",InvMassTypeEnding.Data()));
+    histoTrueEffiWidePt =         (TH1D*)fileCorrections->Get(Form("TrueMesonWideEffiPt%s",InvMassTypeEnding.Data()));
 
 	TH1D* histoInputMesonPt =           (TH1D*)fileCorrections->Get("MC_Meson_genPt");
-	TH1D* histoInputMesonOldBinPt =     (TH1D*)fileCorrections->Get("MC_Meson_genPt_oldBin");
+    TH1D* histoInputMesonOldBinPt =     (TH1D*)fileCorrections->Get("MC_Meson_genPt_oldBin");
 	TH1D* histoInputMesonOldBinPtWOWeights = NULL;
 	TH1D* histoInputMesonOldBinPtWeights = NULL;
 	histoInputMesonOldBinPtWOWeights =     (TH1D*)fileCorrections->Get("MC_Meson_genPt_WOWeights");
@@ -353,8 +356,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	histoMCInputWeightsAddedSig =     (TH1D*)fileCorrections->Get("MC_Meson_genPt_Weights_AddedSig");		//NOT THERE
 	
 	
-	TH1D* histoTrueMassMeson =          (TH1D*)fileCorrections->Get("histoTrueMassMeson");
-	TH1D* histoTrueFWHMMeson =          (TH1D*)fileCorrections->Get("histoTrueFWHMMeson");
+    TH1D* histoTrueMassMeson =          (TH1D*)fileCorrections->Get(Form("histoTrueMassMeson%s",InvMassTypeEnding.Data()));
+    TH1D* histoTrueFWHMMeson =          (TH1D*)fileCorrections->Get(Form("histoTrueFWHMMeson%s",InvMassTypeEnding.Data()));
 
 	TString centralityCutNumber = fEventCutSelection(0,3);
 	TString centralityString = GetCentralityString(fEventCutSelection);
@@ -1272,43 +1275,43 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		
 	
 	TH1D* histoCorrectedYieldNorm = (TH1D*)histoUnCorrectedYield->Clone();
-	histoCorrectedYieldNorm->SetName("CorrectedYieldNormEff");
+    histoCorrectedYieldNorm->SetName(Form("CorrectedYieldNormEff%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrue = (TH1D*)histoUnCorrectedYield->Clone();
-	histoCorrectedYieldTrue->SetName("CorrectedYieldTrueEff");
+    histoCorrectedYieldTrue->SetName(Form("CorrectedYieldTrueEff%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueNarrow = (TH1D*)histoUnCorrectedYieldNarrow->Clone();
-	histoCorrectedYieldTrueNarrow->SetName("CorrectedYieldTrueEffNarrow");
+    histoCorrectedYieldTrueNarrow->SetName(Form("CorrectedYieldTrueEffNarrow%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueWide = (TH1D*)histoUnCorrectedYieldWide->Clone();
-	histoCorrectedYieldTrueWide->SetName("CorrectedYieldTrueEffWide");
+    histoCorrectedYieldTrueWide->SetName(Form("CorrectedYieldTrueEffWide%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldFixed = (TH1D*)histoUnCorrectedYield->Clone();
-	histoCorrectedYieldFixed->SetName("CorrectedYieldEffFixed");
+    histoCorrectedYieldFixed->SetName(Form("CorrectedYieldEffFixed%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldNarrowFixed = (TH1D*)histoUnCorrectedYieldNarrow->Clone();
-	histoCorrectedYieldNarrowFixed->SetName("CorrectedYieldEffNarrowFixed");
+    histoCorrectedYieldNarrowFixed->SetName(Form("CorrectedYieldEffNarrowFixed%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldWideFixed = (TH1D*)histoUnCorrectedYieldWide->Clone();
-	histoCorrectedYieldWideFixed->SetName("CorrectedYieldEffWideFixed");
+    histoCorrectedYieldWideFixed->SetName(Form("CorrectedYieldEffWideFixed%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueFixed = (TH1D*)histoUnCorrectedYield->Clone();
-	histoCorrectedYieldTrueFixed->SetName("CorrectedYieldTrueEffFixed");
+    histoCorrectedYieldTrueFixed->SetName(Form("CorrectedYieldTrueEffFixed%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueNarrowFixed = (TH1D*)histoUnCorrectedYieldNarrow->Clone();
-	histoCorrectedYieldTrueNarrowFixed->SetName("CorrectedYieldTrueEffNarrowFixed");
+    histoCorrectedYieldTrueNarrowFixed->SetName(Form("CorrectedYieldTrueEffNarrowFixed%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueWideFixed = (TH1D*)histoUnCorrectedYieldWide->Clone();
-	histoCorrectedYieldTrueWideFixed->SetName("CorrectedYieldTrueEffWideFixed");
+    histoCorrectedYieldTrueWideFixed->SetName(Form("CorrectedYieldTrueEffWideFixed%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueLeft = (TH1D*)histoUnCorrectedYieldLeft->Clone();
-	histoCorrectedYieldTrueLeft->SetName("CorrectedYieldTrueEffLeft");
+    histoCorrectedYieldTrueLeft->SetName(Form("CorrectedYieldTrueEffLeft%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueLeftNarrow = (TH1D*)histoUnCorrectedYieldLeftNarrow->Clone();
-	histoCorrectedYieldTrueLeftNarrow->SetName("CorrectedYieldTrueEffLeftNarrow");
+    histoCorrectedYieldTrueLeftNarrow->SetName(Form("CorrectedYieldTrueEffLeftNarrow%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueLeftWide = (TH1D*)histoUnCorrectedYieldLeftWide->Clone();
-	histoCorrectedYieldTrueLeftWide->SetName("CorrectedYieldTrueEffLeftWide");
+    histoCorrectedYieldTrueLeftWide->SetName(Form("CorrectedYieldTrueEffLeftWide%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueFitted = (TH1D*)histoUnCorrectedYield->Clone();
-	histoCorrectedYieldTrueFitted->SetName("CorrectedYieldTrueEffFitted");
+    histoCorrectedYieldTrueFitted->SetName(Form("CorrectedYieldTrueEffFitted%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueNarrowFitted = (TH1D*)histoUnCorrectedYieldNarrow->Clone();
-	histoCorrectedYieldTrueNarrowFitted->SetName("CorrectedYieldTrueEffNarrowFitted");
+    histoCorrectedYieldTrueNarrowFitted->SetName(Form("CorrectedYieldTrueEffNarrowFitted%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueWideFitted = (TH1D*)histoUnCorrectedYieldWide->Clone();
-	histoCorrectedYieldTrueWideFitted->SetName("CorrectedYieldTrueEffWideFitted");
+    histoCorrectedYieldTrueWideFitted->SetName(Form("CorrectedYieldTrueEffWideFitted%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueLeftFitted = (TH1D*)histoUnCorrectedYieldLeft->Clone();
-	histoCorrectedYieldTrueLeftFitted->SetName("CorrectedYieldTrueEffLeftFitted");
+    histoCorrectedYieldTrueLeftFitted->SetName(Form("CorrectedYieldTrueEffLeftFitted%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueLeftNarrowFitted = (TH1D*)histoUnCorrectedYieldLeftNarrow->Clone();
-	histoCorrectedYieldTrueLeftNarrowFitted->SetName("CorrectedYieldTrueEffLeftNarrowFitted");
+    histoCorrectedYieldTrueLeftNarrowFitted->SetName(Form("CorrectedYieldTrueEffLeftNarrowFitted%s",InvMassTypeEnding.Data()));
 	TH1D* histoCorrectedYieldTrueLeftWideFitted = (TH1D*)histoUnCorrectedYieldLeftWide->Clone();
-	histoCorrectedYieldTrueLeftWideFitted->SetName("CorrectedYieldTrueEffLeftWideFitted");
+    histoCorrectedYieldTrueLeftWideFitted->SetName(Form("CorrectedYieldTrueEffLeftWideFitted%s",InvMassTypeEnding.Data()));
 	
 	TH1D* histoCompleteCorr = (TH1D*)histoTrueEffiPt->Clone();
 
@@ -1808,8 +1811,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	const char* nameOutput2 = Form("%s/%s/%s_%s_GammaConv_OnlyCorrectionFactor%s_%s.root",fCutSelection.Data(),optionEnergy.Data(),nameMeson.Data(),prefix2.Data(),optionPeriod.Data(),fCutSelection.Data());
 	TFile* correctedOutput2 = new TFile(nameOutput2,"RECREATE");     
 		histoAcceptance->Write();
-		histoTrueEffiPt->Write("TrueMesonEffiPt");
-		histoCompleteCorr->Write("EffiTimesAcceptanceTimesDeltaY");
+        histoTrueEffiPt->Write(Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data()));
+        histoCompleteCorr->Write(Form("EffiTimesAcceptanceTimesDeltaY%s",InvMassTypeEnding.Data()));
 	correctedOutput2->Write();
 	correctedOutput2->Close();
 	
@@ -1847,14 +1850,14 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	histoMassMeson->Write();
 	
 	histoAcceptance->Write();
-	histoTrueEffiPt->Write("TrueMesonEffiPt");
+    histoTrueEffiPt->Write(Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data()));
 	//    histoCompleteCorr->Write("EffiTimesAcceptanceTimesDeltaY");
-	histoTrueEffiPtFit->Write("TrueMesonEffiPtFitted");
-	histoRatioTrueEffiDivFitted->Write("TrueMesonEffiPtDivFittedEffi");
+    histoTrueEffiPtFit->Write(Form("TrueMesonEffiPtFitted%s",InvMassTypeEnding.Data()));
+    histoRatioTrueEffiDivFitted->Write(Form("TrueMesonEffiPtDivFittedEffi%s",InvMassTypeEnding.Data()));
 	histoFWHMMeson->Write();
 	histoTrueFWHMMeson->Write();
 	histoTrueMassMeson->Write();
-	histoMesonSignalFullPtInvMass->SetName("FullInvariantMass");
+    histoMesonSignalFullPtInvMass->SetName(Form("FullInvariantMass%s",InvMassTypeEnding.Data()));
 	histoMesonSignalFullPtInvMass->Write();
 	histoEventQuality->Write();
 	histoNumberOfGoodESDTracksVtx->Write();
@@ -1868,7 +1871,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	if (histoMCInputWOWeightingAddedSig)   histoMCInputWOWeightingAddedSig->Write();
 	if (histoMCInputWeightsAddedSig) histoMCInputWeightsAddedSig->Write("WeightsMeson_AddedSig");
 	
-	histoUnCorrectedYieldDrawing->SetName("histoYieldMesonPerEvent");
+    histoUnCorrectedYieldDrawing->SetName(Form("histoYieldMesonPerEvent%s",InvMassTypeEnding.Data()));
 	histoUnCorrectedYieldDrawing->Write();
 	deltaPt->Write("deltaPt");
 	correctedOutput->Write();

@@ -204,12 +204,15 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     //***************************************************************************************************************
     //********************************** setting correct histo names ************************************************
     //***************************************************************************************************************
-    TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
-    TString nameEfficiency                              = "TrueMesonEffiPt";
+    // Variable to quickly change which type of Inv mass plot is used
+    TString InvMassTypeEnding = "_FixedPzPiZero";
+
+    TString nameCorrectedYield                          = Form("CorrectedYieldTrueEff%s",InvMassTypeEnding.Data());
+    TString nameEfficiency                              = Form("TrueMesonEffiPt%s",InvMassTypeEnding.Data());
     TString nameAcceptance                              = "fMCMesonAccepPt";
     TString nameAcceptanceWOEvtWeights                  = "fMCMesonAccepPtWOEvtWeights";
-    TString nameMassMC                                  = "histoTrueMassMeson";
-    TString nameWidthMC                                 = "histoTrueFWHMMeson";
+    TString nameMassMC                                  = Form("histoTrueMassMeson%s",InvMassTypeEnding.Data());
+    TString nameWidthMC                                 = Form("histoTrueFWHMMeson%s",InvMassTypeEnding.Data());
   //  TString nameMCYield                                 = "MCYield_Meson_oldBinWOWeights";
     TString nameMCYield                                 = "MCYield_Meson";
     if ( mode == 4 || mode == 5 ){
@@ -542,14 +545,14 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
         if(histoAcceptanceOmegaWOEvtWeights[i]) histoAcceptanceOmegaWOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
 
-        histoRawYieldOmega[i]                                 = (TH1D*)fileCorrectedOmega[i]->Get("histoYieldMesonPerEvent");
+        histoRawYieldOmega[i]                                 = (TH1D*)fileCorrectedOmega[i]->Get(Form("histoYieldMesonPerEvent%s",InvMassTypeEnding.Data()));
         histoRawYieldOmega[i]->SetName(Form("RAWYieldPerEvent_%s",cutNumber[i].Data()));
         if (mode != 10){
-            histoMassOmegaData[i]                                 = (TH1D*)fileCorrectedOmega[i]->Get("histoMassMeson");
+            histoMassOmegaData[i]                                 = (TH1D*)fileCorrectedOmega[i]->Get(Form("histoMassMeson%s",InvMassTypeEnding.Data()));
             histoMassOmegaData[i]->SetName(Form("Omega_Mass_data_%s",cutNumber[i].Data()));
             histoMassOmegaMC[i]                                   = (TH1D*)fileCorrectedOmega[i]->Get(nameMassMC.Data());
             histoMassOmegaMC[i]->SetName(Form("Omega_Mass_MC_%s",cutNumber[i].Data()));
-            histoWidthOmegaData[i]                                = (TH1D*)fileCorrectedOmega[i]->Get("histoFWHMMeson");
+            histoWidthOmegaData[i]                                = (TH1D*)fileCorrectedOmega[i]->Get(Form("histoFWHMMeson%s",InvMassTypeEnding.Data()));
             histoWidthOmegaData[i]->SetName(Form("Omega_Width_data_%s",cutNumber[i].Data()));
             histoWidthOmegaMC[i]                                  = (TH1D*)fileCorrectedOmega[i]->Get(nameWidthMC.Data());
             histoWidthOmegaMC[i]->SetName(Form("Omega_Width_MC_%s",cutNumber[i].Data()));
@@ -3927,14 +3930,14 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             histoAcceptanceEta[i]->SetName(Form("Acceptance_%s",  cutNumber[i].Data()));
             histoAcceptanceEtaWOEvtWeights[i]               = (TH1D*)fileCorrectedEta[i]->Get(nameAcceptanceWOEvtWeights.Data());
             if(histoAcceptanceEtaWOEvtWeights[i]) histoAcceptanceEtaWOEvtWeights[i]->SetName(Form("AcceptanceWOEvtWeights_%s",  cutNumber[i].Data()));
-            histoRawYieldEta[i]                             = (TH1D*)fileUnCorrectedEta[i]->Get("histoYieldMesonPerEvent");
+            histoRawYieldEta[i]                             = (TH1D*)fileUnCorrectedEta[i]->Get(Form("histoYieldMesonPerEvent%s",InvMassTypeEnding.Data()));
             histoRawYieldEta[i]->SetName(Form("RAWYieldPerEvent_%s",cutNumber[i].Data()));
 
-            histoMassEtaData[i]                                 = (TH1D*)fileCorrectedEta[i]->Get("histoMassMeson");
+            histoMassEtaData[i]                                 = (TH1D*)fileCorrectedEta[i]->Get(Form("histoMassMeson%s",InvMassTypeEnding.Data()));
             histoMassEtaData[i]->SetName(Form("Eta_Mass_data_%s",cutNumber[i].Data()));
             histoMassEtaMC[i]                                   = (TH1D*)fileCorrectedEta[i]->Get(nameMassMC.Data());
             histoMassEtaMC[i]->SetName(Form("Eta_Mass_MC_%s",cutNumber[i].Data()));
-            histoWidthEtaData[i]                                = (TH1D*)fileCorrectedEta[i]->Get("histoFWHMMeson");
+            histoWidthEtaData[i]                                = (TH1D*)fileCorrectedEta[i]->Get(Form("histoFWHMMeson%s",InvMassTypeEnding.Data()));
             histoWidthEtaData[i]->SetName(Form("Eta_Width_data_%s",cutNumber[i].Data()));
             histoWidthEtaMC[i]                                  = (TH1D*)fileCorrectedEta[i]->Get(nameWidthMC.Data());
             histoWidthEtaMC[i]->SetName(Form("Eta_Width_MC_%s",cutNumber[i].Data()));
