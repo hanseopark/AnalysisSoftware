@@ -1001,6 +1001,42 @@ void QA(    TString select          = "LHC11a",         // set selected
       //      doEquidistantXaxis=kTRUE;
     }
     //**************************************************************************************************************
+    else if(select.CompareTo("LHC16qt_EMC")==0){
+      // pp 5.02TeV
+      mode=4;
+      nSets = 4;
+      cutNr = 0;
+      fEnergyFlag = "pPb_5.023TeV";
+      DataSets[0]="LHC16q_FAST"; DataSets[1]="LHC16q_woSDD"; DataSets[2]="LHC16t_FAST"; DataSets[3]="LHC16t_woSDD"; 
+      plotDataSets[0]="LHC16q_FAST"; plotDataSets[1]="LHC16q_woSDD"; plotDataSets[2]="LHC16t_FAST"; plotDataSets[3]="LHC16t_woSDD";
+      labelData="LHC16qt 0-100%";
+      pathDataSets[0]="/home/mike/1_EMCal_pPb/data/run2/LHC16q_pPb5TeV_p1_FAST_GammaCalo_204.root";
+      pathDataSets[1]="/home/mike/1_EMCal_pPb/data/run2/LHC16q_pPb5TeV_p1_woSDD_GammaCalo_204.root";
+      pathDataSets[2]="/home/mike/1_EMCal_pPb/data/run2/LHC16t_pPb5TeV_p1_FAST_GammaCalo_204.root";
+      pathDataSets[3]="/home/mike/1_EMCal_pPb/data/run2/LHC16t_pPb5TeV_p1_woSDD_GammaCalo_204.root";
+
+      //      markerSize=1.5;
+      //      doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
+    else if(select.CompareTo("LHC16qt_PHOS")==0){
+      // pp 5.02TeV
+      mode=5;
+      nSets = 4;
+      cutNr = 0;
+      fEnergyFlag = "pPb_5.023TeV";
+      DataSets[0]="LHC16q_FAST"; DataSets[1]="LHC16q_woSDD"; DataSets[2]="LHC16t_FAST"; DataSets[3]="LHC16t_woSDD"; 
+      plotDataSets[0]="LHC16q_FAST"; plotDataSets[1]="LHC16q_woSDD"; plotDataSets[2]="LHC16t_FAST"; plotDataSets[3]="LHC16t_woSDD";
+      labelData="LHC16qt 0-100%";
+      pathDataSets[0]="/home/mike/1_EMCal_pPb/data/run2/LHC16q_pPb5TeV_p1_FAST_GammaCalo_345.root";
+      pathDataSets[1]="/home/mike/1_EMCal_pPb/data/run2/LHC16q_pPb5TeV_p1_woSDD_GammaCalo_345.root";
+      pathDataSets[2]="/home/mike/1_EMCal_pPb/data/run2/LHC16t_pPb5TeV_p1_FAST_GammaCalo_345.root";
+      pathDataSets[3]="/home/mike/1_EMCal_pPb/data/run2/LHC16t_pPb5TeV_p1_woSDD_GammaCalo_345.root";
+
+      //      markerSize=1.5;
+      //      doEquidistantXaxis=kTRUE;
+    }
+    //**************************************************************************************************************
     else{
         cout << "No valid selection! Returning..." << endl;
         return;
