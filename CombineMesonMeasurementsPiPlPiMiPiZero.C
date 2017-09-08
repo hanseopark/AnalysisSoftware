@@ -60,7 +60,7 @@ struct SysErrorConversion {
     //    TString name;
 };
 
-void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
+/*void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
     TLatex *latexDummy                  = new TLatex(textcolumn ,textrow,latextext);
     SetStyleTLatex( latexDummy, textSizePixel,4);
     if(setFont)
@@ -71,7 +71,7 @@ void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Doub
         latexDummy->SetTextAlign(31);
     latexDummy->SetTextColor(textcolor);
     latexDummy->Draw();
-}
+}*/
 
 
 void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
@@ -79,6 +79,11 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
                                         TString fileNameEMCal   = "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_19/FinalResultsTriggersPatched_EMC/data_EMCAL-EMCALResultsFullCorrection_PP.root",
                                         TString fileNamePCMPHOS = "",
                                         TString fileNamePCMEMCal= "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_20/FinalResultsTriggersPatched/data_PCM-EMCALResultsFullCorrection_PP.root",
+                                        TString fileNamePi0PCM    = "",
+                                        TString fileNamePi0PHOS    = "",
+                                        TString fileNamePi0EMCal   = "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_19/FinalResultsTriggersPatched_EMC/data_EMCAL-EMCALResultsFullCorrection_PP.root",
+                                        TString fileNamePi0PCMPHOS = "",
+                                        TString fileNamePi0PCMEMCal= "/home/nschmidt/AnalysisSoftware/pdf/5TeV/2017_08_20/FinalResultsTriggersPatched/data_PCM-EMCALResultsFullCorrection_PP.root",
                                         TString suffix          = "pdf",
                                         Int_t numbersofmeas     = 5
                                     ){
@@ -111,6 +116,18 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     if(fileNamePCMEMCal.CompareTo(""))
       gSystem->Exec(Form("cp %s %s/InputPCMEMCal.root", fileNamePCMEMCal.Data(), outputDir.Data()));
 
+    if(fileNamePi0PCM.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/InputPi0PCM.root", fileNamePi0PCM.Data(), outputDir.Data()));
+    if(fileNamePi0PHOS.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/InputPi0PHOS.root", fileNamePi0PHOS.Data(), outputDir.Data()));
+    if(fileNamePi0EMCal.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/InputPi0EMCal.root", fileNamePi0EMCal.Data(), outputDir.Data()));
+    if(fileNamePi0PCMPHOS.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/InputPi0PCMPHOS.root", fileNamePi0PCMPHOS.Data(), outputDir.Data()));
+    if(fileNamePi0PCMEMCal.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/InputPi0PCMEMCal.root", fileNamePi0PCMEMCal.Data(), outputDir.Data()));
+
+
     Double_t mesonMassExpectOmega                = TDatabasePDG::Instance()->GetParticle(223)->Mass();
     Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
 
@@ -122,6 +139,8 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     Size_t  markerSizeComb                      = 2;
 
     TString nameMeasGlobal[11]                  = {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged", "PCMOtherDataset"};
+    TString nameMeasGlobalPi0[11]                  = {"PCM (#pi^{0})", "PHOS (#pi^{0})", "EMCal (#pi^{0})", "PCM-PHOS (#pi^{0})", "PCM-EMCal (#pi^{0})", "PCM-Dalitz (#pi^{0})",
+                                                      "PHOS-Dalitz (#pi^{0})", "EMCal-Dalitz (#pi^{0})", "EMCal high pT (#pi^{0})", "EMCal merged (#pi^{0})", "PCMOtherDataset (#pi^{0})"};
     Color_t colorDet[11];
     Color_t colorDetMC[11];
     Style_t markerStyleDet[11];
@@ -142,19 +161,29 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     }
 
     TFile* inputFile[10];
+    TFile* inputFilePi0[10];
         inputFile[0]                            = new TFile(fileNamePCM.Data());
         inputFile[1]                            = new TFile(fileNamePHOS.Data());
         inputFile[2]                            = new TFile(fileNameEMCal.Data());
         inputFile[3]                            = new TFile(fileNamePCMPHOS.Data());
         inputFile[4]                            = new TFile(fileNamePCMEMCal.Data());
 
+        // Pi0 input files for comparison
+        inputFilePi0[0]                            = new TFile(fileNamePi0PCM.Data());
+        inputFilePi0[1]                            = new TFile(fileNamePi0PHOS.Data());
+        inputFilePi0[2]                            = new TFile(fileNamePi0EMCal.Data());
+        inputFilePi0[3]                            = new TFile(fileNamePi0PCMPHOS.Data());
+        inputFilePi0[4]                            = new TFile(fileNamePi0PCMEMCal.Data());
+
     TDirectory* directoryOmega[10];
     TDirectory* directoryEta[10];
+    TDirectory* directoryPi0[10];
     for(Int_t i=0;i<numbersofmeas;i++){
       if(!inputFile[i]->IsZombie()){
         cout << "loading directories for " <<  nameMeasGlobal[i] << endl;
         directoryOmega[i]                     = (TDirectory*)inputFile[i]->Get("Omega7TeV");
         directoryEta[i]                     = (TDirectory*)inputFile[i]->Get("Eta7TeV");
+        directoryPi0[i]                     = (TDirectory*)inputFilePi0[i]->Get("Pi07TeV");
       }
     }
     cout << __LINE__<<endl;
@@ -174,6 +203,9 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     TH1D* histoEtaAccTimesEff[10];
     TH1D* histoOmegaInvCrossSection[10];
     TH1D* histoEtaInvCrossSection[10];
+    TH1D* histoPi0Acc[10];
+    TH1D* histoPi0TrueEffPt[10];
+    TH1D* histoPi0AccTimesEff[10];
     TGraphAsymmErrors* graphOmegaInvCrossSectionSys[10];
     TGraphAsymmErrors* graphOmegaInvCrossSectionStat[10];
     TGraphAsymmErrors* graphEtaInvCrossSectionStat[10];
@@ -183,6 +215,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
 
     Double_t rapidityMeas[10]                   = {1.6, 1,1, 1.6,1,1,1};
     Double_t availableMeas[10]                  = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
+    Double_t availableMeasPi0[10]                  = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
     Int_t nMeasSet                              = 0;
 
     for (Int_t i = 0; i < 5; i++){
@@ -224,6 +257,8 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
       //______________________________ Neutral pion acceptance and efficiency and calculate acc*eff*y*2pi
       histoOmegaAcc[i]                      = (TH1D*)directoryOmega[i]->Get("AcceptanceOmega_INT1");
       histoOmegaTrueEffPt[i]                = (TH1D*)directoryOmega[i]->Get("EfficiencyOmega_INT1");
+      // calculating for pi0 for later comparison
+
       if(!histoOmegaAcc[i] || !histoOmegaTrueEffPt[i]){
         cout << "missing acceptance or efficiency histograms... returning!" << endl;
         return;
@@ -233,6 +268,23 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         histoOmegaAccTimesEff[i]->Multiply(histoOmegaAcc[i]);
         histoOmegaAccTimesEff[i]->Scale(2*TMath::Pi()*rapidityMeas[i]);
         cout << "loaded " << nameMeasGlobal[i] << "acceptance and efficiency" << endl;
+      }
+
+      if(!inputFilePi0[i]->IsZombie()){
+          histoPi0Acc[i]                      = (TH1D*)directoryPi0[i]->Get("AcceptancePi0_INT1");
+          histoPi0TrueEffPt[i]                = (TH1D*)directoryPi0[i]->Get("EfficiencyPi0_INT1");
+
+          if(!histoPi0Acc[i] || !histoPi0TrueEffPt[i]){
+              cout << "missing acceptance or efficiency histograms of pi0 ... returning!" << endl;
+              return;
+          } else {
+              // calculating acceptance times efficiency
+              availableMeasPi0[i]=kTRUE;
+              histoPi0AccTimesEff[i]            = (TH1D*)histoPi0TrueEffPt[i]->Clone(Form("histoPi0AccTimesEff%s",nameMeasGlobalPi0[i].Data()));
+              histoPi0AccTimesEff[i]->Multiply(histoPi0Acc[i]);
+              histoPi0AccTimesEff[i]->Scale(2*TMath::Pi()*rapidityMeas[i]);
+              cout << "loaded " << nameMeasGlobalPi0[i] << "acceptance and efficiency" << endl;
+          }
       }
       
       //______________________________ Eta meson invariant cross section
@@ -767,7 +819,10 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     for (Int_t i = 0; i < numbersofmeas; i++){
         if(histoOmegaAccTimesEff[i] && availableMeas[i]){
             DrawGammaSetMarker(histoOmegaAccTimesEff[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            // Draw Pi0 measurment for comparison. For now use MC markers
+            if(availableMeasPi0[i]) DrawGammaSetMarker(histoPi0AccTimesEff[i], markerStyleDetMC[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
             histoOmegaAccTimesEff[i]->Draw("p,same,e");
+            if(availableMeasPi0[i]) histoPi0AccTimesEff[i]->Draw("p,same,e");
         }
     }
 
@@ -775,6 +830,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     for (Int_t i = 0; i < numbersofmeas; i++){
         if(histoOmegaAccTimesEff[i] && availableMeas[i]){
             legendEffiAccOmega->AddEntry(histoOmegaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
+            if(availableMeasPi0[i]) legendEffiAccOmega->AddEntry(histoPi0AccTimesEff[i],nameMeasGlobalPi0[i].Data(),"p");
         }
     }
     legendEffiAccOmega->Draw();
