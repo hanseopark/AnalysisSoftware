@@ -73,6 +73,10 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     TString energyForOutput                 = energy;
     energyForOutput.ReplaceAll(".","_");
 
+    TString recoMethod = "";
+    if(mode == 2) recoMethod = "PCMEMC";
+    if(mode == 3) recoMethod = "PCMPHOS";
+
 
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
@@ -149,11 +153,11 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothMBEtaPCMPHOS[19]  = { 0, 1, 1, 1, 1,
+    Bool_t bsmoothMBEtaPCMPHOS[19]  = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothMBEtaToPi0PCMPHOS[19]= { 0, 1, 1, 1, 1,
+    Bool_t bsmoothMBEtaToPi0PCMPHOS[19]= { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -242,12 +246,12 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     TFile* fileErrorInput= new TFile(nameDataFileErrors.Data());
 
     for (Int_t i = 0; i < nCuts; i++){
-
         // read data
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, CellTiming - 14, Trigger - 16, Efficiency - 17
-        if ( i == 0 || i == 14 || i == 16 || i == 17 ){
+        if ( i == 0 || i == 14 || i == 16 || i == 17 || (i==8 && mode==3) || (i==15 && mode==3)){
+
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
@@ -267,8 +271,8 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
         } else { // read graphs from input file
-            TString nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
-            TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
+            TString nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+            TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -322,6 +326,17 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
 
                             if (ptBins[k] < 2.2) continue;
                             Double_t error          = 4.0+0.025*ptBins[k]*ptBins[k];
+
+                            errorsMean[i][k]        = error;
+                            errorsMeanErr[i][k]     = error*0.01;
+                            errorsMeanCorr[i][k]    = error;
+                            errorsMeanErrCorr[i][k] = error*0.01;
+                        }
+                    }
+                    if (mode == 3){
+                        for (Int_t k = 0; k < nPtBins; k++){
+                            if (ptBins[k] != 2.8) continue;
+                            Double_t error          = 15.;
 
                             errorsMean[i][k]        = error;
                             errorsMeanErr[i][k]     = error*0.01;
@@ -545,7 +560,8 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             if(ptBins[k] < 6){
                                 error = 1.84131 - 6.15522e-01*ptBins[k] + 1.43332e-01*ptBins[k]*ptBins[k];
                             } else{
-                                error = -3.9607725 + 1.21149*ptBins[k];
+//                                 error = -3.9607725 + 1.21149*ptBins[k];
+                                error = -3.9607725 + 1.1*ptBins[k];
                             }
                         }
                         errorsMean[i][k]        = error;
@@ -753,8 +769,6 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             else{
                                 error          = 0.818182*ptBins[k] - 1.45454545;
                             }
-                        }else {
-                            error =9.;
                         }
                     }
                     errorsMean[i][k]            = error;
@@ -929,7 +943,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             if (nameCutVariationSC[i].CompareTo("Efficiency") == 0){
                 for (Int_t k = 0; k < nPtBins; k++){
                     Double_t error              = 0.0;
-                    if (mode == 2){
+                    if (mode == 2 || mode == 3){
                         if (meson.CompareTo("Pi0") == 0){
                             if (additionalNameOutput.CompareTo("")==0 ){
                                 error   = 2.;
@@ -1163,9 +1177,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,20.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
         } else {
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,35.);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,50.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1268,7 +1282,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedPCMEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveraged%s_%s_%s%s_%s.dat",recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -1278,7 +1292,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
 
     SysErrDatAver.close();
 
-    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedSinglePCMEMC_%s_%s%s_%s.dat",meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedSingle%s_%s_%s%s_%s.dat",recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);

@@ -5276,6 +5276,8 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     if (fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12){
         fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
                         fMesonFitRange[0], fMesonFitRange[1]);
+    } else if (fMode == 3) {
+        fFitReco = new TF1("GaussLinearBG","gaus(0)",fMesonFitRange[0],fMesonFitRange[1]);
     } else {
         fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0],
                         fMesonFitRange[1]);
