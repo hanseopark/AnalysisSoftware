@@ -962,8 +962,8 @@ void QA(    TString select          = "LHC11a",         // set selected
 		DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
 		plotDataSets[0]="LHC15o High IR"; plotDataSets[1]="LHC16g1";
 		labelData="LHC15o 0-90%";
-		pathDataSets[0]="/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC15o_pass1_highIR_317_GammaCalo_210.root";
-		pathDataSets[1]="/home/mike/2_EMCal_PbPb/1_data/170731_GammaCalo_GammaCalo_ConvCalo_data/PbPb_LHC16g1abc_MERGED_GammaCalo_210.root";
+		pathDataSets[0]="/home/mike/1_PbPb_EMCal/data/170824_PbPb_ESD_EMC_PCMEMC/LHC15o_pass1_highIR_GammaCalo_210.root";
+		pathDataSets[1]="/home/mike/1_PbPb_EMCal/data/170824_PbPb_ESD_EMC_PCMEMC/LHC16g1_5TeV_ancLHC15opass1_MinBias_GammaCalo_210.root";
 		pathPhotonQA[0]="";
 		pathPhotonQA[1]="";
     }
@@ -976,10 +976,10 @@ void QA(    TString select          = "LHC11a",         // set selected
 		DataSets[0]="LHC15o"; DataSets[1]="LHC16g1";
 		plotDataSets[0]="LHC15o High IR"; plotDataSets[1]="LHC16g1";
 		labelData="LHC15o 0-90%";
-		pathDataSets[0]="/home/mike/2_EMCal_PbPb/1_data/170323_GammaCalo_GammaConvCalo_Data/GammaConvCalo_210_LHC15o_pass1_highIR.root";
-		pathDataSets[1]="/home/mike/2_EMCal_PbPb/1_data/170323_GammaCalo_GammaConvCalo_MC/LHC16g1_generalpurpose/GammaConvCalo_210_LHC16g1_5TeV_ancLHC15opass1_MinBias.root";
-		pathPhotonQA[0]="/home/mike/2_EMCal_PbPb/1_data/170323_GammaCalo_GammaConvCalo_Data/GammaCalo_210_LHC15o_pass1_highIR.root";
-		pathPhotonQA[1]="/home/mike/2_EMCal_PbPb/1_data/170323_GammaCalo_GammaConvCalo_MC/LHC16g1_generalpurpose/GammaCalo_210_LHC16g1_5TeV_ancLHC15opass1_MinBias.root";
+		pathDataSets[0]="/home/mike/1_PbPb_EMCal/data/170824_PbPb_ESD_EMC_PCMEMC/LHC15o_pass1_highIR_GammaConvCalo_210.root";
+		pathDataSets[1]="/home/mike/1_PbPb_EMCal/data/170824_PbPb_ESD_EMC_PCMEMC/LHC16g1_5TeV_ancLHC15opass1_MinBias_GammaConvCalo_210.root";
+		pathPhotonQA[0]="";
+		pathPhotonQA[1]="";
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15n")==0){
