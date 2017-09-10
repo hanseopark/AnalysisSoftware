@@ -5,15 +5,11 @@
 
 void read_phos() {
 
-  // define wether to consider correlated uncertainties
-  bool correlated_uncertainties = true;
-
   // file with PHOS results
   TFile file_phos("data_phos/PHOSFlow_v2_final_161116.root");
 
   // open output file
-  TString fn_out = "data_phos/data_phos_uncorrelated_errors.root";
-  if (correlated_uncertainties) fn_out = "data_phos/data_phos.root";
+  TString fn_out = "data_phos/data_phos.root";
   TFile f_out(fn_out,"recreate");
 
   const Int_t n_pt_bins = 16;
@@ -141,6 +137,7 @@ void read_phos() {
     //
     // correlated uncertainties
     //
+    bool correlated_uncertainties = true;
     if (correlated_uncertainties) {
       for (Int_t i_pt_bin=0; i_pt_bin<n_pt_bins; ++i_pt_bin) {
         for (Int_t j_pt_bin=0; j_pt_bin<n_pt_bins; ++j_pt_bin) {

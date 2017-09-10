@@ -10,15 +10,11 @@ void read_pcm() {
 
   const Int_t n_pt_bins = 16;
 
-  // define wether to consider correlated uncertainties
-  bool correlated_uncertainties = true;
-
   // define position in Tgraphs where data start
   const Int_t i_bin_offset = 10;
 
   // open output file
-  TString fn_out = "data_pcm/data_pcm_uncorrelated_errors.root";
-  if (correlated_uncertainties) fn_out = "data_pcm/data_pcm.root";
+  TString fn_out = "data_pcm/data_pcm.root";
   TFile f_out(fn_out,"recreate");
 
   // open Rgamma file
@@ -157,6 +153,7 @@ void read_pcm() {
     // Correlated uncertainties: off-diagonal elements of the covariance matrices
     // Assumption: systematic are fully (positively) correlated among pT bins
     //
+    bool correlated_uncertainties = true;
     if (correlated_uncertainties) {
       for (Int_t i_pt_bin=0; i_pt_bin<n_pt_bins; ++i_pt_bin) {
         for (Int_t j_pt_bin=0; j_pt_bin<n_pt_bins; ++j_pt_bin) {

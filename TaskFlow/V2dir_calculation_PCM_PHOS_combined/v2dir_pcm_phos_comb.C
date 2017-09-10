@@ -27,6 +27,810 @@
 #include "RooMultiVarGaussian.h"
 #include "RooDataSet.h"
 
+//
+// used functions
+//
+void v2_dir_central_value_and_error_from_v2dir_distribution(TH1* h_v2dir_distr,
+  Double_t& v2dir_central_value, Double_t& v2dir_err_up, Double_t& v2dir_err_low);
+  void fill_v2dir_graph(TH1** hp, const TVectorD& pt,
+    const Double_t& pt_offset, const Double_t& err_x, TGraphAsymmErrors& g);
+void weighted_average(const Int_t nMeas, const TVectorD** mu, const TMatrixDSym** cov, TVectorD* muAve, TMatrixDSym* covAve);
+void weighted_average(const TVectorD& mu1, const TVectorD& mu2, const TMatrixDSym& cov1, const TMatrixDSym& cov2, TVectorD& muAve, TMatrixDSym& covAve);
+void likelihood(const Int_t nPtBins, const Int_t nSamples,
+		const TVectorD& vnDirTrueVec,
+		const TVectorD& RgamMeasVec, const TMatrixDSym& covRgam,
+		const TVectorD& vnIncMeasVec, const TMatrixDSym& covVnInc,
+		const TVectorD& vnDecMeasVec, const TMatrixDSym& covVnDec, Double_t& Lfinal);
+void v2dir(const Int_t nPtBins, const Int_t nSamples,
+    const TVectorD& RgamMeasVec, const TMatrixDSym& covRgam,
+    const TVectorD& vnIncMeasVec, const TMatrixDSym& covVnInc,
+    const TVectorD& vnDecMeasVec, const TMatrixDSym& covVnDec,
+    TH1** hVnDir, TString prefix);
+
+// number of pT bins
+const Int_t nPtBins = 16;
+
+//
+// the main function
+//
+void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_dir = ".") {
+
+  //
+  // calculate v2,dir(pT) with uncertainties from R_gamma(pT), v2,inc(pT),  v2,dec(pT) (with toy data)
+  //
+  // input:
+  // - measured  R_gamma(pT) + covariance matrix
+  // - measured  v2,inc(pT) + covariance matrix
+  // - measured  v2,dec(pT) + covariance matrix
+  //
+  //
+  // Klaus Reygers, November 2016
+  //
+
+  if (centr != "00-20" && centr != "20-40" && centr != "40-80") {
+    cout << "Allowed centrality classes are \"00-20\", \"20-40\", and \"40-80\"" << endl;
+    return;
+  }
+
+  output_dir += "/";
+
+  // output file name
+  TString fn_out(output_dir + "v2dir_pcm_phos_comb_" + centr + ".root");
+
+  //
+  // PCM specific input
+  //
+  TString fn_pcm = "data_pcm/data_pcm.root";
+  TFile f_pcm(fn_pcm.Data());
+  TDirectory* dir_pcm = (TDirectory*) f_pcm.Get(centr.Data());
+
+  TVectorD v2_inc_meas_values_pcm = *(TVectorD*) dir_pcm->Get("v2_inc_meas_values");
+  TMatrixDSym cov_v2_inc_toterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_v2_inc_toterr");
+  TMatrixDSym cov_v2_inc_staterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_v2_inc_staterr");
+
+  // only needed for cross checks
+  TVectorD Rgamma_meas_vec_pcm = *(TVectorD*) dir_pcm->Get("Rgamma_meas_vec");
+  TMatrixDSym cov_Rgamma_syserr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_syserr");
+  TMatrixDSym cov_Rgamma_staterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_staterr");
+  TMatrixDSym cov_Rgamma_toterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_toterr");
+
+  //
+  // PHOS specific input
+  //
+  TString fn_phos = "data_phos/data_phos.root";
+  TFile f_phos(fn_phos.Data());
+  TDirectory* dir_phos = (TDirectory*) f_phos.Get(centr.Data());
+
+  TVectorD v2_inc_meas_values_phos = *(TVectorD*) dir_phos->Get("v2_inc_meas_values");
+  TMatrixDSym cov_v2_inc_toterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_v2_inc_toterr");
+  TMatrixDSym cov_v2_inc_staterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_v2_inc_staterr");
+
+  // only needed for cross checks
+  TVectorD Rgamma_meas_vec_phos = *(TVectorD*) dir_phos->Get("Rgamma_meas_vec");
+  TMatrixDSym cov_Rgamma_staterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_Rgamma_staterr");
+  TMatrixDSym cov_Rgamma_syserr_phos = *(TMatrixDSym*) dir_phos->Get("cov_Rgamma_syserr");
+  TMatrixDSym cov_Rgamma_toterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_Rgamma_toterr");
+
+  //
+  // PCM/PHOS combined
+  //
+  TVectorD Rgamma_meas_vec_comb = *(TVectorD*) dir_pcm->Get("Rgamma_meas_vec_comb");
+  TMatrixDSym cov_Rgamma_comb_toterr = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_comb_toterr");
+  TMatrixDSym cov_Rgamma_comb_staterr = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_comb_staterr");
+
+  // check
+  // cout << "WARNING: Rgamma modified to get a feel for the effect" << endl;
+  // for (Int_t i=0; i<nPtBins; i++) {
+  //   Rgamma_meas_vec_comb(i) = 1.03;
+  // }
+
+  // decay photon v2 from PCM file
+  // TVectorD v2_dec_meas_values = *(TVectorD*) dir_pcm->Get("v2_dec_meas_values");
+  // TMatrixDSym cov_v2_dec = *(TMatrixDSym*) dir_pcm->Get("cov_v2_dec");
+
+  // decay photon v2 from PHOS file
+  TVectorD v2_dec_meas_values = *(TVectorD*) dir_phos->Get("v2_dec_meas_values");
+  TMatrixDSym cov_v2_dec_staterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_staterr");
+  TMatrixDSym cov_v2_dec_syserr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_syserr");
+  TMatrixDSym cov_v2_dec_toterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_toterr");
+
+  TVectorD pt = *(TVectorD*) dir_pcm->Get("pt");
+
+  //
+  // create array of pointers to output histograms (vndir distributions for each pT bin)
+  //
+  TH1* h_vn_dir_pcm_Rpcm_toterr[nPtBins];
+  TH1* h_vn_dir_pcm_toterr[nPtBins];
+  TH1* h_vn_dir_phos_Rphos_toterr[nPtBins];
+  TH1* h_vn_dir_phos_toterr[nPtBins];
+  TH1* h_vn_dir_comb_staterr[nPtBins];
+  TH1* h_vn_dir_comb_toterr[nPtBins];
+  TH1* h_vn_dir_comb_toterr_uncorr[nPtBins];
+  TH1* h_vn_dir_comb_staterr_uncorr[nPtBins];
+  TH1* h_vn_dir_comb_toterr_xcheck1[nPtBins];
+
+  //
+  // calculate vnDir PCM (total errors, using PCM Rgamma and common v2dec)
+  //
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
+    v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_vn_dir_pcm_Rpcm_toterr, "h_vnDir_PCM_TotErr_RgamPCM_");
+
+  //
+  // calculate vnDir PCM (total errors, using combined Rgamma and common v2dec)
+  //
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_vn_dir_pcm_toterr, "h_vnDir_PCM_TotErr_RgamComb_");
+
+  //
+  // calculate vnDir PHOS (total errors, using PHOS Rgamma and common v2dec)
+  //
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_phos, cov_Rgamma_toterr_phos,
+    v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_vn_dir_phos_Rphos_toterr, "h_vnDir_PHOS_TotErr_RgamPhos_");
+
+  //
+  // calculate vnDir PHOS (total errors, using combined Rgamma and common v2dec)
+  //
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_vn_dir_phos_toterr, "h_vnDir_PHOS_TotErr_RgamComb_");
+
+  //
+  // calculate weighted average of v2inc
+  //
+
+  // weighted average of Rgamma
+  // TVectorD Rgamma_meas_vec_comb(nPtBins);
+  // TMatrixDSym cov_Rgamma_comb(nPtBins);
+  // weighted_average(Rgamma_meas_vec_syserr_pcm, Rgamma_meas_vec_phos, cov_Rgamma_syserr_pcm, cov_Rgamma_phos, Rgamma_meas_vec_comb, cov_Rgamma_comb);
+
+  //
+  // weighted average of v2,inc
+  //
+
+  // using total error as weight
+  TVectorD v2_inc_meas_values_comb(nPtBins);
+  TMatrixDSym cov_v2_inc_toterr_comb(nPtBins);
+  weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos, cov_v2_inc_toterr_pcm, cov_v2_inc_toterr_phos,           v2_inc_meas_values_comb, cov_v2_inc_toterr_comb);
+
+  // using statistical error as weight
+  TVectorD v2_inc_meas_values_comb_statweights(nPtBins);
+  TMatrixDSym cov_v2_inc_staterr_comb(nPtBins);
+  weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos, cov_v2_inc_staterr_pcm, cov_v2_inc_staterr_phos, v2_inc_meas_values_comb_statweights, cov_v2_inc_staterr_comb);
+
+  //
+  // As a cross check calculate results assuming no correlations of systematic errors
+  //
+
+  // covariance matrix for uncorrelated total errors
+  TMatrixDSym cov_v2_inc_toterr_pcm_uncorr(nPtBins);
+  TMatrixDSym cov_v2_inc_toterr_phos_uncorr(nPtBins);
+  TMatrixDSym cov_Rgamma_comb_toterr_uncorr(nPtBins);
+  TMatrixDSym cov_v2_dec_toterr_uncorr(nPtBins);
+  for (Int_t i=0; i<nPtBins; i++) {
+    cov_v2_inc_toterr_pcm_uncorr(i, i) = cov_v2_inc_toterr_pcm(i, i);
+    cov_v2_inc_toterr_phos_uncorr(i, i) = cov_v2_inc_toterr_phos(i, i);
+    cov_Rgamma_comb_toterr_uncorr(i, i) = cov_Rgamma_comb_toterr(i, i);
+    cov_v2_dec_toterr_uncorr(i, i) = cov_v2_dec_toterr(i, i);
+  }
+
+  // v2,in weighted average using total error as weight, assuming no correlation of errors in pt
+  TVectorD v2_inc_meas_values_comb_uncorr(nPtBins);
+  TMatrixDSym cov_v2_inc_toterr_comb_uncorr(nPtBins);
+  weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos,
+    cov_v2_inc_toterr_pcm_uncorr, cov_v2_inc_toterr_phos_uncorr, v2_inc_meas_values_comb_uncorr, cov_v2_inc_toterr_comb_uncorr);
+
+  // for debugging purposes
+  for (Int_t i=0; i<nPtBins; i++) {
+    Double_t v2_inc_staterr = TMath::Sqrt(cov_v2_inc_staterr_comb(i,i));
+    Double_t v2_inc_toterr = TMath::Sqrt(cov_v2_inc_toterr_comb_uncorr(i,i));
+    cout << "v2_inc_staterr: " << v2_inc_staterr;
+    cout << ", v2_inc_toterr: " << v2_inc_toterr;
+    cout << ", v2_inc_staterr/v2_inc_toterr: " << v2_inc_staterr/v2_inc_toterr << endl;
+  }
+
+
+  //
+  // calculate vnDir combined
+  //
+
+  // total error
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_vn_dir_comb_toterr, "h_vnDir_Comb_totErr_RgamComb_");
+
+  // stat. err.
+  // note that we use  cov_Rgamma_comb_toterr rather than cov_Rgamma_comb_staterr
+  // which actually makes the statistical error of v2,dir smaller(!)
+  // Otherwise we would get a statistical error that is larger than the systematic error
+  // which would not be usedul
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
+    v2_dec_meas_values, cov_v2_dec_staterr,
+    h_vn_dir_comb_staterr, "h_vnDir_Comb_StatErr_RgamComb_");
+
+  //
+  // As a cross chech, do the calcualtion assuming uncorrelated systematic errors
+  //
+
+  // total error, uncorrelated errors (cross check)
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr_uncorr,
+    v2_inc_meas_values_comb_uncorr, cov_v2_inc_toterr_comb_uncorr,
+    v2_dec_meas_values, cov_v2_dec_toterr_uncorr,
+    h_vn_dir_comb_toterr_uncorr, "h_vnDir_Comb_totErr_RgamComb_uncorr_");
+
+  // stat. err. (cross check)
+  v2dir(nPtBins, nSamples,
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb_uncorr, cov_v2_inc_staterr_comb,
+    v2_dec_meas_values, cov_v2_dec_staterr,
+    h_vn_dir_comb_staterr_uncorr, "h_vnDir_Comb_StatErr_RgamComb_uncorr");
+
+  //
+  // Another cross check: calculate v2,dir for a fixed given Rgamma
+  //
+  Double_t Rgamma_xcheck1_val = 1.03;
+  TVectorD Rgamma_xcheck1(nPtBins);
+  for (Int_t i=0; i<nPtBins; i++) Rgamma_xcheck1(i) = Rgamma_xcheck1_val;
+  v2dir(nPtBins, nSamples,
+    Rgamma_xcheck1, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
+    v2_dec_meas_values, cov_v2_dec_staterr,
+    h_vn_dir_comb_toterr_xcheck1, "h_vnDir_Comb_totErr_RgamComb_xcheck_");
+
+
+  // graphs to store v2dir
+  TGraphAsymmErrors g_vn_dir_pcm_Rpcm_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_dir_pcm_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_dir_phos_Rphos_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_dir_phos_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_dir_comb_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_dir_comb_staterr(nPtBins); // central values same as g_vn_dir_comb_toterr
+  TGraphAsymmErrors g_vn_dir_comb_toterr_uncorr(nPtBins);
+  TGraphAsymmErrors g_vn_dir_comb_staterr_uncorr(nPtBins); // central values same as g_vn_dir_comb_toterr_uncorr
+  TGraphAsymmErrors g_vn_dir_comb_toterr_xcheck1(nPtBins);
+
+  // graphs to store v2inc
+  TGraphAsymmErrors g_vn_inc_pcm_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_inc_phos_toterr(nPtBins);
+  TGraphAsymmErrors g_vn_inc_comb_toterr(nPtBins);
+
+  // graph to store decay photon v2
+  TGraphAsymmErrors g_vn_dec_comb(nPtBins);
+
+  //
+  // fill v2dir graphs
+  //
+  // Double_t pt_offset_pcm = 0.03;
+  // Double_t pt_offset_phos = 0.06;
+  Double_t pt_offset_pcm = 0.;
+  Double_t pt_offset_phos = 0.;
+  Double_t err_pt = 0.08; // for visual representation of errors as boxes
+  fill_v2dir_graph(h_vn_dir_pcm_Rpcm_toterr, pt, pt_offset_pcm, 0, g_vn_dir_pcm_Rpcm_toterr);
+  fill_v2dir_graph(h_vn_dir_phos_Rphos_toterr, pt, pt_offset_phos, 0, g_vn_dir_phos_Rphos_toterr);
+  fill_v2dir_graph(h_vn_dir_pcm_toterr, pt, pt_offset_pcm, 0, g_vn_dir_pcm_toterr);
+  fill_v2dir_graph(h_vn_dir_phos_toterr, pt, pt_offset_phos, 0, g_vn_dir_phos_toterr);
+  fill_v2dir_graph(h_vn_dir_comb_toterr, pt, 0, err_pt, g_vn_dir_comb_toterr);
+  fill_v2dir_graph(h_vn_dir_comb_staterr, pt, 0, 0, g_vn_dir_comb_staterr);
+  fill_v2dir_graph(h_vn_dir_comb_toterr_uncorr, pt, 0, err_pt, g_vn_dir_comb_toterr_uncorr);
+  fill_v2dir_graph(h_vn_dir_comb_staterr_uncorr, pt, 0, err_pt, g_vn_dir_comb_staterr_uncorr);
+  fill_v2dir_graph(h_vn_dir_comb_toterr_xcheck1, pt, 0, err_pt, g_vn_dir_comb_toterr_xcheck1);
+
+  // set central values of graphs with statistical error to central values of graphs with total error
+  for (Int_t i=0; i<nPtBins; i++) {
+    Double_t pt_val = g_vn_dir_comb_toterr.GetX()[i];
+    Double_t v2dir_val = g_vn_dir_comb_toterr.GetY()[i];
+    g_vn_dir_comb_staterr.SetPoint(i, pt_val, v2dir_val);
+
+    pt_val = g_vn_dir_comb_toterr_uncorr.GetX()[i];
+    v2dir_val = g_vn_dir_comb_toterr_uncorr.GetY()[i];
+    g_vn_dir_comb_staterr_uncorr.SetPoint(i, pt_val, v2dir_val);
+
+  }
+
+
+  //
+  // plot output
+  //
+  cout << "#entries = " << h_vn_dir_pcm_toterr[0]->GetEntries() << endl;
+
+  // style settings
+  TStyle* myStyle = new TStyle("myStyle","My root style");
+  myStyle->SetOptStat(kFALSE);
+  myStyle->SetLabelOffset(0.005,"x");   // 0.005 = root default
+  myStyle->SetLabelOffset(0.005,"y");   // 0.005 = root default
+  myStyle->SetTitleXSize(0.04);         // 0.04  = root default
+  myStyle->SetTitleYSize(0.04);         // 0.04  = root default
+  myStyle->SetTitleXOffset(1.2);
+  myStyle->SetTitleYOffset(1.3);
+  myStyle->SetPadLeftMargin(0.15);
+  myStyle->SetPadRightMargin(0.12);      // 0.1 = root default
+  myStyle->SetPadTopMargin(0.1);
+  myStyle->SetPadBottomMargin(0.12);
+  myStyle->SetCanvasColor(0);
+  myStyle->SetPadColor(0);
+  myStyle->SetCanvasBorderMode(0);
+  myStyle->SetPadBorderMode(0);
+  myStyle->SetOptTitle(0);
+  gROOT->SetStyle("myStyle");
+
+  //
+  // Plot v2dir distributions for each pT bin (PCM, PHOS, combined)
+  //
+  TCanvas* c1 = new TCanvas("c1","c1", 700, 900);
+  c1->Divide(4,4);
+
+  TLatex lpt;
+
+  for (Int_t i=0; i<nPtBins; i++) {
+    c1->cd(i+1);
+    c1->GetPad(i+1)->SetBottomMargin(0.16);
+    c1->GetPad(i+1)->SetLeftMargin(0.16);
+
+    h_vn_dir_comb_toterr[i]->SetXTitle("v2,dir");
+
+    h_vn_dir_comb_toterr[i]->SetTitle(Form("v2dir, combined, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_vn_dir_comb_toterr[i]->SetName(Form("h_vn_dir_comb_toterr_ptbin_%d",i));
+
+    h_vn_dir_pcm_toterr[i]->SetTitle(Form("v2dir, PCM, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_vn_dir_pcm_toterr[i]->SetName(Form("h_vn_dir_pcm_toterr_ptbin_%d",i));
+
+    h_vn_dir_phos_toterr[i]->SetTitle(Form("v2dir, PHOS, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_vn_dir_phos_toterr[i]->SetName(Form("h_vn_dir_phos_toterr_ptbin_%d",i));
+
+    h_vn_dir_pcm_Rpcm_toterr[i]->SetTitle(Form("v2dir, PCM, Rgamma from PCM, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_vn_dir_pcm_Rpcm_toterr[i]->SetName(Form("h_vn_dir_pcm_Rpcm_toterr_ptbin_%d",i));
+
+    h_vn_dir_phos_Rphos_toterr[i]->SetTitle(Form("v2dir, PHOS, Rgamma from PHOS, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_vn_dir_phos_Rphos_toterr[i]->SetName(Form("h_vn_dir_phos_Rphos_toterr_ptbin_%d",i));
+
+    h_vn_dir_comb_toterr[i]->SetLineColor(kBlack); h_vn_dir_comb_toterr[i]->DrawCopy("HL");
+    h_vn_dir_pcm_Rpcm_toterr[i]->SetLineColor(kRed); h_vn_dir_pcm_Rpcm_toterr[i]->DrawCopy("HL,same");
+    h_vn_dir_phos_Rphos_toterr[i]->SetLineColor(kBlue); h_vn_dir_phos_Rphos_toterr[i]->DrawCopy("HL,same");
+
+    lpt.DrawLatexNDC(0.2, 0.75, Form("p_{T} = %4.1f GeV/#it{c}",pt(i)));
+
+    //
+    // store inclusive v2 values
+    //
+    g_vn_inc_pcm_toterr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
+    g_vn_inc_pcm_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
+    g_vn_inc_pcm_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
+
+    g_vn_inc_phos_toterr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
+    g_vn_inc_phos_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
+    g_vn_inc_phos_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
+
+    g_vn_inc_comb_toterr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
+    g_vn_inc_comb_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
+    g_vn_inc_comb_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
+
+    // store decay photon v2
+    g_vn_dec_comb.SetPoint(i, pt(i), v2_dec_meas_values(i));
+    g_vn_dec_comb.SetPointEYhigh(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
+    g_vn_dec_comb.SetPointEYlow(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
+
+  }
+  TString filename_c1 = "v2dir_distr_" + centr + ".pdf";
+  c1->SaveAs(output_dir + filename_c1);
+
+  //
+  // write root outout file
+  //
+  TFile f_out(fn_out, "recreate");
+
+  g_vn_dir_pcm_Rpcm_toterr.SetName("g_v2_dir_pcm_Rpcm_toterr");
+  g_vn_dir_pcm_Rpcm_toterr.SetTitle("PCM v2dir using PCM Rgamma, total uncertaintes");
+  g_vn_dir_pcm_Rpcm_toterr.Write();
+
+  g_vn_dir_pcm_toterr.SetName("g_v2_dir_pcm_Rcomb_toterr");
+  g_vn_dir_pcm_toterr.SetTitle("PCM v2dir using combined Rgamma, total uncertaintes");
+  g_vn_dir_pcm_toterr.Write();
+
+  g_vn_dir_phos_Rphos_toterr.SetName("g_v2_dir_phos_Rphos_toterr");
+  g_vn_dir_phos_Rphos_toterr.SetTitle("PHOS v2dir using PHOS Rgamma, total uncertaintes");
+  g_vn_dir_phos_Rphos_toterr.Write();
+
+  g_vn_dir_phos_toterr.SetName("g_v2_dir_phos_Rcomb_toterr");
+  g_vn_dir_phos_toterr.SetTitle("PHOS v2dir using combined Rgamma, total uncertaintes");
+  g_vn_dir_phos_toterr.Write();
+
+  g_vn_dir_comb_toterr.SetName("g_v2_dir_comb_toterr");
+  g_vn_dir_comb_toterr.SetTitle("PCM/PHOS combined v2dir, total uncertaintes");
+  g_vn_dir_comb_toterr.Write();
+
+  g_vn_dir_comb_toterr_uncorr.SetName("g_v2_dir_comb_toterr_uncorr");
+  g_vn_dir_comb_toterr_uncorr.SetTitle("PCM/PHOS combined v2dir, total uncertaintes, uncorrelated syst. errors");
+  g_vn_dir_comb_toterr_uncorr.Write();
+
+  g_vn_dir_comb_staterr.SetName("g_v2_dir_comb_staterr");
+  g_vn_dir_comb_staterr.SetTitle("PCM/PHOS combined v2dir, stat. uncertaintes");
+  g_vn_dir_comb_staterr.Write();
+
+  // inclusive photon v2
+  g_vn_inc_pcm_toterr.SetName("g_v2_inc_pcm_toterr");
+  g_vn_inc_pcm_toterr.SetTitle("inclusive photon v2 PCM, total uncertaintes");
+  g_vn_inc_pcm_toterr.Write();
+
+  g_vn_inc_phos_toterr.SetName("g_v2_inc_phos_toterr");
+  g_vn_inc_phos_toterr.SetTitle("inclusive photon v2 PHOS, total uncertaintes");
+  g_vn_inc_phos_toterr.Write();
+
+  g_vn_inc_comb_toterr.SetName("g_v2_inc_comb_toterr");
+  g_vn_inc_comb_toterr.SetTitle("inclusive photon v2 PCM/PHOS combined, total uncertaintes");
+  g_vn_inc_comb_toterr.Write();
+
+  // decay photon v2
+  g_vn_dec_comb.SetName("g_v2_dec_comb");
+  g_vn_dec_comb.SetTitle("decay photon v2");
+  g_vn_dec_comb.Write();
+
+  //
+  // histogram with posteriori v2dir distributions (PCM, PHOS, combined)
+  //
+  for (Int_t i=0; i<nPtBins; i++) {
+    h_vn_dir_pcm_toterr[i]->Write();
+    h_vn_dir_phos_toterr[i]->Write();
+    h_vn_dir_pcm_Rpcm_toterr[i]->Write();
+    h_vn_dir_phos_Rphos_toterr[i]->Write();
+    h_vn_dir_comb_toterr[i]->Write();
+  }
+
+  f_out.Close();
+
+
+  //
+  // Plot v2dir(v2incPCM,RgammaPCM), v2dir(v2incPHOS,RgammaPHOS), and combined v2dir vs pT
+  //
+  TCanvas* c2 = new TCanvas("c2","c2", 700, 10, 700, 500);
+  // TH2F frame("frame","direct photon v_{2}", 1, 0., 6, 1, -0.15, 0.35);
+  TH2F frame("frame","direct photon v_{2}", 1, 0., 6, 1, -0.05, 0.30);
+  frame.SetXTitle("p_{T} (GeV/#it{c})");
+  frame.SetYTitle("direct photon v_{2}");
+
+  frame.DrawCopy();
+
+  TLine ly0(0., 0., 6., 0.);
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr.SetFillColor(kBlue-9);
+
+  g_vn_dir_pcm_Rpcm_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_phos_Rphos_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+
+  g_vn_dir_pcm_Rpcm_toterr.SetLineColor(kRed);
+  g_vn_dir_phos_Rphos_toterr.SetLineColor(kBlue);
+  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+
+  g_vn_dir_pcm_Rpcm_toterr.SetMarkerColor(kRed);
+  g_vn_dir_phos_Rphos_toterr.SetMarkerColor(kBlue);
+  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+
+  g_vn_dir_pcm_Rpcm_toterr.DrawClone("p");
+  g_vn_dir_phos_Rphos_toterr.DrawClone("p");
+  g_vn_dir_comb_toterr.DrawClone("p");
+
+  TLatex l2;
+  l2.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TLegend leg2(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
+  leg2.AddEntry(&g_vn_dir_pcm_Rpcm_toterr,
+    "#it{v}_{2,dir}^{PCM}(#it{v}_{2,inc}^{PCM},#it{v}_{2,dec},#it{R}_{#gamma}^{PCM})", "p");
+  leg2.AddEntry(&g_vn_dir_phos_Rphos_toterr,
+    "#it{v}_{2,dir}^{PHOS}(#it{v}_{2,inc}^{PHOS},#it{v}_{2,dec},#it{R}_{#gamma}^{PHOS})", "p");
+  leg2.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
+  leg2.SetBorderSize(1);
+  leg2.SetTextSize(0.032);
+  leg2.DrawClone();
+
+  TString filename_c2 = "v2dir_pcm_Rpcm_phos_Rphos_comb_" + centr + ".pdf";
+  c2->SaveAs(output_dir + filename_c2);
+
+  //
+  // Plot v2dir(v2incPCM,RgammaComb), v2dir(v2incPHOS,Rgammacomb), and combined v2dir vs pT
+  //
+  TCanvas* c2b = new TCanvas("c2b","c2b", 700, 10, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr.SetFillColor(kBlue-9);
+
+  g_vn_dir_pcm_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_phos_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+
+  g_vn_dir_pcm_toterr.SetLineColor(kRed);
+  g_vn_dir_phos_toterr.SetLineColor(kBlue);
+  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+
+  g_vn_dir_pcm_toterr.SetMarkerColor(kRed);
+  g_vn_dir_phos_toterr.SetMarkerColor(kBlue);
+  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+
+  g_vn_dir_pcm_toterr.DrawClone("p");
+  g_vn_dir_phos_toterr.DrawClone("p");
+  g_vn_dir_comb_toterr.DrawClone("p");
+
+  TLatex l2b;
+  l2b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TLegend leg2b(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
+  leg2b.AddEntry(&g_vn_dir_pcm_toterr,
+    "#it{v}_{2,dir}^{PCM}(#it{v}_{2,inc}^{PCM},#it{v}_{2,dec},#it{R}_{#gamma}^{comb})", "p");
+  leg2b.AddEntry(&g_vn_dir_phos_toterr,
+    "#it{v}_{2,dir}^{PHOS}(#it{v}_{2,inc}^{PHOS},#it{v}_{2,dec},#it{R}_{#gamma}^{comb})", "p");
+  leg2b.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
+  leg2b.SetBorderSize(1);
+  leg2b.SetTextSize(0.032);
+  leg2b.DrawClone();
+
+  TString filename_c2b = "v2dir_pcm_phos_comb_" + centr + ".pdf";
+  c2b->SaveAs(output_dir + filename_c2b);
+
+  //
+  // Plot only combined v2dir vs pT
+  //
+  TCanvas* c3 = new TCanvas("c3","c3", 700, 500, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr.DrawClone("pE5");
+
+  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_staterr.SetLineColor(kBlack);
+  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_staterr.DrawClone("p");
+
+  TLatex l3;
+  l3.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TString filename_c3 = "v2dir_comb_" + centr + ".pdf";
+  c3->SaveAs(output_dir + filename_c3);
+
+  //
+  // Plot combined v2dir vs pT along with Daniel's old PCM result
+  //
+  TCanvas* c3b = new TCanvas("c3b","c3b", 700, 500, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr.DrawClone("pE5");
+
+  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_staterr.SetLineColor(kBlack);
+  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_staterr.DrawClone("p");
+
+  TFile f_pcm_daniel("results_daniel/PCMPi0v2.root");
+
+  Int_t centr_id_daniel = 0;
+  if (centr == "00-20") centr_id_daniel = 6;
+  else if (centr == "20-40") centr_id_daniel = 7;
+
+  TGraphAsymmErrors* v2dir_daniel_staterr
+    = (TGraphAsymmErrors*) f_pcm_daniel.Get(Form("%dDirectPhotonv2", centr_id_daniel));
+  TGraphAsymmErrors* v2dir_daniel_syserr
+    = (TGraphAsymmErrors*) f_pcm_daniel.Get(Form("%dDirectPhotonv2Sys", centr_id_daniel));
+
+  Int_t col = kRed;
+  v2dir_daniel_staterr->SetMarkerStyle(kFullSquare);
+  v2dir_daniel_staterr->SetMarkerColor(col);
+  v2dir_daniel_staterr->SetLineColor(col);
+  v2dir_daniel_syserr->SetMarkerStyle(kOpenCircle);
+  v2dir_daniel_syserr->SetMarkerColor(col);
+  v2dir_daniel_syserr->SetLineColor(col);
+  v2dir_daniel_syserr->SetFillColor(col);
+  v2dir_daniel_syserr->SetFillStyle(3002);
+
+  v2dir_daniel_syserr->DrawClone("pE5");
+  v2dir_daniel_staterr->DrawClone("p");
+
+  f_pcm_daniel.Close();
+
+  TLatex l3b;
+  l3b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TLegend leg3b(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
+  leg3b.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
+  leg3b.AddEntry(v2dir_daniel_staterr,
+    "#it{v}_{2,dir}^{Daniel}", "p");
+  leg3b.SetBorderSize(1);
+  leg3b.SetTextSize(0.032);
+  leg3b.DrawClone();
+
+  TString filename_c3b = "v2dir_comb_cmp_daniel_" + centr + ".pdf";
+  c3b->SaveAs(output_dir + filename_c3b);
+
+  //
+  // Plot only combined v2dir vs pT assuming pT-uncorrelated systematic errors (cross check)
+  //
+  TCanvas* c3c = new TCanvas("c3c","c3c", 700, 500, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr_uncorr.SetFillColor(kOrange-3);
+
+  g_vn_dir_comb_toterr_uncorr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr_uncorr.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr_uncorr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr_uncorr.DrawClone("pE5");
+
+  g_vn_dir_comb_staterr_uncorr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_staterr_uncorr.SetLineColor(kBlack);
+  g_vn_dir_comb_staterr_uncorr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_staterr_uncorr.DrawClone("p");
+
+  TLatex l3c;
+  l3c.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+  l3c.DrawLatexNDC(0.2, 0.15, "uncorrelated errors (cross check)");
+
+  TString filename_c3c = "v2dir_comb_uncorr_errors_" + centr + ".pdf";
+  c3c->SaveAs(output_dir + filename_c3c);
+
+  //
+  // Plot only combined v2dir vs pT + v2dir for given constant Rgamma (cross check)
+  //
+  TCanvas* c3d = new TCanvas("c3d","c3d", 700, 500, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr.DrawClone("pE5");
+
+  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_staterr.SetLineColor(kBlack);
+  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_staterr.DrawClone("p");
+
+  g_vn_dir_comb_toterr_xcheck1.SetFillColor(kOrange-3);
+
+  g_vn_dir_comb_toterr_xcheck1.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr_xcheck1.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr_xcheck1.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr_xcheck1.DrawClone("pE5");
+
+  TLatex l3d;
+  l3d.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+  l3d.DrawLatexNDC(0.2, 0.15, Form("constant R_{gamma} = %4.2f (cross check)", Rgamma_xcheck1_val));
+
+  TString filename_c3d = "v2dir_comb_xcheck1_" + centr + ".pdf";
+  c3d->SaveAs(output_dir + filename_c3d);
+
+
+  //
+  // Plot inclusive and decay photon v2
+  //
+  TCanvas* c4 = new TCanvas("c4","c4", 900, 10, 700, 500);
+  frame.SetXTitle("p_{T} (GeV/#it{c})");
+  frame.SetYTitle("inclusive photon v_{2}, decay photon v_{2}");
+
+  frame.DrawCopy();
+
+  g_vn_dec_comb.SetMarkerStyle(kOpenCircle);
+  g_vn_dec_comb.SetLineColor(kGray);
+  g_vn_dec_comb.SetMarkerColor(kGray);
+  g_vn_dec_comb.SetFillColor(kGray);
+  g_vn_dec_comb.DrawClone("3l");
+
+  g_vn_inc_pcm_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_inc_phos_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_inc_comb_toterr.SetMarkerStyle(kFullCircle);
+
+  g_vn_inc_pcm_toterr.SetLineColor(kRed);
+  g_vn_inc_phos_toterr.SetLineColor(kBlue);
+  g_vn_inc_comb_toterr.SetLineColor(kBlack);
+
+  g_vn_inc_pcm_toterr.SetMarkerColor(kRed);
+  g_vn_inc_phos_toterr.SetMarkerColor(kBlue);
+  g_vn_inc_comb_toterr.SetMarkerColor(kBlack);
+
+  g_vn_inc_pcm_toterr.DrawClone("p");
+  g_vn_inc_phos_toterr.DrawClone("p");
+  g_vn_inc_comb_toterr.DrawClone("p");
+
+  g_vn_dec_comb.DrawClone("p");
+
+  TLatex l4;
+  l4.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TLegend leg4(0.65, 0.68, 0.87, 0.88, NULL, "brNDC");
+  leg4.AddEntry(&g_vn_inc_pcm_toterr, "#it{v}_{2,inc}^{PCM}", "p");
+  leg4.AddEntry(&g_vn_inc_phos_toterr, "#it{v}_{2,inc}^{PHOS}", "p");
+  leg4.AddEntry(&g_vn_inc_comb_toterr, "#it{v}_{2,inc}^{combined}", "p");
+  leg4.AddEntry(&g_vn_dec_comb, "#it{v}_{2,dec}", "l");
+
+  leg4.SetBorderSize(1);
+  leg4.SetTextSize(0.032);
+  leg4.DrawClone();
+
+  TString filename_c4 = "v2inc_pcm_phos_comb_" + centr + ".pdf";
+  c4->SaveAs(output_dir + filename_c4);
+
+  //
+  // finally calculate likelihoods for certain v2dir hypothesis
+  //
+  // hypothesis for vndir,true (all values zero in this case)
+  TVectorD vnDirTrueHyp(nPtBins);
+  for (Int_t i=0; i < nPtBins; i++) vnDirTrueHyp(i) = 0.18;
+
+  // likelihood 1
+  Double_t L1 = 0;
+  // Double_t nlh = 1000000;
+  Double_t nlh = 10000;
+
+  likelihood(nPtBins, nlh, v2_inc_meas_values_comb, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
+
+  // likelihood 2
+  Double_t L2 = 0;
+  likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L2);
+
+}
+
+//
+// functions used in main part
+//
+
+void v2_dir_central_value_and_error_from_v2dir_distribution(TH1* h_v2dir_distr,
+  Double_t& v2dir_central_value, Double_t& v2dir_err_up, Double_t& v2dir_err_low) {
+
+    // determine median and errors
+    const Int_t n_quant = 3;
+    Double_t prob_integrals[n_quant] = {0.15865, 0.5, 0.84135};
+    Double_t quantiles[n_quant];
+
+    h_v2dir_distr->GetQuantiles(n_quant, quantiles, prob_integrals);
+    v2dir_central_value = quantiles[1];
+    v2dir_err_up = quantiles[2] - v2dir_central_value;
+    v2dir_err_low = v2dir_central_value - quantiles[0];
+}
+
+void fill_v2dir_graph(TH1** hp, const TVectorD& pt,
+  const Double_t& pt_offset, const Double_t& err_x, TGraphAsymmErrors& g) {
+  for (Int_t i=0; i<nPtBins; i++) {
+
+    Double_t central_value = 0;
+    Double_t err_high = 0;
+    Double_t err_low = 0;
+    v2_dir_central_value_and_error_from_v2dir_distribution(hp[i], central_value, err_high, err_low);
+
+    g.SetPoint(i, pt(i)+pt_offset , central_value);  // central value same as for g_vn_dir_comb_toterr
+    g.SetPointEYhigh(i, err_high);
+    g.SetPointEYlow(i, err_low);
+
+    // for visual representation of errors as boxes
+    g.SetPointEXhigh(i, err_x);
+    g.SetPointEXlow(i, err_x);
+
+  }
+}
 
 void weighted_average(const Int_t nMeas, const TVectorD** mu, const TMatrixDSym** cov, TVectorD* muAve, TMatrixDSym* covAve) {
 
@@ -378,649 +1182,3 @@ void v2dir(const Int_t nPtBins, const Int_t nSamples,
 
 
 };
-
-
-// ------------------------------------------------------------------
-// The entry point of this macro
-// ------------------------------------------------------------------
-
-void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_dir = ".") {
-
-  //
-  // calculate v2,dir(pT) with uncertainties from R_gamma(pT), v2,inc(pT),  v2,dec(pT) (with toy data)
-  //
-  // input:
-  // - measured  R_gamma(pT) + covariance matrix
-  // - measured  v2,inc(pT) + covariance matrix
-  // - measured  v2,dec(pT) + covariance matrix
-  //
-  //
-  // Klaus Reygers, November 2016
-  //
-
-  if (centr != "00-20" && centr != "20-40" && centr != "40-80") {
-    cout << "Allowed centrality classes are \"00-20\", \"20-40\", and \"40-80\"" << endl;
-    return;
-  }
-
-  output_dir += "/";
-
-  // number of pT bins
-  const Int_t nPtBins = 16;
-
-  // output file name
-  TString fn_out(output_dir + "v2dir_pcm_phos_comb_" + centr + ".root");
-
-  //
-  // PCM specific input
-  //
-  TFile f_pcm("data_pcm/data_pcm.root");
-  // TFile f_pcm("data_pcm/data_pcm_uncorrelated_errors.root");
-  TDirectory* dir_pcm = (TDirectory*) f_pcm.Get(centr.Data());
-
-  TVectorD v2_inc_meas_values_pcm = *(TVectorD*) dir_pcm->Get("v2_inc_meas_values");
-  TMatrixDSym cov_v2_inc_toterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_v2_inc_toterr");
-  TMatrixDSym cov_v2_inc_staterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_v2_inc_staterr");
-
-  // only needed for cross checks
-  TVectorD Rgamma_meas_vec_pcm = *(TVectorD*) dir_pcm->Get("Rgamma_meas_vec");
-  TMatrixDSym cov_Rgamma_syserr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_syserr");
-  TMatrixDSym cov_Rgamma_staterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_staterr");
-  TMatrixDSym cov_Rgamma_toterr_pcm = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_toterr");
-
-  //
-  // PHOS specific input
-  //
-  TFile f_phos("data_phos/data_phos.root");
-  // TFile f_phos("data_phos/data_phos_uncorrelated_errors.root");
-  TDirectory* dir_phos = (TDirectory*) f_phos.Get(centr.Data());
-
-  TVectorD v2_inc_meas_values_phos = *(TVectorD*) dir_phos->Get("v2_inc_meas_values");
-  TMatrixDSym cov_v2_inc_toterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_v2_inc_toterr");
-  TMatrixDSym cov_v2_inc_staterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_v2_inc_staterr");
-
-  // only needed for cross checks
-  TVectorD Rgamma_meas_vec_phos = *(TVectorD*) dir_phos->Get("Rgamma_meas_vec");
-  TMatrixDSym cov_Rgamma_staterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_Rgamma_staterr");
-  TMatrixDSym cov_Rgamma_syserr_phos = *(TMatrixDSym*) dir_phos->Get("cov_Rgamma_syserr");
-  TMatrixDSym cov_Rgamma_toterr_phos = *(TMatrixDSym*) dir_phos->Get("cov_Rgamma_toterr");
-
-  //
-  // PCM/PHOS combined
-  //
-  TVectorD Rgamma_meas_vec_comb = *(TVectorD*) dir_pcm->Get("Rgamma_meas_vec_comb");
-  TMatrixDSym cov_Rgamma_comb_toterr = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_comb_toterr");
-  TMatrixDSym cov_Rgamma_comb_staterr = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_comb_staterr");
-
-  // decay photon v2 from PCM file
-  // TVectorD v2_dec_meas_values = *(TVectorD*) dir_pcm->Get("v2_dec_meas_values");
-  // TMatrixDSym cov_v2_dec = *(TMatrixDSym*) dir_pcm->Get("cov_v2_dec");
-
-  // decay photon v2 from PHOS file
-  TVectorD v2_dec_meas_values = *(TVectorD*) dir_phos->Get("v2_dec_meas_values");
-  TMatrixDSym cov_v2_dec_staterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_staterr");
-  TMatrixDSym cov_v2_dec_syserr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_syserr");
-  TMatrixDSym cov_v2_dec_toterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_toterr");
-
-  TVectorD pt = *(TVectorD*) dir_pcm->Get("pt");
-
-  //
-  // create array of pointers to output histograms (vndir distributions for each pT bin)
-  //
-  TH1* h_vn_dir_pcm_Rpcm_toterr[nPtBins];
-  TH1* h_vn_dir_pcm_toterr[nPtBins];
-  TH1* h_vn_dir_phos_Rphos_toterr[nPtBins];
-  TH1* h_vn_dir_phos_toterr[nPtBins];
-  TH1* h_vn_dir_comb_staterr[nPtBins];
-  TH1* h_vn_dir_comb_toterr[nPtBins];
-
-  //
-  // calculate vnDir PCM (total errors, using PCM Rgamma and common v2dec)
-  //
-  v2dir(nPtBins, nSamples,
-    Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
-    v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
-    v2_dec_meas_values, cov_v2_dec_toterr,
-    h_vn_dir_pcm_Rpcm_toterr, "h_vnDir_PCM_TotErr_RgamPCM_");
-
-  //
-  // calculate vnDir PCM (total errors, using combined Rgamma and common v2dec)
-  //
-  v2dir(nPtBins, nSamples,
-    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-    v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
-    v2_dec_meas_values, cov_v2_dec_toterr,
-    h_vn_dir_pcm_toterr, "h_vnDir_PCM_TotErr_RgamComb_");
-
-  //
-  // calculate vnDir PHOS (total errors, using PHOS Rgamma and common v2dec)
-  //
-  v2dir(nPtBins, nSamples,
-    Rgamma_meas_vec_phos, cov_Rgamma_toterr_phos,
-    v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
-    v2_dec_meas_values, cov_v2_dec_toterr,
-    h_vn_dir_phos_Rphos_toterr, "h_vnDir_PHOS_TotErr_RgamPhos_");
-
-  //
-  // calculate vnDir PHOS (total errors, using combined Rgamma and common v2dec)
-  //
-  v2dir(nPtBins, nSamples,
-    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-    v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
-    v2_dec_meas_values, cov_v2_dec_toterr,
-    h_vn_dir_phos_toterr, "h_vnDir_PHOS_TotErr_RgamComb_");
-
-  //
-  // calculate weighted average of v2inc
-  //
-
-  // weighted average of Rgamma
-  // TVectorD Rgamma_meas_vec_comb(nPtBins);
-  // TMatrixDSym cov_Rgamma_comb(nPtBins);
-  // weighted_average(Rgamma_meas_vec_syserr_pcm, Rgamma_meas_vec_phos, cov_Rgamma_syserr_pcm, cov_Rgamma_phos, Rgamma_meas_vec_comb, cov_Rgamma_comb);
-
-  //
-  // weighted average of v2,inc
-  //
-
-  // using total error as weight
-  TVectorD v2_inc_meas_values_comb(nPtBins);
-  TMatrixDSym cov_v2_inc_toterr_comb(nPtBins);
-  weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos, cov_v2_inc_toterr_pcm, cov_v2_inc_toterr_phos, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb);
-
-  // using statistical error as weight
-  TVectorD v2_inc_meas_values_comb_statweights(nPtBins);
-  TMatrixDSym cov_v2_inc_staterr_comb(nPtBins);
-  weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos, cov_v2_inc_staterr_pcm, cov_v2_inc_staterr_phos, v2_inc_meas_values_comb_statweights, cov_v2_inc_staterr_comb);
-
-  //
-  // calculate vnDir combined
-  //
-
-  // stat. err.
-  v2dir(nPtBins, nSamples,
-    Rgamma_meas_vec_comb, cov_Rgamma_comb_staterr,
-    v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
-    v2_dec_meas_values, cov_v2_dec_staterr,
-    h_vn_dir_comb_staterr, "h_vnDir_Comb_StatErr_RgamComb_");
-
-  // tot. err.
-  v2dir(nPtBins, nSamples,
-    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-    v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
-    v2_dec_meas_values, cov_v2_dec_toterr,
-    h_vn_dir_comb_toterr, "h_vnDir_Comb_totErr_RgamComb_");
-
-  // as a check, calculate weighted average of Rgamma here and determine v2,dir
-  // v2dir(nPtBins, nSamples, Rgamma_meas_vec_comb, cov_Rgamma_comb, v2_inc_meas_values_comb, cov_v2_inc_comb,
-  //	v2_dec_meas_values, cov_v2_dec, h_vn_dir_comb);
-
-  // graphs to store v2dir
-  TGraphAsymmErrors g_vn_dir_pcm_Rpcm_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_pcm_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_phos_Rphos_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_phos_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_comb_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_comb_staterr(nPtBins); // central values same as g_vn_dir_comb_toterr
-
-  // graphs to store v2inc
-  TGraphAsymmErrors g_vn_inc_pcm_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_phos_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_comb_toterr(nPtBins);
-
-  // graph to store decay photon v2
-  TGraphAsymmErrors g_vn_dec_comb(nPtBins);
-
-  //
-  // plot output
-  //
-  cout << "#entries = " << h_vn_dir_pcm_toterr[0]->GetEntries() << endl;
-
-  // style settings
-  TStyle* myStyle = new TStyle("myStyle","My root style");
-  myStyle->SetOptStat(kFALSE);
-  myStyle->SetLabelOffset(0.005,"x");   // 0.005 = root default
-  myStyle->SetLabelOffset(0.005,"y");   // 0.005 = root default
-  myStyle->SetTitleXSize(0.04);         // 0.04  = root default
-  myStyle->SetTitleYSize(0.04);         // 0.04  = root default
-  myStyle->SetTitleXOffset(1.2);
-  myStyle->SetTitleYOffset(1.3);
-  myStyle->SetPadLeftMargin(0.15);
-  myStyle->SetPadRightMargin(0.12);      // 0.1 = root default
-  myStyle->SetPadTopMargin(0.1);
-  myStyle->SetPadBottomMargin(0.12);
-  myStyle->SetCanvasColor(0);
-  myStyle->SetPadColor(0);
-  myStyle->SetCanvasBorderMode(0);
-  myStyle->SetPadBorderMode(0);
-  myStyle->SetOptTitle(0);
-  gROOT->SetStyle("myStyle");
-
-  //
-  // Plot v2dir distributions for each pT bin (PCM, PHOS, combined)
-  //
-  TCanvas* c1 = new TCanvas("c1","c1", 700, 900);
-  c1->Divide(4,4);
-
-  // gStyle->SetOptStat(kFALSE);
-  // gStyle->SetTitleFontSize(0.08);
-  // gROOT->ForceStyle();
-
-  TLatex lpt;
-
-  for (Int_t i=0; i<nPtBins; i++) {
-    c1->cd(i+1);
-    c1->GetPad(i+1)->SetBottomMargin(0.16);
-    c1->GetPad(i+1)->SetLeftMargin(0.16);
-
-    h_vn_dir_comb_toterr[i]->SetXTitle("v2,dir");
-
-    h_vn_dir_comb_toterr[i]->SetTitle(Form("v2dir, combined, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_comb_toterr[i]->SetName(Form("h_vn_dir_comb_toterr_ptbin_%d",i));
-
-    h_vn_dir_pcm_toterr[i]->SetTitle(Form("v2dir, PCM, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_pcm_toterr[i]->SetName(Form("h_vn_dir_pcm_toterr_ptbin_%d",i));
-
-    h_vn_dir_phos_toterr[i]->SetTitle(Form("v2dir, PHOS, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_phos_toterr[i]->SetName(Form("h_vn_dir_phos_toterr_ptbin_%d",i));
-
-    h_vn_dir_pcm_Rpcm_toterr[i]->SetTitle(Form("v2dir, PCM, Rgamma from PCM, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_pcm_Rpcm_toterr[i]->SetName(Form("h_vn_dir_pcm_Rpcm_toterr_ptbin_%d",i));
-
-    h_vn_dir_phos_Rphos_toterr[i]->SetTitle(Form("v2dir, PHOS, Rgamma from PHOS, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_phos_Rphos_toterr[i]->SetName(Form("h_vn_dir_phos_Rphos_toterr_ptbin_%d",i));
-
-    h_vn_dir_comb_toterr[i]->SetLineColor(kBlack); h_vn_dir_comb_toterr[i]->DrawCopy("HL");
-    h_vn_dir_pcm_Rpcm_toterr[i]->SetLineColor(kRed); h_vn_dir_pcm_Rpcm_toterr[i]->DrawCopy("HL,same");
-    h_vn_dir_phos_Rphos_toterr[i]->SetLineColor(kBlue); h_vn_dir_phos_Rphos_toterr[i]->DrawCopy("HL,same");
-
-    lpt.DrawLatexNDC(0.2, 0.75, Form("p_{T} = %4.1f GeV/#it{c}",pt(i)));
-
-    // determine median and errors
-    const Int_t n_quant = 3;
-    Double_t prob_integrals[n_quant] = {0.15865, 0.5, 0.84135};
-    Double_t quantiles[n_quant];
-
-    // v2dir(v2incPCM,RgammaPCM)
-    h_vn_dir_pcm_Rpcm_toterr[i]->GetQuantiles(n_quant, quantiles, prob_integrals);
-    Double_t central_value = quantiles[1];
-    Double_t err_high = quantiles[2] - central_value;
-    Double_t err_low = central_value - quantiles[0];
-
-    g_vn_dir_pcm_Rpcm_toterr.SetPoint(i, pt(i)+0.03, central_value);
-    g_vn_dir_pcm_Rpcm_toterr.SetPointEYhigh(i, err_high);
-    g_vn_dir_pcm_Rpcm_toterr.SetPointEYlow(i, err_low);
-
-    // v2dir(v2incPHOS,RgammaPHOS)
-    h_vn_dir_phos_Rphos_toterr[i]->GetQuantiles(n_quant, quantiles, prob_integrals);
-    central_value = quantiles[1];
-    err_high = quantiles[2] - central_value;
-    err_low = central_value - quantiles[0];
-
-    g_vn_dir_phos_Rphos_toterr.SetPoint(i, pt(i)+0.06, central_value);
-    g_vn_dir_phos_Rphos_toterr.SetPointEYhigh(i, err_high);
-    g_vn_dir_phos_Rphos_toterr.SetPointEYlow(i, err_low);
-
-    // v2dir(v2incPCM,RgammaComb)
-    h_vn_dir_pcm_toterr[i]->GetQuantiles(n_quant, quantiles, prob_integrals);
-    central_value = quantiles[1];
-    err_high = quantiles[2] - central_value;
-    err_low = central_value - quantiles[0];
-
-    g_vn_dir_pcm_toterr.SetPoint(i, pt(i)+0.03, central_value);
-    g_vn_dir_pcm_toterr.SetPointEYhigh(i, err_high);
-    g_vn_dir_pcm_toterr.SetPointEYlow(i, err_low);
-
-    // v2dir(v2incPHOS,RgammaComb)
-    h_vn_dir_phos_toterr[i]->GetQuantiles(n_quant, quantiles, prob_integrals);
-    central_value = quantiles[1];
-    err_high = quantiles[2] - central_value;
-    err_low = central_value - quantiles[0];
-
-    g_vn_dir_phos_toterr.SetPoint(i, pt(i)+0.06, central_value);
-    g_vn_dir_phos_toterr.SetPointEYhigh(i, err_high);
-    g_vn_dir_phos_toterr.SetPointEYlow(i, err_low);
-
-    // combined v2dir with total errors
-    h_vn_dir_comb_toterr[i]->GetQuantiles(n_quant, quantiles, prob_integrals);
-    central_value = quantiles[1];
-    err_high = quantiles[2] - central_value;
-    err_low = central_value - quantiles[0];
-
-    g_vn_dir_comb_toterr.SetPoint(i, pt(i), central_value);
-    g_vn_dir_comb_toterr.SetPointEYhigh(i, err_high);
-    g_vn_dir_comb_toterr.SetPointEYlow(i, err_low);
-    g_vn_dir_comb_toterr.SetPointEXhigh(i, 0.08); // for visual representation of total errors as boxes
-    g_vn_dir_comb_toterr.SetPointEXlow(i, 0.08);
-
-    // combined v2dir with statistical error bars
-    h_vn_dir_comb_staterr[i]->GetQuantiles(n_quant, quantiles, prob_integrals);
-    err_high = quantiles[2] - central_value;
-    err_low = central_value - quantiles[0];
-    g_vn_dir_comb_staterr.SetPoint(i, pt(i), central_value);  // central value same as for g_vn_dir_comb_toterr
-    g_vn_dir_comb_staterr.SetPointEYhigh(i, err_high);
-    g_vn_dir_comb_staterr.SetPointEYlow(i, err_low);
-
-    // store inclusive v2 values
-    g_vn_inc_pcm_toterr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
-    g_vn_inc_pcm_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
-    g_vn_inc_pcm_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
-
-    g_vn_inc_phos_toterr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
-    g_vn_inc_phos_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
-    g_vn_inc_phos_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
-
-    g_vn_inc_comb_toterr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
-    g_vn_inc_comb_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
-    g_vn_inc_comb_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
-
-    // store decay photon v2
-    g_vn_dec_comb.SetPoint(i, pt(i), v2_dec_meas_values(i));
-    g_vn_dec_comb.SetPointEYhigh(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
-    g_vn_dec_comb.SetPointEYlow(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
-
-  }
-  TString filename_c1 = "v2dir_distr_" + centr + ".pdf";
-  c1->SaveAs(output_dir + filename_c1);
-
-  //
-  // write root outout file
-  //
-  TFile f_out(fn_out, "recreate");
-
-  g_vn_dir_pcm_Rpcm_toterr.SetName("g_v2_dir_pcm_Rpcm_toterr");
-  g_vn_dir_pcm_Rpcm_toterr.SetTitle("PCM v2dir using PCM Rgamma, total uncertaintes");
-  g_vn_dir_pcm_Rpcm_toterr.Write();
-
-  g_vn_dir_pcm_toterr.SetName("g_v2_dir_pcm_Rcomb_toterr");
-  g_vn_dir_pcm_toterr.SetTitle("PCM v2dir using combined Rgamma, total uncertaintes");
-  g_vn_dir_pcm_toterr.Write();
-
-  g_vn_dir_phos_Rphos_toterr.SetName("g_v2_dir_phos_Rphos_toterr");
-  g_vn_dir_phos_Rphos_toterr.SetTitle("PHOS v2dir using PHOS Rgamma, total uncertaintes");
-  g_vn_dir_phos_Rphos_toterr.Write();
-
-  g_vn_dir_phos_toterr.SetName("g_v2_dir_phos_Rcomb_toterr");
-  g_vn_dir_phos_toterr.SetTitle("PHOS v2dir using combined Rgamma, total uncertaintes");
-  g_vn_dir_phos_toterr.Write();
-
-  g_vn_dir_comb_toterr.SetName("g_v2_dir_comb_toterr");
-  g_vn_dir_comb_toterr.SetTitle("PCM/PHOS combined v2dir, total uncertaintes");
-  g_vn_dir_comb_toterr.Write();
-
-  g_vn_dir_comb_staterr.SetName("g_v2_dir_comb_staterr");
-  g_vn_dir_comb_staterr.SetTitle("PCM/PHOS combined v2dir, stat. uncertaintes");
-  g_vn_dir_comb_staterr.Write();
-
-  // inclusive photon v2
-  g_vn_inc_pcm_toterr.SetName("g_v2_inc_pcm_toterr");
-  g_vn_inc_pcm_toterr.SetTitle("inclusive photon v2 PCM, total uncertaintes");
-  g_vn_inc_pcm_toterr.Write();
-
-  g_vn_inc_phos_toterr.SetName("g_v2_inc_phos_toterr");
-  g_vn_inc_phos_toterr.SetTitle("inclusive photon v2 PHOS, total uncertaintes");
-  g_vn_inc_phos_toterr.Write();
-
-  g_vn_inc_comb_toterr.SetName("g_v2_inc_comb_toterr");
-  g_vn_inc_comb_toterr.SetTitle("inclusive photon v2 PCM/PHOS combined, total uncertaintes");
-  g_vn_inc_comb_toterr.Write();
-
-  // decay photon v2
-  g_vn_dec_comb.SetName("g_v2_dec_comb");
-  g_vn_dec_comb.SetTitle("decay photon v2");
-  g_vn_dec_comb.Write();
-
-  //
-  // histogram with posteriori v2dir distributions (PCM, PHOS, combined)
-  //
-  for (Int_t i=0; i<nPtBins; i++) {
-    h_vn_dir_pcm_toterr[i]->Write();
-    h_vn_dir_phos_toterr[i]->Write();
-    h_vn_dir_pcm_Rpcm_toterr[i]->Write();
-    h_vn_dir_phos_Rphos_toterr[i]->Write();
-    h_vn_dir_comb_toterr[i]->Write();
-  }
-
-  f_out.Close();
-
-
-  //
-  // Plot v2dir(v2incPCM,RgammaPCM), v2dir(v2incPHOS,RgammaPHOS), and combined v2dir vs pT
-  //
-  TCanvas* c2 = new TCanvas("c2","c2", 700, 10, 700, 500);
-  // TH2F frame("frame","direct photon v_{2}", 1, 0., 6, 1, -0.15, 0.35);
-  TH2F frame("frame","direct photon v_{2}", 1, 0., 6, 1, -0.05, 0.30);
-  frame.SetXTitle("p_{T} (GeV/#it{c})");
-  frame.SetYTitle("direct photon v_{2}");
-
-  frame.DrawCopy();
-
-  TLine ly0(0., 0., 6., 0.);
-  ly0.DrawClone();
-
-  g_vn_dir_comb_toterr.SetFillColor(kBlue-9);
-
-  g_vn_dir_pcm_Rpcm_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_phos_Rphos_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-
-  g_vn_dir_pcm_Rpcm_toterr.SetLineColor(kRed);
-  g_vn_dir_phos_Rphos_toterr.SetLineColor(kBlue);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-
-  g_vn_dir_pcm_Rpcm_toterr.SetMarkerColor(kRed);
-  g_vn_dir_phos_Rphos_toterr.SetMarkerColor(kBlue);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-
-  g_vn_dir_pcm_Rpcm_toterr.DrawClone("p");
-  g_vn_dir_phos_Rphos_toterr.DrawClone("p");
-  g_vn_dir_comb_toterr.DrawClone("p");
-
-  TLatex l2;
-  l2.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
-
-  TLegend leg2(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
-  leg2.AddEntry(&g_vn_dir_pcm_Rpcm_toterr,
-    "#it{v}_{2,dir}^{PCM}(#it{v}_{2,inc}^{PCM},#it{v}_{2,dec},#it{R}_{#gamma}^{PCM})", "p");
-  leg2.AddEntry(&g_vn_dir_phos_Rphos_toterr,
-    "#it{v}_{2,dir}^{PHOS}(#it{v}_{2,inc}^{PHOS},#it{v}_{2,dec},#it{R}_{#gamma}^{PHOS})", "p");
-  leg2.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
-  leg2.SetBorderSize(1);
-  leg2.SetTextSize(0.032);
-  leg2.DrawClone();
-
-  TString filename_c2 = "v2dir_pcm_Rpcm_phos_Rphos_comb_" + centr + ".pdf";
-  c2->SaveAs(output_dir + filename_c2);
-
-  //
-  // Plot v2dir(v2incPCM,RgammaComb), v2dir(v2incPHOS,Rgammacomb), and combined v2dir vs pT
-  //
-  TCanvas* c2b = new TCanvas("c2b","c2b", 700, 10, 700, 500);
-  frame.DrawCopy();
-
-  ly0.DrawClone();
-
-  g_vn_dir_comb_toterr.SetFillColor(kBlue-9);
-
-  g_vn_dir_pcm_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_phos_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-
-  g_vn_dir_pcm_toterr.SetLineColor(kRed);
-  g_vn_dir_phos_toterr.SetLineColor(kBlue);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-
-  g_vn_dir_pcm_toterr.SetMarkerColor(kRed);
-  g_vn_dir_phos_toterr.SetMarkerColor(kBlue);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-
-  g_vn_dir_pcm_toterr.DrawClone("p");
-  g_vn_dir_phos_toterr.DrawClone("p");
-  g_vn_dir_comb_toterr.DrawClone("p");
-
-  TLatex l2b;
-  l2b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
-
-  TLegend leg2b(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
-  leg2b.AddEntry(&g_vn_dir_pcm_toterr,
-    "#it{v}_{2,dir}^{PCM}(#it{v}_{2,inc}^{PCM},#it{v}_{2,dec},#it{R}_{#gamma}^{comb})", "p");
-  leg2b.AddEntry(&g_vn_dir_phos_toterr,
-    "#it{v}_{2,dir}^{PHOS}(#it{v}_{2,inc}^{PHOS},#it{v}_{2,dec},#it{R}_{#gamma}^{comb})", "p");
-  leg2b.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
-  leg2b.SetBorderSize(1);
-  leg2b.SetTextSize(0.032);
-  leg2b.DrawClone();
-
-  TString filename_c2b = "v2dir_pcm_phos_comb_" + centr + ".pdf";
-  c2b->SaveAs(output_dir + filename_c2b);
-
-  //
-  // Plot only combined v2dir vs pT
-  //
-  TCanvas* c3 = new TCanvas("c3","c3", 700, 500, 700, 500);
-  frame.DrawCopy();
-
-  ly0.DrawClone();
-
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr.DrawClone("pE5");
-
-  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr.DrawClone("p");
-
-  TLatex l3;
-  l3.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
-
-  TString filename_c3 = "v2dir_comb_" + centr + ".pdf";
-  c3->SaveAs(output_dir + filename_c3);
-
-  //
-  // Plot combined v2dir vs pT along with Daniel's old PCM result
-  //
-  TCanvas* c3b = new TCanvas("c3b","c3b", 700, 500, 700, 500);
-  frame.DrawCopy();
-
-  ly0.DrawClone();
-
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr.DrawClone("pE5");
-
-  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr.DrawClone("p");
-
-  TFile f_pcm_daniel("results_daniel/PCMPi0v2.root");
-
-  Int_t centr_id_daniel = 0;
-  if (centr == "00-20") centr_id_daniel = 6;
-  else if (centr == "20-40") centr_id_daniel = 7;
-
-  TGraphAsymmErrors* v2dir_daniel_staterr
-    = (TGraphAsymmErrors*) f_pcm_daniel.Get(Form("%dDirectPhotonv2", centr_id_daniel));
-  TGraphAsymmErrors* v2dir_daniel_syserr
-    = (TGraphAsymmErrors*) f_pcm_daniel.Get(Form("%dDirectPhotonv2Sys", centr_id_daniel));
-
-  Int_t col = kRed;
-  v2dir_daniel_staterr->SetMarkerStyle(kFullSquare);
-  v2dir_daniel_staterr->SetMarkerColor(col);
-  v2dir_daniel_staterr->SetLineColor(col);
-  v2dir_daniel_syserr->SetMarkerStyle(kOpenCircle);
-  v2dir_daniel_syserr->SetMarkerColor(col);
-  v2dir_daniel_syserr->SetLineColor(col);
-  v2dir_daniel_syserr->SetFillColor(col);
-  v2dir_daniel_syserr->SetFillStyle(3002);
-
-  v2dir_daniel_syserr->DrawClone("pE5");
-  v2dir_daniel_staterr->DrawClone("p");
-
-  f_pcm_daniel.Close();
-
-  TLatex l3b;
-  l3b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
-
-  TLegend leg3b(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
-  leg3b.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
-  leg3b.AddEntry(v2dir_daniel_staterr,
-    "#it{v}_{2,dir}^{Daniel}", "p");
-  leg3b.SetBorderSize(1);
-  leg3b.SetTextSize(0.032);
-  leg3b.DrawClone();
-
-  TString filename_c3b = "v2dir_comb_cmp_daniel_" + centr + ".pdf";
-  c3b->SaveAs(output_dir + filename_c3b);
-
-  //
-  // Plot inclusive and decay photon v2
-  //
-  TCanvas* c4 = new TCanvas("c4","c4", 900, 10, 700, 500);
-  frame.SetXTitle("p_{T} (GeV/#it{c})");
-  frame.SetYTitle("inclusive photon v_{2}, decay photon v_{2}");
-
-  frame.DrawCopy();
-
-  g_vn_dec_comb.SetMarkerStyle(kOpenCircle);
-  g_vn_dec_comb.SetLineColor(kGray);
-  g_vn_dec_comb.SetMarkerColor(kGray);
-  g_vn_dec_comb.SetFillColor(kGray);
-  g_vn_dec_comb.DrawClone("3l");
-
-  g_vn_inc_pcm_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_inc_phos_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_inc_comb_toterr.SetMarkerStyle(kFullCircle);
-
-  g_vn_inc_pcm_toterr.SetLineColor(kRed);
-  g_vn_inc_phos_toterr.SetLineColor(kBlue);
-  g_vn_inc_comb_toterr.SetLineColor(kBlack);
-
-  g_vn_inc_pcm_toterr.SetMarkerColor(kRed);
-  g_vn_inc_phos_toterr.SetMarkerColor(kBlue);
-  g_vn_inc_comb_toterr.SetMarkerColor(kBlack);
-
-  g_vn_inc_pcm_toterr.DrawClone("p");
-  g_vn_inc_phos_toterr.DrawClone("p");
-  g_vn_inc_comb_toterr.DrawClone("p");
-
-  g_vn_dec_comb.DrawClone("p");
-
-  TLatex l4;
-  l4.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
-
-  TLegend leg4(0.65, 0.68, 0.87, 0.88, NULL, "brNDC");
-  leg4.AddEntry(&g_vn_inc_pcm_toterr, "#it{v}_{2,inc}^{PCM}", "p");
-  leg4.AddEntry(&g_vn_inc_phos_toterr, "#it{v}_{2,inc}^{PHOS}", "p");
-  leg4.AddEntry(&g_vn_inc_comb_toterr, "#it{v}_{2,inc}^{combined}", "p");
-  leg4.AddEntry(&g_vn_dec_comb, "#it{v}_{2,dec}", "l");
-
-  leg4.SetBorderSize(1);
-  leg4.SetTextSize(0.032);
-  leg4.DrawClone();
-
-  TString filename_c4 = "v2inc_pcm_phos_comb_" + centr + ".pdf";
-  c4->SaveAs(output_dir + filename_c4);
-
-  //
-  // finally calculate likelihoods for certain v2dir hypothesis
-  //
-  // hypothesis for vndir,true (all values zero in this case)
-  TVectorD vnDirTrueHyp(nPtBins);
-  for (Int_t i=0; i < nPtBins; i++) vnDirTrueHyp(i) = 0.18;
-
-  // likelihood 1
-  Double_t L1 = 0;
-  // Double_t nlh = 1000000;
-  Double_t nlh = 10000;
-
-  likelihood(nPtBins, nlh, v2_inc_meas_values_comb, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
-
-  // likelihood 2
-  Double_t L2 = 0;
-  likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L2);
-
-}
