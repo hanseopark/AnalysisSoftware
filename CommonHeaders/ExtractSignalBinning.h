@@ -1993,6 +1993,10 @@
             } else if (energy.CompareTo("8TeV") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
+                    if( modi == 2){
+                      fStartPtBin = 4;
+                      fExampleBin = 5;
+                    }
                     fColumn         = 5;
                     fRow            = 5;
                     if (fNBinsPt > 23) {

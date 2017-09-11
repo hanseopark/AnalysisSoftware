@@ -2934,7 +2934,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // resolution correction in case of unfolding
         if (histoGammaResolCorrUnfold_Pt){
             for (Int_t ipt = 1; ipt < histoGammaResolCorrUnfold_Pt->GetNbinsX()+1; ipt++){
-                if (isnan(histoGammaResolCorrUnfold_Pt->GetBinContent(ipt)) || isinf(histoGammaResolCorrUnfold_Pt->GetBinContent(ipt))){
+                if (TMath::IsNaN(histoGammaResolCorrUnfold_Pt->GetBinContent(ipt)) || TMath::Finite(histoGammaResolCorrUnfold_Pt->GetBinContent(ipt))){
                     cout << "needed correction" << endl;
                     histoGammaResolCorrUnfold_Pt->SetBinContent(ipt,-10000);
                 }

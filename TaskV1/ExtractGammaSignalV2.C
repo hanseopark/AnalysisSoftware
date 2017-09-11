@@ -2265,8 +2265,11 @@ void CalculatePileUpBackground(Bool_t doMC){
         delete RatioWithWithoutPileUpCanvas;
 
         // calculate largest difference
-        Double_t largestUp[fNBinsPtDummy]           = {0};
-        Double_t largestDown[fNBinsPtDummy]         = {0};
+        Double_t largestUp[fNBinsPtDummy];
+        Double_t largestDown[fNBinsPtDummy];
+        for(Int_t iInit = 0; iInit<fNBinsPtDummy; iInit++){
+          largestUp[iInit] = 0; largestDown[iInit] = 0;
+        }
         TH1D* relErrorOOBUp                         =  new TH1D( "relErrorOOBUp", "", fNBinsPtDummy, fBinsPtDummy);
         TH1D* relErrorOOBDown                       =  new TH1D( "relErrorOOBDown", "", fNBinsPtDummy, fBinsPtDummy);
         for (Int_t bin = 1; bin < fESDGammaPtRatioWithWithoutPileUpDCAzDistBinning[0]->GetNbinsX()+1; bin++ ){
