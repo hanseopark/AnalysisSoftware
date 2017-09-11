@@ -45,12 +45,13 @@
 
 
 
-void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
-                                TString inputFileNamePHOS   = "",
-                                TString inputFileNameEMC    = "",
-                                TString inputFileNamePCMEMC = "",
-                                TString suffix              = "eps",
-                                Bool_t enablepValueCalc     = kFALSE
+void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
+                                TString inputFileNamePHOS       = "",
+                                TString inputFileNameEMC        = "",
+                                TString inputFileNamePCMEMC     = "",
+                                TString suffix                  = "eps",
+                                TString fileNameCorrelations    = "",
+                                Bool_t enablepValueCalc         = kFALSE
                             ){
 
     //*******************************************************************************************************************************************
@@ -174,6 +175,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
     TH1D* histoRawGamma[11]                         = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
     TH1D* histoConvProb[11]                         = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
     TH1D* histoEffi[11]                             = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoEffiMCPt[11]                         = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoResolCorr[11]                        = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
     TH1D* histoPurity[11]                           = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
     TH1D* histoEffSecCorr[4][11]                    = { {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL},
                                                         {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL},
@@ -192,6 +195,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
         graphIncGammaRatioSysErr[0]                     = (TGraphAsymmErrors*) directoryPCMGammapPb->Get("IncRatioSystError");
         histoConvProb[0]                                = (TH1D*) directoryPCMGammapPb->Get("GammaConversionProbability");
         histoEffi[0]                                    = (TH1D*) directoryPCMGammapPb->Get("GammaRecoEfficiency");
+        histoEffiMCPt[0]                                = (TH1D*) directoryPCMGammapPb->Get("GammaRecoEfficiencyMCPt");
+        histoResolCorr[0]                               = (TH1D*) directoryPCMGammapPb->Get("GammaResolCorr");
         histoPurity[0]                                  = (TH1D*) directoryPCMGammapPb->Get("GammaTruePurity");
         histoIncGammaStatErr[0]                         = (TH1D*) directoryPCMGammapPb->Get("IncGammaStatError");
         graphIncGammaSysErr[0]                          = (TGraphAsymmErrors*) directoryPCMGammapPb->Get("IncGammaSystError");
@@ -213,6 +218,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
         graphIncGammaRatioSysErr[4]                     = (TGraphAsymmErrors*) directoryPCMEMCGammapPb->Get("IncRatioSystError");
         histoConvProb[4]                                = (TH1D*) directoryPCMEMCGammapPb->Get("GammaConversionProbability");
         histoEffi[4]                                    = (TH1D*) directoryPCMEMCGammapPb->Get("GammaRecoEfficiency");
+        histoEffiMCPt[4]                                = (TH1D*) directoryPCMEMCGammapPb->Get("GammaRecoEfficiencyMCPt");
+        histoResolCorr[4]                               = (TH1D*) directoryPCMEMCGammapPb->Get("GammaResolCorr");
         histoPurity[4]                                  = (TH1D*) directoryPCMEMCGammapPb->Get("GammaTruePurity");
         histoIncGammaStatErr[4]                         = (TH1D*) directoryPCMEMCGammapPb->Get("IncGammaStatError");
         graphIncGammaSysErr[4]                          = (TGraphAsymmErrors*) directoryPCMEMCGammapPb->Get("IncGammaSystError");
@@ -244,6 +251,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
         histoIncGammaRatioStatErr[2]                    = (TH1D*) directoryEMCGammapPb->Get("IncRatioStatError");
         graphIncGammaRatioSysErr[2]                     = (TGraphAsymmErrors*) directoryEMCGammapPb->Get("IncRatioSystError");
         histoEffi[2]                                    = (TH1D*) directoryEMCGammapPb->Get("GammaRecoEfficiency");
+        histoEffiMCPt[2]                                = (TH1D*) directoryEMCGammapPb->Get("GammaRecoEfficiencyMCPt");
+        histoResolCorr[2]                               = (TH1D*) directoryEMCGammapPb->Get("GammaResolCorr");
         histoPurity[2]                                  = (TH1D*) directoryEMCGammapPb->Get("GammaTruePurity");
         histoIncGammaStatErr[2]                         = (TH1D*) directoryEMCGammapPb->Get("IncGammaStatError");
 //         if (histoIncGammaStatErr[2]){
@@ -343,8 +352,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
                                                                                     xPtLimitsGamma, maxNBinsGamma,
                                                                                     offSetsGamma, offSetsGammaSys,
                                                                                     graphCombDRStat, graphCombDRSys,
-                                                                                    fileNameDROutputWeighting, "pPb_5.023TeV", "DR", kTRUE,
-                                                                                    NULL, "" );
+                                                                                    fileNameDROutputWeighting, "pPb_5.023TeV", "RGamma", kTRUE,
+                                                                                    NULL, fileNameCorrelations );
 
 
     if (graphCombDRTot == NULL) {
@@ -530,12 +539,6 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
     Int_t offSetsIncGammaSys[11]    = { 4,  8,  11,  0,  8,
                                         0,  0,  0,  0,  0,
                                         0};
-//     Int_t offSetGammaShifting[11]   = { 0,  6,  8,  2,  5,
-//                                         3,  0,  0,  0,  21,
-//                                         0 };
-//     Int_t nComBinsGammaShifting[11] = { 30, 31, 30, 0,  31,
-//                                         17,  0,  0,  0,  0,
-//                                         0 };
 
     TGraphAsymmErrors* statErrorGraphCollectionIncGamma[11];
     for (Int_t i = 0; i< 11; i++){
@@ -599,8 +602,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
                                                                                             xPtLimitsGamma, maxNBinsGamma,
                                                                                             offSetsGamma, offSetsGammaSys,
                                                                                             graphCombIncGammaStat, graphCombIncGammaSys,
-                                                                                            fileNameIncGammaOutputWeighting, "pPb_5.023TeV", "IncGamma", kTRUE,
-                                                                                            NULL, "" );
+                                                                                            fileNameIncGammaOutputWeighting, "pPb_5.023TeV", "GammaInc", kTRUE,
+                                                                                            NULL, fileNameCorrelations );
 
 
     if (graphCombIncGammaTot == NULL) {
@@ -1078,7 +1081,6 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
 
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pPb.%s", outputDir.Data(), suffix.Data()));
 
-
     // **********************************************************************************************************************
     // ******************************** Efficiency for gamma individual measurements ****************************************
     // **********************************************************************************************************************
@@ -1087,38 +1089,95 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
     cout << textSizeLabelsRel << endl;
 
     TCanvas* canvasEff   = new TCanvas("canvasEff", "", 200, 10, 1200, 1100);  // gives the page size
-    DrawGammaCanvasSettings( canvasEff,  0.1, 0.01, 0.015, 0.095);
+    DrawGammaCanvasSettings( canvasEff,  0.09, 0.01, 0.015, 0.095);
 //     canvasEff->SetLogy(1);
     canvasEff->SetLogx(1);
 
     TH1F * histo1DEff            = new TH1F("histo1DEff", "histo1DEff",1000, doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(  histo1DEff, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{rec}",
-                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
-    histo1DEff->GetYaxis()->SetRangeUser(0.1, 1.02 );
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 0.98);//(#times #epsilon_{pur})
+    histo1DEff->GetYaxis()->SetRangeUser(0.22, 0.82 );
     histo1DEff->GetYaxis()->SetLabelOffset(0.001);
     histo1DEff->GetXaxis()->SetLabelOffset(-0.01);
     histo1DEff->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DEff->DrawCopy();
 
-        TLegend* legendEffiGamma           = GetAndSetLegend2(0.65, 0.13, 0.93, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
+        TLegend* legendEffiGamma           = GetAndSetLegend2(0.57, 0.13, 0.95, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel, 2);
         for (Int_t i = 0; i < 11; i++){
             if (histoEffi[i]){
-                DrawGammaSetMarker(histoEffi[i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
+                DrawGammaSetMarker(histoEffi[i],   markerStyleDetMC[i], markerSizeDetMC[i], colorDetMC[i] , colorDetMC[i]);
                 histoEffi[i]->Draw("p,same,e");
-                legendEffiGamma->AddEntry(histoEffi[i],nameMeasGlobalLabel[i],"p");
+                legendEffiGamma->AddEntry(histoEffi[i],"   ","p");
+            } else if (histoEffiMCPt[i]){
+                legendEffiGamma->AddEntry((TObject*)0,"   ","");
+            }
+            if (histoEffiMCPt[i]){
+                DrawGammaSetMarker(histoEffiMCPt[i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
+                histoEffiMCPt[i]->Draw("p,same,e");
+                legendEffiGamma->AddEntry(histoEffiMCPt[i],"    "+nameMeasGlobalLabel[i],"p");
+            } else if (histoEffi[i]){
+                legendEffiGamma->AddEntry((TObject*)0,"    "+nameMeasGlobalLabel[i],"");
             }
         }
         legendEffiGamma->Draw();
 
-        TLatex *labelPerfEffi           = new TLatex(0.15,0.92,"ALICE performance");
+        TLatex *labelPerfEffi           = new TLatex(0.13,0.92,"ALICE performance");
         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
         labelPerfEffi->Draw();
-        TLatex *labelEnergyEffi         = new TLatex(0.15,0.87,collisionSystempPb.Data());
+        TLatex *labelEnergyEffi         = new TLatex(0.13,0.87,collisionSystempPb.Data());
         SetStyleTLatex( labelEnergyEffi, textSizeLabelsRel,4);
         labelEnergyEffi->Draw();
+        TLatex *labelPerfEffiPTrec      = new TLatex(0.57,0.145+(3*textSizeLabelsRel),"#it{p}_{T}^{rec}");
+        SetStyleTLatex( labelPerfEffiPTrec, textSizeLabelsRel,4);
+        labelPerfEffiPTrec->Draw();
+        TLatex *labelPerfEffiPTtrue      = new TLatex(0.665,0.145+(3*textSizeLabelsRel),"#it{p}_{T}^{true}");
+        SetStyleTLatex( labelPerfEffiPTtrue, textSizeLabelsRel,4);
+        labelPerfEffiPTtrue->Draw();
 
     canvasEff->Update();
     canvasEff->Print(Form("%s/Gamma_Effiency.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // ******************************** ResolutionCorr for gamma individual measurements ****************************************
+    // **********************************************************************************************************************
+    TCanvas* canvasResolCor   = new TCanvas("canvasResolCor", "", 200, 10, 1200, 1100);  // gives the page size
+    DrawGammaCanvasSettings( canvasResolCor,  0.1, 0.01, 0.015, 0.095);
+//     canvasResolCor->SetLogy(1);
+    canvasResolCor->SetLogx(1);
+
+    TH2F* histo2DResCor            = new TH2F("histo1DResCor", "histo1DResCor",1000, doubleRatioXpp[0], doubleRatioXpp[1], 1000, -1, 5);
+    SetStyleHistoTH2ForGraphs(  histo2DResCor, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{resol}",
+                                0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
+    histo2DResCor->GetYaxis()->SetRangeUser(0.2, 2.6 );
+    histo2DResCor->GetYaxis()->SetLabelOffset(0.001);
+    histo2DResCor->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DResCor->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histo2DResCor->DrawCopy();
+
+        TLegend* legendResolCorGamma           = GetAndSetLegend2(0.15, 0.85-(3*textSizeLabelsRel), 0.33, 0.85,textSizeLabelsPixel);
+        for (Int_t i = 0; i < 11; i++){
+            if (histoResolCorr[i]){
+                DrawGammaSetMarker(histoResolCorr[i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
+                histoResolCorr[i]->GetXaxis()->SetRangeUser(graphIndGammaIncStat[i]->GetX()[0]-graphIndGammaIncStat[i]->GetEXlow()[0],
+                                                            graphIndGammaIncStat[i]->GetX()[graphIndGammaIncStat[i]->GetN()-1]+graphIndGammaIncStat[i]->GetEXhigh()[graphIndGammaIncStat[i]->GetN()-1] );
+
+                histoResolCorr[i]->Draw("p,same,e");
+                legendResolCorGamma->AddEntry(histoResolCorr[i],nameMeasGlobalLabel[i],"p");
+            }
+        }
+        legendResolCorGamma->Draw();
+        DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+
+        TLatex *labelPerfResolCor           = new TLatex(0.15,0.92,"ALICE performance");
+        SetStyleTLatex( labelPerfResolCor, textSizeLabelsRel,4);
+        labelPerfResolCor->Draw();
+        TLatex *labelEnergyResolCor         = new TLatex(0.15,0.87,collisionSystempPb.Data());
+        SetStyleTLatex( labelEnergyResolCor, textSizeLabelsRel,4);
+        labelEnergyResolCor->Draw();
+
+    histo2DResCor->Draw("same,axis");
+    canvasResolCor->Update();
+    canvasResolCor->Print(Form("%s/Gamma_ResolutionCorrection.%s",outputDir.Data(),suffix.Data()));
 
     // **********************************************************************************************************************
     // ******************************** Purity for gamma individual measurements ****************************************
@@ -1161,6 +1220,11 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
     // **********************************************************************************************************************
     // ******************************** ConvProb for gamma individual measurements ******************************************
     // **********************************************************************************************************************
+    TF1* fitConvProbPCM                     = new TF1("fitConvProbPCM","[0]");
+    if (histoConvProb[0]) histoConvProb[0]->Fit(fitConvProbPCM,"NRMEX0+","",4,10.);
+    else if  (histoConvProb[4]) histoConvProb[4]->Fit(fitConvProbPCM,"NRMEX0+","",4,10.);
+    cout << WriteParameterToFile(fitConvProbPCM)<< endl;
+
     TCanvas* canvasConvProb   = new TCanvas("canvasConvProb", "", 200, 10, 1200, 1100);  // gives the page size
     DrawGammaCanvasSettings( canvasConvProb,  0.11, 0.01, 0.015, 0.095);
     //     canvasConvProb->SetLogy(1);
@@ -1174,6 +1238,15 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
     histo1DConvProb->GetXaxis()->SetLabelOffset(-0.01);
     histo1DConvProb->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DConvProb->DrawCopy();
+
+        TBox* boxConvProbPCM                = CreateBoxConv( kGray, 4,fitConvProbPCM->GetParameter(0)-fitConvProbPCM->GetParError(0), doubleRatioXpp[1],
+                                                            fitConvProbPCM->GetParameter(0)+fitConvProbPCM->GetParError(0));
+        boxConvProbPCM->Draw();
+
+        DrawGammaSetMarkerTF1( fitConvProbPCM, 7, 2, kGray+2);
+        fitConvProbPCM->SetRange(4,doubleRatioXpp[1]);
+        fitConvProbPCM->Draw("same");
+
 
         TLegend* legendConvProbGamma           = GetAndSetLegend2(0.65, 0.13, 0.93, 0.13+(2*textSizeLabelsRel),textSizeLabelsPixel);
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
@@ -1192,6 +1265,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM    = "",
         TLatex *labelEnergyConvProb         = new TLatex(0.15,0.87,collisionSystempPb.Data());
         SetStyleTLatex( labelEnergyConvProb, textSizeLabelsRel,4);
         labelEnergyConvProb->Draw();
+
+    histo1DConvProb->Draw("same,axis");
 
     canvasConvProb->Update();
     canvasConvProb->Print(Form("%s/Gamma_ConvProb.%s",outputDir.Data(),suffix.Data()));

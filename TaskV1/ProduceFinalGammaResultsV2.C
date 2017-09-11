@@ -172,20 +172,11 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         else
             histoSecEffCorr[k]              = (TH1D*) fileInputAdditional->Get(Form("histoSecCocktailGammaFromXFrom%sEffCorr",nameSecondaryMother[k].Data()));
     }
-
-    TString inputFileNameAdditional2               = Form("%s/%s/Pi0_MC_GammaConvV1CorrectionHistos_%s.root", fCutNumber.Data(), optionEnergy.Data(), fCutNumber.Data());
-    cout << "trying to read: " << inputFileNameAdditional2.Data() << endl;
-    TFile *fileInputAdditional2                    = new TFile(inputFileNameAdditional2.Data());
-    if (fileInputAdditional2->IsZombie()) {
-        cout << "file couldn't be read, aborting....";
-        return;
-    }
-
-    // read stat error hists
-    TH1D* histoGammaPurity                  = (TH1D*) fileInputAdditional2->Get("GammaTruePurity_Pt");
-    TH1D* histoGammaConvProb                = (TH1D*) fileInputAdditional2->Get("GammaConvProb_MCPt");
-    TH1D* histoGammaRecoEff                 = (TH1D*) fileInputAdditional2->Get("GammaRecoEff_Pt");
-
+    TH1D* histoGammaRecoEff                 = (TH1D*) fileInputAdditional->Get("GammaRecoEff_WithResolCorr_Pt");
+    TH1D* histoGammaRecoEffMCPt             = (TH1D*) fileInputAdditional->Get("GammaRecoEff_MCPt");
+    TH1D* histoGammaConvProb                = (TH1D*) fileInputAdditional->Get("GammaConvProb_Pt");
+    TH1D* histoGammaPurity                  = (TH1D*) fileInputAdditional->Get("GammaPurityWOSec_Pt");
+    TH1D* histoGammaResolCorr               = (TH1D*) fileInputAdditional->Get("GammaResolCorrUnfold_Pt");
 
     // calculate sys error graphs
     TGraphAsymmErrors* graphIncGammaSysErr      =  NULL;
@@ -477,7 +468,8 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         if(histoGammaPurity)                histoGammaPurity->Write("GammaTruePurity",TObject::kOverwrite);
         if(histoGammaConvProb)              histoGammaConvProb->Write("GammaConversionProbability",TObject::kOverwrite);
         if(histoGammaRecoEff)               histoGammaRecoEff->Write("GammaRecoEfficiency",TObject::kOverwrite);
-
+        if(histoGammaRecoEffMCPt)           histoGammaRecoEffMCPt->Write("GammaRecoEfficiencyMCPt",TObject::kOverwrite);
+        if(histoGammaResolCorr)             histoGammaResolCorr->Write("GammaResolCorr",TObject::kOverwrite);
         for (Int_t k = 0; k < 4; k++){
             if (histoSecEffCorr[k])         histoSecEffCorr[k]->Write(Form("GammaEffectiveSecondaryCorr_%s", nameSecondaryMother[k].Data()),TObject::kOverwrite);
         }

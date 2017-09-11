@@ -1043,7 +1043,7 @@ function ExtractSignalGamma()
 
 function ExtractSignalGammaV2()
 {
-    root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,$addedSig\,$mode\)
+    root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\)
 }
 
 

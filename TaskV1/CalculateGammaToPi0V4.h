@@ -59,6 +59,7 @@
     TH1D *histoGammaSpecCorrPurity                              = NULL;
     TH1D *histoGammaSpecMCAll                                   = NULL;
     TH1D *histoIncRatioFitPurity[6]                             = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *histoPi0Fitted[6]                                     = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *histoIncRatioPurityTrueEff[6]                         = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *histoMCIncRatio                                       = NULL;
     TH1D *histoMCDecaySumGammaPt                                = NULL;
@@ -123,19 +124,19 @@
     //************* Wrapper function to create output names and proper mesonType ********************
     //***********************************************************************************************
     void CreateNamingStrings(TString nameMeson, TString isMC){
-    nameOutputLabel                      = Form("Gamma_%s",nameMeson.Data());
-    if (isMC.CompareTo("kTRUE") == 0){
-        nameRec                           = "recMC";
-    } else {
-        nameRec                           = "data";
-    }
+        nameOutputLabel                      = Form("Gamma_%s",nameMeson.Data());
+        if (isMC.CompareTo("kTRUE") == 0){
+            nameRec                           = "recMC";
+        } else {
+            nameRec                           = "data";
+        }
 
-    TString mesonType;
-    if ((nameMeson.CompareTo("Pi0") == 0) || (nameMeson.CompareTo("Pi0EtaBinning") == 0)){
-        mesonType                               = "Pi0";
-    } else {
-        mesonType                               = "Eta";
-    }
+        TString mesonType;
+        if ((nameMeson.CompareTo("Pi0") == 0) || (nameMeson.CompareTo("Pi0EtaBinning") == 0)){
+            mesonType                               = "Pi0";
+        } else {
+            mesonType                               = "Eta";
+        }
     }
 
     //***********************************************************************************************

@@ -151,9 +151,9 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0 };
     Bool_t benableIncGammapp2760GeV[15]         = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 0,
                                                     0, 0, 1, 0, 0 };
-    Bool_t benableIncRatiopp2760GeV[15]         = { 1, 1, 1, 1, 1,  1, 0, 1, 0, 1,
+    Bool_t benableIncRatiopp2760GeV[15]         = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
                                                     0, 1, 1, 1, 1 };
-    Bool_t benableDRpp2760GeV[15]               = { 1, 1, 1, 1, 1,  1, 0, 1, 0, 1,
+    Bool_t benableDRpp2760GeV[15]               = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
                                                     1, 1, 1, 1, 1 };
 
     // ***************************************************************************************************
@@ -435,7 +435,10 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
 
             // fix ClusterMaterialTRD sys #6
             if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")){
-                errorFixed                      = 4.2;
+                if (spectrumName.Contains("Ratio"))
+                    errorFixed                      = 4.2;
+                else
+                    errorFixed                      = 2.8;
             }
 
             // fix SPD pileup sys #7
@@ -824,11 +827,11 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
         if (benable[8] || benable[9] || benable[11] || benable[13] || benable[14])  SysErrDatAverSinglePaper << errorsMeanCorrSignalExtraction[l] << "\t";
         if (benable[7])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[7][l] << "\t";
         if (benable[1] || benable[2] || benable[4] || benable[5] )                  SysErrDatAverSinglePaper << errorsMeanCorrClusterProp[l] << "\t";
-        if (benable[0])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[9][l] << "\t";
-        if (benable[3])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[12][l] << "\t";
-        if (benable[12])                                                            SysErrDatAverSinglePaper << errorsMeanCorr[23][l] << "\t";
-        if (benable[10])                                                            SysErrDatAverSinglePaper << errorsMeanCorr[20][l] << "\t";
-        if (benable[6])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[15][l] << "\t";
+        if (benable[0])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[0][l] << "\t";
+        if (benable[3])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[3][l] << "\t";
+        if (benable[12])                                                            SysErrDatAverSinglePaper << errorsMeanCorr[12][l] << "\t";
+        if (benable[10])                                                            SysErrDatAverSinglePaper << errorsMeanCorr[10][l] << "\t";
+        if (benable[6])                                                             SysErrDatAverSinglePaper << errorsMeanCorr[6][l] << "\t";
         SysErrDatAverSinglePaper << errorsMeanCorrSummed[l] << endl;
     }
     SysErrDatAverSinglePaper.close();

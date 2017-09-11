@@ -542,7 +542,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
 
             // fix ClusterMaterialTRD sys #15
             if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")){
-                errorFixed                      = 4.2;
+                errorFixed                  = 2.8;
             }
 
             // fix out-of-bunch gamma sys #16

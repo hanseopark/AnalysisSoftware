@@ -1,15 +1,71 @@
 #! /bin/bash
 
+# copies files from grid
+# creates directory
+# changes internal structure
+
+# switches to enable/disable certain procedures
+DOWNLOADON=1
+MERGEON=1
+MERGEONBINSSingle=0
+MERGEONBINS=0
+SEPARATEON=1
+
+function GetFileNumberList()
+{
+    ls $1/GammaC_*.root > filesTemp.txt
+    fileNumbers=`cat filesTemp.txt`
+    rm fileNumbers.txt
+    for fileName in $fileNumbers; do
+        number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number >> fileNumbers.txt
+    done
+    sort -u fileNumbers.txt > $3
+    cat $3
+}
+
+function SeparateCutsIfNeeded()
+{
+    if [ -f $1\_A.root ]; then
+        echo "separated file $1.root already"
+        if [ $CLEANUP == 1 ]; then
+            echo "removing $1.root as already separated"
+            rm $1.root
+        fi
+    else
+        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,4\,kTRUE\)
+        if [ $CLEANUP == 1 ]; then
+            if [ -f $1\_A.root ]; then
+                echo "removing $1.root after successful separation"
+                rm $1.root
+            fi
+        fi
+    fi
+}
+
 function CopyFileIfNonExisitent()
 {
-    if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
-        echo "$1/root_archive.zip exists";
-    else
-        mkdir -p $1
-        alien_cp alien:$2/root_archive.zip file:$1/
+    if [ $DOWNLOADON == 1 ]; then
+        if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
+            echo "$1/root_archive.zip exists";
+        else
+            mkdir -p $1
+            alien_cp alien:$2/root_archive.zip file:$1/
+        fi
+        unzip -u $1/root_archive.zip -d $1/
     fi
-    unzip -u $1/root_archive.zip -d $1/
+
+    if [ $SEPARATEON == 1 ]; then
+        GetFileNumberList $1 $3 fileNumbers2.txt
+        fileNumbers=`cat fileNumbers2.txt`
+        for fileNumber in $fileNumbers; do
+            echo $fileNumber
+            SeparateCutsIfNeeded $1/GammaCalo_$fileNumber
+        done;
+    fi
+
 }
+
 
 function ChangeStructureIfNeeded()
 {
@@ -21,15 +77,6 @@ function ChangeStructureIfNeeded()
 #     fi
 }
 
-# copies files from grid
-# creates directory
-# changes internal structure
-
-# switches to enable/disable certain procedures
-DOWNLOADON=1
-MERGEON=1
-MERGEONBINSSingle=0
-MERGEONBINS=0
 
 # check if train configuration has actually been given
 HAVELHC11a=1
@@ -461,16 +508,22 @@ fi
 # LHC12f1aMC="2883";
 # LHC12f1bMC="2884";
 
-TRAINDIR=Legotrain-vAN20170830_DirGamma
+# TRAINDIR=Legotrain-vAN20170830_DirGamma
 # LHC11aData="2239";
 # LHC12f1aMC="3107";
 # LHC12f1bMC="3109";
 # LHC12f1aMC="3110";
 # LHC12f1bMC="3111";
-LHC12f1aMC="3120";
-LHC12f1bMC="3122";
+# LHC12f1aMC="3120";
+# LHC12f1bMC="3122";
 # LHC12f1aMC="3121";
 # LHC12f1bMC="3123";
+
+TRAINDIR=Legotrain-vAN20170905_DirGamma
+LHC11aData="2241";
+LHC12f1aMC="3128";
+LHC12f1bMC="3129";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

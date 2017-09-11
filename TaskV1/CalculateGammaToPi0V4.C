@@ -117,10 +117,6 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
     fstream fileFinalResults;
     fileFinalResults.open(nameFinalResDat.Data(), ios::out);
 
-    TString nameStatErrorCheckDat                      = Form("%s/%s/Gamma_%s_StatErrorCheck_%s.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data(), cutSel.Data());
-    fstream fileStatErrorCheck;
-    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
-
     // Opening gamma file and loading data gamma spectrum
     fileGamma                                   = new TFile(nameFileGamma);
     histoGammaSpecCorrPurity                    = (TH1D*)fileGamma->Get("GammaCorrUnfold_Pt");
@@ -158,19 +154,53 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         histoIncRatioPurityTrueEff[k]->Divide(histoIncRatioPurityTrueEff[k],histoCorrectedPi0Yield[k],1,1,"");
     }
 
-    fileStatErrorCheck << "GammaSpectra " << histoGammaSpecCorrPurity->GetName() << endl;
+    TString nameStatErrorCheckDat               = Form("%s/%s/Gamma_%s_StatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+    fstream fileStatErrorCheck;
+    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+    fileStatErrorCheck << "# pT \t yield \t absErr \t relErr(%)" << endl;
     for (Int_t i=1; i<=histoGammaSpecCorrPurity->GetNbinsX(); i++){
-        fileStatErrorCheck << histoGammaSpecCorrPurity->GetBinCenter(i) << "\t" << histoGammaSpecCorrPurity->GetBinContent(i) << "\t" << histoGammaSpecCorrPurity->GetBinError(i) << "\t" << histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i) << endl;
+        if (histoGammaSpecCorrPurity->GetBinContent(i) != 0)
+            fileStatErrorCheck << histoGammaSpecCorrPurity->GetBinCenter(i) << "\t" << histoGammaSpecCorrPurity->GetBinContent(i) << "\t" << histoGammaSpecCorrPurity->GetBinError(i) << "\t" << histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 << endl;
     }
-    fileStatErrorCheck << "Pi0Spectra " << histoCorrectedPi0Yield[0]->GetName() << endl;
-    for (Int_t i=1; i<=histoCorrectedPi0Yield[0]->GetNbinsX(); i++){
-        fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i) << endl;
-    }
-    fileStatErrorCheck << "IncRatio " << histoIncRatioPurityTrueEff[0]->GetName() << endl;
+    fileStatErrorCheck.close();
+    nameStatErrorCheckDat                       = Form("%s/%s/Gamma_%s_RelStatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+    fileStatErrorCheck << "pT \t GammaStat" << endl;
     for (Int_t i=1; i<=histoIncRatioPurityTrueEff[0]->GetNbinsX(); i++){
-        fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)/histoIncRatioPurityTrueEff[0]->GetBinContent(i) << endl;
+        if (histoIncRatioPurityTrueEff[0]->GetBinContent(i) != 0){
+            Double_t relGammaErr    = histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 ;
+            Double_t relTotErr      = histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 ;
+            fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << relGammaErr << "\t" << relTotErr << endl;
+        }
     }
-    fileStatErrorCheck << endl;
+    nameStatErrorCheckDat                       = Form("%s/%s/Pi0_StatError_%s_ForDirGammaEst.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+    fileStatErrorCheck << "# pT \t yield \t absErr \t relErr(%)" << endl;
+    for (Int_t i=1; i<=histoCorrectedPi0Yield[0]->GetNbinsX(); i++){
+        if (histoCorrectedPi0Yield[0]->GetBinContent(i) != 0)
+            fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i)*100 << endl;
+    }
+    fileStatErrorCheck.close();
+    nameStatErrorCheckDat                       = Form("%s/%s/IncGammaToPi0_%s_StatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+    fileStatErrorCheck << "# pT \t ratio \t absErr \t relErr(%)" << endl;
+    for (Int_t i=1; i<=histoIncRatioPurityTrueEff[0]->GetNbinsX(); i++){
+        if (histoIncRatioPurityTrueEff[0]->GetBinContent(i) != 0)
+        fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)/histoIncRatioPurityTrueEff[0]->GetBinContent(i)*100 << endl;
+    }
+    fileStatErrorCheck.close();
+    nameStatErrorCheckDat                       = Form("%s/%s/IncGammaToPi0_%s_RelStatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+    fileStatErrorCheck << "pT \t GammaStat \t Pi0Stat" << endl;
+    for (Int_t i=1; i<=histoIncRatioPurityTrueEff[0]->GetNbinsX(); i++){
+        if (histoIncRatioPurityTrueEff[0]->GetBinContent(i) != 0){
+            Double_t relGammaErr    = histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 ;
+            Double_t relPi0Err      = histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i)*100;
+            Double_t relTotErr      = histoIncRatioPurityTrueEff[0]->GetBinError(i)/histoIncRatioPurityTrueEff[0]->GetBinContent(i)*100;
+            fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << relGammaErr << "\t" << relPi0Err << "\t" << relTotErr << endl;
+        }
+    }
+    fileStatErrorCheck.close();
 
     histoMCIncRatio                             = (TH1D*) histoGammaSpecMCAll->Clone("MC_IncRatio");
     histoMCIncRatio->Divide(histoGammaSpecMCAll,histoMCYieldMeson,1,1,"");
@@ -569,19 +599,26 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
     if (doInclusiveFitRatio){
         for (Int_t k = 0; k < 6; k++){
             histoIncRatioFitPurity[k]           = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("histoIncRatioFitPurity%s",nameIntRanges[k].Data()));
+            histoPi0Fitted[k]                   = (TH1D*) histoIncRatioPurityTrueEff[k]->Clone(Form("histoPi0Fitted%s",nameIntRanges[k].Data()));
             // Set datapoints in histoIncRatioFitPurity to the fit values from fitPi0YieldC (Tsallis fit)
             for(Int_t bin = 1; bin<histoIncRatioFitPurity[k]->GetNbinsX()+1; bin++){
                 if(fEnergy.CompareTo("PbPb_2.76TeV") == 0){
                     if(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin) <=3.5){
                         histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldB->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin)));
                         histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                        histoPi0Fitted[k]->SetBinContent(bin,fitPi0YieldB->Eval(histoPi0Fitted[k]->GetBinCenter(bin)));
+                        histoPi0Fitted[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
                     } else {
                         histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin)));
                         histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                        histoPi0Fitted[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoPi0Fitted[k]->GetBinCenter(bin)));
+                        histoPi0Fitted[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
                     }
                 } else {
                     histoIncRatioFitPurity[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoIncRatioPurityTrueEff[k]->GetBinCenter(bin))); //nschmidt2016 changed to mod hagedorn
                     histoIncRatioFitPurity[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
+                    histoPi0Fitted[k]->SetBinContent(bin,fitPi0YieldC->Eval(histoPi0Fitted[k]->GetBinCenter(bin))); //nschmidt2016 changed to mod hagedorn
+                    histoPi0Fitted[k]->SetBinError(bin,histoCorrectedPi0Yield[k]->GetBinError(bin));
                 }
             }
             histoIncRatioFitPurity[k]->Divide( histoGammaSpecCorrPurity, histoIncRatioFitPurity[k]);
@@ -603,6 +640,28 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
             legendIncRatioFit->Draw();
         canvasIncRatioFit->Print(Form("%s/%s_%s_IncRatio_Fit.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
         delete canvasIncRatioFit;
+
+        nameStatErrorCheckDat                       = Form("%s/%s/IncGammaToPi0Fit_%s_StatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+        fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+        fileStatErrorCheck << "# pT \t ratio \t absErr \t relErr(%)" << endl;
+        for (Int_t i=1; i<=histoIncRatioFitPurity[0]->GetNbinsX(); i++){
+            if (histoIncRatioFitPurity[0]->GetBinContent(i) != 0)
+                fileStatErrorCheck << histoIncRatioFitPurity[0]->GetBinCenter(i) << "\t" << histoIncRatioFitPurity[0]->GetBinContent(i)<< "\t" << histoIncRatioFitPurity[0]->GetBinError(i) << "\t" << histoIncRatioFitPurity[0]->GetBinError(i)/histoIncRatioFitPurity[0]->GetBinContent(i)*100 << endl;
+        }
+        fileStatErrorCheck.close();
+
+        nameStatErrorCheckDat                       = Form("%s/%s/IncGammaToPi0Fit_%s_RelStatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+        fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+        fileStatErrorCheck << "pT \t GammaStat \t Pi0Stat" << endl;
+        for (Int_t i=1; i<=histoIncRatioFitPurity[0]->GetNbinsX(); i++){
+            if (histoIncRatioFitPurity[0]->GetBinContent(i) != 0){
+                Double_t relGammaErr    = histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 ;
+                Double_t relPi0Err      = histoPi0Fitted[0]->GetBinError(i)/histoPi0Fitted[0]->GetBinContent(i)*100;
+                Double_t relTotErr      = histoIncRatioFitPurity[0]->GetBinError(i)/histoIncRatioFitPurity[0]->GetBinContent(i)*100;
+                fileStatErrorCheck << histoIncRatioFitPurity[0]->GetBinCenter(i) << "\t" << relGammaErr << "\t" << relPi0Err << "\t" << relTotErr << endl;
+            }
+        }
+        fileStatErrorCheck.close();
     }
 
 
@@ -664,15 +723,14 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         delete canvasMesonSpectra;
     }
 
-    fileStatErrorCheck << "Pi0Cocktail " << cocktailPi0->GetName() << endl;
+    nameStatErrorCheckDat                       = Form("%s/%s/Pi0Cocktail_%s_StatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+    fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+    fileStatErrorCheck << "# pT \t cocktail \t absErr \t relErr(%)" << endl;
     for (Int_t i=1; i<=cocktailPi0->GetNbinsX(); i++){
-        fileStatErrorCheck << cocktailPi0->GetBinCenter(i) << "\t" << cocktailPi0->GetBinContent(i)<< "\t" << cocktailPi0->GetBinError(i) << "\t" << cocktailPi0->GetBinError(i)/cocktailPi0->GetBinContent(i) << endl;
+        if (cocktailPi0->GetBinContent(i) != 0)
+            fileStatErrorCheck << cocktailPi0->GetBinCenter(i) << "\t" << cocktailPi0->GetBinContent(i)<< "\t" << cocktailPi0->GetBinError(i) << "\t" << cocktailPi0->GetBinError(i)/cocktailPi0->GetBinContent(i)*100 << endl;
     }
-    fileStatErrorCheck << "Pi0Spectra " << histoCorrectedPi0Yield[0]->GetName() << endl;
-    for (Int_t i=1; i<=histoCorrectedPi0Yield[0]->GetNbinsX(); i++){
-        fileStatErrorCheck << histoCorrectedPi0Yield[0]->GetBinCenter(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinContent(i)<< "\t" << histoCorrectedPi0Yield[0]->GetBinError(i) << "\t" << histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i) << endl;
-    }
-    fileStatErrorCheck << endl;
+    fileStatErrorCheck.close();
 
     //**********************************************************************************
     //***                      Double Ratios                                         ***
@@ -759,8 +817,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
             TF1* fitRGammaFitPi0    = new TF1("fitRGammaFitPi0","[0]",1,3);
             histoDoubleRatioFitPi0YieldPurity[0]->Fit(fitRGammaFitPi0,"QRME0","",1,3);
             histoDoubleRatioTrueEffPurity[0]->Fit(fitRGamma,"QRME0","",1,3);
-            fileStatErrorCheck << "std.: " << fitRGamma->GetParameter(0) << "+-" << fitRGamma->GetParError(0) << endl;
-            fileStatErrorCheck << "fitted.: " << fitRGammaFitPi0->GetParameter(0) << "+-" << fitRGammaFitPi0->GetParError(0) << endl;
+            fileFinalResults << "std.: " << fitRGamma->GetParameter(0) << "+-" << fitRGamma->GetParError(0) << endl;
+            fileFinalResults << "fitted.: " << fitRGammaFitPi0->GetParameter(0) << "+-" << fitRGammaFitPi0->GetParError(0) << endl;
 
             TLegend* legendDoubleConversionFit3       = GetAndSetLegend2(0.14,0.93-1*0.045,0.5,0.93,0.045,1,"",42,0.2);
             legendDoubleConversionFit3->AddEntry(histoDoubleRatioTrueEffPurity[0],"Data","p");
@@ -769,25 +827,55 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatio.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
         delete canvasDoubleRatio;
 
-        fileStatErrorCheck << "RGamma " << histoDoubleRatioTrueEffPurity[0]->GetName() << endl;
+        nameStatErrorCheckDat                       = Form("%s/%s/RGamma_%s_StatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+        fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+        fileStatErrorCheck << "# pT \t DR \t absErr \t relErr(%)" << endl;
         for (Int_t i=1; i<=histoDoubleRatioTrueEffPurity[0]->GetNbinsX(); i++){
-            fileStatErrorCheck << histoDoubleRatioTrueEffPurity[0]->GetBinCenter(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinContent(i)<< "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i)/histoDoubleRatioTrueEffPurity[0]->GetBinContent(i) << endl;
+            if (histoDoubleRatioTrueEffPurity[0]->GetBinContent(i) != 0)
+                fileStatErrorCheck << histoDoubleRatioTrueEffPurity[0]->GetBinCenter(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinContent(i)<< "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i) << "\t" << histoDoubleRatioTrueEffPurity[0]->GetBinError(i)/histoDoubleRatioTrueEffPurity[0]->GetBinContent(i)*100 << endl;
         }
-        fileStatErrorCheck << "IncRatio " << histoIncRatioPurityTrueEff[0]->GetName() << endl;
-        for (Int_t i=1; i<=histoIncRatioPurityTrueEff[0]->GetNbinsX(); i++){
-            fileStatErrorCheck << histoIncRatioPurityTrueEff[0]->GetBinCenter(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinContent(i)<< "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i) << "\t" << histoIncRatioPurityTrueEff[0]->GetBinError(i)/histoIncRatioPurityTrueEff[0]->GetBinContent(i) << endl;
-        }
-        fileStatErrorCheck << "GammaPi0Cocktail " << cocktailAllGammaPi0->GetName() << endl;
-        for (Int_t i=1; i<=cocktailAllGammaPi0->GetNbinsX(); i++){
-            fileStatErrorCheck << cocktailAllGammaPi0->GetBinCenter(i) << "\t" << cocktailAllGammaPi0->GetBinContent(i)<< "\t" << cocktailAllGammaPi0->GetBinError(i)  << "\t" << cocktailAllGammaPi0->GetBinError(i)/cocktailAllGammaPi0->GetBinContent(i) << endl;
-        }
-        fileStatErrorCheck << endl;
+        fileStatErrorCheck.close();
 
+        nameStatErrorCheckDat                       = Form("%s/%s/RGammaFitPi0_%s_StatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+        fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+        fileStatErrorCheck << "# pT \t DR \t absErr \t relErr(%)" << endl;
+        for (Int_t i=1; i<=histoDoubleRatioFitPi0YieldPurity[0]->GetNbinsX(); i++){
+            if (histoDoubleRatioFitPi0YieldPurity[0]->GetBinContent(i) != 0)
+                fileStatErrorCheck << histoDoubleRatioFitPi0YieldPurity[0]->GetBinCenter(i) << "\t" << histoDoubleRatioFitPi0YieldPurity[0]->GetBinContent(i)<< "\t" << histoDoubleRatioFitPi0YieldPurity[0]->GetBinError(i) << "\t" << histoDoubleRatioFitPi0YieldPurity[0]->GetBinError(i)/histoDoubleRatioFitPi0YieldPurity[0]->GetBinContent(i)*100 << endl;
+        }
+        fileStatErrorCheck.close();
+
+        nameStatErrorCheckDat                       = Form("%s/%s/RGamma_%s_RelStatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+        fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+        fileStatErrorCheck << "pT \t GammaStat \t Pi0Stat \t CocktailStat" << endl;
+        for (Int_t i=1; i<=histoDoubleRatioTrueEffPurity[0]->GetNbinsX(); i++){
+            if (histoDoubleRatioTrueEffPurity[0]->GetBinContent(i) != 0){
+                Double_t relGammaErr    = histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 ;
+                Double_t relPi0Err      = histoCorrectedPi0Yield[0]->GetBinError(i)/histoCorrectedPi0Yield[0]->GetBinContent(i)*100;
+                Double_t relCocktErr    = cocktailPi0->GetBinError(i)/cocktailPi0->GetBinContent(i)*100;
+                Double_t relTotErr      = histoDoubleRatioTrueEffPurity[0]->GetBinError(i)/histoDoubleRatioTrueEffPurity[0]->GetBinContent(i)*100;
+                fileStatErrorCheck << histoDoubleRatioTrueEffPurity[0]->GetBinCenter(i) << "\t" << relGammaErr << "\t" << relPi0Err << "\t" << relCocktErr << "\t"<< relTotErr << endl;
+            }
+        }
+        fileStatErrorCheck.close();
+
+        nameStatErrorCheckDat                       = Form("%s/%s/RGammaFitPi0_%s_RelStatError.dat",cutSel.Data(),fEnergy.Data(), nameRec.Data());
+        fileStatErrorCheck.open(nameStatErrorCheckDat.Data(), ios::out);
+        fileStatErrorCheck << "pT \t GammaStat \t Pi0Stat \t CocktailStat" << endl;
+        for (Int_t i=1; i<=histoDoubleRatioTrueEffPurity[0]->GetNbinsX(); i++){
+            if (histoDoubleRatioFitPi0YieldPurity[0]->GetBinContent(i) != 0){
+                Double_t relGammaErr    = histoGammaSpecCorrPurity->GetBinError(i)/histoGammaSpecCorrPurity->GetBinContent(i)*100 ;
+                Double_t relPi0Err      = histoPi0Fitted[0]->GetBinError(i)/histoPi0Fitted[0]->GetBinContent(i)*100;
+                Double_t relCocktErr    = cocktailPi0->GetBinError(i)/cocktailPi0->GetBinContent(i)*100;
+                Double_t relTotErr      = histoDoubleRatioFitPi0YieldPurity[0]->GetBinError(i)/histoDoubleRatioFitPi0YieldPurity[0]->GetBinContent(i)*100;
+                fileStatErrorCheck << histoDoubleRatioFitPi0YieldPurity[0]->GetBinCenter(i) << "\t" << relGammaErr << "\t" << relPi0Err << "\t" << relCocktErr << "\t"<< relTotErr << endl;
+            }
+        }
+        fileStatErrorCheck.close();
 
     }
 
     fileFinalResults.close();
-    fileStatErrorCheck.close();
 
     //**********************************************************************************
     //***                 Inclusive and decay ratio                                  ***

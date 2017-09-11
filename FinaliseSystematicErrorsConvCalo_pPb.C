@@ -898,7 +898,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
 
             // manual smoothing for Material infront of EMC - variation 15
             if (nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0 ){
-                Double_t error                  = 4.24; //(3% for TRD mat, 3% for TOF mat added in quadrature)
+                Double_t error                  = 2.8; //(2% for TRD mat, 2% for TOF mat added in quadrature)
                 if (mode == 3)
                     error                       = 2.5;  //???? check with PHOS notes
                 if (meson.CompareTo("EtaToPi0") == 0)

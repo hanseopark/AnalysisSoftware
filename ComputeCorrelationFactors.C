@@ -56,7 +56,8 @@ void ComputeCorrelationFactors(
                                     TString meson       = "",
                                     TString energy      = "",
                                     Int_t mode          = -1,
-                                    TString suffix      = "eps"
+                                    TString suffix      = "eps",
+                                    Bool_t isStatCorr   = kFALSE
                                    ){
 
     //---------------------------------------------------------------------------------------------------------------
@@ -76,6 +77,12 @@ void ComputeCorrelationFactors(
         mesonPlot           = "#eta";
     else if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0)
         mesonPlot           = "#eta/#pi^{0}";
+    else if(meson.CompareTo("GammaInc") == 0 )
+        mesonPlot           = "#gamma_{inc}";
+    else if(meson.CompareTo("IncGammaToPi0") == 0 )
+        mesonPlot           = "#gamma_{inc}/#pi^{0}";
+    else if(meson.CompareTo("RGamma") == 0 )
+        mesonPlot           = "R_{#gamma}";
 
     TString modeOutput      = Form("%d",mode);
     if(combMode.CompareTo("systems")==0)
@@ -257,12 +264,22 @@ void ComputeCorrelationFactors(
     Int_t plotErr               = 0;
     TH2F * histo2DPi0Weights    = NULL;
     Double_t minCorrYaxis       = 0.45;
-    if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0)
+    Double_t maxCorrYaxis       = 1.05;
+    if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !meson.Contains("Gamma")){
         minCorrYaxis            = 0.0;
-    else if(combMode.CompareTo("systems") == 0 )
+    } else if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && meson.Contains("Gamma")){
+        minCorrYaxis            = 0.005;
+        maxCorrYaxis            = 1.5;
+        canvasWeights->SetLogy();
+    } else if(combMode.CompareTo("systems") == 0 && energy.CompareTo("2.76TeV") == 0 && meson.Contains("Gamma")){
+        minCorrYaxis            = 0.005;
+        maxCorrYaxis            = 1.5;
+        canvasWeights->SetLogy();
+    }else if(combMode.CompareTo("systems") == 0 ){
         minCorrYaxis            = 0.35;
-    else if (combMode.CompareTo("triggers") == 0 && energy.CompareTo("2.76TeV") == 0 && ( mode == 2 || mode == 4 ) )
+    } else if (combMode.CompareTo("triggers") == 0 && energy.CompareTo("2.76TeV") == 0 && ( mode == 2 || mode == 4 ) ){
         minCorrYaxis            = 0.15;
+    }
     Double_t maxPt              = 0;
     for (Int_t iMeas = 0; iMeas < nMeasTot; iMeas++){
         if (maxPt < vecUseMaxPt.at(iMeas))
@@ -277,7 +294,7 @@ void ComputeCorrelationFactors(
     }
 
     // dummy hist
-    histo2DPi0Weights           = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,minPt,maxPt,1000,minCorrYaxis,1.05);
+    histo2DPi0Weights           = new TH2F("histo2DPi0Weights","histo2DPi0Weights",11000,minPt,maxPt,1000,minCorrYaxis,maxCorrYaxis);
     SetStyleHistoTH2ForGraphs(histo2DPi0Weights, "#it{p}_{T} (GeV/#it{c})","#rho_{ij}",0.04,0.045, 0.04,0.045, 0.85,0.73);
     histo2DPi0Weights->GetXaxis()->SetMoreLogLabels();
     histo2DPi0Weights->GetXaxis()->SetLabelOffset(-0.01);
@@ -288,23 +305,23 @@ void ComputeCorrelationFactors(
         nRowsLabels++;
 
     // labels
-    TLatex *labelWeightsEnergy  = new TLatex(0.95,0.12+((nRowsLabels-1)*0.05),collisionSystem.Data());
+    TLatex *labelWeightsEnergy  = new TLatex(0.95,0.14+((nRowsLabels-1)*0.05),collisionSystem.Data());
     SetStyleTLatex( labelWeightsEnergy, textSizeLabelsPixel,4);
     labelWeightsEnergy->SetTextFont(43);
     labelWeightsEnergy->SetTextAlign(31);
     labelWeightsEnergy->Draw();
 
     TLatex *labelWeightsPi0     = 0x0;
-    if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0)
-        labelWeightsPi0         = new TLatex(0.95,0.12+((nRowsLabels-2)*0.05),Form("%s",mesonPlot.Data()));
+    if(meson.CompareTo("Pi0EtaBinning") == 0 || meson.CompareTo("EtaToPi0") == 0 || meson.Contains("Gamma") )
+        labelWeightsPi0         = new TLatex(0.95,0.14+((nRowsLabels-2)*0.05),Form("%s",mesonPlot.Data()));
     else
-        labelWeightsPi0         = new TLatex(0.95,0.12+((nRowsLabels-2)*0.05),Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
+        labelWeightsPi0         = new TLatex(0.95,0.14+((nRowsLabels-2)*0.05),Form("%s #rightarrow #gamma#gamma",mesonPlot.Data()));
     SetStyleTLatex( labelWeightsPi0, textSizeLabelsPixel,4);
     labelWeightsPi0->SetTextFont(43);
     labelWeightsPi0->SetTextAlign(31);
     labelWeightsPi0->Draw();
 
-    TLatex *labelWeightsDetectionProcess  = new TLatex(0.95,0.12,detectionProcess.Data());
+    TLatex *labelWeightsDetectionProcess  = new TLatex(0.95,0.14,detectionProcess.Data());
     SetStyleTLatex( labelWeightsDetectionProcess, textSizeLabelsPixel,4);
     labelWeightsDetectionProcess->SetTextFont(43);
     labelWeightsDetectionProcess->SetTextAlign(31);
@@ -336,7 +353,10 @@ void ComputeCorrelationFactors(
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" << endl;
 
     fstream fCorr;
-    fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
+    if (!isStatCorr)
+        fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
+    else
+        fCorr.open(Form("%s/corrFactors/%s_%s_Stat_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
     TFile *fOutput              = new TFile(Form("%s/%s.root",outputDir.Data(),fCollisionSystenWrite.Data()),"UPDATE");
 
     // Calculate rho_AB for A = iMeasA and B = iMeasB
@@ -479,7 +499,10 @@ void ComputeCorrelationFactors(
                cout << "not plotting " << tempCorr.Data() << ", no correlation factors different from 0 found!" << endl;
             }
             // write to output
-            histoCorr->Write(Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);
+            if (!isStatCorr)
+                histoCorr->Write(Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);
+            else
+                histoCorr->Write(Form("%s_Stat_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),TObject::kOverwrite);
         }
     }
 
@@ -495,15 +518,22 @@ void ComputeCorrelationFactors(
     labelWeightsPi0->Draw();
 
     DrawGammaLines(minPt,maxPt, 1., 1.,0.1, kGray, 1);
-    DrawGammaLines(minPt,maxPt, 0.98, 0.98,0.1, kGray, 3);
-    DrawGammaLines(minPt,maxPt, 0.96, 0.96,0.1, kGray, 7);
-    DrawGammaLines(minPt,maxPt, 0.94, 0.94,0.1, kGray, 3);
-    DrawGammaLines(minPt,maxPt, 0.92, 0.92,0.1, kGray, 7);
+    if (!meson.Contains("Gamma")){
+        DrawGammaLines(minPt,maxPt, 0.98, 0.98,0.1, kGray, 3);
+        DrawGammaLines(minPt,maxPt, 0.96, 0.96,0.1, kGray, 7);
+        DrawGammaLines(minPt,maxPt, 0.94, 0.94,0.1, kGray, 3);
+        DrawGammaLines(minPt,maxPt, 0.92, 0.92,0.1, kGray, 7);
+    } else {
+        DrawGammaLines(minPt,maxPt, 0.1, 0.1,0.1, kGray, 3);
+    }
     DrawGammaLines(minPt,maxPt, 0.9, 0.9,0.1, kGray, 1);
     DrawGammaLines(minPt,maxPt, 0.8, 0.8,0.1, kGray, 3);
     DrawGammaLines(minPt,maxPt, 0.7, 0.7,0.1, kGray, 7);
 
-    canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),fCollisionSystenWrite.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
+    if (!isStatCorr)
+        canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),fCollisionSystenWrite.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
+    else
+        canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_Stat_%s_corrFactors.%s",outputDir.Data(),fCollisionSystenWrite.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
 
     if(plotErr>0){
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;

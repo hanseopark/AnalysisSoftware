@@ -3410,6 +3410,24 @@
             case 6:
                 fMaxM02=0.27;
                 break;
+            case 7:
+                fMaxM02=1.3;
+                break;
+            case 8:
+                fMaxM02=2.5;
+                break;
+            case 9:
+                fMaxM02=0.35;
+                break;
+            case 10:
+                fMaxM02=0.33;
+                break;
+            case 11:
+                fMaxM02=0.28;
+                break;
+            case 12:
+                fMaxM02=0.32;
+                break;
             default:
                 fMaxM02 = -10;
                 break;
