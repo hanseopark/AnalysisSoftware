@@ -60,19 +60,16 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170
 //     TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16g1/"};
 //     TString SuffixDataSets[nSets]={"/PWGGA/GA_PbPb_MC/595_20170724-1907/"};
     
-    //CALO MC a b c
     
-    const Int_t nFiles = 1;
-    TString Tag = "20170702";
-    TString DataSetsFile[nFiles] = {"GammaCalo_210.root"};
+    const Int_t nFiles = 4;
+    TString Tag = "20170912";
+    TString DataSetsFile[nFiles] = {"GammaCalo_161.root", "GammaCalo_170.root", "GammaConvCalo_159.root", "GammaConvCalo_130.root"};
     
-    const Int_t nSets = 3;
-    TString DataSets[nSets]={"LHC16g1","LHC16g1","LHC16g1"};
-    TString DataSetsFolder[nSets]={"LHC16g1a","LHC16g1b","LHC16g1c"};
-    TString PrefixDataSets[nSets]={"/alice/sim/2016/LHC16g1a/","/alice/sim/2016/LHC16g1b/","/alice/sim/2016/LHC16g1c/"};
-    TString SuffixDataSets[nSets]={"/PWGGA/GA_PbPb_MC/596_20170724-1805/",
-                                   "/PWGGA/GA_PbPb_MC/597_20170721-1608/",
-                                   "/PWGGA/GA_PbPb_MC/590_20170721-1605/"};
+    const Int_t nSets = 1;
+    TString DataSets[nSets]={"LHC15h2h"};
+    TString DataSetsFolder[nSets]={"LHC15h2h"};
+    TString PrefixDataSets[nSets]={"/alice/sim/2015/LHC15h2h/"};
+    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/3136_20170912-1932_child_6/"};
 
 //     const Int_t nSets = 10;
 //     TString DataSets[nSets]={"LHC10b_pass4",
