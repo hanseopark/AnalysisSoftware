@@ -135,6 +135,8 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TMatrixDSym cov_v2_dec_toterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_toterr");
 
   TVectorD pt = *(TVectorD*) dir_pcm->Get("pt");
+  cout << "pt central values: " << endl;
+  pt.Print();
 
   //
   // create array of pointers to output histograms (vndir distributions for each pT bin)
@@ -148,6 +150,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TH1* h_vn_dir_comb_toterr_uncorr[nPtBins];
   TH1* h_vn_dir_comb_staterr_uncorr[nPtBins];
   TH1* h_vn_dir_comb_toterr_xcheck1[nPtBins];
+  TH1* h_vn_dir_comb_toterr_xcheck2[nPtBins];
 
   //
   // calculate vnDir PCM (total errors, using PCM Rgamma and common v2dec)
@@ -290,8 +293,32 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     Rgamma_xcheck1, cov_Rgamma_comb_toterr,
     v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
     v2_dec_meas_values, cov_v2_dec_staterr,
-    h_vn_dir_comb_toterr_xcheck1, "h_vnDir_Comb_totErr_RgamComb_xcheck_");
+    h_vn_dir_comb_toterr_xcheck1, "h_vnDir_Comb_totErr_RgamComb_xcheck1_");
 
+  //
+  // A further cross check:
+  // Scale Rgamma by the ratio of the data-driven and the MC-based purity (Fig. 10 in Mike's note)
+  //
+
+  // purity ratio: data-driven / MC-based
+  Double_t purity_ratio_020[nPtBins] = {0.944581, 0.930561, 0.940445, 0.948759, 0.956215, 0.96239, 0.967351, 0.971467,
+    0.975393, 0.979183, 0.9837, 0.986301, 0.988866, 0.991039, 0.993376, 0.994887};
+  Double_t purity_ratio_2040[nPtBins] = {0.97793, 0.978613, 0.982284, 0.98585, 0.988225, 0.990048, 0.991743, 0.992658,
+    0.993512, 0.994843, 0.995635, 0.996243, 0.996793, 0.997282, 0.997844, 0.998199};
+
+  TVectorD Rgamma_xcheck2(nPtBins);
+  for (Int_t i=0; i<nPtBins; i++) {
+    Double_t sf = 1;
+    if (centr == "00-20") sf = purity_ratio_020[i];
+    else if (centr == "20-40") sf = purity_ratio_2040[i];
+    Rgamma_xcheck2(i) = sf * Rgamma_meas_vec_comb(i);
+  }
+
+  v2dir(nPtBins, nSamples,
+    Rgamma_xcheck2, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
+    v2_dec_meas_values, cov_v2_dec_staterr,
+    h_vn_dir_comb_toterr_xcheck2, "h_vnDir_Comb_totErr_RgamComb_xcheck2_");
 
   // graphs to store v2dir
   TGraphAsymmErrors g_vn_dir_pcm_Rpcm_toterr(nPtBins);
@@ -303,6 +330,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TGraphAsymmErrors g_vn_dir_comb_toterr_uncorr(nPtBins);
   TGraphAsymmErrors g_vn_dir_comb_staterr_uncorr(nPtBins); // central values same as g_vn_dir_comb_toterr_uncorr
   TGraphAsymmErrors g_vn_dir_comb_toterr_xcheck1(nPtBins);
+  TGraphAsymmErrors g_vn_dir_comb_toterr_xcheck2(nPtBins);
 
   // graphs to store v2inc
   TGraphAsymmErrors g_vn_inc_pcm_toterr(nPtBins);
@@ -329,6 +357,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   fill_v2dir_graph(h_vn_dir_comb_toterr_uncorr, pt, 0, err_pt, g_vn_dir_comb_toterr_uncorr);
   fill_v2dir_graph(h_vn_dir_comb_staterr_uncorr, pt, 0, err_pt, g_vn_dir_comb_staterr_uncorr);
   fill_v2dir_graph(h_vn_dir_comb_toterr_xcheck1, pt, 0, err_pt, g_vn_dir_comb_toterr_xcheck1);
+  fill_v2dir_graph(h_vn_dir_comb_toterr_xcheck2, pt, 0, err_pt, g_vn_dir_comb_toterr_xcheck2);
 
   // set central values of graphs with statistical error to central values of graphs with total error
   for (Int_t i=0; i<nPtBins; i++) {
@@ -507,7 +536,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TLine ly0(0., 0., 6., 0.);
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetFillColor(kBlue-9);
+  g_vn_dir_comb_toterr.SetFillColorAlpha(kBlue-9, 0.2);
 
   g_vn_dir_pcm_Rpcm_toterr.SetMarkerStyle(kFullCircle);
   g_vn_dir_phos_Rphos_toterr.SetMarkerStyle(kFullCircle);
@@ -523,7 +552,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   g_vn_dir_pcm_Rpcm_toterr.DrawClone("p");
   g_vn_dir_phos_Rphos_toterr.DrawClone("p");
-  g_vn_dir_comb_toterr.DrawClone("p");
+  g_vn_dir_comb_toterr.DrawClone("pE5");
 
   TLatex l2;
   l2.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
@@ -549,7 +578,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetFillColor(kBlue-9);
+  g_vn_dir_comb_toterr.SetFillColorAlpha(kBlue-9, 0.2);
 
   g_vn_dir_pcm_toterr.SetMarkerStyle(kFullCircle);
   g_vn_dir_phos_toterr.SetMarkerStyle(kFullCircle);
@@ -565,7 +594,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   g_vn_dir_pcm_toterr.DrawClone("p");
   g_vn_dir_phos_toterr.DrawClone("p");
-  g_vn_dir_comb_toterr.DrawClone("p");
+  g_vn_dir_comb_toterr.DrawClone("pE5");
 
   TLatex l2b;
   l2b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
@@ -710,9 +739,9 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
   g_vn_dir_comb_staterr.DrawClone("p");
 
-  g_vn_dir_comb_toterr_xcheck1.SetFillColor(kOrange-3);
+  g_vn_dir_comb_toterr_xcheck1.SetFillColorAlpha(kOrange-3, 0.2);
 
-  g_vn_dir_comb_toterr_xcheck1.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr_xcheck1.SetMarkerStyle(kOpenCircle);
   g_vn_dir_comb_toterr_xcheck1.SetLineColor(kBlack);
   g_vn_dir_comb_toterr_xcheck1.SetMarkerColor(kBlack);
   g_vn_dir_comb_toterr_xcheck1.DrawClone("pE5");
@@ -723,6 +752,38 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   TString filename_c3d = "v2dir_comb_xcheck1_" + centr + ".pdf";
   c3d->SaveAs(output_dir + filename_c3d);
+
+  //
+  // Plot only combined v2dir vs pT + v2dir for Rgamma scaled by purity ratio data-driven/MC-based (cross check)
+  //
+  TCanvas* c3e = new TCanvas("c3e","c3e", 700, 500, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr.DrawClone("pE5");
+
+  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_vn_dir_comb_staterr.SetLineColor(kBlack);
+  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_vn_dir_comb_staterr.DrawClone("p");
+
+  g_vn_dir_comb_toterr_xcheck2.SetFillColorAlpha(kOrange-3, 0.2);
+
+  g_vn_dir_comb_toterr_xcheck2.SetMarkerStyle(kOpenCircle);
+  g_vn_dir_comb_toterr_xcheck2.SetLineColor(kBlack);
+  g_vn_dir_comb_toterr_xcheck2.SetMarkerColor(kBlack);
+  g_vn_dir_comb_toterr_xcheck2.DrawClone("pE5");
+
+  TLatex l3e;
+  l3e.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+  l3e.DrawLatexNDC(0.2, 0.17, "R_{#gamma} #times p_{data-driven}/p_{MC} [p = purity] (cross check)");
+
+  TString filename_c3e = "v2dir_comb_xcheck2_" + centr + ".pdf";
+  c3e->SaveAs(output_dir + filename_c3e);
 
 
   //

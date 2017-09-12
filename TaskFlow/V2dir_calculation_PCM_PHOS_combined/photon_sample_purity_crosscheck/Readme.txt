@@ -1,0 +1,1 @@
+Cross check: calculate v2,dir with Rgamma obtained with the data-driven purity instead of the MC-based method. The published Rgamma is multiplied by the ratio p_{data-driven}/p_{MC} [where p = purity] and then used in the v2,dir calculation. The ratio p_{data-driven}/p_{MC} is calculated here and the numbers are used in v2dir_pcm_phos_comb.C.
