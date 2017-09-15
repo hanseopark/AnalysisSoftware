@@ -223,7 +223,8 @@ void EventQA_Runwise(
     TString fElectronCutSelection    = "";
     TString fMesonCutSelection       = "";
     if (!isMerged){
-        ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
+        if( fMode == 12 ) ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection,     fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, 4);
+        else ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fClusterCutSelection, fMClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     }
@@ -1351,6 +1352,7 @@ void EventQA_Runwise(
             vecRuns.clear();
             fDataSet                = vecDataSet.at(i);
             outputDirDataSet        = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
+            cout << "Reading runs from: " << fileRuns.Data() <<      endl;
 
             if(useDataRunListForMC && i>=nData) {
                 outputDirDataSet    = Form("%s/%s-%s", outputDir.Data(), DataSets[i].Data(),DataSets[0].Data());

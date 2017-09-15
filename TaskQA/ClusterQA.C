@@ -182,7 +182,8 @@ void ClusterQA(
         fElectronCutSelection[i]    = "";
         fMesonCutSelection[i]       = "";
         if (!isMerged){
-            ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+          if(fMode == 12) ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i],                 fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], 4);
+          else ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         } else {
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         }
@@ -281,7 +282,7 @@ void ClusterQA(
         nCaloModules        = 6;
         nCaloCells          = 19000;
     } else {
-        cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;
+        cout << "No correct calorimeter type found: " << fClusterCutSelection[0].Data() << calo.Data() << ", returning..." << endl; return;
     }
 
     //*****************************************************************************************************

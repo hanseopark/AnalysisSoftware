@@ -900,6 +900,17 @@ void QA_Runwise(
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15n")==0){
       // pp 5.02TeV
+      if(mode == 12){
+        fEnergyFlag = "5TeV";
+        nSets = 2;
+        nData = 1;
+        cutNr = 0;
+        filePath = "/home/adrian/git-Framework/AnalysisSoftware/DataQA/20170713";
+        fileName = "GammaCalo_601.root";
+        DataSets[0]="LHC15n"; DataSets[1]="LHC17e2";
+        plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC17e2";
+        markerSize=2;
+      } else {
       mode=0;
       fEnergyFlag = "5TeV";
       nSets = 3;
@@ -921,6 +932,7 @@ void QA_Runwise(
       plotDataSets[0]="LHC15n pass3"; plotDataSets[1]="LHC16k5a PYT8"; plotDataSets[2]="LHC16k5b PYT6";
       markerSize=1.5;
       doEquidistantXaxis=kTRUE;
+      }
     }
     //**************************************************************************************************************
     else{

@@ -168,7 +168,8 @@ void EventQA(
         fElectronCutSelection[i]    = "";
         fMesonCutSelection[i]       = "";
         if (!isMergedCalo){
-            ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+          if(fMode == 12) ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i],                 fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], 4);
+          else ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         } else {
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         }
@@ -639,7 +640,7 @@ void EventQA(
 	    cout << "Gamma candidates per track for " << DataSets[i].Data() << endl;
 	    for(Int_t x=1; x<=fHistTracksVsCandidates->GetNbinsX(); x++){
 	      for(Int_t y=1; y<=fHistTracksVsCandidates->GetNbinsY(); y++){
-		nGammaCandPerTrack = fHistTracksVsCandidates->GetYaxis()->GetBinCenter(y) / fHistTracksVsCandidates->GetXaxis()->GetBinCenter(x);   
+		nGammaCandPerTrack = fHistTracksVsCandidates->GetYaxis()->GetBinCenter(y) / fHistTracksVsCandidates->GetXaxis()->GetBinCenter(x);
 		n = fHistTracksVsCandidates->GetBinContent(x,y);       // number of events with this ratio
 		fHistCandidatesPerTrack->Fill(nGammaCandPerTrack, n);  // increment bin with abscissa nGammaCandPerTrack, with weight n
 	      }

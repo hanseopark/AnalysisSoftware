@@ -778,7 +778,7 @@ void CorrectCaloNonLinearityV4(
     histoDummyMeanMassVsPDG = new TH2F("histoDummyMeanMassVsPDG", "histoDummyMeanMassVsPDG", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minMass, maxMass);
     SetStyleHistoTH2ForGraphs(histoDummyMeanMassVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC/data)} #GT / M_{#pi^{0} (PDG)}", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyMeanMassVsPDG->GetXaxis()->SetMoreLogLabels();
-    histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(-0.01);
+    histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(0.02);
     histoDummyMeanMassVsPDG->DrawCopy("");
 
     Double_t rangeExponent[2]   = {-0.5, -0.08};
@@ -996,7 +996,7 @@ void CorrectCaloNonLinearityV4(
     if(mode == 2 || mode == 3) SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     else SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyDataMCRatio->GetXaxis()->SetMoreLogLabels();
-    histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(-0.01);
+    histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(0.02);
     histoDummyDataMCRatio->DrawCopy("");
 
     DrawGammaSetMarker(histDataMCResults, 20, 1, color[0], color[0]);
@@ -1044,11 +1044,11 @@ void CorrectCaloNonLinearityV4(
     // plotting total correction
     //*******************************************************************************
     canvasMassRatioMCData->cd();
-    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,50);
+    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,20);
     SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 1.,0.9);
     totalCorrection->GetYaxis()->SetRangeUser(minPlotY+0.031,1.1);
     totalCorrection->GetXaxis()->SetMoreLogLabels();
-    totalCorrection->GetXaxis()->SetLabelOffset(-0.01);
+    totalCorrection->GetXaxis()->SetLabelOffset(0.02);
     SetLogBinningXTH(totalCorrection);
     totalCorrection->DrawCopy("p");
 
@@ -1150,8 +1150,8 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
     fFitReco->SetParameter(0,1.);
 
     if (mode == 3 || mode == 5){
-      fFitReco->SetParameter(2,0.5);
-      fFitReco->SetParameter(1,1.);
+      fFitReco->SetParameter(2,-0.5);
+      fFitReco->SetParameter(1,-1.);
     } else {
       fFitReco->SetParameter(2,-0.5);
       fFitReco->SetParameter(1,-1.);
