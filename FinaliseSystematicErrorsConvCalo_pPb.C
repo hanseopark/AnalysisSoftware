@@ -77,7 +77,6 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     if(mode == 2) recoMethod = "PCMEMC";
     if(mode == 3) recoMethod = "PCMPHOS";
 
-
     // ***************************************************************************************************
     // ******************************* general variable definition  **************************************
     // ***************************************************************************************************
@@ -251,7 +250,6 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, CellTiming - 14, Trigger - 16, Efficiency - 17
         if ( i == 0 || i == 14 || i == 16 || i == 17 || (i==8 && mode==3) || (i==15 && mode==3)){
-
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
