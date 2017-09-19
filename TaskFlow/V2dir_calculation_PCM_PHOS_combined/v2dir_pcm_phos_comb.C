@@ -21,6 +21,7 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TROOT.h"
+// #include "Math/Functions.h"
 
 #include "RooArgList.h"
 #include "RooRealVar.h"
@@ -121,21 +122,21 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TMatrixDSym cov_Rgamma_comb_toterr = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_comb_toterr");
   TMatrixDSym cov_Rgamma_comb_staterr = *(TMatrixDSym*) dir_pcm->Get("cov_Rgamma_comb_staterr");
 
-  // check
-  // cout << "WARNING: Rgamma modified to get a feel for the effect" << endl;
-  // for (Int_t i=0; i<nPtBins; i++) {
-  //   Rgamma_meas_vec_comb(i) = 1.03;
-  // }
+  // decay photon v2
+  TString fn_cocktail = "cocktail/cocktail.root";
+  TFile f_cocktail(fn_cocktail.Data());
+  TDirectory* dir_cocktail = (TDirectory*) f_cocktail.Get(centr.Data());
 
-  // decay photon v2 from PCM file
-  // TVectorD v2_dec_meas_values = *(TVectorD*) dir_pcm->Get("v2_dec_meas_values");
-  // TMatrixDSym cov_v2_dec = *(TMatrixDSym*) dir_pcm->Get("cov_v2_dec");
+  TVectorD v2_dec_meas_values = *(TVectorD*) dir_cocktail->Get("v2_dec_meas_values");
+  TMatrixDSym cov_v2_dec_staterr = *(TMatrixDSym*) dir_cocktail->Get("cov_v2_dec_staterr");
+  TMatrixDSym cov_v2_dec_syserr = *(TMatrixDSym*) dir_cocktail->Get("cov_v2_dec_syserr");
+  TMatrixDSym cov_v2_dec_toterr = *(TMatrixDSym*) dir_cocktail->Get("cov_v2_dec_toterr");
 
-  // decay photon v2 from PHOS file
-  TVectorD v2_dec_meas_values = *(TVectorD*) dir_phos->Get("v2_dec_meas_values");
-  TMatrixDSym cov_v2_dec_staterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_staterr");
-  TMatrixDSym cov_v2_dec_syserr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_syserr");
-  TMatrixDSym cov_v2_dec_toterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_toterr");
+  // decay photon v2 from PHOS file (default method)
+  // TVectorD v2_dec_meas_values = *(TVectorD*) dir_phos->Get("v2_dec_meas_values");
+  // TMatrixDSym cov_v2_dec_staterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_staterr");
+  // TMatrixDSym cov_v2_dec_syserr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_syserr");
+  // TMatrixDSym cov_v2_dec_toterr = *(TMatrixDSym*) dir_phos->Get("cov_v2_dec_toterr");
 
   TVectorD pt = *(TVectorD*) dir_pcm->Get("pt");
   cout << "pt central values: " << endl;
@@ -144,81 +145,81 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   //
   // create array of pointers to output histograms (vndir distributions for each pT bin)
   //
-  TH1* h_vn_dir_pcm_Rpcm_toterr[nPtBins];
-  TH1* h_vn_dir_pcm_toterr[nPtBins];
-  TH1* h_vn_dir_phos_Rphos_toterr[nPtBins];
-  TH1* h_vn_dir_phos_toterr[nPtBins];
-  TH1* h_vn_dir_comb_staterr[nPtBins];
-  TH1* h_vn_dir_comb_toterr[nPtBins];
-  TH1* h_vn_dir_comb_toterr_uncorr[nPtBins];
-  TH1* h_vn_dir_comb_staterr_uncorr[nPtBins];
-  TH1* h_vn_dir_comb_toterr_xcheck1[nPtBins];
-  TH1* h_vn_dir_comb_toterr_xcheck2[nPtBins];
+  TH1* h_v2_dir_pcm_Rpcm_toterr[nPtBins];
+  TH1* h_v2_dir_pcm_toterr[nPtBins];
+  TH1* h_v2_dir_phos_Rphos_toterr[nPtBins];
+  TH1* h_v2_dir_phos_toterr[nPtBins];
+  TH1* h_v2_dir_comb_staterr[nPtBins];
+  TH1* h_v2_dir_comb_toterr[nPtBins];
+  TH1* h_v2_dir_comb_toterr_uncorr[nPtBins];
+  TH1* h_v2_dir_comb_staterr_uncorr[nPtBins];
+  TH1* h_v2_dir_comb_toterr_xcheck1[nPtBins];
+  TH1* h_v2_dir_comb_toterr_xcheck2[nPtBins];
 
   //
   // covariance and correlation matrices
   //
-  TMatrixDSym cov_vn_dir_pcm_Rpcm_toterr(nPtBins);
-  TMatrixDSym cov_vn_dir_pcm_toterr(nPtBins);
-  TMatrixDSym cov_vn_dir_phos_Rphos_toterr(nPtBins);
-  TMatrixDSym cov_vn_dir_phos_toterr(nPtBins);
-  TMatrixDSym cov_vn_dir_comb_staterr(nPtBins);
-  TMatrixDSym cov_vn_dir_comb_toterr(nPtBins);
-  TMatrixDSym cov_vn_dir_comb_toterr_uncorr(nPtBins);
-  TMatrixDSym cov_vn_dir_comb_staterr_uncorr(nPtBins);
-  TMatrixDSym cov_vn_dir_comb_toterr_xcheck1(nPtBins);
-  TMatrixDSym cov_vn_dir_comb_toterr_xcheck2(nPtBins);
+  TMatrixDSym cov_v2_dir_pcm_Rpcm_toterr(nPtBins);
+  TMatrixDSym cov_v2_dir_pcm_toterr(nPtBins);
+  TMatrixDSym cov_v2_dir_phos_Rphos_toterr(nPtBins);
+  TMatrixDSym cov_v2_dir_phos_toterr(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_staterr(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_toterr(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_toterr_uncorr(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_staterr_uncorr(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_toterr_xcheck1(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_toterr_xcheck2(nPtBins);
 
-  TMatrixDSym corr_vn_dir_pcm_Rpcm_toterr(nPtBins);
-  TMatrixDSym corr_vn_dir_pcm_toterr(nPtBins);
-  TMatrixDSym corr_vn_dir_phos_Rphos_toterr(nPtBins);
-  TMatrixDSym corr_vn_dir_phos_toterr(nPtBins);
-  TMatrixDSym corr_vn_dir_comb_staterr(nPtBins);
-  TMatrixDSym corr_vn_dir_comb_toterr(nPtBins);
-  TMatrixDSym corr_vn_dir_comb_toterr_uncorr(nPtBins);
-  TMatrixDSym corr_vn_dir_comb_staterr_uncorr(nPtBins);
-  TMatrixDSym corr_vn_dir_comb_toterr_xcheck1(nPtBins);
-  TMatrixDSym corr_vn_dir_comb_toterr_xcheck2(nPtBins);
+  TMatrixDSym corr_v2_dir_pcm_Rpcm_toterr(nPtBins);
+  TMatrixDSym corr_v2_dir_pcm_toterr(nPtBins);
+  TMatrixDSym corr_v2_dir_phos_Rphos_toterr(nPtBins);
+  TMatrixDSym corr_v2_dir_phos_toterr(nPtBins);
+  TMatrixDSym corr_v2_dir_comb_staterr(nPtBins);
+  TMatrixDSym corr_v2_dir_comb_toterr(nPtBins);
+  TMatrixDSym corr_v2_dir_comb_toterr_uncorr(nPtBins);
+  TMatrixDSym corr_v2_dir_comb_staterr_uncorr(nPtBins);
+  TMatrixDSym corr_v2_dir_comb_toterr_xcheck1(nPtBins);
+  TMatrixDSym corr_v2_dir_comb_toterr_xcheck2(nPtBins);
 
   //
   // calculate vnDir PCM (total errors, using PCM Rgamma and common v2dec)
   //
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
-	v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
-	v2_dec_meas_values, cov_v2_dec_toterr,
-	h_vn_dir_pcm_Rpcm_toterr, "h_vnDir_PCM_TotErr_RgamPCM_",
-	cov_vn_dir_pcm_Rpcm_toterr, corr_vn_dir_pcm_Rpcm_toterr);
+	   Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
+	   v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
+	   v2_dec_meas_values, cov_v2_dec_toterr,
+	   h_v2_dir_pcm_Rpcm_toterr, "h_v2Dir_PCM_TotErr_RgamPCM_",
+	   cov_v2_dir_pcm_Rpcm_toterr, corr_v2_dir_pcm_Rpcm_toterr);
 
   //
   // calculate vnDir PCM (total errors, using combined Rgamma and common v2dec)
   //
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
-	v2_dec_meas_values, cov_v2_dec_toterr,
-	h_vn_dir_pcm_toterr, "h_vnDir_PCM_TotErr_RgamComb_",
-	cov_vn_dir_pcm_toterr, corr_vn_dir_pcm_toterr);
+	   Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+	   v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm,
+	   v2_dec_meas_values, cov_v2_dec_toterr,
+	   h_v2_dir_pcm_toterr, "h_v2Dir_PCM_TotErr_RgamComb_",
+	   cov_v2_dir_pcm_toterr, corr_v2_dir_pcm_toterr);
 
   //
   // calculate vnDir PHOS (total errors, using PHOS Rgamma and common v2dec)
   //
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_phos, cov_Rgamma_toterr_phos,
-	v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
-	v2_dec_meas_values, cov_v2_dec_toterr,
-	h_vn_dir_phos_Rphos_toterr, "h_vnDir_PHOS_TotErr_RgamPhos_",
-	cov_vn_dir_phos_Rphos_toterr, corr_vn_dir_phos_Rphos_toterr);
+	   Rgamma_meas_vec_phos, cov_Rgamma_toterr_phos,
+	   v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
+	   v2_dec_meas_values, cov_v2_dec_toterr,
+	   h_v2_dir_phos_Rphos_toterr, "h_v2Dir_PHOS_TotErr_RgamPhos_",
+	   cov_v2_dir_phos_Rphos_toterr, corr_v2_dir_phos_Rphos_toterr);
 
   //
   // calculate vnDir PHOS (total errors, using combined Rgamma and common v2dec)
   //
   v2dir(nPtBins, nSamples,
     Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
-	v2_dec_meas_values, cov_v2_dec_toterr,
-	h_vn_dir_phos_toterr, "h_vnDir_PHOS_TotErr_RgamComb_",
-	cov_vn_dir_phos_toterr, corr_vn_dir_phos_toterr);
+	  v2_inc_meas_values_phos, cov_v2_inc_toterr_phos,
+	  v2_dec_meas_values, cov_v2_dec_toterr,
+	  h_v2_dir_phos_toterr, "h_v2Dir_PHOS_TotErr_RgamComb_",
+	  cov_v2_dir_phos_toterr, corr_v2_dir_phos_toterr);
 
   //
   // calculate weighted average of v2inc
@@ -237,13 +238,13 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TVectorD v2_inc_meas_values_comb(nPtBins);
   TMatrixDSym cov_v2_inc_toterr_comb(nPtBins);
   weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos, cov_v2_inc_toterr_pcm, cov_v2_inc_toterr_phos,
-		   v2_inc_meas_values_comb, cov_v2_inc_toterr_comb);
+    v2_inc_meas_values_comb, cov_v2_inc_toterr_comb);
 
   // using statistical error as weight
   TVectorD v2_inc_meas_values_comb_statweights(nPtBins);
   TMatrixDSym cov_v2_inc_staterr_comb(nPtBins);
   weighted_average(v2_inc_meas_values_pcm, v2_inc_meas_values_phos, cov_v2_inc_staterr_pcm, cov_v2_inc_staterr_phos,
-		   v2_inc_meas_values_comb_statweights, cov_v2_inc_staterr_comb);
+    v2_inc_meas_values_comb_statweights, cov_v2_inc_staterr_comb);
 
   //
   // As a cross check calculate results assuming no correlations of systematic errors
@@ -283,17 +284,18 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   // total error: the main result
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
-	v2_dec_meas_values, cov_v2_dec_toterr,
-	h_vn_dir_comb_toterr, "h_vnDir_Comb_totErr_RgamComb_",
-	cov_vn_dir_comb_toterr, corr_vn_dir_comb_toterr);
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_v2_dir_comb_toterr, "h_v2Dir_Comb_totErr_RgamComb_",
+    cov_v2_dir_comb_toterr, corr_v2_dir_comb_toterr);
+
 
   cout << "--> v2,dir covariance matrix:" << endl;
-  cov_vn_dir_comb_toterr.Print();
+  cov_v2_dir_comb_toterr.Print();
 
   cout << "--> v2,dir correlation matrix:" << endl;
-  corr_vn_dir_comb_toterr.Print();
+  corr_v2_dir_comb_toterr.Print();
 
   // stat. err.
   // note that we use  cov_Rgamma_comb_toterr rather than cov_Rgamma_comb_staterr
@@ -301,11 +303,11 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   // Otherwise we would get a statistical error that is larger than the systematic error
   // which would not be usedul
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
-	v2_dec_meas_values, cov_v2_dec_staterr,
-	h_vn_dir_comb_staterr, "h_vnDir_Comb_StatErr_RgamComb_",
-	cov_vn_dir_comb_staterr, corr_vn_dir_comb_staterr);
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
+    v2_dec_meas_values, cov_v2_dec_staterr,
+    h_v2_dir_comb_staterr, "h_v2Dir_Comb_StatErr_RgamComb_",
+    cov_v2_dir_comb_staterr, corr_v2_dir_comb_staterr);
 
   //
   // As a cross check, do the calcualtion assuming uncorrelated systematic errors
@@ -313,19 +315,19 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   // total error, uncorrelated errors (cross check)
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr_uncorr,
-	v2_inc_meas_values_comb_uncorr, cov_v2_inc_toterr_comb_uncorr,
-	v2_dec_meas_values, cov_v2_dec_toterr_uncorr,
-	h_vn_dir_comb_toterr_uncorr, "h_vnDir_Comb_totErr_RgamComb_uncorr_",
-	cov_vn_dir_comb_toterr_uncorr, corr_vn_dir_comb_toterr_uncorr);
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr_uncorr,
+    v2_inc_meas_values_comb_uncorr, cov_v2_inc_toterr_comb_uncorr,
+    v2_dec_meas_values, cov_v2_dec_toterr_uncorr,
+    h_v2_dir_comb_toterr_uncorr, "h_v2Dir_Comb_totErr_RgamComb_uncorr_",
+    cov_v2_dir_comb_toterr_uncorr, corr_v2_dir_comb_toterr_uncorr);
 
   // stat. err. (cross check)
   v2dir(nPtBins, nSamples,
-	Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_comb_uncorr, cov_v2_inc_staterr_comb,
-	v2_dec_meas_values, cov_v2_dec_staterr,
-	h_vn_dir_comb_staterr_uncorr, "h_vnDir_Comb_StatErr_RgamComb_uncorr",
-	cov_vn_dir_comb_staterr_uncorr, corr_vn_dir_comb_staterr_uncorr);
+    Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb_uncorr, cov_v2_inc_staterr_comb,
+    v2_dec_meas_values, cov_v2_dec_staterr,
+    h_v2_dir_comb_staterr_uncorr, "h_v2Dir_Comb_StatErr_RgamComb_uncorr",
+    cov_v2_dir_comb_staterr_uncorr, corr_v2_dir_comb_staterr_uncorr);
 
   //
   // Another cross check: calculate v2,dir for a fixed given Rgamma
@@ -334,11 +336,11 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TVectorD Rgamma_xcheck1(nPtBins);
   for (Int_t i=0; i<nPtBins; i++) Rgamma_xcheck1(i) = Rgamma_xcheck1_val;
   v2dir(nPtBins, nSamples,
-	Rgamma_xcheck1, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
-	v2_dec_meas_values, cov_v2_dec_staterr,
-	h_vn_dir_comb_toterr_xcheck1, "h_vnDir_Comb_totErr_RgamComb_xcheck1_",
-	cov_vn_dir_comb_toterr_xcheck1, corr_vn_dir_comb_toterr_xcheck1);
+	   Rgamma_xcheck1, cov_Rgamma_comb_toterr,
+	   v2_inc_meas_values_comb, cov_v2_inc_staterr_comb,
+	   v2_dec_meas_values, cov_v2_dec_staterr,
+	   h_v2_dir_comb_toterr_xcheck1, "h_v2Dir_Comb_totErr_RgamComb_xcheck1_",
+	   cov_v2_dir_comb_toterr_xcheck1, corr_v2_dir_comb_toterr_xcheck1);
 
   //
   // A further cross check:
@@ -360,39 +362,39 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   }
 
   v2dir(nPtBins, nSamples,
-	Rgamma_xcheck2, cov_Rgamma_comb_toterr,
-	v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
-	v2_dec_meas_values, cov_v2_dec_toterr,
-	h_vn_dir_comb_toterr_xcheck2, "h_vnDir_Comb_totErr_RgamComb_xcheck2_",
-	cov_vn_dir_comb_toterr_xcheck2, corr_vn_dir_comb_toterr_xcheck2);
+    Rgamma_xcheck2, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
+    v2_dec_meas_values, cov_v2_dec_toterr,
+    h_v2_dir_comb_toterr_xcheck2, "h_v2Dir_Comb_totErr_RgamComb_xcheck2_",
+    cov_v2_dir_comb_toterr_xcheck2, corr_v2_dir_comb_toterr_xcheck2);
 
   // graphs to store v2dir
-  TGraphAsymmErrors g_vn_dir_pcm_Rpcm_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_pcm_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_phos_Rphos_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_phos_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_comb_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_comb_staterr(nPtBins); // central values same as g_vn_dir_comb_toterr
-  TGraphAsymmErrors g_vn_dir_comb_toterr_uncorr(nPtBins);
-  TGraphAsymmErrors g_vn_dir_comb_staterr_uncorr(nPtBins); // central values same as g_vn_dir_comb_toterr_uncorr
-  TGraphAsymmErrors g_vn_dir_comb_toterr_xcheck1(nPtBins);
-  TGraphAsymmErrors g_vn_dir_comb_toterr_xcheck2(nPtBins);
+  TGraphAsymmErrors g_v2_dir_pcm_Rpcm_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_dir_pcm_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_dir_phos_Rphos_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_dir_phos_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_dir_comb_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_dir_comb_staterr(nPtBins); // central values same as g_v2_dir_comb_toterr
+  TGraphAsymmErrors g_v2_dir_comb_toterr_uncorr(nPtBins);
+  TGraphAsymmErrors g_v2_dir_comb_staterr_uncorr(nPtBins); // central values same as g_v2_dir_comb_toterr_uncorr
+  TGraphAsymmErrors g_v2_dir_comb_toterr_xcheck1(nPtBins);
+  TGraphAsymmErrors g_v2_dir_comb_toterr_xcheck2(nPtBins);
 
   // graphs to store v2inc
-  TGraphAsymmErrors g_vn_inc_pcm_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_pcm_syserr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_pcm_staterr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_pcm_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_pcm_syserr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_pcm_staterr(nPtBins);
 
-  TGraphAsymmErrors g_vn_inc_phos_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_phos_syserr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_phos_staterr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_phos_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_phos_syserr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_phos_staterr(nPtBins);
 
-  TGraphAsymmErrors g_vn_inc_comb_toterr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_comb_syserr(nPtBins);
-  TGraphAsymmErrors g_vn_inc_comb_staterr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_comb_toterr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_comb_syserr(nPtBins);
+  TGraphAsymmErrors g_v2_inc_comb_staterr(nPtBins);
 
   // graph to store decay photon v2
-  TGraphAsymmErrors g_vn_dec_comb(nPtBins);
+  TGraphAsymmErrors g_v2_dec_comb(nPtBins);
 
   //
   // fill v2dir graphs
@@ -402,26 +404,26 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   Double_t pt_offset_pcm = 0.;
   Double_t pt_offset_phos = 0.;
   Double_t err_pt = 0.08; // for visual representation of errors as boxes
-  fill_v2dir_graph(h_vn_dir_pcm_Rpcm_toterr, pt, pt_offset_pcm, 0, g_vn_dir_pcm_Rpcm_toterr);
-  fill_v2dir_graph(h_vn_dir_phos_Rphos_toterr, pt, pt_offset_phos, 0, g_vn_dir_phos_Rphos_toterr);
-  fill_v2dir_graph(h_vn_dir_pcm_toterr, pt, pt_offset_pcm, 0, g_vn_dir_pcm_toterr);
-  fill_v2dir_graph(h_vn_dir_phos_toterr, pt, pt_offset_phos, 0, g_vn_dir_phos_toterr);
-  fill_v2dir_graph(h_vn_dir_comb_toterr, pt, 0, err_pt, g_vn_dir_comb_toterr);
-  fill_v2dir_graph(h_vn_dir_comb_staterr, pt, 0, 0, g_vn_dir_comb_staterr);
-  fill_v2dir_graph(h_vn_dir_comb_toterr_uncorr, pt, 0, err_pt, g_vn_dir_comb_toterr_uncorr);
-  fill_v2dir_graph(h_vn_dir_comb_staterr_uncorr, pt, 0, err_pt, g_vn_dir_comb_staterr_uncorr);
-  fill_v2dir_graph(h_vn_dir_comb_toterr_xcheck1, pt, 0, err_pt, g_vn_dir_comb_toterr_xcheck1);
-  fill_v2dir_graph(h_vn_dir_comb_toterr_xcheck2, pt, 0, err_pt, g_vn_dir_comb_toterr_xcheck2);
+  fill_v2dir_graph(h_v2_dir_pcm_Rpcm_toterr, pt, pt_offset_pcm, 0, g_v2_dir_pcm_Rpcm_toterr);
+  fill_v2dir_graph(h_v2_dir_phos_Rphos_toterr, pt, pt_offset_phos, 0, g_v2_dir_phos_Rphos_toterr);
+  fill_v2dir_graph(h_v2_dir_pcm_toterr, pt, pt_offset_pcm, 0, g_v2_dir_pcm_toterr);
+  fill_v2dir_graph(h_v2_dir_phos_toterr, pt, pt_offset_phos, 0, g_v2_dir_phos_toterr);
+  fill_v2dir_graph(h_v2_dir_comb_toterr, pt, 0, err_pt, g_v2_dir_comb_toterr);
+  fill_v2dir_graph(h_v2_dir_comb_staterr, pt, 0, 0, g_v2_dir_comb_staterr);
+  fill_v2dir_graph(h_v2_dir_comb_toterr_uncorr, pt, 0, err_pt, g_v2_dir_comb_toterr_uncorr);
+  fill_v2dir_graph(h_v2_dir_comb_staterr_uncorr, pt, 0, err_pt, g_v2_dir_comb_staterr_uncorr);
+  fill_v2dir_graph(h_v2_dir_comb_toterr_xcheck1, pt, 0, err_pt, g_v2_dir_comb_toterr_xcheck1);
+  fill_v2dir_graph(h_v2_dir_comb_toterr_xcheck2, pt, 0, err_pt, g_v2_dir_comb_toterr_xcheck2);
 
   // set central values of graphs with statistical error to central values of graphs with total error
   for (Int_t i=0; i<nPtBins; i++) {
-    Double_t pt_val = g_vn_dir_comb_toterr.GetX()[i];
-    Double_t v2dir_val = g_vn_dir_comb_toterr.GetY()[i];
-    g_vn_dir_comb_staterr.SetPoint(i, pt_val, v2dir_val);
+    Double_t pt_val = g_v2_dir_comb_toterr.GetX()[i];
+    Double_t v2dir_val = g_v2_dir_comb_toterr.GetY()[i];
+    g_v2_dir_comb_staterr.SetPoint(i, pt_val, v2dir_val);
 
-    pt_val = g_vn_dir_comb_toterr_uncorr.GetX()[i];
-    v2dir_val = g_vn_dir_comb_toterr_uncorr.GetY()[i];
-    g_vn_dir_comb_staterr_uncorr.SetPoint(i, pt_val, v2dir_val);
+    pt_val = g_v2_dir_comb_toterr_uncorr.GetX()[i];
+    v2dir_val = g_v2_dir_comb_toterr_uncorr.GetY()[i];
+    g_v2_dir_comb_staterr_uncorr.SetPoint(i, pt_val, v2dir_val);
 
   }
 
@@ -429,7 +431,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   //
   // plot output
   //
-  cout << "#entries = " << h_vn_dir_pcm_toterr[0]->GetEntries() << endl;
+  cout << "#entries = " << h_v2_dir_pcm_toterr[0]->GetEntries() << endl;
 
   // style settings
   TStyle* myStyle = new TStyle("myStyle","My root style");
@@ -464,26 +466,26 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     c1->GetPad(i+1)->SetBottomMargin(0.16);
     c1->GetPad(i+1)->SetLeftMargin(0.16);
 
-    h_vn_dir_comb_toterr[i]->SetXTitle("v2,dir");
+    h_v2_dir_comb_toterr[i]->SetXTitle("v2,dir");
 
-    h_vn_dir_comb_toterr[i]->SetTitle(Form("v2dir, combined, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_comb_toterr[i]->SetName(Form("h_vn_dir_comb_toterr_ptbin_%d",i));
+    h_v2_dir_comb_toterr[i]->SetTitle(Form("v2dir, combined, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_v2_dir_comb_toterr[i]->SetName(Form("h_v2_dir_comb_toterr_ptbin_%d",i));
 
-    h_vn_dir_pcm_toterr[i]->SetTitle(Form("v2dir, PCM, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_pcm_toterr[i]->SetName(Form("h_vn_dir_pcm_toterr_ptbin_%d",i));
+    h_v2_dir_pcm_toterr[i]->SetTitle(Form("v2dir, PCM, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_v2_dir_pcm_toterr[i]->SetName(Form("h_v2_dir_pcm_toterr_ptbin_%d",i));
 
-    h_vn_dir_phos_toterr[i]->SetTitle(Form("v2dir, PHOS, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_phos_toterr[i]->SetName(Form("h_vn_dir_phos_toterr_ptbin_%d",i));
+    h_v2_dir_phos_toterr[i]->SetTitle(Form("v2dir, PHOS, combined Rgamma, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_v2_dir_phos_toterr[i]->SetName(Form("h_v2_dir_phos_toterr_ptbin_%d",i));
 
-    h_vn_dir_pcm_Rpcm_toterr[i]->SetTitle(Form("v2dir, PCM, Rgamma from PCM, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_pcm_Rpcm_toterr[i]->SetName(Form("h_vn_dir_pcm_Rpcm_toterr_ptbin_%d",i));
+    h_v2_dir_pcm_Rpcm_toterr[i]->SetTitle(Form("v2dir, PCM, Rgamma from PCM, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_v2_dir_pcm_Rpcm_toterr[i]->SetName(Form("h_v2_dir_pcm_Rpcm_toterr_ptbin_%d",i));
 
-    h_vn_dir_phos_Rphos_toterr[i]->SetTitle(Form("v2dir, PHOS, Rgamma from PHOS, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
-    h_vn_dir_phos_Rphos_toterr[i]->SetName(Form("h_vn_dir_phos_Rphos_toterr_ptbin_%d",i));
+    h_v2_dir_phos_Rphos_toterr[i]->SetTitle(Form("v2dir, PHOS, Rgamma from PHOS, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+    h_v2_dir_phos_Rphos_toterr[i]->SetName(Form("h_v2_dir_phos_Rphos_toterr_ptbin_%d",i));
 
-    h_vn_dir_comb_toterr[i]->SetLineColor(kBlack); h_vn_dir_comb_toterr[i]->DrawCopy("HL");
-    h_vn_dir_pcm_Rpcm_toterr[i]->SetLineColor(kRed); h_vn_dir_pcm_Rpcm_toterr[i]->DrawCopy("HL,same");
-    h_vn_dir_phos_Rphos_toterr[i]->SetLineColor(kBlue); h_vn_dir_phos_Rphos_toterr[i]->DrawCopy("HL,same");
+    h_v2_dir_comb_toterr[i]->SetLineColor(kBlack); h_v2_dir_comb_toterr[i]->DrawCopy("HL");
+    h_v2_dir_pcm_Rpcm_toterr[i]->SetLineColor(kRed); h_v2_dir_pcm_Rpcm_toterr[i]->DrawCopy("HL,same");
+    h_v2_dir_phos_Rphos_toterr[i]->SetLineColor(kBlue); h_v2_dir_phos_Rphos_toterr[i]->DrawCopy("HL,same");
 
     lpt.DrawLatexNDC(0.2, 0.75, Form("p_{T} = %4.1f GeV/#it{c}",pt(i)));
 
@@ -492,55 +494,55 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     //
 
     // v2,inc, PCM, total error
-    g_vn_inc_pcm_toterr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
-    g_vn_inc_pcm_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
-    g_vn_inc_pcm_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
+    g_v2_inc_pcm_toterr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
+    g_v2_inc_pcm_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
+    g_v2_inc_pcm_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i)));
 
     // v2,inc, PCM, systematic error
-    g_vn_inc_pcm_syserr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
-    g_vn_inc_pcm_syserr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_syserr_pcm(i,i)));
-    g_vn_inc_pcm_syserr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_syserr_pcm(i,i)));
+    g_v2_inc_pcm_syserr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
+    g_v2_inc_pcm_syserr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_syserr_pcm(i,i)));
+    g_v2_inc_pcm_syserr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_syserr_pcm(i,i)));
 
     // v2,inc, PCM, statistical error
-    g_vn_inc_pcm_staterr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
-    g_vn_inc_pcm_staterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_staterr_pcm(i,i)));
-    g_vn_inc_pcm_staterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_staterr_pcm(i,i)));
+    g_v2_inc_pcm_staterr.SetPoint(i, pt(i), v2_inc_meas_values_pcm(i));
+    g_v2_inc_pcm_staterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_staterr_pcm(i,i)));
+    g_v2_inc_pcm_staterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_staterr_pcm(i,i)));
 
     // v2,inc, PHOS, total error
-    g_vn_inc_phos_toterr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
-    g_vn_inc_phos_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
-    g_vn_inc_phos_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
+    g_v2_inc_phos_toterr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
+    g_v2_inc_phos_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
+    g_v2_inc_phos_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_phos(i,i)));
 
     // v2,inc, PHOS, systematic error
-    g_vn_inc_phos_syserr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
-    g_vn_inc_phos_syserr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_syserr_phos(i,i)));
-    g_vn_inc_phos_syserr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_syserr_phos(i,i)));
+    g_v2_inc_phos_syserr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
+    g_v2_inc_phos_syserr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_syserr_phos(i,i)));
+    g_v2_inc_phos_syserr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_syserr_phos(i,i)));
 
     // v2,inc, PHOS, statistical error
-    g_vn_inc_phos_staterr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
-    g_vn_inc_phos_staterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_staterr_phos(i,i)));
-    g_vn_inc_phos_staterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_staterr_phos(i,i)));
+    g_v2_inc_phos_staterr.SetPoint(i, pt(i), v2_inc_meas_values_phos(i));
+    g_v2_inc_phos_staterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_staterr_phos(i,i)));
+    g_v2_inc_phos_staterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_staterr_phos(i,i)));
 
     // v2,inc, combined, total error
-    g_vn_inc_comb_toterr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
-    g_vn_inc_comb_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
-    g_vn_inc_comb_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
+    g_v2_inc_comb_toterr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
+    g_v2_inc_comb_toterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
+    g_v2_inc_comb_toterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_toterr_comb(i,i)));
 
     // v2,inc, combined, statistical error
-    g_vn_inc_comb_staterr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
-    g_vn_inc_comb_staterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_staterr_comb(i,i)));
-    g_vn_inc_comb_staterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_staterr_comb(i,i)));
+    g_v2_inc_comb_staterr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
+    g_v2_inc_comb_staterr.SetPointEYhigh(i, TMath::Sqrt(cov_v2_inc_staterr_comb(i,i)));
+    g_v2_inc_comb_staterr.SetPointEYlow(i, TMath::Sqrt(cov_v2_inc_staterr_comb(i,i)));
 
     // v2,inc, combined, systematic error
     Double_t vn_inc_syserr = TMath::Sqrt(cov_v2_inc_toterr_comb(i,i) - cov_v2_inc_staterr_comb(i,i));
-    g_vn_inc_comb_syserr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
-    g_vn_inc_comb_syserr.SetPointEYhigh(i, vn_inc_syserr);
-    g_vn_inc_comb_syserr.SetPointEYlow(i, vn_inc_syserr);
+    g_v2_inc_comb_syserr.SetPoint(i, pt(i), v2_inc_meas_values_comb(i));
+    g_v2_inc_comb_syserr.SetPointEYhigh(i, vn_inc_syserr);
+    g_v2_inc_comb_syserr.SetPointEYlow(i, vn_inc_syserr);
 
     // store decay photon v2
-    g_vn_dec_comb.SetPoint(i, pt(i), v2_dec_meas_values(i));
-    g_vn_dec_comb.SetPointEYhigh(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
-    g_vn_dec_comb.SetPointEYlow(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
+    g_v2_dec_comb.SetPoint(i, pt(i), v2_dec_meas_values(i));
+    g_v2_dec_comb.SetPointEYhigh(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
+    g_v2_dec_comb.SetPointEYlow(i, TMath::Sqrt(cov_v2_dec_syserr(i,i)));
 
   }
   TString filename_c1 = "v2dir_distr_" + centr + ".pdf";
@@ -551,89 +553,103 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   //
   TFile f_out(fn_out, "recreate");
 
-  g_vn_dir_pcm_Rpcm_toterr.SetName("g_v2_dir_pcm_Rpcm_toterr");
-  g_vn_dir_pcm_Rpcm_toterr.SetTitle("PCM v2dir using PCM Rgamma, total uncertainties");
-  g_vn_dir_pcm_Rpcm_toterr.Write();
+  g_v2_dir_pcm_Rpcm_toterr.SetName("g_v2_dir_pcm_Rpcm_toterr");
+  g_v2_dir_pcm_Rpcm_toterr.SetTitle("PCM v2dir using PCM Rgamma, total uncertainties");
+  g_v2_dir_pcm_Rpcm_toterr.Write();
 
-  g_vn_dir_pcm_toterr.SetName("g_v2_dir_pcm_Rcomb_toterr");
-  g_vn_dir_pcm_toterr.SetTitle("PCM v2dir using combined Rgamma, total uncertainties");
-  g_vn_dir_pcm_toterr.Write();
+  g_v2_dir_pcm_toterr.SetName("g_v2_dir_pcm_Rcomb_toterr");
+  g_v2_dir_pcm_toterr.SetTitle("PCM v2dir using combined Rgamma, total uncertainties");
+  g_v2_dir_pcm_toterr.Write();
 
-  g_vn_dir_phos_Rphos_toterr.SetName("g_v2_dir_phos_Rphos_toterr");
-  g_vn_dir_phos_Rphos_toterr.SetTitle("PHOS v2dir using PHOS Rgamma, total uncertainties");
-  g_vn_dir_phos_Rphos_toterr.Write();
+  g_v2_dir_phos_Rphos_toterr.SetName("g_v2_dir_phos_Rphos_toterr");
+  g_v2_dir_phos_Rphos_toterr.SetTitle("PHOS v2dir using PHOS Rgamma, total uncertainties");
+  g_v2_dir_phos_Rphos_toterr.Write();
 
-  g_vn_dir_phos_toterr.SetName("g_v2_dir_phos_Rcomb_toterr");
-  g_vn_dir_phos_toterr.SetTitle("PHOS v2dir using combined Rgamma, total uncertainties");
-  g_vn_dir_phos_toterr.Write();
+  g_v2_dir_phos_toterr.SetName("g_v2_dir_phos_Rcomb_toterr");
+  g_v2_dir_phos_toterr.SetTitle("PHOS v2dir using combined Rgamma, total uncertainties");
+  g_v2_dir_phos_toterr.Write();
 
-  g_vn_dir_comb_toterr.SetName("g_v2_dir_comb_toterr");
-  g_vn_dir_comb_toterr.SetTitle("PCM/PHOS combined v2dir, total uncertainties");
-  g_vn_dir_comb_toterr.Write();
+  g_v2_dir_comb_toterr.SetName("g_v2_dir_comb_toterr");
+  g_v2_dir_comb_toterr.SetTitle("PCM/PHOS combined v2dir, total uncertainties");
+  g_v2_dir_comb_toterr.Write();
 
-  g_vn_dir_comb_toterr_uncorr.SetName("g_v2_dir_comb_toterr_uncorr");
-  g_vn_dir_comb_toterr_uncorr.SetTitle("PCM/PHOS combined v2dir, total uncertainties, uncorrelated syst. errors");
-  g_vn_dir_comb_toterr_uncorr.Write();
+  g_v2_dir_comb_toterr_uncorr.SetName("g_v2_dir_comb_toterr_uncorr");
+  g_v2_dir_comb_toterr_uncorr.SetTitle("PCM/PHOS combined v2dir, total uncertainties, uncorrelated syst. errors");
+  g_v2_dir_comb_toterr_uncorr.Write();
 
-  g_vn_dir_comb_staterr.SetName("g_v2_dir_comb_staterr");
-  g_vn_dir_comb_staterr.SetTitle("PCM/PHOS combined v2dir, stat. uncertainties");
-  g_vn_dir_comb_staterr.Write();
+  g_v2_dir_comb_staterr.SetName("g_v2_dir_comb_staterr");
+  g_v2_dir_comb_staterr.SetTitle("PCM/PHOS combined v2dir, stat. uncertainties");
+  g_v2_dir_comb_staterr.Write();
+
+  // write v2,dir covariance matrices
+  cov_v2_dir_pcm_Rpcm_toterr.Write("cov_v2_dir_pcm_Rpcm_toterr");
+  cov_v2_dir_pcm_toterr.Write("cov_v2_dir_pcm_Rcomb_toterr");
+  cov_v2_dir_phos_Rphos_toterr.Write("cov_v2_dir_phos_Rphos_toterr");
+  cov_v2_dir_phos_toterr.Write("cov_v2_dir_phos_Rcomb_toterr");
+  cov_v2_dir_comb_toterr.Write("cov_v2_dir_comb_toterr");
+  cov_v2_dir_comb_toterr_uncorr.Write("cov_v2_dir_comb_toterr_uncorr");
+  cov_v2_dir_comb_staterr.Write("cov_v2_dir_comb_staterr");
+
+  // write v2,dir correlation matrices
+  corr_v2_dir_pcm_Rpcm_toterr.Write("corr_v2_dir_pcm_Rpcm_toterr");
+  corr_v2_dir_pcm_toterr.Write("corr_v2_dir_pcm_Rcomb_toterr");
+  corr_v2_dir_phos_Rphos_toterr.Write("corr_v2_dir_phos_Rphos_toterr");
+  corr_v2_dir_phos_toterr.Write("corr_v2_dir_phos_Rcomb_toterr");
+  corr_v2_dir_comb_toterr.Write("corr_v2_dir_comb_toterr");
+  corr_v2_dir_comb_toterr_uncorr.Write("corr_v2_dir_comb_toterr_uncorr");
+  corr_v2_dir_comb_staterr.Write("corr_v2_dir_comb_staterr");
 
   // inclusive photon v2
-  g_vn_inc_pcm_toterr.SetName("g_v2_inc_pcm_toterr");
-  g_vn_inc_pcm_toterr.SetTitle("inclusive photon v2 PCM, total uncertainties");
-  g_vn_inc_pcm_toterr.Write();
+  g_v2_inc_pcm_toterr.SetName("g_v2_inc_pcm_toterr");
+  g_v2_inc_pcm_toterr.SetTitle("inclusive photon v2 PCM, total uncertainties");
+  g_v2_inc_pcm_toterr.Write();
 
-  g_vn_inc_pcm_syserr.SetName("g_v2_inc_pcm_syserr");
-  g_vn_inc_pcm_syserr.SetTitle("inclusive photon v2 PCM, systematic uncertainties");
-  g_vn_inc_pcm_syserr.Write();
+  g_v2_inc_pcm_syserr.SetName("g_v2_inc_pcm_syserr");
+  g_v2_inc_pcm_syserr.SetTitle("inclusive photon v2 PCM, systematic uncertainties");
+  g_v2_inc_pcm_syserr.Write();
 
-  g_vn_inc_pcm_staterr.SetName("g_v2_inc_pcm_staterr");
-  g_vn_inc_pcm_staterr.SetTitle("inclusive photon v2 PCM, statistical uncertainties");
-  g_vn_inc_pcm_staterr.Write();
+  g_v2_inc_pcm_staterr.SetName("g_v2_inc_pcm_staterr");
+  g_v2_inc_pcm_staterr.SetTitle("inclusive photon v2 PCM, statistical uncertainties");
+  g_v2_inc_pcm_staterr.Write();
 
-  g_vn_inc_phos_toterr.SetName("g_v2_inc_phos_toterr");
-  g_vn_inc_phos_toterr.SetTitle("inclusive photon v2 PHOS, total uncertainties");
-  g_vn_inc_phos_toterr.Write();
+  g_v2_inc_phos_toterr.SetName("g_v2_inc_phos_toterr");
+  g_v2_inc_phos_toterr.SetTitle("inclusive photon v2 PHOS, total uncertainties");
+  g_v2_inc_phos_toterr.Write();
 
-  g_vn_inc_phos_syserr.SetName("g_v2_inc_phos_syserr");
-  g_vn_inc_phos_syserr.SetTitle("inclusive photon v2 PHOS, systematic uncertainties");
-  g_vn_inc_phos_syserr.Write();
+  g_v2_inc_phos_syserr.SetName("g_v2_inc_phos_syserr");
+  g_v2_inc_phos_syserr.SetTitle("inclusive photon v2 PHOS, systematic uncertainties");
+  g_v2_inc_phos_syserr.Write();
 
-  g_vn_inc_phos_staterr.SetName("g_v2_inc_phos_staterr");
-  g_vn_inc_phos_staterr.SetTitle("inclusive photon v2 PHOS, statistical uncertainties");
-  g_vn_inc_phos_staterr.Write();
+  g_v2_inc_phos_staterr.SetName("g_v2_inc_phos_staterr");
+  g_v2_inc_phos_staterr.SetTitle("inclusive photon v2 PHOS, statistical uncertainties");
+  g_v2_inc_phos_staterr.Write();
 
-  g_vn_inc_comb_toterr.SetName("g_v2_inc_comb_toterr");
-  g_vn_inc_comb_toterr.SetTitle("inclusive photon v2 PCM/PHOS combined, total uncertainties");
-  g_vn_inc_comb_toterr.Write();
+  g_v2_inc_comb_toterr.SetName("g_v2_inc_comb_toterr");
+  g_v2_inc_comb_toterr.SetTitle("inclusive photon v2 PCM/PHOS combined, total uncertainties");
+  g_v2_inc_comb_toterr.Write();
 
-  g_vn_inc_comb_syserr.SetName("g_v2_inc_comb_syserr");
-  g_vn_inc_comb_syserr.SetTitle("inclusive photon v2 PCM/PHOS combined, systematic uncertainties");
-  g_vn_inc_comb_syserr.Write();
+  g_v2_inc_comb_syserr.SetName("g_v2_inc_comb_syserr");
+  g_v2_inc_comb_syserr.SetTitle("inclusive photon v2 PCM/PHOS combined, systematic uncertainties");
+  g_v2_inc_comb_syserr.Write();
 
-  g_vn_inc_comb_staterr.SetName("g_v2_inc_comb_staterr");
-  g_vn_inc_comb_staterr.SetTitle("inclusive photon v2 PCM/PHOS combined, statistical uncertainties");
-  g_vn_inc_comb_staterr.Write();
+  g_v2_inc_comb_staterr.SetName("g_v2_inc_comb_staterr");
+  g_v2_inc_comb_staterr.SetTitle("inclusive photon v2 PCM/PHOS combined, statistical uncertainties");
+  g_v2_inc_comb_staterr.Write();
 
   // decay photon v2
-  g_vn_dec_comb.SetName("g_v2_dec_comb");
-  g_vn_dec_comb.SetTitle("decay photon v2");
-  g_vn_dec_comb.Write();
-
-  // covariance and correlation matrix of v2,dir(pT)
-  cov_vn_dir_comb_toterr.Write("cov_vn_dir_comb_toterr");
-  corr_vn_dir_comb_toterr.Write("corr_vn_dir_comb_toterr");
+  g_v2_dec_comb.SetName("g_v2_dec_comb");
+  g_v2_dec_comb.SetTitle("decay photon v2");
+  g_v2_dec_comb.Write();
 
   //
   // histogram with posteriori v2dir distributions (PCM, PHOS, combined)
   //
   for (Int_t i=0; i<nPtBins; i++) {
-    h_vn_dir_pcm_toterr[i]->Write();
-    h_vn_dir_phos_toterr[i]->Write();
-    h_vn_dir_pcm_Rpcm_toterr[i]->Write();
-    h_vn_dir_phos_Rphos_toterr[i]->Write();
-    h_vn_dir_comb_toterr[i]->Write();
+    h_v2_dir_pcm_toterr[i]->Write();
+    h_v2_dir_phos_toterr[i]->Write();
+    h_v2_dir_pcm_Rpcm_toterr[i]->Write();
+    h_v2_dir_phos_Rphos_toterr[i]->Write();
+    h_v2_dir_comb_toterr[i]->Write();
   }
 
   f_out.Close();
@@ -653,33 +669,33 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TLine ly0(0., 0., 6., 0.);
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetFillColorAlpha(kBlue-9, 0.2);
+  g_v2_dir_comb_toterr.SetFillColorAlpha(kBlue-9, 0.2);
 
-  g_vn_dir_pcm_Rpcm_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_phos_Rphos_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_pcm_Rpcm_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_phos_Rphos_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
 
-  g_vn_dir_pcm_Rpcm_toterr.SetLineColor(kRed);
-  g_vn_dir_phos_Rphos_toterr.SetLineColor(kBlue);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_pcm_Rpcm_toterr.SetLineColor(kRed);
+  g_v2_dir_phos_Rphos_toterr.SetLineColor(kBlue);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
 
-  g_vn_dir_pcm_Rpcm_toterr.SetMarkerColor(kRed);
-  g_vn_dir_phos_Rphos_toterr.SetMarkerColor(kBlue);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_pcm_Rpcm_toterr.SetMarkerColor(kRed);
+  g_v2_dir_phos_Rphos_toterr.SetMarkerColor(kBlue);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
 
-  g_vn_dir_pcm_Rpcm_toterr.DrawClone("p");
-  g_vn_dir_phos_Rphos_toterr.DrawClone("p");
-  g_vn_dir_comb_toterr.DrawClone("pE5");
+  g_v2_dir_pcm_Rpcm_toterr.DrawClone("p");
+  g_v2_dir_phos_Rphos_toterr.DrawClone("p");
+  g_v2_dir_comb_toterr.DrawClone("pE5");
 
   TLatex l2;
   l2.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
 
   TLegend leg2(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
-  leg2.AddEntry(&g_vn_dir_pcm_Rpcm_toterr,
+  leg2.AddEntry(&g_v2_dir_pcm_Rpcm_toterr,
     "#it{v}_{2,dir}^{PCM}(#it{v}_{2,inc}^{PCM},#it{v}_{2,dec},#it{R}_{#gamma}^{PCM})", "p");
-  leg2.AddEntry(&g_vn_dir_phos_Rphos_toterr,
+  leg2.AddEntry(&g_v2_dir_phos_Rphos_toterr,
     "#it{v}_{2,dir}^{PHOS}(#it{v}_{2,inc}^{PHOS},#it{v}_{2,dec},#it{R}_{#gamma}^{PHOS})", "p");
-  leg2.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
+  leg2.AddEntry(&g_v2_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
   leg2.SetBorderSize(1);
   leg2.SetTextSize(0.032);
   leg2.DrawClone();
@@ -695,33 +711,33 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetFillColorAlpha(kBlue-9, 0.2);
+  g_v2_dir_comb_toterr.SetFillColorAlpha(kBlue-9, 0.2);
 
-  g_vn_dir_pcm_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_phos_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_pcm_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_phos_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
 
-  g_vn_dir_pcm_toterr.SetLineColor(kRed);
-  g_vn_dir_phos_toterr.SetLineColor(kBlue);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_pcm_toterr.SetLineColor(kRed);
+  g_v2_dir_phos_toterr.SetLineColor(kBlue);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
 
-  g_vn_dir_pcm_toterr.SetMarkerColor(kRed);
-  g_vn_dir_phos_toterr.SetMarkerColor(kBlue);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_pcm_toterr.SetMarkerColor(kRed);
+  g_v2_dir_phos_toterr.SetMarkerColor(kBlue);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
 
-  g_vn_dir_pcm_toterr.DrawClone("p");
-  g_vn_dir_phos_toterr.DrawClone("p");
-  g_vn_dir_comb_toterr.DrawClone("pE5");
+  g_v2_dir_pcm_toterr.DrawClone("p");
+  g_v2_dir_phos_toterr.DrawClone("p");
+  g_v2_dir_comb_toterr.DrawClone("pE5");
 
   TLatex l2b;
   l2b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
 
   TLegend leg2b(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
-  leg2b.AddEntry(&g_vn_dir_pcm_toterr,
+  leg2b.AddEntry(&g_v2_dir_pcm_toterr,
     "#it{v}_{2,dir}^{PCM}(#it{v}_{2,inc}^{PCM},#it{v}_{2,dec},#it{R}_{#gamma}^{comb})", "p");
-  leg2b.AddEntry(&g_vn_dir_phos_toterr,
+  leg2b.AddEntry(&g_v2_dir_phos_toterr,
     "#it{v}_{2,dir}^{PHOS}(#it{v}_{2,inc}^{PHOS},#it{v}_{2,dec},#it{R}_{#gamma}^{comb})", "p");
-  leg2b.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
+  leg2b.AddEntry(&g_v2_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
   leg2b.SetBorderSize(1);
   leg2b.SetTextSize(0.032);
   leg2b.DrawClone();
@@ -737,15 +753,15 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr.DrawClone("pE5");
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr.DrawClone("pE5");
 
-  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr.DrawClone("p");
+  g_v2_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_staterr.SetLineColor(kBlack);
+  g_v2_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_staterr.DrawClone("p");
 
   TLatex l3;
   l3.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
@@ -761,15 +777,15 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr.DrawClone("pE5");
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr.DrawClone("pE5");
 
-  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr.DrawClone("p");
+  g_v2_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_staterr.SetLineColor(kBlack);
+  g_v2_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_staterr.DrawClone("p");
 
   TFile f_pcm_daniel("results_daniel/PCMPi0v2.root");
 
@@ -801,7 +817,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   l3b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
 
   TLegend leg3b(0.55, 0.72, 0.87, 0.88, NULL, "brNDC");
-  leg3b.AddEntry(&g_vn_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
+  leg3b.AddEntry(&g_v2_dir_comb_toterr, "#it{v}_{2,dir}^{comb}", "p");
   leg3b.AddEntry(v2dir_daniel_staterr,
     "#it{v}_{2,dir}^{Daniel}", "p");
   leg3b.SetBorderSize(1);
@@ -819,17 +835,17 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr_uncorr.SetFillColor(kOrange-3);
+  g_v2_dir_comb_toterr_uncorr.SetFillColor(kOrange-3);
 
-  g_vn_dir_comb_toterr_uncorr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr_uncorr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr_uncorr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr_uncorr.DrawClone("pE5");
+  g_v2_dir_comb_toterr_uncorr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr_uncorr.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr_uncorr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr_uncorr.DrawClone("pE5");
 
-  g_vn_dir_comb_staterr_uncorr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr_uncorr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr_uncorr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr_uncorr.DrawClone("p");
+  g_v2_dir_comb_staterr_uncorr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_staterr_uncorr.SetLineColor(kBlack);
+  g_v2_dir_comb_staterr_uncorr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_staterr_uncorr.DrawClone("p");
 
   TLatex l3c;
   l3c.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
@@ -846,22 +862,22 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr.DrawClone("pE5");
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr.DrawClone("pE5");
 
-  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr.DrawClone("p");
+  g_v2_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_staterr.SetLineColor(kBlack);
+  g_v2_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_staterr.DrawClone("p");
 
-  g_vn_dir_comb_toterr_xcheck1.SetFillColorAlpha(kOrange-3, 0.2);
+  g_v2_dir_comb_toterr_xcheck1.SetFillColorAlpha(kOrange-3, 0.2);
 
-  g_vn_dir_comb_toterr_xcheck1.SetMarkerStyle(kOpenCircle);
-  g_vn_dir_comb_toterr_xcheck1.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr_xcheck1.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr_xcheck1.DrawClone("pE5");
+  g_v2_dir_comb_toterr_xcheck1.SetMarkerStyle(kOpenCircle);
+  g_v2_dir_comb_toterr_xcheck1.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr_xcheck1.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr_xcheck1.DrawClone("pE5");
 
   TLatex l3d;
   l3d.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
@@ -878,22 +894,22 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   ly0.DrawClone();
 
-  g_vn_dir_comb_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_toterr.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr.DrawClone("pE5");
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr.DrawClone("pE5");
 
-  g_vn_dir_comb_staterr.SetMarkerStyle(kFullCircle);
-  g_vn_dir_comb_staterr.SetLineColor(kBlack);
-  g_vn_dir_comb_staterr.SetMarkerColor(kBlack);
-  g_vn_dir_comb_staterr.DrawClone("p");
+  g_v2_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_staterr.SetLineColor(kBlack);
+  g_v2_dir_comb_staterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_staterr.DrawClone("p");
 
-  g_vn_dir_comb_toterr_xcheck2.SetFillColorAlpha(kOrange-3, 0.2);
+  g_v2_dir_comb_toterr_xcheck2.SetFillColorAlpha(kOrange-3, 0.2);
 
-  g_vn_dir_comb_toterr_xcheck2.SetMarkerStyle(kOpenCircle);
-  g_vn_dir_comb_toterr_xcheck2.SetLineColor(kBlack);
-  g_vn_dir_comb_toterr_xcheck2.SetMarkerColor(kBlack);
-  g_vn_dir_comb_toterr_xcheck2.DrawClone("pE5");
+  g_v2_dir_comb_toterr_xcheck2.SetMarkerStyle(kOpenCircle);
+  g_v2_dir_comb_toterr_xcheck2.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr_xcheck2.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr_xcheck2.DrawClone("pE5");
 
   TLatex l3e;
   l3e.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
@@ -912,38 +928,38 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   frame.DrawCopy();
 
-  g_vn_dec_comb.SetMarkerStyle(kOpenCircle);
-  g_vn_dec_comb.SetLineColor(kGray);
-  g_vn_dec_comb.SetMarkerColor(kGray);
-  g_vn_dec_comb.SetFillColor(kGray);
-  g_vn_dec_comb.DrawClone("3l");
+  g_v2_dec_comb.SetMarkerStyle(kOpenCircle);
+  g_v2_dec_comb.SetLineColor(kGray);
+  g_v2_dec_comb.SetMarkerColor(kGray);
+  g_v2_dec_comb.SetFillColor(kGray);
+  g_v2_dec_comb.DrawClone("3l");
 
-  g_vn_inc_pcm_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_inc_phos_toterr.SetMarkerStyle(kFullCircle);
-  g_vn_inc_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_inc_pcm_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_inc_phos_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_inc_comb_toterr.SetMarkerStyle(kFullCircle);
 
-  g_vn_inc_pcm_toterr.SetLineColor(kRed);
-  g_vn_inc_phos_toterr.SetLineColor(kBlue);
-  g_vn_inc_comb_toterr.SetLineColor(kBlack);
+  g_v2_inc_pcm_toterr.SetLineColor(kRed);
+  g_v2_inc_phos_toterr.SetLineColor(kBlue);
+  g_v2_inc_comb_toterr.SetLineColor(kBlack);
 
-  g_vn_inc_pcm_toterr.SetMarkerColor(kRed);
-  g_vn_inc_phos_toterr.SetMarkerColor(kBlue);
-  g_vn_inc_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_inc_pcm_toterr.SetMarkerColor(kRed);
+  g_v2_inc_phos_toterr.SetMarkerColor(kBlue);
+  g_v2_inc_comb_toterr.SetMarkerColor(kBlack);
 
-  g_vn_inc_pcm_toterr.DrawClone("p");
-  g_vn_inc_phos_toterr.DrawClone("p");
-  g_vn_inc_comb_toterr.DrawClone("p");
+  g_v2_inc_pcm_toterr.DrawClone("p");
+  g_v2_inc_phos_toterr.DrawClone("p");
+  g_v2_inc_comb_toterr.DrawClone("p");
 
-  g_vn_dec_comb.DrawClone("p");
+  g_v2_dec_comb.DrawClone("p");
 
   TLatex l4;
   l4.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
 
   TLegend leg4(0.65, 0.68, 0.87, 0.88, NULL, "brNDC");
-  leg4.AddEntry(&g_vn_inc_pcm_toterr, "#it{v}_{2,inc}^{PCM}", "p");
-  leg4.AddEntry(&g_vn_inc_phos_toterr, "#it{v}_{2,inc}^{PHOS}", "p");
-  leg4.AddEntry(&g_vn_inc_comb_toterr, "#it{v}_{2,inc}^{combined}", "p");
-  leg4.AddEntry(&g_vn_dec_comb, "#it{v}_{2,dec}", "l");
+  leg4.AddEntry(&g_v2_inc_pcm_toterr, "#it{v}_{2,inc}^{PCM}", "p");
+  leg4.AddEntry(&g_v2_inc_phos_toterr, "#it{v}_{2,inc}^{PHOS}", "p");
+  leg4.AddEntry(&g_v2_inc_comb_toterr, "#it{v}_{2,inc}^{combined}", "p");
+  leg4.AddEntry(&g_v2_dec_comb, "#it{v}_{2,dec}", "l");
 
   leg4.SetBorderSize(1);
   leg4.SetTextSize(0.032);
@@ -953,24 +969,48 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   c4->SaveAs(output_dir + filename_c4);
 
   //
-  // finally calculate likelihoods for certain v2dir hypothesis
+  // Finally calculate likelihoods for certain v2dir hypothesis:
   //
   // hypothesis for vndir,true (all values zero in this case)
+  //
+  // CAUTION: this part is still under development
+  //
   TVectorD vnDirTrueHyp(nPtBins);
   for (Int_t i=0; i < nPtBins; i++) vnDirTrueHyp(i) = 0.18;
 
   // likelihood 1
-  Double_t L1 = 0;
+  // Double_t L1 = 0;
   // Double_t nlh = 1000000;
-  Double_t nlh = 10000;
+  // Double_t nlh = 10000;
 
-  likelihood(nPtBins, nlh, v2_inc_meas_values_comb, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-	     v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
+  // likelihood(nPtBins, nlh, v2_inc_meas_values_comb, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+  //	     v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
 
   // likelihood 2
-  Double_t L2 = 0;
-  likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
-	     v2_dec_meas_values, cov_v2_dec_toterr, L2);
+  // Double_t L2 = 0;
+  // likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
+  //	     v2_dec_meas_values, cov_v2_dec_toterr, L2);
+
+  //
+  // Question: How consistent is v2,dir from PCM with the hypothesis that v2,dir,true = v2,cocktail
+  //
+  TVectorD vnDirTrueHypPCM(nPtBins);
+  for (Int_t i=0; i < nPtBins; i++) vnDirTrueHypPCM(i) = g_v2_dir_pcm_Rpcm_toterr.GetY()[i];
+
+  Double_t nlh_PCM = 10000;
+
+  Double_t L_PCM_1 = 0;
+  likelihood(nPtBins, nlh_PCM, vnDirTrueHypPCM, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
+	     v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_1);
+
+  // likelihood 2
+  Double_t L_PCM_2 = 0;
+  likelihood(nPtBins, nlh_PCM, v2_dec_meas_values, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
+	     v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_2);
+
+  cout << "L_PCM_1 = " << L_PCM_1 << endl;
+  cout << "L_PCM_2 = " << L_PCM_2 << endl;
+  cout << "Bayes factor L_PCM_1 / L_PCM_2 = " << L_PCM_1 / L_PCM_2 << endl;
 
 }
 
@@ -1002,7 +1042,7 @@ void fill_v2dir_graph(TH1** hp, const TVectorD& pt,
     Double_t err_low = 0;
     v2_dir_central_value_and_error_from_v2dir_distribution(hp[i], central_value, err_high, err_low);
 
-    g.SetPoint(i, pt(i)+pt_offset , central_value);  // central value same as for g_vn_dir_comb_toterr
+    g.SetPoint(i, pt(i)+pt_offset , central_value);  // central value same as for g_v2_dir_comb_toterr
     g.SetPointEYhigh(i, err_high);
     g.SetPointEYlow(i, err_low);
 

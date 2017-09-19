@@ -5,7 +5,7 @@
 
 void read_pcm() {
 
-  // read PCM inclusive photon v2, decay photon v2, and Rgamm
+  // read PCM inclusive photon v2 and Rgamma
   // and prepare input for merging macro
 
   const Int_t n_pt_bins = 16;
@@ -20,10 +20,6 @@ void read_pcm() {
   // open Rgamma file
   TString filename_Rgamma = "data_pcm/Gamma_CombResults_PbPb_2.76TeV.root";
   TFile file_Rgamma(filename_Rgamma);
-
-  // open cocktail file
-  TString filename_v2dec = "data_pcm/CocktailV2.root";
-  TFile file_v2dec(filename_v2dec);
 
   // loop over centralities
   // centrality, 0-20% = cen6, 20-40% = cen3, 40-80% = cen8
@@ -42,7 +38,6 @@ void read_pcm() {
     // get graphs / histograms
     TString name_graph_v2inc_syserr = "graphTotalSystErrors_" + centr[i_centr];
     TString name_graph_v2inc_toterr = "graphTotalErrors_" + centr[i_centr];
-    TString name_histo_v2dec = "v2gammaCocktail_" + centr_cocktail[i_centr];
     TString name_graph_Rgamma_comb_toterr = "Gamma_PbPb_2.76TeV_" + centr_Rgamma[i_centr] + "/DR_comb_totErr";
     TString name_graph_Rgamma_comb_staterr = "Gamma_PbPb_2.76TeV_" + centr_Rgamma[i_centr] + "/DR_comb_StatErr";
     TString name_histo_Rgamma_staterr = "Gamma_PbPb_2.76TeV_" + centr_Rgamma[i_centr] + "/hDR_PCM_StatErr";
@@ -52,16 +47,6 @@ void read_pcm() {
 
     TGraphAsymmErrors* g_v2inc_syserr = (TGraphAsymmErrors*) file_v2inc.Get(name_graph_v2inc_syserr);
     TGraphAsymmErrors* g_v2inc_toterr = (TGraphAsymmErrors*) file_v2inc.Get(name_graph_v2inc_toterr);
-    TH1D* h_v2dec = (TH1D*) file_v2dec.Get(name_histo_v2dec);
-    h_v2dec->DrawCopy();
-    g_v2inc_toterr->DrawClone("p");
-
-    // find first bin in dec photon v2 histogram
-    Double_t pt_first_bin = g_v2inc_toterr->GetX()[i_bin_offset];
-    Int_t first_bin_h_v2dec = h_v2dec->GetXaxis()->FindBin(pt_first_bin);
-    if (h_v2dec->GetBinCenter(first_bin_h_v2dec) != pt_first_bin) {
-      cout << "ERROR: pt bin mismatch" << endl;
-    }
 
     TGraphAsymmErrors* g_Rgamma_comb_toterr = (TGraphAsymmErrors*) file_Rgamma.Get(name_graph_Rgamma_comb_toterr);
     TGraphAsymmErrors* g_Rgamma_comb_staterr = (TGraphAsymmErrors*) file_Rgamma.Get(name_graph_Rgamma_comb_staterr);
@@ -78,10 +63,6 @@ void read_pcm() {
     TMatrixDSym cov_v2_inc_syserr(n_pt_bins); // covariance matrix
     TMatrixDSym cov_v2_inc_toterr(n_pt_bins); // covariance matrix
     TMatrixDSym cov_v2_inc_staterr(n_pt_bins); // covariance matrix
-
-    // decay photon vn
-    TVectorD v2_dec_meas_values(n_pt_bins); // data
-    TMatrixDSym cov_v2_dec(n_pt_bins); // covariance matrix
 
     // Rgamma
     TVectorD Rgamma_meas_vec_comb(n_pt_bins); // PCM+PHOS combined
@@ -137,13 +118,6 @@ void read_pcm() {
       cov_v2_inc_toterr(i_pt_bin, i_pt_bin) = sigma_v2inc_tot * sigma_v2inc_tot;
       cov_v2_inc_staterr(i_pt_bin, i_pt_bin) = sigma_v2inc_stat * sigma_v2inc_stat;
 
-      // v2dec
-      v2_dec_meas_values(i_pt_bin) = h_v2dec->GetBinContent(first_bin_h_v2dec + i_pt_bin);
-
-      // v2dec uncertainty
-      Double_t sigma_v2dec = h_v2dec->GetBinError(first_bin_h_v2dec + i_pt_bin);
-      cov_v2_dec(i_pt_bin, i_pt_bin) = sigma_v2dec * sigma_v2dec;
-
       // pt
       pt(i_pt_bin) = g_v2inc_toterr->GetX()[i_bin_offset + i_pt_bin];
 
@@ -173,11 +147,6 @@ void read_pcm() {
             Double_t sig_j_v2inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(j_pt_bin, j_pt_bin));
             cov_v2_inc_toterr(i_pt_bin, j_pt_bin) = sig_i_v2inc_syserr * sig_j_v2inc_syserr;
 
-            // v2dec
-            Double_t sig_i_v2dec_syserr = TMath::Sqrt(cov_v2_dec(i_pt_bin, i_pt_bin));
-            Double_t sig_j_v2dec_syserr = TMath::Sqrt(cov_v2_dec(j_pt_bin, j_pt_bin));
-            cov_v2_dec(i_pt_bin, j_pt_bin) = sig_i_v2dec_syserr * sig_j_v2dec_syserr;
-
           }
         }
       }
@@ -200,9 +169,6 @@ void read_pcm() {
     cov_v2_inc_syserr.Write("cov_v2_inc_syserr");
     cov_v2_inc_toterr.Write("cov_v2_inc_toterr");
     cov_v2_inc_staterr.Write("cov_v2_inc_staterr");
-
-    v2_dec_meas_values.Write("v2_dec_meas_values");
-    cov_v2_dec.Write("cov_v2_dec");
 
     pt.Write("pt");
 
