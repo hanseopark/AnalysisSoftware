@@ -127,8 +127,11 @@ TGraphAsymmErrors* ApplyTpPbSysError(TGraphAsymmErrors* graphMesonSystErr, Doubl
       
   return graphMesonSystErrClone1;
 }
-const Int_t  Ntotal = 26;//31
+const Int_t  Ntotal = 31;//31
 const Int_t  nPtLimits = Ntotal+1;
+
+const Int_t  NtotalEta = 16;
+const Int_t  nPtLimitsEta = NtotalEta+1;
 
 void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){    
 
@@ -158,19 +161,26 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 
     
  
-  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_08_25.root";
+  TString fileNameRpPb                        = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_09_21.root";
   TString fileNameRpPbCombined                = "ExternalInputpPb/InputRpPb/Pi0RpPb_Comb_2017_08_25.root";
-  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_08_25.root";
-  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2017_08_25.root";
-  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2017_08_25.root";
-  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2017_08_25.root";
-  TString fileNameRpPbPCMEMCal                = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM-EMCal_2017_08_25.root";
-  //File to load the correlation factors
-  //TString corrFactorsFileName 		      = "ExternalInputpPb/InputRpPb/CorrelationFactors/RpPb_5.023TeV_2016_09_27.root";
-  //TString corrFactorsFileName                 = "eps/2017_02_14/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
-  //TString corrFactorsFileName                 = "eps/2017_04_05/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
   
-   TString corrFactorsFileName                 = "eps/2017_06_07/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+  
+  /////////////////////////////////////////////////Pi0///////////////////////////////////////////
+  TString fileNameRpPbPCM                     = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM_2017_09_21.root";
+  TString fileNameRpPbDalitz                  = "ExternalInputpPb/InputRpPb/Pi0RpPb_Dalitz_2017_09_21.root";
+  TString fileNameRpPbPHOS                    = "ExternalInputpPb/InputRpPb/Pi0RpPb_PHOS_2017_09_21.root";
+  TString fileNameRpPbEMCal                   = "ExternalInputpPb/InputRpPb/Pi0RpPb_EMCal_2017_09_21.root";
+  TString fileNameRpPbPCMEMCal                = "ExternalInputpPb/InputRpPb/Pi0RpPb_PCM-EMCal_2017_09_21.root";
+  ///////////////////////////////////////////////Eta/////////////////////////////////////////////
+  
+  TString fileNameRpPbPCMEta                  = "ExternalInputpPb/InputRpPb/EtaRpPb_PCM_2017_09_21.root";
+  TString fileNameRpPbEMCalEta                = "ExternalInputpPb/InputRpPb/EtaRpPb_EMCal_2017_09_21.root";
+  TString fileNameRpPbPCMEMCalEta             = "ExternalInputpPb/InputRpPb/EtaRpPb_PCM-EMCal_2017_09_21.root";
+  
+  
+  
+  //TString corrFactorsFileName                 = "eps/2017_06_07/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
+   TString corrFactorsFileName                 = "/opt/AnalysisSoftware/pPb5TeV.root";
   
   
   TFile* fileNeutralPionRpPb                           	= new TFile(fileNameRpPb.Data());
@@ -213,35 +223,80 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TString nameHistoCombAlpha                         = "Pi0_RpPb_Comb_Alpha";
   
  
+  
+  
+  TFile* fileEtaRpPbPCM                         = new TFile(fileNameRpPbPCMEta.Data());
+  TFile* fileEtaRpPbEMCal                       = new TFile(fileNameRpPbEMCalEta.Data());
+  TFile* fileEtaRpPbPCMEMCal		        = new TFile(fileNameRpPbPCMEMCalEta.Data());
    
+  TString nameHistoPCMEtaRpPbStat                    = "Eta_RpPb_PCM_StatErr";
+  TString nameHistoPCMEtaRpPbSyst                    = "Eta_RpPb_PCM_SystErr";
+  TString nameHistoEMCalEtaRpPbStat                  = "Eta_RpPb_EMCal_StatErr";
+  TString nameHistoEMCalEtaRpPbSyst                  = "Eta_RpPb_EMCal_SystErr";
+  TString nameHistoPCMEMCalEtaRpPbStat		     = "Eta_RpPb_PCM-EMCal_StatErr";
+  TString nameHistoPCMEMCalEtaRpPbSyst		     = "Eta_RpPb_PCM-EMCal_SystErr";
+  TString nameHistoPCMEtappReferenceStat             = "Eta_pp_reference_PCMBinning_StatErr";
+  TString nameHistoPCMEtappReferenceSyst             = "Eta_pp_reference_PCMBinning_SystErr";
+  TString nameHistoEMCalEtappReferenceStat           = "Eta_pp_reference_EMCalBinning_StatErr";
+  TString nameHistoEMCalEtappReferenceSyst           = "Eta_pp_reference_EMCalBinning_SystErr";
+  TString nameHistoPCMEMCalEtappReferenceStat        = "Eta_pp_reference_PCM-EMCalBinning_StatErr";
+  TString nameHistoPCMEMCalEtappReferenceSyst	     = "Eta_pp_reference_PCM-EMCalBinning_SystErr";
+  
+  
+  
+  
+  
+  
+  
+  
     
   TString collisionSystempPb                          = "p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV"; 
-    
-    
-  // Double_t pTLimits[nPtLimits]                        = { 0.3, 0.4, 0.5, 0.6, 0.7, 
-  //                                                         0.8, 1.0, 1.2, 1.4, 1.6, 
-  Double_t pTLimits[nPtLimits]                        = { 1.0, 1.2, 1.4, 1.6, 
+  
+                                                          
+  Double_t pTLimits[nPtLimits]                        = { 0.3, 0.4, 0.5, 0.6, 0.7,
+                                                          0.8, 1.0, 1.2, 1.4, 1.6, 
 							  1.8, 2.0, 2.2, 2.4, 2.6,
 							  2.8, 3.0, 3.2, 3.4, 3.6,
 							  3.8, 4.0, 4.5, 5.0, 5.5,
 							  6.0, 7.0, 8.0, 10.0,12.0,
 							  16.0, 20.0};
+                                                          
+ 
+   
+  Double_t pTLimitsEta[nPtLimitsEta]                        = { 0.7,0.9,1.1,1.4,1.8,
+							     2.2,2.6,3.0,3.5,4.0,
+							     5.0,6.0,8.0,10.0,12.0,
+							     16.0,20.0};
+                                                          
+                                                          
+                                                        
                                 
     
-  //    Int_t offSets[11]                             =  { 0, 6, 8, 0, 0,  3, 0, 0, 0,  0, 0};
-  // Int_t offSetsSys[11]                             =  {  0, 6,  8, 0, 0, 3, 0, 0, 0, 0, 0};
-  Int_t offSets[11]                                   =  { -6, 0, 2, 0, -1,  -3, 0, 0, 0,  0, 0};
-  Int_t offSetsSys[11]                                =  { -6, 0, 2, 0, -1, -3, 0, 0, 0, 0, 0};
+  Int_t offSets[11]                                   =  { 0, 6,  8, 0,  5, 3, 0, 0, 0,  0, 0};
+  Int_t offSetsSys[11]                                =  { 0, 6,  8, 0,  5, 3, 0, 0, 0, 0, 0};
+  
+  Int_t offSetsEta[11]                                =  { 0, 0, 4, 0,  2, 0, 0, 0, 0,  0, 0};
+  Int_t offSetsSysEta[11]                             =  { 0, 0, 4, 0,  2, 0, 0, 0, 0, 0, 0};
+  
+  
+  
+    
+    
     
     
   TH1D* statErrorCollection[11];
+  TH1D* statErrorCollectionEtaRpPb[11];
   for (Int_t i = 0; i< 11; i++){
     statErrorCollection[i]                          = NULL;
+    statErrorCollectionEtaRpPb[i]                   = NULL;
   }    
     
   TGraphAsymmErrors* sysErrorCollection[11];
+  TGraphAsymmErrors* sysErrorCollectionEtaRpPb[11];
+  
   for (Int_t i = 0; i< 11; i++){
     sysErrorCollection[i]                           = NULL;
+    sysErrorCollectionEtaRpPb[i]                    = NULL;
   }    
   
   
@@ -249,6 +304,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   
     for (Int_t i = 0; i< 11; i++){
       sysErrorPPReference[i]                           = NULL;
+      
     }    
      
  
@@ -267,11 +323,26 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   // ****************************** Reading PCM *******************************************
   // **************************************************************************************    
   TGraphAsymmErrors* graphPCMYieldPi0pPb           = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCM.Data());
-  TH1D* histoPCMYieldPi0pPb           = (TH1D*)GraphAsymErrorsToHist_withErrors(graphPCMYieldPi0pPb,nameHistoPCM.Data());
+  TH1D* histoPCMYieldPi0pPb                        = (TH1D*)GraphAsymErrorsToHist_withErrors(graphPCMYieldPi0pPb,nameHistoPCM.Data());
   TGraphAsymmErrors* graphPCMYieldPi0pPbSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMSysErrors.Data());
   TGraphAsymmErrors* graphPCMppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMppReferenceStat.Data());
   TGraphAsymmErrors* graphPCMppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get(nameHistoPCMppReferenceSyst.Data());
-  TGraphAsymmErrors* graphPCMAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get( nameHistoPCMAlpha.Data());    
+  TGraphAsymmErrors* graphPCMAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbPCM->Get( nameHistoPCMAlpha.Data());   
+  
+  
+  
+  
+  TGraphAsymmErrors* graphPCMEtaRpPbStat           = (TGraphAsymmErrors*)fileEtaRpPbPCM->Get(nameHistoPCMEtaRpPbStat.Data());
+  TH1D* histoPCMEtaRpPbStat                        = (TH1D*)GraphAsymErrorsToHist_withErrors(graphPCMEtaRpPbStat,nameHistoPCMEtaRpPbStat.Data());
+  TGraphAsymmErrors* graphPCMEtaRpPbSyst    = (TGraphAsymmErrors*)fileEtaRpPbPCM->Get(nameHistoPCMEtaRpPbSyst.Data());
+  
+  TGraphAsymmErrors* graphPCMEtappreferenceStatErr    = (TGraphAsymmErrors*)fileEtaRpPbPCM->Get(nameHistoPCMEtappReferenceStat.Data());
+  TGraphAsymmErrors* graphPCMEtappreferenceSystErr    = (TGraphAsymmErrors*)fileEtaRpPbPCM->Get(nameHistoPCMEtappReferenceSyst.Data());
+  
+
+  
+  
+
   // **************************************************************************************
   // ******************************* Reading PHOS *****************************************
   // **************************************************************************************    
@@ -292,10 +363,33 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TGraphAsymmErrors* graphEMCalppreferenceStatErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceStat.Data());
   TGraphAsymmErrors* graphEMCalppreferenceSystErr    = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceSyst.Data()); 
   TGraphAsymmErrors* graphEMCalAlpha                 = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get( nameHistoEMCalAlpha.Data());
-  cout <<"stat"<< endl;
-  graphEMCalYieldPi0pPb->Print();
-  cout <<"sys"<< endl;
-  graphEMCalYieldPi0pPbSystErr->Print();
+  
+  //cout <<"stat"<< endl;
+  //graphEMCalYieldPi0pPb->Print();
+  //cout <<"sys"<< endl;
+  //graphEMCalYieldPi0pPbSystErr->Print();
+  
+  
+  TGraphAsymmErrors* graphEMCalEtaRpPbStat                 = (TGraphAsymmErrors*)fileEtaRpPbEMCal->Get(nameHistoEMCalEtaRpPbStat.Data());
+  TH1D* histoEMCalEtaRpPbStat                              = GraphAsymErrorsToHist_withErrors(graphEMCalEtaRpPbStat,nameHistoEMCalEtaRpPbStat.Data());
+  TGraphAsymmErrors* graphEMCalEtaRpPbSyst                 = (TGraphAsymmErrors*)fileEtaRpPbEMCal->Get(nameHistoEMCalEtaRpPbSyst.Data());
+  
+  
+  TGraphAsymmErrors* graphEMCalEtappreferenceStatErr          = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalEtappReferenceStat);
+  TGraphAsymmErrors* graphEMCalEtappreferenceSystErr          = (TGraphAsymmErrors*)fileNeutralPionRpPbEMCal->Get(nameHistoEMCalppReferenceSyst.Data());
+  
+  
+ /// graphEMCalEtaRpPbStat->Print();
+  //cout<<"////////////////////////////////////"<<endl;
+  //graphEMCalEtaRpPbSyst->Print();
+  
+  //return;
+  
+  
+  
+  
+  
+  
   // ******************************** Reading PCM-EMCal ***************************************
   // **************************************************************************************
   TGraphAsymmErrors* graphPCMEMCalYieldPi0pPb       	= (TGraphAsymmErrors*)fileNeutralPionRpPbPCMEMCal->Get(nameHistoPCMEMCal.Data());
@@ -308,6 +402,25 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   graphPCMEMCalYieldPi0pPb->Print();
   cout <<"sys"<< endl;
   graphPCMEMCalYieldPi0pPbSystErr->Print();
+  
+  
+  
+  TGraphAsymmErrors* graphPCMEMCalEtaRpPbStat       	= (TGraphAsymmErrors*)fileEtaRpPbPCMEMCal->Get(nameHistoPCMEMCalEtaRpPbStat.Data());
+  TH1D* histoPCMEMCalEtaRpPbStat          		= GraphAsymErrorsToHist_withErrors(graphPCMEMCalEtaRpPbStat,nameHistoPCMEMCalEtaRpPbStat.Data());
+  
+  
+  TGraphAsymmErrors* graphPCMEMCalEtaRpPbSyst    = (TGraphAsymmErrors*)fileEtaRpPbPCMEMCal->Get(nameHistoPCMEMCalEtaRpPbSyst.Data());  
+  
+ //histoPCMEMCalEtaRpPbStat
+  
+  TGraphAsymmErrors* graphPCMEMCalEtappreferenceStatErr    = (TGraphAsymmErrors*)fileEtaRpPbPCMEMCal->Get(nameHistoPCMEMCalEtappReferenceStat.Data());
+  TGraphAsymmErrors* graphPCMEMCalEtappreferenceSystErr    = (TGraphAsymmErrors*)fileEtaRpPbPCMEMCal->Get(nameHistoPCMEMCalEtappReferenceSyst.Data()); 
+  
+  cout<<"//////////////////////////////////////"<<endl;
+  graphPCMEMCalEtappreferenceStatErr->Print();
+  cout<<"//////////////////////////////////////"<<endl;
+  graphPCMEMCalEtappreferenceSystErr->Print();
+  
   
   // **************************************************************************************
   // ******************************** Reading RpPb from Combined pPb spectrum *************
@@ -384,7 +497,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
 												      pTLimits, Ntotal,
 												      offSets, offSetsSys,
 												      graphCombPi0InvCrossSectionStatpPb5023GeV, graphCombPi0InvCrossSectionSyspPb5023GeV,
-												      fileNameOutputWeightingOld,"pPb_5.023GeV_RpPb","Pi0",kFALSE,sysErrorPPReference,corrFactorsFileName.Data()
+												      fileNameOutputWeightingOld,"pPb_5.023TeV","Pi0RpPb",kTRUE,sysErrorPPReference,corrFactorsFileName.Data()
 												      ); 
   cout<<"\n\n */////////////////Combination of Pi0 RpPb  ends here**//////////////"<<endl;
  
@@ -407,6 +520,66 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVStaClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionStatpPb5023GeV->Clone();
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVSysClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionSyspPb5023GeV->Clone();
   TGraphAsymmErrors* graphInvYieldPi0CombpPb5023GeVTotClone   = (TGraphAsymmErrors*) graphCombPi0InvCrossSectionTotpPb5023GeV->Clone();
+  
+  
+  
+   cout<<"\n\n */////////////////Combination of Eta RpPb  begins here**//////////////"<<endl;
+ 
+  
+  
+  TString fileNameOutputWeightingEtaRpPb                = Form("%s/Eta_WeightingRpPb.dat",outputDir.Data());
+  
+  
+
+  statErrorCollectionEtaRpPb[0]          = (TH1D*)histoPCMEtaRpPbStat->Clone("statErrPCMEta");
+  statErrorCollectionEtaRpPb[2]          = (TH1D*)histoEMCalEtaRpPbStat->Clone("statErrEMCalPi0");
+  statErrorCollectionEtaRpPb[4]	         = (TH1D*)histoPCMEMCalEtaRpPbStat->Clone("statErrPCM-EMCalPi0");
+    
+  sysErrorCollectionEtaRpPb[0]           = (TGraphAsymmErrors*)graphPCMEtaRpPbSyst->Clone("sysErrPCMEta");
+  sysErrorCollectionEtaRpPb[2]           = (TGraphAsymmErrors*)graphEMCalEtaRpPbSyst->Clone("sysErrEMCalEta");
+  sysErrorCollectionEtaRpPb[4]		 = (TGraphAsymmErrors*)graphPCMEMCalEtaRpPbSyst->Clone("sysErrPCM-EMCalEta");
+  
+  TGraphAsymmErrors* graphCombEtaRpPb5023GeVStat = NULL;
+  TGraphAsymmErrors* graphCombEtaRpPb5023GeVSyst = NULL;
+  
+  cout<<"\n\n */////////////////Combination of Eta RpPb  begins here**//////////////"<<endl;
+ 
+    
+  TGraphAsymmErrors* graphCombEtaRpPb5023GeVTot = CombinePtPointsSpectraFullCorrMat(   statErrorCollectionEtaRpPb,    sysErrorCollectionEtaRpPb,     
+												      pTLimitsEta, NtotalEta,
+												      offSetsEta, offSetsSysEta,
+												      graphCombEtaRpPb5023GeVStat, graphCombEtaRpPb5023GeVSyst,
+                                                                                                      fileNameOutputWeightingEtaRpPb,"pPb_5.023TeV","EtaRpPb",kTRUE,NULL,corrFactorsFileName.Data()
+												      ); 
+  cout<<"\n\n */////////////////Combination of Pi0 RpPb  ends here**//////////////"<<endl;
+ 
+  graphCombEtaRpPb5023GeVStat->Print();
+
+  if (IsNSD){
+
+    graphCombEtaRpPb5023GeVStat=ScaleGraph(graphCombEtaRpPb5023GeVStat,Scaling);
+    graphCombEtaRpPb5023GeVSyst=ScaleGraph(graphCombEtaRpPb5023GeVSyst,Scaling);
+
+    graphCombEtaRpPb5023GeVTot  =  CalculateCombinedSysAndStatError( graphCombEtaRpPb5023GeVStat ,graphCombEtaRpPb5023GeVSyst );
+    graphCombEtaRpPb5023GeVTot->Print();
+    graphCombEtaRpPb5023GeVStat->Print();
+    graphCombEtaRpPb5023GeVSyst->Print();
+    
+  }
+
+    
+  TGraphAsymmErrors* graphCombEtaRpPb5023GeVStatClone   = (TGraphAsymmErrors*) graphCombEtaRpPb5023GeVStat->Clone();
+  TGraphAsymmErrors* graphCombEtaRpPb5023GeVSystClone   = (TGraphAsymmErrors*) graphCombEtaRpPb5023GeVSyst->Clone();
+  TGraphAsymmErrors* graphCombEtaRpPb5023GeVTotClone    = (TGraphAsymmErrors*) graphCombEtaRpPb5023GeVTot->Clone();
+  
+  
+  //return;
+  
+  
+  
+  
+  
+  
     
   // **************************************************************************************
   // ************************* Plotting Combined R_pPb ************************
@@ -457,6 +630,61 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
   canvasCombRpPb->Print(Form("%s/Comb_RpPb.%s",outputDir.Data(),suffix.Data()));
     
     
+  
+   // **************************************************************************************
+  // ************************* Plotting Combined R_pPb ************************
+  // **************************************************************************************
+  TCanvas* canvasCombEtaRpPb = new TCanvas("canvasCombEtaRpPb","",200,10,1200,700);  // gives the page size
+  DrawGammaCanvasSettings( canvasCombEtaRpPb, 0.09, 0.02, 0.02, 0.13);
+ 
+  TH2F * histo2DCombinedEtaRpPb;
+  histo2DCombinedEtaRpPb = new TH2F("histo2DCombinedEtaRpPb","histo2DCombinedEtaRpPb",1000,0.,20.,1000,0.3,1.7);
+  SetStyleHistoTH2ForGraphs(histo2DCombinedEtaRpPb, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#eta}_{p-Pb}", 0.05,0.06, 0.05,0.06, 0.9,0.6, 512, 505);
+  histo2DCombinedEtaRpPb->DrawCopy();
+    
+
+     
+    
+
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaRpPb5023GeVSystClone,20,1.5, 4, 4, 1, kTRUE);  
+      
+  graphCombEtaRpPb5023GeVSystClone->Draw("E2,same");
+
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaRpPb5023GeVStatClone,20,1.5, kBlue, kBlue);  
+  graphCombEtaRpPb5023GeVStatClone->Draw("p,same");
+
+
+ // TLatex * lt = new TLatex(1.,1.55,"ALICE Preliminary"); 
+ // lt->SetTextSize(0.05) ;
+  //  lt->DrawText(1.,1.45,"2016/06/14") ;
+  lt->Draw("same");
+     
+  TLegend* legendEtaRpPbCombine = new TLegend(0.1,0.75,0.55,0.85);
+  legendEtaRpPbCombine->SetFillColor(0);
+  legendEtaRpPbCombine->SetLineColor(0);
+  legendEtaRpPbCombine->SetTextSize(0.04);
+  legendEtaRpPbCombine->AddEntry(graphInvYieldPi0CombpPb5023GeVSysClone,"NSD, p-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+
+    
+  legendEtaRpPbCombine->Draw();
+  
+  TLine* lineEtaRpPb =new TLine(0.,1.,20.,1.);
+  lineEtaRpPb->Draw("same");
+  
+  TBox* BoxNormEtaRpPb =new TBox(0.25, 1.-NormalizationError, 0.5, 1.+NormalizationError);
+  BoxNormEtaRpPb->SetFillColor(4);
+  BoxNormEtaRpPb->Draw("same");
+    
+  canvasCombEtaRpPb->Print(Form("%s/Comb_Eta_RpPb.%s",outputDir.Data(),suffix.Data()));
+  
+  
+  
+  
+  
+  
+  
+  
+  
   // **************************************************************************************
   // ************************* Plotting All GA R_pPb ************************
   // **************************************************************************************
@@ -1078,6 +1306,10 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
      
   graphInvYieldPi0CombpPb5023GeVSysClone->Write("CombinedPi0RpPbSystErr");
   graphInvYieldPi0CombpPb5023GeVStaClone->Write("CombinedPi0RpPbStatErr");
+  graphCombEtaRpPb5023GeVSystClone->Write("CombinedEtaRpPbSystErr");
+  graphCombEtaRpPb5023GeVStatClone->Write("CombinedEtaRpPbSystErr");
+  
+   
   
   
   fResults.Close();
@@ -1086,6 +1318,20 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kTRUE){
      
   graphInvYieldPi0CombpPb5023GeVSysClone->Write("CombinedPi0RpPbSystErr");
   graphInvYieldPi0CombpPb5023GeVStaClone->Write("CombinedPi0RpPbStatErr");
+  graphCombEtaRpPb5023GeVSystClone->Write("CombinedEtaRpPbSystErr");
+  graphCombEtaRpPb5023GeVStatClone->Write("CombinedEtaRpPbStatErr");
+  
+  
+  graphPCMYieldPi0pPb->Write();
+  graphPCMYieldPi0pPbSystErr->Write();
+  graphPCMppreferenceStatErr->Write();
+  graphPCMppreferenceSystErr->Write();
+  
+
+  
+  
+  
+  
   graphPi0ESP09sPi0KKP->Write("EPS09s_KKP_NLO");
   graphPi0ESP09sPi0AKK->Write("EPS09s_AKK_NLO");
   graphPi0DSS5000->Write("EPS09s_fDSS_NLO");

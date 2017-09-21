@@ -134,7 +134,7 @@ const Int_t  nPtLimits = Ntotal+1;
 const Int_t  nPtLimitsLow = NtotalLow+1;
 const Int_t  NtotalEta = 16;
 const Int_t  nPtLimitsEta = NtotalEta+1;
-const Int_t  NtotalEtaPi0Ratio = 15;
+const Int_t  NtotalEtaPi0Ratio = 16;
 const Int_t  nPtLimitsEtaPi0Ratio = NtotalEtaPi0Ratio+1;
 
 void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t IsNSD=kTRUE, Bool_t LowPtCut=kFALSE){
@@ -183,7 +183,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   //TString fileNamePCMEMCal			      = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
 
-  TString fileNamePCMEMCal                            = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_08_15.root";
+  TString fileNamePCMEMCal                            = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_09_11.root";
 
   //TString fileNamePCMEMCal                            = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_06_13.root";
 
@@ -196,10 +196,13 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   TString fileNameNeutralPionEMCalEta                 = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_20170811_2_pPb.root";
 
 
-  TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
+  //TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//data_PHOSResults_pPb_20160208.root";
+  TString fileNameNeutralPionPHOS                     = "ExternalInputpPb/PHOS/PHOS_pPb_19092017_2.root";
+  
+  
   TString fileNameChargedPions                        = "ExternalInputpPb/InputRpPb/pPb502.fullpT.INEL.20151204_mb_wo_V0Acorr.root";//Charged pion pPb spectrum
-  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_08_25/mTScaling.root";
-  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_08_25/mTScaling_pp7TeV.root";
+  TString fileNamemTScalingpPb                        = "CombinepPbSpectra/mT-Scaling/2017_09_20/mTScaling.root";
+  TString fileNamemTScalingpp7TeV                     = "CombinepPbSpectra/mT-Scaling/2017_09_20/mTScaling_pp7TeV.root";
   TString fileNameChargedPionsRatioPythia             = "ExternalInputpPb/Pythia6_pionRatio.root";
 
 
@@ -212,7 +215,8 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 
   //Correlation factors file for PCM and Dalitz
   //TString corrFactorsFile = "ExternalInputpPb/CorrelationFactors_PCM_Dalitz_2016_10_06_pPb_5.023TeV.root";
-  TString corrFactorsFile = "ExternalInputpPb/CorrFactorsFiles/pPb5TeV_2017_01_17.root";
+  //TString corrFactorsFile = "ExternalInputpPb/CorrFactorsFiles/pPb5TeV_2017_01_17.root";
+  TString corrFactorsFile = "/opt/AnalysisSoftware/pPb5TeV.root";
 
   ////////////////////////////////////Theory///////////////////////////////////////////////////////7
 
@@ -273,7 +277,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   Double_t pTLimitsEtaPi0Ratio[nPtLimits]                        = { 0.7,0.9,1.1,1.4,1.8,
 								     2.2,2.6,3.0,3.5,4.0,
 								     5.0,6.0,8.0,10.0,12.0,
-								     16.0};
+								     16.0,20.0};
 
   //Int_t offSets[11]                                   =  { -4, 2, -4, 0, -4,  0, 0, 0, 0,  0, 0};
   //Int_t offSetsSys[11]                                =  {  0, 3,  5, 0,  2,   0, 0, 0, 0, 0, 0};
@@ -562,7 +566,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   cout<<"/////////////////////////////"<<endl;
   //Eta
   TH1D*	histoEMCalYieldEtapPbStat 			= (TH1D*)directoryEMCalEtapPb->Get("CorrectedYieldEta");
-  TGraphAsymmErrors*	graphEMCalYieldEtapPbSystErr		= (TGraphAsymmErrors*)directoryEMCalEtapPb->Get("graphCorrectedYieldEta");
+  TGraphAsymmErrors*	graphEMCalYieldEtapPbSystErr		= (TGraphAsymmErrors*)directoryEMCalEtapPb->Get("EtaSystError");
 
   TGraphAsymmErrors* graphEMCalYieldEtapPb=new TGraphAsymmErrors(histoEMCalYieldEtapPbStat);
 
@@ -2200,7 +2204,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
 											       pTLimitsEtaPi0Ratio, NtotalEtaPi0Ratio,
 											       offSetsEtaPi0Ratio, offSetsSysEtaPi0Ratio,
 											       graphCombEtaPi0RatioStatpPb5023GeV,graphCombEtaPi0RatioSyspPb5023GeV ,
-											       fileNameOutputWeightingEtaPi0Ratio,"2.76TeV", "EtaToPi0", kFALSE,
+											       fileNameOutputWeightingEtaPi0Ratio,"pPb_5.023TeV", "EtaToPi0", kFALSE,
 											       NULL, corrFactorsFile.Data()
 											       );
 

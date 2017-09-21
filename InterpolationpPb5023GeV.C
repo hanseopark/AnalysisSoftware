@@ -1,4 +1,3 @@
-
 /****************************************************************************************************************************
 ******          provided by Gamma Conversion Group, PWG-GA*****
 ******          Pedro Gonzalez, pedro.gonzalez.zamora@cern.ch
@@ -7,6 +6,7 @@
 ******          Friederike Bock, friederike.bock@cern.ch                                                                 *****
 ******
 *****************************************************************************************************************************/
+
 
 #include <Riostream.h>
 #include "TMath.h"
@@ -60,6 +60,7 @@
 
 void InterpolationpPb5023GeV(   TString System          = "PCM",
                                 TString resultsType     = "PCMPileUpCorrection",
+                                TString meson           = "Pi0",
                                 TString suffix          = "pdf",
                                 TString outputDir       = "OutputRpPb_yShift_Individual",
                                 TString FitFuncName     = "Tsallis",
@@ -68,6 +69,8 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
                             ){
 
 
+    
+    
     gROOT->SetStyle("Plain");
     TH1::AddDirectory(kFALSE);
 
@@ -92,20 +95,43 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
     Float_t pTLimit         = 20.;//30
     Float_t pTLimitLow      = 0.3;//0.8
+    Bool_t removeLowPCMPt   = kTRUE;
+    
+    
+    
     TString SystemLabel     = CaloLabel.Data();
-    if (System.CompareTo("PCM")==0){
+    
+    if( meson.CompareTo("Eta") == 0 )
+        SystemLabel = CaloLabelEta.Data();
+    
+    
+    if ( System.CompareTo("PCM")==0 ){
 
+        
         SystemLabel         = PCMLabel.Data();
+        
+        if( meson.CompareTo("Eta") == 0 )
+          SystemLabel         = PCMLabelEta.Data();  
+        
     }
     else if(System.CompareTo("Dalitz")==0 || System.CompareTo("DALITZ")==0){
 
         SystemLabel         = DalitzLabel.Data();
+        
+         if( meson.CompareTo("Eta") == 0 )
+          SystemLabel         = DalitzLabelEta.Data();
+        
     }
     else if (System.CompareTo("PHOS")==0 ){
         //	  pTLimitLow=0.8;
     }
     else if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ){
+        
+        
 	SystemLabel  	    = PCMEMCalLabel.Data();
+        
+        if( meson.CompareTo("Eta") == 0 )
+            SystemLabel  	    = PCMEMCalLabelEta.Data();
     }
 
     if ( System.CompareTo("EMCal") == 0 || System.CompareTo("EMCAL") == 0 || FitFuncName.CompareTo("Bylinkin") == 0 ){
@@ -129,44 +155,38 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     Bool_t PileUpCorrection = kFALSE;
     Bool_t thesis           = kFALSE;
 
+    
+    
     //Input Files GA
     TString fileNameNeutralPionCombResultsPP7TeV     = "ExternalInput/CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root";
     TString fileNameNeutralPionCombResultsPP2760GeV  = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
-
+    TString fileNameNeutralPionCombResultsPP8TeV        = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP8TeV_2017_07_12.root";
+    TString fileNameNeutralPionPCMResultsPP7TeVHigh     = "ExternalInput/CombNeutralMesons/CombinedResultsPaper7TeVAbove1GeV.root";
+    
+    
     TString fileNameNeutralPionEMCalResultsPP        = "ExternalInput/EMCAL/data_EMCAL-EMCALResultsFullCorrection_PP2760_PaperInput_Pub2017.root";
     TString fileNameNeutralPionEMCalResultsPP7TeV    = "ExternalInputpPb/EMCAL/pi0Specrtum2011EMCAL_24June2015_7_Evi.root";
 
 
     TString fileNameNeutralPionPHOSResultsPP7TeV     = "ExternalInputpPb/PHOS/CombinedResultsPP_ShiftedX_PaperRAA_ConsiderPileup7TeVPHOSData.root";
     TString fileNameNeutralPionPHOSResultsPP2760GeV  = "ExternalInput/CombNeutralMesons/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
-
-    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_08_25.root";
-
-   // TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResultsFullCorrection_pPb_20170606_woEffiCorrection.root";
     
-     
+    
+
+    TString fileNameNeutralPionCombResultspPb        = "ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_09_20.root";
     TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResults_pPb_FinalResult_20170821_V2.root";
-
-    //TString fileNameNeutralPionPCMResultspPb         = "ExternalInputpPb/PCM/data_PCMResults_pPb_20170308.root";
-
-
     TString fileNameNeutralPionDalitzResultspPb      = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20170606.root";//
-    //TString fileNameNeutralPionDalitzResultspPb      = "ExternalInputpPb/PCM/data_PCMResults_Dalitz_pPb_20160929.root";
-    //data_PCMResults_Dalitz_pPb_20150806.root";data_PCMResults_Dalitz_pPb_20160601.root
- //   TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170607_pPb.root";
     TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCAL-EMCALResultsFullCorrection_20170811_2_pPb.root";
-    //TString fileNameNeutralPionEMCalResultspPb       = "ExternalInputpPb/EMCAL/data_EMCalEMCalResults_170314_pPb.root";
+    //TString fileNameNeutralPionPHOSResultspPb        = "ExternalInputpPb/PHOS/PHOS_pPb_19092017.root";
+    //TString fileNameNeutralPionPHOSResultspPb        = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";
+    TString fileNameNeutralPionPHOSResultspPb                         = "ExternalInputpPb/PHOS/PHOS_pPb_19092017_2.root";
     
-
-    TString fileNameNeutralPionPHOSResultspPb       = "ExternalInputpPb/PHOS/20160601_Pi0InvariantSpectrum_pPb_PHOS.root";//InvariantYield_Pi0_pPb_Graph_PHOS_20160415.root";
-    TString fileNameRpPbPHOS                        = "ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
-    TString fileNamePHOSSystErrCancellation         = "ExternalInputpPb/PHOS/ComponentCancelSys.root";
-    //TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2016_12_22.root";
-   // TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_06_13.root";
+    TString fileNameRpPbPHOS                         = "ExternalInputpPb/PHOS/data_PHOSResults_RpPb_20160405.root";
+    //TString fileNameRpPbPHOS                         = "ExternalInputpPb/PHOS/PHOS_pPb_19092017_2.root";
+    TString fileNamePHOSSystErrCancellation          = "ExternalInputpPb/PHOS/ComponentCancelSys.root";
+    TString fileNameNeutralPionPCMEMCalResultspPb    = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_09_11.root";
     
-    TString fileNameNeutralPionPCMEMCalResultspPb   = "ExternalInputpPb/PCM-EMCAL/data_PCM-EMCALResultsFullCorrection_pPb_2017_08_15.root";
-    
-    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_08_25.root");
+    TFile* CommonFile	    = new TFile("ExternalInputpPb/InputRpPb/ResultspPb_Tsallis_2017_09_20.root");
 
     TString nameRebinSpectraFitsDat                 = Form("%s/RebinSpectraFitsParam.dat",outputDir.Data());
     fstream  fileRebinSpectraFits;
@@ -199,8 +219,10 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TGraphAsymmErrors* graphPHOSSystErrCancellation;
     TH1F*              histoPHOSSystErrCancellation;
     TFile*             filePHOSSystErrCancellation;
+    
     //pPb Input
     if (System.CompareTo("Comb")==0){
+        
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionCombResultspPb.Data());
         graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fileNeutralPionResultspPb->Get("CombinedPi0pPbSpectrumSysErr");
         graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fileNeutralPionResultspPb->Get("CombinedPi0pPbSpectrumTotErr");
@@ -213,36 +235,53 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphInvYieldPi0pPb5023GeVStatErr->Print();
         graphInvYieldPi0pPb5023GeVSystErr->Print();
         graphInvYieldPi0pPb5023GeVComplErr->Print();
+        
     } else if (System.CompareTo("PCM")==0) {
+        
+        
+        TString fDirectoryMesonPCMpPb5023GeV = "";
+        
+        if( meson.CompareTo("Pi0") == 0 ){
+            fDirectoryMesonPCMpPb5023GeV = "Pi0_pPb_5.023TeV_0-100%";
+        } else if ( meson.CompareTo("Eta") == 0 ){
+            fDirectoryMesonPCMpPb5023GeV = "Eta_pPb_5.023TeV_0-100%";
+        }
+        
+    
+    
+        
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionPCMResultspPb.Data());
-        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0_pPb_5.023TeV_0-100%");
+        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory(fDirectoryMesonPCMpPb5023GeV.Data());
         if( ! fNeutralPionResultspPbContainer ) {cout<<"TList Pi0pPb_5.023TeV does not exist: "<<endl; return;}
-
-        histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
-        graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0SystError");
+        
+        histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get(Form("CorrectedYield%s",meson.Data()));
+        graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get(Form("%sSystError",meson.Data()));
         graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
-
-
+        
+        if(meson.CompareTo("Pi0") == 0 ) {
         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+        graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(graphInvYieldPi0pPb5023GeVSystErr->GetN()-1);
+        } else if (meson.CompareTo("Eta") == 0 ) {
+            for(Int_t i = 0; i<3; i++) {
+            graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+            graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(graphInvYieldPi0pPb5023GeVSystErr->GetN()-1);
+            }
+        }
+        
         cout<<"PCM stat"<<endl;
         graphInvYieldPi0pPb5023GeVStatErr->Print();
         cout<<"PCM sys"<<endl;
-
         graphInvYieldPi0pPb5023GeVSystErr->Print();
 
 
 
-         graphInvYieldPi0pPb5023GeVComplErr  = CalculateCombinedSysAndStatError(graphInvYieldPi0pPb5023GeVStatErr,graphInvYieldPi0pPb5023GeVSystErr) ;
+        graphInvYieldPi0pPb5023GeVComplErr  = CalculateCombinedSysAndStatError(graphInvYieldPi0pPb5023GeVStatErr,graphInvYieldPi0pPb5023GeVSystErr) ;
 
-         cout<<"PCM complete"<<endl;
+        cout<<"PCM complete"<<endl;
 
-         graphInvYieldPi0pPb5023GeVComplErr->Print();
+        graphInvYieldPi0pPb5023GeVComplErr->Print();
+                  
 
-
-        //cout<<" test"<<endl;
-        //graphInvYieldPi0pPb5023GeVStatErr->Print();
-        //graphInvYieldPi0pPb5023GeVSystErr->Print();
-        //graphInvYieldPi0pPb5023GeVComplErr->Print();
     } else if(System.CompareTo("Dalitz")==0 ||System.CompareTo("DALITZ")==0 ) {
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionDalitzResultspPb.Data());
 
@@ -274,72 +313,34 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphInvYieldPi0pPb5023GeVSystErr->Print();
         graphInvYieldPi0pPb5023GeVComplErr->Print();
     } else if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ){
+        
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionEMCalResultspPb.Data());
-        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0pPb_5.023TeV");
+        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory(Form("%spPb_5.023TeV",meson.Data()));
         if(!fNeutralPionResultspPbContainer) {cout<<"TList fNeutralPionResultspPbContainer does not exist: "<<endl; return;}
         
-        
-        
-        histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
+        histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get(Form("CorrectedYield%s",meson.Data()));
 	graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
+        
+        if( meson.CompareTo("Pi0") == 0 ) {
 	for(Int_t iPoint = 0; iPoint<9; iPoint++)
 	graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+        } else if ( meson.CompareTo("Eta") == 0 ){
+            for(Int_t iPoint = 0; iPoint<7; iPoint++)
+            graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+        }
 
-        graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0SystError");
-        graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0ComplError");
+        graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get(Form("%sSystError",meson.Data()));
+        graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get(Form("%sComplError",meson.Data()));
 
 	if( !graphInvYieldPi0pPb5023GeVComplErr ){
 
 	  graphInvYieldPi0pPb5023GeVComplErr = CalculateCombinedSysAndStatError(graphInvYieldPi0pPb5023GeVStatErr,graphInvYieldPi0pPb5023GeVSystErr);
 
 	}
-
-        //histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
-        //graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0SystError");
-        //graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0ComplError");
-        //graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
-        cout<<"EMCal test"<<endl;
-        graphInvYieldPi0pPb5023GeVStatErr->Print();
-        cout<<"//////////////////"<<endl;
-        graphInvYieldPi0pPb5023GeVSystErr->Print();
-        cout<<"//////////////////"<<endl;
-        graphInvYieldPi0pPb5023GeVComplErr->Print();
-
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(23);
-//         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(22); //remove last pT bin
-// 
-//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(24);
-//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(23);
-//         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(22); //remove last pT bin
-// 
-//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
-//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
-//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(24);
-//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(23);
-//         graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(22); //remove last pT bin
-//         cout<<"EMCal test"<<endl;
-//         graphInvYieldPi0pPb5023GeVStatErr->Print();
-//         graphInvYieldPi0pPb5023GeVSystErr->Print();
-//         graphInvYieldPi0pPb5023GeVComplErr->Print();
-        
-        
+	
     } else if (System.CompareTo("PHOS")==0   ){
         fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionPHOSResultspPb.Data());
         filePHOSSystErrCancellation         = new TFile(fileNamePHOSSystErrCancellation.Data());
-        //	  graphInvYieldPi0pPb5023GeVComplErr= (TGraphAsymmErrors*) fileNeutralPionResultspPb->Get("gPi0Comp");
-        //	  graphInvYieldPi0pPb5023GeVStatErr= (TGraphAsymmErrors*) fileNeutralPionResultspPb->Get("hCor_stat");// fileNeutralPionResultspPb->Get("gPi0Stat");
-        //	  graphInvYieldPi0pPb5023GeVSystErr  = (TGraphAsymmErrors*) fileNeutralPionResultspPb->Get("hCor_syst");//fileNeutralPionResultspPb->Get("gPi0Syst");
         histoInvYieldPi0pPb5023GeV          = (TH1F*)fileNeutralPionResultspPb->Get("hCor_stat");
         graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors( histoInvYieldPi0pPb5023GeV );
         histoInvYieldPi0pPb5023GeVSystErr   = (TH1F*)fileNeutralPionResultspPb->Get("hCor_syst");
@@ -349,17 +350,10 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         cout<<"PHOS test"<<endl;
         graphInvYieldPi0pPb5023GeVStatErr->Print();
         graphInvYieldPi0pPb5023GeVSystErr->Print();
-        //	    graphInvYieldPi0pPb5023GeVComplErr->Print();
-
-        //   graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
         graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(25);
-        //   graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(0);
         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(0);
         graphInvYieldPi0pPb5023GeVSystErr->RemovePoint(25);
-        // graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(0);
-        // graphInvYieldPi0pPb5023GeVComplErr->RemovePoint(0);
-
         cout<<"PHOS test"<<endl;
         graphInvYieldPi0pPb5023GeVComplErr  =  CalculateCombinedSysAndStatError( graphInvYieldPi0pPb5023GeVStatErr ,graphInvYieldPi0pPb5023GeVSystErr );
         graphInvYieldPi0pPb5023GeVStatErr->Print();
@@ -373,28 +367,31 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 	fileNeutralPionResultspPb           = new TFile(fileNameNeutralPionPCMEMCalResultspPb.Data());
 
-        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory("Pi0pPb_5.023TeV");
+        fNeutralPionResultspPbContainer     = (TDirectory*) fileNeutralPionResultspPb->GetDirectory(Form("%spPb_5.023TeV",meson.Data()));
         if(!fNeutralPionResultspPbContainer) {cout<<"TList fNeutralPionResultspPbContainer does not exist: "<<endl; return;}
 
-        histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get("CorrectedYieldPi0");
+        histoInvYieldPi0pPb5023GeV          = (TH1F*)fNeutralPionResultspPbContainer->Get(Form("CorrectedYield%s",meson.Data()));
 	graphInvYieldPi0pPb5023GeVStatErr   = new TGraphAsymmErrors(histoInvYieldPi0pPb5023GeV);
+        
+        if(meson.CompareTo("Pi0") == 0) {
 	for(Int_t iPoint = 0; iPoint<6; iPoint++)
 	graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0);
+        } else if (meson.CompareTo("Eta") == 0) {
+         for(Int_t iPoint = 0; iPoint<5; iPoint++)
+	graphInvYieldPi0pPb5023GeVStatErr->RemovePoint(0); 
+        }
 
-        graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0SystError");
-        graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get("Pi0ComplError");
+        graphInvYieldPi0pPb5023GeVSystErr   = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get(Form("%sSystError",meson.Data()));
+        graphInvYieldPi0pPb5023GeVComplErr  = (TGraphAsymmErrors*)fNeutralPionResultspPbContainer->Get(Form("%sComplError",meson.Data()));
 
+        
 	if( !graphInvYieldPi0pPb5023GeVComplErr ){
 
 	  graphInvYieldPi0pPb5023GeVComplErr = CalculateCombinedSysAndStatError(graphInvYieldPi0pPb5023GeVStatErr,graphInvYieldPi0pPb5023GeVSystErr);
 
 	}
 
-        cout<<"PCM-EMCal test"<<endl;
-        graphInvYieldPi0pPb5023GeVStatErr->Print();
-        graphInvYieldPi0pPb5023GeVSystErr->Print();
-	graphInvYieldPi0pPb5023GeVComplErr->Print();
-
+    
     }   else {
         cout<<"Invalid System type:  "<<System.Data() <<endl;
         return;
@@ -407,6 +404,8 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         cout<<"PileUp correction will be applied to PCM alone spetrum. "<<endl;
     }
 
+    cout<<thesisPlots.Data()<<endl;
+    
     if( thesisPlots.CompareTo("thesis") == 0 ) {
         thesis                          = kTRUE;
         thesisPlotLabel                 = "This thesis";
@@ -414,6 +413,8 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         thesisPlotLabel                 = "ALICE";// work in progress";
     }
 
+   // return;
+    
     const char *fileNameEPS09sPi0AKK    = "ExternalInputpPb/Theory/R_pi0_pPb_y0_eps09s/R_pPb5000_y0_eps09s_akk_mb.dat";
     const char *fileNameEPS09sPi0DSS    = "ExternalInputpPb/Theory/R_pi0_pPb_y0_eps09s/R_pPb5000_y0_eps09s_fdss_mb.dat";
     const char *fileNameEPS09sPi0KKP    = "ExternalInputpPb/Theory/R_pi0_pPb_y0_eps09s/R_pPb5000_y0_eps09s_kkp_mb.dat";
@@ -457,10 +458,22 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     //GA pp Input
     TFile*  fileNeutralPionCombResultsPP7TeV   	 = new TFile(fileNameNeutralPionCombResultsPP7TeV.Data());
     TFile*  fileNeutralPionCombResultsPP2760GeV  = new TFile(fileNameNeutralPionCombResultsPP2760GeV.Data());
+    TFile*  fileNeutralPionCombResultsPP8TeV     = new TFile(fileNameNeutralPionCombResultsPP8TeV.Data());
+    
+    TFile*  fileNeutralPionPCMPP7TeV   	 = new TFile(fileNameNeutralPionPCMResultsPP7TeVHigh.Data());
+    
+    
 
     TDirectory* fDirectoryPi0Comb2760GeV     = (TDirectory*) fileNeutralPionCombResultsPP2760GeV->GetDirectory("Pi02.76TeV");
-
-
+    TDirectory* fDirectoryPi0Comb8TeV        = (TDirectory*) fileNeutralPionCombResultsPP8TeV->GetDirectory("Pi08TeV");
+    TDirectory* fDirectoryPi0PCM7TeV         = (TDirectory*) fileNeutralPionPCMPP7TeV->GetDirectory("Pi07TeV");
+    
+    if( meson.CompareTo("Eta") == 0 ){
+        fDirectoryPi0Comb2760GeV             = (TDirectory*) fileNeutralPionCombResultsPP2760GeV->GetDirectory("Eta2.76TeV");
+        fDirectoryPi0Comb8TeV                = (TDirectory*) fileNeutralPionCombResultsPP8TeV->GetDirectory("Eta8TeV");
+    }
+    
+    
     TFile*  fileNeutralPionPHOSResultsPP7TeV    = new TFile(fileNameNeutralPionPHOSResultsPP7TeV.Data());
     TFile*  fileNeutralPionPHOSResultsPP2760GeV = new TFile(fileNameNeutralPionPHOSResultsPP2760GeV.Data());
 
@@ -471,6 +484,10 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TFile*  fileNeutralPionEMCalResultsPP      = new TFile(fileNameNeutralPionEMCalResultsPP.Data());
     TFile*  fileNeutralPionEMCalResultsPP7TeV  = new TFile(fileNameNeutralPionEMCalResultsPP7TeV.Data());
 
+    TString graphNameInvCrossSectionPi08TeVStatSystErr;
+    TString graphNameInvCrossSectionPi08TeVStatErr;
+    TString graphNameInvCrossSectionPi08TeVSysErr;
+    
     TString graphNameInvCrossSectionPi07TeVStatSystErr;
     TString graphNameInvCrossSectionPi07TeVStatErr;
     TString graphNameInvCrossSectionPi07TeVSysErr;
@@ -479,6 +496,12 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TString graphNameInvCrossSectionPi02760GeVStatErr;
     TString graphNameInvCrossSectionPi02760GeVSysErr;
 
+    
+    TGraphAsymmErrors*  graphInvCrossSectionPi0Comb8TeVStatSystErr;
+    TGraphAsymmErrors*  graphInvCrossSectionPi08TeVStatSystErr;
+    TGraphAsymmErrors*  graphInvCrossSectionPi08TeVStatErr;
+    TGraphAsymmErrors*  graphInvCrossSectionPi08TeVSystErr;
+    
     TGraphAsymmErrors*  graphInvCrossSectionPi0Comb7TeVStatSystErr;
     TGraphAsymmErrors*  graphInvCrossSectionPi07TeVStatSystErr;
     TGraphAsymmErrors*  graphInvCrossSectionPi07TeVStatErr;
@@ -498,9 +521,13 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TGraphAsymmErrors*  graphppPythia   = new TGraphAsymmErrors(ppPythia);
     graphppPythia->Print();
 
+    cout<< "Llego aqui"<< endl;
     TF1* fitPi02760GeVPaper = 0x0;
+    TF1* fitPi08TeVPaper = 0x0;
+    TF1* fitPi07TeVPaper = 0x0;
 
     if ( resultsType.CompareTo("Comb") == 0   ){
+        
         graphNameInvCrossSectionPi07TeVStatSystErr      = Form("graphInvCrossSectionPi0%s7TeV",resultsType.Data());
         graphNameInvCrossSectionPi07TeVStatErr          = Form("graphInvCrossSectionPi0%s7TeVStatErr",resultsType.Data());
         graphNameInvCrossSectionPi07TeVSysErr           = Form("graphInvCrossSectionPi0%s7TeVSysErr",resultsType.Data());
@@ -508,34 +535,21 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphNameInvCrossSectionPi02760GeVStatSystErr   = Form("graphInvCrossSectionPi0%s2760GeV",resultsType.Data());
         graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSectionPi0%s2760GeVAStatErr",resultsType.Data());
         graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSectionPi0%s2760GeVASysErr",resultsType.Data());
-
-//         graphNameInvCrossSectionPi02760GeVStatSystErr   = Form("graphInvCrossSectionPi0%s2760GeVATotErr_yShifted",resultsType.Data());
-//         graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSectionPi0%s2760GeVAStatErr_yShifted",resultsType.Data());
-//         graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSectionPi0%s2760GeVASysErr_yShifted",resultsType.Data());
-//
-
-
+        
+        
         graphInvCrossSectionPi07TeVStatSystErr          = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatSystErr.Data());
         graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
         graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
 
-
-        //cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
-        //graphInvCrossSectionPi07TeVStatErr->Print();
-	//graphInvCrossSectionPi07TeVSystErr->Print();
-        //cout<<"**************************************************"<<endl;
 
 
         graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
         graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
 	graphInvCrossSectionPi02760GeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi02760GeVStatErr,graphInvCrossSectionPi02760GeVSystErr);
 
-        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get("TwoComponentModelFitPi0");
-
-
-
-
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get("TsallisFitPi0");
         cout<<"Entro a Comb"<<endl;
+        
     } else if ( resultsType.CompareTo("PHOS") == 0 ||   resultsType.CompareTo("PHOSPileUpCorrection") == 0){
 
         graphNameInvCrossSectionPi07TeVStatErr          = "graphInvCrossSectionPi0PHOSStat7TeV";
@@ -544,56 +558,94 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         else
             graphNameInvCrossSectionPi07TeVSysErr       = "graphInvCrossSectionPi0PHOSSys7TeV";//published PHOS sys errors
 
+            
         graphNameInvCrossSectionPi02760GeVStatErr       = "graphInvCrossSectionPi0PHOS2760GeVStatErr";
         graphNameInvCrossSectionPi02760GeVSysErr        = "graphInvCrossSectionPi0PHOS2760GeVSysErr";
+        
+        graphNameInvCrossSectionPi08TeVStatErr          = "graphInvCrossSectionPi0PHOS8TeVStatErr";
+        graphNameInvCrossSectionPi08TeVSysErr           = "graphInvCrossSectionPi0PHOS8TeVSysErr";
+        
+        
+        
+        graphInvCrossSectionPi08TeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVStatErr.Data());
+        graphInvCrossSectionPi08TeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVSysErr.Data());
+        
+	graphInvCrossSectionPi08TeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi08TeVStatErr,graphInvCrossSectionPi08TeVSystErr);
+
+        
+
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+        
+        
 
         graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
         graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionPHOSResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
 	graphInvCrossSectionPi07TeVStatSystErr          =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);
 
 
-        //cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
-        //graphInvCrossSectionPi07TeVStatErr->Print();
-	//graphInvCrossSectionPi07TeVSystErr->Print();
-        //cout<<"**************************************************"<<endl;
-
 
         graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0PHOS2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
         graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0PHOS2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
         graphInvCrossSectionPi02760GeVStatSystErr       =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr , graphInvCrossSectionPi02760GeVSystErr);
+    
+        
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0PHOS2760GeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0PHOS2760GeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+        
 
-        cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
-        graphInvCrossSectionPi02760GeVStatErr->Print();
-        cout<<"**************************************************"<<endl;
-
-        graphInvCrossSectionPi02760GeVSystErr->Print();
-        cout<<"Entro a Comb"<<endl;
     } else if ( resultsType.CompareTo("EMCal") == 0 ||resultsType.CompareTo("EMCAL") == 0   ){
 
         cout << "hier!!!"<< endl;
         graphNameInvCrossSectionPi07TeVStatErr          = "pi0Stat";
         graphNameInvCrossSectionPi07TeVSysErr           = "pi0Syst";
-        graphNameInvCrossSectionPi02760GeVStatErr       = "graphInvCrossSectionPi0";
-        graphNameInvCrossSectionPi02760GeVSysErr        = "InvCrossSectionPi0Sys";
+        graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSection%sEMCAL2760GeVStatErr",meson.Data());
+        graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSection%sEMCAL2760GeVSysErr",meson.Data());
+        graphNameInvCrossSectionPi08TeVStatErr          = Form("graphInvCrossSection%sEMCAL8TeVStatErr",meson.Data());
+        graphNameInvCrossSectionPi08TeVSysErr           = Form("graphInvCrossSection%sEMCAL8TeVSysErr",meson.Data());
+        
+        
+        graphInvCrossSectionPi08TeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVStatErr.Data());
+        graphInvCrossSectionPi08TeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVSysErr.Data());
+        
+	graphInvCrossSectionPi08TeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi08TeVStatErr,graphInvCrossSectionPi08TeVSystErr);
 
-        cout << "hier!!!"<< endl;
+        
+        
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+
+
         TH1D* histInvCrossSectionPi07TeVStatErr         = (TH1D*)fileNeutralPionEMCalResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
         TH1D* histInvCrossSectionPi07TeVSystErr         = (TH1D*)fileNeutralPionEMCalResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
-        graphInvCrossSectionPi07TeVStatErr              = new TGraphAsymmErrors(histInvCrossSectionPi07TeVStatErr);       graphInvCrossSectionPi07TeVStatErr->Print();
-        graphInvCrossSectionPi07TeVSystErr              = new TGraphAsymmErrors(histInvCrossSectionPi07TeVSystErr); 	  cout << "hier!!!"<< endl;graphInvCrossSectionPi07TeVStatErr->Print();
-        graphInvCrossSectionPi07TeVStatSystErr          =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);	  cout << "hier!!!"<< endl;
-
-        cout<<"************************************************Checking if they are shifted Combined**********************************************************"<<endl;
-        graphInvCrossSectionPi07TeVStatErr->Print();
-        cout<<"**************************************************"<<endl;
-
-        graphInvCrossSectionPi07TeVSystErr->Print();
-
-        TDirectory* fNeutralPionEMCalpPbContainer       = (TDirectory*) fileNeutralPionEMCalResultsPP->GetDirectory("Pi02.76TeV");
-        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fNeutralPionEMCalpPbContainer->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
-        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fNeutralPionEMCalpPbContainer->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
-        graphInvCrossSectionPi02760GeVStatSystErr       =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr ,graphInvCrossSectionPi02760GeVSystErr );
-        cout<<"Entro a Comb"<<endl;
+        graphInvCrossSectionPi07TeVStatErr              = new TGraphAsymmErrors(histInvCrossSectionPi07TeVStatErr);       graphInvCrossSectionPi07TeVSystErr              = new TGraphAsymmErrors(histInvCrossSectionPi07TeVSystErr); 	  
+        
+        graphInvCrossSectionPi07TeVStatSystErr          =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr); 
+        
+        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
+        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
+	graphInvCrossSectionPi02760GeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi02760GeVStatErr,graphInvCrossSectionPi02760GeVSystErr);
+        
+        
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TsallisFit%s",meson.Data()));
+        
+        
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+        
+        
 
     } else if( resultsType.CompareTo("EMCalComb") == 0 ){
 
@@ -610,7 +662,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
 
 
-
+        
         graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
         graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
 	graphInvCrossSectionPi02760GeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi02760GeVStatErr,graphInvCrossSectionPi02760GeVSystErr);
@@ -646,23 +698,112 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    }  else if(  resultsType.CompareTo("PCM") == 0 || resultsType.CompareTo("PCMPileUpCorrection") == 0 ){
+    } else if ( resultsType.CompareTo("PCM-EMCal") == 0 || resultsType.CompareTo("PCM-EMCAL") == 0 ){
+        
+        
+        cout << "hier!!!"<< endl;
+        cout << "Entro a PCM EMCAL por que"<<endl;
+        graphNameInvCrossSectionPi07TeVStatErr          = "pi0Stat";
+        graphNameInvCrossSectionPi07TeVSysErr           = "pi0Syst";
+        graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSection%sPCMEMCAL2760GeVStatErr",meson.Data());
+        graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSection%sPCMEMCAL2760GeVSysErr",meson.Data());
+        graphNameInvCrossSectionPi08TeVStatErr          = Form("graphInvCrossSection%sPCMEMCAL8TeVStatErr",meson.Data());
+        graphNameInvCrossSectionPi08TeVSysErr           = Form("graphInvCrossSection%sPCMEMCAL8TeVSysErr",meson.Data());
+        
+         
+        
+        graphInvCrossSectionPi08TeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVStatErr.Data());
+        graphInvCrossSectionPi08TeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVSysErr.Data());
+        
+	graphInvCrossSectionPi08TeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi08TeVStatErr,graphInvCrossSectionPi08TeVSystErr);
 
-        graphNameInvCrossSectionPi07TeVStatErr          = "graphInvCrossSectionPi0PCMStat7TeV";
-        graphNameInvCrossSectionPi07TeVSysErr           = "graphInvCrossSectionPi0PCMSys7TeV";
-        graphNameInvCrossSectionPi02760GeVStatErr       = "graphInvCrossSectionPi0PCM2760GeVStatErr";
-        graphNameInvCrossSectionPi02760GeVSysErr        = "graphInvCrossSectionPi0PCM2760GeVSysErr";
+       
+       
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+        
+        
 
+        TH1D* histInvCrossSectionPi07TeVStatErr         = (TH1D*)fileNeutralPionEMCalResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
+        TH1D* histInvCrossSectionPi07TeVSystErr         = (TH1D*)fileNeutralPionEMCalResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
+        graphInvCrossSectionPi07TeVStatErr              = new TGraphAsymmErrors(histInvCrossSectionPi07TeVStatErr);        graphInvCrossSectionPi07TeVSystErr              = new TGraphAsymmErrors(histInvCrossSectionPi07TeVSystErr); 	  
+        graphInvCrossSectionPi07TeVStatSystErr          =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);	  
+        
+        
+        
+        graphInvCrossSectionPi02760GeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
+        graphInvCrossSectionPi02760GeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
+	graphInvCrossSectionPi02760GeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi02760GeVStatErr,graphInvCrossSectionPi02760GeVSystErr);
+        
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+        
+        
+    } else if(  resultsType.CompareTo("PCM") == 0 || resultsType.CompareTo("PCMPileUpCorrection") == 0 ){
+      cout<<"Estoy en PCM"<<endl;
+        graphNameInvCrossSectionPi07TeVStatErr          = Form("graphInvCrossSection%sPCMStat7TeV",meson.Data());
+        graphNameInvCrossSectionPi07TeVSysErr           = Form("graphInvCrossSection%sPCMSys7TeV",meson.Data());
+        
+        graphNameInvCrossSectionPi02760GeVStatErr       = Form("graphInvCrossSection%sPCM2760GeVStatErr",meson.Data());
+        graphNameInvCrossSectionPi02760GeVSysErr        = Form("graphInvCrossSection%sPCM2760GeVSysErr",meson.Data());
+        
+        graphNameInvCrossSectionPi08TeVStatErr          = Form("graphInvCrossSection%sPCM8TeVStatErr",meson.Data());
+        graphNameInvCrossSectionPi08TeVSysErr           = Form("graphInvCrossSection%sPCM8TeVSysErr",meson.Data()); 
+        
+        
+        
+        graphInvCrossSectionPi08TeVStatErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVStatErr.Data());
+        graphInvCrossSectionPi08TeVSystErr           = (TGraphAsymmErrors*)fDirectoryPi0Comb8TeV->Get(graphNameInvCrossSectionPi08TeVSysErr.Data());
+        
+	graphInvCrossSectionPi08TeVStatSystErr       = CalculateCombinedSysAndStatError(graphInvCrossSectionPi08TeVStatErr,graphInvCrossSectionPi08TeVSystErr);
+        
+
+        cout<< "antes de las funciones"<< endl;
+        
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi08TeVPaper = (TF1*) fDirectoryPi0Comb8TeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+        
+	cout<< "despues de las funciones"<< endl;
+        
         graphInvCrossSectionPi07TeVStatErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVStatErr.Data());
         graphInvCrossSectionPi07TeVSystErr              = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(graphNameInvCrossSectionPi07TeVSysErr.Data());
-
-        cout<<"************************************************Checking if they are shifted **********************************************************"<<endl;
-        graphInvCrossSectionPi07TeVStatErr->Print();
-        cout<<"**************************************************"<<endl;
-        graphInvCrossSectionPi07TeVSystErr->Print();
+        
+	graphInvCrossSectionPi07TeVStatErr->Print();
+	graphInvCrossSectionPi07TeVSystErr->Print();
+	cout<<"acabo de hacer un print the 7TeV"<< endl;
+        
+        if( removeLowPCMPt ) {
+            
+            Int_t i = 0;
+            Int_t nPoints = graphInvCrossSectionPi07TeVStatErr->GetN();
+            
+           
+            
+            while( graphInvCrossSectionPi07TeVStatErr->GetX()[0] < 1.0 && i < nPoints){
+                   graphInvCrossSectionPi07TeVStatErr->RemovePoint(0);
+                   i++;
+            }
+            i = 0;
+            
+            while( graphInvCrossSectionPi07TeVSystErr->GetX()[0] < 1.0 && i < nPoints){
+                   graphInvCrossSectionPi07TeVSystErr->RemovePoint(0);
+                   i++;
+            }
+        }
+        
+        
 
         TGraphAsymmErrors* graphInvCrossSectionPi07TeVStatErrNoPileUpCorr = (TGraphAsymmErrors*)graphInvCrossSectionPi07TeVStatErr->Clone();
-
+	cout<<"antes de pileup"<< endl;
         if( PileUpCorrection == kTRUE ){
 
             cout<<"entro a corregir"<<endl;
@@ -714,7 +855,10 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
             }
             cout << "*************************" << endl;
-                graphInvCrossSectionPi07TeVStatErr->Print();
+	    graphInvCrossSectionPi07TeVStatErr->Print();
+
+	    cout<< " Vamos al Canvas"<< endl;
+
             TGraphErrors* RatioNoPileUpAndPileUpCorr =  new TGraphErrors(nBins-1,ratioX,ratioY,errorX,errorY);
 
             TCanvas* canvasRatioNoPileUpAndPileUpCorr = new TCanvas("canvasRatioNoPileUpAndPileUpCorr","Ratio between PileUp Correction And No PileUp correction spectra",200,10,1200,700);
@@ -746,19 +890,27 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
             canvasRatioNoPileUpAndPileUpCorr->SaveAs(Form("%s/Ratio_NoPileUpAndPileUpCorr.%s",outputDir.Data(),suffix.Data()));
         }
 
-
+	cout<< "combining errors"<<endl;
         graphInvCrossSectionPi07TeVStatSystErr    =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi07TeVStatErr , graphInvCrossSectionPi07TeVSystErr);
 
 
 
         graphInvCrossSectionPi02760GeVStatErr     = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVStatErr.Data());
         graphInvCrossSectionPi02760GeVSystErr     = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(graphNameInvCrossSectionPi02760GeVSysErr.Data());
+        
+        
 
         graphInvCrossSectionPi02760GeVStatSystErr =  CalculateCombinedSysAndStatError( graphInvCrossSectionPi02760GeVStatErr , graphInvCrossSectionPi02760GeVSystErr);
-
-        cout<<"Entro a "<<endl;
-
-
+        
+        
+       
+        if( FitFuncName.CompareTo("Tsallis") == 0) {        
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TsallisFit%s",meson.Data()));        
+        } else if ( FitFuncName.CompareTo("Bylinkin") == 0 ) {
+        fitPi02760GeVPaper = (TF1*) fDirectoryPi0Comb2760GeV->Get(Form("TwoComponentModelFit%s",meson.Data()));  
+        }
+	cout<< " after functions 2,76"<< endl;
+        
     } else {
 
         cout<<"Invalid results type:  "<<resultsType.Data() <<endl;
@@ -774,32 +926,39 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     //*********************************************************************
 
 
-    cout<<"LLego 1"<<endl;
-
-
+  
 
     TGraphAsymmErrors* graphInvYieldPi0pPb5023GeVYShiftedSystErr    = (TGraphAsymmErrors*)graphInvYieldPi0pPb5023GeVSystErr->Clone();
     TGraphAsymmErrors* graphInvYieldPi0pPb5023GeVYShiftedStatErr    = (TGraphAsymmErrors*)graphInvYieldPi0pPb5023GeVStatErr->Clone();
     TGraphAsymmErrors* graphInvYieldPi0pPb5023GeVYShiftedComplErr   = (TGraphAsymmErrors*)graphInvYieldPi0pPb5023GeVComplErr->Clone();
-
-
-    cout<<"Llego 3"<<endl;
-
-
 
     cout<<"**********************************BinYShift ********************************************"<<endl;
 
 
     //Use Bylinkin fit from combined spectrum for YShift
 
-    TF1 *fitBylinkinPi0pPb5023GeV = (TF1*)CommonFile->Get("FitCombinedPi0pPbSpectrum");
+    TF1 *fitBylinkinPi0pPb5023GeV = (TF1*)CommonFile->Get(Form("FitCombined%spPbSpectrum",meson.Data()));
 
     graphInvYieldPi0pPb5023GeVYShiftedComplErr  = ApplyYshiftIndividualSpectra(graphInvYieldPi0pPb5023GeVYShiftedComplErr ,fitBylinkinPi0pPb5023GeV);
     graphInvYieldPi0pPb5023GeVYShiftedSystErr   = ApplyYshiftIndividualSpectra(graphInvYieldPi0pPb5023GeVYShiftedSystErr,fitBylinkinPi0pPb5023GeV);
     graphInvYieldPi0pPb5023GeVYShiftedStatErr   = ApplyYshiftIndividualSpectra(graphInvYieldPi0pPb5023GeVYShiftedStatErr, fitBylinkinPi0pPb5023GeV);
 
+    
+    
+    
+    //////////////////////////////////////////Convert to InvYield  8 TeV //////////////////////////////////////////////////
+    
+    cout<<"8 TeV"<<endl;
+    // graphInvCrossSectionPi08TeVStatErr->Print();
+   // return;
+    
+    
+    TGraphAsymmErrors* graphInvYieldPi08TeVStatSystErr         = (TGraphAsymmErrors*) graphInvCrossSectionPi08TeVStatSystErr->Clone();
+    TGraphAsymmErrors* graphInvYieldPi08TeVStatErr             = (TGraphAsymmErrors*) graphInvCrossSectionPi08TeVStatErr->Clone();
+    TGraphAsymmErrors* graphInvYieldPi08TeVSystErr             = (TGraphAsymmErrors*) graphInvCrossSectionPi08TeVSystErr->Clone();
 
-    //////////////////////////////////////////Convert to InvYield  7 TeV////////////////////////////////////////////
+    
+    //////////////////////////////////////////Convert to InvYield  7 TeV /////////////////////////////////////////////////
 
 
     TGraphAsymmErrors* graphInvYieldPi07TeVStatSystErr         = (TGraphAsymmErrors*) graphInvCrossSectionPi07TeVStatSystErr->Clone();
@@ -813,18 +972,20 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TGraphAsymmErrors* graphInvYieldPi02760GeVStatSystErr      =  (TGraphAsymmErrors*)graphInvCrossSectionPi02760GeVStatSystErr->Clone();
     TGraphAsymmErrors* graphInvYieldPi02760GeVStatErr          =  (TGraphAsymmErrors*)graphInvCrossSectionPi02760GeVStatErr->Clone();
     TGraphAsymmErrors* graphInvYieldPi02760GeVSystErr          =  (TGraphAsymmErrors*)graphInvCrossSectionPi02760GeVSystErr->Clone();
-
-
+    
+    
+    
 
 
 
     /////////////////////////////////////////////////Rebinning ////////////////////////////////////////////////////
     Double_t *Parameters2760GeV = NULL;
     Double_t *Parameters7TeV    = NULL;
+    Double_t *Parameters8TeV    = NULL;
 
     //This part obtain the "n" parameter from the fit of the combined spectrum///
-    graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get("graphInvCrossSectionPi0Comb7TeV");
-    graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get("graphInvCrossSectionPi0Comb2760GeVATotErr");
+    graphInvCrossSectionPi0Comb7TeVStatSystErr    = (TGraphAsymmErrors*)fileNeutralPionCombResultsPP7TeV->Get(Form("graphInvCrossSection%sComb7TeV",meson.Data()));
+    graphInvCrossSectionPi0Comb2760GeVStatSystErr = (TGraphAsymmErrors*)fDirectoryPi0Comb2760GeV->Get(Form("graphInvCrossSection%sComb2760GeVATotErr",meson.Data()));
 
 
 
@@ -833,25 +994,82 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
     fitType = "l";
     Parameters2760GeV = new Double_t[3];// = {2.4e+10,6.88,0.139}; //2.,5.,0.18
-    Parameters2760GeV[0] = 2.4e+10;
-    Parameters2760GeV[1] = 6.88;
-    Parameters2760GeV[2] = 0.139;
-
+    
+    if( meson.CompareTo("Pi0") == 0 ){
+    Parameters2760GeV[0] = 1.29e+11;
+    Parameters2760GeV[1] = 7.046;
+    Parameters2760GeV[2] = 0.128;
+    } else if ( meson.CompareTo("Eta") == 0 ){
+    Parameters2760GeV[0] = 1.12e+10;
+    Parameters2760GeV[1] = 7.133;
+    Parameters2760GeV[2] = 0.207;   
+    }
+    
+    if( fitPi02760GeVPaper ) {
+        
+        Parameters2760GeV[0] = fitPi02760GeVPaper->GetParameter(0);
+        Parameters2760GeV[1] = fitPi02760GeVPaper->GetParameter(1);
+        Parameters2760GeV[2] = fitPi02760GeVPaper->GetParameter(2);
+        
+    }
+    
+    
     Parameters7TeV    = new Double_t[3];// = {13.7e+09,7.,0.13};
-    Parameters7TeV[0] = 1.45613e+11;
-    Parameters7TeV[1] = 7;
-    Parameters7TeV[2] = 0.15;
+    
+    if( meson.CompareTo("Pi0") == 0 ) {
+        
+        Parameters7TeV[0] = 1.79e11; //1.45613e+11;
+        Parameters7TeV[1] = 6.865;//7;
+        Parameters7TeV[2] = 0.138;//0.15;
+        fitPi07TeVPaper = (TF1*) FitObject("l","fitInvCrossSectionPi0","Pi0");
+        fitPi07TeVPaper->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2]); // standard 
+        
+        
+    } else if ( meson.CompareTo("Eta") == 0 ) {
+        
+        Parameters7TeV[0] = 1.57e10; //1.45613e+11;
+        Parameters7TeV[1] = 6.979;//7;
+        Parameters7TeV[2] = 0.229;//0.15;
+        fitPi07TeVPaper = (TF1*) FitObject("l","fitInvCrossSectionEta","Eta");
+        fitPi07TeVPaper->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2]); // standard 
+        
+    }
+    
 
-        if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0  ){
-        Parameters7TeV[0] = 2.26842e+11;
-        Parameters7TeV[1] = 6.70106e+00;
-        Parameters7TeV[2] = 1.24671e-01;
-        }
+    
+    Parameters8TeV    = new Double_t[3];
+    
+    
+    if( meson.CompareTo("Pi0") == 0 ) {
+        Parameters8TeV[0] = 2.44e+11;//2.4e+09;
+        Parameters8TeV[1] = 6.456;
+        Parameters8TeV[2] = 0.121;
+    } else if ( meson.CompareTo("Eta") == 0 ){
+        //Parameters8TeV[0] = 1.56e+10;
+        Parameters8TeV[0] = 2.56e+10;
+        Parameters8TeV[1] = 6.559;
+        Parameters8TeV[2] = 0.220;
+    }    
+     if( fitPi08TeVPaper ){
+         Parameters8TeV[0] = fitPi08TeVPaper->GetParameter(0);
+         Parameters8TeV[1] = fitPi08TeVPaper->GetParameter(1);
+         Parameters8TeV[2] = fitPi08TeVPaper->GetParameter(2);
+                  
+     }
+    
+    //if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0  ){
+        
+      //  Parameters7TeV[0] = 2.26842e+11;
+       // Parameters7TeV[1] = 6.70106e+00;
+       // Parameters7TeV[2] = 1.24671e-01;
+    //}
+    
     fitNameLabel = "Tsallis";
+    cout<< "LLego a 2"<< endl;
 
     if( fixParam == 1  ){ //No applied for EMCal
 
-            Float_t minPt2760GeV = 0.4;
+        Float_t minPt2760GeV = 0.4;
         if (System.CompareTo("PHOS")== 0 ) minPt2760GeV = 0.8;
         Float_t maxPt2760GeV = graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetNbins());
         cout<<"maxPt2760GeV: "<<maxPt2760GeV<<endl;
@@ -885,8 +1103,6 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     }
 
 
-
-
     } else if ( FitFuncName.CompareTo("Bylinkin") == 0){
 
     fitType = "tcm";
@@ -916,15 +1132,16 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     Parameters2760GeV[3] =   0.441e+00;
     Parameters2760GeV[4] =   3.083e+00;
 
-    if( fitPi02760GeVPaper ){
-
-        Parameters2760GeV[0] =  fitPi02760GeVPaper->GetParameter(0);
-        Parameters2760GeV[1] =  fitPi02760GeVPaper->GetParameter(1);
-        Parameters2760GeV[2] =  fitPi02760GeVPaper->GetParameter(2);
-        Parameters2760GeV[3] =  fitPi02760GeVPaper->GetParameter(3);
-        Parameters2760GeV[4] =  fitPi02760GeVPaper->GetParameter(4);
-
-    }
+     if( fitPi02760GeVPaper ){
+ 
+         Parameters2760GeV[0] =  fitPi02760GeVPaper->GetParameter(0);
+         Parameters2760GeV[1] =  fitPi02760GeVPaper->GetParameter(1);
+         Parameters2760GeV[2] =  fitPi02760GeVPaper->GetParameter(2);
+         Parameters2760GeV[3] =  fitPi02760GeVPaper->GetParameter(3);
+         Parameters2760GeV[4] =  fitPi02760GeVPaper->GetParameter(4);
+        
+ 
+     }
 
     if( resultsType.CompareTo("PCMEMCalComb") == 0  || resultsType.CompareTo("Comb") == 0){
 
@@ -943,20 +1160,40 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     // Parameters7TeV[2] = 1.28029*xSection7TeVINEL* recalcBarn ;
     // Parameters7TeV[3] =0.702793;
     // Parameters7TeV[4] =3.16247 ;
-    Parameters7TeV[0] =  1.68474e+09;
-    Parameters7TeV[1] =  5.57627e-01;
-    Parameters7TeV[2] =  1.51358e+11;
-    Parameters7TeV[3] =  3.98235e-01;
-    Parameters7TeV[4] =  2.80009e+00;
-
-        if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0   ){
-        Parameters2760GeV[0] = 8.0e+11;
-        Parameters2760GeV[1] = 1.5e-01;
-        Parameters2760GeV[2] = 1.2e+10;
-        Parameters2760GeV[3] = 9.8e-01;
-        Parameters2760GeV[4] = 2.1e+00;
+    
+    if( meson.CompareTo("Pi0") == 0 ) {
+    
+        Parameters7TeV[0] =  3.36e+11;
+        Parameters7TeV[1] =  0.166;
+        Parameters7TeV[2] =  2.76e+10;
+        Parameters7TeV[3] =  0.626;
+        Parameters7TeV[4] =  3.103;
+        fitPi07TeVPaper = (TF1*) FitObject("tcm","fitInvCrossSectionPi0","Pi0");
+        fitPi07TeVPaper->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2],Parameters7TeV[3],Parameters7TeV[4]); // standard 
+        
+    } else if ( meson.CompareTo("Eta") == 0 ) {
+        
+        Parameters7TeV[0] =  6.4e+09;
+        Parameters7TeV[1] =  0.181;
+        Parameters7TeV[2] =  3.67e+09;
+        Parameters7TeV[3] =  0.762;
+        Parameters7TeV[4] =  3.045;
+        fitPi07TeVPaper = (TF1*) FitObject("tcm","fitInvCrossSectionEta","Eta");
+        fitPi07TeVPaper->SetParameters(Parameters7TeV[0],Parameters7TeV[1],Parameters7TeV[2],Parameters7TeV[3],Parameters7TeV[4]); // 
+        
+        //cout<<"Eta"<<endl;
+        //return;
     }
-        if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0 ||
+
+    //    if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0   ){
+    //    Parameters2760GeV[0] = 8.0e+11;
+    //    Parameters2760GeV[1] = 1.5e-01;
+    //    Parameters2760GeV[2] = 1.2e+10;
+    //    Parameters2760GeV[3] = 9.8e-01;
+    //   Parameters2760GeV[4] = 2.1e+00;
+    //  }
+    
+    /*if( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0 ||
             resultsType.CompareTo("Comb") == 0 || resultsType.CompareTo("EMCalComb") == 0 ||
             resultsType.CompareTo("PCMEMCalComb") == 0){
 
@@ -966,28 +1203,50 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
         Parameters7TeV[3] = 9.85130e-01;
         Parameters7TeV[4] = 2.13631e+00;
 
+    }*/
+    
+    Parameters8TeV    = new Double_t[5];//
+    
+    if( meson.CompareTo("Pi0") == 0 ){
+    Parameters8TeV[0] = 6.69e+11;
+    Parameters8TeV[1] = 1.439e-01;
+    Parameters8TeV[2] = 3.44e+10;
+    Parameters8TeV[3] = 6.040e-01;
+    Parameters8TeV[4] = 3.028e+00;
+    } else if ( meson.CompareTo("Eta") == 0 ) {
+        
+    Parameters8TeV[0] = 1.48e+09;
+    Parameters8TeV[1] = 2.25e-01;
+    Parameters8TeV[2] = 2.98e+09;
+    Parameters8TeV[3] = 8.050e-01;
+    Parameters8TeV[4] = 3.041e+00;
+        
+    }
+    
+    
+    if( fitPi08TeVPaper ){
+ 
+         Parameters8TeV[0] =  fitPi08TeVPaper->GetParameter(0);
+         Parameters8TeV[1] =  fitPi08TeVPaper->GetParameter(1);
+         Parameters8TeV[2] =  fitPi08TeVPaper->GetParameter(2);
+         Parameters8TeV[3] =  fitPi08TeVPaper->GetParameter(3);
+         Parameters8TeV[4] =  fitPi08TeVPaper->GetParameter(4);
+        
+ 
+     }
+    
+    
+    
+    
+    
+
+    fitNameLabel = "Bylinkin-Rostovtsev";
+
     }
 
-        fitNameLabel = "Bylinkin-Rostovtsev";
+    
 
-    }
-
-    Float_t minPt = 0.4;
-
-
-    if ( System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=0.4;
-    if ( System.CompareTo("PHOS")==0  ) minPt=0.8;
-    if ( System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) minPt = 0.4;
-
-
-
-
-    Float_t maxPt = graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatSystErr->GetXaxis()->GetNbins());
-
-    if ( System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) maxPt=38.;
-    if ( System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) maxPt = 38.0;
-
-
+  
     TGraphErrors* graphInvYieldPi02760GeVBinStatSystErr;
     TGraphErrors* graphInvYieldPi02760GeVBinStatErr;
     TGraphAsymmErrors* graphAInvYieldPi02760GeVBinStatSystErr;
@@ -996,20 +1255,73 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    cout<<"Rebinning graphInvYieldPi02760GeVStatSystErr to pPb  "<<maxPt<<endl;
-
-    //NOTE this part is cross-checking
-   // TF1* fitPi02760GeVBinStatErr = 0;
+    
     TF1* fitPi02760GeVBinYShiftedUpStatErr   = 0;
     TF1* fitPi02760GeVBinYShiftedDownStatErr = 0;
 
     TGraphAsymmErrors* graphInvYieldPi02760GeVYShiftedUpStatErr;
     TGraphAsymmErrors* graphInvYieldPi02760GeVYShiftedDownStatErr;
+    
+     
+    TGraphAsymmErrors* graphInvYieldPi02760GeVStatErrExtended = NULL;
+    TGraphAsymmErrors* graphInvYieldPi02760GeVSystErrExtended = NULL;
+    
+    
+    if( ( meson.CompareTo("Eta") == 0 || meson.CompareTo("Pi0") == 0 )  && resultsType.CompareTo("PCM") == 0){
+        
+        
+        ExtrapolateSpectrum(fitPi02760GeVPaper,graphInvYieldPi02760GeVStatErr,graphInvYieldPi02760GeVSystErr,&graphInvYieldPi02760GeVStatErrExtended,&graphInvYieldPi02760GeVSystErrExtended,"PCM","2.76TeV",meson);
+        
 
-    TF1* fitPi02760GeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi02760GeVStatErr,graphInvYieldPi02760GeVSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,fitType.Data(), minPt, maxPt,Parameters2760GeV, &graphAInvYieldPi02760GeVBinStatErr,&graphAInvYieldPi02760GeVBinSystErr,&graphInvYieldPi02760GeVYShiftedDownStatErr,&graphInvYieldPi02760GeVYShiftedUpStatErr,&fitPi02760GeVBinYShiftedDownStatErr,&fitPi02760GeVBinYShiftedUpStatErr);
+    } else if ( meson.CompareTo("Pi0") == 0 && resultsType.CompareTo("PHOS") == 0 ) {
+        
+        
+         ExtrapolateSpectrum(fitPi02760GeVPaper,graphInvYieldPi02760GeVStatErr,graphInvYieldPi02760GeVSystErr,&graphInvYieldPi02760GeVStatErrExtended,&graphInvYieldPi02760GeVSystErrExtended,"PHOS","2.76TeV",meson);
+        
+     
+        
+    } else {
+        
+        graphInvYieldPi02760GeVStatErrExtended = (TGraphAsymmErrors*)graphInvYieldPi02760GeVStatErr->Clone();
+        graphInvYieldPi02760GeVSystErrExtended = (TGraphAsymmErrors*)graphInvYieldPi02760GeVSystErr->Clone();
+        
+    
+        
+    }
+    
+    Double_t minPt = 0.4;
 
+
+    if ( System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=0.4;
+    if ( System.CompareTo("PHOS")==0  ) minPt=0.8;
+    if ( System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) minPt = 0.4;
+    
+    // -AM
+     Double_t dummy;
+     graphInvYieldPi02760GeVStatErrExtended->GetPoint(0,minPt, dummy);
+
+
+    Float_t maxPt = graphInvYieldPi02760GeVStatErrExtended->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatErrExtended->GetXaxis()->GetNbins());
+
+    if ( System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) maxPt=38.;
+    if ( System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) maxPt = 38.0;
+
+    if ( System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) maxPt=18.;
+    if ( System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) maxPt = 18.0;
+
+    
+    maxPt = graphInvYieldPi02760GeVStatErrExtended->GetX()[graphInvYieldPi02760GeVStatErrExtended->GetN()-1];
+    //maxPt = graphInvYieldPi02760GeVStatErrExtended->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatErrExtended->GetXaxis()->GetNbins());
+    
+    //cout<< "MaxPt taken"<< maxPt<<endl;
+    
+    //return;
+        
+    
+    
+    TF1* fitPi02760GeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi02760GeVStatErrExtended,graphInvYieldPi02760GeVSystErrExtended,graphInvYieldPi0pPb5023GeVYShiftedComplErr,fitType.Data(), minPt, maxPt,Parameters2760GeV, &graphAInvYieldPi02760GeVBinStatErr,&graphAInvYieldPi02760GeVBinSystErr,&graphInvYieldPi02760GeVYShiftedDownStatErr,&graphInvYieldPi02760GeVYShiftedUpStatErr,&fitPi02760GeVBinYShiftedDownStatErr,&fitPi02760GeVBinYShiftedUpStatErr,meson);
+    
     graphAInvYieldPi02760GeVBinStatSystErr       =  CalculateCombinedSysAndStatError( graphAInvYieldPi02760GeVBinStatErr ,graphAInvYieldPi02760GeVBinSystErr );
-
 
     TString fitPi02760GeVBinStatErrParamToFile =  WriteParameterToFileLatexTable(fitPi02760GeVBinStatErr,kTRUE);
     fileRebinSpectraFits << fitPi02760GeVBinStatErrParamToFile << endl;
@@ -1035,7 +1347,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
     TF1* fitPi02760GeVBinSystErr        = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi02760GeVSystErr,  &graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi02760GeVBinStatSystErr,fitPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV,fixParam);
-    TF1* fitPi02760GeVBinStatErr	= FillTGraphEYWithFitErr(graphInvYieldPi02760GeVStatErr,&graphAInvYieldPi02760GeVBinStatErr,graphAInvYieldPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters2760GeV);
+    TF1* fitPi02760GeVBinStatErr	= FillTGraphEYWithFitErr(graphInvYieldPi02760GeVStatErr,&graphAInvYieldPi02760GeVBinStatErr,graphAInvYieldPi02760GeVBinStatSystErr,fitType.Data(),minPt,maxPt,Par/ameters2760GeV);
 
 
     */
@@ -1047,7 +1359,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 //         cout<<"Fitting with paper"<<endl;
 //     }
 //     else
-        TGraphAymmmRatioToFitPi0PP2760GeV =  (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi02760GeVStatErr,fitPi02760GeVBinStatErr);
+    TGraphAymmmRatioToFitPi0PP2760GeV =  (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi02760GeVStatErrExtended,fitPi02760GeVBinStatErr);
 
 
     TGraphAsymmErrors* TGraphAymmmRatioToFitPi0PP2760GeVYShiftedDown = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi02760GeVYShiftedDownStatErr,fitPi02760GeVBinYShiftedDownStatErr);
@@ -1078,25 +1390,9 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     textRatioToFitPi0PP2760GeVFitFuncName->Draw();
 
 
-    canvasRatioToFitPi0PP2760GeV->SaveAs(Form("%s/RatiotoFit_Pi0PP2760_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    canvasRatioToFitPi0PP2760GeV->SaveAs(Form("%s/RatiotoFit_%sPP2760_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
 
-    minPt = 0.30;
-    if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=0.30;
-    if (System.CompareTo("PHOS")==0) minPt=0.8;
-    if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) minPt=0.30;
-
-
-
-    maxPt = graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetNbins());
-
-    if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) maxPt=18.0;
-    if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) maxPt=18.0;
-
-
-
-
-    cout<<"mxPt combined" << maxPt<<endl;
-
+    
     TGraphErrors*      graphInvYieldPi07TeVBinStatSystErr;
     TGraphErrors*      graphInvYieldPi07TeVBinStatErr;
 
@@ -1115,9 +1411,72 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
     TGraphAsymmErrors* graphInvYieldPi07TeVYShiftedUpStatErr;
     TGraphAsymmErrors* graphInvYieldPi07TeVYShiftedDownStatErr;
+    
+    
+    
+    
+    
+    TGraphAsymmErrors* graphInvYieldPi0pPb5023GeVYShiftedComplErrForBinning = (TGraphAsymmErrors*)graphInvYieldPi0pPb5023GeVYShiftedComplErr->Clone();
+    
+    if( resultsType.CompareTo("PCM") == 0 && removeLowPCMPt){ //NOTE this energy correspond to 7 TeV and this is done to take away pileup points
+      
+        Int_t i = 0;
+        Int_t nPoints = graphInvYieldPi0pPb5023GeVYShiftedComplErrForBinning->GetN(); 
+        
+        while( graphInvYieldPi0pPb5023GeVYShiftedComplErrForBinning->GetX()[0] < 1.0 && i < nPoints ) {
+            graphInvYieldPi0pPb5023GeVYShiftedComplErrForBinning->RemovePoint(0);
+            i++;
+        }
+        
+    } 
+    
+    TGraphAsymmErrors* graphInvYieldPi07TeVStatErrExtended = NULL;
+    TGraphAsymmErrors* graphInvYieldPi07TeVSystErrExtended = NULL;
+    
+    
+    
+    if( meson.CompareTo("Eta") == 0  && resultsType.CompareTo("PCM") == 0){
+        
+      
+        ExtrapolateSpectrum(fitPi07TeVPaper,graphInvYieldPi07TeVStatErr,graphInvYieldPi07TeVSystErr,&graphInvYieldPi07TeVStatErrExtended,&graphInvYieldPi07TeVSystErrExtended,"PCM","7TeV", meson.Data());
+         
 
-    TF1* fitPi07TeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi07TeVStatErr,graphInvYieldPi07TeVSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,fitType.Data(), minPt, maxPt,Parameters7TeV,
-				  &graphAInvYieldPi07TeVBinStatErr,&graphAInvYieldPi07TeVBinSystErr,&graphInvYieldPi07TeVYShiftedDownStatErr,&graphInvYieldPi07TeVYShiftedUpStatErr,&fitPi07TeVBinYShiftedDownStatErr,&fitPi07TeVBinYShiftedUpStatErr);
+    } else {
+        
+        graphInvYieldPi07TeVStatErrExtended = (TGraphAsymmErrors*)graphInvYieldPi07TeVStatErr->Clone();
+        graphInvYieldPi07TeVSystErrExtended = (TGraphAsymmErrors*)graphInvYieldPi07TeVSystErr->Clone();
+        
+       
+        
+    }
+    
+    
+    minPt = 0.30;
+    
+    if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=0.30;
+    if (System.CompareTo("PHOS")==0) minPt=0.8;
+    if (System.CompareTo("PCM")==0) minPt=1.0;
+    if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) minPt=0.30;
+
+    // -AM
+    graphInvYieldPi07TeVStatErrExtended->GetPoint(0,minPt, dummy);
+
+    //maxPt = graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetNbins());
+
+    if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) maxPt=18.0;
+    if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) maxPt=18.0;
+
+    //maxPt = graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetBinUpEdge(graphInvYieldPi07TeVStatSystErr->GetXaxis()->GetNbins());
+    maxPt = graphInvYieldPi07TeVStatErrExtended->GetX()[graphInvYieldPi07TeVStatErrExtended->GetN()-1];
+
+
+    cout<<"mxPt combined" << maxPt<<endl;
+
+   
+    cout<< "Fit to the 7TeV"<< endl;    
+
+    TF1* fitPi07TeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi07TeVStatErrExtended,graphInvYieldPi07TeVSystErrExtended,graphInvYieldPi0pPb5023GeVYShiftedComplErrForBinning,fitType.Data(), minPt, maxPt,Parameters7TeV,
+				  &graphAInvYieldPi07TeVBinStatErr,&graphAInvYieldPi07TeVBinSystErr,&graphInvYieldPi07TeVYShiftedDownStatErr,&graphInvYieldPi07TeVYShiftedUpStatErr,&fitPi07TeVBinYShiftedDownStatErr,&fitPi07TeVBinYShiftedUpStatErr,meson);
 
     graphAInvYieldPi07TeVBinStatSystErr       =  CalculateCombinedSysAndStatError( graphAInvYieldPi07TeVBinStatErr ,graphAInvYieldPi07TeVBinSystErr );
 
@@ -1125,31 +1484,8 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    /*
-
-    TF1* fitPi07TeVBinStatSystErr    	    = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi07TeVStatSystErr,&graphAInvYieldPi07TeVBinStatSystErr,   graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
-    fitPi07TeVBinStatSystErr->SetName("Fit7TeVRebin");
-    TString fitPi07TeVBinSystErrParamToFile =  WriteParameterToFileLatexTable(fitPi07TeVBinStatSystErr,kTRUE);
-    fileRebinSpectraFits << fitPi07TeVBinSystErrParamToFile << endl;
-
-
-
-    cout<<"Rebinning graphInvYieldPi07TeVSystErr to "<<endl;
-
-
-    TF1* fitPi07TeVBinSystErr     = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi07TeVSystErr,&graphAInvYieldPi07TeVBinSystErr,   graphAInvYieldPi07TeVBinStatSystErr,fitPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV,fixParam);
-    TF1* fitPi07TeVBinStatErr	  = FillTGraphEYWithFitErr(graphInvYieldPi07TeVStatErr,&graphAInvYieldPi07TeVBinStatErr,graphAInvYieldPi07TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters7TeV);
-
-    fitPi07TeVBinSystErr->Draw("");
-    graphInvYieldPi07TeVStatSystErr	->Draw("same");
-
-
-    cout<<"Start to computing"<<endl;
-    graphInvYieldPi07TeVStatSystErr->Print();
-
-    */
-
-    TGraphAsymmErrors* TGraphAsymmRatioToFitPi0PP7TeV = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi07TeVStatErr,fitPi07TeVBinStatErr);
+    
+    TGraphAsymmErrors* TGraphAsymmRatioToFitPi0PP7TeV = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi07TeVStatErrExtended,fitPi07TeVBinStatErr);
 
 
 
@@ -1178,17 +1514,224 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    canvasRatioToFitPi0PP7TeV->SaveAs(Form("%s/RatiotoFit_Pi0PP7TeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    canvasRatioToFitPi0PP7TeV->SaveAs(Form("%s/RatiotoFit_%sPP7TeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    
+    
+    
+
+
+    cout<<"mxPt combined" << maxPt<<endl;
+
+    TGraphErrors*      graphInvYieldPi08TeVBinStatSystErr;
+    TGraphErrors*      graphInvYieldPi08TeVBinStatErr;
+
+    TGraphAsymmErrors* graphAInvYieldPi08TeVBinStatSystErr;
+    TGraphAsymmErrors* graphAInvYieldPi08TeVBinSystErr;
+    TGraphAsymmErrors* graphAInvYieldPi08TeVBinStatErr;
 
 
 
+    cout<<"Rebinning graphInvYieldPi08TeVStatSystErr to "<<endl;
+
+
+
+    TF1* fitPi08TeVBinYShiftedUpStatErr   = 0;
+    TF1* fitPi08TeVBinYShiftedDownStatErr = 0;
+    TF1* fitPi08TeVBinStatErr = 0;
+    TF1* fitPi08TeVBinStatSystErr = 0;
+    TF1* fitPi08TeVBinSystErr = 0;
+   
+    
+    
+     
+    TGraphAsymmErrors* graphInvYieldPi08TeVStatErrExtended = NULL;
+    TGraphAsymmErrors* graphInvYieldPi08TeVSystErrExtended = NULL;
+    TGraphAsymmErrors* graphInvYieldPi08TeVStatSystErrExteded = NULL;
+    
+    
+    
+    
+    if( meson.CompareTo("Eta") == 0  && resultsType.CompareTo("PCM") == 0){
+        
+        
+        ExtrapolateSpectrum(fitPi08TeVPaper,graphInvYieldPi08TeVStatErr,graphInvYieldPi08TeVSystErr,&graphInvYieldPi08TeVStatErrExtended,&graphInvYieldPi08TeVSystErrExtended,"PCM","8TeV",meson);
+        
+        
+        graphInvYieldPi08TeVStatSystErrExteded = CalculateCombinedSysAndStatError(graphInvYieldPi08TeVStatErrExtended,graphInvYieldPi08TeVSystErrExtended);
+        
+
+    } else {
+        
+        graphInvYieldPi08TeVStatErrExtended = (TGraphAsymmErrors*)graphInvYieldPi08TeVStatErr->Clone();
+        graphInvYieldPi08TeVSystErrExtended = (TGraphAsymmErrors*)graphInvYieldPi08TeVSystErr->Clone();
+        graphInvYieldPi08TeVStatSystErrExteded = (TGraphAsymmErrors*)graphInvYieldPi08TeVStatSystErr->Clone();
+        
+    }
+    
+    
+
+    
+    minPt = 0.30;
+    if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) minPt=1.0;
+    if (System.CompareTo("PHOS")==0) minPt=0.8;
+    if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) minPt=0.8;
+
+   // -AM
+    graphInvYieldPi08TeVStatErrExtended->GetPoint(0,minPt, dummy);
+
+    maxPt = graphInvYieldPi08TeVStatErrExtended->GetXaxis()->GetBinUpEdge(graphInvYieldPi08TeVStatErrExtended->GetXaxis()->GetNbins());
+
+    if (System.CompareTo("EMCal")==0 ||System.CompareTo("EMCAL")==0 ) maxPt=18.0;
+    //if (System.CompareTo("PCM-EMCal") == 0 || System.CompareTo("PCM-EMCAL") == 0 ) maxPt=18.0;
+
+    
+    maxPt = graphInvYieldPi08TeVStatErrExtended->GetX()[graphInvYieldPi08TeVStatErrExtended->GetN()-1];
+
+//    maxPt = graphInvYieldPi08TeVStatErrExtended->GetXaxis()->GetBinUpEdge(graphInvYieldPi08TeVStatErrExtended->GetXaxis()->GetNbins());
+    
+
+
+    TGraphAsymmErrors* graphInvYieldPi08TeVYShiftedUpStatErr;
+    TGraphAsymmErrors* graphInvYieldPi08TeVYShiftedDownStatErr;
+    
+    
+    
+     //if( !( meson.CompareTo("Eta") == 0 && resultsType.CompareTo("PCM") == 0 ) ) {
+ 
+        fitPi08TeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi08TeVStatErrExtended,graphInvYieldPi08TeVSystErrExtended,graphInvYieldPi0pPb5023GeVYShiftedComplErr,fitType.Data(), minPt, maxPt,Parameters8TeV, &graphAInvYieldPi08TeVBinStatErr,&graphAInvYieldPi08TeVBinSystErr,&graphInvYieldPi08TeVYShiftedDownStatErr,&graphInvYieldPi08TeVYShiftedUpStatErr,&fitPi08TeVBinYShiftedDownStatErr,&fitPi08TeVBinYShiftedUpStatErr,meson,"8TeV",System);
+     
+    /* } else {
+          
+          
+    
+        fitPi08TeVBinStatSystErr    = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi08TeVStatSystErrExteded,&graphAInvYieldPi08TeVBinStatSystErr,graphInvYieldPi0pPb5023GeVYShiftedComplErr,0,fitType.Data(),minPt,maxPt,Parameters8TeV,fixParam,meson);
+        fitPi08TeVBinStatSystErr->SetName("Fit8TeVRebin");
+  
+
+        fitPi08TeVBinSystErr        = RebinWithFitToTGraphWithMeanErr(graphInvYieldPi08TeVSystErrExtended,  &graphAInvYieldPi08TeVBinSystErr,graphAInvYieldPi08TeVBinStatSystErr,fitPi08TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters8TeV,fixParam,meson);
+    
+        fitPi08TeVBinStatErr	= FillTGraphEYWithFitErr(graphInvYieldPi08TeVStatErrExtended,&graphAInvYieldPi08TeVBinStatErr,graphAInvYieldPi08TeVBinStatSystErr,fitType.Data(),minPt,maxPt,Parameters8TeV, meson);
+    
+      }*/
+    
+
+   
+    
+    graphAInvYieldPi08TeVBinStatSystErr       =  CalculateCombinedSysAndStatError( graphAInvYieldPi08TeVBinStatErr ,graphAInvYieldPi08TeVBinSystErr );
+
+
+
+
+
+    
+    TGraphAsymmErrors* TGraphAsymmRatioToFitPi0PP8TeV = (TGraphAsymmErrors*) CalculateGraphErrRatioToFit(graphInvYieldPi08TeVStatErrExtended,fitPi08TeVBinStatErr);
+
+
+
+    TCanvas* canvasRatioToFitPi0PP8TeV = new TCanvas("canvasRatioToFitPi0PP8TeV","Ratio between RatioToFit pp 7TeV",200,10,1200,700);
+    DrawGammaCanvasSettings( canvasRatioToFitPi0PP8TeV,  0.1, 0.01, 0.015, 0.13);
+    TH2F * histo2DRatioToFitPi0PP8TeV = new TH2F("histo2DRatioToFitPi0PP8TeV","histo2DRatioToFitPi0PP8TeV",1000,0.,pTLimit,1000,0.3,2.5);
+    SetStyleHistoTH2ForGraphs(histo2DRatioToFitPi0PP8TeV, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505);
+    histo2DRatioToFitPi0PP8TeV->GetYaxis()->SetRangeUser(0.5,1.5);
+    histo2DRatioToFitPi0PP8TeV->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(TGraphAsymmRatioToFitPi0PP8TeV,20,1, kRed , kRed);
+    TGraphAsymmRatioToFitPi0PP8TeV->Draw("p,same,e");
+
+
+
+    DrawGammaLines(0., 15.,1., 1.,2.,kBlack);
+
+    TLatex *textRatioToFitPi0PP8TeV = new TLatex(0.16,0.9,"pp minimum bias #sqrt{#it{s}} = 8 TeV");
+    SetStyleTLatex( textRatioToFitPi0PP8TeV,0.06,4);
+    textRatioToFitPi0PP8TeV->Draw();
+
+    TLatex *textRatioToFitPi0PP8TeVFitFuncName = new TLatex(0.16,0.8,Form("%s Fit",fitNameLabel.Data()));
+    SetStyleTLatex( textRatioToFitPi0PP8TeVFitFuncName,0.06,4);
+    textRatioToFitPi0PP8TeVFitFuncName->Draw();
+
+
+
+
+    canvasRatioToFitPi0PP8TeV->SaveAs(Form("%s/RatiotoFit_%sPP8TeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    
+    
     ///////////////////////////////////////////
-    cout<<"Just for test Checking Statistic errors"<<endl;
+    
+    
+    TGraphAsymmErrors* graphInvYieldPi08TeVStatErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi08TeVStatErrExtended);
+    TGraphAsymmErrors* graphAInvYieldPi08TeVBinStatErrClone  = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi08TeVBinStatErr);
 
-    TGraphAsymmErrors* graphInvYieldPi07TeVStatErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi07TeVStatErr);
+    TGraphAsymmErrors* graphInvYieldPi08TeVSystErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi08TeVSystErrExtended);
+    TGraphAsymmErrors* graphAInvYieldPi08TeVBinSystErrClone  = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi08TeVBinSystErr);
+
+
+    TCanvas* canvasCrossCheckStatisticalErrPP8TeV = new TCanvas("canvasCrossCheckStatisticalErrPP8TeV","Cross-check statistical errors of pp 7 TeV",200,10,1200,700);
+
+
+    DrawGammaCanvasSettings( canvasCrossCheckStatisticalErrPP8TeV,  0.1, 0.01, 0.015, 0.13);
+    canvasCrossCheckStatisticalErrPP8TeV->SetLogx();
+    TH2F * histo2DStatisticTestPi0PP8TeV = new TH2F("histo2DStatisticTestPi0PP8TeV","histo2DStatisticTestPi0PP8TeV",1000,0.3,pTLimit,1000,0.0,50);
+    SetStyleHistoTH2ForGraphs(histo2DStatisticTestPi0PP8TeV, "#it{p}_{T} (GeV/#it{c})","Statistical error %", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505);
+    histo2DStatisticTestPi0PP8TeV->GetYaxis()->SetRangeUser(0.001,30.0);
+    histo2DStatisticTestPi0PP8TeV->GetXaxis()->SetRangeUser(0.3,20.0);
+    histo2DStatisticTestPi0PP8TeV->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(    graphInvYieldPi08TeVStatErrClone,20,1, kRed , kRed,1,kTRUE,0);
+    graphInvYieldPi08TeVStatErrClone->Draw("p,same,e");
+
+    DrawGammaSetMarkerTGraphAsym(graphAInvYieldPi08TeVBinStatErrClone,20,1, kBlue,kBlue,1,kTRUE,0);
+    graphAInvYieldPi08TeVBinStatErrClone->Draw("p,same,e");
+
+    TLegend* legendStatisticalErrPP8TeV = new TLegend(0.2,0.75,0.6,0.95);
+    legendStatisticalErrPP8TeV->SetFillColor(0);
+    legendStatisticalErrPP8TeV->SetLineColor(0);
+    legendStatisticalErrPP8TeV->SetNColumns(1);
+    legendStatisticalErrPP8TeV->SetTextSize(0.03);
+    legendStatisticalErrPP8TeV->AddEntry(graphInvYieldPi08TeVStatErrClone,"Measured pp #sqrt{s} = 8 TeV","pef");
+    legendStatisticalErrPP8TeV->AddEntry(graphAInvYieldPi08TeVBinStatErrClone,"Calculated pp #sqrt{s} = 8 TeV","pef");
+    legendStatisticalErrPP8TeV->Draw();
+
+    canvasCrossCheckStatisticalErrPP8TeV->SaveAs(Form("%s/StatisticalErr_%sPP8TeV_%s_%s.%s",outputDir.Data(), meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+
+    TCanvas* canvasCrossCheckSystematicErrPP8TeV = new TCanvas("canvasCrossCheckSystematicErrPP8TeV","Cross-check statistical errors of pp 7 TeV",200,10,1200,700);
+
+
+    DrawGammaCanvasSettings( canvasCrossCheckSystematicErrPP8TeV,  0.1, 0.01, 0.015, 0.13);
+    canvasCrossCheckSystematicErrPP8TeV->SetLogx();
+    TH2F * histo2DSystematicTestPi0PP8TeV = new TH2F("histo2DSystematicTestPi0PP8TeV","histo2DSystematicTestPi0PP8TeV",1000,0.3,pTLimit,1000,0.0,50);
+    SetStyleHistoTH2ForGraphs(histo2DSystematicTestPi0PP8TeV, "#it{p}_{T} (GeV/#it{c})","Systematic error %", 0.05,0.064, 0.05,0.06, 0.8,0.6, 512, 505);
+    histo2DSystematicTestPi0PP8TeV->GetYaxis()->SetRangeUser(0.001,30.0);
+    histo2DSystematicTestPi0PP8TeV->GetXaxis()->SetRangeUser(0.3,20.0);
+    histo2DSystematicTestPi0PP8TeV->DrawCopy();
+
+    DrawGammaSetMarkerTGraphAsym(    graphInvYieldPi08TeVSystErrClone,20,1.5, kRed , kRed,1,kTRUE,0);
+    graphInvYieldPi08TeVSystErrClone->Draw("p,same,e");
+
+    DrawGammaSetMarkerTGraphAsym(graphAInvYieldPi08TeVBinSystErrClone,20,1.5, kBlue,kBlue,1,kTRUE,0);
+    graphAInvYieldPi08TeVBinSystErrClone->Draw("p,same,e");
+
+    TLegend* legendSystematicErrPP8TeV = new TLegend(0.2,0.75,0.6,0.95);
+    legendSystematicErrPP8TeV->SetFillColor(0);
+    legendSystematicErrPP8TeV->SetLineColor(0);
+    legendSystematicErrPP8TeV->SetNColumns(1);
+    legendSystematicErrPP8TeV->SetTextSize(0.03);
+    legendSystematicErrPP8TeV->AddEntry(graphInvYieldPi08TeVSystErrClone,"Measured pp #sqrt{s} = 8 TeV","pef");
+    legendSystematicErrPP8TeV->AddEntry(graphAInvYieldPi08TeVBinSystErrClone,"Calculated pp #sqrt{s} = 8 TeV","pef");
+    legendSystematicErrPP8TeV->Draw();
+
+    canvasCrossCheckSystematicErrPP8TeV->SaveAs(Form("%s/SystematicErr_%sPP8TeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+
+    
+    
+    
+    
+    
+
+    TGraphAsymmErrors* graphInvYieldPi07TeVStatErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi07TeVStatErrExtended);
     TGraphAsymmErrors* graphAInvYieldPi07TeVBinStatErrClone  = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi07TeVBinStatErr);
 
-    TGraphAsymmErrors* graphInvYieldPi07TeVSystErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi07TeVSystErr);
+    TGraphAsymmErrors* graphInvYieldPi07TeVSystErrClone      = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi07TeVSystErrExtended);
     TGraphAsymmErrors* graphAInvYieldPi07TeVBinSystErrClone  = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi07TeVBinSystErr);
 
 
@@ -1218,8 +1761,11 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     legendStatisticalErrPP7TeV->AddEntry(graphAInvYieldPi07TeVBinStatErrClone,"Calculated pp #sqrt{s} = 7 TeV","pef");
     legendStatisticalErrPP7TeV->Draw();
 
-    canvasCrossCheckStatisticalErrPP7TeV->SaveAs(Form("%s/StatisticalErr_Pi0PP7TeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    canvasCrossCheckStatisticalErrPP7TeV->SaveAs(Form("%s/StatisticalErr_%sPP7TeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
 
+    
+    
+    
     TCanvas* canvasCrossCheckSystematicErrPP7TeV = new TCanvas("canvasCrossCheckSystematicErrPP7TeV","Cross-check statistical errors of pp 7 TeV",200,10,1200,700);
 
 
@@ -1246,11 +1792,11 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     legendSystematicErrPP7TeV->AddEntry(graphAInvYieldPi07TeVBinSystErrClone,"Calculated pp #sqrt{s} = 7 TeV","pef");
     legendSystematicErrPP7TeV->Draw();
 
-    canvasCrossCheckSystematicErrPP7TeV->SaveAs(Form("%s/SystematicErr_Pi0PP7TeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    canvasCrossCheckSystematicErrPP7TeV->SaveAs(Form("%s/SystematicErr_%sPP7TeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
 
 
 
-    TGraphAsymmErrors* graphInvYieldPi02760GeVStatErrClone       = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi02760GeVStatErr);
+    TGraphAsymmErrors* graphInvYieldPi02760GeVStatErrClone       = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi02760GeVStatErrExtended);
     TGraphAsymmErrors* graphAInvYieldPi02760GeVBinStatErrClone   = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi02760GeVBinStatErr);
 
 
@@ -1280,9 +1826,9 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    canvasCrossCheckStatisticalErrPP2760GeV->SaveAs(Form("%s/StatisticalErr_Pi0PP2760GeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    canvasCrossCheckStatisticalErrPP2760GeV->SaveAs(Form("%s/StatisticalErr_%sPP2760GeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
 
-    TGraphAsymmErrors* graphInvYieldPi02760GeVSystErrClone       = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi02760GeVSystErr);
+    TGraphAsymmErrors* graphInvYieldPi02760GeVSystErrClone       = ProduceTGraphAsymmToPlotErrors(graphInvYieldPi02760GeVSystErrExtended);
     TGraphAsymmErrors* graphAInvYieldPi02760GeVBinSystErrClone   = ProduceTGraphAsymmToPlotErrors(graphAInvYieldPi02760GeVBinSystErr);
 
 
@@ -1313,8 +1859,10 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    canvasCrossCheckSystematicErrPP2760GeV->SaveAs(Form("%s/SystematicErr_Pi0PP2760GeV_%s_%s.%s",outputDir.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
+    canvasCrossCheckSystematicErrPP2760GeV->SaveAs(Form("%s/SystematicErr_%sPP2760GeV_%s_%s.%s",outputDir.Data(),meson.Data(),resultsType.Data(),FitFuncName.Data(),suffix.Data()));
 
+    
+    
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     //Up and Down BinYShift
@@ -1327,8 +1875,10 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    graphInvYieldPi02760GeVBinStatSystErr    	                = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi02760GeVBinStatSystErr);
-    graphInvYieldPi07TeVBinStatSystErr    		        = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi07TeVBinStatSystErr);
+     graphInvYieldPi02760GeVBinStatSystErr    	                = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi02760GeVBinStatSystErr);
+     graphInvYieldPi07TeVBinStatSystErr    		        =    ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi07TeVBinStatSystErr);
+    
+     graphInvYieldPi08TeVBinStatSystErr    		        = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi08TeVBinStatSystErr);
 
 
 
@@ -1338,40 +1888,322 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     TGraphErrors* graphInvYieldPi02760GeVBinYShiftedDownStatErr  = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi02760GeVBinYShiftedDownStatErr);
     TGraphErrors* graphInvYieldPi07TeVBinYShiftedUpStatErr       = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi07TeVBinYShiftedUpStatErr);
     TGraphErrors* graphInvYieldPi07TeVBinYShiftedDownStatErr     = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi07TeVBinYShiftedDownStatErr);
+    
+    
     graphInvYieldPi02760GeVBinStatErr    		         = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi02760GeVBinStatErr);
     graphInvYieldPi07TeVBinStatErr    			         = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi07TeVBinStatErr);
-    // TGraphErrors*  graphErrosInterPolation5023GeVBin           = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinStatSystErr,    graphInvYieldPi07TeVBinStatSystErr,    2760,7000,5023,"SystStat");
-    TGraphErrors*  graphErrosInterPolation5023GeVBin             = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinStatErr,        	   graphInvYieldPi07TeVBinStatErr,    		2760,7000,5023,"Stat");
-    TGraphErrors*  graphErrosInterPolation5023GeVBinUpSystErr    = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinYShiftedUpStatErr,      graphInvYieldPi07TeVBinYShiftedUpStatErr,    2760,7000,5023,"SystUp");
-    TGraphErrors*  graphErrosInterPolation5023GeVBinDownSystErr  = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinYShiftedDownStatErr,    graphInvYieldPi07TeVBinYShiftedDownStatErr,  2760,7000,5023,"SystDown");
+    graphInvYieldPi08TeVBinStatErr                               = ConvertTGraphAsymmErrorstoTGraphErrors(graphAInvYieldPi08TeVBinStatErr);
+    
+    ///
+    graphAInvYieldPi08TeVBinStatErr->Print();
+    //return;
+    
+    
+    
+    
+    
+    
+    TGraphErrors* graphErrosInterPolation5023GeVBin = NULL;
+    
+    
+    Int_t     nPoints    =  0; //graphErrosInterPolation5023GeVBin->GetN();
+    Double_t *xValue     =  0; //graphErrosInterPolation5023GeVBin->GetX();
+    Double_t *xStatErr   =  0;
+    Double_t *yValue     =  0; //graphErrosInterPolation5023GeVBin->GetY();
+    Double_t *yStatErr   =  0; //graphErrosInterPolation5023GeVBin->GetEY();
 
+    
+    
+    
+    
+    if( System.CompareTo("EMCAL") == 0 ||  System.CompareTo("EMCal") == 0 
+        || System.CompareTo("PCM-EMCAL") == 0 || System.CompareTo("PCM-EMCal") == 0 ){
+        
+        
+         graphErrosInterPolation5023GeVBin             = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinStatErr,        	   graphInvYieldPi08TeVBinStatErr,    		2760,8000,5023,"Stat");
+         
+         nPoints    =   graphErrosInterPolation5023GeVBin->GetN();
+         xValue     =   graphErrosInterPolation5023GeVBin->GetX();
+         yValue     =   graphErrosInterPolation5023GeVBin->GetY();
+         yStatErr   =   graphErrosInterPolation5023GeVBin->GetEY();
+         xStatErr   =   graphInvYieldPi08TeVBinStatSystErr->GetEX();  
+         graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints,xValue,yValue,xStatErr,xStatErr,yStatErr,yStatErr);
+         graphAErrosInterPolation5023GeVBinSystErr    = CalculateSystErrors(graphErrosInterPolation5023GeVBin,graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi08TeVBinSystErr); //NOTE
+            
+         
+    } else if (System.CompareTo("PHOS") == 0 ) {
+        
 
+      
+    
+         graphErrosInterPolation5023GeVBin             = GetInterpolSpectrum3D(graphInvYieldPi02760GeVBinStatErr,        	   graphInvYieldPi07TeVBinStatErr,graphInvYieldPi08TeVBinStatErr,2760,7000,8000,5023,"Stat");
+         
+        
+        cout<<"Controlar PHOS"<<endl;
+        graphInvYieldPi02760GeVBinStatErr->Print();
+        
+        cout<<"////////////7TeV//////////////"<<endl;
+        
+        graphInvYieldPi07TeVBinStatErr->Print();
+        
+        cout<<"//////////////8TeV////////////"<<endl;
+        
+        graphInvYieldPi08TeVBinStatErr->Print();
+        
+        cout<<"/////////////////5023/////////////"<<endl;
+        
+        graphErrosInterPolation5023GeVBin->Print();
+        
+        //return;
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         nPoints    =   graphErrosInterPolation5023GeVBin->GetN();
+         xValue     =   graphErrosInterPolation5023GeVBin->GetX();
+         yValue     =   graphErrosInterPolation5023GeVBin->GetY();
+         yStatErr   =   graphErrosInterPolation5023GeVBin->GetEY();
+         xStatErr   =   graphInvYieldPi07TeVBinStatSystErr->GetEX();  
+         
+         graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints,xValue,yValue,xStatErr,xStatErr,yStatErr,yStatErr);
+         graphAErrosInterPolation5023GeVBinSystErr    = CalculateSystErrors(graphErrosInterPolation5023GeVBin,graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi07TeVBinSystErr,graphAInvYieldPi08TeVBinSystErr);
+         
+         
+    } else if (System.CompareTo("PCM") == 0 || System.CompareTo("Dalitz") == 0) {
+        
+        
+        cout<<"Entro Dalitz"<<endl;
+        
+        //return;
+        
+        TGraphErrors* graphInvYieldPi02760GeVBinStatErrLowPt  = (TGraphErrors*)graphInvYieldPi02760GeVBinStatErr->Clone();
+        TGraphErrors* graphInvYieldPi08TeVBinStatErrLowPt     = (TGraphErrors*)graphInvYieldPi08TeVBinStatErr->Clone();
+        
+        TGraphErrors* graphInvYieldPi02760GeVBinStatErrHighPt = (TGraphErrors*)graphInvYieldPi02760GeVBinStatErr->Clone();
+        TGraphErrors* graphInvYieldPi08TeVBinStatErrHighPt    = (TGraphErrors*)graphInvYieldPi08TeVBinStatErr->Clone();
+    
+        TGraphAsymmErrors* graphAInvYieldPi02760GeVBinSystErrLowPt  = (TGraphAsymmErrors*)graphAInvYieldPi02760GeVBinSystErr->Clone();
+        TGraphAsymmErrors* graphAInvYieldPi08TeVBinSystErrLowPt     = (TGraphAsymmErrors*)graphAInvYieldPi08TeVBinSystErr->Clone();
+        
+        TGraphAsymmErrors* graphAInvYieldPi02760GeVBinSystErrHighPt = (TGraphAsymmErrors*)graphAInvYieldPi02760GeVBinSystErr->Clone();
+        TGraphAsymmErrors* graphAInvYieldPi08TeVBinSystErrHighPt    = (TGraphAsymmErrors*)graphAInvYieldPi08TeVBinSystErr->Clone();
+        
+        Int_t nLowPoints  = -1;
+        Int_t nHighPoints = -1;
+        
+        if( System.CompareTo("PCM") == 0 ) {
+            nLowPoints  = 24;
+            nHighPoints = 6;
+            
+        } else if ( System.CompareTo("Dalitz") == 0 ){
+            nLowPoints  = 17;
+            nHighPoints = 3;
+            
+        }
+        
+        
+        while(graphInvYieldPi02760GeVBinStatErrLowPt->GetN() > 0 && graphInvYieldPi02760GeVBinStatErrLowPt->GetX()[graphInvYieldPi02760GeVBinStatErrLowPt->GetN()-1] >= 1.0 ) {
+            
+            graphInvYieldPi02760GeVBinStatErrLowPt->RemovePoint(graphInvYieldPi02760GeVBinStatErrLowPt->GetN()-1);
+            graphInvYieldPi08TeVBinStatErrLowPt->RemovePoint(graphInvYieldPi08TeVBinStatErrLowPt->GetN()-1);
+            
+            graphAInvYieldPi02760GeVBinSystErrLowPt->RemovePoint(graphAInvYieldPi02760GeVBinSystErrLowPt->GetN()-1);
+            graphAInvYieldPi08TeVBinSystErrLowPt->RemovePoint(graphAInvYieldPi08TeVBinSystErrLowPt->GetN()-1);
+            
+        }
+       
+       Int_t i = 0;
+       Int_t nPoints0 = graphInvYieldPi02760GeVBinStatErrHighPt->GetN();
+       
+       while(graphInvYieldPi02760GeVBinStatErrHighPt->GetX()[0] < 1.0 && i < nPoints0 ) {
+        
+            graphInvYieldPi02760GeVBinStatErrHighPt->RemovePoint(0);
+            graphInvYieldPi08TeVBinStatErrHighPt->RemovePoint(0);
+            
+            graphAInvYieldPi02760GeVBinSystErrHighPt->RemovePoint(0);
+            graphAInvYieldPi08TeVBinSystErrHighPt->RemovePoint(0);
+            
+            i++;
+           
+           
+       }
+        
+        graphInvYieldPi02760GeVBinStatErrHighPt->Print();
+        cout<<"//////////////////////////"<<endl;
+        graphInvYieldPi08TeVBinStatErrHighPt->Print();
+        cout<<"//////////////////////////"<<endl;
+        graphAInvYieldPi02760GeVBinSystErrHighPt->Print();
+        cout<<"//////////////////////////"<<endl;
+        graphAInvYieldPi08TeVBinSystErrHighPt->Print();
+        
+      //  return;
+        
+        
+       
+        
+        
+        TGraphErrors* graphErrosInterPolation5023GeVBinHighPt             = GetInterpolSpectrum3D(graphInvYieldPi02760GeVBinStatErrHighPt,        	       graphInvYieldPi07TeVBinStatErr,graphInvYieldPi08TeVBinStatErrHighPt,2760,7000,8000,5023,"Stat");
+         
+        TGraphErrors* graphErrosInterPolation5023GeVBinLowPt             = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinStatErrLowPt,        	      graphInvYieldPi08TeVBinStatErrLowPt,2760,8000,5023,"Stat");
+        
+        
+        
+        
+        
+        
+        
+        TGraphAsymmErrors* InterTempSysErrHighPt    = CalculateSystErrors(graphErrosInterPolation5023GeVBinHighPt,graphAInvYieldPi02760GeVBinSystErrHighPt,graphAInvYieldPi07TeVBinSystErr,graphAInvYieldPi08TeVBinSystErrHighPt);
+        
+        
+        TGraphAsymmErrors* InterTempSysErrLowPt    = CalculateSystErrors(graphErrosInterPolation5023GeVBinLowPt,graphAInvYieldPi02760GeVBinSystErrLowPt,graphAInvYieldPi08TeVBinSystErrLowPt);
+        
+        //Mergint the two files
+        
+        cout<<"Mergin the two files"<<endl;
+        cout<<"///////High////////"<<endl;
+        InterTempSysErrHighPt->Print();
+        
+        cout<<"////////Low/////////////"<<endl;
+        InterTempSysErrLowPt->Print();
+        
+        Int_t nPoints = InterTempSysErrHighPt->GetN()+InterTempSysErrLowPt->GetN();
+        
+        cout<<"nPoints: "<<nPoints<<endl;
+    
+        graphAErrosInterPolation5023GeVBinSystErr = new TGraphAsymmErrors(nPoints);
+        graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints);
+        graphErrosInterPolation5023GeVBin         = new TGraphErrors(nPoints);
+    
+        
+        for(Int_t i=0; i<InterTempSysErrLowPt->GetN();i++){
+            
+            graphAErrosInterPolation5023GeVBinSystErr->SetPoint(i,graphAInvYieldPi02760GeVBinSystErrLowPt->GetX()[i],InterTempSysErrLowPt->GetY()[i]);
+            graphAErrosInterPolation5023GeVBinStatErr->SetPoint(i,graphAInvYieldPi02760GeVBinSystErrLowPt->GetX()[i],InterTempSysErrLowPt->GetY()[i]);
+            graphErrosInterPolation5023GeVBin->SetPoint(i,graphAInvYieldPi02760GeVBinSystErrLowPt->GetX()[i],InterTempSysErrLowPt->GetY()[i]);
 
-    TString	  namePtvsSqrtsPlot = 	Form("%s/Pt_vs_Sqrts_%s.%s",outputDir.Data(),System.Data(),suffix.Data());
+            graphAErrosInterPolation5023GeVBinSystErr->SetPointError(i,graphAInvYieldPi02760GeVBinSystErrLowPt->GetEXlow()[i],graphAInvYieldPi02760GeVBinSystErrLowPt->GetEXhigh()[i],InterTempSysErrLowPt->GetEYlow()[i],InterTempSysErrLowPt->GetEYhigh()[i]);
+            
+            graphAErrosInterPolation5023GeVBinStatErr->SetPointError(i,graphAInvYieldPi02760GeVBinSystErrLowPt->GetEXlow()[i],graphAInvYieldPi02760GeVBinSystErrLowPt->GetEXhigh()[i],graphErrosInterPolation5023GeVBinLowPt->GetEY()[i],graphErrosInterPolation5023GeVBinLowPt->GetEY()[i]);
+            
+            graphErrosInterPolation5023GeVBin->SetPointError(i,0,graphErrosInterPolation5023GeVBinLowPt->GetEY()[i]);
 
+            
+            
+        }
+    
+         Int_t offsetBin = InterTempSysErrLowPt->GetN();
+         
+         for(Int_t i=offsetBin; i<(InterTempSysErrHighPt->GetN()+offsetBin) ;i++){
+            
+            graphAErrosInterPolation5023GeVBinSystErr->SetPoint(i,graphAInvYieldPi02760GeVBinSystErrHighPt->GetX()[i-offsetBin],InterTempSysErrHighPt->GetY()[i-offsetBin]);
+            graphAErrosInterPolation5023GeVBinStatErr->SetPoint(i,graphAInvYieldPi02760GeVBinSystErrHighPt->GetX()[i-offsetBin],InterTempSysErrHighPt->GetY()[i-offsetBin]);
+            
+            graphErrosInterPolation5023GeVBin->SetPoint(i,graphAInvYieldPi02760GeVBinSystErrHighPt->GetX()[i-offsetBin],InterTempSysErrHighPt->GetY()[i-offsetBin]);
+            
+            graphAErrosInterPolation5023GeVBinSystErr->SetPointError(i,graphAInvYieldPi02760GeVBinSystErrHighPt->GetEXlow()[i-offsetBin],graphAInvYieldPi02760GeVBinSystErrHighPt->GetEXhigh()[i-offsetBin],InterTempSysErrHighPt->GetEYlow()[i-offsetBin],InterTempSysErrHighPt->GetEYhigh()[i-offsetBin]);
+            
+            graphAErrosInterPolation5023GeVBinStatErr->SetPointError(i,graphAInvYieldPi02760GeVBinSystErrHighPt->GetEXlow()[i-offsetBin],graphAInvYieldPi02760GeVBinSystErrHighPt->GetEXhigh()[i-offsetBin],graphErrosInterPolation5023GeVBinHighPt->GetEY()[i-offsetBin],graphErrosInterPolation5023GeVBinHighPt->GetEY()[i-offsetBin]);
+            
+            
+            graphErrosInterPolation5023GeVBin->SetPointError(i,0,graphErrosInterPolation5023GeVBinHighPt->GetEY()[i-offsetBin]);
+            
+            
+        }
+         
+         
+         
+         
+         graphAErrosInterPolation5023GeVBinSystErr->Print();
+         
+         cout<<"//////"<<endl;
+         
+         graphAErrosInterPolation5023GeVBinStatErr->Print();
+         
+         
+             
+    
+        //return;
+       
+    }
+    
+    
+    
+    
+    //TGraphErrors*  graphErrosInterPolation5023GeVBinUpSystErr    = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinYShiftedUpStatErr,      graphInvYieldPi07TeVBinYShiftedUpStatErr,    2760,7000,5023,"SystUp");
+    //TGraphErrors*  graphErrosInterPolation5023GeVBinDownSystErr  = GetInterpolSpectrum2D(graphInvYieldPi02760GeVBinYShiftedDownStatErr,    graphInvYieldPi07TeVBinYShiftedDownStatErr,  2760,7000,5023,"SystDown");
+
+    //NOTE 20170905
+
+   // TString	  namePtvsSqrtsPlot = 	Form("%s/Pt_vs_Sqrts_%s.%s",outputDir.Data(),System.Data(),suffix.Data());
+/*
     if (System.CompareTo("Dalitz")==0 || System.CompareTo("DALITZ")==0){
                   PlotInterpolationPtBins(graphPtvsSqrts,gPtvsEnergiesSystem,fPowerlawSystem,graphErrosInterPolation5023GeVBin,5,4,namePtvsSqrtsPlot);
     }	else	  PlotInterpolationPtBins(graphPtvsSqrts,gPtvsEnergiesSystem,fPowerlawSystem,graphErrosInterPolation5023GeVBin,7,5,namePtvsSqrtsPlot);
 
-    PlotAlphavsPt(graphAlpha, System.Data()  ,    thesisPlotLabel.Data(),  Form("%s/Alpha_vs_Pt_%s.%s",   outputDir.Data(),System.Data(),suffix.Data()));
+    PlotAlphavsPt(graphAlpha, System.Data()  ,    thesisPlotLabel.Data(),  Form("%s/Alpha_vs_Pt_%s.%s",   outputDir.Data(),System.Data(),suffix.Data()));*/
 
 
     /////////////////////////////////////////////////////////////////////
 
 
+/*
+    cout<<"Statistics for PCM454"<<endl;  //The statistical errors are taken from the interpolated pp reference with statistics
 
-    cout<<"Statistics for PCM"<<endl;  //The statistical errors are taken from the interpolated pp reference with statistics
-
+    cout<<"Hola despues"<<endl;
+    
+    //return;
+     
     Int_t     nPoints    =   graphErrosInterPolation5023GeVBin->GetN();
     Double_t *xValue     =   graphErrosInterPolation5023GeVBin->GetX();
-    Double_t *xStatErr   =   graphInvYieldPi07TeVBinStatSystErr->GetEX();       //X errors are taken from the rebbined 7 spectrum
+    Double_t *xStatErr   =  0;
+    
+   // graphInvYieldPi07TeVBinStatSystErr->GetEX();       //X errors are taken from the rebbined 7 spectrum
     Double_t *yValue     =   graphErrosInterPolation5023GeVBin->GetY();
-    //Double_t *yStatErr   =   graphErrosInterPolation5023GeVBinStatErr->GetEY(); //Taken with statistics //NOTE this changes
     Double_t *yStatErr   =   graphErrosInterPolation5023GeVBin->GetEY();
 
-    graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints,xValue,yValue,xStatErr,xStatErr,yStatErr,yStatErr);
-    cout<<"Systematics for PCM"<<endl;
-    graphAErrosInterPolation5023GeVBinSystErr    = CalculateSystErrors(graphErrosInterPolation5023GeVBin,graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi07TeVBinSystErr); //NOTE
+    //graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints,xValue,yValue,xStatErr,xStatErr,yStatErr,yStatErr);
+    //cout<<"Systematics for PCM"<<endl;
+    
+    //cout<<"LLego aqui"<<endl;
+    //cout<<System.Data()<<endl;
+    //if ( System.CompareTo("PCM-EMCAL") == 0 ||  System.CompareTo("PCM-EMCal") == 0 ) cout<<"Porque "<<endl;
+    
+    
+    
+    if( System.CompareTo("EMCAL") == 0 ||  System.CompareTo("EMCal") == 0 
+        || System.CompareTo("PCM-EMCAL") == 0 || System.CompareTo("PCM-EMCal") == 0 ) {
+        
+         cout<<"Hola entro EMCAL"<<endl;
+     
+        
+         xStatErr   =  graphInvYieldPi08TeVBinStatSystErr->GetEX();  
+         graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints,xValue,yValue,xStatErr,xStatErr,yStatErr,yStatErr);
+         
+         cout<<"Salio EMCAL"<<endl;
+         //graphAErrosInterPolation5023GeVBinSystErr    = CalculateSystErrors(graphErrosInterPolation5023GeVBin,graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi08TeVBinSystErr); //NOTE
+         
+         graphAErrosInterPolation5023GeVBinSystErr    = CalculateSystErrors(graphErrosInterPolation5023GeVBin,graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi08TeVBinSystErr); //NOTE
+         
+        
+    } else {
+        
+         xStatErr   =  graphInvYieldPi07TeVBinStatSystErr->GetEX();  
+         graphAErrosInterPolation5023GeVBinStatErr = new TGraphAsymmErrors(nPoints,xValue,yValue,xStatErr,xStatErr,yStatErr,yStatErr);
+   
+        
+        graphAErrosInterPolation5023GeVBinSystErr    = CalculateSystErrors(graphErrosInterPolation5023GeVBin,graphAInvYieldPi02760GeVBinSystErr,graphAInvYieldPi07TeVBinSystErr,graphAInvYieldPi08TeVBinSystErr);
+    }*/
+    
+    
+    
     //graphAErrosInterPolation5023GeVBinSystErr  =  CalculateSystErrors(graphAErrosInterPolation5023GeVBinStatErr,graphErrosInterPolation5023GeVBinDownSystErr,graphErrosInterPolation5023GeVBinUpSystErr);
 
 
@@ -1395,22 +2227,44 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
 
     } else if (( resultsType.CompareTo("PHOS") == 0 || resultsType.CompareTo("PHOSPileUpCorrection") == 0 ) && System.CompareTo("PHOS") == 0 ){
-      graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "PHOSPHOS",graphPHOSSystErrCancellation);
-      graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr,"PHOSPHOS",graphPHOSSystErrCancellation);
+      graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "PHOSPHOSv2",NULL);
+      
+      graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr,"PHOSPHOSv2",NULL);
       CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
 
-    }else if(System.CompareTo("Comb") == 0 ) {
+    } else if ( ( resultsType.CompareTo("EMCal") == 0 || resultsType.CompareTo("EMCAL") == 0 ) && ( System.CompareTo("EMCal") == 0||
+      System.CompareTo("EMCAL") == 0 ) ) {
+        
+        
+         graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "EMCEMC",NULL);
+      
+      graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr,"EMCEMC",NULL);
+      CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
+        
+    } else if ( ( resultsType.CompareTo("PCM-EMCal") == 0 || resultsType.CompareTo("PCM-EMCAL") == 0 ) && ( System.CompareTo("PCM-EMCal") == 0|| System.CompareTo("PCM-EMCAL") == 0 ) ) {
+        
+        
+      graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "PCMEMC",NULL);
+      graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr,"PCMEMC",NULL);
+      CalcRpPb(graphErrosInterPolation5023GeVBinSystWOMatErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
+        
+    }
+     else if(System.CompareTo("Comb") == 0 ) {
 
      CalcRpPb(graphAErrosInterPolation5023GeVBinSystErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr,kFALSE);
 
-    } else if (resultsType.CompareTo("Comb") == 0 || resultsType.CompareTo("EMCalComb") == 0 || resultsType.CompareTo("PCMEMCalComb") == 0 ){
+    }
+    
+    
+    /*else if (resultsType.CompareTo("Comb") == 0 || resultsType.CompareTo("EMCalComb") == 0 || resultsType.CompareTo("PCMEMCalComb") == 0 || resultsType.CompareTo("EMCal") == 0 || resultsType.CompareTo("EMCAL") == 0 || 
+        resultsType.CompareTo("PCM-EMCal") == 0 || resultsType.CompareTo("PCM-EMCAL") == 0     ){
 
        //if( System.CompareTo("PCM-EMCAL") == 0 ||  System.CompareTo("PCM-EMCAL") == 0){
        //graphErrosInterPolation5023GeVBinSystWOMatErr     = CancelOutMaterialError(graphAErrosInterPolation5023GeVBinSystErr, "Comb",graphPHOSSystErrCancellation);
        // graphInvYieldPi0pPb5023GeVYShiftedSystWOMatErr    = CancelOutMaterialError(graphInvYieldPi0pPb5023GeVYShiftedSystErr, "PCM-EMCal",   graphPHOSSystErrCancellation);
        //}
        CalcRpPb(graphAErrosInterPolation5023GeVBinSystErr,graphAErrosInterPolation5023GeVBinStatErr,graphInvYieldPi0pPb5023GeVYShiftedSystErr, graphInvYieldPi0pPb5023GeVYShiftedStatErr,&graphRpPbSystErr,&graphRpPbStatErr);
-   }
+   }*/
 
     ///////////////////////////////////Quality plots //////////////////////////
 
@@ -1882,7 +2736,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
     canvasRpPb->Update();
 
-    canvasRpPb->SaveAs(Form("%s/RpPb_%s.%s",outputDir.Data(),System.Data(),suffix.Data()));
+    canvasRpPb->SaveAs(Form("%s/%s_RpPb_%s.%s",outputDir.Data(),meson.Data(),System.Data(),suffix.Data()));
     //--------------------Comparison to old PHOS result--------------------
     TCanvas* canvasRpPbPHOS = new TCanvas("canvasRpPbPHOS","R_{pPb} ",200,10,1000,700);
 
@@ -2486,11 +3340,9 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
 
 
 
-    SavingFiles(outputDir, System);
+    SavingFiles(outputDir,meson,System);
 
 
-
-    cout<<"Llego al final"<<endl;
 
 
     //////////////////////////Comparison to Combined RpPb /////////////////////////////////
@@ -2624,24 +3476,29 @@ TH1F* GetPPReferenceFromPythia(TString fileName){
 
 
 
-void SavingFiles(TString outputDir, TString System){
+void SavingFiles(TString outputDir,TString meson,TString System){
 
     TString dateForOutput = ReturnDateStringForOutput();
 
-    TFile fCombResults(Form("%s/Pi0RpPb_%s_%s.root",outputDir.Data(),System.Data(),dateForOutput.Data()),"RECREATE");
-    graphAErrosInterPolation5023GeVBinStatErr->Write(Form("Pi0_pp_reference_%sBinning_StatErr",System.Data()));
-    graphAErrosInterPolation5023GeVBinSystErr->Write(Form("Pi0_pp_reference_%sBinning_SystErr",System.Data()));
-    graphRpPbStatErr->Write(Form("Pi0_RpPb_%s_StatErr",System.Data()));
-    graphRpPbSystErr->Write(Form("Pi0_RpPb_%s_SystErr",System.Data()));
-    graphAsymmChargedParticlesRpPbStatErr->Write("RpPb_ChargedParticles_StatErr");
-    graphAsymmChargedParticlesRpPbSystErr->Write("RpPb_ChargedParticles_SystErr");
-    graphChargedPionRpPbStatErr->Write("RpPb_ChargedPions_StatErr");
-    graphChargedPionRpPbSystErr->Write("RpPb_ChargedPions_SystErr");
-    graphPi0ESP09sPi0KKP->Write("EPS09s_KKP_NLO");
-    graphPi0ESP09sPi0AKK->Write("EPS09s_AKK_NLO");
-    graphPi0DSS5000->Write("EPS09s_fDSS_NLO");
-    graphAsymmErrorsPi0DSS5000->Write("EPS09s_fDSS_errors");
-    graphPi0CGC->Write("ColorGlasCondensate");
+    TFile fCombResults(Form("%s/%sRpPb_%s_%s.root",outputDir.Data(),meson.Data(),System.Data(),dateForOutput.Data()),"RECREATE");
+    graphAErrosInterPolation5023GeVBinStatErr->Write(Form("%s_pp_reference_%sBinning_StatErr",meson.Data(),System.Data()));
+    graphAErrosInterPolation5023GeVBinSystErr->Write(Form("%s_pp_reference_%sBinning_SystErr",meson.Data(),System.Data()));
+    graphRpPbStatErr->Write(Form("%s_RpPb_%s_StatErr",meson.Data(),System.Data()));
+    graphRpPbSystErr->Write(Form("%s_RpPb_%s_SystErr",meson.Data(),System.Data()));
+    
+    if( meson.CompareTo("Pi0") == 0 ) {
+        
+        graphAsymmChargedParticlesRpPbStatErr->Write("RpPb_ChargedParticles_StatErr");
+        graphAsymmChargedParticlesRpPbSystErr->Write("RpPb_ChargedParticles_SystErr");
+        graphChargedPionRpPbStatErr->Write("RpPb_ChargedPions_StatErr");
+        graphChargedPionRpPbSystErr->Write("RpPb_ChargedPions_SystErr");
+        graphPi0ESP09sPi0KKP->Write("EPS09s_KKP_NLO");
+        graphPi0ESP09sPi0AKK->Write("EPS09s_AKK_NLO");
+        graphPi0DSS5000->Write("EPS09s_fDSS_NLO");
+        graphAsymmErrorsPi0DSS5000->Write("EPS09s_fDSS_errors");
+        graphPi0CGC->Write("ColorGlasCondensate");
+        
+    }
 
 
 //     if( graphAlpha )     graphAlpha->Write(Form("Pi0_RpPb_%s_Alpha",System.Data()));

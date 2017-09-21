@@ -15,8 +15,8 @@ TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors*
 TGraphAsymmErrors* CalculateSystErrors(TGraphAsymmErrors* spectrum,TGraphErrors* g1,TGraphErrors* g2);
 //TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Double_t probability);
 TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Int_t fixParNumber);
-TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters);
-TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters, Int_t fixParNumber);
+TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters, TString meson);
+TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters, Int_t fixParNumber, TString meson);
 TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2,Double_t d1, Double_t d2,Double_t dSqrts);
 TGraphAsymmErrors* GetChargeParticlesRpPb2013(TString typeErr);
 TGraphAsymmErrors* GetChargeParticlesRpPb2012(TString typeErr);
@@ -24,11 +24,14 @@ TGraphAsymmErrors* BinYShiftwithErrhigh(TGraphAsymmErrors* spectrum,TGraphAsymmE
 TGraphAsymmErrors* BinYShiftwithErrlow(TGraphAsymmErrors* spectrum,TGraphAsymmErrors* spectrumErrlow);
 TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, TGraphAsymmErrors *spectrumSystErr,TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,  TGraphAsymmErrors** newSpectrumStatErr,
 					     TGraphAsymmErrors** newSpectrumSystErr,TGraphAsymmErrors** spectrumYShiftedDownStatErr,TGraphAsymmErrors** spectrumYShiftedUpStatErr,
-					     TF1** FitToSpectrumYShiftedDown, TF1** FitToSpectrumYShiftedUp);
+					     TF1** FitToSpectrumYShiftedDown, TF1** FitToSpectrumYShiftedUp, TString meson="",TString energy="",TString system="");
+
+void ExtrapolateSpectrum(TF1* FitToSpectrum, TGraphAsymmErrors *spectrumStatErr, TGraphAsymmErrors *spectrumSystErr, TGraphAsymmErrors** newSpectrumStatErr, TGraphAsymmErrors** newSpectrumSystErr, TString system, TString energy, TString meson);
+
 TGraphErrors *ConvertTGraphAsymmErrorstoTGraphErrors(TGraphAsymmErrors* g1);
 TGraphAsymmErrors* ConvertTGraphErrorstoTGraphAsymmErrors(TGraphErrors* g1);
 TH1F* GetPPReferenceFromPythia(TString fileName);
-void SavingFiles(TString outputDir,TString System);
+void SavingFiles(TString outputDir,TString meson, TString System);
 
 Double_t xSection2760GeVppINEL  = 62.8*1e-3;
 Double_t xSectionpPb5023GeVINEL = 70*1e-3;
@@ -70,10 +73,19 @@ TString invYieldLabel       = "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}
 TString pTLabel             = "#it{p}_{T} (GeV/#it{c})";
 TString RpPbLabel           = "#it{R}_{pPb}";
 TString energyLabel         = "p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV";
+
+
 TString DalitzLabel         = "#pi^{0} #rightarrow e^{+}e^{-}#gamma";
 TString PCMLabel            = "#pi^{0} #rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}";
 TString CaloLabel           = "#pi^{0} #rightarrow #gamma #gamma";
 TString PCMEMCalLabel       = "#pi^{0} #rightarrow #gamma_{conv}#gamma_{calo}";
+
+TString DalitzLabelEta         = "#eta #rightarrow e^{+}e^{-}#gamma";
+TString PCMLabelEta            = "#eta #rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}";
+TString CaloLabelEta           = "#eta #rightarrow #gamma #gamma";
+TString PCMEMCalLabelEta       = "#eta #rightarrow #gamma_{conv}#gamma_{calo}";
+
+
 TString ChargedPionsLabel   = "#pi^{+} + #pi^{-}";
 TString thesisPlotLabel     = "";
 
@@ -321,11 +333,119 @@ TF1* RebinWithFitToTGraph(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSp
 }
 
 
+void ExtrapolateSpectrum(TF1* FitToSpectrum, TGraphAsymmErrors *spectrumStatErr, TGraphAsymmErrors *spectrumSystErr, TGraphAsymmErrors** newSpectrumStatErr, TGraphAsymmErrors** newSpectrumSystErr, TString system, TString energy, TString meson){
+
+    
+    
+    (*newSpectrumStatErr) = (TGraphAsymmErrors*) spectrumStatErr->Clone();
+    (*newSpectrumSystErr) = (TGraphAsymmErrors*) spectrumSystErr->Clone();
+    
+    Double_t newXBins[20];
+    Double_t newXerrlow[20];
+    Double_t newXerrhigh[20];
+    Double_t newYerrlowStat[20];
+    Double_t newYerrhighStat[20];
+    Double_t newYerrlowSyst[20];
+    Double_t newYerrhighSyst[20];
+    
+    Int_t nNewPoints = -1;
+    
+    //Initialation
+    for(Int_t i=0; i<20; i++){
+        newXBins[i]=0.;
+        newXerrhigh[i]=0.;
+        newXerrlow[i]=0.;
+    }
+    
+   
+    
+
+    
+    if( system.CompareTo("PCM") == 0  && energy.CompareTo("2.76TeV") == 0 && meson.CompareTo("Eta") == 0 ) {
+        
+        nNewPoints = 3;    
+        newXBins[0]      = 5.5; newXBins[1] = 7.0;newXBins[2] = 9.0;
+        newXerrhigh[0]   = 0.5; newXerrlow[0] = 0.5;
+        newXerrhigh[1]   = 1.0; newXerrlow[1] = 1.0;
+        newXerrhigh[2]   = 1.0; newXerrhigh[2] = 1.0;
+        
+    
+        
+    } else if ( system.CompareTo("PCM") == 0 && ( energy.CompareTo("7TeV") == 0 || energy.CompareTo("8TeV") == 0 ) && meson.CompareTo("Eta") == 0 ) {
+        
+        nNewPoints       = 1;    
+        newXBins[0]      = 9.0; 
+        newXerrhigh[0]   = 1.; newXerrlow[0] = 1.;
+        
+        
+    } else if ( system.CompareTo("PCM") == 0  && energy.CompareTo("2.76TeV") == 0 && meson.CompareTo("Pi0") == 0 ) {
+        
+    
+
+        nNewPoints = 4; 
+        newXBins[0]      = 7.5; newXBins[1] = 9;newXBins[2] = 11; newXBins[3] = 14;
+        newXerrhigh[0]   = 0.5; newXerrlow[0] = 0.5;
+        newXerrhigh[1]   = 1.0; newXerrlow[1] = 1.0;
+        newXerrhigh[2]   = 1.0; newXerrlow[2] = 1.0;
+        newXerrhigh[3]   = 2.0; newXerrlow[3] = 2.0;
+        
+        
+    } else if ( system.CompareTo("PHOS") ==0 && energy.CompareTo("2.76TeV") == 0 && meson.CompareTo("Pi0") == 0 ) {
+        
+        nNewPoints       = 2;    
+        newXBins[0]      = 14.0; 
+        newXBins[1]      = 18.0;
+        newXerrhigh[0]   = 2.; newXerrlow[0] = 2.;
+        newXerrhigh[1]   = 2.; newXerrlow[1] = 2.;
+        
+        
+    }
+
+   
+    
+    
+    for(Int_t i=0; i<nNewPoints; i++) {
+        newYerrhighStat[i]   = spectrumStatErr->GetEYhigh()[spectrumStatErr->GetN()-1] / spectrumStatErr->GetY()[spectrumStatErr->GetN()-1]; 
+        newYerrlowStat[i]    = spectrumStatErr->GetEYlow()[spectrumStatErr->GetN()-1] / spectrumStatErr->GetY()[spectrumStatErr->GetN()-1]; 
+        newYerrhighSyst[i]   = spectrumSystErr->GetEYhigh()[spectrumSystErr->GetN()-1] / spectrumSystErr->GetY()[spectrumSystErr->GetN()-1]; ; 
+        newYerrlowSyst[i]    = spectrumSystErr->GetEYlow()[spectrumSystErr->GetN()-1] / spectrumSystErr->GetY()[spectrumSystErr->GetN()-1]; ; 
+    }
+    
+    
+    
+    
+    
+    Int_t currentPoint = (*newSpectrumSystErr)->GetN();
+    
+    
+    for(Int_t i=0; i<nNewPoints; i++){
+       
+        Double_t yEval      = FitToSpectrum->Eval(newXBins[i]);
+        newYerrlowStat[i]   = yEval* newYerrlowStat[i];
+        newYerrhighStat[i]  = yEval* newYerrhighStat[i];
+        newYerrlowSyst[i]   = yEval* newYerrlowSyst[i];
+        newYerrhighSyst[i]  = yEval* newYerrhighSyst[i];
+        
+        (*newSpectrumStatErr)->SetPoint(currentPoint,newXBins[i],yEval);
+        (*newSpectrumStatErr)->SetPointError(currentPoint,newXerrlow[i],newXerrhigh[i],newYerrlowStat[i],newYerrhighStat[i]);
+        (*newSpectrumSystErr)->SetPoint(currentPoint,newXBins[i],yEval);
+        (*newSpectrumSystErr)->SetPointError(currentPoint,newXerrlow[i],newXerrhigh[i],newYerrlowStat[i],newYerrhighStat[i]);
+        
+        currentPoint++;
+        
+    }
+    
+
+    
+}
+
+
+
 TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, TGraphAsymmErrors *spectrumSystErr,TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,  TGraphAsymmErrors** newSpectrumStatErr,
 					     TGraphAsymmErrors** newSpectrumSystErr,TGraphAsymmErrors** spectrumYShiftedDownStatErr,TGraphAsymmErrors** spectrumYShiftedUpStatErr,
-					     TF1** FitToSpectrumYShiftedDown, TF1** FitToSpectrumYShiftedUp){
+					     TF1** FitToSpectrumYShiftedDown, TF1** FitToSpectrumYShiftedUp,TString meson,TString energy,TString system){
 
- //Shift the spectra up and down acording to the systematic errors
+    //Shift the spectra up and down acording to the systematic errors
    
     (*spectrumYShiftedUpStatErr)    = BinYShiftwithErrhigh( spectrumStatErr,spectrumSystErr);
     (*spectrumYShiftedDownStatErr)  = BinYShiftwithErrlow(  spectrumStatErr,spectrumSystErr);
@@ -348,60 +468,81 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
        
    if( FitType.BeginsWith("l") || FitType.BeginsWith("L") ) {
      
-            FitToSpectrum = FitObject("l","fitInvCrossSectionPi0","Pi0");
+            FitToSpectrum = FitObject("l",Form("fitInvCrossSection%s",meson.Data()),meson.Data());
             FitToSpectrum->SetRange(minPt,maxPt);
             FitToSpectrum->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
 	    spectrumStatErr->Fit(FitToSpectrum,"SQNRME+","",minPt,maxPt);  //One time
             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
   
-	    
+        
 	    //To compute systematic errors
-	    (*FitToSpectrumYShiftedUp) = FitObject("l","fitInvCrossSectionPi0YShiftedUp","Pi0");
+	    (*FitToSpectrumYShiftedUp) = FitObject("l",Form("fitInvCrossSection%sYShiftedUp",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedUp)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedUp)->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
-	    (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SQNRME+","",minPt,maxPt);  //One time
+            (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SQNRME+","",minPt,maxPt);  //One time
 	    
-	    //To compute systematic errors
 	    
-	    (*FitToSpectrumYShiftedDown) = FitObject("l","fitInvCrossSectionPi0YShiftedDown","Pi0");
+	    
+	    (*FitToSpectrumYShiftedDown) = FitObject("l",Form("fitInvCrossSection%sYShiftedDown",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedDown)->SetRange(minPt,maxPt);
-            (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0],parameters[1],parameters[2]); // standard 
-	    (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
+            (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0] ,parameters[1],parameters[2]); // standard 
+            (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
+            
+             cout<<(*FitToSpectrumYShiftedDown)->GetParameter(0)<<endl;
+             cout<<(*FitToSpectrumYShiftedDown)->GetParameter(1)<<endl;
+             cout<<(*FitToSpectrumYShiftedDown)->GetParameter(2)<<endl;
+             cout<<(*FitToSpectrumYShiftedDown)->GetParameter(1)<<endl;
+            
 	   
    } else if ( FitType.BeginsWith("tcm") || FitType.BeginsWith("tcm") ){
             
-            FitToSpectrum = FitObject("tcm","fitInvCrossSectionPi0","Pi0");
+            FitToSpectrum = FitObject("tcm",Form("fitInvCrossSection%s",meson.Data()),meson.Data());
             FitToSpectrum->SetRange(minPt,maxPt);
             FitToSpectrum->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
-            //FitToSpectrum->FixParameter(1,parameters[1]);
-            //FitToSpectrum->FixParameter(2,parameters[2]);
-            //FitToSpectrum->FixParameter(4,parameters[4]);
-	    spectrumStatErr->Fit(FitToSpectrum,"SQNRME+","",minPt,maxPt);  //One time
+            FitToSpectrum->SetParLimits(0,0.7*parameters[0],1.3*parameters[0]);
+	    FitToSpectrum->SetParLimits(1,0.7*parameters[1],1.3*parameters[1]);
+            FitToSpectrum->SetParLimits(2,0.7*parameters[2],1.3*parameters[2]);	    
+            FitToSpectrum->SetParLimits(3,0.7*parameters[3],1.3*parameters[3]);	    
+            FitToSpectrum->SetParLimits(4,0.7*parameters[4],1.3*parameters[4]);
+            
+            
+            spectrumStatErr->Fit(FitToSpectrum,"SNRME+","",minPt,maxPt);  //One time
+            //spectrumStatErr->Fit(FitToSpectrum,"SNRME+","",minPt,maxPt);  //One time
             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
   
+            
+            parameters[0]= FitToSpectrum->GetParameter(0);
+	    parameters[1]= FitToSpectrum->GetParameter(1);
+	    parameters[2]= FitToSpectrum->GetParameter(2);
+	    parameters[3]= FitToSpectrum->GetParameter(3);
+	    parameters[4]= FitToSpectrum->GetParameter(4);
 	    
 	    //To compute systematic errors
-	    (*FitToSpectrumYShiftedUp) = FitObject("tcm","fitInvCrossSectionPi0YShiftedUp","Pi0");
+	    (*FitToSpectrumYShiftedUp) = FitObject("tcm",Form("fitInvCrossSection%sYShiftedUp",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedUp)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedUp)->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
-            //(*FitToSpectrumYShiftedUp)->FixParameter(0,parameters[0]);
-            //(*FitToSpectrumYShiftedUp)->FixParameter(3,parameters[3]);
-            //(*FitToSpectrumYShiftedUp)->FixParameter(4,parameters[4]);
-	    (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SQNRME+","",minPt,maxPt);  //One time
+            (*FitToSpectrumYShiftedUp)->SetParLimits(0,0.8*parameters[0],1.2*parameters[0]);
+	    (*FitToSpectrumYShiftedUp)->SetParLimits(1,0.8*parameters[1],1.2*parameters[1]);
+           
+            (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SNRME+","",minPt,maxPt);  //One time
+            (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SNRME+","",minPt,maxPt);  //One time
+	   
 	    
 	    //To compute systematic errors
 	    
-	    (*FitToSpectrumYShiftedDown) = FitObject("tcm","fitInvCrossSectionPi0YShiftedDown","Pi0");
+	    (*FitToSpectrumYShiftedDown) = FitObject("tcm",Form("fitInvCrossSection%sYShiftedDown",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedDown)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); //standard
-            //(*FitToSpectrumYShiftedDown)->FixParameter(0,parameters[0]);
-            //(*FitToSpectrumYShiftedDown)->FixParameter(3,parameters[3]);
-            //(*FitToSpectrumYShiftedDown)->FixParameter(4,parameters[4]);
-	    (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
+            (*FitToSpectrumYShiftedDown)->SetParLimits(0,0.8*parameters[0],1.2*parameters[0]);
+	    (*FitToSpectrumYShiftedDown)->SetParLimits(1,0.8*parameters[1],1.2*parameters[1]);
+            (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SNRME+","",minPt,maxPt);  //One time
+            (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SNRME+","",minPt,maxPt);  //One time
+       
        
    }
    
     (*newSpectrumStatErr) = new TGraphAsymmErrors(nNewPoints);
+    
     (*newSpectrumSystErr) = new TGraphAsymmErrors(nNewPoints);
     
     for( Int_t iPoint = 0; iPoint < nNewPoints; iPoint++){
@@ -462,7 +603,7 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
 
 
 
-TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Int_t fixParNumber){
+TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TF1* CurrentFit, TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters,Int_t fixParNumber, TString meson){
     
     Int_t     nOldPoints       = spectrum->GetN();
     Double_t *xOldValue        = spectrum->GetX();
@@ -483,7 +624,7 @@ TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErr
     if( CurrentFit == 0) {
         CurrentFit = new TF1();
         if( FitType.BeginsWith("l") || FitType.BeginsWith("L") ) {
-            CurrentFit = FitObject("l","fitInvCrossSectionPi0","Pi0");
+            CurrentFit = FitObject("l","fitInvCrossSectionPi0",meson.Data());
             CurrentFit->SetRange(minPt,maxPt);
             CurrentFit->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
             
@@ -494,7 +635,7 @@ TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErr
             }
             spectrum->Fit(CurrentFit,"SQNRME+","",minPt,maxPt);  //One time
         } else if (FitType.BeginsWith("tcm") || FitType.BeginsWith("TCM") ){
-            CurrentFit = FitObject("tcm","fitInvCrossSectionPi0","Pi0");
+            CurrentFit = FitObject("tcm","fitInvCrossSectionPi0",meson.Data());
             CurrentFit->SetRange(minPt,maxPt);
             CurrentFit->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
             spectrum->Fit(CurrentFit,"SQNRME+","",minPt,maxPt);  //One time
@@ -533,7 +674,7 @@ TF1* RebinWithFitToTGraphWithMeanErr(TGraphAsymmErrors *spectrum, TGraphAsymmErr
 }
 
 
-TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters){
+TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** newSpectrum, TGraphAsymmErrors *newBins,TString FitType,Double_t minPt, Double_t maxPt, Double_t* parameters, TString meson){
     //This function compute the errors of Y from the fit function
 
     ///////////////////////////////////////////////////////////    
@@ -558,14 +699,14 @@ TF1* FillTGraphEYWithFitErr(TGraphAsymmErrors *spectrum, TGraphAsymmErrors** new
     TF1* CurrentFit             = new TF1();
     
     if( FitType.BeginsWith("l") || FitType.BeginsWith("L") ) {
-        CurrentFit = FitObject("l","fitInvCrossSectionPi0","Pi0");
+        CurrentFit = FitObject("l","fitInvCrossSectionPi0",meson.Data());
         CurrentFit->SetRange(minPt,maxPt);
         CurrentFit->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
         spectrum->Fit(CurrentFit,"SQNRME+","",minPt,maxPt);  //One time
 
         (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
     } else if (FitType.BeginsWith("tcm") || FitType.BeginsWith("TCM") ){
-        CurrentFit = FitObject("tcm","fitInvCrossSectionPi0","Pi0");
+        CurrentFit = FitObject("tcm","fitInvCrossSectionPi0",meson.Data());
         CurrentFit->SetRange(minPt,maxPt);
         CurrentFit->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
         spectrum->Fit(CurrentFit,"SQNRME+","",minPt,maxPt);  //One time
@@ -692,6 +833,61 @@ TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors*
     }
     return graphErr;
 }
+
+
+TGraphAsymmErrors* CalculateSystErrors(TGraphErrors* spectrum,TGraphAsymmErrors* g1,TGraphAsymmErrors* g2,TGraphAsymmErrors* g3){
+
+    Int_t nPoints               = spectrum->GetN();
+    Double_t* xBins             = spectrum->GetX();
+    Double_t* yBins             = spectrum->GetY();
+    Double_t *g1yErrlow         = g1->GetEYlow();
+    Double_t *g1xErrlow         = g1->GetEXlow();
+    Double_t *g1xErrhigh        = g1->GetEXhigh();
+    Double_t *g1yVal            = g1->GetY();
+    Double_t *g2yErrlow         = g2->GetEYlow();
+    Double_t *g2yVal            = g2->GetY();
+    
+    Double_t *g3yErrlow         = g3->GetEYlow();
+    Double_t *g3yVal            = g3->GetY();
+    
+    
+    
+    
+    
+    TGraphAsymmErrors* graphErr = new TGraphAsymmErrors(nPoints);
+    cout<<"iPoin\tx\ty\tXerrLow\tXerrHigh\tYerrLow\tYerrHigh"<<endl;;
+    
+    for(Int_t iPoint = 0; iPoint < nPoints; iPoint++){
+        Double_t g1yrelErr  = g1yErrlow[iPoint]/g1yVal[iPoint];
+        Double_t g2yrelErr  = g2yErrlow[iPoint]/g2yVal[iPoint];
+        Double_t g3yrelErr  = g3yErrlow[iPoint]/g3yVal[iPoint];
+        Double_t ySysErr    = 0.0;
+        
+        if(  g1yrelErr >= g2yrelErr ){
+            
+            if( g1yrelErr >= g3yrelErr ) {
+            ySysErr         = yBins[iPoint]*g1yrelErr;
+            } else {
+                
+            ySysErr         = yBins[iPoint]*g3yrelErr;
+            
+            }
+        } else if( g2yrelErr >= g3yrelErr ) {
+            ySysErr         = yBins[iPoint]*g2yrelErr;
+        } else {
+            
+             ySysErr         = yBins[iPoint]*g3yrelErr;
+        }
+            
+        graphErr->SetPoint(iPoint,xBins[iPoint],yBins[iPoint]);
+        graphErr->SetPointError(iPoint,g1xErrlow[iPoint],g1xErrhigh[iPoint],ySysErr,ySysErr);
+        cout<<iPoint<<"\t"<<xBins[iPoint]<<"\t"<<yBins[iPoint]<<"\t"<<g1xErrlow[iPoint]<<"\t"<<g1xErrhigh[iPoint]<<"\t"<<ySysErr<<"\t"<<ySysErr<<endl;
+    }
+    return graphErr;
+}
+
+
+
 
 TGraphAsymmErrors* CalculateSystErrors(TGraphAsymmErrors* spectrum,TGraphErrors* g1,TGraphErrors* g2){
 
@@ -940,12 +1136,19 @@ TGraphErrors *GetInterpolSpectrum2D(TGraphErrors *g1, TGraphErrors *g2, Double_t
     return gInterpol;
 }
 
-TGraphErrors *GetInterpolSpectrum3D(TGraphErrors *g1, TGraphErrors *g2,TGraphErrors *g3, Double_t d1, Double_t d2, Double_t d3, Double_t dSqrts= 10000){
+TGraphErrors *GetInterpolSpectrum3D(TGraphErrors *g1, TGraphErrors *g2,TGraphErrors *g3, Double_t d1, Double_t d2, Double_t d3, Double_t dSqrts,TString opc){
     if(!g1) return 0x0;
     if(!g2) return 0x0;
     if(!g3) return 0x0;
+    
+    TGraphErrors  *gInterpol     = new TGraphErrors(g1->GetN());
+    TGraphErrors  *gAlpha        = new TGraphErrors(g1->GetN());
+    TGraphErrors** gPtvsSqrts    = new TGraphErrors*[g1->GetN()];
+    TGraphErrors** gPtvsEnergies = new TGraphErrors*[g1->GetN()];
+    TF1**          fPowerlawFits = new TF1*[g1->GetN()];
+    
 
-    TGraphErrors *gInterpol = new TGraphErrors(g1->GetN());
+   // TGraphErrors *gInterpol = new TGraphErrors(g1->GetN());
 
     for(Int_t i = 0; i < g1->GetN(); i++){
         TGraphErrors *grint = new TGraphErrors(1);
@@ -962,16 +1165,56 @@ TGraphErrors *GetInterpolSpectrum3D(TGraphErrors *g1, TGraphErrors *g2,TGraphErr
         fPowerlaw->SetParameters(0, 0.1);
         fPowerlaw->SetParameters(1, 2.0);
 
-        for(Int_t l = 0; l < 10; l++) gToFit->Fit(fPowerlaw,"0Q");
+        for(Int_t l = 0; l < 10; l++) gToFit->Fit(fPowerlaw,"Q");
+        
+         
+        Double_t alpha  = fPowerlaw->GetParameter(1);
+        Double_t alphaE = fPowerlaw->GetParError(1);
 
-        (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
+        (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.48);
         gInterpol->SetPoint(i, g1->GetX()[i],
         fPowerlaw->Eval(dSqrts));
         gInterpol->SetPointError(i, 0, grint->GetEY()[0]);
+       
+                
+        gAlpha->SetPoint(i, g1->GetX()[i],alpha);
+        //gAlpha->SetPointError(i, 0,alphaE);
+        
+        gPtvsSqrts[i]= new TGraphErrors(1);
+        gPtvsSqrts[i]->SetPoint(0,dSqrts,gInterpol->GetY()[i]);
+        //gPtvsSqrts[i]->Sort();
+        
+        fPowerlawFits[i] = fPowerlaw;
+        gPtvsEnergies[i] = gToFit;
+        
+        
+        
 
         delete grint;
         delete fPowerlaw;
     }
+    
+     if( opc.EqualTo("SystUp") || opc.EqualTo("SystDown") || opc.EqualTo("Stat") ) {
+      
+        Int_t index = 0;
+        
+        if( opc.EqualTo("Stat") ) index = 0;
+	else if (opc.EqualTo("SystDown") ) index = 1;
+	else if (opc.EqualTo("SystUp") ) index = 2;
+       
+        graphAlpha[index]    = gAlpha;
+        graphPtvsSqrts[index]      = new TGraphErrors*[g1->GetN()];
+        fPowerlawSystem[index]     = new TF1*[g1->GetN()];
+        gPtvsEnergiesSystem[index] = new TGraphErrors*[g1->GetN()];
+        for ( Int_t i = 0; i < g1->GetN(); i++ ){
+            graphPtvsSqrts[index][i]       = gPtvsSqrts[i];
+            fPowerlawSystem[index][i]      = fPowerlawFits[i];
+            gPtvsEnergiesSystem[index][i]  = gPtvsEnergies[i];
+        }
+    }
+    
+    
+    
 
     return gInterpol;
 }
@@ -1032,6 +1275,16 @@ TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TStr
             cout<<valueX[i]<<" "<<"errorLow:  "<< errorYlow[i]/ valueY[i]*100<<endl;
             cout<<valueX[i]<<" "<<"errorHigh: "<< errorYhigh[i]/ valueY[i]*100<<endl;
         }
+    } else if (method.CompareTo("PHOSPHOSv2") == 0 ){  
+        
+        cout<<"Entro PHOSv2"<<endl;
+        
+        Double_t  errorMaterial = 3.5;
+        for(Int_t i = 0; i < nPoints; i++){
+            Double_t materialE 	=  (  errorMaterial   * valueY[i] ) / 100.0;
+            errorYlow[i]  = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( materialE*materialE ) );
+            errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( materialE*materialE ) );
+        }
     } else if ( method.CompareTo("Comb") == 0 ) {
       cout<<"Entro Comb"<<endl;
       Double_t  errorMaterial = 4.5;
@@ -1052,7 +1305,33 @@ TGraphAsymmErrors* CancelOutMaterialError(TGraphAsymmErrors* graphYieldPi0, TStr
             errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( materialE*materialE ) );
         }
       
-    }
+    } else if ( method.CompareTo("EMCEMC") == 0 ){
+    
+        Double_t  errorClusterMaterialTRD = 4.24;
+      
+        for(Int_t i = 0; i < nPoints; i++){
+            
+            Double_t errorClsMatTRD	=  ( errorClusterMaterialTRD   * valueY[i] ) / 100.0;
+            errorYlow[i]  = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( errorClsMatTRD*errorClsMatTRD ) );
+            errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( errorClsMatTRD*errorClsMatTRD ) );
+        }
+        
+    } else if ( method.CompareTo("PCMEMC") == 0 ) {
+        
+        Double_t  errorClusterMaterialTRD = 4.24;
+        Double_t  errorInnerMaterial      = 4.5;
+        
+        for(Int_t i = 0; i < nPoints; i++){
+            
+            Double_t errorClsMatTRD	=  ( errorClusterMaterialTRD   * valueY[i] ) / 100.0;
+            Double_t errorInnerMat      =  ( errorInnerMaterial        * valueY[i] ) / 100.0;
+            
+            errorYlow[i]  = TMath::Sqrt(   ( errorYlow[i] * errorYlow[i]  )  - ( errorClsMatTRD*errorClsMatTRD ) - (errorInnerMat*errorInnerMat) );
+            errorYhigh[i] = TMath::Sqrt(   ( errorYhigh[i]* errorYhigh[i] )  - ( errorClsMatTRD*errorClsMatTRD ) - (errorInnerMat*errorInnerMat) );
+        }
+        
+        
+    }    
     TGraphAsymmErrors* graphInvYieldPi0CancelOutMaterial = new TGraphAsymmErrors(nPoints,valueX,valueY,errorXlow,errorXhigh,errorYlow,errorYhigh);
     return graphInvYieldPi0CancelOutMaterial;
 }
