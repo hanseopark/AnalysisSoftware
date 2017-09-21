@@ -430,8 +430,6 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (!energy.CompareTo("2.76TeV")){
                             errorFixed              = 1.05+pow(ptBins[k],2.7)*0.045;
-                        else if (!energy.CompareTo("8TeV")){
-                            errorFixed              = 1.05+pow(ptBins[k],2.7)*0.045;
                         } else {
                             errorFixed              = 0.25+pow(ptBins[k]-2.0,2)*0.7;
                         }
@@ -446,6 +444,18 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 } else {
                     if (!energy.CompareTo("2.76TeV")){
                         errorFixed                  = 0.45;
+                    } else if (!energy.CompareTo("8TeV")){
+                        adjustPtDependent               = kTRUE;
+                        for (Int_t k = 0; k < nPtBinsActive; k++){
+                            if (ptBins[k] > 1.0)
+                                errorFixed              = 0.5;
+                            if (errorFixed != -1){
+                                errorsMean[i][k]        = errorFixed;
+                                errorsMeanErr[i][k]     = errorFixed*0.01;
+                                errorsMeanCorr[i][k]    = errorFixed;
+                                errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                            }
+                        }
                     }
                 }
             }
@@ -533,8 +543,11 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                 } else {
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBinsActive; k++){
-                        if (!energy.CompareTo("2.76TeV")||!energy.CompareTo("7TeV")||!energy.CompareTo("8TeV"))
+                        if (!energy.CompareTo("2.76TeV")||!energy.CompareTo("7TeV"))
                             errorFixed              = 0.2+pow(ptBins[k],1.9)*0.02+0.1*ptBins[k];
+                        else if (!energy.CompareTo("8TeV"))
+                            if (ptBins[k] > 1)
+                                errorFixed              = 1.2;
 
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
@@ -637,6 +650,20 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (ptBins[k] > 5)
                             errorFixed              = 1.5;
+                        if (errorFixed != -1){
+                            errorsMean[i][k]        = errorFixed;
+                            errorsMeanErr[i][k]     = errorFixed*0.01;
+                            errorsMeanCorr[i][k]    = errorFixed;
+                            errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                        }
+                    }
+                } else if (!energy.CompareTo("8TeV")){
+                    adjustPtDependent               = kTRUE;
+                    for (Int_t k = 0; k < nPtBinsActive; k++){
+                        if (ptBins[k] < 3)
+                            errorFixed              = 2.2+pow(ptBins[k]-3,2)*0.15;
+                        if (ptBins[k] > 3)
+                            errorFixed              = 2.2+pow(ptBins[k]-3,2)*0.035;
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
                             errorsMeanErr[i][k]     = errorFixed*0.01;
@@ -1107,13 +1134,9 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     fstream SysErrDatAverPaper;
     cout << SysErrDatnameMeanPaper << endl;
     SysErrDatAverPaper.open(SysErrDatnameMeanPaper, ios::out);
-    SysErrDatAverPaper  << "p_{T}" << "\t Material \t Yield Extraction \t PID \t photon reco \t track recon \t pile-up ";
-    if (benable[13]) SysErrDatAverPaper << "\t Cocktail" ;
-    SysErrDatAverPaper << "\t summed"<<  endl;
+    SysErrDatAverPaper  << "p_{T}" << "\t Material \t Yield Extraction \t PID \t photon reco \t track recon \t summed" <<  endl;
     for (Int_t l=0; l< nPtBinsActive; l++){
-        SysErrDatAverPaper << ptBins[l] <<"\t" << errorMaterial << "\t" << errorsMeanCorrSignalExtraction[l] << "\t" << errorsMeanCorrPID[l]<< "\t" << errorsMeanCorrPhotonReco[l]<< "\t" <<errorsMeanCorrTrackReco[l] <<"\t" <<errorsMeanCorrPileup[l] ;
-        if (benable[13]) SysErrDatAverPaper << "\t" << errorsMeanCorr[13][l];
-        SysErrDatAverPaper <<"\t" << errorsMeanCorrMatSummed[l]<< endl;
+        SysErrDatAverPaper << ptBins[l] <<"\t" << errorMaterial << "\t" << errorsMeanCorrSignalExtraction[l] << "\t" << errorsMeanCorrPID[l]<< "\t" << errorsMeanCorrPhotonReco[l]<< "\t" <<errorsMeanCorrTrackReco[l] <<"\t" << errorsMeanCorrMatSummed[l]<< endl;
     }
     SysErrDatAverPaper.close();
 }
