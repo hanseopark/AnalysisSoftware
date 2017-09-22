@@ -450,6 +450,8 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
     (*spectrumYShiftedUpStatErr)    = BinYShiftwithErrhigh( spectrumStatErr,spectrumSystErr);
     (*spectrumYShiftedDownStatErr)  = BinYShiftwithErrlow(  spectrumStatErr,spectrumSystErr);
     
+    
+    
     const Int_t nNewPoints        = newBins->GetN();
     Double_t *xNewValue           = newBins->GetX();
     Double_t *xNewValueErrlow     = newBins->GetEXlow();
@@ -471,22 +473,28 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
             FitToSpectrum = FitObject("l",Form("fitInvCrossSection%s",meson.Data()),meson.Data());
             FitToSpectrum->SetRange(minPt,maxPt);
             FitToSpectrum->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
-	    spectrumStatErr->Fit(FitToSpectrum,"SQNRME+","",minPt,maxPt);  //One time
+	    spectrumStatErr->Fit(FitToSpectrum,"SNRME+","",minPt,maxPt);  //One time
             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(grint, 0.68);
-  
+            
+            //parameters[0]= FitToSpectrum->GetParameter(0);
+	    //parameters[1]= FitToSpectrum->GetParameter(1);
+	    //parameters[2]= FitToSpectrum->GetParameter(2);
+	    
         
 	    //To compute systematic errors
 	    (*FitToSpectrumYShiftedUp) = FitObject("l",Form("fitInvCrossSection%sYShiftedUp",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedUp)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedUp)->SetParameters(parameters[0],parameters[1],parameters[2]); // standard
-            (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SQNRME+","",minPt,maxPt);  //One time
+            (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SNRME+","",minPt,maxPt);  //One time
 	    
 	    
 	    
 	    (*FitToSpectrumYShiftedDown) = FitObject("l",Form("fitInvCrossSection%sYShiftedDown",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedDown)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0] ,parameters[1],parameters[2]); // standard 
-            (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SQNRME+","",minPt,maxPt);  //One time
+            (*FitToSpectrumYShiftedDown)->SetParLimits(0,0.8*parameters[0],1.2*parameters[0]);
+	    (*FitToSpectrumYShiftedDown)->SetParLimits(1,0.8*parameters[1],1.2*parameters[1]);
+            (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SNRME+","",minPt,maxPt);  //One time
             
              cout<<(*FitToSpectrumYShiftedDown)->GetParameter(0)<<endl;
              cout<<(*FitToSpectrumYShiftedDown)->GetParameter(1)<<endl;
@@ -499,11 +507,16 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
             FitToSpectrum = FitObject("tcm",Form("fitInvCrossSection%s",meson.Data()),meson.Data());
             FitToSpectrum->SetRange(minPt,maxPt);
             FitToSpectrum->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
-            FitToSpectrum->SetParLimits(0,0.7*parameters[0],1.3*parameters[0]);
-	    FitToSpectrum->SetParLimits(1,0.7*parameters[1],1.3*parameters[1]);
-            FitToSpectrum->SetParLimits(2,0.7*parameters[2],1.3*parameters[2]);	    
-            FitToSpectrum->SetParLimits(3,0.7*parameters[3],1.3*parameters[3]);	    
-            FitToSpectrum->SetParLimits(4,0.7*parameters[4],1.3*parameters[4]);
+            
+            if( meson.CompareTo("Pi0") == 0 && system.CompareTo("PCM-EMCal") == 0 ) {
+            FitToSpectrum->SetParLimits(0,0.6*parameters[0],1.2*parameters[0]);
+            } else {
+            FitToSpectrum->SetParLimits(0,0.7*parameters[0],1.2*parameters[0]);   
+            }
+	    FitToSpectrum->SetParLimits(1,0.8*parameters[1],1.2*parameters[1]);
+            FitToSpectrum->SetParLimits(2,0.8*parameters[2],1.2*parameters[2]);	    
+            FitToSpectrum->SetParLimits(3,0.8*parameters[3],1.2*parameters[3]);	    
+            FitToSpectrum->SetParLimits(4,0.8*parameters[4],1.2*parameters[4]);
             
             
             spectrumStatErr->Fit(FitToSpectrum,"SNRME+","",minPt,maxPt);  //One time
@@ -521,11 +534,11 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
 	    (*FitToSpectrumYShiftedUp) = FitObject("tcm",Form("fitInvCrossSection%sYShiftedUp",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedUp)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedUp)->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); // standard
-            (*FitToSpectrumYShiftedUp)->SetParLimits(0,0.8*parameters[0],1.2*parameters[0]);
-	    (*FitToSpectrumYShiftedUp)->SetParLimits(1,0.8*parameters[1],1.2*parameters[1]);
+            (*FitToSpectrumYShiftedUp)->SetParLimits(0,0.7*parameters[0],1.3*parameters[0]);
+	    (*FitToSpectrumYShiftedUp)->SetParLimits(1,0.7*parameters[1],1.3*parameters[1]);
            
             (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SNRME+","",minPt,maxPt);  //One time
-            (*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SNRME+","",minPt,maxPt);  //One time
+            //(*spectrumYShiftedUpStatErr)->Fit((*FitToSpectrumYShiftedUp),"SNRME+","",minPt,maxPt);  //One time
 	   
 	    
 	    //To compute systematic errors
@@ -533,10 +546,10 @@ TF1* RebinWithFitToTGraphWithUpDownYShifted(TGraphAsymmErrors *spectrumStatErr, 
 	    (*FitToSpectrumYShiftedDown) = FitObject("tcm",Form("fitInvCrossSection%sYShiftedDown",meson.Data()),meson.Data());
             (*FitToSpectrumYShiftedDown)->SetRange(minPt,maxPt);
             (*FitToSpectrumYShiftedDown)->SetParameters(parameters[0],parameters[1],parameters[2],parameters[3],parameters[4]); //standard
-            (*FitToSpectrumYShiftedDown)->SetParLimits(0,0.8*parameters[0],1.2*parameters[0]);
-	    (*FitToSpectrumYShiftedDown)->SetParLimits(1,0.8*parameters[1],1.2*parameters[1]);
+            (*FitToSpectrumYShiftedDown)->SetParLimits(0,0.7*parameters[0],1.3*parameters[0]);
+	    (*FitToSpectrumYShiftedDown)->SetParLimits(1,0.7*parameters[1],1.3*parameters[1]);
             (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SNRME+","",minPt,maxPt);  //One time
-            (*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SNRME+","",minPt,maxPt);  //One time
+            //(*spectrumYShiftedDownStatErr)->Fit((*FitToSpectrumYShiftedDown),"SNRME+","",minPt,maxPt);  //One time
        
        
    }

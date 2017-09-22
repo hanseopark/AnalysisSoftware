@@ -1313,13 +1313,20 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     maxPt = graphInvYieldPi02760GeVStatErrExtended->GetX()[graphInvYieldPi02760GeVStatErrExtended->GetN()-1];
     //maxPt = graphInvYieldPi02760GeVStatErrExtended->GetXaxis()->GetBinUpEdge(graphInvYieldPi02760GeVStatErrExtended->GetXaxis()->GetNbins());
     
-    //cout<< "MaxPt taken"<< maxPt<<endl;
+    cout<< "MaxPt taken"<< maxPt<<endl;
+    
+    cout<< "Fitting 2760GeV"<<endl;
+    cout<<    Parameters2760GeV[0]<< endl;
+    cout<<    Parameters2760GeV[1]<< endl;
+    cout<<    Parameters2760GeV[2]<< endl;
+    cout<<    Parameters2760GeV[3]<< endl;
+    cout<<    Parameters2760GeV[4]<< endl;
     
     //return;
         
     
     
-    TF1* fitPi02760GeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi02760GeVStatErrExtended,graphInvYieldPi02760GeVSystErrExtended,graphInvYieldPi0pPb5023GeVYShiftedComplErr,fitType.Data(), minPt, maxPt,Parameters2760GeV, &graphAInvYieldPi02760GeVBinStatErr,&graphAInvYieldPi02760GeVBinSystErr,&graphInvYieldPi02760GeVYShiftedDownStatErr,&graphInvYieldPi02760GeVYShiftedUpStatErr,&fitPi02760GeVBinYShiftedDownStatErr,&fitPi02760GeVBinYShiftedUpStatErr,meson);
+    TF1* fitPi02760GeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi02760GeVStatErrExtended,graphInvYieldPi02760GeVSystErrExtended,graphInvYieldPi0pPb5023GeVYShiftedComplErr,fitType.Data(), minPt, maxPt,Parameters2760GeV, &graphAInvYieldPi02760GeVBinStatErr,&graphAInvYieldPi02760GeVBinSystErr,&graphInvYieldPi02760GeVYShiftedDownStatErr,&graphInvYieldPi02760GeVYShiftedUpStatErr,&fitPi02760GeVBinYShiftedDownStatErr,&fitPi02760GeVBinYShiftedUpStatErr,meson,"2.76TeV",System);
     
     graphAInvYieldPi02760GeVBinStatSystErr       =  CalculateCombinedSysAndStatError( graphAInvYieldPi02760GeVBinStatErr ,graphAInvYieldPi02760GeVBinSystErr );
 
@@ -1476,7 +1483,7 @@ void InterpolationpPb5023GeV(   TString System          = "PCM",
     cout<< "Fit to the 7TeV"<< endl;    
 
     TF1* fitPi07TeVBinStatErr = RebinWithFitToTGraphWithUpDownYShifted(graphInvYieldPi07TeVStatErrExtended,graphInvYieldPi07TeVSystErrExtended,graphInvYieldPi0pPb5023GeVYShiftedComplErrForBinning,fitType.Data(), minPt, maxPt,Parameters7TeV,
-				  &graphAInvYieldPi07TeVBinStatErr,&graphAInvYieldPi07TeVBinSystErr,&graphInvYieldPi07TeVYShiftedDownStatErr,&graphInvYieldPi07TeVYShiftedUpStatErr,&fitPi07TeVBinYShiftedDownStatErr,&fitPi07TeVBinYShiftedUpStatErr,meson);
+				  &graphAInvYieldPi07TeVBinStatErr,&graphAInvYieldPi07TeVBinSystErr,&graphInvYieldPi07TeVYShiftedDownStatErr,&graphInvYieldPi07TeVYShiftedUpStatErr,&fitPi07TeVBinYShiftedDownStatErr,&fitPi07TeVBinYShiftedUpStatErr,meson,"7TeV",System);
 
     graphAInvYieldPi07TeVBinStatSystErr       =  CalculateCombinedSysAndStatError( graphAInvYieldPi07TeVBinStatErr ,graphAInvYieldPi07TeVBinSystErr );
 

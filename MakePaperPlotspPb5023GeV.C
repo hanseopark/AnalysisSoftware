@@ -69,7 +69,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 							        //PaperPlots_Tsallis_2017_02_09.root
                                                                 //18
   TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_09_20.root";
-  TString fileNamepPbOutput              = "InputMakePaperPlots/PaperPlots_Tsallis_2017_09_07_ALL.root";
+  TString fileNamepPbOutput              = "InputMakePaperPlots/PaperPlots_Tsallis_2017_09_21_ALL.root";
   TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_09_21.root";
   TString fileNamePeaks                  = "InputMakePaperPlots/PaperPlotsPeaks_2016_11_28.root";
   TString fileNameEPOS3                  = "InputMakePaperPlots/pi0_eta_EPOS3.root";
