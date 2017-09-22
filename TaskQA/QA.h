@@ -2131,7 +2131,7 @@ void PlotCellMeanVsSigma(CellQAObj* obj, Int_t nCaloCells, TH2* hist, TString xL
               Double_t binY = 4*1E8*((obj->TimeSigma[1]+0.05E-6)-(obj->TimeSigma[0]-0.05E-6));
               if(binX>1E3){cout << "WARNING: PlotCellMeanVsSigma: CellTime, number of bins for x-axis'" << binX << "', limiting to 1000" << endl; binX = 1E3;}
               if(binY>1E3){cout << "WARNING: PlotCellMeanVsSigma: CellTime, number of bins for y-axis'" << binY << "', limiting to 1000" << endl; binY = 1E3;}
-              outHist = new TH2D("CellTime","CellTime", binX, (obj->TimeMean[0]-0.02E-6),(obj->TimeMean[1]+0.02E-6), binY, (obj->TimeSigma[0]-0.05E-6), (obj->TimeSigma[1]+0.05E-6));
+              outHist = new TH2D("CellTime","CellTime", binX, (obj->TimeMean[0]-0.02E-6),(obj->TimeMean[1]+0.03E-6), binY, (obj->TimeSigma[0]-0.05E-6), (obj->TimeSigma[1]+0.09E-6));
             }
 			else outHist = new TH2D("CellTime","CellTime", 100, -0.04E-6,0.04E-6, 50, 0, 0.1E-6);
 		}

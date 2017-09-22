@@ -65,9 +65,9 @@ void  Produce_FinalPlots_GammaFlowDir(
   TString centStringInputfile = "";
   if(CentralityLow.CompareTo("0")==0) centStringInputfile  = "00-20";
   if(CentralityLow.CompareTo("20")==0) centStringInputfile = "20-40";
-  TString InputFileName1  = Form("TaskFlow/V2dir_calculation_PCM_PHOS_combined/output/v2dir_pcm_phos_comb_%s.root",centStringInputfile.Data());
+  TString InputFileName1  = Form("v2dir_pcm_phos_comb_%s.root",centStringInputfile.Data());
   
-  TString InputFileNameCocktail  = "TaskFlow/Results/CocktailV2_170912.root";
+  TString InputFileNameCocktail  = "TaskFlow/Results/CocktailV2_19092017.root";
   
   //open datafile with v2 gamma inclusive uncorrected
   TFile* fileInput  = new TFile(InputFileName1.Data());
@@ -84,6 +84,14 @@ void  Produce_FinalPlots_GammaFlowDir(
   TGraphAsymmErrors*  graph_v2inc_pcm_tot = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_pcm_toterr");
   TGraphAsymmErrors*  graph_v2inc_phos_tot = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_phos_toterr");
   TGraphAsymmErrors*  graph_v2dec_tot = (TGraphAsymmErrors*)fileInput->Get("g_v2_dec_comb");
+  
+  TGraphAsymmErrors*  graph_v2inc_comb_stat = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_comb_staterr");
+  TGraphAsymmErrors*  graph_v2inc_pcm_stat = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_pcm_staterr");
+  TGraphAsymmErrors*  graph_v2inc_phos_stat = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_phos_staterr");
+  
+  TGraphAsymmErrors*  graph_v2inc_comb_sys = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_comb_syserr");
+  TGraphAsymmErrors*  graph_v2inc_pcm_sys = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_pcm_syserr");
+  TGraphAsymmErrors*  graph_v2inc_phos_sys = (TGraphAsymmErrors*)fileInput->Get("g_v2_inc_phos_syserr");
   
   if(!graph_v2dir_comb_stat) cout << "g_v2_dir_comb_toterr not found in fileInput!!" << endl;
   
@@ -102,9 +110,9 @@ void  Produce_FinalPlots_GammaFlowDir(
   TH1D*  hist_v2gammaCocktailOmega = (TH1D*)InputFileCocktail->Get(Form("v2gammaOmega%s",centStringCocktail.Data()));
   TGraphAsymmErrors*  graph_v2gammaCocktail_sys = (TGraphAsymmErrors*)InputFileCocktail->Get(Form("v2gammaCocktail_sys%s",centStringCocktail.Data()));
   
-  TH1D*  exampleBin_pcm = (TH1D*)fileInput->Get("h_vn_dir_pcm_toterr_ptbin_9");
-  TH1D*  exampleBin_phos = (TH1D*)fileInput->Get("h_vn_dir_phos_toterr_ptbin_9");
-  TH1D*  exampleBin_comb = (TH1D*)fileInput->Get("h_vn_dir_comb_toterr_ptbin_9");
+  TH1D*  exampleBin_pcm = (TH1D*)fileInput->Get("h_v2_dir_pcm_toterr_ptbin_9");
+  TH1D*  exampleBin_phos = (TH1D*)fileInput->Get("h_v2_dir_phos_toterr_ptbin_9");
+  TH1D*  exampleBin_comb = (TH1D*)fileInput->Get("h_v2_dir_comb_toterr_ptbin_9");
   exampleBin_pcm->Scale(1/exampleBin_pcm->GetEntries());
   exampleBin_phos->Scale(1/exampleBin_pcm->GetEntries());
   exampleBin_comb->Scale(1/exampleBin_pcm->GetEntries());
@@ -124,12 +132,33 @@ void  Produce_FinalPlots_GammaFlowDir(
   graph_v2inc_comb_tot->SetLineWidth(globalLineWidth);
   graph_v2inc_comb_tot->SetFillStyle(0);
   
+  graph_v2inc_comb_stat->SetMarkerStyle(20);
+  graph_v2inc_comb_stat->SetMarkerSize(globalMarkerSize);
+  graph_v2inc_comb_stat->SetMarkerColor(kGray+3);
+  graph_v2inc_comb_stat->SetLineColor(kGray+3);
+  graph_v2inc_comb_stat->SetLineWidth(globalLineWidth);
+  graph_v2inc_comb_stat->SetFillStyle(0);
+  
+  graph_v2inc_comb_sys->SetMarkerStyle(20);
+  graph_v2inc_comb_sys->SetMarkerSize(globalMarkerSize);
+  graph_v2inc_comb_sys->SetMarkerColor(kGray+3);
+  graph_v2inc_comb_sys->SetLineColor(kGray+3);
+  graph_v2inc_comb_sys->SetLineWidth(globalLineWidth);
+  graph_v2inc_comb_sys->SetFillStyle(0);
+  
   graph_v2inc_pcm_tot->SetMarkerStyle(34);
   graph_v2inc_pcm_tot->SetMarkerSize(globalMarkerSize+0.4);
   graph_v2inc_pcm_tot->SetMarkerColor(kRed+2);
   graph_v2inc_pcm_tot->SetLineColor(kRed+2);
   graph_v2inc_pcm_tot->SetLineWidth(globalLineWidth);
   graph_v2inc_pcm_tot->SetFillStyle(0);
+  
+  graph_v2inc_pcm_stat->SetMarkerStyle(34);
+  graph_v2inc_pcm_stat->SetMarkerSize(globalMarkerSize+0.4);
+  graph_v2inc_pcm_stat->SetMarkerColor(kRed+2);
+  graph_v2inc_pcm_stat->SetLineColor(kRed+2);
+  graph_v2inc_pcm_stat->SetLineWidth(globalLineWidth);
+  graph_v2inc_pcm_stat->SetFillStyle(0);
   
   graph_v2dir_pcm_Rpcm_tot->SetMarkerStyle(28);
   graph_v2dir_pcm_Rpcm_tot->SetMarkerSize(globalMarkerSize+0.4);
@@ -151,6 +180,13 @@ void  Produce_FinalPlots_GammaFlowDir(
   graph_v2inc_phos_tot->SetLineColor(kBlue+2);
   graph_v2inc_phos_tot->SetLineWidth(globalLineWidth);
   graph_v2inc_phos_tot->SetFillStyle(0);
+  
+  graph_v2inc_phos_stat->SetMarkerStyle(33);
+  graph_v2inc_phos_stat->SetMarkerSize(globalMarkerSize+0.4);
+  graph_v2inc_phos_stat->SetMarkerColor(kBlue+2);
+  graph_v2inc_phos_stat->SetLineColor(kBlue+2);
+  graph_v2inc_phos_stat->SetLineWidth(globalLineWidth);
+  graph_v2inc_phos_stat->SetFillStyle(0);
   
   graph_v2dir_phos_Rphos_tot->SetMarkerStyle(27);
   graph_v2dir_phos_Rphos_tot->SetMarkerSize(globalMarkerSize+0.4);
@@ -190,6 +226,13 @@ void  Produce_FinalPlots_GammaFlowDir(
   graph_v2inc_ratio_to_comb_pcm->SetLineColor(kRed+2);
   graph_v2inc_ratio_to_comb_pcm->SetLineWidth(globalLineWidth);
   graph_v2inc_ratio_to_comb_pcm->SetFillStyle(0);
+  TGraphAsymmErrors* graph_v2inc_ratio_to_comb_pcm_stat = calcGraphRatio(graph_v2inc_pcm_stat,graph_v2inc_comb_tot);
+  graph_v2inc_ratio_to_comb_pcm_stat->SetMarkerStyle(34);
+  graph_v2inc_ratio_to_comb_pcm_stat->SetMarkerSize(globalMarkerSize+0.4);
+  graph_v2inc_ratio_to_comb_pcm_stat->SetMarkerColor(kRed+2);
+  graph_v2inc_ratio_to_comb_pcm_stat->SetLineColor(kRed+2);
+  graph_v2inc_ratio_to_comb_pcm_stat->SetLineWidth(globalLineWidth);
+  graph_v2inc_ratio_to_comb_pcm_stat->SetFillStyle(0);
   TGraphAsymmErrors* graph_v2inc_ratio_to_comb_phos = calcGraphRatio(graph_v2inc_phos_tot,graph_v2inc_comb_tot);
   graph_v2inc_ratio_to_comb_phos->SetMarkerStyle(33);
   graph_v2inc_ratio_to_comb_phos->SetMarkerSize(globalMarkerSize+0.4);
@@ -197,6 +240,13 @@ void  Produce_FinalPlots_GammaFlowDir(
   graph_v2inc_ratio_to_comb_phos->SetLineColor(kBlue+2);
   graph_v2inc_ratio_to_comb_phos->SetLineWidth(globalLineWidth);
   graph_v2inc_ratio_to_comb_phos->SetFillStyle(0);
+  TGraphAsymmErrors* graph_v2inc_ratio_to_comb_phos_stat = calcGraphRatio(graph_v2inc_phos_stat,graph_v2inc_comb_tot);
+  graph_v2inc_ratio_to_comb_phos_stat->SetMarkerStyle(33);
+  graph_v2inc_ratio_to_comb_phos_stat->SetMarkerSize(globalMarkerSize+0.4);
+  graph_v2inc_ratio_to_comb_phos_stat->SetMarkerColor(kBlue+2);
+  graph_v2inc_ratio_to_comb_phos_stat->SetLineColor(kBlue+2);
+  graph_v2inc_ratio_to_comb_phos_stat->SetLineWidth(globalLineWidth);
+  graph_v2inc_ratio_to_comb_phos_stat->SetFillStyle(0);
   
   TGraphAsymmErrors* graph_v2dir_ratio_to_comb_pcm_Rpcm = calcGraphRatio(graph_v2dir_comb_tot,graph_v2dir_pcm_Rpcm_tot);
   graph_v2dir_ratio_to_comb_pcm_Rpcm->SetMarkerStyle(28);
@@ -372,7 +422,12 @@ void  Produce_FinalPlots_GammaFlowDir(
   graph_v2dec_tot->Draw("SAME e3 P");
   graph_v2inc_phos_tot->Draw("SAME e2 P");
   graph_v2inc_pcm_tot->Draw("SAME e2 P");
+  graph_v2inc_phos_stat->Draw("SAME P");
+  graph_v2inc_pcm_stat->Draw("SAME P");
+//   graph_v2inc_pcm_stat->Draw("SAME e2 P");
+//   graph_v2inc_pcm_sys->Draw("SAME e2 P");
   graph_v2inc_comb_tot->Draw("SAME e2 P");
+  graph_v2inc_comb_stat->Draw("SAME P");
   DrawDirectInfoLabelOnPlot(CentralityLow.Data(),CentralityHigh.Data(),4);
   
   legIncComb->Draw();
@@ -395,6 +450,8 @@ void  Produce_FinalPlots_GammaFlowDir(
   graph_v2Inc_comb_statEmpty->Draw();
   graph_v2dec_tot->Draw("SAME e3 P");
   graph_v2inc_comb_tot->Draw("SAME e2 P");
+  graph_v2inc_comb_stat->Draw("SAME P");
+//   graph_v2inc_comb_sys->Draw("SAME e2 P");
   DrawDirectInfoLabelOnPlot(CentralityLow.Data(),CentralityHigh.Data(),4);
   
   legIncComb2->Draw();
@@ -428,7 +485,9 @@ void  Produce_FinalPlots_GammaFlowDir(
   SetProperMargins();
   graph_v2Inc_comb_Ratio_statEmpty->Draw();
   graph_v2inc_ratio_to_comb_pcm->Draw("SAME e2 P");
+  graph_v2inc_ratio_to_comb_pcm_stat->Draw("SAME P");
   graph_v2inc_ratio_to_comb_phos->Draw("SAME e2 P");
+  graph_v2inc_ratio_to_comb_phos_stat->Draw("SAME P");
 //   graph_v2dec_tot->Draw("SAME P");
 //   graph_v2inc_comb_tot->Draw("SAME P");
   DrawDirectInfoLabelOnPlot(CentralityLow.Data(),CentralityHigh.Data(),4);
@@ -689,6 +748,7 @@ void  Produce_FinalPlots_GammaFlowDir(
     graph_v2dec_tot->Draw("SAME e3 P");
     graphIncTheory->Draw("SAME 3");
     graph_v2inc_comb_tot->Draw("SAME e2 P");
+    graph_v2inc_comb_stat->Draw("SAME P");
     DrawDirectInfoLabelOnPlot(CentralityLow.Data(),CentralityHigh.Data(),4);
 
     TLegend* legIncCombTheory = new TLegend(0.16,0.80,0.4,0.96);

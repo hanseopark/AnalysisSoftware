@@ -6362,6 +6362,11 @@ void CalculateFWHM(TF1 * fFunc){
         Double_t Error2 = TMath::Abs(fFWHMFunc-FWHM_minus);
         if(Error1>=Error2) fFWHMFuncError = Error1;
         if(Error1<Error2) fFWHMFuncError = Error2;
+
+        if (fMode == 3){
+            fFWHMFunc = fFunc->GetParameter(2)*2.35;
+            fFWHMFuncError = fFunc->GetParError(2)*2.35;
+        }
     } else {
         fFWHMFunc = fFunc->GetParameter(2)*2.35;
         fFWHMFuncError = fFunc->GetParError(2)*2.35;
