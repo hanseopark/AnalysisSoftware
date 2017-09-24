@@ -941,18 +941,41 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 
     graphPublishedDoubleRatioSyst->Draw("E2same");
     graphPublishedDoubleRatioStat->Draw("p,e1,same");
-//     graphPublishedCombDoubleRatioSyst->Draw("E2same");
-//     graphPublishedCombDoubleRatioStat->Draw("p,e1,same");
 
-    TLegend* legendDoubleRatioWP = GetAndSetLegend(0.15,0.75,4);
-    legendDoubleRatioWP->AddEntry(graphDoubleRatioSysErr,Form("PCM, %s",collisionSystem.Data()),"pf");
-    legendDoubleRatioWP->AddEntry(graphPublishedDoubleRatioSyst,Form("PCM published, %s",collisionSystem.Data()),"pf");
+    TLegend* legendDoubleRatioWPCM2010 = GetAndSetLegend(0.15,0.75,5);
+    legendDoubleRatioWPCM2010->SetHeader(Form("%s %s",centrality.Data(),collisionSystem.Data()));
+    legendDoubleRatioWPCM2010->AddEntry(graphDoubleRatioSysErr,"PCM","pf");
+    legendDoubleRatioWPCM2010->AddEntry(graphPublishedDoubleRatioSyst,"PCM (2010)","pf");
+    legendDoubleRatioWPCM2010->AddEntry(NLODoubleRatio,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
+    legendDoubleRatioWPCM2010->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
+    legendDoubleRatioWPCM2010->Draw();
+
+    canvasDoubleRatio->Print(Form("%s/DoubleRatioPi0_%s_withPCM2010.eps",outputDir.Data(),centrality.Data()));
+
+    canvasDoubleRatio->cd();
+    dummyDR->DrawCopy();
+
+    graphDoubleRatioSysErr->Draw("E2same");
+    histoDR->DrawCopy("same");
+
+    lineOne->Draw("same");
+//     NLODoubleRatio->Draw("p3lsame");
+    graphDRPbPbNLO->Draw("p3lsame");
+
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombDoubleRatioStat , 20,2, kGray+1, kGray+1, 1, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphPublishedCombDoubleRatioSyst , 20, 2, kGray+1, kGray+1, 1, kTRUE);
+    graphPublishedCombDoubleRatioSyst->Draw("E2same");
+    graphPublishedCombDoubleRatioStat->Draw("p,e1,same");
+
+    TLegend* legendDoubleRatioWP = GetAndSetLegend(0.15,0.75,5);
+    legendDoubleRatioWP->SetHeader(Form("%s",collisionSystem.Data()));
+    legendDoubleRatioWP->AddEntry(graphDoubleRatioSysErr,"0-10% PCM"),"pf");
+    legendDoubleRatioWP->AddEntry(graphPublishedCombDoubleRatioSyst,"0-20% comb published","pf");
     legendDoubleRatioWP->AddEntry(NLODoubleRatio,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
     legendDoubleRatioWP->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");
     legendDoubleRatioWP->Draw();
 
     canvasDoubleRatio->Print(Form("%s/DoubleRatioPi0_%s_withPublished.eps",outputDir.Data(),centrality.Data()));
-
 
     //****************************************************************************
     //*************** Double Ratio with pi0 fitted with ABC errors ***************
@@ -1038,7 +1061,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     DrawGammaSetMarkerTGraphAsym(graphIncRatioFitPi0SysErr , 20, 2, colorCent, colorCent, 1, kTRUE);
     graphIncRatioFitPi0SysErr->Draw("E2same");
     histoIncRatioPi0Fit->DrawCopy("same");
-    cocktailAllGammaPi0->DrawCopy("l,c,same");
+    //cocktailAllGammaPi0->DrawCopy("l,c,same");
 
         TLegend* legendIncRatioFit = GetAndSetLegend(0.15,0.15,2.2);
         legendIncRatioFit->SetHeader(collisionSystem.Data());

@@ -925,8 +925,42 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeV_0010);
     graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
     graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Int_t pi0PbPbEMCalbins = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN();
+    Double_t *xpi0_0010 = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetX();
+    Double_t *ypi0_0010 = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetY();
+    Double_t ypi0Err_0010[pi0PbPbEMCalbins];
+    Double_t ypi0relErr_0010[pi0PbPbEMCalbins];
+    Double_t ypi0ErrorAdded_0010[pi0PbPbEMCalbins];
+    Double_t ypi0relErrorAdded_0010[pi0PbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN();i++){
+        if(xpi0_0010[i]>=15){
+            ypi0relErr_0010[i] = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorYlow(i);
+            ypi0Err_0010[i] = (ypi0relErr_0010[i] * 100.)/ypi0_0010[i];
+            ypi0ErrorAdded_0010[i] = TMath::Sqrt( (ypi0Err_0010[i]*ypi0Err_0010[i]) + (5.*5. + 5.*5.) );
+            ypi0relErrorAdded_0010[i] = (ypi0_0010[i]*ypi0ErrorAdded_0010[i])/100.;
+            graphEMCalPi0InvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),ypi0relErrorAdded_0010[i],ypi0relErrorAdded_0010[i]);
+        }
+    }
+
     TH1D* histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("EMCalSysPion010forRAA");
     TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010);
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Double_t *xpi0RAA_0010 = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetX();
+    Double_t *ypi0RAA_0010 = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetY();
+    Double_t ypi0RAAErr_0010[pi0PbPbEMCalbins];
+    Double_t ypi0RAArelErr_0010[pi0PbPbEMCalbins];
+    Double_t ypi0RAAErrorAdded_0010[pi0PbPbEMCalbins];
+    Double_t ypi0RAArelErrorAdded_0010[pi0PbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetN();i++){
+        if(xpi0RAA_0010[i]>=15){
+            ypi0RAArelErr_0010[i] = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorYlow(i);
+            ypi0RAAErr_0010[i] = (ypi0RAArelErr_0010[i] * 100.)/ypi0RAA_0010[i];
+            ypi0RAAErrorAdded_0010[i] = TMath::Sqrt( (ypi0RAAErr_0010[i]*ypi0RAAErr_0010[i]) + (5.*5. + 5.*5.) );
+            ypi0RAArelErrorAdded_0010[i] = (ypi0RAA_0010[i]*ypi0RAAErrorAdded_0010[i])/100.;
+            graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),ypi0RAArelErrorAdded_0010[i],ypi0RAArelErrorAdded_0010[i]);
+        }
+    }
 
     TH1D* histoEMCalPi0InvYieldStatPbPb2760GeV_2050         = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbStatErrPi_2050");
     TGraphAsymmErrors* graphEMCalPi0InvYieldStatPbPb2760GeV_2050        = new TGraphAsymmErrors(histoEMCalPi0InvYieldStatPbPb2760GeV_2050);
@@ -936,8 +970,43 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeV_2050     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeV_2050);
     graphEMCalPi0InvYieldSysPbPb2760GeV_2050->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetN()-1);
     graphEMCalPi0InvYieldSysPbPb2760GeV_2050->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetN()-1);
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Double_t *xpi0_2050 = graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetX();
+    Double_t *ypi0_2050 = graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetY();
+    Double_t ypi0Err_2050[pi0PbPbEMCalbins];
+    Double_t ypi0relErr_2050[pi0PbPbEMCalbins];
+    Double_t ypi0ErrorAdded_2050[pi0PbPbEMCalbins];
+    Double_t ypi0relErrorAdded_2050[pi0PbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetN();i++){
+        if(xpi0_2050[i]>=15){
+            ypi0relErr_2050[i] = graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorYlow(i);
+            ypi0Err_2050[i] = (ypi0relErr_2050[i] * 100.)/ypi0_2050[i];
+            ypi0ErrorAdded_2050[i] = TMath::Sqrt( (ypi0Err_2050[i]*ypi0Err_2050[i]) + (5.*5. + 5.*5.) );
+            ypi0relErrorAdded_2050[i] = (ypi0_2050[i]*ypi0ErrorAdded_2050[i])/100.;
+            graphEMCalPi0InvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),ypi0relErrorAdded_2050[i],ypi0relErrorAdded_2050[i]);
+        }
+    }
+
     TH1D* histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("EMCalSysPion2050forRAA");
     TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050);
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Double_t *xpi0RAA_2050 = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetX();
+    Double_t *ypi0RAA_2050 = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetY();
+    Double_t ypi0RAAErr_2050[pi0PbPbEMCalbins];
+    Double_t ypi0RAArelErr_2050[pi0PbPbEMCalbins];
+    Double_t ypi0RAAErrorAdded_2050[pi0PbPbEMCalbins];
+    Double_t ypi0RAArelErrorAdded_2050[pi0PbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetN();i++){
+        if(xpi0RAA_2050[i]>=15){
+            ypi0RAArelErr_2050[i] = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorYlow(i);
+            ypi0RAAErr_2050[i] = (ypi0RAArelErr_2050[i] * 100.)/ypi0RAA_2050[i];
+            ypi0RAAErrorAdded_2050[i] = TMath::Sqrt( (ypi0RAAErr_2050[i]*ypi0RAAErr_2050[i]) + (5.*5. + 5.*5.) );
+            ypi0RAArelErrorAdded_2050[i] = (ypi0RAA_2050[i]*ypi0RAAErrorAdded_2050[i])/100.;
+            graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),ypi0RAArelErrorAdded_2050[i],ypi0RAArelErrorAdded_2050[i]);
+        }
+    }
+
+
 
     //***************************************   Eta EMCal   ******************************************//
     TDirectory* directoryEMCalEtaPbPb2760GeV                = (TDirectory*)fileEMCal->Get("Eta2.76TeV_PbPb");
@@ -960,6 +1029,40 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
     graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
 
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Int_t etaPbPbEMCalbins = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN();
+    Double_t *xeta_0010 = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetX();
+    Double_t *yeta_0010 = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetY();
+    Double_t yetaErr_0010[etaPbPbEMCalbins];
+    Double_t yetarelErr_0010[etaPbPbEMCalbins];
+    Double_t yetaErrorAdded_0010[etaPbPbEMCalbins];
+    Double_t yetarelErrorAdded_0010[etaPbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN();i++){
+        if(xeta_0010[i]>=15){
+            yetarelErr_0010[i] = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorYlow(i);
+            yetaErr_0010[i] = (yetarelErr_0010[i] * 100.)/yeta_0010[i];
+            yetaErrorAdded_0010[i] = TMath::Sqrt( (yetaErr_0010[i]*yetaErr_0010[i]) + (5.*5. + 5.*5.) );
+            yetarelErrorAdded_0010[i] = (yeta_0010[i]*yetaErrorAdded_0010[i])/100.;
+            graphEMCalEtaInvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),yetarelErrorAdded_0010[i],yetarelErrorAdded_0010[i]);
+        }
+    }
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Double_t *xetaRAA_0010 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetX();
+    Double_t *yetaRAA_0010 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetY();
+    Double_t yetaRAAErr_0010[etaPbPbEMCalbins];
+    Double_t yetaRAArelErr_0010[etaPbPbEMCalbins];
+    Double_t yetaRAAErrorAdded_0010[etaPbPbEMCalbins];
+    Double_t yetaRAArelErrorAdded_0010[etaPbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetN();i++){
+        if(xetaRAA_0010[i]>=15){
+            yetaRAArelErr_0010[i] = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorYlow(i);
+            yetaRAAErr_0010[i] = (yetaRAArelErr_0010[i] * 100.)/yetaRAA_0010[i];
+            yetaRAAErrorAdded_0010[i] = TMath::Sqrt( (yetaRAAErr_0010[i]*yetaRAAErr_0010[i]) + (5.*5. + 5.*5.) );
+            yetaRAArelErrorAdded_0010[i] = (yetaRAA_0010[i]*yetaRAAErrorAdded_0010[i])/100.;
+            graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),yetaRAArelErrorAdded_0010[i],yetaRAArelErrorAdded_0010[i]);
+        }
+    }
+
     TH1D* histoEMCalEtaInvYieldStatPbPb2760GeV_2050         = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbStatErrEta_2050");
     TGraphAsymmErrors* graphEMCalEtaInvYieldStatPbPb2760GeV_2050        = new TGraphAsymmErrors(histoEMCalEtaInvYieldStatPbPb2760GeV_2050);
     graphEMCalEtaInvYieldStatPbPb2760GeV_2050->RemovePoint(graphEMCalEtaInvYieldStatPbPb2760GeV_2050->GetN()-1);
@@ -978,6 +1081,39 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphEMCalEtatoPi0Sys2760GeV_2050    = new TGraphAsymmErrors(histoEMCalEtatoPi0SysPbPb2760GeV_2050);
     graphEMCalEtatoPi0Sys2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_2050->GetN()-1);
     graphEMCalEtatoPi0Sys2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_2050->GetN()-1);
+
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Double_t *xeta_2050 = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetX();
+    Double_t *yeta_2050 = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetY();
+    Double_t yetaErr_2050[etaPbPbEMCalbins];
+    Double_t yetarelErr_2050[etaPbPbEMCalbins];
+    Double_t yetaErrorAdded_2050[etaPbPbEMCalbins];
+    Double_t yetarelErrorAdded_2050[etaPbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetN();i++){
+        if(xeta_2050[i]>=15){
+            yetarelErr_2050[i] = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorYlow(i);
+            yetaErr_2050[i] = (yetarelErr_2050[i] * 100.)/yeta_2050[i];
+            yetaErrorAdded_2050[i] = TMath::Sqrt( (yetaErr_2050[i]*yetaErr_2050[i]) + (5.*5. + 5.*5.) );
+            yetarelErrorAdded_2050[i] = (yeta_2050[i]*yetaErrorAdded_2050[i])/100.;
+            graphEMCalEtaInvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),yetarelErrorAdded_2050[i],yetarelErrorAdded_2050[i]);
+        }
+    }
+    // added 5% for opening angle and 5% for jet environment above 15GeV
+    Double_t *xetaRAA_2050 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetX();
+    Double_t *yetaRAA_2050 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetY();
+    Double_t yetaRAAErr_2050[etaPbPbEMCalbins];
+    Double_t yetaRAArelErr_2050[etaPbPbEMCalbins];
+    Double_t yetaRAAErrorAdded_2050[etaPbPbEMCalbins];
+    Double_t yetaRAArelErrorAdded_2050[etaPbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetN();i++){
+        if(xetaRAA_2050[i]>=15){
+            yetaRAArelErr_2050[i] = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorYlow(i);
+            yetaRAAErr_2050[i] = (yetaRAArelErr_2050[i] * 100.)/yetaRAA_2050[i];
+            yetaRAAErrorAdded_2050[i] = TMath::Sqrt( (yetaRAAErr_2050[i]*yetaRAAErr_2050[i]) + (5.*5. + 5.*5.) );
+            yetaRAArelErrorAdded_2050[i] = (yetaRAA_2050[i]*yetaRAAErrorAdded_2050[i])/100.;
+            graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),yetaRAArelErrorAdded_2050[i],yetaRAArelErrorAdded_2050[i]);
+        }
+    }
 
     TDirectory* directoryEMCalRAAPbPb2760GeV                = (TDirectory*)fileEMCal->Get("RAA2.76TeV_PbPb");
     TH1D*   histoEMCalPi0RAAStatPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrPion_0010");
