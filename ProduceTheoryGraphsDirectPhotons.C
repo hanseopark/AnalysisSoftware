@@ -853,6 +853,17 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                                                 0.1, 50);
         fitTheoryDirectMcGill2760GeV->SetParameter(0,1);
 
+        TGraph* graphDRTheoryMcGill2760GeV      = new TGraph(199);
+        TGraph* graphTheoryMcGill2760GeV      = new TGraph(199);
+        for(Int_t i = 0; i < 199; i++ ){
+            Double_t pt         = 0.25*(i+1);
+            Double_t yvalueDG   = fitTheoryDirectMcGill2760GeV->Eval(pt);
+            Double_t decayGamma = histoGammaDecayCombPP2760GeV->Interpolate(pt);
+            Double_t yValueDR   = (yvalueDG+decayGamma)/decayGamma;
+            graphDRTheoryMcGill2760GeV->SetPoint(i,pt,yValueDR);
+            graphTheoryMcGill2760GeV->SetPoint(i,pt,yvalueDG);
+        }
+
         //******************************************************************************************************************
         //************************************** Calculate inv. yield ******************************************************
         //******************************************************************************************************************
@@ -1034,6 +1045,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivFrag2760GeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_2760GeV",TObject::kOverwrite);
             fitPromptDivFragGamma2760GeV->Write("ratioFitNLOPromptDivFragGamma2760GeV", TObject::kOverwrite);
             fitTheoryDirectMcGill2760GeV->Write("fitYieldDirectPhotonNLOPaquett_2760GeV",TObject::kOverwrite);
+            graphDRTheoryMcGill2760GeV->Write("graphDRNLOPaquett_2760GeV_ALICECocktail",TObject::kOverwrite);
+            graphTheoryMcGill2760GeV->Write("graphNLOPaquett_2760GeV",TObject::kOverwrite);
 
             graphNLOCalcRGammaALICECocktailPP2760GeV->GetYaxis()->SetTitle("R_{#gamma}");
             graphNLOCalcRGammaALICECocktailPP2760GeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
@@ -1447,7 +1460,6 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         fileMCGill2050.close();
         TGraphErrors* graphDirectPhotonMCGill2050   = new TGraphErrors(nlinesMCGill2050-1,ptMCGill2050,yieldMCGill2050, errYieldXMCGill2050, errYieldMCGill2050);
 
->>>>>>> Added plots for meson and photon analysis in PbPb
         //******************************************************************************************************************
         //*********************************PHSD arXiv:1504.05699 [nucl-th], O. Linnyk **************************************
         //******************************************************************************************************************
@@ -2501,75 +2513,75 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
         //*****************************************************
         // read decay photon spectra
-        const Int_t nParticles                    = 7;
+        const Int_t nParticles              = 7;
         TString particleNames[nParticles]   = {"eta", "etap", "omega", "phi", "pi0",
-                                            "rho0", "Sigma0"};
+                                                "rho0", "Sigma0"};
         TString particleNamesOut[nParticles]= {"eta", "etap", "omega", "phi", "pi0",
-                                            "rho0", "Sigma0"};
-
-        vector<Double_t> **valuesMcGillDecay= new vector<Double_t>*[3];// iParticle x 3 matrix with theory curves
-        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
-            valuesMcGillDecay[iParticle]    = new vector<Double_t>[3];
-        }
-        Int_t nPtPoint[nParticles];
-
-        //  read from file
-        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
-            nPtPoint[iParticle]      = 0;
-            ifstream fileMcGillInput;
-            TString fileName                = Form("ExternalInputpPb/Theory/McGill/decay_photon_sp_%s.dat", particleNames[iParticle].Data());
-            fileMcGillInput.open(fileName.Data(),ios_base::in);
-            cout << "opening: " << fileName.Data() << endl;
-            Int_t iPtCurrent    = 0;
-            Int_t nCurrMeas     = 0;
-            string line;
-            while (getline(fileMcGillInput, line) && iPtCurrent < 100) {
-                TString temp        = "";
-                TString tempBin     = "";
-                istringstream cs(line); // controll stream
-                cs >> temp;
-
-                if (!temp.Contains("#")){
-                    istringstream ss(line);
-                    Int_t iMeasurement  = 0;
-                    while(ss && iMeasurement < 3){
-                        ss >> temp;
-                        if(!temp.IsNull() && temp.CompareTo("nan") != 0){
-                            valuesMcGillDecay[iParticle][iMeasurement].push_back(temp.Atof());
-                            cout << temp.Data() << "\t ";
-                            iMeasurement++;
-                        } else {
-                            valuesMcGillDecay[iParticle][iMeasurement].push_back(-1.0e-6);
-                            cout << -1.0e-6 << "\t ";
-                            iMeasurement++;
-                        }
-                    }
-                    nCurrMeas = iMeasurement;
-                    cout << endl;
-                    iPtCurrent++;
-                } else {
-                    cout << "first line contains comments" << endl;
-                }
-            }
-            cout << "Number of pT bins: "<< iPtCurrent << "\t number of measurement points: "<< nCurrMeas <<  endl;
-            nPtPoint[iParticle]         = iPtCurrent;
-            fileMcGillInput.close();
-        }
-
+                                                "rho0", "Sigma0"};
+//
+//         vector<Double_t> **valuesMcGillDecay= new vector<Double_t>*[3];// iParticle x 3 matrix with theory curves
+//         for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+//             valuesMcGillDecay[iParticle]    = new vector<Double_t>[3];
+//         }
+//         Int_t nPtPoint[nParticles];
+//         ifstream fileMcGillInput;
+//         //  read from file
+//         for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+//             nPtPoint[iParticle]      = 0;
+//
+//             TString fileName                = Form("ExternalInputpPb/Theory/McGill/decay_photon_sp_%s.dat", particleNames[iParticle].Data());
+//             fileMcGillInput.open(fileName.Data(),ios_base::in);
+//             cout << "opening: " << fileName.Data() << endl;
+//             Int_t iPtCurrent    = 0;
+//             Int_t nCurrMeas     = 0;
+//             string line;
+//             while (getline(fileMcGillInput, line) && iPtCurrent < 36) {
+//                 TString temp        = "";
+//                 TString tempBin     = "";
+//                 istringstream cs(line); // controll stream
+//                 cs >> temp;
+//
+//                 if (!temp.Contains("#")){
+//                     istringstream ss(line);
+//                     Int_t iMeasurement  = 0;
+//                     while(ss && iMeasurement < 3){
+//                         ss >> temp;
+//                         if(!temp.IsNull() && temp.CompareTo("nan") != 0){
+//                             valuesMcGillDecay[iParticle][iMeasurement].push_back(temp.Atof());
+//                             cout << temp.Data() << "\t ";
+//                             iMeasurement++;
+//                         } else {
+//                             valuesMcGillDecay[iParticle][iMeasurement].push_back(-1.0e-6);
+//                             cout << -1.0e-6 << "\t ";
+//                             iMeasurement++;
+//                         }
+//                     }
+//                     nCurrMeas = iMeasurement;
+//                     cout << endl;
+//                     iPtCurrent++;
+//                 } else {
+//                     cout << "first line contains comments" << endl;
+//                 }
+//             }
+//             cout << "Number of pT bins: "<< iPtCurrent << "\t number of measurement points: "<< nCurrMeas <<  endl;
+//             nPtPoint[iParticle]         = iPtCurrent;
+//             fileMcGillInput.close();
+//         }
+//
         TGraphErrors* graphDecayPhotonSpectraMcGill5023GeV[nParticles];
         for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
             graphDecayPhotonSpectraMcGill5023GeV[iParticle]       = NULL;
         }
-        for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
-            graphDecayPhotonSpectraMcGill5023GeV[iParticle]       = new TGraphErrors(nPtPoint[iParticle]);
-            for (Int_t iPt = 0; iPt < nPtPoint[iParticle]; iPt++){
-                graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetPoint(iPt, valuesMcGillDecay[iParticle][0].at(iPt), valuesMcGillDecay[iParticle][1].at(iPt));
-                graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetPointError(iPt, 0.01, valuesMcGillDecay[iParticle][2].at(iPt) );
-            }
-            graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetName(Form("graphDecayPhotonFrom%sSpecMcGill5023GeV", particleNamesOut[iParticle].Data()));
-        }
+//         for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
+//             graphDecayPhotonSpectraMcGill5023GeV[iParticle]       = new TGraphErrors(nPtPoint[iParticle]);
+//             for (Int_t iPt = 0; iPt < nPtPoint[iParticle]; iPt++){
+//                 graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetPoint(iPt, valuesMcGillDecay[iParticle][0].at(iPt), valuesMcGillDecay[iParticle][1].at(iPt));
+//                 graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetPointError(iPt, 0.01, valuesMcGillDecay[iParticle][2].at(iPt) );
+//             }
+//             graphDecayPhotonSpectraMcGill5023GeV[iParticle]->SetName(Form("graphDecayPhotonFrom%sSpecMcGill5023GeV", particleNamesOut[iParticle].Data()));
+//         }
 
-        // Create canvas and pads
+            // Create canvas and pads
         TCanvas *canvasNLOCalculations          = GetAndSetCanvas("canvasNLOCalculations",0.,0.,1000,1350);
         TPad* padNLOHistos                      = new TPad("padNLOHistos", "", 0., 0.25, 1., 1.,-1, -1, -2);
         DrawGammaPadSettings( padNLOHistos, 0.14, 0.017, 0.01, 0.);
@@ -2673,6 +2685,83 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             printf("picking up TGraphAsymmErrors failed in line \n");
             return ;
         }
+        TGraphAsymmErrors* graphPowhegInvXSecDirGamma_pPb_nCTEQ15       = (TGraphAsymmErrors*)gae_gamma_pt_powheg_pPb5020_ncteq15->Clone("graphPowhegInvXSecDirGamma_pPb_nCTEQ15");
+        for (Int_t i = 0; i < graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetN(); i++){
+            Double_t yValue     = graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetY()[i]/graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetX()[i];
+            Double_t yErrUp     = graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetEYhigh()[i]/graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetX()[i];
+            Double_t yErrDown   = graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetEYlow()[i]/graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetX()[i];
+            graphPowhegInvXSecDirGamma_pPb_nCTEQ15->SetPoint(i, graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetX()[i], yValue);
+            graphPowhegInvXSecDirGamma_pPb_nCTEQ15->SetPointError(i, graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetEXlow()[i], graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetEXhigh()[i], yErrDown, yErrUp);
+        }
+        TGraphAsymmErrors* graphPowhegInvXSecDirGamma_pPb_EPPS16       = (TGraphAsymmErrors*)gae_gamma_pt_powheg_pPb5020_epps16->Clone("graphPowhegInvXSecDirGamma_pPb_EPPS16");
+        for (Int_t i = 0; i < graphPowhegInvXSecDirGamma_pPb_EPPS16->GetN(); i++){
+            Double_t yValue     = graphPowhegInvXSecDirGamma_pPb_EPPS16->GetY()[i]/graphPowhegInvXSecDirGamma_pPb_EPPS16->GetX()[i];
+            Double_t yErrUp     = graphPowhegInvXSecDirGamma_pPb_EPPS16->GetEYhigh()[i]/graphPowhegInvXSecDirGamma_pPb_EPPS16->GetX()[i];
+            Double_t yErrDown   = graphPowhegInvXSecDirGamma_pPb_EPPS16->GetEYlow()[i]/graphPowhegInvXSecDirGamma_pPb_EPPS16->GetX()[i];
+            graphPowhegInvXSecDirGamma_pPb_EPPS16->SetPoint(i, graphPowhegInvXSecDirGamma_pPb_EPPS16->GetX()[i], yValue);
+            graphPowhegInvXSecDirGamma_pPb_EPPS16->SetPointError(i, graphPowhegInvXSecDirGamma_pPb_EPPS16->GetEXlow()[i], graphPowhegInvXSecDirGamma_pPb_EPPS16->GetEXhigh()[i], yErrDown, yErrUp);
+        }
+        //******************************************************************************************************************
+        //************************************* Calc invariant yields ******************************************************
+        //******************************************************************************************************************
+        TGraphAsymmErrors* graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15  = (TGraphAsymmErrors*)graphPowhegInvXSecDirGamma_pPb_nCTEQ15->Clone("graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15");
+        graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15                     = (TGraphAsymmErrors*)ScaleGraphAsym(graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15,
+                                                                                                             1/recalcBarn/ReturnCorrectXSection("pPb_5TeV", 3));
+        TGraphAsymmErrors* graphPowhegInvYieldINT7DirGamma_pPb_EPPS16  = (TGraphAsymmErrors*)graphPowhegInvXSecDirGamma_pPb_EPPS16->Clone("graphPowhegInvYieldINT7DirGamma_pPb_EPPS16");
+        graphPowhegInvYieldINT7DirGamma_pPb_EPPS16                     = (TGraphAsymmErrors*)ScaleGraphAsym(graphPowhegInvYieldINT7DirGamma_pPb_EPPS16,
+                                                                                                             1/recalcBarn/ReturnCorrectXSection("pPb_5TeV", 3));
+
+
+
+
+        //******************************************************************************************************************
+        //************************************** Calculate RGamma based on ALICE cocktail **********************************
+        //******************************************************************************************************************
+        TGraphAsymmErrors* graphPowhegGammaALICECocktail_nCTEQ15    = (TGraphAsymmErrors*)graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15->Clone("graphPowhegGammaALICECocktail_nCTEQ15");
+        TGraph* graphPowhegGammaALICECocktail_nCTEQ15Center         = new TGraph(graphPowhegGammaALICECocktail_nCTEQ15->GetN());
+        for (Int_t i = 0; i < graphPowhegGammaALICECocktail_nCTEQ15->GetN(); i++){
+            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphPowhegGammaALICECocktail_nCTEQ15->GetX()[i]);
+            Double_t theoGamma                                      = graphPowhegGammaALICECocktail_nCTEQ15->GetY()[i];
+            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
+            Double_t relErrUp                                       = 0;
+            Double_t relErrDown                                     = 0;
+            cout << graphPowhegGammaALICECocktail_nCTEQ15->GetX()[i] << "\t" << decayGamma << "\t" << theoGamma << endl;
+            if (theoGamma != 0){
+                relErrUp                                            = graphPowhegGammaALICECocktail_nCTEQ15->GetEYhigh()[i]/theoGamma;
+                relErrDown                                          = graphPowhegGammaALICECocktail_nCTEQ15->GetEYlow()[i]/theoGamma;
+            }
+            graphPowhegGammaALICECocktail_nCTEQ15->SetPoint(i, graphPowhegGammaALICECocktail_nCTEQ15->GetX()[i], drtheoGamma);
+            graphPowhegGammaALICECocktail_nCTEQ15Center->SetPoint(i, graphPowhegGammaALICECocktail_nCTEQ15->GetX()[i], drtheoGamma);
+            graphPowhegGammaALICECocktail_nCTEQ15->SetPointError(i, graphPowhegGammaALICECocktail_nCTEQ15->GetEXlow()[i], graphPowhegGammaALICECocktail_nCTEQ15->GetEXhigh()[i],
+                                                                 drtheoGamma*relErrDown, drtheoGamma*relErrUp);
+        }
+        while(graphPowhegGammaALICECocktail_nCTEQ15->GetX()[graphPowhegGammaALICECocktail_nCTEQ15->GetN()-1] > 50)
+            graphPowhegGammaALICECocktail_nCTEQ15->RemovePoint(graphPowhegGammaALICECocktail_nCTEQ15->GetN()-1);
+        while(graphPowhegGammaALICECocktail_nCTEQ15Center->GetX()[graphPowhegGammaALICECocktail_nCTEQ15Center->GetN()-1] > 50)
+            graphPowhegGammaALICECocktail_nCTEQ15Center->RemovePoint(graphPowhegGammaALICECocktail_nCTEQ15Center->GetN()-1);
+
+        TGraphAsymmErrors* graphPowhegGammaALICECocktail_EPPS16     = (TGraphAsymmErrors*)graphPowhegInvYieldINT7DirGamma_pPb_EPPS16->Clone("graphPowhegGammaALICECocktail_EPPS16");
+        TGraph* graphPowhegGammaALICECocktail_EPPS16Center          = new TGraph(graphPowhegGammaALICECocktail_EPPS16->GetN());
+        for (Int_t i = 0; i < graphPowhegGammaALICECocktail_EPPS16->GetN(); i++){
+            Double_t decayGamma                                     = histoGammaDecayPureMtScaling->Interpolate(graphPowhegGammaALICECocktail_EPPS16->GetX()[i]);
+            Double_t theoGamma                                      = graphPowhegGammaALICECocktail_EPPS16->GetY()[i];
+            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
+            Double_t relErrUp                                       = 0;
+            Double_t relErrDown                                     = 0;
+            cout << graphPowhegGammaALICECocktail_EPPS16->GetX()[i] << "\t" << decayGamma << "\t" << theoGamma << endl;
+            if (theoGamma != 0){
+                relErrUp                                            = graphPowhegGammaALICECocktail_EPPS16->GetEYhigh()[i]/theoGamma;
+                relErrDown                                          = graphPowhegGammaALICECocktail_EPPS16->GetEYlow()[i]/theoGamma;
+            }
+            graphPowhegGammaALICECocktail_EPPS16->SetPoint(i, graphPowhegGammaALICECocktail_EPPS16->GetX()[i], drtheoGamma);
+            graphPowhegGammaALICECocktail_EPPS16Center->SetPoint(i, graphPowhegGammaALICECocktail_EPPS16->GetX()[i], drtheoGamma);
+            graphPowhegGammaALICECocktail_EPPS16->SetPointError(i, graphPowhegGammaALICECocktail_EPPS16->GetEXlow()[i], graphPowhegGammaALICECocktail_EPPS16->GetEXhigh()[i],
+                                                                drtheoGamma*relErrDown, drtheoGamma*relErrUp);
+        }
+        while(graphPowhegGammaALICECocktail_EPPS16->GetX()[graphPowhegGammaALICECocktail_EPPS16->GetN()-1] > 50)
+            graphPowhegGammaALICECocktail_EPPS16->RemovePoint(graphPowhegGammaALICECocktail_EPPS16->GetN()-1);
+        while(graphPowhegGammaALICECocktail_EPPS16Center->GetX()[graphPowhegGammaALICECocktail_EPPS16Center->GetN()-1] > 50)
+            graphPowhegGammaALICECocktail_EPPS16Center->RemovePoint(graphPowhegGammaALICECocktail_EPPS16Center->GetN()-1);
 
         //******************************************************************************************************************
         //************************************** Writing output for pPb ***************************************************
@@ -2741,20 +2830,28 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 cout << __LINE__ << endl;
 
                 // writing powheg calcs
-                gae_gamma_pt_powheg_pPb5020_ncteq15->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
-                gae_gamma_pt_powheg_pPb5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                gae_gamma_pt_powheg_pPb5020_ncteq15->SetTitle("direct photons for |#eta| < 0.9, errors are nPDF uncertainties");
-                gae_gamma_pt_powheg_pPb5020_ncteq15->Write("gaePowhegDirectPhotonInvXSec_pPb5020_nteq15", TObject::kOverwrite);
+                graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                graphPowhegInvXSecDirGamma_pPb_nCTEQ15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegInvXSecDirGamma_pPb_nCTEQ15->SetTitle("direct photons for |#eta| < 0.9, errors are nPDF uncertainties");
+                graphPowhegInvXSecDirGamma_pPb_nCTEQ15->Write("graphPowhegDirectPhotonInvXSec_pPb5020_nCTEQ15", TObject::kOverwrite);
 
-                gae_gamma_pt_powheg_pPb5020_epps16->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
-                gae_gamma_pt_powheg_pPb5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-                gae_gamma_pt_powheg_pPb5020_epps16->SetTitle("direct photons for |#eta| < 0.9, errors are nPDF uncertainties");
-                gae_gamma_pt_powheg_pPb5020_epps16->Write("gaePowhegDirectPhotonInvXSec_pPb5020_epps16", TObject::kOverwrite);
+                graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+                graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegInvYieldINT7DirGamma_pPb_nCTEQ15->Write("graphPowhegDirectPhotonInvYieldINT7_pPb5020_nCTEQ15",TObject::kOverwrite);
+
+                graphPowhegInvXSecDirGamma_pPb_EPPS16->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
+                graphPowhegInvXSecDirGamma_pPb_EPPS16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegInvXSecDirGamma_pPb_EPPS16->SetTitle("direct photons for |#eta| < 0.9, errors are nPDF uncertainties");
+                graphPowhegInvXSecDirGamma_pPb_EPPS16->Write("graphPowhegDirectPhotonInvXSec_pPb5020_EPPS16", TObject::kOverwrite);
+
+                graphPowhegInvYieldINT7DirGamma_pPb_EPPS16->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+                graphPowhegInvYieldINT7DirGamma_pPb_EPPS16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegInvYieldINT7DirGamma_pPb_EPPS16->Write("graphPowhegDirectPhotonInvYieldINT7_pPb5020_EPPS16",TObject::kOverwrite);
 
                 gae_gamma_pt_powheg_pp5020_ncteq15->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
                 gae_gamma_pt_powheg_pp5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 gae_gamma_pt_powheg_pp5020_ncteq15->SetTitle("direct photons for |#eta| < 0.9");
-                gae_gamma_pt_powheg_pp5020_ncteq15->Write("gaePowhegDirectPhotonInvXSec_pp5020_nteq15", TObject::kOverwrite);
+                gae_gamma_pt_powheg_pp5020_ncteq15->Write("gaePowhegDirectPhotonInvXSec_pp5020_ncteq15", TObject::kOverwrite);
 
                 gae_gamma_pt_powheg_pp5020_epps16->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
                 gae_gamma_pt_powheg_pp5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
@@ -2764,12 +2861,26 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 gae_rpPb_powheg_pPb5020_ncteq15->GetYaxis()->SetTitle("R_{pPb}");
                 gae_rpPb_powheg_pPb5020_ncteq15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 gae_rpPb_powheg_pPb5020_ncteq15->SetTitle("direct photon R_{pPb} for |#eta| < 0.9, errors are nPDF uncertainties");
-                gae_rpPb_powheg_pPb5020_ncteq15->Write("gaePowhegDirectPhotonRpPb_pPb5020_nteq15", TObject::kOverwrite);
+                gae_rpPb_powheg_pPb5020_ncteq15->Write("gaePowhegDirectPhotonRpPb_pPb5020_ncteq15", TObject::kOverwrite);
 
                 gae_rpPb_powheg_pPb5020_epps16->GetYaxis()->SetTitle("R_{pPb}");
                 gae_rpPb_powheg_pPb5020_epps16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 gae_rpPb_powheg_pPb5020_epps16->SetTitle("direct photon R_{pPb} for |#eta| < 0.9, errors are nPDF uncertainties");
                 gae_rpPb_powheg_pPb5020_epps16->Write("gaePowhegDirectPhotonRpPb_pPb5020_epps16", TObject::kOverwrite);
+
+                graphPowhegGammaALICECocktail_nCTEQ15->GetYaxis()->SetTitle("R_{#gamma}");
+                graphPowhegGammaALICECocktail_nCTEQ15->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegGammaALICECocktail_nCTEQ15->Write("graphRGammaDirectPhotonPoweheg5023GeV_nCTEQ15_ALICECocktail",TObject::kOverwrite);
+                graphPowhegGammaALICECocktail_nCTEQ15Center->GetYaxis()->SetTitle("R_{#gamma}");
+                graphPowhegGammaALICECocktail_nCTEQ15Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegGammaALICECocktail_nCTEQ15Center->Write("graphRGammaDirectPhotonPoweheg5023GeV_nCTEQ15_ALICECocktail_Center",TObject::kOverwrite);
+
+                graphPowhegGammaALICECocktail_EPPS16->GetYaxis()->SetTitle("R_{#gamma}");
+                graphPowhegGammaALICECocktail_EPPS16->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegGammaALICECocktail_EPPS16->Write("graphRGammaDirectPhotonPoweheg5023GeV_EPPS16_ALICECocktail",TObject::kOverwrite);
+                graphPowhegGammaALICECocktail_EPPS16Center->GetYaxis()->SetTitle("R_{#gamma}");
+                graphPowhegGammaALICECocktail_EPPS16Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+                graphPowhegGammaALICECocktail_EPPS16Center->Write("graphRGammaDirectPhotonPoweheg5023GeV_EPPS16_ALICECocktail_Center",TObject::kOverwrite);
 
                 fileTheoryGraphsPPb->Close();
 
@@ -2790,8 +2901,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 delete gae_rpPb_powheg_pPb5020_epps16;
 
                 for(Int_t iParticle=0; iParticle<nParticles; iParticle++){
-            if (graphDecayPhotonSpectraMcGill5023GeV[iParticle]) delete graphDecayPhotonSpectraMcGill5023GeV[iParticle];
-        }
+                    if (graphDecayPhotonSpectraMcGill5023GeV[iParticle]) delete graphDecayPhotonSpectraMcGill5023GeV[iParticle];
+                }
 //         delete fileTheoryGraphsPPb;
     }
 }

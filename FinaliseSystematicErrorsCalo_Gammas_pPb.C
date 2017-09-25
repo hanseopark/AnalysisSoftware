@@ -157,9 +157,9 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0 };
     Bool_t benableIncGammapPb5TeV[15]           = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 0,
                                                     0, 0, 1, 0, 0 };
-    Bool_t benableIncRatiopPb5TeV[15]           = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
+    Bool_t benableIncRatiopPb5TeV[15]           = { 1, 1, 1, 1, 1,  1, 1, 0, 0, 1,
                                                     0, 1, 1, 1, 1 };
-    Bool_t benableDRpPb5TeV[15]                 = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
+    Bool_t benableDRpPb5TeV[15]                 = { 1, 1, 1, 1, 1,  1, 1, 0, 0, 1,
                                                     1, 1, 1, 1, 1 };
 
     // ***************************************************************************************************
@@ -733,7 +733,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
         Double_t minXLegend2        = 0.11;
         Double_t maxYLegend2        = 0.95;
         Double_t widthLegend2       = 0.5;
-        Double_t heightLegend2      = 0.25;
+        Double_t heightLegend2      = 4*0.04;
 
         // create legend
         TLegend* legendSummedMeanNew    = GetAndSetLegend2(minXLegend2, maxYLegend2-heightLegend2, minXLegend2+widthLegend2, maxYLegend2, 40, 2, "", 43, 0.1);
@@ -754,31 +754,30 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
         // 13 "Rapidity"
         // 14 "OpeningAngle"
 
-        // Signal extraction error
         if (benable[8] || benable[9] || benable[11] || benable[13] || benable[14]){
-            DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, 20, markersizeSummed,color[0],color[0]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, GetMarkerStyleSystematics("IntRange"), markersizeSummed, GetColorSystematics("IntRange"),GetColorSystematics("IntRange"));
             meanErrorsSignalExtraction->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Extraction #pi^{0}","p");
+            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Ext. #pi^{0}","p");
         }
         if (benable[7] ){
-            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[7], markerStyle[7], markersizeSummed,color[7],color[7]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[7], GetMarkerStyleSystematics("Pileup"), markersizeSummed, GetColorSystematics("Pileup"),GetColorSystematics("Pileup"));
             meanErrorsCorr[7]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[7],"Pileup","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[7],"Pile-up","p");
         }
         if (benable[1] || benable[2] || benable[4] || benable[5] ){
-            DrawGammaSetMarkerTGraphErr(meanErrorsClusterProp, markerStyle[2], markersizeSummed,color[2],color[2]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsClusterProp, GetMarkerStyleSystematics("ClusterM02"), markersizeSummed, GetColorSystematics("ClusterM02"),GetColorSystematics("ClusterM02"));
             meanErrorsClusterProp->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsClusterProp,"cluster prop.","p");
         }
         if (benable[0]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[0], markerStyle[0], markersizeSummed,color[0],color[0]);
             meanErrorsCorr[0]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[9],"cl. energy scale","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[0],"cl. energy scale","p");
         }
         if (benable[3]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[3], markerStyle[3], markersizeSummed,color[3],color[3]);
             meanErrorsCorr[3]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[12],"track match. cl.","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[3],"track match. cl.","p");
         }
         if (benable[12]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[12], markerStyle[12], markersizeSummed,color[12],color[12]);

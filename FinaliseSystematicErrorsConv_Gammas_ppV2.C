@@ -74,7 +74,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     TString collisionSystem                     = ReturnFullCollisionsSystem(energy);
     TString detectionProcess                    = ReturnFullTextReconstructionProcess(mode);
     TString dateForOutput                       = ReturnDateStringForOutput();
-    TString energyForOutput                     = energy;
+    TString energyForOutput                     = ReturnCollisionEnergyOutputString(energy);
 
     TLatex *labelGamma                          = new TLatex(0.95,0.88,detectionProcess);
     SetStyleTLatex( labelGamma, 0.038,4);
@@ -170,9 +170,9 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                                     1, 1, 1, 1, 0,  0 };
     Bool_t benableIncGamma2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 0, 0, 1, 1,
                                                     0, 1, 0, 0, 0,  0 };
-    Bool_t benableIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 1, 1, 1,
+    Bool_t benableIncRatio2760GeV[16]           = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 1,
                                                     0, 1, 1, 0, 0,  1 };
-    Bool_t benableDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 1, 1, 1,
+    Bool_t benableDR2760GeV[16]                 = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 1,
                                                     0, 1, 1, 1, 0,  1 };
     Bool_t benableIncGamma7TeV[16]              = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0,  0 };
@@ -854,7 +854,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         labelGamma->Draw();
         labelSpectrum->Draw();
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMean_%s_%s_%s.%s",spectrumName.Data(), energy.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMean_%s_%s_%s.%s",spectrumName.Data(), energyForOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     canvasNewSysErrMean->cd();
 
@@ -897,11 +897,11 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         labelSpectrum->Draw();
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMeanNewWithMean_%s_%s_%s.%s",spectrumName.Data(), energy.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysMeanNewWithMean_%s_%s_%s.%s",spectrumName.Data(), energyForOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     //+++++++++++++++++++++++++ SAVING SYSTEMATICS TO DAT FILE +++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatname                   = Form("GammaSystematicErrorsCalculated/SystematicError_%s_%s_%s.dat",spectrumName.Data(),energy.Data(),dateForOutput.Data());
+    const char *SysErrDatname                   = Form("GammaSystematicErrorsCalculated/SystematicError_%s_%s_%s.dat",spectrumName.Data(),energyForOutput.Data(),dateForOutput.Data());
     fstream SysErrDat;
     cout << SysErrDatname << endl;
     SysErrDat.open(SysErrDatname, ios::out);
@@ -912,7 +912,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
     //+++++++++++++++++++++++++ SAVING AVERAGE SYSTEMATICS TO DAT ++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatnameMean               = Form("GammaSystematicErrorsCalculated/SystematicErrorAveraged_%s_%s_%s.dat",spectrumName.Data(),energy.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMean               = Form("GammaSystematicErrorsCalculated/SystematicErrorAveraged_%s_%s_%s.dat",spectrumName.Data(),energyForOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -1021,39 +1021,40 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         Double_t minXLegend2        = 0.13;
         Double_t maxYLegend2        = 0.95;
         Double_t widthLegend2       = 0.55;
-        Double_t heightLegend2      = 0.15;
+        Double_t heightLegend2      = 4*0.04;
+        if (!spectrumName.Contains("Ratio"))
+            heightLegend2           = 3*0.04;
+
 
         // create legend
-        TLegend* legendSummedMeanNew = GetAndSetLegend2(minXLegend2,maxYLegend2-heightLegend2,minXLegend2+widthLegend2,maxYLegend2, 40);
-        legendSummedMeanNew->SetNColumns(2);
-        legendSummedMeanNew->SetMargin(0.1);
+        TLegend* legendSummedMeanNew    = GetAndSetLegend2(minXLegend2, maxYLegend2-heightLegend2, minXLegend2+widthLegend2, maxYLegend2, 40, 2, "", 43, 0.1);
         Size_t markersizeSummed     = 1.3;
 
         // Signal extraction error
         if (benable[12] || benable[6] || benable[15]){
-            DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, 20, markersizeSummed,color[0],color[0]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, GetMarkerStyleSystematics("IntRange"), markersizeSummed, GetColorSystematics("IntRange"),GetColorSystematics("IntRange"));
             meanErrorsSignalExtraction->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Extraction #pi^{0}","p");
+            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Ext. #pi^{0}","p");
         }
         if (benable[0] || benable[11]){
-            DrawGammaSetMarkerTGraphErr(meanErrorsPID, 21, markersizeSummed,color[1],color[1]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsPID, GetMarkerStyleSystematics("dEdxE"), markersizeSummed, GetColorSystematics("dEdxE"),GetColorSystematics("dEdxE"));
             meanErrorsPID->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPID,"Electron PID","p");
         }
         if (benable[1] || benable[2]){
-            DrawGammaSetMarkerTGraphErr(meanErrorsTrackReco, 22, markersizeSummed,color[2],color[2]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsTrackReco, GetMarkerStyleSystematics("SinglePt"), markersizeSummed, GetColorSystematics("SinglePt"),GetColorSystematics("SinglePt"));
             meanErrorsTrackReco->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"Track Reco.","p");
         }
         if (benable[3] || benable[4] || benable[5] || benable[10]){
-            DrawGammaSetMarkerTGraphErr(meanErrorsPhotonReco, 23, markersizeSummed,color[3],color[3]);
+            DrawGammaSetMarkerTGraphErr(meanErrorsPhotonReco, GetMarkerStyleSystematics("Qt"), markersizeSummed, GetColorSystematics("Qt"),GetColorSystematics("Qt"));
             meanErrorsPhotonReco->Draw("p,csame");
             legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reco.","p");
         }
-        if (benable[9] || benable[8] || benable[7] ){
-            DrawGammaSetMarkerTGraphErr(meanErrorsPileup, 25, markersizeSummed,color[5],color[5]);
+        if (benable[9] || benable[8] || benable[7]){
+            DrawGammaSetMarkerTGraphErr(meanErrorsPileup,  GetMarkerStyleSystematics("Pileup"), markersizeSummed, GetColorSystematics("Pileup"),GetColorSystematics("Pileup"));
             meanErrorsPileup->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pileup","p");
+            legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pile-up","p");
         }
         if (benable[13]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[13], markerStyle[13], markersizeSummed,color[13],color[13]);
@@ -1074,13 +1075,13 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         labelSpectrum->Draw();
 
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysErrorSummedVisu_%s_%s_%s.%s",spectrumName.Data(), energy.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("GammaSystematicErrorsCalculated/SysErrorSummedVisu_%s_%s_%s.%s",spectrumName.Data(), energyForOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     delete canvasSummedErrMean;
 
     //+++++++++++++++++++++++++ SAVING SYSTEMATICS PAPER STYLE +++++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const char *SysErrDatnameMeanPaper          = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedPaper_%s_%s_%s.dat",spectrumName.Data(),energy.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMeanPaper          = Form("GammaSystematicErrorsCalculated/SystematicErrorAveragedPaper_%s_%s_%s.dat",spectrumName.Data(),energyForOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverPaper;
     cout << SysErrDatnameMeanPaper << endl;
     SysErrDatAverPaper.open(SysErrDatnameMeanPaper, ios::out);

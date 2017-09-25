@@ -88,6 +88,8 @@ void ComputeCorrelationFactors(
     if(combMode.CompareTo("systems")==0)
         modeOutput                = "Systems";
 
+    if (isStatCorr) mesonPlot       = "stat. corr "+mesonPlot;
+    else mesonPlot       = "sys. corr "+mesonPlot;
 
     TString dateForOutput           = ReturnDateStringForOutput();
     TString fCollisionSystenWrite   = ReturnCollisionEnergyOutputString(energy);
@@ -267,14 +269,14 @@ void ComputeCorrelationFactors(
     Double_t maxCorrYaxis       = 1.05;
     if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !meson.Contains("Gamma")){
         minCorrYaxis            = 0.0;
-    } else if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && meson.Contains("Gamma")){
+    } else if(combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 ) &&  meson.Contains("Gamma") && !isStatCorr){
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.5;
         canvasWeights->SetLogy();
-    } else if(combMode.CompareTo("systems") == 0 && energy.CompareTo("2.76TeV") == 0 && meson.Contains("Gamma")){
+    } else if(  combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 ) &&
+                ( meson.Contains("RGamma") ||  meson.Contains("IncGammaToPi0") && isStatCorr ) ){
         minCorrYaxis            = 0.005;
-        maxCorrYaxis            = 1.5;
-        canvasWeights->SetLogy();
+        maxCorrYaxis            = 1.05;
     }else if(combMode.CompareTo("systems") == 0 ){
         minCorrYaxis            = 0.35;
     } else if (combMode.CompareTo("triggers") == 0 && energy.CompareTo("2.76TeV") == 0 && ( mode == 2 || mode == 4 ) ){
@@ -523,7 +525,7 @@ void ComputeCorrelationFactors(
         DrawGammaLines(minPt,maxPt, 0.96, 0.96,0.1, kGray, 7);
         DrawGammaLines(minPt,maxPt, 0.94, 0.94,0.1, kGray, 3);
         DrawGammaLines(minPt,maxPt, 0.92, 0.92,0.1, kGray, 7);
-    } else {
+    } else if (!isStatCorr) {
         DrawGammaLines(minPt,maxPt, 0.1, 0.1,0.1, kGray, 3);
     }
     DrawGammaLines(minPt,maxPt, 0.9, 0.9,0.1, kGray, 1);

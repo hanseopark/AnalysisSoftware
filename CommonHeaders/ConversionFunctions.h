@@ -43,6 +43,8 @@
     TGraph*             ScaleGraph (TGraph* , Double_t );
     TGraphAsymmErrors*  ScaleGraph (TGraphAsymmErrors* , Double_t );
     TGraphErrors*       ScaleGraph (TGraphErrors* , Double_t );
+    TGraphAsymmErrors*  SubtractConstantFromGraph (TGraphAsymmErrors* , Double_t , Bool_t);
+    TGraphAsymmErrors*  AddConstantToGraph (TGraphAsymmErrors* , Double_t , Bool_t);
     Double_t*           ExtractRelErrDownAsymmGraph(TGraphAsymmErrors* );
     Double_t*           ExtractRelErrUpAsymmGraph(TGraphAsymmErrors* );
     TGraphAsymmErrors*  RebinCombPi0Graph(TGraphAsymmErrors* , TH1D* );
@@ -1096,6 +1098,58 @@
             yValue[i]                   = yValue[i]*scaleFac;
             yErrorLow[i]                = yErrorLow[i]*scaleFac;
             yErrorHigh[i]               = yErrorHigh[i]*scaleFac;
+        }
+        TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+        return returnGraph;
+    }
+
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    TGraphAsymmErrors* SubtractConstantFromGraph (TGraphAsymmErrors* graph, Double_t constant, Bool_t recalcErrs){
+        TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)graph->Clone(Form("%s_Subtracted",graph->GetName()));
+
+        Double_t* xValue                = dummyGraph->GetX();
+        Double_t* yValue                = dummyGraph->GetY();
+        Double_t* xErrorLow             = dummyGraph->GetEXlow();
+        Double_t* xErrorHigh            = dummyGraph->GetEXhigh();
+        Double_t* yErrorLow             = dummyGraph->GetEYlow();
+        Double_t* yErrorHigh            = dummyGraph->GetEYhigh();
+        Int_t nPoints                   = dummyGraph->GetN();
+        for (Int_t i = 0; i < nPoints; i++){
+            if (recalcErrs){
+                Double_t relErrLow      = yErrorLow[i]/yValue[i];
+                Double_t relErrHigh     = yErrorHigh[i]/yValue[i];
+                yErrorLow[i]            = relErrLow*(yValue[i]-constant);
+                yErrorHigh[i]           = relErrHigh*(yValue[i]-constant);
+            }
+            yValue[i]                   = yValue[i]-constant;
+        }
+        TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+        return returnGraph;
+    }
+
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    TGraphAsymmErrors* AddConstantToGraph (TGraphAsymmErrors* graph, Double_t constant, Bool_t recalcErrs ){
+        TGraphAsymmErrors* dummyGraph    = (TGraphAsymmErrors*)graph->Clone(Form("%s_Added",graph->GetName()));
+
+        Double_t* xValue                = dummyGraph->GetX();
+        Double_t* yValue                = dummyGraph->GetY();
+        Double_t* xErrorLow             = dummyGraph->GetEXlow();
+        Double_t* xErrorHigh            = dummyGraph->GetEXhigh();
+        Double_t* yErrorLow             = dummyGraph->GetEYlow();
+        Double_t* yErrorHigh            = dummyGraph->GetEYhigh();
+        Int_t nPoints                   = dummyGraph->GetN();
+        for (Int_t i = 0; i < nPoints; i++){
+            if (recalcErrs){
+                Double_t relErrLow      = yErrorLow[i]/yValue[i];
+                Double_t relErrHigh     = yErrorHigh[i]/yValue[i];
+                yErrorLow[i]            = relErrLow*(yValue[i]+constant);
+                yErrorHigh[i]           = relErrHigh*(yValue[i]+constant);
+            }
+            yValue[i]                   = yValue[i]+constant;
         }
         TGraphAsymmErrors* returnGraph  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
         return returnGraph;
@@ -4610,8 +4664,8 @@
         }
         return graphR;
     }
-    
-    
+
+
     //************ Wrapper function to extract the direct photon spectrum upper limit ***************
     //**    - extracts the direct photon signal upper limits based on statistical error            **
     //**      given in a histogram and systematic errors in a graphs                               **
@@ -4671,7 +4725,7 @@
 
         return upperLimits;
     }
-    
+
     //***********************************************************************************************
     //**  function to return upper limit on photon excess, using a Bayesian approach               **
     //**  with the heaviside function used as prior (excluding R_gamma < 1)                        **

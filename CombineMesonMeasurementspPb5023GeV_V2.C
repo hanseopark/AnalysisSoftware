@@ -2432,8 +2432,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     cout << WriteParameterToFile(fitTCMDecomposedHPi0)<< endl;
     fileFitsOutput <<  WriteParameterToFile(fitTCMDecomposedHPi0)<< endl;
 
-    Double_t paramTCMPi0New[5]          = { fitTCMDecomposedLPi0->GetParameter(0),fitTCMDecomposedLPi0->GetParameter(1),
-                                            fitTCMDecomposedHPi0->GetParameter(0),fitTCMDecomposedHPi0->GetParameter(1),fitTCMDecomposedHPi0->GetParameter(2)};
+    Double_t paramTCMPi0New[5]          = { 20.72,0.167, 0.454, 0.629, 3.163};
 
 //     Double_t paramTCMPi0New[5]          = { 5.265,0.33,
 //                                             1.9,0.46,3.1};
