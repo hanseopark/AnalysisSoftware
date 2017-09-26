@@ -4241,7 +4241,7 @@
     //************************************************************************************
     Double_t ReturnCocktailNormalization(TString energy, TString eventCutString) {
 
-        // cocktail is normalized per INEL event, except for: PbPb, pPb 5TeV and pp 8TeV
+        // cocktail is normalized per INEL event, except for: PbPb and pPb 5TeV
 
         Int_t       selTrig             = 0;    // 0 = V0OR, 1 = V0AND, 2 = T0OR, 3 = INEL
         TString     trigger             = eventCutString(GetEventSelectSpecialTriggerCutPosition(),2);
@@ -4258,14 +4258,10 @@
         } else if (energy.BeginsWith("pPb")) {
             scaleFactor                 = 1.;
         } else {
-            if (energy.CompareTo("8TeV") == 0) {
-                scaleFactor             = 1.;
-            } else {
-                if (xSec && xSecINEL)
-                    scaleFactor         = xSecINEL/xSec;
-                else
-                    cout << "ERROR: xSec not found for " << energy.Data() << ", " << selTrig << endl;
-            }
+            if (xSec && xSecINEL)
+                scaleFactor         = xSecINEL/xSec;
+            else
+                cout << "ERROR: xSec not found for " << energy.Data() << ", " << selTrig << endl;
         }
 
         if (triggerRejection != 1.) {
@@ -4273,7 +4269,7 @@
             scaleFactor                 = scaleFactor * triggerRejection;
         }
 
-        cout << "Additional normlization factor for spectra from cocktail simulation: " << scaleFactor << endl;
+        cout << "Additional normalization factor for spectra from cocktail simulation: " << scaleFactor << endl;
 
         return scaleFactor;
     }
