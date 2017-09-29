@@ -1,17 +1,17 @@
 
 
-void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
-    TLatex *latexDummy                              = new TLatex(textcolumn ,textrow,latextext);
-    SetStyleTLatex( latexDummy, textSizePixel,4);
-    if(setFont)
-        latexDummy->SetTextFont(62);
-    if(setFont2)
-        latexDummy->SetTextFont(43);
-    if(alignRight)
-        latexDummy->SetTextAlign(31);
-    latexDummy->SetTextColor(textcolor);
-    latexDummy->Draw();
-}
+//void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
+//    TLatex *latexDummy                              = new TLatex(textcolumn ,textrow,latextext);
+//    SetStyleTLatex( latexDummy, textSizePixel,4);
+//    if(setFont)
+//        latexDummy->SetTextFont(62);
+//    if(setFont2)
+//        latexDummy->SetTextFont(43);
+//    if(alignRight)
+//        latexDummy->SetTextAlign(31);
+//    latexDummy->SetTextColor(textcolor);
+//    latexDummy->Draw();
+//}
 void drawMarker(TH1D* histoDummy, Double_t column, Double_t row, Double_t markerScale){
     TMarker* markerdummy;
     markerdummy                                     = CreateMarkerFromHisto(histoDummy,column ,row ,markerScale);

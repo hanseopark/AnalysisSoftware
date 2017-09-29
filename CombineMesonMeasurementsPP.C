@@ -323,11 +323,11 @@ void CombineMesonMeasurementsPP()
     //---------------------------- Loading pythia predictions from files --------------------------------------------
     //---------------------------------------------------------------------------------------------------------------
 
-    TString pythiaHistoNames[6]                 = { "histoInvSecPythia8Monash2013Pi0900GeV", "histoInvSecPythia8Monash2013Pi02760GeV", "", "histoInvSecPythia8Monash2013Pi07TeV", "histoInvSecPythia8Monash2013LegoPi08TeV", ""};
+    TString pythiaHistoNames[6]                 = { "histoInvSecPythia8Monash2013LegoPi0900GeV", "histoInvSecPythia8Monash2013LegoPi02760GeV", "", "histoInvSecPythia8Monash2013LegoPi07TeV", "histoInvSecPythia8Monash2013LegoPi08TeV", ""};
     TH1F* histoPythiaInvCrossSectionPi0[6];
     TGraphErrors* graphPythiaInvCrossSectionPi0[6];
 
-    TString pythiaHistoNamesEta[6]                 = { "histoInvSecPythia8Monash2013Eta900GeV", "histoInvSecPythia8Monash2013Eta2760GeV", "", "histoInvSecPythia8Monash2013Eta7TeV", "histoInvSecPythia8Monash2013LegoEta8TeV", ""};
+    TString pythiaHistoNamesEta[6]                 = { "histoInvSecPythia8Monash2013LegoEta900GeV", "histoInvSecPythia8Monash2013LegoEta2760GeV", "", "histoInvSecPythia8Monash2013LegoEta7TeV", "histoInvSecPythia8Monash2013LegoEta8TeV", ""};
     TH1F* histoPythiaInvCrossSectionEta[6];
     TGraphErrors* graphPythiaInvCrossSectionEta[6];
     Double_t scalingFactorPythia = 1;
@@ -1731,7 +1731,7 @@ void CombineMesonMeasurementsPP()
               legendRatiosPythia->AddEntry((TObject*)0,"Monash 2013","");
               legendRatiosPythia->Draw();
 
-              legendInvariantXSecTheoryPi0 = GetAndSetLegend2(0.75, 0.595, 0.95, 0.595+textsizeLabelsXSec[0]*(numActiveMeas+3)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              legendInvariantXSecTheoryPi0 = GetAndSetLegend2(0.75, 0.595, 0.95, 0.595+textsizeLabelsXSec[0]*(numActiveMeas+3)+textsizeLabelsXSec[0], textSizeLabelsPixel*0.8);
               legendInvariantXSecTheoryPi0->SetNColumns(1);
               legendInvariantXSecTheoryPi0->SetMargin(0.2);
               legendInvariantXSecTheoryPi0->AddEntry((TObject*)0,"","");
@@ -1739,7 +1739,7 @@ void CombineMesonMeasurementsPP()
               legendInvariantXSecTheoryPi0->AddEntry(graphNLODSS07InvCrossSectionPi0One[exampleActiveMeas],"#mu = #it{p}_{T}","l");
               legendInvariantXSecTheoryPi0->AddEntry(graphNLODSS07InvCrossSectionPi0Two[exampleActiveMeas],"#mu = 2 #it{p}_{T}","l");
               legendInvariantXSecTheoryPi0->Draw();
-              drawLatexAdd("NLO,",0.83,0.86,2.5*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd("NLO,",0.825,0.86,2.5*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("PDF:CTEQ6M5",0.974,0.51,2.2*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("FF:DSS07",0.9,0.44,2.2*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
@@ -2394,7 +2394,7 @@ void CombineMesonMeasurementsPP()
               legendRatiosPythia->AddEntry((TObject*)0,"Monash 2013","");
               legendRatiosPythia->Draw();
 
-              legendInvariantXSecTheoryEta = GetAndSetLegend2(0.75, 0.595, 0.95, 0.595+textsizeLabelsXSec[0]*(numActiveMeas+3)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+              legendInvariantXSecTheoryEta = GetAndSetLegend2(0.75, 0.595, 0.95, 0.595+textsizeLabelsXSec[0]*(numActiveMeas+3)+textsizeLabelsXSec[0], textSizeLabelsPixel*0.8);
               legendInvariantXSecTheoryEta->SetNColumns(1);
               legendInvariantXSecTheoryEta->SetMargin(0.2);
               legendInvariantXSecTheoryEta->AddEntry((TObject*)0,"","");
@@ -2402,7 +2402,7 @@ void CombineMesonMeasurementsPP()
               legendInvariantXSecTheoryEta->AddEntry(graphNLOAESSSInvCrossSectionEtaOne[exampleActiveMeas],"#mu = #it{p}_{T}","l");
               legendInvariantXSecTheoryEta->AddEntry(graphNLOAESSSInvCrossSectionEtaTwo[exampleActiveMeas],"#mu = 2 #it{p}_{T}","l");
               legendInvariantXSecTheoryEta->Draw();
-              drawLatexAdd("NLO,",0.83,0.86,2.5*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              drawLatexAdd("NLO,",0.825,0.85,2.2*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("PDF:CTEQ6M5",0.968,0.51,2.2*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
               drawLatexAdd("FF:AESSS",0.9,0.44,2.2*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
