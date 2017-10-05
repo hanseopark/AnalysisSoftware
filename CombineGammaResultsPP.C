@@ -56,18 +56,6 @@ struct SysErrorConversion {
     //    TString name;
 };
 
-void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
-    TLatex *latexDummy                  = new TLatex(textcolumn ,textrow,latextext);
-    SetStyleTLatex( latexDummy, textSizePixel,4);
-    if(setFont)
-        latexDummy->SetTextFont(62);
-    if(setFont2)
-        latexDummy->SetTextFont(43);
-    if(alignRight)
-        latexDummy->SetTextAlign(31);
-    latexDummy->SetTextColor(textcolor);
-    latexDummy->Draw();
-}
 void drawhMarker(TH1D* histoDummy, Double_t column, Double_t row, Double_t markerScale){
     TMarker* markerdummy;
     markerdummy= CreateMarkerFromHisto(histoDummy,column ,row ,markerScale);
@@ -451,7 +439,7 @@ void plotEverything(TH1D* histoInput[], Double_t yMin, Double_t yMax, Int_t logY
 
         DrawGammaSetMarker(histoInput[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
         histoInput[0]->Draw("p,same,e");
-        if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")){
+        if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb")){
             DrawGammaSetMarker(histoInput[3], markerstyles[3], markersize[3], colorData[3] , colorData[3]);
             histoInput[3]->Draw("p,same,e");
         }
@@ -466,11 +454,11 @@ void plotEverything(TH1D* histoInput[], Double_t yMin, Double_t yMax, Int_t logY
             legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.81, 0.93, 0.81+(3*textSizeLabelsRel),textSizeLabelsPixel);
         if(!plotName.CompareTo("PileupContamination"))
             legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.81-textSizeLabelsRel, 0.93, 0.81+(3*textSizeLabelsRel),textSizeLabelsPixel);
-        if(!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor"))
+        if(!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb"))
             legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.93, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
                 legendEffiAccPi0->AddEntry(histoInput[2],nameMeasGlobal[2].Data(),"p");
                 legendEffiAccPi0->AddEntry(histoInput[1],nameMeasGlobal[1].Data(),"p");
-            if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor"))
+            if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb"))
                 legendEffiAccPi0->AddEntry(histoInput[3],nameMeasGlobal[3].Data(),"p");
                 legendEffiAccPi0->AddEntry(histoInput[0],nameMeasGlobal[0].Data(),"p");
 
@@ -989,63 +977,75 @@ void plotCrossSection(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsS
         histoDummy->Draw("sameaxis");
     canvasDummy->Update();
     canvasDummy->Print(Form("%s/%s.%s",outputDir.Data(),plotName.Data(),suffix.Data()));
-    /*
-        if(!plotName.CompareTo("InclusivePhotons")){
-            TCanvas* canvasDummyRatio       = new TCanvas("canvasDummyRatio", "", 200, 10, 1200, 1100);  // gives the page size
-            DrawGammaCanvasSettings( canvasDummyRatio,  0.14, 0.01, 0.015, 0.095);
-    //         canvasDummyRatio->SetLogy(1);
-            canvasDummyRatio->cd();
-            canvasDummyRatio->SetLogx(1);
-            TH2F * histoDummyRatio;
-                histoDummyRatio                = new TH2F("histoDummyRatio", "histoDummyRatio",1000, xMin,  xMax, 1000, 1.0, 1.8 );
-                SetStyleHistoTH2ForGraphs( histoDummyRatio, "#it{p}_{T} (GeV/#it{c})","#gamma_{incl.}^{8 TeV}/#gamma_{incl.}^{7 TeV}",
-                                    0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.4);//(#times #epsilon_{pur})
+    
+    
+    // **********************************************************************************************************************
+    // ******************************** InvYield for combined inc gamma measurement *****************************************
+    // **********************************************************************************************************************
+    TString nameMeasGlobalx[11]                  = {"PCM", "EMC", "PCM-EMCal"};
+    TString nameMeasGlobal2[11]                  = {"PCM", "EMC", "PCM-EMC"};
+    Color_t colorDet[11];
+    Style_t markerStyleDet[11];
+    Size_t  markerSizeDet[11];
 
-            histoDummyRatio->GetYaxis()->SetLabelOffset(0.001);
-            histoDummyRatio->GetXaxis()->SetLabelOffset(-0.01);
-            histoDummyRatio->GetXaxis()->SetMoreLogLabels(kTRUE);
-            histoDummyRatio->DrawCopy();
-    //             TH1D* ratiohisto = (TH1D*) csGraphs[2]->Clone("ratioinclusivehisto");
-            // csGraphsSys[2]->RemovePoint(csGraphsSys[2]->GetN());
-            // for (int j=0;j<csGraphsSys[2]->GetN();j++){
-            //     csGraphsSys[2]->GetY()[j] *= 1/1000;
-            //     csGraphsSys[2]->GetEYhigh()[j] *= 1/1000;
-            //     csGraphsSys[2]->GetEYlow()[j] *= 1/1000;
-            // }
-            for (int j=0;j<csGraphsSys[2]->GetN();j++){
-                csGraphsSys[2]->GetY()[j] /= 1000;
-                csGraphsSys[2]->GetEYhigh()[j] /= 1000;
-                csGraphsSys[2]->GetEYlow()[j] /= 1000;
-            }
-            for (int j=0;j<csGraphs[2]->GetN();j++){
-                csGraphs[2]->GetY()[j] /= 1000;
-                csGraphs[2]->GetEYhigh()[j] /= 1000;
-                csGraphs[2]->GetEYlow()[j] /= 1000;
-            }
-            for (int j=0;j<csGraphsSys[1]->GetN();j++){
-                csGraphsSys[1]->GetY()[j] /= 100;
-                csGraphsSys[1]->GetEYhigh()[j] /= 100;
-                csGraphsSys[1]->GetEYlow()[j] /= 100;
-            }
-            for (int j=0;j<csGraphs[1]->GetN();j++){
-                csGraphs[1]->GetY()[j] /= 100;
-                csGraphs[1]->GetEYhigh()[j] /= 100;
-                csGraphs[1]->GetEYlow()[j] /= 100;
-            }
-            // csGraphsSys[2]->SetPoint(20,14,-1);
-            TGraphAsymmErrors* ratiohistosys = CalculateAsymGraphRatioToGraph(csGraphsSys[2],csGraphsSys[1]);
-            // ratiohistosys->RemovePoint(ratiohistosys->GetN()-1);
-            DrawGammaSetMarkerTGraphAsym(ratiohistosys, markerstylesFULL[1], markersizeFULL[1], colorDataFULL[1], colorDataFULL[1], widthLinesBoxes, kTRUE);
-            ratiohistosys->Draw("E2same");
+    for (Int_t i = 0; i < 11; i++){
+        colorDet[i]                             = GetDefaultColorDiffDetectors(nameMeasGlobalx[i].Data(), kFALSE, kFALSE, kTRUE);
+        markerStyleDet[i]                       = GetDefaultMarkerStyleDiffDetectors(nameMeasGlobalx[i].Data(), kFALSE);
+        markerSizeDet[i]                        = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobalx[i].Data(), kFALSE);
+    }
+    Double_t doubleRatio[2];
+    Double_t indMeasRatio[2];
+    //     Double_t incRatio[2];
+    Double_t doubleRatioX[2];
+    Double_t doubleRatioXpp[3];
+    doubleRatio[0]      = 0.75;     doubleRatio[1]      = 1.65;
+    indMeasRatio[0]     = 0.65;     indMeasRatio[1]     = 1.45;
+    //  incRatio[0]         = 0.0;      incRatio[1]         = 1.7;
+    doubleRatioX[0]     = 0.7;      doubleRatioX[1]     = 14.5;
+    doubleRatioXpp[0]   = 0.23;     doubleRatioXpp[1]   = 14.5  ;     doubleRatioXpp[2]   = 19.5  ;
+    
+    TCanvas* canvasInvYieldGamma          = new TCanvas("canvasInvYieldGamma","",200,10,1350,1350*1.15);  // gives the page size
+    DrawGammaCanvasSettings( canvasInvYieldGamma, 0.16, 0.02, 0.02, 0.08);
+    canvasInvYieldGamma->SetLogx();
+    canvasInvYieldGamma->SetLogy();
 
-            TGraphAsymmErrors* ratiohisto = CalculateAsymGraphRatioToGraph(csGraphs[2],csGraphs[1]);
-            DrawGammaSetMarkerTGraph(ratiohisto, markerstylesFULL[1], 0.7*markersizeFULL[1], colorDataFULL[1] , colorDataFULL[1]);
-            ratiohisto->Draw("p,same,z");
-            canvasDummyRatio->Update();
-            canvasDummyRatio->Print(Form("%s/%s.%s",outputDir.Data(),"InclusivePhotonsRatio",suffix.Data()));
 
+    TH1F * histo2DYieldGamma              = new TH1F("histo2DYieldGamma","histo2DYieldGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
+    SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
+    histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,3.5e0);
+    histo2DYieldGamma->GetXaxis()->SetMoreLogLabels();
+    histo2DYieldGamma->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DYieldGamma->Draw("copy");
+    
+    TLegend* legendYieldIncGammaInd       = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel);
+    for (Int_t i = 0; i < 3; i++){
+      if(csGraphsSys[i]){
+            DrawGammaSetMarkerTGraphAsym(csGraphsSys[i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
+            csGraphsSys[i]->Draw("E2same");
+            DrawGammaSetMarkerTGraphAsym(csGraphs[i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
+            csGraphs[i]->Draw("Epsame,x0");
+            legendYieldIncGammaInd->AddEntry(csGraphsSys[i], Form("#gamma_{inc} %s", nameMeasGlobal2[i].Data()),"pf");
+          }
         }
-        */
+    legendYieldIncGammaInd->Draw();
+    
+    TLatex *labelEnergyInvYieldPaperAll = new TLatex(0.20, 0.20+0.04*3, "pp #sqrt{#it{s}} = 2.76 TeV");
+    SetStyleTLatex( labelEnergyInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+    labelEnergyInvYieldPaperAll->Draw();
+    TLatex *labelALICEInvYieldPaperAll  = new TLatex(0.20,0.20+0.04*2,"ALICE");
+    SetStyleTLatex( labelALICEInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+    labelALICEInvYieldPaperAll->Draw();
+    TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"Norm. unc. 2.5%");
+    SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
+    labelALICENormUnPaperAll->Draw();
+    
+    labelEnergyInvYieldPaperAll->Draw();
+    labelALICEInvYieldPaperAll->Draw();
+    labelALICENormUnPaperAll->Draw();
+
+    histo2DYieldGamma->Draw("same,axis");
+    canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_IndMeas.%s",outputDir.Data(),suffix.Data()));
+    
     }
 
 void plotEtaToPi0(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSys[], Double_t yMin, Double_t yMax, TString yTitle, TString plotName){
@@ -1955,6 +1955,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     Width_t  widthLineNLO                       = 2.;
 
 
+    cout << __LINE__ << endl;
 
     TString fileNameTheory                      = "ExternalInput/Theory/TheoryCompilationPP.root";
     TFile* fileTheoryCompilation                            = new TFile(fileNameTheory.Data());
@@ -1967,21 +1968,21 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
         histoPythia8InvXSectionPi08TeV->GetXaxis()->SetRangeUser(0.3,14);
         histoPythia8InvXSectionPi08TeV->Scale(1000);
         // 7TeV Pythia8 Monash2013:
-        histoPythia8InvXSectionPi07TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi07TeV");
+        histoPythia8InvXSectionPi07TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi07TeV");
         if(usecombinedspectra)
         histoPythia8InvXSectionPi07TeV->GetXaxis()->SetRangeUser(0.3,25);
         else
         histoPythia8InvXSectionPi07TeV->GetXaxis()->SetRangeUser(0.3,20);
         histoPythia8InvXSectionPi07TeV->Scale(100);
         // 2.76TeV Pythia8 Monash2013:
-        histoPythia8InvXSectionPi0276TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi02760GeV");
+        histoPythia8InvXSectionPi0276TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi02760GeV");
         if(usecombinedspectra)
         histoPythia8InvXSectionPi0276TeV->GetXaxis()->SetRangeUser(0.3,40);
         else
         histoPythia8InvXSectionPi0276TeV->GetXaxis()->SetRangeUser(0.3,8);
         histoPythia8InvXSectionPi0276TeV->Scale(10);
         // 0.9TeV Pythia8 Monash2013:
-        histoPythia8InvXSectionPi0900GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi0900GeV");
+        histoPythia8InvXSectionPi0900GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi0900GeV");
         if(usecombinedspectra)
         histoPythia8InvXSectionPi0900GeV->GetXaxis()->SetRangeUser(0.4,7.);
         else
@@ -1999,7 +2000,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           while(graphPythia8InvXSection8TeV->GetX()[0] < 0.3) graphPythia8InvXSection8TeV->RemovePoint(0);
           while(graphPythia8InvXSection8TeV->GetX()[graphPythia8InvXSection8TeV->GetN()-1] > 14.) graphPythia8InvXSection8TeV->RemovePoint(graphPythia8InvXSection8TeV->GetN()-1);
         }
-        TGraphErrors* graphPythia8InvXSection7TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi07TeV"));
+        TGraphErrors* graphPythia8InvXSection7TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi07TeV"));
         for (int j=0;j<graphPythia8InvXSection7TeV->GetN();j++){
             graphPythia8InvXSection7TeV->GetY()[j] *= 100;
             graphPythia8InvXSection7TeV->GetEY()[j] *= 100;
@@ -2011,7 +2012,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           while(graphPythia8InvXSection7TeV->GetX()[0] < 0.3) graphPythia8InvXSection7TeV->RemovePoint(0);
           while(graphPythia8InvXSection7TeV->GetX()[graphPythia8InvXSection7TeV->GetN()-1] > 20.) graphPythia8InvXSection7TeV->RemovePoint(graphPythia8InvXSection7TeV->GetN()-1);
         }
-        TGraphErrors* graphPythia8InvXSection276TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi02760GeV"));
+        TGraphErrors* graphPythia8InvXSection276TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi02760GeV"));
         for (int j=0;j<graphPythia8InvXSection276TeV->GetN();j++){
             graphPythia8InvXSection276TeV->GetY()[j] *= 10;
             graphPythia8InvXSection276TeV->GetEY()[j] *= 10;
@@ -2023,7 +2024,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           while(graphPythia8InvXSection276TeV->GetX()[0] < 0.3) graphPythia8InvXSection276TeV->RemovePoint(0);
           while(graphPythia8InvXSection276TeV->GetX()[graphPythia8InvXSection276TeV->GetN()-1] > 9.) graphPythia8InvXSection276TeV->RemovePoint(graphPythia8InvXSection276TeV->GetN()-1);
         }
-        TGraphErrors* graphPythia8InvXSection900GeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Pi0900GeV"));
+        TGraphErrors* graphPythia8InvXSection900GeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi0900GeV"));
         if(usecombinedspectra){
           while(graphPythia8InvXSection900GeV->GetX()[0] < 0.4) graphPythia8InvXSection900GeV->RemovePoint(0);
           while(graphPythia8InvXSection900GeV->GetX()[graphPythia8InvXSection900GeV->GetN()-1] > 7.) graphPythia8InvXSection900GeV->RemovePoint(graphPythia8InvXSection900GeV->GetN()-1);
@@ -2031,6 +2032,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           while(graphPythia8InvXSection900GeV->GetX()[0] < 0.4) graphPythia8InvXSection900GeV->RemovePoint(0);
           while(graphPythia8InvXSection900GeV->GetX()[graphPythia8InvXSection900GeV->GetN()-1] > 4.) graphPythia8InvXSection900GeV->RemovePoint(graphPythia8InvXSection900GeV->GetN()-1);
         }
+        cout << __LINE__ << endl;
 
         // *******************************************************************************************************
         // NLO calc
@@ -2071,6 +2073,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           while (graphPi0DSS14276TeV->GetX()[graphPi0DSS14276TeV->GetN()-1] > 9. ) graphPi0DSS14276TeV->RemovePoint(graphPi0DSS14276TeV->GetN()-1);
         }
 
+        cout << __LINE__ << endl;
 
         // *******************************************************************************************************
 
@@ -3241,15 +3244,15 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     histoPythia8InvXSectionEta8TeV->GetXaxis()->SetRangeUser(0.4,35);
     histoPythia8InvXSectionEta8TeV->Scale(1000);
     // 7TeV Pythia8 Monash2013:
-    TH1F* histoPythia8InvXSectionEta7TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta7TeV");
+    TH1F* histoPythia8InvXSectionEta7TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta7TeV");
     histoPythia8InvXSectionEta7TeV->GetXaxis()->SetRangeUser(0.4,35);
     histoPythia8InvXSectionEta7TeV->Scale(100);
     // 7TeV Pythia8 Monash2013:
-    TH1F* histoPythia8InvXSectionEta276TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta2760GeV");
+    TH1F* histoPythia8InvXSectionEta276TeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta2760GeV");
     histoPythia8InvXSectionEta276TeV->GetXaxis()->SetRangeUser(0.4,35);
     histoPythia8InvXSectionEta276TeV->Scale(10);
     // 0.9TeV Pythia8 Monash2013:
-    TH1F* histoPythia8InvXSectionEta900GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta900GeV");
+    TH1F* histoPythia8InvXSectionEta900GeV                       = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta900GeV");
     histoPythia8InvXSectionEta900GeV->GetXaxis()->SetRangeUser(0.8,3.);
 
     TGraphErrors* graphPythia8InvXSection8TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta8TeV"));
@@ -3260,7 +3263,7 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     while(graphPythia8InvXSection8TeV->GetX()[0] < 0.4) graphPythia8InvXSection8TeV->RemovePoint(0);
     while(graphPythia8InvXSection8TeV->GetX()[graphPythia8InvXSection8TeV->GetN()-1] > 35.) graphPythia8InvXSection8TeV->RemovePoint(graphPythia8InvXSection8TeV->GetN()-1);
 
-    TGraphErrors* graphPythia8InvXSection7TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta7TeV"));
+    TGraphErrors* graphPythia8InvXSection7TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta7TeV"));
     for (int j=0;j<graphPythia8InvXSection7TeV->GetN();j++){
         graphPythia8InvXSection7TeV->GetY()[j] *= 100;
         graphPythia8InvXSection7TeV->GetEY()[j] *= 100;
@@ -3268,7 +3271,7 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     while(graphPythia8InvXSection7TeV->GetX()[0] < 0.4) graphPythia8InvXSection7TeV->RemovePoint(0);
     while(graphPythia8InvXSection7TeV->GetX()[graphPythia8InvXSection7TeV->GetN()-1] > 35.) graphPythia8InvXSection7TeV->RemovePoint(graphPythia8InvXSection7TeV->GetN()-1);
     
-    TGraphErrors* graphPythia8InvXSection276TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta2760GeV"));
+    TGraphErrors* graphPythia8InvXSection276TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta2760GeV"));
     for (int j=0;j<graphPythia8InvXSection276TeV->GetN();j++){
         graphPythia8InvXSection276TeV->GetY()[j] *= 10;
         graphPythia8InvXSection276TeV->GetEY()[j] *= 10;
@@ -3276,7 +3279,7 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     while(graphPythia8InvXSection276TeV->GetX()[0] < 0.4) graphPythia8InvXSection276TeV->RemovePoint(0);
     while(graphPythia8InvXSection276TeV->GetX()[graphPythia8InvXSection276TeV->GetN()-1] > 35.) graphPythia8InvXSection276TeV->RemovePoint(graphPythia8InvXSection276TeV->GetN()-1);
 
-    TGraphErrors* graphPythia8InvXSection900GeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013Eta900GeV"));
+    TGraphErrors* graphPythia8InvXSection900GeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta900GeV"));
     while(graphPythia8InvXSection900GeV->GetX()[0] < 0.8) graphPythia8InvXSection900GeV->RemovePoint(0);
     while(graphPythia8InvXSection900GeV->GetX()[graphPythia8InvXSection900GeV->GetN()-1] > 3.) graphPythia8InvXSection900GeV->RemovePoint(graphPythia8InvXSection900GeV->GetN()-1);
 
@@ -4601,12 +4604,83 @@ void plotDoubleRatio(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSy
     // #############################################################################################################################
     // #############################################################################################################################
 
+    Double_t doubleRatio[2];
+    Double_t indMeasRatio[2];
+    //     Double_t incRatio[2];
+    Double_t doubleRatioX[2];
+    Double_t doubleRatioXpp[3];
+    doubleRatio[0]      = 0.75;     doubleRatio[1]      = 1.65;
+    indMeasRatio[0]     = 0.65;     indMeasRatio[1]     = 1.45;
+    //  incRatio[0]         = 0.0;      incRatio[1]         = 1.7;
+    doubleRatioX[0]     = 0.7;      doubleRatioX[1]     = 14.5;
+    doubleRatioXpp[0]   = 0.23;     doubleRatioXpp[1]   = 14.5  ;     doubleRatioXpp[2]   = 19.5  ;
 
 
 
 
+    TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);
+    DrawGammaCanvasSettings( canvasDoubleRatio, 0.086, 0.01, 0.01, 0.105);
+    canvasDoubleRatio->cd();
+    canvasDoubleRatio->SetLogx();
+
+    Double_t minY                            = 0.85;
+    Double_t maxY                            = 1.65;
+    Double_t textSizeSinglePad               = 0.05;
+    TH2F * hist2DDRDummySingle       = new TH2F("hist2DDRDummySingle","hist2DDRDummySingle",1000,0.01, 50,1000,doubleRatio[0], doubleRatio[1]);
+    SetStyleHistoTH2ForGraphs(hist2DDRDummySingle, "#it{p}_{T} (GeV/#it{c})","#it{R}_{#gamma}", 0.85*textSizeSinglePad,textSizeSinglePad, 0.85*textSizeSinglePad,textSizeSinglePad, 0.9,0.81);
+    hist2DDRDummySingle->GetXaxis()->SetRangeUser(doubleRatioXpp[0], doubleRatioXpp[1]);
+    hist2DDRDummySingle->GetXaxis()->SetLabelOffset(-0.01);
+    hist2DDRDummySingle->GetXaxis()->SetMoreLogLabels(kTRUE);
+    hist2DDRDummySingle->DrawCopy();
+        TLegend* legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad,0.5,0.953, textSizeSinglePad, 2, "", 42, 0.3);
+        legendDRSingle->SetTextAlign(11);
+        DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+        // graphNLODoubleRatio[2]->Draw("lp3");
+
+        DrawGammaSetMarkerTGraphAsym(graphDoubleRatioSys8TeV, 20, markersizeFULL[1], kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphDoubleRatioSys8TeV->Draw("2,same");
+        legendDRSingle->AddEntry(graphDoubleRatioSys8TeV,"PCM","pf");
+        DrawGammaSetMarkerTGraphAsym(graphDoubleRatioNoXErrStat8TeV,20, markersizeFULL[1], kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphDoubleRatioNoXErrStat8TeV->Draw("p,same");
+
+        legendDRSingle->Draw();
 
 
+        TLatex *labelDRSingle = new TLatex(0.95,0.92,Form("pp %s",nameMeasGlobal[2].Data()));
+        SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+        labelDRSingle->Draw();
+        TLatex *labelALICEDRSingle = new TLatex(0.95,0.87,"ALICE");
+        SetStyleTLatex( labelALICEDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+        labelALICEDRSingle->Draw();
+
+
+        hist2DDRDummySingle->Draw("same,axis");
+
+    canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_8TeV.pdf", outputDir.Data()));
+
+    hist2DDRDummySingle->GetXaxis()->SetRangeUser(doubleRatioXpp[0], doubleRatioXpp[2]);
+    hist2DDRDummySingle->DrawCopy();
+        legendDRSingle->Clear();
+        DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+
+        DrawGammaSetMarkerTGraphAsym(graphDoubleRatioSys7TeV, 20, markersizeFULL[1], kBlack, kBlack, widthLinesBoxes, kTRUE, 0);
+        graphDoubleRatioSys7TeV->Draw("2,same");
+        legendDRSingle->AddEntry(graphDoubleRatioSys7TeV,"PCM","pf");
+        DrawGammaSetMarkerTGraphAsym(graphDoubleRatioNoXErrStat7TeV,20, markersizeFULL[1], kBlack, kBlack, widthLinesBoxes, kFALSE);
+        graphDoubleRatioNoXErrStat7TeV->Draw("p,same");
+
+        legendDRSingle->Draw();
+
+
+        labelDRSingle = new TLatex(0.95,0.92,Form("pp %s",nameMeasGlobal[1].Data()));
+        SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+        labelDRSingle->Draw();
+        labelALICEDRSingle->Draw();
+
+
+        hist2DDRDummySingle->Draw("same,axis");
+
+    canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_7TeV.pdf", outputDir.Data()));
 
 
 
@@ -4813,940 +4887,6 @@ void plotDoubleRatio(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSy
 
 }
 
-void plotThreePads(){
-
-    // **********************************************************************************************************************
-    // ******************************************* Mass and width for pi0 ****************************************
-    // **********************************************************************************************************************
-    Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-    Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-
-
-    Double_t arrayBoundariesX1_4[4];
-    Double_t arrayBoundariesY1_4[3];
-    Double_t relativeMarginsX[3];
-    Double_t relativeMarginsY[3];
-    Double_t maxX = 19.9;
-    Double_t textSizeLabelsPixel             = 50;
-    ReturnCorrectValuesForCanvasScaling(2350,1250, 3, 2,0.051, 0.005, 0.005,0.085,arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
-
-    TCanvas* canvasMassWidthPi0     = new TCanvas("canvasMassWidthPi0","",0,0,2350,1250);  // gives the page size
-    DrawGammaCanvasSettings( canvasMassWidthPi0,  0.13, 0.02, 0.03, 0.06);
-
-    TPad* padWidthPi08TeV               = new TPad("padWidthPi08TeV", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi08TeV, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi08TeV->Draw();
-
-    TPad* padMassPi08TeV                = new TPad("padMassPi08TeV", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi08TeV, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi08TeV->Draw();
-
-    TPad* padWidthPi07TeV               = new TPad("padWidthPi07TeV", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[1], arrayBoundariesX1_4[2], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi07TeV, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi07TeV->Draw();
-
-    TPad* padMassPi07TeV                = new TPad("padMassPi07TeV", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[2], arrayBoundariesX1_4[2], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi07TeV, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi07TeV->Draw();
-
-    TPad* padWidthPi0900GeV               = new TPad("padWidthPi0900GeV", "", arrayBoundariesX1_4[2], arrayBoundariesY1_4[1], arrayBoundariesX1_4[3], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi0900GeV, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi0900GeV->Draw();
-
-    TPad* padMassPi0900GeV                = new TPad("padMassPi0900GeV", "", arrayBoundariesX1_4[2], arrayBoundariesY1_4[2], arrayBoundariesX1_4[3], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi0900GeV, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi0900GeV->Draw();
-
-    TPad* padMassLegend1            = new TPad("padMassLegend1", "", 0.13, 0.32, 0.52, 0.52,-1, -1, -2);
-    DrawGammaPadSettings( padMassLegend1, 0., 0., 0., 0.);
-    padMassLegend1->SetFillStyle(0);
-    padMassLegend1->Draw();
-
-    padWidthPi08TeV->cd();
-    padWidthPi08TeV->SetLogx();
-
-    Double_t margin                 = relativeMarginsX[0]*2.7*2350;
-    Double_t textsizeLabelsWidth    = 0;
-    Double_t textsizeFacWidth       = 0;
-    if (padWidthPi08TeV->XtoPixel(padWidthPi08TeV->GetX2()) < padWidthPi08TeV->YtoPixel(padWidthPi08TeV->GetY1())){
-        textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthPi08TeV->XtoPixel(padWidthPi08TeV->GetX2()) ;
-        textsizeFacWidth            = (Double_t)1./padWidthPi08TeV->XtoPixel(padWidthPi08TeV->GetX2()) ;
-    } else {
-        textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthPi08TeV->YtoPixel(padWidthPi08TeV->GetY1());
-        textsizeFacWidth            = (Double_t)1./padWidthPi08TeV->YtoPixel(padWidthPi08TeV->GetY1());
-    }
-
-    TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, maxX ,1000., 0.1, 6.9);
-    SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
-                            0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.77, 512, 505);
-    //         histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,24.5);
-    histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
-    histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
-    histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
-    histo2DAllPi0FWHM->GetXaxis()->SetTickLength(0.05);
-    histo2DAllPi0FWHM->GetYaxis()->SetTickLength(0.026);
-    histo2DAllPi0FWHM->DrawCopy();
-
-
-
-
-    DrawGammaSetMarker(histoPi0TrueFWHMMeV[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-    histoPi0TrueFWHMMeV[0]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0FWHMMeV[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-    histoPi0FWHMMeV[0]->Draw("p,same,e");
-
-
-    drawLatexAdd("ALICE",0.18,0.87,textSizeLabelsPixel,kFALSE,kTRUE);
-    drawLatexAdd("pp, PCM",0.18,0.78,textSizeLabelsPixel,kFALSE,kTRUE);
-    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.18,0.69,textSizeLabelsPixel,kFALSE,kTRUE);
-    // drawLatexAdd("a)",0.18,0.06,textSizeLabelsPixel,kFALSE,kTRUE);
-
-    padWidthPi07TeV->cd();
-    padWidthPi07TeV->SetLogx();
-    histo2DAllPi0FWHM->DrawCopy();
-    DrawGammaSetMarker(histoPi0TrueFWHMMeV[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-    histoPi0TrueFWHMMeV[1]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0FWHMMeV[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-    histoPi0FWHMMeV[1]->Draw("p,same,e");
-
-    padWidthPi0900GeV->cd();
-    padWidthPi0900GeV->SetLogx();
-    histo2DAllPi0FWHM->DrawCopy();
-    DrawGammaSetMarker(histoPi0TrueFWHMMeV[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-    histoPi0TrueFWHMMeV[2]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0FWHMMeV[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-    histoPi0FWHMMeV[2]->Draw("p,same,e");
-
-
-    padMassPi08TeV->cd();
-    padMassPi08TeV->SetLogx();
-
-
-    Double_t textsizeLabelsMass         = 0;
-    Double_t textsizeFacMass            = 0;
-    if (padMassPi08TeV->XtoPixel(padMassPi08TeV->GetX2()) <padMassPi08TeV->YtoPixel(padMassPi08TeV->GetY1()) ){
-        textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassPi08TeV->XtoPixel(padMassPi08TeV->GetX2()) ;
-        textsizeFacMass                 = (Double_t)1./padMassPi08TeV->XtoPixel(padMassPi08TeV->GetX2()) ;
-    } else {
-        textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassPi08TeV->YtoPixel(padMassPi08TeV->GetY1());
-        textsizeFacMass                 = (Double_t)1./padMassPi08TeV->YtoPixel(padMassPi08TeV->GetY1());
-    }
-
-    TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, maxX, 1000., 132.1, 139.9);
-    SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
-                            textsizeLabelsMass, 0.9, 0.9, 512, 505);
-    histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
-    histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
-    histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
-    histo2DAllPi0Mass->GetXaxis()->SetNoExponent(kTRUE);
-    histo2DAllPi0Mass->GetXaxis()->SetTickLength(0.05);
-    //         histo2DAllPi0Mass->GetXaxis()->SetLabelOffset(-0.015);
-    TH2F * histo2DAllPi0MassCopy = (TH2F*) histo2DAllPi0Mass->Clone("histo2DAllPi0MassCopy");
-    histo2DAllPi0MassCopy->GetXaxis()->SetTitle("");
-    histo2DAllPi0MassCopy->DrawCopy();
-    // 900 GeV PAD
-    DrawGammaSetMarker(histoPi0TrueMass[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-    histoPi0TrueMass[0]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0Mass[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-    histoPi0Mass[0]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[0].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend900GeV    = GetAndSetLegend2(0.64, 0.67, 0.95, 0.85, textSizeLabelsPixel);
-    TLegend* legend900GeV    = GetAndSetLegend2(0.20, 0.22, 0.46, 0.4, textSizeLabelsPixel);
-    legend900GeV->SetNColumns(1);
-    legend900GeV->SetMargin(0.2);
-    legend900GeV->AddEntry(histoPi0Mass[0],"data","p");
-    legend900GeV->AddEntry(histoPi0TrueMass[0],"MC","p");
-    legend900GeV->Draw();
-
-    DrawGammaLines(0.23, maxX , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-    // 7 TeV PAD
-    padMassPi07TeV->cd();
-    padMassPi07TeV->SetLogx();
-
-    histo2DAllPi0MassCopy->DrawCopy();
-
-    DrawGammaSetMarker(histoPi0TrueMass[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-    histoPi0TrueMass[1]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0Mass[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-    histoPi0Mass[1]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[1].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend7TeV    = GetAndSetLegend2(0.64, 0.67, 0.90, 0.85, textSizeLabelsPixel);
-    TLegend* legend7TeV    = GetAndSetLegend2(0.07, 0.22, 0.45, 0.4, textSizeLabelsPixel);
-    legend7TeV->SetNColumns(1);
-    legend7TeV->SetMargin(0.2);
-    legend7TeV->AddEntry(histoPi0Mass[1],"data","p");
-    legend7TeV->AddEntry(histoPi0TrueMass[1],"MC","p");
-    legend7TeV->Draw();
-    DrawGammaLines(0.23, maxX , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-
-    // 8 TeV PAD
-    padMassPi0900GeV->cd();
-    padMassPi0900GeV->SetLogx();
-    histo2DAllPi0Mass->DrawCopy();
-
-    DrawGammaSetMarker(histoPi0TrueMass[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-    histoPi0TrueMass[2]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0Mass[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-    histoPi0Mass[2]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[2].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend8TeV    = GetAndSetLegend2(0.64, 0.67, 0.95, 0.85, textSizeLabelsPixel);
-    TLegend* legend8TeV    = GetAndSetLegend2(0.05, 0.22, 0.45, 0.4, textSizeLabelsPixel);
-    legend8TeV->SetNColumns(1);
-    legend8TeV->SetMargin(0.2);
-    legend8TeV->AddEntry(histoPi0Mass[2],"data","p");
-    legend8TeV->AddEntry(histoPi0TrueMass[2],"MC","p");
-    legend8TeV->Draw();
-
-    DrawGammaLines(0.23, maxX , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-
-
-    canvasMassWidthPi0->Update();
-    canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidthSeparated.%s",outputDir.Data(),suffix.Data()));
-
-}
-
-void plotPi0FWHMMassNEW(){
-
-    // **********************************************************************************************************************
-    // ******************************************* Mass and width for pi0 ****************************************
-    // **********************************************************************************************************************
-    Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-    Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-
-
-    Double_t arrayBoundariesX1_4[4];
-    Double_t arrayBoundariesY1_4[3];
-    Double_t relativeMarginsX[3];
-    Double_t relativeMarginsY[3];
-    Double_t maxX = 19.9;
-    Double_t textSizeLabelsPixel             = 50;
-    ReturnCorrectValuesForCanvasScaling(2350,1250, 3, 2,0.051, 0.005, 0.005,0.085,arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
-
-    TCanvas* canvasMassWidthPi0     = new TCanvas("canvasMassWidthPi0","",0,0,2350,1250);  // gives the page size
-    DrawGammaCanvasSettings( canvasMassWidthPi0,  0.13, 0.02, 0.03, 0.06);
-
-    TPad* padWidthPi08TeV               = new TPad("padWidthPi08TeV", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi08TeV, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi08TeV->Draw();
-
-    TPad* padMassPi08TeV                = new TPad("padMassPi08TeV", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi08TeV, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi08TeV->Draw();
-
-    TPad* padWidthPi07TeV               = new TPad("padWidthPi07TeV", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[1], arrayBoundariesX1_4[2], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi07TeV, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi07TeV->Draw();
-
-    TPad* padMassPi07TeV                = new TPad("padMassPi07TeV", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[2], arrayBoundariesX1_4[2], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi07TeV, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi07TeV->Draw();
-
-    TPad* padWidthPi0900GeV               = new TPad("padWidthPi0900GeV", "", arrayBoundariesX1_4[2], arrayBoundariesY1_4[1], arrayBoundariesX1_4[3], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi0900GeV, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi0900GeV->Draw();
-
-    TPad* padMassPi0900GeV                = new TPad("padMassPi0900GeV", "", arrayBoundariesX1_4[2], arrayBoundariesY1_4[2], arrayBoundariesX1_4[3], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi0900GeV, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi0900GeV->Draw();
-
-    TPad* padMassLegend1            = new TPad("padMassLegend1", "", 0.13, 0.32, 0.52, 0.52,-1, -1, -2);
-    DrawGammaPadSettings( padMassLegend1, 0., 0., 0., 0.);
-    padMassLegend1->SetFillStyle(0);
-    padMassLegend1->Draw();
-
-    padWidthPi08TeV->cd();
-    padWidthPi08TeV->SetLogx();
-
-    Double_t margin                 = relativeMarginsX[0]*2.7*2350;
-    Double_t textsizeLabelsWidth    = 0;
-    Double_t textsizeFacWidth       = 0;
-    if (padWidthPi08TeV->XtoPixel(padWidthPi08TeV->GetX2()) < padWidthPi08TeV->YtoPixel(padWidthPi08TeV->GetY1())){
-        textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthPi08TeV->XtoPixel(padWidthPi08TeV->GetX2()) ;
-        textsizeFacWidth            = (Double_t)1./padWidthPi08TeV->XtoPixel(padWidthPi08TeV->GetX2()) ;
-    } else {
-        textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthPi08TeV->YtoPixel(padWidthPi08TeV->GetY1());
-        textsizeFacWidth            = (Double_t)1./padWidthPi08TeV->YtoPixel(padWidthPi08TeV->GetY1());
-    }
-
-    TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, maxX ,1000., 0.1, 6.9);
-    SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
-                            0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.77, 512, 505);
-    //         histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,24.5);
-    histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
-    histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
-    histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
-    histo2DAllPi0FWHM->GetXaxis()->SetTickLength(0.05);
-    histo2DAllPi0FWHM->GetYaxis()->SetTickLength(0.026);
-    histo2DAllPi0FWHM->DrawCopy();
-
-
-
-
-    DrawGammaSetMarker(histoPi0TrueFWHMMeV[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-    histoPi0TrueFWHMMeV[0]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0FWHMMeV[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-    histoPi0FWHMMeV[0]->Draw("p,same,e");
-
-
-    drawLatexAdd("ALICE",0.18,0.87,textSizeLabelsPixel,kFALSE,kTRUE);
-    drawLatexAdd("pp, PCM",0.18,0.78,textSizeLabelsPixel,kFALSE,kTRUE);
-    drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",0.18,0.69,textSizeLabelsPixel,kFALSE,kTRUE);
-    // drawLatexAdd("a)",0.18,0.06,textSizeLabelsPixel,kFALSE,kTRUE);
-
-    padWidthPi07TeV->cd();
-    padWidthPi07TeV->SetLogx();
-    histo2DAllPi0FWHM->DrawCopy();
-    DrawGammaSetMarker(histoPi0TrueFWHMMeV[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-    histoPi0TrueFWHMMeV[1]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0FWHMMeV[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-    histoPi0FWHMMeV[1]->Draw("p,same,e");
-
-    padWidthPi0900GeV->cd();
-    padWidthPi0900GeV->SetLogx();
-    histo2DAllPi0FWHM->DrawCopy();
-    DrawGammaSetMarker(histoPi0TrueFWHMMeV[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-    histoPi0TrueFWHMMeV[2]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0FWHMMeV[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-    histoPi0FWHMMeV[2]->Draw("p,same,e");
-
-
-    padMassPi08TeV->cd();
-    padMassPi08TeV->SetLogx();
-
-
-    Double_t textsizeLabelsMass         = 0;
-    Double_t textsizeFacMass            = 0;
-    if (padMassPi08TeV->XtoPixel(padMassPi08TeV->GetX2()) <padMassPi08TeV->YtoPixel(padMassPi08TeV->GetY1()) ){
-        textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassPi08TeV->XtoPixel(padMassPi08TeV->GetX2()) ;
-        textsizeFacMass                 = (Double_t)1./padMassPi08TeV->XtoPixel(padMassPi08TeV->GetX2()) ;
-    } else {
-        textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassPi08TeV->YtoPixel(padMassPi08TeV->GetY1());
-        textsizeFacMass                 = (Double_t)1./padMassPi08TeV->YtoPixel(padMassPi08TeV->GetY1());
-    }
-
-    TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, maxX, 1000., 132.1, 139.9);
-    SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
-                            textsizeLabelsMass, 0.9, 0.9, 512, 505);
-    histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
-    histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
-    histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
-    histo2DAllPi0Mass->GetXaxis()->SetNoExponent(kTRUE);
-    histo2DAllPi0Mass->GetXaxis()->SetTickLength(0.05);
-    //         histo2DAllPi0Mass->GetXaxis()->SetLabelOffset(-0.015);
-    TH2F * histo2DAllPi0MassCopy = (TH2F*) histo2DAllPi0Mass->Clone("histo2DAllPi0MassCopy");
-    histo2DAllPi0MassCopy->GetXaxis()->SetTitle("");
-    histo2DAllPi0MassCopy->DrawCopy();
-    // 900 GeV PAD
-    DrawGammaSetMarker(histoPi0TrueMass[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-    histoPi0TrueMass[0]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0Mass[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-    histoPi0Mass[0]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[0].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend900GeV    = GetAndSetLegend2(0.64, 0.67, 0.95, 0.85, textSizeLabelsPixel);
-    TLegend* legend900GeV    = GetAndSetLegend2(0.20, 0.22, 0.46, 0.4, textSizeLabelsPixel);
-    legend900GeV->SetNColumns(1);
-    legend900GeV->SetMargin(0.2);
-    legend900GeV->AddEntry(histoPi0Mass[0],"data","p");
-    legend900GeV->AddEntry(histoPi0TrueMass[0],"MC","p");
-    legend900GeV->Draw();
-
-    DrawGammaLines(0.23, maxX , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-    // 7 TeV PAD
-    padMassPi07TeV->cd();
-    padMassPi07TeV->SetLogx();
-
-    histo2DAllPi0MassCopy->DrawCopy();
-
-    DrawGammaSetMarker(histoPi0TrueMass[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-    histoPi0TrueMass[1]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0Mass[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-    histoPi0Mass[1]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[1].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend7TeV    = GetAndSetLegend2(0.64, 0.67, 0.90, 0.85, textSizeLabelsPixel);
-    TLegend* legend7TeV    = GetAndSetLegend2(0.07, 0.22, 0.45, 0.4, textSizeLabelsPixel);
-    legend7TeV->SetNColumns(1);
-    legend7TeV->SetMargin(0.2);
-    legend7TeV->AddEntry(histoPi0Mass[1],"data","p");
-    legend7TeV->AddEntry(histoPi0TrueMass[1],"MC","p");
-    legend7TeV->Draw();
-    DrawGammaLines(0.23, maxX , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-
-    // 8 TeV PAD
-    padMassPi0900GeV->cd();
-    padMassPi0900GeV->SetLogx();
-    histo2DAllPi0Mass->DrawCopy();
-
-    DrawGammaSetMarker(histoPi0TrueMass[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-    histoPi0TrueMass[2]->Draw("p,same,e");
-    DrawGammaSetMarker(histoPi0Mass[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-    histoPi0Mass[2]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[2].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend8TeV    = GetAndSetLegend2(0.64, 0.67, 0.95, 0.85, textSizeLabelsPixel);
-    TLegend* legend8TeV    = GetAndSetLegend2(0.05, 0.22, 0.45, 0.4, textSizeLabelsPixel);
-    legend8TeV->SetNColumns(1);
-    legend8TeV->SetMargin(0.2);
-    legend8TeV->AddEntry(histoPi0Mass[2],"data","p");
-    legend8TeV->AddEntry(histoPi0TrueMass[2],"MC","p");
-    legend8TeV->Draw();
-
-    DrawGammaLines(0.23, maxX , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-
-
-    canvasMassWidthPi0->Update();
-    canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidthSeparated.%s",outputDir.Data(),suffix.Data()));
-
-}
-
-void plotEtaFWHMMassNEW(){
-
-    // **********************************************************************************************************************
-    // ******************************************* Mass and width for pi0 ****************************************
-    // **********************************************************************************************************************
-    Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-    Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-
-
-    Double_t arrayBoundariesX1_4[4];
-    Double_t arrayBoundariesY1_4[3];
-    Double_t relativeMarginsX[3];
-    Double_t relativeMarginsY[3];
-    Double_t minX = 0.33;
-    Double_t maxX = 12.9;
-    Double_t textSizeLabelsPixel             = 50;
-    ReturnCorrectValuesForCanvasScaling(2350,1250, 3, 2,0.051, 0.005, 0.005,0.085,arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
-
-    TCanvas* canvasMassWidthEta     = new TCanvas("canvasMassWidthEta","",0,0,2350,1250);  // gives the page size
-    DrawGammaCanvasSettings( canvasMassWidthEta,  0.13, 0.02, 0.03, 0.06);
-
-    TPad* padWidthEta8TeV               = new TPad("padWidthEta8TeV", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthEta8TeV, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthEta8TeV->Draw();
-
-    TPad* padMassEta8TeV                = new TPad("padMassEta8TeV", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassEta8TeV, relativeMarginsX[0], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassEta8TeV->Draw();
-
-    TPad* padWidthEta7TeV               = new TPad("padWidthEta7TeV", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[1], arrayBoundariesX1_4[2], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthEta7TeV, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthEta7TeV->Draw();
-
-    TPad* padMassEta7TeV                = new TPad("padMassEta7TeV", "", arrayBoundariesX1_4[1], arrayBoundariesY1_4[2], arrayBoundariesX1_4[2], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassEta7TeV, relativeMarginsX[1], relativeMarginsX[1], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassEta7TeV->Draw();
-
-    TPad* padWidthEta900GeV               = new TPad("padWidthEta900GeV", "", arrayBoundariesX1_4[2], arrayBoundariesY1_4[1], arrayBoundariesX1_4[3], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthEta900GeV, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthEta900GeV->Draw();
-
-    TPad* padMassEta900GeV                = new TPad("padMassEta900GeV", "", arrayBoundariesX1_4[2], arrayBoundariesY1_4[2], arrayBoundariesX1_4[3], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassEta900GeV, relativeMarginsX[1], relativeMarginsX[2], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassEta900GeV->Draw();
-
-    TPad* padMassLegend1            = new TPad("padMassLegend1", "", 0.13, 0.32, 0.52, 0.52,-1, -1, -2);
-    DrawGammaPadSettings( padMassLegend1, 0., 0., 0., 0.);
-    padMassLegend1->SetFillStyle(0);
-    padMassLegend1->Draw();
-
-    padWidthEta8TeV->cd();
-    padWidthEta8TeV->SetLogx();
-
-    Double_t margin                 = relativeMarginsX[0]*2.7*2350;
-    Double_t textsizeLabelsWidth    = 0;
-    Double_t textsizeFacWidth       = 0;
-    if (padWidthEta8TeV->XtoPixel(padWidthEta8TeV->GetX2()) < padWidthEta8TeV->YtoPixel(padWidthEta8TeV->GetY1())){
-        textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthEta8TeV->XtoPixel(padWidthEta8TeV->GetX2()) ;
-        textsizeFacWidth            = (Double_t)1./padWidthEta8TeV->XtoPixel(padWidthEta8TeV->GetX2()) ;
-    } else {
-        textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthEta8TeV->YtoPixel(padWidthEta8TeV->GetY1());
-        textsizeFacWidth            = (Double_t)1./padWidthEta8TeV->YtoPixel(padWidthEta8TeV->GetY1());
-    }
-
-    TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, minX, maxX ,1000., 0.01, 13.9);
-    SetStyleHistoTH2ForGraphs(histo2DAllEtaFWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
-                            0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.77, 512, 505);
-    //         histo2DAllEtaFWHM->GetYaxis()->SetRangeUser(-1.,24.5);
-    histo2DAllEtaFWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
-    histo2DAllEtaFWHM->GetYaxis()->SetNdivisions(505);
-    histo2DAllEtaFWHM->GetYaxis()->SetNoExponent(kTRUE);
-    histo2DAllEtaFWHM->GetXaxis()->SetTickLength(0.05);
-    histo2DAllEtaFWHM->GetYaxis()->SetTickLength(0.026);
-    histo2DAllEtaFWHM->DrawCopy();
-
-
-
-
-    DrawGammaSetMarker(histoEtaTrueFWHMMeV[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-    histoEtaTrueFWHMMeV[0]->Draw("p,same,e");
-    DrawGammaSetMarker(histoEtaFWHMMeV[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-    histoEtaFWHMMeV[0]->Draw("p,same,e");
-
-
-    drawLatexAdd("ALICE",0.18,0.87,textSizeLabelsPixel,kFALSE,kTRUE);
-    drawLatexAdd("pp, PCM",0.18,0.78,textSizeLabelsPixel,kFALSE,kTRUE);
-    drawLatexAdd("#eta #rightarrow #gamma#gamma",0.18,0.69,textSizeLabelsPixel,kFALSE,kTRUE);
-    // drawLatexAdd("a)",0.18,0.06,textSizeLabelsPixel,kFALSE,kTRUE);
-
-    padWidthEta7TeV->cd();
-    padWidthEta7TeV->SetLogx();
-    histo2DAllEtaFWHM->DrawCopy();
-    DrawGammaSetMarker(histoEtaTrueFWHMMeV[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-    histoEtaTrueFWHMMeV[1]->Draw("p,same,e");
-    DrawGammaSetMarker(histoEtaFWHMMeV[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-    histoEtaFWHMMeV[1]->Draw("p,same,e");
-
-    padWidthEta900GeV->cd();
-    padWidthEta900GeV->SetLogx();
-    histo2DAllEtaFWHM->DrawCopy();
-    DrawGammaSetMarker(histoEtaTrueFWHMMeV[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-    histoEtaTrueFWHMMeV[2]->Draw("p,same,e");
-    DrawGammaSetMarker(histoEtaFWHMMeV[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-    histoEtaFWHMMeV[2]->Draw("p,same,e");
-
-
-    padMassEta8TeV->cd();
-    padMassEta8TeV->SetLogx();
-
-
-    Double_t textsizeLabelsMass         = 0;
-    Double_t textsizeFacMass            = 0;
-    if (padMassEta8TeV->XtoPixel(padMassEta8TeV->GetX2()) <padMassEta8TeV->YtoPixel(padMassEta8TeV->GetY1()) ){
-        textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassEta8TeV->XtoPixel(padMassEta8TeV->GetX2()) ;
-        textsizeFacMass                 = (Double_t)1./padMassEta8TeV->XtoPixel(padMassEta8TeV->GetX2()) ;
-    } else {
-        textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassEta8TeV->YtoPixel(padMassEta8TeV->GetY1());
-        textsizeFacMass                 = (Double_t)1./padMassEta8TeV->YtoPixel(padMassEta8TeV->GetY1());
-    }
-
-    TH2F * histo2DAllEtaMass            = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, minX, maxX, 1000., 537.9, 559.9);
-    SetStyleHistoTH2ForGraphs(histo2DAllEtaMass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
-                            textsizeLabelsMass, 0.9, 0.9, 512, 505);
-    histo2DAllEtaMass->GetXaxis()->SetMoreLogLabels(kTRUE);
-    histo2DAllEtaMass->GetYaxis()->SetNdivisions(505);
-    histo2DAllEtaMass->GetYaxis()->SetNoExponent(kTRUE);
-    histo2DAllEtaMass->GetXaxis()->SetNoExponent(kTRUE);
-    histo2DAllEtaMass->GetXaxis()->SetTickLength(0.05);
-    //         histo2DAllEtaMass->GetXaxis()->SetLabelOffset(-0.015);
-    TH2F * histo2DAllEtaMassCopy = (TH2F*) histo2DAllEtaMass->Clone("histo2DAllEtaMassCopy");
-    histo2DAllEtaMassCopy->GetXaxis()->SetTitle("");
-    histo2DAllEtaMassCopy->DrawCopy();
-    // 900 GeV PAD
-    DrawGammaSetMarker(histoEtaTrueMass[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-    histoEtaTrueMass[0]->Draw("p,same,e");
-    DrawGammaSetMarker(histoEtaMass[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-    histoEtaMass[0]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[0].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend900GeV    = GetAndSetLegend2(0.64, 0.67, 0.95, 0.85, textSizeLabelsPixel);
-    TLegend* legend900GeV    = GetAndSetLegend2(0.20, 0.22, 0.46, 0.4, textSizeLabelsPixel);
-    legend900GeV->SetNColumns(1);
-    legend900GeV->SetMargin(0.2);
-    legend900GeV->AddEntry(histoEtaMass[0],"data","p");
-    legend900GeV->AddEntry(histoEtaTrueMass[0],"MC","p");
-    legend900GeV->Draw();
-
-    DrawGammaLines(minX, maxX , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.1, kGray);
-    // 7 TeV PAD
-    padMassEta7TeV->cd();
-    padMassEta7TeV->SetLogx();
-
-    histo2DAllEtaMassCopy->DrawCopy();
-
-    DrawGammaSetMarker(histoEtaTrueMass[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-    histoEtaTrueMass[1]->Draw("p,same,e");
-    DrawGammaSetMarker(histoEtaMass[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-    histoEtaMass[1]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[1].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend7TeV    = GetAndSetLegend2(0.64, 0.67, 0.90, 0.85, textSizeLabelsPixel);
-    TLegend* legend7TeV    = GetAndSetLegend2(0.07, 0.22, 0.45, 0.4, textSizeLabelsPixel);
-    legend7TeV->SetNColumns(1);
-    legend7TeV->SetMargin(0.2);
-    legend7TeV->AddEntry(histoEtaMass[1],"data","p");
-    legend7TeV->AddEntry(histoEtaTrueMass[1],"MC","p");
-    legend7TeV->Draw();
-    DrawGammaLines(minX, maxX , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.1, kGray);
-
-    // 8 TeV PAD
-    padMassEta900GeV->cd();
-    padMassEta900GeV->SetLogx();
-    histo2DAllEtaMass->DrawCopy();
-
-    DrawGammaSetMarker(histoEtaTrueMass[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-    histoEtaTrueMass[2]->Draw("p,same,e");
-    DrawGammaSetMarker(histoEtaMass[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-    histoEtaMass[2]->Draw("p,same,e");
-
-    drawLatexAdd(nameMeasGlobal[2].Data(),0.92,0.87,textSizeLabelsPixel,kFALSE,kTRUE,kTRUE);
-    // TLegend* legend8TeV    = GetAndSetLegend2(0.64, 0.67, 0.95, 0.85, textSizeLabelsPixel);
-    TLegend* legend8TeV    = GetAndSetLegend2(0.05, 0.22, 0.45, 0.4, textSizeLabelsPixel);
-    legend8TeV->SetNColumns(1);
-    legend8TeV->SetMargin(0.2);
-    legend8TeV->AddEntry(histoEtaMass[2],"data","p");
-    legend8TeV->AddEntry(histoEtaTrueMass[2],"MC","p");
-    legend8TeV->Draw();
-
-    DrawGammaLines(minX, maxX , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.1, kGray);
-
-
-    canvasMassWidthEta->Update();
-    canvasMassWidthEta->Print(Form("%s/Eta_MassAndWidthSeparated.%s",outputDir.Data(),suffix.Data()));
-
-}
-
-void plotPi0FWHMMass(){
-
-     // **********************************************************************************************************************
-    // ******************************************* Mass and width for pi0 ****************************************
-    // **********************************************************************************************************************
-    Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-    Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-
-
-    Double_t arrayBoundariesX1_4[2];
-    Double_t arrayBoundariesY1_4[3];
-    Double_t relativeMarginsX[3];
-    Double_t relativeMarginsY[3];
-    Double_t textSizeLabelsPixel             = 50;
-    ReturnCorrectValuesForCanvasScaling(1350,1250, 1, 2,0.09, 0.005, 0.005,0.085,arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
-
-    TCanvas* canvasMassWidthPi0     = new TCanvas("canvasMassWidthPi0","",0,0,1350,1250);  // gives the page size
-    DrawGammaCanvasSettings( canvasMassWidthPi0,  0.13, 0.02, 0.03, 0.06);
-
-    TPad* padWidthPi0               = new TPad("padWidthPi0", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthPi0, relativeMarginsX[0], relativeMarginsX[2], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthPi0->Draw();
-
-    TPad* padMassPi0                = new TPad("padMassPi0", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassPi0, relativeMarginsX[0], relativeMarginsX[2], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassPi0->Draw();
-
-    TPad* padMassLegend1            = new TPad("padMassLegend1", "", 0.13, 0.32, 0.52, 0.52,-1, -1, -2);
-    DrawGammaPadSettings( padMassLegend1, 0., 0., 0., 0.);
-    padMassLegend1->SetFillStyle(0);
-    padMassLegend1->Draw();
-
-    padWidthPi0->cd();
-    padWidthPi0->SetLogx();
-
-        Double_t margin                 = relativeMarginsX[0]*2.7*1350;
-        Double_t textsizeLabelsWidth    = 0;
-        Double_t textsizeFacWidth       = 0;
-        if (padWidthPi0->XtoPixel(padWidthPi0->GetX2()) < padWidthPi0->YtoPixel(padWidthPi0->GetY1())){
-            textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthPi0->XtoPixel(padWidthPi0->GetX2()) ;
-            textsizeFacWidth            = (Double_t)1./padWidthPi0->XtoPixel(padWidthPi0->GetX2()) ;
-        } else {
-            textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthPi0->YtoPixel(padWidthPi0->GetY1());
-            textsizeFacWidth            = (Double_t)1./padWidthPi0->YtoPixel(padWidthPi0->GetY1());
-        }
-
-        TH2F * histo2DAllPi0FWHM    = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, 20. ,1000., 0.1, 9.9);
-        SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
-                                  0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-        // histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,24.5);
-        histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
-        histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
-        histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
-        histo2DAllPi0FWHM->GetXaxis()->SetTickLength(0.05);
-        histo2DAllPi0FWHM->GetYaxis()->SetTickLength(0.026);
-        histo2DAllPi0FWHM->DrawCopy();
-
-                DrawGammaSetMarker(histoPi0TrueFWHMMeV[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-                histoPi0TrueFWHMMeV[1]->Draw("p,same,e");
-                DrawGammaSetMarker(histoPi0FWHMMeV[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-                histoPi0FWHMMeV[1]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoPi0TrueFWHMMeV[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-                histoPi0TrueFWHMMeV[2]->Draw("p,same,e");
-                DrawGammaSetMarker(histoPi0FWHMMeV[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-                histoPi0FWHMMeV[2]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoPi0TrueFWHMMeV[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-                histoPi0TrueFWHMMeV[0]->Draw("p,same,e");
-                DrawGammaSetMarker(histoPi0FWHMMeV[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-                histoPi0FWHMMeV[0]->Draw("p,same,e");
-
-        TLatex *labelLegendAMass    = new TLatex(0.13,0.06,"a)");
-        SetStyleTLatex( labelLegendAMass, textSizeLabelsPixel,4);
-        labelLegendAMass->SetTextFont(43);
-        labelLegendAMass->Draw();
-
-        TLatex *labelMassPerf       = new TLatex(0.13,0.87,"ALICE");
-        SetStyleTLatex( labelMassPerf, textSizeLabelsPixel,4);
-        labelMassPerf->SetTextFont(43);
-        labelMassPerf->Draw();
-        TLatex *labelMassEnergy     = new TLatex(0.13,0.78,"pp, PCM");
-        SetStyleTLatex( labelMassEnergy, textSizeLabelsPixel,4);
-        labelMassEnergy->SetTextFont(43);
-        labelMassEnergy->Draw();
-        TLatex *labelMassPi0        = new TLatex(0.13,0.69,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelMassPi0, textSizeLabelsPixel,4);
-        labelMassPi0->SetTextFont(43);
-        labelMassPi0->Draw();
-
-    padMassPi0->cd();
-    padMassPi0->SetLogx();
-
-        Double_t textsizeLabelsMass         = 0;
-        Double_t textsizeFacMass            = 0;
-        if (padMassPi0->XtoPixel(padMassPi0->GetX2()) <padMassPi0->YtoPixel(padMassPi0->GetY1()) ){
-            textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassPi0->XtoPixel(padMassPi0->GetX2()) ;
-            textsizeFacMass                 = (Double_t)1./padMassPi0->XtoPixel(padMassPi0->GetX2()) ;
-        } else {
-            textsizeLabelsMass              = (Double_t)textSizeLabelsPixel/padMassPi0->YtoPixel(padMassPi0->GetY1());
-            textsizeFacMass                 = (Double_t)1./padMassPi0->YtoPixel(padMassPi0->GetY1());
-        }
-
-        TH2F * histo2DAllPi0Mass            = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",20, 0.23, 20., 1000., 130.1, 143.9);
-        SetStyleHistoTH2ForGraphs(histo2DAllPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMass, textsizeLabelsMass, 0.85*textsizeLabelsMass,
-                                  textsizeLabelsMass, 0.9, 0.28/(textsizeFacMass*margin), 512, 505);
-        histo2DAllPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
-        histo2DAllPi0Mass->GetYaxis()->SetNdivisions(505);
-        histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
-        histo2DAllPi0Mass->GetXaxis()->SetTickLength(0.05);
-        histo2DAllPi0Mass->GetXaxis()->SetLabelOffset(-0.015);
-        histo2DAllPi0Mass->DrawCopy();
-
-                DrawGammaSetMarker(histoPi0TrueMass[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-                histoPi0TrueMass[1]->Draw("p,same,e");
-                DrawGammaSetMarker(histoPi0Mass[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-                histoPi0Mass[1]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoPi0TrueMass[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-                histoPi0TrueMass[2]->Draw("p,same,e");
-                DrawGammaSetMarker(histoPi0Mass[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-                histoPi0Mass[2]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoPi0TrueMass[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-                histoPi0TrueMass[0]->Draw("p,same,e");
-                DrawGammaSetMarker(histoPi0Mass[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-                histoPi0Mass[0]->Draw("p,same,e");
-
-
-        DrawGammaLines(0.23, 20. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
-
-        TLatex *labelLegendBMass            = new TLatex(0.13,0.22,"b)");
-        SetStyleTLatex( labelLegendBMass, textSizeLabelsPixel,4);
-        labelLegendBMass->SetTextFont(43);
-        labelLegendBMass->Draw();
-
-        //********************************** Defintion of the Legend **************************************************
-        Double_t columnsLegendMass2[3]      = {0.,0.57,0.84};
-        // Double_t rowsLegendMass2[5] = {0.8,0.6,0.4,0.2,0.01};
-        // Double_t rowsLegendMass2[6] = {0.84,0.66,0.50,0.33,0.16,0.01};
-          Double_t  rowsLegendMass2[7]= {0.84,0.66,0.47,0.28,0.01,0.16};
-        //******************* Offsets ***********************
-        Double_t offsetMarkerXMass2         = 0.1;
-        Double_t offsetMarkerYMass2         = 0.1;
-        //****************** Scale factors ******************
-        Double_t scaleMarkerMass2           = 1.2;
-
-        padMassLegend1->cd();
-        //****************** first Column **************************************************
-        TLatex *textMassPCM[10];
-        for (Int_t i = 0; i < 3; i++){
-                textMassPCM[i]                  = new TLatex(columnsLegendMass2[0],rowsLegendMass2[i+1],nameMeasGlobal[i].Data());
-                SetStyleTLatex( textMassPCM[i], textSizeLabelsPixel,4);
-                textMassPCM[i]->SetTextFont(43);
-                textMassPCM[i]->Draw();
-        }
-        //****************** second Column *************************************************
-        TLatex *textMassData                = new TLatex(columnsLegendMass2[1],rowsLegendMass2[0] ,"Data");
-        SetStyleTLatex( textMassData, textSizeLabelsPixel,4);
-        textMassData->SetTextFont(43);
-        textMassData->Draw();
-        TLatex *textMassMC                  = new TLatex(columnsLegendMass2[2] ,rowsLegendMass2[0],"MC");
-        SetStyleTLatex( textMassMC, textSizeLabelsPixel,4);
-        textMassMC->SetTextFont(43);
-        textMassMC->Draw();
-
-        TMarker* markerPCMPi0Mass[10];
-        TMarker* markerPCMPi0MassMC[10];
-        for (Int_t i = 0; i < 3; i++){
-                markerPCMPi0Mass[i]             = CreateMarkerFromHisto(histoPi0Mass[i],columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
-                markerPCMPi0Mass[i]->DrawMarker(columnsLegendMass2[1]+ offsetMarkerXMass2 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2);
-                markerPCMPi0MassMC[i]           = CreateMarkerFromHisto(histoPi0TrueMass[i],columnsLegendMass2[2]+ offsetMarkerXMass2 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
-                markerPCMPi0MassMC[i]->DrawMarker(columnsLegendMass2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendMass2[i+1]+ offsetMarkerYMass2);
-        }
-
-    canvasMassWidthPi0->Update();
-    canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
-
-}
-
-void plotEtaFWHMMass(){
-
-    // **********************************************************************************************************************
-    // ******************************************* Mass and width for Eta at 8TeV ****************************************
-    // **********************************************************************************************************************
-    Double_t mesonMassExpectPi0                 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
-    Double_t mesonMassExpectEta                 = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-
-    Double_t arrayBoundariesX1_4[2];
-    Double_t arrayBoundariesY1_4[3];
-    Double_t relativeMarginsX[3];
-    Double_t relativeMarginsY[3];
-    Double_t textSizeLabelsPixel             = 50;
-    ReturnCorrectValuesForCanvasScaling(1350,1250, 1, 2,0.09, 0.005, 0.005,0.085,arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
-
-    TCanvas* canvasMassWidthEta     = new TCanvas("canvasMassWidthEta","",0,0,1350,1250);  // gives the page size
-    DrawGammaCanvasSettings( canvasMassWidthEta,  0.13, 0.02, 0.03, 0.06);
-
-    TPad* padWidthEta               = new TPad("padWidthEta", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[1], arrayBoundariesX1_4[1], arrayBoundariesY1_4[0],-1, -1, -2);
-    DrawGammaPadSettings( padWidthEta, relativeMarginsX[0], relativeMarginsX[2], relativeMarginsY[0], relativeMarginsY[1]);
-    padWidthEta->Draw();
-
-    TPad* padMassEta                = new TPad("padMassEta", "", arrayBoundariesX1_4[0], arrayBoundariesY1_4[2], arrayBoundariesX1_4[1], arrayBoundariesY1_4[1],-1, -1, -2);
-    DrawGammaPadSettings( padMassEta, relativeMarginsX[0], relativeMarginsX[2], relativeMarginsY[1], relativeMarginsY[2]);
-    padMassEta->Draw();
-
-    TPad* padMassLegend1Eta            = new TPad("padMassLegend1Eta", "", 0.13, 0.34, 0.52, 0.52,-1, -1, -2);
-    DrawGammaPadSettings( padMassLegend1Eta, 0., 0., 0., 0.);
-    padMassLegend1Eta->SetFillStyle(0);
-    padMassLegend1Eta->Draw();
-
-    padWidthEta->cd();
-    padWidthEta->SetLogx();
-
-        Double_t margin                 = relativeMarginsX[0]*2.7*1350;
-        Double_t textsizeLabelsWidth    = 0;
-        Double_t textsizeFacWidth       = 0;
-        if (padWidthEta->XtoPixel(padWidthEta->GetX2()) < padWidthEta->YtoPixel(padWidthEta->GetY1())){
-            textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthEta->XtoPixel(padWidthEta->GetX2()) ;
-            textsizeFacWidth            = (Double_t)1./padWidthEta->XtoPixel(padWidthEta->GetX2()) ;
-        } else {
-            textsizeLabelsWidth         = (Double_t)textSizeLabelsPixel/padWidthEta->YtoPixel(padWidthEta->GetY1());
-            textsizeFacWidth            = (Double_t)1./padWidthEta->YtoPixel(padWidthEta->GetY1());
-        }
-
-        TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, 0.23, 15. ,1000., -4.99, 20.5);
-        SetStyleHistoTH2ForGraphs(histo2DAllEtaFWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
-                                  0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-        // histo2DAllEtaFWHM->GetYaxis()->SetRangeUser(-1.,45.5);
-        histo2DAllEtaFWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
-        histo2DAllEtaFWHM->GetYaxis()->SetNdivisions(505);
-        histo2DAllEtaFWHM->GetYaxis()->SetNoExponent(kTRUE);
-        histo2DAllEtaFWHM->GetXaxis()->SetTickLength(0.05);
-        histo2DAllEtaFWHM->GetYaxis()->SetTickLength(0.026);
-        histo2DAllEtaFWHM->DrawCopy();
-
-
-                DrawGammaSetMarker(histoEtaTrueFWHMMeV[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-                histoEtaTrueFWHMMeV[1]->Draw("p,same,e");
-                DrawGammaSetMarker(histoEtaFWHMMeV[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-                histoEtaFWHMMeV[1]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoEtaTrueFWHMMeV[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-                histoEtaTrueFWHMMeV[2]->Draw("p,same,e");
-                DrawGammaSetMarker(histoEtaFWHMMeV[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-                histoEtaFWHMMeV[2]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoEtaTrueFWHMMeV[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-                histoEtaTrueFWHMMeV[0]->Draw("p,same,e");
-                DrawGammaSetMarker(histoEtaFWHMMeV[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-                histoEtaFWHMMeV[0]->Draw("p,same,e");
-
-        drawLatexAdd("b)",0.13,0.06,textSizeLabelsPixel,kFALSE,kTRUE);
-        drawLatexAdd("ALICE",0.13,0.87,textSizeLabelsPixel,kFALSE,kTRUE);
-        drawLatexAdd("pp, PCM",0.13,0.78,textSizeLabelsPixel,kFALSE,kTRUE);
-        drawLatexAdd("#eta #rightarrow #gamma#gamma",0.13,0.69,textSizeLabelsPixel,kFALSE,kTRUE);
-
-    padMassEta->cd();
-    padMassEta->SetLogx();
-
-        Double_t textsizeLabelsMassEta         = 0;
-        Double_t textsizeFacMassEta            = 0;
-        if (padMassEta->XtoPixel(padMassEta->GetX2()) <padMassEta->YtoPixel(padMassEta->GetY1()) ){
-            textsizeLabelsMassEta              = (Double_t)textSizeLabelsPixel/padMassEta->XtoPixel(padMassEta->GetX2()) ;
-            textsizeFacMassEta                 = (Double_t)1./padMassEta->XtoPixel(padMassEta->GetX2()) ;
-        } else {
-            textsizeLabelsMassEta              = (Double_t)textSizeLabelsPixel/padMassEta->YtoPixel(padMassEta->GetY1());
-            textsizeFacMassEta                 = (Double_t)1./padMassEta->YtoPixel(padMassEta->GetY1());
-        }
-
-        TH2F * histo2DAllEtaMass            = new TH2F("histo2DAllEtaMass","histo2DAllEtaMass",20, 0.23, 15., 1000., 535.1, 575.9);
-        SetStyleHistoTH2ForGraphs(histo2DAllEtaMass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textsizeLabelsMassEta, textsizeLabelsMassEta, 0.85*textsizeLabelsMassEta,
-                                  textsizeLabelsMassEta, 0.9, 0.28/(textsizeFacMassEta*margin), 512, 505);
-        histo2DAllEtaMass->GetXaxis()->SetMoreLogLabels(kTRUE);
-        histo2DAllEtaMass->GetYaxis()->SetNdivisions(505);
-        histo2DAllEtaMass->GetYaxis()->SetNoExponent(kTRUE);
-        histo2DAllEtaMass->GetXaxis()->SetTickLength(0.05);
-        histo2DAllEtaMass->GetXaxis()->SetLabelOffset(-0.015);
-        histo2DAllEtaMass->DrawCopy();
-
-                DrawGammaSetMarker(histoEtaTrueMass[1], markerstylesMC[1], markersizeMC[1], colorMC[1] , colorMC[1]);
-                histoEtaTrueMass[1]->Draw("p,same,e");
-                DrawGammaSetMarker(histoEtaMass[1], markerstyles[1], markersize[1], colorData[1] , colorData[1]);
-                histoEtaMass[1]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoEtaTrueMass[2], markerstylesMC[2], markersizeMC[2], colorMC[2] , colorMC[2]);
-                histoEtaTrueMass[2]->Draw("p,same,e");
-                DrawGammaSetMarker(histoEtaMass[2], markerstyles[2], markersize[2], colorData[2] , colorData[2]);
-                histoEtaMass[2]->Draw("p,same,e");
-
-                DrawGammaSetMarker(histoEtaTrueMass[0], markerstylesMC[0], markersizeMC[0], colorMC[0] , colorMC[0]);
-                histoEtaTrueMass[0]->Draw("p,same,e");
-                DrawGammaSetMarker(histoEtaMass[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
-                histoEtaMass[0]->Draw("p,same,e");
-
-        DrawGammaLines(0.23, 15. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.1, kGray);
-
-        drawLatexAdd("b)",0.13,0.22,textSizeLabelsPixel,kFALSE,kTRUE);
-
-
-        //********************************** Defintion of the Legend **************************************************
-        Double_t columnsLegendMass2Eta[3]      = {0.,0.57,0.84};
-        Double_t rowsLegendMass2Eta[5]         = {0.8,0.6,0.4,0.2,0.01};
-        //******************* Offsets ***********************
-        Double_t offsetMarkerXMass2Eta         = 0.1;
-        Double_t offsetMarkerYMass2Eta         = 0.1;
-        //****************** Scale factors ******************
-        Double_t scaleMarkerMass2Eta           = 1.2;
-
-        padMassLegend1Eta->cd();
-        //****************** first Column **************************************************
-        TLatex *textMassPCMEta[10];
-        Int_t counterEta = 1;
-        for (Int_t i = 0; i < 3; i++){
-            if(histoEtaMass[i] && histoEtaTrueMass[i] && histoEtaFWHMMeV[i] && histoEtaTrueFWHMMeV[i]&&i!=3){
-                textMassPCMEta[i]                  = new TLatex(columnsLegendMass2Eta[0],rowsLegendMass2Eta[counterEta],nameMeasGlobal[i].Data());
-                SetStyleTLatex( textMassPCMEta[i], textSizeLabelsPixel,4);
-                textMassPCMEta[i]->SetTextFont(43);
-                textMassPCMEta[i]->Draw();
-                counterEta+=1;
-            }
-        }
-        //****************** second Column *************************************************
-        TLatex *textMassDataEta                = new TLatex(columnsLegendMass2Eta[1],rowsLegendMass2Eta[0] ,"Data");
-        SetStyleTLatex( textMassDataEta, textSizeLabelsPixel,4);
-        textMassDataEta->SetTextFont(43);
-        textMassDataEta->Draw();
-        TLatex *textMassMCEta                  = new TLatex(columnsLegendMass2Eta[2] ,rowsLegendMass2Eta[0],"MC");
-        SetStyleTLatex( textMassMCEta, textSizeLabelsPixel,4);
-        textMassMCEta->SetTextFont(43);
-        textMassMCEta->Draw();
-
-        TMarker* markerPCMEtaMass[10];
-        TMarker* markerPCMEtaMassMC[10];
-        counterEta = 1;
-        for (Int_t i = 0; i < 3; i++){
-            if(histoEtaMass[i] && histoEtaTrueMass[i]&&i!=3){
-                markerPCMEtaMass[i]             = CreateMarkerFromHisto(histoEtaMass[i],columnsLegendMass2Eta[1]+ offsetMarkerXMass2Eta ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta ,scaleMarkerMass2Eta);
-                markerPCMEtaMass[i]->DrawMarker(columnsLegendMass2Eta[1]+ offsetMarkerXMass2Eta ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta);
-                markerPCMEtaMassMC[i]           = CreateMarkerFromHisto(histoEtaTrueMass[i],columnsLegendMass2Eta[2]+ offsetMarkerXMass2Eta ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta ,scaleMarkerMass2Eta);
-                markerPCMEtaMassMC[i]->DrawMarker(columnsLegendMass2Eta[2]+ offsetMarkerXMass2Eta-0.04 ,rowsLegendMass2Eta[counterEta]+ offsetMarkerYMass2Eta);
-                counterEta+=1;
-            }
-        }
-
-    canvasMassWidthEta->Update();
-    canvasMassWidthEta->Print(Form("%s/Eta_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
-}
 
 void CombineGammaResultsPP(
 
@@ -6072,6 +5212,7 @@ void CombineGammaResultsPP(
             graphNLODirGamma[i+1]     = (TGraphAsymmErrors*)inputFileGammaResults[i+1]->Get("graphNLODirGamma");
             histoGammaPurity_Pt[i+1]                            = (TH1D*)inputFileCorrectionHistos[i+1]->Get("GammaPurity_Pt");
             GammaRecoEff_MCPt[i+1]                              = (TH1D*)inputFileGamma[i+1]->Get("GammaRecoEff_MCPt");
+            GammaConvProb_Pt[i+1]                               = (TH1D*)inputFileGamma[i+1]->Get("GammaConvProb_Pt");
 
         }
 
@@ -6325,33 +5466,27 @@ void CombineGammaResultsPP(
     }
 
 
-
-
-//     plotPi0FWHMMass();
-    plotPi0FWHMMassNEW();
-//     plotEtaFWHMMass();
-    plotEtaFWHMMassNEW();
-
     // RAW YIELD PLOTTING
-    plotYield(histoPi0RawYields,1e-8, 2, "Pi0","Pi0RawYield");
     plotYield(GammaRaw_Pt,9e-7, 2000, "Gamma","GammaRawYield");
-    plotYield(histoEtaRawYields,6e-8, 0.02, "Eta","EtaRawYield");
-
-    plotCrossSection(graphPi0InvCrossSectionStat,graphPi0InvCrossSectionSys,5e3,4e14, "Pi0","Pi0InvCrossSection");
-    plotCrossSection(graphEtaInvCrossSectionStat,graphEtaInvCrossSectionSys,5e4,4e12, "Eta","EtaInvCrossSection");
 
     plotCrossSectionFULL(graphPi0InvCrossSectionStat,graphPi0InvCrossSectionSys,5e4,4e14, "Pi0","Pi0InvCrossSectionFINAL");
+    cout << __LINE__ << endl;
     plotCrossSectionFULLEta(graphEtaInvCrossSectionStat,graphEtaInvCrossSectionSys,5e4,4e14, "Eta","EtaInvCrossSectionFINAL");
+    cout << __LINE__ << endl;
 
 
 
     plotCrossSection(graphGammaSpecCorrPurity,ESD_TruePrimaryConvGammaESD_PtMCPt_SystErr,5e-7,9000, "Gamma","InclusivePhotons");
 
     plotEtaToPi0(graphIncRatioPurity_trueEff,IncRatioPurity_trueEff_SystErr,0.0,1.09, "Ratio Inclusive #gamma/#pi^{0}","InclusiveRatio");
+    cout << __LINE__ << endl;
 
     plotEtaToPi0(graphDoubleRatioConversionTrueEffPurity,DoubleRatioConversionTrueEffPurity_SystErr,0.45,1.55, "(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})","DoubleRatio");
+    cout << __LINE__ << endl;
     plotEtaToPi0(graphcocktailPi0Ratio,graphcocktailPi0Ratio,0.41,1.75, "#pi^{0}_{data}/#pi^{0}_{cocktail}","CocktailRatio");
+    cout << __LINE__ << endl;
     plotDoubleRatio(graphDoubleRatioConversionTrueEffPurity,DoubleRatioConversionTrueEffPurity_SystErr,0.45,1.55, "(#gamma_{inc}/#pi^{0})/(#gamma_{decay}/#pi^{0})","DoubleRatio");
+    cout << __LINE__ << endl;
 
 
 
@@ -6361,6 +5496,7 @@ void CombineGammaResultsPP(
     plotGammaPileup(1, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "counts per event", 1, "GammaPileupBin");
     plotGammaDCAMultiple(1, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "normalized counts", 1, "GammaPileupBinPF");
 //     plotGammaPileup(1, ESDGammaDCAzAll3,ESDGammaDCAzBack3, ESDGammaDCAzAllSub3,1.1,7e8, "counts", 1, "GammaPileupBinCat3");
+cout << __LINE__ << endl;
 
     plotGammaSecondaries(0, SecondaryGammaFromXFromK0sRecoEff_Pt,SecondaryGammaFromXFromK0lRecoEff_Pt, SecondaryGammaFromXFromLambdaRecoEff_Pt,SecondaryGammaFromXFromRestRecoEff_Pt,0.0,1.0, "#epsilon_{eff} in |#eta| < 0.9", 0, "SecGammaEff");
     plotGammaSecondaries(0, SecondaryGammaFromXFromK0sConvProb_MCPt,SecondaryGammaFromXFromK0lConvProb_MCPt, SecondaryGammaFromXFromLambdaConvProb_MCPt,SecondaryGammaFromXFromRestConvProb_MCPt,0.0,8.5e-2, "#it{P}_{conv} in |#eta| < 0.9", 0, "SecGammaConvProb");
@@ -6368,6 +5504,7 @@ void CombineGammaResultsPP(
     plotGammaSecondaries(1, SecondaryGammaFromXFromK0sConvProb_MCPt,SecondaryGammaFromXFromK0lConvProb_MCPt, SecondaryGammaFromXFromLambdaConvProb_MCPt,SecondaryGammaFromXFromRestConvProb_MCPt,0.0,8.5e-2, "#it{P}_{conv} in |#eta| < 0.9", 0, "SecGammaConvProb");
     plotGammaSecondaries(2, SecondaryGammaFromXFromK0sRecoEff_Pt,SecondaryGammaFromXFromK0lRecoEff_Pt, SecondaryGammaFromXFromLambdaRecoEff_Pt,SecondaryGammaFromXFromRestRecoEff_Pt,0.0,1.0, "#epsilon_{eff} in |#eta| < 0.9", 0, "SecGammaEff");
     plotGammaSecondaries(2, SecondaryGammaFromXFromK0sConvProb_MCPt,SecondaryGammaFromXFromK0lConvProb_MCPt, SecondaryGammaFromXFromLambdaConvProb_MCPt,SecondaryGammaFromXFromRestConvProb_MCPt,0.0,8.5e-2, "#it{P}_{conv} in |#eta| < 0.9", 0, "SecGammaConvProb");
+    cout << __LINE__ << endl;
 
 
     plotGammaSecondaries(0, histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt, histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,8e-7,9.9, "Effective Secondary #gamma Correction", 1, "SecGammaFractions");
@@ -6385,20 +5522,331 @@ void CombineGammaResultsPP(
     plotDCA(1, fHistFracIntHistBGvsPt_Cat_1_Variant_1,fHistFracIntHistBGvsPt_Cat_2_Variant_1, fHistFracIntHistBGvsPt_Cat_3_Variant_1, fHistFracIntHistBGvsPt_Cat_4_Variant_1, fHistFracIntHistBGvsPt_Cat_5_Variant_1,fHistFracIntHistBGvsPt_Cat_6_Variant_1,-0.3,14.9, "BG/Total (%)", 0, "FracDCABGcat7");
     plotDCA(2, fHistFracIntHistBGvsPt_Cat_1_Variant_1,fHistFracIntHistBGvsPt_Cat_2_Variant_1, fHistFracIntHistBGvsPt_Cat_3_Variant_1, fHistFracIntHistBGvsPt_Cat_4_Variant_1, fHistFracIntHistBGvsPt_Cat_5_Variant_1,fHistFracIntHistBGvsPt_Cat_6_Variant_1,-0.3,27.9, "BG/Total (%)", 0, "FracDCABGcat8");
 
+    
 
-
-    plotEverything(BGEstimateFromPileup, 0.541, 1.09,0, "Pileup Correction Factor", "PileupCorrectionFactorPi0");
-    plotPeriodwisePileup(BGEstimateFromPileup, 0.451, 1.049,0, "Pileup Correction Factor", "PileupCorrectionFactorPi0Periods");
-    plotEverything(PileupContamination, -0.2, 39,0, "Pileup Contamination [%]", "PileupContamination");
-    plotEverything(BinShiftRatio, 0.95, 1.34,0, "value / binshifted value", "BinShift");
 
     plotEverything(histoGammaPurity_Pt, 0.89, 1.03,0, "#epsilon_{pur,#gamma} in |#eta| < 0.9", "PhotonPurity");
     plotEverything(GammaRecoEff_MCPt, 0.21, 1.01,0, "#epsilon_{eff,#gamma} in |#eta| < 0.9", "PhotonEfficiency");
     plotEverything(GammaConvProb_Pt, 0.055, .099,0, "P_{conv,#gamma} in |#eta| < 0.9", "PhotonConvProb");
     plotEverything(PileUpCorrectionFactor, 0.78, 1.04,0, "Pileup Correction Factor", "GammaPileUpCorrectionFactor");
-    // plotEverything(Pi0spectraRatios, 0.78, 1.04,0, "8 to 7 TeV Ratio", "Pi0Ratio7to8TeV");
-    // plotEverything(GammaspectraRatios, 0.78, 1.04,0, "8 to 7 TeV Ratio", "GammaRatio7to8TeV");
 
 
     plotLuminosity(2e-4,99,"Peak Luminosity [Hz/#mub]","Luminosity");
+    
+    
+    
+    
+    
+    
+    
+    TString nameOutputSec[4]            = {"K0s", "K0l", "Lambda", "Rest"};
+    TString  nameMeasGlobalxx[11]                     = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
+                                                        "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
+                                                        "PCMOtherDataset"};
+    TString  nameMeasGlobalLabel[11]                = { "PCM", "PHOS", "EMC", "PCM-PHOS", "PCM-EMC",
+                                                        "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "mEMC",
+                                                        "PCMOtherDataset"};
+    
+    TH1D* histoDRPi0FitStatErr[11]                  = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TGraphAsymmErrors*  graphDRPi0FitSysErr[11]     = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoIncGammaRatioStatErr[11]             = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TGraphAsymmErrors* graphIncGammaRatioSysErr[11] = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoIncGammaStatErr[11]                  = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TGraphAsymmErrors* graphIncGammaSysErr[11]      = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoConvProb[11]                         = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoEffi[11]                             = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoEffiMCPt[11]                         = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoPurity[11]                           = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoResolCorr[11]                        = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoEffSecCorr[4][11]                    = { {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL},
+                                                        {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL},
+                                                        {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL},
+                                                        {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL} };
+    TH1D* histoPileupCorr[11]                       = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    
+    TFile* filePCMGammapp2760GeV                    = new TFile( "CombinationInputGammaPP/InputPCMGammapp8000GeV.root");
+    //________________________________________________ Load PCM 2.76TeV _________________________________________________________________________
+    TDirectory* directoryPCMGammapp2760GeV          = (TDirectory*)filePCMGammapp2760GeV->Get("Gamma_pp8TeV");
+        histoDRPi0FitStatErr[0]                         = (TH1D*) directoryPCMGammapp2760GeV->Get("DoubleRatioPi0FitStatError");
+        graphDRPi0FitSysErr[0]                          = (TGraphAsymmErrors*) directoryPCMGammapp2760GeV->Get("DoubleRatioPi0FitSystError");
+        histoIncGammaRatioStatErr[0]                    = (TH1D*) directoryPCMGammapp2760GeV->Get("IncRatioStatError");
+        graphIncGammaRatioSysErr[0]                     = (TGraphAsymmErrors*) directoryPCMGammapp2760GeV->Get("IncRatioSystError");
+        histoConvProb[0]                                = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaConversionProbability");
+        histoEffi[0]                                    = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaRecoEfficiency");
+        histoEffiMCPt[0]                                = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaRecoEfficiencyMCPt");
+        histoPurity[0]                                  = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaTruePurity");
+        histoResolCorr[0]                               = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaResolCorr");
+        histoIncGammaStatErr[0]                         = (TH1D*) directoryPCMGammapp2760GeV->Get("IncGammaStatError");
+        graphIncGammaSysErr[0]                          = (TGraphAsymmErrors*) directoryPCMGammapp2760GeV->Get("IncGammaSystError");
+        histoPileupCorr[0]                              = (TH1D*) directoryPCMGammapp2760GeV->Get("PileUpCorrectionFactor");
+        histoEffSecCorr[0][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0s");
+        histoEffSecCorr[1][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0l");
+        histoEffSecCorr[2][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Lambda");
+        histoEffSecCorr[3][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Rest");
+        TGraphAsymmErrors* graphIndGammaIncStat[11]          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+        TGraphAsymmErrors* graphIndGammaIncSys[11]           = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+        TGraphAsymmErrors* statErrorGraphCollectionIncGamma[11];
+        for (Int_t i = 0; i< 11; i++){
+            statErrorGraphCollectionIncGamma[i]   = NULL;
+        }
+        for (Int_t i = 0; i < 11; i++){
+            if (histoIncGammaStatErr[i]){
+                statErrorGraphCollectionIncGamma[i]    = new TGraphAsymmErrors(histoIncGammaStatErr[i]);
+                while (statErrorGraphCollectionIncGamma[i]->GetY()[0] == 0) statErrorGraphCollectionIncGamma[i]->RemovePoint(0);
+                while (statErrorGraphCollectionIncGamma[i]->GetY()[statErrorGraphCollectionIncGamma[i]->GetN()-1] == 0) statErrorGraphCollectionIncGamma[i]->RemovePoint(statErrorGraphCollectionIncGamma[i]->GetN()-1);
+                statErrorGraphCollectionIncGamma[i]->SetName(Form("statErrorIncGamma_%s", nameMeasGlobalxx[i].Data()));
+            }
+        }
+        for (Int_t i = 0; i< 11; i++){
+            if (statErrorGraphCollectionIncGamma[i]){
+                graphIndGammaIncStat[i]                      = (TGraphAsymmErrors*)statErrorGraphCollectionIncGamma[i]->Clone(Form("GammaStat%s",nameMeasGlobalLabel[i].Data()));
+            }
+            if (graphIncGammaSysErr[i]){
+                graphIndGammaIncSys[i]                       = (TGraphAsymmErrors*)graphIncGammaSysErr[i]->Clone(Form("GammaSys%s",nameMeasGlobalLabel[i].Data()));
+            }
+        }
+        
+        
+        
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        TGraphAsymmErrors* graphCombDRSys           = (TGraphAsymmErrors*)graphDRPi0FitSysErr[0]->Clone("DRgammasys");
+        TGraphAsymmErrors* graphCombDRStat            = new TGraphAsymmErrors(histoDRPi0FitStatErr[0]);
+        TGraphAsymmErrors* graphCombDRTot            = CalculateCombinedSysAndStatError(graphCombDRSys,graphCombDRStat);
+        TGraphAsymmErrors* graphCombIncGammaStat            = (TGraphAsymmErrors*)graphIndGammaIncStat[0]->Clone("incgammastat");
+        TGraphAsymmErrors* graphCombIncGammaSys            = (TGraphAsymmErrors*)graphIndGammaIncSys[0]->Clone("incgammasys");
+        TGraphAsymmErrors* graphCombIncGammaTot            = CalculateCombinedSysAndStatError(graphCombIncGammaStat,graphCombIncGammaSys);
+
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        //NOTE: THIS HAS TO BE CHANGED LATER ON!!!!!!!!!
+        
+        
+        
+        //*******************************************************************************************************
+        //************************** Calculating combined direct photon spectrum ********************************
+        //*******************************************************************************************************
+        Double_t xArrayCombDR[graphCombDRStat->GetN()+1];
+        xArrayCombDR[0] = graphCombDRStat->GetX()[0] - graphCombDRStat->GetEXhigh()[0];
+        for (Int_t i = 1; i<graphCombDRStat->GetN()+1;i++){
+            xArrayCombDR[i] = graphCombDRStat->GetX()[i-1] + graphCombDRStat->GetEXhigh()[i-1];
+            cout << xArrayCombDR[i] << endl;
+        }
+        //_______________________ copy inclusive photon spectra _____________________
+        TH1D *histoCombDirGammaSpectrumErrSum                   = new TH1D("histoCombDirGammaSpectrumErrSum","",graphCombDRStat->GetN(),xArrayCombDR);
+        TH1D *histoCombDirGammaSpectrumErrSys                   = new TH1D("histoCombDirGammaSpectrumErrSys","",graphCombDRStat->GetN(),xArrayCombDR);
+        TH1D *histoCombDirGammaSpectrumErrStat                  = new TH1D("histoCombDirGammaSpectrumErrStat","",graphCombDRStat->GetN(),xArrayCombDR);
+
+        //_______________________ get arrays of double ratio errors __________________
+        Double_t *SystErrorsCombDR                              = new Double_t[graphCombIncGammaStat->GetN()];
+        Double_t *sumErrorsCombDR                               = new Double_t[graphCombIncGammaStat->GetN()];
+        Double_t *StatErrorsCombDR                              = new Double_t[graphCombIncGammaStat->GetN()];
+        Double_t *xErrorsDR                                     = new Double_t[graphCombIncGammaStat->GetN()];
+        for (Int_t i = 0; i< graphCombDRStat->GetN(); i++){
+            SystErrorsCombDR[i]                                 = graphCombDRSys->GetEYhigh()[i]/graphCombDRSys->GetY()[i] *100;
+            StatErrorsCombDR[i]                                 = graphCombDRStat->GetEYhigh()[i]/graphCombDRStat->GetY()[i] *100;
+            sumErrorsCombDR[i]                                  = graphCombDRTot->GetEYhigh()[i]/graphCombDRTot->GetY()[i] *100;
+            //cout << i << "\t" << graphCombDRSys->GetY()[i] << "\t" << graphCombDRSys->GetEYhigh()[i] << "\t" <<SystErrorsCombDR[i] << endl;
+        }
+        xErrorsDR                                               = graphCombDRStat->GetX();
+
+        cout << __LINE__ << endl;
+        //graphCombDRTot->Print();
+
+        //_______________________ copy inclusive photon spectra _____________________
+        TH1D* histoCombErrorsForDRSum                           = new TH1D("histoCombErrorsForDRSum","",graphCombDRStat->GetN(),xArrayCombDR);
+        TH1D* histoCombErrorsForDRStat                          = new TH1D("histoCombErrorsForDRStat","",graphCombDRStat->GetN(),xArrayCombDR);
+        TH1D* histoCombErrorsForDRSys                           = new TH1D("histoCombErrorsForDRSys","",graphCombDRStat->GetN(),xArrayCombDR);
+
+        for(Int_t i = 1; i<graphCombDRStat->GetN()+1;i++){
+            //cout<< i << "\t"<<xErrorsDR[i-1]<<"  "<<histoCombErrorsForDRSum->GetBinCenter(i)<< "\t"<<histoCombErrorsForDRSum->GetBinWidth(i) <<endl;
+            Double_t binErrorSummed                                 = sumErrorsCombDR[i-1];
+            Double_t binErrorSyst                                   = SystErrorsCombDR[i-1];
+            Double_t binErrorStat                                   = StatErrorsCombDR[i-1];
+            Double_t DR                                             = graphCombDRStat->GetY()[i-1];
+
+            //cout << DR << "\t" << binErrorStat << "\t" << binErrorSyst << "\t" << binErrorSummed << endl;
+            histoCombErrorsForDRSum->SetBinContent(i,DR);
+            histoCombErrorsForDRSys->SetBinContent(i,DR);
+            histoCombErrorsForDRStat->SetBinContent(i,DR);
+            histoCombErrorsForDRSum->SetBinError(i,(binErrorSummed/100)*DR);
+            histoCombErrorsForDRSys->SetBinError(i,(binErrorSyst/100)*DR);
+            histoCombErrorsForDRStat->SetBinError(i,(binErrorStat/100)*DR);
+        }
+
+        for(Int_t i = 1; i<histoCombErrorsForDRSum->GetNbinsX()+1;i++){
+            histoCombDirGammaSpectrumErrSum->SetBinContent(i+1,-1);
+            histoCombDirGammaSpectrumErrSys->SetBinContent(i+1,-1);
+            histoCombDirGammaSpectrumErrStat->SetBinContent(i+1,-1);
+
+            histoCombDirGammaSpectrumErrSum->SetBinError(i+1,0);
+            histoCombDirGammaSpectrumErrSys->SetBinError(i+1,0);
+            histoCombDirGammaSpectrumErrStat->SetBinError(i+1,0);
+        }
+
+        // get the binning of the direct photons from the DR
+        TH1D *histoCombDirGammaSpecSysErr                        = new TH1D(*histoCombErrorsForDRSys);
+        TH1D *histoCombDirGammaSpecStatErr                       = new TH1D(*histoCombErrorsForDRStat);
+        TH1D *histoCombDirGammaSpecSumErr                        = new TH1D(*histoCombErrorsForDRSum);
+
+
+        cout << __LINE__ << endl;
+        //graphCombDRStat->Print();
+        for(Int_t i = 1; i<graphCombDRStat->GetN()+1; i++){
+            // obtain common quantities
+            Double_t Rgamma                 = histoCombErrorsForDRSys->GetBinContent(i);
+            Double_t nIncGamma              = graphCombIncGammaStat->GetY()[i-1];
+
+            // calculating Systematics graph
+            Double_t errRgamma              = histoCombErrorsForDRSys->GetBinError(i);
+            Double_t errNIncGam             = graphCombIncGammaSys->GetEYhigh()[i-1];
+            Double_t q1                     = 1 - 1/ Rgamma;
+
+            Double_t q1Error                = errRgamma/(Rgamma*Rgamma);
+            Double_t content                = nIncGamma * ( 1 - 1/ Rgamma);
+            Double_t error                  = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+            Double_t errDR                  = content - error;
+            histoCombDirGammaSpecSysErr->SetBinError(i, error);
+            histoCombDirGammaSpecSysErr->SetBinContent(i, content);
+            histoCombDirGammaSpectrumErrSys->SetBinContent(i, errDR);
+
+            // calculating Stat graphs
+            errRgamma                       = histoCombErrorsForDRStat->GetBinError(i);
+            errNIncGam                      = graphCombIncGammaStat->GetEYhigh()[i-1];
+            q1                              = 1 - 1/ Rgamma;
+            q1Error                         = errRgamma/(Rgamma*Rgamma);
+            content                         = nIncGamma * ( 1 - 1/ Rgamma);
+            error                           = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+            errDR                           = content - error;
+            histoCombDirGammaSpecStatErr->SetBinError(i, error);
+            histoCombDirGammaSpecStatErr->SetBinContent(i, content);
+            histoCombDirGammaSpectrumErrStat->SetBinContent(i, errDR);
+
+            // calculating summed error graphs
+            errRgamma                       = histoCombErrorsForDRSum->GetBinError(i);
+            errNIncGam                      = graphCombIncGammaTot->GetEYhigh()[i-1];
+            q1                              = 1 - 1/ Rgamma;
+            q1Error                         = errRgamma/(Rgamma*Rgamma);
+            content                         = nIncGamma * ( 1 - 1/ Rgamma);
+            error                           = sqrt( pow( q1 * errNIncGam ,2) + pow( q1Error * nIncGamma ,2));
+            errDR                           = content - error;
+            histoCombDirGammaSpecSumErr->SetBinError(i, error);
+            histoCombDirGammaSpecSumErr->SetBinContent(i, content);
+            histoCombDirGammaSpectrumErrSum->SetBinContent(i, errDR);
+        }
+
+        // purely calculating points based on all Systematic errors
+        TGraphAsymmErrors *graphCombDirGammaSpectrumSystErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSys,histoCombDirGammaSpecStatErr,0,0.5);
+        if(graphCombDirGammaSpectrumSystErr)graphCombDirGammaSpectrumSystErr->SetName("graphCombDirGammaSpectrumSystErr");
+        if(graphCombDirGammaSpectrumSystErr) cout << "sys has been found" << endl;
+        if(graphCombDirGammaSpectrumSystErr)graphCombDirGammaSpectrumSystErr->Print();
+
+        // purely calculating points based on Statistical errors
+        TGraphAsymmErrors *graphCombDirGammaSpectrumStatErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrStat,histoCombDirGammaSpecStatErr,0,0.5);
+        if(graphCombDirGammaSpectrumStatErr)graphCombDirGammaSpectrumStatErr->SetName("graphCombDirGammaSpectrumStatErr");
+        if(graphCombDirGammaSpectrumStatErr) cout << "stat has been found" << endl;
+        if(graphCombDirGammaSpectrumStatErr)graphCombDirGammaSpectrumStatErr->Print();
+        // purely calculating points based on all Systematic + Statistical errors
+        TGraphAsymmErrors *graphCombDirGammaSpectrumSumErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,0,0.5);
+        if(graphCombDirGammaSpectrumSumErr)graphCombDirGammaSpectrumSumErr->SetName("graphCombDirGammaSpectrumSumErr");
+        if(graphCombDirGammaSpectrumSumErr) cout << "tot has been found" << endl;
+        if(graphCombDirGammaSpectrumSumErr)graphCombDirGammaSpectrumSumErr->Print();
+        // calculate points above confidence level summed errors
+        TGraphAsymmErrors *graphCombDirGammaSpectrumSumErrConfi = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,2,0.5);
+        if(graphCombDirGammaSpectrumSumErrConfi)graphCombDirGammaSpectrumSumErrConfi->SetName("graphCombDirGammaSpectrumSumErrConfi");
+        if(graphCombDirGammaSpectrumSumErrConfi) cout << "confi has been found" << endl;
+        if(graphCombDirGammaSpectrumSumErrConfi)graphCombDirGammaSpectrumSumErrConfi->Print();
+        // calculate arrows for points with 0, error summed
+        TGraphAsymmErrors *graphCombDirGammaSpectrumSumErrAr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,5,0.5);
+        if(graphCombDirGammaSpectrumSumErrAr)graphCombDirGammaSpectrumSumErrAr->SetName("graphCombDirGammaSpectrumSumErrAr");
+        if(graphCombDirGammaSpectrumSumErrAr) cout << "Ar has been found" << endl;
+        if(graphCombDirGammaSpectrumSumErrAr)graphCombDirGammaSpectrumSumErrAr->Print();
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        cout << __LINE__ << endl;
+      
+    //     
+    //     
+    //     
+    //     
+    TString nameOutputCommonFile    = Form("CombinedGammaResultPP8000GeV_%s.root", dateForOutput.Data());
+    
+    TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
+    
+    fCombResults.mkdir("Gamma8TeV");
+    TDirectoryFile* directoryGamma = (TDirectoryFile*)fCombResults.Get("Gamma8TeV");
+    fCombResults.cd("Gamma8TeV");
+    cout << __LINE__ << endl;
+
+        // writing main results
+        // if (graphCombDRStat) graphCombDRStat->Write("graphRGammaCombStatErr");
+        // if (graphCombDRSys) graphCombDRSys->Write("graphRGammaCombSysErr");
+        // if (graphCombDRTot) graphCombDRTot->Write("graphRGammaCombTotErr");
+        // if (graphCombIncGammaStat) graphCombIncGammaStat->Write("graphInvYieldIncGammaStatErr");
+        // if (graphCombIncGammaSys) graphCombIncGammaSys->Write("graphInvYieldIncGammaSysErr");
+        // if (graphCombIncGammaTot) graphCombIncGammaTot->Write("graphInvYieldIncGammaTotErr");
+        // if (graphCombIncGammaStatUnshi) graphCombIncGammaStatUnshi->Write("graphInvYieldIncGammaStatErr_Unshifted");
+        // if (graphCombIncGammaSysUnshi) graphCombIncGammaSysUnshi->Write("graphInvYieldIncGammaSysErr_Unshifted");
+        // if (graphCombIncGammaTotUnshi) graphCombIncGammaTotUnshi->Write("graphInvYieldIncGammaTotErr_Unshifted");
+        // if (graphCombDirGammaSpectrumSystErr) graphCombDirGammaSpectrumSystErr->Write("graphInvYieldDirGammaSysErr");
+        // if (graphCombDirGammaSpectrumStatErr) graphCombDirGammaSpectrumStatErr->Write("graphInvYieldDirGammaStatErr");
+        // if (graphCombDirGammaSpectrumSumErrAr) graphCombDirGammaSpectrumSumErrAr->Write("graphInvYieldDirGammaSumErrAr");
+        cout << __LINE__ << endl;
+    
+        if (graphCombDRStat) graphCombDRStat->Write("graphRGammaCombStatErr");
+        if (graphDRPi0FitSysErr[0]) graphDRPi0FitSysErr[0]->Write("graphRGammaCombSysErr");
+        if (graphCombDRTot) graphCombDRTot->Write("graphRGammaCombTotErr");
+        if (graphIndGammaIncStat[0]) graphIndGammaIncStat[0]->Write("graphInvYieldIncGammaStatErr");
+        if (graphIndGammaIncSys[0]) graphIndGammaIncSys[0]->Write("graphInvYieldIncGammaSysErr");
+        if (graphIndGammaIncStat[0]) graphIndGammaIncStat[0]->Write("graphInvYieldIncGammaTotErr");
+        if (graphIndGammaIncStat[0]) graphIndGammaIncStat[0]->Write("graphInvYieldIncGammaStatErr_Unshifted");
+        if (graphIndGammaIncSys[0]) graphIndGammaIncSys[0]->Write("graphInvYieldIncGammaSysErr_Unshifted");
+        if (graphIndGammaIncStat[0]) graphIndGammaIncStat[0]->Write("graphInvYieldIncGammaTotErr_Unshifted");
+        
+        if (graphCombDirGammaSpectrumSystErr) graphCombDirGammaSpectrumSystErr->Write("graphInvYieldDirGammaSysErr");
+        if (graphCombDirGammaSpectrumStatErr) graphCombDirGammaSpectrumStatErr->Write("graphInvYieldDirGammaStatErr");
+        if (graphCombDirGammaSpectrumSumErrAr) graphCombDirGammaSpectrumSumErrAr->Write("graphInvYieldDirGammaSumErrAr");
+        // 
+        cout << __LINE__ << endl;
+    for (Int_t i = 0; i < 11; i++){
+            if (graphIndGammaIncSys[i]) graphIndGammaIncSys[i]->Write(Form("graphInvYieldIncGamma%sSysErr",nameMeasGlobalxx[i].Data()));
+            if (graphIndGammaIncStat[i]) graphIndGammaIncStat[i]->Write(Form("graphInvYieldIncGamma%sStatErr",nameMeasGlobalxx[i].Data()));
+            if (histoIncGammaStatErr[i]) histoIncGammaStatErr[i]->Write(Form("histoInvYieldIncGamma%sStatErr_Unshifted",nameMeasGlobalxx[i].Data()));
+            if (histoDRPi0FitStatErr[i]) histoDRPi0FitStatErr[i]->Write(Form("histoRGamma%sStatErr",nameMeasGlobalxx[i].Data()));
+            if (graphDRPi0FitSysErr[i]) graphDRPi0FitSysErr[i]->Write(Form("graphRGamma%sSysErr",nameMeasGlobalxx[i].Data()));
+        }
+        directoryGamma->mkdir("Supporting");
+        directoryGamma->cd("Supporting");
+            // Writing full correction factors
+            for (Int_t i = 0; i < 11; i++){
+                if (histoPileupCorr[i]) histoPileupCorr[i]->Write(Form("histoPileupCorr%s",nameMeasGlobalxx[i].Data()));
+                if (histoConvProb[i]) histoConvProb[i]->Write(Form("histoConvProb%s",nameMeasGlobalxx[i].Data()));
+                if (histoEffi[i]) histoEffi[i]->Write(Form("histoEffiEffective%s",nameMeasGlobalxx[i].Data()));
+                if (histoEffiMCPt[i]) histoEffiMCPt[i]->Write(Form("histoEffiWithoutResol%s",nameMeasGlobalxx[i].Data()));
+                if (histoPurity[i]) histoPurity[i]->Write(Form("histoPurity%s",nameMeasGlobalxx[i].Data()));
+                for (Int_t k = 0; k<4; k++){
+                    if (histoEffSecCorr[k][i]) histoEffSecCorr[k][i]->Write(Form("histoEffectiveSecCorrFrom%s_%s",nameOutputSec[i].Data(), nameMeasGlobalxx[i].Data()));
+                }
+            }
+        directoryGamma->mkdir("debug");
+        directoryGamma->cd("debug");
+            // Writing full correction factors
+                if (histoCombDirGammaSpectrumErrSys) histoCombDirGammaSpectrumErrSys->Write("histoCombDirGammaSpectrumErrSys");
+                if (histoCombDirGammaSpectrumErrStat) histoCombDirGammaSpectrumErrStat->Write("histoCombDirGammaSpectrumErrStat");
+                if (histoCombDirGammaSpectrumErrSum) histoCombDirGammaSpectrumErrSum->Write("histoCombDirGammaSpectrumErrSum");
+
+    fCombResults.Close();
+    cout << __LINE__ << endl;
 }
