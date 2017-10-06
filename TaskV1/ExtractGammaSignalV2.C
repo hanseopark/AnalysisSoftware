@@ -3388,11 +3388,6 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
                     }
                 }
             }
-
-            if(fHistoTruePrimaryPi0MissingPtGconv) fHistoTruePrimaryPi0MissingPtGconv->Write("TruePrimaryPi0Missing_GammaConvPt",TObject::kOverwrite);
-            if(fHistoTruePrimaryPi0MissingPtGconv_Rebin) fHistoTruePrimaryPi0MissingPtGconv_Rebin->Write("TruePrimaryPi0Missing_Rebin_GammaConvPt",TObject::kOverwrite);
-            if(fHistoTruePrimaryPi0Sum) fHistoTruePrimaryPi0Sum->Write("TruePrimaryPi0Sum",TObject::kOverwrite);
-            if(fHistoPi0TaggingEfficiency) fHistoPi0TaggingEfficiency->Write("Pi0TaggingEfficiency",TObject::kOverwrite);
         }
 
     Output1->Write();
@@ -3613,6 +3608,11 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
 
 
         }
+
+        if(fHistoTruePrimaryPi0MissingPtGconv) fHistoTruePrimaryPi0MissingPtGconv->Write("TruePrimaryPi0Missing_GammaConvPt",TObject::kOverwrite);
+        if(fHistoTruePrimaryPi0MissingPtGconv_Rebin) fHistoTruePrimaryPi0MissingPtGconv_Rebin->Write("TruePrimaryPi0Missing_Rebin_GammaConvPt",TObject::kOverwrite);
+        if(fHistoTruePrimaryPi0Sum) fHistoTruePrimaryPi0Sum->Write("TruePrimaryPi0Sum",TObject::kOverwrite);
+        if(fHistoPi0TaggingEfficiency) fHistoPi0TaggingEfficiency->Write("Pi0TaggingEfficiency",TObject::kOverwrite);
 
     Output2->Write();
     Output2->Close();

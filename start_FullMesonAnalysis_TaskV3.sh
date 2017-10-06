@@ -36,6 +36,7 @@ PERIOD=""
 NORMALCUTS=0
 dataFileOK=0
 useTHnSparse=1
+DoPi0Tagging=0
 # switch for turning of ToyMC
 disableToyMC=0
 NEvtsToy=1e7
@@ -1091,6 +1092,10 @@ function CreateGammaFinalResultsV3()
     fi
 }
 
+function RunPi0Tagging()
+{
+    root -x -l -b -q TaskV1/Pi0Tagging.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$8\"\,\"$energy\"\,$mode\)
+}
 
 function Usage()
 {
@@ -2286,6 +2291,24 @@ do
         else
             echo "Command not found. Please try again.";
         fi
+
+        if [ $mode = 2 ] || [ $mode = 3 ]; then
+            echo "Do you want to run pi0-tagging instead of DR? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Running pi0-tagging ...";
+                DoPi0Tagging=1
+                DoPi0=0
+                DoEta=0
+                DoPi0InEtaBinning=0
+                DoGamma=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Running standard DR ...";
+                DoPi0Tagging=0
+            else
+                echo "Command not found. Please try again.";
+            fi
+        fi
     elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2810,19 +2833,27 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                     else
                         PARTLY=1
                     fi
-                    Pi0dataCorr=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
-                    GammaPi0dataCorr=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
-                    Pi0MCCorr=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
-                    GammaPi0MCCorr=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
-                    if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorr ]; then
-                        root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorr\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
+                    Pi0dataCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
+                    GammaPi0dataCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
+                    Pi0MCCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
+                    GammaPi0MCCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
+                    if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorrFILE ]; then
+                        root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorrFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
                     fi
                     GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
                     if [ $useCocktail  ]; then
-                        CreateGammaFinalResultsV3 $GammaPi0dataCorr $Pi0dataCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
-                        CreateGammaFinalResultsV3 $GammaPi0MCCorr $Pi0MCCorr $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
+                        if [ $DoPi0Tagging = 1  ]; then
+                          Pi0dataUnCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
+                          Pi0MCUnCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*.root`
+
+                          RunPi0Tagging $GammaPi0dataCorrFILE $Pi0dataUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
+                          RunPi0Tagging $GammaPi0MCCorrFILE $Pi0MCUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
+                        else
+                          CreateGammaFinalResultsV3 $GammaPi0dataCorrFILE $Pi0dataCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
+                          CreateGammaFinalResultsV3 $GammaPi0MCCorrFILE $Pi0MCCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
+                        fi
                     else
-                        CreateGammaFinalResults $GammaPi0dataCorr $Pi0dataCorr $cutSelection $Suffix Pi0 kTRUE;
+                        CreateGammaFinalResults $GammaPi0dataCorrFILE $Pi0dataCorrFILE $cutSelection $Suffix Pi0 kTRUE;
                     fi
                 fi
 
