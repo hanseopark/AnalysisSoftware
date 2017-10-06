@@ -762,6 +762,10 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         if (mode==4) {
             minPt                                = 1.5;
             minY                                 = 0.5;
+            if(fEnergy.CompareTo("8TeV")==0){
+              minPt = 0.5;
+              minY = 0.7;
+            }
         }
 
         TString      method                      = "PCM";

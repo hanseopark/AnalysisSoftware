@@ -1996,6 +1996,9 @@
                     if( modi == 2){
                       fStartPtBin = 4;
                       fExampleBin = 5;
+                    }else if(modi == 4){
+                      fStartPtBin = 6;
+                      fExampleBin = 7;
                     }
                     fColumn         = 5;
                     fRow            = 5;
