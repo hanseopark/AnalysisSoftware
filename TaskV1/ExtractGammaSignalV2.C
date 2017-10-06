@@ -379,18 +379,28 @@ void ExtractGammaSignalV2(      TString meson               = "",
 
         if (fIsMC){
             TString ObjectNameTruePrim                                          = "ESD_TruePrimaryPi0_InvMass_PtConv";
-            TString ObjectNameTruePrimDC                                        = "ESD_TruePrimaryPi0DC_PtConv";
+//            TString ObjectNameTruePrimDC                                        = "ESD_TruePrimaryPi0DC_PtConv";
             TString ObjectNameTruePrimMissing                                   = "ESD_TruePrimaryPi0Missing_PtConv";
             TString ObjectNameTrueSec[4]                                        = { "ESD_TrueSecondaryPi0FromK0s_InvMass_PtConv", "ESD_TrueSecondaryPi0FromLambda_InvMass_PtConv",
                                                                                     "ESD_TrueSecondaryPi0FromK0l_InvMass_PtConv", "ESD_TrueSecondaryPi0_InvMass_PtConv"};
 //             TString ObjectNameTrueSecDC[4]                                      = {"ESD_TrueSecondaryPi0DC_PtConv","","",""};
-//             TString ObjectNameTrueSecMissing[4]                                 = {"ESD_TrueSecondaryPi0Missing_PtConv","","",""};
+             TString ObjectNameTrueSecMissing[4]                                 = {"ESD_TrueSecondaryPi0Missing_PtConv_Source","","",""};
 
             // container with histos for validated reconstructed photons
             TList *TrueConversionContainer                                      = (TList*)HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
 
             fHistoTruePrimMesonInvMassVSPt                                      = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePrim.Data());
             fHistoTruePrimMesonInvMassVSPt->Sumw2();
+
+            fHistoTruePrimaryPi0MissingPtGconv                                  = (TH1D*)TrueConversionContainer->FindObject(ObjectNameTruePrimMissing.Data());
+            fHistoTruePrimaryPi0MissingPtGconv->Sumw2();
+
+            for (Int_t j = 0; j < maxNSec; j++){
+                if (ObjectNameTrueSecMissing[j].CompareTo("")!=0 ){
+                    fHistoTrueSecondaryMesonMissingPtGconv[j]                   = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueSecMissing[j].Data());
+                    fHistoTrueSecondaryMesonMissingPtGconv[j]->Sumw2();
+                }
+            }
 
             for (Int_t j = 0; j < maxNSec; j++){
                 if (ObjectNameTrueSec[j].CompareTo("")!=0 ){
@@ -1505,7 +1515,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         else canvasChi2->SaveAs(Form("%s/%s_data_Chi2FitComp_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
 
         // **************************************************************************************************************
-        // ************************ ResBG compared MC vs Data ********************************************************
+        // ************************ ResBG compared MC vs Data ***********************************************************
         // **************************************************************************************************************
         TCanvas* canvasResBG = new TCanvas("canvasResBG","",200,10,1350,900);  // gives the page size
         DrawGammaCanvasSettings( canvasResBG, 0.092, 0.01, 0.03, 0.092);
@@ -1553,6 +1563,85 @@ void ExtractGammaSignalV2(      TString meson               = "",
         else canvasResBG->SaveAs(Form("%s/%s_data_ResBGYieldFitComp_%s.%s",fOutputDir.Data(),fPrefix.Data(),fCutSelection.Data(),fSuffix.Data()));
     }
 
+    if (fIsMC && (mode == 2 || mode == 3)){
+      fHistoTruePrimaryPi0MissingPtGconv_Rebin = (TH1D*) fHistoTruePrimaryPi0MissingPtGconv->Rebin(fNBinsPt,"fHistoTruePrimaryPi0MissingPtGconv_Rebin",fBinsPt);
+      fHistoTruePrimaryPi0MissingPtGconv_Rebin->Sumw2();
+      fHistoTruePrimaryPi0MissingPtGconv_Rebin->Divide(fDeltaPt);
+
+      fHistoTruePrimaryPi0Sum = (TH1D*) fHistoYieldTrueMeson[0]->Clone("fHistoTruePrimaryPi0Sum");
+      fHistoTruePrimaryPi0Sum->Sumw2();
+      fHistoTruePrimaryPi0Sum->Add(fHistoTruePrimaryPi0MissingPtGconv_Rebin,1.);
+
+      fHistoPi0TaggingEfficiency = (TH1D*) fHistoYieldTrueMeson[0]->Clone("fHistoPi0TaggingEfficiency");
+      fHistoPi0TaggingEfficiency->Sumw2();
+      fHistoPi0TaggingEfficiency->Divide(fHistoPi0TaggingEfficiency,fHistoTruePrimaryPi0Sum,1.,1.,"B");
+
+      // **************************************************************************************************************
+      // ************************ TruePi0 & MissedPi0 & TotalPi0 ******************************************************
+      // **************************************************************************************************************
+
+      Double_t textSizeLabelsRel      = 55./1550;
+
+      TCanvas* canvasTotalPi0 = new TCanvas("canvasTotalPi0","",1550,1200);  // gives the page size
+      canvasTotalPi0->SetTickx();
+      canvasTotalPi0->SetTicky();
+      canvasTotalPi0->SetLogx();
+      canvasTotalPi0->SetLogy();
+
+      DrawGammaSetMarker(fHistoTruePrimaryPi0Sum, 25, 3., kBlack, kBlack);
+      DrawAutoGammaMesonHistos( fHistoTruePrimaryPi0Sum,
+                                  "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","raw yields",
+                                  kFALSE, 3.,0., kFALSE,
+                                  kTRUE, 1., fHistoTruePrimaryPi0Sum->GetMaximum()*5.,
+                                  kTRUE, fBinsPt[fStartPtBin], fBinsPt[fNBinsPt]);
+      DrawGammaSetMarker(fHistoTruePrimaryPi0MissingPtGconv_Rebin, 20, 2.5, kBlack, kBlack);
+      fHistoTruePrimaryPi0MissingPtGconv_Rebin->Draw("p,same");
+      DrawGammaSetMarker(fHistoYieldTrueMeson[0], 33, 3., kBlack, kBlack);
+      fHistoYieldTrueMeson[0]->Draw("p,same");
+
+      canvasTotalPi0->Update();
+
+      TLegend* legendTotalPi0 = new TLegend(0.15,0.12,0.45,0.26);
+      legendTotalPi0->SetFillColor(0);
+      legendTotalPi0->SetLineColor(0);
+      legendTotalPi0->SetTextSize(0.04);
+      legendTotalPi0->AddEntry(fHistoTruePrimaryPi0Sum,"true, total #pi^{0}","p");
+      legendTotalPi0->AddEntry(fHistoTruePrimaryPi0MissingPtGconv_Rebin,"true, missing #pi^{0}","p");
+      legendTotalPi0->AddEntry(fHistoYieldTrueMeson[0],"true, reconstructed #pi^{0}","p");
+      legendTotalPi0->Draw();
+
+      drawLatexAdd(fCollisionSystem.Data(),0.94,0.9,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+
+      canvasTotalPi0->SaveAs(Form("%s/Pi0Tagging_TrueAndMissedFractions_%s.%s",fOutputDir.Data(),fCutSelection.Data(),fSuffix.Data()));
+
+      // **************************************************************************************************************
+      // ************************ Pi0-Tagging efficiency **************************************************************
+      // **************************************************************************************************************
+
+      TCanvas* canvasPi0TaggingEffi = new TCanvas("canvasPi0TaggingEffi","",1550,1200);  // gives the page size
+      canvasPi0TaggingEffi->SetTickx();
+      canvasPi0TaggingEffi->SetTicky();
+
+      DrawGammaSetMarker(fHistoPi0TaggingEfficiency, 20, 2., kBlack, kBlack);
+      fHistoPi0TaggingEfficiency->GetYaxis()->SetNoExponent();
+      DrawAutoGammaMesonHistos( fHistoPi0TaggingEfficiency,
+                                  "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","#epsilon_{tag}",
+                                  kFALSE, 3.,0., kFALSE,
+                                  kTRUE, 0., fHistoPi0TaggingEfficiency->GetMaximum()*1.2,
+                                  kTRUE, fBinsPt[fStartPtBin], fBinsPt[fNBinsPt]);
+      canvasPi0TaggingEffi->Update();
+
+      TLegend* legendPi0TagEffi = new TLegend(0.5,0.12,0.85,0.26);
+      legendPi0TagEffi->SetFillColor(0);
+      legendPi0TagEffi->SetLineColor(0);
+      legendPi0TagEffi->SetTextSize(0.04);
+      legendPi0TagEffi->AddEntry(fHistoPi0TaggingEfficiency,"#pi^{0}-tagging efficiency","p");
+      legendPi0TagEffi->Draw();
+
+      drawLatexAdd(fCollisionSystem.Data(),0.35,0.9,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
+
+      canvasPi0TaggingEffi->SaveAs(Form("%s/Pi0Tagging_Efficiency_%s.%s",fOutputDir.Data(),fCutSelection.Data(),fSuffix.Data()));
+    }
 
     if (fIsMC){
         //************************************** Calculate correction factors **************************************
@@ -3299,6 +3388,11 @@ void SaveHistos(Int_t isMC, TString fCutID, TString fPrefix3,Bool_t PileUpCorrec
                     }
                 }
             }
+
+            if(fHistoTruePrimaryPi0MissingPtGconv) fHistoTruePrimaryPi0MissingPtGconv->Write("TruePrimaryPi0Missing_GammaConvPt",TObject::kOverwrite);
+            if(fHistoTruePrimaryPi0MissingPtGconv_Rebin) fHistoTruePrimaryPi0MissingPtGconv_Rebin->Write("TruePrimaryPi0Missing_Rebin_GammaConvPt",TObject::kOverwrite);
+            if(fHistoTruePrimaryPi0Sum) fHistoTruePrimaryPi0Sum->Write("TruePrimaryPi0Sum",TObject::kOverwrite);
+            if(fHistoPi0TaggingEfficiency) fHistoPi0TaggingEfficiency->Write("Pi0TaggingEfficiency",TObject::kOverwrite);
         }
 
     Output1->Write();

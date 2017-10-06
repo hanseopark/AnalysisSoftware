@@ -266,6 +266,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
     //******************* Binning histogram ****************************************************
     TH1D*   deltaPt                                                 = (TH1D*)fileUnCorrected->Get("deltaPt");
+    if(!deltaPt) deltaPt                                            = (TH1D*)fileUnCorrected->Get("deltaPtGamma");
     for (Int_t i = 0; i < deltaPt->GetNbinsX() +1; i++) deltaPt->SetBinError(i, 0);
 
     //******************* Conversion gamma spectra *********************************************

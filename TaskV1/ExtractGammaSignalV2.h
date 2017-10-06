@@ -253,6 +253,16 @@
     TH1D*       fHistoTrueSecPi0EffiGammaPt[4][3]                                                   = {{NULL, NULL, NULL }, {NULL, NULL, NULL }, {NULL, NULL, NULL }, {NULL, NULL, NULL }};
 
     //*****************************************************************************************************
+    //*********************** Pi0Tagging histograms *******************************************************
+    //*****************************************************************************************************
+
+    TH1D*       fHistoTruePrimaryPi0MissingPtGconv                                                  = NULL;
+    TH1D*       fHistoTruePrimaryPi0MissingPtGconv_Rebin                                            = NULL;
+    TH1D*       fHistoTruePrimaryPi0Sum                                                             = NULL;
+    TH1D*       fHistoPi0TaggingEfficiency                                                          = NULL;
+    TH2D*       fHistoTrueSecondaryMesonMissingPtGconv[4]                                           = {NULL, NULL, NULL, NULL};
+
+    //*****************************************************************************************************
     //******************** Check multiple counts of photons ***********************************************
     //*****************************************************************************************************
     TH2D*       fHistoTrueGammaConvDCRVSPt                                                          = NULL;
