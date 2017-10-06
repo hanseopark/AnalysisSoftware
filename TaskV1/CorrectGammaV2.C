@@ -1096,7 +1096,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     histoPileUpCorrectionFactor_Pt->SetBinError(  i, binError/binContent/binContent);
                 } else {
                     histoPileUpCorrectionFactor_Pt->SetBinContent(i, 1.);
-                    histoPileUpCorrectionFactor_Pt->SetBinError(  i, 0.1);
+                    histoPileUpCorrectionFactor_Pt->SetBinError(  i, 0.);
                 }
             }
 
@@ -1122,7 +1122,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     histoPileUpCorrectionFactor_Pt_OrBin->SetBinError(  i, binError/binContent/binContent);
                 } else {
                     histoPileUpCorrectionFactor_Pt_OrBin->SetBinContent(i, 1.);
-                    histoPileUpCorrectionFactor_Pt_OrBin->SetBinError(  i, 0.1);
+                    histoPileUpCorrectionFactor_Pt_OrBin->SetBinError(  i, 0.);
                 }
             }
         } else {
@@ -1336,7 +1336,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         // pileup correction factor comparison plots
         TCanvas* canvasPileUpCorrFactorComp                         = GetAndSetCanvas("canvasPileUpCorrFactorComp");
 
-        SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.84,1.02);
+        SetHistogramm(histoPileUpCorrectionFactor_PtTemp,"#it{p}_{T} (GeV/#it{c})","Correction Factor (%)",0.82,1.02);
         DrawGammaSetMarker(histoPileUpCorrectionFactor_PtTemp,      24, 2.0, kBlack,    kBlack);
         DrawGammaSetMarker(histoPileUpCorrectionFactor_Pt,          25, 2.0, kBlue-2,   kBlue-2);
         DrawGammaSetMarker(histoPileUpCorrectionFactorNoFit_Pt,     25, 2.5, kAzure+2,  kAzure+2);
@@ -1351,7 +1351,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         histoPileUpCorrectionFactor_Pt_OrBin->Draw("e1,same");
         histoPileUpCorrectionFactorMC_Pt->Draw("e1,same");
 
-        TLegend* legendPileUp3                                      = GetAndSetLegend(0.15,0.15,5,1);
+        TLegend* legendPileUp3                                      = GetAndSetLegend(0.2,0.15,5,1);
         legendPileUp3->AddEntry(histoPileUpCorrectionFactorNoFit_Pt,    "from raw gamma ratio",         "pl");
         legendPileUp3->AddEntry(histoPileUpCorrectionFactor_Pt_OrBin,   "from fit in or. bin.",         "pl");
         legendPileUp3->AddEntry(histoPileUpCorrectionFactor_PtTemp,     "rebin from fit in or. bin.",   "pl");
@@ -1439,7 +1439,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 }
             } else if (isCalo && !isPCM) {
                 if (histoGammaTrueSecCaloGammaFromX_Pt[k]){
-                    SetHistogramm(histoGammaTrueSecCaloGammaFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev.}} #frac{d#it{N}}{d#it{p}_{T}} (#it{c}/GeV)",1e-10,1e-1,1.0,1.6);
+                    SetHistogramm(histoGammaTrueSecCaloGammaFromX_Pt[k],"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev.}} #frac{d#it{N}}{d#it{p}_{T}} (#it{c}/GeV)",histoGammaTrueSecCaloGammaFromX_Pt[k]->GetMinimum(0)/1000.,histoGammaTrueSecCaloGammaFromX_Pt[k]->GetMaximum()*100.,1.0,1.6);
                     DrawGammaSetMarker(histoGammaTrueSecCaloGammaFromX_Pt[k], markerStyleSecWithToy[k], markerSizeSec[k], colorSecFromToy[k], colorSecFromToy[k]);
                     histoGammaTrueSecCaloGammaFromX_Pt[k]->Draw("same");
                     legendSecSpec->AddEntry(histoGammaTrueSecCaloGammaFromX_Pt[k], "MC    ","pl");
@@ -1495,6 +1495,15 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         if(energy.Contains("PbPb_2.76TeV")){
             plotYrange[0] = 0.;
             plotYrange[1] = 35.e-3;
+        }
+        if(energy.CompareTo("8TeV")==0){
+          if(mode==2){
+            plotYrange[0] = 0.;
+            plotYrange[1] = 35.e-3;
+          }else if(mode==4){
+            plotYrange[0] = 0.;
+            plotYrange[1] = 80.e-3;
+          }
         }
         Int_t nColumnsSec                   = 1;
         Double_t startXSecLegend            = 0.65;
@@ -1618,7 +1627,9 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             SetHistogramm(histoGammaConvProb_MCPt, "#it{p}_{T} (GeV/#it{c})",Form("#it{P}_{conv} in |#eta| < %g",eta), 0.04, 0.10);
             histoGammaConvProb_MCPt->Draw();
 
-            TF1 *fConv                  = new TF1("line","[0]",2.5,25.);
+            Double_t minFit_fConv = 2.5;
+            if(energy.CompareTo("8TeV")==0 && mode == 2) minFit_fConv = 3.;
+            TF1 *fConv                  = new TF1("line","[0]",minFit_fConv,25.);
             histoGammaConvProb_MCPt->Fit(fConv,"QRME0");
             Double_t parameterProb[1];
             fConv->GetParameters(parameterProb);
@@ -2563,6 +2574,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
                 if(i==0){
                     histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,100);
+                    if(energy.CompareTo("8TeV")==0 && (mode==2 || mode==4)) histoSignalToCombBackgroundRatio[i]->GetYaxis()->SetRangeUser(1e-5,1);
                     histoSignalToCombBackgroundRatio[i]->DrawCopy("e1");
                 } else if(i<9){
                     DrawGammaSetMarker(histoSignalToCombBackgroundRatio[i], markersCombinatorics[i], 1., colorsCombinatorics[i], colorsCombinatorics[i]);
@@ -2866,6 +2878,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxYLines                               = 1.2;
         } else {
             tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.5, 1.5);
+            if(energy.CompareTo("8TeV")==0 && mode==2) tempRatioDataMCUnfold->GetYaxis()->SetRangeUser(0.8, 1.8);
             minYLines                               = 0.8;
             maxYLines                               = 1.2;
         }
