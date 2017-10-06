@@ -2714,7 +2714,7 @@
         line->SetLineStyle(graph->GetLineStyle());
         return line;
     }
-    
+
     void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
     TLatex *latexDummy                  = new TLatex(textcolumn ,textrow,latextext);
     SetStyleTLatex( latexDummy, textSizePixel,4);
