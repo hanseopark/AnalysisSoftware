@@ -4048,7 +4048,8 @@
                 xSectionInt = xSection8TeVINEL;
                 cout << "INEL xSection taken: \t" << xSectionInt << endl;
             } else {
-                cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
+                xSectionInt = 0.;
+                cout << "ERROR: V0OR xSection not determined, set to \t" << xSectionInt << endl;
             }
         } else if(energy.CompareTo("13TeV") == 0){
             if (selTrig == 1){

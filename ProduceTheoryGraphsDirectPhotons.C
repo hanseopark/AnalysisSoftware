@@ -670,6 +670,17 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 8TeV **********************************************
         // **********************************************************************************************************************
+        // **********************************************************************************************************************
+        // Load cocktail for pp 8TeV comb
+        // **********************************************************************************************************************
+        TString nameCocktailFilePP8TeVComb   = "CocktailInput/GammaCocktail_pp8TeV_MB_comb.root";
+        TFile* fileCockailPP8TeVComb         = new TFile(nameCocktailFilePP8TeVComb.Data());
+        TH1D* histoGammaDecayCombPP8TeV      = (TH1D*)fileCockailPP8TeVComb->Get("Gamma_Pt_OrBin");
+        for (Int_t i = 1; i < histoGammaDecayCombPP8TeV->GetNbinsX()+1; i++){
+            histoGammaDecayCombPP8TeV->SetBinContent(i, histoGammaDecayCombPP8TeV->GetBinContent(i)/(histoGammaDecayCombPP8TeV->GetBinCenter(i) *2* TMath::Pi()) );
+            histoGammaDecayCombPP8TeV->SetBinError(i, histoGammaDecayCombPP8TeV->GetBinError(i)/(histoGammaDecayCombPP8TeV->GetBinCenter(i)*2* TMath::Pi()));
+        }
+        histoGammaDecayCombPP8TeV->GetXaxis()->SetRangeUser(0,30);
 
         TString fileNameNLOPhotonHalf8TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmuhalf.dat";
         TString fileNameNLOPhotonOne8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmu.dat";
@@ -875,6 +886,14 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphNLOCalcInvYieldINT1FragGam2760GeV   = (TGraphAsymmErrors*)graphNLOCalcFragGam2760GeV->Clone("graphNLOCalcInvYieldINT1FragGam2760GeV");
         graphNLOCalcInvYieldINT1FragGam2760GeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT1FragGam2760GeV, 1/recalcBarn/ReturnCorrectXSection("2.76TeV", 0));
 
+        cout << "calculating 8TeV inv yields" << endl;
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam8TeV    = (TGraphAsymmErrors*)graphNLOCalcDirGam8TeV->Clone("graphNLOCalcInvYieldINT7DirGam8TeV");
+        graphNLOCalcInvYieldINT7DirGam8TeV                       = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7DirGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7PromGam8TeV   = (TGraphAsymmErrors*)graphNLOCalcPromGam8TeV->Clone("graphNLOCalcInvYieldINT7PromGam8TeV");
+        graphNLOCalcInvYieldINT7PromGam8TeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7PromGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
+        TGraphAsymmErrors* graphNLOCalcInvYieldINT7FragGam8TeV   = (TGraphAsymmErrors*)graphNLOCalcFragGam8TeV->Clone("graphNLOCalcInvYieldINT7FragGam8TeV");
+        graphNLOCalcInvYieldINT7FragGam8TeV                      = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldINT7FragGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
+
         //******************************************************************************************************************
         //************************************** Calculate RGamma based on ALICE cocktail **********************************
         //******************************************************************************************************************
@@ -932,6 +951,19 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraph* graphThermalAndPromptInvYieldINT7DirGam7TeV         = (TGraph*)graphThermalAndPromptDirGam7TeV->Clone("graphThermalAndPromptInvYieldINT7DirGam7TeV");
         graphThermalAndPromptInvYieldINT7DirGam7TeV                 = (TGraph*)ScaleGraph(graphThermalAndPromptInvYieldINT7DirGam7TeV, 1/recalcBarn/ReturnCorrectXSection("7TeV", 1));
 
+        TGraphAsymmErrors* graphNLOCalcRGammaALICECocktailPP8TeV = (TGraphAsymmErrors*)graphNLOCalcInvYieldINT7DirGam8TeV->Clone("graphNLOCalcRGammaALICECocktailPP8TeV");
+        TGraph* graphNLOCalcRGammaALICECocktailPP8TeVCenter      = new TGraph(graphNLOCalcRGammaALICECocktailPP8TeV->GetN());
+        for (Int_t i = 0; i < graphNLOCalcRGammaALICECocktailPP8TeV->GetN(); i++){
+            Double_t decayGamma                                     = histoGammaDecayCombPP8TeV->Interpolate(graphNLOCalcRGammaALICECocktailPP8TeV->GetX()[i]);
+            Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktailPP8TeV->GetY()[i];
+            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
+            Double_t relErrUp                                       = graphNLOCalcRGammaALICECocktailPP8TeV->GetEYhigh()[i]/theoGamma;
+            Double_t relErrDown                                     = graphNLOCalcRGammaALICECocktailPP8TeV->GetEYlow()[i]/theoGamma;
+            graphNLOCalcRGammaALICECocktailPP8TeV->SetPoint(i, graphNLOCalcRGammaALICECocktailPP8TeV->GetX()[i], drtheoGamma);
+            graphNLOCalcRGammaALICECocktailPP8TeVCenter->SetPoint(i, graphNLOCalcRGammaALICECocktailPP8TeV->GetX()[i], drtheoGamma);
+            graphNLOCalcRGammaALICECocktailPP8TeV->SetPointError(i, graphNLOCalcRGammaALICECocktailPP8TeV->GetEXlow()[i], graphNLOCalcRGammaALICECocktailPP8TeV->GetEXhigh()[i],
+                                                           drtheoGamma*relErrDown, drtheoGamma*relErrUp);
+        }
         cout << "calculating 8TeV inv yields" << endl;
         TGraphAsymmErrors* graphNLOCalcInvYieldDirGam8TeV           = (TGraphAsymmErrors*)graphNLOCalcDirGam8TeV->Clone("graphNLOCalcInvYieldDirGam8TeV");
         graphNLOCalcInvYieldDirGam8TeV                              = (TGraphAsymmErrors*)ScaleGraphAsym(graphNLOCalcInvYieldDirGam8TeV, 1/recalcBarn/ReturnCorrectXSection("8TeV", 1));
@@ -1160,6 +1192,18 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivFrag8TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_8TeV",TObject::kOverwrite);
             fitPromptDivFragGamma8TeV->Write("ratioFitNLOPromptDivFragGamma8TeV", TObject::kOverwrite);
 
+            graphNLOCalcRGammaALICECocktailPP8TeV->GetYaxis()->SetTitle("R_{#gamma}");
+            graphNLOCalcRGammaALICECocktailPP8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcRGammaALICECocktailPP8TeV->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pp8TeV_CT10_ALICECocktail",TObject::kOverwrite);
+            graphNLOCalcRGammaALICECocktailPP8TeVCenter->GetYaxis()->SetTitle("R_{#gamma}");
+            graphNLOCalcRGammaALICECocktailPP8TeVCenter->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcRGammaALICECocktailPP8TeVCenter->Write("graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pp8TeV_CT10_ALICECocktail_Center",TObject::kOverwrite);
+
+            histoGammaDecayCombPP8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            histoGammaDecayCombPP8TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            histoGammaDecayCombPP8TeV->Write("histoALICECombCocktailGammasPP8TeV",TObject::kOverwrite);
+
+            // writing 13TeV Gammas
             graphNLOCalcPromptDirGam13TeV->GetYaxis()->SetTitle("#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )");
             graphNLOCalcPromptDirGam13TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcPromptDirGam13TeV->Write("graphPromptDirectPhotonNLOShenGale_13TeV",TObject::kOverwrite);
