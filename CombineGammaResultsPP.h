@@ -49,6 +49,7 @@ TString suffix = "pdf";
     TH1D* TruePrimaryConvGamma_Pt[13];
     TH1D* histoGammaPurity_Pt[13];
     TH1D* GammaRecoEff_MCPt[13];
+    TH1D* GammaRecoEff_WithResolCorr_Pt[13];
     TH1D* GammaConvProb_Pt[13];
     TH1D* PileUpCorrectionFactor[13];
     

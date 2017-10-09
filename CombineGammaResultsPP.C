@@ -439,7 +439,7 @@ void plotEverything(TH1D* histoInput[], Double_t yMin, Double_t yMax, Int_t logY
 
         DrawGammaSetMarker(histoInput[0], markerstyles[0], markersize[0], colorData[0] , colorData[0]);
         histoInput[0]->Draw("p,same,e");
-        if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb")){
+        if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb")||!plotName.CompareTo("PhotonEfficiencyWithResolCorr")){
             DrawGammaSetMarker(histoInput[3], markerstyles[3], markersize[3], colorData[3] , colorData[3]);
             histoInput[3]->Draw("p,same,e");
         }
@@ -454,11 +454,11 @@ void plotEverything(TH1D* histoInput[], Double_t yMin, Double_t yMax, Int_t logY
             legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.81, 0.93, 0.81+(3*textSizeLabelsRel),textSizeLabelsPixel);
         if(!plotName.CompareTo("PileupContamination"))
             legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.81-textSizeLabelsRel, 0.93, 0.81+(3*textSizeLabelsRel),textSizeLabelsPixel);
-        if(!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb"))
+        if(!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb")||!plotName.CompareTo("PhotonEfficiencyWithResolCorr"))
             legendEffiAccPi0           = GetAndSetLegend2(0.55, 0.13, 0.93, 0.13+(4*textSizeLabelsRel),textSizeLabelsPixel);
                 legendEffiAccPi0->AddEntry(histoInput[2],nameMeasGlobal[2].Data(),"p");
                 legendEffiAccPi0->AddEntry(histoInput[1],nameMeasGlobal[1].Data(),"p");
-            if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb"))
+            if(!plotName.CompareTo("PileupContamination")||!plotName.CompareTo("PhotonPurity")||!plotName.CompareTo("PhotonEfficiency")||!plotName.CompareTo("PileupCorrectionFactorPi0")||!plotName.CompareTo("GammaPileUpCorrectionFactor")||!plotName.CompareTo("PhotonConvProb")||!plotName.CompareTo("PhotonEfficiencyWithResolCorr"))
                 legendEffiAccPi0->AddEntry(histoInput[3],nameMeasGlobal[3].Data(),"p");
                 legendEffiAccPi0->AddEntry(histoInput[0],nameMeasGlobal[0].Data(),"p");
 
@@ -4510,17 +4510,18 @@ void plotDoubleRatio(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSy
     graphDoubleRatioSys7TeV->Draw("2,same");
     graphDoubleRatioNoXErrStat7TeV->Draw("p,same");
 
-    graphDoubleRatioSys7TeVPHOS->Draw("2,same");
-    graphDoubleRatioNoXErrStat7TeVPHOS->Draw("p,same");
+    // graphDoubleRatioSys7TeVPHOS->Draw("2,same");
+    // graphDoubleRatioNoXErrStat7TeVPHOS->Draw("p,same");
 
 
     // legendDR7TeV->Draw();
     // TLegend* legendDRX27TeV    = GetAndSetLegend2(0.14, 0.57, 0.5, 0.92, textSizeLabelsPixel);
-    TLegend* legendDRX27TeV    = GetAndSetLegend2(0.14, 0.57, 0.5, 0.92, textSizeLabelsPixel);
+    // TLegend* legendDRX27TeV    = GetAndSetLegend2(0.14, 0.57, 0.5, 0.92, textSizeLabelsPixel);
+    TLegend* legendDRX27TeV    = GetAndSetLegend2(0.14, 0.77, 0.5, 0.92, textSizeLabelsPixel);
     legendDRX27TeV->SetNColumns(1);
     legendDRX27TeV->SetMargin(0.2);
-        legendDRX27TeV->AddEntry(graphDoubleRatioSys7TeV,Form("pp %s PCM",nameMeasGlobal[1].Data()),"pf");
-        legendDRX27TeV->AddEntry(graphDoubleRatioSys7TeVPHOS,Form("pp %s PHOS",nameMeasGlobal[1].Data()),"pf");
+        legendDRX27TeV->AddEntry(graphDoubleRatioSys7TeV,Form("pp %s",nameMeasGlobal[1].Data()),"pf");
+        // legendDRX27TeV->AddEntry(graphDoubleRatioSys7TeVPHOS,Form("pp %s PHOS",nameMeasGlobal[1].Data()),"pf");
         // legendDRX27TeV->AddEntry(DoubleRatioSystError,"PCM pass2","pf");
     // legendDRX27TeV->AddEntry(graphDoubleRatioSys7TeV,Form("pp %s",nameMeasGlobal[1].Data()),"pf");
     // legendDRX27TeV->AddEntry(graphNLODoubleRatio[4],"Prompt (Phys.Rev.Lett 106, 242301)","l");
@@ -4921,10 +4922,13 @@ void CombineGammaResultsPP(
      //2.76 TeV
      gammaResultsFileNames[3]                        = "ThesisQAInputAllEnergies/2.76TeV/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root";
      dataSetFileNames[3]                        = "ThesisQAInputAllEnergies/2.76TeV/CombinedResultsPaperPP2760GeV_2017_03_01_FrediV2Clusterizer.root";
-     dataGammaFileNames[3]                        = "CombinationInputPP/2.76TeV/gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Gamma_Pi0_data_GammaConvV1Correction_00000113_00200009397300008250400000_0163103100900000.root";
-    dataCorrectionHistos[3]                        = "CombinationInputPP/2.76TeV/gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistos_00000113_00200009397300008250400000_0163103100900000.root";
-    secondaryFileNames[3]                        = "CombinationInputPP/2.76TeV/gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_data_GammaConvV1Correction_00000113_00200009397300008250400000_0163103100900000.root";
-
+     dataGammaFileNames[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Gamma_Pi0_data_GammaConvV1Correction_00000113_00200009397300008250400000_0163103100900000.root";
+    dataCorrectionHistos[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_MC_GammaConvV1CorrectionHistos_00000113_00200009397300008250400000_0163103100900000.root";
+    secondaryFileNames[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_data_GammaConvV1Correction_00000113_00200009397300008250400000_0163103100900000.root";
+    DCAFileNames[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_Data_GammaConvV1DCATestAnalysed.root";
+    DCAFileNamesMC2[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_MC_GammaConvV1DCATestAnalysed.root";
+    DCAFileNames2[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_data_GammaConvV1DCAHistogramms_00000113_00200009397300008250400000_0163103100900000.root";
+    DCAFileNamesMC[3]                        = "ThesisQAInputAllEnergies/2.76TeV_gamma_00000113_00200009397300008250400000_0163103100900000/2.76TeV/Pi0_MC_GammaConvV1DCAHistogramms_00000113_00200009397300008250400000_0163103100900000.root";
     // 7 TeV
      gammaResultsFileNames[1]                        = "ThesisQAInputAllEnergies/7TeV_gamma_00000113_00200009227302008250404000_0152103500000000/7TeV/Gamma_Pi0_data_GammaConvV1_InclusiveRatio.root"; //std binning
 //      gammaResultsFileNames[1]                        = "ThesisQAInputAllEnergies/7TeV_gamma_00000113_00200009227302008250404000_0152103500000000/7TeV/Gamma_Pi0_data_GammaConvV1_InclusiveRatio_FINE.root";  // 0.1 binning
@@ -5111,54 +5115,98 @@ void CombineGammaResultsPP(
 
     TString categoryName = "cat1";
     TString backgroundExtractionMethod = "std";
+    for (Int_t i = 0; i < 4; i++){
+      histoEventQualityMC[i]                               = (TH1F*)inputFileCorrectionHistos[i]->Get("NEvents");
+      if(inputFileCorrectionHistos[i]&&histoEventQualityMC[i])
+      nEvtMC[i]                                        = GetNEvents(histoEventQualityMC[i]);
+
+      TruePrimaryConvGamma_Pt[i]                           = (TH1D*)inputFileCorrectionHistos[i]->Get("TruePrimaryConvGamma_Pt");
+      for(Int_t j = 0;j<17;j++){
+          if(inputFileCorrectionHistos[i])
+          histoCombinatorialSpecies_Pt[i][j]               = (TH1D*)inputFileCorrectionHistos[i]->Get(Form("ESD_TrueComb%s_Pt",combinatorics[j].Data()));
+          else
+          histoCombinatorialSpecies_Pt[i][j]=NULL;
+          if(histoCombinatorialSpecies_Pt[i][j]){
+              histoCombinatorialSpecies_Pt[i][j]->SetMinimum(1e-10);
+              histoCombinatorialSpecies_Pt[i][j]->Scale(1./nEvtMC[i]);
+
+
+              histoSignalToCombBackgroundRatio[i][j] = (TH1D*) histoCombinatorialSpecies_Pt[i][j]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatorics[i].Data()));
+              histoSignalToCombBackgroundRatio[i][j]->Scale(nEvtMC[i]);
+              histoSignalToCombBackgroundRatio[i][j]->Divide(histoSignalToCombBackgroundRatio[i][j],TruePrimaryConvGamma_Pt[i],1,1,"");
+              SetHistogramm(histoSignalToCombBackgroundRatio[i][j],"#it{p}_{T} (GeV/#it{c})","identified BG/ real primary photons",10,5e7);
+              histoSignalToCombBackgroundRatio[i][j]->SetMinimum(1e-5);
+          }
+      }
+      // GAMMA INPUT
+      SecondaryGammaFromXFromK0sRecoEff_Pt[i]              = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0sRecoEff_Pt");
+      SecondaryGammaFromXFromK0lRecoEff_Pt[i]              = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0lRecoEff_Pt");
+      SecondaryGammaFromXFromLambdaRecoEff_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromLambdaRecoEff_Pt");
+
+
+      SecondaryGammaFromXFromK0sConvProb_MCPt[i]           = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0sMCGammaConvProb_MCPt");
+      SecondaryGammaFromXFromK0lConvProb_MCPt[i]           = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0lMCGammaConvProb_MCPt");
+      SecondaryGammaFromXFromLambdaConvProb_MCPt[i]        = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromLambdaConvProb_MCPt");
+
+
+      GammaRaw_Pt[i]                                       = (TH1D*)inputFileGamma[i]->Get("GammaRaw_Pt");
+      GammaRaw_Pt[i]->Sumw2();
+
+      if(i!=1&&i!=2&&i!=3){
+          histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt");
+          histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt");
+          histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i]        = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt");
+      } else{
+          histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecGammaFromXFromK0s_Cocktail_Raw_Pt");
+          histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecGammaFromXFromK0l_Cocktail_Raw_Pt");
+          histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i]        = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecGammaFromXFromLambda_Cocktail_Raw_Pt");
+      }
+      histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i]->Sumw2();
+      histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i]->Sumw2();
+      histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i]->Sumw2();
+      histoGammaTrueSecCocktailGammaRest_Pt[i]        = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecCocktailGammaRest_Pt");
+      histoGammaTrueSecCocktailGammaRest_Pt[i]->Sumw2();
+
+      // calculate fractions
+      histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt[i]                  = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecFromXFromK0s");
+      histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt[i] ->Divide(histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i] ,histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt[i] ,1,1,"B");
+
+
+      histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt[i]                   = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecFromXFromK0l");
+      histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt[i]->Divide(histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i] ,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt[i] ,1,1,"B");
+
+
+      histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt[i]                = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecFromXFromLambda");
+      histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt[i] ->Divide(histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i] ,histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt[i] ,1,1,"B");
+
+
+      histoFracAllGammaToSecRest_Cocktail_Pt[i]                           = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecRest");
+      histoFracAllGammaToSecRest_Cocktail_Pt[i] ->Divide(histoGammaTrueSecCocktailGammaRest_Pt[i] ,histoFracAllGammaToSecRest_Cocktail_Pt[i] ,1,1,"B");
+
+
+    }
     for (Int_t i = 0; i < 3; i++){
 
+      ESDGammaDCAzAllMC[i]                           = (TH1D*)inputFileDCAHistosMC[i]->Get(Form("ESD_TrueGammaPtDCAz_Full_%s_perEvent", categoryName.Data()));
+      ESDGammaDCAzAll3MC[i]                          = (TH1D*)inputFileDCAHistosMC[i]->Get(Form("ESD_TrueGammaPtDCAz_Full_%s_perEvent", "cat3"));
+      fDCAEventQualityMC[i]                          = (TH1D*)inputFileDCAMC[i]->Get("NEvents");
+      if(fDCAEventQualityMC[i])
+      fNEventsDCAMC[i]                               = GetNEvents(fDCAEventQualityMC[i]);
+      else
+      fNEventsDCAMC[i]                          = -1;
 
-        histoEventQualityMC[i]                               = (TH1F*)inputFileCorrectionHistos[i]->Get("NEvents");
-        if(inputFileCorrectionHistos[i]&&histoEventQualityMC[i])
-        nEvtMC[i]                                        = GetNEvents(histoEventQualityMC[i]);
+      ESDGammaDCAzAll[i]                             = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBin_Full_%s_perEvent", categoryName.Data()));
+      ESDGammaDCAzBack[i]                            = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s_perEvent", categoryName.Data(), backgroundExtractionMethod.Data()));
+      ESDGammaDCAzAllSub[i]                          = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s_perEvent", categoryName.Data(), backgroundExtractionMethod.Data()));
 
-        TruePrimaryConvGamma_Pt[i]                           = (TH1D*)inputFileCorrectionHistos[i]->Get("TruePrimaryConvGamma_Pt");
-
-        for(Int_t j = 0;j<17;j++){
-            if(inputFileCorrectionHistos[i])
-            histoCombinatorialSpecies_Pt[i][j]               = (TH1D*)inputFileCorrectionHistos[i]->Get(Form("ESD_TrueComb%s_Pt",combinatorics[j].Data()));
-            else
-            histoCombinatorialSpecies_Pt[i][j]=NULL;
-            if(histoCombinatorialSpecies_Pt[i][j]){
-                histoCombinatorialSpecies_Pt[i][j]->SetMinimum(1e-10);
-                histoCombinatorialSpecies_Pt[i][j]->Scale(1./nEvtMC[i]);
-
-
-                histoSignalToCombBackgroundRatio[i][j] = (TH1D*) histoCombinatorialSpecies_Pt[i][j]->Clone(Form("ESD_TrueCombRatioSignal_%s_Pt",combinatorics[i].Data()));
-                histoSignalToCombBackgroundRatio[i][j]->Scale(nEvtMC[i]);
-                histoSignalToCombBackgroundRatio[i][j]->Divide(histoSignalToCombBackgroundRatio[i][j],TruePrimaryConvGamma_Pt[i],1,1,"");
-                SetHistogramm(histoSignalToCombBackgroundRatio[i][j],"#it{p}_{T} (GeV/#it{c})","identified BG/ real primary photons",10,5e7);
-                histoSignalToCombBackgroundRatio[i][j]->SetMinimum(1e-5);
-            }
-        }
-
-
-        ESDGammaDCAzAllMC[i]                           = (TH1D*)inputFileDCAHistosMC[i]->Get(Form("ESD_TrueGammaPtDCAz_Full_%s_perEvent", categoryName.Data()));
-        ESDGammaDCAzAll3MC[i]                          = (TH1D*)inputFileDCAHistosMC[i]->Get(Form("ESD_TrueGammaPtDCAz_Full_%s_perEvent", "cat3"));
-        fDCAEventQualityMC[i]                          = (TH1D*)inputFileDCAMC[i]->Get("NEvents");
-        if(fDCAEventQualityMC[i])
-        fNEventsDCAMC[i]                               = GetNEvents(fDCAEventQualityMC[i]);
-        else
-        fNEventsDCAMC[i]                          = -1;
-
-        ESDGammaDCAzAll[i]                             = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBin_Full_%s_perEvent", categoryName.Data()));
-        ESDGammaDCAzBack[i]                            = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s_perEvent", categoryName.Data(), backgroundExtractionMethod.Data()));
-        ESDGammaDCAzAllSub[i]                          = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s_perEvent", categoryName.Data(), backgroundExtractionMethod.Data()));
-
-        ESDGammaDCAzAll3[i]                             = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBin_Full_%s_perEvent", "cat3"));
-        ESDGammaDCAzBack3[i]                            = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s_perEvent", "cat3", backgroundExtractionMethod.Data()));
-        ESDGammaDCAzAllSub3[i]                          = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s_perEvent", "cat3", backgroundExtractionMethod.Data()));
-        fDCAEventQuality[i]                          = (TH1D*)inputFileDCA[i]->Get("NEvents");
-        if(fDCAEventQuality[i])
-        fNEventsDCA[i]                               = GetNEvents(fDCAEventQuality[i]);
-        else
-        fNEventsDCA[i]                          = -1;
+      ESDGammaDCAzAll3[i]                             = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBin_Full_%s_perEvent", "cat3"));
+      ESDGammaDCAzBack3[i]                            = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_GammaPtDCAzBackBin_Full_%s_%s_perEvent", "cat3", backgroundExtractionMethod.Data()));
+      ESDGammaDCAzAllSub3[i]                          = (TH1D*)inputFileDCAHistos[i]->Get(Form("ESD_SubGammaPtDCAzBin_Full_%s_%s_perEvent", "cat3", backgroundExtractionMethod.Data()));
+      fDCAEventQuality[i]                          = (TH1D*)inputFileDCA[i]->Get("NEvents");
+      if(fDCAEventQuality[i])
+      fNEventsDCA[i]                               = GetNEvents(fDCAEventQuality[i]);
+      else
+      fNEventsDCA[i]                          = -1;
 
 
         histoGammaSpecCorrPurity[i]                       = (TH1D*)inputFileGammaResults[i]->Get("histoGammaSpecCorrPurity");
@@ -5212,62 +5260,19 @@ void CombineGammaResultsPP(
             graphNLODirGamma[i+1]     = (TGraphAsymmErrors*)inputFileGammaResults[i+1]->Get("graphNLODirGamma");
             histoGammaPurity_Pt[i+1]                            = (TH1D*)inputFileCorrectionHistos[i+1]->Get("GammaPurity_Pt");
             GammaRecoEff_MCPt[i+1]                              = (TH1D*)inputFileGamma[i+1]->Get("GammaRecoEff_MCPt");
+            GammaRecoEff_WithResolCorr_Pt[i+1]                              = (TH1D*)inputFileGamma[i+1]->Get("GammaRecoEff_WithResolCorr_Pt");
             GammaConvProb_Pt[i+1]                               = (TH1D*)inputFileGamma[i+1]->Get("GammaConvProb_Pt");
 
         }
 
         histoGammaPurity_Pt[i]                            = (TH1D*)inputFileCorrectionHistos[i]->Get("GammaPurity_Pt");
         GammaRecoEff_MCPt[i]                              = (TH1D*)inputFileGamma[i]->Get("GammaRecoEff_MCPt");
+        GammaRecoEff_WithResolCorr_Pt[i]                              = (TH1D*)inputFileGamma[i]->Get("GammaRecoEff_WithResolCorr_Pt");
         GammaConvProb_Pt[i]                               = (TH1D*)inputFileGamma[i]->Get("GammaConvProb_Pt");
         PileUpCorrectionFactor[i]                            = (TH1D*)inputFileGamma[i]->Get("PileUpCorrectionFactor");
         if(i==2)
         PileUpCorrectionFactor[3]                            = (TH1D*)inputFileGamma[3]->Get("PileUpCorrectionFactor");
-        // GAMMA INPUT
-        SecondaryGammaFromXFromK0sRecoEff_Pt[i]              = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0sRecoEff_Pt");
-        SecondaryGammaFromXFromK0lRecoEff_Pt[i]              = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0lRecoEff_Pt");
-        SecondaryGammaFromXFromLambdaRecoEff_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromLambdaRecoEff_Pt");
-
-
-        SecondaryGammaFromXFromK0sConvProb_MCPt[i]           = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0sMCGammaConvProb_MCPt");
-        SecondaryGammaFromXFromK0lConvProb_MCPt[i]           = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromK0lMCGammaConvProb_MCPt");
-        SecondaryGammaFromXFromLambdaConvProb_MCPt[i]        = (TH1D*)inputFileGamma[i]->Get("SecondaryGammaFromXFromLambdaConvProb_MCPt");
-
-
-        GammaRaw_Pt[i]                                       = (TH1D*)inputFileGamma[i]->Get("GammaRaw_Pt");
-        GammaRaw_Pt[i]->Sumw2();
-
-        if(i!=1&&i!=2){
-            histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt");
-            histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt");
-            histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i]        = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt");
-        } else{
-            histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecGammaFromXFromK0s_Cocktail_Raw_Pt");
-            histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i]           = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecGammaFromXFromK0l_Cocktail_Raw_Pt");
-            histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i]        = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecGammaFromXFromLambda_Cocktail_Raw_Pt");
-        }
-        histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i]->Sumw2();
-        histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i]->Sumw2();
-        histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i]->Sumw2();
-        histoGammaTrueSecCocktailGammaRest_Pt[i]        = (TH1D*)inputFileGamma[i]->Get("histoGammaTrueSecCocktailGammaRest_Pt");
-        histoGammaTrueSecCocktailGammaRest_Pt[i]->Sumw2();
-
-        // calculate fractions
-        histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt[i]                  = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecFromXFromK0s");
-        histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt[i] ->Divide(histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt[i] ,histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt[i] ,1,1,"B");
-
-
-        histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt[i]                   = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecFromXFromK0l");
-        histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt[i]->Divide(histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt[i] ,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt[i] ,1,1,"B");
-
-
-        histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt[i]                = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecFromXFromLambda");
-        histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt[i] ->Divide(histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt[i] ,histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt[i] ,1,1,"B");
-
-
-        histoFracAllGammaToSecRest_Cocktail_Pt[i]                           = (TH1D*)GammaRaw_Pt[i]->Clone("FracAllGammaToSecRest");
-        histoFracAllGammaToSecRest_Cocktail_Pt[i] ->Divide(histoGammaTrueSecCocktailGammaRest_Pt[i] ,histoFracAllGammaToSecRest_Cocktail_Pt[i] ,1,1,"B");
-
-
+        
         // LOAD INPUT
         histoNumberOfEvents[i]              = (TH1D*)inputFileData[i]->Get("histoNumberOfEvents7TeV");
         BGEstimateFromPileup[i]              = (TH1D*)inputFileSecondary[i]->Get("BGEstimateFromPileup");
@@ -5492,6 +5497,8 @@ void CombineGammaResultsPP(
 
 
 //     plotGammaPileup(2, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,4e-9,2e-5, "counts per event", 1, "GammaPileupBin");
+    plotGammaPileup(3, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "counts per event", 1, "GammaPileupBin");
+    plotGammaPileup(0, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "counts per event", 1, "GammaPileupBin");
     plotGammaPileup(2, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "counts per event", 1, "GammaPileupBin");
     plotGammaPileup(1, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "counts per event", 1, "GammaPileupBin");
     plotGammaDCAMultiple(1, ESDGammaDCAzAll,ESDGammaDCAzBack, ESDGammaDCAzAllSub,ESDGammaDCAzAllMC,3e-4,7, "normalized counts", 1, "GammaPileupBinPF");
@@ -5504,19 +5511,26 @@ cout << __LINE__ << endl;
     plotGammaSecondaries(1, SecondaryGammaFromXFromK0sConvProb_MCPt,SecondaryGammaFromXFromK0lConvProb_MCPt, SecondaryGammaFromXFromLambdaConvProb_MCPt,SecondaryGammaFromXFromRestConvProb_MCPt,0.0,8.5e-2, "#it{P}_{conv} in |#eta| < 0.9", 0, "SecGammaConvProb");
     plotGammaSecondaries(2, SecondaryGammaFromXFromK0sRecoEff_Pt,SecondaryGammaFromXFromK0lRecoEff_Pt, SecondaryGammaFromXFromLambdaRecoEff_Pt,SecondaryGammaFromXFromRestRecoEff_Pt,0.0,1.0, "#epsilon_{eff} in |#eta| < 0.9", 0, "SecGammaEff");
     plotGammaSecondaries(2, SecondaryGammaFromXFromK0sConvProb_MCPt,SecondaryGammaFromXFromK0lConvProb_MCPt, SecondaryGammaFromXFromLambdaConvProb_MCPt,SecondaryGammaFromXFromRestConvProb_MCPt,0.0,8.5e-2, "#it{P}_{conv} in |#eta| < 0.9", 0, "SecGammaConvProb");
+    plotGammaSecondaries(3, SecondaryGammaFromXFromK0sRecoEff_Pt,SecondaryGammaFromXFromK0lRecoEff_Pt, SecondaryGammaFromXFromLambdaRecoEff_Pt,SecondaryGammaFromXFromRestRecoEff_Pt,0.0,1.0, "#epsilon_{eff} in |#eta| < 0.9", 0, "SecGammaEff");
+    plotGammaSecondaries(3, SecondaryGammaFromXFromK0sConvProb_MCPt,SecondaryGammaFromXFromK0lConvProb_MCPt, SecondaryGammaFromXFromLambdaConvProb_MCPt,SecondaryGammaFromXFromRestConvProb_MCPt,0.0,8.5e-2, "#it{P}_{conv} in |#eta| < 0.9", 0, "SecGammaConvProb");
     cout << __LINE__ << endl;
 
 
     plotGammaSecondaries(0, histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt, histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,8e-7,9.9, "Effective Secondary #gamma Correction", 1, "SecGammaFractions");
     plotGammaSecondaries(1, histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt, histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,8e-7,8., "Effective Secondary #gamma Correction", 1, "SecGammaFractions");
     plotGammaSecondaries(2, histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt, histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,8e-7,8., "Effective Secondary #gamma Correction", 1, "SecGammaFractions");
+    plotGammaSecondaries(3, histoFracAllGammaToSecFromXFromK0s_Cocktail_Pt,histoFracAllGammaToSecFromXFromK0l_Cocktail_Pt, histoFracAllGammaToSecFromXFromLambda_Cocktail_Pt,histoFracAllGammaToSecRest_Cocktail_Pt,8e-7,8., "Effective Secondary #gamma Correction", 1, "SecGammaFractions");
 
     plotGammaSecondaries(0, histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt, histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt,histoGammaTrueSecCocktailGammaRest_Pt,5e-13,9e-2, "Secondary Converted #gamma Raw Yield", 1, "SecGammaYield");
     plotGammaSecondaries(1, histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt, histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt,histoGammaTrueSecCocktailGammaRest_Pt,5e-13,9e-2, "Secondary Converted #gamma Raw Yield", 1, "SecGammaYield");
     plotGammaSecondaries(2, histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt, histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt,histoGammaTrueSecCocktailGammaRest_Pt,5e-13,9e-2, "Secondary Converted #gamma Raw Yield", 1, "SecGammaYield");
+    plotGammaSecondaries(3, histoGammaTrueSecConvGammaFromXFromK0s_Cocktail_Raw_Pt,histoGammaTrueSecConvGammaFromXFromK0l_Cocktail_Raw_Pt, histoGammaTrueSecConvGammaFromXFromLambda_Cocktail_Raw_Pt,histoGammaTrueSecCocktailGammaRest_Pt,5e-13,9e-2, "Secondary Converted #gamma Raw Yield", 1, "SecGammaYield");
 
 
+    plotPhotonCombBG(0, histoSignalToCombBackgroundRatio,1e-5,1., "identified BG/real primary #gamma", 1, "GammaCombBGRatio");
     plotPhotonCombBG(1, histoSignalToCombBackgroundRatio,1e-5,1., "identified BG/real primary #gamma", 1, "GammaCombBGRatio");
+    plotPhotonCombBG(2, histoSignalToCombBackgroundRatio,1e-5,1., "identified BG/real primary #gamma", 1, "GammaCombBGRatio");
+    plotPhotonCombBG(3, histoSignalToCombBackgroundRatio,1e-5,1., "identified BG/real primary #gamma", 1, "GammaCombBGRatio");
 
     plotDCA(1, fHistFracCat_1_vsPt,fHistFracCat_2_vsPt, fHistFracCat_3_vsPt, fHistFracCat_4_vsPt, fHistFracCat_5_vsPt,fHistFracCat_6_vsPt,-0.3,100., "N_{meson per cat}/(N_{meson}) (%)", 0, "FracDCAcat");
     plotDCA(1, fHistFracIntHistBGvsPt_Cat_1_Variant_1,fHistFracIntHistBGvsPt_Cat_2_Variant_1, fHistFracIntHistBGvsPt_Cat_3_Variant_1, fHistFracIntHistBGvsPt_Cat_4_Variant_1, fHistFracIntHistBGvsPt_Cat_5_Variant_1,fHistFracIntHistBGvsPt_Cat_6_Variant_1,-0.3,14.9, "BG/Total (%)", 0, "FracDCABGcat7");
@@ -5527,6 +5541,7 @@ cout << __LINE__ << endl;
 
     plotEverything(histoGammaPurity_Pt, 0.89, 1.03,0, "#epsilon_{pur,#gamma} in |#eta| < 0.9", "PhotonPurity");
     plotEverything(GammaRecoEff_MCPt, 0.21, 1.01,0, "#epsilon_{eff,#gamma} in |#eta| < 0.9", "PhotonEfficiency");
+    plotEverything(GammaRecoEff_WithResolCorr_Pt, 0.21, 0.81,0, "#epsilon_{eff,#gamma} in |#eta| < 0.9", "PhotonEfficiencyWithResolCorr");
     plotEverything(GammaConvProb_Pt, 0.055, .099,0, "P_{conv,#gamma} in |#eta| < 0.9", "PhotonConvProb");
     plotEverything(PileUpCorrectionFactor, 0.78, 1.04,0, "Pileup Correction Factor", "GammaPileUpCorrectionFactor");
 
