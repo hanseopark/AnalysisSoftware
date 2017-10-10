@@ -308,9 +308,13 @@ Style_t     markerStyle0010     = 20;
 Style_t     markerStyle2050     = 21;
 Style_t     markerStylepp       = 29;
 
-Size_t      markerSize0010      = 2;
-Size_t      markerSize2050      = 2;
-Size_t      markerSizepp      = 3;
+Size_t      markerSize0010      = 2.2;
+Size_t      markerSize2050      = 2.2;
+Size_t      markerSizepp      = 3.2;
+Size_t      markerSizeComb      = 2.2;
+Size_t      markerSizeComparison = 2.2;
+Size_t  markerSizeInvYield          = 1.7;
+Size_t  markerSizeMass              = 3.4;
 
 //plot range for yields
 Double_t FontSize = 0.035;
@@ -364,13 +368,11 @@ Style_t     styleFitIndivid         = 1;
 Color_t     colorComb           = kMagenta+2;
 Color_t     colorFitIndivid     = kRed+2;
 Style_t     markerStyleComb     = 20;
-Size_t      markerSizeComb      = 2;
 
 Color_t     colorCombLowPt          = GetDefaultColorDiffDetectors("Comb", kFALSE, kFALSE, kFALSE);
 Color_t     colorCombHighPt         = GetDefaultColorDiffDetectors("Comb", kFALSE, kFALSE, kTRUE);
 Style_t     markerStyleCombLowPt    = 20;
 Style_t     markerStyleCombHighPt   = 20;
-Size_t      markerSizeComparison = 2;
 
 TString     nameMeasGlobal[11]  = {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM - EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged", "PCM 2010"};
 Color_t     colorDet[11];
@@ -465,8 +467,6 @@ Color_t     colorPHOSSyst               = kBlue-8;
 Style_t     fillStyleConv               = 0 ;
 Style_t     fillStylePHOS               = 0;
 Style_t     fillStyleEMCAL              = 0;
-Size_t  markerSizeInvYield          = 1.5;
-Size_t  markerSizeMass              = 3.2;
 Style_t     markerStyleConvMC           = 24 ;
 Color_t     colorPHOSMass                   = kRed+1;
 Color_t     colorPHOSMCMass             = kRed-7;

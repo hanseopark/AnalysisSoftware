@@ -499,6 +499,14 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
       graphChargedPionRAASys2040->RemovePoint(0);
     }
 
+    TGraphAsymmErrors* graphChargedPionRAATotErr0010 = AddErrorsOfGraphsQuadratically(graphChargedPionRAA0010,graphChargedPionRAASys0010);
+        DrawGammaSetMarkerTGraphAsym(graphChargedPionRAATotErr0010, 27,3, colorCharged,colorCharged, 0.1, kFALSE);
+    TGraphAsymmErrors* graphChargedKaonRAATotErr0010 = AddErrorsOfGraphsQuadratically(graphChargedKaonRAA0010,graphChargedKaonRAASys0010);
+         DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAATotErr0010, 33,3, colorCharged,colorCharged, 0.1, kFALSE);
+   TGraphAsymmErrors* graphChargedPionRAATotErr2040 = AddErrorsOfGraphsQuadratically(graphChargedPionRAA2040,graphChargedPionRAASys2040);
+        DrawGammaSetMarkerTGraphAsym(graphChargedPionRAATotErr2040, 27,3, colorCharged,colorCharged, 0.1, kFALSE);
+    TGraphAsymmErrors* graphChargedKaonRAATotErr2040 = AddErrorsOfGraphsQuadratically(graphChargedKaonRAA2040,graphChargedKaonRAASys2040);
+        DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAATotErr2040, 33,3, colorCharged,colorCharged, 0.1, kFALSE);
 
     //*********************************************************************************************************//
     //*****************************************  Neutral mesons   *********************************************//
@@ -3479,11 +3487,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
     canvasInvariantYield->cd();
       if(meson.CompareTo("Pi0")==0){
-          histo2DInvariantYieldwithPP = new TH2F("histo2DInvariantYieldwithPP","histo2DInvariantYieldwithPP",11000,0.25,70.,1000,1e-12,1e4);
+          histo2DInvariantYieldwithPP = new TH2F("histo2DInvariantYieldwithPP","histo2DInvariantYieldwithPP",11000,0.25,70.,1000,5e-12,3e3);
           SetStyleHistoTH2ForGraphs(histo2DInvariantYieldwithPP, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N_{#pi^{0}}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2} ",0.035,0.04, 0.035,0.04, 1.,1.65);
 
       } else if(meson.CompareTo("Eta")==0){
-          histo2DInvariantYieldwithPP = new TH2F("histo2DInvariantYieldwithPP","histo2DInvariantYieldwithPP",11000,0.25,70.,1000,1e-10,1e3);
+          histo2DInvariantYieldwithPP = new TH2F("histo2DInvariantYieldwithPP","histo2DInvariantYieldwithPP",11000,0.25,70.,1000,5e-10,3e2);
           SetStyleHistoTH2ForGraphs(histo2DInvariantYieldwithPP, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N_{#eta}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2} ",0.035,0.04, 0.035,0.04, 1.,1.6);
       }
       histo2DInvariantYieldwithPP->GetXaxis()->SetMoreLogLabels();
@@ -3500,12 +3508,12 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphInvSectionCombStatPi02760GeVPlot->Draw("p,same");
             graphInvSectionCombSysPi02760GeVPlot->Draw("E2same");
             legendSpectraPP->SetHeader(collisionSystemPP2760GeV.Data());
-            legendSpectraPP->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"arXiv: 1702.00917","pf");
+            legendSpectraPP->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"pf");
         } else if(meson.CompareTo("Eta")==0){
             graphInvSectionCombStatEta2760GeVPlot->Draw("p,same");
             graphInvSectionCombSysEta2760GeVPlot->Draw("E2same");
             legendSpectraPP->SetHeader(collisionSystemPP2760GeV.Data());
-            legendSpectraPP->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"arXiv: 1702.00917","pf");
+            legendSpectraPP->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"pf");
         }
         legendSpectraPP->Draw();
 
@@ -3755,11 +3763,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
     canvasInvariantYield->cd();
 
-        TH2F * histo2DInvariantYieldWithModels = new TH2F("histo2DInvariantYieldWithModels","histo2DInvariantYieldWithModels",11000,0.25,70.,1000,1e-9,1e7);
+        TH2F * histo2DInvariantYieldWithModels = new TH2F("histo2DInvariantYieldWithModels","histo2DInvariantYieldWithModels",11000,0.25,70.,1000,7e-9,1e6);
         SetStyleHistoTH2ForGraphs(histo2DInvariantYieldWithModels, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N_{#pi^{0}, #eta}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV/#it{c})^{-2} ",0.035,0.04, 0.035,0.04, 1.,1.6);
         if(thesisPlotting){
           histo2DInvariantYieldWithModels->GetXaxis()->SetRangeUser(0.5,40.);
-          histo2DInvariantYieldWithModels->GetYaxis()->SetRangeUser(1e-9,3e7);
+          histo2DInvariantYieldWithModels->GetYaxis()->SetRangeUser(7e-9,3e7);
         } else {
           histo2DInvariantYieldWithModels->GetXaxis()->SetRangeUser(0.5,50.);
         }
@@ -4090,7 +4098,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         if(meson.CompareTo("Pi0")==0){
 
             legendSpectraPPnlo->SetHeader(collisionSystemPP2760GeV.Data());
-            legendSpectraPPnlo->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"arXiv: 1702.00917","pf");
+            legendSpectraPPnlo->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"pf");
             legendSpectraPPnlo->AddEntry(graphNLOforPi0PP,"pQCD NLO #mu = #it{p}_{T}","l");
             legendSpectraPPnlo->AddEntry((TObject*)0,"PDF: MSTW, FF: DSS14","");
             legendSpectraPPnlo->AddEntry((TObject*)0,"PRD 91 014035","");
@@ -4111,7 +4119,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         } else if(meson.CompareTo("Eta")==0){
 
             legendSpectraPPnlo->SetHeader(collisionSystemPP2760GeV.Data());
-            legendSpectraPPnlo->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"arXiv: 1702.00917","pf");
+            legendSpectraPPnlo->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"pf");
             legendSpectraPPnlo->AddEntry(graphNLOforEtaPP,"pQCD NLO #mu = #it{p}_{T}","l");
             legendSpectraPPnlo->AddEntry((TObject*)0,"PDF: MSTW, FF: DSS07","");
             legendSpectraPPnlo->AddEntry((TObject*)0,"PRD 91 014035","");
@@ -4325,11 +4333,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         if(meson.CompareTo("Pi0")==0){
             graphInvSectionCombStatPi02760GeVPlot->Draw("p,same");
             graphInvSectionCombSysPi02760GeVPlot->Draw("E2same");
-            legendSpectraPP2->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"arXiv: 1702.00917","pf");
+            legendSpectraPP2->AddEntry(graphInvSectionCombSysPi02760GeVPlot,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"pf");
         } else if(meson.CompareTo("Eta")==0){
             graphInvSectionCombStatEta2760GeVPlot->Draw("p,same");
             graphInvSectionCombSysEta2760GeVPlot->Draw("E2same");
-            legendSpectraPP2->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"arXiv: 1702.00917","pf");
+            legendSpectraPP2->AddEntry(graphInvSectionCombSysEta2760GeVPlot,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"pf");
         }
         legendSpectraPP2->Draw();
         labelSyst->Draw();
@@ -6252,37 +6260,53 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           TBox* boxErrorNorm0010OnlyV2      = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
           boxErrorNorm0010OnlyV2->Draw();
           DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAA0010, 33,2.3, colorCharged,colorCharged, 0.1, kFALSE);
-          DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAASys0010,33,2.3, colorCharged,colorCharged, 1, kTRUE);
+          DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAASys0010,33,2.3, colorCharged,colorCharged, 2, kTRUE);
 
           DrawGammaSetMarkerTGraphAsym(graphChargedPionRAA0010, 27,2.3, colorCharged,colorCharged, 0.1, kFALSE);
           if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedPionRAA0010);
           DrawGammaSetMarkerTGraphAsym(graphChargedPionRAASys0010,27,2.3, colorCharged,colorCharged, 1, kTRUE);
-          graphChargedKaonRAASys0010->SetFillStyle(3002);
-          graphChargedKaonRAASys0010->SetFillColor(colorCharged+1);
-          graphChargedPionRAASys0010->SetFillStyle(3004);
-          graphChargedPionRAASys0010->SetFillColor(colorCharged+2);
+//           graphChargedKaonRAASys0010->SetFillStyle(3005);
+//           graphChargedKaonRAASys0010->SetFillColor(colorCharged+1);
+          graphChargedPionRAASys0010->SetFillStyle(3001);
+          graphChargedPionRAASys0010->SetFillColor(colorCharged);
 
           graphChargedKaonRAASys0010->Draw("E2same");
           graphChargedKaonRAA0010->Draw("p,same");
           graphChargedPionRAASys0010->Draw("E2same");
           graphChargedPionRAA0010->Draw("p,same");
-          graphRAAPi0SysBothMeson_0010->Draw("E2same");
           graphRAAPi0StatBothMeson_0010->Draw("p,same");
-          graphRAAEtaSysBothMeson_0010->Draw("E2same");
+          graphRAAPi0SysBothMeson_0010->Draw("E2same");
+          graphRAAPi0SysBothMeson_0010->SetFillStyle(3005);
+          graphRAAPi0SysBothMeson_0010->SetFillColor(colorPCM0010);
           graphRAAEtaStatBothMeson_0010->Draw("p,same");
+          graphRAAEtaSysBothMeson_0010->Draw("E2same");
+          DrawGammaSetMarkerTGraphAsym(graphRAAEtaSysBothMeson_0010,20,2.3, colorPCM0010,colorPCM0010, 2, kTRUE);
 
-          TLegend* legendRAAKaonPion00101 = new TLegend(0.52,0.87-(0.037*1.3),0.8,0.87);
+//           graphChargedKaonRAATotErr0010->Draw("p,same");
+//             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedKaonRAATotErr0010);
+//           graphChargedPionRAATotErr0010->Draw("p,same");
+//             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedPionRAATotErr0010);
+//             TGraphAsymmErrors* grapPi0RAATotErr0010 = AddErrorsOfGraphsQuadratically(graphRAAPi0StatBothMeson_0010,graphRAAPi0SysBothMeson_0010);
+//             DrawGammaSetMarkerTGraphAsym(grapPi0RAATotErr0010, markerStyle0010+4, markerSizeComb, colorPCM0010, colorPCM0010);
+//             TGraphAsymmErrors* graphEtaRAATotErr0010 = AddErrorsOfGraphsQuadratically(graphRAAEtaStatBothMeson_0010,graphRAAEtaSysBothMeson_0010);
+//             DrawGammaSetMarkerTGraphAsym(graphEtaRAATotErr0010, markerStyle0010, markerSizeComb, colorPCM0010 , colorPCM0010);
+//           grapPi0RAATotErr0010->Draw("p,same");
+//           graphEtaRAATotErr0010->Draw("p,same");
+
+          TLegend* legendRAAKaonPion00101 = new TLegend(0.55,0.87-(0.037*2.7),0.81,0.87);//0.52,0.87-(0.037*1.3),0.8,0.87);
           legendRAAKaonPion00101->SetFillColor(0);
           legendRAAKaonPion00101->SetLineColor(0);
           legendRAAKaonPion00101->SetTextFont(42);
           legendRAAKaonPion00101->SetMargin(0.35);
           legendRAAKaonPion00101->SetTextSize(0.037);
           legendRAAKaonPion00101->SetNColumns(2);
-//           legendRAAKaonPion00101->SetHeader("");
+          legendRAAKaonPion00101->SetHeader(cent0010.Data());
+//           legendRAAKaonPion00101->AddEntry(grapPi0RAATotErr0010,"#pi^{0}","pl");
+//           legendRAAKaonPion00101->AddEntry(graphEtaRAATotErr0010,"#eta","lp");
           legendRAAKaonPion00101->AddEntry(graphRAAPi0SysBothMeson_0010,"#pi^{0}","pf");
           legendRAAKaonPion00101->AddEntry(graphRAAEtaSysBothMeson_0010,"#eta","fp");
           legendRAAKaonPion00101->Draw();
-          TLegend* legendRAAKaonPion0010 = new TLegend(0.515,0.812-(2.5*0.037),0.86,0.812);
+          TLegend* legendRAAKaonPion0010 = new TLegend(0.55,0.77-(0.037*2.7),0.86,0.77);//0.515,0.812-(2.5*0.037),0.86,0.812);
           legendRAAKaonPion0010->SetFillColor(0);
           legendRAAKaonPion0010->SetLineColor(0);
           legendRAAKaonPion0010->SetTextFont(42);
@@ -6291,10 +6315,12 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaonPion0010->SetNColumns(2);
           legendRAAKaonPion0010->SetHeader("PLB 736 (2014)");
 //           legendRAAKaonPion0010->AddEntry((TObject*)0,"","");
+//           legendRAAKaonPion0010->AddEntry(graphChargedPionRAATotErr0010,"#pi^{#pm}","lp");
+//           legendRAAKaonPion0010->AddEntry(graphChargedKaonRAATotErr0010,"K^{#pm}","lp");
           legendRAAKaonPion0010->AddEntry(graphChargedPionRAASys0010,"#pi^{#pm}","fp");
           legendRAAKaonPion0010->AddEntry(graphChargedKaonRAASys0010,"K^{#pm}","fp");
           legendRAAKaonPion0010->Draw();
-          TLatex *labelEnergyRAAcomboPi0andEta0010andCharged = new TLatex(0.52,0.88,collisionSystemPbPb0010.Data());
+          TLatex *labelEnergyRAAcomboPi0andEta0010andCharged = new TLatex(0.55,0.88,collisionSystem2760GeV.Data());
           SetStyleTLatex( labelEnergyRAAcomboPi0andEta0010andCharged, 0.037,4);
           labelEnergyRAAcomboPi0andEta0010andCharged->Draw();
 
@@ -6340,25 +6366,38 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           TBox* boxErrorNorm2050OnlyV2      = CreateBoxConv(colorEMCal2050, 0.25, 1.-normErr2050 , 0.5, 1.+normErr2050);
           boxErrorNorm2050OnlyV2->Draw();
           DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAA2040, 33,2.5, colorCharged,colorCharged, 0.1, kFALSE);
-          DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAASys2040,33,2.5, colorCharged,colorCharged, 1, kTRUE);
+          DrawGammaSetMarkerTGraphAsym(graphChargedKaonRAASys2040,33,2.5, colorCharged,colorCharged, 2, kTRUE);
 
           DrawGammaSetMarkerTGraphAsym(graphChargedPionRAA2040, 27,2.5, colorCharged,colorCharged, 0.1, kFALSE);
           if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedPionRAA2040);
           DrawGammaSetMarkerTGraphAsym(graphChargedPionRAASys2040,27,2.5, colorCharged,colorCharged, 1, kTRUE);
 
-          graphChargedKaonRAASys2040->SetFillStyle(3002);
-          graphChargedKaonRAASys2040->SetFillColor(colorCharged+1);
-          graphChargedPionRAASys2040->SetFillStyle(3004);
-          graphChargedPionRAASys2040->SetFillColor(colorCharged+2);
+//           graphChargedKaonRAASys2040->SetFillStyle(3005);
+//           graphChargedKaonRAASys2040->SetFillColor(colorCharged+1);
+          graphChargedPionRAASys2040->SetFillStyle(3001);
+          graphChargedPionRAASys2040->SetFillColor(colorCharged);
 
           graphChargedKaonRAASys2040->Draw("E2same");
           graphChargedKaonRAA2040->Draw("p,same");
           graphChargedPionRAASys2040->Draw("E2same");
           graphChargedPionRAA2040->Draw("p,same");
           graphRAAPi0SysBothMeson_2050->Draw("E2same");
+          graphRAAPi0SysBothMeson_2050->SetFillStyle(3005);
+          graphRAAPi0SysBothMeson_2050->SetFillColor(colorEMCal2050);
           graphRAAPi0StatBothMeson_2050->Draw("p,same");
           graphRAAEtaSysBothMeson_2050->Draw("E2same");
           graphRAAEtaStatBothMeson_2050->Draw("p,same");
+          DrawGammaSetMarkerTGraphAsym(graphRAAEtaSysBothMeson_2050,21,2.3, colorEMCal2050,colorEMCal2050, 2, kTRUE);
+//           graphChargedKaonRAATotErr2040->Draw("p,same");
+//             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedKaonRAATotErr2040);
+//             graphChargedPionRAATotErr2040->Draw("p,same");
+//             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedPionRAATotErr2040);
+//             TGraphAsymmErrors* graphPi0RAATotErr2050 = AddErrorsOfGraphsQuadratically(graphRAAPi0StatBothMeson_2050,graphRAAPi0SysBothMeson_2050);
+//             DrawGammaSetMarkerTGraphAsym(graphPi0RAATotErr2050, markerStyle2050+4, markerSizeComb, colorEMCal2050 , colorEMCal2050);
+//             TGraphAsymmErrors* graphEtaRAATotErr2050 = AddErrorsOfGraphsQuadratically(graphRAAEtaStatBothMeson_2050,graphRAAEtaSysBothMeson_2050);
+//             DrawGammaSetMarkerTGraphAsym(graphEtaRAATotErr2050, markerStyle2050, markerSizeComb, colorEMCal2050 , colorEMCal2050);
+//           graphPi0RAATotErr2050->Draw("p,same");
+//           graphEtaRAATotErr2050->Draw("p,same");
 
           TLegend* legendRAAKaonPion20501 = new TLegend(0.55,0.87-(0.037*2.7),0.81,0.87);
           legendRAAKaonPion20501->SetFillColor(0);
@@ -6368,6 +6407,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaonPion20501->SetNColumns(2);
           legendRAAKaonPion20501->SetMargin(0.35);
           legendRAAKaonPion20501->SetHeader("20#font[122]{-}50%");
+//           legendRAAKaonPion20501->AddEntry(graphPi0RAATotErr2050,"#pi^{0}","pl");
+//           legendRAAKaonPion20501->AddEntry(graphEtaRAATotErr2050,"#eta","lp");
           legendRAAKaonPion20501->AddEntry(graphRAAPi0SysBothMeson_2050,"#pi^{0}","pf");
           legendRAAKaonPion20501->AddEntry(graphRAAEtaSysBothMeson_2050,"#eta","fp");
           legendRAAKaonPion20501->Draw();
@@ -6381,6 +6422,8 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaonPion2050->SetHeader("20#font[122]{-}40%, PLB 736 (2014)");
           legendRAAKaonPion2050->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm}","fp");
           legendRAAKaonPion2050->AddEntry(graphChargedKaonRAASys2040,"K^{#pm}","fp");
+//           legendRAAKaonPion2050->AddEntry(graphChargedPionRAATotErr2040,"#pi^{#pm}","lp");
+//           legendRAAKaonPion2050->AddEntry(graphChargedKaonRAATotErr2040,"K^{#pm}","lp");
           legendRAAKaonPion2050->Draw();
           TLatex *labelEnergyRAAcomboPi0andEtaanfCharged = new TLatex(0.55,0.88,collisionSystem2760GeV.Data());
           SetStyleTLatex( labelEnergyRAAcomboPi0andEtaanfCharged, 0.037,4);
@@ -6971,7 +7014,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         canvasRAAcombo->cd();
         histo2DRAAcombo->GetYaxis()->SetRangeUser(0.,1.2);
         histo2DRAAcombo->DrawCopy();
-            DrawGammaLines(0., 21 , 1, 1 ,1,kGray,2);
 
             graphCombRAASysPbPb2760GeV_0010->Draw("E2same");
             graphCombRAAStatPbPb2760GeV_0010->Draw("p,same");
@@ -6988,7 +7030,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendEtaRAAcomp->SetHeader("#eta ALICE 0#font[122]{-}10% Pb#font[122]{-}Pb (2011)");
             legendEtaRAAcomp->AddEntry(graphCombRAASysPbPb2760GeV_0010,"#sqrt{#it{s}_{_{NN}}} = 2.76 TeV", "pf");
             legendEtaRAAcomp->Draw();
-            TLegend* legendEtaRAAcompPHENIX1 =new TLegend(0.5,0.72,0.8,0.82);
+            TLegend* legendEtaRAAcompPHENIX1 =new TLegend(0.5,0.7,0.8,0.8);
             legendEtaRAAcompPHENIX1->SetFillColor(0);
             legendEtaRAAcompPHENIX1->SetLineColor(0);
             legendEtaRAAcompPHENIX1->SetTextFont(42);
@@ -6999,6 +7041,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendEtaRAAcompPHENIX1->Draw();
 
             boxErrorNorm0010_Single->Draw();
+            DrawGammaLines(0., 21 , 1, 1 ,1,kGray,2);
             histo2DRAAcombo->Draw("axis,same");
 
         canvasRAAcombo->SaveAs(Form("%s/%s_RAA_combinedwithPHENIX_0010.%s",outputDir.Data(),meson.Data(),suffix.Data()));
@@ -7508,7 +7551,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legendEtatoPi0combo_withPP2760GeV->SetTextSize(0.037);
                 legendEtatoPi0combo_withPP2760GeV->SetMargin(0.17);
                 legendEtatoPi0combo_withPP2760GeV->SetHeader(collisionSystemPP2760GeV.Data());
-                legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
+                legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"fp");
                 legendEtatoPi0combo_withPP2760GeV->AddEntry(etapi0Ratio2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
                 legendEtatoPi0combo_withPP2760GeV->Draw();
 
@@ -7596,7 +7639,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legendEtatoPi0combo_withPP2760GeVmt->SetTextSize(0.037);
                 legendEtatoPi0combo_withPP2760GeVmt->SetMargin(0.17);
                 legendEtatoPi0combo_withPP2760GeVmt->SetHeader(collisionSystemPP2760GeV.Data());
-                legendEtatoPi0combo_withPP2760GeVmt->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
+                legendEtatoPi0combo_withPP2760GeVmt->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"fp");
     //             legendEtatoPi0combo_withPP2760GeVmt->AddEntry(etapi0Ratio2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
                 legendEtatoPi0combo_withPP2760GeVmt->Draw();
 
@@ -7760,7 +7803,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendEtatoPi0combo_withPP276GeV->SetTextSize(0.037);
             legendEtatoPi0combo_withPP276GeV->SetMargin(0.17);
             legendEtatoPi0combo_withPP276GeV->SetHeader(collisionSystemPP2760GeV.Data());
-            legendEtatoPi0combo_withPP276GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
+            legendEtatoPi0combo_withPP276GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"fp");
             legendEtatoPi0combo_withPP276GeV->Draw();
 
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_combined_DataOnlyWithPP276GeV.%s",outputDir.Data(),suffix.Data()));
@@ -8197,7 +8240,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendEtatoPi0combo_withPP2760GeV->SetTextSize(0.037);
             legendEtatoPi0combo_withPP2760GeV->SetMargin(0.17);
             legendEtatoPi0combo_withPP2760GeV->SetHeader(collisionSystemPP2760GeV.Data());
-            legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"arXiv: 1702.00917","fp");
+            legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"EPJC 77 (2017) 339"/*"arXiv: 1702.00917"*/,"fp");
     //           legendEtatoPi0combo_withPP2760GeV->AddEntry(etapi0Ratio2760GeV,"#eta from #it{m}_{T} scaled #pi^{0}","l");
             legendEtatoPi0combo_withPP2760GeV->Draw();
 
