@@ -468,6 +468,7 @@ void EditTH1NoRunwise(TH1* hist, Style_t markerStyle, Size_t markerSize, Color_t
 void EditTH2(TH2 *hist, Float_t titleOffsetX, Float_t titleOffsetY);
 void EditRunwiseHists(TH1D *hist, Int_t nHist, TString title, Double_t Ymin = -1, Double_t Ymax = -1);
 Bool_t readin(TString fileRuns, std::vector<TString> &vec, Bool_t output = kTRUE, Bool_t badCells = kFALSE);
+Bool_t writeout(TString fileRuns, std::vector<TString> &vec, Bool_t output = kTRUE);
 void DrawAutoGammaCompare3H(TH1* histo1,
 					 TH1* histo2,
 					 TH1* histo3,
@@ -1056,6 +1057,23 @@ Bool_t readin(TString fileRuns, std::vector<TString> &vec, Bool_t output, Bool_t
 		else return kFALSE;
 	}
 	else return kTRUE;
+}
+
+Bool_t writeout(TString fileRuns, std::vector<TString> &vec, Bool_t output)
+{ // write run numbers from vec to fileRuns
+  if(output) cout << Form("\nWriting to %s...", fileRuns.Data()) << endl;
+  fstream file;
+  TString fVar;
+  file.open(fileRuns.Data(), ios::app);
+  if(file.good()){
+    for(Int_t j=0; j<(Int_t) vec.size(); j++){
+      fVar = Form("%s\n", (vec.at(j)).Data());
+      file << fVar.Data();
+    }
+  }
+  file.close();
+  if(output) cout << "...done!\n\n" << endl;
+  return kTRUE;
 }
 
 void DrawFit(TH1D* tempHist, Int_t i, Double_t fittedValue, Float_t* runRanges, TString DataSets, TString plotDataSets, Double_t xD, Double_t yD, Double_t sD, Double_t width){

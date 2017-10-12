@@ -19,8 +19,8 @@ void EventQA_Runwise(
                         TString* plotDataSets,                              // labels of data sets in plots
                         Int_t mode                      = 2,                // standard mode for analysis
                         Int_t cutNr                     = -1,               // if -1: you have to choose number at runtime
-                        Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
-                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram,
+                        Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots, 3: with mean value calculations
+                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram, 
                                                                             // kFALSE: histograms contain the complete specified run number range, where each run represents a bin - even if it is not specified
                         Bool_t doTrigger                = kTRUE,            // enables trigger analysis
                         Bool_t doHistsForEverySet       = kTRUE,            // kTRUE: output done for each set separately as well
@@ -142,6 +142,8 @@ void EventQA_Runwise(
     //*************************************************************************************************************
     // runNumbers
     std::vector<TString> vecRuns;
+    // bad runs
+    std::vector<TString> vecRunsBad;
 
     //*************************************************************************************************************
     //****************************** Determine which cut to process ***********************************************
@@ -243,6 +245,7 @@ void EventQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
+	vecRunsBad.clear();
         fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data());
         if(useDataRunListForMC && i>=nData) {
             fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
@@ -692,6 +695,8 @@ void EventQA_Runwise(
     Double_t* sumEvents                     = new Double_t[nSets];
     Double_t* sumEventsAll                  = new Double_t[nSets];
 
+    TString fileRunsBad                     = "";
+    Int_t nSigmaBad                         = 2;   // consider a deviation of nSigmaBad * error from mean over runs as bad
     Double_t meanVertexZMean                = 0;   // sum mean vertex z coordinate over all runs, then divide by number of runs
     Double_t valueVertexZMean               = 0;
     Double_t errorVertexZMean               = 0;
@@ -707,6 +712,7 @@ void EventQA_Runwise(
 	meanVertexZMean     = 0;     // calculate mean for every dataset separately
         fDataSet            = vecDataSet.at(i);
         fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
+        fileRunsBad         = Form("%s/runNumbers%sBadQA.txt", folderRunlists.Data(), fDataSet.Data());
         if(useDataRunListForMC && i>=nData) {
             fileRuns        = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
             cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
@@ -1166,23 +1172,27 @@ void EventQA_Runwise(
         //--------------------------------------------------------------------------------------------------------
         //--------------------------------------- Mean values ----------------------------------------------------
         //--------------------------------------------------------------------------------------------------------
-	cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
-	cout << "INFO: vecRuns.size() = " << vecRuns.size() << endl;
-	meanVertexZMean = meanVertexZMean / vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
-	cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
-        for(Int_t j=0; j<(Int_t) vecRuns.size(); j++){  // loop over runs j of this dataset
-	  fRunNumber = vecRuns.at(j);
-	  cout << "INFO: fRunNumber = " << fRunNumber << endl;
-	  if(doEquidistantXaxis) bin  = mapBin[fRunNumber]; else bin = fRunNumber.Atoi() - hFBin;     // bin: run number in global run list, starting from 1
-	  cout << "INFO: bin = " << bin << endl;
-	  valueVertexZMean = hVertexZMean[i]->GetBinContent(bin);    
-	  cout << "INFO: valueVertexZMean = " << valueVertexZMean << endl;
-	  errorVertexZMean = hVertexZMean[i]->GetBinError(bin);    
-	  cout << "INFO: errorVertexZMean = " << errorVertexZMean << endl;
-	  if ( TMath::Abs(meanVertexZMean-valueVertexZMean) > TMath::Abs( 2 * errorVertexZMean) ) {
-	    cout << "ATTENTION: run " <<  fRunNumber << " deviates by more than 2 sigma from runwise mean value" << endl; 
-	  }
-	} // end of loop over runs
+	if(doExtQA==3){
+	  //cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
+	  //cout << "INFO: vecRuns.size() = " << vecRuns.size() << endl;
+	  meanVertexZMean = meanVertexZMean / vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
+	  //cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
+	  for(Int_t j=0; j<(Int_t) vecRuns.size(); j++){  // loop over runs j of this dataset
+	    fRunNumber = vecRuns.at(j);
+	    //cout << "INFO: fRunNumber = " << fRunNumber << endl;
+	    if(doEquidistantXaxis) bin  = mapBin[fRunNumber]; else bin = fRunNumber.Atoi() - hFBin;     // bin: run number in global run list, starting from 1
+	    //cout << "INFO: bin = " << bin << endl;
+	    valueVertexZMean = hVertexZMean[i]->GetBinContent(bin);    
+	    //cout << "INFO: valueVertexZMean = " << valueVertexZMean << endl;
+	    errorVertexZMean = hVertexZMean[i]->GetBinError(bin);    
+	    //cout << "INFO: errorVertexZMean = " << errorVertexZMean << endl;
+	    if ( TMath::Abs(meanVertexZMean-valueVertexZMean) > TMath::Abs( nSigmaBad * errorVertexZMean) ) {
+	      //cout << "ATTENTION: run " <<  fRunNumber << " deviates by more than 2 sigma from runwise mean value" << endl; 
+	      vecRunsBad.push_back(fRunNumber);
+	    }
+	  } // end of loop over runs
+	  if(!vecRunsBad.empty()) writeout(fileRunsBad, vecRunsBad, kTRUE);
+	}
 
         //--------------------------------------------------------------------------------------------------------
         //---------------------------------------- Fitters -------------------------------------------------------
