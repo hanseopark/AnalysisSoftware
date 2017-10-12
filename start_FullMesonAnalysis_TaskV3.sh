@@ -1094,7 +1094,7 @@ function CreateGammaFinalResultsV3()
 
 function RunPi0Tagging()
 {
-    root -x -l -b -q TaskV1/Pi0Tagging.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$8\"\,\"$energy\"\,$mode\)
+    root -x -l -b -q TaskV1/Pi0Tagging.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
 }
 
 function Usage()
@@ -2846,8 +2846,8 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                           Pi0dataUnCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
                           Pi0MCUnCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*.root`
 
-                          RunPi0Tagging $GammaPi0dataCorrFILE $Pi0dataUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
-                          RunPi0Tagging $GammaPi0MCCorrFILE $Pi0MCUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
+                          RunPi0Tagging $GammaPi0dataCorrFILE $Pi0dataUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix kFALSE;
+                          RunPi0Tagging $GammaPi0MCCorrFILE $Pi0MCUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix kTRUE;
                         else
                           CreateGammaFinalResultsV3 $GammaPi0dataCorrFILE $Pi0dataCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
                           CreateGammaFinalResultsV3 $GammaPi0MCCorrFILE $Pi0MCCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
