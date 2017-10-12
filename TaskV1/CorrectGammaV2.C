@@ -799,7 +799,6 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxPtFitSec[1]                                              = 50.;
             maxPtFitSec[2]                                              = 50.;
         }
-
     }
 
     if ( hasCocktailInput && isPCM ) {
@@ -816,12 +815,12 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
             ratioGammaConvProbMCPt[k]                               = (TH1D*)histoGammaSecondaryFromXConvProb_MCPt[k]->Clone(Form(      "RatioConvProbFrom%sToPrim_MCPt",
                                                                                                                                         nameSecondaries[k].Data()));
+            if (k == 2)
+                power                                               = new TF1("power", "[0]", 0, 50);
             ratioGammaConvProbMCPt[k]->Divide(histoGammaConvProb_MCPt);
             if (energy.Contains("PbPb_2.76TeV") && k==1) power->FixParameter(2,1);
             if (energy.CompareTo("2.76TeV") == 0 && mode == 2 && k ==2 ){
-                power->FixParameter(2,-0.86);
-                power->FixParameter(1,-290.47);
-                power->FixParameter(0,0);
+                power->FixParameter(0,0.3);
             }
             if (energy.CompareTo("8TeV") ==0 && mode == 2 && k == 0){
                 power->SetParameters(0.77,1.,1.);
@@ -861,7 +860,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
 
                 TLegend* legendSecConvProbRatio                     = GetAndSetLegend2(0.15,0.93-3*1.1*0.035, 0.4,0.93, 0.035, 1, cent, 42, 0.1);
                 legendSecConvProbRatio->AddEntry(ratioGammaConvProbMCPt[k], Form("sec %s P_{conv}/prim",nameLabelSecondaries[k].Data()),"lp");
-                legendSecConvProbRatio->AddEntry(power, Form("[0]/(x-[1])^[2] fit: %2.2f, %2.2f, %2.2f", power->GetParameter(0), power->GetParameter(1), power->GetParameter(2)),"l");
+                legendSecConvProbRatio->AddEntry(power, Form("fit: %s",((TString)power->GetExpFormula("P")).Data()),"l");
                 legendSecConvProbRatio->Draw();
 
             canvasSecConvProbRatio->SaveAs(Form("%s/%s_RatioSecConvProbToPrim%sPt_%s_%s.%s",outputDir.Data(),textPi0New.Data(),nameSecondaries[k].Data(),nameRec.Data(),cutSelection.Data(),suffix.Data()));

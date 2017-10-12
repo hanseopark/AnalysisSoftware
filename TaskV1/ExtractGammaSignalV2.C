@@ -2327,15 +2327,14 @@ void CalculatePileUpBackground(Bool_t doMC){
         Color_t colorOOBMethods[5]      = {kBlack,kRed+1,kGreen+2, kOrange, kViolet+2 };
         Style_t markerOOBMethods[5]     = {20,24,25,20,24};
         TString labelLegend[5]          = {"std., sep. cat", "var. 1, sep. cat", "var. 2, sep. cat", "var. 3, sep. cat", "var. 4, sep. cat" };
+        Double_t maxCorrFacDCA      = 1.1;
+        if (fEnergyFlag.CompareTo("2.76TeV") == 0)
+            maxCorrFacDCA           = 1.3;
 
         TLegend* legendDCAZData                                             = GetAndSetLegend(0.7,0.65,6,1);
-        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,1.1);
+        SetHistogramm(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"#it{p}_{T} (GeV/#it{c})","#gamma / #gamma Pile-Up correted (1/#it{C}_{pileup})",0.95,maxCorrFacDCA);
         DrawGammaSetMarker(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0], 28, 1.0, kGray+2, kGray+2);
         fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0]->DrawCopy("");
-        if (fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[0]) {
-            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[0]->SetLineColor(kGray+2);
-            fESDGammaPtRatioWithWithoutPileUpFitDCAzDistBinningAllCat[0]->Draw("same");
-        }
         legendDCAZData->AddEntry(fESDGammaPtRatioWithWithoutPileUpDCAzDistBinningAllCat[0],"std., comb. cat.","lp");
 
         for (Int_t oobEstMethod = 0; oobEstMethod < fNOOBEstMethods; oobEstMethod++) {
@@ -4128,14 +4127,21 @@ void PlotAdditionalDCAz(Int_t isMC, TString fCutID){
     TH1D *RatioWithWithoutPileUpMC;
 
     if(InputMC && InputData){
+
+
         RatioWithWithoutPileUpData                          = (TH1D*)InputData->Get(Form("ESD_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning_%s", backgroundExtractionMethod[0].Data()));
         RatioWithWithoutPileUpMC                            = (TH1D*)InputMC->Get(Form("MCrec_ConvGamma_Pt_Ratio_WithWithoutPileUp_DCAzDistBinning"));
+
+        Double_t maxCorrFacDCAComp      = 1.1;
+        if (fEnergyFlag.CompareTo("2.76TeV") == 0)
+            maxCorrFacDCAComp           = 1.3;
 
         DrawGammaSetMarker(RatioWithWithoutPileUpData, 20, 1.0, kBlack, kBlack);
         DrawGammaSetMarker(RatioWithWithoutPileUpMC, 24, 1.0, kRed, kRed);
 
         TCanvas *canvasComparisonWithWithoutPileUp      = GetAndSetCanvas("canvasComparisonWithWithoutPileUp");
         TLegend* legendComparisonWithWithoutPileUp      = GetAndSetLegend(0.3,0.75,2.4,1);
+        RatioWithWithoutPileUpData->GetYaxis()->SetRangeUser(0.95,maxCorrFacDCAComp);
         legendComparisonWithWithoutPileUp->AddEntry(RatioWithWithoutPileUpData,"#gamma / #gamma Pile-Up Cor. data","lp");
         legendComparisonWithWithoutPileUp->AddEntry(RatioWithWithoutPileUpMC,"#gamma / #gamma Pile-Up Cor. MC","lp");
 

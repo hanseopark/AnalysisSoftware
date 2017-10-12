@@ -510,7 +510,7 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
 
     TH2F * histo2DRelStatErr;
     histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
-    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+//     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetYaxis()->SetRangeUser(0,24.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
@@ -1602,13 +1602,13 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     TH1F * histo1DEffectiveSecCorr            = new TH1F("histo1DEffectiveSecCorr", "histo1DEffectiveSecCorr",1000, doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(  histo1DEffectiveSecCorr, "#it{p}_{T} (GeV/#it{c})","#it{C}_{sec}",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.08);//(#times #epsilon_{pur})
-    histo1DEffectiveSecCorr->GetYaxis()->SetLabelOffset(0.001);
+    histo1DEffectiveSecCorr->GetYaxis()->SetLabelOffset(0.003);
     histo1DEffectiveSecCorr->GetXaxis()->SetLabelOffset(-0.01);
     histo1DEffectiveSecCorr->GetXaxis()->SetMoreLogLabels(kTRUE);
 
 
     Double_t minYSecCorr[4]             = {0.0, 0.0, 0.0, 0.0};
-    Double_t maxYSecCorr[4]             = {0.05, 0.003, 1.0e-3, 0.025};
+    Double_t maxYSecCorr[4]             = {0.05, 0.004, 0.8e-3, 0.041};
     TString nameLabelSec[4]             = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "Rest"};
     TString nameOutputSec[4]            = {"K0s", "K0l", "Lambda", "Rest"};
     for (Int_t k = 0; k < 4; k++){

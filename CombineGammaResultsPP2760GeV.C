@@ -1535,13 +1535,13 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TH1F * histo1DEffectiveSecCorr            = new TH1F("histo1DEffectiveSecCorr", "histo1DEffectiveSecCorr",1000, doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(  histo1DEffectiveSecCorr, "#it{p}_{T} (GeV/#it{c})","#it{C}_{sec}",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.08);//(#times #epsilon_{pur})
-    histo1DEffectiveSecCorr->GetYaxis()->SetLabelOffset(0.001);
+    histo1DEffectiveSecCorr->GetYaxis()->SetLabelOffset(0.003);
     histo1DEffectiveSecCorr->GetXaxis()->SetLabelOffset(-0.01);
     histo1DEffectiveSecCorr->GetXaxis()->SetMoreLogLabels(kTRUE);
 
 
     Double_t minYSecCorr[4]             = {0.0, 0.0, 0.0, 0.0};
-    Double_t maxYSecCorr[4]             = {0.05, 0.004, 1.0e-3, 0.06};
+    Double_t maxYSecCorr[4]             = {0.05, 0.004, 0.8e-3, 0.041};
     TString nameLabelSec[4]             = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "Rest"};
     TString nameOutputSec[4]            = {"K0s", "K0l", "Lambda", "Rest"};
     for (Int_t k = 0; k < 4; k++){
