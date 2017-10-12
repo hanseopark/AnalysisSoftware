@@ -130,7 +130,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
     // Opening pion file and loading spectra
     filePi0                                     = new TFile(nameFilePi0);
     for (Int_t k = 0; k < 6; k++){
-        histoCorrectedPi0Yield[k]               = (TH1D*)filePi0->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[k].Data()));
+        if(mode == 4 || mode == 5) histoCorrectedPi0Yield[k]               = (TH1D*)filePi0->Get(Form("CorrectedYieldNormEff%s",nameIntRanges[k].Data()));
+        else                       histoCorrectedPi0Yield[k]               = (TH1D*)filePi0->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[k].Data()));
     }
     graphSysPi0PileUpOptions                    = (TGraphAsymmErrors*)filePi0->Get(Form("Pi0_SystErrorRel_BGEstimate_%s",centralityString2.Data()));
     graphSysPi0PileUpIterations                 = (TGraphAsymmErrors*)filePi0->Get(Form("Pi0_SystErrorRel_BGEstimateIterations_%s",centralityString2.Data()));
@@ -143,7 +144,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
     TString nameFileEta                         = nameFilePi0.ReplaceAll("Pi0","Eta");
     fileEta                                     = new TFile(nameFileEta);
     if (!fileEta->IsZombie()){
-        histoCorrectedEtaYield                  = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
+        if(mode == 4 || mode == 5) histoCorrectedEtaYield                  = (TH1D*)fileEta->Get("CorrectedYieldNormEff");
+        else                       histoCorrectedEtaYield                  = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
         if (histoCorrectedEtaYield)
             haveEta                             = kTRUE;
     }
