@@ -927,6 +927,21 @@
                                                         2.7, 3.1, 3.5, 4.0, 4.5, 5.5, 6.5, 8.0, 11.0, 14.0};
     Int_t fBinsDirGammaPbPb5TeVPtRebin[19]          = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4};
+    //****************************************************************************************************
+    //****************** Pt binning for Inter/Extrapolations *********************************************
+    //****************************************************************************************************
+    Double_t fBinsInterAndExtrapolation[50]          = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+                                                         1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0,
+                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
+                                                         4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0,10.0,11.0,
+                                                        12.0,13.0,14.0,15.0,16.0,18.0,20.0,25.0,30.0};
+    Double_t fBinsInterAndExtrapolationFine[62]      = { 0.0, 0.1,0.12,0.14,0.16,0.18, 0.2,0.25, 0.3,0.35,
+                                                         0.4,0.45, 0.5,0.55, 0.6,0.65, 0.7,0.75, 0.8,0.85, 
+                                                         0.9,0.95, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7,
+                                                         1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
+                                                         3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0,
+                                                         9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,18.0,20.0,
+                                                        25.0,30.0};
 
     //*************************************************************************************************
     //******************** Initialize Single bin for invariant mass plot ******************************
@@ -3989,6 +4004,16 @@
                     }
                 }
             }
+        } else if (meson.CompareTo("CKaon") == 0 || meson.CompareTo("CPion") == 0 ){
+            maxNBins = 61;
+            for(Int_t i = 0; i < maxNBins+1; i++){
+                binning[i]  = fBinsInterAndExtrapolationFine[i];
+            }
+        } else if (meson.CompareTo("Lambda") == 0 || meson.CompareTo("Proton") == 0 || meson.CompareTo("Rho") == 0 || meson.CompareTo("K0Star") == 0 || meson.CompareTo("Phi") == 0){
+            maxNBins = 48;
+            for(Int_t i = 0; i < maxNBins+1; i++){
+                binning[i]  = fBinsInterAndExtrapolation[i];
+            }
         }
         return maxNBins;
     }
@@ -4128,7 +4153,19 @@
                     startPtBin     = 7;
                 }
             }
-        }
+        } else if ( meson.CompareTo("Rho") == 0 || meson.CompareTo("K0Star") == 0){
+            startPtBin     = 1;
+        } else if (meson.CompareTo("CPion") == 0){
+            startPtBin     = 2;
+        } else if (meson.CompareTo("Proton") == 0){
+            startPtBin     = 3;
+        } else if (meson.CompareTo("Phi") == 0 ){
+            startPtBin     = 4;
+        } else if (meson.CompareTo("Lambda") == 0){
+            startPtBin     = 5;
+        } else if (meson.CompareTo("CKaon") == 0){
+            startPtBin     = 7;
+        } 
         return startPtBin;
     }
 #endif

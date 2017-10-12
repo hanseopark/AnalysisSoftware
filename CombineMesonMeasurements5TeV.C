@@ -60,19 +60,6 @@ struct SysErrorConversion {
     //    TString name;
 };
 
-void drawLatexAdd(TString latextext, Double_t textcolumn, Double_t textrow, Double_t textSizePixel,Bool_t setFont = kFALSE, Bool_t setFont2 = kFALSE, Bool_t alignRight = kFALSE, Color_t textcolor = kBlack){
-    TLatex *latexDummy                  = new TLatex(textcolumn ,textrow,latextext);
-    SetStyleTLatex( latexDummy, textSizePixel,4);
-    if(setFont)
-        latexDummy->SetTextFont(62);
-    if(setFont2)
-        latexDummy->SetTextFont(43);
-    if(alignRight)
-        latexDummy->SetTextAlign(31);
-    latexDummy->SetTextColor(textcolor);
-    latexDummy->Draw();
-}
-
 
 void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
                                         TString fileNamePHOS    = "",
@@ -162,53 +149,53 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
       }
     }
     cout << __LINE__<<endl;
-    TH1D* histoNumberOfEvents[10];
-    TH1D* histoPi0Mass[10];
-    TH1D* histoPi0InvCrossSectionSys[10];
-    TH1D* histoPi0FWHMMeV[10];
-    TH1D* histoPi0TrueMass[10];
-    TH1D* histoPi0TrueFWHMMeV[10];
-    TH1D* histoEtaMass[10];
-    TH1D* histoEtaFWHMMeV[10];
-    TH1D* histoEtaTrueMass[10];
-    TH1D* histoEtaTrueFWHMMeV[10];
-    TH1D* histoPi0Acc[10];
-    TH1D* histoPi0TrueEffPt[10];
-    TH1D* histoPi0AccTimesEff[10];
-    TH1D* histoEtaAcc[10];
-    TH1D* histoEtaTrueEffPt[10];
-    TH1D* histoEtaAccTimesEff[10];
-    TH1D* histoPi0InvCrossSection[10];
-    TH1D* histoEtaInvCrossSection[10];
-    TH1D* histoPi0RawYields[10];
-    TH1D* histoEtaRawYields[10];
-    TGraphAsymmErrors* graphPi0RawYields[10];
-    TGraphAsymmErrors* graphEtaRawYields[10];
-    TGraphAsymmErrors* graphPi0InvCrossSectionSys[10];
-    TGraphAsymmErrors* graphPi0InvCrossSectionStat[10];
-    TGraphAsymmErrors* graphEtaInvCrossSectionStat[10];
-    TGraphAsymmErrors* graphEtaInvCrossSectionSys[10];
+    TH1D* histoNumberOfEvents[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0Mass[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvCrossSectionSys[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0FWHMMeV[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0TrueMass[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0TrueFWHMMeV[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaMass[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaFWHMMeV[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaTrueMass[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaTrueFWHMMeV[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0Acc[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0TrueEffPt[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0AccTimesEff[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaAcc[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaTrueEffPt[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaAccTimesEff[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvCrossSection[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvCrossSection[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0RawYields[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaRawYields[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TGraphAsymmErrors* graphPi0RawYields[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TGraphAsymmErrors* graphEtaRawYields[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TGraphAsymmErrors* graphPi0InvCrossSectionSys[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TGraphAsymmErrors* graphPi0InvCrossSectionStat[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TGraphAsymmErrors* graphEtaInvCrossSectionStat[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TGraphAsymmErrors* graphEtaInvCrossSectionSys[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     TGraphAsymmErrors* graphEtaToPi0PCMStat;
     TGraphAsymmErrors* graphEtaToPi0PCMSys;
-    TH1D* histoPi0InvMassSigPlusBG[10];
-    TH1D* histoPi0InvMassSig[10];
-    TH1D* histoPi0InvMassSigRemBGSub[10];
-    TH1D* histoPi0InvMassBG[10];
-    TH1D* histoPi0InvMassRemBG[10];
-    TH1D* histoPi0InvMassBGTot[10];
-    TH1D* histoEtaInvMassSigPlusBG[10];
-    TH1D* histoEtaInvMassSig[10];
-    TH1D* histoEtaInvMassSigRemBGSub[10];
-    TH1D* histoEtaInvMassBG[10];
-    TH1D* histoEtaInvMassRemBG[10];
-    TH1D* histoEtaInvMassBGTot[10];
-    TF1* fitPi0InvMassSig[10];
-    TF1* fitPi0InvMassBG[10];
-    TF1* fitEtaInvMassSig[10];
-    TF1* fitEtaInvMassBG[10];
+    TH1D* histoPi0InvMassSigPlusBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvMassSig[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvMassSigRemBGSub[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvMassBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvMassRemBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoPi0InvMassBGTot[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvMassSigPlusBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvMassSig[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvMassSigRemBGSub[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvMassBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvMassRemBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TH1D* histoEtaInvMassBGTot[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TF1* fitPi0InvMassSig[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TF1* fitPi0InvMassBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TF1* fitEtaInvMassSig[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+    TF1* fitEtaInvMassBG[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     Bool_t haveAllPi0InvMass[10]                = {kFALSE, kFALSE, kFALSE,kFALSE,kFALSE};
     Bool_t haveAllEtaInvMass[10]                = {kFALSE, kFALSE, kFALSE,kFALSE,kFALSE};
-    TH1D* histoEtaToPi0Stat[10];
+    TH1D* histoEtaToPi0Stat[10]= {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     TGraphAsymmErrors* graphEtaToPi0Stat[10]    = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
     TGraphAsymmErrors* graphEtaToPi0Sys[10]     = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
@@ -407,6 +394,71 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
         if (statErrorCollectionEta[i]) statErrorRelCollectionEta[i] = CalculateRelErrUpTH1D( statErrorCollectionEta[i], Form("relativeStatErrorEta_%s", nameMeasGlobal[i].Data()));
         if (sysErrorCollectionEta[i]) sysErrorRelCollectionEta[i]   = CalculateRelErrUpAsymmGraph( sysErrorCollectionEta[i], Form("relativeSysErrorEta_%s", nameMeasGlobal[i].Data()));  
     }
+
+
+    TString nameMeasGlobal22[11]                = {"PCM", "PHOS", "EMCAL", "PCMPHOS", "PCMEMCAL", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged", "PCMOtherDataset"};
+    
+    TString nameOutputCommonFile                = Form("%s/CombinedResultsPaperPP5TeV_%s.root", outputDir.Data(), dateForOutput.Data());    
+    TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
+
+    // PI0 MESON
+    fCombResults.mkdir("Pi05TeV");
+    TDirectoryFile* directoryPi02               = (TDirectoryFile*)fCombResults.Get("Pi05TeV");
+    fCombResults.cd("Pi05TeV");
+
+    // graphCombPi0InvCrossSectionStat   ->Write("graphInvCrossSectionPi0Comb5TeVAStatErr");
+    // graphCombPi0InvCrossSectionSysS    ->Write("graphInvCrossSectionPi0Comb5TeVASysErr");
+    cout << __LINE__ << endl;
+    
+    for (Int_t i = 0; i < numbersofmeas; i++){
+      if(graphPi0InvCrossSectionStat[i]&&graphPi0InvCrossSectionSys[i]){
+        cout << i << endl;
+        while(graphPi0InvCrossSectionStat[i]->GetY()[0] == 0) graphPi0InvCrossSectionStat[i]->RemovePoint(0);
+        while(graphPi0InvCrossSectionSys[i]->GetY()[0] == 0) graphPi0InvCrossSectionStat[i]->RemovePoint(0);
+        graphPi0InvCrossSectionStat[i]          ->Write(Form("graphInvCrossSectionPi0%s5TeVStatErr",nameMeasGlobal22[i].Data()));
+        graphPi0InvCrossSectionSys[i]           ->Write(Form("graphInvCrossSectionPi0%s5TeVSysErr",nameMeasGlobal22[i].Data()));
+        cout << i << endl;
+      }
+    }
+cout << __LINE__ << endl;
+    // ETA MESON
+    fCombResults.mkdir("Eta5TeV");
+    TDirectoryFile* directoryEta2               = (TDirectoryFile*)fCombResults.Get("Eta5TeV");
+    fCombResults.cd("Eta5TeV");
+
+    // graphCombEtaInvCrossSectionStat   ->Write("graphInvCrossSectionEtaComb5TeVAStatErr");
+    // graphCombEtaInvCrossSectionSys    ->Write("graphInvCrossSectionEtaComb5TeVASysErr");
+    cout << __LINE__ << endl;
+    
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(graphEtaInvCrossSectionStat[i]&&graphEtaInvCrossSectionSys[i]){
+          cout << i << endl;
+            while(graphEtaInvCrossSectionStat[i]->GetY()[0] < 1e-50) graphEtaInvCrossSectionStat[i]->RemovePoint(0);
+            while(graphEtaInvCrossSectionSys[i]->GetY()[0] < 1e-50) graphEtaInvCrossSectionSys[i]->RemovePoint(0);
+            graphEtaInvCrossSectionStat[i]      ->Write(Form("graphInvCrossSectionEta%s5TeVStatErr",nameMeasGlobal22[i].Data()));
+            graphEtaInvCrossSectionSys[i]       ->Write(Form("graphInvCrossSectionEta%s5TeVSysErr",nameMeasGlobal22[i].Data()));
+            cout << i << endl;
+        }
+      }
+      cout << __LINE__ << endl;
+  
+
+    // graphCombEtaToPi0Stat             ->Write("graphRatioEtaToPi0Comb5TeVStatErr");
+    // graphCombEtaToPi0Sys              ->Write("graphRatioEtaToPi0Comb5TeVSysErr");
+    // for (Int_t i = 0; i < numbersofmeas; i++){
+    //   if(graphEtaToPi0Stat[i]&&graphEtaToPi0Sys[i]){
+    //     cout << i << endl;
+            // while(graphEtaToPi0Stat[i]->GetY()[0] < 1e-50)graphEtaToPi0Stat[i]->RemovePoint(0);
+            // while(graphEtaToPi0Sys[i]->GetY()[0] < 1e-50) graphEtaToPi0Sys[i]->RemovePoint(0);
+    //         graphEtaToPi0Stat[i]                ->Write(Form("graphRatioEtaToPi0%s5TeVStatErr",nameMeasGlobal22[i].Data()));
+    //         graphEtaToPi0Sys[i]                 ->Write(Form("graphRatioEtaToPi0%s5TeVSysErr",nameMeasGlobal22[i].Data()));
+    //         cout << i << endl;
+    //   }
+    // }
+    
+    fCombResults.Close();
+    cout << __LINE__ << endl;
+    
 
 
     Double_t minX                               = 0.61;
@@ -1506,6 +1558,6 @@ interpolationRatioPCMEMCEta->Draw("p,same,e1");
         }
     }
     
-    
+
 
 }

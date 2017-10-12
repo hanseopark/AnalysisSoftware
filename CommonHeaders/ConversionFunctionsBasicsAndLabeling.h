@@ -681,6 +681,20 @@
             return "#eta'";
         } else if(mesonName.CompareTo("Omega") == 0)  {
             return "#omega";
+        } else if(mesonName.CompareTo("CKaon") == 0)  {
+            return "K^{#pm}";
+        } else if(mesonName.CompareTo("CPion") == 0)  {
+            return "#pi^{#pm}";
+        } else if(mesonName.CompareTo("Lambda") == 0)  {
+            return "#Lambda";
+        } else if(mesonName.CompareTo("Rho0") == 0)  {
+            return "#rho^{0}";
+        } else if(mesonName.CompareTo("Phi") == 0)  {
+            return "#phi";
+        } else if(mesonName.CompareTo("K0Star") == 0)  {
+            return "K^{0*}";
+        } else if(mesonName.CompareTo("Proton") == 0)  { // not a meson, but its easier having it in this function
+            return "p#overline{p}";
         } else {
             cout << "No correct meson has been selected" << endl;
             return "";

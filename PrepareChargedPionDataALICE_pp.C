@@ -50,7 +50,247 @@ extern TRandom* gRandom;
 extern TBenchmark* gBenchmark;
 extern TSystem* gSystem;
 extern TMinuit* gMinuit;
+//________________________________________________________________________________________________________________________
+TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt){
+    if (!input) {
+        cout << "Error: Histogram is NULL" << endl;
+        return NULL;
+    }
 
+    Int_t nBins                 = input->GetNbinsX();
+    Double_t newValue           = 0;
+    Double_t newErrorValue      = 0;
+    Double_t correctionValue    = 1;
+
+    //correct by 2pi if specified
+    if (DivideBy2pi) input->Scale(1/(2*TMath::Pi()));
+    if (MultiplyBy2pi) input->Scale(2*TMath::Pi());
+
+    for(Int_t i=0;i<nBins;i++){
+
+        //correct by 1/Pt if specified
+        if(DivideByPt)    correctionValue  = 1/(input->GetBinCenter(i+1));
+        if(MultiplyByPt)  correctionValue  = input->GetBinCenter(i+1);
+
+        //set the value and error of the bin
+        input->SetBinContent(i+1,input->GetBinContent(i+1)*correctionValue);
+        input->SetBinError(i+1,input->GetBinError(i+1)*correctionValue);
+    }
+
+    return input;
+}
+//================================================================================================================
+//Function that converts any yield graph with asymmetric errors
+//================================================================================================================
+TGraphAsymmErrors* ConvertYieldGraph(TGraphAsymmErrors* inputGraph, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt) {
+
+    if (!inputGraph) {
+        cout << "Error: Graph is NULL" << endl;
+        return NULL;
+    }
+
+    if (DivideBy2pi) inputGraph                 = ScaleGraph(inputGraph, 1/(2*TMath::Pi()));
+    if (MultiplyBy2pi) inputGraph               = ScaleGraph(inputGraph, 2*TMath::Pi());
+
+    Double_t* xValue                            = inputGraph->GetX();
+    Double_t* yValue                            = inputGraph->GetY();
+    Double_t* xErrorLow                         = inputGraph->GetEXlow();
+    Double_t* xErrorHigh                        = inputGraph->GetEXhigh();
+    Double_t* yErrorLow                         = inputGraph->GetEYlow();
+    Double_t* yErrorHigh                        = inputGraph->GetEYhigh();
+    Int_t nPoints                               = inputGraph->GetN();
+
+    if (DivideByPt || MultiplyByPt) {
+        Double_t correctionValue                = 1;
+        for (Int_t i=0; i<nPoints; i++) {
+
+            if (DivideByPt) correctionValue     = 1/xValue[i];
+            if (MultiplyByPt) correctionValue   = xValue[i];
+
+            yValue[i]                           = yValue[i]*correctionValue;
+            yErrorLow[i]                        = yErrorLow[i]*correctionValue;
+            yErrorHigh[i]                       = yErrorHigh[i]*correctionValue;
+        }
+    }
+
+    inputGraph                                  = new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
+
+    return inputGraph;
+}
+
+TH1D *GraphToHist_withErrors(TGraphAsymmErrors *graph, TString name = ""){
+    Double_t* xValue        = graph->GetX();
+    Double_t* yValue        = graph->GetY();
+    Double_t* Exhigh        = graph->GetEXhigh();
+    Double_t* Exlow         = graph->GetEXlow();
+    Double_t* Eyhigh        = graph->GetEYhigh();
+    Double_t* Eylow         = graph->GetEYlow();
+    Int_t nPoints           = graph->GetN();
+
+    Double_t *newBinningX   = new Double_t[nPoints+1];
+    for(Int_t i = 0;i<nPoints;i++)
+        newBinningX[i]      = xValue[i]-Exlow[i];
+        newBinningX[nPoints] = xValue[nPoints-1]+Exhigh[nPoints-1];
+    TH1D *hist              = new TH1D(name,"",nPoints,newBinningX);
+
+    for(Int_t i = 1;i<=nPoints;i++){
+      hist->SetBinContent(i,yValue[i-1]);
+      if (Eyhigh[i-1]<Eylow[i-1])Eyhigh[i-1]=Eylow[i-1];
+      hist->SetBinError(i,Eyhigh[i-1]);
+    }
+
+    return hist;
+}
+
+TGraphAsymmErrors* ParseHEPData(TString hepDataFile,
+                                Int_t   totalNumberOfColumns,
+                                Int_t   columnX,
+                                Int_t   columnXErrLow,
+                                Int_t   columnXErrHigh,
+                                Int_t   columnY,
+                                Int_t   columnYErrLow,
+                                Int_t   columnYErrHigh,
+                                Bool_t  isXErrVal,
+                                Bool_t  isYErrVal,
+                                Bool_t  debugMode = kFALSE) {
+
+    // create streamer
+    ifstream file;
+    if (debugMode) cout << "HEP data file: " << hepDataFile.Data() << endl;
+    file.open(hepDataFile,ios_base::in);
+    if (!file) {
+        cout << "ERROR: HEP data file " << hepDataFile.Data() << " not found!" << endl;
+        return NULL;
+    }
+
+    // check for correct column numbers
+    if (columnX<0) {
+        cout << "ERROR: columnX set to " << columnX << endl;
+        return NULL;
+    }
+    if (columnY<0) {
+        cout << "ERROR: columnY set to " << columnY << endl;
+        return NULL;
+    }
+    if (columnYErrLow<0 || columnYErrHigh<0) {
+        cout << "ERROR: columnYErrLow set to " << columnYErrLow << " and columnYErrHigh set to " << columnYErrHigh << endl;
+        return NULL;
+    }
+
+    // initialize vectors for temporary storage of values
+    std::vector<Double_t> xVal;
+    std::vector<Double_t> xErrLow;
+    std::vector<Double_t> xErrHigh;
+    std::vector<Double_t> yVal;
+    std::vector<Double_t> yErrLow;
+    std::vector<Double_t> yErrHigh;
+
+    // read from file
+    TString                 tempString;
+    std::vector<TString>    tempStringColumn(totalNumberOfColumns);
+    std::string line;
+    for( std::string line; getline(file, line); ) {
+        file >> tempString;
+        if (!tempString.BeginsWith("%") && !tempString.BeginsWith("%") && tempString.CompareTo("")) {
+            tempStringColumn[0]     = tempString;
+            if (debugMode) cout << tempStringColumn[0].Data() << "\t";
+            for (Int_t i=1; i<totalNumberOfColumns; i++) {
+                file >> tempStringColumn[i];
+                if (debugMode) cout << tempStringColumn[i].Data() << "\t";
+            }
+            if (debugMode) cout << endl;
+
+            // x value and error
+            xVal.push_back(tempStringColumn[columnX].Atof());
+            if (columnXErrLow>=0)   xErrLow.push_back(tempStringColumn[columnXErrLow].Atof());
+            else                    xErrLow.push_back(-1);
+            if (columnXErrHigh>=0)  xErrHigh.push_back(tempStringColumn[columnXErrHigh].Atof());
+            else                    xErrHigh.push_back(-1);
+
+            // y value and error
+            yVal.push_back(tempStringColumn[columnY].Atof());
+            yErrLow.push_back(tempStringColumn[columnYErrLow].Atof());
+            yErrHigh.push_back(tempStringColumn[columnYErrHigh].Atof());
+        } else
+            continue;
+    }
+
+    // check for equal number of rows for each column
+    Bool_t  isEqualNumberOfRows     = kTRUE;
+    Int_t   nRowsTemp[6];
+    nRowsTemp[0]                    = xVal.size();
+    nRowsTemp[1]                    = xErrLow.size();
+    nRowsTemp[2]                    = xErrHigh.size();
+    nRowsTemp[3]                    = yVal.size();
+    nRowsTemp[4]                    = yErrLow.size();
+    nRowsTemp[5]                    = yErrHigh.size();
+    for (Int_t i=0; i<5; i++) {
+        if (nRowsTemp[i]!=nRowsTemp[i+1]) {
+            isEqualNumberOfRows     = kFALSE;
+            break;
+        }
+    }
+    if (!isEqualNumberOfRows) {
+        cout << "number of rows in " << hepDataFile.Data() << " are not equal for different columns!" << endl;
+        return NULL;
+    }
+    Int_t nRows                     = xVal.size();
+
+    // calculate x errors if necessary (i.e. column numbers set to -1)
+    std::vector<Double_t> tempXErr(xVal.size());
+    if (columnXErrLow<0 || columnXErrHigh<0) {
+        for (Int_t i=0; i<nRows; i++) {
+
+            // calculate x error
+            if (i==0)               tempXErr[i] = (xVal[1]-xVal[0])/2;
+            else if (i==nRows-1)    tempXErr[i] = xVal[i]-(xVal[i-1] + tempXErr[i-1]);
+            else                    tempXErr[i] = (xVal[i]-xVal[i-1])/2;
+
+            // set error
+            xErrLow[i]              = tempXErr[i];
+            xErrHigh[i]             = tempXErr[i];
+        }
+    }
+
+    // calculate errors if bin boundaries were given
+    if (!isXErrVal && columnXErrLow>=0 && columnXErrHigh>=0) {
+        for (Int_t i=0; i<nRows; i++) {
+            xErrLow[i]              = TMath::Abs(xVal[i]-xErrLow[i]);
+            xErrHigh[i]             = TMath::Abs(xErrHigh[i]-xVal[i]);
+        }
+    }
+    if (!isYErrVal) {
+        for (Int_t i=0; i<nRows; i++) {
+            yErrLow[i]              = TMath::Abs(yVal[i]-yErrLow[i]);
+            yErrHigh[i]             = TMath::Abs(yErrHigh[i]-yVal[i]);
+        }
+    }
+
+    // set errors to absolute values, direction is taken care of by TGraphAsymmErrors
+    for (Int_t i=0; i<nRows; i++) {
+        xErrLow[i]                  = TMath::Abs(xErrLow[i]);
+        xErrHigh[i]                 = TMath::Abs(xErrHigh[i]);
+
+        yErrLow[i]                  = TMath::Abs(yErrLow[i]);
+        yErrHigh[i]                 = TMath::Abs(yErrHigh[i]);
+    }
+
+    // cout values (debug mode)
+    if (debugMode) {
+        cout << "nRows = " << nRows << endl;
+        for (Int_t i=0; i<nRows; i++) {
+            cout << "x = " << xVal[i] << "\t+ " << xErrHigh[i] << "\t- " << xErrLow[i] << "\t y = " << yVal[i] << "\t+ " << yErrHigh[i] << "\t- " << yErrLow[i] << endl;
+        }
+    }
+
+    // create TGraphAsymmErrors
+    TGraphAsymmErrors* graph        = new TGraphAsymmErrors(nRows);
+    for (Int_t i=0; i<nRows; i++) {
+        graph->SetPoint(        i, xVal[i], yVal[i]);
+        graph->SetPointError(   i, xErrLow[i], xErrHigh[i], yErrLow[i], yErrHigh[i]);
+    }
+    return graph;
+}
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------- Main function -----------------------------------------------------------------------------
 // ----------------------- This macro is used to compile the pp external input file for data, i.e. charged hadron, pions, kaons ... --------------------------------
@@ -1210,6 +1450,79 @@ void PrepareChargedPionDataALICE_pp(){
         histoChHaddNdyINELTotPP8TeV->SetBinError(i,(chHad_dNdeta_pp8TeVINEL_yErrUp[i-1]+chHad_dNdeta_pp8TeVINEL_yErrDown[i-1])/2.);
     }
 
+    // *********************************************************************************************************************    
+    // ********************************** ALICE K0Star     results 7 TeV ***************************************************
+    // *********************************************************************************************************************
+    // 10.17182/hepdata.59933.v1/t1
+    TString K0Star7TeVHEPDataFile                                  = "ExternalInput/IdentifiedCharged/K0Star7TeV_arxiv1208.5717.csv";
+    TGraphAsymmErrors* graphK0StarStat7TeVALICE         = ParseHEPData(K0Star7TeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphK0StarSys7TeVALICE          = ParseHEPData(K0Star7TeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE);
+    
+    graphK0StarStat7TeVALICE = ConvertYieldGraph(graphK0StarStat7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
+    graphK0StarSys7TeVALICE = ConvertYieldGraph(graphK0StarSys7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
+    
+    TH1D* histoK0StarStat7TeVALICE  = GraphToHist_withErrors(graphK0StarStat7TeVALICE,"histoK0StarStat7TeVALICE");
+    TH1D* histoK0StarSys7TeVALICE   = GraphToHist_withErrors(graphK0StarSys7TeVALICE,"histoK0StarSys7TeVALICE");
+
+    // *********************************************************************************************************************    
+    // ********************************** ALICE K0Star     results 2.76 TeV ***************************************************
+    // *********************************************************************************************************************
+    // 10.17182/hepdata.59933.v1/t1
+    TString K0Star2760GeVHEPDataFile                                  = "ExternalInput/IdentifiedCharged/pp2760GeV_K0Star_arxiv1702.00555.csv";
+    TGraphAsymmErrors* graphK0StarStat2760GeVALICE         = ParseHEPData(K0Star2760GeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphK0StarSys2760GeVALICE          = ParseHEPData(K0Star2760GeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE);
+
+    TH1D* histoK0StarStat2760GeVALICE  = GraphToHist_withErrors(graphK0StarStat2760GeVALICE,"histoK0StarStat2760GeVALICE");
+    TH1D* histoK0StarSys2760GeVALICE   = GraphToHist_withErrors(graphK0StarSys2760GeVALICE,"histoK0StarSys2760GeVALICE");
+    
+    // *********************************************************************************************************************    
+    // ********************************** ALICE Phi     results 7 TeV ***************************************************
+    // *********************************************************************************************************************
+    // 10.17182/hepdata.59933.v1/t1
+    TString Phi7TeVHEPDataFile                                  = "ExternalInput/IdentifiedCharged/pp7TeV_phi_arxiv1208.5717.txt";
+    TGraphAsymmErrors* graphPhiStat7TeVALICE         = ParseHEPData(Phi7TeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphPhiSys7TeVALICE          = ParseHEPData(Phi7TeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE);
+    
+    graphPhiStat7TeVALICE = ConvertYieldGraph(graphPhiStat7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
+    graphPhiSys7TeVALICE = ConvertYieldGraph(graphPhiSys7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
+    
+    TH1D* histoPhiStat7TeVALICE  = GraphToHist_withErrors(graphPhiStat7TeVALICE,"histoPhiStat7TeVALICE");
+    TH1D* histoPhiSys7TeVALICE   = GraphToHist_withErrors(graphPhiSys7TeVALICE,"histoPhiSys7TeVALICE");
+
+    // *********************************************************************************************************************    
+    // ********************************** ALICE Phi     results 2.76 TeV ***************************************************
+    // *********************************************************************************************************************
+    // 10.17182/hepdata.59933.v1/t1
+    TString Phi2760GeVHEPDataFile                                  = "ExternalInput/IdentifiedCharged/pp2760GeV_Phi_arxiv1702.00555.csv";
+    TGraphAsymmErrors* graphPhiStat2760GeVALICE         = ParseHEPData(Phi2760GeVHEPDataFile, 8, 0, 1, 2, 3, 4, 5, kFALSE, kTRUE, kFALSE);
+    TGraphAsymmErrors* graphPhiSys2760GeVALICE          = ParseHEPData(Phi2760GeVHEPDataFile, 8, 0, 1, 2, 3, 6, 7, kFALSE, kTRUE);
+
+    TH1D* histoPhiStat2760GeVALICE  = GraphToHist_withErrors(graphPhiStat2760GeVALICE,"histoPhiStat2760GeVALICE");
+    TH1D* histoPhiSys2760GeVALICE   = GraphToHist_withErrors(graphPhiSys2760GeVALICE,"histoPhiSys2760GeVALICE");
+
+
+    // *********************************************************************************************************************    
+    // ********************************** ALICE Lambda     results 7 TeV ***************************************************
+    // *********************************************************************************************************************
+    
+    TFile* inputLambdaALICE7TeV         = new TFile("ExternalInput/OtherParticles/Lambda-pp7TeV-Preliminary.root");
+    TFile* inputAntiLambdaALICE7TeV     = new TFile("ExternalInput/OtherParticles/AntiLambda-pp7TeV-Preliminary.root");
+    TH1D* histoLambdaStat7TeVALICE      = (TH1D*)inputLambdaALICE7TeV->Get("fHistPtLambdaStatOnly");
+    TH1D* histoLambdaSys7TeVALICE       = (TH1D*)inputLambdaALICE7TeV->Get("fHistPtLambdaStatAndSystExceptNormalization");
+    TH1D* histoAntiLambdaStat7TeVALICE  = (TH1D*)inputAntiLambdaALICE7TeV->Get("fHistPtAntiLambdaStatOnly");
+    TH1D* histoAntiLambdaSys7TeVALICE   = (TH1D*)inputAntiLambdaALICE7TeV->Get("fHistPtAntiLambdaStatAndSystExceptNormalization");
+    if(histoLambdaStat7TeVALICE && histoAntiLambdaStat7TeVALICE){
+      histoLambdaStat7TeVALICE->Scale(0.5);
+      histoLambdaStat7TeVALICE->Add(histoAntiLambdaStat7TeVALICE,0.5);
+      histoLambdaStat7TeVALICE = ConvertYieldHisto(histoLambdaStat7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
+    }
+    if(histoLambdaSys7TeVALICE && histoAntiLambdaSys7TeVALICE){
+      histoLambdaSys7TeVALICE->Scale(0.5);
+      histoLambdaSys7TeVALICE->Add(histoAntiLambdaSys7TeVALICE,0.5);
+      histoLambdaSys7TeVALICE = ConvertYieldHisto(histoLambdaSys7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
+    }
+
+
     // *********************************************************************************************************************
     // ********************************** Write Output files ***************************************************************
     // *********************************************************************************************************************
@@ -1254,6 +1567,14 @@ void PrepareChargedPionDataALICE_pp(){
         histoLambda1115SpecSystPP2760GeV->Write("histoLambda1115SpecSyst2760GeV");
         histoAntiLambda1115SpecStatPP2760GeV->Write("histoAntiLambda1115SpecStat2760GeV");
         histoAntiLambda1115SpecSystPP2760GeV->Write("histoAntiLambda1115SpecSyst2760GeV");
+        histoK0StarStat2760GeVALICE->Write("histoK0StarSpecPubStat2760GeV");
+        histoK0StarSys2760GeVALICE->Write("histoK0StarSpecPubSyst2760GeV");
+        graphK0StarStat2760GeVALICE->Write("graphK0StarStat2760GeVALICE");
+        graphK0StarSys2760GeVALICE->Write("graphK0StarSys2760GeVALICE");
+        histoPhiStat2760GeVALICE->Write("histoPhiSpecPubStat2760GeV");
+        histoPhiSys2760GeVALICE->Write("histoPhiSpecPubSyst2760GeV");
+        graphPhiStat2760GeVALICE->Write("graphPhiStat2760GeVALICE");
+        graphPhiSys2760GeVALICE->Write("graphPhiSys2760GeVALICE");
 
         histoChargedPionSpecHighPtStatPP2760GeV->Write("histoChargedPionSpecHighPtStat2760GeV");
         histoChargedPionSpecHighPtSystPP2760GeV->Write("histoChargedPionSpecHighPtSyst2760GeV");
@@ -1286,6 +1607,16 @@ void PrepareChargedPionDataALICE_pp(){
         histoChargedKaonSpecPubSystPP7TeV->Write("histoChargedKaonSpecPubSyst7TeV");
         histoProtonSpecPubStatPP7TeV->Write("histoProtonSpecPubStat7TeV");
         histoProtonSpecPubSystPP7TeV->Write("histoProtonSpecPubSyst7TeV");
+        histoK0StarStat7TeVALICE->Write("histoK0StarSpecPubStat7TeV");
+        histoK0StarSys7TeVALICE->Write("histoK0StarSpecPubSyst7TeV");
+        graphK0StarStat7TeVALICE->Write("graphK0StarStat7TeVALICE");
+        graphK0StarSys7TeVALICE->Write("graphK0StarSys7TeVALICE");
+        histoPhiStat7TeVALICE->Write("histoPhiSpecPubStat7TeV");
+        histoPhiSys7TeVALICE->Write("histoPhiSpecPubSyst7TeV");
+        graphPhiStat7TeVALICE->Write("graphPhiStat7TeVALICE");
+        graphPhiSys7TeVALICE->Write("graphPhiSys7TeVALICE");
+        histoLambdaStat7TeVALICE->Write("histoLambdaSpecPubStat7TeV");
+        histoLambdaSys7TeVALICE->Write("histoLambdaSpecPubSyst7TeV");
 
         graphChHaddNdyINELTotPP900GeV->Write("graphChargedHadrondNdEtaALICEPP900GeV");
         histoChHaddNdyINELTotPP900GeV->Write("histoChargedHadrondNdEtaALICEPP900GeV");

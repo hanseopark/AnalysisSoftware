@@ -57,6 +57,7 @@ TGraphAsymmErrors *GetInterpolSpectrum2D(Int_t nDataPoints, TGraphAsymmErrors** 
 TH1D* ConvertYieldHisto(TH1D* input, Bool_t DivideBy2pi, Bool_t DivideByPt, Bool_t MultiplyBy2pi, Bool_t MultiplyByPt);
 TF1* DoFitWithTsallis(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2);
 TF1* DoFitWithTCM(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2, Double_t p3, Double_t p4 );
+TF1* DoFitWithModHagedorn(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2, Double_t p3, Double_t p4 );
 void PlotInterpolationPtBins(TGraphErrors** gPtvSqrts,TGraphErrors** gPtvsEnergies, TF1** fPowerlaw, TF1** fPowerlawMC, TGraphAsymmErrors* gRpPb,Int_t fColumnPlot, Int_t fRowPlot,TString namePlot);
 void PlotInterpolationSinglePtBin(TGraphErrors* gPtvSqrts,TGraphErrors* gPtvsEnergies, TF1* fPowerlaw, TF1* fPowerlawMC, TGraphAsymmErrors* gRpPb, Int_t ptBin, TString namePlot);
 void PlotAlphavsPt(TGraphErrors* gAlpha, TGraphErrors* gAlphaSyst, TGraphErrors* gAlphaMC, TSpline* splineMC, TString method, TString thesisPlotLabel, TString namePlot);
@@ -121,7 +122,8 @@ void CalculateReference (   TString configFile                  = "",
                             TString configfileExclusionErrors   = "",
                             TString nameFileMCRef               = "",
                             TString nameHistMCRef               = "",
-                            Int_t nTrials                       = 1000
+                            Int_t nTrials                       = 1000,
+                            TString fitSelection                = ""
                         ){
 
     //*************************************************************************************************
@@ -141,7 +143,7 @@ void CalculateReference (   TString configFile                  = "",
     mesonString             = ReturnMesonString (meson);
     detProcess              = ReturnFullTextReconstructionProcess(mode);
     TString outputDir       = Form("%s/%s/CalculateReference",suffix.Data(),dateForOutput.Data());
-    TString outputDirPlots  = Form("%s/%s/CalculateReference/%s",suffix.Data(), dateForOutput.Data(), modeName.Data());
+    TString outputDirPlots  = Form("%s/%s/CalculateReference/%s_%s",suffix.Data(), dateForOutput.Data(), modeName.Data(), meson.Data());
     gSystem->Exec("mkdir -p "+outputDirPlots);
     Int_t exampleBin        = 7;
     Double_t dummyScaleFac  = 1;
@@ -554,8 +556,12 @@ void CalculateReference (   TString configFile                  = "",
         if (nameHist[3][i].CompareTo("bla") != 0){
             fitComb[i]                  = (TF1*)inputFile[i]->Get(nameHist[3][i].Data());
         } else {
+          if(!fitSelection.CompareTo("TCM"))
+            fitComb[i]                  = DoFitWithTCM(graphComb[i],Form("fitComb_%d",i),meson.Data(), graphComb[i]->GetY()[0],7.,0.2,graphComb[i]->GetY()[0]/10,0.3);
+          else if(!fitSelection.CompareTo("oHag"))
+            fitComb[i]                  = DoFitWithModHagedorn(graphComb[i],Form("fitComb_%d",i),meson.Data(), graphComb[i]->GetY()[0],0.5,0.,0.4,6);
+          else
             fitComb[i]                  = DoFitWithTsallis(graphComb[i],Form("fitComb_%d",i),meson.Data(), graphComb[i]->GetY()[0],7.,0.2);
-//             fitComb[i]                  = DoFitWithTCM(graphComb[i],Form("fitComb_%d",i),meson.Data(), graphComb[i]->GetY()[0],7.,0.2,graphComb[i]->GetY()[0]/10,0.3);
         }
 
         if (doSpecialBinning){
@@ -858,9 +864,13 @@ void CalculateReference (   TString configFile                  = "",
     if (graphAlphaStat && graphAlphaSyst){
         PlotAlphavsPt(graphAlphaStat, graphAlphaSyst, graphAlphaMC, splineAlphaMC, "pp", Form("%s, %s",mesonString.Data(), detProcess.Data()), Form("%s/%s_%s_Alpha_vs_Pt.%s", outputDirPlots.Data(),meson.Data(),modeName.Data(), suffix.Data()));
     }
-
-    TF1* fitFinal                       = DoFitWithTsallis(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7,0.2);
-//     TF1* fitFinal                       = DoFitWithTCM(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7.,0.2,graphFinalEnergyCombWOCorr->GetY()[0]/10,0.3);
+    TF1* fitFinal;
+    if(!fitSelection.CompareTo("TCM"))
+      fitFinal                       = DoFitWithTCM(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7.,0.2,graphFinalEnergyCombWOCorr->GetY()[0]/10,0.3);
+    else if(!fitSelection.CompareTo("oHag"))
+      fitFinal                       = DoFitWithModHagedorn(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],0.5,0.,0.4,6);
+    else
+      fitFinal                       = DoFitWithTsallis(graphFinalEnergyCombWOCorr,Form("fitComb_%s",finalEnergy.Data()),meson.Data(), graphFinalEnergyCombWOCorr->GetY()[0],7,0.2);
 
     graphCombReb[nDataSets]             = graphFinalEnergyCombWOCorr;
     graphComb[nDataSets]                = graphFinalEnergyCombWOCorr;
@@ -1511,6 +1521,31 @@ TF1* DoFitWithTsallis(TGraph* graph, TString name, TString particle, Double_t p0
     paramFit[1]=fit->GetParameter(1);
     paramFit[2]=fit->GetParameter(2);
     fit = FitObject("l",name.Data(),particle.Data(),graph,graph->GetX()[0],graph->GetX()[graph->GetN()-1],paramFit,"QNRMEX0+");
+
+    cout << WriteParameterToFile(fit) << endl;
+    cout << "-----------------------------------" << endl;
+    cout << endl;
+    return fit;
+}
+
+//________________________________________________________________________________________________________________________
+TF1* DoFitWithModHagedorn(TGraph* graph, TString name, TString particle, Double_t p0, Double_t p1, Double_t p2, Double_t p3, Double_t p4 ){
+
+    cout << "-----------------------------------" << endl;
+    cout << "fit: '" << name.Data() << "' for '" << particle.Data() << "'" << endl;
+
+    Double_t paramFit[5] = {p0, p1, p2, p3, p4};
+    TF1* fit = FitObject("oHag",name.Data(),particle.Data(),graph,graph->GetX()[0],graph->GetX()[graph->GetN()-1],paramFit,"QNRMEX0+");
+
+    cout << "chi2/ndf: " << fit->GetChisquare()/fit->GetNDF() << endl;
+    cout << endl;
+
+    paramFit[0]=fit->GetParameter(0);
+    paramFit[1]=fit->GetParameter(1);
+    paramFit[2]=fit->GetParameter(2);
+    paramFit[3]=fit->GetParameter(3);
+    paramFit[4]=fit->GetParameter(4);
+    fit = FitObject("oHag",name.Data(),particle.Data(),graph,graph->GetX()[0],graph->GetX()[graph->GetN()-1],paramFit,"QNRMEX0+");
 
     cout << WriteParameterToFile(fit) << endl;
     cout << "-----------------------------------" << endl;
