@@ -271,7 +271,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     //***************************** Pi0 file ************************************************************************
     TFile* filePi0                                              = new TFile(nameFilePi0);
     if (filePi0 && !filePi0->IsZombie()) {
-        histoPi0InvYieldData                                    = (TH1D*)filePi0->Get("CorrectedYieldTrueEff");
+        if(mode == 4 || mode == 5) histoPi0InvYieldData         = (TH1D*)filePi0->Get("CorrectedYieldNormEff");
+        else                       histoPi0InvYieldData         = (TH1D*)filePi0->Get("CorrectedYieldTrueEff");
     } else {
         cout << "WARNING: No pi0 file specified!" << endl;
         histoPi0InvYieldData                                    = NULL;
@@ -290,7 +291,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     nameFileEta.ReplaceAll("Pi0_", "Eta_");
     TFile* fileEta                                              = new TFile(nameFileEta);
     if (fileEta && !fileEta->IsZombie()) {
-        histoEtaInvYieldData                                    = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
+        if(mode == 4 || mode == 5) histoEtaInvYieldData         = (TH1D*)fileEta->Get("CorrectedYieldNormEff");
+        else                       histoEtaInvYieldData         = (TH1D*)fileEta->Get("CorrectedYieldTrueEff");
     } else {
         histoEtaInvYieldData                                    = NULL;
     }
