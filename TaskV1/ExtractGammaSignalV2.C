@@ -1682,7 +1682,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
 //******************************** Function to rebin spectra histos ********************************
 //**************************************************************************************************
 void RebinSpectrum(TH1D *Spectrum, TString NewName){
-    if(NewName.CompareTo(""))
+    if(NewName.CompareTo("")==0)
         NewName = Spectrum->GetName();
 
     *Spectrum = *((TH1D*)Spectrum->Rebin(fNBinsPt,NewName,fBinsPt));
@@ -1690,7 +1690,7 @@ void RebinSpectrum(TH1D *Spectrum, TString NewName){
 }
 
 void RebinSpectrumToDCAzDistBinning(TH1D *Spectrum, TString NewName){
-    if(NewName.CompareTo(""))
+    if(NewName.CompareTo("")==0)
         NewName = Spectrum->GetName();
 
     *Spectrum = *((TH1D*)Spectrum->Rebin(fNBinsPtDummy,NewName,fBinsPtDummy));

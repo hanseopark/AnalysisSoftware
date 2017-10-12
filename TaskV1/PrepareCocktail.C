@@ -1798,7 +1798,7 @@ void Initialize(TString energy, Int_t numberOfBins){
 
 //************************** Rebin spectrum *************************************************************************
 void RebinSpectrum(TH1F *Spectrum, TString NewName){
-    if(NewName.CompareTo(""))
+    if(NewName.CompareTo("")==0)
         NewName             = Spectrum->GetName();
 
     Double_t newBinContent  = 0.;
@@ -1815,7 +1815,7 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
 
     if (!SpectrumForBinning) return;
 
-    if(NewName.CompareTo(""))
+    if(NewName.CompareTo("")==0)
         NewName                     = Spectrum->GetName();
 
     Double_t newBinContent          = 0.;

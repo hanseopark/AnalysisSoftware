@@ -2976,10 +2976,10 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         }
         if (histoFracAllGammaToSecFromX_Cocktail_Pt[3])         histoFracAllGammaToSecFromX_Cocktail_Pt[3]->Write( Form("histoSecCocktailGammaFromXFrom%sEffCorr", nameSecondaries[3].Data()),
                                                                                                                    TObject::kOverwrite);
-        if (histoFracAllGammaToSecFromX_Pt[3])                  histoFracAllGammaToSecFromX_Pt[3]->Write(   Form("histoSecondaryGammaFromXFrom%sEffCorr", nameSecondaries[3].Data()),
-                                                                                                            TObject::kOverwrite);
+        if (histoFracAllGammaToSecFromX_Pt[3])                  histoFracAllGammaToSecFromX_Pt[3]->Write(          Form("histoSecondaryGammaFromXFrom%sEffCorr", nameSecondaries[3].Data()),
+                                                                                                                   TObject::kOverwrite);
 
-        if (histoAllDiffDecayGamma)                             histoAllDiffDecayGamma->Write("histoRatioAllGammaDivDecayGammaSpectrumMC",TObject::kOverwrite);
+        if (histoAllDiffDecayGamma)                             histoAllDiffDecayGamma->Write("histoRatioAllGammaDivDecayGammaSpectrumMC", TObject::kOverwrite);
 
         //_________________________ writing correction factors to file _________________________
         // photon purity without secondary subtraction
@@ -3004,20 +3004,20 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                     histoGammaResolCorrUnfold_Pt->SetBinContent(ipt,-10000);
                 }
             }
-            histoGammaResolCorrUnfold_Pt->Write(        "GammaResolCorrUnfold_Pt",              TObject::kOverwrite);
+            histoGammaResolCorrUnfold_Pt->Write(                                                            "GammaResolCorrUnfold_Pt",              TObject::kOverwrite);
         }
         // photon correction factors (conv Prob, efficiency incl. resolution correction)
         if (histoGammaCorrFac_Pt)                               histoGammaCorrFac_Pt->Write(                "GammaCorrFac_Pt",                      TObject::kOverwrite);
 
         // ________________________ writing data quantities to file
         // uncorrected spectrum (scaled by 1/Nevt)
-        if (histoGammaRawSpectrum_Pt)                           histoGammaRawSpectrum_Pt->Write(            "GammaRaw_Pt",                  TObject::kOverwrite);
+        if (histoGammaRawSpectrum_Pt)                           histoGammaRawSpectrum_Pt->Write(            "GammaRaw_Pt",                          TObject::kOverwrite);
         // corrected spectrum (legacy corrections: purity, effi incl resolution correction, secondaries, conv prob, plus trivial factors  )
-        if (histoGammaCorrEffiReso_Pt)                          histoGammaCorrEffiReso_Pt->Write(           "GammaCorrEffiResol_Pt",        TObject::kOverwrite);
+        if (histoGammaCorrEffiReso_Pt)                          histoGammaCorrEffiReso_Pt->Write(           "GammaCorrEffiResol_Pt",                TObject::kOverwrite);
         // corrected spectrum (unfolding corrections: purity, secondaries, unfolding resolution correction, effi without unfolding corr, conv prob, plus trivial factors )
-        if (histoGammaCorrUnfoldReso_PtCopy)                    histoGammaCorrUnfoldReso_PtCopy->Write(         "GammaCorrUnfold_PtControl",           TObject::kOverwrite);
-        if (histoGammaCorrUnfoldReso_Pt)                        histoGammaCorrUnfoldReso_Pt->Write(         "GammaCorrUnfold_Pt",           TObject::kOverwrite);
-        if (histoGammaCorrUnfoldReso_BinByBin_Pt)                        histoGammaCorrUnfoldReso_BinByBin_Pt->Write(         "GammaCorrUnfold_BinByBin_Pt",           TObject::kOverwrite);
+        if (histoGammaCorrUnfoldReso_PtCopy)                    histoGammaCorrUnfoldReso_PtCopy->Write(     "GammaCorrUnfold_PtControl",            TObject::kOverwrite);
+        if (histoGammaCorrUnfoldReso_Pt)                        histoGammaCorrUnfoldReso_Pt->Write(         "GammaCorrUnfold_Pt",                   TObject::kOverwrite);
+        if (histoGammaCorrUnfoldReso_BinByBin_Pt)               histoGammaCorrUnfoldReso_BinByBin_Pt->Write("GammaCorrUnfold_BinByBin_Pt",          TObject::kOverwrite);
         if(doPileUpCorr){
             // same as histoGammaCorrEffiReso_Pt with additional pileup correction
             if (histoGammaCorrEffiReso_PileUp_Pt)               histoGammaCorrEffiReso_PileUp_Pt->Write(            "GammaCorrEffiResolPileup_Pt",              TObject::kOverwrite);
@@ -3032,7 +3032,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (graphGammaSysErrOOBPileupUp)                    graphGammaSysErrOOBPileupUp->Write(                 "Gamma_OOBPileupSysUp",                     TObject::kOverwrite);
         }
         // spectrum for pi0tagging (corrections: purity, secondaries)
-        if (histoGammaRaw_PileUpPuritySecondaryCorrected_Pt)    histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->Write("GammaPileUpPuritySecondaryCorr",                     TObject::kOverwrite);
+        if (histoGammaRaw_PileUpPuritySecondaryCorrected_Pt)    histoGammaRaw_PileUpPuritySecondaryCorrected_Pt->Write("GammaPileUpPuritySecondaryCorr",        TObject::kOverwrite);
 
     fileCorrectedOutput->Close();
 }
