@@ -654,7 +654,7 @@ void EventQA_Runwise(
             EditTH1(globalRuns, doEquidistantXaxis, hEtaOpenAngleRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
             vecHistos[i].push_back(hEtaOpenAngleRMS[i]);
         }
-    }
+    } // end of loop over datasets
 
     //*****************************************************************************************************
     //******************************* create log files *****************************************************
@@ -692,6 +692,10 @@ void EventQA_Runwise(
     Double_t* sumEvents                     = new Double_t[nSets];
     Double_t* sumEventsAll                  = new Double_t[nSets];
 
+    Double_t meanVertexZMean                = 0;   // sum mean vertex z coordinate over all runs, then divide by number of runs
+    Double_t valueVertexZMean               = 0;
+    Double_t errorVertexZMean               = 0;
+
     std::vector<TString>* vecMissingRuns    = new std::vector<TString>[nSets];
 
     //*****************************************************************************************************
@@ -700,6 +704,7 @@ void EventQA_Runwise(
     for(Int_t i=0; i<nSets; i++) {
         fitValues[i]        = new Double_t[(Int_t)vecHistos[i].size()];
         vecRuns.clear();
+	meanVertexZMean     = 0;     // calculate mean for every dataset separately
         fDataSet            = vecDataSet.at(i);
         fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
         if(useDataRunListForMC && i>=nData) {
@@ -878,6 +883,7 @@ void EventQA_Runwise(
                 hVertexZMean[i]->SetBinError(bin, ZVertex->GetMeanError());
                 hVertexZRMS[i]->SetBinContent(bin, ZVertex->GetRMS());
                 hVertexZRMS[i]->SetBinError(bin, ZVertex->GetRMSError());
+		meanVertexZMean = meanVertexZMean +  ZVertex->GetMean();
                 TH1D* tempVertexZ       = new TH1D(*ZVertex);
                 tempVertexZ->GetXaxis()->SetTitle("z-Vertex (cm)");
                 tempVertexZ->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dz}");
@@ -1155,7 +1161,28 @@ void EventQA_Runwise(
 
             RootFile->Close();
             delete RootFile;
-        }
+        } // end of loop over runs
+
+        //--------------------------------------------------------------------------------------------------------
+        //--------------------------------------- Mean values ----------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------
+	cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
+	cout << "INFO: vecRuns.size() = " << vecRuns.size() << endl;
+	meanVertexZMean = meanVertexZMean / vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
+	cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
+        for(Int_t j=0; j<(Int_t) vecRuns.size(); j++){  // loop over runs j of this dataset
+	  fRunNumber = vecRuns.at(j);
+	  cout << "INFO: fRunNumber = " << fRunNumber << endl;
+	  if(doEquidistantXaxis) bin  = mapBin[fRunNumber]; else bin = fRunNumber.Atoi() - hFBin;     // bin: run number in global run list, starting from 1
+	  cout << "INFO: bin = " << bin << endl;
+	  valueVertexZMean = hVertexZMean[i]->GetBinContent(bin);    
+	  cout << "INFO: valueVertexZMean = " << valueVertexZMean << endl;
+	  errorVertexZMean = hVertexZMean[i]->GetBinError(bin);    
+	  cout << "INFO: errorVertexZMean = " << errorVertexZMean << endl;
+	  if ( TMath::Abs(meanVertexZMean-valueVertexZMean) > TMath::Abs( 2 * errorVertexZMean) ) {
+	    cout << "ATTENTION: run " <<  fRunNumber << " deviates by more than 2 sigma from runwise mean value" << endl; 
+	  }
+	} // end of loop over runs
 
         //--------------------------------------------------------------------------------------------------------
         //---------------------------------------- Fitters -------------------------------------------------------
@@ -1172,7 +1199,7 @@ void EventQA_Runwise(
             delete tfFit;
             tfFit               = 0x0;
         }
-    }
+    } // end of loop over datasets
 
     //**************************************************************************************************
     //****************************** Drawing Histograms ************************************************
