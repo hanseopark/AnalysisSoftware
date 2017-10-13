@@ -41,7 +41,9 @@ TString suffix = "pdf";
                                                               };
     TH1D*  histoCombinatorialSpecies_Pt[13][17];
     TH1D*  histoSignalToCombBackgroundRatio[13][17];
-    
+    Color_t colorComb                               = kBlack;
+    Style_t markerStyleComb                         = 20;
+    Size_t markerSizeComb                           = 1.2;
     // DATA: Definition of colors, styles and markers sizes
     Float_t nEvtMC[13];
     TH1F*   histoEventQualityMC[13];

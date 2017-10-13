@@ -1521,8 +1521,84 @@ void PrepareChargedPionDataALICE_pp(){
       histoLambdaSys7TeVALICE->Add(histoAntiLambdaSys7TeVALICE,0.5);
       histoLambdaSys7TeVALICE = ConvertYieldHisto(histoLambdaSys7TeVALICE, kTRUE, kTRUE, kFALSE, kFALSE);
     }
+    
+    // *********************************************************************************************************************    
+    // ********************************** ALICE Kaon     results 5 TeV ***************************************************
+    // *********************************************************************************************************************
+    TFile* fileChargedKaon5TeVprelim            = new TFile("ExternalInput/IdentifiedCharged/Spectra_ppLHC15n_Combined_Histograms.root");
+    TList* listStatChargedKaon5TeVprelim        = (TList*)fileChargedKaon5TeVprelim->Get("Summed_Kaon");
+    TList* listSysChargedKaon5TeVprelim         = (TList*)fileChargedKaon5TeVprelim->Get("Summed_Kaon_Sys");
+    TH1D*   histoChargedKaonSpecPrelim5023GeVStat     = (TH1D*)listStatChargedKaon5TeVprelim->FindObject("hSpectraSummedKaon_pp_Combined_MB");
+    TH1D*   histoChargedKaonSpecPrelim5023GeVSys      = (TH1D*)listSysChargedKaon5TeVprelim->FindObject("hSpectraSummedKaon_pp_Combined_MB");
+    histoChargedKaonSpecPrelim5023GeVStat->Scale(0.5);
+    histoChargedKaonSpecPrelim5023GeVSys->Scale(0.5);
+    
+    TGraphAsymmErrors* graphChargedKaonSpecPrelim5023GeVStat = new TGraphAsymmErrors(histoChargedKaonSpecPrelim5023GeVStat);
+    while (graphChargedKaonSpecPrelim5023GeVStat->GetY()[0] < 0) graphChargedKaonSpecPrelim5023GeVStat->RemovePoint(0);
+    while (graphChargedKaonSpecPrelim5023GeVStat->GetY()[graphChargedKaonSpecPrelim5023GeVStat->GetN()-1] < 0) graphChargedKaonSpecPrelim5023GeVStat->RemovePoint(graphChargedKaonSpecPrelim5023GeVStat->GetN()-1);
+    
+    TGraphAsymmErrors* graphChargedKaonSpecPrelim5023GeVSys = new TGraphAsymmErrors(histoChargedKaonSpecPrelim5023GeVSys);
+    while (graphChargedKaonSpecPrelim5023GeVSys->GetY()[0] < 0) graphChargedKaonSpecPrelim5023GeVSys->RemovePoint(0);
+    while (graphChargedKaonSpecPrelim5023GeVSys->GetY()[graphChargedKaonSpecPrelim5023GeVSys->GetN()-1] < 0) graphChargedKaonSpecPrelim5023GeVSys->RemovePoint(graphChargedKaonSpecPrelim5023GeVSys->GetN()-1);
+    
+    graphChargedKaonSpecPrelim5023GeVStat = ConvertYieldGraph(graphChargedKaonSpecPrelim5023GeVStat, kTRUE, kTRUE, kFALSE, kFALSE);
+    graphChargedKaonSpecPrelim5023GeVSys = ConvertYieldGraph(graphChargedKaonSpecPrelim5023GeVSys, kTRUE, kTRUE, kFALSE, kFALSE);
+    
+    TH1D* histoChargedKaonSpecPreliminary5023GeVStat  = GraphToHist_withErrors(graphChargedKaonSpecPrelim5023GeVStat,"histoChargedKaonSpecPreliminary5023GeVStat");
+    TH1D* histoChargedKaonSpecPreliminary5023GeVSys   = GraphToHist_withErrors(graphChargedKaonSpecPrelim5023GeVSys,"histoChargedKaonSpecPreliminary5023GeVSys");
+    
+    // *********************************************************************************************************************    
+    // ********************************** ALICE Kaon     results 5 TeV ***************************************************
+    // *********************************************************************************************************************
+    TFile* fileChargedPion5TeVprelim            = new TFile("ExternalInput/IdentifiedCharged/Spectra_ppLHC15n_Combined_Histograms.root");
+    TList* listStatChargedPion5TeVprelim        = (TList*)fileChargedPion5TeVprelim->Get("Summed_Pion");
+    TList* listSysChargedPion5TeVprelim         = (TList*)fileChargedPion5TeVprelim->Get("Summed_Pion_Sys");
+    TH1D*   histoChargedPionSpecPrelim5023GeVStat     = (TH1D*)listStatChargedPion5TeVprelim->FindObject("hSpectraSummedPion_pp_Combined_MB");
+    TH1D*   histoChargedPionSpecPrelim5023GeVSys      = (TH1D*)listSysChargedPion5TeVprelim->FindObject("hSpectraSummedPion_pp_Combined_MB");
+    histoChargedPionSpecPrelim5023GeVStat->Scale(0.5);
+    histoChargedPionSpecPrelim5023GeVSys->Scale(0.5);
+    
+    TGraphAsymmErrors* graphChargedPionSpecPrelim5023GeVStat = new TGraphAsymmErrors(histoChargedPionSpecPrelim5023GeVStat);
+    while (graphChargedPionSpecPrelim5023GeVStat->GetY()[0] < 0) graphChargedPionSpecPrelim5023GeVStat->RemovePoint(0);
+    while (graphChargedPionSpecPrelim5023GeVStat->GetY()[graphChargedPionSpecPrelim5023GeVStat->GetN()-1] < 0) graphChargedPionSpecPrelim5023GeVStat->RemovePoint(graphChargedPionSpecPrelim5023GeVStat->GetN()-1);
+    
+    TGraphAsymmErrors* graphChargedPionSpecPrelim5023GeVSys = new TGraphAsymmErrors(histoChargedPionSpecPrelim5023GeVSys);
+    while (graphChargedPionSpecPrelim5023GeVSys->GetY()[0] < 0) graphChargedPionSpecPrelim5023GeVSys->RemovePoint(0);
+    while (graphChargedPionSpecPrelim5023GeVSys->GetY()[graphChargedPionSpecPrelim5023GeVSys->GetN()-1] < 0) graphChargedPionSpecPrelim5023GeVSys->RemovePoint(graphChargedPionSpecPrelim5023GeVSys->GetN()-1);
+    
+    graphChargedPionSpecPrelim5023GeVStat = ConvertYieldGraph(graphChargedPionSpecPrelim5023GeVStat, kTRUE, kTRUE, kFALSE, kFALSE);
+    graphChargedPionSpecPrelim5023GeVSys = ConvertYieldGraph(graphChargedPionSpecPrelim5023GeVSys, kTRUE, kTRUE, kFALSE, kFALSE);
+    
+    TH1D* histoChargedPionSpecPreliminary5023GeVStat  = GraphToHist_withErrors(graphChargedPionSpecPrelim5023GeVStat,"histoChargedPionSpecPreliminary5023GeVStat");
+    TH1D* histoChargedPionSpecPreliminary5023GeVSys   = GraphToHist_withErrors(graphChargedPionSpecPrelim5023GeVSys,"histoChargedPionSpecPreliminary5023GeVSys");
+    
+    // *********************************************************************************************************************    
+    // ********************************** ALICE Kaon     results 5 TeV ***************************************************
+    // *********************************************************************************************************************
+    TFile* fileProton5TeVprelim            = new TFile("ExternalInput/IdentifiedCharged/Spectra_ppLHC15n_Combined_Histograms.root");
+    TList* listStatProton5TeVprelim        = (TList*)fileProton5TeVprelim->Get("Summed_Proton");
+    TList* listSysProton5TeVprelim         = (TList*)fileProton5TeVprelim->Get("Summed_Proton_Sys");
+    TH1D*   histoProtonSpecPrelim5023GeVStat     = (TH1D*)listStatProton5TeVprelim->FindObject("hSpectraSummedProton_pp_Combined_MB");
+    TH1D*   histoProtonSpecPrelim5023GeVSys      = (TH1D*)listSysProton5TeVprelim->FindObject("hSpectraSummedProton_pp_Combined_MB");
+    histoProtonSpecPrelim5023GeVStat->Scale(0.5);
+    histoProtonSpecPrelim5023GeVSys->Scale(0.5);
+    
+    TGraphAsymmErrors* graphProtonSpecPrelim5023GeVStat = new TGraphAsymmErrors(histoProtonSpecPrelim5023GeVStat);
+    while (graphProtonSpecPrelim5023GeVStat->GetY()[0] < 0) graphProtonSpecPrelim5023GeVStat->RemovePoint(0);
+    while (graphProtonSpecPrelim5023GeVStat->GetY()[graphProtonSpecPrelim5023GeVStat->GetN()-1] < 0) graphProtonSpecPrelim5023GeVStat->RemovePoint(graphProtonSpecPrelim5023GeVStat->GetN()-1);
+    
+    TGraphAsymmErrors* graphProtonSpecPrelim5023GeVSys = new TGraphAsymmErrors(histoProtonSpecPrelim5023GeVSys);
+    while (graphProtonSpecPrelim5023GeVSys->GetY()[0] < 0) graphProtonSpecPrelim5023GeVSys->RemovePoint(0);
+    while (graphProtonSpecPrelim5023GeVSys->GetY()[graphProtonSpecPrelim5023GeVSys->GetN()-1] < 0) graphProtonSpecPrelim5023GeVSys->RemovePoint(graphProtonSpecPrelim5023GeVSys->GetN()-1);
+    
+    graphProtonSpecPrelim5023GeVStat = ConvertYieldGraph(graphProtonSpecPrelim5023GeVStat, kTRUE, kTRUE, kFALSE, kFALSE);
+    graphProtonSpecPrelim5023GeVSys = ConvertYieldGraph(graphProtonSpecPrelim5023GeVSys, kTRUE, kTRUE, kFALSE, kFALSE);
+    
+    TH1D* histoProtonSpecPreliminary5023GeVStat  = GraphToHist_withErrors(graphProtonSpecPrelim5023GeVStat,"histoProtonSpecPreliminary5023GeVStat");
+    TH1D* histoProtonSpecPreliminary5023GeVSys   = GraphToHist_withErrors(graphProtonSpecPrelim5023GeVSys,"histoProtonSpecPreliminary5023GeVSys");
+    
 
-
+    
     // *********************************************************************************************************************
     // ********************************** Write Output files ***************************************************************
     // *********************************************************************************************************************
@@ -1592,6 +1668,13 @@ void PrepareChargedPionDataALICE_pp(){
         graphChKaonMinALICESysPP900GeV->Write("graphNegKaonSpecLowPtSys900GeV");
         graphChKaonPlALICEStatPP900GeV->Write("graphPosKaonSpecLowPtStat900GeV");
         graphChKaonPlALICESysPP900GeV->Write("graphPosKaonSpecLowPtSys900GeV");
+        
+        histoChargedKaonSpecPreliminary5023GeVStat->Write("histoChargedKaonSpecPrelim5023GeVStat");
+        histoChargedKaonSpecPreliminary5023GeVSys->Write("histoChargedKaonSpecPrelim5023GeVSys");
+        histoChargedPionSpecPreliminary5023GeVStat->Write("histoChargedPionSpecPrelim5023GeVStat");
+        histoChargedPionSpecPreliminary5023GeVSys->Write("histoChargedPionSpecPrelim5023GeVSys");
+        histoProtonSpecPreliminary5023GeVStat->Write("histoProtonSpecPrelim5023GeVStat");
+        histoProtonSpecPreliminary5023GeVSys->Write("histoProtonSpecPrelim5023GeVSys");
         
         histoChargedPionSpecLowPtStat7TeVCMS->Write("histoChargedPionSpecLowPtStat7TeVCMS");
         histoChargedPionSpecLowPtSys7TeVCMS->Write("histoChargedPionSpecLowPtSys7TeVCMS");

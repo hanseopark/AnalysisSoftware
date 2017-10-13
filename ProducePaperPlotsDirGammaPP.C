@@ -442,10 +442,10 @@ void ProducePaperPlotsDirGammaPP(
             
             TLegend* legendYieldIncGammaInd2760       = GetAndSetLegend2(0.20, 0.12, 0.5, 0.12+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel);
             // TLegend* legendYieldIncGammaInd8000       = GetAndSetLegend2(0.62, 0.83-(3*textSizeLabelsRel*0.85), 0.95, 0.83,textSizeLabelsPixel);
-            TLegend* legendYieldIncGammaInd8000       = GetAndSetLegend2(0.62, 0.83-(2*textSizeLabelsRel*0.85), 0.95, 0.83,textSizeLabelsPixel);
+            TLegend* legendYieldIncGammaInd8000       = GetAndSetLegend2(0.62, 0.83-(3*textSizeLabelsRel*0.85), 0.95, 0.83,textSizeLabelsPixel);
             for (Int_t i = 0; i < 2; i++){
               for (Int_t j = 0; j < 11; j++){
-                if(graphIncGammaSysErr[i][j]&&!(i==1&&j==2)){
+                if(graphIncGammaSysErr[i][j]){
                   DrawGammaSetMarkerTGraphAsym(graphIncGammaSysErr[i][j], markerStyleDet[i][j], markerSizeDet[j], colorDet[j] , colorDet[j],widthLinesBoxes, kTRUE);
                   graphIncGammaSysErr[i][j]->Draw("E2same");
                   DrawGammaSetMarkerTGraphAsym(graphIncGammaStatErr[i][j],  markerStyleDet[i][j], markerSizeDet[j], colorDet[j] , colorDet[j]);
@@ -522,8 +522,8 @@ void ProducePaperPlotsDirGammaPP(
         // legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad,0.5,0.953, textSizeSinglePad, 2, "", 42, 0.3);
       hist2DDRDummySingle->GetXaxis()->SetRangeUser(doubleRatioXpp[0], doubleRatioXpp[j+1]);
       hist2DDRDummySingle->DrawCopy();
-      if(j==1)
-        legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*1,0.5,0.953, textSizeSinglePad, 2, "", 42, 0.3);
+      // if(j==1)
+      //   legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*1,0.5,0.953, textSizeSinglePad, 2, "", 42, 0.3);
       legendDRSingle->Clear();
       DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[j+1], 1., 1., 1.2, kGray+2, 7);
       for (Int_t i = 10; i > -1; i--){

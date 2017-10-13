@@ -3981,6 +3981,13 @@
                         binning[i] = fBinsDirGamma2760GeVPt[i];
                     }
                 }
+            } else if (energy.CompareTo("8TeV") == 0){
+                if (mode == 0){
+                    maxNBins = 23;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i]  = fBinsDirGamma8TeVPt[i];
+                    }
+                }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if (mode == 0){
                     maxNBins = 25;
