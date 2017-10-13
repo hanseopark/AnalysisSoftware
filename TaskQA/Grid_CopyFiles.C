@@ -961,11 +961,11 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
       "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
     };
 
-    TString train = "Legotrain-vAN-20171005-8TeV-dirGamma_rerun";
+    TString train = "Legotrain-vAN-20171009-8TeV-dirGamma_EMC";
     Int_t trainRuns[nSets] = {
-                              2247,2247,2247,2247,2247,2247,2247,
-                              2247,2247,2247,2247,2247,2247,
-                              2247,2247,2247,2247,2247
+                              2256,2256,2256,2256,2256,2256,2256,
+                              2256,2256,2256,2256,2256,2256,
+                              2256,2256,2256,2256,2256
                              };
 
     TString runlist[nSets] = {
@@ -974,9 +974,9 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
                               "_child_3/merge_runlist_4","_child_4/merge_runlist_4","_child_5/merge_runlist_4","_child_6/merge_runlist_4","_child_7/merge_runlist_4"
                              };
 
-    const Int_t nFiles = 5;
+    const Int_t nFiles = 2;
     TString Files[nFiles] = {
-      "GammaCalo_103", "GammaCalo_161", "GammaCalo_170", "GammaCalo_171", "GammaConvCalo_101"
+      "GammaCalo_103", "GammaConvCalo_101"
                             };
 
     const Int_t nMerge = 3;
@@ -1000,10 +1000,10 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //      "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
 //    };
 
-//    TString train = "Legotrain-vAN-20171005-8TeV-dirGamma_rerun";
+//    TString train = "Legotrain-vAN-20171009-8TeV-dirGamma_EMC";
 //    Int_t trainRuns[nSets] = {
-//      3149,3149,3149,3149,3149,3149,3149,
-//      3150,3150,3150,3150,3150,3150,3150
+//      3156,3156,3156,3156,3156,3156,3156,
+//      3157,3157,3157,3157,3157,3157,3157
 //    };
 
 //    TString runlist[nSets] = {
@@ -1011,9 +1011,9 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //      "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
 //    };
 
-//    const Int_t nFiles = 4;
+//    const Int_t nFiles = 1;
 //    TString Files[nFiles] = {
-//      "GammaCalo_161", "GammaCalo_103", "GammaConvCalo_130", "GammaConvCalo_159"
+//      "GammaCalo_103"
 //    };
 
 //    const Int_t nMerge = 3;
