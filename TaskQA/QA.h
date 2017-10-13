@@ -1064,7 +1064,7 @@ Bool_t writeout(TString fileRuns, std::vector<TString> &vec, Bool_t output)
   if(output) cout << Form("\nWriting to %s...", fileRuns.Data()) << endl;
   fstream file;
   TString fVar;
-  file.open(fileRuns.Data(), ios::app);
+  file.open(fileRuns.Data(), ios::out);
   if(file.good()){
     for(Int_t j=0; j<(Int_t) vec.size(); j++){
       fVar = Form("%s\n", (vec.at(j)).Data());

@@ -142,8 +142,6 @@ void EventQA_Runwise(
     //*************************************************************************************************************
     // runNumbers
     std::vector<TString> vecRuns;
-    // bad runs
-    std::vector<TString> vecRunsBad;
 
     //*************************************************************************************************************
     //****************************** Determine which cut to process ***********************************************
@@ -245,7 +243,6 @@ void EventQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
-	vecRunsBad.clear();
         fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data());
         if(useDataRunListForMC && i>=nData) {
             fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
@@ -695,6 +692,8 @@ void EventQA_Runwise(
     Double_t* sumEvents                     = new Double_t[nSets];
     Double_t* sumEventsAll                  = new Double_t[nSets];
 
+    // bad QA runs
+    std::vector<TString> vecRunsBad;
     TString fileRunsBad                     = "";
     Int_t nSigmaBad                         = 2;   // consider a deviation of nSigmaBad * error from mean over runs as bad
     Double_t meanVertexZMean                = 0;   // sum mean vertex z coordinate over all runs, then divide by number of runs
@@ -709,6 +708,7 @@ void EventQA_Runwise(
     for(Int_t i=0; i<nSets; i++) {
         fitValues[i]        = new Double_t[(Int_t)vecHistos[i].size()];
         vecRuns.clear();
+	vecRunsBad.clear();
 	meanVertexZMean     = 0;     // calculate mean for every dataset separately
         fDataSet            = vecDataSet.at(i);
         fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
