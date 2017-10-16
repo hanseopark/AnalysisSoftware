@@ -705,8 +705,14 @@ void EventQA_Runwise(
         fitValues[i]        = new Double_t[(Int_t)vecHistos[i].size()];
         vecRuns.clear();
 	vecRunsBad.clear();
-	badRunCalc sVertexZMean    = {2,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
-	badRunCalc sCentralityMean = {2,0.,0.,0.,hCentralityMean[i]};
+	badRunCalc sVertexZMean       = {2,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
+	badRunCalc sCentralityMean    = {2,0.,0.,0.,hCentralityMean[i]};
+	badRunCalc sFracWOVtx         = {2,0.,0.,0.,hFracWOVtx[i]};
+	badRunCalc sTracksMeanGood    = {2,0.,0.,0.,hTracksMeanGood[i]};
+	badRunCalc sConvNCandidatesQA = {2,0.,0.,0.,hConvNCandidatesQA[i]};
+	badRunCalc sPi0Frac           = {2,0.,0.,0.,hPi0Frac[i]};
+	badRunCalc sPi0Mass           = {2,0.,0.,0.,hPi0Mass[i]};
+	badRunCalc sPi0Width          = {2,0.,0.,0.,hPi0Width[i]};
         fDataSet            = vecDataSet.at(i);
         fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
         fileRunsBad         = Form("%s/runNumbers%sBadQA.txt", folderRunlists.Data(), fDataSet.Data());
@@ -861,6 +867,7 @@ void EventQA_Runwise(
             hFracWVtxOutside10cm[i]->SetBinError(bin,ratioWVtxOutside10cmEvtErr);
             hFracWOVtx[i]->SetBinContent(bin,ratioWOVtxEvt);
             hFracWOVtx[i]->SetBinError(bin,ratioWOVtxEvtErr);
+	    sFracWOVtx.mean += ratioWOVtxEvt;
             hFracPileUp[i]->SetBinContent(bin,ratioPileUpEvt);
             hFracPileUp[i]->SetBinError(bin,ratioPileUpEvtErr);
             hFracSPDClusTrack[i]->SetBinContent(bin,ratioSPDClusTrackEvt);
@@ -873,6 +880,7 @@ void EventQA_Runwise(
             if(GOODESD){
                 hTracksMeanGood[i]->SetBinContent(bin, GOODESD->GetMean());
                 hTracksMeanGood[i]->SetBinError(bin, GOODESD->GetMeanError());
+		sTracksMeanGood.mean += GOODESD->GetMean();
                 hTracksRMSGood[i]->SetBinContent(bin, GOODESD->GetRMS());
                 hTracksRMSGood[i]->SetBinError(bin, GOODESD->GetRMSError());
             }else cout << "INFO: Object |GoodESDTracks| could not be found! Skipping Fill..." << endl;
@@ -982,6 +990,7 @@ void EventQA_Runwise(
                     hConvNCandidates[i]->SetBinError(bin, sqrt(ConvNCandidates) / nEvents);
                     hConvNCandidatesQA[i]->SetBinContent(bin, ConvNCandidatesQA / nEvents);
                     hConvNCandidatesQA[i]->SetBinError(bin, sqrt(ConvNCandidatesQA) / nEvents);
+		    sConvNCandidatesQA.mean += ConvNCandidatesQA / nEvents;
                 }else cout << "INFO: Object |IsPhotonSelected| could not be found! Skipping Fill..." << endl;
             }
             //--------------------------------------------------------------------------------------------------------
@@ -1013,11 +1022,13 @@ void EventQA_Runwise(
 
                         hPi0Frac[i]->SetBinContent(bin,ratioPi0);
                         hPi0Frac[i]->SetBinError(bin,ratioPi0Err);
+			sPi0Frac.mean += ratioPi0;
                         hPi0Mass[i]->SetBinContent(bin,massPi);
                         hPi0Mass[i]->SetBinError(bin,massPiErr);
+			sPi0Mass.mean += massPi;
                         hPi0Width[i]->SetBinContent(bin,widthPi/2.35);
                         hPi0Width[i]->SetBinError(bin,widthPiErr/2.35);
-
+			sPi0Width.mean += widthPi/2.35;
                         hEtaFrac[i]->SetBinContent(bin,ratioEta);
                         hEtaFrac[i]->SetBinError(bin,ratioEtaErr);
                         hEtaMass[i]->SetBinContent(bin,massEta);
