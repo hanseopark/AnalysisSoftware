@@ -700,15 +700,15 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     differenceGammaSumPtOrBin->Add(histoGammaResummedPtOrBin, -1);
 
     Bool_t  isSane                                              = kTRUE;
-    Double_t tolerance                                          = 1E-10;
+    Double_t tolerance                                          = 2.;
     for (Int_t i=1; i<differenceGammaSumPt->GetNbinsX()+1; i++) {
-        if ( !((0 <= (differenceGammaSumPt->GetBinContent(i) + differenceGammaSumPt->GetBinError(i)) + tolerance) && (0 >= (differenceGammaSumPt->GetBinContent(i) - differenceGammaSumPt->GetBinError(i))) - tolerance) ) {
+        if ( !((0 <= (differenceGammaSumPt->GetBinContent(i) + tolerance*differenceGammaSumPt->GetBinError(i))) && (0 >= (differenceGammaSumPt->GetBinContent(i) - tolerance*differenceGammaSumPt->GetBinError(i)))) ) {
             cout << "WARNING: " << differenceGammaSumPt->GetName() << " at p_T[" << i << "] = " << differenceGammaSumPt->GetBinCenter(i) << " GeV/c is " << differenceGammaSumPt->GetBinContent(i) << " +/- " << differenceGammaSumPt->GetBinError(i) << endl;
             isSane                                              = kFALSE;
         }
     }
     for (Int_t i=1; i<differenceGammaSumPtOrBin->GetNbinsX()+1; i++) {
-        if ( !((0 <= (differenceGammaSumPtOrBin->GetBinContent(i) + differenceGammaSumPtOrBin->GetBinError(i)) + tolerance) && (0 >= (differenceGammaSumPtOrBin->GetBinContent(i) - differenceGammaSumPtOrBin->GetBinError(i))) - tolerance) ) {
+        if ( !((0 <= (differenceGammaSumPtOrBin->GetBinContent(i) + tolerance*differenceGammaSumPtOrBin->GetBinError(i))) && (0 >= (differenceGammaSumPtOrBin->GetBinContent(i) - tolerance*differenceGammaSumPtOrBin->GetBinError(i)))) ) {
             cout << "WARNING: " << differenceGammaSumPtOrBin->GetName() << " at p_T[" << i << "] = " << differenceGammaSumPtOrBin->GetBinCenter(i) << " GeV/c is " << differenceGammaSumPtOrBin->GetBinContent(i) << " +/- " << differenceGammaSumPtOrBin->GetBinError(i) << endl;
             isSane                                              = kFALSE;
         }
