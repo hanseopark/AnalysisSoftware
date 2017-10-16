@@ -516,6 +516,9 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
     One->SetLineColor(1);
     TString nameIntRanges[6]    = {"","Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
 
+    TString namePi0CorrectedYield = "CorrectedYieldTrueEff";
+    if(mode == 4 || mode == 5) namePi0CorrectedYield = "CorrectedYieldNormEff";
+
     //*******************************************************************************************
     //************************** Initialization of variables ************************************
     //*******************************************************************************************
@@ -869,8 +872,8 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             histoIncGammaToPi0RatioRatio[i]->Divide(histoIncGammaToPi0RatioRatio[i],histoIncGammaToPi0Ratio[0],1,1,"b");
             SetHistogramm(histoIncGammaToPi0RatioRatio[i],"#it{p}_{T} (GeV/c)","Ratios of #gamma/#pi^{0} Ratios",0.8,1.2);
 
-            histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get("CorrectedYieldTrueEff");
-            if(i > 0 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("CorrectedYieldTrueEff%s",nameIntRanges[i].Data()));
+            histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(namePi0CorrectedYield.Data());
+            if(i > 0 && cutVariationName.Contains("IntRange")) histoPi0Spectrum[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("%s%s",namePi0CorrectedYield.Data(),nameIntRanges[i].Data()));
             histoPi0Spectrum[i]->SetTitle("");
             DrawGammaSetMarker(histoPi0Spectrum[i], markerType, 2.0, color[i], color[i]);
             histoPi0SpectrumRatio[i] = (TH1D*) histoPi0Spectrum[i]->Clone(Form("histoPi0SpectrumRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
