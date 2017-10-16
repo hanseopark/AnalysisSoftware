@@ -103,6 +103,7 @@ struct CellQAObj{
 
 typedef struct {
   Int_t nSigmaBad;    // consider a deviation of nSigmaBad * error from mean over runs as bad
+  Int_t nRunsBad;     // number of runs with bad QA due to 
   Double_t mean;      // sum mean vertex z coordinate over all runs, then divide by number of runs
   Double_t value;     // runwise value
   Double_t error;     // runwise error
@@ -3056,9 +3057,14 @@ void CalculateFWHM(TF1 * fFunc, Double_t startMass, Double_t endMass)
 }
 
 Bool_t isBadRun(badRunCalc* sBadRunCalc, Int_t bin){
+  // calculate if runwise value deviates more than nSigmaBad times the error bar size from the mean over all runs
+  // and count the number of runs which are deviating
   sBadRunCalc->value = (sBadRunCalc->histo)->GetBinContent(bin);
-  sBadRunCalc->error = (sBadRunCalc->histo)->GetBinError(bin);
-  return (TMath::Abs(sBadRunCalc->mean-sBadRunCalc->value) > TMath::Abs(sBadRunCalc->mean*sBadRunCalc->error));
+  sBadRunCalc->error = (sBadRunCalc->histo)->GetBinError(bin); 
+  if(TMath::Abs(sBadRunCalc->mean-sBadRunCalc->value) > TMath::Abs(sBadRunCalc->nSigmaBad*sBadRunCalc->error)){
+    sBadRunCalc->nRunsBad++;
+    return kTRUE;
+  } else return kFALSE;
 }
 
 #endif // QA_H
