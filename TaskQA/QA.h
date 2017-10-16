@@ -101,6 +101,14 @@ struct CellQAObj{
 	std::vector<Int_t> goodCells;
 };
 
+typedef struct {
+  Int_t nSigmaBad;    // consider a deviation of nSigmaBad * error from mean over runs as bad
+  Double_t mean;      // sum mean vertex z coordinate over all runs, then divide by number of runs
+  Double_t value;     // runwise value
+  Double_t error;     // runwise error
+  TH1D* histo;        // corresponding histo
+} badRunCalc;
+
 void CalculateFWHM(TF1 * fFunc, Double_t startMass, Double_t endMass);
 
 class MesonFit{
@@ -506,6 +514,7 @@ void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TStrin
 void CheckCellsDataMC(CellQAObj* obj, TH2* fHistDataCell, TH2* fHistMCCell, TString xLabel, TString yLabel, Int_t nCaloCells, TString plotData, TString plotMC);
 Double_t GetHistogramIntegral(TH1D* hist, Float_t lowX, Float_t highX);
 Double_t GetHistogramIntegralError(TH1D* hist, Float_t lowX, Float_t highX);
+Bool_t isBadRun(badRunCalc* sBadRunCalc, Int_t bin);
 //**********************************************************************************************************
 
 //*********************** definition of functions **********************************************************
@@ -3046,5 +3055,10 @@ void CalculateFWHM(TF1 * fFunc, Double_t startMass, Double_t endMass)
    return;
 }
 
+Bool_t isBadRun(badRunCalc* sBadRunCalc, Int_t bin){
+  sBadRunCalc->value = (sBadRunCalc->histo)->GetBinContent(bin);
+  sBadRunCalc->error = (sBadRunCalc->histo)->GetBinError(bin);
+  return (TMath::Abs(sBadRunCalc->mean-sBadRunCalc->value) > TMath::Abs(sBadRunCalc->mean*sBadRunCalc->error));
+}
 
 #endif // QA_H

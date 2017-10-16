@@ -695,10 +695,6 @@ void EventQA_Runwise(
     // bad QA runs
     std::vector<TString> vecRunsBad;
     TString fileRunsBad                     = "";
-    Int_t nSigmaBad                         = 2;   // consider a deviation of nSigmaBad * error from mean over runs as bad
-    Double_t meanVertexZMean                = 0;   // sum mean vertex z coordinate over all runs, then divide by number of runs
-    Double_t valueVertexZMean               = 0;
-    Double_t errorVertexZMean               = 0;
 
     std::vector<TString>* vecMissingRuns    = new std::vector<TString>[nSets];
 
@@ -709,7 +705,8 @@ void EventQA_Runwise(
         fitValues[i]        = new Double_t[(Int_t)vecHistos[i].size()];
         vecRuns.clear();
 	vecRunsBad.clear();
-	meanVertexZMean     = 0;     // calculate mean for every dataset separately
+	badRunCalc sVertexZMean    = {2,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
+	badRunCalc sCentralityMean = {2,0.,0.,0.,hCentralityMean[i]};
         fDataSet            = vecDataSet.at(i);
         fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
         fileRunsBad         = Form("%s/runNumbers%sBadQA.txt", folderRunlists.Data(), fDataSet.Data());
@@ -889,7 +886,7 @@ void EventQA_Runwise(
                 hVertexZMean[i]->SetBinError(bin, ZVertex->GetMeanError());
                 hVertexZRMS[i]->SetBinContent(bin, ZVertex->GetRMS());
                 hVertexZRMS[i]->SetBinError(bin, ZVertex->GetRMSError());
-		meanVertexZMean = meanVertexZMean +  ZVertex->GetMean();
+		sVertexZMean.mean +=  ZVertex->GetMean();
                 TH1D* tempVertexZ       = new TH1D(*ZVertex);
                 tempVertexZ->GetXaxis()->SetTitle("z-Vertex (cm)");
                 tempVertexZ->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dz}");
@@ -918,6 +915,7 @@ void EventQA_Runwise(
             if(Centrality){
                 hCentralityMean[i]->SetBinContent(bin, Centrality->GetMean());
                 hCentralityMean[i]->SetBinError(bin, Centrality->GetMeanError());
+		sCentralityMean.mean += Centrality->GetMean();
             }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
 
             //--------------------------------------------------------------------------------------------------------
@@ -1173,23 +1171,11 @@ void EventQA_Runwise(
         //--------------------------------------- Mean values ----------------------------------------------------
         //--------------------------------------------------------------------------------------------------------
 	if(doExtQA==3){
-	  //cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
-	  //cout << "INFO: vecRuns.size() = " << vecRuns.size() << endl;
-	  meanVertexZMean = meanVertexZMean / vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
-	  //cout << "INFO: meanVertexZMean = " << meanVertexZMean << endl;
+	 sVertexZMean.mean /= vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
 	  for(Int_t j=0; j<(Int_t) vecRuns.size(); j++){  // loop over runs j of this dataset
 	    fRunNumber = vecRuns.at(j);
-	    //cout << "INFO: fRunNumber = " << fRunNumber << endl;
 	    if(doEquidistantXaxis) bin  = mapBin[fRunNumber]; else bin = fRunNumber.Atoi() - hFBin;     // bin: run number in global run list, starting from 1
-	    //cout << "INFO: bin = " << bin << endl;
-	    valueVertexZMean = hVertexZMean[i]->GetBinContent(bin);    
-	    //cout << "INFO: valueVertexZMean = " << valueVertexZMean << endl;
-	    errorVertexZMean = hVertexZMean[i]->GetBinError(bin);    
-	    //cout << "INFO: errorVertexZMean = " << errorVertexZMean << endl;
-	    if ( TMath::Abs(meanVertexZMean-valueVertexZMean) > TMath::Abs( nSigmaBad * errorVertexZMean) ) {
-	      //cout << "ATTENTION: run " <<  fRunNumber << " deviates by more than 2 sigma from runwise mean value" << endl; 
-	      vecRunsBad.push_back(fRunNumber);
-	    }
+	    if(isBadRun(&sVertexZMean,bin) || isBadRun(&sCentralityMean,bin) ) vecRunsBad.push_back(fRunNumber);
 	  } // end of loop over runs
 	  if(!vecRunsBad.empty()) writeout(fileRunsBad, vecRunsBad, kTRUE);
 	}
