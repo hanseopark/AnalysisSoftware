@@ -31,7 +31,8 @@ void EventQA_Runwise(
                                                                             // kFALSE: use specified
                         Size_t markerSize               = 1,                // how large should the markers be?
                         TString suffix                  = "eps",            // output format of plots
-                        TString folderRunlists          = ""                // path to the runlists
+                        TString folderRunlists          = "",               // path to the runlists
+			Int_t *nSigmasBadRun            = NULL              // array of 8 integers 
                     )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -698,6 +699,15 @@ void EventQA_Runwise(
 
     std::vector<TString>* vecMissingRuns    = new std::vector<TString>[nSets];
 
+    Bool_t isNullNSigmas = kFALSE;
+    if(nSigmasBadRun == NULL){
+      isNullNSigmas = kTRUE;
+      const Int_t nQuantities = 8;
+      nSigmasBadRun = (Int_t*)calloc(nQuantities,sizeof(Int_t));
+      for(Int_t i=0; i<nQuantities; i++) nSigmasBadRun[i] = 2;
+    }
+
+
     //*****************************************************************************************************
     //****************************** Looping over DataSets ************************************************
     //*****************************************************************************************************
@@ -705,14 +715,14 @@ void EventQA_Runwise(
         fitValues[i]        = new Double_t[(Int_t)vecHistos[i].size()];
         vecRuns.clear();
 	vecRunsBad.clear();
-	badRunCalc sVertexZMean       = {2,0,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
-	badRunCalc sCentralityMean    = {2,0,0.,0.,0.,hCentralityMean[i]};
-	badRunCalc sFracWOVtx         = {2,0,0.,0.,0.,hFracWOVtx[i]};
-	badRunCalc sTracksMeanGood    = {2,0,0.,0.,0.,hTracksMeanGood[i]};
-	badRunCalc sConvNCandidatesQA = {2,0,0.,0.,0.,hConvNCandidatesQA[i]};
-	badRunCalc sPi0Frac           = {2,0,0.,0.,0.,hPi0Frac[i]};
-	badRunCalc sPi0Mass           = {2,0,0.,0.,0.,hPi0Mass[i]};
-	badRunCalc sPi0Width          = {2,0,0.,0.,0.,hPi0Width[i]};
+	badRunCalc sVertexZMean       = {nSigmasBadRun[0],0,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
+	badRunCalc sCentralityMean    = {nSigmasBadRun[1],0,0.,0.,0.,hCentralityMean[i]};
+	badRunCalc sFracWOVtx         = {nSigmasBadRun[2],0,0.,0.,0.,hFracWOVtx[i]};
+	badRunCalc sTracksMeanGood    = {nSigmasBadRun[3],0,0.,0.,0.,hTracksMeanGood[i]};
+	badRunCalc sConvNCandidatesQA = {nSigmasBadRun[4],0,0.,0.,0.,hConvNCandidatesQA[i]};
+	badRunCalc sPi0Frac           = {nSigmasBadRun[5],0,0.,0.,0.,hPi0Frac[i]};
+	badRunCalc sPi0Mass           = {nSigmasBadRun[6],0,0.,0.,0.,hPi0Mass[i]};
+	badRunCalc sPi0Width          = {nSigmasBadRun[7],0,0.,0.,0.,hPi0Width[i]};
         fDataSet            = vecDataSet.at(i);
         fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
         fileRunsBad         = Form("%s/runNumbers%sBadQA.txt", folderRunlists.Data(), fDataSet.Data());
@@ -1231,6 +1241,8 @@ void EventQA_Runwise(
             tfFit               = 0x0;
         }
     } // end of loop over datasets
+    
+    if(isNullNSigmas) free(nSigmasBadRun);
 
     //**************************************************************************************************
     //****************************** Drawing Histograms ************************************************
