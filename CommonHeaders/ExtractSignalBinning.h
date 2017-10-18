@@ -2007,6 +2007,20 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("8TeV") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
+                    if (triggerSet == -1){
+                        if (trigger.CompareTo("52") == 0){
+                            specialTrigg = 1; // L0 EMC7
+                        } else if ( trigger.CompareTo("81") == 0 ){
+                            specialTrigg = 2; //L1 INT7 EGA
+                        } else if ( trigger.CompareTo("53") == 0 ){
+                            specialTrigg = 3; // L0 EMC8
+                        } else if ( trigger.CompareTo("82") == 0 ) {
+                            specialTrigg = 4; // L1 INT8 EGA
+                        }
+                    } else {
+                        specialTrigg        = triggerSet;
+                    }
+
                     fStartPtBin     = 1;
                     if( modi == 2){
                       fStartPtBin = 4;
@@ -2014,16 +2028,73 @@
                     }else if(modi == 4){
                       fStartPtBin = 6;
                       fExampleBin = 7;
+                      if (modi == 4 && specialTrigg == 1){ fStartPtBin = 22; fExampleBin = 25;}
+                      if (modi == 4 && specialTrigg == 2){ fStartPtBin = 33; fExampleBin = 36;}
                     }
                     fColumn         = 5;
                     fRow            = 5;
-                    if (fNBinsPt > 23) {
+                    if ((fNBinsPt - fStartPtBin) > 28){
+                        fColumn     = 6;
+                        fRow        = 6;
+                    } else if ((fNBinsPt - fStartPtBin) < 4){
+                        fColumn     = 2;
+                        fRow        = 2;
+                    } else if ((fNBinsPt - fStartPtBin) < 8){
+                        fColumn     = 4;
+                        fRow        = 2;
+                    } else if ((fNBinsPt - fStartPtBin) < 12){
+                        fColumn     = 4;
+                        fRow        = 3;
+                    } else if ((fNBinsPt - fStartPtBin) < 16){
+                        fColumn     = 4;
+                        fRow        = 4;
+                    } else if ((fNBinsPt - fStartPtBin) < 20){
+                        fColumn     = 5;
+                        fRow        = 4;
+                    } else if ((fNBinsPt - fStartPtBin) < 25){
+                        fColumn     = 5;
+                        fRow        = 5;
+                    }  else if ((fNBinsPt - fStartPtBin) < 29){
+                      fColumn     = 6;
+                      fRow        = 5;
+                    }
+                    if (fNBinsPt > 32 && (modi ==4)){
+                      if( specialTrigg == 2 && fNBinsPt > 42){
+                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        fNBinsPt                        = 42;
+                      } else if ( specialTrigg == 1 && fNBinsPt > 42){
+                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        fNBinsPt                        = 42;
+                      } else if (specialTrigg!=1 && specialTrigg!=2){
+                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
+                        fNBinsPt                        = 23;
+                      }
+                    } else if (fNBinsPt > 23 && (modi !=4) ) {
                         cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
                         fNBinsPt    = 23;
                     }
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         fBinsPt[i]         = fBinsDirGamma8TeVPt[i];
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
+
+                        if (modi == 4 ){
+                            if( specialTrigg == 1 ){
+                                fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger1Pt[i];
+                            } else if ( specialTrigg == 2 ){
+                                fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger2Pt[i];
+                            } else
+                                fBinsPt[i]                 = fBinsDirGamma8TeVPt[i];
+                        }
+
+                        if(modi == 4) {
+                            if( specialTrigg == 1 ){
+                                if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger1PtRebin[i];
+                            } else if( specialTrigg == 2 ){
+                                if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger2PtRebin[i];
+                            } else{
+                                if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
+                            }
+                        }
                     }
                 } else {
                     if (triggerSet == -1){

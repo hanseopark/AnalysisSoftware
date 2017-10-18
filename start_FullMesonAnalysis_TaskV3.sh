@@ -286,6 +286,10 @@ function GiveBinningDirectPhoton7TeV()
         echo "30 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
         BinsPtPi0=30
+    elif [ $answer = 37 ]; then
+        echo "37 Bins --> Max p_T = 25 GeV ...";
+        correctPi0=1
+        BinsPtPi0=37
     elif [ $answer = 41 ]; then
         echo "41 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
