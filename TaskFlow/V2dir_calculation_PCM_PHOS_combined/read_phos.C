@@ -6,7 +6,9 @@
 void read_phos() {
 
   // file with PHOS results
-  TFile file_phos("data_phos/PHOSFlow_v2_final_161116.root");
+  // TFile file_phos("data_phos/PHOSFlow_v2_final_161116.root");
+  TFile file_phos("data_phos/PHOS_SP_final_16102017.root");
+  TFile file_phos_rgamma("data_phos/PHOSFlow_v2_final_161116.root"); // only for Rgamma
 
   // open output file
   TString fn_out = "data_phos/data_phos.root";
@@ -16,10 +18,14 @@ void read_phos() {
 
   // loop over centralities
   // centrality, 0-20% = cen6, 20-40% = cen3, 40-80% = cen8
-  const Int_t n_centr = 3;
-  TString centr[n_centr] = {"00-20", "20-40", "40-80"};
-  TString centr_cocktail[n_centr] = {"cen6", "cen3", "cen8"};
-  TString centr_Rgamma[n_centr] = {"0-20%", "20-40%", "40-80%"};
+  // const Int_t n_centr = 3;
+  // TString centr[n_centr] = {"00-20", "20-40", "40-80"};
+  // TString centr_cocktail[n_centr] = {"cen6", "cen3", "cen8"};
+  // TString centr_Rgamma[n_centr] = {"0-20%", "20-40%", "40-80%"};
+  const Int_t n_centr = 2;
+  TString centr[n_centr] = {"00-20", "20-40"};
+  TString centr_cocktail[n_centr] = {"cen6", "cen3"};
+  TString centr_Rgamma[n_centr] = {"0-20%", "20-40%"};
 
   // inclusive photon vn
   TVectorD v2_inc_meas_values(n_pt_bins); // data
@@ -43,34 +49,33 @@ void read_phos() {
 
     TString dir = "PHOS_v2SP_PbPb_2760_Centrality_" + centr[i_centr] + "/";
 
-    // get histograms
-    TString name_histo_v2inc_staterr = dir + "hPHOS_v2SP_gammaIncl_noK0s_PbPb_cen" + centr[i_centr] + "_Stat";
-    TString name_histo_v2inc_syserr = dir + "hPHOS_v2SP_gammaIncl_noK0s_PbPb_cen" + centr[i_centr] + "_Syst";
-    TString name_histo_v2dec = dir + "hPHOS_v2SP_Cocktail_noK0s_PbPb_cen" + centr[i_centr] + "_Stat";
-    TString name_graph_v2dec_syserr = dir + "hPHOS_v2SP_Cocktail_noK0s_PbPb_cen" + centr[i_centr] + "_Syst";
+    // // get histograms (works with PHOSFlow_v2_final_161116.root)
+    // TString name_histo_v2inc_staterr = dir + "hPHOS_v2SP_gammaIncl_noK0s_PbPb_cen" + centr[i_centr] + "_Stat";
+    // TString name_histo_v2inc_syserr = dir + "hPHOS_v2SP_gammaIncl_noK0s_PbPb_cen" + centr[i_centr] + "_Syst";
+    // TString name_histo_v2dec = dir + "hPHOS_v2SP_Cocktail_noK0s_PbPb_cen" + centr[i_centr] + "_Stat";
+    // TString name_graph_v2dec_syserr = dir + "hPHOS_v2SP_Cocktail_noK0s_PbPb_cen" + centr[i_centr] + "_Syst";
+    // TString name_histo_Rgamma_staterr = dir + "hPHOS_DoubleRatio_PbPb_cen" + centr[i_centr] + "_Stat";
+    // TString name_histo_Rgamma_syserr = dir + "hPHOS_DoubleRatio_PbPb_cen" + centr[i_centr] + "_Syst";
+
+    // get histograms (works with PHOS_SP_final_16102017.root)
+    TString name_histo_v2inc_staterr = "v2SP_PHOS_gammaIncl_noK0s_PbPb_cen" + centr[i_centr] + "_Stat";
+    TString name_histo_v2inc_syserr = "v2SP_PHOS_gammaIncl_noK0s_PbPb_cen" + centr[i_centr] + "_Syst";
     TString name_histo_Rgamma_staterr = dir + "hPHOS_DoubleRatio_PbPb_cen" + centr[i_centr] + "_Stat";
     TString name_histo_Rgamma_syserr = dir + "hPHOS_DoubleRatio_PbPb_cen" + centr[i_centr] + "_Syst";
 
     TH1D* h_v2inc_staterr = (TH1D*) file_phos.Get(name_histo_v2inc_staterr);
     TH1D* h_v2inc_syserr = (TH1D*) file_phos.Get(name_histo_v2inc_syserr);
 
-    //    for (Int_t ibin=1; ibin<=h_v2inc_toterr->GetNbinsX(); ibin++) {
-    //   Double_t sys_err =  h_v2inc_syserr->GetBinError(ibin);
-    //   Double_t stat_err =  h_v2inc_staterr->GetBinError(ibin);
-    //   Double_t
-    // };
+    // TH1D* h_v2dec = (TH1D*) file_phos.Get(name_histo_v2dec);
+    // TGraphAsymmErrors* g_v2dec_syserr = (TGraphAsymmErrors*) file_phos.Get(name_graph_v2dec_syserr);
+    TH1D* h_Rgamma_staterr = (TH1D*) file_phos_rgamma.Get(name_histo_Rgamma_staterr);
+    TH1D* h_Rgamma_syserr = (TH1D*) file_phos_rgamma.Get(name_histo_Rgamma_syserr);
 
-
-    TH1D* h_v2dec = (TH1D*) file_phos.Get(name_histo_v2dec);
-    TGraphAsymmErrors* g_v2dec_syserr = (TGraphAsymmErrors*) file_phos.Get(name_graph_v2dec_syserr);
-    TH1D* h_Rgamma_staterr = (TH1D*) file_phos.Get(name_histo_Rgamma_staterr);
-    TH1D* h_Rgamma_syserr = (TH1D*) file_phos.Get(name_histo_Rgamma_syserr);
-
-    if (!h_v2dec) cout << "Error" << endl;
+    // if (!h_v2dec) cout << "Error" << endl;
 
     Double_t pt_bin_center_first_bin = 1.; // GeV
     Int_t ibin_first_v2inc = h_v2inc_staterr->GetXaxis()->FindBin(pt_bin_center_first_bin);
-    Int_t ibin_first_v2dec = h_v2dec->GetXaxis()->FindBin(pt_bin_center_first_bin);
+    // Int_t ibin_first_v2dec = h_v2dec->GetXaxis()->FindBin(pt_bin_center_first_bin);
     Int_t ibin_first_Rgamma = h_Rgamma_staterr->GetXaxis()->FindBin(pt_bin_center_first_bin);
 
     for (Int_t i_pt_bin=0; i_pt_bin<n_pt_bins; ++i_pt_bin) {
@@ -101,36 +106,7 @@ void read_phos() {
       cov_v2_inc_staterr(i_pt_bin,i_pt_bin) = sigma_v2inc_stat * sigma_v2inc_stat;
       cov_v2_inc_syserr(i_pt_bin,i_pt_bin) = sigma_v2inc_sys * sigma_v2inc_sys;
       cov_v2_inc_toterr(i_pt_bin,i_pt_bin) = sigma_v2inc_tot_squared;
-
-      //
-      // decay photon v2
-      //
-
-      // decay photon v2 (stat)
-      v2_dec_meas_values(i_pt_bin) = h_v2dec->GetBinContent(ibin_first_v2dec + i_pt_bin);
-
-      // decay photon covariance matrix (stat.)
-      Double_t sigma_v2dec_staterr = h_v2dec->GetBinError(ibin_first_v2dec + i_pt_bin);
-      if (sigma_v2dec_staterr == 0) {
-	       cout << "Warming: sigma_v2dec equal to 0" << endl;
-	        sigma_v2dec_staterr = 0.0001;
-      }
-      cov_v2_dec_staterr(i_pt_bin,i_pt_bin) = sigma_v2dec_staterr * sigma_v2dec_staterr;
-
-      // consistency check
-      Int_t graph_offset_v2dec = 1;
-      Double_t v2_dec_meas_values_syserr = g_v2dec_syserr->GetY()[graph_offset_v2dec + i_pt_bin];
-      if (v2_dec_meas_values(i_pt_bin) != v2_dec_meas_values_syserr) {
-        cout << "WARNING: inconsistent v2,dec values (histogram vs. TGraph)" << endl;
-      }
-
-      Double_t sigma_v2dec_syserr = g_v2dec_syserr->GetEYhigh()[graph_offset_v2dec + i_pt_bin];
-      cov_v2_dec_syserr(i_pt_bin,i_pt_bin) = sigma_v2dec_syserr * sigma_v2dec_syserr;
-
-      Double_t sigma_v2dec_toterr =
-        TMath::Sqrt(sigma_v2dec_staterr*sigma_v2dec_staterr + sigma_v2dec_syserr*sigma_v2dec_syserr);
-      cov_v2_dec_toterr(i_pt_bin,i_pt_bin) = sigma_v2dec_toterr * sigma_v2dec_toterr;
-
+      
     }
 
 
@@ -152,13 +128,8 @@ void read_phos() {
             // v2inc (assumption: systematic uncertainties is fully correlated among pT bins)
             Double_t sig_i_v2_inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(i_pt_bin, i_pt_bin));
             Double_t sig_j_v2_inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(j_pt_bin, j_pt_bin));
+            cov_v2_inc_syserr(i_pt_bin, j_pt_bin) = sig_i_v2_inc_syserr * sig_j_v2_inc_syserr;
             cov_v2_inc_toterr(i_pt_bin, j_pt_bin) = sig_i_v2_inc_syserr * sig_j_v2_inc_syserr;
-
-            // v2dec
-            Double_t sig_i_v2_dec_syserr = TMath::Sqrt(cov_v2_dec_syserr(i_pt_bin, i_pt_bin));
-            Double_t sig_j_v2_dec_syserr = TMath::Sqrt(cov_v2_dec_syserr(j_pt_bin, j_pt_bin));
-            cov_v2_dec_syserr(i_pt_bin, j_pt_bin) = sig_i_v2_dec_syserr * sig_j_v2_dec_syserr;
-            cov_v2_dec_toterr(i_pt_bin, j_pt_bin) = sig_i_v2_dec_syserr * sig_j_v2_dec_syserr;
 
           }
         }
@@ -181,11 +152,6 @@ void read_phos() {
     cov_v2_inc_staterr.Write("cov_v2_inc_staterr");
     cov_v2_inc_syserr.Write("cov_v2_inc_syserr");
     cov_v2_inc_toterr.Write("cov_v2_inc_toterr");
-
-    v2_dec_meas_values.Write("v2_dec_meas_values");
-    cov_v2_dec_staterr.Write("cov_v2_dec_staterr");
-    cov_v2_dec_syserr.Write("cov_v2_dec_syserr");
-    cov_v2_dec_toterr.Write("cov_v2_dec_toterr");
 
   } // end loop over centrality
 

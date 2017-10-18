@@ -14,6 +14,7 @@
 #include "TDirectory.h"
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TGraphErrors.h"
 #include "TGraphAsymmErrors.h"
 #include "TLatex.h"
 #include "TLegend.h"
@@ -427,6 +428,33 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
   }
 
+  //
+  // Yet another check:
+  // calculate weighted average of v2,dir(PCM, RgammaPCM) and v2,dir(PHOS, RgammaPHOS).
+  // To be compared with the combined v2mdir of the default method
+  //
+  TVectorD v2_dir_pcm_Rpcm_toterr(nPtBins);
+  TVectorD v2_dir_phos_Rphos_toterr(nPtBins);
+  for (Int_t i=0; i<nPtBins; i++) {
+    v2_dir_pcm_Rpcm_toterr(i) = g_v2_dir_pcm_Rpcm_toterr.GetY()[i];
+    v2_dir_phos_Rphos_toterr(i) = g_v2_dir_phos_Rphos_toterr.GetY()[i];
+  }
+
+  // the result of the simple averaging
+  TVectorD v2_dir_comb_ave_xcheck(nPtBins);
+  TMatrixDSym cov_v2_dir_comb_ave_xcheck(nPtBins);
+
+  // weighted average of v2,dir(PCM, RgammaPCM) and v2,dir(PHOS, RgammaPHOS)
+  weighted_average(v2_dir_pcm_Rpcm_toterr, v2_dir_phos_Rphos_toterr, cov_v2_dir_pcm_Rpcm_toterr, cov_v2_dir_phos_Rphos_toterr,
+    v2_dir_comb_ave_xcheck, cov_v2_dir_comb_ave_xcheck);
+
+  // store result in graph
+  TGraphAsymmErrors g_v2_dir_comb_ave_xcheck(nPtBins);
+  for (Int_t i=0; i<nPtBins; i++) {
+    g_v2_dir_comb_ave_xcheck.SetPoint(i, pt(i), v2_dir_comb_ave_xcheck(i));
+    Double_t toterr = TMath::Sqrt(cov_v2_dir_comb_ave_xcheck(i, i));
+    g_v2_dir_comb_ave_xcheck.SetPointError(i, err_pt, err_pt, toterr, toterr);
+  }
 
   //
   // plot output
@@ -918,6 +946,39 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   TString filename_c3e = "v2dir_comb_xcheck2_" + centr + ".pdf";
   c3e->SaveAs(output_dir + filename_c3e);
 
+  //
+  // Plot default v2,dir along with weighted average of
+  // v2,dir,PCM(RgammaPCM) and v2,dir,PHOS(RgammaPHOS)
+  //
+  TCanvas* c3f = new TCanvas("c3f","c3f", 700, 500, 700, 500);
+  frame.DrawCopy();
+
+  ly0.DrawClone();
+
+  g_v2_dir_comb_toterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_toterr.SetLineColor(kBlack);
+  g_v2_dir_comb_toterr.SetMarkerColor(kBlack);
+  g_v2_dir_comb_toterr.DrawClone("pE5");
+
+  g_v2_dir_comb_staterr.SetMarkerStyle(kFullCircle);
+  g_v2_dir_comb_staterr.SetLineColor(kBlack);
+  g_v2_dir_comb_staterr.SetMarkerColor(kBlack);
+  // g_v2_dir_comb_staterr.DrawClone("p");
+
+  g_v2_dir_comb_ave_xcheck.SetFillColorAlpha(kOrange-3, 0.2);
+
+  g_v2_dir_comb_ave_xcheck.SetMarkerStyle(kOpenCircle);
+  g_v2_dir_comb_ave_xcheck.SetLineColor(kBlack);
+  g_v2_dir_comb_ave_xcheck.SetMarkerColor(kBlack);
+  g_v2_dir_comb_ave_xcheck.DrawClone("pE5");
+
+  TLatex l3f;
+  l3f.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+  l3f.SetTextSize(0.04);
+  l3f.DrawLatexNDC(0.2, 0.17, "Weighted average of v_{2,dir}^{PCM} and v_{2,dir}^{PHOS} (cross check)");
+
+  TString filename_c3f = "v2dir_comb_ave_xcheck_" + centr + ".pdf";
+  c3f->SaveAs(output_dir + filename_c3f);
 
   //
   // Plot inclusive and decay photon v2
@@ -969,48 +1030,224 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
   c4->SaveAs(output_dir + filename_c4);
 
   //
+  // Plot current v2,inc,PCM along with Daniel's result
+  //
+  TCanvas* c5 = new TCanvas("c5","c5", 900, 10, 700, 500);
+  frame.SetXTitle("p_{T} (GeV/#it{c})");
+  frame.SetYTitle("inclusive photon v_{2}");
+  frame.DrawCopy();
+
+  // Daniel's v2,inc (0-20%)
+  TGraphErrors *gre0020 = new TGraphErrors(23);
+  gre0020->SetName("grDanielv2inc0020");
+  gre0020->SetTitle("");
+  gre0020->SetFillColor(1);
+  gre0020->SetFillStyle(0);
+  gre0020->SetLineWidth(2);
+  gre0020->SetMarkerStyle(24);
+  gre0020->SetMarkerSize(1.2);
+  gre0020->SetPoint(0,0.25,0.02653868);
+  gre0020->SetPointError(0,0.05,0.0004103671);
+  gre0020->SetPoint(1,0.35,0.03666553);
+  gre0020->SetPointError(1,0.05,0.0005929124);
+  gre0020->SetPoint(2,0.45,0.04550414);
+  gre0020->SetPointError(2,0.05,0.0004489667);
+  gre0020->SetPoint(3,0.55,0.05248478);
+  gre0020->SetPointError(3,0.05,0.0004132783);
+  gre0020->SetPoint(4,0.65,0.05761384);
+  gre0020->SetPointError(4,0.05,0.0002697986);
+  gre0020->SetPoint(5,0.75,0.06367664);
+  gre0020->SetPointError(5,0.05,0.0002163565);
+  gre0020->SetPoint(6,0.85,0.06925035);
+  gre0020->SetPointError(6,0.05,0.0003906399);
+  gre0020->SetPoint(7,1,0.07546688);
+  gre0020->SetPointError(7,0.1,0.0004597703);
+  gre0020->SetPoint(8,1.2,0.08402089);
+  gre0020->SetPointError(8,0.1,0.0004792006);
+  gre0020->SetPoint(9,1.4,0.09208977);
+  gre0020->SetPointError(9,0.1,0.0005386815);
+  gre0020->SetPoint(10,1.6,0.09751575);
+  gre0020->SetPointError(10,0.1,0.0006099597);
+  gre0020->SetPoint(11,1.8,0.1044671);
+  gre0020->SetPointError(11,0.1,0.000524053);
+  gre0020->SetPoint(12,2,0.1053657);
+  gre0020->SetPointError(12,0.1,0.001143335);
+  gre0020->SetPoint(13,2.2,0.1147294);
+  gre0020->SetPointError(13,0.1,0.000629642);
+  gre0020->SetPoint(14,2.4,0.1080451);
+  gre0020->SetPointError(14,0.1,0.001381279);
+  gre0020->SetPoint(15,2.6,0.09923275);
+  gre0020->SetPointError(15,0.1,0.001402856);
+  gre0020->SetPoint(16,2.85,0.1067197);
+  gre0020->SetPointError(16,0.15,0.001420079);
+  gre0020->SetPoint(17,3.15,0.104392);
+  gre0020->SetPointError(17,0.15,0.001612167);
+  gre0020->SetPoint(18,3.5,0.07886321);
+  gre0020->SetPointError(18,0.2,0.003232181);
+  gre0020->SetPoint(19,3.9,0.09279333);
+  gre0020->SetPointError(19,0.2,0.002346974);
+  gre0020->SetPoint(20,4.35,0.06173879);
+  gre0020->SetPointError(20,0.25,0.003790896);
+  gre0020->SetPoint(21,5,0.06296306);
+  gre0020->SetPointError(21,0.4,0.005187371);
+  gre0020->SetPoint(22,5.8,0.03971473);
+  gre0020->SetPointError(22,0.4,0.006876481);
+
+  // Daniel's v2,inc (20-40%)
+  TGraphErrors *gre2040 = new TGraphErrors(23);
+  gre2040->SetName("grDanielv2inc2040");
+  gre2040->SetTitle("");
+  gre2040->SetFillColor(1);
+  gre2040->SetFillStyle(0);
+  gre2040->SetLineWidth(2);
+  gre2040->SetMarkerStyle(24);
+  gre2040->SetMarkerSize(1.2);
+  gre2040->SetPoint(0,0.25,0.05754349);
+  gre2040->SetPointError(0,0.05,0.0004665395);
+  gre2040->SetPoint(1,0.35,0.07447413);
+  gre2040->SetPointError(1,0.05,0.0007736117);
+  gre2040->SetPoint(2,0.45,0.09129447);
+  gre2040->SetPointError(2,0.05,0.0004530184);
+  gre2040->SetPoint(3,0.55,0.104128);
+  gre2040->SetPointError(3,0.05,0.0005179349);
+  gre2040->SetPoint(4,0.65,0.1163502);
+  gre2040->SetPointError(4,0.05,0.0004933628);
+  gre2040->SetPoint(5,0.75,0.1269654);
+  gre2040->SetPointError(5,0.05,0.0004371996);
+  gre2040->SetPoint(6,0.85,0.1370555);
+  gre2040->SetPointError(6,0.05,0.0006342705);
+  gre2040->SetPoint(7,1,0.149815);
+  gre2040->SetPointError(7,0.1,0.0007434604);
+  gre2040->SetPoint(8,1.2,0.165099);
+  gre2040->SetPointError(8,0.1,0.0009312401);
+  gre2040->SetPoint(9,1.4,0.1774414);
+  gre2040->SetPointError(9,0.1,0.001089122);
+  gre2040->SetPoint(10,1.6,0.1881529);
+  gre2040->SetPointError(10,0.1,0.001280767);
+  gre2040->SetPoint(11,1.8,0.1952062);
+  gre2040->SetPointError(11,0.1,0.001302265);
+  gre2040->SetPoint(12,2,0.1956598);
+  gre2040->SetPointError(12,0.1,0.001264462);
+  gre2040->SetPoint(13,2.2,0.1948985);
+  gre2040->SetPointError(13,0.1,0.001483711);
+  gre2040->SetPoint(14,2.4,0.1946173);
+  gre2040->SetPointError(14,0.1,0.001965538);
+  gre2040->SetPoint(15,2.6,0.1950112);
+  gre2040->SetPointError(15,0.1,0.001783452);
+  gre2040->SetPoint(16,2.85,0.1866001);
+  gre2040->SetPointError(16,0.15,0.001826611);
+  gre2040->SetPoint(17,3.15,0.1728413);
+  gre2040->SetPointError(17,0.15,0.002727349);
+  gre2040->SetPoint(18,3.5,0.1501855);
+  gre2040->SetPointError(18,0.2,0.001926224);
+  gre2040->SetPoint(19,3.9,0.1445375);
+  gre2040->SetPointError(19,0.2,0.004738899);
+  gre2040->SetPoint(20,4.35,0.1158196);
+  gre2040->SetPointError(20,0.25,0.002635487);
+  gre2040->SetPoint(21,5,0.1144715);
+  gre2040->SetPointError(21,0.4,0.004965387);
+  gre2040->SetPoint(22,5.8,0.09643851);
+  gre2040->SetPointError(22,0.4,0.005143298);
+
+  g_v2_inc_pcm_toterr.DrawClone("pE5");
+
+  TGraphErrors* greDaniel = 0;
+  if (centr == "00-20") greDaniel = gre0020;
+  else if (centr == "20-40") greDaniel = gre2040;
+  greDaniel->Draw("p");
+
+  TLatex l5;
+  l5.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TLegend leg5(0.65, 0.68, 0.87, 0.88, NULL, "brNDC");
+  leg5.AddEntry(&g_v2_inc_pcm_toterr, "#it{v}_{2,inc}^{PCM} (Mike)", "p");
+  leg5.AddEntry(greDaniel, "#it{v}_{2,inc}^{PCM} (Daniel)", "p");
+
+  leg5.SetBorderSize(1);
+  leg5.SetTextSize(0.032);
+  leg5.DrawClone();
+
+  TString filename_c5 = "v2inc_pcm_new_old_" + centr + ".pdf";
+  c5->SaveAs(output_dir + filename_c5);
+
+  //
+  // Plot current v2,inc,PCM along with Daniel's result
+  //
+  TCanvas* c5b = new TCanvas("c5b","c5b", 900, 10, 700, 500);
+  TH2F frame2("frame2", "frame2", 1, 0., 6., 1, 0.8, 1.2);
+  frame2.SetXTitle("p_{T} (GeV/#it{c})");
+  frame2.SetYTitle("v_{2}^{inc}(Daniel) / v_{2}^{inc}(Mike)");
+  frame2.DrawCopy();
+
+  TGraphErrors* g_ratio_mike_daniel = new TGraphErrors(nPtBins);
+  for (Int_t i=0; i<nPtBins; i++) {
+    Double_t v2_Daniel = greDaniel->GetY()[i+7];
+    Double_t v2_Daniel_err = greDaniel->GetEY()[i+7];
+    Double_t v2_Daniel_relerr = v2_Daniel_err / v2_Daniel;
+    Double_t v2_Mike = v2_inc_meas_values_pcm(i);
+    Double_t v2_Mike_err = TMath::Sqrt(cov_v2_inc_toterr_pcm(i,i));
+    Double_t v2_Mike_relerr = v2_Mike_err / v2_Mike;
+    Double_t ratio = v2_Daniel / v2_Mike;
+    Double_t ratio_err = ratio *
+      TMath::Sqrt(v2_Mike_relerr*v2_Mike_relerr + v2_Daniel_relerr*v2_Daniel_relerr);
+    g_ratio_mike_daniel->SetPoint(i, pt(i), ratio);
+    g_ratio_mike_daniel->SetPointError(i, 0, ratio_err);
+  }
+
+  g_ratio_mike_daniel->SetMarkerStyle(20);
+  g_ratio_mike_daniel->Draw("p");
+
+  TLatex l5b;
+  l5b.DrawLatexNDC(0.2, 0.75, Form("%s%%",centr.Data()));
+
+  TString filename_c5b = "v2inc_ratio_daniel_" + centr + ".pdf";
+  c5b->SaveAs(output_dir + filename_c5b);
+
+  //
   // Finally calculate likelihoods for certain v2dir hypothesis:
   //
   // hypothesis for vndir,true (all values zero in this case)
   //
   // CAUTION: this part is still under development
   //
+
   TVectorD vnDirTrueHyp(nPtBins);
-  for (Int_t i=0; i < nPtBins; i++) vnDirTrueHyp(i) = 0.18;
+  for (Int_t i=0; i < nPtBins; i++) vnDirTrueHyp(i) = 0.0;
 
-  // likelihood 1
-  // Double_t L1 = 0;
+  // likelihood 1: hypothesis v2,dir = v2,decay
+  Double_t L1 = 0;
   // Double_t nlh = 1000000;
-  // Double_t nlh = 10000;
+  Double_t nlh = 100000;
 
-  // likelihood(nPtBins, nlh, v2_inc_meas_values_comb, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
-  //	     v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
+  likelihood(nPtBins, nlh, v2_dec_meas_values, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr,
+    v2_inc_meas_values_comb, cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
 
-  // likelihood 2
-  // Double_t L2 = 0;
-  // likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
-  //	     v2_dec_meas_values, cov_v2_dec_toterr, L2);
+  // likelihood 2: v2,dir = 0
+  Double_t L2 = 0;
+  likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb, cov_v2_inc_toterr_comb,
+    v2_dec_meas_values, cov_v2_dec_toterr, L2);
+
+  cout << "likelihood 1 (v2,dir = v2,decay) = " << L1 << endl;
+  cout << "likelihood 2 (v2,dir = 0) = " << L2 << endl;
+  cout << "Bayes factor L1 / L2 = " << L1 / L2 << endl;
+
 
   //
   // Question: How consistent is v2,dir from PCM with the hypothesis that v2,dir,true = v2,cocktail
   //
-  TVectorD vnDirTrueHypPCM(nPtBins);
-  for (Int_t i=0; i < nPtBins; i++) vnDirTrueHypPCM(i) = g_v2_dir_pcm_Rpcm_toterr.GetY()[i];
-
-  Double_t nlh_PCM = 10000;
-
-  Double_t L_PCM_1 = 0;
-  likelihood(nPtBins, nlh_PCM, vnDirTrueHypPCM, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
-	     v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_1);
-
+  // TVectorD vnDirTrueHypPCM(nPtBins);
+  // for (Int_t i=0; i < nPtBins; i++) vnDirTrueHypPCM(i) = g_v2_dir_pcm_Rpcm_toterr.GetY()[i];
+  // Double_t nlh_PCM = 10000;
+  // Double_t L_PCM_1 = 0;
+  // likelihood(nPtBins, nlh_PCM, vnDirTrueHypPCM, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
+	     // v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_1);
   // likelihood 2
-  Double_t L_PCM_2 = 0;
-  likelihood(nPtBins, nlh_PCM, v2_dec_meas_values, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
-	     v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_2);
-
-  cout << "L_PCM_1 = " << L_PCM_1 << endl;
-  cout << "L_PCM_2 = " << L_PCM_2 << endl;
-  cout << "Bayes factor L_PCM_1 / L_PCM_2 = " << L_PCM_1 / L_PCM_2 << endl;
+  // Double_t L_PCM_2 = 0;
+  // likelihood(nPtBins, nlh_PCM, v2_dec_meas_values, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
+	//   v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_2);
+  // cout << "L_PCM_1 = " << L_PCM_1 << endl;
+  // cout << "L_PCM_2 = " << L_PCM_2 << endl;
+  // cout << "Bayes factor L_PCM_1 / L_PCM_2 = " << L_PCM_1 / L_PCM_2 << endl;
 
 }
 

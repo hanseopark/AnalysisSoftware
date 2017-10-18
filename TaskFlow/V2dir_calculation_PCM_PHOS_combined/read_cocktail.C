@@ -19,8 +19,9 @@ void read_cocktail() {
   // 15 |5.8
 
   // open cocktail file
-  TString filename_v2dec = "cocktail/CocktailV2_FullSys_19092017.root";
-  // TString filename_v2dec = "cocktail/CocktailV2_19092017.root";
+  // TString filename_v2dec = "cocktail/CocktailV2_FullSys_19092017.root";
+  // // TString filename_v2dec = "cocktail/CocktailV2_19092017.root";
+  TString filename_v2dec = "cocktail/CocktailV2_16102017.root";
   TFile file_v2dec(filename_v2dec);
 
   // loop over centralities

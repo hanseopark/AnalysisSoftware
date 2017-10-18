@@ -32,7 +32,8 @@ void read_pcm() {
   for (Int_t i_centr=0; i_centr<n_centr; i_centr++) {
 
     // open v2 inc file
-    TString filename_v2inc = "data_pcm/PCM_InclusivePhotonFlow_Syst_" + centr[i_centr] + "_170508.root";
+    // TString filename_v2inc = "data_pcm/PCM_InclusivePhotonFlow_Syst_" + centr[i_centr] + "_170508.root";
+    TString filename_v2inc = "data_pcm/PCM_InclusivePhotonFlow_Syst_" + centr[i_centr] + "_171012.root";
     TFile file_v2inc(filename_v2inc);
 
     // get graphs / histograms
@@ -145,6 +146,7 @@ void read_pcm() {
             // v2inc
             Double_t sig_i_v2inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(i_pt_bin, i_pt_bin));
             Double_t sig_j_v2inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(j_pt_bin, j_pt_bin));
+            cov_v2_inc_syserr(i_pt_bin, j_pt_bin) = sig_i_v2inc_syserr * sig_j_v2inc_syserr;
             cov_v2_inc_toterr(i_pt_bin, j_pt_bin) = sig_i_v2inc_syserr * sig_j_v2inc_syserr;
 
           }
