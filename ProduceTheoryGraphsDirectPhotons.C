@@ -685,6 +685,11 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TString fileNameNLOPhotonHalf8TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmuhalf.dat";
         TString fileNameNLOPhotonOne8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmu.dat";
         TString fileNameNLOPhotonTwo8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVtwomu.dat";
+        
+        TFile *file8TeVJetPhox = new TFile("ExternalInput/Theory/8tev_jetphox_NLO_16000M.root");
+        TH1D* pp8TeVJetPhox_xsec = (TH1D*)file8TeVJetPhox->Get("hp21");
+        TGraphAsymmErrors* pp8TeVJetPhox_xsec = (TH1D*)file8TeVJetPhox->Get("hp21");
+        
         Int_t nlinesNLOTwo8TeV              = 0;
         Int_t nlinesNLOOne8TeV              = 0;
         Int_t nlinesNLOHalf8TeV             = 0;
@@ -809,6 +814,8 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             labelRatioGamma->Draw();
 
         canvasRatioDirGammaCalc->SaveAs(Form("%s/GammaNLOCalc_Separation_PP8TeV.%s",outputDir.Data(),suffix.Data()));
+
+
 
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 13TeV *********************************************

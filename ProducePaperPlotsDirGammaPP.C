@@ -480,12 +480,64 @@ void ProducePaperPlotsDirGammaPP(
             SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
             labelALICENormUnPaperAll->Draw();
             
-            labelEnergyInvYieldPaperAll->Draw();
-            labelALICEInvYieldPaperAll->Draw();
-            labelALICENormUnPaperAll->Draw();
 
             histo2DYieldGamma->Draw("same,axis");
             canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_IndMeas.%s",outputDir.Data(),suffix.Data()));
+            
+            
+          
+          
+            histo2DYieldGamma->Draw("copy");
+            DrawGammaSetMarkerTF1( fitHagGammaComb[0], 3, 2.5, kGray+3);
+            DrawGammaSetMarkerTF1( fitHagGammaComb[1], 2, 2.5, kGray+1);
+            fitHagGammaComb[0]->SetRange(0.38,10.5);
+            fitHagGammaComb[1]->SetRange(0.28,12.5);
+            TLegend* legendYieldIncGammaInd2760_comb       = GetAndSetLegend2(0.20, 0.11, 0.5, 0.12+(2*textSizeLabelsRel*0.85),textSizeLabelsPixel);
+            TLegend* legendYieldIncGammaInd8000_comb       = GetAndSetLegend2(0.64, 0.86-(2*textSizeLabelsRel*0.85), 0.95, 0.87,textSizeLabelsPixel);
+            for (Int_t i = 0; i < 2; i++){
+                if(graphIncGammaSysErr[i]){
+                  DrawGammaSetMarkerTGraphAsym(graphCombIncGammaSys[i], markerStyleDet[i][0], markerSizeDet[i], defaultColor , defaultColor,widthLinesBoxes, kTRUE);
+                  graphCombIncGammaSys[i]->Draw("E2same");
+                  DrawGammaSetMarkerTGraphAsym(graphCombIncGammaStat[i],  markerStyleDet[i][0], markerSizeDet[i], defaultColor , defaultColor);
+                  graphCombIncGammaStat[i]->Draw("Epsame,x0");
+                  if(i==0){
+                    legendYieldIncGammaInd2760_comb->AddEntry(graphCombIncGammaSys[i], Form("#gamma_{inc} %s", "ALICE"),"pf");
+                    legendYieldIncGammaInd2760_comb->AddEntry(fitHagGammaComb[i], "Hagedorn fit","l");
+                  }
+                  else if(i==1){
+                    legendYieldIncGammaInd8000_comb->AddEntry(graphCombIncGammaSys[i], Form("#gamma_{inc} %s", "ALICE"),"pf");
+                    legendYieldIncGammaInd8000_comb->AddEntry(fitHagGammaComb[i], "mod. Hag. fit","l");
+                  }
+                  fitHagGammaComb[i]->Draw("same");
+                }
+                
+            }
+            
+            legendYieldIncGammaInd2760_comb->Draw();
+            legendYieldIncGammaInd8000_comb->Draw();
+            
+            labelEnergyInvYieldPaperAll8000 = new TLatex(0.64, 0.92, "pp #sqrt{#it{s}} = 8 TeV");
+            SetStyleTLatex( labelEnergyInvYieldPaperAll8000, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+            labelEnergyInvYieldPaperAll8000->Draw();
+            // labelALICEInvYieldPaperAll8000  = new TLatex(0.62,0.92-0.04,"ALICE");
+            // SetStyleTLatex( labelALICEInvYieldPaperAll8000, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+            // labelALICEInvYieldPaperAll8000->Draw();
+            labelALICENormUnPaperAll8000    = new TLatex(0.64,0.92-0.03,"Norm. unc. 2.6%");
+            SetStyleTLatex( labelALICENormUnPaperAll8000, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
+            labelALICENormUnPaperAll8000->Draw();
+            
+            labelEnergyInvYieldPaperAll = new TLatex(0.20, 0.12+0.04*3, "pp #sqrt{#it{s}} = 2.76 TeV");
+            SetStyleTLatex( labelEnergyInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+            labelEnergyInvYieldPaperAll->Draw();
+            // labelALICEInvYieldPaperAll  = new TLatex(0.20,0.12+0.04*2,"ALICE");
+            // SetStyleTLatex( labelALICEInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
+            // labelALICEInvYieldPaperAll->Draw();
+            labelALICENormUnPaperAll    = new TLatex(0.20,0.12+0.05+0.04,"Norm. unc. 2.5%");
+            SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
+            labelALICENormUnPaperAll->Draw();
+
+            histo2DYieldGamma->Draw("same,axis");
+            canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_Comb.%s",outputDir.Data(),suffix.Data()));
             
             
   // **********************************************************************************************************************
