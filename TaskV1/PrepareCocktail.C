@@ -60,7 +60,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
                         Int_t       numberOfBins                = 30,
                         Int_t       mode                        = 0,
                         Bool_t      producePlotsInOrPtRange     = kFALSE,
-                        Bool_t      producePlotsForThesis       = kTRUE
+                        Bool_t      producePlotsForThesis       = kFALSE,
+                        Bool_t      produceOutputForPaper       = kFALSE,
+                        TString     specialNameForOutput        = ""
                      ) {
 
     gROOT->Reset();
@@ -81,6 +83,8 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     fSuffix                                                     = suffix;
     fMode                                                       = mode;
     fRapidity                                                   = rapidity;
+    doWriteGammaRatioFile                                       = produceOutputForPaper;
+    fSpecialFoldername                                          = specialNameForOutput;
     cout << "Pictures are saved as " << suffix.Data() << endl;
     TString rapidityForOut                                      = Form("%.2f", rapidity);
     rapidityForOut.ReplaceAll(".","_");
@@ -2092,6 +2096,28 @@ void SaveHistos() {
     for (Int_t i=0; i<nCocktailInputMethods; i++) {
         if (histoPi0CocktailInput[i]) histoPi0CocktailInput[i]->Write(histoPi0CocktailInput[i]->GetName(), TObject::kOverwrite);
         if (histoEtaCocktailInput[i]) histoEtaCocktailInput[i]->Write(histoEtaCocktailInput[i]->GetName(), TObject::kOverwrite);
+    }
+    if(doWriteGammaRatioFile){
+        TString nameOutput2                  = Form("%s/%s/GammaCocktailRatios.root", fCutSelection.Data(), fEnergyFlag.Data());
+        cout << "INFO: writing into: " << nameOutput2 << endl;
+        TFile *outputFile2                   = new TFile(nameOutput2,"UPDATE");
+        outputFile2->mkdir(Form("%s_%s",fEnergyFlag.Data(),fSpecialFoldername.Data()));
+        TDirectoryFile* directoryGamma = (TDirectoryFile*)outputFile2->Get(Form("%s_%s",fEnergyFlag.Data(),fSpecialFoldername.Data()));
+        outputFile2->cd(Form("%s_%s",fEnergyFlag.Data(),fSpecialFoldername.Data()));
+        
+        TH1D* dummyClone;
+        // write projections
+        histoGammaSumPtOrBin->Write(                            histoGammaSumPtOrBin->GetName(),    TObject::kOverwrite);
+        for (Int_t i=0; i<nMotherParticles; i++) {
+            if (histoGammaPtOrBin[i]){
+              dummyClone = (TH1D*)histoGammaPtOrBin[i]->Clone(Form("%s_RatioToAll",histoGammaPtOrBin[i]->GetName()));
+              dummyClone->Divide(histoGammaSumPtOrBin);
+              histoGammaPtOrBin[i]->Write(            histoGammaPtOrBin[i]->GetName(),            TObject::kOverwrite);
+              dummyClone->Write(            dummyClone->GetName(),            TObject::kOverwrite);
+            }
+            if (histoGammaMotherPtOrBin[i])         histoGammaMotherPtOrBin[i]->Write(      histoGammaMotherPtOrBin[i]->GetName(),      TObject::kOverwrite);
+        }
+        outputFile2->Close();
     }
 }
 

@@ -46,6 +46,10 @@ Double_t    eventNormScalingFactor                          = 1.;
 // this switch is to check the scaling factors by producing the gamma pt spec also from the gamma pt vs phi dist
 Bool_t      doGammaPtOrBinFromPtPhi                         = kTRUE;
 
+// this switch is to also write out an extra root file with orgBin gamma ratios
+Bool_t      doWriteGammaRatioFile                           = kFALSE;
+TString     fSpecialFoldername                              = "";
+
 //************************** cocktail settings ********************************************
 Double_t    ptGenMin                                        = 0;
 Double_t    ptGenMax                                        = 20;
