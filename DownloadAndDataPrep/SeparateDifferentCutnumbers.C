@@ -53,6 +53,10 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
                                 ){
 
     TFile *fileInput1 = new TFile(nameInputFile1.Data());
+    if(fileInput1->IsZombie()){
+      cout << "ERROR: file is zombie, returning..." << endl;
+      return;
+    }
     
     TString autoDetectedMainDir1     = AutoDetectMainTList(mode , fileInput1);
     TString defaultMainDir           = GetDefaultMainTListName(mode);
