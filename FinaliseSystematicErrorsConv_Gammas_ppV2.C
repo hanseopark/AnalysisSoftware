@@ -214,7 +214,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothIncRatio8TeV[16]              = { 0, 0, 1, 1, 1,  1, 0, 1, 0, 0,
                                                     0, 0, 1, 0, 0,  0 };
-    Bool_t bsmoothDR8TeV[16]                    = { 0, 0, 1, 1, 1,  1, 0, 1, 0, 0,
+    Bool_t bsmoothDR8TeV[16]                    = { 1, 0, 1, 1, 1,  1, 0, 1, 0, 1,
                                                     0, 0, 1, 0, 0,  0 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
@@ -430,6 +430,11 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (!energy.CompareTo("2.76TeV")){
                             errorFixed              = 1.05+pow(ptBins[k],2.7)*0.045;
+                        } else if (!energy.CompareTo("8TeV")){
+                          if (ptBins[k] < 2.0)
+                            errorFixed              = 0.7+pow(ptBins[k]-2.0,2)*0.75;
+                          else 
+                            errorFixed              = 0.7;
                         } else {
                             errorFixed              = 0.25+pow(ptBins[k]-2.0,2)*0.7;
                         }
@@ -661,9 +666,9 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                     adjustPtDependent               = kTRUE;
                     for (Int_t k = 0; k < nPtBinsActive; k++){
                         if (ptBins[k] < 3)
-                            errorFixed              = 2.2+pow(ptBins[k]-3,2)*0.15;
+                            errorFixed              = 2.2+pow(ptBins[k]-3,2)*0.25;
                         if (ptBins[k] > 3)
-                            errorFixed              = 2.2+pow(ptBins[k]-3,2)*0.035;
+                            errorFixed              = 2.2+pow(ptBins[k]-3,2)*0.037;
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
                             errorsMeanErr[i][k]     = errorFixed*0.01;
