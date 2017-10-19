@@ -3620,6 +3620,14 @@
                     return kGreen+4;
                 } else if (!generator.CompareTo("LHC13f")){
                     return 418;
+                } else if (generator.Contains("LHC16q")){
+                    return 633;
+                } else if (generator.Contains("LHC16t")){
+                    return 807;
+                } else if (generator.Contains("LHC17f2a_fix") || generator.Contains("EPOS")){
+                    return kViolet+1;
+                } else if (generator.Contains("LHC17f2b") || generator.Contains("DPMJET")){
+                    return kViolet+6;
                 }
             } else {
                 return kViolet+6;
@@ -3860,6 +3868,14 @@
                 return 26;
             } else if (generator.Contains("LHC13e7")){
                 return 28;
+            } else if (generator.Contains("LHC16q")){
+                return 20;
+            } else if (generator.Contains("LHC16t")){
+                return 21;
+            } else if (generator.Contains("LHC17f2a_fix")){
+                return 24;
+            } else if (generator.Contains("LHC17f2b")){
+                return 25;
             } else {
                 return 27;
             }

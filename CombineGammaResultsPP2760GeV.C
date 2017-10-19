@@ -53,7 +53,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                     TString inputFileNamePCMEMC     = "",
                                     TString suffix                  = "eps",
                                     TString fileNameCorrelations    = "",
-                                    Bool_t enablepValueCalc         = kFALSE
+                                    Bool_t enablepValueCalc         = kFALSE,
+                                    Bool_t isThesis                 = kFALSE
                             ){
 
     //*******************************************************************************************************************************************
@@ -148,8 +149,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     Width_t widthCommonFit                          = 2.4;
 
     TString collisionSystempp2760GeV                = "pp #sqrt{#it{s}} = 2.76 TeV";
-    TString textALICE                               = "ALICE this thesis";
-
+    TString textALICE                               = "ALICE";
+    if (isThesis)   textALICE                       = "ALICE this thesis";
     cout << "Setting Gamma binning" << endl;
     Double_t xPtLimitsGamma[100]                    = {0};
     Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, "Gamma", "2.76TeV", 20 );

@@ -916,12 +916,14 @@ void GammaCutStudiesV3(TString cutFile = "CombineCuts.dat",TString energy="",TSt
             if(i == 2 && cutVariationName.Contains("CocktailParam")) histoDR[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioTrueEffPurityModB");
             histoDR[i]->SetTitle("");
             histoDR[i]->GetYaxis()->SetTitle("R_{#gamma}");
+//             histoDR[i]->GetYaxis()->SetRangeUser(0.75,1.4);
             DrawGammaSetMarker(histoDR[i], markerType, 2.0, color[i], color[i]);
             histoDRRatio[i] = (TH1D*) histoDR[i]->Clone(Form("histoDRRatio_%s/%s",cutSelection[i].Data(),cutSelection[0].Data()));
             histoDRRatio[i]->Divide(histoDRRatio[i],histoDR[0],1,1,"b");
             SetHistogramm(histoDRRatio[i],"#it{p}_{T} (GeV/c)","Ratios of Double Ratios",0.8,1.2);
 
             histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioFitPurity");
+//             histoDRFit[i]->GetYaxis()->SetRangeUser(0.75,1.4);
             if(i > 0 && cutVariationName.Contains("IntRange")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get(Form("DoubleRatioFitPurity%s",nameIntRanges[i].Data()));
             if(i == 1 && cutVariationName.Contains("Fit")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioLowFitPurity");
             if(i == 2 && cutVariationName.Contains("Fit")) histoDRFit[i] = (TH1D*) fileCurrentFinal[i]->Get("DoubleRatioHighFitPurity");

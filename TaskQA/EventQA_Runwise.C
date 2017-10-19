@@ -1,7 +1,7 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
- ******     Friederike Bock, fbock@cern.ch                                 ***** 
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Friederike Bock, fbock@cern.ch                                 *****
  *******************************************************************************/
 
 #include "QA.h"
@@ -20,7 +20,7 @@ void EventQA_Runwise(
                         Int_t mode                      = 2,                // standard mode for analysis
                         Int_t cutNr                     = -1,               // if -1: you have to choose number at runtime
                         Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
-                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram, 
+                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram,
                                                                             // kFALSE: histograms contain the complete specified run number range, where each run represents a bin - even if it is not specified
                         Bool_t doTrigger                = kTRUE,            // enables trigger analysis
                         Bool_t doHistsForEverySet       = kTRUE,            // kTRUE: output done for each set separately as well
@@ -41,7 +41,7 @@ void EventQA_Runwise(
     //**************************************************************************************************************
     //**************************** Setting general plotting style **************************************************
     //**************************************************************************************************************
-    
+
     gROOT->Reset();
     TH1::AddDirectory(kFALSE);
     StyleSettingsThesis();
@@ -59,8 +59,8 @@ void EventQA_Runwise(
         cout << "Maximum hardcoded number of Data Sets: " << maxSets << endl;
         cout << "You have chosen: " << nSets << ", returning!" << endl;
         return;
-    }    
-    
+    }
+
     Int_t fMode         = mode;
     Bool_t isCalo       = kFALSE;
     Bool_t isMerged     = kFALSE;
@@ -74,14 +74,14 @@ void EventQA_Runwise(
     //          9 // old output PCM-PCM
     //          10 // merged EMCal
     //          11 // merged PHOS
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9) 
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
         isConv          = kTRUE;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11) 
+    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11)
         isCalo          = kTRUE;
     if (fMode == 10 || fMode == 11 )
         isMerged        = kTRUE;
-    
-    
+
+
     TString fDate               = ReturnDateString();
     TString fTextMeasurement    = Form("#pi^{0} #rightarrow #gamma#gamma");
     TString fCentrality[30];
@@ -194,19 +194,19 @@ void EventQA_Runwise(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     TString fCutSelection            = cuts.at(cutNr);
-    TString fEventCutSelection       = ""; 
-    TString fGammaCutSelection       = ""; 
-    TString fClusterCutSelection     = ""; 
-    TString fMClusterCutSelection    = ""; 
-    TString fElectronCutSelection    = ""; 
+    TString fEventCutSelection       = "";
+    TString fGammaCutSelection       = "";
+    TString fClusterCutSelection     = "";
+    TString fMClusterCutSelection    = "";
+    TString fElectronCutSelection    = "";
     TString fMesonCutSelection       = "";
     if (!isMerged){
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fClusterCutSelection, fMClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
-    }    
+    }
 
-    
+
     //*****************************************************************************************************
     //************************** Set proper cluster nomenclature ******************************************
     //*****************************************************************************************************
@@ -219,14 +219,14 @@ void EventQA_Runwise(
             calo                = "EMCal";
             fClusters           = Form("%s clusters", calo.Data());
         }else if(fClusterCutSelection.BeginsWith('2')){
-            calo                = "PHOS"; 
+            calo                = "PHOS";
             fClusters           = Form("%s clusters", calo.Data());
         }else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
     }
-    
+
     //*****************************************************************************************************
     //************************** Define output directories*************************************************
-    //*****************************************************************************************************    
+    //*****************************************************************************************************
     TString outputDir           = Form("%s/%s/EventQA/%s/Runwise",fCutSelection.Data(),fEnergyFlag.Data(),suffix.Data());
     if(addSubFolder){
         outputDir               += "/";
@@ -234,7 +234,7 @@ void EventQA_Runwise(
     }
     gSystem->Exec("mkdir -p "+outputDir);
 
-    
+
     //*****************************************************************************************************
     //**************************** Determine global run list **********************************************
     //*****************************************************************************************************
@@ -274,7 +274,7 @@ void EventQA_Runwise(
 
     map<TString,Int_t> mapBin;
 
-    
+
     //*****************************************************************************************************
     //********************* Create histograms for plotting ************************************************
     //*****************************************************************************************************
@@ -315,7 +315,7 @@ void EventQA_Runwise(
 
     TH1D* hCaloMergedNClusters[nSets];
     TH1D* hCaloMergedNClustersQA[nSets];
-    
+
     TH1D* hPi0Frac[nSets];
     TH1D* hPi0Mass[nSets];
     TH1D* hPi0Width[nSets];
@@ -358,7 +358,7 @@ void EventQA_Runwise(
     std::vector<TString> vecHistosName;
     TString histoName;
 
-    
+
     Int_t hFBin;
     Int_t hLBin;
     Int_t hNBin;
@@ -492,7 +492,7 @@ void EventQA_Runwise(
             EditTH1(globalRuns, doEquidistantXaxis, hConvNCandidatesQA[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
             vecHistos[i].push_back(hConvNCandidatesQA[i]);
         }
-            
+
         histoName                   = "hCaloNClusters";
         if(i==0) vecHistosName.push_back(histoName);
         hCaloNClusters[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCaloNClusters; Run Number ; #frac{1}{N_{Events}} N_{Clusters before Cuts}",hNBin,hFBin,hLBin);
@@ -516,22 +516,22 @@ void EventQA_Runwise(
             if(i==0) vecHistosName.push_back(histoName);
             hCaloMergedNClustersQA[i]= new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCaloMergedNClustersQA; Run Number ; #frac{1}{N_{Events}} N_{merged clusters}",hNBin,hFBin,hLBin);
             EditTH1(globalRuns, doEquidistantXaxis, hCaloMergedNClustersQA[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-            vecHistos[i].push_back(hCaloMergedNClustersQA[i]);            
-        }    
-        
+            vecHistos[i].push_back(hCaloMergedNClustersQA[i]);
+        }
+
         if (!isMerged){
             histoName               = "hPi0Frac";
             if(i==0) vecHistosName.push_back(histoName);
             hPi0Frac[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Frac; Run Number ; N^{#pi^{0}}/N^{Evt}",hNBin,hFBin,hLBin);
             EditTH1(globalRuns, doEquidistantXaxis, hPi0Frac[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
             vecHistos[i].push_back(hPi0Frac[i]);
-            
+
             histoName               = "hPi0Mass";
             if(i==0) vecHistosName.push_back(histoName);
             hPi0Mass[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Mass; Run Number ; m_{#pi^{0}}",hNBin,hFBin,hLBin);
             EditTH1(globalRuns, doEquidistantXaxis, hPi0Mass[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
             vecHistos[i].push_back(hPi0Mass[i]);
-            
+
             histoName               = "hPi0Width";
             if(i==0) vecHistosName.push_back(histoName);
             hPi0Width[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Width; Run Number ; #sigma_{#pi^{0}}",hNBin,hFBin,hLBin);
@@ -550,7 +550,7 @@ void EventQA_Runwise(
         hPi0PtRMS[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0PtRMS; Run Number ; #sigma_{#it{p}_{T}^{#pi^{0}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hPi0PtRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hPi0PtRMS[i]);
-        
+
         histoName                   = "hPi0Alpha";
         if(i==0) vecHistosName.push_back(histoName);
         hPi0Alpha[i]                = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Alpha; Run Number ; Mean #alpha_{#pi^{0}}",hNBin,hFBin,hLBin);
@@ -586,20 +586,20 @@ void EventQA_Runwise(
         hPi0OpenAngleRMS[i]         = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0OpenAngleRMS; Run Number ; #sigma_{#theta_{#pi^{0}}}",hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hPi0OpenAngleRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hPi0OpenAngleRMS[i]);
-    
+
         if (!isMerged){
             histoName               = "hEtaFrac";
             if(i==0) vecHistosName.push_back(histoName);
             hEtaFrac[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEtaFrac; Run Number ; N^{#eta}/N^{Evt}",hNBin,hFBin,hLBin);
             EditTH1(globalRuns, doEquidistantXaxis, hEtaFrac[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
             vecHistos[i].push_back(hEtaFrac[i]);
-            
+
             histoName               = "hEtaMass";
             if(i==0) vecHistosName.push_back(histoName);
             hEtaMass[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEtaMass; Run Number ; m_{#eta}",hNBin,hFBin,hLBin);
             EditTH1(globalRuns, doEquidistantXaxis, hEtaMass[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
             vecHistos[i].push_back(hEtaMass[i]);
-            
+
             histoName               = "hEtaWidth";
             if(i==0) vecHistosName.push_back(histoName);
             hEtaWidth[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEtaWidth; Run Number ; #sigma_{#eta}",hNBin,hFBin,hLBin);
@@ -658,7 +658,7 @@ void EventQA_Runwise(
 
     //*****************************************************************************************************
     //******************************* create log files *****************************************************
-    //*****************************************************************************************************    
+    //*****************************************************************************************************
     fstream* fLog           = new fstream[nSets];
     fstream* fEventLog      = new fstream[nSets];
     for(Int_t iStr=0; iStr<nSets; iStr++){
@@ -761,7 +761,7 @@ void EventQA_Runwise(
             //--------------------------------------------------------------------------------------------------------
             if(doEquidistantXaxis) bin  = mapBin[fRunNumber];
             else bin = fRunNumber.Atoi() - hFBin;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //----------------------------- Event quality histograms processing --------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -771,23 +771,23 @@ void EventQA_Runwise(
                 cout << "INFO: Output contains event weights" << endl;
             } else {
                 EVENTS      = (TH1D*) ESDContainer->FindObject("NEvents");
-            }    
-            
+            }
+
             if(!EVENTS){
                 cout << "ERROR: Object |NEvents| could not be found! Returning!" << endl;
                 return;
             }
             Double_t nEvents;
-            if(fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb")) 
+            if(fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
                 nEvents = EVENTS->GetBinContent(1);
-            else                      
+            else
                 nEvents = GetNEvents((TH1*)EVENTS,kFALSE);
             Double_t nEventsAll         = EVENTS->GetEntries() - EVENTS->GetBinContent(4);
             sumEventsAll[i]             += nEventsAll;
             sumEvents[i]                += nEvents;
             //--------------------------------------------------------------------------------------------------------
             Float_t nEventsBin1         = EVENTS->GetBinContent(1);
-            if(nEventsBin1==0) 
+            if(nEventsBin1==0)
                 nEventsBin1             = 1;
             Float_t nEventsBin2         = EVENTS->GetBinContent(2);
             Float_t nEventsBin3         = EVENTS->GetBinContent(3);
@@ -796,7 +796,7 @@ void EventQA_Runwise(
             Float_t nEventsBin6         = EVENTS->GetBinContent(6);
             Float_t nEventsBin7         = EVENTS->GetBinContent(7);
             Float_t nEventsBin12 = 0;
-            if(EVENTS->GetNbinsX()==12) 
+            if(EVENTS->GetNbinsX()==12)
                 nEventsBin12            = EVENTS->GetBinContent(12);
 
             Float_t nEventsAllEvt       = nEventsBin1+nEventsBin2+nEventsBin3+nEventsBin4+nEventsBin5+nEventsBin6+nEventsBin7;
@@ -857,7 +857,7 @@ void EventQA_Runwise(
             hFracPileUp[i]->SetBinError(bin,ratioPileUpEvtErr);
             hFracSPDClusTrack[i]->SetBinContent(bin,ratioSPDClusTrackEvt);
             hFracSPDClusTrack[i]->SetBinError(bin,ratioSPDClusTrackEvtErr);
-            
+
             //--------------------------------------------------------------------------------------------------------
             //----------------------- number of reference tracks in the TPC (|eta| < 0.8) ----------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -868,7 +868,7 @@ void EventQA_Runwise(
                 hTracksRMSGood[i]->SetBinContent(bin, GOODESD->GetRMS());
                 hTracksRMSGood[i]->SetBinError(bin, GOODESD->GetRMSError());
             }else cout << "INFO: Object |GoodESDTracks| could not be found! Skipping Fill..." << endl;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------- primary vertex distribution in Z ---------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -898,25 +898,25 @@ void EventQA_Runwise(
                 }
             }else cout << "INFO: Object |VertexZ| could not be found! Skipping Fill..." << endl;
 
-	    if(fEnergyFlag.Contains("PbPb")){
-	      //--------------------------------------------------------------------------------------------------------
-	      //--------------------------------------- centrality -----------------------------------------------------
-	      //--------------------------------------------------------------------------------------------------------
-	      TH1D* Centrality               = (TH1D*) ESDContainer->FindObject("Centrality");
-	      if(Centrality){
+            if(fEnergyFlag.Contains("PbPb")){
+            //--------------------------------------------------------------------------------------------------------
+            //--------------------------------------- centrality -----------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------
+            TH1D* Centrality               = (TH1D*) ESDContainer->FindObject("Centrality");
+            if(Centrality){
                 hCentralityMean[i]->SetBinContent(bin, Centrality->GetMean());
                 hCentralityMean[i]->SetBinError(bin, Centrality->GetMeanError());
-	      }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
+            }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
 
-	      //--------------------------------------------------------------------------------------------------------
-	      //--------------------------------------- event plane angle ----------------------------------------------
-	      //--------------------------------------------------------------------------------------------------------
-	      TH1D* EventPlaneAngle          = (TH1D*) ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
-	      if(EventPlaneAngle){
-		 hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
-		 hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
-	      }else cout << "INFO: Object |EventPlaneAngle| could not be found! Skipping Fill..." << endl;
-	    }
+            //--------------------------------------------------------------------------------------------------------
+            //--------------------------------------- event plane angle ----------------------------------------------
+            //--------------------------------------------------------------------------------------------------------
+            TH1D* EventPlaneAngle          = (TH1D*) ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
+            if(EventPlaneAngle){
+                hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
+                hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
+            } else cout << "INFO: Object |EventPlaneAngle| could not be found! Skipping Fill..." << endl;
+            }
 
             //--------------------------------------------------------------------------------------------------------
             //------------------------- Calorimeter selection histograms ---------------------------------------------
@@ -954,7 +954,7 @@ void EventQA_Runwise(
                 }else cout << "INFO: Object |AcceptanceCuts| or |IsPhotonSelected| could not be found! Skipping Fill..." << endl;
             }
 
-            
+
             //--------------------------------------------------------------------------------------------------------
             //-------------------------- Conversion selection histograms ---------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1056,7 +1056,7 @@ void EventQA_Runwise(
                         hEtaWidth[i]->SetBinError(bin,0.);
                     }
                 }else{ cout << "ERROR: Object |ESD_Mother_InvMass_Pt| or |ESD_BG_InvMass| could not be found! Returning..." << endl; return;}
-            }   
+            }
             //--------------------------------------------------------------------------------------------------------
             //--------------------------- Pion properties ------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1068,7 +1068,7 @@ void EventQA_Runwise(
                 namePi0MesonY           = "ESD_Mother_Pt_Y";
                 namePi0MesonAlpha       = "ESD_Mother_Pt_Alpha";
                 namePi0MesonOpen        = "ESD_Mother_Pt_OpenAngle";
-            } 
+            }
 
             TH2D* Pi0PtY                = (TH2D*) ESDContainer->FindObject(namePi0MesonY.Data());
             if(Pi0PtY){
@@ -1105,8 +1105,8 @@ void EventQA_Runwise(
                 hPi0OpenAngleRMS[i]->SetBinError(bin, Pi0OpenAngle->GetRMSError());
                 delete Pi0OpenAngle;
             }else cout << "INFO: Object |ESD_MotherPi0_Pt_OpenAngle| could not be found! Skipping Fill..." << endl;
-            
-            
+
+
             //--------------------------------------------------------------------------------------------------------
             //---------------------------- Eta properties ------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1146,8 +1146,8 @@ void EventQA_Runwise(
                     hEtaOpenAngleRMS[i]->SetBinError(bin, EtaOpenAngle->GetRMSError());
                     delete EtaOpenAngle;
                 }else cout << "INFO: Object |ESD_MotherEta_Pt_OpenAngle| could not be found! Skipping Fill..." << endl;
-            }    
-            
+            }
+
             //--------------------------------------------------------------------------------------------------------
             //---------------------------- Cleanup -------------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1163,9 +1163,9 @@ void EventQA_Runwise(
         TF1 *tfFit;
         for(Int_t iHist=0; iHist<(Int_t)vecHistos[i].size(); iHist++){
             TH1D* temp          = vecHistos[i].at(iHist);
-            if(doEquidistantXaxis) 
+            if(doEquidistantXaxis)
                 tfFit           = new TF1("tfFit","[0]",0,temp->GetNbinsX());
-            else 
+            else
                 tfFit           = new TF1("tfFit","[0]",rangesRuns[i][0],rangesRuns[i][1]);
             temp->Fit(tfFit,"QRME0");
             fitValues[i][iHist] = tfFit->GetParameter(0);
@@ -1173,16 +1173,16 @@ void EventQA_Runwise(
             tfFit               = 0x0;
         }
     }
-    
+
     //**************************************************************************************************
     //****************************** Drawing Histograms ************************************************
     //**************************************************************************************************
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Histograms" << endl;
     TCanvas* canvas         = new TCanvas("canvas","",10,10,750,500);  // gives the page size
-    Double_t leftMar        = 0.09; 
-    Double_t rightMar       = 0.025; 
-    Double_t topMargin      = 0.04; 
+    Double_t leftMar        = 0.09;
+    Double_t rightMar       = 0.025;
+    Double_t topMargin      = 0.04;
     Double_t bottomMargin   = 0.09;
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
     Double_t yMax;  // min of y range for vertical lines
@@ -1238,14 +1238,14 @@ void EventQA_Runwise(
                     if(((TString)vecHistosName.at(h)).CompareTo("hCaloNClusters")==0 ||
                         ((TString)vecHistosName.at(h)).CompareTo("hCaloNClustersQA")==0 ||
                         ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClusters")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 ) 
+                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 )
                         PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.81, 0.03, fClusters.Data(), "", "");
                 } else{
                     TString temp="";
                     if(((TString)vecHistosName.at(h)).CompareTo("hCaloNClusters")==0 ||
                         ((TString)vecHistosName.at(h)).CompareTo("hCaloNClustersQA")==0 ||
                         ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClusters")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 ) 
+                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 )
                         temp = fClusters;
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), temp.Data());
 
@@ -1258,7 +1258,7 @@ void EventQA_Runwise(
                 else SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()));
             }
         }
-        
+
         //**********************************************************************************************************
         //****************************** Drawing Runwise Histograms ************************************************
         //**********************************************************************************************************
@@ -1304,7 +1304,7 @@ void EventQA_Runwise(
             if(doTrigger && i<nData){
                 TString fTriggerCut = fEventCutSelection(3,2);
                 fTrigger            = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
-                if(fTrigger.Contains("not defined")) 
+                if(fTrigger.Contains("not defined"))
                     fTrigger        = "";
             }
             //--------------------------------------------------------------------------------------------------------
@@ -1321,7 +1321,7 @@ void EventQA_Runwise(
                                         doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "EtaSignal_Runwise", plotDataSets[i], kFALSE,
                                         fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE, kFALSE);
             }
-            
+
             delete legendRuns;
             delete canvasRunwise;
         }
@@ -1367,19 +1367,19 @@ void EventQA_Runwise(
                 ((TH1D*) vecHistos[i].at(h))->Draw(draw.Data());
                 if(i<nData) DrawFit(((TH1D*) vecHistos[i].at(h)),i,fitValues[i][h],rangesRuns[i],DataSets[i],plotDataSets[i],0.15,0.9,0.03,1);
             }
-	    if (drawVerticalLines){
-	      if(!adjustedRange){
-		canvas->Update();
-		yMax = canvas->GetUymax();
-		yMin = canvas->GetUymin();
-	      }
-	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
-		verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
-		verticalLines[lineBin]->SetLineWidth(1);
-		verticalLines[lineBin]->SetLineStyle(2);
-		verticalLines[lineBin]->Draw("same");
-	      }
-	    }
+            if (drawVerticalLines){
+                if(!adjustedRange){
+                    canvas->Update();
+                    yMax = canvas->GetUymax();
+                    yMin = canvas->GetUymin();
+                }
+                for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+                    verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
+                    verticalLines[lineBin]->SetLineWidth(1);
+                    verticalLines[lineBin]->SetLineStyle(2);
+                    verticalLines[lineBin]->Draw("same");
+                }
+            }
             legend->Draw();
 
             if(doTrigger){
@@ -1457,18 +1457,18 @@ void EventQA_Runwise(
                         ratio[j]->Draw(draw.Data());
                         legend->AddEntry(ratio[j],ratioSets[j]->Data(),"p");
                     }
-		    if (drawVerticalLines){
-		      canvas->Update();
-		      yMax = canvas->GetUymax();
-		      yMin = canvas->GetUymin();
-		      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
-			verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
-			verticalLines[lineBin]->SetLineWidth(1);
-			verticalLines[lineBin]->SetLineStyle(2);
-			verticalLines[lineBin]->Draw("same");
-		      }
-		    }
-		    legend->Draw();
+                    if (drawVerticalLines){
+                        canvas->Update();
+                        yMax = canvas->GetUymax();
+                        yMin = canvas->GetUymin();
+                        for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+                            verticalLines[lineBin] = new TLine(runRanges[lineBin],yMin,runRanges[lineBin],yMax);
+                            verticalLines[lineBin]->SetLineWidth(1);
+                            verticalLines[lineBin]->SetLineStyle(2);
+                            verticalLines[lineBin]->Draw("same");
+                        }
+                    }
+                    legend->Draw();
                     outputDirDataSet = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
                     gSystem->Exec("mkdir -p "+outputDirDataSet+"/TrendingRatios");
 
@@ -1476,7 +1476,7 @@ void EventQA_Runwise(
                         TString fTrigger    = "";
                         TString fTriggerCut = fEventCutSelection(3,2);
                         fTrigger            = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
-                        if(fTrigger.Contains("not defined")) 
+                        if(fTrigger.Contains("not defined"))
                             fTrigger        = "";
 
                         if( CheckForCaloHist((TString)vecHistosName.at(h)) ) PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), fClusters.Data());
@@ -1489,11 +1489,11 @@ void EventQA_Runwise(
                     if(canvas->GetTopMargin()!=0.06) canvas->SetTopMargin(0.06);
                     SaveCanvas(canvas, Form("%s/TrendingRatios/%s.%s", outputDirDataSet.Data(),Form("%s",((TH1D*) vecHistos[i].at(h))->GetName()),suffix.Data()));
                     legend->Clear();
-		    if(drawVerticalLines){
-		      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
-			delete verticalLines[lineBin];
-		      }
-		    }
+                    if(drawVerticalLines){
+                        for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+                            delete verticalLines[lineBin];
+                        }
+                    }
                     for(Int_t j=0; j<nSets-nData; j++) {
                         delete ratio[j];
                         delete ratioSets[j];

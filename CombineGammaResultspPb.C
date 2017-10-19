@@ -51,7 +51,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
                                 TString inputFileNamePCMEMC     = "",
                                 TString suffix                  = "eps",
                                 TString fileNameCorrelations    = "",
-                                Bool_t enablepValueCalc         = kFALSE
+                                Bool_t enablepValueCalc         = kFALSE,
+                                Bool_t isThesis                 = kFALSE
                             ){
 
     //*******************************************************************************************************************************************
@@ -159,7 +160,10 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
 
     TString collisionSystempPb                      = "p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     TString collisionSystempPbNSD                   = "NSD p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
-    TString textALICE                               = "ALICE this thesis";
+
+    TString textALICE                               = "ALICE";
+    if (isThesis) textALICE                         = "ALICE this thesis";
+
     cout << "Setting Gamma binning" << endl;
     Double_t xPtLimitsGamma[100]                    = {0};
     Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, "Gamma", "pPb_5.023TeV", 20 );
@@ -509,8 +513,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     canvasRelStatErr->SetLogx();
 
     TH2F * histo2DRelStatErr;
-    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
-//     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
+    histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
+    SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetYaxis()->SetRangeUser(0,24.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);

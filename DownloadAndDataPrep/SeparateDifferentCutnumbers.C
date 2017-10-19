@@ -33,7 +33,7 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
@@ -46,7 +46,7 @@ using namespace std;
 
 
 void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
-                                    TString nameOutputFileBase      = "",                           
+                                    TString nameOutputFileBase      = "",
                                     Int_t mode                      = 0,
                                     Int_t splitAll                  = kFALSE,
                                     Bool_t removeDCAtree            = kFALSE
@@ -57,20 +57,20 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
       cout << "ERROR: file is zombie, returning..." << endl;
       return;
     }
-    
+
     TString autoDetectedMainDir1     = AutoDetectMainTList(mode , fileInput1);
     TString defaultMainDir           = GetDefaultMainTListName(mode);
-    
+
     if (autoDetectedMainDir1.CompareTo("") == 0){
         cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
         return;
     }
-    
+
     TList *listInput1 =(TList*)fileInput1->Get(autoDetectedMainDir1.Data());
-    if (listInput1 == NULL){ 
+    if (listInput1 == NULL){
         return;
     }
-    
+
     Int_t nDiffCutNumbers = 0;
     for(Int_t i = 0; i<listInput1->GetSize(); i++){
         TList *listToSave       = (TList*)listInput1->At(i);
@@ -83,13 +83,13 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
         cout << "only one cut present + additional folders for basis cuts available, no need to split" << endl;
         return;
     }
-    
+
     TString additionOutputName[20] = {"A", "B", "C", "D", "E",
                                       "F", "G", "H", "I", "J",
                                       "K", "L", "M", "N", "O",
                                       "P", "Q", "R", "S", "T" };
-    
-    Int_t n = 0; 
+
+    Int_t n = 0;
     for(Int_t i = 0; i<listInput1->GetSize(); i++){
         TList *listToSave       = (TList*)listInput1->At(i);
         TString dirname         = listToSave->GetName();
@@ -125,8 +125,8 @@ void SeparateDifferentCutnumbers(   TString nameInputFile1          = "",
                 listOutput->Write("",TObject::kSingleKey);
             fileOutput->Close();
             delete fileOutput;
-            
-        }    
+
+        }
     }
     delete fileInput1;
 }

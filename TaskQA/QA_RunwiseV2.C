@@ -41,13 +41,13 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     }
 
     Size_t      markerSize              = 1.25;
-    
+
     Bool_t      doEquidistantXaxis      = kFALSE;
     Bool_t      doTrigger               = kFALSE; // was: kTRUE
     Bool_t      doHistsForEverySet      = kFALSE; // was: kTRUE
     Bool_t      useDataRunListForMC     = kFALSE;
     Bool_t      addSubFolder            = kFALSE;
-    
+
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
     //**************************************************************************************************************
@@ -61,7 +61,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
         cout << "ERROR: settings " << configFileName.Data() << " not found!" << endl;
         return;
     }
-    
+
     // read settings from file
     for( TString tempLine; tempLine.ReadLine(fileConfigQA, kTRUE); ) {
         // check if line should be considered
@@ -112,7 +112,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             cutNr               = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
             mode                = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
-        } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("markerSize",TString::kIgnoreCase)){
             markerSize          = (Size_t)((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("enableSubfolder",TString::kIgnoreCase)){
             addSubFolder        = kTRUE;
@@ -186,7 +186,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     cout << "**************************************************************************" << endl;
     cout << "**************************************************************************" << endl;
 
-    
+
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************

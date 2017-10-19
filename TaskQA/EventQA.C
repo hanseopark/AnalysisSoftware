@@ -1,7 +1,7 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
- ******     Friederike Bock, fbock@cern.ch                                 ***** 
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Friederike Bock, fbock@cern.ch                                 *****
  *******************************************************************************/
 
 #include "QA.h"
@@ -19,7 +19,7 @@ void EventQA(
                 Int_t cutNr             = -1,           // if -1: you have to choose number at runtime
                 Int_t doExtQA           = 2,            // 0: switched off, 1: normal extQA, 2: with Cell level plots
                 TString suffix          = "eps",        // output format of plots
-                TString labelData       = "Data",       // Label for data    
+                TString labelData       = "Data",       // Label for data
                 Bool_t addSubfolder     = kFALSE        // flag to enable subdirectory creation for primary cut
             )
 {
@@ -39,10 +39,10 @@ void EventQA(
     //**************************************************************************************************************
     //****************************** Setting common variables ******************************************************
     //**************************************************************************************************************
-    
+
     const Int_t nSets                   = nSetsIn;
     // set correct mode and enable respective flags
-    Int_t fMode                         = mode;    
+    Int_t fMode                         = mode;
     Bool_t isCalo                       = kFALSE;
     Bool_t isMergedCalo                 = kFALSE;
     Bool_t isConv                       = kFALSE;
@@ -55,13 +55,13 @@ void EventQA(
     //          9 // old output PCM-PCM
     //          10 // merged EMCal
     //          11 // merged PHOS
-    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9) 
+    if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
         isConv                          = kTRUE;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11) 
+    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11)
         isCalo                          = kTRUE;
     if (fMode == 10 || fMode == 11)
         isMergedCalo                    = kTRUE;
-    
+
     TString fCollisionSystem            = ReturnFullCollisionsSystem(fEnergyFlag);
     if (fCollisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
@@ -163,17 +163,17 @@ void EventQA(
 
     for(Int_t i=0; i<nSets; i++){
         fCutSelection[i]            = cuts.at(cutNr);
-        fEventCutSelection[i]       = ""; 
-        fGammaCutSelection[i]       = ""; 
-        fClusterCutSelection[i]     = ""; 
-        fMClusterCutSelection[i]    = ""; 
-        fElectronCutSelection[i]    = ""; 
+        fEventCutSelection[i]       = "";
+        fGammaCutSelection[i]       = "";
+        fClusterCutSelection[i]     = "";
+        fMClusterCutSelection[i]    = "";
+        fElectronCutSelection[i]    = "";
         fMesonCutSelection[i]       = "";
         if (!isMergedCalo){
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         } else {
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
-        }    
+        }
     }
 
     Int_t fIsHeavyIonInt = -1;
@@ -188,7 +188,7 @@ void EventQA(
       processLabelOffsetX1 = 0.76;
       processLabelOffsetX2 = 0.58;
     } else if(fIsHeavyIonInt == 8 || fIsHeavyIonInt == 9){
-      fIspPb = kTRUE;  
+      fIspPb = kTRUE;
     } else if (fIsHeavyIonInt == -1){
       cout << "ERROR detecting collision system" << endl;
     }
@@ -196,7 +196,7 @@ void EventQA(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Obtaining trigger - ";
     TString* fTrigger       = new TString[nSets];
-    for(Int_t iT=0;iT<nSets;iT++){ 
+    for(Int_t iT=0;iT<nSets;iT++){
         fTrigger[iT] = "";
     }
     TString fTriggerCut     = fEventCutSelection[0](3,2);
@@ -209,7 +209,7 @@ void EventQA(
 
     //*****************************************************************************************************
     //************************** Define output directories*************************************************
-    //*****************************************************************************************************    
+    //*****************************************************************************************************
     TString outputDir                   = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
     TString outputDirRootFile           = Form("%s/%s/EventQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
     if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
@@ -217,7 +217,7 @@ void EventQA(
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison");
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison/Ratios");
-    
+
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     //*****************************************************************************************************
@@ -228,10 +228,10 @@ void EventQA(
 
     if(isCalo){
         if(fClusterCutSelection[0].BeginsWith('1')){
-            calo            = "EMCal"; 
+            calo            = "EMCal";
             fClusters       = Form("%s clusters", calo.Data());
         } else if(fClusterCutSelection[0].BeginsWith('2')){
-            calo            = "PHOS"; 
+            calo            = "PHOS";
             fClusters       = Form("%s clusters", calo.Data());
         } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
     }
@@ -292,7 +292,7 @@ void EventQA(
     Int_t minB_SPD      = 0;    Int_t maxB_SPD      = 0;
     Int_t minYB_SPD     = 0;    Int_t maxYB_SPD     = 0;
     Bool_t isMinMaxSPD  = kTRUE;
-    
+
     MesonFit fitter;
 
     //*****************************************************************************************************
@@ -304,10 +304,10 @@ void EventQA(
     // canvas definition
     TCanvas* canvas         = new TCanvas("canvas","",10,10,750,500);  // gives the page size
     TCanvas* cvsQuadratic   = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
-    Double_t leftMargin     = 0.09; 
-    Double_t rightMargin    = 0.02; 
-    Double_t topMargin      = 0.04; 
-    Double_t bottomMargin   = 0.09;
+    Double_t leftMargin     = 0.075;
+    Double_t rightMargin    = 0.02;
+    Double_t topMargin      = 0.04;
+    Double_t bottomMargin   = 0.075;
     DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
 
     for(Int_t i=0; i<nSets; i++) {
@@ -376,11 +376,11 @@ void EventQA(
         if (fHistNEvents ){
             cout << "INFO: Output contains event weights" << endl;
         } else {
-           fHistNEvents     = (TH1D*)ESDContainer->FindObject("NEvents"); 
-        }    
+           fHistNEvents     = (TH1D*)ESDContainer->FindObject("NEvents");
+        }
         //if(plotDataSets[i].Contains("JetJet") || plotDataSets[i].Contains("jetjet")) fHistNEvents = (TH1D*)ESDContainer->FindObject("NEventsWOWeight");
         if(fHistNEvents){
-            if(fIsPbPb || fIspPb ) 
+            if(fIsPbPb || fIspPb )
                 nEvents[i]     = (Double_t) fHistNEvents->GetBinContent(1);
             else
                 nEvents[i]     = (Double_t) GetNEvents(fHistNEvents,kFALSE);
@@ -416,7 +416,7 @@ void EventQA(
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         fLog << "Output file: " << nameOutput << endl;
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------- Event properties --------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -492,7 +492,7 @@ void EventQA(
         } else cout << "INFO: Object |V0 Multiplicity| could not be found! Skipping Draw..." << endl;
         TGaxis::SetExponentOffset(0, 0, "x");
         //-------------------------------------------------------------------------------------------------------------------------------
-        // number of gamma candidates 
+        // number of gamma candidates
         TH1D* fHistGammaCandidates = (TH1D*)ESDContainer->FindObject("GammaCandidates");
         if(fHistGammaCandidates){
             GetMinMaxBin(fHistGammaCandidates,minB,maxB);
@@ -506,7 +506,7 @@ void EventQA(
 
         if (isMergedCalo){
             //-------------------------------------------------------------------------------------------------------------------------------
-            // number of merged candidates 
+            // number of merged candidates
             TH1D* fHistMergedCandidates = (TH1D*)ESDContainer->FindObject("MergedCandidates");
             if(fHistMergedCandidates){
                 GetMinMaxBin(fHistMergedCandidates,minB,maxB);
@@ -518,7 +518,7 @@ void EventQA(
                 vecMergedCandidates.push_back(new TH1D(*fHistMergedCandidates));
             } else cout << "INFO: Object |MergedCandidates| could not be found! Skipping Draw..." << endl;
         }
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
         // SPD tracklets vs SPD cluster before cuts
         TH2D* fHistSPDtracklets_clusters_before = (TH2D*)TopContainerEvent->FindObject(Form("SPD tracklets vs SPD clusters %s",ContainerEventCut.Data()));
@@ -596,7 +596,7 @@ void EventQA(
                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTracksVsCandidates, Form("%s/GoodESDTracksVsGammaCandidates_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
 	// centrality
 	if(fIsPbPb){
@@ -688,8 +688,8 @@ void EventQA(
         fLog << "ratioGoodEventsEvt: \t\t(" << ratioGoodEventsEvt << " +- " << ratioGoodEventsEvtErr << ")" << endl;
         fLog << "ratioNormAllEvt: \t\t(" << ratioNormAllEvt << " +- " << ratioNormAllEvtErr << ")" << endl;
         fLog << "ratioNormMinBiasEvt: \t\t(" << ratioNormMinBiasEvt << " +- " << ratioNormMinBiasEvtErr << ")" << endl;
-        
-        
+
+
         //-------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------- Cluster properties -------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -735,7 +735,7 @@ void EventQA(
 
             //-------------------------------------------------------------------------------------------------------------------------------
             //---------------------------------------------- statistics for Calo photons -----------------------------------------------------
-            //-------------------------------------------------------------------------------------------------------------------------------        
+            //-------------------------------------------------------------------------------------------------------------------------------
             if(fHistAcceptance && fHistCutIndex){
                 Double_t CaloNClusters = fHistAcceptance->GetBinContent(1);
                 Double_t CaloNClustersQA = fHistCutIndex->GetBinContent(5);
@@ -748,10 +748,10 @@ void EventQA(
                 fLog << "CaloNClusters: \t\t\t(" << CaloNClusters << " +- " << sqrt(CaloNClusters) << ")" << endl;
                 fLog << "CaloNClustersQA: \t\t(" << CaloNClustersQA << " +- " << sqrt(CaloNClustersQA) << ")" << endl;
             }
-            
+
         }
 
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
         //------------------------------------------- PCM photon properties -------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -936,9 +936,9 @@ void EventQA(
                 fLog << "ConvNCandidatesQA: \t\t(" << ConvNCandidatesQA << " +- " << ConvNCandidatesQAErr << ")" << endl;
             }
 
-            
+
         }
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------- Meson properties --------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -973,7 +973,7 @@ void EventQA(
                                 5,10,0,0);
             SaveCanvas(canvas, Form("%s/MesonBGCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
         } else cout << Form("INFO: Object |MesonBGCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
         // define name for meson property histograms
         TString namePi0MesonY       = "ESD_MotherPi0_Pt_Y";
@@ -983,7 +983,7 @@ void EventQA(
             namePi0MesonY           = "ESD_Mother_Pt_Y";
             namePi0MesonAlpha       = "ESD_Mother_Pt_Alpha";
             namePi0MesonOpen        = "ESD_Mother_Pt_OpenAngle";
-        } 
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         // neutral pion pt vs rapidity
         TH2D* Pi0PtY = (TH2D*) ESDContainer->FindObject(namePi0MesonY.Data());
@@ -1032,9 +1032,9 @@ void EventQA(
             WriteHistogram(Pi0OpenAngle);
             vecPi0OpenAngle.push_back(new TH1D(*Pi0OpenAngle));
         }else cout << "INFO: Object |"<< namePi0MesonOpen.Data()<<"| could not be found! Skipping Draw..." << endl;
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------
-        // Eta properties 
+        // Eta properties
         if ( !isMergedCalo ){
             //-------------------------------------------------------------------------------------------------------------------------------
             // eta meson pt vs rapidity
@@ -1084,7 +1084,7 @@ void EventQA(
                 WriteHistogram(EtaOpenAngle);
                 vecEtaOpenAngle.push_back(new TH1D(*EtaOpenAngle));
             }else cout << "INFO: Object |ESD_MotherEta_Pt_OpenAngle| could not be found! Skipping Draw..." << endl;
-        }    
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         // Invariant mass of meson candidates
         TH2D* ESDMother = (TH2D*) ESDContainer->FindObject("ESD_Mother_InvMass_Pt");
@@ -1101,7 +1101,7 @@ void EventQA(
                 WriteHistogram(ESDBackground);
                 vecESDBackground.push_back(new TH2D(*ESDBackground));
             }else {cout << "ERROR: Object |ESD_Background_InvMass_Pt| could not be found! Skipping Draw & return..." << endl; return;}
-        }   
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         //--------------------------------- statistics for meson properties -------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1154,7 +1154,7 @@ void EventQA(
     //*****************************************************************************************************
 
     std::vector<TH1D*> temp;
-    
+
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Comparison Histograms" << endl;
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -1331,7 +1331,7 @@ void EventQA(
                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MergedCandidates.%s", outputDir.Data(), suffix.Data()));
-    }    
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // centrality
     if(fIsPbPb){
@@ -1416,8 +1416,8 @@ void EventQA(
                                         labelData, colorCompare, kFALSE, 1, 1, kTRUE,
                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta.%s", outputDir.Data(), suffix.Data()));
-    }    
-  
+    }
+
     //-------------------------------------------------------------------------------------------------------------------------------
     // pt distribution pi0
     GetMinMaxBin(vecPi0Pt,minB,maxB);
@@ -1510,7 +1510,7 @@ void EventQA(
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()));
-    
+
     if (!isMergedCalo){
         //-------------------------------------------------------------------------------------------------------------------------------
         // pt distribution eta
@@ -1605,8 +1605,8 @@ void EventQA(
                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta_OpenAngle.%s", outputDir.Data(), suffix.Data()));
     }
-    
-    
+
+
     //*****************************************************************************************************
     //*****************************************************************************************************
     //****************************** Special Histograms ***************************************************
@@ -1649,7 +1649,7 @@ void EventQA(
         DeleteVecTH1D(vecInvMassBeforeAfter[0]);
         DeleteVecTH1D(vecInvMassBeforeAfter[1]);
     }
-    
+
 
 
     //*****************************************************************************************************
