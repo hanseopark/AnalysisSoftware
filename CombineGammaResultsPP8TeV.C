@@ -157,7 +157,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     Width_t widthLinesBoxes                         = 1.4;
     Width_t widthCommonFit                          = 2.4;
 
-    TString collisionSystempp8TeV                   = "pp #sqrt{#it{s}} = 8 TeV";
+    TString collisionSystempp8TeV                   = "pp, #sqrt{#it{s}} = 8 TeV";
     TString textALICE                               = "ALICE";
 
     cout << "Setting Gamma binning" << endl;
@@ -389,13 +389,13 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
         return;
     }
-    while (graphCombDRStat->GetX()[0] < 0.4){
+    while (graphCombDRStat->GetX()[0] < 0.3){
         graphCombDRStat->RemovePoint(0);
     }
-    while (graphCombDRTot->GetX()[0] < 0.4){
+    while (graphCombDRTot->GetX()[0] < 0.3){
         graphCombDRTot->RemovePoint(0);
     }
-    while (graphCombDRSys->GetX()[0] < 0.4){
+    while (graphCombDRSys->GetX()[0] < 0.3){
         graphCombDRSys->RemovePoint(0);
     }
     graphCombDRTot->Print();
@@ -667,13 +667,13 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
         return;
     }
-    while (graphCombDRNonFitStat->GetX()[0] < 0.4){
+    while (graphCombDRNonFitStat->GetX()[0] < 0.3){
         graphCombDRNonFitStat->RemovePoint(0);
     }
-    while (graphCombDRNonFitTot->GetX()[0] < 0.4){
+    while (graphCombDRNonFitTot->GetX()[0] < 0.3){
         graphCombDRNonFitTot->RemovePoint(0);
     }
-    while (graphCombDRNonFitSys->GetX()[0] < 0.4){
+    while (graphCombDRNonFitSys->GetX()[0] < 0.3){
         graphCombDRNonFitSys->RemovePoint(0);
     }
     graphCombDRNonFitTot->Print();
@@ -956,13 +956,13 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
         return;
     }
-    while (graphCombIncGammaStat->GetX()[0] < 0.4){
+    while (graphCombIncGammaStat->GetX()[0] < 0.3){
         graphCombIncGammaStat->RemovePoint(0);
     }
-    while (graphCombIncGammaTot->GetX()[0] < 0.4){
+    while (graphCombIncGammaTot->GetX()[0] < 0.3){
         graphCombIncGammaTot->RemovePoint(0);
     }
-    while (graphCombIncGammaSys->GetX()[0] < 0.4){
+    while (graphCombIncGammaSys->GetX()[0] < 0.3){
         graphCombIncGammaSys->RemovePoint(0);
     }
     graphCombIncGammaTot->Print();
@@ -1135,10 +1135,10 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     //NOTE: dirty hack to use pcm histo for fitting!
     // TF1* fitHagGammaComb            = FitObject("h","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
                                                     // graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],NULL,"QNRME+");
-    // Double_t paramGraphoHag[5]                      = {190,0.188,-0.35,0.3,5.67};
-    // TF1* fitHagGammaComb            = FitObject("oHag","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
-    //                                                 graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],NULL,"QNRME+");
-    TF1* fitHagGammaComb            = FitObject("oHag", "fitHagGammaComb8000","Gamma1", histoIncGammaStatErr[0], histoIncGammaStatErr[0]->GetXaxis()->GetBinLowEdge(1), histoIncGammaStatErr[0]->GetXaxis()->GetBinUpEdge(histoIncGammaStatErr[0]->GetNbinsX()), NULL,"QNRME+");
+    Double_t paramGraphoHag[5]                      = {82,-0.22,-0.01,0.57,6.28};
+    TF1* fitHagGammaComb            = FitObject("oHag","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[2],
+                                                     graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],paramGraphoHag,"QNRME+");
+    //TF1* fitHagGammaComb            = FitObject("oHag", "fitHagGammaComb8000","Gamma1", histoIncGammaStatErr[0], histoIncGammaStatErr[0]->GetXaxis()->GetBinLowEdge(1), histoIncGammaStatErr[0]->GetXaxis()->GetBinUpEdge(histoIncGammaStatErr[0]->GetNbinsX()), NULL,"QNRME+");
     TString forOutput               = WriteParameterToFile(fitHagGammaComb);
     cout << forOutput.Data() << endl;
 
@@ -2100,7 +2100,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
 
 
     Double_t minYSecCorr[4]             = {0.0, 0.0, 0.0, 0.0};
-    Double_t maxYSecCorr[4]             = {0.05, 0.004, 1.0e-3, 0.06};
+    Double_t maxYSecCorr[4]             = {0.07, 0.005, 1.0e-3, 0.06};
     TString nameLabelSec[4]             = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "Rest"};
     TString nameOutputSec[4]            = {"K0s", "K0l", "Lambda", "Rest"};
     for (Int_t k = 0; k < 4; k++){
@@ -2161,7 +2161,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         fitHagGammaComb->SetRange(0.28, 20);
         fitHagGammaComb->Draw("same");
         DrawGammaSetMarkerTF1( fitTsallisGammaComb, 5, 2, colorCombpp8TeVBox);
-        legendYieldIncGamma->AddEntry(fitTsallisGammaComb,"Tsalis fit","l");
+        legendYieldIncGamma->AddEntry(fitTsallisGammaComb,"Levy-Tsallis fit","l");
         fitTsallisGammaComb->SetRange(doubleRatioXpp[0], doubleRatioXpp[1]);
         fitTsallisGammaComb->Draw("same");
 
