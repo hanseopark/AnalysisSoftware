@@ -266,7 +266,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
         TF1* fitPromptDivGammaDir2760GeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt2760GeV, fitGammaDir2760GeV, "ratioFitNLOPromptDivDirGamma2760GeV");
         fitPromptDivGammaDir2760GeV->SetRange(2,50);
-        TF1* fitPromptDivFragGamma2760GeV                   = CalculateRatioOfTwoFunctions (fitGammaPrompt2760GeV, fitGammaFrag2760GeV, "ratioFitNLOPromptDivFragGamma2760GeV");
+        TF1* fitPromptDivFragGamma2760GeV                  = CalculateRatioOfTwoFunctions (fitGammaPrompt2760GeV, fitGammaFrag2760GeV, "ratioFitNLOPromptDivFragGamma2760GeV");
         fitPromptDivFragGamma2760GeV->SetRange(10,50);
 
         graphRatioNLOFragGammaDivTot2760GeV->Fit(fitFragDivGammaDir2760GeV,"QNRMEX0+");
@@ -685,11 +685,11 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TString fileNameNLOPhotonHalf8TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmuhalf.dat";
         TString fileNameNLOPhotonOne8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVmu.dat";
         TString fileNameNLOPhotonTwo8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVtwomu.dat";
-        
-        TFile *file8TeVJetPhox = new TFile("ExternalInput/Theory/8tev_jetphox_NLO_16000M.root");
-        TH1D* pp8TeVJetPhox_xsec = (TH1D*)file8TeVJetPhox->Get("hp21");
-        TGraphAsymmErrors* pp8TeVJetPhox_xsec = (TH1D*)file8TeVJetPhox->Get("hp21");
-        
+
+//         TFile *file8TeVJetPhox = new TFile("ExternalInput/Theory/8tev_jetphox_NLO_16000M.root");
+//         TH1D* pp8TeVJetPhox_xsec = (TH1D*)file8TeVJetPhox->Get("hp21");
+//         TGraphAsymmErrors* pp8TeVJetPhox_xsec = (TH1D*)file8TeVJetPhox->Get("hp21");
+
         Int_t nlinesNLOTwo8TeV              = 0;
         Int_t nlinesNLOOne8TeV              = 0;
         Int_t nlinesNLOHalf8TeV             = 0;
@@ -750,17 +750,69 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         }
         inTwo8TeV.close();
 
+
         for (Int_t i = 0; i < nlinesNLOTwo8TeV; i++){
-            cout << ptNLOPhotonHalf8TeV[i] << "\t" << muHalfDF8TeV[i] << "\t"<< ptNLOPhotonOne8TeV[i] <<"\t" << muOneDF8TeV[i] << "\t"<< ptNLOPhotonTwo8TeV[i] << "\t" << muTwoDF8TeV[i] << endl;
-            gammaValue8TeV[i]           = muOneDF8TeV[i];
-            gammaErrUp8TeV[i]           = muHalfDF8TeV[i]-muOneDF8TeV[i];
-            gammaErrDown8TeV[i]         = muOneDF8TeV[i]-muTwoDF8TeV[i];
-            fragGammaValue8TeV[i]       = muOneF8TeV[i];
-            fragGammaErrUp8TeV[i]       = muHalfF8TeV[i]-muOneF8TeV[i];
-            fragGammaErrDown8TeV[i]     = muOneF8TeV[i]-muTwoF8TeV[i];
+            cout << ptNLOPhotonHalf8TeV[i] << "\t" << muHalfDF8TeV[i] << "\t" << muOneDF8TeV[i] << "\t" << muTwoDF8TeV[i] << endl;
+            gammaValue8TeV[i]               = muOneDF8TeV[i];
+            if (muHalfDF8TeV[i] > muOneDF8TeV[i]){
+                gammaErrUp8TeV[i]           = muHalfDF8TeV[i]-muOneDF8TeV[i];
+                if (muOneDF8TeV[i]-muTwoDF8TeV[i] < 0){
+                    gammaErrDown8TeV[i]     = 0;
+                    if (gammaErrUp8TeV[i] < TMath::Abs(muOneDF8TeV[i]-muTwoDF8TeV[i]))
+                        gammaErrUp8TeV[i]   = TMath::Abs(muOneDF8TeV[i]-muTwoDF8TeV[i]);
+                } else {
+                    gammaErrDown8TeV[i]     = muOneDF8TeV[i]-muTwoDF8TeV[i];
+                }
+            } else {
+                gammaErrUp8TeV[i]           = muTwoDF8TeV[i]-muOneDF8TeV[i];
+                if (muOneDF8TeV[i]-muHalfDF8TeV[i] < 0){
+                    gammaErrDown8TeV[i]     = 0;
+                    if (gammaErrUp8TeV[i] < TMath::Abs(muOneDF8TeV[i]-muHalfDF8TeV[i]))
+                        gammaErrUp8TeV[i]   = TMath::Abs(muOneDF8TeV[i]-muHalfDF8TeV[i]);
+                } else {
+                    gammaErrDown8TeV[i]     = muOneDF8TeV[i]-muHalfDF8TeV[i];
+                }
+            }
+            fragGammaValue8TeV[i]           = muOneF8TeV[i];
+            if (muHalfF8TeV[i] > muOneF8TeV[i]){
+                fragGammaErrUp8TeV[i]           = muHalfF8TeV[i]-muOneF8TeV[i];
+                if (muOneF8TeV[i]-muTwoF8TeV[i] < 0){
+                    fragGammaErrDown8TeV[i]     = 0;
+                    if (fragGammaErrUp8TeV[i] < TMath::Abs(muOneF8TeV[i]-muTwoF8TeV[i]))
+                        fragGammaErrUp8TeV[i]   = TMath::Abs(muOneF8TeV[i]-muTwoF8TeV[i]);
+                } else {
+                    fragGammaErrDown8TeV[i]     = muOneF8TeV[i]-muTwoF8TeV[i];
+                }
+            } else {
+                fragGammaErrUp8TeV[i]           = muTwoF8TeV[i]-muOneF8TeV[i];
+                if (muOneF8TeV[i]-muHalfF8TeV[i] < 0){
+                    fragGammaErrDown8TeV[i]     = 0;
+                    if (fragGammaErrUp8TeV[i] < TMath::Abs(muOneF8TeV[i]-muHalfF8TeV[i]))
+                        fragGammaErrUp8TeV[i]   = TMath::Abs(muOneF8TeV[i]-muHalfF8TeV[i]);
+                } else {
+                    fragGammaErrDown8TeV[i]     = muOneF8TeV[i]-muHalfF8TeV[i];
+                }
+            }
             promptGammaValue8TeV[i]     = muOneD8TeV[i];
-            promptGammaErrUp8TeV[i]     = muHalfD8TeV[i]-muOneD8TeV[i];
-            promptGammaErrDown8TeV[i]   = muOneD8TeV[i]-muTwoD8TeV[i];
+            if (muHalfD8TeV[i] > muOneD8TeV[i]){
+                promptGammaErrUp8TeV[i]           = muHalfD8TeV[i]-muOneD8TeV[i];
+                if (muOneD8TeV[i]-muTwoD8TeV[i] < 0){
+                    promptGammaErrDown8TeV[i]     = 0;
+                    if (promptGammaErrUp8TeV[i] < TMath::Abs(muOneD8TeV[i]-muTwoD8TeV[i]))
+                        promptGammaErrUp8TeV[i]   = TMath::Abs(muOneD8TeV[i]-muTwoD8TeV[i]);
+                } else {
+                    promptGammaErrDown8TeV[i]     = muOneD8TeV[i]-muTwoD8TeV[i];
+                }
+            } else {
+                promptGammaErrUp8TeV[i]           = muTwoD8TeV[i]-muOneD8TeV[i];
+                if (muOneD8TeV[i]-muHalfD8TeV[i] < 0){
+                    promptGammaErrDown8TeV[i]     = 0;
+                    if (promptGammaErrUp8TeV[i] < TMath::Abs(muOneD8TeV[i]-muHalfD8TeV[i]))
+                        promptGammaErrUp8TeV[i]   = TMath::Abs(muOneD8TeV[i]-muHalfD8TeV[i]);
+                } else {
+                    promptGammaErrDown8TeV[i]     = muOneD8TeV[i]-muHalfD8TeV[i];
+                }
+            }
         }
 
         TGraphAsymmErrors *graphNLOCalcDirGam8TeV       = new TGraphAsymmErrors(nlinesNLOTwo8TeV,ptNLOPhotonTwo8TeV,gammaValue8TeV,ptNLOPhotonTwo8TeVErr,ptNLOPhotonTwo8TeVErr,gammaErrDown8TeV,gammaErrUp8TeV);
@@ -910,12 +962,12 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             Double_t decayGamma                                     = histoGammaDecayCombPP2760GeV->Interpolate(graphNLOCalcRGammaALICECocktailPP2760GeV->GetX()[i]);
             Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktailPP2760GeV->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
-            Double_t relErrUp                                       = graphNLOCalcRGammaALICECocktailPP2760GeV->GetEYhigh()[i]/theoGamma;
-            Double_t relErrDown                                     = graphNLOCalcRGammaALICECocktailPP2760GeV->GetEYlow()[i]/theoGamma;
+            Double_t errUpGamma                                     = (theoGamma+graphNLOCalcRGammaALICECocktailPP2760GeV->GetEYhigh()[i]+decayGamma)/decayGamma - drtheoGamma;
+            Double_t errDownGamma                                   = TMath::Abs((theoGamma-graphNLOCalcRGammaALICECocktailPP2760GeV->GetEYlow()[i]+decayGamma)/decayGamma - drtheoGamma);
             graphNLOCalcRGammaALICECocktailPP2760GeV->SetPoint(i, graphNLOCalcRGammaALICECocktailPP2760GeV->GetX()[i], drtheoGamma);
             graphNLOCalcRGammaALICECocktailPP2760GeVCenter->SetPoint(i, graphNLOCalcRGammaALICECocktailPP2760GeV->GetX()[i], drtheoGamma);
             graphNLOCalcRGammaALICECocktailPP2760GeV->SetPointError(i, graphNLOCalcRGammaALICECocktailPP2760GeV->GetEXlow()[i], graphNLOCalcRGammaALICECocktailPP2760GeV->GetEXhigh()[i],
-                                                           drtheoGamma*relErrDown, drtheoGamma*relErrUp);
+                                                                    errDownGamma, errUpGamma);
         }
 
         TGraphAsymmErrors* graphNLOCalcInvYieldINT7DirGam2760GeV    = (TGraphAsymmErrors*)graphNLOCalcDirGam2760GeV->Clone("graphNLOCalcInvYieldINT7DirGam2760GeV");
@@ -964,12 +1016,12 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             Double_t decayGamma                                     = histoGammaDecayCombPP8TeV->Interpolate(graphNLOCalcRGammaALICECocktailPP8TeV->GetX()[i]);
             Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktailPP8TeV->GetY()[i];
             Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
-            Double_t relErrUp                                       = graphNLOCalcRGammaALICECocktailPP8TeV->GetEYhigh()[i]/theoGamma;
-            Double_t relErrDown                                     = graphNLOCalcRGammaALICECocktailPP8TeV->GetEYlow()[i]/theoGamma;
+            Double_t errUpGamma                                     = (theoGamma+graphNLOCalcRGammaALICECocktailPP8TeV->GetEYhigh()[i]+decayGamma)/decayGamma - drtheoGamma;
+            Double_t errDownGamma                                   = TMath::Abs((theoGamma-graphNLOCalcRGammaALICECocktailPP8TeV->GetEYlow()[i]+decayGamma)/decayGamma - drtheoGamma);
             graphNLOCalcRGammaALICECocktailPP8TeV->SetPoint(i, graphNLOCalcRGammaALICECocktailPP8TeV->GetX()[i], drtheoGamma);
             graphNLOCalcRGammaALICECocktailPP8TeVCenter->SetPoint(i, graphNLOCalcRGammaALICECocktailPP8TeV->GetX()[i], drtheoGamma);
             graphNLOCalcRGammaALICECocktailPP8TeV->SetPointError(i, graphNLOCalcRGammaALICECocktailPP8TeV->GetEXlow()[i], graphNLOCalcRGammaALICECocktailPP8TeV->GetEXhigh()[i],
-                                                           drtheoGamma*relErrDown, drtheoGamma*relErrUp);
+                                                           errDownGamma, errUpGamma);
         }
         cout << "calculating 8TeV inv yields" << endl;
         TGraphAsymmErrors* graphNLOCalcInvYieldDirGam8TeV           = (TGraphAsymmErrors*)graphNLOCalcDirGam8TeV->Clone("graphNLOCalcInvYieldDirGam8TeV");

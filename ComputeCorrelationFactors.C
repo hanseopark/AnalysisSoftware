@@ -269,11 +269,11 @@ void ComputeCorrelationFactors(
     Double_t maxCorrYaxis       = 1.05;
     if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !meson.Contains("Gamma")){
         minCorrYaxis            = 0.0;
-    } else if(combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 ) &&  meson.Contains("Gamma") && !isStatCorr){
+    } else if(combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&  meson.Contains("Gamma") && !isStatCorr){
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.5;
         canvasWeights->SetLogy();
-    } else if(  combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 ) &&
+    } else if(  combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&
                 ( meson.Contains("RGamma") ||  meson.Contains("IncGammaToPi0") && isStatCorr ) ){
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.05;
