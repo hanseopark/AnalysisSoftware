@@ -3402,6 +3402,8 @@
         }
 
         Double_t fMaxM02 = 1000.;
+        Bool_t isPtDepM02 = kFALSE;
+        TString pTdepM02 = "";
         switch(maxM02){
             case 0:
                 fMaxM02=1000;
@@ -3442,12 +3444,47 @@
             case 12:
                 fMaxM02=0.32;
                 break;
+            case 20:
+                fMaxM02=0.5;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.27+0.0092*(E_clus)^2 < 0.5; then 0.5)";
+                break;
+            case 21:
+                fMaxM02=0.5;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.32+0.0072*(E_clus)^2 < 0.5; then 0.5)";
+                break;
+            case 22:
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.32+0.0152*(E_clus)^2 < 0.7; then 0.7)";
+                break;
+            case 23:
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.32+0.0238*(E_clus)^2 < 0.7; then 0.7)";
+                break;
+            case 24:
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.27+0.0092*(E_clus)^2 < 0.5; then 0.7)";
+                break;
+            case 25:
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.32+0.0072*(E_clus)^2 < 0.5; then 0.7)";
+                break;
+            case 26:
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="(0.34+0.0072*(E_clus)^2 < 0.5; then 0.7)";
+                break;
             default:
                 fMaxM02 = -10;
                 break;
         }
-        return Form("%1.1f < M_{02} < %3.2f", fMinM02, fMaxM02);
-
+        if(isPtDepM02) return Form("%1.1f < M_{02} < %s", fMinM02, pTdepM02.Data());
+        else return Form("%1.1f < M_{02} < %3.2f", fMinM02, fMaxM02);
 
     }
 
