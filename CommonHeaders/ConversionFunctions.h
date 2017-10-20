@@ -777,7 +777,7 @@
         TGraphAsymmErrors* graphSysDummy  = new TGraphAsymmErrors(histo);
 
         Bool_t kGraphLower          = kFALSE;
-        while (graphSysDummy->GetX()[0] < ptCenter[0] && graphSysDummy->GetN() > 1){
+        while ( TMath::Abs(graphSysDummy->GetX()[0]-ptCenter[0])>0.001 && graphSysDummy->GetN() > 1){
             graphSysDummy->RemovePoint(0);
             kGraphLower             = kTRUE;
         }
