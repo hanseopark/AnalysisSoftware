@@ -185,7 +185,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     Bool_t benableIncRatio8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1,  0 };
     Bool_t benableDR8TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                    1, 1, 1, 1, 1,  0 };
+                                                    1, 1, 1, 1, 1,  1 };
 
     // ***************************************************************************************************
     // ******************************** Booleans for smoothing *******************************************
@@ -215,7 +215,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     Bool_t bsmoothIncRatio8TeV[16]              = { 0, 0, 1, 1, 1,  1, 0, 1, 0, 0,
                                                     0, 0, 1, 0, 0,  0 };
     Bool_t bsmoothDR8TeV[16]                    = { 1, 0, 1, 1, 1,  1, 0, 1, 0, 1,
-                                                    0, 0, 1, 0, 0,  0 };
+                                                    0, 0, 1, 0, 0,  1 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("900GeV") == 0){
@@ -783,6 +783,14 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                         if (!energy.CompareTo("2.76TeV")){
                             if (ptBins[k] > 8.0)
                                 errorFixed          = 3;
+                        }
+                        if (!energy.CompareTo("8TeV")){
+                          if (ptBins[k] < 0.6)
+                              errorFixed              = 4+pow(ptBins[k]-0.6,2)*90;
+                          else if (ptBins[k] < 3 && ptBins[k] > 0.6)
+                              errorFixed              =1.2+pow(ptBins[k]-3,2)*0.25;
+                          else if (ptBins[k] > 3)
+                              errorFixed              = 1.2+pow(ptBins[k]-3,2)*0.08;
                         }
 
                         if (errorFixed != -1){
