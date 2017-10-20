@@ -297,6 +297,10 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     } else if (mode==4) {
         minPt                                = 1.5;
         minY                                 = 0.5;
+        if(optionEnergy.CompareTo("8TeV")==0){
+          minPt                                = 1.0;
+          minY                                 = 0.5;
+        }
     }
 
     TCanvas *canvasDoublRatioNLO = new TCanvas("canvasDoublRatioNLO","",0.095,0.09,1000,815);

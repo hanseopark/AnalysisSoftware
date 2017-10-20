@@ -4741,21 +4741,21 @@
     TString GetSystematicsName  (  TString variationName = "" ){
 
         if ( variationName.CompareTo("PileupDCA") == 0 || variationName.Contains("BGEstimateIterations") )
-            return "OB pile-up B";
+            return "OB pileup B";
         if ( variationName.CompareTo("OOBPileupGamma") == 0)
-            return "OB pile-up #gamma";
+            return "OB pileup #gamma";
         if ( variationName.CompareTo("OOBPileupPi0") == 0)
-            return "OB pile-up #pi^{0}";
+            return "OB pileup #pi^{0}";
         if ( variationName.Contains("BGEstimate") )
-            return "OB pile-up A";
+            return "OB pileup A";
         if ( variationName.CompareTo("Pileup") == 0 || variationName.CompareTo("pileup") == 0 )
-            return "IB pile-up ";
+            return "IB pileup ";
         if ( variationName.CompareTo("BG") == 0 )
             return "BG method";
         if ( variationName.Contains("Periods"))
             return "periods";
         if ( variationName.CompareTo("SPD") == 0 )
-            return "IB pile-up";
+            return "IB pileup";
         if ( variationName.CompareTo("CosPoint") == 0 )
             return "cos(#Theta_{point})";
         if ( variationName.CompareTo("Eta") == 0 )
