@@ -1096,36 +1096,36 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
         if (benable[12] || benable[6] || benable[15]){
             DrawGammaSetMarkerTGraphErr(meanErrorsSignalExtraction, GetMarkerStyleSystematics("IntRange"), markersizeSummed, GetColorSystematics("IntRange"),GetColorSystematics("IntRange"));
             meanErrorsSignalExtraction->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"Signal Ext. #pi^{0}","p");
+            legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"signal ext. #pi^{0}","p");
         }
         if (benable[0] || benable[11]){
             DrawGammaSetMarkerTGraphErr(meanErrorsPID, GetMarkerStyleSystematics("dEdxE"), markersizeSummed, GetColorSystematics("dEdxE"),GetColorSystematics("dEdxE"));
             meanErrorsPID->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsPID,"Electron PID","p");
+            legendSummedMeanNew->AddEntry(meanErrorsPID,"electron PID","p");
         }
         if (benable[1] || benable[2]){
             DrawGammaSetMarkerTGraphErr(meanErrorsTrackReco, GetMarkerStyleSystematics("SinglePt"), markersizeSummed, GetColorSystematics("SinglePt"),GetColorSystematics("SinglePt"));
             meanErrorsTrackReco->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"Track Reco.","p");
+            legendSummedMeanNew->AddEntry(meanErrorsTrackReco,"track reco.","p");
         }
         if (benable[3] || benable[4] || benable[5] || benable[10]){
             DrawGammaSetMarkerTGraphErr(meanErrorsPhotonReco, GetMarkerStyleSystematics("Qt"), markersizeSummed, GetColorSystematics("Qt"),GetColorSystematics("Qt"));
             meanErrorsPhotonReco->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"Photon Reco.","p");
+            legendSummedMeanNew->AddEntry(meanErrorsPhotonReco,"photon reco.","p");
         }
         if (benable[9] || benable[8] || benable[7]){
             DrawGammaSetMarkerTGraphErr(meanErrorsPileup,  GetMarkerStyleSystematics("Pileup"), markersizeSummed, GetColorSystematics("Pileup"),GetColorSystematics("Pileup"));
             meanErrorsPileup->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsPileup,"Pile-up","p");
+            legendSummedMeanNew->AddEntry(meanErrorsPileup,"pileup","p");
         }
         if (benable[13]){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[13], markerStyle[13], markersizeSummed,color[13],color[13]);
             meanErrorsCorr[13]->Draw("p,csame");
-            legendSummedMeanNew->AddEntry(meanErrorsCorr[13],"Cocktail","p");
+            legendSummedMeanNew->AddEntry(meanErrorsCorr[13],"cocktail","p");
         }
         DrawGammaSetMarkerTGraphErr(graphMaterialError,  GetMarkerStyleSystematics( "Material" ), 1.,GetColorSystematics( "Material" ),GetColorSystematics( "Material" ));
         graphMaterialError->Draw("p,csame");
-        legendSummedMeanNew->AddEntry(graphMaterialError,"Material","p");
+        legendSummedMeanNew->AddEntry(graphMaterialError,"material","p");
 
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, markersizeSummed,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
