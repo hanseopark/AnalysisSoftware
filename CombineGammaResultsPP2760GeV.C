@@ -119,7 +119,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TString fParticleLatex[14]                      = { "#pi^{0}", "#eta", "#omega", "#eta'", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "#Delta^{0}", "#Delta^{+}", "#Sigma^{0}", "K^{0}_{s}","K^{0}_{l}", "#Lambda"};
     TString fParticleLatexPartialSums[14]           = { "#pi^{0}", "#eta", "#omega", "#eta'", "#rho^{0}", "#rho^{#pm}", "", "#phi", "#Delta^{0/+}", "", "#Sigma^{0}", "K^{0}_{s}","K^{0}_{l}", "#Lambda"};
     Style_t     cocktailColor[14]                   = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kGreen+2,kRed-2,kViolet, kBlue-3, kTeal+9,kMagenta+2,kCyan+4,kViolet+4,kAzure-4};
-    Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen+2,kOrange+3, kTeal+9,kMagenta+2,kCyan+4,kViolet+4,kAzure-4};
+//     Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen+2,kOrange+3, kTeal+9,kMagenta+2,kCyan+4,kViolet+4,kAzure-4};
     Color_t     cocktailMarker[14]                  = {20,    21, 25, 24,  20,      21,      24,25, 24,      25,21,        24,     25,       20};
 
 
@@ -170,44 +170,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         cout << i << ": "<< xPtLimitsGamma[i] <<" - " << xPtLimitsGamma[i+1]<< ", " <<endl;
     }
 
-    //*******************************************************************************************************************************************
-    //***************************************** Load cocktail ratios ****************************************************************************
-    //*******************************************************************************************************************************************
-    TH1D* histoGammaFractionsCocktail[14][11];
-    TGraphAsymmErrors* graphGammaFractionsCocktail[14][11];
-    TH1D* histoGammaFractionsCocktailPartialSums[14][11];
-    TGraphAsymmErrors* graphGammaFractionsCocktailPartialSums[14][11];
-    TGraphAsymmErrors* graphGammaFractionsCocktailBand[14];
-    TGraphAsymmErrors* graphGammaFractionsCocktailPartialSumsBand[14];
-    for(Int_t i=0;i<14;i++){
-        for(Int_t j=0;j<11;j++){
-            histoGammaFractionsCocktail[i][j]           = NULL;
-            graphGammaFractionsCocktail[i][j]           = NULL;
-            histoGammaFractionsCocktailPartialSums[i][j]= NULL;
-            graphGammaFractionsCocktailPartialSums[i][j]= NULL;
-        }
-        graphGammaFractionsCocktailBand[i]              = NULL;
-        graphGammaFractionsCocktailPartialSumsBand[i]   = NULL;
-    }
-    TFile* fileCocktailGamma                    = new TFile( inputFileNameCocktail.Data());
-    TDirectory* directoryCombCocktail           = (TDirectory*)fileCocktailGamma->Get("2.76TeV_Comb");
-    for(Int_t i=0;i<14;i++){
-        histoGammaFractionsCocktail[i][5]       = (TH1D*) directoryCombCocktail->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
-        graphGammaFractionsCocktail[i][5]       = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][5]);
-        graphGammaFractionsCocktailBand[i]      = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][5]);
-        cout << fParticle[i] << "\t"<< histoGammaFractionsCocktail[i][5] <<endl;
-
-        if(i!=6&&i!=9){
-            histoGammaFractionsCocktailPartialSums[i][5]    = histoGammaFractionsCocktail[i][5];
-        } else {
-            histoGammaFractionsCocktailPartialSums[i-1][5]->Add(histoGammaFractionsCocktail[i][5]);
-            graphGammaFractionsCocktailPartialSums[i-1][5]  = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i-1][5]);
-        }
-        if(histoGammaFractionsCocktailPartialSums[i][5]){
-            graphGammaFractionsCocktailPartialSums[i][5]    = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][5]);
-            graphGammaFractionsCocktailPartialSumsBand[i]   = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][5]);
-        }
-    }
 
     //*******************************************************************************************************************************************
     //*********************************************** Create histogram arrays *************************************************
@@ -250,20 +212,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         histoEffSecCorr[1][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0l");
         histoEffSecCorr[2][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Lambda");
         histoEffSecCorr[3][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Rest");
-    TDirectory* directoryPCMCocktail                = (TDirectory*)fileCocktailGamma->Get("2.76TeV_PCM");
-        for(Int_t i=0;i<14;i++){
-            histoGammaFractionsCocktail[i][0]           = (TH1D*) directoryPCMCocktail->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
-            graphGammaFractionsCocktail[i][0]           = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][0]);
-
-            histoGammaFractionsCocktailPartialSums[i][0]        = histoGammaFractionsCocktail[i][0];
-            if(i==6||i==9){
-                histoGammaFractionsCocktailPartialSums[i-1][0]->Add(histoGammaFractionsCocktail[i][0]);
-                graphGammaFractionsCocktailPartialSums[i-1][0]  = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i-1][0]);
-                histoGammaFractionsCocktailPartialSums[i][0]    = NULL;
-            }
-            if(histoGammaFractionsCocktailPartialSums[i][0])
-                graphGammaFractionsCocktailPartialSums[i][0]    = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][0]);
-        }
 
     //*******************************************************************************************************************************************
     //*********************************************** Load PCMEMC histograms from 2.76TeV PCM file **********************************************
@@ -289,20 +237,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             histoEffSecCorr[1][4]                           = (TH1D*) directoryPCMEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0l");
             histoEffSecCorr[2][4]                           = (TH1D*) directoryPCMEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Lambda");
             histoEffSecCorr[3][4]                           = (TH1D*) directoryPCMEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Rest");
-        TDirectory* directoryPCMEMCCocktail             =  (TDirectory*)fileCocktailGamma->Get("2.76TeV_PCMEMCal");
-            for(Int_t i=0;i<14;i++){
-                histoGammaFractionsCocktail[i][4]           = (TH1D*) directoryPCMEMCCocktail->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
-                graphGammaFractionsCocktail[i][4]           = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][4]);
-
-                histoGammaFractionsCocktailPartialSums[i][4]     = histoGammaFractionsCocktail[i][4];
-                if(i==6||i==9){
-                    histoGammaFractionsCocktailPartialSums[i-1][4]->Add(histoGammaFractionsCocktail[i][4]);
-                    graphGammaFractionsCocktailPartialSums[i-1][4] = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i-1][4]);
-                    histoGammaFractionsCocktailPartialSums[i][4]    = NULL;
-                }
-                if(histoGammaFractionsCocktailPartialSums[i][4])
-                    graphGammaFractionsCocktailPartialSums[i][4] = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][4]);
-            }
     }
     //*******************************************************************************************************************************************
     //*********************************************** Load PCM histograms from 2.76TeV EMC file *************************************************
@@ -325,20 +259,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             histoEffSecCorr[1][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0l");
             histoEffSecCorr[2][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Lambda");
             histoEffSecCorr[3][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Rest");
-        TDirectory* directoryEMCCocktail                = (TDirectory*)fileCocktailGamma->Get("2.76TeV_EMCal");
-            for(Int_t i=0;i<14;i++){
-                histoGammaFractionsCocktail[i][2]           = (TH1D*) directoryEMCCocktail->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
-                graphGammaFractionsCocktail[i][2]           = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][2]);
-
-                histoGammaFractionsCocktailPartialSums[i][2]     = histoGammaFractionsCocktail[i][2];
-                if(i==6||i==9){
-                    histoGammaFractionsCocktailPartialSums[i-1][2]->Add(histoGammaFractionsCocktail[i][2]);
-                    graphGammaFractionsCocktailPartialSums[i-1][2] = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i-1][2]);
-                    histoGammaFractionsCocktailPartialSums[i][2]   = NULL;
-                }
-                if(histoGammaFractionsCocktailPartialSums[i][2])
-                    graphGammaFractionsCocktailPartialSums[i][2] = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][2]);
-            }
     }
     //*******************************************************************************************************************************************
     //************************************************ Load theory curves from external input ***************************************************
@@ -1875,6 +1795,43 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
 
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
+    Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
+
+    TDirectory* directoryCocktailpp2760GeV[11]     = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoGammaFractionsCocktail[14][11];
+    TGraphAsymmErrors* graphGammaFractionsCocktail[14][11];
+    TH1D* histoGammaFractionsCocktailPartialSums[14][11];
+    TGraphAsymmErrors* graphGammaFractionsCocktailPartialSums[14][11];
+    TGraphAsymmErrors* graphGammaFractionsCocktailBand[14];
+    TGraphAsymmErrors* graphGammaFractionsCocktailPartialSumsBand[14];
+    for(Int_t i=0;i<14;i++){
+        for(Int_t j=0;j<11;j++){
+            histoGammaFractionsCocktail[i][j]= NULL;
+            graphGammaFractionsCocktail[i][j]= NULL;
+            histoGammaFractionsCocktailPartialSums[i][j]= NULL;
+            graphGammaFractionsCocktailPartialSums[i][j]= NULL;
+        }
+        graphGammaFractionsCocktailBand[i]= NULL;
+        graphGammaFractionsCocktailPartialSumsBand[i]= NULL;
+    }
+    TFile* fileCocktailGamma2760GeV                    = new TFile( inputFileNameCocktail.Data());
+    directoryCocktailpp2760GeV[0]       = (TDirectory*)fileCocktailGamma2760GeV->Get("2.76TeV_PCM");
+    directoryCocktailpp2760GeV[2]       = (TDirectory*)fileCocktailGamma2760GeV->Get("2.76TeV_EMCal");
+    directoryCocktailpp2760GeV[4]       = (TDirectory*)fileCocktailGamma2760GeV->Get("2.76TeV_PCMEMCal");
+    directoryCocktailpp2760GeV[5]       = (TDirectory*)fileCocktailGamma2760GeV->Get("2.76TeV_Comb");
+    for(Int_t k=0;k<11;k++){
+        if(directoryCocktailpp2760GeV[k]){
+            for(Int_t i=0;i<14;i++){
+                histoGammaFractionsCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
+                graphGammaFractionsCocktail[i][k] = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
+                if(k==5)
+                    graphGammaFractionsCocktailBand[i] = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
+                histoGammaFractionsCocktailPartialSums[i][k] = histoGammaFractionsCocktail[i][k];
+            }
+        }
+    }
+
+
     Double_t newBinErrorLow  = 0.;
     Double_t newBinErrorHigh  = 0.;
     Bool_t lowChanged=kFALSE;
@@ -1941,10 +1898,29 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     PutALICESimulationLabel(                   0.17, 0.15, 40, 0.03, 1.25, 43);
     dummyHist->Draw("same,axis");
 
-    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAll.%s",outputDir.Data(),suffix.Data()));
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAll_8.%s",outputDir.Data(),suffix.Data()));
+
+    cout << __LINE__ << endl;
 
 
+    for(Int_t j=0;j<11;j++){
+        if(histoGammaFractionsCocktail[0][j]){
+            for(Int_t i=0;i<14;i++){
+                if(i==5||i==8){
+                    histoGammaFractionsCocktailPartialSums[i][j]->Sumw2();
+                    histoGammaFractionsCocktailPartialSums[i+1][j]->Sumw2();
+                    histoGammaFractionsCocktailPartialSums[i][j]->Add(histoGammaFractionsCocktail[i+1][j]);
+                }
+                if(i==6||i==9)
+                    histoGammaFractionsCocktailPartialSums[i][j] = NULL;
+                if(histoGammaFractionsCocktailPartialSums[i][j])
+                    graphGammaFractionsCocktailPartialSums[i][j] = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][j]);
+                if(histoGammaFractionsCocktailPartialSums[i][j]&&j==5)
+                    graphGammaFractionsCocktailPartialSumsBand[i] = new TGraphAsymmErrors(histoGammaFractionsCocktailPartialSums[i][j]);
 
+            }
+        }
+    }
     for(Int_t i=0;i<14;i++){
         if(graphGammaFractionsCocktailPartialSums[i][5]){
             for(Int_t k = 0; k <= graphGammaFractionsCocktailPartialSums[i][5]->GetN()-1; k++){
@@ -1990,10 +1966,16 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             // else
             // graphGammaFractionsCocktailPartialSumsBand[i]->SetFillColorAlpha(cocktailColorPartialSums[i],0.7);
             graphGammaFractionsCocktailPartialSumsBand[i]->SetFillStyle(4050);
+
+            if(i==5)  // continue to draw rho above phi
+                continue;
+
             graphGammaFractionsCocktailPartialSumsBand[i]->Draw("3same");
+            if(i==7)
+                graphGammaFractionsCocktailPartialSumsBand[5]->Draw("3same");
+
             if(i<4)
                 graphGammaFractionsCocktailPartialSumsBand[i]->Draw("LXsame");
-
         }
     }
     legendGammasRatio2->AddEntry(   histoGammaFractionsCocktailPartialSums[8][5], fParticleLatexPartialSums[8].Data(), "l");
@@ -2002,8 +1984,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     PutALICESimulationLabel(                   0.17, 0.15, 40, 0.03, 1.25, 43);
     dummyHist->Draw("same,axis");
 
-    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums.%s",outputDir.Data(),suffix.Data()));
-
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums_8.%s",outputDir.Data(),suffix.Data()));
 
     // ****************************************************************************************************************
     // ************************** Store final results including corr factors in 1 file ********************************

@@ -1,0 +1,10 @@
+#example config	LHC13bc	-	PCMEMC
+select	LHC13bc
+mode	2
+nSets	2
+cutNr	0
+labelData	Data
+energy	pPb_5.023TeV
+pathDataSets	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170525FF-newDefaultPlusSys/GammaConvCalo_LHC13bc-pass2_20_A_Basic.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170525FF-newDefaultPlusSys/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_20_A_Basic.root	/mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20170417-Weighting/GammaConvV1_MC_LHC13e7_130.root	STOP
+DataSetNames	LHC13bc	LHC13b2_efix_[1-4]	LHC13e7	STOP
+DataSetNamesPlot	LHC13bc		DPMJET	HIJING	STOP

@@ -1,0 +1,12 @@
+#example config	LHC10[b-f] - EMC
+select	LHC16qt
+mode	2
+cutNr	0
+nSets	3
+nData   2
+energy	pPb_5.023TeV
+filePath    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
+fileName    GammaConvCalo_201_A.root
+DataSets    LHC16q_woSDD    LHC16t_woSDD    LHC17f2a_fix_woSDD  STOP
+plotDataSets    LHC16q  LHC16t  EPOS    STOP
+doEquidistantXaxis  kTRUE

@@ -1,0 +1,10 @@
+#example config	LHC11a	-	PCM
+select	LHC11a
+mode	0
+nSets	3
+cutNr	0
+labelData	Data
+energy	2.76TeV
+pathDataSets	/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-vAN20170126_ConvDirGammaDefCut/GammaConvV1_LHC11a-pass4-WOSDD_1.root	/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-vAN20170126_ConvDirGammaDefCut/GammaConvV1_MC_LHC12f1a-WOSDD_1.root	/mnt/additionalStorage/OutputLegoTrains/pp/Legotrain-vAN20170126_ConvDirGammaDefCut/GammaConvV1_MC_LHC12f1b-WOSDD_1.root	STOP
+DataSetNames	LHC11a_woSDD	LHC12f1a	LHC12f1b	STOP
+DataSetNamesPlot	LHC11a_woSDD	Pythia8	Phojet	STOP
