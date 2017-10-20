@@ -42,6 +42,8 @@ void QA_Runwise(
     Bool_t useDataRunListForMC      = kFALSE;
     Bool_t addSubFolder             = kFALSE;
 
+    Int_t nSigmasBadRun[8] = {2,2,2,2,2,2,2,2};
+
     //**************************************************************************************************************
     //*************************** choose which data set to process *************************************************
     //**************************************************************************************************************
@@ -912,7 +914,7 @@ void QA_Runwise(
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
     if(doEventQA) EventQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
-                                    doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists);
+                                    doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, nSigmasBadRun);
     if(doPhotonQA){
         TString path                = filePath;
         if(!filePathPhoton.IsNull()) 
