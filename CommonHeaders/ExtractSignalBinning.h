@@ -352,13 +352,13 @@
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {4,4,4,4,4,4,4,4,4,4,4};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {1,1,1,1,1,1,1,1,1,1,1,1};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {4,4,4,4,4,4,4,4,6,6,6,6};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtEMC[16]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12,14,16,20.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[15]       = {4,4,4,4,4,4,4,4,4,4,4,4,4,4,4};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {1,1,1,1,1,1,1,1,1,1,1};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {4,4,4,4,4,4,4,4,4,4,4};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,14.};
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[12]       = {1,1,1,1,1,1,1,1,1,1,1,1};
@@ -1332,7 +1332,7 @@
 
               } else if(mode == 40){
                 scaleFac        = 4.;
-                return 4;
+                return 6;
               } else if(mode == 41){
                 scaleFac        = 1.;
                 return 10;

@@ -526,8 +526,8 @@
             Double_t lowBin  = 0.30;
             Double_t highBin = 0.70;
             if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
-              lowBin  = 0.46;
-              highBin = 0.70;
+              lowBin  = 0.47;
+              highBin = 0.65;
             }
             if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
               lowBin-=0.134;
@@ -634,8 +634,8 @@
               Double_t lowBin  = 0.35;
               Double_t highBin = 0.695;
               if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
-                lowBin  = 0.46;
-                highBin = 0.70;
+                lowBin  = 0.47;
+                highBin = 0.65;
               }
               histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
               SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
@@ -1478,8 +1478,8 @@
             Double_t lowBin   = 0.35;
             Double_t highBin  = 0.695;
             if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
-              lowBin  = 0.46;
-              highBin = 0.70;
+              lowBin  = 0.47;
+              highBin = 0.65;
             }
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
@@ -1515,7 +1515,13 @@
           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
             fitPi0InvMassSig->SetRange(0.35-0.134,0.695-0.134);
           } else{
-            fitPi0InvMassSig->SetRange(0.35,0.695);
+              Double_t lowBin   = 0.35;
+              Double_t highBin  = 0.695;
+              if(decayChannel.CompareTo("#pi^{+} #pi^{-} #pi^{0}") == 0){
+                lowBin  = 0.47;
+                highBin = 0.65;
+              }
+            fitPi0InvMassSig->SetRange(lowBin,highBin);
           }
         } else { // omega
           labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));

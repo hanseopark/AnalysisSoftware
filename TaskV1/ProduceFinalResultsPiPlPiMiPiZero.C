@@ -148,17 +148,16 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
     Double_t binningOmega[100];
     Int_t maxNBinsOmega               = GetBinning( binningOmega, "Omega", optionEnergy, mode );
-    Int_t maxNAllowedOmega            = 0;
     Int_t nRealTriggers             = 0;
-    while (binningOmega[maxNAllowedOmega] < maxPtGlobalOmega ) maxNAllowedOmega++;
-    for (Int_t i= 0; i< maxNAllowedOmega+1; i++){
+    while (binningOmega[maxNBinsOmega] < maxPtGlobalOmega ) maxNBinsOmega++;
+    for (Int_t i= 0; i< maxNBinsOmega+1; i++){
         cout << binningOmega[i] << ", ";
     }
     cout << endl;
 
     Double_t binningEta[100];
     Int_t maxNBinsEta               = GetBinning( binningEta, "Eta", optionEnergy, mode );
-    Int_t maxNAllowedEta            = 0;
+    Int_t maxNAllowedEta            = maxNBinsEta;
     while (binningEta[maxNAllowedEta] < maxPtGlobalEta ) maxNAllowedEta++;
     for (Int_t i= 0; i< maxNAllowedEta+1; i++){
         cout << binningEta[i] << ", ";
@@ -2430,10 +2429,10 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     }
     // Calculate averaged Omega spectrum & respective supporting graphs according to statistical and systematic errors taking correctly into account the cross correlations
     if (averagedOmega){
-        cout << maxNAllowedOmega << endl;
+        cout << maxNBinsOmega << endl;
         // Calculate average Omega spectrum
         graphCorrectedYieldWeightedAverageOmegaTot        = CombinePtPointsSpectraTriggerCorrMat(    histoStatOmega, graphSystOmega,
-                                                                                                   binningOmega,  maxNAllowedOmega,
+                                                                                                   binningOmega,  maxNBinsOmega,
                                                                                                    offSetsOmega ,offSetsOmegaSys,
                                                                                                    graphCorrectedYieldWeightedAverageOmegaStat, graphCorrectedYieldWeightedAverageOmegaSys,
                                                                                                    nameWeightsLogFileOmega.Data(),
@@ -2728,7 +2727,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             for (Int_t k = 0; k< nRelSysErrOmegaSources ; k++ ){
                 graphRelSysErrOmegaSourceWeighted[k]      = CalculateWeightedQuantity(    graphOrderedRelSysErrOmegaSource[k],
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                    );
                 if (!graphRelSysErrOmegaSourceWeighted[k]){
@@ -2746,7 +2745,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         if (mode != 10){
             graphMassOmegaDataWeighted                    = CalculateWeightedQuantity(    graphOrderedMassOmegaData,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                    );
             if (!graphMassOmegaDataWeighted){
@@ -2755,7 +2754,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             }
             graphMassOmegaMCWeighted                      = CalculateWeightedQuantity(    graphOrderedMassOmegaMC,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                    );
             if (!graphMassOmegaMCWeighted){
@@ -2765,7 +2764,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
             graphWidthOmegaDataWeighted                   = CalculateWeightedQuantity(    graphOrderedWidthOmegaData,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                    );
             if (!graphWidthOmegaDataWeighted){
@@ -2775,7 +2774,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
 
             graphWidthOmegaMCWeighted                     = CalculateWeightedQuantity(    graphOrderedWidthOmegaMC,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                    );
             if (!graphWidthOmegaMCWeighted){
@@ -2787,7 +2786,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         cout << "weighting Omega acceptance" << endl;
         graphAcceptanceOmegaWeighted                      = CalculateWeightedQuantity(    graphOrderedAcceptanceOmega,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                     );
         if (!graphAcceptanceOmegaWeighted){
@@ -2801,7 +2800,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             if (hasSecCorrFac[k]){
                 graphEffectSecCorrOmegaWeighted[k]        = CalculateWeightedQuantity(    graphOrderedEffectSecCorrOmega[k],
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                     );
                 if (!graphEffectSecCorrOmegaWeighted[k]){
@@ -2814,7 +2813,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
             if (hasSecEffi[k]){
                 graphEfficiencySecOmegaWeighted[k]        = CalculateWeightedQuantity(    graphOrderedEfficiencySecOmega[k],
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                     );
                 if (!graphEffectSecCorrOmegaWeighted[k]){
@@ -2828,7 +2827,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         cout << "weighting Omega efficiency" << endl;
         graphEfficiencyOmegaWeighted                      = CalculateWeightedQuantity(    graphOrderedEfficiencyOmega,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                     );
         if (!graphEfficiencyOmegaWeighted){
@@ -2838,7 +2837,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         cout << "weighting Omega efficiency x acceptance" << endl;
         graphEffTimesAccOmegaWeighted                     = CalculateWeightedQuantity(    graphOrderedEffTimesAccOmega,
                                                                                         graphWeightsOmega,
-                                                                                        binningOmega,  maxNAllowedOmega,
+                                                                                        binningOmega,  maxNBinsOmega,
                                                                                         MaxNumberOfFiles
                                                                                     );
 
@@ -6954,7 +6953,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     cout << "xSection = " << xSection << endl;
 
     if (graphCorrectedYieldWeightedAverageOmegaStat){
-        histoInvYieldWeightedAverageOmegaStat                  = new TH1D("histoInvYieldWeightedAverageOmegaStat", "", maxNAllowedOmega, binningOmega);
+        histoInvYieldWeightedAverageOmegaStat                  = new TH1D("histoInvYieldWeightedAverageOmegaStat", "", maxNBinsOmega, binningOmega);
         Int_t firstBinOmega = 1;
         while (histoInvYieldWeightedAverageOmegaStat->GetBinCenter(firstBinOmega) < graphCorrectedYieldWeightedAverageOmegaStat->GetX()[0]){
             histoInvYieldWeightedAverageOmegaStat->SetBinContent(firstBinOmega, 0);
@@ -6967,7 +6966,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         }
         if (xSection != 0){
             graphInvXSectionWeightedAverageOmegaStat                  = ScaleGraph(graphCorrectedYieldWeightedAverageOmegaStat,xSection*recalcBarn);
-            histoInvXSectionWeightedAverageOmegaStat                  = new TH1D("histoInvXSectionWeightedAverageOmegaStat", "", maxNAllowedOmega, binningOmega);
+            histoInvXSectionWeightedAverageOmegaStat                  = new TH1D("histoInvXSectionWeightedAverageOmegaStat", "", maxNBinsOmega, binningOmega);
             for (Int_t i = 0; i < graphInvXSectionWeightedAverageOmegaStat->GetN(); i++){
                 histoInvXSectionWeightedAverageOmegaStat->SetBinContent(i+firstBinOmega, graphInvXSectionWeightedAverageOmegaStat->GetY()[i]);
                 histoInvXSectionWeightedAverageOmegaStat->SetBinError(i+firstBinOmega, graphInvXSectionWeightedAverageOmegaStat->GetEYlow()[i]);

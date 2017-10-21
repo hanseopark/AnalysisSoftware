@@ -1028,12 +1028,12 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
 
         // Initialze fit range
         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
-            fFitRange[0]                = 0.37;
-            fFitRange[1]                = 0.71;
-            fFitRange_SubPiZero[0]      = 0.37-0.134;
-            fFitRange_SubPiZero[1]      = 0.71-0.134;
-            fFitRange_FixedPzPiZero[0]  = 0.37;
-            fFitRange_FixedPzPiZero[1]  = 0.71;
+            fFitRange[0]                = 0.40;
+            fFitRange[1]                = 0.65;
+            fFitRange_SubPiZero[0]      = 0.40-0.134;
+            fFitRange_SubPiZero[1]      = 0.65-0.134;
+            fFitRange_FixedPzPiZero[0]  = 0.40;
+            fFitRange_FixedPzPiZero[1]  = 0.65;
             fIntFixedRange[0]           = 0.48; // not yet implemented
             fIntFixedRange[1]           = 0.58;  // not yet implemented
         }
@@ -1045,7 +1045,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fBGFitRange_SubPiZero[0]             = 0.57-0.134;
             fBGFitRange_SubPiZero[1]             = 0.61-0.134;
             fBGFitRange_FixedPzPiZero[0]         = 0.57;
-            fBGFitRange_FixedPzPiZero[1]         = 0.61;
+            fBGFitRange_FixedPzPiZero[1]         = 0.64;
             fBGFitRangeLeft[0]                   = 0.46;
             fBGFitRangeLeft[1]                   = 0.505;
             fBGFitRangeLeft_SubPiZero[0]                       = 0.46-0.134;
@@ -1079,11 +1079,11 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonMassPlotRange_FixedPzPiZero[0]  = 0.47;
              fMesonMassPlotRange_FixedPzPiZero[1]  = 0.61;
              fMesonMassRange[0]                    = 0.47;
-             fMesonMassRange[1]                    = 0.70;
+             fMesonMassRange[1]                    = 0.65;
              fMesonMassRange_SubPiZero[0]          = 0.47-0.134;
              fMesonMassRange_SubPiZero[1]          = 0.70-0.134;
              fMesonMassRange_FixedPzPiZero[0]      = 0.47;
-             fMesonMassRange_FixedPzPiZero[1]      = 0.70;
+             fMesonMassRange_FixedPzPiZero[1]      = 0.65;
          }
 
          // Set meson fit range
@@ -1097,8 +1097,58 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
          }
 
          // Set remaining parameters for fitting
-         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
-             fMesonWidthExpect           = 0.007;
+         if(mode == 40 || mode == 41 || mode == 45){
+             fMesonWidthExpect           = 0.02;
+             fMesonWidthRange[0]         = 0.004;
+             fMesonWidthRange[1]         = 0.070;
+             fMesonLambdaTail            = 0.001;
+             fMesonLambdaTailRange[0]    = 0.001;
+             fMesonLambdaTailRange[1]    = 0.001;
+
+             fFullPt[0]                  = 0.4;
+             fFullPt[1]                  = 15;
+
+             // Settings for MC
+             fMesonLambdaTailMC    = fMesonLambdaTail;
+             fMesonWidthExpectMC   = fMesonWidthExpect;
+             fMesonWidthRangeMC[0] = fMesonWidthRange[0];
+             fMesonWidthRangeMC[1] = fMesonWidthRange[1];
+         } else if(mode == 41){
+             fMesonWidthExpect           = 0.07;
+             fMesonWidthRange[0]         = 0.05;
+             fMesonWidthRange[1]         = 0.09;
+             fMesonLambdaTail            = 0.001;
+             fMesonLambdaTailRange[0]    = 0.001;
+             fMesonLambdaTailRange[1]    = 0.001;
+
+             fFullPt[0]                  = 0.4;
+             fFullPt[1]                  = 15;
+
+             // Settings for MC
+             fMesonLambdaTailMC    = fMesonLambdaTail;
+             fMesonWidthExpectMC   = fMesonWidthExpect;
+             fMesonWidthRangeMC[0] = fMesonWidthRange[0];
+             fMesonWidthRangeMC[1] = fMesonWidthRange[1];
+
+         } else if(mode == 42){
+             fMesonWidthExpect           = 0.05;
+             fMesonWidthRange[0]         = 0.004;
+             fMesonWidthRange[1]         = 0.070;
+             fMesonLambdaTail            = 0.001;
+             fMesonLambdaTailRange[0]    = 0.001;
+             fMesonLambdaTailRange[1]    = 0.001;
+
+             fFullPt[0]                  = 0.4;
+             fFullPt[1]                  = 15;
+
+             // Settings for MC
+             fMesonLambdaTailMC    = fMesonLambdaTail;
+             fMesonWidthExpectMC   = fMesonWidthExpect;
+             fMesonWidthRangeMC[0] = fMesonWidthRange[0];
+             fMesonWidthRangeMC[1] = fMesonWidthRange[1];
+
+         } else if (mode == 44){
+             fMesonWidthExpect           = 0.05;
              fMesonWidthRange[0]         = 0.004;
              fMesonWidthRange[1]         = 0.070;
              fMesonLambdaTail            = 0.001;

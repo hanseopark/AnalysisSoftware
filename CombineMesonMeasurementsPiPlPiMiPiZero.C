@@ -139,8 +139,6 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     Size_t  markerSizeComb                      = 2;
 
     TString nameMeasGlobal[11]                  = {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged", "PCMOtherDataset"};
-    TString nameMeasGlobalPi0[11]                  = {"PCM (#pi^{0})", "PHOS (#pi^{0})", "EMCal (#pi^{0})", "PCM-PHOS (#pi^{0})", "PCM-EMCal (#pi^{0})", "PCM-Dalitz (#pi^{0})",
-                                                      "PHOS-Dalitz (#pi^{0})", "EMCal-Dalitz (#pi^{0})", "EMCal high pT (#pi^{0})", "EMCal merged (#pi^{0})", "PCMOtherDataset (#pi^{0})"};
     Color_t colorDet[11];
     Color_t colorDetMC[11];
     Style_t markerStyleDet[11];
@@ -177,13 +175,15 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
 
     TDirectory* directoryOmega[10];
     TDirectory* directoryEta[10];
+    TDirectory* directoryEtaGG[10];
     TDirectory* directoryPi0[10];
     for(Int_t i=0;i<numbersofmeas;i++){
       if(!inputFile[i]->IsZombie()){
         cout << "loading directories for " <<  nameMeasGlobal[i] << endl;
         directoryOmega[i]                     = (TDirectory*)inputFile[i]->Get("Omega7TeV");
-        directoryEta[i]                     = (TDirectory*)inputFile[i]->Get("Eta7TeV");
-        directoryPi0[i]                     = (TDirectory*)inputFilePi0[i]->Get("Pi07TeV");
+        directoryEta[i]                       = (TDirectory*)inputFile[i]->Get("Eta7TeV");
+        directoryEtaGG[i]                     = (TDirectory*)inputFilePi0[i]->Get("Eta7TeV");
+        directoryPi0[i]                       = (TDirectory*)inputFilePi0[i]->Get("Pi07TeV");
       }
     }
     cout << __LINE__<<endl;
@@ -201,11 +201,15 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     TH1D* histoEtaAcc[10];
     TH1D* histoEtaTrueEffPt[10];
     TH1D* histoEtaAccTimesEff[10];
+    TH1D* histoEtaAccTimesEffBR[10];
     TH1D* histoOmegaInvCrossSection[10];
     TH1D* histoEtaInvCrossSection[10];
     TH1D* histoPi0Acc[10];
     TH1D* histoPi0TrueEffPt[10];
     TH1D* histoPi0AccTimesEff[10];
+    TH1D* histoEtaGGAcc[10];
+    TH1D* histoEtaGGTrueEffPt[10];
+    TH1D* histoEtaGGAccTimesEff[10];
     TGraphAsymmErrors* graphOmegaInvCrossSectionSys[10];
     TGraphAsymmErrors* graphOmegaInvCrossSectionStat[10];
     TGraphAsymmErrors* graphEtaInvCrossSectionStat[10];
@@ -213,9 +217,13 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     TGraphAsymmErrors* graphEtaToOmegaPCMStat;
     TGraphAsymmErrors* graphEtaToOmegaPCMSys;
 
+    Double_t branchingEtaGG     = 0.3941;
+    Double_t branchingEtaPiPiPi = 0.2292;
+
     Double_t rapidityMeas[10]                   = {1.6, 1,1, 1.6,1,1,1};
     Double_t availableMeas[10]                  = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
     Double_t availableMeasPi0[10]                  = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
+    Double_t availableMeasEtaGG[10]                  = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
     Int_t nMeasSet                              = 0;
 
     for (Int_t i = 0; i < 5; i++){
@@ -224,7 +232,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
       else
         cout << "loading  histos for " << nameMeasGlobal[i] << endl;
         
-    //______________________________ Neutral pion cross section
+    //______________________________ Omega cross section
       graphOmegaInvCrossSectionSys[i]       = (TGraphAsymmErrors*)directoryOmega[i]->Get("InvCrossSectionOmegaSys");
       histoOmegaInvCrossSection[i]          = (TH1D*)directoryOmega[i]->Get("InvCrossSectionOmega");
       graphOmegaInvCrossSectionStat[i]      = new TGraphAsymmErrors(histoOmegaInvCrossSection[i]);
@@ -237,7 +245,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         cout << "loaded " << nameMeasGlobal[i] << " Omega invariant cross section" << endl;
       }
       
-      //______________________________ Neutral pion invariant mass peak pos and FWHM
+      //______________________________ Omega invariant mass peak pos and FWHM
       histoOmegaMass[i]                     = (TH1D*)directoryOmega[i]->Get("Omega_Mass_data_INT1");
       histoOmegaFWHMMeV[i]                  = (TH1D*)directoryOmega[i]->Get("Omega_Width_data_INT1");
       histoOmegaTrueMass[i]                 = (TH1D*)directoryOmega[i]->Get("Omega_Mass_MC_INT1");
@@ -254,9 +262,9 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         cout << "loaded " << nameMeasGlobal[i] << " mass and width" << endl;
       }
       
-      //______________________________ Neutral pion acceptance and efficiency and calculate acc*eff*y*2pi
+      //______________________________ Omega acceptance and efficiency and calculate acc*eff*y*2pi
       histoOmegaAcc[i]                      = (TH1D*)directoryOmega[i]->Get("AcceptanceOmega_INT1");
-      histoOmegaTrueEffPt[i]                = (TH1D*)directoryOmega[i]->Get("EfficiencyOmega_INT1");
+      histoOmegaTrueEffPt[i]                = (TH1D*)directoryOmega[i]->Get("EfficiencyOmega_INT1");      
       // calculating for pi0 for later comparison
 
       if(!histoOmegaAcc[i] || !histoOmegaTrueEffPt[i]){
@@ -271,19 +279,42 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
       }
 
       if(!inputFilePi0[i]->IsZombie()){
-          histoPi0Acc[i]                      = (TH1D*)directoryPi0[i]->Get("AcceptancePi0_INT1");
-          histoPi0TrueEffPt[i]                = (TH1D*)directoryPi0[i]->Get("EfficiencyPi0_INT1");
+          if((nameMeasGlobal[i].CompareTo("PCM-PHOS")==0) || (nameMeasGlobal[i].CompareTo("PHOS")==0)){
+              histoPi0Acc[i]                      = (TH1D*)directoryPi0[i]->Get("AcceptancePi0");
+              histoPi0TrueEffPt[i]                = (TH1D*)directoryPi0[i]->Get("EfficiencyPi0");
 
+              histoEtaGGAcc[i]                      = (TH1D*)directoryEtaGG[i]->Get("AcceptanceEta");
+              histoEtaGGTrueEffPt[i]                = (TH1D*)directoryEtaGG[i]->Get("EfficiencyEta");
+
+          } else{
+              histoPi0Acc[i]                      = (TH1D*)directoryPi0[i]->Get("AcceptancePi0_INT1");
+              histoPi0TrueEffPt[i]                = (TH1D*)directoryPi0[i]->Get("EfficiencyPi0_INT1");
+
+              histoEtaGGAcc[i]                      = (TH1D*)directoryEtaGG[i]->Get("AcceptanceEta_INT1");
+              histoEtaGGTrueEffPt[i]                = (TH1D*)directoryEtaGG[i]->Get("EfficiencyEta_INT1");
+          }
           if(!histoPi0Acc[i] || !histoPi0TrueEffPt[i]){
               cout << "missing acceptance or efficiency histograms of pi0 ... returning!" << endl;
-              return;
+              availableMeasPi0[i] = kFALSE;
           } else {
               // calculating acceptance times efficiency
               availableMeasPi0[i]=kTRUE;
-              histoPi0AccTimesEff[i]            = (TH1D*)histoPi0TrueEffPt[i]->Clone(Form("histoPi0AccTimesEff%s",nameMeasGlobalPi0[i].Data()));
+              histoPi0AccTimesEff[i]            = (TH1D*)histoPi0TrueEffPt[i]->Clone(Form("histoPi0AccTimesEff%s",nameMeasGlobal[i].Data()));
               histoPi0AccTimesEff[i]->Multiply(histoPi0Acc[i]);
               histoPi0AccTimesEff[i]->Scale(2*TMath::Pi()*rapidityMeas[i]);
-              cout << "loaded " << nameMeasGlobalPi0[i] << "acceptance and efficiency" << endl;
+              cout << "loaded " << nameMeasGlobal[i] << "acceptance and efficiency" << endl;
+          }
+
+          if(!histoEtaGGAcc[i] || !histoEtaGGTrueEffPt[i]){
+              cout << "missing acceptance or efficiency histograms of eta->gamma gamma ... returning!" << endl;
+              availableMeasEtaGG[i] = kFALSE;
+          } else {
+              // calculating acceptance times efficiency
+              availableMeasEtaGG[i]=kTRUE;
+              histoEtaGGAccTimesEff[i]            = (TH1D*)histoEtaGGTrueEffPt[i]->Clone(Form("histoEtaGGAccTimesEff%s",nameMeasGlobal[i].Data()));
+              histoEtaGGAccTimesEff[i]->Multiply(histoEtaGGAcc[i]);
+              histoEtaGGAccTimesEff[i]->Scale(2*TMath::Pi()*rapidityMeas[i]*branchingEtaGG);
+              cout << "loaded " << nameMeasGlobal[i] << "acceptance and efficiency" << endl;
           }
       }
       
@@ -326,8 +357,11 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         } else {
           // calculating acceptance times efficiency
           histoEtaAccTimesEff[i]            = (TH1D*)histoEtaTrueEffPt[i]->Clone(Form("histoEtaAccTimesEff%s",nameMeasGlobal[i].Data()));
+          histoEtaAccTimesEffBR[i]          = (TH1D*)histoEtaTrueEffPt[i]->Clone(Form("histoEtaAccTimesEffBR%s",nameMeasGlobal[i].Data()));
           histoEtaAccTimesEff[i]->Multiply(histoEtaAcc[i]);
+          histoEtaAccTimesEffBR[i]->Multiply(histoEtaAcc[i]);
           histoEtaAccTimesEff[i]->Scale(2*TMath::Pi()*rapidityMeas[i]);
+          histoEtaAccTimesEffBR[i]->Scale(2*TMath::Pi()*rapidityMeas[i]*branchingEtaPiPiPi);
           cout << "loaded " << nameMeasGlobal[i] << "acceptance and efficiency" << endl;
         }
     }
@@ -377,7 +411,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     }
 
 
-    Double_t minX                               = 1;
+    Double_t minX                               = 0.5;
     Double_t maxX                               = 39.;
 
     // **********************************************************************************************************************
@@ -469,7 +503,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     canvasCrossSectionOmega->Print(Form("%s/Omega_InvariantCrossSectionMeas.%s",outputDir.Data(),suffix.Data()));
     
     // **********************************************************************************************************************
-    // ******************************************* Omega invariant cross section            ****************************************
+    // ******************************************* Eta invariant cross section       ****************************************
     // **********************************************************************************************************************
         TH2F * histoDummyCrossSectionEta;
             histoDummyCrossSectionEta                = new TH2F("histoDummyCrossSectionEta", "histoDummyCrossSectionEta",1000, minX,  maxX, 1000, 3, 4e10 );
@@ -577,7 +611,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         textsizeFacWidth            = (Double_t)1./padWidthOmega->YtoPixel(padWidthOmega->GetY1());
     }
 
-    TH2F * histo2DAllOmegaFWHM    = new TH2F("histo2DAllOmegaFWHM","histo2DAllOmegaFWHM", 20, minX, maxX ,1000., -30, 80);
+    TH2F * histo2DAllOmegaFWHM    = new TH2F("histo2DAllOmegaFWHM","histo2DAllOmegaFWHM", 20, minX, maxX ,1000., -30, 60);
     SetStyleHistoTH2ForGraphs(histo2DAllOmegaFWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                             0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
     histo2DAllOmegaFWHM->GetYaxis()->SetRangeUser(-1.,79.5);
@@ -715,7 +749,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     padWidthOmega->cd();
     padWidthOmega->SetLogx();
 
-    TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, minX, maxX ,1000., 1, 89);
+    TH2F * histo2DAllEtaFWHM    = new TH2F("histo2DAllEtaFWHM","histo2DAllEtaFWHM", 20, minX, maxX ,1000., -1, 89);
     SetStyleHistoTH2ForGraphs(histo2DAllEtaFWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                             0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
     histo2DAllEtaFWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -796,7 +830,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
 
 
     // **********************************************************************************************************************
-    // ******************************** Acceptance * Efficiency for Omega single measurement  *********************************
+    // ******************************** Acceptance * Efficiency for Omega and Pi0           *********************************
     // **********************************************************************************************************************
     textSizeLabelsPixel             = 55;
     textSizeLabelsRel      = 55./1200;
@@ -808,7 +842,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     canvasAcceptanceTimesEff->SetLogx(1);
 
     TH2F * histo2DAccEff;
-    histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, minX,  maxX, 1000, 8e-5, 3 );
+    histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, minX,  maxX, 1000, 8e-5, 0.8 );
     SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
                             0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
                             histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
@@ -826,60 +860,316 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         }
     }
 
-    TLegend* legendEffiAccOmega           = GetAndSetLegend2(0.59, 0.13, 0.96, 0.13+(numbersofmeas*textSizeLabelsRel),textSizeLabelsPixel);
-    for (Int_t i = 0; i < numbersofmeas; i++){
-        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
-            legendEffiAccOmega->AddEntry(histoOmegaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
-            if(availableMeasPi0[i]) legendEffiAccOmega->AddEntry(histoPi0AccTimesEff[i],nameMeasGlobalPi0[i].Data(),"p");
-        }
-    }
-    legendEffiAccOmega->Draw();
+//    TLegend* legendEffiAccOmega           = GetAndSetLegend2(0.59, 0.13, 0.96, 0.13+(numbersofmeas*textSizeLabelsRel),textSizeLabelsPixel);
+//    for (Int_t i = 0; i < numbersofmeas; i++){
+//        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+//            legendEffiAccOmega->AddEntry(histoOmegaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
+//            if(availableMeasPi0[i]) legendEffiAccOmega->AddEntry(histoPi0AccTimesEff[i],nameMeasGlobalPi0[i].Data(),"p");
+//        }
+//    }
+//    legendEffiAccOmega->Draw();
 
     drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
     drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
-    drawLatexAdd("#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+    //drawLatexAdd("X #rightarrow #pi^{+}#pi^{-}#pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+    TPad* padAccEffLegend1            = new TPad("padAccEffLegend1", "", 0.53, 0.15, 0.93, 0.45,-1, -1, -2);
+    DrawGammaPadSettings( padAccEffLegend1, 0., 0., 0., 0.);
+    padAccEffLegend1->SetFillStyle(0);
+    padAccEffLegend1->Draw();
+    //********************************** Defintion of the Legend **************************************************
+    Double_t columnsLegendAccEff2[3]      = {0.,0.57,0.84};
+    //   Double_t rowsLegendMass2[5] = {0.8,0.6,0.4,0.2,0.01};
+    Double_t rowsLegendAccEff2[6] = {0.84,0.66,0.50,0.33,0.16,0.01};
+    //           Double_t  rowsLegendMass2[7]= {0.84,0.66,0.50,0.33,0.01,0.16};
+    //Double_t  rowsLegendMass2[9]= {0.84,0.66,0.51,0.50,0.331,0.33,0.01,0.16}; //setting for use without PHOS and PCM-PHOS peak positions
+    //******************* Offsets ***********************
+    offsetMarkerXMass2         = 0.1;
+    offsetMarkerYMass2         = 0.1;
+    //****************** Scale factors ******************
+    scaleMarkerMass2           = 1.2;
+
+    padAccEffLegend1->cd();
+    //****************** first Column **************************************************
+    TLatex *textAccEffPCM[10];
+    for (Int_t i = 0; i < numbersofmeas; i++){
+         if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            textAccEffPCM[i]                  = new TLatex(columnsLegendAccEff2[0],rowsLegendAccEff2[i+1],nameMeasGlobal[i].Data());
+            SetStyleTLatex( textAccEffPCM[i], textSizeLabelsPixel,4);
+            textAccEffPCM[i]->SetTextFont(43);
+            textAccEffPCM[i]->Draw();
+        }
+    }
+    //****************** second Column *************************************************
+    TLatex *testAccEffOmega                = new TLatex(columnsLegendAccEff2[1]+0.02,rowsLegendAccEff2[0] ," #omega");
+    SetStyleTLatex( testAccEffOmega, textSizeLabelsPixel,4);
+    testAccEffOmega->SetTextFont(43);
+    testAccEffOmega->Draw();
+    TLatex *textAccEffPi0                  = new TLatex(columnsLegendAccEff2[2]-0.01 ,rowsLegendAccEff2[0]," #pi^{0}");
+    SetStyleTLatex( textAccEffPi0, textSizeLabelsPixel,4);
+    textAccEffPi0->SetTextFont(43);
+    textAccEffPi0->Draw();
+
+    TMarker* markerOmegaAccEff[10];
+    TMarker* markerPi0AccEff[10];
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            markerOmegaAccEff[i]             = CreateMarkerFromHisto(histoOmegaAccTimesEff[i],columnsLegendAccEff2[1]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerOmegaAccEff[i]->DrawMarker(columnsLegendAccEff2[1]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2);
+        }
+        if(availableMeasPi0[i]){
+            markerPi0AccEff[i]           = CreateMarkerFromHisto(histoPi0AccTimesEff[i],columnsLegendAccEff2[2]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerPi0AccEff[i]->DrawMarker(columnsLegendAccEff2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2);
+        }
+    }
+
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/OmegaPi0_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // ******************************** Acceptance * Efficiency for Omega****************************************************
+    // **********************************************************************************************************************
+    textSizeLabelsPixel             = 55;
+    textSizeLabelsRel      = 55./1200;
+    cout << textSizeLabelsRel << endl;
+
+    canvasAcceptanceTimesEff       = new TCanvas("canvasAcceptanceTimesEff", "", 200, 10, 1200, 1100);  // gives the page size
+    canvasAcceptanceTimesEff->cd();
+    DrawGammaCanvasSettings( canvasAcceptanceTimesEff,  0.1, 0.01, 0.015, 0.095);
+    canvasAcceptanceTimesEff->SetLogy(1);
+    canvasAcceptanceTimesEff->SetLogx(1);
+
+    histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, minX,  maxX, 1000, 8e-5, 0.8 );
+    SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
+                            0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
+                            histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
+                            histo2DAccEff->GetXaxis()->SetLabelOffset(-0.01);
+                            histo2DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
+                            histo2DAccEff->DrawCopy();
+
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            DrawGammaSetMarker(histoOmegaAccTimesEff[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            histoOmegaAccTimesEff[i]->Draw("p,same,e");
+        }
+    }
+
+//    TLegend* legendEffiAccOmega           = GetAndSetLegend2(0.59, 0.13, 0.96, 0.13+(numbersofmeas*textSizeLabelsRel),textSizeLabelsPixel);
+//    for (Int_t i = 0; i < numbersofmeas; i++){
+//        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+//            legendEffiAccOmega->AddEntry(histoOmegaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
+//            if(availableMeasPi0[i]) legendEffiAccOmega->AddEntry(histoPi0AccTimesEff[i],nameMeasGlobalPi0[i].Data(),"p");
+//        }
+//    }
+//    legendEffiAccOmega->Draw();
+
+    drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+    drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+    drawLatexAdd("X #rightarrow #pi^{+}#pi^{-}#pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+    padAccEffLegend1            = new TPad("padAccEffLegend1", "", 0.53, 0.15, 0.93, 0.45,-1, -1, -2);
+    DrawGammaPadSettings( padAccEffLegend1, 0., 0., 0., 0.);
+    padAccEffLegend1->SetFillStyle(0);
+    padAccEffLegend1->Draw();
+    //******************* Offsets ***********************
+    offsetMarkerXMass2         = 0.1;
+    offsetMarkerYMass2         = 0.1;
+    //****************** Scale factors ******************
+    scaleMarkerMass2           = 1.2;
+
+    padAccEffLegend1->cd();
+    //****************** first Column **************************************************
+    for (Int_t i = 0; i < numbersofmeas; i++){
+         if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            textAccEffPCM[i]                  = new TLatex(columnsLegendAccEff2[0],rowsLegendAccEff2[i+1],nameMeasGlobal[i].Data());
+            SetStyleTLatex( textAccEffPCM[i], textSizeLabelsPixel,4);
+            textAccEffPCM[i]->SetTextFont(43);
+            textAccEffPCM[i]->Draw();
+        }
+    }
+    //****************** second Column *************************************************
+    testAccEffOmega                = new TLatex(columnsLegendAccEff2[1]+0.02,rowsLegendAccEff2[0] ," #omega");
+    SetStyleTLatex( testAccEffOmega, textSizeLabelsPixel,4);
+    testAccEffOmega->SetTextFont(43);
+    testAccEffOmega->Draw();
+
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            markerOmegaAccEff[i]             = CreateMarkerFromHisto(histoOmegaAccTimesEff[i],columnsLegendAccEff2[1]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerOmegaAccEff[i]->DrawMarker(columnsLegendAccEff2[1]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2);
+        }
+    }
 
     canvasAcceptanceTimesEff->Update();
     canvasAcceptanceTimesEff->Print(Form("%s/Omega_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
     
     // **********************************************************************************************************************
-    // ******************************** Acceptance * Efficiency for eta single measurement  *********************************
+    // ******************************** Acceptance * Efficiency for eta->pipipi and eta->gammagamma measurement *************
     // **********************************************************************************************************************
     TH2F * histo2DAccEffEta;
-    histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, minX,  maxX, 1000, 8e-5, 3 );
-    SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
-                            0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
-                            histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);
-                            histo2DAccEffEta->GetXaxis()->SetLabelOffset(-0.01);
-                            histo2DAccEffEta->GetXaxis()->SetMoreLogLabels(kTRUE);
-                            histo2DAccEffEta->DrawCopy();
+    canvasAcceptanceTimesEff->cd();
+    minX=0.3;
+    histo2DAccEffEta                = new TH2F("histo2DAccEffEta", "histo2DAccEffEta",1000, minX,  maxX, 1000, 8e-6, 0.5 );
+    SetStyleHistoTH2ForGraphs( histo2DAccEffEta, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upointBR#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
+                               0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
+    histo2DAccEffEta->GetYaxis()->SetLabelOffset(0.001);
+    histo2DAccEffEta->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DAccEffEta->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histo2DAccEffEta->DrawCopy();
 
     for (Int_t i = 0; i < numbersofmeas; i++){
+        if(histoEtaAccTimesEffBR[i] && availableMeas[i]){
+            DrawGammaSetMarker(histoEtaAccTimesEffBR[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            // Draw Eta->gamma gamma measurment for comparison. For now use MC markers
+            if(availableMeasEtaGG[i]) DrawGammaSetMarker(histoEtaGGAccTimesEff[i], markerStyleDetMC[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            histoEtaAccTimesEffBR[i]->Draw("p,same,e");
+            if(availableMeasEtaGG[i]) histoEtaGGAccTimesEff[i]->Draw("p,same,e");
+        }
+    }
+
+    drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
+    drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
+    drawLatexAdd("#eta",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+    padAccEffLegend1            = new TPad("padAccEffLegend1", "", 0.53, 0.12, 0.93, 0.40,-1, -1, -2);
+    DrawGammaPadSettings( padAccEffLegend1, 0., 0., 0., 0.);
+    padAccEffLegend1->SetFillStyle(0);
+    padAccEffLegend1->Draw();
+    //********************************** Defintion of the Legend **************************************************
+    Double_t columnsLegendAccEff3[3]      = {0.,0.57,0.84};
+    //   Double_t rowsLegendMass2[5] = {0.8,0.6,0.4,0.2,0.01};
+    Double_t rowsLegendAccEff3[6] = {0.84,0.66,0.50,0.33,0.16,0.01};
+    //           Double_t  rowsLegendMass2[7]= {0.84,0.66,0.50,0.33,0.01,0.16};
+    //Double_t  rowsLegendMass2[9]= {0.84,0.66,0.51,0.50,0.331,0.33,0.01,0.16}; //setting for use without PHOS and PCM-PHOS peak positions
+    //******************* Offsets ***********************
+    offsetMarkerXMass2         = 0.1;
+    offsetMarkerYMass2         = 0.1;
+    //****************** Scale factors ******************
+    scaleMarkerMass2           = 1.2;
+
+    padAccEffLegend1->cd();
+    //****************** first Column **************************************************
+    for (Int_t i = 0; i < numbersofmeas; i++){
+         if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            textAccEffPCM[i]                  = new TLatex(columnsLegendAccEff3[0],rowsLegendAccEff3[i+1],nameMeasGlobal[i].Data());
+            SetStyleTLatex( textAccEffPCM[i], textSizeLabelsPixel,4);
+            textAccEffPCM[i]->SetTextFont(43);
+            textAccEffPCM[i]->Draw();
+        }
+    }
+    //****************** second Column *************************************************
+    TLatex *testAccEffEta                = new TLatex(columnsLegendAccEff3[1]-0.03,rowsLegendAccEff3[0] ,"#pi^{+}#pi^{-}#pi^{0}");
+    SetStyleTLatex( testAccEffEta, textSizeLabelsPixel,4);
+    testAccEffEta->SetTextFont(43);
+    testAccEffEta->Draw();
+    TLatex *textAccEffEtaGG                  = new TLatex(columnsLegendAccEff3[2]-0.03 ,rowsLegendAccEff3[0]," #gamma#gamma");
+    SetStyleTLatex( textAccEffEtaGG, textSizeLabelsPixel,4);
+    textAccEffEtaGG->SetTextFont(43);
+    textAccEffEtaGG->Draw();
+
+    TMarker* markerEtaAccEff[10];
+    TMarker* markerEtaGGAccEff[10];
+    for (Int_t i = 0; i < numbersofmeas; i++){
         if(histoEtaAccTimesEff[i] && availableMeas[i]){
-            DrawGammaSetMarker(histoEtaAccTimesEff[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            markerEtaAccEff[i]             = CreateMarkerFromHisto(histoEtaAccTimesEffBR[i],columnsLegendAccEff3[1]+ offsetMarkerXMass2 ,rowsLegendAccEff3[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerEtaAccEff[i]->DrawMarker(columnsLegendAccEff3[1]+ offsetMarkerXMass2 ,rowsLegendAccEff3[i+1]+ offsetMarkerYMass2);
+        }
+        if(availableMeasEtaGG[i]){
+            markerEtaGGAccEff[i]           = CreateMarkerFromHisto(histoEtaGGAccTimesEff[i],columnsLegendAccEff3[2]+ offsetMarkerXMass2 ,rowsLegendAccEff3[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerEtaGGAccEff[i]->DrawMarker(columnsLegendAccEff3[2]+ offsetMarkerXMass2-0.04 ,rowsLegendAccEff3[i+1]+ offsetMarkerYMass2);
+        }
+    }
+
+    canvasAcceptanceTimesEff->Update();
+    canvasAcceptanceTimesEff->Print(Form("%s/EtaEta_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
+
+    // **********************************************************************************************************************
+    // ******************************** Acceptance * Efficiency for Omega and eta *******************************************
+    // **********************************************************************************************************************
+    textSizeLabelsPixel             = 55;
+    textSizeLabelsRel      = 55./1200;
+    cout << textSizeLabelsRel << endl;
+    canvasAcceptanceTimesEff->cd();
+    DrawGammaCanvasSettings( canvasAcceptanceTimesEff,  0.1, 0.01, 0.015, 0.095);
+    canvasAcceptanceTimesEff->SetLogy(1);
+    canvasAcceptanceTimesEff->SetLogx(1);
+
+    minX=1.5;
+
+    histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, minX,  maxX, 1000, 8e-5, 0.5 );
+    SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
+                            0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1);//(#times #epsilon_{pur})
+                            histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
+                            histo2DAccEff->GetXaxis()->SetLabelOffset(-0.01);
+                            histo2DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
+                            histo2DAccEff->DrawCopy();
+
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            DrawGammaSetMarker(histoOmegaAccTimesEff[i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            DrawGammaSetMarker(histoEtaAccTimesEff[i], markerStyleDetMC[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
+            histoOmegaAccTimesEff[i]->Draw("p,same,e");
             histoEtaAccTimesEff[i]->Draw("p,same,e");
         }
     }
 
-    TLegend* legendEffiAccEta           = GetAndSetLegend2(0.59, 0.13, 0.93, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
-    for (Int_t i = 0; i < numbersofmeas; i++){
-        if(histoEtaAccTimesEff[i] && availableMeas[i]){
-            legendEffiAccEta->AddEntry(histoEtaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
-        }
-    }
-    TLegend* legendEffiAccOmegaEta           = GetAndSetLegend2(0.59, 0.13, 0.93, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel);
-    for (Int_t i = 0; i < numbersofmeas; i++){
-        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
-            legendEffiAccOmegaEta->AddEntry(histoEtaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
-        }
-    }
-    legendEffiAccEta->Draw();
+//    TLegend* legendEffiAccOmega           = GetAndSetLegend2(0.59, 0.13, 0.96, 0.13+(numbersofmeas*textSizeLabelsRel),textSizeLabelsPixel);
+//    for (Int_t i = 0; i < numbersofmeas; i++){
+//        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+//            legendEffiAccOmega->AddEntry(histoOmegaAccTimesEff[i],nameMeasGlobal[i].Data(),"p");
+//            if(availableMeasPi0[i]) legendEffiAccOmega->AddEntry(histoPi0AccTimesEff[i],nameMeasGlobalPi0[i].Data(),"p");
+//        }
+//    }
+//    legendEffiAccOmega->Draw();
 
     drawLatexAdd("ALICE",0.15,0.92,textSizeLabelsRel,kFALSE);
     drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
-    drawLatexAdd("#eta #rightarrow #pi^{+}#pi^{-}#pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+    drawLatexAdd("X #rightarrow #pi^{+}#pi^{-}#pi^{0}",0.15,0.82,textSizeLabelsRel,kFALSE);
+
+    padAccEffLegend1            = new TPad("padAccEffLegend1", "", 0.53, 0.10, 0.93, 0.40,-1, -1, -2);
+    DrawGammaPadSettings( padAccEffLegend1, 0., 0., 0., 0.);
+    padAccEffLegend1->SetFillStyle(0);
+    padAccEffLegend1->Draw();
+    //********************************** Defintion of the Legend **************************************************
+    //           Double_t  rowsLegendMass2[7]= {0.84,0.66,0.50,0.33,0.01,0.16};
+    //Double_t  rowsLegendMass2[9]= {0.84,0.66,0.51,0.50,0.331,0.33,0.01,0.16}; //setting for use without PHOS and PCM-PHOS peak positions
+    //******************* Offsets ***********************
+    offsetMarkerXMass2         = 0.1;
+    offsetMarkerYMass2         = 0.1;
+    //****************** Scale factors ******************
+    scaleMarkerMass2           = 1.2;
+
+    padAccEffLegend1->cd();
+    //****************** first Column **************************************************
+    for (Int_t i = 0; i < numbersofmeas; i++){
+         if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            textAccEffPCM[i]                  = new TLatex(columnsLegendAccEff2[0],rowsLegendAccEff2[i+1],nameMeasGlobal[i].Data());
+            SetStyleTLatex( textAccEffPCM[i], textSizeLabelsPixel,4);
+            textAccEffPCM[i]->SetTextFont(43);
+            textAccEffPCM[i]->Draw();
+        }
+    }
+    //****************** second Column *************************************************
+    testAccEffOmega                = new TLatex(columnsLegendAccEff2[1]+0.02,rowsLegendAccEff2[0] ," #omega");
+    SetStyleTLatex( testAccEffOmega, textSizeLabelsPixel,4);
+    testAccEffOmega->SetTextFont(43);
+    testAccEffOmega->Draw();
+    TLatex* textAccEffEta                  = new TLatex(columnsLegendAccEff2[2]-0.01,rowsLegendAccEff2[0]," #eta");
+    SetStyleTLatex( textAccEffEta, textSizeLabelsPixel,4);
+    textAccEffEta->SetTextFont(43);
+    textAccEffEta->Draw();
+
+    for (Int_t i = 0; i < numbersofmeas; i++){
+        if(histoOmegaAccTimesEff[i] && availableMeas[i]){
+            markerOmegaAccEff[i]             = CreateMarkerFromHisto(histoOmegaAccTimesEff[i],columnsLegendAccEff2[1]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerOmegaAccEff[i]->DrawMarker(columnsLegendAccEff2[1]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2);
+
+            markerEtaAccEff[i]           = CreateMarkerFromHisto(histoEtaAccTimesEff[i],columnsLegendAccEff2[2]+ offsetMarkerXMass2 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2 ,scaleMarkerMass2);
+            markerEtaAccEff[i]->DrawMarker(columnsLegendAccEff2[2]+ offsetMarkerXMass2-0.04 ,rowsLegendAccEff2[i+1]+ offsetMarkerYMass2);
+        }
+    }
 
     canvasAcceptanceTimesEff->Update();
-    canvasAcceptanceTimesEff->Print(Form("%s/Eta_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
+    canvasAcceptanceTimesEff->Print(Form("%s/OmegaEta_AcceptanceTimesEff.%s",outputDir.Data(),suffix.Data()));
 
 }
