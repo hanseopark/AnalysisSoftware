@@ -1510,12 +1510,18 @@ void EventQA_Runwise(
 
                     for(Int_t b=1; b<hNBin+1; b++){
                         Double_t hData = ((TH1D*) vecHistos[i].at(h))->GetBinContent(b);
+			Double_t hErrData = ((TH1D*) vecHistos[i].at(h))->GetBinError(b);
                         for(Int_t j=0; j<nSets-nData; j++){
                             Double_t hMC = ((TH1D*) vecHistos[j+nData].at(h))->GetBinContent(b);
+                            Double_t hErrMC = ((TH1D*) vecHistos[j+nData].at(h))->GetBinError(b);
                             if(hMC!=0) {
                                 if(hData/hMC>1.98) ratio[j]->SetBinContent(b,1.98);
                                 else if(hData/hMC<0.02) ratio[j]->SetBinContent(b,0.02);
-                                else ratio[j]->SetBinContent(b,hData/hMC);
+                                else {
+				  ratio[j]->SetBinContent(b,hData/hMC);
+				  Double_t hErrRatio = hData*sqrt((hErrData/hData)*(hErrData/hData)+(hErrMC/hMC)*(hErrMC/hMC))/hMC;
+				  ratio[j]->SetBinError(b,hErrRatio);
+				}
                             }else ratio[j]->SetBinContent(b,1.98);
                         }
                     }
