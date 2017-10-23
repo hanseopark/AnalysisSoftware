@@ -405,7 +405,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                         if(!energy.CompareTo("2.76TeV")){
                           errorFixed                  = 0.15+pow(ptBins[k],2.6)*0.02+0.01*ptBins[k];
                         }else if(!energy.CompareTo("8TeV")){
-                          if(ptBins[k]>3.5) errorFixed = 1.0;
+                          if(ptBins[k]>=1.8) errorFixed = 0.8;
                         }
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
@@ -422,7 +422,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                                 errorFixed                  = 0.3+pow(ptBins[k],2.2)*0.012+0.001*ptBins[k];
                             }
                           }else if(!energy.CompareTo("8TeV")){
-                            if(ptBins[k]>5.) errorFixed = 1.0;
+                            if(ptBins[k]>=1.8) errorFixed = 0.6;
                           }
                           if (errorFixed != -1){
                               errorsMean[i][k]        = errorFixed;
@@ -497,8 +497,8 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                           if (ptBins[k] > 1.2)
                               errorFixed          = 0.5+pow(ptBins[k],2.1)*0.012+0.02*ptBins[k];
                         }else if(!energy.CompareTo("8TeV")){
-                          errorFixed              = 0.4;
-                          if(ptBins[k]>4.) errorFixed += 0.2*(ptBins[k]-4.);
+                          errorFixed              = 0.8;
+                          if(ptBins[k]>4.) errorFixed += 0.1*(ptBins[k]-4.);
                         }
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
@@ -513,8 +513,8 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                         if(!energy.CompareTo("2.76TeV")){
                           errorFixed              = 0.2+pow(ptBins[k],1.8)*0.07+0.03*ptBins[k];
                         }else if(!energy.CompareTo("8TeV")){
-                          errorFixed              = 0.2;
-                          if(ptBins[k]>4.) errorFixed += 0.2*(ptBins[k]-4.);
+                          errorFixed              = 1.2;
+                          if(ptBins[k]>4.) errorFixed += 0.05*(ptBins[k]-4.);
                         }
                         if (errorFixed != -1){
                             errorsMean[i][k]        = errorFixed;
@@ -679,7 +679,8 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                           errorFixed              = 0.9;
                     }else if(!energy.CompareTo("8TeV")){
                       errorFixed                  = 2.5;
-                      if(ptBins[k]>3.) errorFixed += 0.1*(ptBins[k]-3.);
+                      if(ptBins[k] < 3.) errorFixed += pow(ptBins[k]-3,2)*0.25;
+                      if(ptBins[k] > 3.) errorFixed += 0.1*(ptBins[k]-3.);
                     }
                     if (errorFixed != -1){
                         errorsMean[i][k]        = errorFixed;

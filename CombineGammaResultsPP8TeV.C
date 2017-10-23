@@ -535,7 +535,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     TH2F * histo2DRelStatErr;
     histo2DRelStatErr                   = new TH2F("histo2DRelStatErr","histo2DRelStatErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.5);
     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
-    histo2DRelStatErr->GetYaxis()->SetRangeUser(0,30.5);
+    histo2DRelStatErr->GetYaxis()->SetRangeUser(0,35.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
     histo2DRelStatErr->Draw("copy");
@@ -571,7 +571,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         TH2F * histo2DRelErr;
         histo2DRelErr                    = new TH2F("histo2DRelErr","histo2DRelErr",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,0,50.0);
         SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
-        histo2DRelErr->GetYaxis()->SetRangeUser(0,30.5);
+        histo2DRelErr->GetYaxis()->SetRangeUser(0,35.5);
         histo2DRelErr->GetXaxis()->SetMoreLogLabels();
         histo2DRelErr->GetXaxis()->SetLabelOffset(-0.01);
         histo2DRelErr->Draw("copy");
@@ -584,7 +584,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         graphCombDRRelSys->SetLineStyle(7);
         graphCombDRRelSys->Draw("l,x0,same,e1");
 
-        TLegend* legendRelTotErr       = GetAndSetLegend2(0.14, 0.92-(0.035*3), 0.45, 0.92, 32);
+        TLegend* legendRelTotErr       = GetAndSetLegend2(0.22, 0.92-(0.035*3), 0.45, 0.92, 32);
         legendRelTotErr->AddEntry(graphCombDRRelTot,"tot","p");
         legendRelTotErr->AddEntry(graphCombDRRelStat,"stat","l");
         legendRelTotErr->AddEntry(graphCombDRRelSys,"sys","l");
@@ -1054,7 +1054,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
 
     canvasRelSysErr->cd();
 
-    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,17.5);
+    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,13.5);
     histo2DRelSysErr->Draw("copy");
 
     TLegend* legendRelSysErrIncGamma       = GetAndSetLegend2(0.62, 0.92-(0.04*(nMeasSetIncGamma+1)/2), 0.95, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
@@ -1081,7 +1081,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     //  *********************************************************************************************************************
     canvasRelStatErr->cd();
 
-    histo2DRelStatErr->GetYaxis()->SetRangeUser(-0.2,17.5);
+    histo2DRelStatErr->GetYaxis()->SetRangeUser(-0.2,13.5);
     histo2DRelStatErr->Draw("copy");
     TLegend* legendRelStatErrIncGamma       = GetAndSetLegend2(0.14, 0.92-(0.04*(nMeasSetIncGamma+1)/2), 0.45, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
     for (Int_t i = 0; i < nMeasSetIncGamma; i++){
@@ -1109,7 +1109,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     TGraphAsymmErrors* graphCombIncGammaRelTot      = CalculateRelErrUpAsymmGraph( graphCombIncGammaTot, "relativeTotalErrorDR");
 
     canvasRelSysErr->cd();
-        histo2DRelErr->GetYaxis()->SetRangeUser(0,20.5);
+        histo2DRelErr->GetYaxis()->SetRangeUser(0,12.5);
         histo2DRelErr->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphCombIncGammaRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -1265,7 +1265,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     histo2DGammaRatioToCombFit->GetXaxis()->SetMoreLogLabels();
     histo2DGammaRatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
     //  histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.59,1.42);
+    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.75,1.46);
     histo2DGammaRatioToCombFit->Draw("copy");
 
     ProduceGraphAsymmWithoutXErrors(graphRatioGammaCombCombFitStat);
@@ -1297,6 +1297,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     // **********************************************************************************************************************
 
     canvasRatioToCombFit->cd();
+    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.59,1.47);
     histo2DGammaRatioToCombFit->Draw("copy");
 
     for (Int_t i = 10; i > -1 ; i--){
@@ -1871,7 +1872,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     histo1DEff->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DEff->DrawCopy();
 
-        TLegend* legendEffiGamma           = GetAndSetLegend2(0.57, 0.13, 0.95, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel, 2);
+        TLegend* legendEffiGamma           = GetAndSetLegend2(0.54, 0.13, 0.92, 0.13+(3*textSizeLabelsRel),textSizeLabelsPixel, 2);
         for (Int_t i = 0; i < 11; i++){
             if (histoEffi[i]){
                 DrawGammaSetMarker(histoEffi[i],  markerStyleDetMC[i], markerSizeDetMC[i], colorDetMC[i] , colorDetMC[i]);
@@ -1896,10 +1897,10 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         TLatex *labelEnergyEffi         = new TLatex(0.13,0.87,collisionSystempp8TeV.Data());
         SetStyleTLatex( labelEnergyEffi, textSizeLabelsRel,4);
         labelEnergyEffi->Draw();
-        TLatex *labelPerfEffiPTrec      = new TLatex(0.57,0.145+(3*textSizeLabelsRel),"#it{p}_{T}^{rec}");
+        TLatex *labelPerfEffiPTrec      = new TLatex(0.55,0.145+(3*textSizeLabelsRel),"#it{p}_{T}^{rec}");
         SetStyleTLatex( labelPerfEffiPTrec, textSizeLabelsRel,4);
         labelPerfEffiPTrec->Draw();
-        TLatex *labelPerfEffiPTtrue      = new TLatex(0.665,0.145+(3*textSizeLabelsRel),"#it{p}_{T}^{true}");
+        TLatex *labelPerfEffiPTtrue      = new TLatex(0.655,0.145+(3*textSizeLabelsRel),"#it{p}_{T}^{true}");
         SetStyleTLatex( labelPerfEffiPTtrue, textSizeLabelsRel,4);
         labelPerfEffiPTtrue->Draw();
 
@@ -2100,7 +2101,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
 
 
     Double_t minYSecCorr[4]             = {0.0, 0.0, 0.0, 0.0};
-    Double_t maxYSecCorr[4]             = {0.07, 0.005, 1.0e-3, 0.06};
+    Double_t maxYSecCorr[4]             = {0.066, 0.0046, 1.0e-3, 0.054};
     TString nameLabelSec[4]             = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "Rest"};
     TString nameOutputSec[4]            = {"K0s", "K0l", "Lambda", "Rest"};
     for (Int_t k = 0; k < 4; k++){
@@ -2140,7 +2141,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
 
     TH1F * histo2DYieldGamma              = new TH1F("histo2DYieldGamma","histo2DYieldGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
-    histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,3.5e0);
+    histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,7e0);
     histo2DYieldGamma->GetXaxis()->SetMoreLogLabels();
     histo2DYieldGamma->GetXaxis()->SetLabelOffset(-0.01);
     histo2DYieldGamma->Draw("copy");
@@ -2184,7 +2185,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     // **********************************************************************************************************************
     // ******************************** InvYield for individual inc gamma measurements **************************************
     // **********************************************************************************************************************
-    histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,3.5e0);
+    histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,7e0);
     histo2DYieldGamma->Draw("copy");
     TLegend* legendYieldIncGammaInd       = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel);
     for (Int_t i = 0; i < 11; i++){
