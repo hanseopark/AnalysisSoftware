@@ -119,7 +119,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
     // Set names of cut variations for file input
     TString nameCutVariationSC[16]              = {"dEdxE", "TPCCluster", "SinglePt", "Chi2" , "Qt" ,
-                                                    "DoubleCount" ,"BG" ,"Periods" ,"SPD" ,"OOBPileupGamma",
+                                                    "DoubleCount" ,"BG" ,"Efficiency" ,"SPD" ,"OOBPileupGamma",
                                                     "CosPoint","dEdxPi", "Alpha" ,"Cocktail","RCut",
                                                     "IntRange" };
 
@@ -134,7 +134,7 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
     if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))
         nameCutVariationSC[14]                   = "OOBPileupPi0";
     if((!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))&&!spectrumName.CompareTo("Gamma"))
-        nameCutVariationSC[10]                   = "Cocktail";
+        nameCutVariationSC[12]                   = "Cocktail";
 
     for (Int_t k =0; k<nCuts; k++ ){
         cout << "variation: " << nameCutVariationSC[k].Data() << endl;
@@ -146,10 +146,6 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
 
 
     // adapt some cut name for different energies
-    if(!energy.CompareTo("7TeV"))
-        nameCutVariationSC[7]                   = "7TeVPeriods";
-    if(!energy.CompareTo("8TeV"))
-        nameCutVariationSC[7]                   = "8TeVPeriods";
     if(!energy.CompareTo("900GeV"))
         nameCutVariationSC[7]                   = "BG";
 
@@ -180,10 +176,10 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0,  0 };
     Bool_t benableDR7TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 0,  0 };
-    Bool_t benableIncGamma8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
+    Bool_t benableIncGamma8TeV[16]              = { 1, 1, 1, 1, 1,  1, 0, 1, 1, 1,
                                                     1, 1, 1, 0, 0,  0 };
     Bool_t benableIncRatio8TeV[16]              = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
-                                                    1, 1, 1, 1, 1,  0 };
+                                                    1, 1, 1, 1, 1,  1 };
     Bool_t benableDR8TeV[16]                    = { 1, 1, 1, 1, 1,  1, 1, 1, 1, 1,
                                                     1, 1, 1, 1, 1,  1 };
 
@@ -210,11 +206,11 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
                                                     0, 0, 0, 0, 0,  0 };
     Bool_t bsmoothDR7TeV[16]                    = { 0, 0, 1, 1, 1,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncGamma8TeV[16]              = { 1, 0, 0, 1, 0,  0, 0, 1, 0, 1,
+    Bool_t bsmoothIncGamma8TeV[16]              = { 1, 0, 0, 1, 0,  0, 0, 1, 1, 1,
                                                     0, 0, 0, 0, 0,  0 };
-    Bool_t bsmoothIncRatio8TeV[16]              = { 0, 0, 1, 1, 1,  1, 0, 1, 0, 0,
-                                                    0, 0, 1, 0, 0,  0 };
-    Bool_t bsmoothDR8TeV[16]                    = { 1, 0, 1, 1, 1,  1, 0, 1, 0, 1,
+    Bool_t bsmoothIncRatio8TeV[16]              = { 1, 0, 1, 1, 1,  1, 0, 1, 1, 1,
+                                                    0, 0, 1, 0, 0,  1 };
+    Bool_t bsmoothDR8TeV[16]                    = { 1, 0, 1, 1, 1,  1, 0, 1, 1, 1,
                                                     0, 0, 1, 0, 0,  1 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
@@ -620,12 +616,12 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
             }
 
             // fix periods sys #7
-            if (!nameCutVariationSC[i].CompareTo("7TeVPeriods")||!nameCutVariationSC[i].CompareTo("8TeVPeriods")){
+            if (!nameCutVariationSC[i].CompareTo("Efficiency")){
                 for (Int_t k = 0; k < nPtBinsActive; k++){
                     if(spectrumName.CompareTo("Gamma")){
-                        errorFixed              = 0;
+                        errorFixed              = 0.5;
                     }else{
-                        errorFixed              = 1.5;
+                        errorFixed              = 0.5;
                     }
                 }
             }
@@ -634,6 +630,8 @@ void FinaliseSystematicErrorsConv_Gammas_ppV2(  TString nameDataFileErrors      
             if (!nameCutVariationSC[i].CompareTo("SPD")){
                 if (!energy.CompareTo("2.76TeV")){
                     errorFixed                  = 0.25;
+                } else if (!energy.CompareTo("8TeV")){
+                    errorFixed                  = 0.4;
                 } else {
                     adjustPtDependent               = kTRUE;
                     for (Int_t k = 0; k < nPtBinsActive; k++){
