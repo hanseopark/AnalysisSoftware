@@ -1483,12 +1483,18 @@
                 corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Eta", "EMC_PCMEMC-EMC");
             } else if ( (energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0  ) &&
                         (mesonType.CompareTo("RGamma") == 0 || mesonType.CompareTo("GammaInc") == 0 || mesonType.CompareTo("IncGammaToPi0") == 0)){
+              cout << "\n**************************************************************************************************" << endl;
+              cout << "loading systematic correlations..." << endl;
+              cout << "**************************************************************************************************\n" << endl;
                 corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-PCMEMC");
                 corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCM-PCMEMC");
                 corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCMEMC-EMC");
                 corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCMEMC-EMC");
                 corrFracPCM_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-EMC");
                 corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCM-EMC");
+              cout << "\n**************************************************************************************************" << endl;
+              cout << "loading statistical correlations..." << endl;
+              cout << "**************************************************************************************************\n" << endl;
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC") != -10)
                     corrFracPCM_PCM_PCMEMC[1]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC");
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCM-PCMEMC") != -10)
@@ -1592,12 +1598,18 @@
                     corrFracPCMPHOS_PCMPHOS_EMC[0]     = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMPHOS_EMC-PCMPHOS");
                 }
             } else if ( energy.CompareTo("pPb_5.023TeV") == 0 && ( mesonType.CompareTo("GammaInc") == 0 || mesonType.CompareTo("RGamma") == 0 || mesonType.CompareTo("IncGammaToPi0") == 0)){
+              cout << "\n**************************************************************************************************" << endl;
+              cout << "loading systematic correlations..." << endl;
+              cout << "**************************************************************************************************\n" << endl;
                 corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-PCMEMC");
                 corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCM-PCMEMC");
                 corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCMEMC_PCMEMC-EMC");
                 corrFracEMC_PCMEMC_EMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCMEMC-EMC");
                 corrFracPCM_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "PCM_PCM-EMC");
                 corrFracEMC_PCM_EMC[0]                 = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", mesonType, "EMC_PCM-EMC");
+              cout << "\n**************************************************************************************************" << endl;
+              cout << "loading statistical correlations..." << endl;
+              cout << "**************************************************************************************************\n" << endl;
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC") != -10)
                     corrFracPCM_PCM_PCMEMC[1]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCM_PCM-PCMEMC");
                 if (GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems_Stat", mesonType, "PCMEMC_PCM-PCMEMC") != -10)
@@ -1641,6 +1653,8 @@
                 corrFracPCMEMC_EMCm_PCMEMC[0]              = 0.6;
                 corrFracPCMEMC_EMCm_EMCm[0]                = 0.7;
             }
+
+            cout << "\n**************************************************************************************************\n" << endl;
 
             Double_t cvPCM_PCMPHO                   = 0;
             if (yValue[0]>0 && yValue[3]>0 ){
