@@ -16,7 +16,7 @@ void QA_Runwise(
                 Bool_t doMergedQA       = kFALSE,           // switch on merged ClusterQA
                 Int_t mode              = 2,                // standard mode selector
                 Int_t cutNr             = -1,               // if -1: you have to choose number at runtime
-                Int_t doExtQA           = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
+                Int_t doExtQA           = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots, 3: calculate mean values
                 TString suffix          = "eps"             // output format of plots
 ){
     //**************************************************************************************************************
