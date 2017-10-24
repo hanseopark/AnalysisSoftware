@@ -799,7 +799,7 @@ void PrepareChargedPionDataALICE_pp(){
     histoProtonSpecPubStatPP7TeV->Scale(0.5);
     histoProtonSpecPubSystPP7TeV->Scale(0.5);
 
-
+    
     // *********************************************************************************************************************
     // ************************** High Pt  charged pions 7 TeV ALICE *******************************************************
     // ************************** rather old spectra ***********************************************************************
@@ -1597,6 +1597,40 @@ void PrepareChargedPionDataALICE_pp(){
     TH1D* histoProtonSpecPreliminary5023GeVStat  = GraphToHist_withErrors(graphProtonSpecPrelim5023GeVStat,"histoProtonSpecPreliminary5023GeVStat");
     TH1D* histoProtonSpecPreliminary5023GeVSys   = GraphToHist_withErrors(graphProtonSpecPrelim5023GeVSys,"histoProtonSpecPreliminary5023GeVSys");
     
+    // *********************************************************************************************************************
+    // **************************** full pt spectra 13 TeV identified hadrons **********************************************
+    // **************************** preliminary                  ***********************************************************
+    // *********************************************************************************************************************
+    TFile* fileChargedPionSpectraPrelimPP13TeV        = new TFile("ExternalInput/IdentifiedCharged/HIST_pp.13TeV.mb.INEL.PREL_12062017.root");
+    TH1D*   histoChargedPionSpecPrelimStatPP13TeV           = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_pion_pp13_sum");
+    TH1D*   histoChargedPionSpecPrelimSystPP13TeV           = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_pion_pp13_sum");
+    histoChargedPionSpecPrelimStatPP13TeV->Scale(0.5);
+    histoChargedPionSpecPrelimSystPP13TeV->Scale(0.5);
+    TH1D*   histoChargedKaonSpecPrelimStatPP13TeV           = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_kaon_pp13_sum");
+    TH1D*   histoChargedKaonSpecPrelimSystPP13TeV           = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_kaon_pp13_sum");
+    histoChargedKaonSpecPrelimStatPP13TeV->Scale(0.5);
+    histoChargedKaonSpecPrelimSystPP13TeV->Scale(0.5);
+    TH1D*   histoProtonSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_proton_pp13_sum");
+    TH1D*   histoProtonSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_proton_pp13_sum");
+    histoProtonSpecPrelimStatPP13TeV->Scale(0.5);
+    histoProtonSpecPrelimSystPP13TeV->Scale(0.5);
+    TH1D*   histok0sSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_k0s_pp13");
+    TH1D*   histok0sSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_k0s_pp13");
+    TH1D*   histolambdaSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_lambda_pp13");
+    TH1D*   histolambdaSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_lambda_pp13");
+    TH1D*   histoxiSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_xi_pp13_sum");
+    TH1D*   histoxiSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_xi_pp13_sum");
+    histoxiSpecPrelimStatPP13TeV->Scale(0.5);
+    histoxiSpecPrelimSystPP13TeV->Scale(0.5);
+    TH1D*   histoomegaSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_omega_pp13_sum");
+    TH1D*   histoomegaSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_omega_pp13_sum");
+    histoomegaSpecPrelimStatPP13TeV->Scale(0.5);
+    histoomegaSpecPrelimSystPP13TeV->Scale(0.5);
+    TH1D*   histophiSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_phi_pp13");
+    TH1D*   histophiSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_phi_pp13");
+    TH1D*   histokstarSpecPrelimStatPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hstat_kstar_pp13");
+    TH1D*   histokstarSpecPrelimSystPP13TeV                = (TH1D*)fileChargedPionSpectraPrelimPP13TeV->Get("hsys_kstar_pp13");
+
 
     
     // *********************************************************************************************************************
@@ -1709,6 +1743,27 @@ void PrepareChargedPionDataALICE_pp(){
         histoChHaddNdyINELTotPP7TeV->Write("histoChargedHadrondNdEtaALICEPP7TeV");
         graphChHaddNdyINELTotPP8TeV->Write("graphChargedHadrondNdEtaALICEPP8TeV");
         histoChHaddNdyINELTotPP8TeV->Write("histoChargedHadrondNdEtaALICEPP8TeV");
+        
+        
+        histoChargedPionSpecPrelimStatPP13TeV->Write("histoChargedPionSpecPrelimStat13TeV");
+        histoChargedPionSpecPrelimSystPP13TeV->Write("histoChargedPionSpecPrelimSyst13TeV");
+        histoChargedKaonSpecPrelimStatPP13TeV->Write("histoChargedKaonSpecPrelimStat13TeV");
+        histoChargedKaonSpecPrelimSystPP13TeV->Write("histoChargedKaonSpecPrelimSyst13TeV");
+        histoProtonSpecPrelimStatPP13TeV->Write("histoProtonSpecPrelimStat13TeV");
+        histoProtonSpecPrelimSystPP13TeV->Write("histoProtonSpecPrelimSyst13TeV");
+        histok0sSpecPrelimStatPP13TeV->Write("histok0sSpecPrelimStat13TeV");
+        histok0sSpecPrelimSystPP13TeV->Write("histok0sSpecPrelimSyst13TeV");
+        histolambdaSpecPrelimStatPP13TeV->Write("histolambdaSpecPrelimStat13TeV");
+        histolambdaSpecPrelimSystPP13TeV->Write("histolambdaSpecPrelimSyst13TeV");
+        histoxiSpecPrelimStatPP13TeV->Write("histoxiSpecPrelimStat13TeV");
+        histoxiSpecPrelimSystPP13TeV->Write("histoxiSpecPrelimSyst13TeV");
+        histoomegaSpecPrelimStatPP13TeV->Write("histoomegaSpecPrelimStat13TeV");
+        histoomegaSpecPrelimSystPP13TeV->Write("histoomegaSpecPrelimSyst13TeV");
+        histophiSpecPrelimStatPP13TeV->Write("histophiSpecPrelimStat13TeV");
+        histophiSpecPrelimSystPP13TeV->Write("histophiSpecPrelimSyst13TeV");
+        histokstarSpecPrelimStatPP13TeV->Write("histokstarSpecPrelimStat13TeV");
+        histokstarSpecPrelimSystPP13TeV->Write("histokstarSpecPrelimSyst13TeV");
+        
         
     fileChargedPionspp.Close();
     

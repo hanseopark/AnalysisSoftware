@@ -4089,6 +4089,8 @@
             }
         } else if (meson.CompareTo("Lambda") == 0 || meson.CompareTo("Proton") == 0 || meson.CompareTo("Rho") == 0 || meson.CompareTo("K0Star") == 0 || meson.CompareTo("Phi") == 0){
             maxNBins = 48;
+            if(meson.CompareTo("Phi") == 0)
+                maxNBins = 36;
             for(Int_t i = 0; i < maxNBins+1; i++){
                 binning[i]  = fBinsInterAndExtrapolation[i];
             }
