@@ -103,8 +103,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     Color_t colorCocktailPhi                        = kViolet;
     Color_t colorCocktailRho0                       = kAzure-2;
     Color_t colorCocktailSigma0                     = kGray+1;
-    Color_t  colorJETPHOX                           = kOrange+2;
-    Color_t  colorJETPHOXBand                       = kOrange-9;
+    Color_t  colorJETPHOX                           = kRed+2;
+    Color_t  colorJETPHOXBand                       = kRed-9;
 
     Color_t  colorNLOWerner                         = kAzure+2;
     Color_t  colorNLOWernerBand                     = kAzure-9;
@@ -284,11 +284,12 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         
         TGraphAsymmErrors* graphTheoryJETPHOXDRpp2760GeV    = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonJETPHOXInvYieldINT1_pp2760GeV_ALICECocktail");
         TGraph* graphTheoryJETPHOXDRpp2760GeVCenter         = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonJETPHOXInvYieldINT1_pp2760GeV_ALICECocktail_Center");
-        TGraphAsymmErrors* graphTheoryJETPHOXpp2760GeV      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonJETPHOXInvYield_2760GeV");
+        TH1D* histoTheoryJETPHOXpp2760GeV      = (TH1D*) fileTheory->Get("DirectPhoton/graphDirectPhotonJETPHOXInvYield_2760GeV");
+        TGraph* graphTheoryJETPHOXpp2760GeV      = new TGraph(histoTheoryJETPHOXpp2760GeV);
         
-        // while(graphTheoryJETPHOXpp2760GeV->GetX()[0] < 1.5) graphTheoryJETPHOXpp2760GeV->RemovePoint(0);
+        while(graphTheoryJETPHOXpp2760GeV->GetX()[0] < 1.5) graphTheoryJETPHOXpp2760GeV->RemovePoint(0);
         // while(graphTheoryJETPHOXDRpp2760GeV->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp2760GeV->RemovePoint(0);
-        // while(graphTheoryJETPHOXDRpp2760GeVCenter->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp2760GeVCenter->RemovePoint(0);
+        while(graphTheoryJETPHOXDRpp2760GeVCenter->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp2760GeVCenter->RemovePoint(0);
         
         TGraphAsymmErrors* dummyJETPHOXforLegend    = new TGraphAsymmErrors(1);
         DrawGammaSetMarkerTGraphAsym(dummyJETPHOXforLegend , 2, styleLineJETPHOX, colorJETPHOX, colorJETPHOX, 0.2, kTRUE, colorJETPHOXBand);
@@ -2299,7 +2300,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_NonFit.pdf",outputDir.Data()));
     histo2DYieldGamma->Draw("copy");
 
-    TLegend* legendYieldDirGammaTheo2      = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "#gamma_{dir} NLO pQCD:", 43, 0.23);
+    TLegend* legendYieldDirGammaTheo2      = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(4*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "#gamma_{dir} NLO pQCD:", 43, 0.23);
     legendYieldDirGammaTheo2->SetTextAlign(12);
     graphCombIncGammaSys->Draw("E2same");
     graphCombIncGammaStatPlot->Draw("Epsame");
@@ -2320,6 +2321,13 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             graphTheoryNLOpp2760GeVPaquettCenter->RemovePoint(0);
             graphTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
             legendYieldDirGammaTheo2->AddEntry(graphTheoryNLOpp2760GeVPaquettCenter,"PDF: CTEQ6.1M, FF: BFG2","l");
+        }
+        
+        if (graphTheoryJETPHOXpp2760GeV) {
+          DrawGammaNLOTGraph( graphTheoryJETPHOXpp2760GeV, 2, styleLineJETPHOX, colorJETPHOX );
+            graphTheoryJETPHOXpp2760GeV->Draw("l,same");
+            graphTheoryJETPHOXpp2760GeV->SetLineWidth(widthLineNLO*1.5);
+            legendYieldDirGammaTheo2->AddEntry(graphTheoryJETPHOXpp2760GeV,"JETPHOX","l");
         }
         legendYieldDirGammaTheo2->Draw();
 
@@ -2359,6 +2367,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         if (graphTheoryNLOpp2760GeVPaquettCenter) {
             graphTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
+        }
+        if (graphTheoryJETPHOXpp2760GeV) {
+            graphTheoryJETPHOXpp2760GeV->Draw("l,same");
         }
         legendYieldDirGammaTheo2->Draw();
 

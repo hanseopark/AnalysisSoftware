@@ -118,8 +118,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         histoGammaDecayCombPP2760GeV->GetXaxis()->SetRangeUser(0,30);
         
         TFile *file2760GeVJetPhox = new TFile("ExternalInput/Theory/2760gev_jetphox_NLO_16000M_invYield.root");
-        TH1D* pp2760GeVJetPhox_invyield = (TH1D*)file2760GeVJetPhox->Get("hp23");
-        TGraphAsymmErrors* graphpp2760GeVJetPhox_invyield = new TGraphAsymmErrors(pp2760GeVJetPhox_invyield);
+        TH1D* pp2760GeVJetPhox_invyield = (TH1D*)file2760GeVJetPhox->Get("hp22");
+        TH1D* pp2760GeVJetPhox_invyield23 = (TH1D*)file2760GeVJetPhox->Get("hp23");
+        TGraphAsymmErrors* graphpp2760GeVJetPhox_invyield = new TGraphAsymmErrors(pp2760GeVJetPhox_invyield23);
 
         TString fileNameNLOPhotonHalf2760GeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmuhalf.dat";
         TString fileNameNLOPhotonOne2760GeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
@@ -690,8 +691,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TString fileNameNLOPhotonTwo8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVtwomu.dat";
 
         TFile *file8TeVJetPhox = new TFile("ExternalInput/Theory/8tev_jetphox_NLO_16000M_invYield.root");
-        TH1D* pp8TeVJetPhox_invyield = (TH1D*)file8TeVJetPhox->Get("hp23");
-        TGraphAsymmErrors* graphpp8TeVJetPhox_invyield = new TGraphAsymmErrors(pp8TeVJetPhox_invyield);
+        TH1D* pp8TeVJetPhox_invyield = (TH1D*)file8TeVJetPhox->Get("hp22");
+        TH1D* pp8TeVJetPhox_invyield23 = (TH1D*)file8TeVJetPhox->Get("hp23");
+        TGraphAsymmErrors* graphpp8TeVJetPhox_invyield = new TGraphAsymmErrors(pp8TeVJetPhox_invyield23);
 
         Int_t nlinesNLOTwo8TeV              = 0;
         Int_t nlinesNLOOne8TeV              = 0;
@@ -1269,9 +1271,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphThermalAndPromptInvYieldINT7DirGam7TeV->Write("graphThermalAndPromptDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
 
             // writing 8TeV Gammas
-            graphpp8TeVJetPhox_invyield->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
-            graphpp8TeVJetPhox_invyield->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
-            graphpp8TeVJetPhox_invyield->Write("graphDirectPhotonJETPHOXInvYield_8TeV",TObject::kOverwrite);
+            pp8TeVJetPhox_invyield->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            pp8TeVJetPhox_invyield->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            pp8TeVJetPhox_invyield->Write("graphDirectPhotonJETPHOXInvYield_8TeV",TObject::kOverwrite);
             graphNLOCalcRGammaALICECocktailPP8TeVJETPHOX->GetYaxis()->SetTitle("R_{#gamma}");
             graphNLOCalcRGammaALICECocktailPP8TeVJETPHOX->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphNLOCalcRGammaALICECocktailPP8TeVJETPHOX->Write("graphRGammaDirectPhotonJETPHOXInvYieldINT7_pp8TeV_ALICECocktail",TObject::kOverwrite);
