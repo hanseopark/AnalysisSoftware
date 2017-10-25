@@ -49,7 +49,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     Bool_t      doHistsForEverySet      = kFALSE; // was: kTRUE
     Bool_t      useDataRunListForMC     = kFALSE;
     Bool_t      addSubFolder            = kFALSE;
-
+    Int_t       nSigmasBadRun[8]        = {2,2,2,2,2,2,2,2};
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -205,7 +205,8 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
     if (doEventQA)      EventQA_Runwise(    nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
-                                            doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
+                                            doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, nSigmasBadRun,
+                                            addLabelRunlist );
     if (doPhotonQA) {
         TString                         path = filePath;
         if(!filePathPhoton.IsNull())    path = filePathPhoton;
