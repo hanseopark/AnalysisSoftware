@@ -3817,7 +3817,7 @@
                     }
                 }
             } else if (energy.CompareTo("5TeV") == 0){
-                if ( mode == 2 ){
+                if ( mode == 2 || mode == 20){
                     maxNBins = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi05TeVPtPCMEMC[i];
@@ -3926,6 +3926,11 @@
                     maxNBins = 13;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta5TeVPt[i];
+                    }
+                } else if ( mode == 20 ){
+                    maxNBins = 22;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta5TeVPCMEMCPt[i];
                     }
                 }
             } else if (energy.CompareTo("7TeV") == 0){
@@ -4124,6 +4129,10 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
+            } else if (energy.CompareTo("5TeV") == 0){
+              if ( mode == 20 ){
+                  startPtBin     = 1;
+              }
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 0 ){
                     startPtBin     = 1;
@@ -4174,6 +4183,10 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
+            } else if (energy.CompareTo("5TeV") == 0){
+              if ( mode == 20 ){
+                  startPtBin     = 1;
+              }
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 0 ){
                     startPtBin     = 1;
