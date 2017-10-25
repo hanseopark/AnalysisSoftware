@@ -1,0 +1,15 @@
+#example config	LHC16[q&t] - PCM-EMC
+select	LHC16qt
+mode	2
+cutNr	0
+nSets	1
+nData   1
+energy	pPb_5.023TeV
+filePath    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
+filePathPhoton    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
+fileName    GammaConvCalo_201.root
+fileNamePhoton    AnalysisResults.root
+DataSets    LHC16q_woSDD    STOP
+plotDataSets    LHC16q  STOP
+doEquidistantXaxis  kTRUE
+addPhotonCutNr   0005314140

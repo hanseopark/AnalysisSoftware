@@ -29,9 +29,11 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     TString     fEnergyFlag             = "";
     TString     filePath                = "";
     TString     fileName                = "";
+    TString     fileNamePhoton          = "";
     TString     filePathPhoton          = "";
     TString     select                  = "";
-
+    TString     addPhotonCutNr          = "";
+    TString     addLabelRunlist         = "";
     // initialize arrays
     TString     DataSets[maxSets];
     TString     plotDataSets[maxSets];
@@ -47,6 +49,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     Bool_t      doHistsForEverySet      = kFALSE; // was: kTRUE
     Bool_t      useDataRunListForMC     = kFALSE;
     Bool_t      addSubFolder            = kFALSE;
+
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -106,8 +109,14 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             filePath            = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("filePathPhoton",TString::kIgnoreCase)){
             filePathPhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("fileNamePhoton",TString::kIgnoreCase)){
+            fileNamePhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("fileName",TString::kIgnoreCase)){
             fileName            = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("addPhotonCutNr",TString::kIgnoreCase)){
+            addPhotonCutNr      = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("addLabelRunlist",TString::kIgnoreCase)){
+            addLabelRunlist     = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("cutNr",TString::kIgnoreCase)){
             cutNr               = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
@@ -143,6 +152,8 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
         delete tempArr;
     }
 
+    if (fileNamePhoton.CompareTo("") == 0) fileNamePhoton = fileName;
+
     //**************************************************************************************************************
     //******************************* Check wether settings were valid *********************************************
     //**************************************************************************************************************
@@ -157,6 +168,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     cout << "fileName:              " << fileName.Data()            << endl;
     cout << "filePath:              " << filePath.Data()            << endl;
     cout << "filePathPhoton:        " << filePathPhoton.Data()      << endl;
+    cout << "fileNamePhoton:        " << fileNamePhoton.Data()            << endl;
     cout << "cutNr:                 " << cutNr                      << endl;
     cout << "mode:                  " << mode                       << endl;
     cout << endl;
@@ -167,6 +179,8 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     cout << "doHistsForEverySet:    " << doHistsForEverySet         << endl;
     cout << "useDataRunListForMC:   " << useDataRunListForMC        << endl;
     cout << "addSubFolder:          " << addSubFolder               << endl;
+    cout << "addLabelRunlist:       " << addLabelRunlist            << endl;
+    cout << "addPhotonCutNr:        " << addPhotonCutNr             << endl;
     cout << endl;
     cout << "nSets:                 " << nSets                      << endl;
     cout << "nData:                 " << nData                      << endl;
@@ -191,16 +205,16 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
     if (doEventQA)      EventQA_Runwise(    nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
-                                            doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists );
+                                            doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
     if (doPhotonQA) {
         TString                         path = filePath;
         if(!filePathPhoton.IsNull())    path = filePathPhoton;
-        PhotonQA_Runwise(   nSets, nData, fEnergyFlag, path, fileName, DataSets, plotDataSets, mode, cutNr,
-                            doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists );
+        PhotonQA_Runwise(   nSets, nData, fEnergyFlag, path, fileNamePhoton, DataSets, plotDataSets, mode, cutNr,
+                            doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, addPhotonCutNr);
     }
     if (doClusterQA)    ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
-                                            doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists );
+                                            doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
     if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
-                                            1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, kTRUE );
+                                            1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kTRUE );
     return;
 }

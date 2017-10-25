@@ -1,6 +1,6 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
  *******************************************************************************/
 
 #include "QA.h"
@@ -16,7 +16,7 @@ void ClusterQA_Runwise(
                         Int_t mode                      = 2,            // standard mode for analysis
                         Int_t cutNr                     = -1,           // if -1: you have to choose number at runtime
                         Int_t doExtQA                   = 2,            // 0: switched off, 1: normal extQA, 2: with Cell level plots
-                        Bool_t doEquidistantXaxis       = kFALSE,       // kTRUE: each run in runlist corresponds to 1 bin in X in histogram, 
+                        Bool_t doEquidistantXaxis       = kFALSE,       // kTRUE: each run in runlist corresponds to 1 bin in X in histogram,
                                                                         // kFALSE: histograms contain the complete specified run number range, where each run represents a bin - even if it is not specified
                         Bool_t doTrigger                = kTRUE,        // enables trigger analysis
                         Bool_t doHistsForEverySet       = kTRUE,        // kTRUE: output done for each set separately as well
@@ -27,14 +27,15 @@ void ClusterQA_Runwise(
                                                                         // kFALSE: use specified
                         Size_t markerSize               = 1,            // how large should the markers be?
                         TString suffix                  = "eps",        // output format of plots
-                        TString folderRunlists          = "",            // path to the runlists
-                        Bool_t runMergedClust           = kFALSE        // flag to switch to merged cluster cuts instead of standard cluster cut           
+                        TString folderRunlists          = "",           // path to the runlists
+                        TString addLabelRunList         = "",           // additional name for runlist
+                        Bool_t runMergedClust           = kFALSE        // flag to switch to merged cluster cuts instead of standard cluster cut
                        )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "ClusterQA_Runwise" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
- 
+
     //**************************************************************************************************************
     //**************************** Setting general plotting style **************************************************
     //**************************************************************************************************************
@@ -46,19 +47,19 @@ void ClusterQA_Runwise(
 
     //**************************************************************************************************************
     //****************************** Setting common variables ******************************************************
-    //**************************************************************************************************************    
+    //**************************************************************************************************************
 
     const Int_t nSets           = nSetsIn;
     const Int_t nData           = nDataIn;
-    
+
     TString fDate               = ReturnDateString();
     TString fTextMeasurement    = Form("#pi^{0} #rightarrow #gamma#gamma");
     TString nameMainDir;
 
     Float_t xPosLabel           = 0.8;
     if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
-        xPosLabel               = 0.75;    
-    
+        xPosLabel               = 0.75;
+
     const Int_t maxSets         = 20;
     if(nSets>maxSets){
         cout << "Maximum hardcoded number of Data Sets: " << maxSets << endl;
@@ -79,9 +80,9 @@ void ClusterQA_Runwise(
     //          10 // merged EMCal
     //          11 // merged EMCal
     if(fMode == 0 || fMode == 1 || fMode == 9){ cout << "Returning, given mode contains no calo information: " << fMode << endl; return;}
-    if(fMode != 2 && fMode != 3) 
+    if(fMode != 2 && fMode != 3)
         isPCMCalo               = kFALSE;
-    if(fMode == 10 || fMode == 11) 
+    if(fMode == 10 || fMode == 11)
         isMerged                = kTRUE;
 
     TString fCollisionSystem = ReturnFullCollisionsSystem(fEnergyFlag);
@@ -90,17 +91,17 @@ void ClusterQA_Runwise(
         return;
     }
     TString fDetectionProcess = ReturnFullTextReconstructionProcess(fMode);
-    
+
     //**************************************************************************************************************
     //****************************** Define plotting settings ******************************************************
     //**************************************************************************************************************
-    
+
     std::vector<TString> vecDataSet;
     Style_t hMarkerStyle[maxSets];
     Size_t hMarkerSize[maxSets];
     Color_t hMarkerColor[maxSets];
     Color_t hLineColor[maxSets];
-    
+
     for(Int_t i=0; i<nSets; i++){
         vecDataSet.push_back(DataSets[i].Data());
         hMarkerStyle[i]         = GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),"");
@@ -108,17 +109,26 @@ void ClusterQA_Runwise(
         hLineColor[i]           = GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),"");
         hMarkerSize[i]          = markerSize;
     }
-    
-    
+
+
     //*************************************************************************************************************
     // runNumbers
     std::vector<TString> vecRuns;
+    TString fileRuns[maxSets];
+    for(Int_t i=0; i<nSets; i++){
+        fileRuns[i]             = Form("%s/runNumbers%s%s.txt", folderRunlists.Data(), (vecDataSet.at(i)).Data(),addLabelRunList.Data());
+        if(useDataRunListForMC && i>=nData) {
+            fileRuns[i]         = Form("%s/runNumbers%s%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(), addLabelRunList.Data(),vecDataSet.at(0).Data());
+            cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns[i].Data() << endl;
+        }
+        cout << "trying to read: " << fileRuns[i].Data() << endl;
+        if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+    }
 
     //*************************************************************************************************************
     //****************************** Determine which cut to process ***********************************************
     //*************************************************************************************************************
-    TString fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), (vecDataSet.at(0)).Data());
-    if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+
     TFile* fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()));
     if(fCutFile->IsZombie()) {cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl; return;}
 
@@ -165,22 +175,22 @@ void ClusterQA_Runwise(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     TString fCutSelection            = cuts.at(cutNr);
-    TString fEventCutSelection       = ""; 
-    TString fGammaCutSelection       = ""; 
-    TString fClusterCutSelection     = ""; 
-    TString fMClusterCutSelection    = ""; 
-    TString fElectronCutSelection    = ""; 
+    TString fEventCutSelection       = "";
+    TString fGammaCutSelection       = "";
+    TString fClusterCutSelection     = "";
+    TString fMClusterCutSelection    = "";
+    TString fElectronCutSelection    = "";
     TString fMesonCutSelection       = "";
     if (!isMerged){
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fClusterCutSelection, fMClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
-    }    
+    }
     if (runMergedClust){
         fClusterCutSelection        = fMClusterCutSelection;
-    }    
+    }
 
-    
+
     //*****************************************************************************************************
     //**************************** Determine wether to run track matching or not **************************
     //*****************************************************************************************************
@@ -200,7 +210,7 @@ void ClusterQA_Runwise(
     Int_t nCaloModules              = 0;
     Int_t nCaloCells                = 0;
     if(fClusterCutSelection.BeginsWith('1')){
-        calo                        = "EMCal"; 
+        calo                        = "EMCal";
         iCalo                       = 1;
         nCaloModules                = 10;
         nCaloCells                  = 11520;
@@ -222,14 +232,14 @@ void ClusterQA_Runwise(
 
     //*****************************************************************************************************
     //************************** Define output directories*************************************************
-    //*****************************************************************************************************        
+    //*****************************************************************************************************
     TString outputDir   = "";
     if (!runMergedClust){
         outputDir       = Form("%s/%s/ClusterQA/%s/Runwise",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
     } else {
         outputDir       = Form("%s/%s/MergedClusterQA/%s/Runwise",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
-    }    
-    if(addSubFolder) 
+    }
+    if(addSubFolder)
         outputDir       +=Form("/%s",DataSets[0].Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
@@ -240,15 +250,10 @@ void ClusterQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
-        fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data());
-        if(useDataRunListForMC && i>=nData) {
-            fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
-            cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
-        }
-        if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
-
+        if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
         for(Int_t j=0; j<(Int_t) vecRuns.size();j++) {
-            if( i==0 ) 
+
+            if( i==0 )
                 globalRuns.push_back(vecRuns.at(j));
             else {
                 Bool_t bFound = kFALSE;
@@ -269,8 +274,8 @@ void ClusterQA_Runwise(
         cout << globalRuns.at(i) << ", ";
     }
     cout << endl;
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;    
-    
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+
     //*****************************************************************************************************
     //********************* Create histograms for plotting ************************************************
     //*****************************************************************************************************
@@ -331,7 +336,7 @@ void ClusterQA_Runwise(
     //****************************** Vectors for Histograms ***********************************************
     //*****************************************************************************************************
     //*****************************************************************************************************
-    
+
     std::vector<TString>* vecBadCells                   = new std::vector<TString>[nSets];
     std::vector<TH2D*>* vecClusterEtaPhi                = new std::vector<TH2D*>[nSets];
     std::vector<TH2D*>* vecClusterEnergyTime            = new std::vector<TH2D*>[nSets];
@@ -634,7 +639,7 @@ void ClusterQA_Runwise(
 
     //*****************************************************************************************************
     //******************************* create log files *****************************************************
-    //*****************************************************************************************************    
+    //*****************************************************************************************************
 
     fstream* fLog = new fstream[nSets];
     fstream* fLogRunwiseHotCells = new fstream[nSets];
@@ -661,7 +666,7 @@ void ClusterQA_Runwise(
 
     //*****************************************************************************************************
     //******************************* define transverse momentum binning **********************************
-    //*****************************************************************************************************    
+    //*****************************************************************************************************
 
     const Int_t fNBinsClusterPt 			    = 60;
     Double_t fBinsClusterPt[fNBinsClusterPt+1]  = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
@@ -700,19 +705,15 @@ void ClusterQA_Runwise(
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
         fDataSet                = vecDataSet.at(i);
-        fileRuns                = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
-        if(useDataRunListForMC && i>=nData) {
-            fileRuns            = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
-            cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
-        }
-        if(!readin(fileRuns, vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+
+        if(!readin(fileRuns[i], vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
         fileCells               = Form("%s/%s/ClusterQA/%s/%s/Cells/%s.log",fCutSelection.Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[i].Data(),DataSets[i].Data());
         if (runMergedClust)
             fileCells               = Form("%s/%s/MergedClusterQA/%s/%s/Cells/%s.log",fCutSelection.Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[i].Data(),DataSets[i].Data());
         readin(fileCells, vecBadCells[i], kTRUE, kTRUE);
         fLog[i] << "Read in " << vecBadCells[i].size() << " bad cells: ";
-        for(Int_t iBad=0; iBad<(Int_t) vecBadCells[i].size(); iBad++) 
+        for(Int_t iBad=0; iBad<(Int_t) vecBadCells[i].size(); iBad++)
             fLog[i] << vecBadCells[i].at(iBad) << ", ";
         fLog[i] << endl;
 
@@ -763,23 +764,23 @@ void ClusterQA_Runwise(
             //--------------------------------------------------------------------------------------------------------
             //if(extendedRunwiseQA) ClusterQA(fRootFile,"","",nameMainDir,fEnergyFlag,plotDataSets[i],"","",fCutSelection,fRunNumber,suffix,mode);
             //--------------------------------------------------------------------------------------------------------
-            if(doEquidistantXaxis) 
+            if(doEquidistantXaxis)
                 bin                     = mapBin[fRunNumber];
-            else 
+            else
                 bin                     = fRunNumber.Atoi() - hFBin;
             Double_t nEvents            = 0;
-            if ((TH1*) ESDContainer->FindObject("NEventsWOWeights")){            
+            if ((TH1*) ESDContainer->FindObject("NEventsWOWeights")){
                 if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
                     nEvents         = ((TH1*) ESDContainer->FindObject("NEventsWOWeights"))->GetBinContent(1);
-                else 
+                else
                     nEvents         = GetNEvents((TH1*) ESDContainer->FindObject("NEventsWOWeights"),kFALSE);
                 cout << "INFO: Output contains event weights" << endl;
             } else {
                 if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb"))
                     nEvents        = ((TH1*) ESDContainer->FindObject("NEvents"))->GetBinContent(1);
-                else 
+                else
                     nEvents        = GetNEvents((TH1*) ESDContainer->FindObject("NEvents"),kFALSE);
-            }    
+            }
             //--------------------------------------------------------------------------------------------------------
             fLog[i] << "----------------------------------------------------------------------------" << endl;
             fLog[i] << "Processing file: " << fRootFile.Data() << endl;
@@ -793,7 +794,7 @@ void ClusterQA_Runwise(
             if(hNEvents){
                 hNEvents[i]->SetBinContent(bin, nEvents);
             } else cout << "Info: Object |NEvents| could not be found! Skipping Fill..." << endl;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------------ Cluster properties: cluster energy --------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -845,7 +846,7 @@ void ClusterQA_Runwise(
                 tempClusEtaPhi->GetZaxis()->SetRangeUser(0, 2);
                 vecClusterEtaPhi[i].push_back(tempClusEtaPhi);
             } else cout << "Info: Object |EtaPhi_afterClusterQA| could not be found! Skipping..." << endl;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------------ Cluster properties: cluster NCells --------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -877,7 +878,7 @@ void ClusterQA_Runwise(
                     vecClusterEVsNCells[i].push_back(tempClusEVsNCells);
                 } else cout << "Info: Object |ClusterEnergyVsNCells_afterQA| could not be found! Skipping..." << endl;
             }
-            
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------------ Cluster properties: cluster shape ---------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -930,7 +931,7 @@ void ClusterQA_Runwise(
                 tempClusDispersion->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dDisp}");
                 vecClusterDispersion[i].push_back(tempClusDispersion);
             } else cout << "Info: Object |Dispersion_afterClusterQA| could not be found! Skipping..." << endl;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //----------------------------- conversion photon bookkeeping --------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -944,7 +945,7 @@ void ClusterQA_Runwise(
                 hCaloNClustersQA[i]->SetBinContent(bin, CaloNClustersQA / nEvents);
                 hCaloNClustersQA[i]->SetBinError(bin, sqrt(CaloNClustersQA) / nEvents);
             } else cout << "Info: Object |AcceptanceCuts| or |IsPhotonSelected| could not be found! Skipping Fill..." << endl;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------------ Cluster properties: cluster timing --------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -984,7 +985,7 @@ void ClusterQA_Runwise(
                     vecClusterTime[i][iT].push_back(tempClusTime);
                 }
             } else cout << "Info: Object |ClusterTimeVsE_afterClusterQA| could not be found! Skipping..." << endl;
-            
+
             //--------------------------------------------------------------------------------------------------------
             //------------------------- Cluster properties: number of local maxima in cluster ------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1063,7 +1064,7 @@ void ClusterQA_Runwise(
                     } else cout << Form("Info: Object |ESD_Mother%sConvPhoton_Eta_Phi| could not be found! Skipping...", sT[iT].Data()) << endl;
                 }
             }
-            
+
             //--------------------------------------------------------------------------------------------------------
             //----------------------------- Cluster properties: track matching to cluster ----------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1168,7 +1169,7 @@ void ClusterQA_Runwise(
                         vecClusterNCells1500VsModule[i][iModule].push_back(tempNCells1500ForModule);
                     } else cout << "Info: Object |NCellsAbove1500VsModule| could not be found! Skipping..." << endl;
                 }
-        
+
                 //--------------------------------------------------------------------------------------------------------
                 //------------------------- Cell QA: cell frequency, timing and energy distribution ----------------------
                 //--------------------------------------------------------------------------------------------------------
@@ -1281,7 +1282,7 @@ void ClusterQA_Runwise(
                     }
                 }
             }
-            
+
             //--------------------------------------------------------------------------------------------------------
             //-------------------------------- clean up --------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1299,8 +1300,8 @@ void ClusterQA_Runwise(
 
     TCanvas* canvas                 = new TCanvas("canvas","",10,10,750,500);  // gives the page size
     Double_t leftMar                = 0.09;
-    Double_t rightMar               = 0.025; 
-    Double_t topMargin              = 0.04; 
+    Double_t rightMar               = 0.025;
+    Double_t topMargin              = 0.04;
     Double_t bottomMargin           = 0.09;
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
 
@@ -1343,7 +1344,7 @@ void ClusterQA_Runwise(
                                     0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, boxLabel, kFALSE, kFALSE);
 
             TGaxis::SetExponentOffset(0, -0.1, "x");
-            if(i<nData) 
+            if(i<nData)
                 DrawVectorOverviewTH2D( canvas, vecClusterEnergyTime[i], "ExtQA/hClusterEnergyTime", outputDirDataSet, suffix,
                                         0.13, 0.15, 0.1, 0.14, 0.8, 0.8, 0.12, 0.93, 0x0, kTRUE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
@@ -1400,9 +1401,9 @@ void ClusterQA_Runwise(
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), Form("%s clusters", calo.Data()));
                 }
 
-                if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ) 
+                if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 )
                     SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()), kFALSE, kTRUE);
-                else 
+                else
                     SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()));
             }
         }
@@ -1422,15 +1423,7 @@ void ClusterQA_Runwise(
         for(Int_t i=0; i<nSets; i++) {
             vecRuns.clear();
             fDataSet                    = vecDataSet.at(i);
-            fileRuns                    = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
-            outputDirDataSet            = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
-
-            if(useDataRunListForMC && i>=nData) {
-                fileRuns                = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
-                outputDirDataSet        = Form("%s/%s-%s", outputDir.Data(), DataSets[i].Data(),DataSets[0].Data());
-                cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
-            }
-            if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+            if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
             for(Int_t iRun=0; iRun<(Int_t)vecMissingRuns[i].size(); iRun++){
                 vecRuns.erase(std::remove(vecRuns.begin(), vecRuns.end(), vecMissingRuns[i].at(iRun)), vecRuns.end());
@@ -1458,7 +1451,7 @@ void ClusterQA_Runwise(
             if(doTrigger && i<nData){
                 TString fTriggerCut     = fEventCutSelection(3,2);
                 fTrigger                = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
-                if(fTrigger.Contains("not defined")) 
+                if(fTrigger.Contains("not defined"))
                     fTrigger            = "";
             }
             //--------------------------------------------------------------------------------------------------------
@@ -1543,7 +1536,7 @@ void ClusterQA_Runwise(
     //************************************************************************************************************
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Trending Histograms" << endl;
-    
+
     //--------------------------------------------------------------------------------------------------------
     if(useDataRunListForMC) cout << "WARNING: useDataRunListForMC is true, overwriting histograms for DataSet!" << endl;
 
@@ -1568,9 +1561,9 @@ void ClusterQA_Runwise(
             if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
                 ((TString)vecHistosName.at(h)).CompareTo("hClusterTime-Mean")==0 )
                 AdjustHistRange(vecHistos,10,10,h,nSets,kTRUE);
-            else 
+            else
                 AdjustHistRange(vecHistos,1.1,1.1,h,nSets,kTRUE);
-            
+
             for(Int_t i=nSets-1; i>=0; i--){
                 TString draw;
                 if(h==0) draw = (i==nSets-1)?"p":"p, same";
@@ -1580,12 +1573,12 @@ void ClusterQA_Runwise(
             }
             legend->Draw();
 
-            if(doTrigger) 
+            if(doTrigger)
                 PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), Form("%s clusters", calo.Data()));
-            else 
+            else
                 PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), "");
 
-            if(canvas->GetTopMargin()!=0.06) 
+            if(canvas->GetTopMargin()!=0.06)
                 canvas->SetTopMargin(0.06);
             if(useDataRunListForMC && !addSubFolder){
                 if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
@@ -1655,11 +1648,11 @@ void ClusterQA_Runwise(
                         TString fTrigger            = "";
                         TString fTriggerCut         = fEventCutSelection(3,2);
                         fTrigger                    = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), plotDataSets[i]);
-                        if(fTrigger.Contains("not defined")) 
+                        if(fTrigger.Contains("not defined"))
                             fTrigger                = "";
 
                         PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), fTrigger.Data(), Form("%s clusters", calo.Data()));
-                    } else 
+                    } else
                         PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), "");
 
                     SaveCanvas(canvas, Form("%s/TrendingRatios/%s.%s", outputDirDataSet.Data(),Form("%s",((TH1D*) vecHistos[i].at(h))->GetName()),suffix.Data()));
@@ -1689,8 +1682,8 @@ void ClusterQA_Runwise(
         } else {
             if(useDataRunListForMC && i>=nData) nameOutput = Form("%s/%s/MergedClusterQA/%s-%s_ClusterQARunwise.root",fCutSelection.Data(),fEnergyFlag.Data(),fDataSet.Data(),vecDataSet.at(0).Data());
             else nameOutput = Form("%s/%s/MergedClusterQA/%s_ClusterQARunwise.root",fCutSelection.Data(),fEnergyFlag.Data(),fDataSet.Data());
-        } 
-            
+        }
+
         TFile* fOutput = new TFile(nameOutput,"RECREATE");
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "Output file: " << nameOutput << endl;

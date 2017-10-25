@@ -87,8 +87,7 @@ void EventQA(
 
     Color_t colorCompare[maxSets]       = {kBlack, kRed+1, kMagenta+2, 807, 800, kGreen+2, kCyan+2, kBlue+1, kOrange+2, kAzure, kViolet, kGray+1};
     TString nameMainDir[maxSets];
-    Double_t processLabelOffsetX1       = 0.82;
-    Double_t processLabelOffsetX2       = 0.65;
+    Double_t processLabelOffsetX1       = 0.85;
 
     TString* fCutSelection              = new TString[nSets];
     TString* fEventCutSelection         = new TString[nSets];
@@ -185,8 +184,7 @@ void EventQA(
       cout << "Detected from event cuts that dataset is PbPb" << endl;
       cout << "Will produce centrality and event plane angle histograms" << endl;
       fIsPbPb = kTRUE;
-      processLabelOffsetX1 = 0.76;
-      processLabelOffsetX2 = 0.58;
+      processLabelOffsetX1 = 0.85;
     } else if(fIsHeavyIonInt == 8 || fIsHeavyIonInt == 9){
       fIspPb = kTRUE;
     } else if (fIsHeavyIonInt == -1){
@@ -302,13 +300,18 @@ void EventQA(
     //*****************************************************************************************************
 
     // canvas definition
-    TCanvas* canvas         = new TCanvas("canvas","",10,10,750,500);  // gives the page size
-    TCanvas* cvsQuadratic   = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
-    Double_t leftMargin     = 0.075;
-    Double_t rightMargin    = 0.02;
-    Double_t topMargin      = 0.04;
-    Double_t bottomMargin   = 0.075;
+    TCanvas* canvas             = new TCanvas("canvas","",10,10,750,500);  // gives the page size
+    TCanvas* cvsQuadratic       = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
+    Double_t leftMargin         = 0.075;
+    Double_t rightMargin        = 0.02;
+    Double_t topMargin          = 0.04;
+    Double_t bottomMargin       = 0.075;
+    Double_t topMarginQuad      = 0.014;
+    Double_t bottomMarginQuad   = 0.092;
+    Double_t leftMarginQuad     = 0.117;
+    Double_t rightMarginQuad    = 0.117;
     DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
+    DrawGammaCanvasSettings(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad);
 
     for(Int_t i=0; i<nSets; i++) {
         TFile *fFile = new TFile(pathDataSets[i].Data(),"READ");
@@ -531,10 +534,10 @@ void EventQA(
             SetXRange(fHistSPDtracklets_clusters_before,1,maxB_SPD);
             SetYRange(fHistSPDtracklets_clusters_before,1,maxYB_SPD);
             SetZMinMaxTH2(fHistSPDtracklets_clusters_before,1,maxB_SPD,1,maxYB_SPD);
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                 fHistSPDtracklets_clusters_before,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -550,10 +553,10 @@ void EventQA(
             SetXRange(fHistSPDtracklets_clusters_beforePileUp,1,maxB_SPD);
             SetYRange(fHistSPDtracklets_clusters_beforePileUp,1,maxYB_SPD);
             SetZMinMaxTH2(fHistSPDtracklets_clusters_beforePileUp,1,maxB_SPD,1,maxYB_SPD);
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                 fHistSPDtracklets_clusters_beforePileUp,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -569,10 +572,10 @@ void EventQA(
             SetXRange(fHistSPDtracklets_clusters,1,maxB_SPD);
             SetYRange(fHistSPDtracklets_clusters,1,maxYB_SPD);
             SetZMinMaxTH2(fHistSPDtracklets_clusters,1,maxB_SPD,1,maxYB_SPD);
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                 fHistSPDtracklets_clusters,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
@@ -590,39 +593,39 @@ void EventQA(
             GetMinMaxBinY(fHistTracksVsCandidates,minYB,maxYB);
             SetYRange(fHistTracksVsCandidates,1,maxYB+1);
             SetZMinMaxTH2(fHistTracksVsCandidates,1,maxB+1,1,maxYB+1);
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                 fHistTracksVsCandidates,"",
                                 "N_{Good Tracks}","N_{GammaCandidates}",1,1.4,
-                                processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                                processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTracksVsCandidates, Form("%s/GoodESDTracksVsGammaCandidates_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
 
         //-------------------------------------------------------------------------------------------------------------------------------
-	// centrality
-	if(fIsPbPb){
-	  TH1D* fHistCentrality = (TH1D*)ESDContainer->FindObject("Centrality");
-	  if(fHistCentrality){
-	    fHistCentrality->Rebin(4);
-            GetMinMaxBin(fHistCentrality,minB,maxB);
-            SetXRange(fHistCentrality,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
-				 fHistCentrality,"","centrality (%)","",1,1,
-				 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            WriteHistogram(fHistCentrality);
-            vecCentrality.push_back(new TH1D(*fHistCentrality));
-	  } else cout << "INFO: Object |fHistCentrality| could not be found! Skipping Draw..." << endl;
-	  // event plane angle
-	  TH1D* fHistEventPlaneAngle = (TH1D*)ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection[i].Data()));
-	  if(fHistEventPlaneAngle){
-	    GetMinMaxBin(fHistEventPlaneAngle,minB,maxB);
-            SetXRange(fHistEventPlaneAngle,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
-				 fHistEventPlaneAngle,"","event plane angle (rad)","",1,1,
-				 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            WriteHistogram(fHistEventPlaneAngle);
-            vecEventPlaneAngle.push_back(new TH1D(*fHistEventPlaneAngle));
-	  } else cout << "INFO: Object |fHistEventPlaneAngle| could not be found! Skipping Draw..." << endl;
-	}
+        // centrality
+        if(fIsPbPb){
+            TH1D* fHistCentrality = (TH1D*)ESDContainer->FindObject("Centrality");
+            if(fHistCentrality){
+                fHistCentrality->Rebin(4);
+                    GetMinMaxBin(fHistCentrality,minB,maxB);
+                    SetXRange(fHistCentrality,minB,maxB);
+                    DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                        fHistCentrality,"","centrality (%)","",1,1,
+                        processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                    WriteHistogram(fHistCentrality);
+                    vecCentrality.push_back(new TH1D(*fHistCentrality));
+            } else cout << "INFO: Object |fHistCentrality| could not be found! Skipping Draw..." << endl;
+            // event plane angle
+            TH1D* fHistEventPlaneAngle = (TH1D*)ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection[i].Data()));
+            if(fHistEventPlaneAngle){
+                GetMinMaxBin(fHistEventPlaneAngle,minB,maxB);
+                    SetXRange(fHistEventPlaneAngle,minB,maxB);
+                    DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                        fHistEventPlaneAngle,"","event plane angle (rad)","",1,1,
+                        processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                    WriteHistogram(fHistEventPlaneAngle);
+                    vecEventPlaneAngle.push_back(new TH1D(*fHistEventPlaneAngle));
+            } else cout << "INFO: Object |fHistEventPlaneAngle| could not be found! Skipping Draw..." << endl;
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
 
         Float_t nEventsBin1 = fHistNEvents->GetBinContent(1);
@@ -829,7 +832,7 @@ void EventQA(
                 fHistGammaAlphaQt->Scale(1./fHistGammaAlphaQt->GetEntries());
                 fHistGammaAlphaQt->GetYaxis()->SetRangeUser(0,0.25);
                 SetZMinMaxTH2(fHistGammaAlphaQt,1,fHistGammaAlphaQt->GetNbinsX(),1,fHistGammaAlphaQt->GetXaxis()->FindBin(0.25),kTRUE);
-                DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                     fHistGammaAlphaQt,"",
                                     "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})","#it{q}_{T} (GeV/#it{c})",1,1.4,
                                     0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
@@ -855,7 +858,7 @@ void EventQA(
                     GetMinMaxBin(histodEdx,minB,maxB);
                     SetXRange(histodEdx,minB,maxB);
                     SetZMinMaxTH2(histodEdx,1,histodEdx->GetNbinsX(),1,histodEdx->GetNbinsY(),kTRUE);
-                    DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                    DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kTRUE,kFALSE,kTRUE,
                                         histodEdx,"",
                                         "#it{p} (GeV/#it{c})","d#it{E}/d#it{x}",1,1.4,
                                         0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
@@ -871,11 +874,11 @@ void EventQA(
                     if(iBefore==0) GetMinMaxBinY(histonSigmadEdx,sigmadEdxMinMax[0],sigmadEdxMinMax[1]);
                     SetYRange(histonSigmadEdx,sigmadEdxMinMax[0]-1,sigmadEdxMinMax[1]+1);
                     SetZMinMaxTH2(histonSigmadEdx,1,histonSigmadEdx->GetNbinsX(),1,histonSigmadEdx->GetNbinsY(),kTRUE);
-                    DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                    DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kTRUE,kFALSE,kTRUE,
                                         histonSigmadEdx,"",
                                         "#it{p} (GeV/#it{c})","#it{n} #sigma_{e^{#pm}} d#it{E}/d#it{x}",1,1.4,
                                         0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
-                        SaveCanvasAndWriteHistogram(cvsQuadratic, histonSigmadEdx, Form("%s/nSigma_dEdx_Candidates_%s_%s.%s", outputDir.Data(), str[iBefore].Data(),DataSets[i].Data(), suffix.Data()));
+                    SaveCanvasAndWriteHistogram(cvsQuadratic, histonSigmadEdx, Form("%s/nSigma_dEdx_Candidates_%s_%s.%s", outputDir.Data(), str[iBefore].Data(),DataSets[i].Data(), suffix.Data()));
                 } else cout << Form("INFO: Object |Gamma_dEdxSig_%s %s| could not be found! Skipping Draw...",str[iBefore].Data(),iCutNumber.Data()) << endl;
                 //-------------------------------------------------------------------------------------------------------------------------------
                 TH2D* histoTOF = (TH2D*)list->FindObject(Form("Gamma_TOF_%s %s",str[iBefore].Data(),iCutNumber.Data()));
@@ -886,7 +889,7 @@ void EventQA(
                     GetMinMaxBin(histoTOF,minB,maxB);
                     SetXRange(histoTOF,minB,maxB);
                     SetZMinMaxTH2(histoTOF,1,histoTOF->GetNbinsX(),1,histoTOF->GetNbinsY(),kTRUE);
-                    DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                    DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kTRUE,kFALSE,kTRUE,
                                         histoTOF,"",
                                         "#it{p} (GeV/#it{c})","#it{t}_{measured}-#it{t}_{expected}",1,1.4,
                                         0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
@@ -903,7 +906,7 @@ void EventQA(
                     if(iBefore==0) GetMinMaxBinY(histonSigmaTOF,sigmaTOFMinMax[0],sigmaTOFMinMax[1]);
                     SetYRange(histonSigmaTOF,sigmaTOFMinMax[0]-1,sigmaTOFMinMax[1]+1);
                     SetZMinMaxTH2(histonSigmaTOF,1,histonSigmadEdx->GetNbinsX(),1,histonSigmadEdx->GetNbinsY(),kTRUE);
-                    DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                    DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kTRUE,kFALSE,kTRUE,
                                         histonSigmaTOF,"",
                                         "#it{p} (GeV/#it{c})","#it{n} #sigma_{e^{#pm}} TOF",1,1.4,
                                         0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);

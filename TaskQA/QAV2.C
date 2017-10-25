@@ -30,7 +30,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     TString labelData               = "";
     Bool_t addSubfolder             = kFALSE;
     TString select                  = "";
-
+    TString addPhotonCutNr          = "";
     TString DataSets        [maxSets];
     TString plotDataSets    [maxSets];
     TString pathDataSets    [maxSets];
@@ -108,6 +108,8 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
             cutNr           = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("mode",TString::kIgnoreCase)){
             mode            = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+        } else if (tempValue.BeginsWith("addPhotonCutNr",TString::kIgnoreCase)){
+            addPhotonCutNr  = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("enableSubfolder",TString::kIgnoreCase)){
             addSubfolder    = kTRUE;
         } else if (tempValue.BeginsWith("pathDataSets",TString::kIgnoreCase)){
@@ -204,7 +206,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     cout << "mode:\t"<< mode << endl;
     cout << "addSubfolder:\t"<< addSubfolder << endl;
     cout << "labelData:\t" << labelData.Data() << endl;
-
+    cout << "addPhotonCutNr:\t" << addPhotonCutNr << endl;
     if (nSets == 0 || !fEnergyFlag.CompareTo("") || mode == -1 ){
         cout << "ABORTING: You are missing the nSets, energy or mode setting, can't continue like that" << endl;
         return;
@@ -229,7 +231,7 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
     if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
-    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, addPhotonCutNr);
     if ( doClusterQA){
         if(fuseClusterQAValues==1)
             ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kFALSE, fuseClusterQAValues, arrQAEnergy, arrQATime, arrQAHotCells1D, arrmin2D, arrmax2D);

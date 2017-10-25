@@ -3627,7 +3627,7 @@
                 } else if (generator.Contains("LHC17f2a_fix") || generator.Contains("EPOS")){
                     return kViolet+1;
                 } else if (generator.Contains("LHC17f2b") || generator.Contains("DPMJET")){
-                    return kViolet+6;
+                    return kGreen+2;
                 }
             } else {
                 return kViolet+6;

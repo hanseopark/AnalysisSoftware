@@ -20,7 +20,7 @@ void EventQA_Runwise(
                         Int_t mode                      = 2,                // standard mode for analysis
                         Int_t cutNr                     = -1,               // if -1: you have to choose number at runtime
                         Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots, 3: with mean value calculations
-                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram, 
+                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram,
                                                                             // kFALSE: histograms contain the complete specified run number range, where each run represents a bin - even if it is not specified
                         Bool_t doTrigger                = kTRUE,            // enables trigger analysis
                         Bool_t doHistsForEverySet       = kTRUE,            // kTRUE: output done for each set separately as well
@@ -32,7 +32,8 @@ void EventQA_Runwise(
                         Size_t markerSize               = 1,                // how large should the markers be?
                         TString suffix                  = "eps",            // output format of plots
                         TString folderRunlists          = "",               // path to the runlists
-			Int_t *nSigmasBadRun            = NULL              // array of 8 integers 
+                        Int_t *nSigmasBadRun            = NULL,             // array of 8 integers
+                        TString addLabelRunList         = ""                // additional name for runlist
                     )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -143,12 +144,26 @@ void EventQA_Runwise(
     //*************************************************************************************************************
     // runNumbers
     std::vector<TString> vecRuns;
+    TString fileRuns[maxSets];
+    // bad QA runs
+    std::vector<TString> vecRunsBad;
+    TString fileRunsBad[maxSets];
+
+    for(Int_t i=0; i<nSets; i++){
+        fileRuns[i]             = Form("%s/runNumbers%s%s.txt", folderRunlists.Data(), (vecDataSet.at(i)).Data(),addLabelRunList.Data());
+        fileRunsBad[i]          = Form("%s/runNumbers%s%sBadQA.txt", folderRunlists.Data(), fDataSet.Data(),addLabelRunList.Data());
+
+        if(useDataRunListForMC && i>=nData) {
+            fileRuns[i]         = Form("%s/runNumbers%s%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(), addLabelRunList.Data(),vecDataSet.at(0).Data());
+            cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns[i].Data() << endl;
+        }
+        cout << "trying to read: " << fileRuns[i].Data() << endl;
+        if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+    }
 
     //*************************************************************************************************************
     //****************************** Determine which cut to process ***********************************************
     //*************************************************************************************************************
-    TString fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), (vecDataSet.at(0)).Data());
-    if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..., tried to find: " << fileRuns.Data() << endl; return;}
     TFile* fCutFile             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()));
     if(fCutFile->IsZombie()) {cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl; return;}
 
@@ -244,12 +259,7 @@ void EventQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++) {
         vecRuns.clear();
-        fileRuns = Form("%s/runNumbers%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data());
-        if(useDataRunListForMC && i>=nData) {
-            fileRuns = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
-            cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
-        }
-        if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+        if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
         for(Int_t j=0; j<(Int_t) vecRuns.size();j++){
             if( i==0 ) globalRuns.push_back(vecRuns.at(j));
@@ -693,10 +703,6 @@ void EventQA_Runwise(
     Double_t* sumEvents                     = new Double_t[nSets];
     Double_t* sumEventsAll                  = new Double_t[nSets];
 
-    // bad QA runs
-    std::vector<TString> vecRunsBad;
-    TString fileRunsBad                     = "";
-
     std::vector<TString>* vecMissingRuns    = new std::vector<TString>[nSets];
 
     Bool_t isNullNSigmas = kFALSE;
@@ -714,23 +720,17 @@ void EventQA_Runwise(
     for(Int_t i=0; i<nSets; i++) {
         fitValues[i]        = new Double_t[(Int_t)vecHistos[i].size()];
         vecRuns.clear();
-	vecRunsBad.clear();
-	badRunCalc sVertexZMean       = {nSigmasBadRun[0],0,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
-	badRunCalc sCentralityMean    = {nSigmasBadRun[1],0,0.,0.,0.,hCentralityMean[i]};
-	badRunCalc sFracWOVtx         = {nSigmasBadRun[2],0,0.,0.,0.,hFracWOVtx[i]};
-	badRunCalc sTracksMeanGood    = {nSigmasBadRun[3],0,0.,0.,0.,hTracksMeanGood[i]};
-	badRunCalc sConvNCandidatesQA = {nSigmasBadRun[4],0,0.,0.,0.,hConvNCandidatesQA[i]};
-	badRunCalc sPi0Frac           = {nSigmasBadRun[5],0,0.,0.,0.,hPi0Frac[i]};
-	badRunCalc sPi0Mass           = {nSigmasBadRun[6],0,0.,0.,0.,hPi0Mass[i]};
-	badRunCalc sPi0Width          = {nSigmasBadRun[7],0,0.,0.,0.,hPi0Width[i]};
-        fDataSet            = vecDataSet.at(i);
-        fileRuns            = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
-        fileRunsBad         = Form("%s/runNumbers%sBadQA.txt", folderRunlists.Data(), fDataSet.Data());
-        if(useDataRunListForMC && i>=nData) {
-            fileRuns        = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
-            cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
-        }
-        if(!readin(fileRuns, vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+        vecRunsBad.clear();
+        badRunCalc sVertexZMean       = {nSigmasBadRun[0],0,0.,0.,0.,hVertexZMean[i]};        // calculate mean for every dataset separately
+        badRunCalc sCentralityMean    = {nSigmasBadRun[1],0,0.,0.,0.,hCentralityMean[i]};
+        badRunCalc sFracWOVtx         = {nSigmasBadRun[2],0,0.,0.,0.,hFracWOVtx[i]};
+        badRunCalc sTracksMeanGood    = {nSigmasBadRun[3],0,0.,0.,0.,hTracksMeanGood[i]};
+        badRunCalc sConvNCandidatesQA = {nSigmasBadRun[4],0,0.,0.,0.,hConvNCandidatesQA[i]};
+        badRunCalc sPi0Frac           = {nSigmasBadRun[5],0,0.,0.,0.,hPi0Frac[i]};
+        badRunCalc sPi0Mass           = {nSigmasBadRun[6],0,0.,0.,0.,hPi0Mass[i]};
+        badRunCalc sPi0Width          = {nSigmasBadRun[7],0,0.,0.,0.,hPi0Width[i]};
+        fDataSet                      = vecDataSet.at(i);
+        if(!readin(fileRuns[i], vecRuns)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
         //*****************************************************************************************************
         //****************************** Looping over Runs ****************************************************
@@ -1191,39 +1191,39 @@ void EventQA_Runwise(
         //--------------------------------------------------------------------------------------------------------
         //--------------------------------------- Mean values ----------------------------------------------------
         //--------------------------------------------------------------------------------------------------------
-	if(doExtQA==3){
-	  Bool_t isRunBadFlag = kFALSE;
-	  sVertexZMean.mean /= vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
-	  sCentralityMean.mean /= vecRuns.size();
-	  sFracWOVtx.mean /= vecRuns.size();
-	  sTracksMeanGood.mean /= vecRuns.size();
-	  sConvNCandidatesQA.mean /= vecRuns.size();
-	  sPi0Frac.mean /= vecRuns.size();
-	  sPi0Mass.mean /= vecRuns.size();
-	  sPi0Width.mean /= vecRuns.size();
-	  for(Int_t j=0; j<(Int_t) vecRuns.size(); j++){  // loop over runs j of this dataset
-	    fRunNumber = vecRuns.at(j);
-	    if(doEquidistantXaxis) bin  = mapBin[fRunNumber]; else bin = fRunNumber.Atoi() - hFBin;     // bin: run number in global run list, starting from 1
-	    if(isBadRun(&sVertexZMean,bin))       isRunBadFlag = kTRUE;
-	    if(isBadRun(&sCentralityMean,bin))    isRunBadFlag = kTRUE;
-	    if(isBadRun(&sFracWOVtx,bin))         isRunBadFlag = kTRUE;
-	    if(isBadRun(&sTracksMeanGood,bin))    isRunBadFlag = kTRUE;
-	    if(isBadRun(&sConvNCandidatesQA,bin)) isRunBadFlag = kTRUE;
-	    if(isBadRun(&sPi0Frac,bin))           isRunBadFlag = kTRUE;
-	    if(isBadRun(&sPi0Mass,bin))           isRunBadFlag = kTRUE;
-	    if(isBadRun(&sPi0Width,bin))          isRunBadFlag = kTRUE;
-	    if(isRunBadFlag) vecRunsBad.push_back(fRunNumber);
-	  } // end of loop over runs
-	  cout << "INFO: hVertexZMean: "       << sVertexZMean.nRunsBad       << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sVertexZMean.nSigmaBad       << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hCentralityMean: "    << sCentralityMean.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sCentralityMean.nSigmaBad    << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hFracWOVtx: "         << sFracWOVtx.nRunsBad         << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sFracWOVtx.nSigmaBad         << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hTracksMeanGood: "    << sTracksMeanGood.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sTracksMeanGood.nSigmaBad    << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hConvNCandidatesQA: " << sConvNCandidatesQA.nRunsBad << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sConvNCandidatesQA.nSigmaBad << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hPi0Frac: "           << sPi0Frac.nRunsBad           << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Frac.nSigmaBad           << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hPi0Mass: "           << sPi0Mass.nRunsBad           << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Mass.nSigmaBad << " error bars from the mean over all runs" << endl;
-	  cout << "INFO: hPi0Width: "          << sPi0Width.nRunsBad          << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Width.nSigmaBad << " error bars from the mean over all runs" << endl;
-	  if(!vecRunsBad.empty()) writeout(fileRunsBad, vecRunsBad, kTRUE);
-	}
+        if(doExtQA==3){
+            Bool_t isRunBadFlag = kFALSE;
+            sVertexZMean.mean /= vecRuns.size();  // divide the sum of bin contents by number of runs in the current dataset
+            sCentralityMean.mean /= vecRuns.size();
+            sFracWOVtx.mean /= vecRuns.size();
+            sTracksMeanGood.mean /= vecRuns.size();
+            sConvNCandidatesQA.mean /= vecRuns.size();
+            sPi0Frac.mean /= vecRuns.size();
+            sPi0Mass.mean /= vecRuns.size();
+            sPi0Width.mean /= vecRuns.size();
+            for(Int_t j=0; j<(Int_t) vecRuns.size(); j++){  // loop over runs j of this dataset
+                fRunNumber = vecRuns.at(j);
+                if(doEquidistantXaxis) bin  = mapBin[fRunNumber]; else bin = fRunNumber.Atoi() - hFBin;     // bin: run number in global run list, starting from 1
+                if(isBadRun(&sVertexZMean,bin))       isRunBadFlag = kTRUE;
+                if(isBadRun(&sCentralityMean,bin))    isRunBadFlag = kTRUE;
+                if(isBadRun(&sFracWOVtx,bin))         isRunBadFlag = kTRUE;
+                if(isBadRun(&sTracksMeanGood,bin))    isRunBadFlag = kTRUE;
+                if(isBadRun(&sConvNCandidatesQA,bin)) isRunBadFlag = kTRUE;
+                if(isBadRun(&sPi0Frac,bin))           isRunBadFlag = kTRUE;
+                if(isBadRun(&sPi0Mass,bin))           isRunBadFlag = kTRUE;
+                if(isBadRun(&sPi0Width,bin))          isRunBadFlag = kTRUE;
+                if(isRunBadFlag) vecRunsBad.push_back(fRunNumber);
+            } // end of loop over runs
+            cout << "INFO: hVertexZMean: "       << sVertexZMean.nRunsBad       << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sVertexZMean.nSigmaBad       << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hCentralityMean: "    << sCentralityMean.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sCentralityMean.nSigmaBad    << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hFracWOVtx: "         << sFracWOVtx.nRunsBad         << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sFracWOVtx.nSigmaBad         << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hTracksMeanGood: "    << sTracksMeanGood.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sTracksMeanGood.nSigmaBad    << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hConvNCandidatesQA: " << sConvNCandidatesQA.nRunsBad << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sConvNCandidatesQA.nSigmaBad << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hPi0Frac: "           << sPi0Frac.nRunsBad           << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Frac.nSigmaBad           << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hPi0Mass: "           << sPi0Mass.nRunsBad           << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Mass.nSigmaBad << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hPi0Width: "          << sPi0Width.nRunsBad          << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Width.nSigmaBad << " error bars from the mean over all runs" << endl;
+            if(!vecRunsBad.empty()) writeout(fileRunsBad[i], vecRunsBad, kTRUE);
+        }
 
         //--------------------------------------------------------------------------------------------------------
         //---------------------------------------- Fitters -------------------------------------------------------
@@ -1241,7 +1241,7 @@ void EventQA_Runwise(
             tfFit               = 0x0;
         }
     } // end of loop over datasets
-    
+
     if(isNullNSigmas) free(nSigmasBadRun);
 
     //**************************************************************************************************
@@ -1341,15 +1341,12 @@ void EventQA_Runwise(
         for(Int_t i=0; i<nSets; i++) {
             vecRuns.clear();
             fDataSet                = vecDataSet.at(i);
-            fileRuns                = Form("%s/runNumbers%s.txt", folderRunlists.Data(), fDataSet.Data());
             outputDirDataSet        = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
 
             if(useDataRunListForMC && i>=nData) {
-                fileRuns            = Form("%s/runNumbers%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(),vecDataSet.at(0).Data());
                 outputDirDataSet    = Form("%s/%s-%s", outputDir.Data(), DataSets[i].Data(),DataSets[0].Data());
-                cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns.Data() << endl;
             }
-            if(!readin(fileRuns, vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+            if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
             for(Int_t iRun=0; iRun<(Int_t)vecMissingRuns[i].size(); iRun++){
                 vecRuns.erase(std::remove(vecRuns.begin(), vecRuns.end(), vecMissingRuns[i].at(iRun)), vecRuns.end());

@@ -10,10 +10,10 @@ source basicFunction.sh
 
 DOWNLOADON=0
 MERGEON=1
-SINGLERUN=1
+SINGLERUN=0
 SEPARATEON=0
-MERGEONSINGLEData=1
-MERGEONSINGLEMC=1
+MERGEONSINGLEData=0
+MERGEONSINGLEMC=0
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -129,19 +129,19 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16q == 1 ]; then
         echo "downloading LHC16q"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16q_all_$3.txt`
+            runNumbers=`cat runlists/runNumbersLHC16q_$3_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16q/$runNumber "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16qData" $NSlashes3 "/alice/data/2016/LHC16q/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16qData/Stage_1/"
             done;
             if [ $MERGEONSINGLEData == 1 ] && [ ! -f $OUTPUTDIR_LHC16q/mergedAllConv.txt ]; then
                 rm $OUTPUTDIR_LHC16q/GammaConvCalo*.root*
-                firstrunNumber=`head -n1 runlists/runNumbersLHC16q_all_$3.txt`
+                firstrunNumber=`head -n1 runlists/runNumbersLHC16q_$3_all.txt`
                 ls $OUTPUTDIR_LHC16q/$firstrunNumber/GammaConvCalo_*.root > fileLHC16q.txt
 
-                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16q_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16q_dpgTracks_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16q_dpgTracksAndCalo_$3.txt
+                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16q_$3_all.txt
+                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16q_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16q_$3_dpgTracksAndCalo.txt
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC16q "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16qData/merge_runlist_1" $NSlashes
@@ -150,17 +150,19 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16t == 1 ]; then
         echo "downloading LHC16t"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16t_all_$3.txt`
+            runNumbers=`cat runlists/runNumbersLHC16t_$3_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16t/$runNumber "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16tData" $NSlashes3 "/alice/data/2016/LHC16t/000$runNumber/pass$passNr$4/PWGGA/GA_pPb/$LHC16tData/Stage_1/"
             done;
             if [ $MERGEONSINGLEData == 1 ] && [ ! -f $OUTPUTDIR_LHC16t/mergedAllConv.txt ]; then
                 rm $OUTPUTDIR_LHC16t/GammaConvCalo*.root*
-                firstrunNumber=`head -n1 runlists/runNumbersLHC16t_all_$3.txt`
+                firstrunNumber=`head -n1 runlists/runNumbersLHC16t_$3_all.txt`
                 ls $OUTPUTDIR_LHC16t/$firstrunNumber/GammaConvCalo_*.root > fileLHC16t.txt
                 fileNumbers=`cat fileLHC16t.txt`
-                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16t_all_$3.txt
+                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16t_$3_all.txt
+                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16t_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16t_$3_dpgTracksAndCalo.txt
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC16t "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16tData/merge_runlist_1" $NSlashes
@@ -179,16 +181,13 @@ if [ $CLEANUPMAYOR == 0 ]; then
             if [ $MERGEONSINGLEMC == 1 ] && [ ! -f $OUTPUTDIR_LHC17f2b/mergedAllConv.txt ]; then
                 cd $currentDir
                 rm $OUTPUTDIR_LHC17f2b/GammaConvCalo*.root*
-                echo runlists/runNumbersLHC17f2b_all_$3.txt
-                firstrunNumber=`head -n1 runlists/runNumbersLHC17f2b_all_$3.txt`
+                echo runlists/runNumbersLHC17f2b_$3_all.txt
+                firstrunNumber=`head -n1 runlists/runNumbersLHC17f2b_$3_all.txt`
                 echo $firstrunNumber
                 ls $OUTPUTDIR_LHC17f2b/$firstrunNumber/GammaConvCalo_*.root > fileLHC17f2b.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16q_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16q_dpgTracks_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16q_dpgTracksAndCalo_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16t_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16t_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16t_all_$3.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo All runlists/runNumbersLHC17f2b_$3_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC17f2b_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC17f2b_$3_dpgTracks.txt
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMC/merge" $NSlashes
@@ -197,7 +196,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC17f2afix == 1 ]; then
         echo "downloading LHC17f2a_fix"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC17f2a_fix_all_$3.txt`
+            runNumbers=`cat runlists/runNumbersLHC17f2a_fix_$3_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fix/$runNumber "/alice/sim/2017/LHC17f2a$5_fix/$runNumber/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC" $NSlashes3 "/alice/sim/2017/LHC17f2a$5_fix/$runNumber/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC/Stage_1/"
@@ -205,15 +204,12 @@ if [ $CLEANUPMAYOR == 0 ]; then
             if [ $MERGEONSINGLEMC == 1 ]  && [ ! -f $OUTPUTDIR_LHC17f2a_fix/mergedAllConv.txt ]; then
                 cd $currentDir
                 rm $OUTPUTDIR_LHC17f2a_fix/GammaConvCalo*.root*
-                firstrunNumber=`head -n1 runlists/runNumbersLHC17f2a_fix_all_$3.txt`
+                firstrunNumber=`head -n1 runlists/runNumbersLHC17f2a_fix_$3_all.txt`
                 ls $OUTPUTDIR_LHC17f2a_fix/$firstrunNumber/GammaConvCalo_*.root > fileLHC17f2a_fix.txt
                 fileNumbers=`cat fileLHC17f2a_fix.txt`
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16q_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16q_dpgTracks_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16q_dpgTracksAndCalo_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo All runlists/runNumbersLHC16t_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC16t_all_$3.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC16t_all_$3.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo All runlists/runNumbersLHC17f2a_fix_$3_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvCalo DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC/merge" $NSlashes
@@ -221,54 +217,124 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
 
     if [ $HAVELHC16q == 1 ]; then
-        ls $OUTPUTDIR_LHC16q/GammaConvCalo_*.root > fileLHC16q.txt
+        ls $OUTPUTDIR_LHC16q/GammaConvCalo-All_*.root > fileLHC16q.txt
         fileNumbers=`cat fileLHC16q.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16q $NSlashes "LHC16q-pass$passNr"
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16q $NSlashes "LHC16q-pass$passNr-All" "-All"
+        done;
+        ls $OUTPUTDIR_LHC16q/GammaConvCalo-DPGTrack_*.root > fileLHC16q.txt
+        fileNumbers=`cat fileLHC16q.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16q $NSlashes "LHC16q-pass$passNr-DPGTrack" "-DPGTrack"
+        done;
+        ls $OUTPUTDIR_LHC16q/GammaConvCalo-DPGTrackAndCalo_*.root > fileLHC16q.txt
+        fileNumbers=`cat fileLHC16q.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16q $NSlashes "LHC16q-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
         done;
     fi
 
     if [ $HAVELHC16t == 1 ]; then
-        ls $OUTPUTDIR_LHC16t/GammaConvCalo_*.root > fileLHC16t.txt
+        ls $OUTPUTDIR_LHC16t/GammaConvCalo-All_*.root > fileLHC16t.txt
         fileNumbers=`cat fileLHC16t.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC16t $NSlashes "LHC16t-pass$passNr"
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16t $NSlashes "LHC16t-pass$passNr-All" "-All"
+        done;
+        ls $OUTPUTDIR_LHC16t/GammaConvCalo-DPGTrack_*.root > fileLHC16t.txt
+        fileNumbers=`cat fileLHC16t.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16t $NSlashes "LHC16t-pass$passNr-DPGTrack" "-DPGTrack"
+        done;
+        ls $OUTPUTDIR_LHC16t/GammaConvCalo-DPGTrackAndCalo_*.root > fileLHC16t.txt
+        fileNumbers=`cat fileLHC16t.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16t $NSlashes "LHC16t-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
         done;
     fi
 
     if [ $HAVELHC17f2b == 1 ]; then
-        ls $OUTPUTDIR_LHC17f2b/GammaConvCalo_*.root > fileLHC17f2b.txt
+        ls $OUTPUTDIR_LHC17f2b/GammaConvCalo-All_*.root > fileLHC17f2b.txt
         fileNumbers=`cat fileLHC17f2b.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f2b $NSlashes "MC_LHC17f2b"
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2b $NSlashes "MC_LHC17f2b-All" "-All"
+        done;
+        ls $OUTPUTDIR_LHC17f2b/GammaConvCalo-DPGTrack_*.root > fileLHC17f2b.txt
+        fileNumbers=`cat fileLHC17f2b.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2b $NSlashes "MC_LHC17f2b-DPGTrack" "-DPGTrack"
+        done;
+        ls $OUTPUTDIR_LHC17f2b/GammaConvCalo-DPGTrackAndCalo_*.root > fileLHC17f2b.txt
+        fileNumbers=`cat fileLHC17f2b.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2b $NSlashes "MC_LHC17f2b-DPGTrackAndCalo" "-DPGTrackAndCalo"
         done;
     fi
 
     if [ $HAVELHC17f2afix == 1 ]; then
-        ls $OUTPUTDIR_LHC17f2a_fix/GammaConvCalo_*.root > fileLHC17f2a_fix.txt
+        ls $OUTPUTDIR_LHC17f2a_fix/GammaConvCalo-All_*.root > fileLHC17f2a_fix.txt
         fileNumbers=`cat fileLHC17f2a_fix.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-            echo $number
-            ChangeStructureIfNeededPCM $fileName $OUTPUTDIR_LHC17f2a_fix $NSlashes "MC_LHC17f2a_fix"
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2a_fix $NSlashes "MC_LHC17f2a_fix-All" "-All"
+        done;
+        ls $OUTPUTDIR_LHC17f2a_fix/GammaConvCalo-DPGTrack_*.root > fileLHC17f2a_fix.txt
+        fileNumbers=`cat fileLHC17f2a_fix.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2a_fix $NSlashes "MC_LHC17f2a_fix-DPGTrack" "-DPGTrack"
+        done;
+        ls $OUTPUTDIR_LHC17f2a_fix/GammaConvCalo-DPGTrackAndCalo*.root > fileLHC17f2a_fix.txt
+        fileNumbers=`cat fileLHC17f2a_fix.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC17f2a_fix $NSlashes "MC_LHC17f2a_fix-DPGTrackAndCalo" "-DPGTrackAndCalo"
         done;
     fi
 
     if [ $MERGEON == 1 ]; then
-        ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr\_*.root > filesForMerging.txt
+        ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrackAndCalo\_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
             echo $fileName
             GetFileNumberMerging $fileName $((NSlashes-1)) 3
             echo $number
-            ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr\_$number.root
-            ls $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr\_$number.root
-            if [ -f $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr\_$number.root ] ; then
-                hadd -f $OUTPUTDIR/GammaConvCalo_LHC16qt-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrackAndCalo\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-DPGTrackAndCalo\_$number.root
+            if [ -f $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrackAndCalo\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-DPGTrackAndCalo\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC16qt-pass$passNr-DPGTrackAndCalo\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrackAndCalo\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-DPGTrackAndCalo\_$number.root
+            fi
+        done
+        ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrack\_*.root > filesForMerging.txt
+        filesForMerging=`cat filesForMerging.txt`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 3
+            echo $number
+            ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrack\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-DPGTrack\_$number.root
+            if [ -f $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrack\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-DPGTrack\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC16qt-pass$passNr-DPGTrack\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-DPGTrack\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-DPGTrack\_$number.root
+            fi
+        done
+        ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-All\_*.root > filesForMerging.txt
+        filesForMerging=`cat filesForMerging.txt`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 3
+            echo $number
+            ls $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-All\_$number.root
+            ls $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-All\_$number.root
+            if [ -f $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-All\_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-All\_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_LHC16qt-pass$passNr-All\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16q-pass$passNr-All\_$number.root $OUTPUTDIR/GammaConvCalo_LHC16t-pass$passNr-All\_$number.root
             fi
         done
     fi

@@ -162,7 +162,7 @@ function ChangeStructureIfNeededPCM()
             number=$number1\_$number2
         fi
         echo $number
-        cp $2/GammaConvV1_$number.root $OUTPUTDIR/GammaConvV1_$4\_$number.root
+        cp $2/GammaConvV1$5_$number.root $OUTPUTDIR/GammaConvV1_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then
             echo "nothing to be done";
         else
@@ -185,7 +185,7 @@ function ChangeStructureIfNeededPCMCalo()
             number=$number1\_$number2
         fi
         echo $number
-        cp $2/GammaConvCalo_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root
+        cp $2/GammaConvCalo$5_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then
             echo "nothing to be done";
         else
@@ -273,7 +273,7 @@ function MergeAccordingToSpecificRunlist()
                 echo "I couldn't find the file for bin $run, $nameCurrFile";
             fi
         done
-        hadd -f $2/$4_$5_$number.root $TOMERGE
+        hadd -f $2/$4-$5_$number.root $TOMERGE
     done;
     echo "done" > $2/mergedAll$4.txt
 }
