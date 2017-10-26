@@ -4745,7 +4745,7 @@
         if ( variationName.CompareTo("CellMinE") == 0 )
             return 33;
         if ( variationName.CompareTo("Cocktail") == 0 )
-            return 21;
+            return 24;
 
         cout << "GetMarkerStyleSystematics(): no valid input parameters given for '" << variationName.Data() <<  "'..." << endl;
         return 20;

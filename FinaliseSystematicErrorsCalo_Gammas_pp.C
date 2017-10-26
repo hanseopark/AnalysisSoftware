@@ -188,11 +188,11 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                                                     0, 0, 1, 1, 0 };
 
     Bool_t bsmoothIncGammapp8TeV[15]            = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    1, 0, 1, 0, 0 };
+                                                    0, 0, 1, 0, 0 };
     Bool_t bsmoothIncRatiopp8TeV[15]            = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    1, 1, 1, 0, 1 };
+                                                    0, 1, 1, 0, 1 };
     Bool_t bsmoothDRpp8TeV[15]                  = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    1, 1, 1, 0, 1 };
+                                                    0, 1, 1, 0, 1 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
         if (energy.CompareTo("2.76TeV") == 0){
@@ -574,11 +574,6 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
             }
 
             // fix "Cocktail" #10
-            if (!nameCutVariationSC[i].CompareTo("Cocktail")){
-                if(!energy.CompareTo("8TeV")){
-                    errorFixed                  = 3.5;
-                }
-            }
 
             // fix IntRange sys #11
             if (!nameCutVariationSC[i].CompareTo("IntRange")){

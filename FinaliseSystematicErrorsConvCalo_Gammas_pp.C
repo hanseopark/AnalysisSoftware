@@ -170,10 +170,10 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
 
     Bool_t benableIncGamma8TeV[24]              = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 0,
                                                     0, 0, 0, 0, 0,  0, 1, 1, 0, 0,
-                                                    0, 1, 0, 1 };
+                                                    1, 1, 0, 1 };
     Bool_t benableIncRatio8TeV[24]              = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    0, 0, 1, 1 };
+                                                    1, 0, 1, 1 };
     Bool_t benableDR8TeV[24]                    = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
                                                     1, 0, 1, 1 };
@@ -199,7 +199,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                                                     0, 1, 0, 1 };
     Bool_t bsmoothIncRatio8TeV[24]              = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
-                                                    1, 0, 1, 1 };
+                                                    0, 0, 1, 1 };
     Bool_t bsmoothDR8TeV[24]                    = { 1, 1, 1, 1, 1,  1, 0, 0, 1, 1,
                                                     1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
                                                     1, 0, 1, 1 };
@@ -728,11 +728,22 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
             }
             // fix "Cocktail" #20
             if (!nameCutVariationSC[i].CompareTo("Cocktail")){
-                if(!energy.CompareTo("8TeV")){
-                    errorFixed                  = 3.5;
+              if (!spectrumName.CompareTo("DoubleRatio")){
+                adjustPtDependent           = kTRUE;
+                for (Int_t k = 0; k < nPtBinsActive; k++){
+                  if(!energy.CompareTo("8TeV")){
+                    if(ptBins[k]<=3.) errorFixed = 1. ;
+                    else              errorFixed = -1;
+                  }
+                  if (errorFixed != -1){
+                    errorsMean[i][k]        = errorFixed;
+                    errorsMeanErr[i][k]     = errorFixed*0.01;
+                    errorsMeanCorr[i][k]    = errorFixed;
+                    errorsMeanErrCorr[i][k] = errorFixed*0.01;
+                  }
                 }
+              }
             }
-
             // fix Material sys #21
             if (!nameCutVariationSC[i].CompareTo("Material")){
                 if (!spectrumName.Contains("Ratio")){
