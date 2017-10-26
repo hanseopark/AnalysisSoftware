@@ -151,7 +151,7 @@ void EventQA_Runwise(
 
     for(Int_t i=0; i<nSets; i++){
         fileRuns[i]             = Form("%s/runNumbers%s%s.txt", folderRunlists.Data(), (vecDataSet.at(i)).Data(),addLabelRunList.Data());
-        fileRunsBad[i]          = Form("%s/runNumbers%s%sBadQA.txt", folderRunlists.Data(), fDataSet.Data(),addLabelRunList.Data());
+        fileRunsBad[i]          = Form("%s/runNumbers%s%sBadQA.txt", folderRunlists.Data(), (vecDataSet.at(i)).Data(),addLabelRunList.Data());
 
         if(useDataRunListForMC && i>=nData) {
             fileRuns[i]         = Form("%s/runNumbers%s%s-%s.txt", folderRunlists.Data(), vecDataSet.at(i).Data(), addLabelRunList.Data(),vecDataSet.at(0).Data());
