@@ -278,6 +278,14 @@ function GiveBinningDirectPhoton7TeV()
         echo "26 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
         BinsPtPi0=26
+    elif [ $answer = 27 ]; then
+        echo "27 Bins --> Max p_T = 25 GeV ...";
+        correctPi0=1
+        BinsPtPi0=27
+    elif [ $answer = 28 ]; then
+        echo "28 Bins --> Max p_T = 25 GeV ...";
+        correctPi0=1
+        BinsPtPi0=28
     elif [ $answer = 29 ]; then
         echo "29 Bins --> Max p_T = 25 GeV ...";
         correctPi0=1
@@ -1066,7 +1074,7 @@ function CorrectSignalGamma()
 function CorrectSignalGammaV2()
 {
     root -x -b -q -l CompileCorrectGammaV2.C\+\+
-    root -x -l -b -q TaskV1/CorrectGammaV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\)
+    root -x -l -b -q TaskV1/CorrectGammaV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\,\"$7\"\)
 }
 
 function CreateFinalResults()
@@ -2301,6 +2309,7 @@ do
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
                 echo "Running pi0-tagging ...";
+                directphoton="directPhotonTagging"
                 DoPi0Tagging=1
                 DoPi0=0
                 DoEta=0
@@ -2823,7 +2832,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                         if [ $NEWGammaMacros == 0 ]; then
                             CorrectSignalGamma $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
                         else
-                            CorrectSignalGammaV2 $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
+                            CorrectSignalGammaV2 $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $directphoton
                         fi
                     else
                         PARTLY=1
@@ -2832,7 +2841,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                         if [ $NEWGammaMacros == 0 ]; then
                             CorrectSignalGamma $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE
                         else
-                            CorrectSignalGammaV2 $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE
+                            CorrectSignalGammaV2 $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $directphoton
                         fi
                     else
                         PARTLY=1

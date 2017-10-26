@@ -99,7 +99,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
     //************************************ Set global variables ****************************************
     fDate                                                                       = ReturnDateString();
     fDirectPhoton                                                               = directphotonPlots;
-    if (directphotonPlots.CompareTo("No") != 0 && directphotonPlots.CompareTo("directPhotonA") != 0 )
+    if (directphotonPlots.CompareTo("No") != 0 && directphotonPlots.CompareTo("directPhotonA") != 0 && directphotonPlots.CompareTo("directPhotonTagging") != 0)
         fDirectPhoton                                                           = "directPhoton";
     fEnergyFlag                                                                 = option;
     fPrefix                                                                     = meson;
@@ -1572,7 +1572,11 @@ void ExtractGammaSignalV2(      TString meson               = "",
       fHistoTruePrimaryPi0Sum->Sumw2();
       fHistoTruePrimaryPi0Sum->Add(fHistoTruePrimaryPi0MissingPtGconv_Rebin,1.);
 
-      fHistoPi0TaggingEfficiency = (TH1D*) fHistoYieldTrueMeson[0]->Clone("fHistoPi0TaggingEfficiency");
+      fHistoTruePi0TaggingEfficiency = (TH1D*) fHistoYieldTrueMeson[0]->Clone("fHistoTruePi0TaggingEfficiency");
+      fHistoTruePi0TaggingEfficiency->Sumw2();
+      fHistoTruePi0TaggingEfficiency->Divide(fHistoTruePi0TaggingEfficiency,fHistoTruePrimaryPi0Sum,1.,1.,"B");
+
+      fHistoPi0TaggingEfficiency = (TH1D*) fHistoYieldMeson[0]->Clone("fHistoPi0TaggingEfficiency");
       fHistoPi0TaggingEfficiency->Sumw2();
       fHistoPi0TaggingEfficiency->Divide(fHistoPi0TaggingEfficiency,fHistoTruePrimaryPi0Sum,1.,1.,"B");
 
@@ -1598,6 +1602,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
       fHistoTruePrimaryPi0MissingPtGconv_Rebin->Draw("p,same");
       DrawGammaSetMarker(fHistoYieldTrueMeson[0], 33, 3., kBlack, kBlack);
       fHistoYieldTrueMeson[0]->Draw("p,same");
+      DrawGammaSetMarker(fHistoYieldMeson[0], 27, 4., kBlack, kBlack);
+      fHistoYieldMeson[0]->Draw("p,same");
 
       canvasTotalPi0->Update();
 
@@ -1608,6 +1614,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
       legendTotalPi0->AddEntry(fHistoTruePrimaryPi0Sum,"true, total #pi^{0}","p");
       legendTotalPi0->AddEntry(fHistoTruePrimaryPi0MissingPtGconv_Rebin,"true, missing #pi^{0}","p");
       legendTotalPi0->AddEntry(fHistoYieldTrueMeson[0],"true, reconstructed #pi^{0}","p");
+      legendTotalPi0->AddEntry(fHistoYieldMeson[0],"reconstructed #pi^{0}","p");
       legendTotalPi0->Draw();
 
       drawLatexAdd(fCollisionSystem.Data(),0.94,0.9,textSizeLabelsRel,kFALSE,kFALSE,kTRUE);
@@ -1622,19 +1629,22 @@ void ExtractGammaSignalV2(      TString meson               = "",
       canvasPi0TaggingEffi->SetTickx();
       canvasPi0TaggingEffi->SetTicky();
 
-      DrawGammaSetMarker(fHistoPi0TaggingEfficiency, 20, 2., kBlack, kBlack);
-      fHistoPi0TaggingEfficiency->GetYaxis()->SetNoExponent();
-      DrawAutoGammaMesonHistos( fHistoPi0TaggingEfficiency,
+      DrawGammaSetMarker(fHistoTruePi0TaggingEfficiency, 20, 2., kRed, kRed);
+      fHistoTruePi0TaggingEfficiency->GetYaxis()->SetNoExponent();
+      DrawAutoGammaMesonHistos( fHistoTruePi0TaggingEfficiency,
                                   "", "#it{p}_{T, #gamma_{conv}} (GeV/#it{c})","#epsilon_{tag}",
                                   kFALSE, 3.,0., kFALSE,
-                                  kTRUE, 0., fHistoPi0TaggingEfficiency->GetMaximum()*1.2,
+                                  kTRUE, 0., fHistoTruePi0TaggingEfficiency->GetMaximum()*1.2,
                                   kTRUE, fBinsPt[fStartPtBin], fBinsPt[fNBinsPt]);
+      DrawGammaSetMarker(fHistoPi0TaggingEfficiency, 20, 2.5, kBlack, kBlack);
+      fHistoPi0TaggingEfficiency->Draw("p,same");
       canvasPi0TaggingEffi->Update();
 
       TLegend* legendPi0TagEffi = new TLegend(0.5,0.12,0.85,0.26);
       legendPi0TagEffi->SetFillColor(0);
       legendPi0TagEffi->SetLineColor(0);
       legendPi0TagEffi->SetTextSize(0.04);
+      legendPi0TagEffi->AddEntry(fHistoTruePi0TaggingEfficiency,"true #pi^{0}-tagging efficiency","p");
       legendPi0TagEffi->AddEntry(fHistoPi0TaggingEfficiency,"#pi^{0}-tagging efficiency","p");
       legendPi0TagEffi->Draw();
 
@@ -3611,6 +3621,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3,Bool_t PileUpCorrecti
         if(fHistoTruePrimaryPi0MissingPtGconv) fHistoTruePrimaryPi0MissingPtGconv->Write("TruePrimaryPi0Missing_GammaConvPt",TObject::kOverwrite);
         if(fHistoTruePrimaryPi0MissingPtGconv_Rebin) fHistoTruePrimaryPi0MissingPtGconv_Rebin->Write("TruePrimaryPi0Missing_Rebin_GammaConvPt",TObject::kOverwrite);
         if(fHistoTruePrimaryPi0Sum) fHistoTruePrimaryPi0Sum->Write("TruePrimaryPi0Sum",TObject::kOverwrite);
+        if(fHistoTruePi0TaggingEfficiency) fHistoTruePi0TaggingEfficiency->Write("TruePi0TaggingEfficiency",TObject::kOverwrite);
         if(fHistoPi0TaggingEfficiency) fHistoPi0TaggingEfficiency->Write("Pi0TaggingEfficiency",TObject::kOverwrite);
 
     Output2->Write();

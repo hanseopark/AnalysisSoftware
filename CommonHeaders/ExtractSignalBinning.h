@@ -575,6 +575,15 @@
     Int_t fBinsDirGamma8TeVPtRebin[24]              = { 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
+
+    Double_t fBinsDirGammaTagging8TeVPt[28]         = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7,
+                                                        0.8, 0.9, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.7, 3.0, 3.5, 4.0, 5.0,
+                                                        6.0, 8.0, 12., 16., 20.};
+    Int_t fBinsDirGammaTagging8TeVPtRebin[27]       = { 4, 4, 2, 2, 2, 2, 2, 2,
+                                                        1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 2, 2, 2, 4, 4, 8,
+                                                        8, 8, 8};
     //****************************************************************************************************
     //******************** Pt binning for pp, 13 TeV *****************************************************
     //****************************************************************************************************
@@ -2096,6 +2105,46 @@
                             }
                         }
                     }
+                }else if (directPhoton.CompareTo("directPhotonTagging") == 0){
+                        if (triggerSet == -1){
+                            if (trigger.CompareTo("52") == 0){
+                                specialTrigg = 1; // L0 EMC7
+                            } else if ( trigger.CompareTo("81") == 0 ){
+                                specialTrigg = 2; //L1 INT7 EGA
+                            } else if ( trigger.CompareTo("53") == 0 ){
+                                specialTrigg = 3; // L0 EMC8
+                            } else if ( trigger.CompareTo("82") == 0 ) {
+                                specialTrigg = 4; // L1 INT8 EGA
+                            }
+                        } else {
+                            specialTrigg        = triggerSet;
+                        }
+
+                        fStartPtBin     = 1;
+                        if( modi == 2){
+                          fStartPtBin = 1;
+                          fExampleBin = 1;
+                        }
+                        fColumn         = 6;
+                        fRow            = 5;
+                        if ((fNBinsPt - fStartPtBin) > 29){
+                            fColumn     = 6;
+                            fRow        = 6;
+                        } else if ((fNBinsPt - fStartPtBin) < 20){
+                            fColumn     = 5;
+                            fRow        = 4;
+                        } else if ((fNBinsPt - fStartPtBin) < 25){
+                            fColumn     = 5;
+                            fRow        = 5;
+                        }
+                        if (fNBinsPt > 29 ) {
+                            cout << "You have chosen Direct Photon Plots and more than 29 bins, this is not possible, it will be reduced to 29 bins." << endl;
+                            fNBinsPt    = 29;
+                        }
+                        for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                            fBinsPt[i]         = fBinsDirGammaTagging8TeVPt[i];
+                            if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGammaTagging8TeVPtRebin[i];
+                        }
                 } else {
                     if (triggerSet == -1){
                         if (trigger.CompareTo("52") == 0){

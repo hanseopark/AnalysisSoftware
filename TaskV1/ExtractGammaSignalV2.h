@@ -259,6 +259,7 @@
     TH1D*       fHistoTruePrimaryPi0MissingPtGconv                                                  = NULL;
     TH1D*       fHistoTruePrimaryPi0MissingPtGconv_Rebin                                            = NULL;
     TH1D*       fHistoTruePrimaryPi0Sum                                                             = NULL;
+    TH1D*       fHistoTruePi0TaggingEfficiency                                                      = NULL;
     TH1D*       fHistoPi0TaggingEfficiency                                                          = NULL;
     TH2D*       fHistoTrueSecondaryMesonMissingPtGconv[4]                                           = {NULL, NULL, NULL, NULL};
 

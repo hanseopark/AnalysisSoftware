@@ -61,7 +61,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                         TString energy                      = "",
                         TString optionPeriod                = "",
                         TString fEstimatePileup             = "",
-                        Int_t mode                          = 9
+                        Int_t mode                          = 9,
+                        TString directPhoton                = ""
                     ){
 
     gROOT->Reset();
@@ -572,12 +573,20 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         minPtFitSec[1]                                              = 1.0;
         maxPtFitSec[1]                                              = 2.0;
     } else if (!energy.CompareTo("8TeV") && mode == 2) {
-        minPtFitSec[0]                                              = 1.0;
+        minPtFitSec[0]                                              = 2.0;
         maxPtFitSec[0]                                              = 12.0;
         minPtFitSec[1]                                              = 1.0;
         maxPtFitSec[1]                                              = 4.0;
-        minPtFitSec[2]                                              = 0.8;
+        minPtFitSec[2]                                              = 0.7;
         maxPtFitSec[2]                                              = 2.0;
+        if(directPhoton.Contains("Tagging")){
+          minPtFitSec[0]                                              = 2.0;
+          maxPtFitSec[0]                                              = 12.0;
+          minPtFitSec[1]                                              = 1.0;
+          maxPtFitSec[1]                                              = 4.0;
+          minPtFitSec[2]                                              = 0.7;
+          maxPtFitSec[2]                                              = 2.0;
+        }
     } else if (energy.Contains("PbPb_2.76TeV")) {
         doConstFitSec[0]                                            = kFALSE;
 
@@ -717,9 +726,11 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 ratioGammaSecEffRecPt[k]->Draw();
                 if (doConstFitSec[k]) {
                     DrawGammaSetMarkerTF1( constantRecPt, 9, 2, kRed-6);
+                    constantRecPt->SetRange(minPtFitSec[k], maxPtFitSec[k]);
                     constantRecPt->Draw("same");
                 } else {
                     DrawGammaSetMarkerTF1( exponentRecPt, 9, 2, kRed-6);
+                    constantRecPt->SetRange(minPtFitSec[k], maxPtFitSec[k]);
                     exponentRecPt->Draw("same");
                 }
 
@@ -799,6 +810,13 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             maxPtFitSec[1]                                              = 50.;
             maxPtFitSec[2]                                              = 50.;
         }
+    }else if(energy.Contains("8TeV") && directPhoton.Contains("Tagging") && mode == 2){
+      minPtFitSec[0]                                              = 1.;
+      maxPtFitSec[0]                                              = 12.;
+      minPtFitSec[1]                                              = 2.;
+      maxPtFitSec[1]                                              = 12.;
+      minPtFitSec[2]                                              = 0.5;
+      maxPtFitSec[2]                                              = 12.;
     }
 
     if ( hasCocktailInput && isPCM ) {
@@ -856,6 +874,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
                 DrawGammaSetMarker(ratioGammaConvProbMCPt[k], 20, 1, kRed+2, kRed+2);
                 ratioGammaConvProbMCPt[k]->Draw();
                 DrawGammaSetMarkerTF1( power, 9, 2, kRed-6);
+                power->SetRange(minPtFitSec[k], maxPtFitSec[k]);
                 power->Draw("same");
 
                 TLegend* legendSecConvProbRatio                     = GetAndSetLegend2(0.15,0.93-3*1.1*0.035, 0.4,0.93, 0.035, 1, cent, 42, 0.1);
