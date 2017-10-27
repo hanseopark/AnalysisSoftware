@@ -440,7 +440,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     histo2DDRWeights = new TH2F("histo2DDRWeights","histo2DDRWeights",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DDRWeights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DDRWeights->GetXaxis()->SetMoreLogLabels();
-    histo2DDRWeights->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DDRWeights->GetXaxis()->SetNoExponent();
     histo2DDRWeights->Draw("copy");
 
     histo2DDRWeights->Draw("copy");
@@ -480,7 +480,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     SetStyleHistoTH2ForGraphs(histo2DRelSysErr, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
-    histo2DRelSysErr->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DRelSysErr->GetXaxis()->SetNoExponent();
     histo2DRelSysErr->Draw("copy");
 
     TLegend* legendRelSysErr2       = GetAndSetLegend2(0.62, 0.92-(0.04*(nMeasSetDR+1)/2), 0.95, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
@@ -516,7 +516,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     SetStyleHistoTH2ForGraphs(histo2DRelStatErr, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErr->GetYaxis()->SetRangeUser(0,30.5);
     histo2DRelStatErr->GetXaxis()->SetMoreLogLabels();
-    histo2DRelStatErr->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DRelStatErr->GetXaxis()->SetNoExponent();
     histo2DRelStatErr->Draw("copy");
     TLegend* legendRelStatErr2       = GetAndSetLegend2(0.14, 0.92-(0.04*(nMeasSetDR+1)/2), 0.45, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
     for (Int_t i = 0; i < nMeasSetDR; i++){
@@ -552,7 +552,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         SetStyleHistoTH2ForGraphs(histo2DRelErr, "#it{p}_{T} (GeV/#it{c})","Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
         histo2DRelErr->GetYaxis()->SetRangeUser(0,30.5);
         histo2DRelErr->GetXaxis()->SetMoreLogLabels();
-        histo2DRelErr->GetXaxis()->SetLabelOffset(-0.01);
+        histo2DRelErr->GetXaxis()->SetNoExponent();
         histo2DRelErr->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -950,7 +950,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     histo2DIncGammaWeights = new TH2F("histo2DIncGammaWeights","histo2DIncGammaWeights",11000,doubleRatioXpp[0], doubleRatioXpp[1],1000,-0.7,1.3);
     SetStyleHistoTH2ForGraphs(histo2DIncGammaWeights, "#it{p}_{T} (GeV/#it{c})","#omega_{a} for BLUE",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DIncGammaWeights->GetXaxis()->SetMoreLogLabels();
-    histo2DIncGammaWeights->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DIncGammaWeights->GetXaxis()->SetNoExponent();
     histo2DIncGammaWeights->Draw("copy");
 
     TLegend* legendWeightsIncGamma   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*(nMeasSetIncGamma+1)/2), textSizeLabelsPixel, 2, "", 43, 0);
@@ -1184,7 +1184,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     SetStyleHistoTH2ForGraphs(histo2DGammaRatioToCombFit, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.85*textsizeLabelsPPb, textsizeLabelsPPb,
                               0.85*textsizeLabelsPPb,textsizeLabelsPPb, 0.9, 0.65, 510, 505);
     histo2DGammaRatioToCombFit->GetXaxis()->SetMoreLogLabels();
-    histo2DGammaRatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DGammaRatioToCombFit->GetXaxis()->SetNoExponent();
     //  histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
     histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.59,1.42);
     histo2DGammaRatioToCombFit->Draw("copy");
@@ -1588,7 +1588,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     Double_t textSizeSinglePad               = 0.05;
     TH2F * hist2DDRDummySingle       = new TH2F("hist2DDRDummySingle","hist2DDRDummySingle",1000,doubleRatioXpp[0], doubleRatioXpp[1],1000,doubleRatio[0], doubleRatio[1]);
     SetStyleHistoTH2ForGraphs(hist2DDRDummySingle, "#it{p}_{T} (GeV/#it{c})","#it{R}_{#gamma}", 0.85*textSizeSinglePad,textSizeSinglePad, 0.85*textSizeSinglePad,textSizeSinglePad, 0.9,0.81);
-    hist2DDRDummySingle->GetXaxis()->SetLabelOffset(-0.01);
+    hist2DDRDummySingle->GetXaxis()->SetNoExponent();
     hist2DDRDummySingle->GetXaxis()->SetMoreLogLabels(kTRUE);
     hist2DDRDummySingle->DrawCopy();
 
@@ -1808,7 +1808,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 0.98);//(#times #epsilon_{pur})
     histo1DEff->GetYaxis()->SetRangeUser(0.22, 0.82 );
     histo1DEff->GetYaxis()->SetLabelOffset(0.001);
-    histo1DEff->GetXaxis()->SetLabelOffset(-0.01);
+    histo1DEff->GetXaxis()->SetNoExponent();
     histo1DEff->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DEff->DrawCopy();
 
@@ -1861,7 +1861,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
     histo2DResCor->GetYaxis()->SetRangeUser(0.2, 2.6 );
     histo2DResCor->GetYaxis()->SetLabelOffset(0.001);
-    histo2DResCor->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DResCor->GetXaxis()->SetNoExponent();
     histo2DResCor->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo2DResCor->DrawCopy();
 
@@ -1903,7 +1903,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
     histo1DPurity->GetYaxis()->SetRangeUser(0.8, 1.07 );
     histo1DPurity->GetYaxis()->SetLabelOffset(0.001);
-    histo1DPurity->GetXaxis()->SetLabelOffset(-0.01);
+    histo1DPurity->GetXaxis()->SetNoExponent();
     histo1DPurity->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DPurity->DrawCopy();
 
@@ -1948,7 +1948,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.2);//(#times #epsilon_{pur})
     histo1DConvProb->GetYaxis()->SetRangeUser(0.04, 0.12 );
     histo1DConvProb->GetYaxis()->SetLabelOffset(0.003);
-    histo1DConvProb->GetXaxis()->SetLabelOffset(-0.01);
+    histo1DConvProb->GetXaxis()->SetNoExponent();
     histo1DConvProb->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DConvProb->DrawCopy();
 
@@ -1998,7 +1998,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.25, 510,505);
     histo1DPileUp->GetYaxis()->SetRangeUser(0.83, 1.03 );
     histo1DPileUp->GetYaxis()->SetLabelOffset(0.005);
-    histo1DPileUp->GetXaxis()->SetLabelOffset(-0.01);
+    histo1DPileUp->GetXaxis()->SetNoExponent();
     histo1DPileUp->GetXaxis()->SetMoreLogLabels(kTRUE);
     histo1DPileUp->DrawCopy();
 
@@ -2036,7 +2036,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     SetStyleHistoTH1ForGraphs(  histo1DEffectiveSecCorr, "#it{p}_{T} (GeV/#it{c})","#it{C}_{sec}",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.08);//(#times #epsilon_{pur})
     histo1DEffectiveSecCorr->GetYaxis()->SetLabelOffset(0.003);
-    histo1DEffectiveSecCorr->GetXaxis()->SetLabelOffset(-0.01);
+    histo1DEffectiveSecCorr->GetXaxis()->SetNoExponent();
     histo1DEffectiveSecCorr->GetXaxis()->SetMoreLogLabels(kTRUE);
 
 
@@ -2083,7 +2083,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
     histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,3.5e0);
     histo2DYieldGamma->GetXaxis()->SetMoreLogLabels();
-    histo2DYieldGamma->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DYieldGamma->GetXaxis()->SetNoExponent();
     histo2DYieldGamma->Draw("copy");
 
         TGraphAsymmErrors* graphCombIncGammaStatPlot    = (TGraphAsymmErrors*)graphCombIncGammaStat->Clone("graphCombIncGammaStatPlot");
