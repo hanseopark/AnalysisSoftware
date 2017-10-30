@@ -1949,7 +1949,8 @@ do
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
-        AdvMesonQA=""#"AdvancedMesonQA"
+        AdvMesonQA=""
+        #"AdvancedMesonQA"
         correct=1
     elif [ $answer = "13" ]; then
         echo "You are analysing PCM-DCAL output";
@@ -1957,7 +1958,8 @@ do
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
-        AdvMesonQA=""#"AdvancedMesonQA"
+        AdvMesonQA=""
+        #"AdvancedMesonQA"
         correct=1
     else
         echo "Command not found. Please try again.";

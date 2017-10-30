@@ -108,6 +108,10 @@ void ExtractSignalV2(   TString meson                   = "",
         fEventCutSelection  = fGammaCutSelection(0,7);
         fGammaCutSelection  = fGammaCutSelection(7,fGammaCutSelection.Length()-7);
         cout << fEventCutSelection.Data() << "\t" << fGammaCutSelection.Data() << endl;
+    } else if(mode == 12){
+        ReturnSeparatedCutNumberAdvanced(cutSelection,fEventCutSelection, fGammaCutSelection,fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, 4);
+    } else if(mode == 13){
+        ReturnSeparatedCutNumberAdvanced(cutSelection,fEventCutSelection, fGammaCutSelection,            fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, 2);
     } else {
         ReturnSeparatedCutNumberAdvanced(cutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     }
