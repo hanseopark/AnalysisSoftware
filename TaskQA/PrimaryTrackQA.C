@@ -204,6 +204,7 @@ void PrimaryTrackQA(
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison");
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison/Ratios");
+    gSystem->Exec("mkdir -p "+outputDir+"/Debug");
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     //*****************************************************************************************************
     //************************** Set proper cluster nomenclature ******************************************
@@ -246,6 +247,12 @@ void PrimaryTrackQA(
     std::vector<TH2D*> vecESD_PrimaryPions_DCAz;
     std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx;
     std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal;
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_LowPt;
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt;
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_MidPt;
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt;
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_HighPt;
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt;
     //AfterQA=Cut Number Pion Cut (Pion Cut folder in Cut number directory); Pre Selection=Main Dir Pion Cut
     //AfterQA
     std::vector<TH1D*> vecIsPionSelected_AfterQA;
@@ -625,6 +632,30 @@ void PrimaryTrackQA(
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdx.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx));
         } else cout << Form("INFO: Object |ESD_PrimaryPions_TPCdEdx %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //ESD_PrimaryPions_TPCdEdx_LowPt
+        cout<<"======================================================================================================"<<endl;
+        cout<<"======================================================================================================"<<endl;
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistESD_PrimaryPions_TPCdEdx_LowPt =new TH2D(*fHistESD_PrimaryPions_TPCdEdx);
+        if(fHistESD_PrimaryPions_TPCdEdx_LowPt){
+            fHistESD_PrimaryPions_TPCdEdx_LowPt->SetName(StrNameOfHistogram.Data());
+            GetMinMaxBin(fHistESD_PrimaryPions_TPCdEdx_LowPt,minB,maxB);
+            SetXRange(fHistESD_PrimaryPions_TPCdEdx_LowPt,0,fHistESD_PrimaryPions_TPCdEdx_LowPt->GetXaxis()->FindBin(0.2));
+            //SetXRange(fHistESD_PrimaryPions_TPCdEdx_LowPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistESD_PrimaryPions_TPCdEdx_LowPt,minYB,maxYB);
+            SetYRange(fHistESD_PrimaryPions_TPCdEdx_LowPt,minYB-1,maxYB+1);
+            SetZMinMaxTH2(fHistESD_PrimaryPions_TPCdEdx_LowPt,1,maxB+1,minB-1,maxB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistESD_PrimaryPions_TPCdEdx_LowPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx_LowPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryPions_TPCdEdx_LowPt.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx_LowPt));
+        } else cout << Form("INFO: Object | ESD_PrimaryPions_TPCdEdx %s| could not be found! Skipping Draw for LowPt...", fPionCutsContainerCutString.Data()) << endl;
+        cout<<"======================================================================================================"<<endl;
+        cout<<"======================================================================================================"<<endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPions_TPCdEdxSignal
         if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal";}
@@ -1423,14 +1454,14 @@ void PrimaryTrackQA(
             TGaxis::SetExponentOffset(-0.03, -0.04, "x");
             DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMCvsTrueAllPosPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Counts",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueAllPosPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
             DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                              vecMCvsTrueAllPosPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueAllPosPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTrueAllNegPions_Pt
@@ -1445,14 +1476,14 @@ void PrimaryTrackQA(
             TGaxis::SetExponentOffset(-0.03, -0.04, "x");
             DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMCvsTrueAllNegPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Counts",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueAllNegPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
             DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                              vecMCvsTrueAllNegPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueAllNegPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTruePosPionsFromNeutralMeson_Pt
@@ -1467,14 +1498,14 @@ void PrimaryTrackQA(
             TGaxis::SetExponentOffset(-0.03, -0.04, "x");
             DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Counts",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/MCvsTruePosPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
             DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                              vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTruePosPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTrueNegPionsFromNeutralMeson_Pt
@@ -1489,14 +1520,14 @@ void PrimaryTrackQA(
             TGaxis::SetExponentOffset(-0.03, -0.04, "x");
             DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                         vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Counts",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueNegPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
             TGaxis::SetExponentOffset(0, 0, "x");
             DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                              vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                    "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                    0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
             SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueNegPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
         }
     }
