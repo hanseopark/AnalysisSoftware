@@ -609,13 +609,8 @@ void SaveCanvasAndWriteHistogram(TCanvas* canvas, TObject* hist, TString output)
     if(hist) hist->Write();
     canvas->Update();
     canvas->SaveAs(output.Data());
-<<<<<<< HEAD
     canvas->Clear();
     return;
-=======
-	canvas->Clear();
-	return;
->>>>>>> fixed Bug for GetMinMax and edited PrimaryTrackQA
 }
 
 void SaveCanvasOnly(TCanvas* canvas, TString output){
@@ -788,42 +783,22 @@ void SetTH1RangeForLogY(TH1* hist, Int_t minX, Int_t maxX){
 
 void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax){
     if(!hist) {cout << "INFO: NULL pointer given to GetMinMaxBin!'" << endl; return;}
-<<<<<<< HEAD
+    Double_t very_small_number=1e-5;
     iMin = 1;
     iMax = hist->GetNbinsX();
     Double_t min = hist->GetBinContent(iMin);
     Double_t max = hist->GetBinContent(iMax);
-
-    while(min==0.){
+    while(min<=very_small_number){//max==0. but Double_t
         min = hist->GetBinContent(++iMin);
         if(iMin==iMax){
             iMin=1;
             break;
         }
     }
-
-    while(max==0.){
-        max = hist->GetBinContent(--iMax);
-        if(iMax==1 && max==0.){
-            iMax = hist->GetNbinsX();
-=======
-    Double_t very_small_number=1e-5;
-    iMin = 1;
-	iMax = hist->GetNbinsX();
-	Double_t min = hist->GetBinContent(iMin);
-	Double_t max = hist->GetBinContent(iMax);
-    while(min<=very_small_number){//max==0. but Double_t
-		min = hist->GetBinContent(++iMin);
-		if(iMin==iMax){
-			iMin=1;
-            break;
-		}
-	}
     while(max<=very_small_number){//max==0. but Double_t
-		max = hist->GetBinContent(--iMax);
+        max = hist->GetBinContent(--iMax);
         if(iMax==1 && max<=very_small_number){//max==0. but Double_t
-			iMax = hist->GetNbinsX();
->>>>>>> fixed Bug for GetMinMax and edited PrimaryTrackQA
+            iMax = hist->GetNbinsX();
             cout << "INFO: Empty histogram given to GetMinMaxBin: '" << hist->GetName() << "'" << endl;
             break;
         }
@@ -840,16 +815,10 @@ void GetMinMaxBin(TH2* hist2D, Int_t &iMin, Int_t &iMax){
     hist2D->GetXaxis()->SetRange(0,0);
     //if(hist2D->IsA()!=TH2::Class()){cout << Form("INFO: No TH2 given to GetMinMaxBin(TH2*): %s!'",hist2D->GetName()) << endl; return;}
     TH1* hist = (TH1*) hist2D->ProjectionX(Form("%s_project",hist2D->GetName()),1,hist2D->GetNbinsY());
-<<<<<<< HEAD
+    hist2D->GetXaxis()->SetRange(iFirstBin,iLastBin);
     GetMinMaxBin(hist, iMin, iMax);
     delete hist;
     return;
-=======
-    hist2D->GetXaxis()->SetRange(iFirstBin,iLastBin);
-    GetMinMaxBin(hist, iMin, iMax);
-	delete hist;
-	return;
->>>>>>> fixed Bug for GetMinMax and edited PrimaryTrackQA
 }
 
 void GetMinMaxBinY(TH2* hist2D, Int_t &iMin, Int_t &iMax){
