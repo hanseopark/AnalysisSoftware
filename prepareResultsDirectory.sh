@@ -9,7 +9,7 @@ elif [ $1 = "msas" ]; then
 elif [ $1 = "jlueh" ]; then
    PHOTONCONVDIR=/home/jens/Cloud/Sciebo/Linux_Arbeitsbereich/Programme_und_Skripte/alice-pcg/AnalysisSoftware
 elif [ $1 = "jokonig" ]; then
-   PHOTONCONVDIR=PHOTONCONVDIR=/home/joshua/AnalysisSoftware
+   PHOTONCONVDIR=/home/joshua/AnalysisSoftware/AnalysisSoftware
 elif [ $1 = "mdanisch" ]; then
    PHOTONCONVDIR=/home/meike/analysis/software/photonconv/AnalysisSoftware
 elif [ $1 = "loizides" ]; then
