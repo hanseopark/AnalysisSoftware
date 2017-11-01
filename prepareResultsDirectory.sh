@@ -6,6 +6,10 @@ elif [ $1 = "dmuhlhei" ]; then
    PHOTONCONVDIR=/home/daniel/data/work/pcgGit/AnalysisSoftware
 elif [ $1 = "msas" ]; then
    PHOTONCONVDIR=/home/mike/git_afterburner/AnalysisSoftware
+elif [ $1 = "jlueh" ]; then
+   PHOTONCONVDIR=/home/jens/Cloud/Sciebo/Linux_Arbeitsbereich/Programme_und_Skripte/alice-pcg/AnalysisSoftware
+elif [ $1 = "jokonig" ]; then
+   PHOTONCONVDIR=PHOTONCONVDIR=/home/joshua/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR
@@ -87,6 +91,14 @@ elif [ $2 = "pp8TeV" ]; then
     rm *2760*
     rm *7TeV*
     rm *13TeV*
+    rm *LHC11h*
+    rm *LHC10*
+elif [ $2 = "pp13TeV" ]; then
+    rm *PbPb*
+    rm *pPb*
+    rm *2760*
+    rm *7TeV*
+    rm *8TeV*
     rm *LHC11h*
     rm *LHC10*
 fi
