@@ -627,15 +627,15 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
             if (!nameCutVariationSC[i].CompareTo("Efficiency")||!nameCutVariationSC[i].CompareTo("8TeVEfficiency")){
                 if (spectrumName.Contains("Ratio")){
                     if(!energy.CompareTo("2.76TeV")){
-                        errorFixed          = TMath::Sqrt(2*2+1.5*1.5);
+                        errorFixed          = TMath::Sqrt(2.0*2.0+1.5*1.5);
                     }else if(!energy.CompareTo("8TeV")){
-                        errorFixed          = TMath::Sqrt(1.5*1.5+2*2+1.0*1.0);
+                        errorFixed          = TMath::Sqrt(1.5*1.5+2.0*2.0+1.0*1.0); // period - pi0_eff - gamma_eff
                     }
                 } else {
                     if(!energy.CompareTo("2.76TeV")){
                         errorFixed          = 1.5;
                     }else if(!energy.CompareTo("8TeV")){
-                        errorFixed          = TMath::Sqrt(1.5*1.5+1.0*1.0);
+                        errorFixed          = TMath::Sqrt(1.5*1.5+1.0*1.0); // period - gamma_eff
                     }
                 }
             }

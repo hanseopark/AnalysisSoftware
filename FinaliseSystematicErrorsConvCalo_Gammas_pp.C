@@ -782,9 +782,9 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
                 errorFixed                  = 2.0;
               }else if(!energy.CompareTo("8TeV")){
                 if(spectrumName.Contains("Ratio")){
-                   errorFixed                  = TMath::Sqrt(2.0*2.0 + 0.5*0.5);
+                   errorFixed                  = TMath::Sqrt(2.0*2.0 + 0.5*0.5); // pi0_eff - gamma_eff
                 }else{
-                   errorFixed                  = TMath::Sqrt(0.5*0.5);
+                   errorFixed                  = TMath::Sqrt(0.5*0.5); // gamma_eff
                 }
               }
             }
