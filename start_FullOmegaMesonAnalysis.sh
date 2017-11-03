@@ -602,14 +602,15 @@ if [ $ONLYRESULTS = 0 ] ; then
                 fi
             fi
 
+            OmegaMCcorrectionFullFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+            EtaMCcorrectionFullFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_$cutSelection.root`
+
+
             optionsOmegaCorrection=\"$OmegadataRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
             optionsOmegaCorrectionMC=\"$OmegaMCRAWFILE\"\,\"$OmegaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Omega\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
 
             optionsEtaCorrection=\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
             optionsEtaCorrectionMC=\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"\"\,0\,kFALSE\,$mode
-
-            OmegaMCcorrectionFullFILE=`ls $cutSelection/$energy/Omega_MC_GammaConvV1Correction_$cutSelection.root`
-            EtaMCcorrectionFullFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1Correction_$cutSelection.root`
 
             if [[ -f $OmegadataRAWFILE  &&  -f $OmegaMCcorrectionFILE ]]; then
 

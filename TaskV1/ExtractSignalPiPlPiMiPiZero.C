@@ -669,7 +669,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
           }
 
           if((fHistoMappingGGInvMassBackFitPtBin_FixedPzPiZero[iPt]!=NULL) && (fHistoMappingBackInvMassPtBin_FixedPzPiZero[k][iPt]!=NULL )){
-            cout << " k =" << k << endl;
             ProcessEM( fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt], fHistoMappingBackInvMassPtBin_FixedPzPiZero[k][iPt], fBGFitRange_FixedPzPiZero);
             if(k==0) fNormTot = fNorm; // k==0 means tot back was just scaled -> store value
             fHistoMappingSignalInvMassPtBin_FixedPzPiZero[iPt] = fSignal;
@@ -904,7 +903,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         }
 
         if (fFitSignalInvMassBackFitPtBin[iPt] !=0x00){ //TODO  look into the whole BackFit part
-            cout<<fFitSignalInvMassBackFitPtBin[iPt]->GetParameter(1)<<endl;
             fMesonMassBackFit[iPt]          = fFitSignalInvMassBackFitPtBin[iPt]->GetParameter(1);
             fMesonMassBackFitError[iPt]     = fFitSignalInvMassBackFitPtBin[iPt]->GetParError(1);
             fMesonWidthBackFit[iPt]         = fFitSignalInvMassBackFitPtBin[iPt]->GetParameter(2);
@@ -990,7 +988,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
         }
 
-        for (Int_t k = 0; k < 6; k++){
+        for (Int_t k = 0; k < 3; k++){
             IntegrateHistoInvMass( fHistoMappingGGInvMassPtBin[iPt], fMesonCurIntRange[k]);
             fGGYields[k][iPt]               = fYields;
             fGGYieldsError[k][iPt]          = fYieldsError;
@@ -1416,13 +1414,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                         << fTotalBckYields_FixedPzPiZero[k][iPt] << "\t +- \t" << fTotalBckYieldsError_FixedPzPiZero[k][iPt] << endl<< endl;
             fFileDataLog << "Background (Pi0 pz fixed)" << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                         << fBckYields_FixedPzPiZero[k][iPt] << "\t +- \t" << fBckYieldsError_FixedPzPiZero[k][iPt] << endl<< endl;
-
-            fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
-            fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
-                                                                fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
-            fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
-            fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
             if (k<3){
+                fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
+                fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
+                                                                        fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
+                fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
+                fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
                 // Calculation for InvMass pi0 subtracted
                 fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]          = fMesonYields_SubPiZero[k][iPt]- fMesonYieldsResidualBckFunc_SubPiZero[k][iPt];
                 fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]     = pow(( fMesonYieldsError_SubPiZero[k][iPt]*fMesonYieldsError_SubPiZero[k][iPt] +
@@ -1458,12 +1455,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                         pow((fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]*fMesonYieldsBackFitError_FixedPzPiZero[k][iPt]+
                              fMesonYieldsResidualBckFuncBackFitError_FixedPzPiZero[iPt]*fMesonYieldsResidualBckFuncBackFitError_FixedPzPiZero[iPt]),0.5);
                 fMesonYieldsPerEventBackFit_FixedPzPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit_FixedPzPiZero[k][iPt]/fNEvents;
-                fMesonYieldsPerEventBackFitError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError_SubPiZero[k][iPt]/fNEvents;
+                fMesonYieldsPerEventBackFitError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError_FixedPzPiZero[k][iPt]/fNEvents;
 
-         }
+            }
       }
 
-            // TODO: Why is this not done for normal integration range?
+            // TODO: Why is this not done for normal integration range? -> because case 0 was already done before?
             if (k > 0){
                 fFileErrLog << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << "\t" << nameIntRange[k].Data()<<  endl;
                 Double_t intRange[2]    = {0,0};
@@ -1477,7 +1474,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 if(fCrysFitting==0){
                     if(fHistoMappingSignalInvMassPtBin[iPt]){
                         fFileErrLog << "Using exp fit"<<endl;
-                        cout << "k =" << k << endl;
                         FitSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], intRange, iPt, kFALSE,0);
                         fMesonYieldsResidualBckFunc[k][iPt]         = fIntLinearBck;
                         fMesonYieldsResidualBckFuncError[k][iPt]    = fIntLinearBckError;
@@ -2114,8 +2110,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     nameMesonSub                = Form("%s/%s_%s_MesonSubtractedBackFit_SubPiZero_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
     nameCanvasSub               = "MesonCanvasSubtractedBackFit";
     namePadSub                  = "MesonPadSubtractedBackFit";
-    cout << " fHistoMappingGGInvMassBachFitPtBin_SubPiZero" << fHistoMappingGGInvMassBackFitPtBin_SubPiZero << endl;
-    cout << " fFitSignalInvMassBackFitPtBin_SubPiZero" << fFitSignalInvMassBackFitPtBin_SubPiZero << endl;
     PlotWithFitSubtractedInvMassInPtBins( fHistoMappingGGInvMassBackFitPtBin_SubPiZero, fHistoMappingTrueMesonInvMassPtBins_SubPiZero, fFitSignalInvMassBackFitPtBin_SubPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_SubPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, kFALSE,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}");
 
     // Meson Subtracted backfit (pz of pi0 is fixed) (NOTE: isMC is always disabled because no true histos exist)
@@ -2299,17 +2293,14 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
         for (Int_t k = 0; k < 6; k++){ //TODO is 6 correct ?
             fNameHistoEffi                      = Form("Meson%sEffiPt",nameIntRange[k].Data());
-            cout << fNameHistoEffi.Data() << endl;
             fHistoMonteMesonEffiPt[k]           = CalculateMesonEfficiency(fHistoYieldMeson[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi );
 
             // Sub Pi Zero
             fNameHistoEffi                      = Form("Meson%sEffiPt_SubPiZero",nameIntRange[k].Data());
-            cout << fNameHistoEffi.Data() << endl;
             fHistoMonteMesonEffiPt_SubPiZero[k]           = CalculateMesonEfficiency(fHistoYieldMeson_SubPiZero[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi );
 
             // Fixed Pz Pi Zero
             fNameHistoEffi                      = Form("Meson%sEffiPt_FixedPzPiZero",nameIntRange[k].Data());
-            cout << fNameHistoEffi.Data() << endl;
             fHistoMonteMesonEffiPt_FixedPzPiZero[k]           = CalculateMesonEfficiency(fHistoYieldMeson_FixedPzPiZero[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi );
         }
 
@@ -2327,32 +2318,26 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         for (Int_t k = 0; k < 3; k++){
             fNameHistoEffi                          = Form("TrueMeson%sEffiPt",nameIntRange[k].Data());
             fHistoMCTrueMesonEffiPt[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
-            cout << fNameHistoEffi.Data() << endl;
 
             // Sub PiZero
             fNameHistoEffi                          = Form("TrueMeson%sEffiPt_SubPiZero",nameIntRange[k].Data());
             fHistoMCTrueMesonEffiPt_SubPiZero[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson_SubPiZero[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
-            cout << fNameHistoEffi.Data() << endl;
 
             // Fixed pZ PiZero
             fNameHistoEffi                          = Form("TrueMeson%sEffiPt_FixedPzPiZero",nameIntRange[k].Data());
             fHistoMCTrueMesonEffiPt_FixedPzPiZero[k]              = CalculateMesonEfficiency(fHistoYieldTrueMeson_FixedPzPiZero[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
-            cout << fNameHistoEffi.Data() << endl;
 
             // True meson efficiencies with possibly fully weighted inputs taking the average weight per inv mass bin in the original binning of the TrueMesonInvMass vs pT plot
             // should give on average the same as TrueMesonEffiPt
             fNameHistoEffi                          = Form("TrueMeson%sEffiPtReweighted",nameIntRange[k].Data());
-            cout << fNameHistoEffi.Data() << endl;
             fHistoMCTrueMesonEffiPtReweighted[k]    = CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
 
             // Sub PiZero
             fNameHistoEffi                          = Form("TrueMeson%sEffiPtReweighted_SubPiZero",nameIntRange[k].Data());
-            cout << fNameHistoEffi.Data() << endl;
             fHistoMCTrueMesonEffiPtReweighted_SubPiZero[k]    = CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted_SubPiZero[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
 
             // Fixed Pz PiZero
             fNameHistoEffi                          = Form("TrueMeson%sEffiPtReweighted_FixedPzPiZero",nameIntRange[k].Data());
-            cout << fNameHistoEffi.Data() << endl;
             fHistoMCTrueMesonEffiPtReweighted_FixedPzPiZero[k]    = CalculateMesonEfficiency(fHistoYieldTrueMesonReweighted_FixedPzPiZero[k], fHistoMCMesonWithinAccepPt, fNameHistoEffi);
         }
 
@@ -3050,9 +3035,7 @@ void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy,TH2D* fGammaGammaInvM
           fNameHistoGG = Form("Mapping_GG_InvMass_SubPiZero_in_Pt_Bin%02d", iPt);
 
           if(fHistoMappingGGInvMassPtBin_SubPiZero[iPt]!= NULL){
-              cout << "fHistoMappingGGInvMassPtBin_SubPiZero before" << endl;
             delete fHistoMappingGGInvMassPtBin_SubPiZero[iPt];
-              cout << "fHistoMappingGGInvMassPtBin_SubPiZero after" << endl;
             fHistoMappingGGInvMassPtBin_SubPiZero[iPt]=NULL;
           }
           fHistoMappingGGInvMassPtBin_SubPiZero[iPt]=new TH1D(fNameHistoGG.Data(),fNameHistoGG.Data(),fGammaGammaInvMassVSPtDummy_SubPiZero->GetNbinsX(),0.,fGammaGammaInvMassVSPtDummy_SubPiZero->GetXaxis()->GetBinUpEdge(fGammaGammaInvMassVSPtDummy->GetNbinsX()));
@@ -3081,9 +3064,7 @@ void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy,TH2D* fGammaGammaInvM
           fNameHistoGG = Form("Mapping_GG_InvMass_FixedPzPiZero_in_Pt_Bin%02d", iPt);
 
           if(fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt]!= NULL){
-            cout << "fHistoMappingGGInvMassPtBin_FixedPzPiZero before" << endl;
             delete fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt];
-            cout << "fHistoMappingGGInvMassPtBin_FixedPzPiZero after" << endl;
             fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt]=NULL;
           }
           fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt]=new TH1D(fNameHistoGG.Data(),fNameHistoGG.Data(),fGammaGammaInvMassVSPtDummy_FixedPzPiZero->GetNbinsX(),0.,fGammaGammaInvMassVSPtDummy_FixedPzPiZero->GetXaxis()->GetBinUpEdge(fGammaGammaInvMassVSPtDummy->GetNbinsX()));
@@ -3091,10 +3072,6 @@ void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy,TH2D* fGammaGammaInvM
 
           Int_t startBin = fGammaGammaInvMassVSPtDummy_FixedPzPiZero->GetYaxis()->FindBin(fBinsPt[iPt]+0.001);
           Int_t endBin = fGammaGammaInvMassVSPtDummy_FixedPzPiZero->GetYaxis()->FindBin(fBinsPt[iPt+1]-0.001);
-
-          //             cout<< "bins::"<< startBin<< " " << endBin<<" "<< fBinsPt[iPt]<< " "<<fBinsPt[iPt+1]<<  endl;
-          //             cout<< "bin values::"<< fGammaGammaInvMassVSPtDummy->GetYaxis()->GetBinCenter(startBin)<< " "
-          //                 << fGammaGammaInvMassVSPtDummy->GetYaxis()->GetBinCenter(endBin)<< endl;
 
           fGammaGammaInvMassVSPtDummy_FixedPzPiZero->ProjectionX(fNameHistoGG.Data(),startBin,endBin);
 
@@ -3107,8 +3084,6 @@ void FillMassHistosArray(TH2D* fGammaGammaInvMassVSPtDummy,TH2D* fGammaGammaInvM
           }
         }
     }
-    //    cout << "each pt written" << endl;
-
 }
 
 void FillMassMCTrueMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFill)
@@ -3124,10 +3099,6 @@ for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
     fHistoMappingTrueMesonInvMassPtBins[iPt]->Sumw2();
     Int_t startBin = fHistoTrueMesonInvMassVSPtFill->GetYaxis()->FindBin(fBinsPt[iPt]+0.001);
     Int_t endBin = fHistoTrueMesonInvMassVSPtFill->GetYaxis()->FindBin(fBinsPt[iPt+1]-0.001);
-
-    //       cout<< "bins::"<< startBin<< " " << endBin<<" "<< fBinsPt[iPt]<< " "<<fBinsPt[iPt+1]<<  endl;
-    //       cout<< "bin values::"<< fHistoTrueMesonInvMassVSPtFill->GetYaxis()->GetBinCenter(startBin)<< " "
-    //           << fHistoTrueMesonInvMassVSPtFill->GetYaxis()->GetBinCenter(endBin)<< endl;
 
     fHistoTrueMesonInvMassVSPtFill->ProjectionX(fNameHistoTrue.Data(),startBin,endBin,"e");
 
@@ -3166,10 +3137,6 @@ for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
     fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]->Sumw2();
     Int_t startBin = fHistoTrueMesonInvMassVSPtFill->GetYaxis()->FindBin(fBinsPt[iPt]+0.001);
     Int_t endBin = fHistoTrueMesonInvMassVSPtFill->GetYaxis()->FindBin(fBinsPt[iPt+1]-0.001);
-
-    //       cout<< "bins::"<< startBin<< " " << endBin<<" "<< fBinsPt[iPt]<< " "<<fBinsPt[iPt+1]<<  endl;
-    //       cout<< "bin values::"<< fHistoTrueMesonInvMassVSPtFill->GetYaxis()->GetBinCenter(startBin)<< " "
-    //           << fHistoTrueMesonInvMassVSPtFill->GetYaxis()->GetBinCenter(endBin)<< endl;
 
     fHistoTrueMesonInvMassVSPtFill->ProjectionX(fNameHistoTrue.Data(),startBin,endBin,"e"); 
     fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]=(TH1D*)gDirectory->Get(fNameHistoTrue.Data());
@@ -3383,20 +3350,14 @@ void FillPtHistos()
 
             for (Int_t k = 0; k < 3; k++){
                 fHistoYieldTrueMeson[k]->SetBinContent(iPt,fMesonTrueYields[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                cout << "-----> SetBinContent (should be filled) = " << fMesonTrueYields[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]) <<endl;
                 fHistoYieldTrueMeson_SubPiZero[k]->SetBinContent(iPt,fMesonTrueYields_SubPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                cout << "-----> SetBinContent (should be filled) = " << fMesonTrueYields_SubPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]) <<endl;
                 fHistoYieldTrueMeson_FixedPzPiZero[k]->SetBinContent(iPt,fMesonTrueYields_FixedPzPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                cout << "-----> SetBinContent (should be filled) = " << fMesonTrueYields_FixedPzPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]) <<endl;
 
                 fHistoYieldTrueMeson[k]->SetBinError(iPt,fMesonTrueYieldsError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                 fHistoYieldTrueMeson_SubPiZero[k]->SetBinError(iPt,fMesonTrueYieldsError_SubPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                 fHistoYieldTrueMeson_FixedPzPiZero[k]->SetBinError(iPt,fMesonTrueYieldsError_FixedPzPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                cout << "-----> SetBinContent = " << fMesonTrueYieldsReweighted[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]) <<endl;
                 fHistoYieldTrueMesonReweighted[k]->SetBinContent(iPt,fMesonTrueYieldsReweighted[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                cout << "-----> SetBinContent = " << fMesonTrueYieldsReweighted_SubPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]) <<endl;
                 fHistoYieldTrueMesonReweighted_SubPiZero[k]->SetBinContent(iPt,fMesonTrueYieldsReweighted_SubPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                cout << "-----> SetBinContent = " << fMesonTrueYieldsReweighted_FixedPzPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]) <<endl;
                 fHistoYieldTrueMesonReweighted_FixedPzPiZero[k]->SetBinContent(iPt,fMesonTrueYieldsReweighted_FixedPzPiZero[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
                 fHistoYieldTrueMesonReweighted[k]->SetBinError(iPt,fMesonTrueYieldsReweightedError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
@@ -3563,6 +3524,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
       cout << " ERROR! Invalid InvMassType was given. FitSubtractedInvMassInPtBins won't be run!" << endl;
       return;
     }
+
     fFitReco= NULL;
     fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",FitRangeTmp[0],FitRangeTmp[1]);
 
@@ -3579,8 +3541,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     // Set Results as start parameters
     fFitReco->FixParameter(4,fFitLinearBckExcl->GetParameter(0));
     fFitReco->FixParameter(5,fFitLinearBckExcl->GetParameter(1));
-    //fFitReco->SetParError(4,fFitLinearBckExcl->GetParError(0));
-    //fFitReco->SetParError(5,fFitLinearBckExcl->GetParError(1));
+
+    // Even though parameter is fixed, assign error from linear fit (TODO: Check if this is allowed, because not the same fitting range is used)
+    fFitReco->SetParError(4,fFitLinearBckExcl->GetParError(0));
+    fFitReco->SetParError(5,fFitLinearBckExcl->GetParError(1));
 
     fFitReco->SetParameter(0,mesonAmplitude);
 
@@ -3598,18 +3562,17 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         fFitReco->SetParameter(3,fMesonLambdaTail);
         fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
     }
+
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-     if(InvMassType == 1){
+
+    if(InvMassType == 1){
        fFitReco->SetParLimits(1,(fMesonMassExpect-0.134)*0.9,(fMesonMassExpect-0.134)*1.15);
      } else{
        fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
      }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
-
-    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"RME0");
-    //fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
-
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
 
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
@@ -3662,10 +3625,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
 
         Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
 
-        fFileDataLog << "Parameter for bin " << ptBin << endl;
+        /*fFileDataLog << "Parameter for bin " << ptBin << endl;
         fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
         fFileDataLog << "Linear: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< endl;
-
+         */
         fIntLinearBck = intLinearBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         fIntLinearBckError = errorLinearBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
     } else {
@@ -4081,7 +4044,6 @@ TH1D* CalculateMesonEfficiency( TH1D* fMC_fMesonYieldsPt,
                                 TH1D* fHistoMCMesonWithinAccepPt,
                                 TString nameEfi
                               ){
-    cout << "---> Begin of CalculateMesonEfficiency " << endl;
     fHistoMCMesonEffiPt = new TH1D(nameEfi.Data(),"",fNBinsPt,fBinsPt);
 
     fHistoMCMesonEffiPt->Sumw2();
