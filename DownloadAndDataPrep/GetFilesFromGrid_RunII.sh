@@ -1,475 +1,326 @@
 #! /bin/bash
 
-# This macro copies GammaConvV1_<trainConfig> or AnalysisResults.root files from grid and puts them in the correct directories
+# This macro copies runwise GammaConvV1_<trainConfig> and/or AnalysisResults.root files from grid and puts them in the correct directories
+#
+# the files will be saved in these places:
+#    $DIR/GammaConv/$SYSTEM/$PERIOD/$run/GammaConvV1_<trainconfig>.root
+#    $DIR/PhotonQA/$SYSTEM/$PERIOD/$run/AnalysisResults.root
+# 
+# In the basic settings, one has to specify the base directory "DIR"
+# and the current information on the datasets
+#
+# Available functions are:
+#   MergeList()
+#   ChangeStructure()
+#   MainRoutine()
+#
+#
+# TO DO:
+# dry-run option
+# check if file is corrupted
+# Error / warning and algorithm if folder exists already
+# automatic train selection like in old macro
+# create info.txt 
+# meaningful filename for overall merged file via ChangeStructureToStandard
+# possibility to download part of the data and merge afterwards the whole runlist
+#
 
-#****** arguments ******************************************************************************************************************
-# $1 = period 
-# $2 = "G"       (Download GammaConv files)
-#      "A"       (Download AnalysisResults.root files)
-# $3 = "runwise" (download runwise. If $2="G": optional merge afterwards) 
-#      "merge"   (merge ONLY. Only for $2="G")
+MergeList(){  # $1:list   $2:target path   $3:target name    
+    
+    fileList=`cat $1`
+    hadd -f $2/$3 $fileList
 
-#***** variables to be set manually ******************************************************************************************************************
-# specify where the files should be saved:
-#     $DIR/GammaConv/$SYSTEM/$PERIOD/$run/GammaConvV1_<trainconfig>.root
-# or  $DIR/PhotonQA/$SYSTEM/$PERIOD/$run/AnalysisResults.root
-DIR=/home/meike/analysis/data/GridOutput
-
-#****** automatic settings according to period given as argument ****************
-# update when there is a new production or a new production pass
-
-case "$1" in   
-    "LHC15f")
-	PERIOD=LHC15f
-	YEAR=2015
-	isMC=FALSE
-	SYSTEM=pp
-	PASS=pass2
-	# listPCMgood_kINT7:
-	#RUN=(225026 225031 225035 225037 225041 225043 225050 225051 225052 225106 225305 225307 225309 225310 225313 225314 225315 225322 225576 225578 225579 225586 225587 225705 225707 225708 225709 225710 225716 225717 225719 225753 225757 225762 225763 225766 225768 226062 226170 226220 226225 226444 226445 226452 226466 226468 226472 226476 226483 226495 226500);
-	# list RCT-good:
-	RUN=(225000 225011 225016 225026 225031 225035 225037 225041 225043 225050 225051 225052 225106 225305 225307 225309 225310 225313 225314 225315 225322 225576 225578 225579 225586 225587 225705 225707 225708 225709 225710 225716 225717 225719 225753 225757 225762 225763 225766 225768 226062 226170 226220 226225 226444 226445 226452 226466 226468 226472 226476 226483 226495 226500);
-	AODNO=171
-	;;
-    "LHC15g3a3") # anchored to 15f	
-	PERIOD=LHC15g3a3
-	YEAR=2015
-	isMC=TRUE
-	SYSTEM=pp
-	# no pass
-	AODNO=176
-	# listPCMgood_kINT7: 
-	#RUN=(225026 225031 225035 225037 225041 225043 225050 225051 225052 225106 225305 225307 225309 225310 225313 225314 225315 225322 225576 225578 225579 225586 225587 225705 225707 225708 225709 225710 225716 225717 225719 225753 225757 225762 225763 225766 225768 226062 226170 226220 226225 226444 226445 226452 226466 226468 226472 226476 226483 226495 226500);
-	# list RCT-good:
-	RUN=(225000 225011 225016 225026 225031 225035 225037 225041 225043 225050 225051 225052 225106 225305 225307 225309 225310 225313 225314 225315 225322 225576 225578 225579 225586 225587 225705 225707 225708 225709 225710 225716 225717 225719 225753 225757 225762 225763 225766 225768 226062 226170 226220 226225 226444 226445 226452 226466 226468 226472 226476 226483 226495 226500);
-	;;
-    "LHC15g3c3") # anchored to 15f
-	PERIOD=LHC15g3c3
-	YEAR=2015
-	isMC=TRUE
-	SYSTEM=pp
-	# no pass
-	AODNO=176
-	# listPCMgood_kINT7:
-	RUN=(225026 225031 225035 225037 225041 225043 225050 225051 225052 225106 225305 225307 225309 225310 225313 225314 225315 225322 225576 225578 225579 225586 225587 225705 225707 225708 225709 225710 225716 225717 225719 225753 225757 225762 225763 225766 225768 226062 226170 226220 226225 226444 226445 226452 226466 226468 226472 226476 226483 226495 226500);
-	;;
-    "LHC15g")
-	PERIOD=LHC15g
-	YEAR=2015
-	isMC=FALSE
-	SYSTEM=pp
-	PASS=pass1_megarun
-	;;
-    "LHC15h")
-	PERIOD=LHC15h
-	YEAR=2015
-	isMC=FALSE
-	SYSTEM=pp
-	PASS=pass1
-	RUN=(232914 232916 232986 232993 232995 233020 233059 233061 233093 233116 233120 233144 233169 233217 233232 233239 233242 233361 233465 233472 233614 233621 233623 233627 233678 233686 233692 233696 233697 233698 233700 233716 233719 233720 233721 233743 233799 233828 233830 233837 233858 233912 233969 233971 233972 233973 233974 233975 233976 233977 233978 234031 234039 234040 234043 234045 234048 234049 234050);
-	;;
-    "LHC15i")
-	PERIOD=LHC15i
-	YEAR=2015
-	isMC=FALSE
-	SYSTEM=pp
-	PASS=pass1
-	RUN=(236866 236863 236862 236860 236850 236848 236835 236824 236822 236821 236816 236815 236814 236813 236569 236565 236564 236563 236562 236558 236556 236444 236443 236441  236393 236389 236360 236359 236357 236356 236354 236353 236352 236349 236348 236337 236334 236331 236284 236281 236248 236246 236244 236242 236240 236238 236234 236227 236222 236204 236203 236164 236163 236161 236158 236153 236151 236150 236138 236137 236062 235898 235897 235896 235895 235893 235891 235890 235889 235888 235886 235841 235839 235811 235759 235721 235714 235710 235694 235684 235683 235573 235547 235462 235459 235454 235450 235443 235436 235435 235432 235423 235383 235380 235364 235362 235356 235347 235345 235344 235245 235242 235226 235204 235203 235201 235196);
-	;;
-    "LHC15oLowIR")
-	PERIOD=LHC15o
-	YEAR=2015
-	isMC=FALSE
-	SYSTEM=PbPb
-	PASS=pass2_lowIR
-	# all 13 runs:
-	#RUN=(244917 244918 244975 244980 244982 244983 245061 245064 245066 245068 246390 246391 246392);
-	# runs with MC
-	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
-	;;
-    "LHC15k1a1") # anchored to LHC15oLowIR
-	PERIOD=LHC15k1a1
-	YEAR=2015
-	isMC=TRUE
-	SYSTEM=PbPb
-	# no pass
-	# 10 runs:
-	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
-	;;
-    "LHC15k1a2") # anchored to LHC15oLowIR
-	PERIOD=LHC15k1a2
-	YEAR=2015
-	isMC=TRUE
-	SYSTEM=PbPb
-	# no pass
-	# 10 runs:
-	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
-	;;
-    "LHC15k1a3") # anchored to LHC15oLowIR
-	PERIOD=LHC15k1a3
-	YEAR=2015
-	isMC=TRUE
-	SYSTEM=PbPb
-	# no pass
-	# 10 runs:
-	RUN=(244918 244975 244982 244983 245064 245066 245068 246390 246391 246392);
-	;;
-    "LHC15oHighIR")
-	PERIOD=LHC15o
-	YEAR=2015
-	isMC=FALSE
-	SYSTEM=PbPb
-	PASS=pass1
-	# all 31 runs:
-	RUN=(245683 246807 246808 246809 246810 246844 246845 246846 246847 246851 246855 246858 246859 246864 246865 246867 246870 246871 246928 246930 246937 246942 246945 246948 246949 246980 246982 246984 246989 246991 246994);
-	;;
-    "LHC16h4b")
-	PERIOD=LHC16h4b
-	YEAR=2016
-	isMC=TRUE
-	SYSTEM=PbPb
-	# 1 run:
-	RUN=(245064);
-	;;
-    *)
-	echo "no valid period chosen"; 
-esac
-
-echo "chose period: " $PERIOD", year: "$YEAR", MC: "$isMC", pass: "$PASS", collision system: "$SYSTEM", refiltering number if available: "$AODNO;
-
-if [ $2 = "G" ]; then
-    echo "Chose GammaConvV1_<trainconfig>.root";
-    FILETYPE=G
-    BASEDIR=$DIR/GammaConv/
-elif [ $2 = "A" ]; then
-    echo "Chose AnalysisResults.root"
-    FILETYPE=A
-    BASEDIR=$DIR/PhotonQA/
-else
-    echo "second argument should be G or A";
-fi
-
-# ********* common functions **********************************************************************************************************
-Structure() {
-
-    ls $1/GammaConvV1_*.root > fileData.txt
-    fileNumbers=`cat fileData.txt`
-    for fileName in $fileNumbers; do
-	config=`echo $fileName | cut -d "_" -f 2 | cut -d "." -f 1`
-	echo "trainconfig: " $config
-	root -l -b -q -x ChangeStructureToStandard.C\(\"$1/GammaConvV1_$config.root\"\,\"$1/GammaConvV1_$config.root\"\,\"GammaConvV1_$config\"\)
-    done
 }
 
-Merge() {
-       
-        if [ "$config" == "" ]; then
-	    echo "enter trainconfig";
-	    read config
-	fi
+ChangeStructure(){  #$1: file path + name
+#"$BASEDIR/$SYSTEM/$PERIOD/$fileName" 
 
-	echo "merge ${#RUN[@]} files";               # not the actual number of downloaded runs!    PRODUCE FILE WITH MERGED RUN NUMBERS!!!
-	declare -i i=0
-	declare -i actualNoRuns=${#RUN[@]}
+if [ -f "$1" ]; then
+    echo "Change Structure to standard..."
+    config=`echo $1 | cut -d "_" -f 2 | cut -d "." -f 1`
+    echo "detected trainconfig: " $config
+    root -l -b -q -x ChangeStructureToStandard.C\(\"$1\"\,\"$1\"\,\"GammaConvV1_$config\"\)
+else
+    echo "no file for ChangeStructureToStandard"
+fi
+
+}
+
+
+MainRoutine(){ 
+
+    # arguments:
+    # $1:  "GammaConv" or "PhotonQA"
+    # $2:  "ESD" or "AOD"
+    # $3:  "LHC15o"
+    # $4:  "337_20171030-1322"
+    # $5:  "data" or "sim"
+    # $6:  "pass1" / "pass1_pidfix" / "pass3_lowIR_pidfix" / ""
+
+    # merge all runs in the end?
+    declare -i doMerge=1   # 1 for yes, 0 for no
+
+    DIR=/home/meike/analysis/data/GridOutput
+    TASK=$1
+    BASEDIR=$DIR/$1
+    DATATYPE=$2
+    SYSTEM=PbPb/$2
+    PERIOD=$3
+    TRAIN=$4
+    TYPE=$5
+    PASS=$6
+
+    # settings according to the pass and runlist
+    if [ "$PASS" == "pass1" ];then
+	RUN=(246994 246991 246989 246984 246982 246980 246948 246945 246928 246871 246870 246867 246865 246851 246847 246846 246845 246844 246810 246809 246808 246807 246805 246804 246766 246765 246763 246760 246759 246758 246757 246751 246750 246676 246675 246495 246493 246488 246487 246434 246431 246428 246424 246276 246275 246272 246271 246225 246222 246217 246185 246182 246181 246180 246178 246153 246152 246151 246115 246113 246089 246087 246053 246052 246049 246048 246042 246037 246036 246012 246003 246001 245954 245952 245949 245923 245833 245831 245829 245793 245785 245775 245766 245759 245752 245738 245731 245729 245705 245702 245700 245692 245683);
+    elif [ "$PASS" == "pass1_pidfix" ];then
+	RUN=(245554 245545 245544 245543 245542 245540 245535 245507 245505 245504 245501 245497 245496 245454 245452 245450 245446 245441 245439 245411 245410 245409 245407 245401 245397 245396 245353 245349 245347 245346 245345 245343 245259 245232 245231 245152 245151 245146 245145);	
+    elif [ "$PASS" == "pass3_lowIR_pidfix" ];then
+	RUN=(246392 246391 246390 245068 245066 245064 244983 244982 244980 244975 244918);
+    elif [ "$PASS" == "" ];then
+	echo "no PASS definded because using MC"
+    else
+	echo "PASS $PASS not defined"
+    fi
+
+    # settings according to data or MC
+    if [ "$TYPE" == "data" ];then
+	YEAR="2015"
+	PREFIX="000"
+	if [ "$DATATYPE" == "ESD" ];then
+	    AODNO=""
+	    TRAINDIR="GA_PbPb"
+	elif [ "$DATATYPE" == "AOD" ];then
+	    AODNO="AOD186"
+	    TRAINDIR="GA_PbPb_AOD"
+	else
+	    echo "DATATYPE $DATATYPE not defined"
+	fi
+    elif [ "$TYPE" == "sim" ];then
+	YEAR="2016"
+	PREFIX=""
+	PASS=""
+	if [ "$DATATYPE" == "ESD" ];then
+	    AODNO=""
+	    TRAINDIR="GA_PbPb_MC"
+	elif [ "$DATATYPE" == "AOD" ];then
+	    AODNO="AOD188"
+	    TRAINDIR="GA_PbPb_MC_AOD"
+	else
+	    echo "DATATYPE $DATATYPE not defined"
+	fi
+    else
+	echo "TYPE $TYPE not defined"
+    fi
+
+    # settings according to which task was run and which trainconfigs were used
+    if [ "$TASK" == "GammaConv" ];then
+	FILENAMES=("GammaConvV1_246.root");   # or ("GammaConvV1_245.root" "GammaConvV1_246.root")
+	declare -i doChStr=1                  # 1 for yes, 0 for no
+    elif [ "$TASK" == "PhotonQA" ];then
+	FILENAMES=("AnalysisResults.root");
+	declare -i doChStr=0   
+    else
+	echo "TASK $TASK not defined"
+    fi
+
+    # end of settings
+
+    # print settings ...
+    echo "YOU HAVE CHOSEN THE FOLLOWING SETTINGS"
+    echo "DIR = $DIR"
+    echo "BASEDIR = $BASEDIR"
+    echo "DATATYPE = $DATATYPE"
+    echo "SYSTEM = $SYSTEM"
+    echo "PERIOD = $PERIOD"
+    echo "TRAIN = $TRAIN"
+    echo "TYPE = $TYPE"
+    echo "TRAINDIR = $TRAINDIR"
+    echo "YEAR = $YEAR"
+    echo "PREFIX = $PREFIX"
+    echo "PASS = $PASS"
+    echo "AODNO = $AODNO"
+    echo "FILENAMES = ${FILENAMES[@]}"
+    echo "doMerge = $doMerge"
+    echo "Runs: ${RUN[@]}"
+    echo "END OF SETTINGS"
+
+    declare -i r=0  # number of runs
+    declare -i k=0  # number of downloaded runs of one filename
+    declare -i l=0  # number of unmerged files for one run
+    
+    for FILENAME in "${FILENAMES[@]}"; do
+	
+	if [ -f FilesToMerge.txt ]; then rm FilesToMerge.txt; fi 
+	if [ -f UnmergedFilesToMerge.txt ]; then rm UnmergedFilesToMerge.txt; fi
+	if [ -f MergedRuns.txt ]; then rm MergedRuns.txt; fi
+	
+	r=0
+	k=0
+	
 	for run in "${RUN[@]}"; do
-	    i=i+1
-	    echo "Run $i of ${#RUN[@]} ...";
-	    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1_$config.root ]; then
-		if [ $i = 1 ]; then
-		    mkdir -p $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/
-		    cp $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1_$config.root
+	    r=r+1
+	    l=0     # for one specific run: number of unmerged files
+	    if [ -f UnmergedFilesToMerge.txt ]; then rm UnmergedFilesToMerge.txt; fi # clear list before every new run
+	    echo "**********************************************************************************************************"
+	    echo "Run $r of ${#RUN[@]}: $run";
+	    SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AODNO/PWGGA/$TRAINDIR/$TRAIN
+	    echo "source directory:    $SOURCEDIR"
+	    echo "search for file:     $FILENAME";
+	    fileName=`alien_ls $SOURCEDIR/$FILENAME`                  
+	    if [ "$fileName" = "$FILENAME" ]; then
+		echo "merged file exists:  $fileName"
+		OUTPUTDIR=$BASEDIR/$SYSTEM/$PERIOD/$run/
+		echo "output directory:    $OUTPUTDIR"
+		mkdir -p $OUTPUTDIR
+		alien_cp alien:$SOURCEDIR/$fileName file:$OUTPUTDIR/   
+		if [ -f $OUTPUTDIR/$fileName ]; then  # only if ile exists
+		    echo "copied               $SOURCEDIR/$fileName "
+		    echo "to                   $OUTPUTDIR" 
+		    echo -n " $OUTPUTDIR/$fileName" >> FilesToMerge.txt   
+		    k=k+1
+		    echo $run >> MergedRuns.txt
+		    if [ "$doChStr" -eq 1 ]; then
+			ChangeStructure "$OUTPUTDIR/$fileName" 
+		    fi
 		else
-		    hadd -f ./GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/$run/GammaConvV1_$config.root    # merge every file to mymerge/GammaConv/GammaConvV1_$config.root
-		    mv GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/
+		    echo "ERROR: download failed"
 		fi
 	    else
-		    echo "file "$BASEDIR/$SYSTEM/$PERIOD/$run/"GammaConvV1_$config.root does not exist!";
-		    actualNoRuns=actualNoRuns-1
-	    fi      
-	done
-	echo $actualNoRuns" runs merged";
-	#if [ $actualNoRuns -ne ${#RUN[@]} ]; then
-	mv $BASEDIR/$SYSTEM/$PERIOD/mymerge/${#RUN[@]}runs/GammaConvV1_$config.root $BASEDIR/$SYSTEM/$PERIOD/GammaConvV1_$config_$actualNoRuns"runs.root"
-	rm -r $BASEDIR/$SYSTEM/$PERIOD/mymerge/
-	#fi
-}
-
-MergeList(){  # $1: list $2: target path $3: target name
-
-    echo "target path: "$2
-    filesToMerge=`cat $1`
-    echo "name: "$3
-    declare -i i=0
-    rm $2/tmp.root
-    rm $2/TMP.root
-    for fileToMerge in $filesToMerge; do
-	i=i+1
-	if [ $i = 1 ]; then
-	    cp $fileToMerge $2/tmp.root
-	else
-	    hadd -f $2/TMP.root $2/tmp.root $fileToMerge
-	    mv $2/TMP.root $2/tmp.root
-	fi
-    done
-    mv $2/tmp.root $2/$3
-
-}
-
-WriteInfo() {
-    InfoExists=`ls $BASEDIR/$SYSTEM/$PERIOD/info.txt`
-    if [ "$InfoExists" == "" ]; then
-	echo -e "$TRAIN\n$PERIOD\n$PASS" > $BASEDIR/$SYSTEM/$PERIOD/info.txt
-	echo "info.txt created"
-	cat $BASEDIR/$SYSTEM/$PERIOD/info.txt
-    else
-	echo "Do you want to overwrite Info.txt? yes / no";
-        cat $BASEDIR/$SYSTEM/$PERIOD/info.txt
-        read answerInfo
-	if [ "$answerInfo" != "yes" ] && [ "$answerInfo" != "no" ]; then
-	    echo "no valid answer has been given. Will assume no.";
-	    answerInfo=no;
-	fi
-	if [ "$answerInfo" == "yes" ]; then
-	   echo -e "$TRAIN\n$PERIOD\n$PASS" > $BASEDIR/$SYSTEM/$PERIOD/info.txt  # write also ESD/AOD, AliPhysics version!!
-	   echo "info.txt written"
-	   cat $BASEDIR/$SYSTEM/$PERIOD/info.txt
-	fi
-    fi
-}
-
-OldData() {
-    if [ -f $BASEDIR/$SYSTEM/$PERIOD/info.txt ]; then
-	echo "Data for this period already exists: "
-	cat $BASEDIR/$SYSTEM/$PERIOD/info.txt
-	echo "What do you want to do? move and download (m) download (d) abort (a)";
-	read answerMove  
-	if [ "$answerMove" == "m" ]; then
-	    line=$(head -n 1 $BASEDIR/$SYSTEM/$PERIOD/info.txt)
-	    mkdir -p $BASEDIR/$SYSTEM/$PERIOD/old/$PASS/$line                      
-	    mv $BASEDIR/$SYSTEM/$PERIOD/* $BASEDIR/$SYSTEM/$PERIOD/old/$PASS/$line
-	    echo "moved old data to $BASEDIR/$PERIOD/old/$pass/$line.";
-	    echo "Go on with download...";
-	elif [ "$answerMove" == "d" ]; then
-	    echo "go on with download...";
-	elif [ "$answerMove" == "a" ]; then
-	    echo "Abort.";
-	    exit
-	else
-	    echo "No valid answer has been given. Abort.";
-	    exit
-	fi
-    fi
-} # additional variables: answerMove line
-
-Show() {   # -> split into two functions, one being GetSourceDir
-# shows runwise files
-
-if [ "$isMC" == "FALSE" ];then # data
-    if [ "$isAOD" == "FALSE" ]; then
-	TRAINDIR=GA_$SYSTEM                         # don't need TRAINDIR AND AOD, define SOURCEDIR right away ?      
-	AOD=
-    else
-	TRAINDIR=GA_"$SYSTEM"_AOD
-	AOD=/AOD$AODNO
-    fi
-else # MC
-    if [ "$isAOD" == "FALSE" ]; then
-	TRAINDIR=GA_"$SYSTEM"_MC
-	AOD=
-    else
-	TRAINDIR=GA_"$SYSTEM"_MC_AOD
-	AOD=/AOD$AODNO
-    fi
-fi
-
-for run in "${RUN[@]}"; do
-    if [ "$isMC" == "FALSE" ];then # data
-	SOURCEDIR=/alice/data/$YEAR/$PERIOD/000$run/$PASS$AOD/PWGGA/$TRAINDIR
-    else
-	SOURCEDIR=/alice/sim/$YEAR/$PERIOD/$run$AOD/PWGGA/$TRAINDIR
-    fi
-    if [ "$FILETYPE" == "G" ]; then
-	expr=$SOURCEDIR/[[:digit:]]*_[[:digit:]]*-[[:digit:]]*/GammaConvV1_[[:digit:]]*.root
-	echo "search "$SOURCEDIR;
-	alien_find $SOURCEDIR/*/ GammaConvV1_*.root | grep $expr
-    else
-	expr=$SOURCEDIR/[[:digit:]]*_[[:digit:]]*-[[:digit:]]*/AnalysisResults.root
-	echo "search "$SOURCEDIR;
-	alien_find $SOURCEDIR/*/ AnalysisResults.root | grep $expr
-    fi        
-done
-
-}
-
-#******* MAIN ROUTINE ***********************************************************************************************************************
-
-# ********************* automatic settings to according to second argument ***************************
-if [ $3 = "runwise" ]; then
-    echo "chose runwise download";
-elif [ $3 = "merge" ]; then
-    Merge
-    exit
-else
-    echo "third argument should be runwise or merge";
-fi
-
-    #******* SELECT TRAIN **********          if not $3 = merged!
-    echo "available data from ESDs: "
-    isAOD=FALSE
-    Show 
-    echo "available data from AODs: "
-    isAOD=TRUE
-    Show 
-    echo "which train do you want to use?";
-    read TRAIN
-    echo "chose train: "$TRAIN;
-
-    # defined: BASEDIR 
-    #          PERIOD YEAR isMC SYSTEM PASS RUN AODNO
-    #          TRAIN
-    # not usable: TRAINDIR SOURCEDIR AOD expr isAOD
-
-    # need automatic setting: $TRAIN -> isAOD 
-    echo "isAOD: TRUE or FALSE?"
-    read isAOD
-    echo "chose isAOD="$isAOD;
-
-
-    #**************** make settings according to data/MC and ESD/AOD ***************************************
-    if [ "$isMC" == "TRUE" ]; then
-	TYPE=sim
-	if [ "$isAOD" == "TRUE" ]; then
-	    #SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/$run/AOD$AODNO/PWGGA/GA_"$SYSTEM"_MC_AOD/$TRAIN    # MC AOD
-	    PREFIX=
-	    TRAINDIR=GA_"$SYSTEM"_MC_AOD
-	    AOD=AOD$AODNO
-	    PASS=
-	elif [ "$isAOD" == "FALSE" ]; then
-	    #SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/$run/PWGGA/GA_"$SYSTEM"_MC/$TRAIN                  # MC ESD
-	    PREFIX=
-	    TRAINDIR=GA_"$SYSTEM"_MC
-	    PASS=
-	    AOD=
-	else
-	    echo "isAOD must be TRUE or FALSE. Is "$isAOD;
-	fi
-    elif [ "$isMC" == "FALSE" ]; then   
-	TYPE=data
-	if [ "$isAOD" == "TRUE" ]; then
-	    #SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/000$run/$PASS/AOD$AODNO/PWGGA/GA_"$SYSTEM"_AOD/$TRAIN       # data AOD
-	    PREFIX=000
-	    TRAINDIR=GA_"$SYSTEM"_AOD
-	    AOD=AOD$AODNO
-	elif [ "$isAOD" == "FALSE" ]; then
-	    #SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/000$run/$PASS/PWGGA/GA_"$SYSTEM"/$TRAIN                     # data ESD
-	    PREFIX=000
-	    TRAINDIR=GA_"$SYSTEM"
-	    AOD=
-	else
-	    echo "isAOD must be TRUE or FALSE. Is "$isAOD;
-	fi
-    else
-	echo "isMC mus be TRUE or FALSE. Is "$isMC;
-    fi
-
-    # defined: BASEDIR 
-    #          PERIOD YEAR isMC SYSTEM PASS RUN AODNO
-    #          TRAIN isAOD TRAINDIR PREFIX AOD
-    # not usable: SOURCEDIR expr 
-
-    #check if there is already data for this period        if not $3 = merged!!
-    OldData
-
-    #***** RUNWISE ************* download runwise and ask afterwards for merging
-    # possible scenarios: no data / part of the data available already
-
-	declare -i i=0
-	declare -i j=0
-	for run in "${RUN[@]}"; do
-	    i=i+1
-	    echo "Run $i of ${#RUN[@]} ...";
-	    SOURCEDIR=/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AOD/PWGGA/$TRAINDIR/$TRAIN
-	    OUTPUTDIR=$BASEDIR/$SYSTEM/$PERIOD/$run/
-	    if [ $2 = "G" ]; then
-		alien_ls $SOURCEDIR/GammaConvV1_*.root > filesToCopy.txt
-	    else
-		alien_ls $SOURCEDIR/AnalysisRes*.root > filesToCopy.txt
-	    fi
-	    mkdir -p $OUTPUTDIR  # move below ?
-	    files=`cat filesToCopy.txt`
-	    if [ "$files" = "" ]; then
-		echo "no files found. Search for unmerged run files stage 1"
-		if [ $2 = "G" ]; then alien_find $SOURCEDIR/Stage_1/*/ GammaConvV1_*.root > UnMergedRunFilesToCopy.txt
-		else                  alien_find $SOURCEDIR/Stage_1/*/ AnalysisResults.root > UnMergedRunFilesToCopy.txt
-		fi
-		unmergedFiles=`cat UnMergedRunFilesToCopy.txt`
-		j=0
-		for fileToCopy in $unmergedFiles; do
-		    j=j+1
-		    if [[ $fileToCopy =~ ^[0-9]+$ ]]; then   # " x \n files \n found "
-			break
-		    fi
-		    if [ -d $OUTPUTDIR/$j ]; then
-			echo "already copied $OUTPUTDIR/$j ";
-		    else
-			mkdir -p $OUTPUTDIR/$j
-			echo "copy "   $fileToCopy " to " $OUTPUTDIR/$j;
-			alien_cp alien:$fileToCopy file:$OUTPUTDIR/$j
-			echo "copied"
-			if [ "$FILETYPE" == "G" ]; then
-			    Structure $OUTPUTDIR/$j
-			fi
-		    fi
-		    if [ $2 = "G" ]; then realpath $OUTPUTDIR/$j/GammaConvV1_*.root >> FilesToMerge.txt
-		    else                  realpath $OUTPUTDIR/$j/AnalysisResults.root >> FilesToMerge.txt
+		echo "   no merged file found"
+		for((i=5; i>=0; ((i=i-1)) )); do       # search first stage_5, last stage_1
+		    echo "   search Stage $i ..."
+		    if [ "$i" -eq 0 ]; then SOURCEDIR="/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AODNO/PWGGA/$TRAINDIR/$TRAIN/"
+		    else SOURCEDIR="/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AODNO/PWGGA/$TRAINDIR/$TRAIN/Stage_$i"; fi
+		    unmergedFolders=`alien_ls $SOURCEDIR`
+		    notFoundString="no such file or directory"
+		    if [[ $unmergedFolders = *$notFoundString* ]]; then
+			echo "   stage $i not found"
+		    else   # if stage_i folder exists, it does not mean that merging stage_i has completed !!!
+			echo "   folders found in stage $i "
+			for unmergedFolder in $unmergedFolders; do
+			    if [ "${unmergedFolder//[0-9]}" = "" ]; then #  consists only of digits. Can be also .xml file
+				echo "      download from $unmergedFolder ..."
+				if [ "$i" -eq 0 ]; then SOURCEDIR="/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AODNO/PWGGA/$TRAINDIR/$TRAIN/$unmergedFolder"
+				else SOURCEDIR="/alice/$TYPE/$YEAR/$PERIOD/$PREFIX$run/$PASS/$AODNO/PWGGA/$TRAINDIR/$TRAIN/Stage_$i/$unmergedFolder"; fi
+				echo "      source directory:    $SOURCEDIR"
+				fileName=`alien_ls $SOURCEDIR/$FILENAME`
+				if [ "$fileName" = "$FILENAME" ]; then
+				    echo "      unmerged file exists:$fileName"
+				    OUTPUTDIR=$BASEDIR/$SYSTEM/$PERIOD/$run/$unmergedFolder
+				    echo "      output directory:    $OUTPUTDIR"
+				    mkdir -p $OUTPUTDIR
+				    alien_cp alien:$SOURCEDIR/$fileName file:$OUTPUTDIR/
+				    if [ -f $OUTPUTDIR/$fileName ]; then  # only if file exists:
+					echo "      copied               $SOURCEDIR/$fileName "
+					echo "      to                   $OUTPUTDIR"
+					echo -n " $OUTPUTDIR/$fileName" >> UnmergedFilesToMerge.txt
+					l=l+1
+				    else
+					echo "      ERROR: copying failed"
+				    fi
+				else
+				    echo "      ERROR: found $fileName, not $FILENAME"
+				fi
+			    else
+				echo "      do not download from $unmergedFolder ..."
+			    fi
+			done
+			break   # download only the 'highest stage'
 		    fi
 		done
-		name=`ls $OUTPUTDIR/1`
-		if [ ! -f $OUTPUTDIR/$name ]; then  
-		    MergeList FilesToMerge.txt $OUTPUTDIR $name 
-		fi
-		rm FilesToMerge.txt
-		continue
-	    fi
-	    EXISTS=`ls $OUTPUTDIR`
-	    if [ "$EXISTS" != "" ] && [ "$answer" != "all" ] && [ "$answer" != "none" ]; then
-	        echo "files already exist for this run: "$EXISTS" download anyways? yes / all / no / none";  # !!! Diese Abfrage funktioniert noch nicht
-		read answer
-		if [ "$answer" != "yes" ] && [ "$answer" != "no" ] && [ "$answer" != "all" ] && [ "$answer" != "none" ]; then
-		    echo "no valid answer has been given";
-		    answer=no                                                                                 
-		fi
-	    fi
-	    for fileToCopy in $files; do
-		if [ -f $OUTPUTDIR/$fileToCopy ]; then
-		    echo "already copied $OUTPUTDIR/$fileToCopy ";
-		elif [ "$answer" == "no" ] || [ "$answer" == "none" ]; then
-		    echo "don't copy "$SOURCEDIR/$fileToCopy;
-		else
-		    alien_cp alien:$SOURCEDIR/$fileToCopy file:$OUTPUTDIR/
-		    echo "copied " $SOURCEDIR/$fileToCopy " to " $OUTPUTDIR;
-		    if [ "$FILETYPE" == "G" ]; then
-			Structure $OUTPUTDIR
+		echo "downloaded $l unmerged file(s) for run $run"
+		if [ "$l" -gt 1 ]; then
+		    echo "merge $l files for run $run ..."
+		    MergeList "UnmergedFilesToMerge.txt" $BASEDIR/$SYSTEM/$PERIOD/$run $fileName 
+		    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName ]; then  # only if ile exists
+			echo -n " $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName" >> FilesToMerge.txt
+			k=k+1
+			echo $run >> MergedRuns.txt
+			if [ "$doChStr" -eq 1 ]; then
+			    ChangeStructure "$BASEDIR/$SYSTEM/$PERIOD/$run/$fileName"
+			fi
+		    else
+			echo "ERROR: merging failed"
 		    fi
+		elif [ "$l" -eq 1 ]; then
+		    echo "Only one file, nothing to merge"
+		    singleFile=`cat UnmergedFilesToMerge.txt`
+		    mv $singleFile $BASEDIR/$SYSTEM/$PERIOD/$run/
+		    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName ]; then  # only if ile exists
+			echo "moved $singleFile "
+			echo "to    $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName"
+			echo -n " $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName" >> FilesToMerge.txt
+			k=k+1
+			echo $run >> MergedRuns.txt
+			if [ "$doChStr" -eq 1 ]; then
+			    ChangeStructure "$BASEDIR/$SYSTEM/$PERIOD/$run/$fileName"
+			fi
+		    fi
+		else
+		    echo "nothing to merge"
 		fi
-	    done  
-	done
-	WriteInfo
-	if [ $2 = "G" ]; then
-	    echo "Do you want to merge the given run list? yes / no";
-	    read answerMerge
-	    if [ "$answerMerge" != "yes" ] && [ "$answerMerge" != "no" ]; then
-		echo "no valid answer has been given. Will assume no.";
-		answerMerge=no;
 	    fi
-	    if [ "$answerMerge" == "yes" ]; then 
-		Merge
+	    
+	done # end runs loop
+	
+	
+	echo "**********************************************************************************************************"
+	echo "**********************************************************************************************************"
+	echo "downloaded $k of ${#RUN[@]} files $FILENAME"
+	
+	if [ "$doMerge" -eq 1 ]; then
+	    if [ "$k" -gt 1 ]; then
+		echo "merge files from $k runs..."
+		MergeList "FilesToMerge.txt" $BASEDIR/$SYSTEM/$PERIOD $fileName	
+		textFileName="mergedRuns_$fileName.txt"
+		mv MergedRuns.txt $BASEDIR/$SYSTEM/$PERIOD/$textFileName
+		echo "moved MergedRuns.txt to $BASEDIR/$SYSTEM/$PERIOD/$textFileName";
+	    elif [ "$k" -eq 1 ]; then
+		    echo "Only one file, nothing to merge"
+		    singleFile=`cat FilesToMerge.txt`
+		    mv $singleFile $BASEDIR/$SYSTEM/$PERIOD/$fileName
+		    echo "moved $singleFile "
+		    echo "to    $BASEDIR/$SYSTEM/$PERIOD/$fileName"
+		    textFileName="mergedRuns_$fileName.txt"
+		    mv MergedRuns.txt $BASEDIR/$SYSTEM/$PERIOD/$textFileName
+		    echo "moved MergedRuns.txt to $BASEDIR/$SYSTEM/$PERIOD/$textFileName";
+	    else
+		echo "nothing to merge"
+	    fi
+	    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$fileName ]; then
+		echo "OK; merged file exists"
+	    else
+		echo "ERROR: no merged file"
 	    fi
 	fi
 	
-# remove help files
-if [ -f fileData.txt ]; then rm fileData.txt; fi
-if [ -f filesToCopy.txt ]; then rm filesToCopy.txt; fi
-if [ -f UnMergedRunFilesToCopy.txt ]; then rm UnMergedRunFilesToCopy.txt; fi
-if [ -f FilesToMerge.txt ]; then rm FilesToMerge.txt; fi
+    done # end filenames loop
+    
+    echo "**********************************************************************************************************"
+    echo "**********************************************************************************************************"
+    
+    # clean-up if necessary
+    if [ -f FilesToMerge.txt ]; then rm FilesToMerge.txt; fi
+    if [ -f UnmergedFilesToMerge.txt ]; then rm UnmergedFilesToMerge.txt; fi
+    if [ -f MergedRuns.txt ]; then rm MergedRuns.txt; fi
+}
+
+
+
+MainRoutine "PhotonQA" "ESD" "LHC15o" "337_20171030-1322" "data" "pass1"
+MainRoutine "PhotonQA" "ESD" "LHC15o" "338_20171030-1331" "data" "pass1_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC15o" "339_20171030-1322" "data" "pass3_lowIR_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1" "646_20171030-1323" "sim" "pass1"
+MainRoutine "PhotonQA" "ESD" "LHC16g1" "647_20171030-1324" "sim" "pass1_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1" "648_20171030-1324" "sim" "pass3_lowIR_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1a" "649_20171030-1326" "sim" "pass1"
+MainRoutine "PhotonQA" "ESD" "LHC16g1a" "650_20171030-1326" "sim" "pass1_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1a" "651_20171031-0950" "sim" "pass3_lowIR_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1b" "652_20171030-1328" "sim" "pass1"
+MainRoutine "PhotonQA" "ESD" "LHC16g1b" "653_20171030-1329" "sim" "pass1_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1b" "654_20171030-1605" "sim" "pass3_lowIR_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1c" "655_20171030-1329" "sim" "pass1"
+MainRoutine "PhotonQA" "ESD" "LHC16g1c" "656_20171030-1329" "sim" "pass1_pidfix" 
+MainRoutine "PhotonQA" "ESD" "LHC16g1c" "657_20171030-1532" "sim" "pass3_lowIR_pidfix" 
 
