@@ -58,16 +58,16 @@ function GetFileNumberListCalo()
 
 function SeparateCutsIfNeeded()
 {
-    if [ -f $1\_A.root ]; then
+    if [ -f $1\_A.root ] || [ -f $1\_AWOTree.root ] ; then
         echo "separated file $1.root already"
         if [ $CLEANUP == 1 ]; then
             echo "removing $1.root as already separated"
             rm $1.root
         fi
     else
-        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,$2\,kTRUE\)
+        root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,$2\,kTRUE\,$3\)
         if [ $CLEANUP == 1 ]; then
-            if [ -f $1\_A.root ]; then
+            if [ -f $1\_A.root ] || [ -f $1\_AWOTree.root ] ; then
                 echo "removing $1.root after successful separation"
                 rm $1.root
             fi
@@ -92,6 +92,7 @@ function CopyFileIfNonExisitent()
             echo "********** log output ***********"
             cat locallog.txt
             dirNumbers=`cat locallog.txt`
+            firstDir=`head -n1 locallog.txt`
             for dirName in $dirNumbers; do
                 mkdir -p $1/Stage1/$dirName
                 if [ -f $1/Stage1/$dirName/root_archive.zip ] && [ -s $1/Stage1/$dirName/root_archive.zip ]; then
@@ -103,7 +104,7 @@ function CopyFileIfNonExisitent()
             done
             rm locallog.txt
             BASEDIR=$PWD
-            cd $1/Stage1/001/
+            cd $1/Stage1/$firstDir/
             ls G*.root > $BASEDIR/locallog.txt
             cd -
             echo "********** log output 2 for merging***********"
@@ -126,21 +127,21 @@ function CopyFileIfNonExisitent()
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             echo $fileNumber
-            SeparateCutsIfNeeded $1/GammaConvV1_$fileNumber 0
+            SeparateCutsIfNeeded $1/GammaConvV1_$fileNumber 0 $5
         done;
         rm fileNumbers2.txt
         GetFileNumberListPCMCalo $1 $3 fileNumbers2.txt
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             echo $fileNumber
-            SeparateCutsIfNeeded $1/GammaConvCalo_$fileNumber 2
+            SeparateCutsIfNeeded $1/GammaConvCalo_$fileNumber 2 $5
         done;
         rm fileNumbers2.txt
         GetFileNumberListCalo $1 $3 fileNumbers2.txt
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             echo $fileNumber
-            SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4
+            SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
         done;
         rm fileNumbers2.txt
     fi
@@ -208,7 +209,7 @@ function ChangeStructureIfNeededCalo()
             number=$number1\_$number2
         fi
         echo $number
-        cp $2/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_$4\_$number.root
+        cp $2/GammaCalo$5_$number.root $OUTPUTDIR/GammaCalo_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ]; then
             echo "nothing to be done";
         else
@@ -263,17 +264,22 @@ function MergeAccordingToSpecificRunlist()
         echo $fileName
         GetFileNumberMerging2 $fileName $3
         echo $number
-        TOMERGE="";
-        runs=`cat $6`
-        for run in $runs; do
-            nameCurrFile=`echo $2/$run/$4\_$number.root`
-            if [ -f $nameCurrFile ]; then
-                TOMERGE="$TOMERGE $nameCurrFile"
-            else
-                echo "I couldn't find the file for bin $run, $nameCurrFile";
-            fi
-        done
-        hadd -f $2/$4-$5_$number.root $TOMERGE
+        if [[ $number == *"WTree"* ]]; then
+            echo "won't merge these";
+        else
+            TOMERGE="";
+            runs=`cat $6`
+            for run in $runs; do
+                nameCurrFile=`echo $2/$run/$4\_$number.root`
+                if [ -f $nameCurrFile ]; then
+                    TOMERGE="$TOMERGE $nameCurrFile"
+                else
+                    echo "I couldn't find the file for bin $run, $nameCurrFile";
+                fi
+            done
+            hadd -f $2/$4-$5_$number.root $TOMERGE
+        fi
+
     done;
     echo "done" > $2/mergedAll$4.txt
 }

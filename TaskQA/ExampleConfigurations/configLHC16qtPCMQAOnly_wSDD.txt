@@ -1,0 +1,12 @@
+#example config LHC16qt -   PCMEMC
+select  LHC16qt
+mode    2
+nSets   3
+cutNr   0
+labelData   Data
+energy  pPb_5.023TeV
+pathDataSets    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_LHC16qt_wSDD-pass1-DPGTrackAndCalo_201.root /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_MC_LHC17f2b_wSDD-DPGTrackAndCalo_201.root  /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_MC_LHC17f2a_fix_wSDD-DPGTrackAndCalo_201.root  STOP
+pathPhotonQA    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/PhotonQA_LHC16qt-pass1_wSDD_DPGTrackAndCalo.root /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/LHC17f2b_wSDD/PhotonQA_LHC17f2b_wSDD_AnchoredLHC16q_DPGTrackAndCalo.root /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/LHC17f2a_fix_wSDD/PhotonQA_LHC17f2a_fix_wSDD_AnchoredLHC16qt_DPGTrackAndCalo.root STOP
+DataSetNames    LHC16qt_wSDD   LHC17f2b_wSDD  LHC17f2a_fix_wSDD  STOP
+DataSetNamesPlot    LHC16qt DPMJet EPOS    STOP
+addPhotonCutNr   0005314140

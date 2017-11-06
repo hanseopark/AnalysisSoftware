@@ -1,0 +1,11 @@
+#example config LHC16qt -   PCMPHOS
+select  LHC16qt
+mode    3
+nSets   4
+cutNr   0
+labelData   Data
+energy  pPb_5.023TeV
+pathDataSets    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_LHC16q_wSDD-pass1-DPGTrack_341.root   /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_LHC16t_wSDD-pass1-DPGTrack_341.root /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_MC_LHC17f2b_wSDD-DPGTrack_341.root  /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/GammaConvCalo_MC_LHC17f2a_fix_wSDD-DPGTrack_341.root  STOP
+DataSetNames    LHC16q_wSDD    LHC16t_wSDD  LHC17f2b_wSDD  LHC17f2a_fix_wSDD  STOP
+DataSetNamesPlot    LHC16q  LHC16t DPMJet EPOS    STOP
+addPhotonCutNr   0005314140

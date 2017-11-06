@@ -990,6 +990,33 @@ function GiveBinningHI5020GeV()
     BinsPtGamma=$BinsPtPi0
 }
 
+function GiveBinningXeXe5440GeV()
+{
+    if [ $DoPi0 -eq 1 ] ; then
+        echo "How many p_T bins do you want to use for Pi0? up to 24";
+        read answer
+        if [ "$answer" -le "24" ]; then
+            correctPi0=1
+            BinsPtPi0=$answer
+        else
+            echo "Pi0 Binning was not set correctly. Please try again.";
+            correctPi0=0
+        fi
+    fi
+    if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
+        echo "How many p_T bins do you want to use for Eta? up to 9";
+        read answer
+        if [ "$answer" -le "9" ]; then
+            correctEta=1
+            BinsPtEta=$answer
+        else
+            echo "Pi0 Binning was not set correctly. Please try again.";
+            correctEta=0
+        fi
+    fi
+    BinsPtGamma=$BinsPtPi0
+}
+
 
 function GiveBinningpPb()
 {
@@ -2007,9 +2034,18 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV), PbPb_5.02TeV (PbPb@5.02TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV),  PbPb_2.76TeV (PbPb@2.76TeV), PbPb_5.02TeV (PbPb@5.02TeV), XeXe_5.44TeV(XeXe@5.44TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
-    if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
+    if [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
+        energy="900GeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "2.76TeV" ] || [ $answer = "2" ] || [ $answer = "2.76" ]; then
+        energy="2.76TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "5TeV" ] || [ $answer = "5.02TeV" ] || [ $answer = "5" ] || [ $answer = "5.02" ]; then
+        energy="5TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
         ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "8TeV" ] || [ $answer = "8" ]; then
@@ -2021,21 +2057,14 @@ do
     elif [ $answer = "13TeVLowB" ]; then
         energy="13TeVLowB";
         ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
-    elif [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
-        energy="900GeV";
-        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
-    elif [ $answer = "2.76TeV" ] || [ $answer = "2" ] || [ $answer = "2.76" ]; then
-        energy="2.76TeV";
-        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "PbPb_2.76TeV" ] || [ $answer = "PbPb_2.76" ] || [ $answer = "PbPb2" ] || [ $answer = "Pb2" ]; then
         energy="PbPb_2.76TeV";
         ExtInputFile="";
-    elif [ $answer = "5TeV" ] || [ $answer = "5.02TeV" ] || [ $answer = "5" ] || [ $answer = "5.02" ]; then
-        energy="5TeV";
-        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
-
     elif [ $answer = "PbPb_5.02TeV" ] || [ $answer = "PbPb_5.02" ] || [ $answer = "PbPb5" ] || [ $answer = "Pb5" ]; then
         energy="PbPb_5.02TeV";
+        ExtInputFile="";
+    elif [ $answer = "XeXe_5.44TeV" ] || [ $answer = "XeXe_5.44" ] || [ $answer = "XeXe5" ] || [ $answer = "Xe5" ]; then
+        energy="XeXe_5.44TeV";
         ExtInputFile="";
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
@@ -2573,7 +2602,31 @@ do
                 fi
             fi
         fi
+   elif [ $energy = "XeXe_5.44TeV" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningXeXe5440GeV
+                correctPi0=1
+                correctEta=1
+            else
+                correctPi0=1
+                correctEta=1
+            fi
 
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+
+        if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                useTHnSparse=0
+            fi
+        fi
     fi
 done
 

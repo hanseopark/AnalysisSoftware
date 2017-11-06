@@ -1020,8 +1020,10 @@ void PhotonQA_Runwise(
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Drawing Histograms" << endl;
 
-    TCanvas* canvas = new TCanvas("canvas","",10,10,750,500);  // gives the page size
+    TCanvas* canvas2D = new TCanvas("canvas2D","",10,10,750*6,500*6);  // gives the page size
     Double_t leftMar = 0.09; Double_t rightMar = 0.025; Double_t topMargin = 0.04; Double_t bottomMargin = 0.09;
+    DrawGammaCanvasSettings(canvas2D, leftMar, rightMar, topMargin, bottomMargin);
+    TCanvas* canvas = new TCanvas("canvas","",10,10,750,500);  // gives the page size
     DrawGammaCanvasSettings(canvas, leftMar, rightMar, topMargin, bottomMargin);
 
     Float_t xPosLabel = 0.8;
@@ -1058,26 +1060,26 @@ void PhotonQA_Runwise(
                 }
             }
 
-            DrawVectorOverviewTH2D(canvas, vecInvMassR[i], "oInvMassR", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecInvMassR[i], "oInvMassR", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecEtaR[i], "oEtaR", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecEtaR[i], "oEtaR", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecPhiR[i], "oPhiR", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecPhiR[i], "oPhiR", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecAlphaR[i], "oAlphaR", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecAlphaR[i], "oAlphaR", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecPsiPairR[i], "oPsiPairR", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecPsiPairR[i], "oPsiPairR", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecAsymR[i], "oAsymR", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecAsymR[i], "oAsymR", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
 
-            DrawVectorOverviewTH2D(canvas, vecNSdEdx[i][0], "oNSdEdx_Electron", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecNSdEdx[i][0], "oNSdEdx_Electron", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecNSdEdx[i][1], "oNSdEdx_Positron", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecNSdEdx[i][1], "oNSdEdx_Positron", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecTPCClusR[i][0], "oTPCClusR_Electron", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecTPCClusR[i][0], "oTPCClusR_Electron", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
-            DrawVectorOverviewTH2D(canvas, vecTPCClusR[i][1], "oTPCClusR_Positron", outputDirDataSet, suffix,
+            DrawVectorOverviewTH2D(canvas2D, vecTPCClusR[i][1], "oTPCClusR_Positron", outputDirDataSet, "jpg",
                                         0.13, 0.15, 0.1, 0.1, 0.6, 0.8, 0.12, 0.93, 0x0, kFALSE, kFALSE);
 
         //--------
