@@ -4825,7 +4825,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
 
     fIntLinearBck = 0;
     fIntLinearBckError = 0;
-    if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("PROBLEMS") == 0){
+    if(TString(gMinuit->fCstatu.Data()).Contains("CONVERGED") == 1 || TString(gMinuit->fCstatu.Data()).Contains("SUCCESSFUL") == 1 || TString(gMinuit->fCstatu.Data()).Contains("PROBLEMS") == 1){
         binCenterStart = fHistoSignalInvMassPtGConvBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
         startBinEdge = fHistoSignalInvMassPtGConvBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoSignalInvMassPtGConvBinSingle->GetBinWidth(10);
         binCenterEnd = fHistoSignalInvMassPtGConvBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);

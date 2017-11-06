@@ -1389,6 +1389,8 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 }
 
             }
+            }
+
 
             fFileDataLog << "Residual Background leftover " << nameIntRange[k].Data() << " in iPt " << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << ":\t"
                                 << fMesonYieldsResidualBckFunc[k][iPt] << "\t +- \t" << fMesonYieldsResidualBckFuncError[k][iPt] << endl<< endl;
@@ -1418,6 +1420,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
                 fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] +
                                                                         fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
+//                cout << "**********************************************" << endl;
+//                cout << "fMesonYieldsCorResidualBckFuncError[k][iPt] = " << fMesonYieldsCorResidualBckFuncError[k][iPt] << endl;
+//                cout << "fMesonYieldsError[k][iPt] = " << fMesonYieldsError[k][iPt]<< endl;
+//                cout << "fMesonYieldsResidualBckFuncError[k][iPt] = " << fMesonYieldsResidualBckFuncError[k][iPt]<< endl;
+//                cout << "**********************************************" << endl;
+
                 fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
                 fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
                 // Calculation for InvMass pi0 subtracted
@@ -1427,6 +1435,8 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fMesonYieldsPerEvent_SubPiZero[k][iPt]                    = fMesonYieldsCorResidualBckFunc_SubPiZero[k][iPt]/fNEvents;
                 fMesonYieldsPerEventError_SubPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncError_SubPiZero[k][iPt]/fNEvents;
 
+                fMesonYieldsPerEventBackFit[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit[k][iPt]/fNEvents;
+                fMesonYieldsPerEventBackFitError[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError[k][iPt]/fNEvents;
                 // Calculation for InvMass pz of pi0 fixes
                 fMesonYieldsCorResidualBckFunc_FixedPzPiZero[k][iPt]          = fMesonYields_FixedPzPiZero[k][iPt]- fMesonYieldsResidualBckFunc_FixedPzPiZero[k][iPt];
                 fMesonYieldsCorResidualBckFuncError_FixedPzPiZero[k][iPt]     = pow(( fMesonYieldsError_FixedPzPiZero[k][iPt]*fMesonYieldsError_FixedPzPiZero[k][iPt] +
@@ -1438,8 +1448,6 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fMesonYieldsCorResidualBckFuncBackFitError[k][iPt]     =
                         pow((fMesonYieldsBackFitError[k][iPt]*fMesonYieldsBackFitError[k][iPt]+
                              fMesonYieldsResidualBckFuncBackFitError[iPt]*fMesonYieldsResidualBckFuncBackFitError[iPt]),0.5);
-                fMesonYieldsPerEventBackFit[k][iPt]                    = fMesonYieldsCorResidualBckFuncBackFit[k][iPt]/fNEvents;
-                fMesonYieldsPerEventBackFitError[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError[k][iPt]/fNEvents;
 
                 // Calculation for InvMass pi0 subtracted
                 fMesonYieldsCorResidualBckFuncBackFit_SubPiZero[k][iPt]          = fMesonYieldsBackFit_SubPiZero[k][iPt]- fMesonYieldsResidualBckFuncBackFit_SubPiZero[iPt];
@@ -1458,7 +1466,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fMesonYieldsPerEventBackFitError_FixedPzPiZero[k][iPt]               = fMesonYieldsCorResidualBckFuncBackFitError_FixedPzPiZero[k][iPt]/fNEvents;
 
             }
-      }
+
 
             // TODO: Why is this not done for normal integration range? -> because case 0 was already done before?
             if (k > 0){
@@ -3542,6 +3550,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     fFitReco->FixParameter(4,fFitLinearBckExcl->GetParameter(0));
     fFitReco->FixParameter(5,fFitLinearBckExcl->GetParameter(1));
 
+//    cout << "*****************fFitLinearBckExcl->GetParError(0) = " << fFitLinearBckExcl->GetParError(0) << endl;
+//    cout << "*****************fFitLinearBckExcl->GetParError(1) = " << fFitLinearBckExcl->GetParError(1) << endl;
+
+
     // Even though parameter is fixed, assign error from linear fit (TODO: Check if this is allowed, because not the same fitting range is used)
     fFitReco->SetParError(4,fFitLinearBckExcl->GetParError(0));
     fFitReco->SetParError(5,fFitLinearBckExcl->GetParError(1));
@@ -3611,7 +3623,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
 
     fIntLinearBck = 0;
     fIntLinearBckError = 0;
-    if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("PROBLEMS") == 0){
+    if(TString(gMinuit->fCstatu.Data()).Contains("CONVERGED") == 1 || TString(gMinuit->fCstatu.Data()).Contains("SUCCESSFUL") == 1 || TString(gMinuit->fCstatu.Data()).Contains("PROBLEMS") == 1){
         binCenterStart = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
         startBinEdge = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         binCenterEnd = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
@@ -3623,12 +3635,17 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         Float_t intLinearBack = fFitLinearBck->GetParameter(0)*(endBinEdge-startBinEdge)+
             0.5*fFitLinearBck->GetParameter(1)*(endBinEdge*endBinEdge-startBinEdge*startBinEdge);
 
-        Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitReco->GetParError(4),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitReco->GetParError(5),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+//        cout << "*****************fFitReco->GetParError(4) = " << fFitReco->GetParError(4) << endl;
+//        cout << "*****************fFitReco->GetParError(5) = " << fFitReco->GetParError(5) << endl;
+//        cout << "*****************covMatrix[nFreePar*nFreePar-2]" << covMatrix[nFreePar*nFreePar-2] << endl;
 
-        /*fFileDataLog << "Parameter for bin " << ptBin << endl;
+        // Take Error from Linear back function
+        Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitLinearBckExcl->GetParError(0),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitLinearBckExcl->GetParError(1),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
+        //Float_t errorLinearBck = 0.;
+        fFileDataLog << "Parameter for bin " << ptBin << endl;
         fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
         fFileDataLog << "Linear: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< endl;
-         */
+
         fIntLinearBck = intLinearBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         fIntLinearBckError = errorLinearBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
     } else {
