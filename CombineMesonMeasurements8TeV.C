@@ -5672,7 +5672,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DXSectionWithEtaAndPi0          = new TH2F("histo2DXSectionWithEtaAndPi0","histo2DXSectionWithEtaAndPi0",11000,0.23,50.,1000,6e-2,9e11);
     SetStyleHistoTH2ForGraphs(histo2DXSectionWithEtaAndPi0, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.45);
     histo2DXSectionWithEtaAndPi0->GetXaxis()->SetMoreLogLabels();
-    histo2DXSectionWithEtaAndPi0->GetXaxis()->SetLabelOffset(-0.01);
+    histo2DXSectionWithEtaAndPi0->GetXaxis()->SetNoExponent();
     histo2DXSectionWithEtaAndPi0->Draw("copy");
 
         // scale eta graphs
