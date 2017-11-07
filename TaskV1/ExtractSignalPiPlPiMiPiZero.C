@@ -873,6 +873,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
               fMesonCurIntRange_FixedPzPiZero[2][1]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRangeNarrow[1];
             }
         } else {
+
             fMesonMass[iPt]                 = fMesonMassExpect;
             fMesonMassError[iPt]            = 0.;
             fMesonCurIntRange[0][0]         = fMesonMassExpect + fMesonIntDeltaRange[0];
@@ -910,12 +911,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             //fMesonCurIntRangeBackFit[0]     = fMesonIntRange[0] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
             //fMesonCurIntRangeBackFit[1]     = fMesonIntRange[1] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
 
-            fMesonCurIntRangeBackFit[0][0]         = fMesonMass[iPt] + fMesonIntDeltaRange[0];
-            fMesonCurIntRangeBackFit[1][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[0];
-            fMesonCurIntRangeBackFit[2][0]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[0];
-            fMesonCurIntRangeBackFit[0][1]         = fMesonMass[iPt] + fMesonIntDeltaRange[1];
-            fMesonCurIntRangeBackFit[1][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeWide[1];
-            fMesonCurIntRangeBackFit[2][1]         = fMesonMass[iPt] + fMesonIntDeltaRangeNarrow[1];
+            fMesonCurIntRangeBackFit[0][0]         = fMesonMassBackFit[iPt] + fMesonIntDeltaRange[0];
+            fMesonCurIntRangeBackFit[1][0]         = fMesonMassBackFit[iPt] + fMesonIntDeltaRangeWide[0];
+            fMesonCurIntRangeBackFit[2][0]         = fMesonMassBackFit[iPt] + fMesonIntDeltaRangeNarrow[0];
+            fMesonCurIntRangeBackFit[0][1]         = fMesonMassBackFit[iPt] + fMesonIntDeltaRange[1];
+            fMesonCurIntRangeBackFit[1][1]         = fMesonMassBackFit[iPt] + fMesonIntDeltaRangeWide[1];
+            fMesonCurIntRangeBackFit[2][1]         = fMesonMassBackFit[iPt] + fMesonIntDeltaRangeNarrow[1];
 
             if(fFitSignalInvMassBackFitPtBin_SubPiZero !=0x00){
               fMesonMassBackFit_SubPiZero[iPt]          = fFitSignalInvMassBackFitPtBin_SubPiZero[iPt]->GetParameter(1);
@@ -924,12 +925,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
               fMesonWidthBackFitError_SubPiZero[iPt]    = fFitSignalInvMassBackFitPtBin_SubPiZero[iPt]->GetParError(2);
               //fMesonCurIntRangeBackFit[0]     = fMesonIntRange[0] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
               //fMesonCurIntRangeBackFit[1]     = fMesonIntRange[1] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
-              fMesonCurIntRangeBackFit_SubPiZero[0][0]         = fMesonMass_SubPiZero[iPt] + fMesonIntDeltaRange[0];
-              fMesonCurIntRangeBackFit_SubPiZero[1][0]         = fMesonMass_SubPiZero[iPt] + fMesonIntDeltaRangeWide[0];
-              fMesonCurIntRangeBackFit_SubPiZero[2][0]         = fMesonMass_SubPiZero[iPt] + fMesonIntDeltaRangeNarrow[0];
-              fMesonCurIntRangeBackFit_SubPiZero[0][1]         = fMesonMass_SubPiZero[iPt] + fMesonIntDeltaRange[1];
-              fMesonCurIntRangeBackFit_SubPiZero[1][1]         = fMesonMass_SubPiZero[iPt] + fMesonIntDeltaRangeWide[1];
-              fMesonCurIntRangeBackFit_SubPiZero[2][1]         = fMesonMass_SubPiZero[iPt] + fMesonIntDeltaRangeNarrow[1];
+              fMesonCurIntRangeBackFit_SubPiZero[0][0]         = fMesonMassBackFit_SubPiZero[iPt] + fMesonIntDeltaRange[0];
+              fMesonCurIntRangeBackFit_SubPiZero[1][0]         = fMesonMassBackFit_SubPiZero[iPt] + fMesonIntDeltaRangeWide[0];
+              fMesonCurIntRangeBackFit_SubPiZero[2][0]         = fMesonMassBackFit_SubPiZero[iPt] + fMesonIntDeltaRangeNarrow[0];
+              fMesonCurIntRangeBackFit_SubPiZero[0][1]         = fMesonMassBackFit_SubPiZero[iPt] + fMesonIntDeltaRange[1];
+              fMesonCurIntRangeBackFit_SubPiZero[1][1]         = fMesonMassBackFit_SubPiZero[iPt] + fMesonIntDeltaRangeWide[1];
+              fMesonCurIntRangeBackFit_SubPiZero[2][1]         = fMesonMassBackFit_SubPiZero[iPt] + fMesonIntDeltaRangeNarrow[1];
             }
 
             if(fFitSignalInvMassBackFitPtBin_FixedPzPiZero !=0x00){
@@ -939,12 +940,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
               fMesonWidthBackFitError_FixedPzPiZero[iPt]    = fFitSignalInvMassBackFitPtBin_FixedPzPiZero[iPt]->GetParError(2);
               //fMesonCurIntRangeBackFit[0]     = fMesonIntRange[0] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
               //fMesonCurIntRangeBackFit[1]     = fMesonIntRange[1] - (fMesonMassExpect-fMesonMassBackFit[iPt]);
-              fMesonCurIntRangeBackFit_FixedPzPiZero[0][0]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRange[0];
-              fMesonCurIntRangeBackFit_FixedPzPiZero[1][0]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRangeWide[0];
-              fMesonCurIntRangeBackFit_FixedPzPiZero[2][0]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRangeNarrow[0];
-              fMesonCurIntRangeBackFit_FixedPzPiZero[0][1]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRange[1];
-              fMesonCurIntRangeBackFit_FixedPzPiZero[1][1]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRangeWide[1];
-              fMesonCurIntRangeBackFit_FixedPzPiZero[2][1]         = fMesonMass_FixedPzPiZero[iPt] + fMesonIntDeltaRangeNarrow[1];
+              fMesonCurIntRangeBackFit_FixedPzPiZero[0][0]         = fMesonMassBackFit_FixedPzPiZero[iPt] + fMesonIntDeltaRange[0];
+              fMesonCurIntRangeBackFit_FixedPzPiZero[1][0]         = fMesonMassBackFit_FixedPzPiZero[iPt] + fMesonIntDeltaRangeWide[0];
+              fMesonCurIntRangeBackFit_FixedPzPiZero[2][0]         = fMesonMassBackFit_FixedPzPiZero[iPt] + fMesonIntDeltaRangeNarrow[0];
+              fMesonCurIntRangeBackFit_FixedPzPiZero[0][1]         = fMesonMassBackFit_FixedPzPiZero[iPt] + fMesonIntDeltaRange[1];
+              fMesonCurIntRangeBackFit_FixedPzPiZero[1][1]         = fMesonMassBackFit_FixedPzPiZero[iPt] + fMesonIntDeltaRangeWide[1];
+              fMesonCurIntRangeBackFit_FixedPzPiZero[2][1]         = fMesonMassBackFit_FixedPzPiZero[iPt] + fMesonIntDeltaRangeNarrow[1];
             }
         } else {
             fMesonMassBackFit[iPt]          = 0;
@@ -2403,7 +2404,7 @@ void ProcessBckFitSubtraction(TH1D *fGammaGamma, Int_t i, Double_t * fPeakRangeD
           fHistoBckFitConfidence[i] =  (TH1D*)fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i]->Clone(Form(" fHistoBckFitConfidence_%i",i));
       }
 
-      fHistoMappingGGInvMassBackFitPtBin[i] = (TH1D*) fGammaGamma->Clone(Form("GG_SubtractedSignal_%i",i));
+      fHistoMappingGGInvMassBackFitPtBin[i] = (TH1D*) fGammaGamma->Clone(Form("fHistoMappingGGInvMassBackFit_in_Pt_Bin%i",i));
       fHistoMappingGGInvMassBackFitPtBin[i]->Sumw2();
       fHistoMappingGGInvMassBackFitPtBin[i]->Add(fHistoMappingGGInvMassBackFitWithoutSignalPtBin[i],-1);
     }else if(InvMassType==1){

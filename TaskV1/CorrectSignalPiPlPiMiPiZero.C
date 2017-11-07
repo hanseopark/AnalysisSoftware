@@ -57,7 +57,7 @@ void CorrectYield(TH1D* histoCorrectedYield,TH1D* histoEffiPt, TH1D* histoAccept
 	histoCorrectedYield->Sumw2();
 	histoCorrectedYield->Scale(1./nEvt);
     histoCorrectedYield->Divide(histoCorrectedYield,histoEffiPt,1.,1.,"");
-	histoCorrectedYield->Divide(histoCorrectedYield,histoAcceptance,1.,1.,"");
+    histoCorrectedYield->Divide(histoCorrectedYield,histoAcceptance,1.,1.,"");
 	histoCorrectedYield->Scale(1./deltaRapid);
 	histoCorrectedYield->Scale(scaling);
 	for (Int_t i = 1; i < histoCorrectedYield->GetNbinsX()+1 ; i++){
@@ -225,8 +225,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	Double_t scaling = 1./(2.*TMath::Pi());
 
     // Variable to quickly change which type of yield is used
-    TString InvMassTypeEnding = "_FixedPzPiZero";
-    //TString InvMassTypeEnding = "";
+    //TString InvMassTypeEnding = "_FixedPzPiZero";
+    TString InvMassTypeEnding = "";
 	
 	// File definitions
 	TFile fileUncorrected(fileNameUnCorrectedFile.Data());  
@@ -1224,6 +1224,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	TH1D *histoMCYieldMeson = (TH1D*)histoInputMesonPt->Clone();
 	histoMCYieldMeson->SetName("MCYield_Meson");
 	ScaleMCYield(histoMCYieldMeson,  deltaRapid,  scaling,  nEvtMC,  nameMeson ,optDalitz);
+
 	DrawAutoGammaMesonHistos(histoMCYieldMeson , 
 							"", "p_{T} (GeV/c)", "#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{p_{T}dp_{T}dy} (c/GeV)^{2}",
 							kFALSE, 3., 4e-10, kTRUE,
@@ -1319,7 +1320,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
     if (!optDalitz){
         CorrectYield(histoCorrectedYieldNorm, histoEffiPt, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson,optDecayChannel);
 
-        CorrectYield(histoCorrectedYieldTrue,histoTrueEffiPt, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson,optDecayChannel);
+        CorrectYield(histoCorrectedYieldTrue, histoTrueEffiPt, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson,optDecayChannel);
         CompileFullCorrectionFactor( histoCompleteCorr, histoAcceptance, deltaRapid);
     //       CorrectYield(histoCorrectedYieldNormBackFit, histoYieldSecMesonBackFit, histoYieldSecFromK0SMesonBackFit, histoEffiPtBackFit, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
     //       CorrectYield(histoCorrectedYieldTrueBackFit, histoYieldSecMesonBackFit, histoYieldSecFromK0SMesonBackFit, histoTrueEffiPt, histoAcceptance, deltaRapid, scaling, nEvt, nameMeson);
@@ -1389,7 +1390,6 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	DrawGammaSetMarker(histoCorrectedYieldTrueLeftWide, 24, 1., kBlue+2, kBlue+2);                               
 	histoCorrectedYieldTrueLeftWide->DrawCopy("e1,same");    
 	
-	cout << "here" << endl; 
 	TLegend* legendYield3 = new TLegend(0.15,0.03,0.66,0.19);
 	legendYield3->SetTextSize(0.02);       
 	legendYield3->SetFillColor(0);
@@ -1420,7 +1420,10 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	TH1D *RatioTrueMCInput = (TH1D*) histoCorrectedYieldTrue->Clone();   
 	RatioTrueMCInput->Divide(RatioTrueMCInput,histoMCYieldMeson,1.,1.,"");
 	TH1D *RatioNormal = (TH1D*) histoCorrectedYieldTrue->Clone();  
-	RatioNormal->Divide(RatioNormal,histoCorrectedYieldNorm,1.,1.,"");
+	RatioNormal->Divide(RatioNormal,histoCorrectedYieldNorm,1.,1.,"");    
+    TH1D *RatioNormalMCInput = (TH1D*) histoCorrectedYieldNorm->Clone();
+    RatioNormalMCInput->Divide(RatioNormalMCInput,histoMCYieldMeson,1.,1.,"");
+
 
 	RatioTrue->SetYTitle("#frac{standard}{modified}"); 
 	RatioTrue->GetYaxis()->SetRangeUser(0.8,1.23);
@@ -1471,19 +1474,19 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		padCorrectedYieldHistos->cd();
 		padCorrectedYieldHistos->SetLogy();    
 
-		DrawGammaSetMarker(histoCorrectedYieldTrue, 22, 1., kBlack, kBlack);                             
-		histoCorrectedYieldTrue->DrawCopy("e1");  
-		DrawGammaSetMarker(histoMCYieldMeson, 24, 1., kRed+2, kRed+2);                             
-		histoMCYieldMeson->DrawCopy("e1,same"); 
-		DrawGammaSetMarker(histoCorrectedYieldNorm, 24, 1., kGreen+2, kGreen+2);                               
-		histoCorrectedYieldNorm->DrawCopy("e1,same"); 
+        DrawGammaSetMarker(histoCorrectedYieldTrue, 22, 1., kBlack, kBlack);
+        histoCorrectedYieldTrue->DrawCopy("e1");
+        DrawGammaSetMarker(histoMCYieldMeson, 24, 1., kRed+2, kRed+2);
+        histoMCYieldMeson->DrawCopy("e1,same");
+        DrawGammaSetMarker(histoCorrectedYieldNorm, 24, 1., kGreen+2, kGreen+2);
+        histoCorrectedYieldNorm->DrawCopy("e1,same");
 		
 		TLegend* legendYield3 = new TLegend(0.15,0.03,0.66,0.19);
 		legendYield3->SetTextSize(0.02);       
 		legendYield3->SetFillColor(0);
-		legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff");
-		legendYield3->AddEntry(histoMCYieldMeson,"MC input");
-		legendYield3->AddEntry(histoCorrectedYieldNorm,"normal eff");
+        legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff (Ratio: normal / MC)");
+        legendYield3->AddEntry(histoMCYieldMeson,"MC input (Ratio: true / MC)");
+        legendYield3->AddEntry(histoCorrectedYieldNorm,"normal eff (Ratio: true / norm)");
 		legendYield3->Draw();
 
 		padCorrectedYieldRatios->cd();
@@ -1491,12 +1494,13 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		padCorrectedYieldRatios->SetTicky();
 		padCorrectedYieldRatios->SetLogy(0);
 		
-		DrawGammaSetMarker(RatioTrue, 22, 1., kBlack, kBlack);                               
-		RatioTrue->DrawCopy("p,e1");  
-		DrawGammaSetMarker(RatioTrueMCInput, 24, 1., kRed+2, kRed+2);                              
-		RatioTrueMCInput->DrawCopy("e1,same"); 
-		DrawGammaSetMarker(RatioNormal, 24, 1., kGreen+2, kGreen+2);                               
-		RatioNormal->DrawCopy("e1,same"); 
+        DrawGammaSetMarker(RatioNormalMCInput, 22, 1., kBlack, kBlack);
+        RatioNormalMCInput->DrawCopy("p,e1"); // normal/ MC
+        DrawGammaSetMarker(RatioNormal, 24, 1., kGreen+2, kGreen+2);
+        RatioNormal->DrawCopy("e1,same"); // True / Norm
+        DrawGammaSetMarker(RatioTrueMCInput, 24, 1., kRed+2, kRed+2);
+        RatioTrueMCInput->DrawCopy("e1,same"); // true/ mc
+
 
 		canvasCorrecftedYield->Update();
 		canvasCorrecftedYield->SaveAs(Form("%s/%s_%s_CorrectedYield_SanityCheck_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
