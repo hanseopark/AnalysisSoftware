@@ -1158,8 +1158,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     Double_t paramGraphoHag[5]                      = {82,-0.22,-0.01,0.57,6.28};
     TF1* fitHagGammaComb            = FitObject("oHag","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[2],
                                                      graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],paramGraphoHag,"QNRME+");
-    //TF1* fitHagGammaComb            = FitObject("oHag", "fitHagGammaComb8000","Gamma1", histoIncGammaStatErr[0], histoIncGammaStatErr[0]->GetXaxis()->GetBinLowEdge(1), histoIncGammaStatErr[0]->GetXaxis()->GetBinUpEdge(histoIncGammaStatErr[0]->GetNbinsX()), NULL,"QNRME+");
-    TString forOutput               = WriteParameterToFile(fitHagGammaComb);
+    Double_t paramTCM[5] = {graphCombIncGammaTot->GetY()[1],0.1,graphCombIncGammaTot->GetY()[4],0.6,3};
+    TF1* fitTCMGammaComb            = FitObject("tcm", "fitTCMGammaComb","Pi0", graphCombIncGammaTot, graphCombIncGammaTot->GetX()[0], graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()], paramTCM,"QNRME+");
+    TString forOutput               = WriteParameterToFile(fitTCMGammaComb);
     cout << forOutput.Data() << endl;
 
     TF1* fitTsallisGammaComb        = FitObject("l","fitTsallisGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
@@ -1245,20 +1246,20 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     TGraphAsymmErrors* graphRatioGammaIndCombFitSys[11]  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
     TGraphAsymmErrors* graphRatioGammaCombCombFitTot     = (TGraphAsymmErrors*)graphCombIncGammaTot->Clone();
-    graphRatioGammaCombCombFitTot                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitTot, fitHagGammaComb);
+    graphRatioGammaCombCombFitTot                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitTot, fitTCMGammaComb);
     TGraphAsymmErrors* graphRatioGammaCombCombFitStat    = (TGraphAsymmErrors*)graphCombIncGammaStat->Clone();
-    graphRatioGammaCombCombFitStat                       = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitStat, fitHagGammaComb);
+    graphRatioGammaCombCombFitStat                       = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitStat, fitTCMGammaComb);
     TGraphAsymmErrors* graphRatioGammaCombCombFitSys     = (TGraphAsymmErrors*)graphCombIncGammaSys->Clone();
-    graphRatioGammaCombCombFitSys                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitSys, fitHagGammaComb);
+    graphRatioGammaCombCombFitSys                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitSys, fitTCMGammaComb);
 
     for (Int_t i= 0; i< 11; i++){
         if (graphIndGammaIncStat[i]){
             graphRatioGammaIndCombFitStat[i]             = (TGraphAsymmErrors*)graphIndGammaIncStat[i]->Clone(Form("RatioGamma%sToCombFitStat", nameMeasGlobalLabel[i].Data()));
-            graphRatioGammaIndCombFitStat[i]             = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitStat[i], fitHagGammaComb);
+            graphRatioGammaIndCombFitStat[i]             = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitStat[i], fitTCMGammaComb);
         }
         if (graphIndGammaIncSys[i]){
             graphRatioGammaIndCombFitSys[i]              = (TGraphAsymmErrors*)graphIndGammaIncSys[i]->Clone(Form("RatioGamma%sToCombFitSyst", nameMeasGlobalLabel[i].Data()));
-            graphRatioGammaIndCombFitSys[i]              = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitSys[i], fitHagGammaComb);
+            graphRatioGammaIndCombFitSys[i]              = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitSys[i], fitTCMGammaComb);
         }
     }
 
@@ -2174,6 +2175,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         legendYieldIncGamma->AddEntry(graphCombIncGammaSys,"ALICE","pf");
         legendYieldIncGamma->Draw();
 
+        
         DrawGammaSetMarkerTF1( fitHagGammaComb, 7, 2, colorCombpp8TeV);
         legendYieldIncGamma->AddEntry(fitHagGammaComb,"mod. Hagedorn fit","l");
         fitHagGammaComb->SetRange(0.28, 20);
@@ -2182,6 +2184,10 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         legendYieldIncGamma->AddEntry(fitTsallisGammaComb,"Levy-Tsallis fit","l");
         fitTsallisGammaComb->SetRange(doubleRatioXpp[0], doubleRatioXpp[1]);
         fitTsallisGammaComb->Draw("same");
+        DrawGammaSetMarkerTF1( fitTCMGammaComb, 4, 2, kBlue+2);
+        legendYieldIncGamma->AddEntry(fitTCMGammaComb,"TCM fit","l");
+        fitTCMGammaComb->SetRange(0.28, 20);
+        fitTCMGammaComb->Draw("same");
 
         TLatex *labelEnergyInvYieldPaperAll = new TLatex(0.20, 0.20+0.04*3, collisionSystempp8TeV.Data());
         SetStyleTLatex( labelEnergyInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);

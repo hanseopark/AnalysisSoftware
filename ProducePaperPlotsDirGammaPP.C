@@ -61,10 +61,10 @@ void ProducePaperPlotsDirGammaPP(
     TString inputFileName2760PCM        = "CombinationInputGammaPP/InputPCMGammapp2760GeV.root",
     TString inputFileName2760EMC        = "CombinationInputGammaPP/InputEMCGammapp2760GeV.root",
     TString inputFileName2760PCMEMC     = "CombinationInputGammaPP/InputPCMEMCGammapp2760GeV.root",
-    TString inputFileName8000           = "CombinationInputGammaPP/CombinedGammaResultPP8000GeV_2017_10_03.root",
-    TString inputFileName8000PCM        = "CombinationInputGammaPP/InputPCMGammapp8000GeV.root",
-    TString inputFileName8000EMC        = "CombinationInputGammaPP/InputEMCGammapp8000GeV.root",
-    TString inputFileName8000PCMEMC     = "CombinationInputGammaPP/InputPCMEMCGammapp8000GeV.root",
+    TString inputFileName8000           = "CombinationInputGammaPP/CombinedGammaResultPP8TeV_2017_11_06.root",
+    TString inputFileName8000PCM        = "CombinationInputGammaPP/InputPCMGammapp8TeV.root",
+    TString inputFileName8000EMC        = "CombinationInputGammaPP/InputEMCGammapp8TeV.root",
+    TString inputFileName8000PCMEMC     = "CombinationInputGammaPP/InputPCMEMCGammapp8TeV.root",
     Bool_t plotEMC                      = kTRUE,
     Bool_t plotPCMEMC                   = kTRUE,
     TString suffix                      = "pdf"
@@ -110,6 +110,9 @@ void ProducePaperPlotsDirGammaPP(
                                                       "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
                                                       "PCMOtherDataset"};
   TString  nameMeasGlobalLabel[11]                = { "PCM", "PHOS", "EMC", "PCM-PHOS", "PCM-EMC",
+                                                      "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "mEMC",
+                                                      "PCMOtherDataset"};
+  TString  nameMeasGlobalLabelGamma[11]           = { "PCM", "PHOS", "EMC", "PCM-PHOS", "PCM*",
                                                       "PCM-Dalitz", "PHOS-Dalitz", "EMC-Dalitz", "EMC high pT", "mEMC",
                                                       "PCMOtherDataset"};
 
@@ -442,7 +445,7 @@ void ProducePaperPlotsDirGammaPP(
             
             TLegend* legendYieldIncGammaInd2760       = GetAndSetLegend2(0.20, 0.12, 0.5, 0.12+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel);
             // TLegend* legendYieldIncGammaInd8000       = GetAndSetLegend2(0.62, 0.83-(3*textSizeLabelsRel*0.85), 0.95, 0.83,textSizeLabelsPixel);
-            TLegend* legendYieldIncGammaInd8000       = GetAndSetLegend2(0.62, 0.83-(3*textSizeLabelsRel*0.85), 0.95, 0.83,textSizeLabelsPixel);
+            TLegend* legendYieldIncGammaInd8000       = GetAndSetLegend2(0.72, 0.83-(3*textSizeLabelsRel*0.85), 0.95, 0.83,textSizeLabelsPixel);
             for (Int_t i = 0; i < 2; i++){
               for (Int_t j = 0; j < 11; j++){
                 if(graphIncGammaSysErr[i][j]){
@@ -451,22 +454,22 @@ void ProducePaperPlotsDirGammaPP(
                   DrawGammaSetMarkerTGraphAsym(graphIncGammaStatErr[i][j],  markerStyleDet[i][j], markerSizeDet[j], colorDet[j] , colorDet[j]);
                   graphIncGammaStatErr[i][j]->Draw("Epsame,x0");
                   if(i==0)
-                    legendYieldIncGammaInd2760->AddEntry(graphIncGammaSysErr[i][j], Form("#gamma_{inc} %s", nameMeasGlobal[j].Data()),"pf");
+                    legendYieldIncGammaInd2760->AddEntry(graphIncGammaSysErr[i][j], Form("#gamma_{inc} %s", nameMeasGlobalLabelGamma[j].Data()),"pf");
                   else if(i==1)
-                    legendYieldIncGammaInd8000->AddEntry(graphIncGammaSysErr[i][j], Form("#gamma_{inc} %s", nameMeasGlobal[j].Data()),"pf");
+                    legendYieldIncGammaInd8000->AddEntry(graphIncGammaSysErr[i][j], Form("#gamma_{inc} %s", nameMeasGlobalLabelGamma[j].Data()),"pf");
                 }
               }
             }
             legendYieldIncGammaInd2760->Draw();
             legendYieldIncGammaInd8000->Draw();
             
-            TLatex *labelEnergyInvYieldPaperAll8000 = new TLatex(0.62, 0.92, "pp #sqrt{#it{s}} = 8 TeV");
+            TLatex *labelEnergyInvYieldPaperAll8000 = new TLatex(0.72, 0.92, "pp #sqrt{#it{s}} = 8 TeV");
             SetStyleTLatex( labelEnergyInvYieldPaperAll8000, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
             labelEnergyInvYieldPaperAll8000->Draw();
-            TLatex *labelALICEInvYieldPaperAll8000  = new TLatex(0.62,0.92-0.04,"ALICE");
+            TLatex *labelALICEInvYieldPaperAll8000  = new TLatex(0.72,0.92-0.04,"ALICE");
             SetStyleTLatex( labelALICEInvYieldPaperAll8000, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
             labelALICEInvYieldPaperAll8000->Draw();
-            TLatex *labelALICENormUnPaperAll8000    = new TLatex(0.62,0.92-0.07,"Norm. unc. 2.6%");
+            TLatex *labelALICENormUnPaperAll8000    = new TLatex(0.72,0.92-0.07,"Norm. unc. 2.6%");
             SetStyleTLatex( labelALICENormUnPaperAll8000, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
             labelALICENormUnPaperAll8000->Draw();
             
@@ -491,7 +494,7 @@ void ProducePaperPlotsDirGammaPP(
             DrawGammaSetMarkerTF1( fitHagGammaComb[0], 3, 2.5, kGray+3);
             DrawGammaSetMarkerTF1( fitHagGammaComb[1], 2, 2.5, kGray+1);
             fitHagGammaComb[0]->SetRange(0.38,10.5);
-            fitHagGammaComb[1]->SetRange(0.28,12.5);
+            fitHagGammaComb[1]->SetRange(0.28,16.5);
             TLegend* legendYieldIncGammaInd2760_comb       = GetAndSetLegend2(0.20, 0.11, 0.5, 0.12+(2*textSizeLabelsRel*0.85),textSizeLabelsPixel);
             TLegend* legendYieldIncGammaInd8000_comb       = GetAndSetLegend2(0.64, 0.86-(2*textSizeLabelsRel*0.85), 0.95, 0.87,textSizeLabelsPixel);
             for (Int_t i = 0; i < 2; i++){
@@ -837,16 +840,16 @@ canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp8TeV.pdf", outputDir.Data()
     Double_t lengthBox                          = 0.22;
     Double_t heightBox                          = 0.03/2;
     //****************** first Column **************************************************
-    TLatex *textPCMRatioGamma                 = new TLatex(columnsLegendGammaRatio[0],rowsLegendGammaRatio[1],nameMeasGlobalLabel[0]);
+    TLatex *textPCMRatioGamma                 = new TLatex(columnsLegendGammaRatio[0],rowsLegendGammaRatio[1],nameMeasGlobalLabelGamma[0]);
     SetStyleTLatex( textPCMRatioGamma, textSizeLabelsPixel,4, 1, 43);
     textPCMRatioGamma->Draw();
-    TLatex *textEMCALRatioGamma               = new TLatex(columnsLegendGammaRatio[0],rowsLegendGammaRatio[2],nameMeasGlobalLabel[2]);
+    TLatex *textEMCALRatioGamma               = new TLatex(columnsLegendGammaRatio[0],rowsLegendGammaRatio[2],nameMeasGlobalLabelGamma[2]);
     SetStyleTLatex( textEMCALRatioGamma, textSizeLabelsPixel,4, 1, 43);
     textEMCALRatioGamma->Draw();
-    // TLatex *textPCMEMCALRatioGamma            = new TLatex(columnsLegendGammaRatio[3],rowsLegendGammaRatio[1],nameMeasGlobalLabel[4]);
+    // TLatex *textPCMEMCALRatioGamma            = new TLatex(columnsLegendGammaRatio[3],rowsLegendGammaRatio[1],nameMeasGlobalLabelGamma[4]);
     // SetStyleTLatex( textPCMEMCALRatioGamma, textSizeLabelsPixel,4, 1, 43);
     // textPCMEMCALRatioGamma->Draw();
-    TLatex *textPCMEMCALRatioGamma            = new TLatex(columnsLegendGammaRatio[0],rowsLegendGammaRatio[3],nameMeasGlobalLabel[4]);
+    TLatex *textPCMEMCALRatioGamma            = new TLatex(columnsLegendGammaRatio[0],rowsLegendGammaRatio[3],nameMeasGlobalLabelGamma[4]);
     SetStyleTLatex( textPCMEMCALRatioGamma, textSizeLabelsPixel,4, 1, 43);
     textPCMEMCALRatioGamma->Draw();
 
