@@ -3183,7 +3183,7 @@
                                 mass                        = fMesonTrueMass[iPt];
 
                             // Use namePlot because not all names of histos areset correctly, but name for picture is
-                            if (namePlot.Contains("BackFit"))
+                            /*if (namePlot.Contains("BackFit"))
                                 mass                        = fMesonMassBackFit[iPt];
                             if (namePlot.Contains("SubPiZero")){
                                 if (namePlot.Contains("BackFit")){
@@ -3192,6 +3192,7 @@
                                     mass                        = fMesonMass[iPt]-0.134;
                                 }
                             }
+                            */
 
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
 

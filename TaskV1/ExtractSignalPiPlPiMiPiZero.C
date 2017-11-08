@@ -3636,10 +3636,6 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         Float_t intLinearBack = fFitLinearBck->GetParameter(0)*(endBinEdge-startBinEdge)+
             0.5*fFitLinearBck->GetParameter(1)*(endBinEdge*endBinEdge-startBinEdge*startBinEdge);
 
-//        cout << "*****************fFitReco->GetParError(4) = " << fFitReco->GetParError(4) << endl;
-//        cout << "*****************fFitReco->GetParError(5) = " << fFitReco->GetParError(5) << endl;
-//        cout << "*****************covMatrix[nFreePar*nFreePar-2]" << covMatrix[nFreePar*nFreePar-2] << endl;
-
         // Take Error from Linear back function
         Float_t errorLinearBck = pow((pow( (endBinEdge-startBinEdge)*fFitLinearBckExcl->GetParError(0),2)+pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fFitLinearBckExcl->GetParError(1),2)+2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5);
         //Float_t errorLinearBck = 0.;

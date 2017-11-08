@@ -347,7 +347,7 @@
 
     // Eta->pi+pi-pi0
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {4,4,4,4,4,4,4,4,4,4,4};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {3,3,3,3,3,3,3,3,3,3,4};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {4,4,4,4,4,4,4,4,6,6,6,6};
