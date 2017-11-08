@@ -519,6 +519,8 @@ fileNameEMCAL2="";
 
         TGraphAsymmErrors* graphEtaToPi02760GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice2760GeV");
         ProduceGraphAsymmWithoutXErrors(graphEtaToPi02760GeV);
+        TGraphAsymmErrors* graphEtaToPi08000GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice8TeV");
+        ProduceGraphAsymmWithoutXErrors(graphEtaToPi08000GeV);
 
         // *******************************************************************************************************
 
@@ -4114,11 +4116,12 @@ fileNameEMCAL2="";
         textsizeLabelsEtaToPi0*=0.9;
 
     TH2F * histo2DEtatoPi0combo;
-    histo2DEtatoPi0combo               = new TH2F("histo2DEtatoPi0combo","histo2DEtatoPi0combo",1000,minPtEta,maxPtEta,1000,-0.05,1.05    );
+    histo2DEtatoPi0combo               = new TH2F("histo2DEtatoPi0combo","histo2DEtatoPi0combo",1000,minPtEta,35.,1000,-0.05,1.05    );
     SetStyleHistoTH2ForGraphs(histo2DEtatoPi0combo, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}", 0.85*textsizeLabelsEtaToPi0, textsizeLabelsEtaToPi0,
                               0.85*textsizeLabelsEtaToPi0,1.1*textsizeLabelsEtaToPi0, 0.9, 0.65, 510, 510);
     histo2DEtatoPi0combo->GetXaxis()->SetMoreLogLabels();
     histo2DEtatoPi0combo->GetXaxis()->SetNoExponent();
+    histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(minPtEta,maxPtEta);
     histo2DEtatoPi0combo->GetYaxis()->SetRangeUser(-0.05,1.05);
     histo2DEtatoPi0combo->Draw("copy");
 
@@ -4156,6 +4159,7 @@ fileNameEMCAL2="";
     //*************************************************************************************************************
     //*************************************************************************************************************
 
+    histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(minPtEta,32.);
     histo2DEtatoPi0combo->Draw("copy");
 
     TLegend* legendXsectionPaperEtaToPi0     = GetAndSetLegend2(0.12, 0.8, 0.45, 0.96, 0.85*textSizeLabelsPixel);
@@ -4163,10 +4167,11 @@ fileNameEMCAL2="";
     legendXsectionPaperEtaToPi0->SetMargin(0.2);
     legendXsectionPaperEtaToPi0->AddEntry(graphCombPi0InvXSectionSys,"Data","pf");
     legendXsectionPaperEtaToPi0->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi0->AddEntry(graphEtaToPi08000GeV,"ALICE pp, #sqrt{#it{s}} = 8 TeV","p");
     legendXsectionPaperEtaToPi0->Draw();
 
-//    DrawGammaSetMarkerTGraphAsym(graphEtaToPi07000GeV, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[1] , colorDet[1], widthLinesBoxes, kTRUE);
-//    graphEtaToPi07000GeV->Draw("same,p");
+    DrawGammaSetMarkerTGraphAsym(graphEtaToPi08000GeV, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[1] , colorDet[1], widthLinesBoxes, kTRUE);
+    graphEtaToPi08000GeV->Draw("same,p");
     DrawGammaSetMarkerTGraphAsym(graphEtaToPi02760GeV, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[4] , colorDet[4], widthLinesBoxes, kTRUE);
     graphEtaToPi02760GeV->Draw("same,p");
 
@@ -4199,11 +4204,11 @@ fileNameEMCAL2="";
     histo2DEtatoPi0combo->Draw("copy");
 
     // eta/pi0 mt-scaled
-    TH1F *eta2pi0MtScaled = new TH1F("eta2pi0MtScaled","#eta/#pi^{0} from m_{T} scaling",5000,0.4,25.);
+    TH1F *eta2pi0MtScaled = new TH1F("eta2pi0MtScaled","#eta/#pi^{0} from m_{T} scaling",5000,0.4,32.);
     eta2pi0MtScaled->SetLineColor(kBlue+2);
     eta2pi0MtScaled->SetLineWidth(2.);
 
-    TH1F *eta2pi0MtScaledTCM = new TH1F("eta2pi0MtScaledTCM","#eta/#pi^{0} from m_{T} scaling",5000,0.4,25.);
+    TH1F *eta2pi0MtScaledTCM = new TH1F("eta2pi0MtScaledTCM","#eta/#pi^{0} from m_{T} scaling",5000,0.4,32.);
     eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
     eta2pi0MtScaledTCM->SetLineWidth(2.);
 
@@ -4253,9 +4258,12 @@ fileNameEMCAL2="";
     legendXsectionPaperEtaToPi03->SetMargin(0.15);
     legendXsectionPaperEtaToPi03->AddEntry(graphCombPi0InvXSectionSys,"ALICE pp, #sqrt{#it{s}} = 7 TeV","pf");
     legendXsectionPaperEtaToPi03->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03->AddEntry(graphEtaToPi08000GeV,"ALICE pp, #sqrt{#it{s}} = 8 TeV","p");
     legendXsectionPaperEtaToPi03->AddEntry(eta2pi0MtScaled,"ALICE pp m_{T}-scaled, #sqrt{#it{s}} = 7 TeV","l");
     legendXsectionPaperEtaToPi03->Draw();
 
+    DrawGammaSetMarkerTGraphAsym(graphEtaToPi08000GeV, markerStyleDet[4], markerSizeDet[4]*0.75, colorDet[1] , colorDet[1], widthLinesBoxes, kTRUE);
+    graphEtaToPi08000GeV->Draw("same,p");
     DrawGammaSetMarkerTGraphAsym(graphEtaToPi02760GeV, 30, 3., kBlue-6, kBlue-6, 2., kFALSE);
     graphEtaToPi02760GeV->Draw("same,p");
 
@@ -4284,9 +4292,11 @@ fileNameEMCAL2="";
     legendXsectionPaperEtaToPi03TCM->SetMargin(0.15);
     legendXsectionPaperEtaToPi03TCM->AddEntry(graphCombPi0InvXSectionSys,"ALICE pp, #sqrt{#it{s}} = 7 TeV","pf");
     legendXsectionPaperEtaToPi03TCM->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03TCM->AddEntry(graphEtaToPi08000GeV,"ALICE pp, #sqrt{#it{s}} = 8 TeV","p");
     legendXsectionPaperEtaToPi03TCM->AddEntry(eta2pi0MtScaledTCM,"ALICE pp m_{T}-scaled, #sqrt{#it{s}} = 7 TeV","l");
     legendXsectionPaperEtaToPi03TCM->Draw();
 
+    graphEtaToPi08000GeV->Draw("same,p");
     graphEtaToPi02760GeV->Draw("same,p");
 
     eta2pi0MtScaledTCM->Draw("][ c same");
@@ -4343,8 +4353,10 @@ fileNameEMCAL2="";
     legendXsectionPaperEtaToPi03n->SetMargin(0.15);
     legendXsectionPaperEtaToPi03n->AddEntry(graphCombPi0InvXSectionSys,"ALICE pp, #sqrt{#it{s}} = 7 TeV","pf");
     legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi02760GeV,"ALICE pp, #sqrt{#it{s}} = 2.76 TeV","p");
+    legendXsectionPaperEtaToPi03n->AddEntry(graphEtaToPi08000GeV,"ALICE pp, #sqrt{#it{s}} = 8 TeV","p");
     legendXsectionPaperEtaToPi03n->Draw();
 
+    graphEtaToPi08000GeV->Draw("same,p");
     graphEtaToPi02760GeV->Draw("same,p");
 
     // plotting data
@@ -4359,6 +4371,7 @@ fileNameEMCAL2="";
     //*************************************************************************************************************
     //*************************************************************************************************************
 
+    histo2DEtatoPi0combo->GetXaxis()->SetRangeUser(minPtEta,maxPtEta);
     histo2DEtatoPi0combo->Draw("copy");
 
     DrawGammaSetMarkerTGraphErr(graphPythia8EtaToPi0, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
