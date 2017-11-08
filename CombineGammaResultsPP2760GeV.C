@@ -56,7 +56,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                     Bool_t enablepValueCalc         = kFALSE,
                                     TString inputFileNameCocktail   = "",
                                     Bool_t isThesis                 = kFALSE,
-                                    Double_t confidenceLevelnSigma  = 1.28; //90% C.L.
+                                    Double_t confidenceLevelnSigma  = 1.28 //90% C.L.
                             ){
 
     //*******************************************************************************************************************************************

@@ -55,7 +55,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
                                     TString suffix                  = "pdf",
                                     TString fileNameCorrelations    = "",
                                     Bool_t enablepValueCalc         = kFALSE,
-                                    Double_t confidenceLevelnSigma  = 1.28; //90% C.L.
+                                    Double_t confidenceLevelnSigma  = 1.2 //90% C.L.
                             ){
 
     //*******************************************************************************************************************************************
