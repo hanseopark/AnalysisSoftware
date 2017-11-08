@@ -3587,6 +3587,28 @@
                 return kRed;
             } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
                 return kGreen+2;
+            } else if (generator.Contains("Phytia")) {
+                return kGreen+4;
+            } else if (generator.Contains("Phojet")) {
+                return kGreen+3;
+            } else if (generator.Contains("LHC16d")) {
+                return kGreen-2;
+            } else if (generator.Contains("LHC16g")) {
+                return kCyan+3;
+            } else if (generator.Contains("LHC16h")) {
+                return kBlack;
+            } else if (generator.Contains("LHC16i")) {
+                return 633;
+            } else if (generator.Contains("LHC16j")) {
+                return 807;
+            } else if (generator.Contains("LHC16k")) {
+                return 800;
+            } else if (generator.Contains("LHC16l")) {
+                return kGreen+4;
+            } else if (generator.Contains("LHC16o")) {
+                return 418;
+            } else if (generator.Contains("LHC16p")) {
+                return 435;
             } else {
                 return kRed;
             }
@@ -3833,7 +3855,7 @@
 
         if (!energy.CompareTo("13TeV")){
             if (!generator.CompareTo("")) {
-                return 7;
+                return 33;
             } else if (!generator.CompareTo("LHC15f") || !generator.CompareTo("LHC15f_ESD")) {
                 return 24;
             } else if (!generator.CompareTo("LHC15f_AOD")) {
@@ -3846,8 +3868,14 @@
                 return 31;
             } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
                 return 27;
+            } else if (generator.Contains("Phytia")) {
+                return 30;
+            } else if (generator.Contains("Phojet")) {
+                return 27;
+            } else if ((generator.Contains("LHC16d")) || (generator.Contains("LHC16g")) || (generator.Contains("LHC16h")) || (generator.Contains("LHC16i")) || (generator.Contains("LHC16j")) || (generator.Contains("LHC16k")) || (generator.Contains("LHC16l")) || (generator.Contains("LHC16o")) || (generator.Contains("LHC16p"))) {
+                return 29;
             } else {
-                return 2;
+                return 24;
             }
         }
 
@@ -4034,7 +4062,7 @@
         }
 
         if (!energy.CompareTo("13TeV")){
-                return 2.0;
+            return 2.2;
         }
 
         if (!energy.CompareTo("pPb_5.023TeV")){
