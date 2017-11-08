@@ -3006,7 +3006,8 @@
                                             Bool_t labelData             = kTRUE,
                                             TString fTextFit             = "Fit",
                                             TString fTextMGammaGamma     ="mixed evt. subtr. #it{M}_{#gamma#gamma}",
-                                            Bool_t isVsPtConv            = kFALSE
+                                            Bool_t isVsPtConv            = kFALSE,
+                                            Double_t* MassArray           = NULL
                                             ){
 
         TCanvas *canvasDataFit          = new TCanvas(nameCanvas.Data(),"",1400,900);  // gives the page size
@@ -3176,23 +3177,18 @@
                     if (fHistoMappingSignalInvMassPtBinPlot[iPt]!=0x00){
 
                             TString nameOfPlot = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetName();
-                            Double_t mass = fMesonMass[iPt];
-                            if (nameOfPlot.Contains("Left"))
-                                mass                        = fMesonMassLeft[iPt];
-                            if (nameOfPlot.Contains("True"))
-                                mass                        = fMesonTrueMass[iPt];
-
-                            // Use namePlot because not all names of histos areset correctly, but name for picture is
-                            /*if (namePlot.Contains("BackFit"))
-                                mass                        = fMesonMassBackFit[iPt];
-                            if (namePlot.Contains("SubPiZero")){
-                                if (namePlot.Contains("BackFit")){
-                                    mass                        = fMesonMassBackFit[iPt]-0.134;
-                                } else {
-                                    mass                        = fMesonMass[iPt]-0.134;
-                                }
+                            Double_t mass;
+                            if(MassArray == NULL){                             
+                                // no array was given by user
+                                mass = fMesonMass[iPt];
+                                if (nameOfPlot.Contains("Left"))
+                                    mass                        = fMesonMassLeft[iPt];
+                                if (nameOfPlot.Contains("True"))
+                                    mass                        = fMesonTrueMass[iPt];
+                            } else{
+                                // use array given by user
+                                mass = MassArray[iPt];
                             }
-                            */
 
                             Double_t intRangeLow            = mass + fMesonIntDeltaRange[0];
 
