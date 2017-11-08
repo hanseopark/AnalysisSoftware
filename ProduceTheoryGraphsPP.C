@@ -1305,11 +1305,11 @@ void ProduceTheoryGraphsPP(){
         graphNLOCalcInvSecEtaMuHalf900GeV->Write("graphNLOCalcInvSecEtaMuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuOne900GeV->Write("graphNLOCalcInvSecEtaMuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvSecEtaMuTwo900GeV->Write("graphNLOCalcInvSecEtaMuTwo900GeV", TObject::kOverwrite);
-        graphNLOCalcInvSecEta900GeV->Write("graphNLOCalcDSS07InvSecEta900GeV", TObject::kOverwrite);
+        graphNLOCalcInvSecEta900GeV->Write("graphNLOCalcAESSSInvSecEta900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuHalf900GeV->Write("graphNLOCalcInvYieldEtaMuHalf900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuOne900GeV->Write("graphNLOCalcInvYieldEtaMuOne900GeV", TObject::kOverwrite);
         graphNLOCalcInvYieldEtaMuTwo900GeV->Write("graphNLOCalcInvYieldEtaMuTwo900GeV", TObject::kOverwrite);
-        graphNLOCalcInvYieldEta900GeV->Write("graphNLOCalcDSS07InvYieldEta900GeV", TObject::kOverwrite);
+        graphNLOCalcInvYieldEta900GeV->Write("graphNLOCalcAESSSInvYieldEta900GeV", TObject::kOverwrite);
         // eta/pi0 Vogelsang PDF: CT10, FF eta- AESSS, FF pi0 - DSS07
         graphEtaToPi0NLOMuHalf900GeV->Write("graphNLOCalcEtaOverPi0MuHalf900GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne900GeV->Write("graphNLOCalcEtaOverPi0MuOne900GeV", TObject::kOverwrite);

@@ -495,8 +495,6 @@ fileNameEMCAL2="";
         histoPythia8InvXSection->GetXaxis()->SetRangeUser(minPtPi0,maxPtPi0);
         TH1F* histoPythia8InvXSectionEta                    = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta7TeV");
         histoPythia8InvXSectionEta->GetXaxis()->SetRangeUser(minPtEta,maxPtEta);
-        TH1F* histoPythia8InvXSectionChPion             = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoChPion7TeV");
-        histoPythia8InvXSectionChPion->GetXaxis()->SetRangeUser(minPtPi0,maxPtPi0);
         TGraphErrors* graphPythia8InvXSection               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi07TeV"));
         while(graphPythia8InvXSection->GetX()[0] < minPtPi0) graphPythia8InvXSection->RemovePoint(0);
         while(graphPythia8InvXSection->GetX()[graphPythia8InvXSection->GetN()-1] > 25.) graphPythia8InvXSection->RemovePoint(graphPythia8InvXSection->GetN()-1);
