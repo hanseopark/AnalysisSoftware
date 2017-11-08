@@ -948,6 +948,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	TLegend* legendFWHM = new TLegend(0.15,0.1,0.5,0.2);
 	legendFWHM->SetTextSize(0.02);         
 	legendFWHM->SetFillColor(0);
+    legendFWHM->SetBorderSize(0);
 	legendFWHM->AddEntry(histoFWHMMeson,"normal");
 	legendFWHM->AddEntry(histoFWHMMesonLeft,"left+right norm");
 
@@ -1177,6 +1178,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		TLegend* legendTrueEff = new TLegend(0.6,0.13,0.98,0.24);
 		legendTrueEff->SetTextSize(0.02);         
 		legendTrueEff->SetFillColor(0);
+        legendTrueEff->SetBorderSize(0);
 		legendTrueEff->AddEntry(histoTrueEffiPt,"true normal");
 		if (optionEnergy.CompareTo("PbPb_2.76TeV")==0 ) legendTrueEff->AddEntry(fitTrueEffi,"true fitted"); //|| optionEnergy.CompareTo("2.76TeV")==0 
 		legendTrueEff->AddEntry(histoTrueEffiWidePt,"true wide int");
@@ -1393,6 +1395,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	TLegend* legendYield3 = new TLegend(0.15,0.03,0.66,0.19);
 	legendYield3->SetTextSize(0.02);       
 	legendYield3->SetFillColor(0);
+    legendYield3->SetBorderSize(0);
 	legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff/right norm");
 	legendYield3->AddEntry(histoCorrectedYieldTrueWide,"corr true eff wide int /right norm");
 	legendYield3->AddEntry(histoCorrectedYieldTrueNarrow,"corr true eff narrow int /right norm");
@@ -1481,12 +1484,22 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoCorrectedYieldNorm, 24, 1., kGreen+2, kGreen+2);
         histoCorrectedYieldNorm->DrawCopy("e1,same");
 		
-		TLegend* legendYield3 = new TLegend(0.15,0.03,0.66,0.19);
-		legendYield3->SetTextSize(0.02);       
+        TLegend* legendYield3 = new TLegend(0.15,0.03,0.85,0.15);
+        legendYield3->SetTextSize(0.02);
+        legendYield3->SetBorderSize(0);
 		legendYield3->SetFillColor(0);
-        legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff (Ratio: normal / MC)");
-        legendYield3->AddEntry(histoMCYieldMeson,"MC input (Ratio: true / MC)");
-        legendYield3->AddEntry(histoCorrectedYieldNorm,"normal eff (Ratio: true / norm)");
+        legendYield3->SetNColumns(2);
+        legendYield3->AddEntry((TObject*)0,"Yields (top):","");
+        legendYield3->AddEntry((TObject*)0,"Ratios (bottom):","");
+        legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff");
+        legendYield3->AddEntry(RatioNormalMCInput,"corr normal eff / MC Input");
+
+        legendYield3->AddEntry(histoMCYieldMeson,"MC input ");
+        legendYield3->AddEntry(RatioNormal,"corr true eff / corr normal eff");
+
+        legendYield3->AddEntry(histoCorrectedYieldNorm,"normal eff ");
+        legendYield3->AddEntry(RatioTrueMCInput,"corr true eff / MC Input");
+
 		legendYield3->Draw();
 
 		padCorrectedYieldRatios->cd();
@@ -1495,6 +1508,16 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		padCorrectedYieldRatios->SetLogy(0);
 		
         DrawGammaSetMarker(RatioNormalMCInput, 22, 1., kBlack, kBlack);
+        RatioNormalMCInput->SetYTitle("#frac{standard}{modified}");
+        RatioNormalMCInput->GetYaxis()->SetRangeUser(0.8,1.23);
+        RatioNormalMCInput->GetYaxis()->SetLabelSize(0.07);
+        RatioNormalMCInput->GetYaxis()->SetNdivisions(505);
+        RatioNormalMCInput->GetYaxis()->SetTitleSize(0.1);
+        RatioNormalMCInput->GetYaxis()->SetDecimals();
+        RatioNormalMCInput->GetYaxis()->SetTitleOffset(0.5);
+        RatioNormalMCInput->GetXaxis()->SetTitleSize(0.11);
+        RatioNormalMCInput->GetXaxis()->SetLabelSize(0.08);
+        RatioNormalMCInput->GetXaxis()->SetTitle("p_{T} (GeV/c)");
         RatioNormalMCInput->DrawCopy("p,e1"); // normal/ MC
         DrawGammaSetMarker(RatioNormal, 24, 1., kGreen+2, kGreen+2);
         RatioNormal->DrawCopy("e1,same"); // True / Norm
@@ -1508,8 +1531,95 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		
 	}
 
+    // Plot Sanity check but now histoMCYield meson in the old pT binning will be plottet aswelll
+    if (isMC == kTRUE){
+        canvasCorrecftedYield->cd();
+
+        padCorrectedYieldHistos->cd();
+        padCorrectedYieldHistos->SetLogy();
+
+        DrawGammaSetMarker(histoCorrectedYieldTrue, 22, 1., kBlack, kBlack);
+        histoCorrectedYieldTrue->DrawCopy("e1");
+        DrawGammaSetMarker(histoMCYieldMeson, 24, 1., kRed+2, kRed+2);
+        histoMCYieldMeson->DrawCopy("e1,same");
+        DrawGammaSetMarker(histoCorrectedYieldNorm, 24, 1., kGreen+2, kGreen+2);
+        histoCorrectedYieldNorm->DrawCopy("e1,same");
+        DrawGammaSetMarker(histoMCYieldMesonOldBin, 24, 1., kBlue+2, kBlue+2);
+        histoMCYieldMesonOldBin->DrawCopy("e1,same");
+
+        TLegend* legendYield3 = new TLegend(0.15,0.03,0.85,0.20);
+        legendYield3->SetTextSize(0.02);
+        legendYield3->SetBorderSize(0);
+        legendYield3->SetFillColor(0);
+        legendYield3->SetNColumns(2);
+        legendYield3->AddEntry((TObject*)0,"Yields (top):","");
+        legendYield3->AddEntry((TObject*)0,"Ratios (bottom):","");
+        legendYield3->AddEntry(histoCorrectedYieldTrue,"corr true eff");
+        legendYield3->AddEntry(RatioNormalMCInput,"corr normal eff / MC Input");
+
+        legendYield3->AddEntry(histoMCYieldMeson,"MC input ");
+        legendYield3->AddEntry(RatioNormal,"corr true eff / corr normal eff");
+
+        legendYield3->AddEntry(histoCorrectedYieldNorm,"normal eff ");
+        legendYield3->AddEntry(RatioTrueMCInput,"corr true eff / MC Input");
+
+        legendYield3->AddEntry(histoMCYieldMesonOldBin,"MC Input (original pt binning)");
+        legendYield3->AddEntry((TObject*)0,"","");
+
+        legendYield3->Draw();
+
+        padCorrectedYieldRatios->cd();
+        padCorrectedYieldRatios->SetTickx();
+        padCorrectedYieldRatios->SetTicky();
+        padCorrectedYieldRatios->SetLogy(0);
+
+        DrawGammaSetMarker(RatioNormalMCInput, 22, 1., kBlack, kBlack);
+        RatioNormalMCInput->DrawCopy("p,e1"); // normal/ MC
+        DrawGammaSetMarker(RatioNormal, 24, 1., kGreen+2, kGreen+2);
+        RatioNormal->DrawCopy("e1,same"); // True / Norm
+        DrawGammaSetMarker(RatioTrueMCInput, 24, 1., kRed+2, kRed+2);
+        RatioTrueMCInput->DrawCopy("e1,same"); // true/ mc
+
+
+        canvasCorrecftedYield->Update();
+        canvasCorrecftedYield->SaveAs(Form("%s/%s_%s_CorrectedYield_SanityCheck_MCInputOldBinning_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
+
+
+    }
+
 	delete canvasCorrecftedYield;
 	delete legendYield3;
+
+    //**********************************************************************************
+    //******************** Simple Efficiency Comparison ********************************
+    //**********************************************************************************
+    TCanvas* canvasEffiComparison = new TCanvas("canvasEffComparison","",200,10,1350,900);  // gives the page size
+    DrawGammaCanvasSettings( canvasEffiComparison, 0.13, 0.02, 0.03, 0.09);
+    //       canvasEffSimple->SetLogy(1);
+
+    DrawAutoGammaMesonHistos( histoTrueEffiPt,
+                                "", "p_{T} (GeV/c)", "Efficiency",
+                                kTRUE, 1., 3e-6, kFALSE,
+                                kFALSE, 0., 0.7,
+                                kTRUE, 0., 25.);
+
+    DrawGammaSetMarker(histoTrueEffiPt, 22, 1., kRed+2, kRed+2);
+    histoTrueEffiPt->DrawCopy("e1");
+    DrawGammaSetMarker(histoEffiPt, 22, 1., kBlack, kBlack);
+    histoEffiPt->DrawCopy("e1,same");
+
+    TLegend* legendEffiComparison= new TLegend(0.6,0.5,0.97,0.6);
+    legendEffiComparison->SetTextSize(0.03);
+    legendEffiComparison->SetFillColor(0);
+    legendEffiComparison->SetBorderSize(0);
+
+    legendEffiComparison->AddEntry(histoEffiPt, "Normal efficiency");
+    legendEffiComparison->AddEntry(histoTrueEffiPt, "True efficiency");
+    legendEffiComparison->Draw();
+    canvasEffiComparison->Update();
+
+    canvasEffiComparison->SaveAs(Form("%s/%s_TrueNormEffComparison_%s.%s",outputDir.Data(),nameMeson.Data(),fCutSelection.Data(),suffix.Data()));
+    delete canvasEffiComparison;
 
 	//***********************************************************************************************
 	//***************************  Secondary RAW Yield  *********************************************
