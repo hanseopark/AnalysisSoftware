@@ -88,11 +88,11 @@
     Double_t xSection5023GeVINEL    = 67.6*1e-3;    // from https://aliceinfo.cern.ch/Notes/sites/aliceinfo.cern.ch.Notes/files/notes/analysis/stripath/2017-Jun-14-analysis_note-INEL_norm.pdf
     Double_t xSection5023GeVINELErr = 0.6;          // from https://aliceinfo.cern.ch/Notes/sites/aliceinfo.cern.ch.Notes/files/notes/analysis/stripath/2017-Jun-14-analysis_note-INEL_norm.pdf
     // pp 7 TeV
-    Double_t xSection7TeVINEL       = 73.2*1e-3;
-    Double_t xSection7TeV           = 62.22*1e-3;
-    Double_t xSection7TeVV0AND      = 54.31*1e-3;
-    Double_t xSection7TeVErrUp      = 2.18;
-    Double_t xSection7TeVErrDown    = 2.18;
+    Double_t xSection7TeVINEL       = 73.2*1e-3;   // from https://arxiv.org/abs/1208.4968
+    Double_t xSection7TeV           = 62.37*1e-3;  // from https://arxiv.org/abs/1208.4968
+    Double_t xSection7TeVV0AND      = 54.31*1e-3;  // from https://arxiv.org/abs/1208.4968
+    Double_t xSection7TeVErrUp      = 2.18;        // from https://arxiv.org/abs/1208.4968
+    Double_t xSection7TeVErrDown    = 2.18;        // from https://arxiv.org/abs/1208.4968
     // pp 8 TeV
     Double_t xSection8TeVINEL       = 72.3*1e-3;   // from https://aliceinfo.cern.ch/Notes/node/665
     Double_t xSection8TeVINELErrUp  = 0.5;         // from https://aliceinfo.cern.ch/Notes/node/665
