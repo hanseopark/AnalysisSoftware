@@ -301,7 +301,7 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphEtaToPi0NLOMuOne900GeV =   new TGraph(xNBins900GeV,xValueNLO900GeV,valueNLOEtaToPi0NLOMuOne900GeV);
     TGraph* graphEtaToPi0NLOMuTwo900GeV =   new TGraph(xNBins900GeV,xValueNLO900GeV,valueNLOEtaToPi0NLOMuTwo900GeV);
 
-
+    TGraphAsymmErrors* graphNLOCalcEtaToPi0900GeV  = CombineMuScales(xNBins900GeV, xValueNLO900GeV, graphEtaToPi0NLOMuOne900GeV->GetY(), graphEtaToPi0NLOMuHalf900GeV->GetY(), graphEtaToPi0NLOMuTwo900GeV->GetY());
 
     //**********************************************************************************************************************
     //******************************** 2.76TeV GeV Pi0 and Eta calc*********************************************************
@@ -762,13 +762,13 @@ void ProduceTheoryGraphsPP(){
 
     // Eta/Pi0
     Double_t* valueNLOMuHalfEta = graphNLOCalcInvSecEtaMuHalf7000GeV->GetY();
-    Double_t* valueNLOMuOneEta =  graphNLOCalcInvSecEtaMuOne7000GeV->GetY();
-    Double_t* valueNLOMuTwoEta =  graphNLOCalcInvSecEtaMuTwo7000GeV->GetY();
+    Double_t* valueNLOMuOneEta  = graphNLOCalcInvSecEtaMuOne7000GeV->GetY();
+    Double_t* valueNLOMuTwoEta  = graphNLOCalcInvSecEtaMuTwo7000GeV->GetY();
     Double_t* valueNLOMuHalfPi0 = graphNLOCalcInvSecPi0MuHalf7000GeV->GetY();
-    Double_t* valueNLOMuOnePi0 =  graphNLOCalcInvSecPi0MuOne7000GeV->GetY();
-    Double_t* valueNLOMuTwoPi0 =  graphNLOCalcInvSecPi0MuTwo7000GeV->GetY();
-    Double_t* xValueNLO =      graphNLOCalcInvSecPi0MuOne7000GeV->GetX();
-    Int_t    xNBins =          graphNLOCalcInvSecPi0MuOne7000GeV->GetN();
+    Double_t* valueNLOMuOnePi0  = graphNLOCalcInvSecPi0MuOne7000GeV->GetY();
+    Double_t* valueNLOMuTwoPi0  = graphNLOCalcInvSecPi0MuTwo7000GeV->GetY();
+    Double_t* xValueNLO         = graphNLOCalcInvSecPi0MuOne7000GeV->GetX();
+    Int_t    xNBins             = graphNLOCalcInvSecPi0MuOne7000GeV->GetN();
     Double_t    valueNLOEtaToPi0NLOMuHalf[50];
     Double_t    valueNLOEtaToPi0NLOMuOne[50];
     Double_t    valueNLOEtaToPi0NLOMuTwo[50];
@@ -800,6 +800,7 @@ void ProduceTheoryGraphsPP(){
     TGraph* graphEtaToPi0NLOMuOne7TeV =   new TGraph(xNBins,xValueNLO,valueNLOEtaToPi0NLOMuOne);
     TGraph* graphEtaToPi0NLOMuTwo7TeV =   new TGraph(xNBins,xValueNLO,valueNLOEtaToPi0NLOMuTwo);
 
+    TGraphAsymmErrors* graphNLOCalcEtaToPi07TeV  = CombineMuScales(xNBins, xValueNLO, graphEtaToPi0NLOMuOne7TeV->GetY(), graphEtaToPi0NLOMuHalf7TeV->GetY(), graphEtaToPi0NLOMuTwo7TeV->GetY());
 
     //*---CGC- T. Lappi and H.M"antysaari  arxiv1309.6963 (kt-factorization)---*//
     TGraph * graphInvYieldCGC7000GeV = new TGraph(66);
@@ -1313,6 +1314,7 @@ void ProduceTheoryGraphsPP(){
         graphEtaToPi0NLOMuHalf900GeV->Write("graphNLOCalcEtaOverPi0MuHalf900GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne900GeV->Write("graphNLOCalcEtaOverPi0MuOne900GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo900GeV->Write("graphNLOCalcEtaOverPi0MuTwo900GeV", TObject::kOverwrite);
+        graphNLOCalcEtaToPi0900GeV->Write("graphNLOCalcEtaOverPi0900GeV_AESSS_DSS07",TObject::kOverwrite);
 //         // pi0, eta, eta/pi0 Pythia 8.1 Monash 2013
 //         histoPi0Pythia8MonashInvSec900GeV->Write("histoInvSecPythia8Monash2013Pi0900GeV", TObject::kOverwrite);
 //         histoEtaPythia8MonashInvSec900GeV->Write("histoInvSecPythia8Monash2013Eta900GeV", TObject::kOverwrite);
@@ -1442,6 +1444,7 @@ void ProduceTheoryGraphsPP(){
         graphEtaToPi0NLOMuHalf7TeV->Write("graphNLOCalcEtaOverPi0MuHalf7000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuOne7TeV->Write("graphNLOCalcEtaOverPi0MuOne7000GeV", TObject::kOverwrite);
         graphEtaToPi0NLOMuTwo7TeV->Write("graphNLOCalcEtaOverPi0MuTwo7000GeV", TObject::kOverwrite);
+        graphNLOCalcEtaToPi07TeV->Write("graphNLOCalcEtaOverPi07000GeV_AESSS_DSS07",TObject::kOverwrite);
         // pi0 Stratmann FF:DSS14
         graphNLOCalcDSS14InvSecPi07000GeV->Write("graphNLOCalcDSS14InvCrossSec7000GeV", TObject::kOverwrite);
         graphNLOCalcDSS14InvYieldPi07000GeV->Write("graphNLOCalcDSS14InvYield7000GeV", TObject::kOverwrite);
