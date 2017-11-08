@@ -55,7 +55,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                     TString fileNameCorrelations    = "",
                                     Bool_t enablepValueCalc         = kFALSE,
                                     TString inputFileNameCocktail   = "",
-                                    Bool_t isThesis                 = kFALSE
+                                    Bool_t isThesis                 = kFALSE,
+                                    Double_t confidenceLevelnSigma  = 1.28; //90% C.L.
                             ){
 
     //*******************************************************************************************************************************************
@@ -1410,30 +1411,29 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         histoCombDirGammaSpecSumErr->SetBinContent(i, content);
         histoCombDirGammaSpectrumErrSum->SetBinContent(i, errDR);
     }
-
     // purely calculating points based on all Systematic errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumSystErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSys,histoCombDirGammaSpecStatErr,0,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumSystErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSys,histoCombDirGammaSpecStatErr,0,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumSystErr)graphCombDirGammaSpectrumSystErr->SetName("graphCombDirGammaSpectrumSystErr");
     if(graphCombDirGammaSpectrumSystErr) cout << "sys has been found" << endl;
     if(graphCombDirGammaSpectrumSystErr)graphCombDirGammaSpectrumSystErr->Print();
 
     // purely calculating points based on Statistical errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumStatErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrStat,histoCombDirGammaSpecStatErr,0,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumStatErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrStat,histoCombDirGammaSpecStatErr,0,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumStatErr)graphCombDirGammaSpectrumStatErr->SetName("graphCombDirGammaSpectrumStatErr");
     if(graphCombDirGammaSpectrumStatErr) cout << "stat has been found" << endl;
     if(graphCombDirGammaSpectrumStatErr)graphCombDirGammaSpectrumStatErr->Print();
     // purely calculating points based on all Systematic + Statistical errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumSumErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,0,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumSumErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,0,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumSumErr)graphCombDirGammaSpectrumSumErr->SetName("graphCombDirGammaSpectrumSumErr");
     if(graphCombDirGammaSpectrumSumErr) cout << "tot has been found" << endl;
     if(graphCombDirGammaSpectrumSumErr)graphCombDirGammaSpectrumSumErr->Print();
     // calculate points above confidence level summed errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumSumErrConfi = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,2,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumSumErrConfi = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,2,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumSumErrConfi)graphCombDirGammaSpectrumSumErrConfi->SetName("graphCombDirGammaSpectrumSumErrConfi");
     if(graphCombDirGammaSpectrumSumErrConfi) cout << "confi has been found" << endl;
     if(graphCombDirGammaSpectrumSumErrConfi)graphCombDirGammaSpectrumSumErrConfi->Print();
     // calculate arrows for points with 0, error summed
-    TGraphAsymmErrors *graphCombDirGammaSpectrumSumErrAr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,5,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumSumErrAr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumErrSum,histoCombDirGammaSpecStatErr,5,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumSumErrAr)graphCombDirGammaSpectrumSumErrAr->SetName("graphCombDirGammaSpectrumSumErrAr");
     if(graphCombDirGammaSpectrumSumErrAr) cout << "Ar has been found" << endl;
     if(graphCombDirGammaSpectrumSumErrAr)graphCombDirGammaSpectrumSumErrAr->Print();
@@ -1550,28 +1550,28 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     }
 
     // purely calculating points based on all Systematic errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSystErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSys,histoCombDirGammaSpecNonFitStatErr,0,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSystErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSys,histoCombDirGammaSpecNonFitStatErr,0,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumNonFitSystErr)graphCombDirGammaSpectrumNonFitSystErr->SetName("graphCombDirGammaSpectrumNonFitSystErr");
     if(graphCombDirGammaSpectrumNonFitSystErr) cout << "sys has been found" << endl;
     if(graphCombDirGammaSpectrumNonFitSystErr)graphCombDirGammaSpectrumNonFitSystErr->Print();
 
     // purely calculating points based on Statistical errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitStatErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrStat,histoCombDirGammaSpecNonFitStatErr,0,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitStatErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrStat,histoCombDirGammaSpecNonFitStatErr,0,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumNonFitStatErr)graphCombDirGammaSpectrumNonFitStatErr->SetName("graphCombDirGammaSpectrumNonFitStatErr");
     if(graphCombDirGammaSpectrumNonFitStatErr) cout << "stat has been found" << endl;
     if(graphCombDirGammaSpectrumNonFitStatErr)graphCombDirGammaSpectrumNonFitStatErr->Print();
     // purely calculating points based on all Systematic + Statistical errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSumErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSum,histoCombDirGammaSpecNonFitStatErr,0,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSumErr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSum,histoCombDirGammaSpecNonFitStatErr,0,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumNonFitSumErr)graphCombDirGammaSpectrumNonFitSumErr->SetName("graphCombDirGammaSpectrumNonFitSumErr");
     if(graphCombDirGammaSpectrumNonFitSumErr) cout << "tot has been found" << endl;
     if(graphCombDirGammaSpectrumNonFitSumErr)graphCombDirGammaSpectrumNonFitSumErr->Print();
     // calculate points above confidence level summed errors
-    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSumErrConfi = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSum,histoCombDirGammaSpecNonFitStatErr,2,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSumErrConfi = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSum,histoCombDirGammaSpecNonFitStatErr,2,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumNonFitSumErrConfi)graphCombDirGammaSpectrumNonFitSumErrConfi->SetName("graphCombDirGammaSpectrumNonFitSumErrConfi");
     if(graphCombDirGammaSpectrumNonFitSumErrConfi) cout << "confi has been found" << endl;
     if(graphCombDirGammaSpectrumNonFitSumErrConfi)graphCombDirGammaSpectrumNonFitSumErrConfi->Print();
     // calculate arrows for points with 0, error summed
-    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSumErrAr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSum,histoCombDirGammaSpecNonFitStatErr,5,0.5,0,1.28);
+    TGraphAsymmErrors *graphCombDirGammaSpectrumNonFitSumErrAr = CalculateDirectPhotonPointsAndUpperLimits(histoCombDirGammaSpectrumNonFitErrSum,histoCombDirGammaSpecNonFitStatErr,5,0.5,0,confidenceLevelnSigma);
     if(graphCombDirGammaSpectrumNonFitSumErrAr)graphCombDirGammaSpectrumNonFitSumErrAr->SetName("graphCombDirGammaSpectrumNonFitSumErrAr");
     if(graphCombDirGammaSpectrumNonFitSumErrAr) cout << "Ar has been found" << endl;
     if(graphCombDirGammaSpectrumNonFitSumErrAr)graphCombDirGammaSpectrumNonFitSumErrAr->Print();
