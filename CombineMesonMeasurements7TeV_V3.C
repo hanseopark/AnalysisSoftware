@@ -3912,7 +3912,7 @@ fileNameEMCAL2="";
            TH1D* histFitTCMInvXSectionEta                               = (TH1D*)fitTCMInvXSectionEta->GetHistogram();
            histFitTCMInvXSectionEta->Scale(scaleFacEtaForCombPlot);
 
-           TF1* tf1FitInvXSectionEta = new TF1("tf1FitInvXSectionEta","(1/100) * fitInvCrossSectionEta8TeV", 0.4, 35.);
+           TF1* tf1FitInvXSectionEta = new TF1("tf1FitInvXSectionEta","(1/100) * fitInvXSectionEta", 0.4, 18.);
 
            histoPythia8InvXSectionEta->Scale(scaleFacEtaForCombPlot);
            TGraphErrors* graphPythia8InvXSectionEtaScaled              = ScaleGraph(graphPythia8InvXSectionEta,scaleFacEtaForCombPlot);
