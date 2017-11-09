@@ -285,26 +285,26 @@
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 1};
-    Double_t fBinsPi07TeVPCMEMCPt[44]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
-                                                        1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
-                                                        2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+    Double_t fBinsPi07TeVPCMEMCPt[41]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                        1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
                                                         4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0,
                                                         10.0, 12.0, 16.0, 20.0};
-    Int_t fBinsPi07TeVPCMEMCPtRebin[43]             = { 2, 2, 2, 2, 2, 2, 10, 5, 4, 4,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 4, 4, 4, 4, 5,
-                                                        5, 5, 1};
-    Double_t fBinsPi07TeVEMCPt[46]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
-                                                        1.2, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
-                                                        2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+    Int_t fBinsPi07TeVPCMEMCPtRebin[40]             = { 2, 2, 2, 2, 2, 2, 8, 5, 4, 4,
+                                                        2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 4, 4, 4, 4, 3,
+                                                        5, 8, 1};
+    Double_t fBinsPi07TeVEMCPt[41]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                        1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
                                                         4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0,
                                                         10.0, 11.0, 12.0, 14.0, 16.0, 20.0, 25.0};
-    Int_t fBinsPi07TeVEMCPtRebin[45]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                        4, 4, 4, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 5,
-                                                        5, 10, 10, 10, 16, 16};
+    Int_t fBinsPi07TeVEMCPtRebin[40]                = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        4, 4, 4, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 1, 5,
+                                                        5, 5, 5, 8, 16, 16};
 
     Double_t fBinsEta7TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
                                                         3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0};
@@ -323,10 +323,14 @@
     Int_t fBinsEta7TeVPHOSPtRebin[17]               = { 8, 8, 8, 8, 8, 8, 8, 8, 8,
                                                         8, 8, 8, 8, 8, 8, 8};
 
-    Int_t fBinsEta7TeVPCMEMCPtRebin[18]             = { 2, 2, 2, 16, 10, 8, 8, 8, 8, 8,
+    Int_t fBinsEta7TeVPCMEMCPtRebin[18]             = { 2, 2, 2, 12, 10, 8, 8, 8, 6, 8,
                                                         8, 10, 10, 16, 16, 16, 16, 20};
-    Int_t fBinsEta7TeVEMCPtRebin[18]                = { 2, 2, 2, 2, 2, 16, 16, 8, 8, 8,
-                                                        8, 10, 10, 16, 16, 16, 16, 20};
+    Int_t fBinsPi0EtaBinning7TeVPCMEMCPtRebin[18]   = { 2, 2, 2, 4, 4, 2, 2, 2, 2, 2,
+                                                        2, 4, 4, 4, 4, 4, 16, 20};
+    Int_t fBinsEta7TeVEMCPtRebin[18]                = { 2, 2, 2, 2, 2, 2, 10, 10, 10, 8,
+                                                        8, 8, 8, 10, 12, 20, 2, 2};
+    Int_t fBinsPi0EtaBinning7TeVEMCPtRebin[18]      = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 4, 2, 2};
     Double_t fBinsEta7TeVDalitzPt[10]               = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
     Int_t fBinsEta7TeVDalitzPtRebin[9]              = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
 
@@ -2258,9 +2262,9 @@
                     if (fNBinsPt > 27 && isDCA) {
                         cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
                         fNBinsPt    = 27;
-                    } else if (fNBinsPt > 45) {
-                        cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
-                        fNBinsPt    = 45;
+                    } else if (fNBinsPt > 40) {
+                        cout << "You have chosen to have more than 40 bins, this is not possible, it will be reduced to 40" << endl;
+                        fNBinsPt    = 40;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
@@ -3308,16 +3312,24 @@
                             fNRebin[i]  = fBinsEta7TeVDalitzPtRebin[i];
                     } else if (modi == 2){
                         fBinsPt[i]      = fBinsEta7TeVPCMEMCPt[i];
-                        if (i < fNBinsPt+1)
-                            fNRebin[i]  = fBinsEta7TeVPCMEMCPtRebin[i];
+                        if (i < fNBinsPt+1){
+                          if(!setPi0.CompareTo("Pi0EtaBinning"))
+                            fNRebin[i] = fBinsPi0EtaBinning7TeVPCMEMCPtRebin[i];
+                          else
+                            fNRebin[i] = fBinsEta7TeVPCMEMCPtRebin[i];
+                        }
                     } else if (modi == 3){
                         fBinsPt[i]      = fBinsEta7TeVPCMPHOSPt[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i]  = fBinsEta7TeVPCMPHOSPtRebin[i];
                     } else if(modi == 4){
                         fBinsPt[i]      = fBinsEta7TeVPCMEMCPt[i];
-                        if (i < fNBinsPt+1)
-                            fNRebin[i]  = fBinsEta7TeVEMCPtRebin[i];
+                        if (i < fNBinsPt+1){
+                          if(!setPi0.CompareTo("Pi0EtaBinning"))
+                            fNRebin[i] = fBinsPi0EtaBinning7TeVEMCPtRebin[i];
+                          else
+                            fNRebin[i] = fBinsEta7TeVEMCPtRebin[i];
+                        }
                     } else if(modi == 5){
                       fBinsPt[i]      = fBinsEta7TeVPHOSPt[i];
                       if (i < fNBinsPt+1)
@@ -4019,12 +4031,12 @@
                 }
             } else if (energy.CompareTo("7TeV") == 0){
                 if ( mode == 2 ){
-                    maxNBins = 43;
+                    maxNBins = 40;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi07TeVPCMEMCPt[i];
                     }
                 } else if ( mode == 4 || mode == 12 ){
-                    maxNBins = 45;
+                    maxNBins = 40;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi07TeVEMCPt[i];
                     }

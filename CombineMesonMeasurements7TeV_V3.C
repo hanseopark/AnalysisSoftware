@@ -668,7 +668,7 @@ fileNameEMCAL2="";
 
     //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
     Int_t offSetsEta[11]                        =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
-    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      5, 0,0,0,   9,0,0};
+    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
     if(!useDanielmeas){
       offSetsEta[2]    = 4;
       offSetsSysEta[2] = 9;
@@ -685,7 +685,7 @@ fileNameEMCAL2="";
 
     //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
     Int_t offSetsEtaToPi0[11]                   =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
-    Int_t offSetsSysEtaToPi0[11]                =  {1,    4,  7,     3,      5, 0,0,0,   9,0,0};
+    Int_t offSetsSysEtaToPi0[11]                =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
     if(!useDanielmeas){
       offSetsEtaToPi0[2]    = 4;
       offSetsSysEtaToPi0[2] = 9;

@@ -284,9 +284,9 @@
 
       Double_t minPtEta = 0.7;
       Double_t minPtEtaToPi0 = 0.33;
-      Double_t maxPtEta = 5.0;
+      Double_t maxPtEta = 5.1;
       Double_t minXSectionEta = 1e5;
-      Double_t maxXSectionEta = 1e10;
+      Double_t maxXSectionEta = 9e9;
 
       Bool_t doOutput = kTRUE;
 
@@ -3424,7 +3424,7 @@
              legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuTwo,"#mu = 2 #it{p}_{T}","l");
              legendXsectionPaperEta->Draw();
 
-             TLatex *labelEta = new TLatex(0.175, 0.2,"NLO, PDF:CTEQ6M5 - FF:AESSS");
+             TLatex *labelEta = new TLatex(0.17, 0.19,"NLO, PDF:CTEQ6M5 - FF:AESSS");
              SetStyleTLatex( labelEta, 0.75*textsizeLabelsPP,4);
              labelEta->Draw();
 
