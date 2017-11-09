@@ -44,7 +44,7 @@
 
     Double_t fBinsPi0900GeVPCMEMCPt[12]             = { 0.0, 0.8, 1.2, 1.4, 1.6, 2.0, 2.5, 3.0, 4.0, 5.0,
                                                         7.0, 10.0};
-    Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 5, 5, 4, 4, 4, 4, 8, 8, 8};
+    Int_t fBinsPi0900GeVPCMEMCPtRebin[11]           = { 2, 5, 4, 4, 4, 4, 4, 4, 8, 8, 8};
 
     Double_t fBinsPi0900GeVEMCPt[13]                = { 0.0, 1.2, 1.6, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0,
                                                         10.0, 16.0};
