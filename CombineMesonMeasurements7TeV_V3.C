@@ -437,6 +437,14 @@ fileNameEMCAL2="";
           while (graphEtaInvXSectionSys[i]->GetY()[0] <= 1E-50 ) graphEtaInvXSectionSys[i]->RemovePoint(0);
           while (graphEtaInvXSectionSys[i]->GetY()[graphEtaInvXSectionSys[i]->GetN()-1] <= 1E-50 ) graphEtaInvXSectionSys[i]->RemovePoint(graphEtaInvXSectionSys[i]->GetN()-1);
 
+          //fix x-errors for PHOS being not consistent in stat+sys
+          if(i==1){
+            for(Int_t iP=0;iP<graphEtaInvXSectionSys[i]->GetN();iP++){
+              graphEtaInvXSectionSys[i]->SetPointEXhigh(iP,graphEtaInvXSectionStat[i]->GetErrorXhigh(iP));
+              graphEtaInvXSectionSys[i]->SetPointEXlow(iP,graphEtaInvXSectionStat[i]->GetErrorXlow(iP));
+            }
+          }
+
         cout << nameMeasGlobal[i].Data() << " eta stat:" << graphEtaInvXSectionStat[i] << endl;
         if(doOutput) graphEtaInvXSectionStat[i]->Print();
         cout << nameMeasGlobal[i].Data() << " eta sys:" << graphEtaInvXSectionSys[i] << endl;
@@ -450,6 +458,12 @@ fileNameEMCAL2="";
             histoEtaToPi0Stat[i]           = (TH1D*)directoryEta[i]->Get("RatioEtaPi0");
             graphEtaToPi0Stat[i]           = new TGraphAsymmErrors(histoEtaToPi0Stat[i]);
             graphEtaToPi0Sys[i]            = (TGraphAsymmErrors*)directoryEta[i]->Get("RatioEtaPi0Sys");
+
+            //fix x-errors for PHOS being not consistent in stat+sys
+            for(Int_t iP=0;iP<graphEtaToPi0Sys[i]->GetN();iP++){
+              graphEtaToPi0Sys[i]->SetPointEXhigh(iP,graphEtaToPi0Stat[i]->GetErrorXhigh(iP));
+              graphEtaToPi0Sys[i]->SetPointEXlow(iP,graphEtaToPi0Stat[i]->GetErrorXlow(iP));
+            }
         }
         if(i==3){
             histoEtaToPi0Stat[i]           = (TH1D*)directoryEta[i]->Get("EtatoPi0RatioConversion");
@@ -1099,7 +1113,7 @@ fileNameEMCAL2="";
     SetStyleHistoTH2ForGraphs(histo2DRelSysErrEta, "#it{p}_{T} (GeV/#it{c})","sys Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelSysErr->GetXaxis()->SetMoreLogLabels();
     histo2DRelSysErr->GetXaxis()->SetNoExponent();
-    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,45.5);
+    histo2DRelSysErr->GetYaxis()->SetRangeUser(0,55.5);
     histo2DRelSysErr->Draw("copy");
 
         TLegend* legendRelSysErrEta                = GetAndSetLegend2(0.62, 0.94-(0.035*nMeasSet*1.35), 0.95, 0.94, 32);
@@ -1134,7 +1148,7 @@ fileNameEMCAL2="";
     SetStyleHistoTH2ForGraphs(histo2DRelStatErrEta, "#it{p}_{T} (GeV/#it{c})","stat Err (%)",0.035,0.04, 0.035,0.04, 1.,1.);
     histo2DRelStatErrEta->GetXaxis()->SetMoreLogLabels();
     histo2DRelStatErrEta->GetXaxis()->SetNoExponent();
-    histo2DRelStatErrEta->GetYaxis()->SetRangeUser(0,45.5);
+    histo2DRelStatErrEta->GetYaxis()->SetRangeUser(0,55.5);
     histo2DRelStatErrEta->Draw("copy");
 
         TLegend* legendRelStatErrEta               = GetAndSetLegend2(0.14, 0.94-(0.035*nMeasSet*1.35), 0.45, 0.94, 32);
@@ -3417,7 +3431,7 @@ fileNameEMCAL2="";
            legendRatioTheorypp_3Parted->AddEntry(graphRatioPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
            legendRatioTheorypp_3Parted->Draw();
 
-           TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.91,0.59,0.96, 0.85* textSizeLabelsPixel);
+           TLegend* legendRatioTheoryNormUnc = GetAndSetLegend2(0.34,0.9,0.59,0.95, 0.85* textSizeLabelsPixel);
            legendRatioTheoryNormUnc->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
            legendRatioTheoryNormUnc->Draw();
 
@@ -3506,7 +3520,7 @@ fileNameEMCAL2="";
        canvasRatioPP->cd();
        canvasRatioPP->SetLogx();
 
-           TH2F * ratio2DTheoryPPEta       = new TH2F("ratio2DTheoryPPEta","ratio2DTheoryPPEta",1000,minPtEta,maxPtEta,1000,0.2,3.9);
+           TH2F * ratio2DTheoryPPEta       = new TH2F("ratio2DTheoryPPEta","ratio2DTheoryPPEta",1000,minPtEta,maxPtEta,1000,0.3,3.95);
            SetStyleHistoTH2ForGraphs(ratio2DTheoryPPEta, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{TCM fit}", 0.85*textsizeLabelsPP, textsizeLabelsPP,
                                      0.85*textsizeLabelsPP,textsizeLabelsPP, 0.9, 0.95, 510, 505);
            ratio2DTheoryPPEta->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -3552,7 +3566,7 @@ fileNameEMCAL2="";
            legendRatioTheoryppEta_3Parted->AddEntry(graphRatioEtaCombNLOMuTwo,  "#mu = 2 #it{p}_{T}", "l");
            legendRatioTheoryppEta_3Parted->Draw();
 
-           TLegend* legendRatioTheoryNormUncEta = GetAndSetLegend2(0.31,0.91,0.56,0.96, 0.85* textSizeLabelsPixel);
+           TLegend* legendRatioTheoryNormUncEta = GetAndSetLegend2(0.31,0.908,0.56,0.958, 0.85* textSizeLabelsPixel);
            legendRatioTheoryNormUncEta->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
            legendRatioTheoryNormUncEta->Draw();
 
@@ -3631,6 +3645,7 @@ fileNameEMCAL2="";
                                    0.85*textsizeLabelsXSecUp,textsizeLabelsXSecUp, 0.85*textsizeLabelsXSecUp, textsizeLabelsXSecUp, 1,0.2/(textsizeFacXSecUp*marginXSec));
            histo2DXSectionPi0->GetXaxis()->SetMoreLogLabels();
            histo2DXSectionPi0->GetXaxis()->SetLabelOffset(+0.01);
+           histo2DXSectionPi0->GetYaxis()->SetRangeUser(minXSectionPi0,6E11);
            histo2DXSectionPi0->Draw();
 
            graphPi0DSS14->SetLineWidth(widthCommonFit);
@@ -3684,7 +3699,7 @@ fileNameEMCAL2="";
 
        padInvSectionNLORatio->cd();
        padInvSectionNLORatio->SetLogx(1);
-           TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,minPtPi0,maxPtPi0,1000,0.6,1.95);
+           TH2F * ratio2DNLO               = new TH2F("ratio2DNLO","ratio2DNLO",1000,minPtPi0,maxPtPi0,1000,0.4,1.85);
            SetStyleHistoTH2ForGraphs(ratio2DNLO, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{TCM fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
                                      0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
            ratio2DNLO->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -3730,7 +3745,7 @@ fileNameEMCAL2="";
 
        padInvSectionPythiaRatio->cd();
        padInvSectionPythiaRatio->SetLogx(1);
-           TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,minPtPi0,maxPtPi0,1000,0.6,1.95);
+           TH2F * ratio2DPythia            = new TH2F("ratio2DPythia","ratio2DPythia",1000,minPtPi0,maxPtPi0,1000,0.4,1.85);
            SetStyleHistoTH2ForGraphs(ratio2DPythia, "#it{p}_{T} (GeV/#it{c})","#frac{Pythia, Data}{TCM fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                                      0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 505);
            ratio2DPythia->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -3770,6 +3785,7 @@ fileNameEMCAL2="";
                                    0.85*textsizeLabelsXSecUp,textsizeLabelsXSecUp, 0.85*textsizeLabelsXSecUp, textsizeLabelsXSecUp, 1,0.2/(textsizeFacXSecUp*marginXSec));
            histo2DXSectionEta->GetXaxis()->SetMoreLogLabels();
            histo2DXSectionEta->GetXaxis()->SetLabelOffset(+0.01);
+           histo2DXSectionEta->GetYaxis()->SetRangeUser(minXSectionEta,5E10);
            histo2DXSectionEta->Draw();
 
            DrawGammaNLOTGraph( graphNLOCalcEtaMuHalf, widthCommonFit, styleLineNLOMuHalf, colorNLO);
@@ -3816,13 +3832,13 @@ fileNameEMCAL2="";
            legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuTwo,"#mu = 2 #it{p}_{T}","l");
            legendXsectionPaperEta->Draw();
 
-           TLatex *labelEta = new TLatex(0.175, 0.192,"NLO, PDF:CTEQ6M5 - FF:AESSS");
+           TLatex *labelEta = new TLatex(0.185, 0.192,"NLO, PDF:CTEQ6M5 - FF:AESSS");
            SetStyleTLatex( labelEta, 0.75*textsizeLabelsPP,4);
            labelEta->Draw();
 
        padInvSectionNLORatio->cd();
        padInvSectionNLORatio->SetLogx(1);
-           TH2F * ratio2DNLOEta                = new TH2F("ratio2DNLOEta","ratio2DNLOEta",1000,minPtEta,maxPtEta,1000,0.35,3.15);
+           TH2F * ratio2DNLOEta                = new TH2F("ratio2DNLOEta","ratio2DNLOEta",1000,minPtEta,maxPtEta,1000,0.35,3.35);
            SetStyleHistoTH2ForGraphs(ratio2DNLOEta, "#it{p}_{T} (GeV/#it{c})","#frac{NLO, Data}{TCM fit}", 0.85*textsizeLabelsXSecMiddle, textsizeLabelsXSecMiddle,
                                      0.85*textsizeLabelsXSecMiddle,textsizeLabelsXSecMiddle, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
            ratio2DNLOEta->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -3855,7 +3871,7 @@ fileNameEMCAL2="";
 
        padInvSectionPythiaRatio->cd();
        padInvSectionPythiaRatio->SetLogx(1);
-           TH2F * ratio2DPythiaEta             = new TH2F("ratio2DPythiaEta","ratio2DPythiaEta",1000,minPtEta,maxPtEta,1000,0.6,1.95);
+           TH2F * ratio2DPythiaEta             = new TH2F("ratio2DPythiaEta","ratio2DPythiaEta",1000,minPtEta,maxPtEta,1000,0.6,1.65);
            SetStyleHistoTH2ForGraphs(ratio2DPythiaEta, "#it{p}_{T} (GeV/#it{c})","#frac{Pythia, Data}{TCM fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                                      0.85*textsizeLabelsXSecDown,textsizeLabelsXSecDown, 0.9,0.2/(textsizeFacXSecDown*marginXSec), 510, 505);
            ratio2DPythiaEta->GetYaxis()->SetMoreLogLabels(kTRUE);
