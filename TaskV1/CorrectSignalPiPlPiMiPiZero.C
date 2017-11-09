@@ -225,8 +225,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	Double_t scaling = 1./(2.*TMath::Pi());
 
     // Variable to quickly change which type of yield is used
-    //TString InvMassTypeEnding = "_FixedPzPiZero";
-    TString InvMassTypeEnding = "";
+    TString InvMassTypeEnding = "_FixedPzPiZero";
+    //TString InvMassTypeEnding = "";
 	
 	// File definitions
 	TFile fileUncorrected(fileNameUnCorrectedFile.Data());  
@@ -1509,7 +1509,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 		
         DrawGammaSetMarker(RatioNormalMCInput, 22, 1., kBlack, kBlack);
         RatioNormalMCInput->SetYTitle("#frac{standard}{modified}");
-        RatioNormalMCInput->GetYaxis()->SetRangeUser(0.8,1.23);
+        RatioNormalMCInput->GetYaxis()->SetRangeUser(0.1,2.0);
         RatioNormalMCInput->GetYaxis()->SetLabelSize(0.07);
         RatioNormalMCInput->GetYaxis()->SetNdivisions(505);
         RatioNormalMCInput->GetYaxis()->SetTitleSize(0.1);
@@ -1518,6 +1518,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
         RatioNormalMCInput->GetXaxis()->SetTitleSize(0.11);
         RatioNormalMCInput->GetXaxis()->SetLabelSize(0.08);
         RatioNormalMCInput->GetXaxis()->SetTitle("p_{T} (GeV/c)");
+        RatioNormalMCInput->GetXaxis()->SetRange(0.,12.);
         RatioNormalMCInput->DrawCopy("p,e1"); // normal/ MC
         DrawGammaSetMarker(RatioNormal, 24, 1., kGreen+2, kGreen+2);
         RatioNormal->DrawCopy("e1,same"); // True / Norm
