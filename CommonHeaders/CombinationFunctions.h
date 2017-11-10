@@ -1533,7 +1533,7 @@
 //                 corrFracEMC_PCMEMC_EMC[1]              = 0.8;
 //                 corrFracPCM_PCM_EMC[1]                 = 0;
 //                 corrFracEMC_PCM_EMC[1]                 = 0;
-            } else if (energy.CompareTo("7TeV") == 0 && mesonType.CompareTo("Pi0") == 0){
+            } else if ( (energy.CompareTo("7TeV") == 0 || energy.CompareTo("900GeV") == 0) && mesonType.CompareTo("Pi0") == 0){
                 corrFracPCM_PCM_PCMEMC[0]              = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCM_PCM-PCMEMC");
                 corrFracPCMEMC_PCM_PCMEMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCM-PCMEMC");
                 corrFracPCMEMC_PCMEMC_EMC[0]           = GetCorrFactorFromFile(fCorrFactors,xValue[ptBin], "Systems", "Pi0", "PCMEMC_PCMEMC-EMC");

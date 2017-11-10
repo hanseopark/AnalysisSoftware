@@ -364,6 +364,14 @@ fileNameEMCAL2="";
           while (graphPi0InvXSectionSys[i]->GetY()[0] <= 1E-50 ) graphPi0InvXSectionSys[i]->RemovePoint(0);
           while (graphPi0InvXSectionSys[i]->GetY()[graphPi0InvXSectionSys[i]->GetN()-1] <= 1E-50 ) graphPi0InvXSectionSys[i]->RemovePoint(graphPi0InvXSectionSys[i]->GetN()-1);
 
+          //fix x-errors for PHOS being not consistent in stat+sys
+          if(i==1){
+            for(Int_t iP=0;iP<graphPi0InvXSectionSys[i]->GetN();iP++){
+              graphPi0InvXSectionSys[i]->SetPointEXhigh(iP,graphPi0InvXSectionStat[i]->GetErrorXhigh(iP));
+              graphPi0InvXSectionSys[i]->SetPointEXlow(iP,graphPi0InvXSectionStat[i]->GetErrorXlow(iP));
+            }
+          }
+
         cout << nameMeasGlobal[i].Data() << " pi0 stat:" << graphPi0InvXSectionStat[i] << endl;
         if(doOutput) graphPi0InvXSectionStat[i]->Print();
         cout << nameMeasGlobal[i].Data() << " pi0 sys:" << graphPi0InvXSectionSys[i] << endl;
@@ -557,15 +565,15 @@ fileNameEMCAL2="";
     // ************************** Combination of different measurements **************************************
     // *******************************************************************************************************
 
-    Int_t nBinsPi0 = 48;
-    Double_t xPtLimits[49]                      =  { 0.0, 0.3, 0.4, 0.5, 0.6,
+    Int_t nBinsPi0 = 43;
+    Double_t xPtLimits[44]                      =  { 0.0, 0.3, 0.4, 0.5, 0.6,
                                                      0.7, 0.8, 0.9, 1.0, 1.1,
                                                      1.2, 1.3, 1.4, 1.5, 1.6,
-                                                     1.7, 1.8, 1.9, 2.0, 2.1,
-                                                     2.2, 2.3, 2.4, 2.6, 2.8,
+                                                     1.7, 1.8, 2.0,
+                                                     2.2, 2.4, 2.6, 2.8,
                                                      3.0, 3.2, 3.4, 3.6, 3.8,
-                                                     4.0, 4.3, 4.6, 5.0, 5.5,
-                                                     6.0, 6.5, 7.0, 8.0, 9.0,
+                                                     4.0, 4.5, 5.0, 5.5,
+                                                     6.0, 7.0, 8.0, 9.0,
                                                      10.0, 11.0, 12.0, 13.0, 14.0,
                                                      16.0, 18.0, 20.0, 25.0
                                                     };

@@ -4914,7 +4914,7 @@
         if ( variationName.CompareTo("Trigger") == 0 )
             return "trigger normalization";
         if ( variationName.CompareTo("PileUp") == 0 )
-            return "SPD pile-up";
+            return "SPD pileup";
         if ( variationName.CompareTo("Efficiency") == 0 )
             return "efficiency";
         if ( variationName.CompareTo("YieldExtractionPi0") == 0 || variationName.CompareTo("IntRange") == 0 )

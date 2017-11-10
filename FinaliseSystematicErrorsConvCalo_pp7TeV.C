@@ -77,7 +77,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
     const Int_t nCuts = numberCutStudies;
     Double_t* ptBins = 0x0;
     Double_t* ptBinsErr = 0x0;
-    const Int_t nMaxVar = 24;
+    const Int_t nMaxVar = 23;
     TString nameCutVariation[nMaxVar];
     TString nameCutVariationSC[nMaxVar];
     
@@ -85,7 +85,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                                                "Chi2", "Qt", "Alpha", "ConvPhi", "ClusterMinEnergy",
                                                "ClusterNCells", "ClusterNonLinearity", "ClusterTrackMatching", "ClusterM02", "CellTiming",
                                                "ClusterMaterialTRD", "PileUp", "Efficiency", "ClusterEnergyScale", "ClusterTime",
-                                               "ClusterizationEnergy", "Periods", "Secondary","YieldExtractionPi0"};
+                                               "ClusterizationEnergy", "Secondary","YieldExtractionPi0"};
 
     Color_t color[nMaxVar];
     Color_t markerStyle[nMaxVar];
@@ -109,24 +109,24 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                                         0, 0, 0, 0, 0,
                                         0, 0, 0, 0, 0,
                                         0, 0, 0, 0 ,0,
-                                        0, 0, 0, 0};
+                                        0, 0, 0};
     // minimum bias trigger                      
     Bool_t bsmoothMBPi0[nMaxVar]    = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1 ,1,
-                                        1, 1, 1, 0};
+                                        1, 1, 0};
     Bool_t bsmoothMBEta[nMaxVar]    = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1 ,1,
-                                        1, 1, 1, 0};
+                                        1, 1, 0};
     Bool_t bsmoothMBPi0EtaBinning[nMaxVar]
                                     = { 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1 ,1,
-                                        1, 1, 1, 1};
+                                        1, 1, 1};
 
                           
     for (Int_t i = 0; i < numberCutStudies; i++){
@@ -214,7 +214,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, Efficiency - 17
-        if (i == 0 || i == 15 || i == 17 || i == 18 || i == 20 || i == 22 || ((i == 14 || i == 20 || i == 21 ) && (meson.CompareTo("Pi0EtaBinning") == 0)) ){ // special treatment for Yield extraction error and calculated erros
+        if (i == 0 || i == 15 || i == 17 || i == 18 || i == 20 || i == 21 || ((i == 14 || i == 20) && (meson.CompareTo("Pi0EtaBinning") == 0)) ){ // special treatment for Yield extraction error and calculated erros
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("Pi0EtaBinning") != 0 ){
@@ -238,7 +238,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
-        } else if (i == 23){ // special treatment for eta to pi0 ratio
+        } else if (i == 22){ // special treatment for eta to pi0 ratio
             TString nameGraphPos    = Form("Pi0EtaBinning_SystErrorRelPos_YieldExtraction_%s",additionalName.Data() );
             TString nameGraphNeg    = Form("Pi0EtaBinning_SystErrorRelNeg_YieldExtraction_%s",additionalName.Data() );
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
@@ -282,8 +282,8 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
             if  (nameCutVariationSC[i].CompareTo("YieldExtraction") == 0){
                 if ( meson.CompareTo("Pi0") == 0){
                     for (Int_t k = 0; k < nPtBins; k++){
-                        Double_t error          = 1.75+15/pow(25,ptBins[k]);
-                        if(ptBins[k]>=5.) error         += 0.25*(ptBins[k]-5) ;
+                        Double_t error            = 1.75+20/pow(25,ptBins[k]);
+                        if(ptBins[k]>=5.) error  += 0.25*(ptBins[k]-5);
 
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
@@ -292,8 +292,8 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                     }
                 } else {
                     for (Int_t k = 0; k < nPtBins; k++){
-                        Double_t error   = 5.5+25./pow(2.,ptBins[k]);
-                        if(ptBins[k]>=5.) error         += 0.4*(ptBins[k]-5) ;
+                        Double_t error            = 5.+25./pow(2.,ptBins[k]);
+                        if(ptBins[k]>=5.) error  += 0.4*(ptBins[k]-5.);
                         
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = error*0.01;
@@ -624,7 +624,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
             
             // manual smoothing for Material infront of EMC - variation 15
             if (nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")==0 ){
-                Double_t error                  = 4.24; //(3% for TRD mat, 3% for TOF mat added in quadrature)
+                Double_t error                  = 2.1; //(1.5% for TRD mat, 1.5% for TOF mat added in quadrature)
                 if (meson.CompareTo("Pi0EtaBinning") == 0)
                     error                       = 0;    // cancels fully for eta/pi0
                 for (Int_t k = 0;k < nPtBins;k++){
@@ -724,22 +724,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                 }
             }
 
-            // manual smoothing for Periods uncertainties - variation 21
-            if (nameCutVariationSC[i].CompareTo("Periods")==0 ){
-                cout << "Periods smoothing" << endl;
-                Double_t error                  = 2.5;
-                if (meson.CompareTo("Pi0EtaBinning") == 0){
-                    error   = 0.;
-                }
-                for (Int_t k = 0;k < nPtBins;k++){
-                    errorsMean[i][k]            = error;
-                    errorsMeanErr[i][k]         = error*0.01;
-                    errorsMeanCorr[i][k]        = error;
-                    errorsMeanErrCorr[i][k]     = error*0.01;
-                }
-            }
-
-            // manual smoothing for SecondaryCorrection uncertainties - variation 22
+            // manual smoothing for SecondaryCorrection uncertainties - variation 21
             if (nameCutVariationSC[i].CompareTo("Secondary")==0 ){
                 cout << "Seconday smoothing" << endl;
                 Double_t error                  = 0.5;
@@ -753,12 +738,12 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                 }
             }
 
-            // manual smoothing for pi0 in eta binning - variation 23
-            if (i==23 && nameCutVariationSC[i].CompareTo("YieldExtractionPi0")==0 ){
+            // manual smoothing for pi0 in eta binning - variation 22
+            if (i==22 && nameCutVariationSC[i].CompareTo("YieldExtractionPi0")==0 ){
                 cout << "pi0etabinning smoothing" << endl;
                 for (Int_t k = 0;k < nPtBins;k++){
-                  Double_t error          = 1.75+15/pow(25,ptBins[k]);
-                  if(ptBins[k]>=5.) error         += 0.25*(ptBins[k]-5) ;
+                  Double_t error            = 1.75+20/pow(25,ptBins[k]);
+                  if(ptBins[k]>=5.) error  += 0.25*(ptBins[k]-5);
 
                   errorsMean[i][k]        = error;
                   errorsMeanErr[i][k]     = error*0.01;
@@ -889,15 +874,10 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;
                 continue;
             }
-            if ( meson.CompareTo("Eta") == 0 && (i == 22) ){
+            if ( meson.CompareTo("Eta") == 0 && (i == 21) ){
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;
                 continue;
             }
-            // PileUp - 16
-//            if ((additionalNameOutput.CompareTo("") == 0) && i == 16){
-//                cout << "not drawing: " << nameCutVariation[i].Data() << endl;
-//                continue;
-//            }
             // Alpha - 7
             if (!(additionalNameOutput.CompareTo("") == 0) ) {
                 if ( i == 7 ){
@@ -915,7 +895,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
         if ( meson.CompareTo("Pi0EtaBinning") != 0 ){
             DrawGammaSetMarkerTGraphErr(graphMaterialError, 24, 1.,color[10],color[10]);
             graphMaterialError->Draw("pX0,csame");
-            legendMean->AddEntry(graphMaterialError,"Inner Material","p");
+            legendMean->AddEntry(graphMaterialError,"inner material","p");
         }
         legendMean->Draw();
 
@@ -974,11 +954,6 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
 
         for(Int_t i = 0; i< numberCutStudies ; i++){
             cout << i << "\t"<< additionalNameOutput.Data() << endl;
-            // PileUp - 16
-//            if (additionalNameOutput.CompareTo("") == 0 && i == 16){
-//                cout << "not drawing: " << nameCutVariation[i].Data() << endl;
-//                continue;
-//            }
             // Alpha - 7
             if (!(additionalNameOutput.CompareTo("") == 0) ) {
                 if ( i == 7 ){
@@ -991,7 +966,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;
                 continue;
             }
-            if ( meson.CompareTo("Eta") == 0 && (i == 22) ){
+            if ( meson.CompareTo("Eta") == 0 && (i == 21) ){
                 cout << "not drawing: " << nameCutVariation[i].Data() << endl;
                 continue;
             }
@@ -1005,7 +980,7 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
         if ( meson.CompareTo("Pi0EtaBinning") != 0 ){
             DrawGammaSetMarkerTGraphErr(graphMaterialError, GetMarkerStyleSystematics( "InnerMaterial", 2), 1.,GetColorSystematics( "InnerMaterial", 2),GetColorSystematics( "InnerMaterial", 2));
             graphMaterialError->Draw("pX0,csame");
-            legendMeanNew->AddEntry(graphMaterialError,"Inner Material","p");
+            legendMeanNew->AddEntry(graphMaterialError,"inner material","p");
         }
         
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
@@ -1126,13 +1101,13 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
     for (Int_t l=0; l< nPtBins; l++){
         // "YieldExtraction"-0,"dEdxE"-1,"dEdxPi"-2, "TPCCluster"-3, "SinglePt"-4, "Chi2"-5, "Qt"-6, "Alpha"-7, "ConvPhi"-8, "ClusterMinEnergy"-9, "ClusterNCells"-10, 
         // "NonLinearity"-11, "ClusterTrackMatching" -12, "ClusterM02" -13, "CellTiming" -14,"ClusterMaterialTRD" -15, "PileUp" -16,
-        // "Efficiency" -17, "ClusterEnergyScale" -18, "ClusterTime" -19,"ClusterizationEnergy" -20, "Periods" -21, "Secondary" - 22, "YieldExtraction" -23
+        // "Efficiency" -17, "ClusterEnergyScale" -18, "ClusterTime" -19,"ClusterizationEnergy" -20, "Secondary" - 21, "YieldExtraction" -22
         // grouping:
-        // Signal extraction: Yield extraction 0, Alpha 7, Secondary 22, Eta/Pi0: YieldPi0 23
+        // Signal extraction: Yield extraction 0, Alpha 7, Secondary 21, Eta/Pi0: YieldPi0 22
         if (numberCutStudies>8){
-            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]+errorsMeanCorr[22][l]*errorsMeanCorr[22][l]);
+            errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]+errorsMeanCorr[21][l]*errorsMeanCorr[21][l]);
             if( meson.CompareTo("Pi0EtaBinning") == 0 ) {
-              errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]+errorsMeanCorr[22][l]*errorsMeanCorr[22][l]+errorsMeanCorr[23][l]*errorsMeanCorr[23][l]);
+              errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]+errorsMeanCorr[21][l]*errorsMeanCorr[21][l]+errorsMeanCorr[22][l]*errorsMeanCorr[22][l]);
             }else if(meson.CompareTo("Eta") == 0){
               errorsMeanCorrSignalExtraction[l] = TMath::Sqrt(errorsMeanCorr[0][l]*errorsMeanCorr[0][l]+errorsMeanCorr[7][l]*errorsMeanCorr[7][l]);
             }
@@ -1208,9 +1183,6 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
         // Photon reco error
         DrawGammaSetMarkerTGraphErr(meanErrorsPhotonReco, 23, 1.,color[3],color[3]);
         meanErrorsPhotonReco->Draw("pX0,csame");
-        // Non linearity - 11
-//        DrawGammaSetMarkerTGraphErr(meanErrorsCorr[11], 25, 1.,color[5],color[5]);
-//        meanErrorsCorr[11]->Draw("pX0,csame");
         // Material infront of EMCAL -15
         if (meson.CompareTo("Pi0EtaBinning") != 0){
             DrawGammaSetMarkerTGraphErr(meanErrorsCorr[15], 21, 1.,color[7],color[7]);
@@ -1243,21 +1215,11 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
         }
         
         if (meson.CompareTo("Pi0EtaBinning") != 0){
-            // Cell time - 14
-//            if (numberCutStudies>14){
-//                DrawGammaSetMarkerTGraphErr(meanErrorsCorr[14], 20, 1.,color[13],color[13]);
-//                meanErrorsCorr[14]->Draw("pX0,csame");
-//            }
             // PileUp -16
             if (numberCutStudies>16 /*&& !(additionalNameOutput.CompareTo("") == 0 || additionalNameOutput.CompareTo("INT7") ==0 )*/){
                 DrawGammaSetMarkerTGraphErr(meanErrorsCorr[16], 25, 1.,color[14],color[14]);
                 meanErrorsCorr[16]->Draw("pX0,csame");
             }
-
-            //period error
-            DrawGammaSetMarkerTGraphErr(meanErrorsCorr[21], 26, 1.,color[6],color[6]);
-            meanErrorsCorr[21]->Draw("pX0,csame");
-            
         }
         
         legendSummedMeanNew->AddEntry(meanErrorsSignalExtraction,"signal extraction","p");
@@ -1276,10 +1238,9 @@ void FinaliseSystematicErrorsConvCalo_pp7TeV(TString nameDataFileErrors    = "",
             legendSummedMeanNew->AddEntry(meanErrorsCorr[15],"mat. infront of EMCal","p");
         }
         if (numberCutStudies>17) legendSummedMeanNew->AddEntry(meanErrorsCorr[17],"efficiency","p");
-        if (meson.CompareTo("Pi0EtaBinning") != 0)legendSummedMeanNew->AddEntry(meanErrorsCorr[21],"periods","p");
         if (meson.CompareTo("Pi0EtaBinning") != 0){
             if (numberCutStudies>16 /*&& !(additionalNameOutput.CompareTo("") == 0)*/)
-                legendSummedMeanNew->AddEntry(meanErrorsCorr[16],"SPD pile-up","p");
+                legendSummedMeanNew->AddEntry(meanErrorsCorr[16],"SPD pileup","p");
         }
         DrawGammaSetMarkerTGraphErr(meanErrorsCorrSummedIncMat, 20, 1.,kBlack,kBlack);
         meanErrorsCorrSummedIncMat->Draw("p,csame");
