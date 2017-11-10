@@ -99,7 +99,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     TString fileNamePOWHEG8TeV                  = "ExternalInput/Theory/POWHEG_Pythia/powhegDijetShoweredWithPythia_pi0_eta_invariantXsec_NNPDF23LOas0130.root";
 
     TString fileName2760GeV                     = "ExternalInput/CombinedResultsPaperPP2760GeV_2016_12_15_FrediV2Clusterizer.root";
-    TString fileName7TeV                        = "ExternalInput/CombinedResultsPaperPP7TeV_2017_04_20.root";
+    TString fileName7TeV                        = "ExternalInput/CombinedResultsPaperPP7TeV_2017_11_10.root";
     TString fileName7TeVpub                     = "ExternalInput/CombNeutralMesons/CombinedResultsPP_ShiftedX_PaperRAA_16_May_2014_including7TeVand900GeVpublished.root";
 
     TString fileNamePCMMB                       = "ExternalInput/PCM/8TeV/8TeV_data_PCMResults_InvMassBins.root";
@@ -1181,12 +1181,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
      histoPythia8InvXSection2760GeVChPion->GetXaxis()->SetRangeUser(0.3,35);
 
      TFile* file7TeV                              = new TFile(fileName7TeV.Data());
-     TGraphAsymmErrors* graph7TeVPi0Stat          = (TGraphAsymmErrors*) file7TeV->Get("Pi07TeV/graphInvCrossSectionPi0CombStat");
-     TGraphAsymmErrors* graph7TeVPi0Sys           = (TGraphAsymmErrors*) file7TeV->Get("Pi07TeV/graphInvCrossSectionPi0CombSys");
-     TGraphAsymmErrors* graph7TeVPi0              = new TGraphAsymmErrors(*graph7TeVPi0Stat);
-     for (Int_t i = 0; i<graph7TeVPi0->GetN(); i++){
-         graph7TeVPi0->GetEYlow()[i] = TMath::Sqrt(TMath::Power(graph7TeVPi0Stat->GetEYlow()[i],2)+TMath::Power(graph7TeVPi0Sys->GetEYlow()[i],2));
-         graph7TeVPi0->GetEYhigh()[i] = TMath::Sqrt(TMath::Power(graph7TeVPi0Stat->GetEYhigh()[i],2)+TMath::Power(graph7TeVPi0Sys->GetEYhigh()[i],2));
+     TGraphAsymmErrors* graph7TeVPi0Stat          = (TGraphAsymmErrors*) file7TeV->Get("Pi07TeV/graphInvCrossSectionPi0Comb7TeVStatErr");
+     TGraphAsymmErrors* graph7TeVPi0Sys           = (TGraphAsymmErrors*) file7TeV->Get("Pi07TeV/graphInvCrossSectionPi0Comb7TeVSysErr");
+     TGraphAsymmErrors* graph7TeVPi0              = (TGraphAsymmErrors*) file7TeV->Get("Pi07TeV/graphInvCrossSectionPi0Comb7TeV");
+     if(!graph7TeVPi0){
+       for (Int_t i = 0; i<graph7TeVPi0->GetN(); i++){
+           graph7TeVPi0->GetEYlow()[i] = TMath::Sqrt(TMath::Power(graph7TeVPi0Stat->GetEYlow()[i],2)+TMath::Power(graph7TeVPi0Sys->GetEYlow()[i],2));
+           graph7TeVPi0->GetEYhigh()[i] = TMath::Sqrt(TMath::Power(graph7TeVPi0Stat->GetEYhigh()[i],2)+TMath::Power(graph7TeVPi0Sys->GetEYhigh()[i],2));
+       }
      }
 
 //     TFile* file7TeVpub                              = new TFile(fileName7TeVpub.Data());
@@ -1198,12 +1200,14 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
      TF1* fit7TeVPi0Tsallis                           = (TF1*) file7TeV->Get("Pi07TeV/TsallisFitPi0");
      fit7TeVPi0Tsallis->SetName("fit7TeVPi0Tsallis");
 
-     TGraphAsymmErrors* graph7TeVEtaStat          = (TGraphAsymmErrors*) file7TeV->Get("Eta7TeV/graphInvCrossSectionEtaCombStat");
-     TGraphAsymmErrors* graph7TeVEtaSys           = (TGraphAsymmErrors*) file7TeV->Get("Eta7TeV/graphInvCrossSectionEtaCombSys");
-     TGraphAsymmErrors* graph7TeVEta              = new TGraphAsymmErrors(*graph7TeVEtaStat);
-     for (Int_t i = 0; i<graph7TeVEta->GetN(); i++){
-         graph7TeVEta->GetEYlow()[i] = TMath::Sqrt(TMath::Power(graph7TeVEtaStat->GetEYlow()[i],2)+TMath::Power(graph7TeVEtaSys->GetEYlow()[i],2));
-         graph7TeVEta->GetEYhigh()[i] = TMath::Sqrt(TMath::Power(graph7TeVEtaStat->GetEYhigh()[i],2)+TMath::Power(graph7TeVEtaSys->GetEYhigh()[i],2));
+     TGraphAsymmErrors* graph7TeVEtaStat          = (TGraphAsymmErrors*) file7TeV->Get("Eta7TeV/graphInvCrossSectionEtaComb7TeVStatErr");
+     TGraphAsymmErrors* graph7TeVEtaSys           = (TGraphAsymmErrors*) file7TeV->Get("Eta7TeV/graphInvCrossSectionEtaComb7TeVSysErr");
+     TGraphAsymmErrors* graph7TeVEta              = (TGraphAsymmErrors*) file7TeV->Get("Eta7TeV/graphInvCrossSectionEtaComb7TeV");
+     if(!graph7TeVEta){
+       for (Int_t i = 0; i<graph7TeVEta->GetN(); i++){
+           graph7TeVEta->GetEYlow()[i] = TMath::Sqrt(TMath::Power(graph7TeVEtaStat->GetEYlow()[i],2)+TMath::Power(graph7TeVEtaSys->GetEYlow()[i],2));
+           graph7TeVEta->GetEYhigh()[i] = TMath::Sqrt(TMath::Power(graph7TeVEtaStat->GetEYhigh()[i],2)+TMath::Power(graph7TeVEtaSys->GetEYhigh()[i],2));
+       }
      }
      TF1* fit7TeVEtaTCM                           = (TF1*) file7TeV->Get("Eta7TeV/TwoComponentModelFitEta");
      fit7TeVEtaTCM->SetName("fit7TeVEtaTCM");
@@ -3108,7 +3112,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     //fitInvXSectionEta        = FitObject("l","fitInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramGraphEta,"QNRMEX0+");
     cout << WriteParameterToFile(fitInvXSectionEta)<< endl;
 
-    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[2],0.2,graphCombEtaInvXSectionTotA->GetY()[3],0.75,3.};
+    Double_t paramTCMEta[5]  = {graphCombEtaInvXSectionTotA->GetY()[1],0.2,graphCombEtaInvXSectionTotA->GetY()[3],0.75,3.};
      //Double_t paramTCMEta[5]  = {5E7,0.2,4E9,0.5,3.03};
     // Two component model by Bylinkin
     TF1* fitTCMInvXSectionEta= FitObject("tcm","fitTCMInvCrossSectionEta8TeV","Eta",graphCombEtaInvXSectionTotA,0.4,35.,paramTCMEta,"QNRMEX0+","", kFALSE);
