@@ -285,24 +285,24 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         TGraphAsymmErrors* graphTheoryNLOpp2760GeV      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonNLOVogelsangInvYieldINT1_2760GeV");
         TGraph* graphTheoryNLODRpp2760GeVPaquettCenter  = (TGraph*) fileTheory->Get("DirectPhoton/graphDRNLOPaquett_2760GeV_ALICECocktail");
         TGraph* graphTheoryNLOpp2760GeVPaquettCenter    = (TGraph*) fileTheory->Get("DirectPhoton/graphNLOPaquett_2760GeV");
-        
+
         TGraphAsymmErrors* graphTheoryJETPHOXDRpp2760GeV    = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonJETPHOXInvYieldINT1_pp2760GeV_ALICECocktail");
         TGraph* graphTheoryJETPHOXDRpp2760GeVCenter         = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonJETPHOXInvYieldINT1_pp2760GeV_ALICECocktail_Center");
         TH1D* histoTheoryJETPHOXpp2760GeV      = (TH1D*) fileTheory->Get("DirectPhoton/graphDirectPhotonJETPHOXInvYield_2760GeV");
         TGraph* graphTheoryJETPHOXpp2760GeV      = new TGraph(histoTheoryJETPHOXpp2760GeV);
-        
+
         while(graphTheoryJETPHOXpp2760GeV->GetX()[0] < 1.5) graphTheoryJETPHOXpp2760GeV->RemovePoint(0);
         // while(graphTheoryJETPHOXDRpp2760GeV->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp2760GeV->RemovePoint(0);
         while(graphTheoryJETPHOXDRpp2760GeVCenter->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp2760GeVCenter->RemovePoint(0);
-        
+
         TGraphAsymmErrors* dummyJETPHOXforLegend    = new TGraphAsymmErrors(1);
         DrawGammaSetMarkerTGraphAsym(dummyJETPHOXforLegend , 2, styleLineJETPHOX, colorJETPHOX, colorJETPHOX, 0.2, kTRUE, colorJETPHOXBand);
         dummyJETPHOXforLegend->SetLineStyle(styleLineJETPHOX);
-        dummyJETPHOXforLegend->SetLineWidth(2);
+        dummyJETPHOXforLegend->SetLineWidth(widthLineNLO);
         TGraphAsymmErrors* dummyVogelsangforLegend    = new TGraphAsymmErrors(1);
         DrawGammaSetMarkerTGraphAsym(dummyVogelsangforLegend , 2, styleLineNLOWerner, colorNLOWerner, colorNLOWerner, 0.2, kTRUE, colorNLOWernerBand);
         dummyVogelsangforLegend->SetLineStyle(styleLineNLOWerner);
-        dummyVogelsangforLegend->SetLineWidth(2);
+        dummyVogelsangforLegend->SetLineWidth(widthLineNLO);
 
     //*******************************************************************************************************************************************
     //*********************************************** Combining Rgamma ratios  ******************************************************************
@@ -756,7 +756,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     //  ************************************ Visualize relative errors ******************************************************
     //  *********************************************************************************************************************
     canvasRelStatErr->cd();
-    
+
     histo2DRelStatErr->Draw("copy");
     TLegend* legenDRNonFitelStatErr2       = GetAndSetLegend2(0.14, 0.92-(0.04*(nMeasSetDRNonFit+1)/2), 0.45, 0.92, textSizeLabelsPixel, 2, "", 43, 0);
     for (Int_t i = 0; i < nMeasSetDRNonFit; i++){
@@ -1632,7 +1632,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV.pdf", outputDir.Data()));
-    
+
     hist2DDRDummySingle->DrawCopy();
 
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
@@ -1666,7 +1666,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         TGraphAsymmErrors* graphCombDRStatPlot    = (TGraphAsymmErrors*)graphCombDRStat->Clone("graphCombDRStatPlot");
         ProduceGraphAsymmWithoutXErrors(graphCombDRStatPlot);
 
-
         TLegend* legendDRComb = GetAndSetLegend2(0.12,0.95-textSizeSinglePad*1,0.5,0.95, textSizeSinglePad, 1, "", 42, 0.15);
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
         DrawGammaSetMarkerTGraphAsym(graphCombDRSys, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV,widthLinesBoxes, kTRUE);
@@ -1683,7 +1682,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_Comb_pp2760GeV.pdf", outputDir.Data()));
-    
+
     hist2DDRDummySingle->DrawCopy();
         TGraphAsymmErrors* graphCombDRNonFitStatPlot    = (TGraphAsymmErrors*)graphCombDRNonFitStat->Clone("graphCombDRNonFitStatPlot");
         ProduceGraphAsymmWithoutXErrors(graphCombDRNonFitStatPlot);
@@ -1705,10 +1704,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         hist2DDRDummySingle->DrawCopy();
 
-        TLegend* legendDRTheoryComb = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
-        legendDRTheoryComb->SetTextAlign(11);
-        TLegend* legendDRTheoryComb2 = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*5,0.5,0.96-textSizeSinglePad*1, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
-        legendDRTheoryComb2->SetTextAlign(11);
+        TLegend* legendDRTheoryComb         = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
+        TLegend* legendDRTheoryComb2        = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*5,0.5,0.96-textSizeSinglePad*1, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRSys, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRStatPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes);
@@ -1752,31 +1749,25 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV.pdf", outputDir.Data()));
-    
+
         hist2DDRDummySingle->DrawCopy();
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitSys, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitStatPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes);
 
         if (graphTheoryNLODRpp2760GeV) {
-            DrawGammaSetMarkerTGraphAsym(graphTheoryNLODRpp2760GeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
             graphTheoryNLODRpp2760GeV->Draw("3,same");
         }
         if (graphTheoryNLODRpp2760GeVCenter){
-            DrawGammaNLOTGraph( graphTheoryNLODRpp2760GeVCenter, 2, styleLineNLOWerner, colorNLOWerner);
             graphTheoryNLODRpp2760GeVCenter->Draw("lc,same");
         }
         if (graphTheoryNLODRpp2760GeVPaquettCenter){
-            DrawGammaNLOTGraph( graphTheoryNLODRpp2760GeVPaquettCenter, 2, styleLineMcGill, colorNLOMcGill );
-            graphTheoryNLODRpp2760GeVPaquettCenter->RemovePoint(0);
             graphTheoryNLODRpp2760GeVPaquettCenter->Draw("lc,same");
         }
         if (graphTheoryJETPHOXDRpp2760GeV) {
-            DrawGammaSetMarkerTGraphAsym(graphTheoryJETPHOXDRpp2760GeV, 0, 0, colorJETPHOXBand, colorJETPHOXBand, 0.2, kTRUE, colorJETPHOXBand);
             graphTheoryJETPHOXDRpp2760GeV->Draw("3,same");
         }
         if (graphTheoryJETPHOXDRpp2760GeVCenter){
-            DrawGammaNLOTGraph( graphTheoryJETPHOXDRpp2760GeVCenter, 2, styleLineJETPHOX, colorJETPHOX);
             graphTheoryJETPHOXDRpp2760GeVCenter->Draw("lc,same");
         }
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
@@ -1795,6 +1786,36 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pp2760GeV_NonFit.pdf", outputDir.Data()));
 
 
+        hist2DDRDummySingle->DrawCopy();
+
+        TLegend* legendDRTheoryComb3        = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*4,0.5,0.96-textSizeSinglePad*0, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
+
+        if (graphTheoryNLODRpp2760GeV) {
+            graphTheoryNLODRpp2760GeV->Draw("3,same");
+            legendDRTheoryComb3->AddEntry(dummyVogelsangforLegend,"PDF: CT10, FF: GRV","fl");
+        }
+        if (graphTheoryNLODRpp2760GeVCenter){
+            graphTheoryNLODRpp2760GeVCenter->Draw("lc,same");
+        }
+        if (graphTheoryNLODRpp2760GeVPaquettCenter){
+            graphTheoryNLODRpp2760GeVPaquettCenter->Draw("lc,same");
+            legendDRTheoryComb3->AddEntry(graphTheoryNLODRpp2760GeVPaquettCenter,"PDF: CTEQ6.1M, FF: BFG2","l");
+        }
+        if (graphTheoryJETPHOXDRpp2760GeV) {
+            graphTheoryJETPHOXDRpp2760GeV->Draw("3,same");
+            legendDRTheoryComb3->AddEntry(dummyJETPHOXforLegend,"JETPHOX","l");
+        }
+        if (graphTheoryJETPHOXDRpp2760GeVCenter){
+            graphTheoryJETPHOXDRpp2760GeVCenter->Draw("lc,same");
+        }
+        DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+
+        legendDRTheoryComb3->Draw();
+        labelDRSingle->Draw();
+        hist2DDRDummySingle->Draw("same,axis");
+
+    canvasDoubleRatio->Print(Form("%s/DR_Theory_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
+    canvasDoubleRatio->Print(Form("%s/DR_Theory_pp2760GeV.pdf", outputDir.Data()));
 
     // **********************************************************************************************************************
     // ******************************** Efficiency for gamma individual measurements ****************************************
@@ -2199,7 +2220,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma.pdf",outputDir.Data()));
-    
+
     // prep plot graphs
     TGraphAsymmErrors* graphCombDirGammaSpectrumNonFitStatErrPlot = NULL;
     if (graphCombDirGammaSpectrumNonFitStatErr) graphCombDirGammaSpectrumNonFitStatErrPlot       = (TGraphAsymmErrors*)graphCombDirGammaSpectrumNonFitStatErr->Clone("graphCombDirGammaSpectrumNonFitStatErrPlot");
@@ -2272,7 +2293,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma.pdf",outputDir.Data()));
-    
+
     histo2DYieldGamma->Draw("copy");
 
 
@@ -2293,7 +2314,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumNonFitSumErrAr);
         }
 
-        
+
         if (graphCombDirGammaSpectrumNonFitSumErrAr){
             dummyForLegend->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
@@ -2331,7 +2352,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             graphTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
             legendYieldDirGammaTheo2->AddEntry(graphTheoryNLOpp2760GeVPaquettCenter,"PDF: CTEQ6.1M, FF: BFG2","l");
         }
-        
+
         if (graphTheoryJETPHOXpp2760GeV) {
           DrawGammaNLOTGraph( graphTheoryJETPHOXpp2760GeV, 2, styleLineJETPHOX, colorJETPHOX );
             graphTheoryJETPHOXpp2760GeV->Draw("l,same");
@@ -2359,7 +2380,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory.pdf",outputDir.Data()));
-    
+
     histo2DYieldGamma->Draw("copy");
 
     graphCombIncGammaSys->Draw("E2same");

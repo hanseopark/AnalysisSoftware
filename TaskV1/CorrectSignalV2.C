@@ -331,7 +331,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         return;
     }
     Int_t kCollisionSystem = 0; // 0 : pp, 1: PbPb, 2: pPb
-    if (optionEnergy.Contains("PbPb"))  kCollisionSystem = 1;
+    if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe") )  kCollisionSystem = 1;
     if (optionEnergy.Contains("pPb"))   kCollisionSystem = 2;
 
     TString centralityString    = GetCentralityString(fEventCutSelection);
@@ -764,7 +764,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             histoSecTrueEffi[k][j]->Scale(fitConst->GetParameter(0));
                         }
                     }
-                } else if (optionEnergy.CompareTo("pPb_5.023TeV") == 0){
+                } else if (optionEnergy.Contains("pPb_5.023TeV") ){
                     histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // crude assumptions // need to be validated for other energies
                     if (mode == 4 || mode == 12 ){
@@ -825,7 +825,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                         modifiedSecTrueEffi[k][j]   = kTRUE;
                         cout << "adjusted sec effi, due to to little stat" << endl;
                     }
-                } else if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0){
+                } else if (optionEnergy.CompareTo("PbPb_2.76TeV") == 0 || optionEnergy.CompareTo("XeXe_5.44TeV") == 0 ){
                     histoSecTrueEffi[k][j]              = (TH1D*)histoTrueEffiPt[k]->Clone(Form("TrueSecFrom%s%sEffiPt",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     if  ( mode == 0) {
                         if (j == 1){
@@ -1633,11 +1633,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
             if (mode == 2 || mode == 13 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
-            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.170);
+            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && kCollisionSystem ==1 ) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.170);
         } else {
             histoMassMeson->GetYaxis()->SetRangeUser(0.54,0.56);
             if (mode == 2 || mode == 13 || mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.50,0.57);
-            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.45,0.65);
+            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && kCollisionSystem ==1) histoMassMeson->GetYaxis()->SetRangeUser(0.45,0.65);
         }
         histoMassMeson->GetYaxis()->SetNdivisions(510);
 
@@ -1695,7 +1695,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                         kTRUE, 0.95, 1.05,
                                         kFALSE, 0., 10.);
             DrawGammaSetMarker(histoRatioRecMass, 20, 0.8, kBlack, kBlack);
-            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && optionEnergy.CompareTo("PbPb_5.02TeV")==0) histoRatioRecMass->GetYaxis()->SetRangeUser(0.75,1.25);
+            if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && kCollisionSystem == 1) histoRatioRecMass->GetYaxis()->SetRangeUser(0.75,1.25);
             histoRatioRecMass->DrawCopy("e1,p");
             DrawGammaSetMarker(histoRatioValRecMass, 24, 0.8, kRed+2, kRed+2);
             histoRatioValRecMass->DrawCopy("same,e1,p");
@@ -2309,7 +2309,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TCanvas* canvasCompEffSimple = new TCanvas("canvasCompEffSimple","",200,10,1350,900);// gives the page size
     DrawGammaCanvasSettings( canvasCompEffSimple, 0.10, 0.01, 0.035, 0.09);
 
-    if (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 && nameMeson.CompareTo("Eta") == 0) )){ //(mode!=0 || mode!=9) &&
+    if (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.Contains("pPb_5.023TeV") && nameMeson.CompareTo("Eta") == 0) )){ //(mode!=0 || mode!=9) &&
         if ( !(mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )){
             TH1D* histoRatioEffWOWeightingEff[3]        = {NULL, NULL, NULL};
             TH1D* histoRatioEffWOWeightingEffCFPol0[3]  = {NULL, NULL, NULL};
@@ -2317,7 +2317,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             for (Int_t k = 0; k < 3; k++){
                 histoRatioEffWOWeightingEff[k]          = (TH1D*) histoEffiPt[k]->Clone();
                 histoRatioEffWOWeightingEff[k]->Divide(histoRatioEffWOWeightingEff[k], histoTrueEffiPtWOWeights[k], 1., 1., "B");
-                if(mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
+                if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                   histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
                 }else{
                   histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.4,maxPtMeson);
@@ -2334,7 +2334,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
 
                 if( !((optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("900GeV") == 0) && mode == 2 && k == 0) ) fitEffiBiasWOWeightsPol1[k]->SetParLimits(2,0.5,1.5);
-                if(mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0 ){
+                if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                   histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
                 }else{
                   histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
@@ -2391,7 +2391,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 // correct true effi to normal effi
                 histoTrueEffiPt[k]->Sumw2();
                 // histoRatioEffWOWeightingEffCFPol1[k]->Sumw2();
-                if(!optionEnergy.CompareTo("900GeV"))
+                if(!optionEnergy.CompareTo("900GeV") || !optionEnergy.CompareTo("XeXe_5.44TeV") )
                   histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol0[k]);
                 else
                   histoTrueEffiPt[k]->Multiply(histoTrueEffiPt[k],histoRatioEffWOWeightingEffCFPol1[k]);
@@ -2425,7 +2425,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         Double_t rangeAcc[2]    = {0.5, 1.02};
         if (mode == 0){
-            if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
+            if (optionEnergy.Contains("pPb_5.023TeV")){
                 rangeAcc[0]     = 0.2;
                 rangeAcc[1]     = 1.02;
                 if (kIsEta)
@@ -3569,7 +3569,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     SysErrorConversion sysErr[6][100];
     for (Int_t k = 0; k < 6; k++){
         for (Int_t i = 1; i < nBinsPt +1; i++){
-            if ( (mode == 9 || mode == 0 || mode == 1 || mode == 2) || (mode == 4 && nameMeson.CompareTo("Eta") && optionEnergy.CompareTo("pPb_5.023TeV") ) ){
+            if ( (mode == 9 || mode == 0 || mode == 1 || mode == 2) || (mode == 4 && nameMeson.CompareTo("Eta") && !optionEnergy.Contains("pPb_5.023TeV") ) ){
     //          binYValue[i] = histoCorrectedYieldTrue->GetBinContent(i);
                 sysErr[k][i].value  = histoCorrectedYieldTrue[k]->GetBinContent(i);
                 sysErr[k][i].error  = histoCorrectedYieldTrue[k]->GetBinError(i);

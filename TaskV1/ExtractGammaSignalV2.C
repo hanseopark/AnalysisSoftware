@@ -2923,7 +2923,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing7";
         optionShowBackground[3]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
         optionShowBackground[4]                         = "BackDecreasingWindow, BackSmoothing3";   // standard
-    } else if ((fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) ) {
+    } else if ((fEnergyFlag.Contains("pPb_5.023TeV") ) ) {
         nIterationsShowBackground[0]                    = 11;
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 10;
@@ -4716,7 +4716,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
     } else {
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
-        if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+        if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
         if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
             if ((ptBin > 2)&&ptBin<100 ){
                 fMesonWidthRange[0]         = 0.001;
@@ -4786,7 +4786,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoSignalInvMassPtGConvBinSingle, Dou
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && ptBin >=17){
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
         }
-        else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (ptBin >= 20) ){//
+        else if (fEnergyFlag.Contains("pPb_5.023TeV")  && (ptBin >= 20) ){//
             cout << "Skipping the vary option for this case" << endl;
         } else {// ...do what you are supposed to....
 

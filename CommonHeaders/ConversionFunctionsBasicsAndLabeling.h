@@ -737,7 +737,7 @@
             return  Form("PbPb #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 2.76 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) {
             return  Form("XeXe #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5.44 TeV ",textProcessOpt.Data());
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 ) {
             return  Form("pPb #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5.02 TeV ",textProcessOpt.Data());
         } else {
             cout << "No correct collision system specification, has been given" << endl;
@@ -763,7 +763,7 @@
             return  Form("PbPb #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 2.76 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) {
             return  Form("XeXe #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 5.44 TeV ",textProcessOpt.Data());
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 ) {
             return  Form("pPb #rightarrow %s (#rightarrow #pi^{+}#pi^{-}#gamma) + X @ 5.02 TeV ",textProcessOpt.Data());
         } else {
             cout << "No correct collision system specification, has been given" << endl;
@@ -793,7 +793,7 @@
             return "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return "Xe-Xe, #sqrt{#it{s}_{_{NN}}} = 5.44 TeV";
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 ) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             return "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
         } else {
             cout << "No correct collision system specification, has been given" << endl;
@@ -823,7 +823,7 @@
             return 5020;
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return 5444;
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 )  {
             return 5023;
         } else {
             cout << "No correct collision system energy specification, has been given" << endl;
@@ -853,7 +853,7 @@
             return  "PbPb5TeV";
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return  "XeXe5440GeV";
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 ) {
             return  "pPb5TeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
             return  "pPb8TeV";
@@ -885,7 +885,7 @@
             return  "5TeV";
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return  "5440GeV";
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 ||  fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             return  "5TeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
             return  "8TeV";
@@ -1525,7 +1525,7 @@
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
             return ncollpPb5023GeV;
         } else {
             return 1.;
@@ -1584,7 +1584,7 @@
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
             return ncollErrpPb5023GeV;
         } else {
             return 1.;
@@ -1633,7 +1633,7 @@
             } else if (name.CompareTo("7590") == 0){ //60-80%
                 return ncoll7590;
             }
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ||  energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
             return ncollpPb5023GeV;
         } else {
             return 1.;
@@ -1684,7 +1684,7 @@
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
 
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 || energy.CompareTo("pPb_5TeV") == 0){
             return ncollErrpPb5023GeV;
         } else {
             return 1.;
@@ -1788,7 +1788,7 @@
             return GetScalingFactorSecCorrection(cutNr.Data());
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return GetScalingFactorSecCorrection(cutNr.Data());
-        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0) {
+        } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             // return 0.;
             return  GetScalingFactorSecCorrection(cutNr.Data());
         } else {
@@ -1823,7 +1823,7 @@
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
             return tpPb5023GeV;
         } else {
             return 1.;
@@ -1857,7 +1857,7 @@
             }
         } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
             return 1.;
-        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
+        } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
             return tpPbErr5023GeV;
         } else {
             return 1.;
@@ -2113,7 +2113,11 @@
             } else if( centralityCutNumberEnd.CompareTo("0")!=0){
                 return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
             } else {
-                return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
+                if (centralityCutNumberEnd.CompareTo("0") == 0){
+                    return Form("%i-100%s", CutNumberToInteger(centralityCutNumberStart)*10,"%");
+                } else {
+                    return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
+                }
             }
         } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
@@ -4138,7 +4142,7 @@
                 cout << "ERROR: V0OR xSection not deterimined, set to \t" << xSectionInt << endl;
             }
 
-        } else if( energy.CompareTo("pPb_5TeV") == 0  || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.02TeV") == 0){
+        } else if( energy.CompareTo("pPb_5TeV") == 0  || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("pPb_5.02TeV") == 0 ){
             if (selTrig == 3){
                 xSectionInt = xSection5023GeVINELpPb;
                 cout << "INEL xSection taken: \t" << xSectionInt << endl;

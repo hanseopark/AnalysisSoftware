@@ -81,8 +81,27 @@ void ExtractSignalV2(   TString meson                   = "",
     //         12// new output DCal-DCal
     //         13// new output PCM-DCal
 
+
+    //******************************************************************************************************
+    //***************************** Get selected file and main dir *****************************************
+    //******************************************************************************************************
+    TFile* f                        = new TFile(file.Data());
+    TString autoDetectedMainDir     = AutoDetectMainTList(mode , f);
+    if (autoDetectedMainDir.CompareTo("") == 0){
+        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+        return;
+    }
+
+    TList *TopDir                   = (TList*)f->Get(autoDetectedMainDir.Data());
+    if(TopDir == NULL){
+        cout<<"ERROR: TopDir not Found"<<endl;
+        return;
+    }
+
+
     if(optionAdvancedMesonQA.Contains("AdvancedMesonQA")){fAdvancedMesonQA = kTRUE;}
 
+    // adjusting Cutnumber
     fCutSelection = cutSelection;
     TString fCutSelectionRead = cutSelection;
     if (mode == 9){
@@ -104,8 +123,6 @@ void ExtractSignalV2(   TString meson                   = "",
             fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
             cout << fEventCutSelection.Data() << endl;
             fEventCutSelectionRead      = fEventCutSelection;
-            fGammaCutSelectionRead      = fGammaCutSelection;
-            fMesonCutSelectionRead      = fMesonCutSelection;
             if (mode==9)
                 fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
             else if (mode==0)
@@ -119,8 +136,6 @@ void ExtractSignalV2(   TString meson                   = "",
             fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
             cout << fEventCutSelection.Data() << endl;
             fEventCutSelectionRead      = fEventCutSelection;
-            fGammaCutSelectionRead      = fGammaCutSelection;
-            fMesonCutSelectionRead      = fMesonCutSelection;
             if (mode==9)
                 fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
             else if (mode==0)
@@ -136,33 +151,75 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << fEventCutSelection.Data() << endl;
         fEventCutSelection.Replace(GetEventCentralityMinCutPosition(),2,"00");
         fEventCutSelectionRead      = fEventCutSelection;
-        fGammaCutSelectionRead      = fGammaCutSelection;
-        fMesonCutSelectionRead      = fMesonCutSelection;
         cout << fGammaCutSelection.Data() << endl;
-        if (mode==9)fCutSelectionRead = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-        else if (mode==0)fCutSelectionRead = Form("%s_%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==0)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==2 || mode==3)
+          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==4 || mode==5)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
         cout << fCutSelectionRead.Data() << endl;
     }
 
-    TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
-    cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
-    if( CutNumberToInteger(fEventCutSelectionPileUpRejection) > 1  && optionMC.CompareTo("kTRUE") == 0){
-      cout << "changing PileUpCut for MC" << endl;
-      cout << fEventCutSelection.Data() << endl;
-      fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");
-      cout << fEventCutSelection.Data() << endl;
-      fEventCutSelectionRead    = fEventCutSelection;
-      fGammaCutSelectionRead    = fGammaCutSelection;
-      fMesonCutSelectionRead    = fMesonCutSelection;
-      fClusterCutSelectionRead  = fClusterCutSelection;
-      if (mode==0)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-      if (mode==2 || mode==3)
-          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-      if (mode==4 || mode==5)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-      cout << fCutSelectionRead.Data() << endl;
+    //******************************************************************************************************
+    //***************************** Get Main folder for cut ************************************************
+    //******************************************************************************************************
+    TList *HistosGammaConversion       = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+    // check if cutnumber available, otherwise adjust for pileup cut
+    if (HistosGammaConversion == NULL){
+        TString fEventCutSelectionPileUpRejection   = fEventCutSelection(5,1);
+        cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
+        if( CutNumberToInteger(fEventCutSelectionPileUpRejection) > 1  && optionMC.CompareTo("kTRUE") == 0){
+        cout << "changing PileUpCut for MC" << endl;
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelectionRead    = fEventCutSelection;
+        fClusterCutSelectionRead  = fClusterCutSelection;
+        if (mode==0)
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==2 || mode==3)
+            fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==4 || mode==5)
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        cout << fCutSelectionRead.Data() << endl;
+        }
     }
+    HistosGammaConversion       = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+    if (HistosGammaConversion == NULL){
+      TString fEventCutSelectionBaseEvent     = fEventCutSelection(GetEventSystemCutPosition(),1);
+      cout << "cutnumber for basic event selection is: " << fEventCutSelectionBaseEvent << endl;
+      if ( CutNumberToInteger(fEventCutSelectionBaseEvent) == 1 && optionMC.CompareTo("kTRUE") == 0){
+        cout << "changing basic event cut for MC" << endl;
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelection.Replace(GetEventSystemCutPosition(),1,"5");
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelectionRead    = fEventCutSelection;
+        fClusterCutSelectionRead  = fClusterCutSelection;
+        if (mode==0)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==2 || mode==3)
+          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==4 || mode==5)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        cout << fCutSelectionRead.Data() << endl;
+      } else if ( CutNumberToInteger(fEventCutSelectionBaseEvent) == 5 && optionMC.CompareTo("kTRUE") == 0){
+        cout << "changing basic event cut for MC" << endl;
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelection.Replace(GetEventSystemCutPosition(),1,"1");
+        cout << fEventCutSelection.Data() << endl;
+        fEventCutSelectionRead    = fEventCutSelection;
+        fClusterCutSelectionRead  = fClusterCutSelection;
+        if (mode==0)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==2 || mode==3)
+          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==4 || mode==5)
+          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        cout << fCutSelectionRead.Data() << endl;
+      }
+    }
+
 
     StyleSettingsThesis(Suffix);
     SetPlotStyle();
@@ -263,25 +320,9 @@ void ExtractSignalV2(   TString meson                   = "",
     fFileErrLog.open(fFileErrLogDatname, ios::out);
 
     //******************************************************************************************************
-    //***************************** Get selected file and main dir *****************************************
-    //******************************************************************************************************
-    TFile* f                        = new TFile(file.Data());
-    TString autoDetectedMainDir     = AutoDetectMainTList(mode , f);
-    if (autoDetectedMainDir.CompareTo("") == 0){
-        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
-        return;
-    }
-
-    TList *TopDir                   = (TList*)f->Get(autoDetectedMainDir.Data());
-    if(TopDir == NULL){
-        cout<<"ERROR: TopDir not Found"<<endl;
-        return;
-    }
-
-    //******************************************************************************************************
     //***************************** Get Main folder for cut ************************************************
     //******************************************************************************************************
-    TList *HistosGammaConversion       = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+    HistosGammaConversion       = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     // couldn't find main folder for cut
     if(HistosGammaConversion == NULL){
         //******************************************************************************************************
@@ -3062,14 +3103,14 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     // MC histograms primaries
     ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
     ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
-    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ) ObjectNameMCPi0AccWOWeights = "MC_Pi0InAcc_Pt";
+    if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) ) ObjectNameMCPi0AccWOWeights = "MC_Pi0InAcc_Pt";
     if(fMode == 4 || fMode == 12 || fMode == 5)
       ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0WOEvtWeightInAcc_Pt";
     else
       ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0_WOEventWeightsInAcc_Pt";
     ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
     ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
-    if(fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ) ObjectNameMCEtaAccWOWeights         = "MC_EtaInAcc_Pt";
+    if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) )  ObjectNameMCEtaAccWOWeights = "MC_EtaInAcc_Pt";
     if(fMode == 4 || fMode == 12 || fMode == 5)
       ObjectNameMCEtaAccWOEvtWeights    = "MC_EtaWOEvtWeightInAcc_Pt";
     else
@@ -4280,9 +4321,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     // set mass start value
     fFitReco->SetParameter(1,fMesonMassExpect);
     // set ranges for mass fitting
-    if( (fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ) && (fMode == 4 || fMode == 12 )){
+    if( (fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.Contains("pPb") ) && (fMode == 4 || fMode == 12 )){
         fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
-    } else if( fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && fMode == 2 && fPrefix.CompareTo("Eta") ==0){
+    } else if( fEnergyFlag.Contains("pPb_5.023TeV")  && fMode == 2 && fPrefix.CompareTo("Eta") ==0){
         fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.3);
     } else {
         fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
@@ -4307,7 +4348,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
       fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
     }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
-    if(fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
+    if(fEnergyFlag.Contains("pPb") && (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
       if(fMode == 4) {
         fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
         fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.5,fMesonWidthRange[1]*2.);
@@ -4317,7 +4358,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         if (fBinsPt[ptBin] > 9. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.2);
       }
     }
-    if(fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (fPrefix.CompareTo("Eta") ==0 )){
+    if(fEnergyFlag.Contains("pPb") && (fPrefix.CompareTo("Eta") ==0 )){
       if(fMode == 3){
         fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
       }
@@ -4341,7 +4382,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     if (vary && !fIsMC && (fMode == 0 || fMode == 9)){
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && fPrefix.CompareTo("Pi0") ==0 && ptBin >=17){
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
-        } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && (ptBin >= 20) ){//
+        } else if (fEnergyFlag.Contains("pPb") && (ptBin >= 20) ){//
             cout << "Skipping the vary option for this case" << endl;
         } else {// ...do what you are supposed to....
             if (!(fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1]) ){
@@ -4455,7 +4496,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+            if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
             if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
                 if ((ptBin > 2)&&ptBin<100 ){
                     fMesonWidthRange[0]         = 0.001;
@@ -4638,7 +4679,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
-            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+            if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
             if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
                 if ((ptBin > 2)&&ptBin<100 ){
                     fMesonWidthRange[0]         = 0.001;
@@ -4822,7 +4863,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*115./100.;
             // set global max for pPb
-            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+            if (fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
             if (fMode == 0 && !fEnergyFlag.CompareTo("8TeV")){
                 if ((ptBin > 2)&&ptBin<100 ){
                     fMesonWidthRange[0]         = 0.001;
@@ -4979,7 +5020,7 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
     if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
-        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
         if (fMode == 2 || fMode == 13 || fMode == 3) {
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
@@ -5239,7 +5280,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
             } else if( fEnergyFlag.CompareTo("2.76TeV") == 0 ){
                   mesonAmplitudeMin                 = mesonAmplitude*80./100.;
                   mesonAmplitudeMax                 = mesonAmplitude*1000./100.;
-            } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
+            } else if (fEnergyFlag.Contains("pPb_5.023TeV")  ){
                 mesonAmplitudeMin                   = mesonAmplitude*90./100.;
                 if(fBinsPt[ptBin] >= 12.0 && fPrefix.Contains("Pi0")) {
                     fMesonLambdaTailMC              = 0.0095;
@@ -5253,7 +5294,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
                 mesonAmplitudeMax = mesonAmplitude*400./100.;
-            } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
+            } else if (fEnergyFlag.Contains("pPb_5.023TeV")  ){
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
                 mesonAmplitudeMax = mesonAmplitude*700./100.;
                 if( !fPrefix.CompareTo("Eta")) {
@@ -5299,7 +5340,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 //         cout << "fixing tail parameter for MC: "<< fBinsPt[ptBin] << endl;
         fFitReco->FixParameter(3,fMesonLambdaTailMC);
     } else {
-        if (ptBin > fStartPtBin+1 && fMode == 4 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+        if (ptBin > fStartPtBin+1 && fMode == 4 && fEnergyFlag.Contains("pPb_5.023TeV") ){
             fFitReco->SetParameter(3,fMesonLambdaTailMCpar[ptBin-1]);
             fFitReco->SetParLimits(3,fMesonLambdaTailMCpar[ptBin-1]*0.5,fMesonLambdaTailMCpar[ptBin-1]*1.5);
         } else {
@@ -5322,15 +5363,15 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     if (fMode == 2 || fMode == 13){
-        if (fBinsPt[ptBin] > 12 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 && fPrefix.Contains("Pi0") ){
+        if (fBinsPt[ptBin] > 12 && fEnergyFlag.Contains("pPb_5.023TeV")  && fPrefix.Contains("Pi0") ){
             fFitReco->FixParameter(4,0);
             fFitReco->FixParameter(5,0);
-        } else if (fBinsPt[ptBin] > 9 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0  ){
+        } else if (fBinsPt[ptBin] > 9 && fEnergyFlag.Contains("pPb_5.023TeV")   ){
             fFitReco->FixParameter(4,0);
             fFitReco->FixParameter(5,0);
         }
     } else if (fMode == 4 || fMode == 12){
-        if (fBinsPt[ptBin] > 10 && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
+        if (fBinsPt[ptBin] > 10 && fEnergyFlag.Contains("pPb_5.023TeV")  ){
             fFitReco->FixParameter(4,0);
             fFitReco->FixParameter(5,0);
         }
@@ -5349,7 +5390,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 
     cout << "amp range: " << mesonAmplitude  << "\t" << mesonAmplitudeMin << "\t" << mesonAmplitudeMax << endl;
     cout << "width range params: " << fMesonWidthExpect  << "\t" << fMesonWidthRangeMC[0] << "\t" << fMesonWidthRangeMC[1] << endl;
-    if ( (fMode == 2 || fMode == 4 || fMode == 12 || fMode == 13) && fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 )
+    if ( (fMode == 2 || fMode == 4 || fMode == 12 || fMode == 13) && fEnergyFlag.Contains("pPb_5.023TeV")  )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
     else if ( fMode == 2  && fEnergyFlag.CompareTo("2.76TeV") == 0 )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
@@ -5384,7 +5425,7 @@ void FitTrueInvMassPureGaussianInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSin
     if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
-        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.Contains("pPb_5.023TeV") ) mesonAmplitudeMin = mesonAmplitude*92./100.;
         if (fMode == 2 || fMode == 13 || fMode == 3) {
             mesonAmplitudeMin = mesonAmplitude*98./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;

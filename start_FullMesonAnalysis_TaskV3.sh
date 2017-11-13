@@ -993,9 +993,9 @@ function GiveBinningHI5020GeV()
 function GiveBinningXeXe5440GeV()
 {
     if [ $DoPi0 -eq 1 ] ; then
-        echo "How many p_T bins do you want to use for Pi0? up to 24";
+        echo "How many p_T bins do you want to use for Pi0? up to 25";
         read answer
-        if [ "$answer" -le "24" ]; then
+        if [ "$answer" -le "25" ]; then
             correctPi0=1
             BinsPtPi0=$answer
         else
@@ -2069,6 +2069,9 @@ do
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
         ExtInputFile="";
+    elif [ $answer = "pPb_5.023TeVRun2" ] || [ $answer = "pPb_5.023R2" ] || [ $answer = "pPb5R2" ];  then
+        energy="pPb_5.023TeVRun2";
+        ExtInputFile="";
     fi
     echo "The collision system has been selected to be $energy."
 
@@ -2404,7 +2407,7 @@ do
             fi
         fi
 
-    elif [ $energy = "pPb_5.023TeV" ]; then
+    elif [ $energy = "pPb_5.023TeV" ] || [ $energy = "pPb_5.023TeVRun2" ]  ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then

@@ -54,19 +54,20 @@ struct SysErrorConversion {
 };
 
 
-void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
-                        TString suffix = "gif",
-                        TString meson = "",
-                        TString isMC = "",
-                        TString optionMult = "",
-                        TString optionEnergy = "",
-                        TString cutVariationName = "",
-                        Int_t NumberOfCuts = 1,
-                        Bool_t optGammaOn = 1,
-                        TString fDalitz = "",
-                        TString optionPeriod = "No",
-                        Int_t mode = 9,
-                        Bool_t doBarlow = kFALSE ){
+void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.dat",
+                        TString suffix                          = "gif",
+                        TString meson                           = "",
+                        TString isMC                            = "",
+                        TString optionMult                      = "",
+                        TString optionEnergy                    = "",
+                        TString cutVariationName                = "",
+                        Int_t NumberOfCuts                      = 1,
+                        Bool_t optGammaOn                       = 1,
+                        TString fDalitz                         = "",
+                        TString optionPeriod                    = "No",
+                        Int_t mode                              = 9,
+                        Bool_t doBarlow                         = kFALSE
+                       ){
 
     // Define global arrays
     TString     cutNumber               [50];
@@ -74,7 +75,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     Double_t    nColls                  [50];
     TString     prefix2                                         = "";
     Bool_t      doMassRatio                                     = kTRUE;
-    Bool_t      doWidthRatio                                     = kTRUE;
+    Bool_t      doWidthRatio                                    = kTRUE;
     Bool_t      correctionFilesAvail                            = kTRUE;
 
     // Set common default plot style
@@ -169,6 +170,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TH1D*   histoTrueEffiCut            [ConstNumberOfCuts];
     TH1D*   histoAcceptanceCut          [ConstNumberOfCuts];
     TH1D*   histoRawYieldCut            [ConstNumberOfCuts];
+    TH1D*   histoRawYieldCutRelUnc      [ConstNumberOfCuts];
     TH1D*   histoMassRatioCut           [ConstNumberOfCuts];
     TH1D*   histoWidthRatioCut          [ConstNumberOfCuts];
     TH1D*   histoEtaToPi0Cut            [ConstNumberOfCuts];
@@ -201,6 +203,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
     TGraphAsymmErrors* systErrGraphBGEstimate                   = NULL;
     TGraphAsymmErrors* systErrGraphBGEstimateIterations         = NULL;
     TString            centralityString                         = "";
+    TString            centralityStringOutput                   = "";
     Double_t           maxPt                                    = 0;
     Bool_t             kSpecialTrigger                          = kFALSE;
 
@@ -386,6 +389,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             // for first cut read yield extraction errors as well
             if(i == 0){
                 centralityString                                = GetCentralityString(fEventCutSelection.Data());
+                centralityStringOutput                          = GetCentralityStringOutput(fEventCutSelection.Data());
                 cout << centralityString.Data()<< endl;
                 systErrGraphNegYieldExt                         = (TGraphAsymmErrors*)Cutcorrfile[i]->Get(Form("%s_SystErrorRelNeg_YieldExtraction_%s",meson.Data(), centralityString.Data()));
                 Double_t* negErrorYield                         = systErrGraphNegYieldExt->GetY();
@@ -447,6 +451,18 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         histoRawYieldCut[i]                                     = (TH1D*)Cutuncorrfile[i]->Get("histoYieldMesonPerEvent");
         histoRawYieldCut[i]->SetName(Form("histoYieldMesonPerEvent_%s",cutNumber[i].Data()));
         histoRawYieldCut[i]->Scale(1./nColls[i]);
+
+        histoRawYieldCutRelUnc[i]                               = (TH1D*)histoRawYieldCut[i]->Clone("histoYieldMesonPerEventRelUnc");
+        for (Int_t k = 1; k < histoRawYieldCutRelUnc[i]->GetNbinsX()+1; k++){
+            if (histoRawYieldCutRelUnc[i]->GetBinContent(k) != 0){
+                histoRawYieldCutRelUnc[i]->SetBinContent(k, histoRawYieldCutRelUnc[i]->GetBinError(k)/histoRawYieldCutRelUnc[i]->GetBinContent(k)*100);
+                histoRawYieldCutRelUnc[i]->SetBinError(k, 0);
+            } else {
+                histoRawYieldCutRelUnc[i]->SetBinContent(k, 0);
+                histoRawYieldCutRelUnc[i]->SetBinError(k, 0);
+            }
+        }
+
         cout << "line " << __LINE__ << endl;
         histoWidthMeson[i]                                      = (TH1D*)Cutuncorrfile[i]->Get("histoFWHMMeson");
         histoWidthMeson[i]->SetName(Form("histoFWHMMeson_%s",cutNumber[i].Data()));
@@ -497,7 +513,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
         }
         histoRatioRawYieldCut[i]                                = (TH1D*) histoRawYieldCut[i]->Clone(Form("histoRatioRawYieldCut_%s", cutNumber[i].Data()));
-        if (!kSpecialTrigger){
+        if (!kSpecialTrigger && !cutVariationName.Contains("Cent")){
             histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"B");
         } else {
             histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"");
@@ -618,10 +634,10 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasRawYieldMeson->Update();
-        canvasRawYieldMeson->SaveAs(Form("%s/%s_%s_RAWYield%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasRawYieldMeson->SaveAs(Form("%s/%s_%s_RAWYield%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasRawYieldMeson;
 
-    if (cutVariationName.Contains("SpecialTrigg")){
+    if (cutVariationName.Contains("SpecialTrigg") || cutVariationName.Contains("Cent") ){
         //**************************************************************************************
         //********************* Plotting RAW-Yield for special triggers  ***********************
         //**************************************************************************************
@@ -632,15 +648,20 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
 
         // Set legend
 
-        TLegend* legendSpecRawTrigger = GetAndSetLegend2(0.15,0.15,0.3,0.15+1.15*0.032*NumberOfCuts, 1000*0.032);
+        TLegend* legendSpecRawTrigger = GetAndSetLegend2(0.15,0.11,0.3,0.11+1.15*0.032*NumberOfCuts, 1000*0.032);
         // Draw Raw yield for different triggers
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 Double_t scaleFactorRaw = 10.;
+                Double_t minRaw         = 10e-10;
+                if (cutVariationName.Contains("Cent") && optionEnergy.Contains("pPb")){
+                    scaleFactorRaw      = 1.;
+                    minRaw              = 5e-11;
+                }
                 DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoRawYieldCut[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s RAW Yield/(#it{N}_{ev})",textMeson.Data()),
-                                        kTRUE, scaleFactorRaw, 10e-10, kTRUE,
+                                        kTRUE, scaleFactorRaw, minRaw, kTRUE,
                                         kFALSE, 0.0, 0.030,
                                         kFALSE, 0., 10.);
                 legendSpecRawTrigger->AddEntry(histoRawYieldCut[i],Form("standard: %s",cutStringsName[i].Data()));
@@ -659,9 +680,58 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
         canvasRawYieldsTrigg->Update();
-        canvasRawYieldsTrigg->SaveAs(Form("%s/%s_%s_TriggerYieldSpectra%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasRawYieldsTrigg->SaveAs(Form("%s/%s_%s_TriggerYieldSpectra%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasRawYieldsTrigg;
 
+        //**************************************************************************************
+        //********************* Plotting RAW-Yield for special triggers  ***********************
+        //**************************************************************************************
+
+        TCanvas* canvasRelUncRawYieldsTrigg = new TCanvas("canvasRawYieldsTrigg","",1000,1000);  // gives the page size
+        DrawGammaCanvasSettings( canvasRelUncRawYieldsTrigg,  0.1, 0.02, 0.04, 0.08);
+
+        // Set legend
+        Int_t nRows         = ((NumberOfCuts+1)/2);
+        TLegend* legendSpecRawTriggerUnc = GetAndSetLegend2(0.11,0.93-(1.05*0.032*nRows),0.65,0.93, 1000*0.032, 2);
+
+        // Draw Raw yield for different triggers
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i == 0){
+                Double_t scaleFactorRaw = 2.;
+                Double_t minRaw         = 0;
+                if (cutVariationName.Contains("Cent") && optionEnergy.Contains("pPb")){
+                    scaleFactorRaw      = 2.;
+                    minRaw              = -1;
+                }
+                DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20, 1., color[0], color[0]);
+                DrawAutoGammaMesonHistos( histoRawYieldCutRelUnc[i],
+                                          "", "#it{p}_{T} (GeV/#it{c})", Form("%s rel unc.",textMeson.Data()),
+                                          kTRUE, scaleFactorRaw, minRaw, kFALSE,
+                                          kFALSE, 0.0, 0.030,
+                                          kFALSE, 0., 10.);
+                histoRawYieldCutRelUnc[i]->DrawCopy("same,c,p");
+                legendSpecRawTriggerUnc->AddEntry(histoRawYieldCutRelUnc[i],Form("standard: %s",cutStringsName[i].Data()));
+            } else {
+                if(i<20){
+                    DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoRawYieldCutRelUnc[i]->DrawCopy("same,c,p");
+                legendSpecRawTriggerUnc->AddEntry(histoRawYieldCutRelUnc[i],cutStringsName[i].Data());
+            }
+        }
+        legendSpecRawTriggerUnc->Draw();
+        // labeling of the plot
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
+        canvasRelUncRawYieldsTrigg->Update();
+        canvasRelUncRawYieldsTrigg->SaveAs(Form("%s/%s_%s_RelUncTriggerYieldSpectra%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
+        delete canvasRelUncRawYieldsTrigg;
+
+        //     }
+
+//     if (cutVariationName.Contains("SpecialTrigg")){
         //**************************************************************************************
         //***************** Plotting RAW-Yield ratios for special triggers  ********************
         //**************************************************************************************
@@ -669,13 +739,20 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         DrawGammaCanvasSettings( canvasRatioRawYields,  0.1, 0.02, 0.04, 0.08);
         if (mode==2 || mode == 4 )canvasRatioRawYields->SetLogy(1);
         // create legend
-        TLegend* legendRatioRaw = GetAndSetLegend2(0.55,0.15,0.7,0.15+1.15*0.032*NumberOfCuts, 1000*0.032);
+        TLegend* legendRatioRaw = GetAndSetLegend2(0.11,0.93-(1.05*0.032*nRows),0.65,0.93, 1000*0.032, 2);
         // find min und max
-        Double_t maxRatio = 2e3;
-        Double_t minRatio = 0;
+        Double_t maxRatio   = 2e3;
+        Double_t minRatio   = 0;
         if (mode==2 || mode == 4){
-            maxRatio = 2e5;
-            minRatio = 0.1;
+            maxRatio        = 2e5;
+            minRatio        = 0.1;
+        }
+        if (cutVariationName.Contains("Cent") && optionEnergy.Contains("pPb") ) {
+            minRatio        = 0;
+            maxRatio        = 5;
+        } else if (cutVariationName.Contains("Cent") && optionEnergy.Contains("XeXe") ) {
+            minRatio        = 0;
+            maxRatio        = 20;
         }
         // plot ratios in canvas
         for(Int_t i = 1; i< NumberOfCuts; i++){
@@ -702,7 +779,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
         canvasRatioRawYields->Update();
-        canvasRatioRawYields->SaveAs(Form("%s/%s_%s_TriggerYieldRatio%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasRatioRawYields->SaveAs(Form("%s/%s_%s_TriggerYieldRatio%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasRatioRawYields;
     }
 
@@ -777,7 +854,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasWidthMeson->Update();
-        canvasWidthMeson->SaveAs(Form("%s/%s_%s_Width%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasWidthMeson->SaveAs(Form("%s/%s_%s_Width%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasWidthMeson;
 
 
@@ -861,7 +938,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasSBMeson->Update();
-        canvasSBMeson->SaveAs(Form("%s/%s_%s_SB%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasSBMeson->SaveAs(Form("%s/%s_%s_SB%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasSBMeson;
 
 
@@ -943,7 +1020,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasSBNarrowMeson->Update();
-        canvasSBNarrowMeson->SaveAs(Form("%s/%s_%s_SBNarrow%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasSBNarrowMeson->SaveAs(Form("%s/%s_%s_SBNarrow%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasSBNarrowMeson;
 
 
@@ -1026,7 +1103,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasSignNarrowMeson->Update();
-        canvasSignNarrowMeson->SaveAs(Form("%s/%s_%s_SignNarrow%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasSignNarrowMeson->SaveAs(Form("%s/%s_%s_SignNarrow%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasSignNarrowMeson;
 
 
@@ -1110,7 +1187,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasSignMeson->Update();
-        canvasSignMeson->SaveAs(Form("%s/%s_%s_Sign%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasSignMeson->SaveAs(Form("%s/%s_%s_Sign%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasSignMeson;
 
 
@@ -1196,7 +1273,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
 
             canvasRawClusterPt->Update();
-            canvasRawClusterPt->SaveAs(Form("%s/%s_%s_RAWYieldCluster%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+            canvasRawClusterPt->SaveAs(Form("%s/%s_%s_RAWYieldCluster%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
             delete canvasRawClusterPt;
 
         if (cutVariationName.Contains("SpecialTrigg") && meson.CompareTo("Pi0") == 0 ){
@@ -1236,7 +1313,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
             canvasRawClusterPtTrigg->Update();
-            canvasRawClusterPtTrigg->SaveAs(Form("%s/%s_TriggerYieldCluster%s.%s",outputDir.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+            canvasRawClusterPtTrigg->SaveAs(Form("%s/%s_TriggerYieldCluster%s.%s",outputDir.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
             delete canvasRawClusterPtTrigg;
 
             //**************************************************************************************
@@ -1279,7 +1356,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
             canvasRatioRawClusterPt->Update();
-            canvasRatioRawClusterPt->SaveAs(Form("%s/%s_TriggerYieldClusterRatio%s.%s",outputDir.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+            canvasRatioRawClusterPt->SaveAs(Form("%s/%s_TriggerYieldClusterRatio%s.%s",outputDir.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
             delete canvasRatioRawClusterPt;
         }
     }
@@ -1385,7 +1462,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         DrawGammaLines(0., maxPt,1., 1.,0.1);
 
         canvasCorrectedYieldMeson->Update();
-        canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield%s.%s",outputDir.Data(), meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield%s.%s",outputDir.Data(), meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasCorrectedYieldMeson;
 
 
@@ -1486,7 +1563,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasTrueEffiMeson->Update();
-        canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasTrueEffiMeson;
 
 
@@ -1574,7 +1651,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
         }
 
         canvasAcceptanceMeson->Update();
-        canvasAcceptanceMeson->SaveAs(Form("%s/%s_%s_Acceptance%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+        canvasAcceptanceMeson->SaveAs(Form("%s/%s_%s_Acceptance%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasAcceptanceMeson;
 
 
@@ -1658,7 +1735,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
 
             canvasMassRatioMeson->Update();
-            canvasMassRatioMeson->SaveAs(Form("%s/%s_%s_MassRatio%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+            canvasMassRatioMeson->SaveAs(Form("%s/%s_%s_MassRatio%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
             delete canvasMassRatioMeson;
         }
 
@@ -1832,7 +1909,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
             }
 
             canvasEtaToPi0Meson->Update();
-            canvasEtaToPi0Meson->SaveAs(Form("%s/%s_%s_EtaToPi0%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityString.Data(),suffix.Data()));
+            canvasEtaToPi0Meson->SaveAs(Form("%s/%s_%s_EtaToPi0%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
             delete canvasEtaToPi0Meson;
 
         }
@@ -2481,7 +2558,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 DrawGammaLines(0., maxPt,1., 1.,0.1);
 
                 canvasCorrectedYieldGamma->Update();
-                canvasCorrectedYieldGamma->SaveAs(Form("%s/Gamma_%s_CorrectedYield%s.%s",outputDir.Data(), prefix2.Data(),centralityString.Data(),suffix.Data()));
+                canvasCorrectedYieldGamma->SaveAs(Form("%s/Gamma_%s_CorrectedYield%s.%s",outputDir.Data(), prefix2.Data(), centralityStringOutput.Data(), suffix.Data()));
                 delete canvasCorrectedYieldGamma;
 
             //*****************************************************************************************
@@ -2556,7 +2633,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 DrawGammaLines(0., maxPt,1., 1.,0.1);
 
                 canvasRawYieldGamma->Update();
-                canvasRawYieldGamma->SaveAs(Form("%s/Gamma_%s_RawYield%s.%s",outputDir.Data(), prefix2.Data(),centralityString.Data(),suffix.Data()));
+                canvasRawYieldGamma->SaveAs(Form("%s/Gamma_%s_RawYield%s.%s",outputDir.Data(), prefix2.Data(), centralityStringOutput.Data(), suffix.Data()));
                 delete canvasRawYieldGamma;
 
             //*****************************************************************************************
@@ -2628,7 +2705,7 @@ void CutStudiesOverview(TString CombineCutsName = "CombineCuts.dat",
                 DrawGammaLines(0., maxPt,1., 1.,0.1);
 
                 canvasEffiGamma->Update();
-                canvasEffiGamma->SaveAs(Form("%s/Gamma_%s_Efficiencies%s.%s",outputDir.Data(), prefix2.Data(),centralityString.Data(),suffix.Data()));
+                canvasEffiGamma->SaveAs(Form("%s/Gamma_%s_Efficiencies%s.%s",outputDir.Data(), prefix2.Data(), centralityStringOutput.Data(), suffix.Data()));
                 delete canvasEffiGamma;
         }
     }

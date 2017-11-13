@@ -41,9 +41,21 @@ elif [ $1 = "dmuhlhei" ]; then
     NSlashes=9;
 fi
 
-TRAINDIR=Legotrain-vAN20171029-XeXeQA
-LHC17nData="340"; #pass 3
+# TRAINDIR=Legotrain-vAN20171029-XeXeQA
+# LHC17nData="340"; #pass 3
 # LHC17j7MC="1090";
+
+# TRAINDIR=Legotrain-vAN20171105-XeXeQA
+# LHC17nData="341"; #pass 1
+# LHC17j7MC="664"
+# LHC17j7MC="665"
+
+TRAINDIR=Legotrain-vAN20171109-XeXeQA
+# LHC17nData="345"; #pass 1
+ LHC17nData="344"; #pass 1
+# LHC17j7MC="673";
+# LHC17j7MC="672";
+# LHC17j7MC="674";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -104,7 +116,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC17j7 == 1 ]; then
         echo "downloading LHC17j7"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC17j7.txt`
+            runNumbers=`cat runlists/runNumbersLHC17j7_all.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC17j7/$runNumber "/alice/sim/2017/LHC17j7/$runNumber/PWGGA/GA_PbPb_MC/$LHC17j7MC" $NSlashes3 "/alice/sim/2017/LHC17j7/$runNumber/PWGGA/GA_PbPb_MC/$LHC17j7MC/Stage_1/" kTRUE

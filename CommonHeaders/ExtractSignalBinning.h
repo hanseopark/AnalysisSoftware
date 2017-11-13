@@ -160,8 +160,8 @@
     //******************** Pt binning for pp, 5 TeV ******************************************************
     //****************************************************************************************************
     Double_t fBinsPi05TeVPt[27]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-							2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
-							4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0};
+                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
+                                                        4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0};
     Double_t fBinsPi05TeVPtDCal[25]                 = { 0.0, 1., 1.2, 1.4, 1.6,
                                                         1.7, 1.8, 1.9, 2.0, 2.1,
                                                         2.2, 2.4, 2.6, 2.8, 3.0,
@@ -938,16 +938,19 @@
     //****************************************************************************************************
     //***************************** Pt binning for XeXe, 5.44 TeV ***********************************
     //****************************************************************************************************
-    Double_t fBinsPi0XeXe5440GeVPt[25]              = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
+    Double_t fBinsPi0XeXe5440GeVPt[26]              = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
                                                         1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 3.0, 3.5, 4.0, 5.0,
-                                                        6.0, 8.0, 10.0,12.0, 14.0};
+                                                        6.0, 8.0, 10.0,12.0, 14.0, 20.0};
     Double_t fBinsPi0XeXe5440GeVPtDCA[16]           = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.25, 2.5,3.0, 4.0, 6.0, 12.};
     Double_t fBinsEtaXeXe5440GeVPtDCA[14]           = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 2.5, 3.0,
                                                         4.0, 6.0, 10., 12.};
-    Int_t fBinsPi0XeXe5440GeVPtRebin[24]            = { 10, 8, 5, 5, 4, 4, 4, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
-                                                        8, 10, 10, 10};
+    Int_t fBinsPi0XeXe5440GeVPtRebin[25]            = { 10, 8, 5, 5, 4, 4, 4, 4, 4, 2,
+                                                        2, 2, 2, 4, 4, 4, 4, 4, 4, 4,
+                                                        10, 12, 12, 12, 12};
+    Int_t fBinsPi0XeXe5440GeVPtRebinCent[25]        = { 10, 8, 8, 8, 5, 5, 5, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 5, 5, 8, 8,
+                                                        8, 12, 12, 12, 12};
 
     Double_t fBinsEtaXeXe5440GeVPt[10]              = { 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 6.0, 8.0, 10.0};
     Int_t fBinsEtaXeXe5440GeVPtRebin[9]             = { 10, 10, 8, 8, 8, 8, 8, 8, 10};
@@ -1259,7 +1262,48 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 return 2;
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0) {
+            } else if( energy.CompareTo("pPb_5.023TeV") == 0 ) {
+                if (mode == 0){
+                    return 7;
+                } else if (mode == 1){
+                    return 5;
+                } else if (mode == 2 || mode == 13){
+                    switch (trigger){
+                        case 0:
+                        case 1:
+                        case 10:
+                        case 11:
+                            return 7;      // INT triggers
+                            break;
+                        case 51:
+                        case 52:
+                        case 53:
+                            return 20;      // EMC triggers
+                            break;
+                        case 85:
+                            return 26;
+                            break;
+                        case 81:
+                        case 82:
+                        case 83:
+                            return 32;      // EGA triggers
+                            break;
+                        default:
+                            return 7;
+                            break;
+                    }
+                } else if (mode == 4 || mode == 12 ){
+                    return 25;
+                } else if (mode == 5){
+                    return 25;
+                } else if (mode == 6){
+                    return 7;
+                } else if (mode == 7){
+                    return 6;
+                } else {
+                    return 7;
+                }
+            } else if( energy.CompareTo("pPb_5.023TeVRun2") == 0 ) {
                 if (mode == 0){
                     return 7;
                 } else if (mode == 1){
@@ -1321,7 +1365,10 @@
                     return 5;
                 } else if (mode == 2){
                     scaleFac    = 2;
-                    return 10;
+                    return 12;
+                } else if (mode == 4){
+                  scaleFac    = 2;
+                  return 15;
                 } else {
                     scaleFac    = 2;
                     return 10;
@@ -1499,7 +1546,7 @@
                     return 7;
             } else if (energy.CompareTo("13TeVLowB") == 0) {
                 return 2;
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0) {
+            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0  ) {
                 if (mode == 0){
     //                 scaleFac    = 2;
                     return 6;
@@ -1604,7 +1651,8 @@
     Int_t GetStartBin(  TString   meson,
                         TString   energy,
                         Int_t     mode,
-                        Int_t     specialTrigg=-1
+                        Int_t     specialTrigg  =-1,
+                        TString   centrality    = ""
     ){
 
         Int_t startPtBin = 0;
@@ -1645,7 +1693,7 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
-            } else if (energy.CompareTo("pPb_5.023TeV") == 0){
+            } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
@@ -1670,21 +1718,49 @@
                 } else {
                     startPtBin     = 1;
                 }
-            } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
+            } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
-                    startPtBin     = 5;
+                    if (specialTrigg == 1)
+                        fStartPtBin     = 14;
+                    else if (specialTrigg == 2)
+                        fStartPtBin     = 24;
+                    else if (specialTrigg == 3)
+                        fStartPtBin     = 29;
+                    else
+                        startPtBin     = 5;
                 } else if ( mode == 3 ){
-                    startPtBin     = 4;
+                    startPtBin     = 2;
                 } else if ( mode == 4 || mode == 12 ){
+                    startPtBin     = 8;
+                } else if ( mode == 5){
+                    startPtBin     = 4;
+                } else if (mode == 20){
+                    startPtBin     = 1;
+                } else {
+                    startPtBin     = 1;
+                }
+            } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
+                if ( mode == 0 ){
+                    if (centrality.CompareTo("0-90%") == 0)
+                        startPtBin     = 2;
+                    else
+                        startPtBin     = 3;
+                } else if ( mode == 1 ){
+                    startPtBin     = 2;
+                } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 7;
+                } else if ( mode == 3 ){
+                    startPtBin     = 6;
+                } else if ( mode == 4 || mode == 12 ){
+                    startPtBin     = 9;
                 } else if ( mode == 5){
                     startPtBin     = 7;
                 } else if (mode == 20){
-                    startPtBin     = 1;
+                    startPtBin     = 2;
                 }
             }
         } else if (meson.Contains("Eta")){
@@ -1738,6 +1814,29 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if ( mode == 0 ){
+                    startPtBin      = 3;
+                } else if ( mode == 1 ){
+                    startPtBin      = 3;
+                } else if ( mode == 2 || mode == 13 ){
+                    if (specialTrigg == 1)
+                        startPtBin  = 11;
+                    else if (specialTrigg == 2)
+                        startPtBin  = 16;
+                    else if (specialTrigg == 3)
+                        startPtBin  = 19;
+                    else
+                        startPtBin  = 5;
+                } else if ( mode == 3 ){
+                    startPtBin      = 4;
+                } else if ( mode == 4 || mode == 12 ){
+                    startPtBin      = 7;
+                } else if ( mode == 5){
+                    startPtBin      = 11;
+                } else if (mode == 20){
+                    startPtBin      = 3;
+                }
+            } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0){
+                if ( mode == 0 ){
                     startPtBin     = 3;
                 } else if ( mode == 1 ){
                     startPtBin     = 3;
@@ -1748,13 +1847,16 @@
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 7;
                 } else if ( mode == 5){
-                    startPtBin     = 8;
+                    startPtBin     = 5;
                 } else if (mode == 20){
                     startPtBin     = 3;
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
                 if ( mode == 0 ){
-                    startPtBin     = 1;
+                    if (centrality.CompareTo("0-90%") == 0)
+                        startPtBin     = 2;
+                    else
+                        startPtBin     = 3;
                 } else if ( mode == 1 ){
                     startPtBin     = 2;
                 } else if ( mode == 2 || mode == 13 ){
@@ -1802,24 +1904,24 @@
 
     void InitializeClusterBinning (TString energy, Int_t modi ){
         fBinsClusterPt          = new Double_t[100];
-        if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("5TeV") == 0 ){
-        fNBinsClusterPt       = fNBinsCluster2760GeVPt;
-        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-            fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
-        }
+        if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("5TeV") == 0 || energy.CompareTo("XeXe_5.44TeV") == 0 ){
+            fNBinsClusterPt       = fNBinsCluster2760GeVPt;
+            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
+            }
         } else if( energy.CompareTo("7TeV") == 0 || energy.CompareTo("900GeV") == 0){
-        fNBinsClusterPt       = fNBinsCluster8TeVPt;
-        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-            fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
-        }
+            fNBinsClusterPt       = fNBinsCluster8TeVPt;
+            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+            }
         } else if( energy.CompareTo("8TeV") == 0){
-        fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
-        for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-            fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
-        }
+            fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
+            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
+            }
         } else {
-        fNBinsClusterPt       = 0;
-        fBinsClusterPt        = NULL;
+            fNBinsClusterPt       = 0;
+            fBinsClusterPt        = NULL;
         }
     }
 
@@ -1831,34 +1933,7 @@
         //************************************ Binning for Cluster ****************************************
         //*************************************************************************************************
 
-        fBinsClusterPt          = new Double_t[100];
-        if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("5TeV") == 0){
-            fNBinsClusterPt       = fNBinsCluster2760GeVPt;
-            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
-            }
-        } else if( energy.CompareTo("7TeV") == 0 || energy.CompareTo("900GeV") == 0){
-            fNBinsClusterPt       = fNBinsCluster8TeVPt;
-            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
-            }
-        } else if( energy.CompareTo("8TeV") == 0 || energy.CompareTo("13TeV") == 0){
-            if(modi == 10){
-                fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
-                for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
-                }
-            }else{
-                fNBinsClusterPt       = fNBinsCluster8TeVPt;
-                for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
-                fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
-                }
-            }
-        } else {
-            fNBinsClusterPt       = 0;
-            fBinsClusterPt        = NULL;
-        }
-
+        InitializeClusterBinning(energy, modi);
         //get centrality
         TString centrality      = GetCentralityString(eventCutSelection);
          // set trigger string
@@ -2611,7 +2686,7 @@
             //*********************************************************************************************
             //********************************** Pi0 for pPb 5.023TeV**************************************
             //*********************************************************************************************
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0) {
+            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0) {
                 if (triggerSet == -1){
                     if (trigger.CompareTo("52") == 0){
                         specialTrigg = 1;    // L0
@@ -2918,14 +2993,14 @@
             //********************************** Pi0 for XeXe 5.44TeV**************************************
             //*********************************************************************************************
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
-                fStartPtBin     = GetStartBin("Pi0", energy, modi);
+                fStartPtBin     = GetStartBin("Pi0", energy, modi, -1, centrality);
 
                 if (fNBinsPt > 15 && isDCA) {
                     cout << "You have chosen to have more than 15 bins, this is not possible, it will be reduced to 15" << endl;
                     fNBinsPt    = 15;
-                } else if (fNBinsPt > 26) {
-                    cout << "You have chosen to have more than 26 bins, this is not possible, it will be reduced to 24" << endl;
-                    fNBinsPt    = 26;
+                } else if (fNBinsPt > 25) {
+                    cout << "You have chosen to have more than 26 bins, this is not possible, it will be reduced to 25" << endl;
+                    fNBinsPt    = 25;
                 }
 
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -2936,6 +3011,10 @@
                         fBinsPt[i]          = fBinsPi0XeXe5440GeVPt[i];
                     if (i < fNBinsPt+1){
                       fNRebin[i]            = fBinsPi0XeXe5440GeVPtRebin[i];
+                      if (centrality.CompareTo("0-90%") == 0)
+                          fNRebin[i]        = fBinsPi0XeXe5440GeVPtRebin[i];
+                      else
+                          fNRebin[i]        = fBinsPi0XeXe5440GeVPtRebinCent[i];
                     }
                 }
                 optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
@@ -3504,7 +3583,7 @@
             //*********************************************************************************************
             //********************************** Eta for pPb 5.023TeV**************************************
             //*********************************************************************************************
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0) {
+            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0) {
                 if (triggerSet == -1){
                     if (trigger.CompareTo("52") == 0){
                         specialTrigg = 1;    // L0
@@ -3517,25 +3596,7 @@
                     specialTrigg        = triggerSet;
                 }
 
-                fStartPtBin         = 3;
-                if (modi == 2 && specialTrigg == 1){
-                    fStartPtBin     = 11;
-                } else if (modi == 2 && specialTrigg == 2){
-                    fStartPtBin     = 16;
-                } else if (modi == 2 && specialTrigg == 3){
-                    fStartPtBin     = 19;
-                } else if (modi == 2){
-                    fStartPtBin     = 5;
-                } else if (modi == 3) {
-                    fStartPtBin     = 4;
-                    fExampleBin     = 9;
-                } else if (modi == 4) {
-                    fStartPtBin     = 7; //8
-                } else if (modi == 5) {
-                    fStartPtBin     = 11;
-                    fExampleBin     = 12;;
-                }
-
+                fStartPtBin         = GetStartBin("Eta", energy, modi, specialTrigg);
                 if (fNBinsPt > 16 && isDCA) {
                     cout << "You have chosen to have more than 16 DCA bins, this is not possible, it will be reduced to 16" << endl;
                     fNBinsPt        = 16;
@@ -4000,7 +4061,7 @@
                         binning[i] = fBinsPi08TeVPtmEMCComb[i];
                     }
                 }
-            } else if (energy.CompareTo("pPb_5.023TeV") == 0){
+            } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if (mode == 0 ){ // PCM
                     maxNBins = 31;
                     for(Int_t i = 0; i < maxNBins+1; i++){
@@ -4187,7 +4248,7 @@
                         binning[i]  = fBinsDirGamma8TeVPt[i];
                     }
                 }
-            } else if (energy.CompareTo("pPb_5.023TeV") == 0){
+            } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0){
                     maxNBins = 25;
                     for(Int_t i = 0; i < maxNBins+1; i++){

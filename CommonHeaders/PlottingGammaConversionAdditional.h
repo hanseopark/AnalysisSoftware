@@ -3614,7 +3614,7 @@
             }
         }
 
-        if (!energy.CompareTo("pPb_5.023TeV")){
+        if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!kBox){
                 if (!generator.CompareTo("")){
                     return kViolet+2;
@@ -3778,6 +3778,29 @@
                 } else return kCyan-3;
             }
         }
+        if (!energy.CompareTo("XeXe_5.44TeV")){
+            if (!generator.CompareTo("LHC17n")){
+                if (!centrality.CompareTo("0-20%")){
+                    return kRed+1;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return kOrange+7;
+                } else if (!centrality.CompareTo("0-40%")){
+                    return kGreen+2;
+                } else if (!centrality.CompareTo("40-90%")){
+                    return kBlue+2;
+                } else return kGray+1;
+            } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING") || !generator.CompareTo("Hijing")){
+                if (!centrality.CompareTo("0-20%")){
+                    return kRed-6;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return kOrange-3;
+                } else if (!centrality.CompareTo("0-40%")){
+                    return kGreen-6;
+                } else if (!centrality.CompareTo("40-90%")){
+                    return kBlue-6;
+                } else return kGray+2;
+            }
+        }
         cout << "GetColorDefaultColor(): no valid input parameters given..." << endl;
         return kBlack;
     }
@@ -3879,7 +3902,7 @@
             }
         }
 
-        if (!energy.CompareTo("pPb_5.023TeV")){
+        if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
                 return 33;
             } else if (!generator.CompareTo("LHC13b")){
@@ -4013,6 +4036,29 @@
                 } else return 5;
             }
         }
+        if (!energy.CompareTo("XeXe_5.44TeV")){
+            if (!generator.CompareTo("LHC17n")){
+                if (!centrality.CompareTo("0-90%")){
+                    return 24;
+                } else if (!centrality.CompareTo("0-20%")){
+                    return 30;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return 27;
+                } else if (!centrality.CompareTo("0-40%")){
+                    return 28;
+                } else return 25;
+            } else if (!generator.CompareTo("LHC17j7")){
+                if (!centrality.CompareTo("0-90%")){
+                    return 25;
+                } else if (!centrality.CompareTo("0-20%")){
+                    return 24;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return 30;
+                } else if (!centrality.CompareTo("0-40%")){
+                    return 27;
+                } else return 28;
+            }
+        }
         cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
         return 0;
     }
@@ -4065,7 +4111,7 @@
             return 2.2;
         }
 
-        if (!energy.CompareTo("pPb_5.023TeV")){
+        if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
                 return 2.2;
             } else if (generator.CompareTo("LHC13")==0 || (generator.BeginsWith("LHC13")&&generator.Length()==6)){
@@ -4112,6 +4158,19 @@
                 } else if (!centrality.CompareTo("20-50%")){
                     return 2;
                 } else if (!centrality.CompareTo("50-90%")){
+                    return 2;
+                } else return 2;
+            }
+        }
+        if (!energy.CompareTo("XeXe_5.44TeV")){
+            if (!generator.CompareTo("")){
+                if (!centrality.CompareTo("0-90%")){
+                    return 2;
+                } else if (!centrality.CompareTo("0-20%")){
+                    return 2;
+                } else if (!centrality.CompareTo("20-40%")){
+                    return 2;
+                } else if (!centrality.CompareTo("0-40%")){
                     return 2;
                 } else return 2;
             }
