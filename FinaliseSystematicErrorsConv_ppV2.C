@@ -88,7 +88,9 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                                                 "MCSmearing" };
     if(!energy.CompareTo("900GeV"))
         nameCutVariationSCCurrent[10] = "SPD";
-    if(!energy.CompareTo("8TeV")||!energy.CompareTo("7TeV"))
+    if(!energy.CompareTo("7TeV"))
+        nameCutVariationSCCurrent[10] = "BGEstimateIterations_pp";
+    if(!energy.CompareTo("8TeV"))
         nameCutVariationSCCurrent[12] = "PileupDCA";
     Color_t color[20];
     Color_t markerStyle[20];
@@ -259,6 +261,11 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                 nameGraphPos                = Form("Eta_SystErrorRel_%s",nameCutVariationSC[i].Data()  );
                 nameGraphNeg                = Form("Eta_SystErrorRel_%s",nameCutVariationSC[i].Data()  );
             }
+            graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
+            graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
+        } else if ( nameCutVariationSC[i].CompareTo("BGEstimateIterations_pp")==0  ){
+            TString nameGraphPos            = Form("%s_SystErrorRel_%s",meson.Data(),nameCutVariationSC[i].Data()  );
+            TString nameGraphNeg            = Form("%s_SystErrorRel_%s",meson.Data(),nameCutVariationSC[i].Data()  );
             graphPosErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors                  = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 

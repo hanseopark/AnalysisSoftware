@@ -55,7 +55,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
                                     TString suffix                  = "pdf",
                                     TString fileNameCorrelations    = "",
                                     Bool_t enablepValueCalc         = kFALSE,
-                                    Double_t confidenceLevelnSigma  = 1.28 //90% C.L.
+                                    Double_t confidenceLevelnSigma  = 1.64 //95% C.L. //1.28 //90% C.L.
                             ){
 
     //*******************************************************************************************************************************************
@@ -2412,46 +2412,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_NonFit_8.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_NonFit_8.pdf",outputDir.Data()));
-    
-    histo2DYieldGamma->Draw("copy");
-
-
-        graphCombIncGammaSys->Draw("E2same");
-        graphCombIncGammaStatPlot->Draw("Epsame");
-
-        if (graphCombDirGammaNonFitSpectrumSystErr){
-            graphCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
-        }
-        if (graphCombDirGammaNonFitSpectrumStatErrPlot){
-            graphCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,E1Z,same");
-        }
-        if (graphCombDirGammaNonFitSpectrumSumErrAr){
-            graphCombDirGammaNonFitSpectrumSumErrAr->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaNonFitSpectrumSumErrAr);
-        }
-
-        if(graphPHENIXdirGammaYield200GeVSys){
-            DrawGammaSetMarkerTGraphAsym(graphPHENIXdirGammaYield200GeVSys, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorPHENIX200GeV , colorPHENIX200GeV, widthLinesBoxes, kTRUE);
-            graphPHENIXdirGammaYield200GeVSys->Draw("E2same");
-          }
-        if(graphPHENIXdirGammaYield200GeVStat){
-            DrawGammaSetMarkerTGraphAsym(graphPHENIXdirGammaYield200GeVStat, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorPHENIX200GeVBox , colorPHENIX200GeVBox);
-            graphPHENIXdirGammaYield200GeVStat->Draw("p,E1Z,same");
-          }
-
-        if (graphCombDirGammaNonFitSpectrumSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
-        }
-        legendYieldDirGamma->Draw();
-
-        labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
-        labelALICEDGNormUnPaperAll->Draw();
-
-    histo2DYieldGamma->Draw("same,axis");
-    canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_NonFit_8_withPHENIX.%s",outputDir.Data(),suffix.Data()));
-    canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_NonFit_8_withPHENIX.pdf",outputDir.Data()));
+  
     histo2DYieldGamma->Draw("copy");
 
     TLegend* legendYieldDirGammaTheo2      = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "#gamma_{dir} NLO pQCD:", 43, 0.23);
@@ -2539,7 +2500,67 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory_NonFit_8.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory_NonFit_8.pdf",outputDir.Data()));
 
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSystErr       = ScaleGraph( graphCombDirGammaNonFitSpectrumSystErr,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumStatErrPlot   = ScaleGraph( graphCombDirGammaNonFitSpectrumStatErrPlot,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSumErrAr      = ScaleGraph( graphCombDirGammaNonFitSpectrumSumErrAr,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombIncGammaSys                         = ScaleGraph( graphCombIncGammaSys,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombIncGammaStatPlot                    = ScaleGraph( graphCombIncGammaStatPlot,xSection8TeVV0AND*recalcBarn);
+    
+    TH1F * histo2DXSecGamma              = new TH1F("histo2DXSecGamma","histo2DXSecGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
+    SetStyleHistoTH1ForGraphs(histo2DXSecGamma, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.7);
+    histo2DXSecGamma->GetYaxis()->SetRangeUser(2e-3,7e11);
+    histo2DXSecGamma->GetXaxis()->SetMoreLogLabels();
+    histo2DXSecGamma->GetXaxis()->SetNoExponent();
+    histo2DXSecGamma->Draw("copy");
 
+    TLegend* legendDirGammaXSec      = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(1*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
+    legendDirGammaXSec->SetTextAlign(12);
+    
+    DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaSys, markerStyleCombpp8TeV+4, markerSizeCombpp8TeV+0.2, colorCombpp8TeVBox , colorCombpp8TeVBox,widthLinesBoxes, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaStatPlot, markerStyleCombpp8TeV+4, markerSizeCombpp8TeV+0.2, colorCombpp8TeVBox , colorCombpp8TeVBox, widthLinesBoxes);
+    graphXSecCombIncGammaSys->Draw("E2same");
+    graphXSecCombIncGammaStatPlot->Draw("Epsame");
+
+    if (graphXSecCombDirGammaNonFitSpectrumSystErr){
+        DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSystErr, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV, widthLinesBoxes, kTRUE);
+        graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
+    }
+    if (graphXSecCombDirGammaNonFitSpectrumStatErrPlot){
+        DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumStatErrPlot, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV);
+        graphXSecCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,E1Z,same");
+    }
+    if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+        DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSumErrAr , 1, 3, colorCombpp8TeV, colorCombpp8TeV, 1.8, kTRUE);
+        graphXSecCombDirGammaNonFitSpectrumSumErrAr->Draw(">,same");
+        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphXSecCombDirGammaNonFitSpectrumSumErrAr);
+    }
+
+        if(graphPHENIXdirGammaxsec200GeVSys){
+            DrawGammaSetMarkerTGraphAsym(graphPHENIXdirGammaxsec200GeVSys, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorPHENIX200GeV , colorPHENIX200GeV, widthLinesBoxes, kTRUE);
+            graphPHENIXdirGammaxsec200GeVSys->Draw("E2same");
+            legendDirGammaXSec->AddEntry(graphPHENIXdirGammaxsec200GeVSys, "PHENIX: p+p, #sqrt{#it{s}} = 200 GeV","pf");
+          }
+        if(graphPHENIXdirGammaxsec200GeVStat){
+            DrawGammaSetMarkerTGraphAsym(graphPHENIXdirGammaxsec200GeVStat, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorPHENIX200GeVBox , colorPHENIX200GeVBox);
+            graphPHENIXdirGammaxsec200GeVStat->Draw("p,E1Z,same");
+          }
+          dummyForLegend->SetPoint(0,6.2,6e8);
+          dummyForLegend->SetPointError(0,0,0,3e8,0);
+        if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+            dummyForLegend->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
+        }
+        legendYieldDirGamma->Draw();
+        legendDirGammaXSec->Draw();
+
+        labelEnergyDGInvYieldPaperAll->Draw();
+        labelALICEDGInvYieldPaperAll->Draw();
+        labelALICEDGNormUnPaperAll->Draw();
+        
+        
+    histo2DYieldGamma->Draw("same,axis");
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_8_withPHENIX.%s",outputDir.Data(),suffix.Data()));
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_8_withPHENIX.pdf",outputDir.Data()));
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
     Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
 
