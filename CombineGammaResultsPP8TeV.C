@@ -1160,7 +1160,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     TF1* fitHagGammaComb            = FitObject("oHag","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[2],
                                                      graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],paramGraphoHag,"QNRME+");
     Double_t paramTCM[5] = {graphCombIncGammaTot->GetY()[1],0.1,graphCombIncGammaTot->GetY()[4],0.6,3};
-    TF1* fitTCMGammaComb            = FitObject("tcm", "fitTCMGammaComb","Pi0", graphCombIncGammaTot, graphCombIncGammaTot->GetX()[0], graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()], paramTCM,"QNRME+");
+    TF1* fitTCMGammaComb            = FitObject("tcm", "fitTCMGammaComb","Gamma", graphCombIncGammaTot, graphCombIncGammaTot->GetX()[0], graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()], paramTCM,"QNRME+");
     TString forOutput               = WriteParameterToFile(fitTCMGammaComb);
     cout << forOutput.Data() << endl;
 
@@ -2196,7 +2196,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         TLatex *labelALICEInvYieldPaperAll  = new TLatex(0.20,0.20+0.04*2,textALICE.Data());
         SetStyleTLatex( labelALICEInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
         labelALICEInvYieldPaperAll->Draw();
-        TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"Norm. unc. 2.6%");
+        TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"norm. unc. 2.6%");
         SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
         labelALICENormUnPaperAll->Draw();
 
@@ -2205,6 +2205,66 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_8.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_8.pdf",outputDir.Data()));
 
+    //********************************************************************************************************
+    // Plotting simple comparison of data vs fit to inc gamma spec
+    //********************************************************************************************************
+
+    TF1* fitTCMDecomposedGammaL                 = new TF1("twoCompModel_DecLow",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1])",0.,0.,0.));
+    fitTCMDecomposedGammaL->SetParameters(fitTCMGammaComb->GetParameter(0),fitTCMGammaComb->GetParameter(1));
+    fitTCMDecomposedGammaL->SetRange(0.28, 20.);
+    TF1 *fitTCMDecomposedGammaH                 = new TF1("twoCompModel_DecH","[0]/(TMath::Power(1+x*x/([1]*[1]*[2]),[2]))");
+   //      graphCombEtaInvXSectionTotA->Fit(fitTCMDecomposedH,"QNRMEX0+","",5,20);
+    fitTCMDecomposedGammaH->SetParameters(fitTCMGammaComb->GetParameter(2),fitTCMGammaComb->GetParameter(3), fitTCMGammaComb->GetParameter(4));
+    fitTCMDecomposedGammaH->SetRange(0.28, 20.);
+
+    histo2DYieldGamma->DrawCopy();
+
+    graphCombIncGammaStatPlot->Draw("pEsame");
+    graphCombIncGammaSys->Draw("E2same");
+
+    fitTCMGammaComb->SetLineStyle(0);
+    fitTCMGammaComb->SetLineColor(kRed+2);
+    fitTCMGammaComb->SetRange(0.28, 20.);
+    fitTCMGammaComb->Draw("same");
+
+    fitTCMDecomposedGammaL->SetLineColor(kAzure);
+    fitTCMDecomposedGammaL->SetLineStyle(2);
+    fitTCMDecomposedGammaL->Draw("same");
+    fitTCMDecomposedGammaH->SetLineColor(kGreen+2);
+    fitTCMDecomposedGammaH->SetLineStyle(8);
+    fitTCMDecomposedGammaH->Draw("same");
+
+    TLatex *labelTCMGamma1= new TLatex(0.43, 0.94, Form("TCM low:"));
+    TLatex *labelTCMGamma2= new TLatex(0.43, 0.90, Form("A_{1}: (%.1e #pm %.1e) - T_{e}: (%.3f #pm %.3f)",fitTCMGammaComb->GetParameter(0),fitTCMGammaComb->GetParError(0),fitTCMGammaComb->GetParameter(1),fitTCMGammaComb->GetParError(1)));
+    TLatex *labelTCMGamma3= new TLatex(0.43, 0.86, Form("TCM high:"));
+    TLatex *labelTCMGamma4= new TLatex(0.43, 0.82, Form("A_{2}: (%.1e #pm %.1e) - T: (%.3f #pm %.3f) - n: (%.3f #pm %.3f)",fitTCMGammaComb->GetParameter(2),fitTCMGammaComb->GetParError(2),abs(fitTCMGammaComb->GetParameter(3)),fitTCMGammaComb->GetParError(3),fitTCMGammaComb->GetParameter(4),fitTCMGammaComb->GetParError(4)));
+
+    TLatex *labelTCMGamma5= new TLatex(0.52, 0.75, Form("Bylinkin-Rostovtsev:"));
+    TLatex *labelTCMGamma6= new TLatex(0.52, 0.71, Form("#it{A}_{1} exp(-#it{E}_{T, kin}/#it{T}_{e}) + #it{A}_{2}/#(){1 + #frac{#it{p}_{T}^{2}}{#it{T}^{2}#upoint n}}^{n}"));
+
+    SetStyleTLatex( labelTCMGamma1, 0.03,4);
+    labelTCMGamma1->Draw();
+    SetStyleTLatex( labelTCMGamma2, 0.02,4);
+    labelTCMGamma2->Draw();
+    SetStyleTLatex( labelTCMGamma3, 0.03,4);
+    labelTCMGamma3->Draw();
+    SetStyleTLatex( labelTCMGamma4, 0.02,4);
+    labelTCMGamma4->Draw();
+    SetStyleTLatex( labelTCMGamma5, 0.03,4);
+    labelTCMGamma5->Draw();
+    SetStyleTLatex( labelTCMGamma6, 0.03,4);
+    labelTCMGamma6->Draw();
+
+
+    TLegend* legendWithFit   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
+    legendWithFit->AddEntry(fitTCMDecomposedGammaL,"TCM low","l");
+    legendWithFit->AddEntry(fitTCMDecomposedGammaH,"TCM high","l");
+    legendWithFit->AddEntry(fitTCMGammaComb,"Bylinkin-Rostovtsev (TCM)","l");
+    legendWithFit->Draw();
+
+    canvasInvYieldGamma->Update();
+    canvasInvYieldGamma->Print(Form("%s/InvYield_IncGamma_WithFit_8.%s",outputDir.Data(),suffix.Data()));
+    canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_WithFit_8.pdf",outputDir.Data()));
 
     // **********************************************************************************************************************
     // ******************************** InvYield for individual inc gamma measurements **************************************
@@ -2267,7 +2327,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         TLatex *labelALICEDGInvYieldPaperAll  = new TLatex(0.94,0.965-0.04*2,textALICE.Data());
         SetStyleTLatex( labelALICEDGInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelALICEDGInvYieldPaperAll->Draw();
-        TLatex *labelALICEDGNormUnPaperAll    = new TLatex(0.94,0.965-(0.04*2+0.04*0.8),"Norm. unc. 2.6%");
+        TLatex *labelALICEDGNormUnPaperAll    = new TLatex(0.94,0.965-(0.04*2+0.04*0.8),"norm. unc. 2.6%");
         SetStyleTLatex( labelALICEDGNormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
         labelALICEDGNormUnPaperAll->Draw();
 
