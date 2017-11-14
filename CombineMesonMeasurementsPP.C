@@ -59,13 +59,13 @@ void CombineMesonMeasurementsPP()
     //---------------------------------------------------------------------------------------------------------------
 
     TString fileName[6];
-        // /*  900GeV  */  fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaperPP900GeV_2017_07_18.root";
+    //     /*  900GeV  */  fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaperPP900GeV_2017_11_10.root";
     /*  900GeV  */  fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaper7TeVand900GeV_IncludingPP2760YShiftedPrelim_Pub2012.root";
     /*  2.76TeV */  fileName[1]                 = "CombinationInputPP/2.76TeV/CombinedResultsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer.root";
     /*  5TeV    */  fileName[2]                 = "CombinationInputPP/5TeV/";
-        // /*  7TeV    */  fileName[3]                 = "CombinationInputPP/7TeV/CombinedResultsPaperPP7TeV_2017_07_18.root";
+    //     /*  7TeV    */  fileName[3]                 = "CombinationInputPP/7TeV/CombinedResultsPaperPP7TeV_2017_11_10.root";
     /*  7TeV    */  fileName[3]                 = "CombinationInputPP/7TeV/CombinedResultsPaper7TeVand900GeV_IncludingPP2760YShiftedPrelim_Pub2012.root";
-    /*  8TeV    */  fileName[4]                 = "CombinationInputPP/8TeV/CombinedResultsPaperPP8TeV_2017_07_13.root";
+    /*  8TeV    */  fileName[4]                 = "CombinationInputPP/8TeV/CombinedResultsPaperPP8TeV_2017_11_11.root";
     /*  13TeV   */  fileName[5]                 = "CombinationInputPP/13TeV/";
     TString         fileNameTheory              = "ExternalInput/Theory/TheoryCompilationPP.root";
     TString         suffix                      = "eps";
@@ -243,12 +243,12 @@ void CombineMesonMeasurementsPP()
                 if(directoryEta[i]) {
                   graphEtaToPi0RatioStat[i][j]   = (TGraphAsymmErrors*)directoryEta[i]->Get(Form("graphRatioEtaToPi0%s%sStatErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
                   histoEtaToPi0RatioStat[i][j]   = (TH1D*)directoryEta[i]->Get(Form("histoRatioEtaToPi0%s%sStatErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
-                  if(histoEtaToPi0RatioStat[i][j]) graphEtaToPi0RatioStat[i][j]= new TGraphAsymmErrors(histoEtaToPi0RatioStat[i][j]);
+                  if(histoEtaToPi0RatioStat[i][j] && !graphEtaToPi0RatioStat[i][j]) graphEtaToPi0RatioStat[i][j]= new TGraphAsymmErrors(histoEtaToPi0RatioStat[i][j]);
                   graphEtaToPi0RatioSys[i][j]   = (TGraphAsymmErrors*)directoryEta[i]->Get(Form("graphRatioEtaToPi0%s%sSysErr",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
                 }else{
                   graphEtaToPi0RatioStat[i][j]   = (TGraphAsymmErrors*)inputFile[i]->Get(Form("graphEtaToPi0%s%sStat",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
                   histoEtaToPi0RatioStat[i][j]   = (TH1D*)inputFile[i]->Get(Form("histoEtaToPi0%s%sStat",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
-                  if(histoEtaToPi0RatioStat[i][j]) graphEtaToPi0RatioStat[i][j]= new TGraphAsymmErrors(histoEtaToPi0RatioStat[i][j]);
+                  if(histoEtaToPi0RatioStat[i][j] && !graphEtaToPi0RatioStat[i][j]) graphEtaToPi0RatioStat[i][j]= new TGraphAsymmErrors(histoEtaToPi0RatioStat[i][j]);
                   graphEtaToPi0RatioSys[i][j]   = (TGraphAsymmErrors*)inputFile[i]->Get(Form("graphEtaToPi0%s%sSys",nameMeasGlobalshort[j].Data(),nameEnergyGlobal2[i].Data()));
 // TEMP FIX TEMP FIX TEMP FIX
                   if(!graphEtaToPi0RatioStat[i][j] && !graphEtaToPi0RatioSys[i][j]){
