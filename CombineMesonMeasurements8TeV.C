@@ -5413,7 +5413,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
         legendXsectionPaper->AddEntry(fitTCMInvXSectionPi0Plot,"TCM fit","l");
-        legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
+        legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Levy-Tsallis fit","l");
 //        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, DSS14 ","f");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
@@ -5571,7 +5571,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 2.6%", "l");
         legendXsectionPaperEta->AddEntry(fitTCMInvXSectionEta,"TCM fit","l");
-        legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Tsallis fit","l");
+        legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Levy-Tsallis fit","l");
         legendXsectionPaperEta->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaperEta->AddEntry(histoPythia8_4CInvXSectionEta,"PYTHIA 8.2, Tune 4C","l");
         legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
@@ -5760,7 +5760,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperAll->AddEntry(graphCombPi0InvXSectionSysA,"#pi^{0}","pf");
         legendXsectionPaperAll->AddEntry(graphCombEtaInvXSectionSysA_Copy,"#eta (x 10^{-2})","pf");
         legendXsectionPaperAll->AddEntry(fitTCMInvXSectionPi0Plot,"TCM fit","l");
-        legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
+        legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Levy-Tsallis fit","l");
         legendXsectionPaperAll->Draw();
 
         TLatex *labelEnergyXSectionPaperAll = new TLatex(0.18, 0.12+0.04*6, collisionSystem8TeV.Data());
