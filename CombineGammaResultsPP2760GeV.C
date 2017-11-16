@@ -2483,7 +2483,58 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory_NonFit.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory_NonFit.pdf",outputDir.Data()));
 
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSystErr       = ScaleGraph( graphCombDirGammaSpectrumNonFitSystErr,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumStatErrPlot   = ScaleGraph( graphCombDirGammaSpectrumNonFitStatErrPlot,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSumErrAr      = ScaleGraph( graphCombDirGammaSpectrumNonFitSumErrAr,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombIncGammaSys                         = ScaleGraph( graphCombIncGammaSys,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombIncGammaStatPlot                    = ScaleGraph( graphCombIncGammaStatPlot,xSection2760GeV*recalcBarn);
+    
+    TH1F * histo2DXSecGamma              = new TH1F("histo2DXSecGamma","histo2DXSecGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
+    SetStyleHistoTH1ForGraphs(histo2DXSecGamma, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.7);
+    histo2DXSecGamma->GetYaxis()->SetRangeUser(2e1,7e11);
+    histo2DXSecGamma->GetXaxis()->SetMoreLogLabels();
+    histo2DXSecGamma->GetXaxis()->SetNoExponent();
+    histo2DXSecGamma->Draw("copy");
 
+    TLegend* legendDirGammaXSec      = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(1*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
+    legendDirGammaXSec->SetTextAlign(12);
+    
+    DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaSys, markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV+0.2, colorCombpp2760GeVBox , colorCombpp2760GeVBox,widthLinesBoxes, kTRUE);
+    DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaStatPlot, markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV+0.2, colorCombpp2760GeVBox , colorCombpp2760GeVBox, widthLinesBoxes);
+    graphXSecCombIncGammaSys->Draw("E2same");
+    graphXSecCombIncGammaStatPlot->Draw("Epsame");
+
+    if (graphXSecCombDirGammaNonFitSpectrumSystErr){
+        DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSystErr, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes, kTRUE);
+        graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
+    }
+    if (graphXSecCombDirGammaNonFitSpectrumStatErrPlot){
+        DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumStatErrPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV);
+        graphXSecCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,E1Z,same");
+    }
+    if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+        DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSumErrAr , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
+        graphXSecCombDirGammaNonFitSpectrumSumErrAr->Draw(">,same");
+        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphXSecCombDirGammaNonFitSpectrumSumErrAr);
+    }
+
+          dummyForLegend->SetPoint(0,6.2,6e8);
+          dummyForLegend->SetPointError(0,0,0,3e8,0);
+        if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+            dummyForLegend->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
+        }
+        legendYieldDirGamma->Draw();
+        legendDirGammaXSec->Draw();
+
+        labelEnergyDGInvYieldPaperAll->Draw();
+        labelALICEDGInvYieldPaperAll->Draw();
+        labelALICEDGNormUnPaperAll->Draw();
+        
+        
+    histo2DYieldGamma->Draw("same,axis");
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit.%s",outputDir.Data(),suffix.Data()));
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit.pdf",outputDir.Data()));
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
     Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
 
