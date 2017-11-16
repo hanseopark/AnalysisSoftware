@@ -1598,18 +1598,18 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
     DrawGammaCanvasSettings( canvasEffiComparison, 0.13, 0.02, 0.03, 0.09);
     //       canvasEffSimple->SetLogy(1);
 
-    DrawAutoGammaMesonHistos( histoTrueEffiPt,
+    DrawAutoGammaMesonHistos( histoEffiPt,
                                 "", "p_{T} (GeV/c)", "Efficiency",
-                                kTRUE, 1., 3e-6, kFALSE,
+                                kFALSE, 1., 1e-5, kFALSE,
                                 kFALSE, 0., 0.7,
                                 kTRUE, 0., 25.);
 
-    DrawGammaSetMarker(histoTrueEffiPt, 22, 1., kRed+2, kRed+2);
-    histoTrueEffiPt->DrawCopy("e1");
     DrawGammaSetMarker(histoEffiPt, 22, 1., kBlack, kBlack);
-    histoEffiPt->DrawCopy("e1,same");
+    histoEffiPt->DrawCopy("e1");
+    DrawGammaSetMarker(histoTrueEffiPt, 22, 1., kRed+2, kRed+2);
+    histoTrueEffiPt->DrawCopy("e1,same");
 
-    TLegend* legendEffiComparison= new TLegend(0.6,0.5,0.97,0.6);
+    TLegend* legendEffiComparison= new TLegend(0.6,0.2,0.97,0.3);
     legendEffiComparison->SetTextSize(0.03);
     legendEffiComparison->SetFillColor(0);
     legendEffiComparison->SetBorderSize(0);

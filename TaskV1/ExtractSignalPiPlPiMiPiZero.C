@@ -542,15 +542,15 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     if(fCrysFitting==0){
         fFileErrLog << "Using exp fit"<<endl;
         if(fFittingHistMidPtSignalSub){
-            FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub, fMesonIntDeltaRange,200,kTRUE,0);
+            FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub, fMesonIntDeltaRange,200,kFALSE,0);
             fFitSignalInvMassMidPt = fFitReco;
         }
         if(fFittingHistMidPtSignalSub_SubPiZero){
-            FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub_SubPiZero, fMesonIntDeltaRange,200,kTRUE,1);
+            FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub_SubPiZero, fMesonIntDeltaRange,200,kFALSE,1);
             fFitSignalInvMassMidPt_SubPiZero = fFitReco;
         }
         if(fFittingHistMidPtSignalSub_FixedPzPiZero){
-            FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub_FixedPzPiZero, fMesonIntDeltaRange,200,kTRUE,2);
+            FitSubtractedInvMassInPtBins(fFittingHistMidPtSignalSub_FixedPzPiZero, fMesonIntDeltaRange,200,kFALSE,2);
             fFitSignalInvMassMidPt_FixedPzPiZero = fFitReco;
         }
     } else {
@@ -3536,6 +3536,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
 
     // initialize fitting functions
     fFitReco= NULL;
+
     fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",FitRangeTmp[0],FitRangeTmp[1]);
 
     fFitGausExp =NULL;
@@ -3663,7 +3664,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
 
 void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_t* fMesonIntDeltaRangeFit, Int_t ptBin, Bool_t vary, Int_t InvMassType)
 {
-    //    cout<<"Start Fitting spectra"<<endl;
+
     // Set Correct Meson Plot Range
     if(InvMassType==0) {
       fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
@@ -3675,15 +3676,24 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
       cout << " ERROR! Invalid InvMassType was given. FitSubtractedInvMassInPtBins won't be run!" << endl;
       return;
     }
+
+    // extract mesonAmplitude from histo maximum (will be used for par ranges)
     Double_t mesonAmplitude =fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin;
     Double_t mesonAmplitudeMax;
-    mesonAmplitudeMin = mesonAmplitude*95./100.;
-    mesonAmplitudeMax = mesonAmplitude*130./100.;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
-        mesonAmplitudeMin = mesonAmplitude*20./100.;
+    if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
+        mesonAmplitudeMin = mesonAmplitude*98./100.;
+        mesonAmplitudeMax = mesonAmplitude*115./100.;
+        if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+    } else {
+        mesonAmplitudeMin = mesonAmplitude*90./100.;
+        mesonAmplitudeMax = mesonAmplitude*130./100.;
+        if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
+            mesonAmplitudeMin = mesonAmplitude*98./100.;
+        }
     }
 
+    // Determine Fit Range (depending on which InvMass mode (normal, fixedPzPiZero or SubPiZero) was chosen
     Double_t FitRangeTmp[2];
     if(InvMassType==0) {
       FitRangeTmp[0] = fMesonFitRange[0];
@@ -3702,62 +3712,61 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     fFitReco = NULL;
     fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",FitRangeTmp[0],FitRangeTmp[1]);
 
-    fFitReco->SetParameter(0,mesonAmplitude);
+    // Gaussian for pre-Fitting to get start parameters
+    TF1* fFitRecoPre = new TF1("fGauss","([0]*exp(-0.5*((x-[1])/[2])^2))", FitRangeTmp[0], FitRangeTmp[1]);
+    fFitRecoPre->SetParameter(0,mesonAmplitude);
     if(InvMassType == 1){
-      fFitReco->SetParameter(1,fMesonMassExpect-0.134);
+        fFitRecoPre->SetParameter(1,fMesonMassExpect-0.134);
     } else{
-      fFitReco->SetParameter(1,fMesonMassExpect);
+        fFitRecoPre->SetParameter(1,fMesonMassExpect);
+
     }
-    fFitReco->SetParameter(2,fMesonWidthExpect);
-    fFitReco->SetParameter(3,fMesonLambdaTailMC);
+    fFitRecoPre->SetParameter(2,fMesonWidthExpect);
+    fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
+    fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
+
+    fHistoMappingSignalInvMassPtBinSingle->Fit(fFitRecoPre,"QRME0");
+
+    Double_t widthPrefit = fFitRecoPre->GetParameter(2);
+
+    // set parameters from prefitting as start parameters for actual fit
+    fFitReco->SetParameter(0,fFitRecoPre->GetParameter(0));
+    fFitReco->SetParameter(1,fMesonMassExpect);
+    fFitReco->SetParameter(2,widthPrefit);
+    fFitReco->SetParameter(3,fMesonLambdaTailTrue);
+
 
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-    fFitReco->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
-    fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+    fFitReco->SetParLimits(3,fMesonLambdaTailRangeTrue[0],fMesonLambdaTailRangeTrue[1]);
 
-    if((fMesonLambdaTail==fMesonLambdaTailRange[0])&&(fMesonLambdaTailRange[0] == fMesonLambdaTailRange[1])){
-        fFitReco->FixParameter(3,fMesonLambdaTail);
+    if((fMesonLambdaTail==fMesonLambdaTailRangeTrue[0])&&(fMesonLambdaTailRangeTrue[0] == fMesonLambdaTailRangeTrue[1])){
+        fFitReco->FixParameter(3,fMesonLambdaTailTrue);
     } else{
-        fFitReco->SetParameter(3,fMesonLambdaTail);
-        fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
+        fFitReco->SetParameter(3,fMesonLambdaTailTrue);
+        fFitReco->SetParLimits(3,fMesonLambdaTailRangeTrue[0],fMesonLambdaTailRangeTrue[1]);
     }
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
      if(InvMassType == 1){
-       fFitReco->SetParLimits(1,(fMesonMassExpect-0.134)*0.9,(fMesonMassExpect-0.134)*1.15);
+       fFitReco->SetParLimits(1,(fMesonMassExpect-0.134)-(widthPrefit/2.),(fMesonMassExpect-0.134)+(widthPrefit/2.));
      } else{
-       fFitReco->SetParLimits(1,fMesonMassExpect*0.95,fMesonMassExpect*1.05);
+       fFitReco->SetParLimits(1,fMesonMassExpect-(widthPrefit/2.),fMesonMassExpect+(widthPrefit/2.));
      }
-    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
+    fFitReco->SetParLimits(2,fMesonWidthRangeTrue[0],fMesonWidthRangeTrue[1]);
 
-    // //    fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.3);
-    // //    fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
-    // //    if(vary){
-    // 	   fFitReco->SetParLimits(3,fMesonLambdaTailRange[0],fMesonLambdaTailRange[1]);
-
+    // fitting two time to improve stability
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"RME0");
 
-    //    cout << TString(gMinuit->fCstatu.Data()).Data() << endl;
-
     if (vary){
         fMesonLambdaTailMC = fFitReco->GetParameter(3);
-    // 	   fMesonWidthExpectMC = fMesonMassExpect*0.03;
         }
+
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
 
-    //    Int_t binCenterStart = 0;
-    //    Double_t startBinEdge = 0;;
-    //    Int_t binCenterEnd = 0;
-    //    Double_t endBinEdge = 0;
 
     if(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0 ){
-    //       binCenterStart = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[0]);
-    //       startBinEdge = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
-    //       binCenterEnd = fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+fMesonIntDeltaRangeFit[1]);
-    //       endBinEdge = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
-
         fFileDataLog << "Parameter for bin " << ptBin << endl;
         fFileDataLog << "Gausexp: \t" << fFitReco->GetParameter(0) <<"+-" << fFitReco->GetParError(0) << "\t " << fFitReco->GetParameter(1)<<"+-" << fFitReco->GetParError(1) << "\t "<< fFitReco->GetParameter(2) <<"+-" << fFitReco->GetParError(2)<< "\t "<< fFitReco->GetParameter(3) <<"+-" << fFitReco->GetParError(3)<<endl;
     } else {

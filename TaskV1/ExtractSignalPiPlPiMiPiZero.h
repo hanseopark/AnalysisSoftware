@@ -329,10 +329,13 @@ Double_t 	*fMesonFitRangeWithoutPeak = 					NULL;
 Double_t 	fMesonWidthExpect=								0;
 Double_t 	fMesonWidthExpectMC=							0;
 Double_t 	fMesonLambdaTail=								0;
+Double_t 	fMesonLambdaTailTrue=   						0;
 Double_t 	fMesonLambdaTailMC=								0;
 Double_t 	*fMesonWidthRange = 							NULL;
+Double_t 	*fMesonWidthRangeTrue = 						NULL; // with range used for fitting of true
 Double_t 	*fMesonWidthRangeMC = 							NULL;
 Double_t 	*fMesonLambdaTailRange = 						NULL;
+Double_t 	*fMesonLambdaTailRangeTrue =					NULL;
 Double_t 	*fMidPt = 										NULL;
 Double_t 	*fFullPt = 										NULL;
 // end common meson analysis variables
@@ -726,7 +729,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
     fMesonFitRange_SubPiZero           = new Double_t[2];
     fMesonFitRange_FixedPzPiZero       = new Double_t[2];
     fMesonWidthRange                   = new Double_t[2];
+    fMesonWidthRangeTrue               = new Double_t[2];
     fMesonLambdaTailRange              = new Double_t[2];
+    fMesonLambdaTailRangeTrue          = new Double_t[2];
     fMidPt                             = new Double_t[2];
     fMesonWidthRangeMC                 = new Double_t[2];
     fFullPt                            = new Double_t[2];
@@ -920,15 +925,20 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
 
          // Set remaining parameters for fitting
          if(mode == 40){
-             fMesonWidthExpect           = 0.060;
-             fMesonWidthRange[0]         = 0.010;
-             fMesonWidthRange[1]         = 0.070;
-             fMesonLambdaTail            = 0.0007;
-             fMesonLambdaTailRange[0]    = 0.0007;
-             fMesonLambdaTailRange[1]    = 0.0007;
+             fMesonWidthExpect            = 0.080;
+             fMesonWidthRange[0]          = 0.005;
+             fMesonWidthRange[1]          = 0.100;
+             fMesonWidthRangeTrue[0]      = 0.005;
+             fMesonWidthRangeTrue[1]      = 0.100;
+             fMesonLambdaTail             = 0.0007;
+             fMesonLambdaTailTrue         = 0.0007;
+             fMesonLambdaTailRange[0]     = 0.0007;
+             fMesonLambdaTailRange[1]     = 0.0007;
+             fMesonLambdaTailRangeTrue[0] = 0.0005;
+             fMesonLambdaTailRangeTrue[1] = 0.0020;
 
-             fFullPt[0]                  = 0.4;
-             fFullPt[1]                  = 15;
+             fFullPt[0]                   = 0.4;
+             fFullPt[1]                   = 15;
 
              // Settings for MC
              fMesonLambdaTailMC    = fMesonLambdaTail;
