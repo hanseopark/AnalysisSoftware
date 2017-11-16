@@ -4036,7 +4036,7 @@
                         binning[i] = fBinsPi07TeVPCMEMCPt[i];
                     }
                 } else if ( mode == 4 || mode == 12 ){
-                    maxNBins = 39;
+                    maxNBins = 38;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi07TeVEMCPt[i];
                     }
