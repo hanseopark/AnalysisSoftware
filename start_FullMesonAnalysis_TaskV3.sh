@@ -2289,6 +2289,25 @@ do
         else
             echo "Command not found. Please try again.";
         fi
+
+        if [ $mode = 2 ] || [ $mode = 3 ]; then
+            echo "Do you want to run pi0-tagging instead of DR? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Running pi0-tagging ...";
+                directphoton="directPhotonTagging"
+                DoPi0Tagging=1
+                DoPi0=0
+                DoEta=0
+                DoPi0InEtaBinning=0
+                DoGamma=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Running standard DR ...";
+                DoPi0Tagging=0
+            else
+                echo "Command not found. Please try again.";
+            fi
+        fi
     elif [ $energy = "8TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer

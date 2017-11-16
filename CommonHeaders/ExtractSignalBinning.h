@@ -2231,9 +2231,9 @@
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     if (modi == 4)
-                        fStartPtBin = 5;
-                    else if(modi == 2)
                         fStartPtBin = 6;
+                    else if(modi == 2)
+                        fStartPtBin = 4;
                     else if(modi == 1)
                         fStartPtBin = 6;
                     if (fNBinsPt > 23) {
@@ -2248,6 +2248,19 @@
                                 fNRebin[i] = fBinsDirGamma7TeVEMCPtRebin[i];
                             else
                                 fNRebin[i] = fBinsDirGamma7TeVPtRebin[i];
+                        }
+                    }
+                }else if (directPhoton.CompareTo("directPhotonTagging") == 0){
+                    fStartPtBin     = 1;
+                    if (fNBinsPt > 23) {
+                        cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                        fNBinsPt    = 23;
+                    }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+                    for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                        fBinsPt[i]         = fBinsDirGamma7TeVPt[i];
+                        if (i < fNBinsPt+1) {
+                              fNRebin[i] = fBinsDirGamma7TeVPtRebin[i];
                         }
                     }
                 } else {

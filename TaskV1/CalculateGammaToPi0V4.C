@@ -775,7 +775,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         if (mode==4) {
             minPt                                = 1.5;
             minY                                 = 0.5;
-            if(fEnergy.CompareTo("8TeV")==0){
+            if(fEnergy.CompareTo("8TeV")==0 || fEnergy.CompareTo("7TeV")==0 || fEnergy.CompareTo("900GeV")==0){
               minPt = 1.0;
               minY = 0.7;
             }
