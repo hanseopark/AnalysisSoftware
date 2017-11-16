@@ -2005,7 +2005,7 @@ fileNameEMCAL2="";
     labelRelSysErrEtaC->Draw();
 
     TLegend* legendWithFitEta2   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
-    legendWithFitEta2->AddEntry(fitInvXSectionEta,"Levy-Tsallis","l");
+    legendWithFitEta2->AddEntry(fitInvXSectionEta,"Tsallis","l");
     legendWithFitEta2->Draw();
 
     canvasDummy2->Update();
@@ -2099,7 +2099,7 @@ fileNameEMCAL2="";
     labelRelSysErrPi0C->Draw();
 
     TLegend* legendWithFitPi02   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
-    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
+    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Tsallis","l");
     legendWithFitPi02->Draw();
 
     canvasDummy2->Update();
@@ -2354,7 +2354,7 @@ fileNameEMCAL2="";
 
         TLegend* legendRatioPi0Fits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioPi0Fits->AddEntry(graphRatioCombCombFitSys,"TCM","p");
-        legendRatioPi0Fits->AddEntry(graphRatioPi0CombTsallisFitSys,"Levy-Tsallis","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0CombTsallisFitSys,"Tsallis","p");
         legendRatioPi0Fits->AddEntry(graphRatioPi0CombHagedornFitSys,"mod. Hagedorn","p");
         legendRatioPi0Fits->AddEntry(graphRatioPi0CombPowerFitSys,"pure powerlaw, 3.5-25 GeV/#it{c}","p");
         legendRatioPi0Fits->Draw();
@@ -2515,7 +2515,7 @@ fileNameEMCAL2="";
 
         TLegend* legendRatioEtaFits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioEtaFits->AddEntry(graphRatioCombCombFitSysEta,"TCM","p");
-        legendRatioEtaFits->AddEntry(graphRatioEtaCombTsallisFitSys,"Levy-Tsallis","p");
+        legendRatioEtaFits->AddEntry(graphRatioEtaCombTsallisFitSys,"Tsallis","p");
         legendRatioEtaFits->AddEntry(graphRatioEtaCombHagedornFitSys,"mod. Hagedorn","p");
         legendRatioEtaFits->AddEntry(graphRatioEtaCombPowerFitSys,"pure powerlaw, 3.5-18 GeV/#it{c}","p");
         legendRatioEtaFits->Draw();
@@ -3696,7 +3696,7 @@ fileNameEMCAL2="";
            legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSys,"Data","pf");
            legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 3.5%","l");
            legendXsectionPaper->AddEntry(fitTCMInvXSectionPi0,"TCM fit","l");
-           legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Levy-Tsallis fit","l");
+           legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
            legendXsectionPaper->AddEntry(histoPythia8InvXSection,"PYTHIA 8.2, Monash 2013","l");
            legendXsectionPaper->AddEntry(graphPi0DSS14,  "NLO, PDF:MSTW08 - FF:DSS14", "f");
            legendXsectionPaper->Draw();
@@ -3832,7 +3832,7 @@ fileNameEMCAL2="";
            legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSys,"Data","pf");
            legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 3.5%", "l");
            legendXsectionPaperEta->AddEntry(fitTCMInvXSectionEta,"TCM fit","l");
-           legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Levy-Tsallis fit","l");
+           legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Tsallis fit","l");
            legendXsectionPaperEta->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2, Monash 2013","l");
            legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
            legendXsectionPaperEta->AddEntry(graphNLOCalcEtaMuHalf,"#mu = 0.5 #it{p}_{T}","l");
@@ -3992,7 +3992,7 @@ fileNameEMCAL2="";
            legendXsectionPaperAll->AddEntry(graphCombPi0InvXSectionSys,"#pi^{0}","pf");
            legendXsectionPaperAll->AddEntry(graphCombEtaInvXSectionSys_Copy,"#eta (x 10^{-2})","pf");
            legendXsectionPaperAll->AddEntry(fitTCMInvXSectionPi0,"TCM fit","l");
-           legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Levy-Tsallis fit","l");
+           legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
            legendXsectionPaperAll->Draw();
 
            TLatex *labelEnergyXSectionPaperAll = new TLatex(0.18, 0.12+0.04*6, collisionSystem7TeV.Data());

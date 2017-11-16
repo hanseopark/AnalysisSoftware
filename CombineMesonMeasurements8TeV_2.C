@@ -1855,7 +1855,7 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     labelRelSysErrPi0C->Draw();
 
     TLegend* legendWithFitPi02   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
-    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
+    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Tsallis","l");
     legendWithFitPi02->Draw();
 
     canvasDummy2->Update();

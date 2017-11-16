@@ -5237,11 +5237,11 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         labelDetSysXSectionPi0->Draw();
 
         TLegend* legendXSectionPi0DiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*10, 32);
-        legendXSectionPi0DiffFits->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
-        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis1,"Levy-Tsallis, 0.8-40","l");
-        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis2,"Levy-Tsallis, 1.5-40","l");
-        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis3,"Levy-Tsallis, 2.5-40","l");
-        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis4,"Levy-Tsallis, 0.4-10","l");
+        legendXSectionPi0DiffFits->AddEntry(fitInvXSectionPi0,"Tsallis","l");
+        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis1,"Tsallis, 0.8-40","l");
+        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis2,"Tsallis, 1.5-40","l");
+        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis3,"Tsallis, 2.5-40","l");
+        legendXSectionPi0DiffFits->AddEntry(fitPi0Tsallis4,"Tsallis, 0.4-10","l");
         legendXSectionPi0DiffFits->AddEntry(fitPowInvXSectionPi0Tot,"pure powerlaw 6-40","l");
         legendXSectionPi0DiffFits->AddEntry(fitPowInvXSectionPi0TotLower,"pure powerlaw 4-40","l");
         legendXSectionPi0DiffFits->AddEntry(fitTCMInvXSectionPi0,"full TCM","l");
@@ -5292,10 +5292,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
         TLegend* legendXSectionPi0WithOld          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*6, 32);
         legendXSectionPi0WithOld->AddEntry(graphCombPi0InvXSectionSysA, "updated","pf");
         legendXSectionPi0WithOld->AddEntry(fitTCMInvXSectionPi0,"full TCM","l");
-        legendXSectionPi0WithOld->AddEntry(fitTsallisPi0PrevPubRefitted,"Levy-Tsallis, restr. param.","l");
+        legendXSectionPi0WithOld->AddEntry(fitTsallisPi0PrevPubRefitted,"Tsallis, restr. param.","l");
         legendXSectionPi0WithOld->AddEntry(fitPowInvXSectionPi0Tot,"pure powerlaw 6-40 GeV/#it{c}","l");
         legendXSectionPi0WithOld->AddEntry(graphPi0PubOldSys, "old pub","pf");
-        legendXSectionPi0WithOld->AddEntry(fitPi0OldPub,"Levy-Tsallis, old pub","l");
+        legendXSectionPi0WithOld->AddEntry(fitPi0OldPub,"Tsallis, old pub","l");
         legendXSectionPi0WithOld->Draw();
 
     canvasXSectionPi0->SaveAs(Form("%s/InvXSection_Pi0_WithOld.%s",outputDir.Data(),suffix.Data()));
@@ -5327,7 +5327,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     labelDetSysXSectionEta->Draw();
 
     TLegend* legendXSectionEtaDiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*5, 32);
-    legendXSectionEtaDiffFits->AddEntry(fitInvXSectionEta,"Levy-Tsallis","l");
+    legendXSectionEtaDiffFits->AddEntry(fitInvXSectionEta,"Tsallis","l");
     legendXSectionEtaDiffFits->AddEntry(fitPowInvXSectionEtaTot,"pure powerlaw","l");
     legendXSectionEtaDiffFits->AddEntry(fitTCMInvXSectionEta,"full TCM","l");
     legendXSectionEtaDiffFits->AddEntry(fitTCMDecomposedLEta,"low p_{T} comp. TCM","l");
@@ -5417,12 +5417,12 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         TLegend* legendRatioPi0Fits= GetAndSetLegend2(0.12,0.95-5*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioPi0Fits->AddEntry(graphRatioPi0TCMTot,"TCM","p");
-        legendRatioPi0Fits->AddEntry(graphRatioPi0TsallisTot,"Levy-Tsallis, free","p");
-//         legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis1Tot,"Levy-Tsallis, 0.8-40","p");
-        legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis2Tot,"Levy-Tsallis, 1.5-40 GeV/#it{c}","pl");
-//         legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis3Tot,"Levy-Tsallis, 2.5-40","p");
-//         legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis4Tot,"Levy-Tsallis, 0.4-10","p");
-        legendRatioPi0Fits->AddEntry(graphRatioPi0TsallisOld,"Levy-Tsallis, restr. param.","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0TsallisTot,"Tsallis, free","p");
+//         legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis1Tot,"Tsallis, 0.8-40","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis2Tot,"Tsallis, 1.5-40 GeV/#it{c}","pl");
+//         legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis3Tot,"Tsallis, 2.5-40","p");
+//         legendRatioPi0Fits->AddEntry(graphRatioPi0Tsallis4Tot,"Tsallis, 0.4-10","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0TsallisOld,"Tsallis, restr. param.","p");
 //         legendRatioPi0Fits->AddEntry(graphRatioPi0PowTot,"pure powerlaw 6-40","p");
         legendRatioPi0Fits->AddEntry(graphRatioPi0PowTotLow,"pure powerlaw, 4-40 GeV/#it{c}","p");
         legendRatioPi0Fits->Draw();
@@ -5479,7 +5479,7 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         TLegend* legendRatioEtaFits= GetAndSetLegend2(0.12,0.95-3*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioEtaFits->AddEntry(graphRatioEtaTCMTot,"TCM","p");
-        legendRatioEtaFits->AddEntry(graphRatioEtaTsallisTot,"Levy-Tsallis, free","p");
+        legendRatioEtaFits->AddEntry(graphRatioEtaTsallisTot,"Tsallis, free","p");
         legendRatioEtaFits->AddEntry(graphRatioEtaPowTotLow,"pure powerlaw, 4-20 GeV/#it{c}","p");
         legendRatioEtaFits->Draw();
 

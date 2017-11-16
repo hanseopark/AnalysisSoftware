@@ -2154,7 +2154,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendRatioPi0Fits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioPi0Fits->AddEntry(graphRatioPi0CombCombFitSysA,"TCM","p");
-        legendRatioPi0Fits->AddEntry(graphRatioPi0CombTsallisFitSysA,"Levy-Tsallis","p");
+        legendRatioPi0Fits->AddEntry(graphRatioPi0CombTsallisFitSysA,"Tsallis","p");
         legendRatioPi0Fits->AddEntry(graphRatioPi0CombHagedornFitSysA,"mod. Hagedorn","p");
         legendRatioPi0Fits->AddEntry(graphRatioPi0CombPowerFitSysA,"pure powerlaw, 3.5-35 GeV/#it{c}","p");
         legendRatioPi0Fits->Draw();
@@ -3274,7 +3274,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     labelRelSysErrEtaC->Draw();
 
     TLegend* legendWithFitEta2   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
-    legendWithFitEta2->AddEntry(fitInvXSectionEta,"Levy-Tsallis","l");
+    legendWithFitEta2->AddEntry(fitInvXSectionEta,"Tsallis","l");
     legendWithFitEta2->Draw();
 
     canvasDummy2->Update();
@@ -3370,7 +3370,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     labelRelSysErrPi0C->Draw();
 
     TLegend* legendWithFitPi02   = GetAndSetLegend2(0.17, 0.14, 0.5, 0.14+(0.035*3), 32);
-    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Levy-Tsallis","l");
+    legendWithFitPi02->AddEntry(fitInvXSectionPi0,"Tsallis","l");
     legendWithFitPi02->Draw();
 
     canvasDummy2->Update();
@@ -3540,7 +3540,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         TLegend* legendRatioEtaFits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
         legendRatioEtaFits->AddEntry(graphRatioEtaCombCombFitSysA,"TCM","p");
-        legendRatioEtaFits->AddEntry(graphRatioEtaCombTsallisFitSysA,"Levy-Tsallis","p");
+        legendRatioEtaFits->AddEntry(graphRatioEtaCombTsallisFitSysA,"Tsallis","p");
         legendRatioEtaFits->AddEntry(graphRatioEtaCombHagedornFitSysA,"mod. Hagedorn","p");
         legendRatioEtaFits->AddEntry(graphRatioEtaCombPowerFitSysA,"pure powerlaw, 3.5-35 GeV/#it{c}","p");
         legendRatioEtaFits->Draw();
@@ -5413,7 +5413,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaper->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaper->AddEntry(boxErrorSigmaRatio,"norm. unc. 2.6%","l");
         legendXsectionPaper->AddEntry(fitTCMInvXSectionPi0Plot,"TCM fit","l");
-        legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Levy-Tsallis fit","l");
+        legendXsectionPaper->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
 //        legendXsectionPaper->AddEntry(graphNLODSS14Calc,"NLO, DSS14 ","f");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuHalf, "NLO, DSS07 #mu = 0.5 #it{p}_{T}", "l");
 //        legendXsectionPaper->AddEntry(graphNLOCalcPi0MuOne,  "NLO, DSS07 #mu = #it{p}_{T}", "l");
@@ -5571,7 +5571,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperEta->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
         legendXsectionPaperEta->AddEntry(boxErrorSigmaRatio, "norm. unc. 2.6%", "l");
         legendXsectionPaperEta->AddEntry(fitTCMInvXSectionEta,"TCM fit","l");
-        legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Levy-Tsallis fit","l");
+        legendXsectionPaperEta->AddEntry(fitInvXSectionEta,"Tsallis fit","l");
         legendXsectionPaperEta->AddEntry(histoPythia8InvXSectionEta,"PYTHIA 8.2, Monash 2013","l");
         legendXsectionPaperEta->AddEntry(histoPythia8_4CInvXSectionEta,"PYTHIA 8.2, Tune 4C","l");
         legendXsectionPaperEta->AddEntry((TObject*)0, "", "");
@@ -5760,7 +5760,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         legendXsectionPaperAll->AddEntry(graphCombPi0InvXSectionSysA,"#pi^{0}","pf");
         legendXsectionPaperAll->AddEntry(graphCombEtaInvXSectionSysA_Copy,"#eta (x 10^{-2})","pf");
         legendXsectionPaperAll->AddEntry(fitTCMInvXSectionPi0Plot,"TCM fit","l");
-        legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Levy-Tsallis fit","l");
+        legendXsectionPaperAll->AddEntry(fitInvXSectionPi0,"Tsallis fit","l");
         legendXsectionPaperAll->Draw();
 
         TLatex *labelEnergyXSectionPaperAll = new TLatex(0.18, 0.12+0.04*6, collisionSystem8TeV.Data());

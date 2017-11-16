@@ -55,7 +55,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
                                     TString suffix                  = "pdf",
                                     TString fileNameCorrelations    = "",
                                     Bool_t enablepValueCalc         = kFALSE,
-                                    Double_t confidenceLevelnSigma  = 1.28 //95% C.L. //1.28 //90% C.L.
+                                    Double_t confidenceLevelnSigma  = 1.28 //1.64 95% C.L. //1.28 //90% C.L.
                             ){
 
     //*******************************************************************************************************************************************
@@ -2149,7 +2149,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         fitHagGammaComb->SetRange(0.28, 20);
         fitHagGammaComb->Draw("same");
         DrawGammaSetMarkerTF1( fitTsallisGammaComb, 5, 2, colorCombpp8TeVBox);
-        legendYieldIncGamma->AddEntry(fitTsallisGammaComb,"Levy-Tsallis fit","l");
+        legendYieldIncGamma->AddEntry(fitTsallisGammaComb,"Tsallis fit","l");
         fitTsallisGammaComb->SetRange(doubleRatioXpp[0], doubleRatioXpp[1]);
         fitTsallisGammaComb->Draw("same");
         DrawGammaSetMarkerTF1( fitTCMGammaComb, 4, 2, kBlue+2);
