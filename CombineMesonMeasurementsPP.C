@@ -632,6 +632,10 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
                   Double_t paramTCMPi0New[5]  = { 703678218.2483119965,0.5727060723,
                                                   68561118949.5456314087,0.4481417931,3.0869940568};
                   fitTCMInvCrossSectionPi0Comb[i]   = FitObject("tcm",Form("fitTCMInvCrossSectionPi0Comb_%s",nameEnergyGlobal2[i].Data()),"Pi0",graphPi0InvariantCrossSectionTot[i][10],minXSpectra[i][10],maxXSpectra[i][10] ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
+                }else if( i == 0 && useNewMeasurements){
+                  Double_t paramTCMPi0New[5]  = { 99747914072.3427581787,0.2239955466,
+                                                  787371127.3022410870,1.0596112634,4.3840859785};
+                  fitTCMInvCrossSectionPi0Comb[i]   = FitObject("tcm",Form("fitTCMInvCrossSectionPi0Comb_%s",nameEnergyGlobal2[i].Data()),"Pi0",graphPi0InvariantCrossSectionTot[i][10],minXSpectra[i][10],maxXSpectra[i][10] ,paramTCMPi0New,"QNRMEX0+","", kFALSE);
                 }else{
                   Double_t paramTCMComb[5]  = { graphPi0InvariantCrossSectionTot[i][10]->GetY()[1],0.1,graphPi0InvariantCrossSectionTot[i][10]->GetY()[3],0.6,3.0};
                   fitTCMInvCrossSectionPi0Comb[i]   = FitObject("tcm",Form("fitTCMInvCrossSectionPi0Comb_%s",nameEnergyGlobal2[i].Data()),"Pi0",graphPi0InvariantCrossSectionTot[i][10],minXSpectra[i][10],maxXSpectra[i][10] ,paramTCMComb,"QNRMEX0+","", kFALSE);
@@ -2539,4 +2543,178 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     canvasEtatoPi0combo->RedrawAxis();
     canvasEtatoPi0combo->Print(Form("%s/EtaToPi0_mT.%s",outputDir.Data(),suffix.Data()));
 
+
+    //---------------------------------------------------------------------------------------------------------------
+    //-------------------------------Plotting -----------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+
+    outputDir += "/SingleSystems";
+    cout << outputDir.Data() << endl;
+
+    gSystem->Exec("mkdir -p "+outputDir);
+
+    //---------------------------------------------------------------------------------------------------------------
+    //-------------------------------Plotting -----------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+
+    for(Int_t j=0; j<11; j++){
+      canvasRatios->cd();
+      //__________________________________________ Set ratio pad properties
+      for(Int_t i=0;i<numActiveMeas;i++){
+          padRatios[i]->Draw();
+      }
+      //__________________________________________ Loop over all ratio pads and draw
+      for(Int_t i=0;i<numActiveMeas;i++){
+          padRatios[i]->cd();
+          padRatios[i]->SetLogx(1);
+          histoRatiosDummy[i]->DrawCopy();
+      }
+      Int_t counterAvailMeas = 0.;
+      padCounter = 0;
+      for (Int_t i = 5; i > -1; i--){
+          if(includeEnergy[i]){
+              padRatios[padCounter]->cd();
+              DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
+              if(padCounter==0){
+                drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+                drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+                if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.62,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              }
+              if(graphRatioIndivMeasToCombFitEtaSys[i][j]&&graphEtaInvariantCrossSectionStat[i][j]){
+                  if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.76+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+                  else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+                  legendRatiosEnergy[i]->SetNColumns(1);
+                  legendRatiosEnergy[i]->SetMargin(0.2);
+                  if(i==0 && !useNewMeasurements) legendRatiosEnergy[i]->AddEntry(graphRatioIndivMeasToCombFitEtaSys[i][j],Form("pp, %s (Prelim.)",energyLatex[i].Data()),"pf");
+                  else legendRatiosEnergy[i]->AddEntry(graphRatioIndivMeasToCombFitEtaSys[i][j],Form("pp, %s",energyLatex[i].Data()),"pf");
+                  legendRatiosEnergy[i]->Draw();
+                  DrawGammaSetMarkerTGraphAsym(graphRatioIndivMeasToCombFitEtaStat_woXErr[i][j], markerStyleMeas[j], markerSizeMeas[j], colorEnergy[i] , colorEnergy[i]);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioIndivMeasToCombFitEtaSys[i][j], markerStyleMeas[j], markerSizeMeas[j], colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
+                  graphRatioIndivMeasToCombFitEtaSys[i][j]->Draw("2,same");
+                  graphRatioIndivMeasToCombFitEtaStat_woXErr[i][j]->Draw("p,same");
+                  counterAvailMeas++;
+              }
+              padCounter+=1;
+          }
+      }
+      for(Int_t i=0;i<numActiveMeas;i++) padRatios[i]->RedrawAxis();
+      if(counterAvailMeas > 0.5) canvasRatios->Print(Form("%s/Eta_Ratios_%s.%s",outputDir.Data(),nameMeasGlobalshort[j].Data(),suffix.Data()));
+
+      canvasXSectionEta->cd();
+      histoXSecDummyEta[0]->Draw();
+      Bool_t bAvailMeas[6] = {kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE};
+      for (Int_t i = 0; i < 6; i++){
+          if(includeEnergy[i]){
+              if(graphEtaInvariantCrossSectionSys[i][j]&&graphEtaInvariantCrossSectionStat[i][j]){
+                DrawGammaSetMarkerTGraph(graphEtaInvariantCrossSectionStat[i][j], markerStyleMeas[j], markerSizeMeas[j]+0.5, colorEnergy[i] , colorEnergy[i]);
+                DrawGammaSetMarkerTGraph(graphEtaInvariantCrossSectionSys[i][j], markerStyleMeas[j], markerSizeMeas[j]+0.5, colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
+                if(i>0)fitTCMInvCrossSectionEtaCombPlot[i]->Draw("same");
+                fitTsallisInvCrossSectionEtaComb[i]->Draw("same");
+                graphEtaInvariantCrossSectionSys[i][j]->Draw("E2same");
+                graphEtaInvariantCrossSectionStat[i][j]->Draw("p,same,z");
+              }else bAvailMeas[i] = kFALSE;
+          }
+      }
+      drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+      drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+      if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.84,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+
+      TLegend* legendInvariantCrossSectionEta2    = GetAndSetLegend2(0.17, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+      legendInvariantCrossSectionEta2->SetNColumns(1);
+      legendInvariantCrossSectionEta2->SetMargin(0.2);
+      legendRunningIndex = numActiveMeas-1;
+      for (Int_t i = 5; i > -1; i--){
+          if(includeEnergy[i]){
+              if(bAvailMeas[i]) legendInvariantCrossSectionEta2->AddEntry(graphEtaInvariantCrossSectionSys[i][j],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+              legendRunningIndex-=1;
+          }
+      }
+      legendInvariantCrossSectionEta2->AddEntry(fitTCMInvCrossSectionEtaCombPlot[exampleActiveMeas],"TCM fit","l");
+      legendInvariantCrossSectionEta2->AddEntry(fitTsallisInvCrossSectionEtaComb[exampleActiveMeas],"Tsallis fit","l");
+      legendInvariantCrossSectionEta2->Draw();
+
+      if(counterAvailMeas > 0.5) canvasXSectionEta->Print(Form("%s/Eta_XSec_%s.%s",outputDir.Data(),nameMeasGlobalshort[j].Data(),suffix.Data()));
+    }
+
+    //---------------------------------------------------------------------------------------------------------------
+    //-------------------------------Plotting -----------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+    for(Int_t j=0; j<11; j++){
+      canvasRatios->cd();
+      //__________________________________________ Set ratio pad properties
+      for(Int_t i=0;i<numActiveMeas;i++){
+          padRatios[i]->Draw();
+      }
+      //__________________________________________ Loop over all ratio pads and draw
+      for(Int_t i=0;i<numActiveMeas;i++){
+          padRatios[i]->cd();
+          padRatios[i]->SetLogx(1);
+          histoRatiosDummy[i]->GetYaxis()->SetTitle("#frac{Data}{TCM fit}");
+          histoRatiosDummy[i]->DrawCopy();
+      }
+      Int_t counterAvailMeas = 0.;
+      padCounter = 0;
+      for (Int_t i = 5; i > -1; i--){
+          if(includeEnergy[i]){
+              padRatios[padCounter]->cd();
+              DrawGammaLines(xRangeMinRatios, xRangeMaxRatios, 1., 1., 1.2, kGray+2);
+              if(padCounter==0){
+                drawLatexAdd("ALICE",rightalignDouble,0.84,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+                drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.73,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+                if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.62,3*textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+              }
+              if(graphPi0InvariantCrossSectionSys[i][j]&&graphPi0InvariantCrossSectionStat[i][j]){
+                  if(i==0) legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.81, 0.5, 0.76+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+                  else legendRatiosEnergy[i] = GetAndSetLegend2(0.15, 0.75, 0.5, 0.75+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+                  legendRatiosEnergy[i]->SetNColumns(1);
+                  legendRatiosEnergy[i]->SetMargin(0.2);
+                  legendRatiosEnergy[i]->AddEntry(graphRatioIndivMeasToCombFitPi0Sys[i][j],Form("pp, %s",energyLatex[i].Data()),"pf");
+                  legendRatiosEnergy[i]->Draw();
+                  DrawGammaSetMarkerTGraphAsym(graphRatioIndivMeasToCombFitPi0Stat_woXErr[i][j], markerStyleMeas[j], markerSizeMeas[j], colorEnergy[i] , colorEnergy[i]);
+                  DrawGammaSetMarkerTGraphAsym(graphRatioIndivMeasToCombFitPi0Sys[i][j], markerStyleMeas[j], markerSizeMeas[j], colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
+                  graphRatioIndivMeasToCombFitPi0Sys[i][j]->Draw("2,same");
+                  graphRatioIndivMeasToCombFitPi0Stat_woXErr[i][j]->Draw("p,same");
+                  counterAvailMeas++;
+              }
+              padCounter+=1;
+          }
+      }
+      for(Int_t i=0;i<numActiveMeas;i++) padRatios[i]->RedrawAxis();
+      if(counterAvailMeas > 0.5) canvasRatios->Print(Form("%s/Pi0_Ratios_%s.%s",outputDir.Data(),nameMeasGlobalshort[j].Data(),suffix.Data()));
+
+      canvasXSectionPi0->cd();
+      histoXSecDummy[0]->Draw();
+      Bool_t bAvailMeas2[6] = {kTRUE, kTRUE, kTRUE, kTRUE, kTRUE, kTRUE};
+      for (Int_t i = 0; i < 6; i++){
+          if(includeEnergy[i]){
+              if(graphPi0InvariantCrossSectionSys[i][j]&&graphPi0InvariantCrossSectionStat[i][j]){
+                DrawGammaSetMarkerTGraph(graphPi0InvariantCrossSectionStat[i][j], markerStyleMeas[j], markerSizeMeas[j]+0.5, colorEnergy[i] , colorEnergy[i]);
+                DrawGammaSetMarkerTGraph(graphPi0InvariantCrossSectionSys[i][j], markerStyleMeas[j], markerSizeMeas[j]+0.5, colorEnergy[i] , colorEnergy[i], widthLinesBoxes, kTRUE);
+                fitTCMInvCrossSectionPi0CombPlot[i]->Draw("same");
+                fitTsallisInvCrossSectionPi0Comb[i]->Draw("same");
+                graphPi0InvariantCrossSectionSys[i][j]->Draw("E2same");
+                graphPi0InvariantCrossSectionStat[i][j]->Draw("p,same,z");
+              }else bAvailMeas2[i] = kFALSE;
+          }
+      }
+      drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+      drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+      if(j!=10)drawLatexAdd(Form("rec. with %s",nameMeasGlobal[j].Data()),rightalignDouble,0.84,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
+
+      TLegend* legendInvariantCrossSectionPi02    = GetAndSetLegend2(0.17, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+      legendInvariantCrossSectionPi02->SetNColumns(1);
+      legendInvariantCrossSectionPi02->SetMargin(0.2);
+      legendRunningIndex = numActiveMeas-1;
+      for (Int_t i = 5; i > -1; i--){
+          if(includeEnergy[i]){
+              if(bAvailMeas2[i]) legendInvariantCrossSectionPi02->AddEntry(graphPi0InvariantCrossSectionSys[i][j],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+              legendRunningIndex-=1;
+          }
+      }
+      legendInvariantCrossSectionPi02->AddEntry(fitTCMInvCrossSectionPi0CombPlot[exampleActiveMeas],"TCM fit","l");
+      legendInvariantCrossSectionPi02->AddEntry(fitTsallisInvCrossSectionPi0Comb[exampleActiveMeas],"Tsallis fit","l");
+      legendInvariantCrossSectionPi02->Draw();
+
+      if(counterAvailMeas > 0.5) canvasXSectionPi0->Print(Form("%s/Pi0_XSec_%s.%s",outputDir.Data(),nameMeasGlobalshort[j].Data(),suffix.Data()));
+    }
 }
