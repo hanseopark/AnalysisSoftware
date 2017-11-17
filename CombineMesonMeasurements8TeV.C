@@ -1365,9 +1365,9 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         return;
     }
     // remove bin from 0-0.3 (should have been done automatically in principle)
-//    graphCombPi0InvXSectionStatA->RemovePoint(0);
-//    graphCombPi0InvXSectionSysA->RemovePoint(0);
-//    graphCombPi0InvXSectionTotA->RemovePoint(0);
+    graphCombPi0InvXSectionStatA->RemovePoint(0);
+    graphCombPi0InvXSectionSysA->RemovePoint(0);
+    graphCombPi0InvXSectionTotA->RemovePoint(0);
     cout << __LINE__ << endl;
     graphCombPi0InvXSectionTotA->Print();
 //     return;

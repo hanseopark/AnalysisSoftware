@@ -171,6 +171,17 @@ fileNameEMCAL2="";
                                                    "EMCal",
                                                    "EMCAL merged",
                                                    "PCMOtherDataset"};
+    TString nameMeasGlobalWriteToFile[11]       = {"PCM",
+                                                   "PHOS",
+                                                   "EMCAL",
+                                                   "PCMPHOS",
+                                                   "PCMEMCAL",
+                                                   "PCMDalitz",
+                                                   "PHOSDalitz",
+                                                   "EMCALDalitz",
+                                                   "EMCAL",
+                                                   "EMCALmerged",
+                                                   "PCMOtherDataset"};
     TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
     TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
     Double_t maxSecCorr[4]                      = { 0.04, 0.007, 0.00028, 0.04};
@@ -4556,14 +4567,14 @@ fileNameEMCAL2="";
        fCombResults.mkdir("Pi07TeV");
        TDirectoryFile* fileDirectoryPi0 = (TDirectoryFile*)fCombResults.Get("Pi07TeV");
        fCombResults.cd("Pi07TeV");
-           graphCombPi0InvXSectionTot->Write("graphInvCrossSectionPi0Comb7TeV");
-           graphCombPi0InvXSectionStat->Write("graphInvCrossSectionPi0Comb7TeVStatErr");
-           graphCombPi0InvXSectionSys->Write("graphInvCrossSectionPi0Comb7TeVSysErr");
+           graphCombPi0InvXSectionTot->Write("graphInvCrossSectionPi0Comb7TeVA");
+           graphCombPi0InvXSectionStat->Write("graphInvCrossSectionPi0Comb7TeVAStatErr");
+           graphCombPi0InvXSectionSys->Write("graphInvCrossSectionPi0Comb7TeVASysErr");
 
            for (Int_t i = 0; i < 11; i++){
              if(directoryPi0[i]){
-               graphPi0InvXSectionStat[i]          ->Write(Form("graphInvCrossSectionPi0%s7TeVStatErr",nameMeasGlobal[i].Data()));
-               graphPi0InvXSectionSys[i]           ->Write(Form("graphInvCrossSectionPi0%s7TeVSysErr",nameMeasGlobal[i].Data()));
+               graphPi0InvXSectionStat[i]          ->Write(Form("graphInvCrossSectionPi0%s7TeVStatErr",nameMeasGlobalWriteToFile[i].Data()));
+               graphPi0InvXSectionSys[i]           ->Write(Form("graphInvCrossSectionPi0%s7TeVSysErr",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
 
@@ -4578,8 +4589,8 @@ fileNameEMCAL2="";
 
                for (Int_t i = 0; i < 11; i++){
                  if(directoryPi0[i]){
-                   graphPi0InvXSectionStat_yShifted[i]          ->Write(Form("graphInvCrossSectionPi0%s7TeVStatErr_yShifted",nameMeasGlobal[i].Data()));
-                   graphPi0InvXSectionSys_yShifted[i]           ->Write(Form("graphInvCrossSectionPi0%s7TeVSysErr_yShifted",nameMeasGlobal[i].Data()));
+                   graphPi0InvXSectionStat_yShifted[i]          ->Write(Form("graphInvCrossSectionPi0%s7TeVStatErr_yShifted",nameMeasGlobalWriteToFile[i].Data()));
+                   graphPi0InvXSectionSys_yShifted[i]           ->Write(Form("graphInvCrossSectionPi0%s7TeVSysErr_yShifted",nameMeasGlobalWriteToFile[i].Data()));
                  }
                }
 
@@ -4590,25 +4601,25 @@ fileNameEMCAL2="";
            for (Int_t i = 0; i < 11; i++){
              if(directoryPi0[i]){
                // Writing full correction factors
-               histoPi0AccTimesEff[i]          ->Write(Form("Pi0CorrectionFactor%s",nameMeasGlobal[i].Data()));
-               histoPi0Mass[i]                 ->Write(Form("Pi0MassData%s",nameMeasGlobal[i].Data()));
-               histoPi0TrueMass[i]             ->Write(Form("Pi0MassMC%s",nameMeasGlobal[i].Data()));
-               histoPi0FWHMMeV[i]              ->Write(Form("Pi0WidthData%s",nameMeasGlobal[i].Data()));
-               histoPi0TrueFWHMMeV[i]          ->Write(Form("Pi0WidthMC%s",nameMeasGlobal[i].Data()));
+               histoPi0AccTimesEff[i]          ->Write(Form("Pi0CorrectionFactor%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoPi0Mass[i]                 ->Write(Form("Pi0MassData%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoPi0TrueMass[i]             ->Write(Form("Pi0MassMC%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoPi0FWHMMeV[i]              ->Write(Form("Pi0WidthData%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoPi0TrueFWHMMeV[i]          ->Write(Form("Pi0WidthMC%s",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
 
        fCombResults.mkdir("Eta7TeV");
        TDirectoryFile* fileDirectoryEta = (TDirectoryFile*)fCombResults.Get("Eta7TeV");
        fCombResults.cd("Eta7TeV");
-           graphCombEtaInvXSectionTot->Write("graphInvCrossSectionEtaComb7TeV");
-           graphCombEtaInvXSectionStat->Write("graphInvCrossSectionEtaComb7TeVStatErr");
-           graphCombEtaInvXSectionSys->Write("graphInvCrossSectionEtaComb7TeVSysErr");
+           graphCombEtaInvXSectionTot->Write("graphInvCrossSectionEtaComb7TeVA");
+           graphCombEtaInvXSectionStat->Write("graphInvCrossSectionEtaComb7TeVAStatErr");
+           graphCombEtaInvXSectionSys->Write("graphInvCrossSectionEtaComb7TeVASysErr");
 
            for (Int_t i = 0; i < 11; i++){
              if(directoryEta[i]){
-               graphEtaInvXSectionStat[i]          ->Write(Form("graphInvCrossSectionEta%s7TeVStatErr",nameMeasGlobal[i].Data()));
-               graphEtaInvXSectionSys[i]           ->Write(Form("graphInvCrossSectionEta%s7TeVSysErr",nameMeasGlobal[i].Data()));
+               graphEtaInvXSectionStat[i]          ->Write(Form("graphInvCrossSectionEta%s7TeVStatErr",nameMeasGlobalWriteToFile[i].Data()));
+               graphEtaInvXSectionSys[i]           ->Write(Form("graphInvCrossSectionEta%s7TeVSysErr",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
 
@@ -4623,22 +4634,22 @@ fileNameEMCAL2="";
 
                for (Int_t i = 0; i < 11; i++){
                  if(directoryEta[i]){
-                   graphEtaInvXSectionStat_yShifted[i]          ->Write(Form("graphInvCrossSectionEta%s7TeVStatErr_yShifted",nameMeasGlobal[i].Data()));
-                   graphEtaInvXSectionSys_yShifted[i]           ->Write(Form("graphInvCrossSectionEta%s7TeVSysErr_yShifted",nameMeasGlobal[i].Data()));
+                   graphEtaInvXSectionStat_yShifted[i]          ->Write(Form("graphInvCrossSectionEta%s7TeVStatErr_yShifted",nameMeasGlobalWriteToFile[i].Data()));
+                   graphEtaInvXSectionSys_yShifted[i]           ->Write(Form("graphInvCrossSectionEta%s7TeVSysErr_yShifted",nameMeasGlobalWriteToFile[i].Data()));
                  }
                }
 
            }
 
 
-           graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0Comb8TeVTotErr");
-           graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0Comb8TeVStatErr");
-           graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0Comb8TeVSysErr");
+           graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0Comb7TeVTotErr");
+           graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0Comb7TeVStatErr");
+           graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0Comb7TeVSysErr");
 
            for (Int_t i = 0; i < 11; i++){
              if(directoryEta[i]){
-               graphEtaToPi0Stat[i]          ->Write(Form("graphEtaToPi0%s7TeVStatErr",nameMeasGlobal[i].Data()));
-               graphEtaToPi0Sys[i]           ->Write(Form("graphEtaToPi0%s7TeVSysErr",nameMeasGlobal[i].Data()));
+               graphEtaToPi0Stat[i]          ->Write(Form("graphRatioEtaToPi0%s7TeVStatErr",nameMeasGlobalWriteToFile[i].Data()));
+               graphEtaToPi0Sys[i]           ->Write(Form("graphRatioEtaToPi0%s7TeVSysErr",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
 
@@ -4650,11 +4661,11 @@ fileNameEMCAL2="";
            for (Int_t i = 0; i < 11; i++){
              if(directoryEta[i]){
                // Writing full correction factors
-               histoEtaAccTimesEff[i]          ->Write(Form("EtaCorrectionFactor%s",nameMeasGlobal[i].Data()));
-               histoEtaMass[i]                 ->Write(Form("EtaMassData%s",nameMeasGlobal[i].Data()));
-               histoEtaTrueMass[i]             ->Write(Form("EtaMassMC%s",nameMeasGlobal[i].Data()));
-               histoEtaFWHMMeV[i]              ->Write(Form("EtaWidthData%s",nameMeasGlobal[i].Data()));
-               histoEtaTrueFWHMMeV[i]          ->Write(Form("EtaWidthMC%s",nameMeasGlobal[i].Data()));
+               histoEtaAccTimesEff[i]          ->Write(Form("EtaCorrectionFactor%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoEtaMass[i]                 ->Write(Form("EtaMassData%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoEtaTrueMass[i]             ->Write(Form("EtaMassMC%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoEtaFWHMMeV[i]              ->Write(Form("EtaWidthData%s",nameMeasGlobalWriteToFile[i].Data()));
+               histoEtaTrueFWHMMeV[i]          ->Write(Form("EtaWidthMC%s",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
        fCombResults.Close();
