@@ -39,8 +39,8 @@ void level_of_agreement_v2inc() {
     TVectorD pt = *(TVectorD *)dir_pcm->Get("pt");
 
     // possible cross check: no correlations, i.e., all off-diagonal elements are zero
-    // bool no_correlations = false; // default
-    bool no_correlations = true; // cross check
+    bool no_correlations = false; // default
+    // bool no_correlations = true; // cross check
     if (no_correlations) {
         for (Int_t i = 0; i < n_bins; ++i) {
             for (Int_t j = 0; j < n_bins; ++j) {
