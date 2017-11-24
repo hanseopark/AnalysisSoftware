@@ -191,6 +191,11 @@ void EventQA(
       cout << "ERROR detecting collision system" << endl;
     }
 
+    TString centralityString    = GetCentralityString(fEventCutSelection[0]);
+    if (centralityString.CompareTo("pp")!=0 && !centralityString.Contains("0-100%") ){
+        fCollisionSystem    = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
+    }
+
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Obtaining trigger - ";
     TString* fTrigger       = new TString[nSets];
@@ -325,9 +330,22 @@ void EventQA(
         TList* TopDir                   = (TList*) fFile->Get(nameMainDir[i].Data());
             if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
             else TopDir->SetOwner(kTRUE);
+            cout << "container list for main dir" << endl;
+            for(Int_t j = 0; j<TopDir->GetSize(); j++){
+                TList *container = (TList*)TopDir->At(j);
+                cout <<  container->GetName() << endl;
+            }
+
         TList* TopContainer             = (TList*) TopDir->FindObject(Form("Cut Number %s",fCutSelection[i].Data()));
             if(TopContainer == NULL) {cout << "ERROR: " << Form("Cut Number %s",fCutSelection[i].Data()) << " not found in File" << endl; return;}
             else TopContainer->SetOwner(kTRUE);
+
+            cout << "container list for selected CutNumber" << endl;
+            for(Int_t j = 0; j<TopContainer->GetSize(); j++){
+                TList *container = (TList*)TopContainer->At(j);
+                cout <<  container->GetName() << endl;
+            }
+
         TList* ESDContainer             = (TList*) TopContainer->FindObject(Form("%s ESD histograms",fCutSelection[i].Data()));
             if(ESDContainer == NULL) {cout << "ERROR: " << Form("%s ESD histograms",fCutSelection[i].Data()) << " not found in File" << endl; return;}
             else ESDContainer->SetOwner(kTRUE);
@@ -347,6 +365,7 @@ void EventQA(
             if(TrueContainer == NULL) {cout << "INFO: " << Form("%s True histograms",fCutSelection[i].Data()) << " not found in File, processing data?" << endl;}
             else TrueContainer->SetOwner(kTRUE);
 
+        Bool_t hasMainGammaContainer    = kTRUE;
         TList* TopContainerGamma        = NULL;
         TString ContainerGammaCut       = "";
             if(isConv){
@@ -355,11 +374,16 @@ void EventQA(
                 if(j>=TopDir->GetSize()) TopContainerGamma = NULL;
                 else TopContainerGamma  = listCuts;
 
-                if(TopContainerGamma == NULL) {cout << "ERROR: " << "ConvCuts_*" << " not found in File" << endl; return;}
-                else TopContainerGamma->SetOwner(kTRUE);
-                ContainerGammaCut = TopContainerGamma->GetName();
-                ContainerGammaCut.Remove(0,9);
+                if(TopContainerGamma == NULL) {
+                    hasMainGammaContainer   = kFALSE;
+                    cout << "ERROR: " << "ConvCuts_*" << " not found in File" << endl;
+                } else {
+                    TopContainerGamma->SetOwner(kTRUE);
+                    ContainerGammaCut = TopContainerGamma->GetName();
+                    ContainerGammaCut.Remove(0,9);
+                }
             }
+        Bool_t hasMainEventContainer    = kTRUE;
         TList* TopContainerEvent = NULL;
         TString ContainerEventCut = "";
             TList* listCuts=NULL; TString name=""; Int_t j=0;
@@ -367,10 +391,14 @@ void EventQA(
             if(j>=TopDir->GetSize()) TopContainerEvent = NULL;
             else TopContainerEvent = listCuts;
 
-            if(TopContainerEvent == NULL) {cout << "ERROR: " << "ConvEventCuts_*" << " not found in File" << endl; return;}
-            else TopContainerEvent->SetOwner(kTRUE);
-            ContainerEventCut = TopContainerEvent->GetName();
-            ContainerEventCut.Remove(0,14);
+            if(TopContainerEvent == NULL) {
+                hasMainEventContainer   = kFALSE;
+                cout << "ERROR: " << "ConvEventCuts_*" << " not found in File" << endl;
+            } else {
+                TopContainerEvent->SetOwner(kTRUE);
+                ContainerEventCut = TopContainerEvent->GetName();
+                ContainerEventCut.Remove(0,14);
+            }
         //-------------------------------------------------------------------------------------------------------------------------------
         nEvents[i]          = 0;
         nEventsAll[i]       = 0;
@@ -523,29 +551,31 @@ void EventQA(
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------
-        // SPD tracklets vs SPD cluster before cuts
-        TH2D* fHistSPDtracklets_clusters_before = (TH2D*)TopContainerEvent->FindObject(Form("SPD tracklets vs SPD clusters %s",ContainerEventCut.Data()));
-        if(fHistSPDtracklets_clusters_before){
-            if(isMinMaxSPD){
-                GetMinMaxBin(fHistSPDtracklets_clusters_before,minB_SPD,maxB_SPD); maxB_SPD+=5;
-                GetMinMaxBinY(fHistSPDtracklets_clusters_before,minYB_SPD,maxYB_SPD); maxYB_SPD-=1;
-                isMinMaxSPD=kFALSE;
-            }
-            SetXRange(fHistSPDtracklets_clusters_before,1,maxB_SPD);
-            SetYRange(fHistSPDtracklets_clusters_before,1,maxYB_SPD);
-            SetZMinMaxTH2(fHistSPDtracklets_clusters_before,1,maxB_SPD,1,maxYB_SPD);
-            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
-                                fHistSPDtracklets_clusters_before,"",
-                                "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
-                                processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
-            cut->SetLineColor(kRed);
-            cut->SetLineStyle(2);
-            cut->SetLineWidth(4);
-            cut->Draw("SAME");
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistSPDtracklets_clusters_before, Form("%s/SPD_TrackletsVsClusters_Before_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-            delete cut;
-        } else cout << Form("INFO: Object |SPD tracklets vs SPD clusters %s| could not be found! Skipping Draw...",ContainerEventCut.Data()) << endl;
+        if (hasMainEventContainer){
+            // SPD tracklets vs SPD cluster before cuts
+            TH2D* fHistSPDtracklets_clusters_before = (TH2D*)TopContainerEvent->FindObject(Form("SPD tracklets vs SPD clusters %s",ContainerEventCut.Data()));
+            if(fHistSPDtracklets_clusters_before){
+                if(isMinMaxSPD){
+                    GetMinMaxBin(fHistSPDtracklets_clusters_before,minB_SPD,maxB_SPD); maxB_SPD+=5;
+                    GetMinMaxBinY(fHistSPDtracklets_clusters_before,minYB_SPD,maxYB_SPD); maxYB_SPD-=1;
+                    isMinMaxSPD=kFALSE;
+                }
+                SetXRange(fHistSPDtracklets_clusters_before,1,maxB_SPD);
+                SetYRange(fHistSPDtracklets_clusters_before,1,maxYB_SPD);
+                SetZMinMaxTH2(fHistSPDtracklets_clusters_before,1,maxB_SPD,1,maxYB_SPD);
+                DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+                                    fHistSPDtracklets_clusters_before,"",
+                                    "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
+                                    processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+                cut->SetLineColor(kRed);
+                cut->SetLineStyle(2);
+                cut->SetLineWidth(4);
+                cut->Draw("SAME");
+                SaveCanvasAndWriteHistogram(cvsQuadratic, fHistSPDtracklets_clusters_before, Form("%s/SPD_TrackletsVsClusters_Before_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                delete cut;
+            } else cout << Form("INFO: Object |SPD tracklets vs SPD clusters %s| could not be found! Skipping Draw...",ContainerEventCut.Data()) << endl;
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         // SPD tracklets vs SPD cluster before pileup cuts
         TH2D* fHistSPDtracklets_clusters_beforePileUp = (TH2D*)ConvEventCutsContainer->FindObject(Form("SPD tracklets vs SPD clusters %s before Pileup Cut",fEventCutSelection[i].Data()));
@@ -751,7 +781,6 @@ void EventQA(
                 fLog << "CaloNClusters: \t\t\t(" << CaloNClusters << " +- " << sqrt(CaloNClusters) << ")" << endl;
                 fLog << "CaloNClustersQA: \t\t(" << CaloNClustersQA << " +- " << sqrt(CaloNClustersQA) << ")" << endl;
             }
-
         }
 
 
@@ -765,36 +794,38 @@ void EventQA(
                 cout << Form("ERROR: Object |ESD_ConvGamma_Pt| could not be found, although running mode: '%i'! Returning...",fMode) << endl;
                 return;
             }
-            //-------------------------------------------------------------------------------------------------------------------------------
-            TH2D* fHistPhotonCuts2DPreSel = (TH2D*)TopContainerGamma->FindObject(Form("PhotonCuts %s", ContainerGammaCut.Data()));
-            if(fHistPhotonCuts2DPreSel && fHistPhotonCuts2DPreSel->IsA()==TH2F::Class()){
-                GetMinMaxBinY(fHistPhotonCuts2DPreSel,minB,maxB);
-                SetYRange(fHistPhotonCuts2DPreSel,1,maxB+1);
-                SetZMinMaxTH2(fHistPhotonCuts2DPreSel,1,fHistPhotonCuts2DPreSel->GetNbinsX(),1,maxB+1);
-                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                    fHistPhotonCuts2DPreSel,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
-                                    "","#it{p}_{T, #gamma}",0.9,0.8);
-                SaveCanvasAndWriteHistogram(canvas, fHistPhotonCuts2DPreSel, Form("%s/Preselect_PhotonCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            if (hasMainGammaContainer){
+                //-------------------------------------------------------------------------------------------------------------------------------
+                TH2D* fHistPhotonCuts2DPreSel = (TH2D*)TopContainerGamma->FindObject(Form("PhotonCuts %s", ContainerGammaCut.Data()));
+                if(fHistPhotonCuts2DPreSel && fHistPhotonCuts2DPreSel->IsA()==TH2F::Class()){
+                    GetMinMaxBinY(fHistPhotonCuts2DPreSel,minB,maxB);
+                    SetYRange(fHistPhotonCuts2DPreSel,1,maxB+1);
+                    SetZMinMaxTH2(fHistPhotonCuts2DPreSel,1,fHistPhotonCuts2DPreSel->GetNbinsX(),1,maxB+1);
+                    DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                        fHistPhotonCuts2DPreSel,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                        "","#it{p}_{T, #gamma}",0.9,0.8);
+                    SaveCanvasAndWriteHistogram(canvas, fHistPhotonCuts2DPreSel, Form("%s/Preselect_PhotonCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
-                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonCuts2DPreSel, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
-                                    5,10,0,0);
-                SaveCanvas(canvas, Form("%s/Preselect_PhotonCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
-            } else cout << Form("INFO: Object |Preselect_PhotonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", ContainerGammaCut.Data()) << endl;
-            //-------------------------------------------------------------------------------------------------------------------------------
-            TH2D* fHistPhotonAccCuts2DPreSel = (TH2D*)TopContainerGamma->FindObject(Form("PhotonAcceptanceCuts %s", ContainerGammaCut.Data()));
-            if(fHistPhotonAccCuts2DPreSel && fHistPhotonAccCuts2DPreSel->IsA()==TH2F::Class()){
-                GetMinMaxBinY(fHistPhotonAccCuts2DPreSel,minB,maxB);
-                SetYRange(fHistPhotonAccCuts2DPreSel,1,maxB+1);
-                SetZMinMaxTH2(fHistPhotonAccCuts2DPreSel,1,fHistPhotonAccCuts2DPreSel->GetNbinsX(),1,maxB+1);
-                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                    fHistPhotonAccCuts2DPreSel,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
-                                    "","#it{p}_{T, #gamma}",0.9,0.8);
-                SaveCanvasAndWriteHistogram(canvas, fHistPhotonAccCuts2DPreSel, Form("%s/Preselect_PhotonAcceptanceCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                    PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonCuts2DPreSel, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
+                                        5,10,0,0);
+                    SaveCanvas(canvas, Form("%s/Preselect_PhotonCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+                } else cout << Form("INFO: Object |Preselect_PhotonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", ContainerGammaCut.Data()) << endl;
+                //-------------------------------------------------------------------------------------------------------------------------------
+                TH2D* fHistPhotonAccCuts2DPreSel = (TH2D*)TopContainerGamma->FindObject(Form("PhotonAcceptanceCuts %s", ContainerGammaCut.Data()));
+                if(fHistPhotonAccCuts2DPreSel && fHistPhotonAccCuts2DPreSel->IsA()==TH2F::Class()){
+                    GetMinMaxBinY(fHistPhotonAccCuts2DPreSel,minB,maxB);
+                    SetYRange(fHistPhotonAccCuts2DPreSel,1,maxB+1);
+                    SetZMinMaxTH2(fHistPhotonAccCuts2DPreSel,1,fHistPhotonAccCuts2DPreSel->GetNbinsX(),1,maxB+1);
+                    DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                        fHistPhotonAccCuts2DPreSel,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                        "","#it{p}_{T, #gamma}",0.9,0.8);
+                    SaveCanvasAndWriteHistogram(canvas, fHistPhotonAccCuts2DPreSel, Form("%s/Preselect_PhotonAcceptanceCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
-                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonAccCuts2DPreSel, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
-                                    5,10,0,0);
-                SaveCanvas(canvas, Form("%s/Preselect_PhotonAcceptanceCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
-            } else cout << Form("INFO: Object |Preselect_PhotonAcceptanceCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", ContainerGammaCut.Data()) << endl;
+                    PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistPhotonAccCuts2DPreSel, "#it{p}_{T, #gamma}", "#frac{d#it{p}_{T, #gamma}}{dN}",
+                                        5,10,0,0);
+                    SaveCanvas(canvas, Form("%s/Preselect_PhotonAcceptanceCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+                } else cout << Form("INFO: Object |Preselect_PhotonAcceptanceCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", ContainerGammaCut.Data()) << endl;
+            }
             //-------------------------------------------------------------------------------------------------------------------------------
             TH2D* fHistPhotonCuts2D = (TH2D*)ConvCutsContainer->FindObject(Form("PhotonCuts %s", fGammaCutSelection[i].Data()));
             if(fHistPhotonCuts2D && fHistPhotonCuts2D->IsA()==TH2F::Class()){
@@ -826,24 +857,27 @@ void EventQA(
                 SaveCanvas(canvas, Form("%s/PhotonAcceptanceCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             } else cout << Form("INFO: Object |PhotonAcceptanceCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fGammaCutSelection[i].Data()) << endl;
             //-------------------------------------------------------------------------------------------------------------------------------
-            TH2D* fHistGammaAlphaQt = (TH2D*)TopContainerGamma->FindObject(Form("Armenteros_before %s",ContainerGammaCut.Data()));
-            if(fHistGammaAlphaQt){
-                fHistGammaAlphaQt->Sumw2();
-                fHistGammaAlphaQt->Scale(1./fHistGammaAlphaQt->GetEntries());
-                fHistGammaAlphaQt->GetYaxis()->SetRangeUser(0,0.25);
-                SetZMinMaxTH2(fHistGammaAlphaQt,1,fHistGammaAlphaQt->GetNbinsX(),1,fHistGammaAlphaQt->GetXaxis()->FindBin(0.25),kTRUE);
-                DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
-                                    fHistGammaAlphaQt,"",
-                                    "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})","#it{q}_{T} (GeV/#it{c})",1,1.4,
-                                    0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
-                DrawArmenterosLines(kFALSE);
-                SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaAlphaQt, Form("%s/Armenteros_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-            } else cout << Form("INFO: Object |Armenteros_before %s| could not be found! Skipping Draw...",ContainerGammaCut.Data()) << endl;
+            if (hasMainGammaContainer){
+                TH2D* fHistGammaAlphaQt = (TH2D*)TopContainerGamma->FindObject(Form("Armenteros_before %s",ContainerGammaCut.Data()));
+                if(fHistGammaAlphaQt){
+                    fHistGammaAlphaQt->Sumw2();
+                    fHistGammaAlphaQt->Scale(1./fHistGammaAlphaQt->GetEntries());
+                    fHistGammaAlphaQt->GetYaxis()->SetRangeUser(0,0.25);
+                    SetZMinMaxTH2(fHistGammaAlphaQt,1,fHistGammaAlphaQt->GetNbinsX(),1,fHistGammaAlphaQt->GetXaxis()->FindBin(0.25),kTRUE);
+                    DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+                                        fHistGammaAlphaQt,"",
+                                        "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})","#it{q}_{T} (GeV/#it{c})",1,1.4,
+                                        0.85,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+                    DrawArmenterosLines(kFALSE);
+                    SaveCanvasAndWriteHistogram(cvsQuadratic, fHistGammaAlphaQt, Form("%s/Armenteros_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                } else cout << Form("INFO: Object |Armenteros_before %s| could not be found! Skipping Draw...",ContainerGammaCut.Data()) << endl;
+            }
             //-------------------------------------------------------------------------------------------------------------------------------
             TString str[2]={"before","after"};
             Int_t sigmadEdxMinMax[2]={0,0};
             Int_t sigmaTOFMinMax[2]={0,0};
             for(Int_t iBefore=0; iBefore<2; iBefore++){
+                if (!hasMainGammaContainer && iBefore == 0) continue;
                 TList* list = TopContainerGamma;
                 TString iCutNumber = ContainerGammaCut;
                 if(iBefore==1){
@@ -942,6 +976,7 @@ void EventQA(
 
         }
 
+        cout << "looking at meson properties" << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------- Meson properties --------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1105,11 +1140,13 @@ void EventQA(
                 vecESDBackground.push_back(new TH2D(*ESDBackground));
             }else {cout << "ERROR: Object |ESD_Background_InvMass_Pt| could not be found! Skipping Draw & return..." << endl; return;}
         }
+
         //-------------------------------------------------------------------------------------------------------------------------------
         //--------------------------------- statistics for meson properties -------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
         if ( !isMergedCalo ){
-            Bool_t kScs = fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog);
+            cout << "started fitting" << endl;
+            Bool_t kScs = fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog, fCollisionSystem);
 
             if(kScs){
             TH1D* tempPi = new TH1D(*fitter.GetSignalPi0());

@@ -197,6 +197,13 @@ void ClusterQA(
             isTrackMatching         = kFALSE;
         }
     }
+
+    TString centralityString        = GetCentralityString(fEventCutSelection[0]);
+    if (centralityString.CompareTo("pp")!=0 && !centralityString.Contains("0-100%") ){
+      fCollisionSystem              = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
+      cout << "added cent to Collision system string" << endl;
+    }
+
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     cout << "Obtaining trigger - ";
@@ -205,7 +212,7 @@ void ClusterQA(
         fTrigger[iT]                = "";
     }
     TString fTriggerCut             = fEventCutSelection[0](3,2);
-    fTrigger[0]                     = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), DataSets[0].Data()); fTrigger[0]+=" ";
+    fTrigger[0]                     = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), DataSets[0].Data()); //fTrigger[0]+=" ";
     cout  << "'" << fTrigger[0].Data() << "' - was found!" << endl;
     if(fTrigger[0].Contains("not defined")){
         fTrigger[0]                 = "";
@@ -406,7 +413,7 @@ void ClusterQA(
         const Int_t dim2D       = 9;
         Double_t min2D[dim2D];
         Double_t max2D[dim2D];
-        for(Int_t i=1;i<9;i++){
+        for(Int_t i=0;i<9;i++){
             min2D[i]=arrSetMin2D[i];
             max2D[i]=arrSetMax2D[i];
         }
@@ -479,7 +486,7 @@ void ClusterQA(
             const Int_t dim2D       = 9;
             Double_t min2D[dim2D]   = {0,2.5,1.5,0.8,0.7,0.6,0.5,0.4,0.3};
             Double_t max2D[dim2D]   = {0,105,105,105,105,105,105,105,105};
-            } else if(DataSets[0].CompareTo("LHC13bc")==0){
+        } else if(DataSets[0].CompareTo("LHC13bc")==0){
             doCellQA                = kTRUE;
             cellQAData              = new CellQAObj();
             setQAEnergy(cellQAData,0.065,0.205,0.045,0.23);
@@ -2062,7 +2069,7 @@ void ClusterQA(
                     line->DrawLine(cellQA->EnergyMean[1],cellQA->EnergySigma[0],cellQA->EnergyMean[1],cellQA->EnergySigma[1]);
                     line->DrawLine(cellQA->EnergyMean[0],cellQA->EnergySigma[1],cellQA->EnergyMean[1],cellQA->EnergySigma[1]);
                 }
-                PutProcessLabelAndEnergyOnPlot(0.75, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.87, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellEnergyVsSigma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kFALSE, kTRUE);
 
                 // estimate hot cells from energy distribution
@@ -2074,11 +2081,12 @@ void ClusterQA(
                 if(!isMC && doCellQA){
                     const Int_t dim2D= 9;
                     for(Int_t ii=0; ii<dim2D; ii++){
-                        line->DrawLine(cellQA->HotCells2D[ii][0],0.1+ii*0.1,cellQA->HotCells2D[ii][0],0.2+ii*0.1);
-                        line->DrawLine(cellQA->HotCells2D[ii][1],0.1+ii*0.1,cellQA->HotCells2D[ii][1],0.2+ii*0.1);
+                        cout << ii << "\t" << cellQA->HotCells2D[ii][0] << "\t" << cellQA->HotCells2D[ii][1] << endl;
+                        line->DrawLine(cellQA->HotCells2D[ii][0],0.2+ii*0.1,cellQA->HotCells2D[ii][0],0.3+ii*0.1);
+                        line->DrawLine(cellQA->HotCells2D[ii][1],0.2+ii*0.1,cellQA->HotCells2D[ii][1],0.3+ii*0.1);
                     }
                 }
-                PutProcessLabelAndEnergyOnPlot(0.75, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.87, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), 42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCells2D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kFALSE, kTRUE);
 
                 canvas->SetRightMargin(rightMargin);
@@ -2091,8 +2099,26 @@ void ClusterQA(
                     line->DrawLine(cellQA->HotCells1D[0],0,cellQA->HotCells1D[0],10);
                     line->DrawLine(cellQA->HotCells1D[1],0,cellQA->HotCells1D[1],10);
                 }
-                PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCells_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kTRUE);
+
+                canvas->SetRightMargin(rightMargin);
+                PlotHotCells(cellQA,0,nCaloCells,fHistCellTimeVsCellID,
+                             "N_{Cell fired}",
+                             "#frac{dN_{Cell fired with E>0.2 GeV}}{dN}",
+                             0,0,0,
+                             0,0,0,isMC,
+                             1,1,kTRUE
+                            );
+                if(!isMC && doCellQA){
+                  line->DrawLine(cellQA->HotCells1D[0],0,cellQA->HotCells1D[0],10);
+                  line->DrawLine(cellQA->HotCells1D[1],0,cellQA->HotCells1D[1],10);
+                }
+                PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
+                SaveCanvas(canvas, Form("%s/CellHotCellsRescaled_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kTRUE);
+
+                TGaxis::SetMaxDigits(3);
+
             } else cout << "INFO: Object |CellEnergyVsCellID| could not be found! Skipping Draw..." << endl;
 
             // saved as .jpg per default due to size of histogram
@@ -2119,7 +2145,7 @@ void ClusterQA(
                     line->DrawLine(cellQA->TimeMean[0],cellQA->TimeSigma[1],cellQA->TimeMean[1],cellQA->TimeSigma[1]);
                 }
                 TGaxis::SetExponentOffset(0, 0.5, "y");
-                PutProcessLabelAndEnergyOnPlot(0.75, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.87, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellTimeVsSigma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kFALSE, kTRUE);
 
                 // estimate Hot cells based on timing information
@@ -2133,7 +2159,7 @@ void ClusterQA(
                     //line->DrawLine(cellQA->HotCellsTime1D[0],0,cellQA->HotCellsTime1D[0],10);
                     line->DrawLine(cellQA->HotCellsTime1D[1],0,cellQA->HotCellsTime1D[1],10);
                 }
-                PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCellsTime1D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kTRUE, kFALSE);
             } else cout << "INFO: Object |CellTimeVsCellID| could not be found! Skipping Draw..." << endl;
             //---------------------------------------------------------------------------------------------------------------
@@ -2184,7 +2210,7 @@ void ClusterQA(
                                 "Cluster Energy (GeV)",
                                 "#frac{dE}{dN}",
                                 1,10,1,0.1,kTRUE,minB,maxB,kTRUE);
-                PutProcessLabelAndEnergyOnPlot(0.8, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data());
+                PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/ClusterEnergyVsModule_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             } else cout << "INFO: Object |ClusterEnergyVsModule_afterClusterQA| could not be found! Skipping Draw..." << endl;
 

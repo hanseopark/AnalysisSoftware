@@ -308,9 +308,13 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
         TGraphAsymmErrors* graphTheoryPowhegDREPPS16pPb = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonPoweheg5023GeV_EPPS16_ALICECocktail");
         TGraph* graphTheoryPowhegDREPPS16pPbCenter      = (TGraph*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonPoweheg5023GeV_EPPS16_ALICECocktail_Center");
 
-        TGraphAsymmErrors* graphTheoryPowhegnCTEQpPb  = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphPowhegDirectPhotonInvYieldINT7_pPb5020_nCTEQ15");
-        TGraphAsymmErrors* graphTheoryPowhegEPPS16pPb = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphPowhegDirectPhotonInvYieldINT7_pPb5020_EPPS16");
+        TGraphAsymmErrors* graphTheoryPowhegnCTEQpPb    = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphPowhegDirectPhotonInvYieldINT7_pPb5020_nCTEQ15");
+        TGraphAsymmErrors* graphTheoryPowhegEPPS16pPb   = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphPowhegDirectPhotonInvYieldINT7_pPb5020_EPPS16");
 
+        TGraph* graphTheoryDRAlwinaPeTer                = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonPeTerAlwina");
+        TGraph* graphTheoryDRAlwinaPWGGA                = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonPWGGAAlwina");
+        TGraph* graphTheoryDRAlwinaVogelsang            = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonVogelsangAlwina");
+        TGraph* graphTheoryDRAlwinaJetPHOX              = (TGraphAsymmErrors*) fileTheory->Get("pPb_5.023TeV/graphRGammaDirectPhotonJETPHOXAlwina");
 
     //*******************************************************************************************************************************************
     //*********************************************** Combining Rgamma ratios  ******************************************************************
@@ -1670,6 +1674,51 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
 
     canvasDoubleRatio->Print(Form("%s/DRNonFit_CombAndTheory_pPb5TeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DRNonFit_CombAndTheory_pPb5TeV.pdf", outputDir.Data()));
+
+
+    hist2DDRDummySingle->DrawCopy();
+
+        TLegend* legendDRTheoryComb5        = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
+        TLegend* legendDRTheoryComb6        = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*5,0.5,0.96-textSizeSinglePad*1, textSizeSinglePad, 1, "", 42, 0.15);
+
+        legendDRTheoryComb5->AddEntry(graphCombDRSys,"ALICE","pf");
+
+        if (graphTheoryDRAlwinaPeTer){
+            DrawGammaNLOTGraph( graphTheoryDRAlwinaPeTer, widthLineNLO, styleLineMcGill, colorNLOMcGill);
+            graphTheoryDRAlwinaPeTer->Draw("lc,same");
+            legendDRTheoryComb6->AddEntry(graphTheoryDRAlwinaPeTer,"PeTer","l");
+        }
+        if (graphTheoryDRAlwinaPWGGA){
+            DrawGammaNLOTGraph( graphTheoryDRAlwinaPWGGA, widthLineNLO, styleLineNLONCTEQ, colorNLONCTEQ);
+            graphTheoryDRAlwinaPWGGA->Draw("lc,same");
+            legendDRTheoryComb6->AddEntry(graphTheoryDRAlwinaPWGGA,"PWGGA","l");
+        }
+        if (graphTheoryDRAlwinaJetPHOX){
+            DrawGammaNLOTGraph( graphTheoryDRAlwinaJetPHOX, widthLineNLO, styleLineNLOEPPS, colorNLOEPPS);
+            graphTheoryDRAlwinaJetPHOX->Draw("lc,same");
+            legendDRTheoryComb6->AddEntry(graphTheoryDRAlwinaJetPHOX,"JetPHOX","l");
+        }
+        if (graphTheoryDRAlwinaVogelsang){
+            DrawGammaNLOTGraph( graphTheoryDRAlwinaVogelsang, widthLineNLO, styleLineNLOWerner, colorNLOWerner);
+            graphTheoryDRAlwinaVogelsang->Draw("lc,same");
+            legendDRTheoryComb6->AddEntry(graphTheoryDRAlwinaVogelsang,"W. Vogelsang","l");
+        }
+
+        DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
+
+        graphCombDRSys->Draw("E2same");
+        graphCombDRStatPlot->Draw("p,z,same");
+        legendDRTheoryComb5->Draw();
+        legendDRTheoryComb6->Draw();
+
+        labelALICEDRSingle->Draw();
+
+        labelDRSingle->Draw();
+        hist2DDRDummySingle->Draw("same,axis");
+
+    canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pPb5TeV_Alwina.%s", outputDir.Data(), suffix.Data()));
+    canvasDoubleRatio->Print(Form("%s/DR_CombAndTheory_pPb5TeV_Alwina.pdf", outputDir.Data()));
+
 
         hist2DDRDummySingle->DrawCopy();
 

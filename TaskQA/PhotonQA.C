@@ -125,6 +125,11 @@ void PhotonQA(
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
+    TString centralityString    = GetCentralityString(nameCutsPQAEvent[0]);
+    if (centralityString.CompareTo("pp")!=0 && !centralityString.Contains("0-100%") ){
+      fCollisionSystem    = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
+    }
+
 
     TString fDetectionProcess = ReturnFullTextReconstructionProcess(fMode);
 

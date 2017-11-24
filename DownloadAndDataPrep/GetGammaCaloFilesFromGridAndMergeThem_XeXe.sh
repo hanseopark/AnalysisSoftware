@@ -50,12 +50,20 @@ fi
 # LHC17j7MC="664"
 # LHC17j7MC="665"
 
-TRAINDIR=Legotrain-vAN20171109-XeXeQA
+# TRAINDIR=Legotrain-vAN20171109-XeXeQA
 # LHC17nData="345"; #pass 1
- LHC17nData="344"; #pass 1
+#  LHC17nData="344"; #pass 1
 # LHC17j7MC="673";
 # LHC17j7MC="672";
 # LHC17j7MC="674";
+
+TRAINDIR=Legotrain-vAN20171115-XeXeQA
+# LHC17nData="348"; #pass 1
+#  LHC17nData="349"; #pass 1
+# LHC17j7MC="687";
+# LHC17j7MC="688";
+# LHC17j7MC="689";
+LHC17j7MC="690";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

@@ -103,7 +103,7 @@ struct CellQAObj{
 
 typedef struct {
   Int_t nSigmaBad;    // consider a deviation of nSigmaBad * error from mean over runs as bad
-  Int_t nRunsBad;     // number of runs with bad QA due to 
+  Int_t nRunsBad;     // number of runs with bad QA due to
   Double_t mean;      // sum mean vertex z coordinate over all runs, then divide by number of runs
   Double_t value;     // runwise value
   Double_t error;     // runwise error
@@ -161,12 +161,16 @@ public:
         return;
     }
 
-    Bool_t DoFitting(TH2D* fInvMassMesonPt, TH2D* fInvMassBGPt, Double_t nEventsBin1, Int_t mode, TString saveCanvas, TString name, Bool_t doPrint, Bool_t doLog, fstream& fLog){
+    Bool_t DoFitting(TH2D* fInvMassMesonPt, TH2D* fInvMassBGPt, Double_t nEventsBin1, Int_t mode, TString saveCanvas, TString name, Bool_t doPrint, Bool_t doLog, fstream& fLog,
+                     TString collisionSystem = ""){
         Init();
 
         //Fitting starts at pT = 1 GeV/c
-        fGammaGamma = (TH1D*)fInvMassMesonPt->ProjectionX("ESD_Mother_InvMass",10,fInvMassMesonPt->GetNbinsY());
-        fBck = (TH1D*)fInvMassBGPt->ProjectionX("ESD_BG_InvMass",10,fInvMassBGPt->GetNbinsY());
+        Int_t startBinFitting       = 10;
+        if (collisionSystem.Contains("Pb-Pb") && mode == 4)
+            startBinFitting         = 30;
+        fGammaGamma = (TH1D*)fInvMassMesonPt->ProjectionX("ESD_Mother_InvMass",startBinFitting,fInvMassMesonPt->GetNbinsY());
+        fBck = (TH1D*)fInvMassBGPt->ProjectionX("ESD_BG_InvMass",startBinFitting,fInvMassBGPt->GetNbinsY());
 
         for (Int_t binx= 0; binx < fGammaGamma->GetNbinsX()+1; binx++){
             if(fGammaGamma->GetBinContent(binx) == 0){
@@ -215,14 +219,15 @@ public:
             }
         }
 
+        cout << "fitting pi0" << endl;
         TCanvas* canvasMass = new TCanvas("canvasMass","",200,10,1350,900);  // gives the page size
         fSignalPi = (TH1D*)fGammaGamma->Clone("fSignalPi");
         fSignalPi->SetTitle("");
         fSignalPi->Sumw2();
         fSignalPi->Add(fBckNormPi,-1.);
         if(fSignalPi->Integral(fSignalPi->FindBin(0.1),fSignalPi->FindBin(0.17))<=50){
-        cout << "Total integral <= 10 for pi0 in " << name.Data() << ", skipping fit and returning..." << endl;
-        return kFALSE;
+            cout << "Total integral <= 10 for pi0 in " << name.Data() << ", skipping fit and returning..." << endl;
+            return kFALSE;
         }
 
         if (mode == 0){
@@ -242,20 +247,20 @@ public:
         fFitRecoPi->SetParLimits(1,0.1,0.2);
 
         if(mode==2){
-        fFitRecoPi->SetParameter(2,0.008);
-        fFitRecoPi->SetParameter(3,0.015);
-        fFitRecoPi->SetParLimits(2,0.005,0.02);
-        fFitRecoPi->SetParLimits(3,0.010,0.04);
+            fFitRecoPi->SetParameter(2,0.008);
+            fFitRecoPi->SetParameter(3,0.015);
+            fFitRecoPi->SetParLimits(2,0.005,0.02);
+            fFitRecoPi->SetParLimits(3,0.010,0.04);
         }else if(mode==4){
-        fFitRecoPi->SetParameter(2,0.012);
-        fFitRecoPi->SetParameter(3,0.020);
-        fFitRecoPi->SetParLimits(2,0.01,0.03);
-        fFitRecoPi->SetParLimits(3,0.01,0.04);
+            fFitRecoPi->SetParameter(2,0.012);
+            fFitRecoPi->SetParameter(3,0.020);
+            fFitRecoPi->SetParLimits(2,0.01,0.03);
+            fFitRecoPi->SetParLimits(3,0.01,0.04);
         }else{
-        fFitRecoPi->SetParameter(2,0.003);
-        fFitRecoPi->SetParameter(3,0.020);
-        fFitRecoPi->SetParLimits(2,0.001,0.01);
-        fFitRecoPi->SetParLimits(3,0.001,0.05);
+            fFitRecoPi->SetParameter(2,0.003);
+            fFitRecoPi->SetParameter(3,0.020);
+            fFitRecoPi->SetParLimits(2,0.001,0.01);
+            fFitRecoPi->SetParLimits(3,0.001,0.05);
         }
         fSignalPi->Draw();
         fSignalPi->Fit(fFitRecoPi,"SINRMQEC+","",0.05,0.25);
@@ -271,6 +276,8 @@ public:
         Double_t integralErr = 0;
         Double_t integralBG = 0;
 
+        cout << __LINE__ << endl;
+
         if(doPrint) cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         if(doLog) fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         if(!(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0) ){
@@ -279,6 +286,7 @@ public:
             TString status = gMinuit->fCstatu.Data();
             if(doPrint) cout << status.Data() << endl;
             if (status.Contains("PROBLEMS")){
+                cout << __LINE__ << endl;
                 CalculateFWHM(fFitRecoPi,0.1,0.15);
                 widthPi = fFWHMFunc;
                 widthPiErr = fFWHMFuncError;
@@ -291,10 +299,15 @@ public:
                 if(doPrint) cout << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
                 if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
                 if(doLog) fLog << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
+                cout << __LINE__ << endl;
+
             } else {
                 if(doPrint) cout << "here" << endl;
             }
         } else {
+            cout << __LINE__ << endl;
+
+            cout << __LINE__ << endl;
             CalculateFWHM(fFitRecoPi,0.1,0.17);
             widthPi = fFWHMFunc;
             widthPiErr = fFWHMFuncError;
@@ -308,87 +321,89 @@ public:
             if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
             if(doLog) fLog << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
         }
+        cout << __LINE__ << endl;
 
         fSignalEta = (TH1D*)fGammaGamma->Clone("fSignalEta");
         fSignalEta->SetTitle("");
         fSignalEta->Sumw2();
         fSignalEta->Add(fBckNormEta,-1.);
         if(fSignalEta->Integral(fSignalEta->FindBin(0.5),fSignalEta->FindBin(0.57))<=25){
-        cout << "Total integral <= 5 for eta in " << name.Data() << ", skipping fit and returning..." << endl;
-        return kFALSE;
+            cout << "Total integral <= 5 for eta in " << name.Data() << ", skipping fit and returning..." << endl;
+            return kFALSE;
         }
 
 
         fSignalEta->Rebin(4);
         fSignalEta->GetXaxis()->SetRangeUser(0.4,0.7);
 
+        if (!(mode == 4 && collisionSystem.Contains("Pb-Pb"))){
+            cout << "fitting eta" <<  endl;
+            fFitRecoEta = new TF1("GaussExpLinearEta","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.45,0.65);
+            Double_t mesonAmplitudeEta =fSignalEta->GetMaximum();
+            Double_t mesonAmplitudeMinEta  = mesonAmplitudeEta*80./110.;
+            Double_t mesonAmplitudeMaxEta = mesonAmplitudeEta*115./100.;
 
-        fFitRecoEta = new TF1("GaussExpLinearEta","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.45,0.65);
-        Double_t mesonAmplitudeEta =fSignalEta->GetMaximum();
-        Double_t mesonAmplitudeMinEta  = mesonAmplitudeEta*80./110.;
-        Double_t mesonAmplitudeMaxEta = mesonAmplitudeEta*115./100.;
+            fFitRecoEta->SetParameter(0,mesonAmplitudeEta);
+            fFitRecoEta->SetParameter(1,0.540);
+            fFitRecoEta->SetParLimits(0,mesonAmplitudeMinEta,mesonAmplitudeMaxEta);
+            fFitRecoEta->SetParLimits(1,0.45,0.60);
 
-        fFitRecoEta->SetParameter(0,mesonAmplitudeEta);
-        fFitRecoEta->SetParameter(1,0.540);
-        fFitRecoEta->SetParLimits(0,mesonAmplitudeMinEta,mesonAmplitudeMaxEta);
-        fFitRecoEta->SetParLimits(1,0.45,0.60);
+            if(mode==2){
+            fFitRecoEta->SetParameter(2,0.020);
+            fFitRecoEta->SetParameter(3,0.020);
+            fFitRecoEta->SetParLimits(2,0.010,0.040);
+            fFitRecoEta->SetParLimits(3,0.010,0.030);
+            }else if(mode==4){
+            fFitRecoEta->SetParameter(2,0.030);
+            fFitRecoEta->SetParameter(3,0.025);
+            fFitRecoEta->SetParLimits(2,0.015,0.050);
+            fFitRecoEta->SetParLimits(3,0.010,0.040);
+            }else{
+            fFitRecoEta->SetParameter(2,0.010);
+            fFitRecoEta->SetParameter(3,0.007);
+            fFitRecoEta->SetParLimits(2,0.002,0.050);
+            fFitRecoEta->SetParLimits(3,0.005,0.026);
+            }
 
-        if(mode==2){
-        fFitRecoEta->SetParameter(2,0.020);
-        fFitRecoEta->SetParameter(3,0.020);
-        fFitRecoEta->SetParLimits(2,0.010,0.040);
-        fFitRecoEta->SetParLimits(3,0.010,0.030);
-        }else if(mode==4){
-        fFitRecoEta->SetParameter(2,0.030);
-        fFitRecoEta->SetParameter(3,0.025);
-        fFitRecoEta->SetParLimits(2,0.015,0.050);
-        fFitRecoEta->SetParLimits(3,0.010,0.040);
-        }else{
-        fFitRecoEta->SetParameter(2,0.010);
-        fFitRecoEta->SetParameter(3,0.007);
-        fFitRecoEta->SetParLimits(2,0.002,0.050);
-        fFitRecoEta->SetParLimits(3,0.005,0.026);
+            fSignalEta->Draw("");
+            fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.45,0.65);
+            TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.45,0.65);
+
+            fFitRecoEta->SetLineColor(3);
+            fFitRecoEta->SetLineWidth(1);
+            fFitRecoEta->SetLineStyle(1);
+            fFitRecoEta->Draw("same");
+            canvasMass->SaveAs(Form("%s/Eta_%s.eps",saveCanvas.Data(),name.Data()));
+
+            Double_t integralEta = 0;
+            Double_t integralEtaErr = 0;
+            Double_t integralEtaBG = 0;
+
+            if(doPrint) cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            if(doLog) fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            if(!(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0) ){
+                if(doPrint) cout << "Fitting failed in with status " << gMinuit->fCstatu.Data() <<endl << endl;
+                if(doLog) fLog << "Fitting failed in with status " << gMinuit->fCstatu.Data() <<endl << endl;
+            } else {
+                CalculateFWHM(fFitRecoEta,0.5,0.57);
+                widthEta = fFWHMFunc;
+                widthEtaErr = fFWHMFuncError;
+                massEta = fFitRecoEta->GetParameter(1);
+                massEtaErr = fFitRecoEta->GetParError(1);
+                if(doPrint) cout << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
+                if(doLog) fLog << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
+
+                integralEta = fFitRecoEta->Integral(0.5,0.57, resultEta->GetParams()) / fSignalEta->GetBinWidth(10);
+                integralEtaErr = fFitRecoEta->IntegralError(0.5,0.57, resultEta->GetParams(), resultEta->GetCovarianceMatrix().GetMatrixArray() ) / fSignalEta->GetBinWidth(10);
+                integralEtaBG = fFitRecoEta->GetParameter(4)*0.57 + fFitRecoEta->GetParameter(5)/2 *0.57*0.57- (fFitRecoEta->GetParameter(4)*0.5 + fFitRecoEta->GetParameter(5)/2 *0.5*0.5);
+                if(doPrint) cout << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
+                if(doLog) fLog << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
+                ratioEta = (Double_t)	(integralEta-integralEtaBG)/nEventsBin1;
+                ratioEtaErr = sqrt( pow(integralEtaErr/nEventsBin1,2)  + pow( sqrt(nEventsBin1)*(integralEta-integralEtaBG)/pow(nEventsBin1,2),2) );
+            }
         }
-
-        fSignalEta->Draw("");
-        fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.45,0.65);
-        TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.45,0.65);
-
-        fFitRecoEta->SetLineColor(3);
-        fFitRecoEta->SetLineWidth(1);
-        fFitRecoEta->SetLineStyle(1);
-        fFitRecoEta->Draw("same");
-        canvasMass->SaveAs(Form("%s/Eta_%s.eps",saveCanvas.Data(),name.Data()));
-
-        Double_t integralEta = 0;
-        Double_t integralEtaErr = 0;
-        Double_t integralEtaBG = 0;
-
-        if(doPrint) cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        if(doLog) fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        if(!(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0) ){
-            if(doPrint) cout << "Fitting failed in with status " << gMinuit->fCstatu.Data() <<endl << endl;
-            if(doLog) fLog << "Fitting failed in with status " << gMinuit->fCstatu.Data() <<endl << endl;
-        } else {
-            CalculateFWHM(fFitRecoEta,0.5,0.57);
-            widthEta = fFWHMFunc;
-            widthEtaErr = fFWHMFuncError;
-            massEta = fFitRecoEta->GetParameter(1);
-            massEtaErr = fFitRecoEta->GetParError(1);
-            if(doPrint) cout << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
-            if(doLog) fLog << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
-
-            integralEta = fFitRecoEta->Integral(0.5,0.57, resultEta->GetParams()) / fSignalEta->GetBinWidth(10);
-            integralEtaErr = fFitRecoEta->IntegralError(0.5,0.57, resultEta->GetParams(), resultEta->GetCovarianceMatrix().GetMatrixArray() ) / fSignalEta->GetBinWidth(10);
-            integralEtaBG = fFitRecoEta->GetParameter(4)*0.57 + fFitRecoEta->GetParameter(5)/2 *0.57*0.57- (fFitRecoEta->GetParameter(4)*0.5 + fFitRecoEta->GetParameter(5)/2 *0.5*0.5);
-            if(doPrint) cout << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
-            if(doLog) fLog << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
-        }
-
         ratioPi0 = (Double_t)	(integral-integralBG)/nEventsBin1;
         ratioPi0Err = sqrt( pow(integralErr/nEventsBin1,2)  + pow( sqrt(nEventsBin1)*(integral-integralBG)/pow(nEventsBin1,2),2) );
-        ratioEta = (Double_t)	(integralEta-integralEtaBG)/nEventsBin1;
-        ratioEtaErr = sqrt( pow(integralEtaErr/nEventsBin1,2)  + pow( sqrt(nEventsBin1)*(integralEta-integralEtaBG)/pow(nEventsBin1,2),2) );
 
         delete canvasMass;
 
@@ -515,7 +530,7 @@ TH2D** PlotCellMeanVsSigmaForRunwise(Int_t nCaloCells, TH2* histEnergy, TH2* his
                                      TString xLabelT, TString yLabelT, Bool_t kMC, Double_t titleOffsetX = 1, Double_t titleOffsetY = 1);
 void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TString xLabel, TString yLabel, Bool_t XRange, Float_t XMin, Float_t XMax,
                   Bool_t YRange, Float_t YMin, Float_t YMax, Bool_t kMC,
-                  Double_t titleOffsetX = 1, Double_t titleOffsetY = 1);
+                  Double_t titleOffsetX = 1, Double_t titleOffsetY = 1, Bool_t reScaledToCutRange = kFALSE);
 void CheckCellsDataMC(CellQAObj* obj, TH2* fHistDataCell, TH2* fHistMCCell, TString xLabel, TString yLabel, Int_t nCaloCells, TString plotData, TString plotMC);
 Double_t GetHistogramIntegral(TH1D* hist, Float_t lowX, Float_t highX);
 Double_t GetHistogramIntegralError(TH1D* hist, Float_t lowX, Float_t highX);
@@ -2223,6 +2238,7 @@ void PlotCellMeanVsSigma(CellQAObj* obj, Int_t nCaloCells, TH2* hist, TString xL
         Double_t mean = temp->GetMean();
         if(mean>=outHist->GetXaxis()->GetBinUpEdge(outHist->GetNbinsX())){ mean = outHist->GetXaxis()->GetBinCenter(outHist->GetNbinsX());}
         Double_t rms = temp->GetRMS();
+//         if (!kEnergy) cout << iY << "\t" << mean << "\t" << rms << endl;
         if(rms>=outHist->GetYaxis()->GetBinUpEdge(outHist->GetNbinsY())){ rms = outHist->GetYaxis()->GetBinCenter(outHist->GetNbinsY());}
         if(temp->Integral(1,temp->GetNbinsX())>0){
             outHist->Fill(mean,rms);
@@ -2315,29 +2331,53 @@ TH2D** PlotCellMeanVsSigmaForRunwise(Int_t nCaloCells, TH2* histEnergy, TH2* his
 
 
 
-void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TString xLabel, TString yLabel, Bool_t XRange, Float_t XMin, Float_t XMax, Bool_t YRange, Float_t YMin, Float_t YMax, Bool_t kMC, Double_t titleOffsetX, Double_t titleOffsetY)
+void PlotHotCells(  CellQAObj* obj,
+                    Int_t iSw,
+                    Int_t nCaloCells,
+                    TH2* hist,
+                    TString xLabel, TString yLabel,
+                    Bool_t XRange, Float_t XMin, Float_t XMax,
+                    Bool_t YRange, Float_t YMin, Float_t YMax,
+                    Bool_t kMC,
+                    Double_t titleOffsetX, Double_t titleOffsetY,
+                    Bool_t reScaledToCutRange
+                 )
 {
     if(iSw==0){
         Double_t min = 0;
         Double_t max = 0;
-        TH1D* outHist;
-        if(kMC) {
-            min = -0.05E6;
-            max = 0.05E6;
-            outHist = new TH1D("CellHotCells","", 100,min,max);
+
+
+        for(Int_t iY=1; iY<nCaloCells+1; iY++)
+        {
+          TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntries",iY,iY);
+          if(temp->Integral(1,temp->GetNbinsX())>0) {
+            Double_t nFired = temp->Integral(1,temp->GetXaxis()->GetNbins());
+            if (max < nFired) max = nFired;
+          }
+          delete temp;
+          //if(temp->GetMean()>0.4) cout << iY << endl;
         }
-        else{
-            if(obj){
-                min = obj->HotCells1D[0];
+
+        if (reScaledToCutRange){
+            if (obj){
                 max = obj->HotCells1D[1];
-                if(min-(max/10) < -10) outHist = new TH1D("CellHotCells","", 1000,-10,max+(max/10));
-                else outHist = new TH1D("CellHotCells","", 1000,min-(max/10),max+(max/10));
-            }else{
-                min = -0.5E6;
-                max = 5E6;
-                outHist = new TH1D("CellHotCells","", 1000,min,max);
             }
         }
+        TH1D* outHist;
+
+        Int_t maxNBins = 2000;
+        if (max < maxNBins && !reScaledToCutRange) maxNBins = (Int_t)max +1;
+        else if (max < maxNBins && reScaledToCutRange) maxNBins = (Int_t)(max*1.2)+1;
+
+        if (reScaledToCutRange){
+            outHist = new TH1D("CellHotCells","", maxNBins,min,max*1.2);
+        } else {
+            outHist = new TH1D("CellHotCells","", maxNBins,min,max+1);
+        }
+        if (max > 1000) TGaxis::SetMaxDigits(4);
+        if (max > 10000) TGaxis::SetMaxDigits(5);
+
         //SetLogBinningXTH(outHist);
         if(XRange) outHist->GetXaxis()->SetRangeUser(XMin, XMax);
         if(YRange) outHist->GetYaxis()->SetRangeUser(YMin, YMax);
@@ -2359,32 +2399,18 @@ void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TStrin
         outHist->GetXaxis()->SetTitleSize(0.04);
         outHist->GetXaxis()->SetTitleOffset(titleOffsetX);
 
-//		Double_t averageTemp=0;
-//		Double_t sigmaTemp=0;
-//		Double_t nCells=0;
-//		for(Int_t iY=1; iY<nCaloCells+1; iY++)
-//		{
-//			TH1D* temp = (TH1D*) hist->ProjectionX("number",iY,iY);
-//			if(temp->Integral(1,temp->GetNbinsX())>10) {
-//				averageTemp+=temp->Integral(1,temp->GetNbinsX());
-//				sigmaTemp+=TMath::Power(temp->Integral(1,temp->GetNbinsX()),2);
-//				nCells++;
-//			}
-//			delete temp;
-//		}
-//		Double_t average=averageTemp/nCells;
-//		Double_t sigma=sqrt(1/(nCells-1)*(sigmaTemp-1/nCells*TMath::Power(averageTemp,2)));
-
         for(Int_t iY=1; iY<nCaloCells+1; iY++)
         {
             TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntries",iY,iY);
             if(temp->Integral(1,temp->GetNbinsX())>0) {
                 Double_t nFired = temp->Integral(1,temp->GetXaxis()->GetNbins());
-                if(!kMC && obj && nFired>=max) nFired = max;
-                else if(nFired>=(max-1)) nFired = max-1;
+                if(!kMC && obj && nFired>=max+(max/10)) nFired = outHist->GetBinCenter(outHist->GetNbinsX()-1);
+                else if(nFired>=(max+(max/10)-1)) nFired = outHist->GetBinCenter(outHist->GetNbinsX()-1);
                 outHist->Fill(nFired);
-                if(obj && ( nFired <= obj->HotCells1D[0] || nFired >= obj->HotCells1D[1] )){
-                    if(!CheckGoodCell(obj,iY-1)) obj->cellIDsHotCells1D.push_back(iY-1);
+                if (!reScaledToCutRange){
+                    if(obj && ( nFired <= obj->HotCells1D[0] || nFired >= obj->HotCells1D[1] )){
+                        if(!CheckGoodCell(obj,iY-1)) obj->cellIDsHotCells1D.push_back(iY-1);
+                    }
                 }
             }
             delete temp;
@@ -2395,7 +2421,7 @@ void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TStrin
         delete outHist;
         return;
     }else if(iSw==1){
-        TH2D* outHist2D = new TH2D("CellHotCells2D","", 100,0.00009,110, 9,0.1,1.);
+        TH2D* outHist2D = new TH2D("CellHotCells2D","", 100,0.00009,110, 9,0.2,1.1);
         SetLogBinningXTH(outHist2D);
         if(XRange) outHist2D->GetXaxis()->SetRangeUser(XMin, XMax);
         if(YRange) outHist2D->GetYaxis()->SetRangeUser(YMin, YMax);
@@ -2420,7 +2446,7 @@ void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TStrin
         for(Int_t iY=1; iY<nCaloCells+1; iY++)
         {
             TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntriesAbove",iY,iY);
-            for(Int_t iBin=1; iBin<10; iBin++)
+            for(Int_t iBin=2; iBin<11; iBin++)
             {
                 if(temp->Integral(1,temp->GetNbinsX())>0){
                     //Double_t nTotal = temp->Integral(1,temp->GetXaxis()->GetNbins());
@@ -2432,7 +2458,7 @@ void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TStrin
                     if(fraction>100) fraction = 100;
                     if(fraction<0.0001) fraction = 0.0001;
                     outHist2D->Fill(fraction,((Double_t)iBin+0.05)/10.);
-                    if(obj && (fraction < obj->HotCells2D[iBin-1][0] || fraction > obj->HotCells2D[iBin-1][1] )){
+                    if(obj && (fraction < obj->HotCells2D[iBin-2][0] || fraction > obj->HotCells2D[iBin-2][1] )){
                         if(!CheckGoodCell(obj,iY-1)&&nCellTotal>1000) obj->cellIDsHotCells2D.push_back(iY-1);
                     }
                     //if(fraction>10){ cout << "iBin:" << iBin << ", cell" << iY << endl;}
@@ -3090,7 +3116,7 @@ Bool_t isBadRun(badRunCalc* sBadRunCalc, Int_t bin){
   // calculate if runwise value deviates more than nSigmaBad times the error bar size from the mean over all runs
   // and count the number of runs which are deviating
   sBadRunCalc->value = (sBadRunCalc->histo)->GetBinContent(bin);
-  sBadRunCalc->error = (sBadRunCalc->histo)->GetBinError(bin); 
+  sBadRunCalc->error = (sBadRunCalc->histo)->GetBinError(bin);
   if(TMath::Abs(sBadRunCalc->mean-sBadRunCalc->value) > TMath::Abs(sBadRunCalc->nSigmaBad*sBadRunCalc->error)){
     sBadRunCalc->nRunsBad++;
     return kTRUE;

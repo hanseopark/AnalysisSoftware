@@ -2912,6 +2912,27 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         while(graphPowhegGammaALICECocktail_EPPS16Center->GetX()[graphPowhegGammaALICECocktail_EPPS16Center->GetN()-1] > 50)
             graphPowhegGammaALICECocktail_EPPS16Center->RemovePoint(graphPowhegGammaALICECocktail_EPPS16Center->GetN()-1);
 
+        //**************************************************************************************************
+        //****************************** additional calculations from Alwina Liu, Berkeley *****************
+        //**************************************************************************************************
+        // read RGamma
+        ifstream inAlwinaRGamma;
+        Int_t nlinesGammaAlwina     = 0;
+        Double_t xPtGammaAlwina[300], rGammaPeter[300], rGammaWVogelsang[300], rGammaJETPHOX[300], rGammaPWGGA[300];
+
+        inAlwinaRGamma.open("ExternalInputpPb/Theory/AlwinaLiu/compilationOfpPbMBCalc.csv",ios_base::in);
+        while(!inAlwinaRGamma.eof()){
+          inAlwinaRGamma >> xPtGammaAlwina[nlinesGammaAlwina]  >> rGammaPeter[nlinesGammaAlwina] >> rGammaWVogelsang[nlinesGammaAlwina] >> rGammaJETPHOX[nlinesGammaAlwina] >> rGammaPWGGA[nlinesGammaAlwina];
+          cout << nlinesGammaAlwina << "         "  << xPtGammaAlwina[nlinesGammaAlwina] << "         "  <<rGammaPeter[nlinesGammaAlwina]<<endl;
+          nlinesGammaAlwina++;
+        }
+        nlinesGammaAlwina--;
+        TGraph *graphRGammaDirectPhotonPeterAlwina     = new TGraph(nlinesGammaAlwina,xPtGammaAlwina,rGammaPeter);
+        TGraph *graphRGammaDirectPhotonVogelsanAlwina  = new TGraph(nlinesGammaAlwina,xPtGammaAlwina,rGammaWVogelsang);
+        TGraph *graphRGammaDirectPhotonJetPHOXAlwina   = new TGraph(nlinesGammaAlwina,xPtGammaAlwina,rGammaJETPHOX);
+        TGraph *graphRGammaDirectPhotonPWGGAAlwina     = new TGraph(nlinesGammaAlwina,xPtGammaAlwina,rGammaPWGGA);
+
+
         //******************************************************************************************************************
         //************************************** Writing output for pPb ***************************************************
         //******************************************************************************************************************
@@ -3030,6 +3051,13 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
                 graphPowhegGammaALICECocktail_EPPS16Center->GetYaxis()->SetTitle("R_{#gamma}");
                 graphPowhegGammaALICECocktail_EPPS16Center->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
                 graphPowhegGammaALICECocktail_EPPS16Center->Write("graphRGammaDirectPhotonPoweheg5023GeV_EPPS16_ALICECocktail_Center",TObject::kOverwrite);
+
+                graphRGammaDirectPhotonPeterAlwina->Write("graphRGammaDirectPhotonPeTerAlwina",TObject::kOverwrite);
+                graphRGammaDirectPhotonPeterAlwina->Print();
+                graphRGammaDirectPhotonVogelsanAlwina->Write("graphRGammaDirectPhotonVogelsangAlwina",TObject::kOverwrite);
+                graphRGammaDirectPhotonJetPHOXAlwina->Write("graphRGammaDirectPhotonJETPHOXAlwina",TObject::kOverwrite);
+                graphRGammaDirectPhotonPWGGAAlwina->Write("graphRGammaDirectPhotonPWGGAAlwina",TObject::kOverwrite);
+
 
                 fileTheoryGraphsPPb->Close();
 

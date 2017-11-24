@@ -70,6 +70,11 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     gSystem->Exec(Form("cp %s %s/InputGammapPb5TeV.root", inputFileNamePPb5TeV.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputGammaPbPb2760GeV.root", inputFileNamePbPb2760GeV.Data(), outputDir.Data()));
 
+    TString fileNameTheoryPP                                    = "ExternalInput/Theory/TheoryCompilationPP.root";
+    TString fileNameTheoryPPb                                   = "ExternalInputPPb/Theory/TheoryCompilationPPb.root";
+    TString fileNameTheoryPbPb                                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
+
+
     //*******************************************************************************************************************************************
     //******************************************************* set ranges for plotting ***********************************************************
     //*******************************************************************************************************************************************
@@ -170,6 +175,18 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TGraphAsymmErrors* graphInvYieldDirGammaSysPbPb4080     = (TGraphAsymmErrors*) dirGammaPbPb4080->Get("DirGammaSpec_comb_SysErr");
     TGraphAsymmErrors* graphInvYieldDirGammaTotArPbPb4080   = (TGraphAsymmErrors*) dirGammaPbPb4080->Get("DirGammaSpec_comb_upperLimits");
 
+
+    TFile* fileTheoryPP                                     = new TFile( fileNameTheoryPP.Data());
+    TGraph* graphTheoryNLODRpp2760GeVPaquettCenter          = (TGraph*) fileTheoryPP->Get("DirectPhoton/graphDRNLOPaquett_2760GeV_ALICECocktail");
+
+    TFile* fileTheoryPPb                                    = new TFile( fileNameTheoryPPb.Data());
+    TGraph* graphTheoryNLODRpPbCenter                       = (TGraph*) fileTheoryPPb->Get("pPb_5.023TeV/graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10_ALICECocktail_Center");
+    while (graphTheoryNLODRpPbCenter->GetX()[0] < 3)    graphTheoryNLODRpPbCenter->RemovePoint(0);
+    TGraph* graphTheoryMCGillDRpPbCenter                    = (TGraph*) fileTheoryPPb->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center");
+
+
+
+    TFile* fileTheoryPbPb                                   = new TFile( fileNameTheorypp2760GeV.Data());
 
     //*************************************************************************************************************************************************
     //*************************************** Prepare for plotting ************************************************************************************
