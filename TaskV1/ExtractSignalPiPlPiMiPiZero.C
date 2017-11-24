@@ -1127,7 +1127,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
                 fFitTrueSignalInvMassPtBin_SubPiZero[iPt]=0x00;
                 if(fCrysFitting==0){
                     fFileErrLog << "Using exp fit"<<endl;
-                    FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt], fMesonIntRange,iPt,kFALSE,1);
+                    FitTrueInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt],fMesonIntRange,iPt,kFALSE,1);
                 } else {
                     fFileErrLog << "Using Crystal Ball function"<<endl;
                     FitCBSubtractedInvMassInPtBins(fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt], fMesonIntRange,iPt,kFALSE,Form("CBFitFuncMCTrueBin%02d",iPt),1);
@@ -2103,7 +2103,15 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
     nameCanvasSub       = "MesonCanvasSubtracted";
     namePadSub          = "MesonPadSubtracted";
-    PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins, fFitSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, kFALSE,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_FixedPzPiZero);
+    PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"Fit","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_FixedPzPiZero);
+
+    if(fIsMC){
+        // Meson Subtracted with pz of pi0 fixed that shows fit of true signal instead of signal fit
+        nameMesonSub        = Form("%s/%s_%s_MesonSubtracted_FixedPzPiZero_TrueFit_%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
+        nameCanvasSub       = "MesonCanvasSubtracted";
+        namePadSub          = "MesonPadSubtracted";
+        PlotWithFitSubtractedInvMassInPtBins( fHistoMappingSignalInvMassPtBin_FixedPzPiZero, fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero, fFitTrueSignalInvMassPtBin_FixedPzPiZero, nameMesonSub, nameCanvasSub, namePadSub, fMesonMassRange_FixedPzPiZero, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC,fDecayChannel, fDetectionProcess, fCollisionSystem,"MC validated signal",kTRUE,"fit of validated signal","mixed evt. subtr. #it{M}_{#pi^{+}#pi^{-}#pi^{0}}",kFALSE,fMesonMass_FixedPzPiZero);
+    }
 
     // Meson Subtracted backfit
     nameMesonSub                = Form("%s/%s_%s_MesonSubtractedBackFit%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(), fPeriodFlag.Data(), fCutSelection.Data(),Suffix.Data());
@@ -2199,17 +2207,17 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[0][fExampleBin],
                         fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig,kFALSE);
     // In example bin with pi0 inv mass subtracted
 
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingSignalInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_SubPiZero[0][fExampleBin],
                         fFitSignalInvMassPtBin_SubPiZero[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_SubPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig,kFALSE,fBGFitRange_SubPiZero);
     // In example bin with pz of pi0 fixed
 
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingSignalInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_FixedPzPiZero[0][fExampleBin],
                         fFitSignalInvMassPtBin_FixedPzPiZero[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMass_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig, kFALSE, fBGFitRange_FixedPzPiZero);
 
     PlotExampleInvMassBinsBckFit(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingGGInvMassBackFitPtBin[fExampleBin], fBackgroundFitPol[fExampleBin],fHistoBckFitConfidence[fExampleBin],
                          fFitSignalInvMassBackFitPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
@@ -3108,8 +3116,14 @@ for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
     fHistoTrueMesonInvMassVSPtFill->ProjectionX(fNameHistoTrue.Data(),startBin,endBin,"e");
 
     fHistoMappingTrueMesonInvMassPtBins[iPt]=(TH1D*)gDirectory->Get(fNameHistoTrue.Data());
-    // dirty fix
-    fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt]=(TH1D*)fHistoMappingTrueMesonInvMassPtBins[iPt]->Clone(Form("%s_SubPiZero",fNameHistoTrue.Data()));
+
+    // Get a copy of fHistoMappingTrueMesonInvMassPtBins that is shifted by Neutral pion mass
+    fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt]= new TH1D(Form("%s_SubPiZero",fNameHistoTrue.Data()),Form("%s_SubPiZero",fNameHistoTrue.Data()),fHistoMappingTrueMesonInvMassPtBins[iPt]->GetNbinsX(),(fHistoMappingTrueMesonInvMassPtBins[iPt]->GetXaxis()->GetBinLowEdge(0))-0.134,(fHistoMappingTrueMesonInvMassPtBins[iPt]->GetXaxis()->GetBinUpEdge(fHistoMappingTrueMesonInvMassPtBins[iPt]->GetNbinsX()))-0.134);
+    for(Int_t bin = 0; bin < fHistoMappingTrueMesonInvMassPtBins[iPt]->GetNbinsX(); bin++){
+      fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt]->SetBinContent(bin,fHistoMappingTrueMesonInvMassPtBins[iPt]->GetBinContent(bin));
+      fHistoMappingTrueMesonInvMassPtBins_SubPiZero[iPt]->SetBinError(bin,fHistoMappingTrueMesonInvMassPtBins[iPt]->GetBinError(bin));
+    }
+
     fHistoMappingTrueMesonInvMassPtBins_FixedPzPiZero[iPt]=(TH1D*)fHistoMappingTrueMesonInvMassPtBins[iPt]->Clone(Form("%s_FixedPzPiZero",fNameHistoTrue.Data()));
 
         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtBins[iPt]->GetEntries() << endl;

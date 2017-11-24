@@ -776,7 +776,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         // Initialize default BG fit range right & left
         if(mode == 40){
             fBGFitRange[0]                = 0.82;
-            fBGFitRange[1]                = 0.89;
+            fBGFitRange[1]                = 0.87;
             fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
             fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];

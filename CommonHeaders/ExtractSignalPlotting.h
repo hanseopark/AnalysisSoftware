@@ -459,7 +459,8 @@
                                     Double_t scaleFacSignal                 = 1.0,
                                     Int_t detMode                           = 0,
                                     Bool_t addSig                           = kFALSE,
-                                    Bool_t isVsPtConv                       = kFALSE
+                                    Bool_t isVsPtConv                       = kFALSE,
+                                    Double_t* UsrBckFitRange                = NULL
                                 ){
 
         cout << "Trigger set: " << triggerSet << endl;
@@ -897,6 +898,33 @@
           canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplit%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
 
         }
+
+       // plot same further split plot for example bin, but with blue box showing BG fit range
+       if(fMesonType.CompareTo("Omega") == 0){
+           Double_t fBGFitRangeLow     = fBGFitRange[0];
+           Double_t fBGFitRangeHigh    = fBGFitRange[1];
+
+           if(UsrBckFitRange!=NULL){
+               fBGFitRangeLow          = UsrBckFitRange[0];
+               fBGFitRangeHigh         = UsrBckFitRange[1];
+           }
+
+           TBox *box               = new TBox(fBGFitRangeLow,histoInvMassSignalWithBG->GetMaximum()*0.43,fBGFitRangeHigh,histoInvMassSignalWithBG->GetMaximum()*0.41);
+           box->SetFillStyle(1001);
+           box->SetFillColor(kAzure+9);
+           box->Draw("same");
+
+
+           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
+               canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplitWithScaleRange_SubPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+           } else if(titleInvMassSignalWithBG.Contains("FixedPzPiZero")==kTRUE){
+               canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplitWithScaleRange_FixedPzPiZero_%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+           } else{
+               canvasInvMassSamplePlot->SaveAs(Form("%s/%s_%s_InvMassBinBGFurtherSplitWithScaleRange%s_%s.%s",outputDir.Data(),fMesonType.Data(),fSimulation.Data(), methodStrOut.Data(), triggerStr2.Data(),  suffix.Data()));
+
+           }
+       }
+
         // Plot Invariant mass sample bin with linear BG in Signal
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->Draw();
