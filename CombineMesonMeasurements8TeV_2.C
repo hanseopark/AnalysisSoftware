@@ -613,6 +613,10 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvSecPi08000GeV");
         while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > 42. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
 
+        TGraphAsymmErrors* graphPi0DSS14central             = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvSecPi08000GeV");
+        while (graphPi0DSS14central->GetX()[graphPi0DSS14central->GetN()-1] > 42. ) graphPi0DSS14central->RemovePoint(graphPi0DSS14central->GetN()-1);
+        for(Int_t iBinD = 0; iBinD<graphPi0DSS14central->GetN(); iBinD++){graphPi0DSS14central->SetPointEYhigh(iBinD,0); graphPi0DSS14central->SetPointEYlow(iBinD,0);}
+
         TGraph* graphEtaToPi07000GeV                        = (TGraph*) fileEtaToPi07000GeV->Get("EtaPi0Ratio7000GeV");
         TGraph* graphEtaToPi02760GeV                        = (TGraph*) directoryfileEtaToPi02760GeV->Get("graphRatioEtaToPi0Comb2760GeVTotErr");
 //        TH1F* histoPythia8InvXSection_VarBinning            = (TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Spec8000GeVVarBinning");
@@ -1373,11 +1377,15 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     TGraph* graphRatioPi0CombNLOMuOne                = (TGraph*)graphNLOCalcPi0MuOne->Clone();cout << __LINE__ << endl;
     TGraph* graphRatioPi0CombNLOMuTwo                = (TGraph*)graphNLOCalcPi0MuTwo->Clone();cout << __LINE__ << endl;
     TGraphAsymmErrors* graphRatioPi0DSS14            = (TGraphAsymmErrors*)graphPi0DSS14->Clone();cout << __LINE__ << endl;
+    TGraphAsymmErrors* graphRatioPi0DSS14central     = (TGraphAsymmErrors*)graphPi0DSS14central->Clone();cout << __LINE__ << endl;
+
     //TGraphAsymmErrors* graphRatioPi0CombNLODSS14     = (TGraphAsymmErrors*)graphNLODSS14Calc->Clone();cout << __LINE__ << endl;
     graphRatioPi0CombNLOMuHalf                       = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuHalf, fitTCMInvXSectionPi0Plot); cout << __LINE__ << endl;
     graphRatioPi0CombNLOMuOne                        = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuOne, fitTCMInvXSectionPi0Plot); cout << __LINE__ << endl;
     graphRatioPi0CombNLOMuTwo                        = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuTwo, fitTCMInvXSectionPi0Plot); cout << __LINE__ << endl;
     graphRatioPi0DSS14                               = CalculateGraphErrRatioToFit (graphRatioPi0DSS14, fitTCMInvXSectionPi0Plot); cout << __LINE__ << endl;
+    graphRatioPi0DSS14central                        = CalculateGraphErrRatioToFit (graphRatioPi0DSS14central, fitTCMInvXSectionPi0Plot); cout << __LINE__ << endl;
+
     //graphRatioPi0CombNLODSS14                        = CalculateGraphErrRatioToFit(graphRatioPi0CombNLODSS14, fitTCMInvXSectionPi0Plot); cout << __LINE__ << endl;
 
     TGraphAsymmErrors* graphRatioPi0CombCombFitTotA     = (TGraphAsymmErrors*)graphCombPi0InvXSectionTotA->Clone();
@@ -2450,6 +2458,11 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0DSS14->SetFillColor(colorNLO);
         graphRatioPi0DSS14->Draw("same,e4");
 
+        graphRatioPi0DSS14central->SetLineWidth(1);
+        graphRatioPi0DSS14central->SetLineColor(colorNLO+2);
+        graphRatioPi0DSS14central->SetLineStyle(2);
+        graphRatioPi0DSS14central->Draw("same");
+
         DrawGammaSetMarker(histoRatioPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);
         histoRatioPythia8ToFit->SetLineWidth(widthCommonFit);
         histoRatioPythia8ToFit->GetXaxis()->SetRangeUser(0.3,35);
@@ -2516,6 +2529,11 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     graphRatioPi0DSS14->SetFillStyle(1001);
     graphRatioPi0DSS14->SetFillColor(colorNLO);
     graphRatioPi0DSS14->Draw("same,e4");
+
+    graphRatioPi0DSS14central->SetLineWidth(1);
+    graphRatioPi0DSS14central->SetLineColor(colorNLO+2);
+    graphRatioPi0DSS14central->SetLineStyle(2);
+    graphRatioPi0DSS14central->Draw("same");
 
     DrawGammaNLOTGraph( graphRatioPi0CombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, kGray+1);
     graphRatioPi0CombNLOMuHalf->Draw("same,c");
@@ -2646,6 +2664,10 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphPi0DSS14->SetFillColor(colorNLO);
         graphPi0DSS14->Draw("same,e4");
 
+        graphPi0DSS14central->SetLineWidth(1);
+        graphPi0DSS14central->SetLineColor(colorNLO+2);
+        graphPi0DSS14central->SetLineStyle(2);
+        graphPi0DSS14central->Draw("same");
 
         DrawGammaSetMarkerTGraphAsym(graphCombPi0InvXSectionSysA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kTRUE);
         graphCombPi0InvXSectionSysA->Draw("E2same");
@@ -2724,6 +2746,11 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
         graphRatioPi0DSS14->SetFillStyle(1001);
         graphRatioPi0DSS14->SetFillColor(colorNLO);
         graphRatioPi0DSS14->Draw("same,e4");
+
+        graphRatioPi0DSS14central->SetLineWidth(1);
+        graphRatioPi0DSS14central->SetLineColor(colorNLO+2);
+        graphRatioPi0DSS14central->SetLineStyle(2);
+        graphRatioPi0DSS14central->Draw("same");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
         graphRatioPi0CombCombFitStatA->SetLineWidth(widthLinesBoxes);

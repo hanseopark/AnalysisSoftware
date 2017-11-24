@@ -530,23 +530,28 @@ fileNameEMCAL2="";
         histoPythia8InvXSectionEta->GetXaxis()->SetRangeUser(minPtEta,maxPtEta);
         TGraphErrors* graphPythia8InvXSection               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoPi07TeV"));
         while(graphPythia8InvXSection->GetX()[0] < minPtPi0) graphPythia8InvXSection->RemovePoint(0);
-        while(graphPythia8InvXSection->GetX()[graphPythia8InvXSection->GetN()-1] > 25.) graphPythia8InvXSection->RemovePoint(graphPythia8InvXSection->GetN()-1);
+        while(graphPythia8InvXSection->GetX()[graphPythia8InvXSection->GetN()-1] > maxPtPi0) graphPythia8InvXSection->RemovePoint(graphPythia8InvXSection->GetN()-1);
         TGraphErrors* graphPythia8InvXSectionEta            = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta7TeV"));
         while(graphPythia8InvXSectionEta->GetX()[0] < minPtEta) graphPythia8InvXSectionEta->RemovePoint(0);
-        while(graphPythia8InvXSectionEta->GetX()[graphPythia8InvXSectionEta->GetN()-1] > 25.) graphPythia8InvXSectionEta->RemovePoint(graphPythia8InvXSectionEta->GetN()-1);
+        while(graphPythia8InvXSectionEta->GetX()[graphPythia8InvXSectionEta->GetN()-1] > maxPtEta) graphPythia8InvXSectionEta->RemovePoint(graphPythia8InvXSectionEta->GetN()-1);
         TH1F* histoPythia8EtaToPi0                          = (TH1F*) histoPythia8InvXSectionEta->Clone("Pythia8EtaToPi0");
         histoPythia8EtaToPi0->Divide(histoPythia8InvXSection);
-        histoPythia8EtaToPi0->GetXaxis()->SetRangeUser(minPtEta,maxPtEta);
+        histoPythia8EtaToPi0->GetXaxis()->SetRangeUser(minPtEta,15.);
         TGraphErrors* graphPythia8EtaToPi0                  = new TGraphErrors(histoPythia8EtaToPi0);
         while(graphPythia8EtaToPi0->GetX()[0] < 0.4) graphPythia8EtaToPi0->RemovePoint(0);
-        while(graphPythia8EtaToPi0->GetX()[graphPythia8EtaToPi0->GetN()-1] > 25.) graphPythia8EtaToPi0->RemovePoint(graphPythia8EtaToPi0->GetN()-1);
+        while(graphPythia8EtaToPi0->GetX()[graphPythia8EtaToPi0->GetN()-1] > 15.) graphPythia8EtaToPi0->RemovePoint(graphPythia8EtaToPi0->GetN()-1);
 
         // *******************************************************************************************************
         // NLO calc
         TGraphAsymmErrors* graphPi0DSS14                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec7000GeV");
-        while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > 42. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
+        while (graphPi0DSS14->GetX()[graphPi0DSS14->GetN()-1] > maxPtPi0-2. ) graphPi0DSS14->RemovePoint(graphPi0DSS14->GetN()-1);
+
+        TGraphAsymmErrors* graphPi0DSS14central             = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS14InvCrossSec7000GeV");
+        while (graphPi0DSS14central->GetX()[graphPi0DSS14central->GetN()-1] > maxPtPi0-2. ) graphPi0DSS14central->RemovePoint(graphPi0DSS14central->GetN()-1);
+        for(Int_t iBinD = 0; iBinD<graphPi0DSS14central->GetN(); iBinD++){graphPi0DSS14central->SetPointEYhigh(iBinD,0); graphPi0DSS14central->SetPointEYlow(iBinD,0); graphPi0DSS14central->SetPointEXhigh(iBinD,0); graphPi0DSS14central->SetPointEXlow(iBinD,0);}
 
         TGraphAsymmErrors* graphEtaAESSS                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcAESSSInvSecEta7000GeV");
+        while (graphEtaAESSS->GetX()[graphEtaAESSS->GetN()-1] > maxPtEta ) graphEtaAESSS->RemovePoint(graphEtaAESSS->GetN()-1);
 
         TGraphAsymmErrors* graphEtaToPi02760GeV             = (TGraphAsymmErrors*) fileEtaToPi->Get("Alice2760GeV");
         ProduceGraphAsymmWithoutXErrors(graphEtaToPi02760GeV);
@@ -562,15 +567,19 @@ fileNameEMCAL2="";
         TGraph* graphNLOCalcEtaMuOne                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuOne7000GeV");
         TGraph* graphNLOCalcEtaMuTwo                        = (TGraph*)fileTheoryCompilation->Get("graphNLOCalcInvSecEtaMuTwo7000GeV");
 
-        while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > 27. )
+        while (graphNLOCalcEtaMuHalf->GetX()[graphNLOCalcEtaMuHalf->GetN()-1] > maxPtEta )
             graphNLOCalcEtaMuHalf->RemovePoint(graphNLOCalcEtaMuHalf->GetN()-1);
-        while (graphNLOCalcEtaMuOne->GetX()[graphNLOCalcEtaMuOne->GetN()-1] > 27. )
+        while (graphNLOCalcEtaMuOne->GetX()[graphNLOCalcEtaMuOne->GetN()-1] > maxPtEta )
             graphNLOCalcEtaMuOne->RemovePoint(graphNLOCalcEtaMuOne->GetN()-1);
-        while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > 27. )
+        while (graphNLOCalcEtaMuTwo->GetX()[graphNLOCalcEtaMuTwo->GetN()-1] > maxPtEta )
             graphNLOCalcEtaMuTwo->RemovePoint(graphNLOCalcEtaMuTwo->GetN()-1);
 
         TGraphAsymmErrors* graphNLOEtaToPi0                = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcEtaOverPi07000GeV_AESSS_DSS07");
-        while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 27. ) graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
+        while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 15. ) graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
+
+        TGraphAsymmErrors* graphNLOEtaToPi0central         = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcEtaOverPi07000GeV_AESSS_DSS07");
+        while (graphNLOEtaToPi0central->GetX()[graphNLOEtaToPi0central->GetN()-1] > 15. ) graphNLOEtaToPi0central->RemovePoint(graphNLOEtaToPi0central->GetN()-1);
+        for(Int_t iBinD = 0; iBinD<graphNLOEtaToPi0central->GetN(); iBinD++){graphNLOEtaToPi0central->SetPointEYhigh(iBinD,0); graphNLOEtaToPi0central->SetPointEYlow(iBinD,0);}
 
     // *******************************************************************************************************
     // ************************** Combination of different measurements **************************************
@@ -2132,11 +2141,13 @@ fileNameEMCAL2="";
     TGraph* graphRatioPi0CombNLOMuOne                = (TGraph*)graphNLOCalcPi0MuOne->Clone();cout << __LINE__ << endl;
     TGraph* graphRatioPi0CombNLOMuTwo                = (TGraph*)graphNLOCalcPi0MuTwo->Clone();cout << __LINE__ << endl;
     TGraphAsymmErrors* graphRatioPi0DSS14            = (TGraphAsymmErrors*)graphPi0DSS14->Clone();cout << __LINE__ << endl;
+    TGraphAsymmErrors* graphRatioPi0DSS14central     = (TGraphAsymmErrors*)graphPi0DSS14central->Clone();cout << __LINE__ << endl;
 
     graphRatioPi0CombNLOMuHalf                       = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuHalf, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
     graphRatioPi0CombNLOMuOne                        = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuOne, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
     graphRatioPi0CombNLOMuTwo                        = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuTwo, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
     graphRatioPi0DSS14                               = CalculateGraphErrRatioToFit (graphRatioPi0DSS14, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
+    graphRatioPi0DSS14central                        = CalculateGraphErrRatioToFit (graphRatioPi0DSS14central, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
 
     TH1D* histoRatioPythia8ToFitEta                  = (TH1D*) histoPythia8InvXSectionEta->Clone();
     histoRatioPythia8ToFitEta                        = CalculateHistoRatioToFit (histoRatioPythia8ToFitEta, fitTCMInvXSectionEta);
@@ -3426,6 +3437,11 @@ fileNameEMCAL2="";
            graphRatioPi0DSS14->SetFillColor(colorNLO);
            graphRatioPi0DSS14->Draw("same,e4");
 
+           graphRatioPi0DSS14central->SetLineWidth(1);
+           graphRatioPi0DSS14central->SetLineColor(colorNLO+2);
+           graphRatioPi0DSS14central->SetLineStyle(2);
+           graphRatioPi0DSS14central->Draw("same");
+
            DrawGammaSetMarkerTGraphErr(graphRatioPythia8ToFit, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
            graphRatioPythia8ToFit->Draw("3,same");
            DrawGammaSetMarker(histoRatioPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);
@@ -3491,6 +3507,11 @@ fileNameEMCAL2="";
        graphRatioPi0DSS14->SetFillStyle(1001);
        graphRatioPi0DSS14->SetFillColor(colorNLO);
        graphRatioPi0DSS14->Draw("same,e4");
+
+       graphRatioPi0DSS14central->SetLineWidth(1);
+       graphRatioPi0DSS14central->SetLineColor(colorNLO+2);
+       graphRatioPi0DSS14central->SetLineStyle(2);
+       graphRatioPi0DSS14central->Draw("same");
 
        DrawGammaNLOTGraph( graphRatioPi0CombNLOMuHalf, widthCommonFit, styleLineNLOMuHalf, kGray+1);
        graphRatioPi0CombNLOMuHalf->Draw("same,c");
@@ -3674,6 +3695,11 @@ fileNameEMCAL2="";
            graphPi0DSS14->SetFillColor(colorNLO);
            graphPi0DSS14->Draw("same,e3");
 
+           graphPi0DSS14central->SetLineWidth(1);
+           graphPi0DSS14central->SetLineColor(colorNLO+2);
+           graphPi0DSS14central->SetLineStyle(2);
+           graphPi0DSS14central->Draw("same");
+
            DrawGammaSetMarkerTGraphErr(graphPythia8InvXSection, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
            graphPythia8InvXSection->Draw("3,same");
            DrawGammaSetMarker(histoPythia8InvXSection, 24, 1.5, kRed+2 , kRed+2);
@@ -3751,6 +3777,11 @@ fileNameEMCAL2="";
            graphRatioPi0DSS14->SetFillStyle(1001);
            graphRatioPi0DSS14->SetFillColor(colorNLO);
            graphRatioPi0DSS14->Draw("same,e4");
+
+           graphRatioPi0DSS14central->SetLineWidth(1);
+           graphRatioPi0DSS14central->SetLineColor(colorNLO+2);
+           graphRatioPi0DSS14central->SetLineStyle(2);
+           graphRatioPi0DSS14central->Draw("same");
 
            DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
            graphRatioCombCombFitStat_WOXErr->SetLineWidth(widthLinesBoxes);
@@ -3955,6 +3986,10 @@ fileNameEMCAL2="";
            TGraphAsymmErrors* graphEtaAESSSCopy                        = (TGraphAsymmErrors*)graphEtaAESSS->Clone("graphEtaAESSSCopy");
            graphEtaAESSSCopy                                           = ScaleGraph(graphEtaAESSSCopy,scaleFacEtaForCombPlot);
 
+           TGraphAsymmErrors* graphEtaAESSSCopycentral                 = (TGraphAsymmErrors*)graphEtaAESSS->Clone("graphEtaAESSSCopycentral");
+           for(Int_t iBinD = 0; iBinD<graphEtaAESSSCopycentral->GetN(); iBinD++){graphEtaAESSSCopycentral->SetPointEYhigh(iBinD,0); graphEtaAESSSCopycentral->SetPointEYlow(iBinD,0);}
+           graphEtaAESSSCopycentral                                    = ScaleGraph(graphEtaAESSSCopycentral,scaleFacEtaForCombPlot);
+
            // plotting NLO calcs pi0
            graphPi0DSS14->SetLineWidth(widthCommonFit);
            graphPi0DSS14->SetLineColor(colorNLO);
@@ -3963,9 +3998,18 @@ fileNameEMCAL2="";
            graphPi0DSS14->SetFillColor(colorNLO);
            graphPi0DSS14->Draw("same,e3");
 
+           graphPi0DSS14central->SetLineWidth(1);
+           graphPi0DSS14central->SetLineColor(colorNLO+2);
+           graphPi0DSS14central->SetLineStyle(2);
+           graphPi0DSS14central->Draw("same");
+
            // plotting NLO calcs eta
            DrawGammaSetMarkerTGraphAsym(graphEtaAESSSCopy, 0, 0, colorCGC, colorCGC, widthLinesBoxes, kTRUE, colorCGC);
            graphEtaAESSSCopy->Draw("3,same");
+
+           graphEtaAESSSCopycentral->SetLineStyle(2);
+           DrawGammaSetMarkerTGraphAsym(graphEtaAESSSCopycentral, 0, 0, colorNLO, colorNLO, 1., kTRUE, colorNLO);
+           graphEtaAESSSCopycentral->Draw("same");
 
            // plotting Pythia 8.2 Monash
            DrawGammaSetMarkerTGraphErr(graphPythia8InvXSection, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
@@ -4234,11 +4278,11 @@ fileNameEMCAL2="";
     histo2DEtatoPi0combo->Draw("copy");
 
     // eta/pi0 mt-scaled
-    TH1F *eta2pi0MtScaled = new TH1F("eta2pi0MtScaled","#eta/#pi^{0} from m_{T} scaling",5000,0.4,32.);
+    TH1F *eta2pi0MtScaled = new TH1F("eta2pi0MtScaled","#eta/#pi^{0} from m_{T} scaling",4000,0.4,15.);
     eta2pi0MtScaled->SetLineColor(kBlue+2);
     eta2pi0MtScaled->SetLineWidth(2.);
 
-    TH1F *eta2pi0MtScaledTCM = new TH1F("eta2pi0MtScaledTCM","#eta/#pi^{0} from m_{T} scaling",5000,0.4,32.);
+    TH1F *eta2pi0MtScaledTCM = new TH1F("eta2pi0MtScaledTCM","#eta/#pi^{0} from m_{T} scaling",4000,0.4,15.);
     eta2pi0MtScaledTCM->SetLineColor(kBlue+2);
     eta2pi0MtScaledTCM->SetLineWidth(2.);
 
@@ -4429,6 +4473,11 @@ fileNameEMCAL2="";
     graphNLOEtaToPi0->SetFillColor(colorNLO);
     graphNLOEtaToPi0->Draw("same,e4");
 
+    graphNLOEtaToPi0central->SetLineWidth(1);
+    graphNLOEtaToPi0central->SetLineColor(colorNLO+2);
+    graphNLOEtaToPi0central->SetLineStyle(2);
+    graphNLOEtaToPi0central->Draw("same");
+
     // plotting data
     DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Stat_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
     graphCombEtaToPi0Stat_WOXErr->SetLineWidth(widthLinesBoxes);
@@ -4470,6 +4519,7 @@ fileNameEMCAL2="";
 
     // plotting NLO
     graphNLOEtaToPi0->Draw("same,e4");
+    graphNLOEtaToPi0central->Draw("same");
 
     // plotting data
     graphCombEtaToPi0Sys->Draw("2,same");
@@ -4525,6 +4575,7 @@ fileNameEMCAL2="";
 
     // plotting NLO
     graphNLOEtaToPi0->Draw("same,e4");
+    graphNLOEtaToPi0central->Draw("same");
 
     // plotting data
     graphCombEtaToPi0Sys->Draw("2,same");

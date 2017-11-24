@@ -394,6 +394,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     TGraph* graphNLODSS07InvCrossSectionPi0Two[6];
     TString NLO14HistoNames[6]                 = { "", "graphNLOCalcDSS14InvCrossSec2760GeV", "", "graphNLOCalcDSS14InvCrossSec7000GeV", "graphNLOCalcDSS14InvSecPi08000GeV", ""};
     TGraphAsymmErrors* graphNLODSS14InvCrossSectionPi0[6];
+    TGraphAsymmErrors* graphNLODSS14InvCrossSectionPi0center[6];
     TString NLOAESSSHistoNamesEtaHalf[6]      = { "graphNLOCalcInvSecEtaMuHalf900GeV", "graphNLOCalcInvSecEtaMuHalf2760GeV", "", "graphNLOCalcInvSecEtaMuHalf7000GeV", "graphNLOCalcInvSecEtaMuHalf8000GeV", ""};
     TString NLOAESSSHistoNamesEtaOne[6]       = { "graphNLOCalcInvSecEtaMuOne900GeV", "graphNLOCalcInvSecEtaMuOne2760GeV", "", "graphNLOCalcInvSecEtaMuOne7000GeV", "graphNLOCalcInvSecEtaMuOne8000GeV", ""};
     TString NLOAESSSHistoNamesEtaTwo[6]       = { "graphNLOCalcInvSecEtaMuTwo900GeV", "graphNLOCalcInvSecEtaMuTwo2760GeV", "", "graphNLOCalcInvSecEtaMuTwo7000GeV", "graphNLOCalcInvSecEtaMuTwo8000GeV", ""};
@@ -476,6 +477,30 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }else{
                 graphNLODSS14InvCrossSectionPi0[i]=NULL;
             }
+
+            if(fileTheoryCompilation->Get(NLO14HistoNames[i].Data()))
+              graphNLODSS14InvCrossSectionPi0center[i] = (TGraphAsymmErrors*) ((TGraphAsymmErrors*) fileTheoryCompilation->Get(NLO14HistoNames[i].Data()))->Clone(Form("graphNLODSS14InvCrossSectionPi0center_%i",i));
+            else
+              graphNLODSS14InvCrossSectionPi0center[i] = NULL;
+
+            if(graphNLODSS14InvCrossSectionPi0center[i]){
+                for (int j=0;j<graphNLODSS14InvCrossSectionPi0center[i]->GetN();j++){
+                    graphNLODSS14InvCrossSectionPi0center[i]->GetY()[j] *= scalingFactorNLO;
+                    graphNLODSS14InvCrossSectionPi0center[i]->GetEYhigh()[j] *= scalingFactorNLO;
+                    graphNLODSS14InvCrossSectionPi0center[i]->GetEYlow()[j] *= scalingFactorNLO;
+                }
+                while(graphNLODSS14InvCrossSectionPi0center[i]->GetX()[0] < minXSpectra[i][10]) graphNLODSS14InvCrossSectionPi0center[i]->RemovePoint(0);
+                while(graphNLODSS14InvCrossSectionPi0center[i]->GetX()[graphNLODSS14InvCrossSectionPi0center[i]->GetN()-1] > maxXSpectra[i][10]) graphNLODSS14InvCrossSectionPi0center[i]->RemovePoint(graphNLODSS14InvCrossSectionPi0center[i]->GetN()-1);
+                DrawGammaSetMarkerTGraphAsym(graphNLODSS14InvCrossSectionPi0center[i], 0, 0, colorNLO , colorNLO, widthLinesBoxes, kTRUE, colorNLO);
+                ProduceGraphAsymmWithoutXErrors(graphNLODSS14InvCrossSectionPi0center[i]);
+                graphNLODSS14InvCrossSectionPi0center[i]->SetLineWidth(1.);
+                graphNLODSS14InvCrossSectionPi0center[i]->SetLineColor(colorNLO+2);
+                graphNLODSS14InvCrossSectionPi0center[i]->SetLineStyle(2);
+                for(Int_t iBinD = 0; iBinD<graphNLODSS14InvCrossSectionPi0center[i]->GetN(); iBinD++){graphNLODSS14InvCrossSectionPi0center[i]->SetPointEYhigh(iBinD,0); graphNLODSS14InvCrossSectionPi0center[i]->SetPointEYlow(iBinD,0);}
+            }else{
+                graphNLODSS14InvCrossSectionPi0center[i]=NULL;
+            }
+
             if(fileTheoryCompilation->Get(NLOAESSSHistoNamesEtaHalf[i].Data()))
               graphNLOAESSSInvCrossSectionEtaHalf[i] = (TGraph*) ((TGraph*) fileTheoryCompilation->Get(NLOAESSSHistoNamesEtaHalf[i].Data()))->Clone(Form("graphNLOAESSSInvCrossSectionEtaHalf_%i",i));
             else
@@ -813,6 +838,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     TGraph* graphRatioNLODSS07ToCombFitPi0One[6];
     TGraph* graphRatioNLODSS07ToCombFitPi0Two[6];
     TGraphAsymmErrors* graphRatioNLODSS14ToCombFitPi0[6];
+    TGraphAsymmErrors* graphRatioNLODSS14ToCombFitPi0center[6];
     TGraph* graphRatioNLOAESSSToCombFitEtaHalf[6];
     TGraph* graphRatioNLOAESSSToCombFitEtaOne[6];
     TGraph* graphRatioNLOAESSSToCombFitEtaTwo[6];
@@ -845,6 +871,16 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             graphRatioNLODSS14ToCombFitPi0[i]->SetFillStyle(1001);
             graphRatioNLODSS14ToCombFitPi0[i]->SetFillColor(colorNLO);
           }else graphRatioNLODSS14ToCombFitPi0[i] = NULL;
+
+          if(graphNLODSS14InvCrossSectionPi0center[i]){
+            graphRatioNLODSS14ToCombFitPi0center[i]     = (TGraphAsymmErrors*)graphNLODSS14InvCrossSectionPi0center[i]->Clone(Form("graphRatioNLODSS14ToCombFitPi0center%i",i));
+            graphRatioNLODSS14ToCombFitPi0center[i]     = CalculateGraphErrRatioToFit(graphRatioNLODSS14ToCombFitPi0center[i], fitTCMInvCrossSectionPi0CombPlot[i]);
+            DrawGammaSetMarkerTGraphAsym(graphRatioNLODSS14ToCombFitPi0center[i], 0, 0, colorNLO+2 , colorNLO+2, widthLinesBoxes, kTRUE, colorNLO+2);
+            ProduceGraphAsymmWithoutXErrors(graphRatioNLODSS14ToCombFitPi0center[i]);
+            graphRatioNLODSS14ToCombFitPi0center[i]->SetLineWidth(1.);
+            graphRatioNLODSS14ToCombFitPi0center[i]->SetLineColor(colorNLO+2);
+            graphRatioNLODSS14ToCombFitPi0center[i]->SetLineStyle(2);
+          }else graphRatioNLODSS14ToCombFitPi0center[i] = NULL;
 
           if(graphNLOAESSSInvCrossSectionEtaHalf[i]){
             graphRatioNLOAESSSToCombFitEtaHalf[i]     = (TGraph*)graphNLOAESSSInvCrossSectionEtaHalf[i]->Clone(Form("graphRatioNLOAESSSToCombFitEtaHalf%i",i));
@@ -1062,6 +1098,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
         if(includeEnergy[i]){
             if(graphPi0InvariantCrossSectionSys[i][10]&&graphPi0InvariantCrossSectionStat[i][10]){
               if(graphNLODSS14InvCrossSectionPi0[i]) graphNLODSS14InvCrossSectionPi0[i]->Draw("same,e3");
+              if(graphNLODSS14InvCrossSectionPi0center[i]) graphNLODSS14InvCrossSectionPi0center[i]->Draw("same");
               if(graphPythiaInvCrossSectionPi0[i]) graphPythiaInvCrossSectionPi0[i]->Draw("3,same");
               if(histoPythiaInvCrossSectionPi0[i]) histoPythiaInvCrossSectionPi0[i]->Draw("same,hist,l");
               fitTCMInvCrossSectionPi0CombPlot[i]->Draw("same");
@@ -1103,6 +1140,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             DrawGammaLines(xRangeMinXSec, xRangeMaxXSec , 1., 1., 1.2, kGray+2);
             if(graphPi0InvariantCrossSectionSys[i][10]&&graphPi0InvariantCrossSectionStat[i][10]){
               if(graphRatioNLODSS14ToCombFitPi0[i]) graphRatioNLODSS14ToCombFitPi0[i]->Draw("same,e3");
+              if(graphRatioNLODSS14ToCombFitPi0center[i]) graphRatioNLODSS14ToCombFitPi0center[i]->Draw("same");
               graphRatioPythiaToCombFitPi0[i]->Draw("3,same");
               histoRatioPythiaToCombFitPi0[i]->Draw("same,hist,l");
               graphRatioIndivMeasToCombFitPi0Sys[i][10]->Draw("2,same");
@@ -1434,6 +1472,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
         if(includeEnergy[i]){
             if(graphPi0InvariantCrossSectionSys[i][10]&&graphPi0InvariantCrossSectionStat[i][10]){
               if(graphNLODSS14InvCrossSectionPi0[i]) graphNLODSS14InvCrossSectionPi0[i]->Draw("same,e3");
+              if(graphNLODSS14InvCrossSectionPi0center[i]) graphNLODSS14InvCrossSectionPi0center[i]->Draw("same");
               if(graphPythiaInvCrossSectionPi0[i]) graphPythiaInvCrossSectionPi0[i]->Draw("3,same");
               if(histoPythiaInvCrossSectionPi0[i]) histoPythiaInvCrossSectionPi0[i]->Draw("same,hist,l");
               fitTCMInvCrossSectionPi0CombPlot[i]->Draw("same");
@@ -1690,6 +1729,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
             }
             if(graphPi0InvariantCrossSectionSys[i][10]&&graphPi0InvariantCrossSectionStat[i][10]){
               if(graphRatioNLODSS14ToCombFitPi0[i]) graphRatioNLODSS14ToCombFitPi0[i]->Draw("same,e3");
+              if(graphRatioNLODSS14ToCombFitPi0center[i]) graphRatioNLODSS14ToCombFitPi0center[i]->Draw("same");
               graphRatioPythiaToCombFitPi0[i]->Draw("3,same");
               histoRatioPythiaToCombFitPi0[i]->Draw("same,hist,l");
               graphRatioIndivMeasToCombFitPi0Sys[i][10]->Draw("2,same");

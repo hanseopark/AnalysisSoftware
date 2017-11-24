@@ -496,6 +496,10 @@
           TGraphAsymmErrors* graphPi0DSS07                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS07InvSecPi0900GeV");
           while (graphPi0DSS07->GetX()[graphPi0DSS07->GetN()-1] > 12. ) graphPi0DSS07->RemovePoint(graphPi0DSS07->GetN()-1);
 
+          TGraphAsymmErrors* graphPi0DSS07central             = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcDSS07InvSecPi0900GeV");
+          while (graphPi0DSS07central->GetX()[graphPi0DSS07central->GetN()-1] > 12. ) graphPi0DSS07central->RemovePoint(graphPi0DSS07central->GetN()-1);
+          for(Int_t iBinD = 0; iBinD<graphPi0DSS07central->GetN(); iBinD++){graphPi0DSS07central->SetPointEYhigh(iBinD,0); graphPi0DSS07central->SetPointEYlow(iBinD,0);}
+
           TGraphAsymmErrors* graphEtaAESSS                    = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcAESSSInvSecEta900GeV");
           while (graphEtaAESSS->GetX()[graphEtaAESSS->GetN()-1] > 5. ) graphEtaAESSS->RemovePoint(graphEtaAESSS->GetN()-1);
 
@@ -522,6 +526,10 @@
 
           TGraphAsymmErrors* graphNLOEtaToPi0                = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0900GeV_AESSS_DSS07");
           while (graphNLOEtaToPi0->GetX()[graphNLOEtaToPi0->GetN()-1] > 6. ) graphNLOEtaToPi0->RemovePoint(graphNLOEtaToPi0->GetN()-1);
+
+          TGraphAsymmErrors* graphNLOEtaToPi0central         = (TGraphAsymmErrors*) fileTheoryCompilation->Get("graphNLOCalcEtaOverPi0900GeV_AESSS_DSS07");
+          while (graphNLOEtaToPi0central->GetX()[graphNLOEtaToPi0central->GetN()-1] > 6. ) graphNLOEtaToPi0central->RemovePoint(graphNLOEtaToPi0central->GetN()-1);
+          for(Int_t iBinD = 0; iBinD<graphNLOEtaToPi0central->GetN(); iBinD++){graphNLOEtaToPi0central->SetPointEYhigh(iBinD,0); graphNLOEtaToPi0central->SetPointEYlow(iBinD,0);}
 
       // *******************************************************************************************************
       // ************************** Combination of different measurements **************************************
@@ -1815,11 +1823,13 @@
       TGraph* graphRatioPi0CombNLOMuOne                = (TGraph*)graphNLOCalcPi0MuOne->Clone();cout << __LINE__ << endl;
       TGraph* graphRatioPi0CombNLOMuTwo                = (TGraph*)graphNLOCalcPi0MuTwo->Clone();cout << __LINE__ << endl;
       TGraphAsymmErrors* graphRatioPi0DSS07            = (TGraphAsymmErrors*)graphPi0DSS07->Clone();cout << __LINE__ << endl;
+      TGraphAsymmErrors* graphRatioPi0DSS07central     = (TGraphAsymmErrors*)graphPi0DSS07central->Clone();cout << __LINE__ << endl;
 
       graphRatioPi0CombNLOMuHalf                       = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuHalf, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
       graphRatioPi0CombNLOMuOne                        = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuOne, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
       graphRatioPi0CombNLOMuTwo                        = CalculateGraphRatioToFit (graphRatioPi0CombNLOMuTwo, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
       graphRatioPi0DSS07                               = CalculateGraphErrRatioToFit (graphRatioPi0DSS07, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
+      graphRatioPi0DSS07central                        = CalculateGraphErrRatioToFit (graphRatioPi0DSS07central, fitTCMInvXSectionPi0); cout << __LINE__ << endl;
 
       TH1D* histoRatioPythia8ToFitEta                  = (TH1D*) histoPythia8InvXSectionEta->Clone();
       histoRatioPythia8ToFitEta                        = CalculateHistoRatioToFit (histoRatioPythia8ToFitEta, fitInvXSectionEta);
@@ -3022,6 +3032,11 @@
              graphRatioPi0DSS07->SetFillColor(colorNLO);
              graphRatioPi0DSS07->Draw("same,e4");
 
+             graphRatioPi0DSS07central->SetLineWidth(1);
+             graphRatioPi0DSS07central->SetLineColor(colorNLO+2);
+             graphRatioPi0DSS07central->SetLineStyle(2);
+             graphRatioPi0DSS07central->Draw("same");
+
              DrawGammaSetMarkerTGraphErr(graphRatioPythia8ToFit, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
              graphRatioPythia8ToFit->Draw("3,same");
              DrawGammaSetMarker(histoRatioPythia8ToFit, 24, 1.5, kRed+2 , kRed+2);
@@ -3259,6 +3274,11 @@
              graphPi0DSS07->SetFillColor(colorNLO);
              graphPi0DSS07->Draw("same,e3");
 
+             graphPi0DSS07central->SetLineWidth(1);
+             graphPi0DSS07central->SetLineColor(colorNLO+2);
+             graphPi0DSS07central->SetLineStyle(2);
+             graphPi0DSS07central->Draw("same");
+
              DrawGammaSetMarkerTGraphErr(graphPythia8InvXSection, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
              graphPythia8InvXSection->Draw("3,same");
              DrawGammaSetMarker(histoPythia8InvXSection, 24, 1.5, kRed+2 , kRed+2);
@@ -3336,6 +3356,11 @@
              graphRatioPi0DSS07->SetFillStyle(1001);
              graphRatioPi0DSS07->SetFillColor(colorNLO);
              graphRatioPi0DSS07->Draw("same,e4");
+
+             graphRatioPi0DSS07central->SetLineWidth(1);
+             graphRatioPi0DSS07central->SetLineColor(colorNLO+2);
+             graphRatioPi0DSS07central->SetLineStyle(2);
+             graphRatioPi0DSS07central->Draw("same");
 
              DrawGammaSetMarkerTGraphAsym(graphRatioCombCombFitStat_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
              graphRatioCombCombFitStat_WOXErr->SetLineWidth(widthLinesBoxes);
@@ -3538,6 +3563,10 @@
              TGraphAsymmErrors* graphEtaAESSSCopy                        = (TGraphAsymmErrors*)graphEtaAESSS->Clone("graphEtaAESSSCopy");
              graphEtaAESSSCopy                                           = ScaleGraph(graphEtaAESSSCopy,scaleFacEtaForCombPlot);
 
+             TGraphAsymmErrors* graphEtaAESSSCopycentral                 = (TGraphAsymmErrors*)graphEtaAESSS->Clone("graphEtaAESSSCopycentral");
+             for(Int_t iBinD = 0; iBinD<graphEtaAESSSCopycentral->GetN(); iBinD++){graphEtaAESSSCopycentral->SetPointEYhigh(iBinD,0); graphEtaAESSSCopycentral->SetPointEYlow(iBinD,0);}
+             graphEtaAESSSCopycentral                                    = ScaleGraph(graphEtaAESSSCopycentral,scaleFacEtaForCombPlot);
+
              // plotting NLO calcs pi0
              graphPi0DSS07->SetLineWidth(widthCommonFit);
              graphPi0DSS07->SetLineColor(colorNLO);
@@ -3546,9 +3575,18 @@
              graphPi0DSS07->SetFillColor(colorNLO);
              graphPi0DSS07->Draw("same,e3");
 
+             graphPi0DSS07central->SetLineWidth(1);
+             graphPi0DSS07central->SetLineColor(colorNLO+2);
+             graphPi0DSS07central->SetLineStyle(2);
+             graphPi0DSS07central->Draw("same");
+
              // plotting NLO calcs eta
              DrawGammaSetMarkerTGraphAsym(graphEtaAESSSCopy, 0, 0, colorCGC, colorCGC, widthLinesBoxes, kTRUE, colorCGC);
              graphEtaAESSSCopy->Draw("3,same");
+
+             graphEtaAESSSCopycentral->SetLineStyle(2);
+             DrawGammaSetMarkerTGraphAsym(graphEtaAESSSCopycentral, 0, 0, colorNLO, colorNLO, 1., kTRUE, colorNLO);
+             graphEtaAESSSCopycentral->Draw("same");
 
              // plotting Pythia 8.2 Monash
              DrawGammaSetMarkerTGraphErr(graphPythia8InvXSection, 0, 0, kRed+2 , kRed+2, widthLinesBoxes, kTRUE, kRed+2);
@@ -3840,6 +3878,11 @@
       graphNLOEtaToPi0->SetFillColor(colorNLO);
       graphNLOEtaToPi0->Draw("same,e4");
 
+      graphNLOEtaToPi0central->SetLineWidth(1);
+      graphNLOEtaToPi0central->SetLineColor(colorNLO+2);
+      graphNLOEtaToPi0central->SetLineStyle(2);
+      graphNLOEtaToPi0central->Draw("same");
+
       // plotting data
       DrawGammaSetMarkerTGraphAsym(graphCombEtaToPi0Stat_WOXErr, markerStyleComb, markerSizeComb, kBlack, kBlack, widthLinesBoxes, kFALSE);
       graphCombEtaToPi0Stat_WOXErr->SetLineWidth(widthLinesBoxes);
@@ -3892,6 +3935,7 @@
 
       // plotting NLO
       graphNLOEtaToPi0->Draw("same,e4");
+      graphNLOEtaToPi0central->Draw("same");
 
       // plotting data
       graphCombEtaToPi0Sys->Draw("2,same");
