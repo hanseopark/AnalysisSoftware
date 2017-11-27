@@ -365,15 +365,17 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
            hist_true_PiPlPiMi_SameMother[k]                       = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiMiGroups[k].Data());
         }
         for(Int_t k=1;k<7;k++){
-            fTruePiPlPiMiSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiPlPiMi_SameMother[k-1]->Clone(ObjectNameTruePiPlPiMiGroups[k-1]);
+            if(hist_true_PiPlPiMi_SameMother[k-1]) fTruePiPlPiMiSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiPlPiMi_SameMother[k-1]->Clone(ObjectNameTruePiPlPiMiGroups[k-1]);
         }
 
-        fTruePiPlPiMiSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiPlPiMiSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiPlPiMiSameMother);
-        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[2]);
-        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[3]);
-        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[4]);
-        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[5]);
-        fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[6]);
+        if(fTruePiPlPiMiSameMotherInvMassVSPt[1]){
+            fTruePiPlPiMiSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiPlPiMiSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiPlPiMiSameMother);
+            fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[2]);
+            fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[3]);
+            fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[4]);
+            fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[5]);
+            fTruePiPlPiMiSameMotherInvMassVSPt[0]->Add(fTruePiPlPiMiSameMotherInvMassVSPt[6]);
+        }
 
         // Get True backround histos in which PiMi and PiZero have same mother
         TString ObjectNameTruePiMiPiZeroSameMother           = "ESD_TruePiMiPiZeroSameMother_InvMassPt";
@@ -387,13 +389,15 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
            hist_true_PiMiPiZero_SameMother[k]                       = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiMiPiZeroGroups[k].Data());
         }
         for(Int_t k=1;k<5;k++){
-           fTruePiMiPiZeroSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiMiPiZero_SameMother[k-1]->Clone(ObjectNameTruePiMiPiZeroGroups[k-1]);
+           if(hist_true_PiMiPiZero_SameMother[k-1]) fTruePiMiPiZeroSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiMiPiZero_SameMother[k-1]->Clone(ObjectNameTruePiMiPiZeroGroups[k-1]);
         }
 
-        fTruePiMiPiZeroSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiMiPiZeroSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiMiPiZeroSameMother);
-        fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[2]);
-        fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[3]);
-        fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[4]);
+        if(fTruePiMiPiZeroSameMotherInvMassVSPt[1]){
+            fTruePiMiPiZeroSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiMiPiZeroSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiMiPiZeroSameMother);
+            fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[2]);
+            fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[3]);
+            fTruePiMiPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiMiPiZeroSameMotherInvMassVSPt[4]);
+        }
 
         // Get True backround histos in which PiPl and PiZero have same mother
         TString ObjectNameTruePiPlPiZeroSameMother           = "ESD_TruePiPlPiZeroSameMother_InvMassPt";
@@ -407,13 +411,15 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
            hist_true_PiPlPiZero_SameMother[k]                       = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTruePiPlPiZeroGroups[k].Data());
         }
         for(Int_t k=1;k<5;k++){
-           fTruePiPlPiZeroSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiPlPiZero_SameMother[k-1]->Clone(ObjectNameTruePiPlPiZeroGroups[k-1]);
+          if(hist_true_PiPlPiZero_SameMother[k-1]) fTruePiPlPiZeroSameMotherInvMassVSPt[k]                 = (TH2D*)hist_true_PiPlPiZero_SameMother[k-1]->Clone(ObjectNameTruePiPlPiZeroGroups[k-1]);
         }
 
-        fTruePiPlPiZeroSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiPlPiZeroSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiPlPiZeroSameMother);
-        fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[2]);
-        fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[3]);
-        fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[4]);
+        if( fTruePiPlPiZeroSameMotherInvMassVSPt[1]){
+            fTruePiPlPiZeroSameMotherInvMassVSPt[0]  =(TH2D*) fTruePiPlPiZeroSameMotherInvMassVSPt[1]->Clone(ObjectNameTruePiPlPiZeroSameMother);
+            fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[2]);
+            fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[3]);
+            fTruePiPlPiZeroSameMotherInvMassVSPt[0]->Add(fTruePiPlPiZeroSameMotherInvMassVSPt[4]);
+        }
 
         // Get True combinatorical histo and True Contamination Histo
         TString ObjectNameTruePiPlPiMiPiZeroPureCombinatorical = "ESD_TruePiPlPiMiPiZeroPureCombinatorical_InvMassPt";
@@ -424,14 +430,31 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
         // Get Projections in pT Bins
         for(Int_t k=0;k<7;k++){
-          ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiSameMotherInvMassVSPt[k],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k]);
+          if(fTruePiPlPiMiSameMotherInvMassVSPt[k]){
+              ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiSameMotherInvMassVSPt[k],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k]);
+          } else{
+              fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k] = NULL;
+          }
           if(k<5){
-             ProduceBckWithoutWeightingMinimal(fTruePiPlPiZeroSameMotherInvMassVSPt[k],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k]);
-             ProduceBckWithoutWeightingMinimal(fTruePiMiPiZeroSameMotherInvMassVSPt[k],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k]);
+              if(fTruePiPlPiZeroSameMotherInvMassVSPt[k] && fTruePiMiPiZeroSameMotherInvMassVSPt[k]){
+                  ProduceBckWithoutWeightingMinimal(fTruePiPlPiZeroSameMotherInvMassVSPt[k],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k]);
+                  ProduceBckWithoutWeightingMinimal(fTruePiMiPiZeroSameMotherInvMassVSPt[k],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k]);
+              } else{
+                  fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k] = NULL;
+                  fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k] = NULL;
+              }
           }
         }
-        ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt,fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin);
-        ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiPiZeroContamination_InvMassPt,fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin);
+        if(fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt){
+            ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiPiZeroPureCombinatorical_InvMassPt,fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin);
+        } else{
+            fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin = NULL;
+        }
+        if(fTruePiPlPiMiPiZeroContamination_InvMassPt){
+            ProduceBckWithoutWeightingMinimal(fTruePiPlPiMiPiZeroContamination_InvMassPt,fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin);
+        } else{
+            fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin = NULL;
+        }
     }
 
     fMesonMassExpect = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
@@ -1858,27 +1881,34 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         // Integrate TrueHistos
         if(fIsMC){
             for(Int_t k = 0; k< 7;k++){
-              IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
-              fYieldsMappingTruePiPlPiMiSameMother[k][iPt]           = fYields;
-              fYieldsMappingTruePiPlPiMiSameMotherError[k][iPt]      = fYieldsError;
+                if(fTruePiPlPiMiSameMotherInvMassVSPt[k]){
+                    IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
+                    fYieldsMappingTruePiPlPiMiSameMother[k][iPt]           = fYields;
+                    fYieldsMappingTruePiPlPiMiSameMotherError[k][iPt]      = fYieldsError;
+                }
               //cout << "------------------------------------> fYieldsMappingTruePiPlPiMiSameMother k=" << k << " pT=" << iPt << "  VALUE=" << fYieldsMappingTruePiPlPiMiSameMother[k][iPt] << endl;
               if(k<5){
-                IntegrateHistoInvMass(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
-                fYieldsMappingTruePiMiPiZeroSameMother[k][iPt]       = fYields;
-                fYieldsMappingTruePiMiPiZeroSameMotherError[k][iPt]  = fYieldsError;
-                IntegrateHistoInvMass(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
-                fYieldsMappingTruePiPlPiZeroSameMother[k][iPt] = fYields;
-                fYieldsMappingTruePiPlPiZeroSameMotherError[k][iPt]  = fYieldsError;
+                  if(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k] && fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k]){
+                      IntegrateHistoInvMass(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
+                      fYieldsMappingTruePiMiPiZeroSameMother[k][iPt]       = fYields;
+                      fYieldsMappingTruePiMiPiZeroSameMotherError[k][iPt]  = fYieldsError;
+                      IntegrateHistoInvMass(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][iPt],fMesonCurIntRange[0]);
+                      fYieldsMappingTruePiPlPiZeroSameMother[k][iPt] = fYields;
+                      fYieldsMappingTruePiPlPiZeroSameMotherError[k][iPt]  = fYieldsError;
+                  }
               }
             }
 
-            IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[iPt],fMesonCurIntRange[0]);
-            fYieldsMappingTruePiPlPiMiPiZeroCombinatorical[iPt]      = fYields;
-            fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError[iPt] = fYieldsError;
-
-            IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[iPt],fMesonCurIntRange[0]);
-            fYieldsMappingTruePiPlPiMiPiZeroContamination[iPt]       = fYields;
-            fYieldsMappingTruePiPlPiMiPiZeroContaminationError[iPt]  = fYieldsError;
+            if(fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin){
+                IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[iPt],fMesonCurIntRange[0]);
+                fYieldsMappingTruePiPlPiMiPiZeroCombinatorical[iPt]      = fYields;
+                fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError[iPt] = fYieldsError;
+            }
+            if(fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin){
+                IntegrateHistoInvMass(fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[iPt],fMesonCurIntRange[0]);
+                fYieldsMappingTruePiPlPiMiPiZeroContamination[iPt]       = fYields;
+                fYieldsMappingTruePiPlPiMiPiZeroContaminationError[iPt]  = fYieldsError;
+            }
         }
     }
 
@@ -2248,28 +2278,29 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
     if(fIsMC){
       // Example bin for debugging changed to fStartPTBin
       TString HistosLegendsTitlesPiPlPiMi[7] = { "True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-} same mother from #eta","True #pi^{+}#pi^{-} same mother from #omega","True #pi^{+}#pi^{-} same mother from #rho","True #pi^{+}#pi^{-} same mother from #eta '","True #pi^{+}#pi^{-} same mother from K^{0}_{s}","True #pi^{+}#pi^{-} same mother from K^{0}_{l}"};
-      PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin,1,7,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+      if(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0]) PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin,1,7,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                                       fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiMi[0],HistosLegendsTitlesPiPlPiMi,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMi_Contributions",kFALSE,6.);
 
       TString HistosLegendsTitlesPiPlPiZero[5] = { "True #pi^{+}#pi^{0} same mother","True #pi^{+}#pi^{0} same mother from #eta","True #pi^{+}#pi^{0} same mother from #omega","True #pi^{+}#pi^{0} same mother from #rho","True #pi^{+}#pi^{0} same mother from K^{0}_{l}"};
-      PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+      if(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0]) PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                                       fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiZero[0],HistosLegendsTitlesPiPlPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiZero_Contributions",kFALSE,6.);
       TString HistosLegendsTitlesPiMiPiZero[5] = { "True #pi^{-}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother from #eta","True #pi^{-}#pi^{0} same mother from #omega","True #pi^{-}#pi^{0} same mother from #rho","True #pi^{-}#pi^{0} same mother from K^{0}_{l}"};
-      PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+      if(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0]) PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
                                       fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiMiPiZero[0],HistosLegendsTitlesPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiMiPiZero_Contributions",kFALSE,6.);
 
       // pi+pi-pi0 contributions
-      TH1D** tempPlotArray[6] = {NULL,NULL,NULL,NULL,NULL,NULL}; // temporary array serving as a plotting container
-      tempPlotArray[0] = fHistoMappingTrueMesonInvMassPtBins;
-      tempPlotArray[1] = fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0];
-      tempPlotArray[2] = fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0];
-      tempPlotArray[3] = fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0];
-      tempPlotArray[4] = fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin;
-      tempPlotArray[5] = fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin;
-      TString HistosLegendsTitlesPiPlPiMiPiZero[6] = {"True #pi^{+}#pi^{-}#pi^{0} from #eta or #omega","True #pi^{+}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother","True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-}#pi^{0} pure combinatorial","#pi^{+}#pi^{-}#pi^{0} contamination"};
-      PlotExampleInvMassSingleHistAndArray(fHistoMappingGGInvMassPtBin[fStartPtBin],tempPlotArray,0,6,fMesonMassRange[0],fMesonMassRange[1],fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,"Signal+Background",HistosLegendsTitlesPiPlPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMiPiZero_Contributions",kFALSE,2.);
-
+      if(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0]){ // if this histo is not there, light output was probably on and there is no point in doing these plots
+          TH1D** tempPlotArray[6] = {NULL,NULL,NULL,NULL,NULL,NULL}; // temporary array serving as a plotting container
+          tempPlotArray[0] = fHistoMappingTrueMesonInvMassPtBins;
+          tempPlotArray[1] = fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0];
+          tempPlotArray[2] = fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0];
+          tempPlotArray[3] = fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0];
+          tempPlotArray[4] = fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin;
+          tempPlotArray[5] = fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin;
+          TString HistosLegendsTitlesPiPlPiMiPiZero[6] = {"True #pi^{+}#pi^{-}#pi^{0} from #eta or #omega","True #pi^{+}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother","True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-}#pi^{0} pure combinatorial","#pi^{+}#pi^{-}#pi^{0} contamination"};
+          PlotExampleInvMassSingleHistAndArray(fHistoMappingGGInvMassPtBin[fStartPtBin],tempPlotArray,0,6,fMesonMassRange[0],fMesonMassRange[1],fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
+                  fThesis, fCollisionSystem, fBinsPt, fDecayChannel,"Signal+Background",HistosLegendsTitlesPiPlPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMiPiZero_Contributions",kFALSE,2.);
+      }
     }
     if(((TString)fMesonCutSelection(1,1)).CompareTo("a")!=0){ // do these plots only if LikeSign method was used
         // Background groups scaled with same factor in example bin
@@ -3473,20 +3504,37 @@ void FillPtHistos()
           fHistoYieldsMappingTrueMeson_SubPiZero->SetBinError(iPt,fMesonTrueYieldsError_SubPiZero[0][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
           fHistoYieldsMappingTrueMeson_FixedPzPiZero->SetBinError(iPt,fMesonTrueYieldsError_FixedPzPiZero[0][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
           // Note: no need to store combinatorical, same mother yields etc. for subtracted and fixed.
-          fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiPiZeroCombinatorical[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-          fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->SetBinError(iPt,fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-          fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiPiZeroContamination[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-          fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->SetBinError(iPt,fYieldsMappingTruePiPlPiMiPiZeroContaminationError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          if(fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin){
+              fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiPiZeroCombinatorical[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+              fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->SetBinError(iPt,fYieldsMappingTruePiPlPiMiPiZeroCombinatoricalError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          } else {
+              fHistoYieldsMappingTruePiPlPiMiPiZeroCombinatorical = NULL;
+          }
+          if(fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin){
+              fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiPiZeroContamination[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+              fHistoYieldsMappingTruePiPlPiMiPiZeroContamination->SetBinError(iPt,fYieldsMappingTruePiPlPiMiPiZeroContaminationError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+          } else{
+              fHistoYieldsMappingTruePiPlPiMiPiZeroContamination = NULL;
+          }
 
           for(Int_t k = 0; k < 7; k++){
-            fHistoYieldsMappingTruePiPlPiMiSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            fHistoYieldsMappingTruePiPlPiMiSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiPlPiMiSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            if(k<5){
-              fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiPlPiZeroSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-              fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiPlPiZeroSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-              fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiMiPiZeroSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-              fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiMiPiZeroSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            }
+              if(fTruePiPlPiMiSameMotherInvMassVSPt[k]){
+                  fHistoYieldsMappingTruePiPlPiMiSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiPlPiMiSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                  fHistoYieldsMappingTruePiPlPiMiSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiPlPiMiSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+              } else{
+                  fHistoYieldsMappingTruePiPlPiMiSameMother[k] = NULL;
+              }
+              if(k<5){
+                  if(fTruePiPlPiZeroSameMotherInvMassVSPt[k] && fTruePiMiPiZeroSameMotherInvMassVSPt[k]){
+                      fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiPlPiZeroSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                      fHistoYieldsMappingTruePiPlPiZeroSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiPlPiZeroSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                      fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->SetBinContent(iPt,fYieldsMappingTruePiMiPiZeroSameMother[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                      fHistoYieldsMappingTruePiMiPiZeroSameMother[k]->SetBinError(iPt,fYieldsMappingTruePiMiPiZeroSameMotherError[k][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
+                  } else{
+                      fHistoYieldsMappingTruePiPlPiZeroSameMother[k] = NULL;
+                      fHistoYieldsMappingTruePiMiPiZeroSameMother[k] = NULL;
+                  }
+              }
           }
         }
     }
@@ -4198,10 +4246,10 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
                                               "HistoMappingTruePiPlPiZeroSameMother_FromK0l"};
       for(Int_t k=0;k<7;k++){
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
-          fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiPlPiMi[k].Data(),ii));
+          if(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k]) fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiPlPiMi[k].Data(),ii));
           if(k<5){
-            fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiMiPiZero[k].Data(),ii));
-            fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiPlPiZero[k].Data(),ii));
+            if(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k]) fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiMiPiZero[k].Data(),ii));
+            if(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k]) fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[k][ii]->Write(Form("%s_in_Pt_Bin%02d",nameMappingTruePiPlPiZero[k].Data(),ii));
           }
         }
       }
@@ -4268,8 +4316,8 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3)
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             fHistoMappingTrueMesonInvMassPtBins[ii]->Write();
             fHistoMappingTrueMesonInvMassPtReweightedBins[ii]->Write();
-            fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[ii]->Write(Form("HistoMappingTruePiPlPiMiPiZeroCombinatorical_in_Pt_Bin%02d",ii));
-            fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[ii]->Write(Form("HistoMappingTruePiPlPiMiPiZeroContamination_in_Pt_Bin%02d",ii));
+            if(fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin) fHistoMappingTruePiPlPiMiPiZeroCombinatoricalPtBin[ii]->Write(Form("HistoMappingTruePiPlPiMiPiZeroCombinatorical_in_Pt_Bin%02d",ii));
+            if(fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin) fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin[ii]->Write(Form("HistoMappingTruePiPlPiMiPiZeroContamination_in_Pt_Bin%02d",ii));
             if (fFitTrueSignalInvMassPtBin[ii]!=0x00) fFitTrueSignalInvMassPtBin[ii]->Write();
             if (fFitTrueSignalInvMassPtReweightedBin[ii]!=0x00) fFitTrueSignalInvMassPtReweightedBin[ii]->Write();
         }
