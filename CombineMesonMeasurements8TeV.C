@@ -7388,8 +7388,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
     TLegend* legendRatiosChPion  = GetAndSetLegend2(0.15, 0.75, 0.4, 0.95, 0.85*textSizeLabelsPixel);
     legendRatiosChPion->SetMargin(0.25);
     legendRatiosChPion->AddEntry((TObject*)0,"#pi^{+/-} ALICE - bin-by-bin ratio","");
-    legendRatiosChPion->AddEntry((TObject*)0, "N/A","p");
-    legendRatiosChPion->AddEntry((TObject*)0, "N/A","p");
+    legendRatiosChPion->AddEntry((TObject*)0, "N/A","");
+    legendRatiosChPion->AddEntry((TObject*)0, "N/A","");
 //    legendRatiosChPion->AddEntry(graphRatioBinByBin8000_2760ChPion, "8TeV/2.76TeV","p");
 //    legendRatiosChPion->AddEntry(graphRatioBinByBin8000_7000ChPion,"8TeV/7TeV","p");
     legendRatiosChPion->AddEntry(graphRatioBinByBin7000_2760ChPion, "7TeV/2.76TeV","p");
@@ -8229,8 +8229,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
       for(Int_t iBin=0; iBin<nBins; iBin++){
         TH1D* histoPHOSSignalPlusBGPi0                        = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassSigPlusBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
-        TH1D* histoPHOSCombBGPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassCombBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
-        TH1D* histoPHOSResiBGPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassResiBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        TH1D* histoPHOSCombBGPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
+        //TH1D* histoPHOSResiBGPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassResiBG_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
         TH1D* histoPHOSSignalPi0                              = (TH1D*)directoryPHOSPi0L->Get(Form("InvMassSig_PtBin_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
         TF1* fitPHOSlow                                       = (TF1*)directoryPHOSPi0L->Get(Form("InvMassFinalFit_%.1fto%.1f",binLow[iBin],binHigh[iBin]));
 
@@ -8247,9 +8247,9 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         DrawGammaSetMarker(histoPHOSCombBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
         histoPHOSCombBGPi0->SetLineWidth(markerSizeInvMassMBG);
         histoPHOSCombBGPi0->Draw("same");
-        DrawGammaSetMarker(histoPHOSResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
-        histoPHOSResiBGPi0->SetLineWidth(markerSizeInvMassMBG);
-        histoPHOSResiBGPi0->Draw("same");
+//        DrawGammaSetMarker(histoPHOSResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+//        histoPHOSResiBGPi0->SetLineWidth(markerSizeInvMassMBG);
+//        histoPHOSResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
         histoPHOSSignalPi0->SetStats(kFALSE);
@@ -8294,8 +8294,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         TLegend* legendInvMassPHOSl  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
         legendInvMassPHOSl->SetMargin(0.25);
         legendInvMassPHOSl->AddEntry(histoPHOSSignalPlusBGPi0,"Raw real events","l");
-        legendInvMassPHOSl->AddEntry(histoPHOSCombBGPi0,"Mixed event BG","p");
-        legendInvMassPHOSl->AddEntry(histoPHOSResiBGPi0,"Remain. BG","p");
+        legendInvMassPHOSl->AddEntry(histoPHOSCombBGPi0,"Mixed event +","p");
+        legendInvMassPHOSl->AddEntry((TObject*)0,"remain. BG","");
         legendInvMassPHOSl->AddEntry(histoPHOSSignalPi0,"BG subtracted","p");
         legendInvMassPHOSl->AddEntry(fitPHOSlow, "Fit","l");
         legendInvMassPHOSl->Draw();
@@ -8319,8 +8319,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
 
       for(Int_t iBin=0; iBin<nBinsTr; iBin++){
         TH1D* histoPHOSHighSignalPlusBGPi0                      = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassSigPlusBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
-        TH1D* histoPHOSHighCombBGPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassCombBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
-        TH1D* histoPHOSHighResiBGPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassResiBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        TH1D* histoPHOSHighCombBGPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
+        //TH1D* histoPHOSHighResiBGPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassResiBG_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
         TH1D* histoPHOSHighSignalPi0                            = (TH1D*)directoryPHOSPi0H->Get(Form("InvMassSig_PtBin_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
         TF1* fitPHOShigh                                        = (TF1*)directoryPHOSPi0H->Get(Form("InvMassFinalFit_%.1fto%.1f",binTrLow[iBin],binTrHigh[iBin]));
 
@@ -8336,9 +8336,9 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         DrawGammaSetMarker(histoPHOSHighCombBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG1, markerColorInvMassMBG1);
         histoPHOSHighCombBGPi0->SetLineWidth(markerSizeInvMassMBG);
         histoPHOSHighCombBGPi0->Draw("same");
-        DrawGammaSetMarker(histoPHOSHighResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
-        histoPHOSHighResiBGPi0->SetLineWidth(markerSizeInvMassMBG);
-        histoPHOSHighResiBGPi0->Draw("same");
+//        DrawGammaSetMarker(histoPHOSHighResiBGPi0, markerStyleInvMassMBG, markerSizeInvMassMBG, markerColorInvMassMBG2, markerColorInvMassMBG2);
+//        histoPHOSHighResiBGPi0->SetLineWidth(markerSizeInvMassMBG);
+//        histoPHOSHighResiBGPi0->Draw("same");
 
         DrawGammaSetMarker(histoPHOSHighSignalPi0, markerStyleInvMassSG, markerSizeInvMassSG, markerColorInvMassSG, markerColorInvMassSG);
         histoPHOSHighSignalPi0->SetStats(kFALSE);
@@ -8383,8 +8383,8 @@ graphRatioBinByBin8000_2760Eta->RemovePoint(0);
         TLegend* legendInvMassPHOSh  = GetAndSetLegend2(0.67, 0.88-5*0.8*0.75*textsizeLabelsPP, 0.9, 0.88, 0.85*textSizeLabelsPixel);
         legendInvMassPHOSh->SetMargin(0.25);
         legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPlusBGPi0,"Raw real events","l");
-        legendInvMassPHOSh->AddEntry(histoPHOSHighCombBGPi0,"Mixed event BG","p");
-        legendInvMassPHOSh->AddEntry(histoPHOSHighResiBGPi0,"Remain. BG","p");
+        legendInvMassPHOSh->AddEntry(histoPHOSHighCombBGPi0,"Mixed event +","p");
+        legendInvMassPHOSh->AddEntry((TObject*)0,"remain. BG","");
         legendInvMassPHOSh->AddEntry(histoPHOSHighSignalPi0,"BG subtracted","p");
         legendInvMassPHOSh->AddEntry(fitPHOShigh, "Fit","l");
         legendInvMassPHOSh->Draw();
