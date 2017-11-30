@@ -4371,15 +4371,27 @@
 
     void PlotErrorBarAtUpperEdgeOfTGraphAsymErr(TGraphAsymmErrors* graph,
                                                 Double_t widthTick = 0.05,
-                                                Bool_t isLog = kFALSE){
+                                                Bool_t isLog = kFALSE,
+                                                TGraphAsymmErrors* graphpTbinning = NULL){
 
         TGraphAsymmErrors* dummy = (TGraphAsymmErrors*)graph->Clone("dummyPlotErrorsAtEdge");
-        for (Int_t i=0; i < dummy->GetN();i++){
-            Double_t widthTickUsedUp = widthTick;
-            Double_t widthTickUsedDown = widthTick;
-            DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEYhigh()[i], dummy->GetY()[i]+dummy->GetEYhigh()[i],
-                        dummy->GetLineWidth(), dummy->GetLineColor(),dummy->GetLineStyle());
+        if(!graphpTbinning){
+            for (Int_t i=0; i < dummy->GetN();i++){
+                Double_t widthTickUsedUp = widthTick;
+                Double_t widthTickUsedDown = widthTick;
+                DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEYhigh()[i], dummy->GetY()[i]+dummy->GetEYhigh()[i],
+                            dummy->GetLineWidth(), dummy->GetLineColor(),dummy->GetLineStyle());
 
+            }
+        } else {
+cout << "PLOTTING THE UPPER LIMIT BARS WIDER NOW!!!!!!!!!!!!!!!!!!!!!" << endl;
+            for (Int_t i=0; i < dummy->GetN();i++){
+                Double_t widthTickUsedUp = graphpTbinning->GetEXhigh()[i];
+                Double_t widthTickUsedDown = graphpTbinning->GetEXlow()[i];
+                DrawGammaLines(dummy->GetX()[i]-widthTickUsedUp, dummy->GetX()[i]+widthTickUsedDown, dummy->GetY()[i]+dummy->GetEYhigh()[i], dummy->GetY()[i]+dummy->GetEYhigh()[i],
+                            dummy->GetLineWidth(), dummy->GetLineColor(),dummy->GetLineStyle());
+
+            }
         }
     }
 

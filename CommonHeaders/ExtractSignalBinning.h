@@ -4126,10 +4126,15 @@
                     binning[i] = fBinsEta2760GeVPtTrig11a[i];
                 }
             } else if (energy.CompareTo("5TeV") == 0){
-                if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
+                if ( mode == 2 || mode == 13 || mode == 12  ){
                     maxNBins = 22;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta5TeVPCMEMCPt[i];
+                    }
+                } else if ( mode == 4 ){
+                    maxNBins = 22;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta5TeVEMCPt[i];
                     }
                 } else if ( mode == 0 ){
                     maxNBins = 13;
