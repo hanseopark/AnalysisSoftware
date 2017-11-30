@@ -3748,34 +3748,44 @@
                 } else return kBlue+1;
             } else if (!generator.CompareTo("LHC16g1a")){
                 if (!centrality.CompareTo("0-10%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("10-20%")){
                     return kRed-7;
-                } else if (!centrality.CompareTo("20-50%")){
+                } else if (!centrality.CompareTo("10-20%")){
                     return kGreen+1;
-                } else if (!centrality.CompareTo("50-90%")){
+                } else if (!centrality.CompareTo("20-50%")){
                     return kOrange+1;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kBlue-4;
                 } else return kMagenta+1;
             } else if (!generator.CompareTo("LHC16g1b")){
                 if (!centrality.CompareTo("0-10%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kRed-7;
-                } else if (!centrality.CompareTo("20-50%")){
                     return kGreen+1;
-                } else if (!centrality.CompareTo("50-90%")){
+                } else if (!centrality.CompareTo("10-20%")){
                     return kOrange+1;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return kBlue-4;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kRed-7;
                 } else return kRed+2;
             } else if (!generator.CompareTo("LHC16g1c")){
                 if (!centrality.CompareTo("0-10%")){
-                    return kBlue-4;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return kRed-7;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return kGreen+1;
-                } else if (!centrality.CompareTo("50-90%")){
                     return kOrange+1;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return kBlue-4;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return kRed-7;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kGreen+1;
                 } else return kCyan-3;
+            } else if (!generator.CompareTo("LHC16h4")){
+                if (!centrality.CompareTo("0-10%")){
+                    return kRed-7;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return kBlue-4;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return kOrange+1;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return kGreen+1;
+                } else return kRed+2;
             }
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
@@ -4006,33 +4016,33 @@
                 } else return 28;
             } else if (!generator.CompareTo("LHC16g1a")){
                 if (!centrality.CompareTo("0-10%")){
-                    return 25;
-                } else if (!centrality.CompareTo("10-20%")){
                     return 24;
-                } else if (!centrality.CompareTo("20-50%")){
+                } else if (!centrality.CompareTo("10-20%")){
                     return 30;
-                } else if (!centrality.CompareTo("50-90%")){
+                } else if (!centrality.CompareTo("20-50%")){
                     return 27;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return 25;
                 } else return 2;
             } else if (!generator.CompareTo("LHC16g1b")){
                 if (!centrality.CompareTo("0-10%")){
-                    return 25;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 24;
-                } else if (!centrality.CompareTo("20-50%")){
                     return 30;
-                } else if (!centrality.CompareTo("50-90%")){
+                } else if (!centrality.CompareTo("10-20%")){
                     return 27;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 25;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return 24;
                 } else return 3;
             } else if (!generator.CompareTo("LHC16g1c")){
                 if (!centrality.CompareTo("0-10%")){
-                    return 25;
-                } else if (!centrality.CompareTo("10-20%")){
-                    return 24;
-                } else if (!centrality.CompareTo("20-50%")){
-                    return 30;
-                } else if (!centrality.CompareTo("50-90%")){
                     return 27;
+                } else if (!centrality.CompareTo("10-20%")){
+                    return 25;
+                } else if (!centrality.CompareTo("20-50%")){
+                    return 24;
+                } else if (!centrality.CompareTo("50-90%")){
+                    return 30;
                 } else return 5;
             }
         }
