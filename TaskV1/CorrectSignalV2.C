@@ -2812,7 +2812,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
 
             PutProcessLabelAndEnergyOnPlot(0.12, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
-
+	    legendTrueEff->Draw("same");
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/%s_%s_TrueEfficiency_%s.%s",outputDir.Data(),nameMeson.Data(),prefix2.Data(),fCutSelection.Data(),suffix.Data()));
         delete legendTrueEff;
