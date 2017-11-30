@@ -1294,16 +1294,16 @@ void EventQA(
         //temp->Scale(1./nEvents[iVec]);
         SetXRange(temp,1,maxB);
     }
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.05, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                 vecNGoodTracks,"","Number of Good Tracks","#frac{1}{N} #frac{dN}{dNTracks}",1,1.1,
                                 labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+                                0.92,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/NGoodTracks.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
 
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.05, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
                                     vecNGoodTracks,"","Number of Good Tracks","#frac{1}{N} #frac{dN}{dNTracks}",1,1.1,
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+                                    0.92,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_NGoodTracks.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // VZERO multiplicity
