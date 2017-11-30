@@ -6,6 +6,8 @@
 #    $DIR/GammaConv/$SYSTEM/$PERIOD/$run/GammaConvV1_<trainconfig>.root
 #    $DIR/PhotonQA/$SYSTEM/$PERIOD/$run/AnalysisResults.root
 # 
+#                or     .../<runNumber>/Stage*/*/<file>
+#
 # In the basic settings, one has to specify the base directory "DIR"
 # and the current information on the datasets
 #
@@ -14,6 +16,8 @@
 #   ChangeStructure()
 #   MainRoutine()
 #
+# Have to check by hand the merging success; if stage_i output exists it doesn't mean that stage_i merging was completely successful
+# Merged file: include pass/runlist in name
 #
 # TO DO:
 # dry-run option
@@ -58,7 +62,8 @@ MainRoutine(){
     # $6:  "pass1" / "pass1_pidfix" / "pass3_lowIR_pidfix" / ""
 
     # merge all runs in the end?
-    declare -i doMerge=1   # 1 for yes, 0 for no
+    declare -i doMerge=1      # merge runs: 1 for yes, 0 for no
+    declare -i doMergeRun=1   # merge sub-run files: 1 for yes, 0 for no
 
     DIR=/home/meike/analysis/data/GridOutput
     TASK=$1
@@ -115,7 +120,7 @@ MainRoutine(){
 
     # settings according to which task was run and which trainconfigs were used
     if [ "$TASK" == "GammaConv" ];then
-	FILENAMES=("GammaConvV1_246.root");   # or ("GammaConvV1_245.root" "GammaConvV1_246.root")
+	FILENAMES=("GammaConvV1_246.root" "GammaConvV1_247.root");   #  ("GammaConvV1_246.root") or ("GammaConvV1_245.root" "GammaConvV1_246.root")
 	declare -i doChStr=1                  # 1 for yes, 0 for no
     elif [ "$TASK" == "PhotonQA" ];then
 	FILENAMES=("AnalysisResults.root");
@@ -142,6 +147,7 @@ MainRoutine(){
     echo "AODNO = $AODNO"
     echo "FILENAMES = ${FILENAMES[@]}"
     echo "doMerge = $doMerge"
+    echo "doMergeRun = $doMergeRun"
     echo "Runs: ${RUN[@]}"
     echo "END OF SETTINGS"
 
@@ -231,17 +237,19 @@ MainRoutine(){
 		done
 		echo "downloaded $l unmerged file(s) for run $run"
 		if [ "$l" -gt 1 ]; then
-		    echo "merge $l files for run $run ..."
-		    MergeList "UnmergedFilesToMerge.txt" $BASEDIR/$SYSTEM/$PERIOD/$run $fileName 
-		    if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName ]; then  # only if ile exists
-			echo -n " $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName" >> FilesToMerge.txt
-			k=k+1
-			echo $run >> MergedRuns.txt
-			if [ "$doChStr" -eq 1 ]; then
-			    ChangeStructure "$BASEDIR/$SYSTEM/$PERIOD/$run/$fileName"
+		    if [ "$doMergeRun" -eq 1 ]; then
+			echo "merge $l files for run $run ..."
+			MergeList "UnmergedFilesToMerge.txt" $BASEDIR/$SYSTEM/$PERIOD/$run $fileName
+			if [ -f $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName ]; then  # only if ile exists
+			    echo -n " $BASEDIR/$SYSTEM/$PERIOD/$run/$fileName" >> FilesToMerge.txt
+			    k=k+1
+			    echo $run >> MergedRuns.txt
+			    if [ "$doChStr" -eq 1 ]; then
+				ChangeStructure "$BASEDIR/$SYSTEM/$PERIOD/$run/$fileName"
+			    fi
+			else
+			    echo "ERROR: merging failed"
 			fi
-		    else
-			echo "ERROR: merging failed"
 		    fi
 		elif [ "$l" -eq 1 ]; then
 		    echo "Only one file, nothing to merge"
@@ -261,13 +269,12 @@ MainRoutine(){
 		    echo "nothing to merge"
 		fi
 	    fi
-	    
 	done # end runs loop
 	
 	
 	echo "**********************************************************************************************************"
 	echo "**********************************************************************************************************"
-	echo "downloaded $k of ${#RUN[@]} files $FILENAME"
+	echo "have $k of ${#RUN[@]} run files $FILENAME"
 	
 	if [ "$doMerge" -eq 1 ]; then
 	    if [ "$k" -gt 1 ]; then
@@ -307,20 +314,22 @@ MainRoutine(){
 }
 
 
+#MainRoutine "PhotonQA" "ESD" "LHC15o" "337_20171030-1322" "data" "pass1"
+#MainRoutine "PhotonQA" "ESD" "LHC15o" "338_20171030-1331" "data" "pass1_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC15o" "339_20171030-1322" "data" "pass3_lowIR_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1" "646_20171030-1323" "sim" "pass1"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1" "647_20171030-1324" "sim" "pass1_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1" "648_20171030-1324" "sim" "pass3_lowIR_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1a" "649_20171030-1326" "sim" "pass1"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1a" "650_20171030-1326" "sim" "pass1_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1a" "651_20171031-0950" "sim" "pass3_lowIR_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1b" "652_20171030-1328" "sim" "pass1"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1b" "653_20171030-1329" "sim" "pass1_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1b" "654_20171030-1605" "sim" "pass3_lowIR_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1c" "655_20171030-1329" "sim" "pass1"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1c" "656_20171030-1329" "sim" "pass1_pidfix"
+#MainRoutine "PhotonQA" "ESD" "LHC16g1c" "657_20171030-1532" "sim" "pass3_lowIR_pidfix"
 
-MainRoutine "PhotonQA" "ESD" "LHC15o" "337_20171030-1322" "data" "pass1"
-MainRoutine "PhotonQA" "ESD" "LHC15o" "338_20171030-1331" "data" "pass1_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC15o" "339_20171030-1322" "data" "pass3_lowIR_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1" "646_20171030-1323" "sim" "pass1"
-MainRoutine "PhotonQA" "ESD" "LHC16g1" "647_20171030-1324" "sim" "pass1_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1" "648_20171030-1324" "sim" "pass3_lowIR_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1a" "649_20171030-1326" "sim" "pass1"
-MainRoutine "PhotonQA" "ESD" "LHC16g1a" "650_20171030-1326" "sim" "pass1_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1a" "651_20171031-0950" "sim" "pass3_lowIR_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1b" "652_20171030-1328" "sim" "pass1"
-MainRoutine "PhotonQA" "ESD" "LHC16g1b" "653_20171030-1329" "sim" "pass1_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1b" "654_20171030-1605" "sim" "pass3_lowIR_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1c" "655_20171030-1329" "sim" "pass1"
-MainRoutine "PhotonQA" "ESD" "LHC16g1c" "656_20171030-1329" "sim" "pass1_pidfix" 
-MainRoutine "PhotonQA" "ESD" "LHC16g1c" "657_20171030-1532" "sim" "pass3_lowIR_pidfix" 
-
+#MainRoutine "GammaConv" "ESD" "LHC16h4" "666_20171106-1018" "sim" "pass1" # train configs 246 & 247
+MainRoutine "GammaConv" "ESD" "LHC16h4" "669_20171106-1019" "sim" "pass1_pidfix"
+MainRoutine "GammaConv" "ESD" "LHC16h4" "668_20171106-1019" "sim" "pass3_lowIR_pidfix"
