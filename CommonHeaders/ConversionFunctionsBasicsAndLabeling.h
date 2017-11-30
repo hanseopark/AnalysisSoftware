@@ -735,6 +735,8 @@
             return Form("pp #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 2.76 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) {
             return  Form("PbPb #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 2.76 TeV ",textProcessOpt.Data());
+        } else if( fEnergyFlagOpt.CompareTo("PbPb_5.02TeV") == 0) {
+            return  Form("PbPb #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5.02 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) {
             return  Form("XeXe #rightarrow %s (#rightarrow #gamma#gamma #rightarrow e^{+}e^{-}e^{+}e^{-}) + X @ 5.44 TeV ",textProcessOpt.Data());
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0 ) {
@@ -849,7 +851,7 @@
             return  "pp900GeV";
         } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) ) {
             return  "PbPb2760GeV";
-        } else if( (fEnergyFlagOpt.CompareTo("PbPb_5TeV") == 0) ) {
+        } else if( (fEnergyFlagOpt.CompareTo("PbPb_5.02TeV") == 0) ) {
             return  "PbPb5TeV";
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return  "XeXe5440GeV";
@@ -881,7 +883,7 @@
             return  "900GeV";
         } else if( (fEnergyFlagOpt.CompareTo("PbPb_2.76TeV") == 0) ) {
             return  "2760GeV";
-        } else if( (fEnergyFlagOpt.CompareTo("PbPb_5TeV") == 0) ) {
+        } else if( (fEnergyFlagOpt.CompareTo("PbPb_5.02TeV") == 0) ) {
             return  "5TeV";
         } else if( (fEnergyFlagOpt.CompareTo("XeXe_5.44TeV") == 0) ) {
             return  "5440GeV";
