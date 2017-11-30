@@ -4384,7 +4384,6 @@
 
             }
         } else {
-cout << "PLOTTING THE UPPER LIMIT BARS WIDER NOW!!!!!!!!!!!!!!!!!!!!!" << endl;
             for (Int_t i=0; i < dummy->GetN();i++){
                 Double_t widthTickUsedUp = graphpTbinning->GetEXhigh()[i];
                 Double_t widthTickUsedDown = graphpTbinning->GetEXlow()[i];
