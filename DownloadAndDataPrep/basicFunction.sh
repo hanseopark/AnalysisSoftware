@@ -277,7 +277,7 @@ function MergeAccordingToSpecificRunlist()
                     echo "I couldn't find the file for bin $run, $nameCurrFile";
                 fi
             done
-            hadd -f $2/$4-$5_$number.root $TOMERGE
+            hadd -n 10 -f $2/$4-$5_$number.root $TOMERGE
         fi
 
     done;
