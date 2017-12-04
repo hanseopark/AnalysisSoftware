@@ -36,7 +36,7 @@ MergeList(){  # $1:list   $2:target path   $3:target name
 
 }
 
-ChangeStructure(){  #$1: file path + name
+ChangeStructure(){  # $1: file path + name
 #"$BASEDIR/$SYSTEM/$PERIOD/$fileName" 
 
 if [ -f "$1" ]; then
@@ -50,8 +50,22 @@ fi
 
 }
 
+DownloadMerged(){ # $1: source, $2:target , $3:change structure to standard
 
-MainRoutine(){ 
+    echo "copy $1 to $2 ..."
+    alien_cp alien:$1 file:$2
+    if [ -f "$2" ]; then
+	if [ "$3" == "yes" ];then
+	    ChangeStructure $2
+	fi
+    else
+	echo "download failed"
+    fi
+}
+
+
+
+DownloadRunwise(){
 
     # arguments:
     # $1:  "GammaConv" or "PhotonQA"
@@ -314,22 +328,26 @@ MainRoutine(){
 }
 
 
-#MainRoutine "PhotonQA" "ESD" "LHC15o" "337_20171030-1322" "data" "pass1"
-#MainRoutine "PhotonQA" "ESD" "LHC15o" "338_20171030-1331" "data" "pass1_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC15o" "339_20171030-1322" "data" "pass3_lowIR_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1" "646_20171030-1323" "sim" "pass1"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1" "647_20171030-1324" "sim" "pass1_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1" "648_20171030-1324" "sim" "pass3_lowIR_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1a" "649_20171030-1326" "sim" "pass1"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1a" "650_20171030-1326" "sim" "pass1_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1a" "651_20171031-0950" "sim" "pass3_lowIR_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1b" "652_20171030-1328" "sim" "pass1"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1b" "653_20171030-1329" "sim" "pass1_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1b" "654_20171030-1605" "sim" "pass3_lowIR_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1c" "655_20171030-1329" "sim" "pass1"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1c" "656_20171030-1329" "sim" "pass1_pidfix"
-#MainRoutine "PhotonQA" "ESD" "LHC16g1c" "657_20171030-1532" "sim" "pass3_lowIR_pidfix"
 
-#MainRoutine "GammaConv" "ESD" "LHC16h4" "666_20171106-1018" "sim" "pass1" # train configs 246 & 247
-MainRoutine "GammaConv" "ESD" "LHC16h4" "669_20171106-1019" "sim" "pass1_pidfix"
-MainRoutine "GammaConv" "ESD" "LHC16h4" "668_20171106-1019" "sim" "pass3_lowIR_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC15o" "337_20171030-1322" "data" "pass1"
+#DownloadRunwise "PhotonQA" "ESD" "LHC15o" "338_20171030-1331" "data" "pass1_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC15o" "339_20171030-1322" "data" "pass3_lowIR_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1" "646_20171030-1323" "sim" "pass1"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1" "647_20171030-1324" "sim" "pass1_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1" "648_20171030-1324" "sim" "pass3_lowIR_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1a" "649_20171030-1326" "sim" "pass1"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1a" "650_20171030-1326" "sim" "pass1_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1a" "651_20171031-0950" "sim" "pass3_lowIR_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1b" "652_20171030-1328" "sim" "pass1"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1b" "653_20171030-1329" "sim" "pass1_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1b" "654_20171030-1605" "sim" "pass3_lowIR_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1c" "655_20171030-1329" "sim" "pass1"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1c" "656_20171030-1329" "sim" "pass1_pidfix"
+#DownloadRunwise "PhotonQA" "ESD" "LHC16g1c" "657_20171030-1532" "sim" "pass3_lowIR_pidfix"
+#DownloadRunwise "GammaConv" "ESD" "LHC16h4" "666_20171106-1018" "sim" "pass1" # train configs 246 & 247
+#DownloadRunwise "GammaConv" "ESD" "LHC16h4" "669_20171106-1019" "sim" "pass1_pidfix"
+#DownloadRunwise "GammaConv" "ESD" "LHC16h4" "668_20171106-1019" "sim" "pass3_lowIR_pidfix"
+
+DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/352_20171130-1612/merge_runlist_4/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list1_train352.root" "yes"
+DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/353_20171130-1607/merge/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list2_train353.root" "yes"
+DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/354_20171130-1608/merge/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list3_train354.root" "yes"
