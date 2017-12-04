@@ -40,6 +40,16 @@ function GiveBinning7TeV()
 
 }
 
+function GiveBinning13TeV()
+{
+    echo "How many p_T bins do you want to use for Omega? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
+    read answer
+    BinsPtOmega=$answer
+    correctOmega=1
+    echo "You have chosen " $answer " pt bins for Omega";
+
+}
+
 
 function GiveBinningpPb()
 {
@@ -354,14 +364,14 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 8TeV (pp@8TeV), 7TeV (pp@7TeV), 13TeV (pp@7TeV, 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
     if [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
     elif [ $answer = "8TeV" ] || [ $answer = "8" ]; then
         energy="8TeV";
-    #elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
-    #    energy="13TeV";
+    elif [ $answer = "13TeV" ] || [ $answer = "13" ]; then
+        energy="13TeV";
     #elif [ $answer = "13TeVLowB" ]; then
     #    energy="13TeVLowB";
     elif [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
@@ -446,15 +456,15 @@ do
         if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ]; then
             AdvMesonQA="AdvancedMesonQA"
         fi
-    #elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]; then
-    #    if [ $ONLYCORRECTION -eq 0 ]; then
-    #        GiveBinning13TeV
-    #    fi
-    #    if [ $correctOmega -eq 0 ]; then
-    #        correct=0
-    #    else
-    #        correct=1
-    #    fi
+    elif [ $energy = "13TeV" ]; then
+        if [ $ONLYCORRECTION -eq 0 ]; then
+            GiveBinning13TeV
+        fi
+        if [ $correctOmega -eq 0 ]; then
+            correct=0
+        else
+            correct=1
+        fi
     elif [ $energy = "pPb_5.023TeV" ]; then
         if [ $ONLYCORRECTION -eq 0 ]; then
             GiveBinningpPb

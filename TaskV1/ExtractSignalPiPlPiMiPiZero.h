@@ -1108,12 +1108,12 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
 
          // Set remaining parameters for fitting
          if(mode == 40 || mode == 41 || mode == 45){
-             fMesonWidthExpect           = 0.02;
+             fMesonWidthExpect           = 0.010;
              fMesonWidthRange[0]         = 0.004;
-             fMesonWidthRange[1]         = 0.070;
-             fMesonLambdaTail            = 0.001;
-             fMesonLambdaTailRange[0]    = 0.001;
-             fMesonLambdaTailRange[1]    = 0.001;
+             fMesonWidthRange[1]         = 0.030;
+             fMesonLambdaTail            = 0.003;
+             fMesonLambdaTailRange[0]    = 0.003;
+             fMesonLambdaTailRange[1]    = 0.003;
 
              fFullPt[0]                  = 0.4;
              fFullPt[1]                  = 15;

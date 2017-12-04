@@ -2237,56 +2237,56 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[0][fExampleBin],
                         fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig,kFALSE);
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig,kFALSE);
     // In example bin with pi0 inv mass subtracted
 
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingSignalInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_SubPiZero[0][fExampleBin],
                         fFitSignalInvMassPtBin_SubPiZero[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_SubPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig,kFALSE,fBGFitRange_SubPiZero);
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig,kFALSE,fBGFitRange_SubPiZero);
     // In example bin with pz of pi0 fixed
 
     PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingSignalInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_FixedPzPiZero[0][fExampleBin],
                         fFitSignalInvMassPtBin_FixedPzPiZero[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMass_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig, kFALSE, fBGFitRange_FixedPzPiZero);
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig, kFALSE, fBGFitRange_FixedPzPiZero);
 
     PlotExampleInvMassBinsBckFit(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingGGInvMassBackFitPtBin[fExampleBin], fBackgroundFitPol[fExampleBin],fHistoBckFitConfidence[fExampleBin],
                          fFitSignalInvMassBackFitPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig );
     // In example bin with pi0 inv mass subtracted
     PlotExampleInvMassBinsBckFit(fHistoMappingGGInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingGGInvMassBackFitPtBin_SubPiZero[fExampleBin], fBackgroundFitPol_SubPiZero[fExampleBin],fHistoBckFitConfidence_SubPiZero[fExampleBin],
                          fFitSignalInvMassBackFitPtBin_SubPiZero[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_SubPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig );
 
     // In example bin with pz of pi0 fixed
     PlotExampleInvMassBinsBckFit(fHistoMappingGGInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingGGInvMassBackFitPtBin_FixedPzPiZero[fExampleBin], fBackgroundFitPol_FixedPzPiZero[fExampleBin],fHistoBckFitConfidence_FixedPzPiZero[fExampleBin],
                          fFitSignalInvMassBackFitPtBin_FixedPzPiZero[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMass_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig );
+                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig );
     if(((TString)fMesonCutSelection(1,1)).CompareTo("a")!=0){ //Do these plots only if LikeSign method was used
         // Background groups individually scaled in example bin
         PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroups");
+                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"InvMassBinBckGroups");
 
         // Background groups individually scaled in example bin (pi0 subtracted)
         PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_SubPiZero,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_SubPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroups_SubPiZero");
+                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"InvMassBinBckGroups_SubPiZero");
 
         // Background groups individually scaled in example bin (pz of pi0 fixed)
         PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingBackNormInvMassPtBin_FixedPzPiZero,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroups_FixedPzPiZero");
+                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"InvMassBinBckGroups_FixedPzPiZero");
     }
 
     if(fIsMC){
       // Example bin for debugging changed to fStartPTBin
       TString HistosLegendsTitlesPiPlPiMi[7] = { "True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-} same mother from #eta","True #pi^{+}#pi^{-} same mother from #omega","True #pi^{+}#pi^{-} same mother from #rho","True #pi^{+}#pi^{-} same mother from #eta '","True #pi^{+}#pi^{-} same mother from K^{0}_{s}","True #pi^{+}#pi^{-} same mother from K^{0}_{l}"};
       if(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0]) PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin,1,7,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiMi[0],HistosLegendsTitlesPiPlPiMi,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMi_Contributions",kFALSE,6.);
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiMi[0],HistosLegendsTitlesPiPlPiMi,fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"TrueBackPiPlPiMi_Contributions",kFALSE,6.);
 
       TString HistosLegendsTitlesPiPlPiZero[5] = { "True #pi^{+}#pi^{0} same mother","True #pi^{+}#pi^{0} same mother from #eta","True #pi^{+}#pi^{0} same mother from #omega","True #pi^{+}#pi^{0} same mother from #rho","True #pi^{+}#pi^{0} same mother from K^{0}_{l}"};
       if(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0]) PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiPlPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiZero[0],HistosLegendsTitlesPiPlPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiZero_Contributions",kFALSE,6.);
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiPlPiZero[0],HistosLegendsTitlesPiPlPiZero,fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"TrueBackPiPlPiZero_Contributions",kFALSE,6.);
       TString HistosLegendsTitlesPiMiPiZero[5] = { "True #pi^{-}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother from #eta","True #pi^{-}#pi^{0} same mother from #omega","True #pi^{-}#pi^{0} same mother from #rho","True #pi^{-}#pi^{0} same mother from K^{0}_{l}"};
       if(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0]) PlotExampleInvMassSingleHistAndArray(fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin[0][fStartPtBin],fHistoMappingTruePiMiPiZeroSameMotherInvMassPtBin,1,5,0.46,2.0,fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiMiPiZero[0],HistosLegendsTitlesPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiMiPiZero_Contributions",kFALSE,6.);
+                                      fThesis, fCollisionSystem, fBinsPt, fDecayChannel,HistosLegendsTitlesPiMiPiZero[0],HistosLegendsTitlesPiMiPiZero,fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"TrueBackPiMiPiZero_Contributions",kFALSE,6.);
 
       // pi+pi-pi0 contributions
       if(fHistoMappingTruePiPlPiMiSameMotherInvMassPtBin[0]){ // if this histo is not there, light output was probably on and there is no point in doing these plots
@@ -2299,20 +2299,20 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
           tempPlotArray[5] = fHistoMappingTruePiPlPiMiPiZeroContaminationPtBin;
           TString HistosLegendsTitlesPiPlPiMiPiZero[6] = {"True #pi^{+}#pi^{-}#pi^{0} from #eta or #omega","True #pi^{+}#pi^{0} same mother","True #pi^{-}#pi^{0} same mother","True #pi^{+}#pi^{-} same mother","True #pi^{+}#pi^{-}#pi^{0} pure combinatorial","#pi^{+}#pi^{-}#pi^{0} contamination"};
           PlotExampleInvMassSingleHistAndArray(fHistoMappingGGInvMassPtBin[fStartPtBin],tempPlotArray,0,6,fMesonMassRange[0],fMesonMassRange[1],fStartPtBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                  fThesis, fCollisionSystem, fBinsPt, fDecayChannel,"Signal+Background",HistosLegendsTitlesPiPlPiMiPiZero,fDetectionProcess, 0, fScaleFac, fMode, addSig ,"TrueBackPiPlPiMiPiZero_Contributions",kFALSE,2.);
+                  fThesis, fCollisionSystem, fBinsPt, fDecayChannel,"Signal+Background",HistosLegendsTitlesPiPlPiMiPiZero,fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"TrueBackPiPlPiMiPiZero_Contributions",kFALSE,2.);
       }
     }
     if(((TString)fMesonCutSelection(1,1)).CompareTo("a")!=0){ // do these plots only if LikeSign method was used
         // Background groups scaled with same factor in example bin
         PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingBackSameNormInvMassPtBin,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale");
+                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale");
         // Background groups scaled with same factor in example bin (pi0 subtracted)
         PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin_SubPiZero[fExampleBin], fHistoMappingBackSameNormInvMassPtBin_SubPiZero,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_SubPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale_SubPiZero");
+                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale_SubPiZero");
 
         // Background groups scaled with same factor in example bin (pz of pi0 fixed)
         PlotExampleInvMassBinsBckGroups(fHistoMappingGGInvMassPtBin_FixedPzPiZero[fExampleBin], fHistoMappingBackSameNormInvMassPtBin_FixedPzPiZero,fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassRange_FixedPzPiZero, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
-                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale_FixedPzPiZero");
+                                        fThesis, fCollisionSystem, fBinsPt, fDecayChannel, fDetectionProcess, 0, fExampleBinScaleFac, fMode, addSig ,"InvMassBinBckGroupsSameScale_FixedPzPiZero");
     }
     if(fIsMC){
         TString nameMesonTrue   = Form("%s/%s_%s_TrueMesonFitted%s_%s.%s",outputDir.Data(),fPrefix.Data(),fPrefix2.Data(),fPeriodFlag.Data(),fCutSelection.Data(),Suffix.Data());
@@ -3572,6 +3572,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0) mesonAmplitudeMin = mesonAmplitude*92./100.;
+    } else if(fPrefix.CompareTo("Eta") ==0){
+        mesonAmplitudeMin = mesonAmplitude*98./100.;
+        mesonAmplitudeMax = mesonAmplitude*120./100.;
     } else {
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
