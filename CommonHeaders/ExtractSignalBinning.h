@@ -350,8 +350,8 @@
                                                         5, 5, 5};
 
     // Eta->pi+pi-pi0
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {3,6,3,3,3,3,3,3,3,3,4};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,10.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {3,6,6,6,3,3,3,3,3,3,3,3,4};
 
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {4,4,4,4,4,4,4,4,6,6,6,6};
@@ -366,8 +366,8 @@
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[12]       = {1,1,1,1,1,1,1,1,1,1,1,1};
 
     // omega->pi+pi-pi0
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[11]       = {10,10,10,5,5,5,5,5,5,10,13};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,10.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCM[13]       = {10,10,7,7,7,5,5,5,5,5,5,10,13};
 
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMEMC[13]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.,12};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMEMC[12]       = {10,10,10,10,10,10,9,9,5,5,8,10};
@@ -642,12 +642,12 @@
     Double_t fBinsDirGamma13TeVPtDCAzDist[16]       = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.5, 4.0, 6.0, 9.0, 12.0, 16.0};
     // Eta->pi+pi-pi0
-    Double_t fBinsEtaPiPlPiMiPiZero13TevPtPCM[17]         = {0,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6.,7,8.,10.,15.};
-    Int_t fBinsEtaPiPlPiMiPiZero13TevPtRebinPCM[16]       = {8,8,8,4,4,4,4,4,4,4,4,4,4,6,8,8};
+    Double_t fBinsEtaPiPlPiMiPiZero13TevPtPCM[20]         = {0,1,1.4,1.6,1.8,2,2.2,2.4,2.6,3,3.5,4,4.5,5,5.5,6.,7,8.,10.,15.};
+    Int_t fBinsEtaPiPlPiMiPiZero13TevPtRebinPCM[19]       = {8,8,6,6,6,6,4,4,4,4,4,4,4,4,4,4,6,8,8};
 
     // omega->pi+pi-pi0
-    Double_t fBinsOmegaPiPlPiMiPiZero13TevPtPCM[17]         = {0,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6.,7,8.,10.,15.};
-    Int_t fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCM[16]        = {8,8,8,4,4,4,4,4,4,4,4,4,4,6,8,8};
+    Double_t fBinsOmegaPiPlPiMiPiZero13TevPtPCM[20]         = {0,1,1.4,1.6,1.8,2,2.2,2.4,2.6,3,3.5,4,4.5,5,5.5,6.,7,8.,10.,15.};
+    Int_t fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCM[19]        = {8,8,6,6,6,6,4,4,4,4,4,4,4,4,4,4,6,8,8};
 
     //****************************************************************************************************
     //******************** Pt binning for pp, 13 TeV low B ( 0.2T ) **************************************
@@ -1635,12 +1635,12 @@
             if(energy.CompareTo("13TeV") == 0) {
                 if(mode == 40){
                     scaleFac        = 4.;
-                    return 3;
+                    return 4;
                 }
             } else {
                 if(mode == 40){
                     scaleFac        = 4.;
-                    return 3;
+                    return 5;
                 } else if(mode == 41){
                     scaleFac        = 1.;
                     return 10;
@@ -1908,7 +1908,7 @@
         } else if (meson.CompareTo("Omega") == 0){
             if (energy.CompareTo("7TeV") == 0){
                 if (mode == 40){
-                    startPtBin     = 2;
+                    startPtBin     = 4;
                 } else if (mode == 41){
                     startPtBin     = 6;
                 } else if (mode == 42){
