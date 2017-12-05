@@ -996,17 +996,19 @@ void PrimaryTrackQA(
         if (iParticleType==1){StrNameOfHistogram="";}
         TH2D* fHisthTrack_NFindCls_Pt_TPC_after_AfterQA = (TH2D*)PionCutsContainer->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCutsContainerCutString.Data()));
         if(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA){
-            GetMinMaxBin(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA,minB,maxB);
-            SetXRange(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA,minB-1,maxB+1);
-            GetMinMaxBinY(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA,minYB,maxYB);
-            SetYRange(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA,minYB,maxYB+1);
-            SetZMinMaxTH2(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA,1,maxB+1,minYB,maxYB+1);
+            TH2D* fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis = SwitchTF2DAxis(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA);
+            GetMinMaxBin(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis,minB,maxB);
+            SetXRange(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis,minB-1,maxB+1);
+            GetMinMaxBinY(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis,minYB,maxYB);
+            SetYRange(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis,minYB,maxYB+1);
+            SetZMinMaxTH2(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                 fHisthTrack_NFindCls_Pt_TPC_after_AfterQA,"",
-                                 "Findable Clusters after Cut","#it{p}_{T} (GeV/#it{c}) TPC",1,1.4,
+                                 fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis,"","#it{p}_{T} (GeV/#it{c}) TPC",
+                                 "Findable Clusters after Cut",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHisthTrack_NFindCls_Pt_TPC_after_AfterQA, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
-            vechTrack_NFindCls_Pt_TPC_after_AfterQA.push_back(new TH2D(*fHisthTrack_NFindCls_Pt_TPC_after_AfterQA));
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vechTrack_NFindCls_Pt_TPC_after_AfterQA.push_back(new TH2D(*fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis));
+            delete fHisthTrack_NFindCls_Pt_TPC_after_AfterQA_switchedAxis;
         } else cout << Form("INFO: Object |AfterQA: hTrack_NFindCls_Pt_TPC_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //-----------------------------|Get Histograms: Pre Selection (Pion Cut folder in Main Directory)|----------------------------------------
@@ -1159,17 +1161,19 @@ void PrimaryTrackQA(
         if (iParticleType==1){StrNameOfHistogram="";}
         TH2D* fHisthTrack_NFindCls_Pt_TPC_before_PreSel = (TH2D*)PionCuts2Container->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCuts2ContainerCutString.Data()));
         if(fHisthTrack_NFindCls_Pt_TPC_before_PreSel){
-            GetMinMaxBin(fHisthTrack_NFindCls_Pt_TPC_before_PreSel,minB,maxB);
-            SetXRange(fHisthTrack_NFindCls_Pt_TPC_before_PreSel,minB-1,maxB+1);
-            GetMinMaxBinY(fHisthTrack_NFindCls_Pt_TPC_before_PreSel,minYB,maxYB);
-            SetYRange(fHisthTrack_NFindCls_Pt_TPC_before_PreSel,minYB,maxYB+1);
-            SetZMinMaxTH2(fHisthTrack_NFindCls_Pt_TPC_before_PreSel,1,maxB+1,minYB,maxYB+1);
+            TH2D* fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis=SwitchTF2DAxis(fHisthTrack_NFindCls_Pt_TPC_before_PreSel);
+            GetMinMaxBin(fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis,minB,maxB);
+            SetXRange(fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis,minB-1,maxB+1);
+            GetMinMaxBinY(fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis,minYB,maxYB);
+            SetYRange(fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis,minYB,maxYB+1);
+            SetZMinMaxTH2(fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                 fHisthTrack_NFindCls_Pt_TPC_before_PreSel,"",
-                                 "Findable Clusters before Cut","#it{p}_{T} (GeV/#it{c}) TPC",1,1.4,
+                                 fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis,"","#it{p}_{T} (GeV/#it{c}) TPC",
+                                 "Findable Clusters before Cut",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHisthTrack_NFindCls_Pt_TPC_before_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
-            vechTrack_NFindCls_Pt_TPC_before_PreSel.push_back(new TH2D(*fHisthTrack_NFindCls_Pt_TPC_before_PreSel));
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vechTrack_NFindCls_Pt_TPC_before_PreSel.push_back(new TH2D(*fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis));
+            delete fHisthTrack_NFindCls_Pt_TPC_before_PreSel_switchedAxis;
         } else cout << Form("INFO: Object |Pre Selection: hTrack_NFindCls_Pt_TPC_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //--------------------------|Get Histograms: Pre Selection (Pion Cut folder in Main Directory) after|-------------------------------------
@@ -1287,17 +1291,19 @@ void PrimaryTrackQA(
         if (iParticleType==1){StrNameOfHistogram="";}
         TH2D* fHisthTrack_NFindCls_Pt_TPC_after_PreSel = (TH2D*)PionCuts2Container->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCuts2ContainerCutString.Data()));
         if(fHisthTrack_NFindCls_Pt_TPC_after_PreSel){
-            GetMinMaxBin(fHisthTrack_NFindCls_Pt_TPC_after_PreSel,minB,maxB);
-            SetXRange(fHisthTrack_NFindCls_Pt_TPC_after_PreSel,minB-1,maxB+1);
-            GetMinMaxBinY(fHisthTrack_NFindCls_Pt_TPC_after_PreSel,minYB,maxYB);
-            SetYRange(fHisthTrack_NFindCls_Pt_TPC_after_PreSel,minYB,maxYB+1);
-            SetZMinMaxTH2(fHisthTrack_NFindCls_Pt_TPC_after_PreSel,1,maxB+1,minYB,maxYB+1);
+            TH2D* fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis=SwitchTF2DAxis(fHisthTrack_NFindCls_Pt_TPC_after_PreSel);
+            GetMinMaxBin(fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis,minB,maxB);
+            SetXRange(fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis,minB-1,maxB+1);
+            GetMinMaxBinY(fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis,minYB,maxYB);
+            SetYRange(fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis,minYB,maxYB+1);
+            SetZMinMaxTH2(fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                 fHisthTrack_NFindCls_Pt_TPC_after_PreSel,"",
-                                 "Findable Clusters after Cut","#it{p}_{T} (GeV/#it{c}) TPC",1,1.4,
+                                 fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis,"","#it{p}_{T} (GeV/#it{c}) TPC",
+                                 "Findable Clusters after Cut",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHisthTrack_NFindCls_Pt_TPC_after_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
-            vechTrack_NFindCls_Pt_TPC_after_PreSel.push_back(new TH2D(*fHisthTrack_NFindCls_Pt_TPC_after_PreSel));
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vechTrack_NFindCls_Pt_TPC_after_PreSel.push_back(new TH2D(*fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis));
+            delete fHisthTrack_NFindCls_Pt_TPC_after_PreSel_switchedAxis;
         } else cout << Form("INFO: Object |Pre Selection: hTrack_NFindCls_Pt_TPC_after %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------- clean up -------------------------------------------------------------------------
