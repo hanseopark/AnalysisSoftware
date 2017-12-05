@@ -71,6 +71,7 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
     TString fileNameIntYield8TeV                = "ExternalInput/CocktailInputPP_IntegYieldComp8TeV.root";
     TString fileNameIntYield7TeV                = "ExternalInput/CocktailInputPP_IntegYieldComp7TeV.root";
     TString fileNameIntYield2760GeV             = "ExternalInput/CocktailInputPP_IntegYieldComp2_76TeV.root";
+    TString fileNameIntYield900GeV              = "ExternalInput/CocktailInputPP_IntegYieldComp0_9TeV.root";
 
     TString outputDir                           = Form("%s/%s/CombineMesonMeasurementsYieldPt",suffix.Data(),dateForOutput.Data());
     gSystem->Exec("mkdir -p "+outputDir);
@@ -212,6 +213,7 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       yieldSys8TeV->DrawClone("e||");
 
       canvasY->SaveAs(Form("%s/ParticleYield.%s", outputDir.Data(), suffix.Data()));
+      canvasY->Clear();
 
       //--------------
       //----mean pT
@@ -318,7 +320,7 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       meanPtSys8TeV->DrawClone("e||");
 
       canvasY->SaveAs(Form("%s/ParticleMeanPt.%s", outputDir.Data(), suffix.Data()));
-
+      canvasY->Clear();
 
       TFile* fileIntYield7TeV                           = new TFile(fileNameIntYield7TeV.Data());
       if(fileIntYield7TeV->IsZombie()) return;
@@ -361,25 +363,6 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       dummyHisto->Draw();
 
 
-      yieldSys2760GeV->DrawClone("e||");
-      yieldSysFunc2760GeV->DrawClone("e[]");
-      yieldStat2760GeV->DrawClone("pZ");
-
-      yieldSys8TeV->DrawClone("e||");
-      yieldSysFunc8TeV->DrawClone("e[]");
-      yieldStat8TeV->DrawClone("pZ");
-
-      DrawGammaSetMarkerTGraphAsym(yieldSys7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue-6, kBlue-6);
-      gStyle->SetEndErrorSize(10);
-      yieldSys7TeV->DrawClone("e||");
-      DrawGammaSetMarkerTGraphAsym(yieldSysFunc7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue+4, kBlue+4);
-      gStyle->SetEndErrorSize(15);
-      yieldSysFunc7TeV->DrawClone("e[]");
-      DrawGammaSetMarkerTGraphAsym(yieldStat7TeV, GetDefaultMarkerStyle("7TeV","",""), 4, kBlue+2, kBlue+2);
-      yieldStat7TeV->SetLineWidth(2);
-      yieldStat7TeV->DrawClone("pZ");
-
-
       DrawGammaSetMarkerTGraphAsym(yieldSys2760GeV_charged, 30, 2, kMagenta-6, kMagenta-6);
       gStyle->SetEndErrorSize(10);
       yieldSys2760GeV_charged->DrawClone("e||");
@@ -399,6 +382,24 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       DrawGammaSetMarkerTGraphAsym(yieldStat7TeV_charged, 24, 4, kBlue+2, kBlue+2);
       yieldStat7TeV_charged->SetLineWidth(2);
       yieldStat7TeV_charged->DrawClone("pZ");
+
+      yieldSys2760GeV->DrawClone("e||");
+      yieldSysFunc2760GeV->DrawClone("e[]");
+      yieldStat2760GeV->DrawClone("pZ");
+
+      DrawGammaSetMarkerTGraphAsym(yieldSys7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue-6, kBlue-6);
+      gStyle->SetEndErrorSize(10);
+      yieldSys7TeV->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(yieldSysFunc7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue+4, kBlue+4);
+      gStyle->SetEndErrorSize(15);
+      yieldSysFunc7TeV->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(yieldStat7TeV, GetDefaultMarkerStyle("7TeV","",""), 4, kBlue+2, kBlue+2);
+      yieldStat7TeV->SetLineWidth(2);
+      yieldStat7TeV->DrawClone("pZ");
+
+      yieldSys8TeV->DrawClone("e||");
+      yieldSysFunc8TeV->DrawClone("e[]");
+      yieldStat8TeV->DrawClone("pZ");
 
       nColumns = 3;
       legend                              = GetAndSetLegend2(0.18, 0.10, 0.48, 0.10+(1.05*0.042*3),75,nColumns, "" ,43,margin);
@@ -460,6 +461,149 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
 
       canvasY->SetLogx();
       canvasY->SaveAs(Form("%s/ParticleYield_with7TeV_pass4.%s", outputDir.Data(), suffix.Data()));
+      canvasY->Clear();
+
+      TFile* fileIntYield900GeV                           = new TFile(fileNameIntYield900GeV.Data());
+      if(fileIntYield900GeV->IsZombie()) return;
+      TList* directoryIntYield900GeV                 = (TList*)fileIntYield900GeV->Get("pp_0.9TeV");
+
+      TGraphAsymmErrors* yieldStat900GeVtemp = (TGraphAsymmErrors*) directoryIntYield900GeV->FindObject("IntegratedYieldStatVsMassMeson");
+      TGraphAsymmErrors* yieldSys900GeVtemp = (TGraphAsymmErrors*) directoryIntYield900GeV->FindObject("IntegratedYieldSysVsMassMeson");
+      TGraphAsymmErrors* yieldSysFunc900GeVtemp = (TGraphAsymmErrors*) directoryIntYield900GeV->FindObject("IntegratedYieldSysFuncVsMassMeson");
+
+      TGraphAsymmErrors* yieldStat900GeV = (TGraphAsymmErrors*) yieldStat900GeVtemp->Clone("stat900GeV");
+      TGraphAsymmErrors* yieldSys900GeV = (TGraphAsymmErrors*) yieldSys900GeVtemp->Clone("stat900GeV");
+      TGraphAsymmErrors* yieldSysFunc900GeV = (TGraphAsymmErrors*) yieldSysFunc900GeVtemp->Clone("stat900GeV");
+
+      yieldStat900GeV->RemovePoint(1);
+      yieldSys900GeV->RemovePoint(1);
+      yieldSysFunc900GeV->RemovePoint(1);
+      yieldStat900GeV->RemovePoint(1);
+      yieldSys900GeV->RemovePoint(1);
+      yieldSysFunc900GeV->RemovePoint(1);
+      yieldStat900GeV->RemovePoint(1);
+      yieldSys900GeV->RemovePoint(1);
+      yieldSysFunc900GeV->RemovePoint(1);
+
+      TGraphAsymmErrors* yieldStat900GeV_charged = (TGraphAsymmErrors*) yieldStat900GeVtemp->Clone("stat900GeV_charged");
+      TGraphAsymmErrors* yieldSys900GeV_charged = (TGraphAsymmErrors*) yieldSys900GeVtemp->Clone("sys900GeV_charged");
+      TGraphAsymmErrors* yieldSysFunc900GeV_charged = (TGraphAsymmErrors*) yieldSysFunc900GeVtemp->Clone("sysFunc900GeV_charged");
+
+      yieldStat900GeV_charged->RemovePoint(0);
+      yieldSys900GeV_charged->RemovePoint(0);
+      yieldSysFunc900GeV_charged->RemovePoint(0);
+      yieldStat900GeV_charged->RemovePoint(1);
+      yieldSys900GeV_charged->RemovePoint(1);
+      yieldSysFunc900GeV_charged->RemovePoint(1);
+
+      dummyHisto->Draw();
+
+      DrawGammaSetMarkerTGraphAsym(yieldSys900GeV_charged, 25, 2, kRed-6, kRed-6);
+      gStyle->SetEndErrorSize(10);
+      yieldSys900GeV_charged->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(yieldSysFunc900GeV_charged, 25, 2, kRed+4, kRed+4);
+      gStyle->SetEndErrorSize(15);
+      yieldSysFunc900GeV_charged->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(yieldStat900GeV_charged, 25, 4, kRed+2, kRed+2);
+      yieldStat900GeV_charged->SetLineWidth(2);
+      yieldStat900GeV_charged->DrawClone("pZ");
+
+
+      yieldSys2760GeV_charged->DrawClone("e||");
+      yieldSysFunc2760GeV_charged->DrawClone("e[]");
+      yieldStat2760GeV_charged->DrawClone("pZ");
+
+      yieldSys7TeV_charged->DrawClone("e||");
+      yieldSysFunc7TeV_charged->DrawClone("e[]");
+      yieldStat7TeV_charged->DrawClone("pZ");
+
+      DrawGammaSetMarkerTGraphAsym(yieldSys900GeV, GetDefaultMarkerStyle("900GeV","",""), 2, kRed-6, kRed-6);
+      gStyle->SetEndErrorSize(10);
+      yieldSys900GeV->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(yieldSysFunc900GeV, GetDefaultMarkerStyle("900GeV","",""), 2, kRed+4, kRed+4);
+      gStyle->SetEndErrorSize(15);
+      yieldSysFunc900GeV->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(yieldStat900GeV, GetDefaultMarkerStyle("900GeV","",""), 4, kRed+2, kRed+2);
+      yieldStat900GeV->SetLineWidth(2);
+      yieldStat900GeV->DrawClone("pZ");
+
+      yieldSys2760GeV->DrawClone("e||");
+      yieldSysFunc2760GeV->DrawClone("e[]");
+      yieldStat2760GeV->DrawClone("pZ");
+
+      yieldSys7TeV->DrawClone("e||");
+      yieldSysFunc7TeV->DrawClone("e[]");
+      yieldStat7TeV->DrawClone("pZ");
+
+      yieldSys8TeV->DrawClone("e||");
+      yieldSysFunc8TeV->DrawClone("e[]");
+      yieldStat8TeV->DrawClone("pZ");
+
+      nColumns = 4;
+      TLegend* legend900                              = GetAndSetLegend2(0.15, 0.10, 0.65, 0.10+(1.05*0.042*3),75,nColumns, "" ,43,margin);
+      TLegend* legend9002                             = GetAndSetLegend2(0.55, 0.10, 0.55+widthLegend2, 0.10+(1.05*0.042*3),75,1, "" ,43,0);
+
+      TGraphAsymmErrors* yieldStat900GeV_c2 = (TGraphAsymmErrors*) yieldStat900GeV->Clone();
+      yieldStat900GeV_c2->SetMarkerSize(5);
+
+      legend900->AddEntry(yieldStat900GeV_c2, "   ", "pe");
+      legend900->AddEntry(yieldStat2760GeV_c2, "   ", "pe");
+      legend900->AddEntry(yieldStat7TeV_c2, "   ", "pe");
+      legend900->AddEntry(yieldStat8TeV_c2, "   ", "pe");
+      legend9002->AddEntry((TObject*)0, "stat. unc.", "");
+
+      yieldSys900GeV->SetTitle("");
+      legend900->AddEntry(yieldSys900GeV, "", "l");
+      yieldSys2760GeV->SetTitle("");
+      legend900->AddEntry(yieldSys2760GeV, "", "l");
+      yieldSys7TeV->SetTitle("");
+      legend900->AddEntry(yieldSys7TeV, "", "l");
+      yieldSys8TeV->SetTitle("");
+      legend900->AddEntry(yieldSys8TeV, "", "l");
+
+      legend9002->AddEntry((TObject*)0, "sys. unc.", "");
+      legend900->AddEntry(yieldSysFunc900GeV, " ", "l");
+      legend900->AddEntry(yieldSysFunc2760GeV, " ", "l");
+      legend900->AddEntry(yieldSysFunc7TeV, " ", "l");
+      legend900->AddEntry(yieldSysFunc8TeV, " ", "l");
+      legend9002->AddEntry((TObject*)0, "sys. unc. func. form", "");
+
+      legend900->Draw();
+      legend9002->Draw();
+
+      TLatex *label1_                     = new TLatex(0.9, 0.9, "charged particles");
+      SetStyleTLatex( label1_, 0.04,4, 1, 42, kTRUE, 31);
+      label1_->Draw();
+      TLatex *label1_2                     = new TLatex(0.9, 0.85, "with open markers");
+      SetStyleTLatex( label1_2, 0.04,4, 1, 42, kTRUE, 31);
+      label1_2->Draw();
+
+      TLatex *labelpp1_                     = new TLatex(0.35, 0.3, "ALICE, pp@#sqrt{#it{s}}");
+      SetStyleTLatex( labelpp1_, 0.04,4, 1, 42, kTRUE, 31);
+      labelpp1_->Draw();
+
+      TLatex *labelpp122_                     = new TLatex(0.22, 0.25, "0.9TeV");
+      SetStyleTLatex( labelpp122_, 0.04,4, 1, 42, kTRUE, 31);
+      labelpp122_->Draw();
+
+      TLatex *labelpp12_                     = new TLatex(0.37, 0.25, "2.76TeV");
+      SetStyleTLatex( labelpp12_, 0.04,4, 1, 42, kTRUE, 31);
+      labelpp12_->Draw();
+
+      TLatex *labelpp12_1                     = new TLatex(0.47, 0.25, "7TeV");
+      SetStyleTLatex( labelpp12_1, 0.04,4, 1, 42, kTRUE, 31);
+      labelpp12_1->Draw();
+
+      TLatex *labelpp13_                     = new TLatex(0.59, 0.25, "8TeV");
+      SetStyleTLatex( labelpp13_, 0.04,4, 1, 42, kTRUE, 31);
+      labelpp13_->Draw();
+      labelpp1_->Draw();
+
+      yieldSys8TeV->DrawClone("e||");
+
+      canvasY->SetLogx();
+      canvasY->SaveAs(Form("%s/ParticleYield_with7TeV_pass4_and_900GeV.%s", outputDir.Data(), suffix.Data()));
+      canvasY->Clear();
 
       //--------------
       //----mean pT
@@ -512,23 +656,15 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       //dummyHisto->GetYaxis()->SetMoreLogLabels();
       dummyHisto->Draw();
 
-      meanPtSys2760GeV->DrawClone("e||");
-      meanPtSysFunc2760GeV->DrawClone("e[]");
-      meanPtStat2760GeV->DrawClone("pZ");
-
-      meanPtSys8TeV->DrawClone("e||");
-      meanPtSysFunc8TeV->DrawClone("e[]");
-      meanPtStat8TeV->DrawClone("pZ");
-
-      DrawGammaSetMarkerTGraphAsym(meanPtSys7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue-6, kBlue-6);
+      DrawGammaSetMarkerTGraphAsym(meanPtSys2760GeV_charged, 30, 2, kMagenta-6, kMagenta-6);
       gStyle->SetEndErrorSize(10);
-      meanPtSys7TeV->DrawClone("e||");
-      DrawGammaSetMarkerTGraphAsym(meanPtSysFunc7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue+4, kBlue+4);
+      meanPtSys2760GeV_charged->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(meanPtSysFunc2760GeV_charged, 30, 2, kMagenta+4, kMagenta+4);
       gStyle->SetEndErrorSize(15);
-      meanPtSysFunc7TeV->DrawClone("e[]");
-      DrawGammaSetMarkerTGraphAsym(meanPtStat7TeV, GetDefaultMarkerStyle("7TeV","",""), 4, kBlue+2, kBlue+2);
-      meanPtStat7TeV->SetLineWidth(2);
-      meanPtStat7TeV->DrawClone("pZ");
+      meanPtSysFunc2760GeV_charged->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(meanPtStat2760GeV_charged, 30, 4, kMagenta+2, kMagenta+2);
+      meanPtStat2760GeV_charged->SetLineWidth(2);
+      meanPtStat2760GeV_charged->DrawClone("pZ");
 
       DrawGammaSetMarkerTGraphAsym(meanPtSys7TeV_charged, 24, 2, kBlue-6, kBlue-6);
       gStyle->SetEndErrorSize(10);
@@ -540,15 +676,30 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       meanPtStat7TeV_charged->SetLineWidth(2);
       meanPtStat7TeV_charged->DrawClone("pZ");
 
-      DrawGammaSetMarkerTGraphAsym(meanPtSys2760GeV_charged, 30, 2, kMagenta-6, kMagenta-6);
+      meanPtSys2760GeV->DrawClone("e||");
+      meanPtSysFunc2760GeV->DrawClone("e[]");
+      meanPtStat2760GeV->DrawClone("pZ");
+
+      DrawGammaSetMarkerTGraphAsym(meanPtSys7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue-6, kBlue-6);
       gStyle->SetEndErrorSize(10);
-      meanPtSys2760GeV_charged->DrawClone("e||");
-      DrawGammaSetMarkerTGraphAsym(meanPtSysFunc2760GeV_charged, 30, 2, kMagenta+4, kMagenta+4);
+      meanPtSys7TeV->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(meanPtSysFunc7TeV, GetDefaultMarkerStyle("7TeV","",""), 2, kBlue+4, kBlue+4);
       gStyle->SetEndErrorSize(15);
-      meanPtSysFunc2760GeV_charged->DrawClone("e[]");
-      DrawGammaSetMarkerTGraphAsym(meanPtStat2760GeV_charged, 30, 4, kMagenta+2, kMagenta+2);
-      meanPtStat2760GeV_charged->SetLineWidth(2);
-      meanPtStat2760GeV_charged->DrawClone("pZ");
+      meanPtSysFunc7TeV->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(meanPtStat7TeV, GetDefaultMarkerStyle("7TeV","",""), 4, kBlue+2, kBlue+2);
+      meanPtStat7TeV->SetLineWidth(2);
+      meanPtStat7TeV->DrawClone("pZ");
+
+      meanPtSys8TeV->DrawClone("e||");
+      meanPtSysFunc8TeV->DrawClone("e[]");
+      meanPtStat8TeV->DrawClone("pZ");
+
+      TLatex *label1_1                     = new TLatex(0.15, 0.9, "charged particles");
+      SetStyleTLatex( label1_1, 0.04,4, 1, 42, kTRUE, 11);
+      label1_1->Draw();
+      TLatex *label1_21                     = new TLatex(0.15, 0.85, "with open markers");
+      SetStyleTLatex( label1_21, 0.04,4, 1, 42, kTRUE, 11);
+      label1_21->Draw();
 
       legend->Draw();
       legend2->Draw();
@@ -563,5 +714,98 @@ void CombineMesonMeasurementsYieldPt(TString suffix="eps"){
       meanPtSys8TeV->DrawClone("e||");
 
       canvasY->SaveAs(Form("%s/ParticleMeanPt_with7TeV_pass4.%s", outputDir.Data(), suffix.Data()));
+      canvasY->Clear();
+
+
+      TGraphAsymmErrors* meanPtStat900GeVtemp = (TGraphAsymmErrors*) directoryIntYield900GeV->FindObject("meanPtStatVsMassMeson");
+      TGraphAsymmErrors* meanPtSys900GeVtemp = (TGraphAsymmErrors*) directoryIntYield900GeV->FindObject("meanPtSysVsMassMeson");
+      TGraphAsymmErrors* meanPtSysFunc900GeVtemp = (TGraphAsymmErrors*) directoryIntYield900GeV->FindObject("meanPtSysFuncVsMassMeson");
+
+      TGraphAsymmErrors* meanPtStat900GeV = (TGraphAsymmErrors*) meanPtStat900GeVtemp->Clone("meanPtStat");
+      TGraphAsymmErrors* meanPtSys900GeV = (TGraphAsymmErrors*) meanPtSys900GeVtemp->Clone("meanPtSys");
+      TGraphAsymmErrors* meanPtSysFunc900GeV = (TGraphAsymmErrors*) meanPtSysFunc900GeVtemp->Clone("meanPtSysFunc");
+
+      meanPtStat900GeV->RemovePoint(1);
+      meanPtSys900GeV->RemovePoint(1);
+      meanPtSysFunc900GeV->RemovePoint(1);
+      meanPtStat900GeV->RemovePoint(1);
+      meanPtSys900GeV->RemovePoint(1);
+      meanPtSysFunc900GeV->RemovePoint(1);
+      meanPtStat900GeV->RemovePoint(1);
+      meanPtSys900GeV->RemovePoint(1);
+      meanPtSysFunc900GeV->RemovePoint(1);
+
+      TGraphAsymmErrors* meanPtStat900GeV_charged = (TGraphAsymmErrors*) meanPtStat900GeVtemp->Clone("meanPtstat900GeV_charged");
+      TGraphAsymmErrors* meanPtSys900GeV_charged = (TGraphAsymmErrors*) meanPtSys900GeVtemp->Clone("meanPtsys900GeV_charged");
+      TGraphAsymmErrors* meanPtSysFunc900GeV_charged = (TGraphAsymmErrors*) meanPtSysFunc900GeVtemp->Clone("meanPtsysFunc900GeV_charged");
+
+      meanPtStat900GeV_charged->RemovePoint(0);
+      meanPtSys900GeV_charged->RemovePoint(0);
+      meanPtSysFunc900GeV_charged->RemovePoint(0);
+      meanPtStat900GeV_charged->RemovePoint(1);
+      meanPtSys900GeV_charged->RemovePoint(1);
+      meanPtSysFunc900GeV_charged->RemovePoint(1);
+
+      dummyHisto->Draw();
+
+      DrawGammaSetMarkerTGraphAsym(meanPtSys900GeV_charged, 25, 2, kRed-6, kRed-6);
+      gStyle->SetEndErrorSize(10);
+      meanPtSys900GeV_charged->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(meanPtSysFunc900GeV_charged, 25, 2, kRed+4, kRed+4);
+      gStyle->SetEndErrorSize(15);
+      meanPtSysFunc900GeV_charged->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(meanPtStat900GeV_charged, 25, 4, kRed+2, kRed+2);
+      meanPtStat900GeV_charged->SetLineWidth(2);
+      meanPtStat900GeV_charged->DrawClone("pZ");
+
+      meanPtSys2760GeV_charged->DrawClone("e||");
+      meanPtSysFunc2760GeV_charged->DrawClone("e[]");
+      meanPtStat2760GeV_charged->DrawClone("pZ");
+
+      meanPtSys7TeV_charged->DrawClone("e||");
+      meanPtSysFunc7TeV_charged->DrawClone("e[]");
+      meanPtStat7TeV_charged->DrawClone("pZ");
+
+      DrawGammaSetMarkerTGraphAsym(meanPtSys900GeV, GetDefaultMarkerStyle("900GeV","",""), 2, kRed-6, kRed-6);
+      gStyle->SetEndErrorSize(10);
+      meanPtSys900GeV->DrawClone("e||");
+      DrawGammaSetMarkerTGraphAsym(meanPtSysFunc900GeV, GetDefaultMarkerStyle("900GeV","",""), 2, kRed+4, kRed+4);
+      gStyle->SetEndErrorSize(15);
+      meanPtSysFunc900GeV->DrawClone("e[]");
+      DrawGammaSetMarkerTGraphAsym(meanPtStat900GeV, GetDefaultMarkerStyle("900GeV","",""), 4, kRed+2, kRed+2);
+      meanPtStat900GeV->SetLineWidth(2);
+      meanPtStat900GeV->DrawClone("pZ");
+
+      meanPtSys2760GeV->DrawClone("e||");
+      meanPtSysFunc2760GeV->DrawClone("e[]");
+      meanPtStat2760GeV->DrawClone("pZ");
+
+      meanPtSys7TeV->DrawClone("e||");
+      meanPtSysFunc7TeV->DrawClone("e[]");
+      meanPtStat7TeV->DrawClone("pZ");
+
+      meanPtSys8TeV->DrawClone("e||");
+      meanPtSysFunc8TeV->DrawClone("e[]");
+      meanPtStat8TeV->DrawClone("pZ");
+
+      legend900->Draw();
+      legend9002->Draw();
+
+      label1_1->Draw();
+      label1_21->Draw();
+
+      labelpp1_->Draw();
+      labelpp122_->Draw();
+      labelpp12_->Draw();
+      labelpp12_1->Draw();
+      labelpp13_->Draw();
+      labelpp1_->Draw();
+
+
+      meanPtSys8TeV->DrawClone("e||");
+
+      canvasY->SaveAs(Form("%s/ParticleMeanPt_with7TeV_pass4_and_900GeV.%s", outputDir.Data(), suffix.Data()));
+      canvasY->Clear();
+
       return;
 }
