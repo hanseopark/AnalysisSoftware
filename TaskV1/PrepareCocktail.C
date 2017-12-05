@@ -700,7 +700,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     differenceGammaSumPtOrBin->Add(histoGammaResummedPtOrBin, -1);
 
     Bool_t  isSane                                              = kTRUE;
-    Double_t tolerance                                          = 2.;
+    Double_t tolerance                                          = 4.;
     for (Int_t i=1; i<differenceGammaSumPt->GetNbinsX()+1; i++) {
         if ( !((0 <= (differenceGammaSumPt->GetBinContent(i) + tolerance*differenceGammaSumPt->GetBinError(i))) && (0 >= (differenceGammaSumPt->GetBinContent(i) - tolerance*differenceGammaSumPt->GetBinError(i)))) ) {
             cout << "WARNING: " << differenceGammaSumPt->GetName() << " at p_T[" << i << "] = " << differenceGammaSumPt->GetBinCenter(i) << " GeV/c is " << differenceGammaSumPt->GetBinContent(i) << " +/- " << differenceGammaSumPt->GetBinError(i) << endl;
@@ -1771,6 +1771,9 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     delete dummyHist;
     delete dummyHistRatio;
 
+
+    //***************************** Make plot *****************************************************************
+    MakeSpectrumAndParamPlot( cocktailInputList,cocktailSettingsList, collisionSystem,cent,suffix,outputDir,ptPlotMin, ptPlotMax);
     //***************************** Save histograms *****************************************************************
     if (isSane) {
         SaveHistos();
@@ -2111,11 +2114,21 @@ void SaveHistos() {
         for (Int_t i=0; i<nMotherParticles; i++) {
             if (histoGammaPtOrBin[i]){
               dummyClone = (TH1D*)histoGammaPtOrBin[i]->Clone(Form("%s_RatioToAll",histoGammaPtOrBin[i]->GetName()));
+              dummyClone->Sumw2();
               dummyClone->Divide(histoGammaSumPtOrBin);
               histoGammaPtOrBin[i]->Write(            histoGammaPtOrBin[i]->GetName(),            TObject::kOverwrite);
               dummyClone->Write(            dummyClone->GetName(),            TObject::kOverwrite);
             }
+            if (histoGammaPt[i]){
+              dummyClone = (TH1D*)histoGammaPt[i]->Clone(Form("%s_RatioToAll_Rebin",histoGammaPt[i]->GetName()));
+              dummyClone->Sumw2();
+              dummyClone->Divide(histoGammaSumPt);
+              histoGammaPt[i]->Write(            histoGammaPt[i]->GetName(),            TObject::kOverwrite);
+              dummyClone->Write(            dummyClone->GetName(),            TObject::kOverwrite);
+            }
             if (histoGammaMotherPtOrBin[i])         histoGammaMotherPtOrBin[i]->Write(      histoGammaMotherPtOrBin[i]->GetName(),      TObject::kOverwrite);
+            if (cocktailInputParametrizations[i])           cocktailInputParametrizations[i]->Write(        cocktailInputParametrizations[i]->GetName(),            TObject::kOverwrite);
+            if (cocktailInputParametrizationsMtScaled[i])   cocktailInputParametrizationsMtScaled[i]->Write(cocktailInputParametrizationsMtScaled[i]->GetName(),    TObject::kOverwrite);
         }
         outputFile2->Close();
     }
@@ -2360,4 +2373,497 @@ TH1F* TransformGraphToTH1F(TGraphAsymmErrors* graph) {
 
     return histo;
     delete[] newBinningX;
+}
+
+//************************** Function to get spectrum from cocktail input list **************************************
+void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
+                                              TString collSys,
+                                              TString cent,
+                                              TString suffix,
+                                              TString outputDir,
+                                              Double_t xMin,
+                                              Double_t xMax) {
+  const Int_t nParticles                  = 29;
+  TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrime", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
+                                             "NRho", "CRho", "NDelta", "CDelta", "NKaonSubS", "Lambda", "NSigma", "CSigma", "COmega", "CXi", "JPsi",
+                                             "DZero", "DPlus", "DStarPlus", "DSPlus", "CSigmaStar", "NXiStar", "NKaonSubL"};
+  TString fParticleLatex[nParticles]      = {"#pi^{0}", "#eta", "#omega", "#eta'", "#gamma_{dir}", "(#pi^{+}+#pi^{-})/2", "(K^{+}+K^{-})/2", "(p+#bar{p})/2", "(h^{+}+h^{-})/2",
+                                             "#phi", "K^{0*}", "#rho^{0}", "(#rho^{+}+#rho^{-})/2", "#Delta^{0}", "(#Delta^{+}+#Delta^{-})/2", "K^{0}_{s}", "#Lambda", "#Sigma^{0}",
+                                             "(#Sigma^{+}+#Sigma^{-})/2", "(#Omega^{-}+#bar{#Omega}^{+})/2", "(#Xi^{-}+#bar{#Xi}^{+})/ 2", "J/#psi", "D^{0}", "D^{+}", "D^{*+}",
+                                             "D_{S}^{+}", "#Sigma^{*+}", "(#Xi^{*0}+#bar{#Xi}^{*0})/ 2", "K^{0}_{l}"};
+  Int_t fParticlePDG[nParticles]          = { 111,    221,    223,    331,    22,     211,    321,    2212,   211,    333,   313,    113,    213,    2114,   1114,   310,    3122,   3212,   3222,   3334,   3312,   443,    421,    411,    413,    431,    3224,   3214,   130};
+    if (!list) {
+        cout << "no cocktail input list given!" << endl;
+        return;
+    }
+    TString fileNameAddParams                     = "";
+    if (collSys.Contains("pp"))
+      fileNameAddParams                                            = Form("CocktailInput/CocktailInputPP_Param_%s.root",fEnergyFlag.Data());
+    if (collSys.Contains("pPb"))
+      fileNameAddParams                                            = Form("CocktailInput/CocktailInputPPB_Param_%s.root",fEnergyFlag.Data());
+    Bool_t addParamsAvail                         = kTRUE;
+    TFile fileAddParams(fileNameAddParams.Data());
+    if (fileAddParams.IsZombie()) {
+        cout << "file " << fileNameAddParams.Data() << " not found, will not add additional parametrizations!" << endl;
+        addParamsAvail                            = kFALSE;
+    }
+    TString                             listNameAddParam            = "";
+    if (collSys.Contains("pp"))        listNameAddParam            = Form("pp_%s", fEnergyFlag.Data());
+    else if (collSys.Contains("pPb"))  listNameAddParam            = Form("pPb_%s",  fEnergyFlag.Data());
+    TList* listAddParam                                                 = (TList*)fileAddParams.Get(listNameAddParam.Data());
+    if (!listAddParam) {
+      cout << "list " << listNameAddParam.Data() << " not contained in file " << fileNameAddParams.Data() << "!" << endl;
+      addParamsAvail                            = kFALSE;
+    }
+    listAddParam->SetOwner(kTRUE);
+    // get yRange
+    Double_t yMin                           = GetYRangeExtremaFromList(list, kTRUE, kFALSE, collSys) * 0.5;
+    Double_t yMax                           = GetYRangeExtremaFromList(list, kTRUE, kTRUE, collSys) * 2;
+    
+    TCanvas* canvas                         = GetAndSetCanvas("canvas", 0, 0, 1700, 2000);
+    DrawCanvasSettings(canvas, 0.152, 0.015, 0.015, 0.068);
+    canvas->SetLogy();
+    canvas->SetLogx();
+    
+    // count number of stat histograms in list
+    Int_t histCounter                       = 0;
+    TString tempName                        = "";
+    Bool_t hasHeavyParticle                 = kFALSE;
+    for (Int_t i=0; i<list->GetEntries(); i++) {
+        tempName                            = ((TObject*)list->At(i))->GetName();
+//         cout << tempName.Data() << endl;
+        if (tempName.Contains("Stat") ){
+            if (!tempName.Contains("To") && !tempName.Contains("Fit")) {
+                if ( tempName.Contains("COmega") || tempName.Contains("Xi") ||  tempName.Contains("Phi")  ||  tempName.Contains("Sigma")  )
+                    hasHeavyParticle                = kTRUE;
+//                 cout << "accepted: "<< tempName.Data() << endl;
+                histCounter++;
+            } else {
+                continue;
+            }
+        } else {
+            continue;
+        }
+    }
+    cout << "counted: " << histCounter << " inputs"<< endl;
+
+    // get number of rows for legend
+    Int_t nRows                             = 0;
+    if (histCounter%2 == 0) nRows           = histCounter/2;
+    else nRows                              = (histCounter+1)/2;
+
+    // create legend
+    Int_t textSizeLabelsPixel                 = 2000*0.038;
+    TLegend* legend                              = GetAndSetLegend2(0.2,  0.09, 0.65, 0.08+(1.05*0.028*nRows),textSizeLabelsPixel, 2, "", 43, 0);
+    TLatex *labelEnergy                     = new TLatex(0.94, 0.925, Form("ALICE %s", collSys.Data()));
+    SetStyleTLatex( labelEnergy, 0.043,4, 1, 42, kTRUE, 31);
+
+    if (hasHeavyParticle && xMax < 5){
+        cout << "resetting yMin" << endl;
+        yMin                                = yMin*0.1;
+    }
+    // dummy histogram
+    TH1D* dummyHisto                          = new TH1D("dummyHisto", "", 100000, xMin*0.4, xMax*1.9);
+    SetHistogramm(dummyHisto,"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}d#it{y}} ((GeV/#it{c})^{-1})", yMin, yMax, 0.7, 1.65);
+    dummyHisto->GetXaxis()->SetLabelOffset(-0.01);
+    dummyHisto->GetXaxis()->SetTickLength(0.02);
+    dummyHisto->GetYaxis()->SetTitleFont(62);
+    dummyHisto->GetXaxis()->SetTitleFont(62);
+    dummyHisto->Draw();
+
+    // search list for particle spectra
+    Width_t widthLinesBoxes                 = 1.4;
+    TH1D* tempHist                          = NULL;
+    TGraph* tempGraph                       = NULL;
+    TGraphErrors* tempGraphErrs             = NULL;
+    TGraphAsymmErrors* tempGraphAsymErrs    = NULL;
+    TString tempClass                       = "";
+    TF1* tempFit                            = NULL;
+    TString methodMeson                     = "";
+    for (Int_t i=0; i<nParticles; i++) {
+      if(i==0||i==1)
+        methodMeson = fSpecialFoldername;
+      else
+        methodMeson = "";
+      if (list->FindObject(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data()))) {
+          tempClass                   = ((TObject*)list->FindObject(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data())))->ClassName();
+          if (tempClass.Contains("TH1")) {
+              tempHist                = (TH1D*)((TH1D*)list->FindObject(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data())))->Clone("tempHist");
+              TGraphAsymmErrors* tempGrC   = new TGraphAsymmErrors(tempHist);
+              DrawGammaSetMarkerTGraphAsym(tempGrC, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),widthLinesBoxes,kTRUE);
+              tempGrC->DrawClone("e2");
+          } else if (tempClass.CompareTo("TGraph") == 0) {
+              tempGraph               = (TGraph*)((TGraph*)list->FindObject(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data())))->Clone("tempGraph");
+              DrawGammaSetMarkerTGraph(tempGraph, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),widthLinesBoxes,kTRUE);
+              tempGraph->DrawClone("e2");
+          } else if (tempClass.CompareTo("TGraphErrors") == 0) {
+
+              tempGraphErrs           = (TGraphErrors*)((TGraphErrors*)list->FindObject(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data())))->Clone("tempGraphErrs");
+              DrawGammaSetMarkerTGraphErr(tempGraphErrs, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),widthLinesBoxes,kTRUE);
+              tempGraphErrs->DrawClone("e2");
+          } else if (tempClass.CompareTo("TGraphAsymmErrors") == 0) {
+              tempGraphAsymErrs       = (TGraphAsymmErrors*)((TGraphAsymmErrors*)list->FindObject(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data())))->Clone(Form("%s%sSys", fParticle[i].Data(),methodMeson.Data()));
+              DrawGammaSetMarkerTGraphAsym(tempGraphAsymErrs, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),widthLinesBoxes,kTRUE);
+              tempGraphAsymErrs->DrawClone("e2");
+          }
+      }
+      if (list->FindObject(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data()))) {
+          tempClass                   = ((TObject*)list->FindObject(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data())))->ClassName();
+          if (tempClass.Contains("TH1")) {
+              tempHist                = (TH1D*)((TH1D*)list->FindObject(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data())))->Clone("tempHist");
+              DrawGammaSetMarker(tempHist, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]));
+              tempHist->SetLineWidth(2);
+              tempHist->Draw("e1x0,same");
+              legend->AddEntry(tempHist, Form("%s", fParticleLatex[i].Data()), "lp");
+          } else if (tempClass.CompareTo("TGraph") == 0) {
+              tempGraph               = (TGraph*)((TGraph*)list->FindObject(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data())))->Clone("tempGraph");
+              DrawGammaSetMarkerTGraph(tempGraph, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),2);
+              tempGraph->DrawClone("p");
+              legend->AddEntry(tempGraph, Form("%s", fParticleLatex[i].Data()), "lp");
+          } else if (tempClass.CompareTo("TGraphErrors") == 0) {
+              tempGraphErrs           = (TGraphErrors*)((TGraphErrors*)list->FindObject(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data())))->Clone("tempGraphErrs");
+              ProduceGraphErrWithoutXErrors(tempGraphErrs);
+              DrawGammaSetMarkerTGraphErr(tempGraphErrs, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),2);
+              tempGraphErrs->DrawClone("p");
+
+              legend->AddEntry(tempGraphErrs, Form("%s", fParticleLatex[i].Data()), "lp");
+          } else if (tempClass.CompareTo("TGraphAsymmErrors") == 0) {
+              tempGraphAsymErrs       = (TGraphAsymmErrors*)((TGraphAsymmErrors*)list->FindObject(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data())))->Clone(Form("%s%sStat", fParticle[i].Data(),methodMeson.Data()));
+              ProduceGraphAsymmWithoutXErrors(tempGraphAsymErrs);
+              DrawGammaSetMarkerTGraphAsym(tempGraphAsymErrs, GetParticleMarkerStyle(fParticle[i]), GetParticleMarkerSize(fParticle[i]), GetParticleColor(fParticle[i]),GetParticleColor(fParticle[i]),2);
+              tempGraphAsymErrs->DrawClone("p");
+
+              legend->AddEntry(tempGraphAsymErrs, Form("%s", fParticleLatex[i].Data()), "lp");
+          }
+          if (cocktailParamList->FindObject(Form("%d_pt", fParticlePDG[i]))) {
+              tempFit       = (TF1*)cocktailParamList->FindObject(Form("%d_pt", fParticlePDG[i]));
+              DrawGammaSetMarkerTF1(tempFit, 1,1.5, GetParticleColor(fParticle[i]));
+              tempFit->SetRange(xMin*0.5, xMax*1.5);
+              tempFit->Draw("l,same");
+          } else if (cocktailParamList->FindObject(Form("%d_pt_mtScaled", fParticlePDG[i]))) {
+              tempFit       = (TF1*)cocktailParamList->FindObject(Form("%d_pt_mtScaled", fParticlePDG[i]));
+              DrawGammaSetMarkerTF1(tempFit, 1, 1.5, GetParticleColor(fParticle[i]));
+              tempFit->SetRange(xMin*0.5, xMax*1.5);
+              tempFit->Draw("l,same");
+          } else if (listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data())) && addParamsAvail) {
+              tempFit       = (TF1*)listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data()));
+              DrawGammaSetMarkerTF1(tempFit, 1, 1.5, GetParticleColor(fParticle[i]));
+              tempFit->SetRange(xMin*0.5, xMax*1.5);
+              tempFit->Draw("l,same");
+          }
+      }
+      
+    }
+    dummyHisto->Draw("same,axis");
+    // draw legend
+    Double_t textSizeLabelsRel          = 55./1200;
+    TLegend* legendHagedorn           = GetAndSetLegend2(0.56,  0.87, 0.95, 0.92,textSizeLabelsPixel, 1, "", 43, 0);
+    legendHagedorn->SetMargin(0.12);
+    TGraphAsymmErrors* dummyForLegend    = new TGraphAsymmErrors(1);
+    dummyForLegend->SetLineColor(kGray+2);
+    dummyForLegend->SetLineWidth(2);
+    legendHagedorn->AddEntry(dummyForLegend,"mod. Hagedorn fit","l");
+    legendHagedorn->Draw();
+    legend->Draw("same");
+    labelEnergy->Draw();
+    // labelALICE->Draw();
+    // save canvas
+    if (histCounter){cout << "saving plot" << endl;
+     canvas->SaveAs(Form("%s/ParticleSpectra_WithFits.%s", outputDir.Data(), suffix.Data()));}
+
+    // free pointer
+    delete tempHist;
+    delete legend;
+    delete canvas;
+    delete dummyHisto;
+}
+//================================================================================================================
+//Return particle color
+//================================================================================================================
+Color_t GetParticleColor(TString particle) {
+    if (particle.Contains("NPion")){
+        return kBlue+1;
+    } else if (particle.Contains("Eta")){
+        return kRed+1;
+    } else if (particle.Contains("CPion")){
+        return kBlue-6;
+    } else if (particle.Contains("CKaon")){
+        return kRed-6;
+    } else if (particle.Contains("NKaonSubS")){
+        return kPink+8;
+    } else if (particle.Contains("NKaonSubL")){
+        return kPink+9;
+    } else if (particle.Contains("Proton")){
+        return kSpring+4;
+    } else if (particle.Contains("Lambda")){
+        return kViolet+1;
+    } else if (particle.Contains("Phi")){
+        return kGreen+3;
+    } else if (particle.Contains("NKaonStar")){
+        return 807;
+    } else if (particle.Contains("CXi")){
+        return 800;
+    } else if (particle.Contains("COmega")){
+        return kCyan+2;
+    } else if (particle.Contains("NRho")){
+        return kPink-2;
+    } else if (particle.Contains("CRho")){
+        return kSpring+2;
+    } else if (particle.Contains("CSigmaStar")){
+        return 802;
+    } else if (particle.Contains("NXiStar")){
+        return kTeal+4;
+    } else if (particle.Contains("DZero")){
+        return kAzure;
+    } else if (particle.Contains("DPlus")){
+        return kAzure+2;
+    } else if (particle.Contains("DStarPlus")){
+        return kAzure-7;
+    } else if (particle.Contains("DSPlus")){
+        return kViolet+4;
+    } else if (particle.Contains("Omega")){
+        return kOrange-2;
+    } else if (particle.Contains("CSigma")){
+        return kPink-6;
+    } else if (particle.Contains("CHadron")){
+        return kViolet+2;
+    } else {
+        cout << "setting color for "<< particle.Data() << ", which isn't known for the color settings" << endl;
+        return kGray+1;
+    }
+
+}
+
+//================================================================================================================
+//Return particle color
+//================================================================================================================
+Style_t GetParticleMarkerStyle(TString particle) {
+
+    if (particle.Contains("NPion"))
+        return kFullCircle;
+    else if (particle.Contains("Eta"))
+        return kFullSquare;
+    else if (particle.Contains("CPion"))
+        return kOpenCircle;
+    else if (particle.Contains("CKaon"))
+        return kOpenSquare;
+    else if (particle.Contains("NKaonSubS"))
+        return kOpenCross;
+    else if (particle.Contains("NKaonSubL"))
+        return kOpenStar;
+    else if (particle.Contains("Proton"))
+        return kFullCross;
+    else if (particle.Contains("Lambda"))
+        return kFullDiamond;
+    else if (particle.Contains("Phi"))
+        return kOpenDiamond;
+    else if (particle.Contains("NKaonStar"))
+        return kFullStar;
+    else if (particle.Contains("CXi"))
+        return kOpenStar;
+    else if (particle.Contains("COmega"))
+        return kFullCircle;
+    else if (particle.Contains("NRho"))
+        return kOpenCircle;
+    else if (particle.Contains("CRho"))
+        return kOpenCircle;
+    else if (particle.Contains("NXiStar"))
+        return kOpenSquare;
+    else if (particle.Contains("CSigmaStar"))
+        return kOpenCircle;
+    else if (particle.Contains("DZero"))
+        return kFullCross;
+    else if (particle.Contains("DPlus"))
+        return kFullStar;
+    else if (particle.Contains("DStarPlus"))
+        return kOpenCross;
+    else if (particle.Contains("DSPlus"))
+        return kFullDiamond;
+    else if (particle.Contains("Omega"))
+        return kOpenCross;
+    else if (particle.Contains("CSigma"))
+        return kOpenCircle;
+    else
+        return 1;
+}
+
+//================================================================================================================
+//Return particle color
+//================================================================================================================
+Size_t GetParticleMarkerSize(TString particle) {
+
+    if (particle.Contains("NPion"))
+        return 1.5;
+    else if (particle.Contains("Eta"))
+        return 1.4;
+    else if (particle.Contains("CPion"))
+        return 1.6;
+    else if (particle.Contains("CKaon"))
+        return 1.5;
+    else if (particle.Contains("NKaonSubS"))
+        return 1.8;
+    else if (particle.Contains("NKaonSubL"))
+        return 1.8;
+    else if (particle.Contains("Proton"))
+        return 1.7;
+    else if (particle.Contains("Lambda"))
+        return 2.5;
+    else if (particle.Contains("Phi"))
+        return 2.6;
+    else if (particle.Contains("NKaonStar"))
+        return 2.3;
+    else if (particle.Contains("CXi"))
+        return 2.6;
+    else if (particle.Contains("COmega"))
+        return 1.5;
+    else if (particle.Contains("NRho"))
+        return 1.6;
+    else if (particle.Contains("NXiStar"))
+        return 1.6;
+    else if (particle.Contains("CSigmaStar"))
+        return 1.5;
+    else if (particle.Contains("DZero"))
+        return 1.7;
+    else if (particle.Contains("DPlus"))
+        return 2.3;
+    else if (particle.Contains("DStarPlus"))
+        return 1.8;
+    else if (particle.Contains("DSPlus"))
+        return 2.5;
+    else if (particle.Contains("Omega"))
+        return 1.8;
+    else if (particle.Contains("CSigma"))
+        return 1.6;
+    else
+        return 1.5;
+}
+//================================================================================================================
+//Function to obtain best choice of yRange for all histograms in list
+//================================================================================================================
+Double_t GetYRangeExtremaFromList(TList* list, Bool_t doParticleSpectra, Bool_t returnMax, TString collSystem) {
+
+    // get number of histograms in list
+    Int_t numberOfObjects                       = list->GetEntries();
+    
+    const Int_t nParticles                  = 29;
+    TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrime", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
+                                               "NRho", "CRho", "NDelta", "CDelta", "NKaonSubS", "Lambda", "NSigma", "CSigma", "COmega", "CXi", "JPsi",
+                                               "DZero", "DPlus", "DStarPlus", "DSPlus", "CSigmaStar", "NXiStar", "NKaonSubL"};
+    
+    // search list for particle spectra and fill maxima in array
+    TString tempClass                           = "";
+    TString tempName                            = "";
+    TObject** tempObject                        = new TObject*[numberOfObjects];
+    for (Int_t i=0; i<numberOfObjects; i++)
+        tempObject[i]                           = new TObject;
+
+    Double_t* tempMax                           = new Double_t[numberOfObjects];
+    Double_t* tempMin                           = new Double_t[numberOfObjects];
+    for (Int_t i=0; i<numberOfObjects; i++) {
+        tempMax[i]                              = 0;
+        tempMin[i]                              = 0;
+    }
+
+    if (doParticleSpectra) {
+        for (Int_t i=0; i<numberOfObjects; i++) {
+            tempName                            = ((TObject*)list->At(i))->GetName();
+            tempClass                           = ((TObject*)list->At(i))->ClassName();
+
+            for (Int_t particle=0; particle<nParticles; particle++) {
+                for (Int_t method=0; method<9; method++) {
+
+                    // check if object at position i is particle spectrum (stat. err.)
+                    if (tempName.CompareTo(Form("%sStat", fParticle[particle].Data())) == 0) {
+
+                        // check for type of object and fill extrema in arrays
+                        if (tempClass.Contains("TH1")) {
+                            tempObject[i]       = (TH1D*)((TH1D*)list->FindObject(Form("%sStat", fParticle[particle].Data())))->Clone("tempObject");
+                            tempMax[i]          = 0;
+                            tempMin[i]          = 1e11;
+                            for (Int_t l = 0; l < ((TH1D*)tempObject[i])->GetNbinsX()+1; l++){
+                                if (tempMax[i] < ((TH1D*)tempObject[i])->GetBinContent(l))
+                                    tempMax[i]  = ((TH1D*)tempObject[i])->GetBinContent(l);
+                                if (tempMin[i] > ((TH1D*)tempObject[i])->GetBinContent(l) && ((TH1D*)tempObject[i])->GetBinContent(l) > 0)
+                                    tempMin[i]  = ((TH1D*)tempObject[i])->GetBinContent(l);
+                            }
+                        } else if (tempClass.CompareTo("TGraph") == 0) {
+                            tempObject[i]       = (TGraph*)((TGraph*)list->FindObject(Form("%sStat", fParticle[particle].Data())))->Clone("tempObject");
+                            tempMax[i]          = TMath::MaxElement(((TGraph*)tempObject[i])->GetN(),((TGraph*)tempObject[i])->GetY());
+                            tempMin[i]          = TMath::MinElement(((TGraph*)tempObject[i])->GetN(),((TGraph*)tempObject[i])->GetY());
+                        } else if (tempClass.CompareTo("TGraphErrors") == 0) {
+                            tempObject[i]       = (TGraphErrors*)((TGraphErrors*)list->FindObject(Form("%sStat", fParticle[particle].Data())))->Clone("tempObject");
+                            tempMax[i]          = TMath::MaxElement(((TGraphErrors*)tempObject[i])->GetN(),((TGraphErrors*)tempObject[i])->GetY());
+                            tempMin[i]          = TMath::MinElement(((TGraphErrors*)tempObject[i])->GetN(),((TGraphErrors*)tempObject[i])->GetY());
+                        } else if (tempClass.CompareTo("TGraphAsymmErrors") == 0) {
+                            tempObject[i]       = (TGraphAsymmErrors*)((TGraphAsymmErrors*)list->FindObject(Form("%sStat", fParticle[particle].Data())))->Clone("tempObject");
+                            tempMax[i]          = TMath::MaxElement(((TGraphAsymmErrors*)tempObject[i])->GetN(),((TGraphAsymmErrors*)tempObject[i])->GetY());
+                            tempMin[i]          = TMath::MinElement(((TGraphAsymmErrors*)tempObject[i])->GetN(),((TGraphAsymmErrors*)tempObject[i])->GetY());
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        for (Int_t i=0; i<numberOfObjects; i++) {
+            tempClass                           = ((TObject*)list->At(i))->ClassName();
+
+            if (tempClass.Contains("TH1")) {
+                tempObject[i]                   = (TH1D*)list->At(i);
+                tempMax[i]                      = 0;
+                tempMin[i]                      = 1e11;
+                for (Int_t l = 0; l < ((TH1D*)tempObject[i])->GetNbinsX()+1; l++){
+                    if (tempMax[i] < ((TH1D*)tempObject[i])->GetBinContent(l))
+                        tempMax[i]  = ((TH1D*)tempObject[i])->GetBinContent(l);
+                    if (tempMin[i] > ((TH1D*)tempObject[i])->GetBinContent(l) && ((TH1D*)tempObject[i])->GetBinContent(l) > 0)
+                        tempMin[i]  = ((TH1D*)tempObject[i])->GetBinContent(l);
+                }
+            } else if (tempClass.CompareTo("TGraph") == 0) {
+                tempObject[i]                   = (TGraph*)list->At(i);
+                tempMax[i]                      = TMath::MaxElement(((TGraph*)tempObject[i])->GetN(),((TGraph*)tempObject[i])->GetY());
+                tempMin[i]                      = TMath::MinElement(((TGraph*)tempObject[i])->GetN(),((TGraph*)tempObject[i])->GetY());
+            } else if (tempClass.CompareTo("TGraphErrors") == 0) {
+                tempObject[i]                   = (TGraphErrors*)list->At(i);
+                tempMax[i]                      = TMath::MaxElement(((TGraphErrors*)tempObject[i])->GetN(),((TGraphErrors*)tempObject[i])->GetY());
+                tempMin[i]                      = TMath::MinElement(((TGraphErrors*)tempObject[i])->GetN(),((TGraphErrors*)tempObject[i])->GetY());
+            } else if (tempClass.CompareTo("TGraphAsymmErrors") == 0) {
+                tempObject[i]                   = (TGraphAsymmErrors*)list->At(i);
+                tempMax[i]                      = TMath::MaxElement(((TGraphAsymmErrors*)tempObject[i])->GetN(),((TGraphAsymmErrors*)tempObject[i])->GetY());
+                tempMin[i]                      = TMath::MinElement(((TGraphAsymmErrors*)tempObject[i])->GetN(),((TGraphAsymmErrors*)tempObject[i])->GetY());
+            }
+        }
+    }
+
+    // sort arrays using sort() - lowest to highest
+    sort(tempMax, tempMax + numberOfObjects);
+    sort(tempMin, tempMin + numberOfObjects);
+
+    // set total min and max
+    Double_t totalMax                           = tempMax[numberOfObjects-1];
+    Double_t totalMin                           = tempMin[0];
+    if (totalMin == 0) {
+        for (Int_t i=1; i<numberOfObjects; i++) {
+            if (tempMin[i] != 0 && tempMin[i]<totalMin && tempMin[i]>1e-60) {
+                totalMin                        = tempMin[i];
+                break;
+            } else {
+                continue;
+            }
+        }
+    }
+    if (totalMin == 0 && !collSystem.Contains("Pb") )
+        totalMin                 = 1e-9;
+    else
+        totalMin                 = 1e-7;
+
+    // free pointer
+    delete[] tempObject;
+    delete[] tempMax;
+    delete[] tempMin;
+
+    // return either total maximum or total minimum
+    if (returnMax) {
+        return totalMax;
+    } else {
+        return totalMin;
+    }
 }

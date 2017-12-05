@@ -144,5 +144,18 @@ TH1F*       GetCocktailInputSpectrum                    (   TList*              
                                                             Int_t               method          );
 TH1F*       TransformGraphToTH1F                        (   TGraphErrors*       graph           );
 TH1F*       TransformGraphToTH1F                        (   TGraphAsymmErrors*  graph           );
-
-
+void        MakeSpectrumAndParamPlot                    (   TList*      list,
+                                                            TList*      cocktailParamList,
+                                                            TString     collSys,
+                                                            TString     cent,
+                                                            TString     suffix,
+                                                            TString     outputDir,
+                                                            Double_t    xMin,
+                                                            Double_t    xMax                    );
+Color_t     GetParticleColor                            (   TString     particle                );
+Style_t     GetParticleMarkerStyle                      (   TString     particle                );
+Size_t      GetParticleMarkerSize                       (   TString     particle                );
+Double_t    GetYRangeExtremaFromList                    (   TList*      list,
+                                                            Bool_t      doParticleSpectra,
+                                                            Bool_t      returnMax,
+                                                            TString     collSystem              );
