@@ -91,7 +91,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 //     Double_t incRatio[2];
     Double_t doubleRatioX[2];
     Double_t doubleRatioXpp[2];
-    doubleRatio[0]      = 0.75;     doubleRatio[1]      = 1.65;
+    doubleRatio[0]      = 0.72;     doubleRatio[1]      = 1.55;
     indMeasRatio[0]     = 0.65;     indMeasRatio[1]     = 1.45;
 //  incRatio[0]         = 0.0;      incRatio[1]         = 1.7;
     doubleRatioX[0]     = 0.7;      doubleRatioX[1]     = 24.5;
@@ -123,10 +123,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TString fParticle[14]                           = { "Pi0", "Eta", "omega", "EtaPrim", "rho0", "rho+", "rho-", "phi", "Delta0", "Delta+", "Sigma0","K0s", "K0l", "Lambda"};
     TString fParticleLatex[14]                      = { "#pi^{0}", "#eta", "#omega", "#eta'", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "#Delta^{0}", "#Delta^{+}", "#Sigma^{0}", "K^{0}_{s}","K^{0}_{l}", "#Lambda"};
     TString fParticleLatexPartialSums[14]           = { "#pi^{0}", "#eta", "#omega", "#eta'", "#rho^{0}", "#rho^{#pm}", "", "#phi", "#Delta^{0/+}", "", "#Sigma^{0}", "K^{0}_{s}","K^{0}_{l}", "#Lambda"};
-    Style_t     cocktailColor[14]                   = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kGreen+2,kRed-2,kViolet, kBlue-3, kTeal+9,kMagenta+2,kCyan+4,kViolet+4,kAzure-4};
+    Style_t     cocktailColor[14]                   = {kBlue+1,    kRed+1, kOrange-2, kOrange-2,  kPink-2,      kSpring+2,  kGreen+3,    kAzure,kAzure+2, 24,      kPink+8,kPink+9,      kViolet+1  };
+    // Style_t     cocktailColor[14]                   = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kGreen+2,kRed-2,kViolet, kBlue-3, kTeal+9,kMagenta+2,kCyan+4,kViolet+4,kAzure-4};
 //     Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen+2,kOrange+3, kTeal+9,kMagenta+2,kCyan+4,kViolet+4,kAzure-4};
     Color_t     cocktailMarker[14]                  = {20,    21, 25, 24,  20,      21,      24,25, 24,      25,21,        24,     25,       20};
-
 
 
     TString  nameMeasGlobal[11]                     = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
@@ -1255,12 +1255,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     DrawGammaLines(0.23, 25. , 1.05, 1.05,0.1, kGray, 7);
     DrawGammaLines(0.23, 25. , 0.95, 0.95,0.1, kGray, 7);
 
-    TLatex *labelRatioToFitEnergy   = new TLatex(0.95, 0.92, collisionSystempp2760GeV.Data());
+    TLatex *labelRatioToFitEnergy   = new TLatex(0.95, 0.91, Form("%s, %s",textALICE.Data(),collisionSystempp2760GeV.Data()));
     SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
     labelRatioToFitEnergy->Draw();
-    TLatex *labelRatioToFitALICE    = new TLatex(0.95, 0.86, textALICE.Data());
-    SetStyleTLatex( labelRatioToFitALICE, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
-    labelRatioToFitALICE->Draw();
     TLatex *labelRatioToFitGamma      = new TLatex(0.12, 0.92, "#gamma_{inc}");
     SetStyleTLatex( labelRatioToFitGamma, textSizeLabelsPixel, 4, 1, 43, kTRUE, 11);
     labelRatioToFitGamma->Draw();
@@ -1295,7 +1292,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     DrawGammaLines(0.23, 25. , 0.9, 0.9,0.5, kGray, 9);
 
     labelRatioToFitEnergy->Draw();
-    labelRatioToFitALICE->Draw();
     labelRatioToFitGamma->Draw();
     histo2DGammaRatioToCombFit->Draw("same,axis");
 
@@ -1347,7 +1343,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit.%s",outputDir.Data(),suffix.Data()));
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit.pdf",outputDir.Data()));
     
-    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.75,1.33);
+    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.73,1.27);
     histo2DGammaRatioToCombFit->Draw("copy");
     cout << __LINE__ << endl;
 
@@ -1377,7 +1373,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     DrawGammaLines(0.23, 25. , 0.9, 0.9,0.5, kGray, 9);
 
     labelRatioToFitEnergy->Draw();
-    labelRatioToFitALICE->Draw();
     labelRatioToFitGamma->Draw();
     histo2DGammaRatioToCombFit->Draw("same,axis");
 
@@ -1385,11 +1380,11 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     //****************************** Definition of the Legend ******************************************
     //**************** Row def ************************
     Double_t rowsLegendGammaRatioPCMcomb[5]          = {0.31, 0.27, 0.21, 0.16, 0.16};
-    Double_t rowsLegendGammaRatioAbsPCMcomb[5]       = {0.82, 0.78, 0.64, 0.59 };
+    Double_t rowsLegendGammaRatioAbsPCMcomb[5]       = {0.80, 0.77, 0.64, 0.59 };
     Double_t columnsLegendGammaRatioPCMcomb[7]       = {0.14, 0.28, 0.38, 0.48, 0.7, 0.8};
     Double_t columnsLegendGammaRatioAbsPCMcomb[7]    = {0.215, 0.74, 1.24, 2, 6.6, 9.6};
     Double_t lengthBoxPCMcomb                          = 0.2;
-    Double_t heightBoxPCMcomb                          = 0.02/2;
+    Double_t heightBoxPCMcomb                          = 0.016/2;
     //****************** first Column **************************************************
     textPCMRatioGamma                 = new TLatex(columnsLegendGammaRatioPCMcomb[0],rowsLegendGammaRatioPCMcomb[2],nameMeasGlobalLabelGamma[0]);
     SetStyleTLatex( textPCMRatioGamma, textSizeLabelsPixel,4, 1, 43);
@@ -1411,9 +1406,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     markerEMCALGammaRatio         = CreateMarkerFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatioPCMcomb[1] ,rowsLegendGammaRatioPCMcomb[2],1);
     markerEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbsPCMcomb[1] ,rowsLegendGammaRatioAbsPCMcomb[1]);
 
-    boxPCMGammaRatio                 = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[0], columnsLegendGammaRatioAbsPCMcomb[2]-0.8*lengthBox , rowsLegendGammaRatioAbsPCMcomb[0]- heightBox, columnsLegendGammaRatioAbsPCMcomb[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbsPCMcomb[0]+ heightBox);
+    boxPCMGammaRatio                 = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[0], columnsLegendGammaRatioAbsPCMcomb[2]-0.8*lengthBox , rowsLegendGammaRatioAbsPCMcomb[0]- heightBox, columnsLegendGammaRatioAbsPCMcomb[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbsPCMcomb[0]+ heightBoxPCMcomb);
     boxPCMGammaRatio->Draw("l");
-    boxEMCALGammaRatio               = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatioAbsPCMcomb[2]-0.8*lengthBox , rowsLegendGammaRatioAbsPCMcomb[1]- heightBox, columnsLegendGammaRatioAbsPCMcomb[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbsPCMcomb[1]+ heightBox);
+    boxEMCALGammaRatio               = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatioAbsPCMcomb[2]-0.8*lengthBox , rowsLegendGammaRatioAbsPCMcomb[1]- heightBox, columnsLegendGammaRatioAbsPCMcomb[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbsPCMcomb[1]+ heightBoxPCMcomb);
     boxEMCALGammaRatio->Draw("l");
 
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit_combPCM.%s",outputDir.Data(),suffix.Data()));
@@ -1715,10 +1710,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     hist2DDRDummySingle->GetXaxis()->SetMoreLogLabels(kTRUE);
     hist2DDRDummySingle->DrawCopy();
 
-        TLegend* legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*2,0.5,0.953, textSizeSinglePad, 2, "", 42, 0.3);
+        TLegend* legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*3,0.31,0.953, textSizeSinglePad, 1, "", 42, 0.3);
         legendDRSingle->SetTextAlign(11);
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
-        for (Int_t i = 10; i > -1; i--){
+        for (Int_t i = 0; i < 11; i++){
             if (graphDRPi0FitSysErr[i]){
                 DrawGammaSetMarkerTGraphAsym(graphDRPi0FitSysErr[i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
                 graphDRPi0FitSysErr[i]->Draw("E2same");
@@ -1738,13 +1733,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         legendDRSingle->Draw();
 
 
-        TLatex *labelDRSingle = new TLatex(0.95,0.92,collisionSystempp2760GeV.Data());
+        TLatex *labelDRSingle = new TLatex(0.95,0.92,Form("%s, %s",textALICE.Data(),collisionSystempp2760GeV.Data()));
         SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
         labelDRSingle->Draw();
-        TLatex *labelALICEDRSingle = new TLatex(0.95,0.87,textALICE.Data());
-        SetStyleTLatex( labelALICEDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
-        labelALICEDRSingle->Draw();
-
 
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -1770,10 +1761,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         if (histoDRNonFitStatErr[0]) histoDRNonFitStatErr[0]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[4]) histoDRNonFitStatErr[4]->Draw("p,same,e0,X0");
         legendDRSingle->Draw();
-
         labelDRSingle->Draw();
-        labelALICEDRSingle->Draw();
-
 
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -1790,10 +1778,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         DrawGammaSetMarkerTGraphAsym(graphCombDRStatPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes);
         legendDRComb->AddEntry(graphCombDRSys,"ALICE","pf");
         graphCombDRSys->Draw("E2same");
-        graphCombDRStatPlot->Draw("Epsame");
-//         legendDRComb->Draw();
-
-        labelALICEDRSingle->Draw();
+        graphCombDRStatPlot->Draw("p,same,z");
 
         labelDRSingle->Draw();
         hist2DDRDummySingle->Draw("same,axis");
@@ -1810,9 +1795,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitSys, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitStatPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes);
         graphCombDRNonFitSys->Draw("E2same");
-        graphCombDRNonFitStatPlot->Draw("Epsame");
-
-        labelALICEDRSingle->Draw();
+        graphCombDRNonFitStatPlot->Draw("p,same,z");
 
         labelDRSingle->Draw();
         hist2DDRDummySingle->Draw("same,axis");
@@ -1822,8 +1805,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         hist2DDRDummySingle->DrawCopy();
 
-        TLegend* legendDRTheoryComb         = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
-        TLegend* legendDRTheoryComb2        = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*5,0.5,0.96-textSizeSinglePad*1, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
+        TLegend* legendDRTheoryComb         = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1.2,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
+        TLegend* legendDRTheoryComb2        = GetAndSetLegend2(0.12,0.94-textSizeSinglePad*5,0.5,0.94-textSizeSinglePad*1, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRSys, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRStatPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes);
@@ -1856,12 +1839,12 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
 
         graphCombDRSys->Draw("E2same");
-        graphCombDRStatPlot->Draw("Epsame");
+        graphCombDRStatPlot->Draw("p,same,z");
         legendDRTheoryComb->Draw();
         legendDRTheoryComb2->Draw();
 
-        labelALICEDRSingle->Draw();
-
+        labelDRSingle = new TLatex(0.95,0.92,Form("%s",collisionSystempp2760GeV.Data()));
+        SetStyleTLatex( labelDRSingle, textSizeSinglePad,4, 1, 42, kTRUE, 31);
         labelDRSingle->Draw();
         hist2DDRDummySingle->Draw("same,axis");
 
@@ -1891,11 +1874,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
 
         graphCombDRNonFitSys->Draw("E2same");
-        graphCombDRNonFitStatPlot->Draw("Epsame");
+        graphCombDRNonFitStatPlot->Draw("p,same,z");
         legendDRTheoryComb->Draw();
         legendDRTheoryComb2->Draw();
-
-        labelALICEDRSingle->Draw();
 
         labelDRSingle->Draw();
         hist2DDRDummySingle->Draw("same,axis");
@@ -2385,13 +2366,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
 
 
-        TLatex *labelEnergyDGInvYieldPaperAll = new TLatex(0.94, 0.965-0.04*1, collisionSystempp2760GeV.Data());
+        TLatex *labelEnergyDGInvYieldPaperAll = new TLatex(0.94, 0.965-0.04*1, Form("%s, %s",textALICE.Data(),collisionSystempp2760GeV.Data()));
         SetStyleTLatex( labelEnergyDGInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
         labelEnergyDGInvYieldPaperAll->Draw();
-        TLatex *labelALICEDGInvYieldPaperAll  = new TLatex(0.94,0.965-0.04*2,textALICE.Data());
-        SetStyleTLatex( labelALICEDGInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
-        labelALICEDGInvYieldPaperAll->Draw();
-        TLatex *labelALICEDGNormUnPaperAll    = new TLatex(0.94,0.965-(0.04*2+0.04*0.8),"norm. unc. 2.5%");
+        TLatex *labelALICEDGNormUnPaperAll    = new TLatex(0.94,0.965-(0.04*2),"norm. unc. 2.5%");
         SetStyleTLatex( labelALICEDGNormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 31);
         labelALICEDGNormUnPaperAll->Draw();
 
@@ -2423,7 +2401,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
 
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
@@ -2431,11 +2408,11 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_NonFit.pdf",outputDir.Data()));
     histo2DYieldGamma->Draw("copy");
 
-        TLegend* legendYieldDirGamma        = GetAndSetLegend2(0.70, 0.84-(2*textSizeLabelsRel*0.85), 0.93, 0.84,textSizeLabelsPixel, 1, "", 43, 0.3);
+        TLegend* legendYieldDirGamma        = GetAndSetLegend2(0.70, 0.87-(2*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
 
         DrawGammaSetMarkerTGraphAsym(graphCombIncGammaSys, markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV+0.2, colorCombpp2760GeVBox , colorCombpp2760GeVBox,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombIncGammaStatPlot, markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV+0.2, colorCombpp2760GeVBox , colorCombpp2760GeVBox, widthLinesBoxes);
-        legendYieldDirGamma->AddEntry(graphCombIncGammaSys, "#gamma_{inc} ALICE","pf");
+        legendYieldDirGamma->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
         graphCombIncGammaSys->Draw("E2same");
         graphCombIncGammaStatPlot->Draw("Epsame");
 
@@ -2451,12 +2428,12 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSumErrAr , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
             graphCombDirGammaSpectrumSumErrAr->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
-            legendYieldDirGamma->AddEntry((TObject*)0, "#gamma_{dir} ALICE","");
+            legendYieldDirGamma->AddEntry((TObject*)0, "#gamma_{dir} data","");
         }
 
         TGraphAsymmErrors* dummyForLegend    = new TGraphAsymmErrors(1);
-        dummyForLegend->SetPoint(0,4.2,0.02);
-        dummyForLegend->SetPointError(0,0,0,0.009,0);
+        dummyForLegend->SetPoint(0,6.2,0.06);
+        dummyForLegend->SetPointError(0,0,0,0.03,0);
         DrawGammaSetMarkerTGraphAsym(dummyForLegend , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
         if (graphCombDirGammaSpectrumSumErrAr){
             dummyForLegend->Draw(">,same");
@@ -2465,7 +2442,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         legendYieldDirGamma->Draw();
 
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
@@ -2500,7 +2476,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         legendYieldDirGamma->Draw();
 
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
@@ -2552,7 +2527,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
 
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
@@ -2594,7 +2568,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
 
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
@@ -2610,7 +2583,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TGraph* graphXSecTheoryNLOpp2760GeVPaquettCenter                    = ScaleGraph( graphTheoryNLOpp2760GeVPaquettCenter,xSection2760GeV*recalcBarn);
     TGraph* graphXSecTheoryJETPHOXpp2760GeV                             = ScaleGraph( graphTheoryJETPHOXpp2760GeV,xSection2760GeV*recalcBarn);
     
-    TLegend* legendXsecDirGamma        = GetAndSetLegend2(0.70, 0.84-(1*textSizeLabelsRel*0.85), 0.93, 0.84,textSizeLabelsPixel, 1, "", 43, 0.3);
+    TLegend* legendXsecDirGamma        = GetAndSetLegend2(0.68, 0.87-(1*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendXsecDirGamma->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
     
     TLegend* legendULXSecDirGamma      = GetAndSetLegend2(0.17, 0.12+(4.2*textSizeLabelsRel*0.85), 0.5, 0.12+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
@@ -2671,7 +2644,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         legendULXSecDirGamma->Draw();
 
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
         
         
@@ -2684,7 +2656,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     graphXSecCombIncGammaSys->Draw("E2same");
     graphXSecCombIncGammaStatPlot->Draw("Epsame");
     
-    TLegend* legendTCMfitXSec      = GetAndSetLegend2(0.70, 0.84-(2*textSizeLabelsRel*0.85), 0.93, 0.84,textSizeLabelsPixel, 1, "", 43, 0.3);
+    TLegend* legendTCMfitXSec      = GetAndSetLegend2(0.68, 0.87-(2*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendTCMfitXSec->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
     
     TF1* fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb,xSection2760GeV*recalcBarn,"xsecTCMfit");
@@ -2723,7 +2695,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendULXSecDirGamma->Draw();
         labelEnergyDGInvYieldPaperAll->Draw();
-        labelALICEDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
         
         
@@ -2731,7 +2702,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_TCM.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_TCM.pdf",outputDir.Data()));
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
-    Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
+    // Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
+    Style_t     cocktailColorPartialSums[14]                   = {kBlue+1,  kRed+1,   kOrange-2,  kGreen-2,   kPink-2,
+                                                                  kOrange+2,  kAzure,   kGreen+3,   kAzure+2,   24,
+                                                                  kGray+1,      kPink+9,  kPink+5,        kViolet+1};
 
     TDirectory* directoryCocktailpp2760GeV[11]     = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
     TH1D* histoGammaFractionsCocktail[14][11];
@@ -2758,7 +2732,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     for(Int_t k=0;k<11;k++){
         if(directoryCocktailpp2760GeV[k]){
             for(Int_t i=0;i<14;i++){
-                histoGammaFractionsCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
+                // histoGammaFractionsCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
+                histoGammaFractionsCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_RatioToAll_Rebin",fParticle[i].Data()));
                 graphGammaFractionsCocktail[i][k] = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
                 if(k==5)
                     graphGammaFractionsCocktailBand[i] = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
@@ -2806,7 +2781,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TLegend* legendGammasRatio2                                 = GetAndSetLegend2(0.2, 0.96-(40*1.15*(2+1)/1200), 0.95, 0.96, 40, 7);
     legendGammasRatio2->SetHeader("#gamma from");
     TH1D* dummyHist                                                   = new TH1D("dummyHist", "", 1000,  0.25, 19.9);
-    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#gamma_{source} / #gamma_{decay}", 1e-6, 5e1, 1.0, 1.3);
+    SetHistogramm(dummyHist, "#it{p}_{T} (GeV/#it{c})", "#gamma_{source} / #gamma_{decay}", 1e-6, 3e1, 1.0, 1.3);
     dummyHist->SetLabelOffset(-0.013, "X");
     dummyHist->SetTitleOffset(0.8, "X");
     dummyHist->GetYaxis()->SetTitleFont(62);
@@ -2888,8 +2863,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     dummyHist->Draw();
     legendGammasRatio2->Clear();
-    legendGammasRatio2                                 = GetAndSetLegend2(0.2, 0.96-(40*1.15*(2+1)/1200), 0.95, 0.96, 40, 6);
-    legendGammasRatio2->SetHeader("#gamma from");
+    legendGammasRatio2                                 = GetAndSetLegend2(0.3, 0.90-(40*1.15*(2)/1200), 1.03, 0.90, 46, 6);
+    // legendGammasRatio2->SetHeader("#gamma from");
     for (Int_t i=0; i<14; i++) {
         if (histoGammaFractionsCocktailPartialSums[i][0]) {
             cout << i << " being plotted - particle " << fParticleLatexPartialSums[i].Data() << endl;
@@ -2916,11 +2891,34 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     }
     legendGammasRatio2->AddEntry(   histoGammaFractionsCocktailPartialSums[8][5], fParticleLatexPartialSums[8].Data(), "l");
     legendGammasRatio2->Draw("same");
-    PutProcessLabelAndEnergyOnPlot(                 0.7, 1.01, 40, "", collisionSystempp2760GeV.Data(), "", 43, 0.03);
-    PutALICESimulationLabel(                   0.7, 0.15, 40, 0.03, 1.25, 43);
+    TLatex* labelALICECocktailPlot   = new TLatex(0.16,0.92,"ALICE simulation");
+    SetStyleTLatex( labelALICECocktailPlot, 46, 4, 1, 43, kTRUE, 41);
+    labelALICECocktailPlot->Draw();
+    TLatex* labelEnergyCocktailPlot   = new TLatex(0.95,0.92,Form("%s",collisionSystempp2760GeV.Data()));
+    SetStyleTLatex( labelEnergyCocktailPlot, 46, 4, 1, 43, kTRUE, 31);
+    labelEnergyCocktailPlot->Draw();
+    TLatex* labelGammaFromCocktailPlot   = new TLatex(0.17,0.855,"#gamma from");
+    SetStyleTLatex( labelGammaFromCocktailPlot, 46, 4, 1, 43, kTRUE, 41);
+    labelGammaFromCocktailPlot->Draw();
     dummyHist->Draw("same,axis");
 
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums.%s",outputDir.Data(),suffix.Data()));
+    
+    dummyHist->Draw();
+    for (Int_t i=0; i<14; i++) {
+        if (graphGammaFractionsCocktailPartialSums[i][5]) {
+            DrawGammaSetMarkerTGraphAsym(             graphGammaFractionsCocktailPartialSums[i][5], cocktailMarker[i], 0, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
+            graphGammaFractionsCocktailPartialSums[i][5]->SetLineWidth(3);
+            graphGammaFractionsCocktailPartialSums[i][5]->SetLineColor(cocktailColorPartialSums[i]);
+            graphGammaFractionsCocktailPartialSums[i][5]->Draw("sameCX");
+        }
+    }
+    legendGammasRatio2->Draw("same");
+    dummyHist->Draw("same,axis");
+    labelALICECocktailPlot->Draw();
+    labelEnergyCocktailPlot->Draw();
+    labelGammaFromCocktailPlot->Draw();
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSumsCentral.%s",outputDir.Data(),suffix.Data()));
 
     // ****************************************************************************************************************
     // ************************** Store final results including corr factors in 1 file ********************************
