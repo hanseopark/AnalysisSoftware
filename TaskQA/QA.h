@@ -3123,4 +3123,36 @@ Bool_t isBadRun(badRunCalc* sBadRunCalc, Int_t bin){
   } else return kFALSE;
 }
 
+TH2D* SwitchTF2DAxis(TH2D* HistogramToSwitchAxis){
+    TString OldName=HistogramToSwitchAxis->GetName();
+    TString OldTitle=HistogramToSwitchAxis->GetTitle();
+    TAxis* OldXAxis=HistogramToSwitchAxis->GetXaxis();
+    Int_t OldXBins=OldXAxis->GetNbins();
+    Double_t OldXMin=OldXAxis->GetXmin();
+    Double_t OldXMax=OldXAxis->GetXmax();
+    TString OldXTitle=OldXAxis->GetTitle();
+    TString OldXName=OldXAxis->GetName();
+    TAxis* OldYAxis=HistogramToSwitchAxis->GetYaxis();
+    Int_t OldYBins=OldYAxis->GetNbins();
+    Double_t OldYMin=OldYAxis->GetXmin();
+    Double_t OldYMax=OldYAxis->GetXmax();
+    TString OldYTitle=OldYAxis->GetTitle();
+    TString OldYName=OldYAxis->GetName();
+    TH2D* OutputHistogram=new TH2D(Form("%s_switchedAxis",OldName.Data()),Form("%s",OldTitle.Data()),OldYBins,OldYMin,OldYMax,OldXBins,OldXMin,OldXMax);
+    TAxis* NewXAxis=OutputHistogram->GetXaxis();
+    TAxis* NewYAxis=OutputHistogram->GetYaxis();
+    NewXAxis->SetTitle(OldYTitle.Data());
+    NewXAxis->SetName(OldYName.Data());
+    NewYAxis->SetTitle(OldXTitle.Data());
+    NewYAxis->SetName(OldXName.Data());
+    Double_t BinValue;
+    for (Int_t OldXBinsLoop=1;OldXBinsLoop<=OldXBins;OldXBinsLoop++){
+        for (Int_t OldYBinsLoop=1;OldYBinsLoop<=OldXBins;OldYBinsLoop++){
+            BinValue=HistogramToSwitchAxis->GetBinContent(OldXBinsLoop,OldYBinsLoop);
+            OutputHistogram->SetBinContent(OldYBinsLoop,OldXBinsLoop,BinValue);
+        }
+    }
+    return OutputHistogram;
+}
+
 #endif // QA_H
