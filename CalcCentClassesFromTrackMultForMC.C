@@ -33,7 +33,10 @@
 #include "TMarker.h"
 #include "TGraphAsymmErrors.h" 
 #include <vector>
+#include "CommonHeaders/PlottingGammaConversionHistos.h"
 #include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "CommonHeaders/PlottingGammaConversionAdditional.h"
+
 using std::cout;
 using std::endl;
 
@@ -47,13 +50,16 @@ have to run ChangeStructureToStandard first
 
 void CalcCentClassesFromTrackMultForMC(){
 
+  StyleSettingsThesis();
+  SetPlotStyle();
+
   std::vector<TString> fileNames{"/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_248_list1_train352.root","/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_250_list1_train352.root","/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_252_list1_train352.root","/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list1_train352.root"};
   TString photonMesonCuts = "00200009247602008250404000_0652501500000000";  
   const Int_t maxX=3500;         // max x value for plotting (maximum possible:4000)
   const Int_t maxY=1000000;      // max y value for plotting
   const Bool_t drawLegend = kTRUE;
   const Bool_t debug = kFALSE;
-  const Bool_t logX = kTRUE;
+  const Bool_t logX = kFALSE;
   const Int_t minBinContent = 100;        
   const Int_t maxBin = 2000;
   const TString outputDir = "eps";
@@ -76,12 +82,17 @@ void CalcCentClassesFromTrackMultForMC(){
   }
 
   // plotting
-  gStyle->SetOptStat(0);
   TCanvas canvas("canvas","",1200,600);
   canvas.cd();
   canvas.SetLogy();  
   if(logX) canvas.SetLogx();
-  TLegend legend(0.8,0.1,0.9,0.9);
+
+  gStyle->SetOptStat(0);
+  if(!logX) canvas.SetRightMargin(0.04);
+  canvas.SetLeftMargin(0.08);
+
+  TLegend legend = TLegend(0.85,0.13,0.95,0.93);
+  legend.SetLineColor(0);
   std::vector<TH1F*> histos;
   Int_t fileNo=0;
   cout << "found " << cutNumbers.size() << " cut selections: " << endl;
@@ -91,7 +102,10 @@ void CalcCentClassesFromTrackMultForMC(){
     if(cutList){
       TList *subList=(TList*)cutList->FindObject(Form("%s ESD histograms",cutNumbers.at(nCut).Data()));
       TH1F *histoTracks=(TH1F*)subList->FindObject("GoodESDTracks");
-      histoTracks->SetLineColor(30+nCut);
+      histoTracks->SetLineColor(46-nCut);
+      histoTracks->SetTitle("");
+      histoTracks->GetXaxis()->SetTitle("N_{Good Tracks}");
+      histoTracks->GetYaxis()->SetTitle("#frac{dN}{dN_{Good Tracks}}");
       histoTracks->GetXaxis()->SetRangeUser(1,maxX);
       histoTracks->GetYaxis()->SetRangeUser(1,maxY);
       legend.AddEntry(histoTracks, GetCentralityString(cutNumbers.at(nCut)).Data());
@@ -102,7 +116,10 @@ void CalcCentClassesFromTrackMultForMC(){
       TList *cutList=(TList*)(lists.at(fileNo)->FindObject(Form("Cut Number %s",cutNumbers.at(nCut).Data())));
       TList *subList=(TList*)cutList->FindObject(Form("%s ESD histograms",cutNumbers.at(nCut).Data()));
       TH1F *histoTracks=(TH1F*)subList->FindObject("GoodESDTracks");
-      histoTracks->SetLineColor(30+nCut);
+      histoTracks->SetLineColor(46-nCut);
+      histoTracks->SetTitle("");
+      histoTracks->GetXaxis()->SetTitle("N_{Good Tracks}");
+      histoTracks->GetYaxis()->SetTitle("#frac{dN}{dN_{Good Tracks}}");
       histoTracks->GetXaxis()->SetRangeUser(1,maxX);
       histoTracks->GetYaxis()->SetRangeUser(1,maxY);
       legend.AddEntry(histoTracks, GetCentralityString(cutNumbers.at(nCut)).Data());
