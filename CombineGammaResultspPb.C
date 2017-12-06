@@ -1059,7 +1059,7 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     TString forOutput               = WriteParameterToFile(fitHagGammaComb);
     cout << forOutput.Data() << endl;
 
-    TF1* fitTsallisGammaComb        = FitObject("l","fitTsallisGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
+    TF1* fitTsallisGammaComb        = FitObject("tcm","fitTsallisGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
                                                  graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],NULL,"QNRME+");
     forOutput                       = WriteParameterToFile(fitTsallisGammaComb);
     cout << forOutput.Data() << endl;
@@ -1182,7 +1182,7 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     histo2DGammaRatioToCombFit->GetXaxis()->SetMoreLogLabels();
     histo2DGammaRatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
     //  histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.59,1.42);
+    histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.75,1.33);
     histo2DGammaRatioToCombFit->Draw("copy");
 
     ProduceGraphAsymmWithoutXErrors(graphRatioGammaCombCombFitStat);
@@ -1216,11 +1216,11 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     histo2DGammaRatioToCombFit->Draw("copy");
 
     for (Int_t i = 10; i > -1 ; i--){
-        if (graphRatioGammaIndCombFitSys[i]){
+        if (graphRatioGammaIndCombFitSys[i] && i!=4){
             DrawGammaSetMarkerTGraphAsym(graphRatioGammaIndCombFitSys[i], markerStyleDet[i] ,markerSizeDet[i], colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
             graphRatioGammaIndCombFitSys[i]->Draw("E2same");
         }
-        if (graphRatioGammaIndCombFitStat[i]){
+        if (graphRatioGammaIndCombFitStat[i] && i!=4){
             ProduceGraphAsymmWithoutXErrors(graphRatioGammaIndCombFitStat[i]);
             DrawGammaSetMarkerTGraphAsym(graphRatioGammaIndCombFitStat[i], markerStyleDet[i] ,markerSizeDet[i], colorDet[i], colorDet[i]);
             graphRatioGammaIndCombFitStat[i]->Draw("p,same,z");
@@ -1247,7 +1247,7 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     //****************************** Definition of the Legend ******************************************
     //**************** Row def ************************
     Double_t rowsLegendGammaRatio[4]          = {0.26, 0.21, 0.16, 0.16};
-    Double_t rowsLegendGammaRatioAbs[4]       = {0.92, 0.69, 0.64, 0.47 };
+    Double_t rowsLegendGammaRatioAbs[4]       = {0.92, 0.82, 0.78, 0.47 };
     Double_t columnsLegendGammaRatio[6]       = {0.14, 0.26, 0.36, 0.48, 0.7, 0.8};
     Double_t columnsLegendGammaRatioAbs[6]    = {0.215, 0.69, 1.15, 2, 6.6, 9.6};
     Double_t lengthBox                          = 0.2;
@@ -1260,8 +1260,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     SetStyleTLatex( textEMCALRatioGamma, textSizeLabelsPixel,4, 1, 43);
     textEMCALRatioGamma->Draw();
     TLatex *textPCMEMCALRatioGamma            = new TLatex(columnsLegendGammaRatio[3],rowsLegendGammaRatio[1],nameMeasGlobalLabel[4]);
-    SetStyleTLatex( textPCMEMCALRatioGamma, textSizeLabelsPixel,4, 1, 43);
-    textPCMEMCALRatioGamma->Draw();
+//     SetStyleTLatex( textPCMEMCALRatioGamma, textSizeLabelsPixel,4, 1, 43);
+//     textPCMEMCALRatioGamma->Draw();
 
     //****************** second Column *************************************************
     TLatex *textStatRatioGamma                = new TLatex(columnsLegendGammaRatio[1],rowsLegendGammaRatio[0] ,"stat");
@@ -1270,26 +1270,26 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     TLatex *textSysRatioGamma                 = new TLatex(columnsLegendGammaRatio[2] ,rowsLegendGammaRatio[0],"syst");
     SetStyleTLatex( textSysRatioGamma, textSizeLabelsPixel,4, 1, 43);
     textSysRatioGamma->Draw();
-    TLatex *textStatRatioGamma2               = new TLatex(columnsLegendGammaRatio[4],rowsLegendGammaRatio[0] ,"stat");
-    SetStyleTLatex( textStatRatioGamma2, textSizeLabelsPixel,4, 1, 43);
-    textStatRatioGamma2->Draw();
-    TLatex *textSysRatioGamma2                = new TLatex(columnsLegendGammaRatio[5] ,rowsLegendGammaRatio[0],"syst");
-    SetStyleTLatex( textSysRatioGamma2, textSizeLabelsPixel,4, 1, 43);
-    textSysRatioGamma2->Draw();
+//     TLatex *textStatRatioGamma2               = new TLatex(columnsLegendGammaRatio[4],rowsLegendGammaRatio[0] ,"stat");
+//     SetStyleTLatex( textStatRatioGamma2, textSizeLabelsPixel,4, 1, 43);
+//     textStatRatioGamma2->Draw();
+//     TLatex *textSysRatioGamma2                = new TLatex(columnsLegendGammaRatio[5] ,rowsLegendGammaRatio[0],"syst");
+//     SetStyleTLatex( textSysRatioGamma2, textSizeLabelsPixel,4, 1, 43);
+//     textSysRatioGamma2->Draw();
 
     TMarker* markerPCMGammaRatio           = CreateMarkerFromGraph(graphRatioGammaIndCombFitSys[0],columnsLegendGammaRatio[1] ,rowsLegendGammaRatio[1],1);
     markerPCMGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[1]);
     TMarker* markerEMCALGammaRatio         = CreateMarkerFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatio[1] ,rowsLegendGammaRatio[2],1);
     markerEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[2]);
-    TMarker* markerPCMEMCALGammaRatio      = CreateMarkerFromGraph(graphRatioGammaIndCombFitSys[4], columnsLegendGammaRatio[4] ,rowsLegendGammaRatio[1],1);
-    markerPCMEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[4] ,rowsLegendGammaRatioAbs[1]);
+//     TMarker* markerPCMEMCALGammaRatio      = CreateMarkerFromGraph(graphRatioGammaIndCombFitSys[4], columnsLegendGammaRatio[4] ,rowsLegendGammaRatio[1],1);
+//     markerPCMEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[4] ,rowsLegendGammaRatioAbs[1]);
 
     TBox* boxPCMGammaRatio                 = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[0], columnsLegendGammaRatioAbs[2]-0.8*lengthBox , rowsLegendGammaRatioAbs[1]- heightBox, columnsLegendGammaRatioAbs[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbs[1]+ heightBox);
     boxPCMGammaRatio->Draw("l");
     TBox* boxEMCALGammaRatio               = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[2], columnsLegendGammaRatioAbs[2]-0.8*lengthBox , rowsLegendGammaRatioAbs[2]- heightBox, columnsLegendGammaRatioAbs[2]+ 1.1*lengthBox, rowsLegendGammaRatioAbs[2]+ heightBox);
     boxEMCALGammaRatio->Draw("l");
-    TBox* boxPCMEMCALGammaRatio            = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[4], columnsLegendGammaRatioAbs[5]-0.5*lengthBox , rowsLegendGammaRatioAbs[1]- heightBox, columnsLegendGammaRatioAbs[5]+ 18*lengthBox, rowsLegendGammaRatioAbs[1]+ heightBox);
-    boxPCMEMCALGammaRatio->Draw("l");
+//     TBox* boxPCMEMCALGammaRatio            = CreateBoxFromGraph(graphRatioGammaIndCombFitSys[4], columnsLegendGammaRatioAbs[5]-0.5*lengthBox , rowsLegendGammaRatioAbs[1]- heightBox, columnsLegendGammaRatioAbs[5]+ 18*lengthBox, rowsLegendGammaRatioAbs[1]+ heightBox);
+//     boxPCMEMCALGammaRatio->Draw("l");
 
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit.%s",outputDir.Data(),suffix.Data()));
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit.pdf",outputDir.Data()));
