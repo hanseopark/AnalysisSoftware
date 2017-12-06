@@ -58,10 +58,10 @@
     Double_t fBinsEta900GeVPCMEMCPt[6]              =  {0., 0.9, 1.8, 3.0, 5.0, 7.0};
     Int_t fBinsEta900GeVPCMEMCPtRebin[5]            =  {5, 16, 10, 20, 5};
 
-    Double_t fBinsDirGamma900GeVPt[12]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0, 2.5,
-                                                        3.5, 4.5};
-    Int_t fBinsDirGamma900GeVPtRebin[11]            = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
-                                                        4};
+    Double_t fBinsDirGamma900GeVPt[14]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0, 2.5,
+                                                        3.5, 4.5, 6.5, 8.5};
+    Int_t fBinsDirGamma900GeVPtRebin[13]            = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
+                                                        4, 4, 4};
     //****************************************************************************************************
     //******************** Pt binning for pp, 2.76 TeV ***************************************************
     //****************************************************************************************************
@@ -1994,10 +1994,17 @@
             if (energy.CompareTo("900GeV") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
+                    if( modi == 2){
+                      fStartPtBin = 3;
+                      fExampleBin = 4;
+                    }else if(modi == 4){
+                      fStartPtBin = 6;
+                      fExampleBin = 7;
+                    }
 
-                    if (fNBinsPt > 12) {
-                        cout << "You have chosen Direct Photon Plots and more than 12 bins, this is not possible, it will be reduced to 12 bins." << endl;
-                        fNBinsPt    = 12;
+                    if (fNBinsPt > 13) {
+                        cout << "You have chosen Direct Photon Plots and more than 13 bins, this is not possible, it will be reduced to 14 bins." << endl;
+                        fNBinsPt    = 13;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
