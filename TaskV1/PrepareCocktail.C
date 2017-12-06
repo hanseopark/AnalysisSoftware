@@ -2414,8 +2414,8 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     if (!listAddParam) {
       cout << "list " << listNameAddParam.Data() << " not contained in file " << fileNameAddParams.Data() << "!" << endl;
       addParamsAvail                            = kFALSE;
-    }
-    listAddParam->SetOwner(kTRUE);
+    }else listAddParam->SetOwner(kTRUE);
+
     // get yRange
     Double_t yMin                           = GetYRangeExtremaFromList(list, kTRUE, kFALSE, collSys) * 0.5;
     Double_t yMax                           = GetYRangeExtremaFromList(list, kTRUE, kTRUE, collSys) * 2;
@@ -2545,7 +2545,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
               DrawGammaSetMarkerTF1(tempFit, 1, 1.5, GetParticleColor(fParticle[i]));
               tempFit->SetRange(xMin*0.5, xMax*1.5);
               tempFit->Draw("l,same");
-          } else if (listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data())) && addParamsAvail) {
+          } else if (addParamsAvail && listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data()))) {
               tempFit       = (TF1*)listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data()));
               DrawGammaSetMarkerTF1(tempFit, 1, 1.5, GetParticleColor(fParticle[i]));
               tempFit->SetRange(xMin*0.5, xMax*1.5);
