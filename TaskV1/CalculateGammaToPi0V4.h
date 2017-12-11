@@ -34,6 +34,8 @@
     //***********************************************************************************************
     TFile *filePi0                                              = NULL;
     TH1D *histoCorrectedPi0Yield[6]                             = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *histoCorrectedPi0YieldBinShift                        = NULL;
+    TH1D *histoCorrectedPi0YieldBinShiftCorr                    = NULL;
     TGraphAsymmErrors* graphSysPi0PileUpOptions                 = NULL;
     TGraphAsymmErrors* graphSysPi0PileUpIterations              = NULL;
     TH1D *histoMCYieldMeson                                     = NULL;
@@ -57,10 +59,14 @@
     TFile *fileGamma                                            = NULL;
     TDirectoryFile* directoryGamma                              = NULL;
     TH1D *histoGammaSpecCorrPurity                              = NULL;
+    TH1D *histoGammaSpecCorrPurityBinShift                      = NULL;
+    TH1D *histoGammaSpecCorrPurityBinShiftCorr                  = NULL;
     TH1D *histoGammaSpecMCAll                                   = NULL;
     TH1D *histoIncRatioFitPurity[6]                             = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *histoPi0Fitted[6]                                     = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *histoIncRatioPurityTrueEff[6]                         = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *histoIncRatioPurityTrueEffBinShift                    = NULL;
+    TH1D *histoIncRatioPurityTrueEffBinShiftCorr                = NULL;
     TH1D *histoMCIncRatio                                       = NULL;
     TH1D *histoMCDecaySumGammaPt                                = NULL;
     //***********************************************************************************************
@@ -87,6 +93,7 @@
     //***************************  calculated double Ratios  ****************************************
     //***********************************************************************************************
     TH1D *histoDoubleRatioTrueEffPurity[6]                      = {NULL, NULL, NULL, NULL, NULL, NULL};
+    TH1D *histoDoubleRatioTrueEffPurityBinShift                 = NULL;
     TH1D *histoDoubleRatioFitPi0YieldPurity[6]                  = {NULL, NULL, NULL, NULL, NULL, NULL};
     TH1D *histoDoubleRatioUpperLimits                           = NULL;
 

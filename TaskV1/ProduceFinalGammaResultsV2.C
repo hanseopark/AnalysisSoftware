@@ -53,6 +53,7 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
 
     ifstream in(configurationFileName.Data());
     cout<<"Available Triggers:"<<endl;
+    TString addNameBinshift             = "";
     TString fCutNumber                  = "";
     TString nameSysFiles[3]             = {""};
     Int_t doSys                         = 0;
@@ -64,11 +65,13 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     TString nameTheoryGraphsErr         = "";
     TString nameTheoryGraphsCenter      = "";
     Bool_t doDirGamma                   = kFALSE;
+    Bool_t useBinShifted                = kFALSE;
     Int_t lines                         = 0;
     while(!in.eof() && lines < 1){
         TString doTheoString            = "";
         TString doDirGammaString        = "";
-        in >> fCutNumber >> nameSysFiles[0] >>nameSysFiles[1] >> nameSysFiles[2]    >> doTheoString    >> nameTheoryFile >> nameTheoryGraphsErr >> nameTheoryGraphsCenter >> doDirGammaString;
+        TString useBinShiftedString     = "";
+        in >> fCutNumber >> nameSysFiles[0] >>nameSysFiles[1] >> nameSysFiles[2]    >> doTheoString    >> nameTheoryFile >> nameTheoryGraphsErr >> nameTheoryGraphsCenter >> doDirGammaString >> useBinShiftedString;
         cout << fCutNumber.Data() << endl;
         if ( nameSysFiles[0].CompareTo("bla") != 0 ){
             doSys                       = doSys+100;
@@ -105,6 +108,12 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
             doDirGamma                  = kTRUE;
         if (doDirGamma)
             cout << "will calculate dir gamma spectra" << endl;
+        if (useBinShiftedString.CompareTo("kTRUE") == 0){
+            useBinShifted                  = kTRUE;
+            addNameBinshift                = "_BinShifted";
+          }
+        if (useBinShifted)
+            cout << "will use bin shifted spectra" << endl;
         lines++;
     }
 
@@ -152,6 +161,16 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     TH1D* histoDR                           = (TH1D*) fileInput->Get("DoubleRatioTrueEffPurity");
     TH1D* histoDRFit                        = (TH1D*) fileInput->Get("DoubleRatioFitPurity");
     TH1D* histococktailAllGamma             = (TH1D*) fileInput->Get("Gamma_Pt");
+    TH1D* histoIncGammaBinShift             = NULL;
+    TH1D* histoPi0SpectrumBinShift          = NULL;
+    TH1D* histoIncRatioBinShift             = NULL;
+    TH1D* histoDRBinShift                   = NULL;
+    if(useBinShifted){
+      histoIncGammaBinShift                 = (TH1D*) fileInput->Get("histoGammaSpecCorrPurity_YShifted");
+      histoPi0SpectrumBinShift              = (TH1D*) fileInput->Get("CorrectedYieldPi0BinShift");
+      histoIncRatioBinShift                 = (TH1D*) fileInput->Get("IncRatioPurity_trueEff_YShifted");
+      histoDRBinShift                       = (TH1D*) fileInput->Get("DoubleRatioTrueEffPurity_YShifted");
+    }
 
     TString inputFileNameAdditional               = Form("%s/%s/Gamma_Pi0_data_GammaConvV1Correction_%s.root", fCutNumber.Data(), optionEnergy.Data(), fCutNumber.Data());
     cout << "trying to read: " << inputFileNameAdditional.Data() << endl;
@@ -179,11 +198,14 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     TH1D* histoGammaResolCorr               = (TH1D*) fileInputAdditional->Get("GammaResolCorrUnfold_Pt");
 
     // calculate sys error graphs
-    TGraphAsymmErrors* graphIncGammaSysErr      =  NULL;
-    TGraphAsymmErrors* graphIncRatioSysErr      =  NULL;
-    TGraphAsymmErrors* graphIncRatioPi0FitSysErr=  NULL;
-    TGraphAsymmErrors* graphDRSysErr            =  NULL;
-    TGraphAsymmErrors* graphDRPi0FitSysErr      =  NULL;
+    TGraphAsymmErrors* graphIncGammaSysErr              =  NULL;
+    TGraphAsymmErrors* graphIncGammaSysErrBinShift      =  NULL;
+    TGraphAsymmErrors* graphIncRatioSysErr              =  NULL;
+    TGraphAsymmErrors* graphIncRatioSysErrBinShift      =  NULL;
+    TGraphAsymmErrors* graphIncRatioPi0FitSysErr        =  NULL;
+    TGraphAsymmErrors* graphDRSysErr                    =  NULL;
+    TGraphAsymmErrors* graphDRSysErrBinShift            =  NULL;
+    TGraphAsymmErrors* graphDRPi0FitSysErr              =  NULL;
 
     if (doSysGamma){
         ifstream fileSysErrGamma;
@@ -204,6 +226,9 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         fileSysErrGamma.close();
         nPointsGamma                = nPointsGamma-1;
         graphIncGammaSysErr         = CalculateSysErrFromRelSysHistoWithPtBins( histoIncGamma, "GammaSystError",
+                                                                            relSystErrorGammaDown, relSystErrorGammaUp, ptSysGamma, nPointsGamma);
+        if(useBinShifted)
+          graphIncGammaSysErrBinShift         = CalculateSysErrFromRelSysHistoWithPtBins( histoIncGammaBinShift, "GammaSystError_BinShifted",
                                                                             relSystErrorGammaDown, relSystErrorGammaUp, ptSysGamma, nPointsGamma);
     }
 
@@ -228,6 +253,9 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         fileSysErrInclRatio.close();
         nPointsInclRatio            = nPointsInclRatio-1;
         graphIncRatioSysErr         = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatio, "InclRatioSysError",
+                                                                                relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
+        if(useBinShifted)
+          graphIncRatioSysErrBinShift         = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatioBinShift, "InclRatioSysError_BinShifted",
                                                                                 relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
         graphIncRatioPi0FitSysErr   = CalculateSysErrFromRelSysHistoWithPtBins( histoIncRatioPi0Fit, "InclRatioSysError",
                                                                                 relSystErrorInclRatioDown, relSystErrorInclRatioUp, ptSysInclRatio, nPointsInclRatio);
@@ -254,6 +282,9 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         nPointsDoubleRatio          = nPointsDoubleRatio-1;
 
         graphDRSysErr               = CalculateSysErrFromRelSysHistoWithPtBins( histoDR, "DRSysError",
+                                                                                relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
+        if(useBinShifted)
+          graphDRSysErrBinShift     = CalculateSysErrFromRelSysHistoWithPtBins( histoDRBinShift, "DRSysError_BinShifted",
                                                                                 relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
         graphDRPi0FitSysErr         = CalculateSysErrFromRelSysHistoWithPtBins( histoDRFit, "DRSysError",
                                                                                 relSystErrorDoubleRatioDown, relSystErrorDoubleRatioUp, ptSysDoubleRatio, nPointsDoubleRatio);
@@ -404,12 +435,12 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
     // put everything in common output per system
     //*************************************************************************************************
     TString optionOutput                = "pp";
-    TString fileNameOutputComp          = Form("%s_%sResultsFullCorrection_PP.root","data",system.Data());
+    TString fileNameOutputComp          = Form("%s_%sResultsFullCorrection_PP%s.root","data",system.Data(),addNameBinshift.Data());
     if (optionEnergy.Contains("pPb")){
-        fileNameOutputComp              = Form("%s_%sResultsFullCorrection_pPb.root","data",system.Data());
+        fileNameOutputComp              = Form("%s_%sResultsFullCorrection_pPb%s.root","data",system.Data(),addNameBinshift.Data());
         optionOutput                    = "pPb";
     } else if (optionEnergy.Contains("PbPb")){
-        fileNameOutputComp              = Form("%s_%sResultsFullCorrection_PbPb.root","data",system.Data());
+        fileNameOutputComp              = Form("%s_%sResultsFullCorrection_PbPb%s.root","data",system.Data(),addNameBinshift.Data());
         optionOutput                    = "PbPb";
     }
     TFile* fileGammaFinal               = new TFile(fileNameOutputComp,"UPDATE");
@@ -430,6 +461,12 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
             histoDR->Write("DoubleRatioStatError",TObject::kOverwrite);
         }
         if (graphDRSysErr) graphDRSysErr->Write("DoubleRatioSystError",TObject::kOverwrite);
+        
+        if (histoDRBinShift){
+            SetHistogramm(histoDRBinShift,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
+            histoDRBinShift->Write(Form("DoubleRatioStatError%s",addNameBinshift.Data()),TObject::kOverwrite);
+        }
+        if (graphDRSysErrBinShift) graphDRSysErrBinShift->Write(Form("DoubleRatioSystError%s",addNameBinshift.Data()),TObject::kOverwrite);
 
         if (histoDRFit){
             SetHistogramm(histoDRFit,"#it{p}_{T} (GeV/#it{c})", "(#it{N}_{#gamma_{inc}}/#it{N}_{#pi^{0}})/(#it{N}_{#gamma_{decay}}/#it{N}_{#pi^{0}})");
@@ -443,6 +480,12 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
             histoIncRatio->Write("IncRatioStatError",TObject::kOverwrite);
         }
         if (graphIncRatioSysErr) graphIncRatioSysErr->Write("IncRatioSystError",TObject::kOverwrite);
+        
+        if (histoIncRatioBinShift){
+            SetHistogramm(histoIncRatioBinShift,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
+            histoIncRatioBinShift->Write(Form("IncRatioStatError%s",addNameBinshift.Data()),TObject::kOverwrite);
+        }
+        if (graphIncRatioSysErrBinShift) graphIncRatioSysErrBinShift->Write(Form("IncRatioSystError%s",addNameBinshift.Data()),TObject::kOverwrite);
 
         if (histoIncRatioPi0Fit){
             SetHistogramm(histoIncRatioPi0Fit,"#it{p}_{T} (GeV/#it{c})", "#gamma_{inc}/#pi^{0}");
@@ -456,11 +499,21 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
             histoIncGamma->Write("IncGammaStatError",TObject::kOverwrite);
         }
         if (graphIncGammaSysErr) graphIncGammaSysErr->Write("IncGammaSystError",TObject::kOverwrite);
+        
+        if (histoIncGammaBinShift){
+            SetHistogramm(histoIncGammaBinShift,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#gamma}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
+            histoIncGammaBinShift->Write(Form("IncGammaStatError%s",addNameBinshift.Data()),TObject::kOverwrite);
+        }
+        if (graphIncGammaSysErrBinShift) graphIncGammaSysErrBinShift->Write(Form("IncGammaSystError%s",addNameBinshift.Data()),TObject::kOverwrite);
 
         // writing pi0 used pi0 spectrum
         if (histoPi0Spectrum){
             SetHistogramm(histoPi0Spectrum,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
             histoPi0Spectrum->Write("Pi0StatError",TObject::kOverwrite);
+        }
+        if (histoPi0SpectrumBinShift){
+            SetHistogramm(histoPi0SpectrumBinShift,"#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}N_{#pi^{0}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})");
+            histoPi0SpectrumBinShift->Write(Form("Pi0StatError%s",addNameBinshift.Data()),TObject::kOverwrite);
         }
         // // writing direct photon spectrum
         if(histoDirectPhotonSpectrum)            histoDirectPhotonSpectrum->Write("DirectPhotonSpectrum",TObject::kOverwrite);
