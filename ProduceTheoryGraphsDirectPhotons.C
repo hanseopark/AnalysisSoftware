@@ -117,10 +117,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         }
         histoGammaDecayCombPP2760GeV->GetXaxis()->SetRangeUser(0,30);
 
-        TFile *file2760GeVJetPhox = new TFile("ExternalInput/Theory/2760gev_jetphox_NLO_16000M_invYield.root");
-        TH1D* pp2760GeVJetPhox_invyield = (TH1D*)file2760GeVJetPhox->Get("hp22");
-        TH1D* pp2760GeVJetPhox_invyield23 = (TH1D*)file2760GeVJetPhox->Get("hp23");
-        TGraphAsymmErrors* graphpp2760GeVJetPhox_invyield = new TGraphAsymmErrors(pp2760GeVJetPhox_invyield23);
+        TFile *file2760GeVJetPhox = new TFile("ExternalInput/Theory/2760gev_jetphox_NLO_16000M_invYield_scaleVar.root");
+        TGraphAsymmErrors* pp2760GeVJetPhox_invyield = (TGraphAsymmErrors*)file2760GeVJetPhox->Get("gae22");
+        TGraphAsymmErrors* graphpp2760GeVJetPhox_invyield = (TGraphAsymmErrors*)file2760GeVJetPhox->Get("gae22");
 
         TString fileNameNLOPhotonHalf2760GeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmuhalf.dat";
         TString fileNameNLOPhotonOne2760GeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton2760GeVmu.dat";
@@ -691,10 +690,9 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TString fileNameNLOPhotonTwo8TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton8TeVtwomu.dat";
         TString fileNameNLOPaquettPhoton8TeV = "ExternalInput/Theory/pp_prompt_photons_8TeV.dat";
 
-        TFile *file8TeVJetPhox = new TFile("ExternalInput/Theory/8tev_jetphox_NLO_16000M_invYield.root");
-        TH1D* pp8TeVJetPhox_invyield = (TH1D*)file8TeVJetPhox->Get("hp22");
-        TH1D* pp8TeVJetPhox_invyield23 = (TH1D*)file8TeVJetPhox->Get("hp23");
-        TGraphAsymmErrors* graphpp8TeVJetPhox_invyield = new TGraphAsymmErrors(pp8TeVJetPhox_invyield23);
+        TFile *file8TeVJetPhox = new TFile("ExternalInput/Theory/8tev_jetphox_NLO_16000M_invYield_scaleVar.root");
+        TGraphAsymmErrors* pp8TeVJetPhox_invyield = (TGraphAsymmErrors*)file8TeVJetPhox->Get("gae22");
+        TGraphAsymmErrors* graphpp8TeVJetPhox_invyield = (TGraphAsymmErrors*)file8TeVJetPhox->Get("gae22");
 
         Int_t nlinesNLOTwo8TeV              = 0;
         Int_t nlinesNLOOne8TeV              = 0;

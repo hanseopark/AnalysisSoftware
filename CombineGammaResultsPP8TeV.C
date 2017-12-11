@@ -275,24 +275,39 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     //*******************************************************************************************************************************************
     //************************************************ Load theory curves from external input ***************************************************
     //*******************************************************************************************************************************************
+    Double_t xmaxNLO = 20;
     TFile* fileTheory                               = new TFile( fileNameTheorypp8TeV.Data());
         TGraphAsymmErrors* graphTheoryNLODRpp8TeV    = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pp8TeV_CT10_ALICECocktail");
         TGraph* graphTheoryNLODRpp8TeVCenter         = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pp8TeV_CT10_ALICECocktail_Center");
         TGraphAsymmErrors* graphTheoryNLOpp8TeV      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonNLOVogelsangInvYield_8TeV");
+        TGraphAsymmErrors* graphTheoryNLOpp8TeVCenter      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonNLOVogelsangInvYield_8TeV");
         TGraphAsymmErrors* graphTheoryJETPHOXDRpp8TeV    = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonJETPHOXInvYieldINT7_pp8TeV_ALICECocktail");
         TGraph* graphTheoryJETPHOXDRpp8TeVCenter         = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonJETPHOXInvYieldINT7_pp8TeV_ALICECocktail_Center");
-        TH1D* histoTheoryJETPHOXpp8TeV      = (TH1D*) fileTheory->Get("DirectPhoton/graphDirectPhotonJETPHOXInvYield_8TeV");
-        TGraph* graphTheoryJETPHOXpp8TeV      = new TGraph(histoTheoryJETPHOXpp8TeV);
+        TGraphAsymmErrors* graphTheoryJETPHOXpp8TeV      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonJETPHOXInvYield_8TeV");
+        TGraphAsymmErrors* graphTheoryJETPHOXpp8TeVCenter      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonJETPHOXInvYield_8TeV");
         TGraph* graphTheoryNLODRpp8TeVPaquett  = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaPaquett_pp8TeV_ALICECocktail");
         TGraph* graphTheoryNLOp8TeVPaquett    = (TGraph*) fileTheory->Get("DirectPhoton/graphPromptPhotonNLOPaquett_8TeV");
+        while(graphTheoryNLODRpp8TeVPaquett->GetX()[graphTheoryNLODRpp8TeVPaquett->GetN()-1] > xmaxNLO) graphTheoryNLODRpp8TeVPaquett->RemovePoint(graphTheoryNLODRpp8TeVPaquett->GetN()-1);
+        while(graphTheoryNLOp8TeVPaquett->GetX()[graphTheoryNLOp8TeVPaquett->GetN()-1] > xmaxNLO) graphTheoryNLOp8TeVPaquett->RemovePoint(graphTheoryNLOp8TeVPaquett->GetN()-1);
 
         while(graphTheoryNLODRpp8TeV->GetX()[0] < 2.0) graphTheoryNLODRpp8TeV->RemovePoint(0);
         while(graphTheoryNLODRpp8TeVCenter->GetX()[0] < 2.0) graphTheoryNLODRpp8TeVCenter->RemovePoint(0);
         while(graphTheoryNLOpp8TeV->GetX()[0] < 2.0) graphTheoryNLOpp8TeV->RemovePoint(0);
+        while(graphTheoryNLOpp8TeVCenter->GetX()[0] < 2.0) graphTheoryNLOpp8TeVCenter->RemovePoint(0);
+        while(graphTheoryNLODRpp8TeV->GetX()[graphTheoryNLODRpp8TeV->GetN()-1] > xmaxNLO) graphTheoryNLODRpp8TeV->RemovePoint(graphTheoryNLODRpp8TeV->GetN()-1);
+        while(graphTheoryNLODRpp8TeVCenter->GetX()[graphTheoryNLODRpp8TeVCenter->GetN()-1] > xmaxNLO) graphTheoryNLODRpp8TeVCenter->RemovePoint(graphTheoryNLODRpp8TeVCenter->GetN()-1);
+        while(graphTheoryNLOpp8TeV->GetX()[graphTheoryNLOpp8TeV->GetN()-1] > xmaxNLO) graphTheoryNLOpp8TeV->RemovePoint(graphTheoryNLOpp8TeV->GetN()-1);
+        while(graphTheoryNLOpp8TeVCenter->GetX()[graphTheoryNLOpp8TeVCenter->GetN()-1] > xmaxNLO) graphTheoryNLOpp8TeVCenter->RemovePoint(graphTheoryNLOpp8TeVCenter->GetN()-1);
         
         while(graphTheoryJETPHOXpp8TeV->GetX()[0] < 1.5) graphTheoryJETPHOXpp8TeV->RemovePoint(0);
+        while(graphTheoryJETPHOXpp8TeVCenter->GetX()[0] < 1.5) graphTheoryJETPHOXpp8TeVCenter->RemovePoint(0);
         while(graphTheoryJETPHOXDRpp8TeV->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp8TeV->RemovePoint(0);
         while(graphTheoryJETPHOXDRpp8TeVCenter->GetX()[0] < 1.5) graphTheoryJETPHOXDRpp8TeVCenter->RemovePoint(0);
+        while(graphTheoryJETPHOXpp8TeV->GetX()[graphTheoryJETPHOXpp8TeV->GetN()-1] > xmaxNLO) graphTheoryJETPHOXpp8TeV->RemovePoint(graphTheoryJETPHOXpp8TeV->GetN()-1);
+        while(graphTheoryJETPHOXpp8TeVCenter->GetX()[graphTheoryJETPHOXpp8TeVCenter->GetN()-1] > xmaxNLO) graphTheoryJETPHOXpp8TeVCenter->RemovePoint(graphTheoryJETPHOXpp8TeVCenter->GetN()-1);
+        while(graphTheoryJETPHOXDRpp8TeV->GetX()[graphTheoryJETPHOXDRpp8TeV->GetN()-1] > xmaxNLO) graphTheoryJETPHOXDRpp8TeV->RemovePoint(graphTheoryJETPHOXDRpp8TeV->GetN()-1);
+        while(graphTheoryJETPHOXDRpp8TeVCenter->GetX()[graphTheoryJETPHOXDRpp8TeVCenter->GetN()-1] > xmaxNLO) graphTheoryJETPHOXDRpp8TeVCenter->RemovePoint(graphTheoryJETPHOXDRpp8TeVCenter->GetN()-1);
+
         
         TGraphAsymmErrors* dummyJETPHOXforLegend    = new TGraphAsymmErrors(1);
         DrawGammaSetMarkerTGraphAsym(dummyJETPHOXforLegend , 2, styleLineJETPHOX, colorJETPHOX, colorJETPHOX, 0.2, kTRUE, colorJETPHOXBand);
@@ -1873,7 +1888,14 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         DrawGammaSetMarkerTGraphAsym(graphCombDRSys, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRStatPlot, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV, widthLinesBoxes);
         legendDRTheoryComb->AddEntry(graphCombDRSys,"ALICE","pf");
-
+        if (graphTheoryJETPHOXDRpp8TeV) {
+            DrawGammaSetMarkerTGraphAsym(graphTheoryJETPHOXDRpp8TeV, 0, 0, colorJETPHOXBand, colorJETPHOXBand, 0.2, kTRUE, colorJETPHOXBand);
+            graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
+        }
+        if (graphTheoryJETPHOXDRpp8TeVCenter){
+            DrawGammaNLOTGraph( graphTheoryJETPHOXDRpp8TeVCenter, 2, styleLineJETPHOX, colorJETPHOX);
+            graphTheoryJETPHOXDRpp8TeVCenter->Draw("lc,same");
+        }
         if (graphTheoryNLODRpp8TeV) {
             DrawGammaSetMarkerTGraphAsym(graphTheoryNLODRpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
             graphTheoryNLODRpp8TeV->Draw("3,same");
@@ -1886,17 +1908,12 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         if (graphTheoryNLODRpp8TeVPaquett){
             DrawGammaNLOTGraph( graphTheoryNLODRpp8TeVPaquett, 2, styleLineMcGill, colorNLOMcGill );
             graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
-            legendDRTheoryComb2->AddEntry(graphTheoryNLODRpp8TeVPaquett,"PDF: CTEQ6.1M, FF: BFG2","l");
+            legendDRTheoryComb2->AddEntry(graphTheoryNLODRpp8TeVPaquett,"PDF: nCTEQ15, FF: BFG2","l");
         }
         if (graphTheoryJETPHOXDRpp8TeV) {
-            DrawGammaSetMarkerTGraphAsym(graphTheoryJETPHOXDRpp8TeV, 0, 0, colorJETPHOXBand, colorJETPHOXBand, 0.2, kTRUE, colorJETPHOXBand);
-            graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
-            legendDRTheoryComb2->AddEntry(dummyJETPHOXforLegend,"JETPHOX","l");
+            legendDRTheoryComb2->AddEntry(dummyJETPHOXforLegend,"JETPHOX","fl");
         }
-        if (graphTheoryJETPHOXDRpp8TeVCenter){
-            DrawGammaNLOTGraph( graphTheoryJETPHOXDRpp8TeVCenter, 2, styleLineJETPHOX, colorJETPHOX);
-            graphTheoryJETPHOXDRpp8TeVCenter->Draw("lc,same");
-        }
+
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
 
         graphCombDRSys->Draw("E2same");
@@ -1918,7 +1935,12 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitSys, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRNonFitStatPlot, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV, widthLinesBoxes);
-
+        if (graphTheoryJETPHOXDRpp8TeV) {
+            graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
+        }
+        if (graphTheoryJETPHOXDRpp8TeVCenter){
+            graphTheoryJETPHOXDRpp8TeVCenter->Draw("lc,same");
+        }
         if (graphTheoryNLODRpp8TeV) {
             DrawGammaSetMarkerTGraphAsym(graphTheoryNLODRpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
             graphTheoryNLODRpp8TeV->Draw("3,same");
@@ -1929,14 +1951,6 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
         }
         if (graphTheoryNLODRpp8TeVPaquett){
             graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
-        }
-        if (graphTheoryJETPHOXDRpp8TeV) {
-            DrawGammaSetMarkerTGraphAsym(graphTheoryJETPHOXDRpp8TeV, 0, 0, colorJETPHOXBand, colorJETPHOXBand, 0.2, kTRUE, colorJETPHOXBand);
-            graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
-        }
-        if (graphTheoryJETPHOXDRpp8TeVCenter){
-            DrawGammaNLOTGraph( graphTheoryJETPHOXDRpp8TeVCenter, 2, styleLineJETPHOX, colorJETPHOX);
-            graphTheoryJETPHOXDRpp8TeVCenter->Draw("lc,same");
         }
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
 
@@ -2531,28 +2545,35 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     legendYieldDirGammaTheo2->SetTextAlign(12);
     graphCombIncGammaSys->Draw("E2same");
     graphCombIncGammaStatPlot->Draw("Epsame");
-
+    if (graphTheoryJETPHOXpp8TeV) {
+      DrawGammaSetMarkerTGraphAsym(graphTheoryJETPHOXpp8TeV, 0, 0, colorJETPHOX, colorJETPHOX, 0.2, kTRUE, colorJETPHOXBand);
+        graphTheoryJETPHOXpp8TeV->Draw("3,same");
+        graphTheoryJETPHOXpp8TeV->SetLineWidth(widthLineNLO*1.5);
+    }
+    if (graphTheoryJETPHOXpp8TeVCenter) {
+      DrawGammaNLOTGraph( graphTheoryJETPHOXpp8TeVCenter, 2, styleLineJETPHOX, colorJETPHOX );
+        graphTheoryJETPHOXpp8TeVCenter->Draw("lX,same");
+        graphTheoryJETPHOXpp8TeVCenter->SetLineWidth(widthLineNLO*1.5);
+    }
         if (graphCombDirGammaSpectrumSystErr){
             graphCombDirGammaSpectrumSystErr->Draw("E2same");
         }
         legendYieldDirGamma->Draw();
         if (graphTheoryNLOpp8TeV) {
-            DrawGammaSetMarkerTGraphAsym(graphTheoryNLOpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
-            graphTheoryNLOpp8TeV->Draw("3,same");
-            graphTheoryNLOpp8TeV->SetLineWidth(widthLineNLO*1.5);
-            legendYieldDirGammaTheo2->AddEntry(graphTheoryNLOpp8TeV,"PDF: CT10, FF: GRV","l");
+          // DrawGammaSetMarkerTGraphAsym(graphTheoryNLOpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
+          // graphTheoryNLOpp8TeV->Draw("3,same");
+            DrawGammaNLOTGraph( graphTheoryNLOpp8TeVCenter, 2, styleLineNLOWerner, colorNLOWerner );
+            graphTheoryNLOpp8TeVCenter->Draw("lX,same");
+            legendYieldDirGammaTheo2->AddEntry(dummyVogelsangforLegend,"PDF: CT10, FF: GRV","l");
         }
 
         if (graphTheoryNLOp8TeVPaquett) {
             DrawGammaNLOTGraph( graphTheoryNLOp8TeVPaquett, 2, styleLineMcGill, colorNLOMcGill );
             graphTheoryNLOp8TeVPaquett->Draw("lc,same");
-            legendYieldDirGammaTheo2->AddEntry(graphTheoryNLOp8TeVPaquett,"PDF: CTEQ6.1M, FF: BFG2","l");
+            legendYieldDirGammaTheo2->AddEntry(graphTheoryNLOp8TeVPaquett,"PDF: nCTEQ15, FF: BFG2","l");
         }
         if (graphTheoryJETPHOXpp8TeV) {
-          DrawGammaNLOTGraph( graphTheoryJETPHOXpp8TeV, 2, styleLineJETPHOX, colorJETPHOX );
-            graphTheoryJETPHOXpp8TeV->Draw("l,same");
-            graphTheoryJETPHOXpp8TeV->SetLineWidth(widthLineNLO*1.5);
-            legendYieldDirGammaTheo2->AddEntry(graphTheoryJETPHOXpp8TeV,"JETPHOX","l");
+            legendYieldDirGammaTheo2->AddEntry(dummyJETPHOXforLegend,"JETPHOX","fl");
         }
         legendYieldDirGammaTheo2->Draw();
 
@@ -2584,15 +2605,18 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
             graphCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
         }
         legendYieldDirGamma->Draw();
+        if (graphTheoryJETPHOXpp8TeV) {
+            graphTheoryJETPHOXpp8TeV->Draw("3,same");
+            graphTheoryJETPHOXpp8TeVCenter->Draw("lX,same");
+        }
         if (graphTheoryNLOpp8TeV) {
-            graphTheoryNLOpp8TeV->Draw("3,same");
+            // graphTheoryNLOpp8TeV->Draw("3,same");
+            graphTheoryNLOpp8TeVCenter->Draw("lX,same");
         }
         if (graphTheoryNLOp8TeVPaquett) {
             graphTheoryNLOp8TeVPaquett->Draw("lc,same");
         }
-        if (graphTheoryJETPHOXpp8TeV) {
-            graphTheoryJETPHOXpp8TeV->Draw("l,same");
-        }
+
         legendYieldDirGammaTheo2->Draw();
 
         if (graphCombDirGammaNonFitSpectrumStatErrPlot){
@@ -2620,7 +2644,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     TGraphAsymmErrors* graphXSecCombIncGammaSys                         = ScaleGraph( graphCombIncGammaSys,xSection8TeVV0AND*recalcBarn);
     TGraphAsymmErrors* graphXSecCombIncGammaStatPlot                    = ScaleGraph( graphCombIncGammaStatPlot,xSection8TeVV0AND*recalcBarn);
     TGraphAsymmErrors* graphXSecTheoryNLOpp8TeV                         = ScaleGraph( graphTheoryNLOpp8TeV,xSection8TeVV0AND*recalcBarn);
-    TGraph* graphXSecTheoryJETPHOXpp8TeV                                = ScaleGraph( graphTheoryJETPHOXpp8TeV,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecTheoryNLOpp8TeVCenter                   = ScaleGraph( graphTheoryNLOpp8TeV,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecTheoryJETPHOXpp8TeV                     = ScaleGraph( graphTheoryJETPHOXpp8TeV,xSection8TeVV0AND*recalcBarn);
+    TGraphAsymmErrors* graphXSecTheoryJETPHOXpp8TeVCenter               = ScaleGraph( graphTheoryJETPHOXpp8TeVCenter,xSection8TeVV0AND*recalcBarn);
     TGraph* graphXSecTheoryPaquettpp8TeV                                = ScaleGraph( graphTheoryNLOp8TeVPaquett,xSection8TeVV0AND*recalcBarn);
     
     TH1F * histo2DXSecGamma              = new TH1F("histo2DXSecGamma","histo2DXSecGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
@@ -2634,11 +2660,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaStatPlot, markerStyleCombpp8TeV+4, markerSizeCombpp8TeV+0.2, colorCombpp8TeVBox , colorCombpp8TeVBox, widthLinesBoxes);
     graphXSecCombIncGammaSys->Draw("E2same");
     graphXSecCombIncGammaStatPlot->Draw("Epsame");
-    if (graphXSecTheoryNLOpp8TeV) {
-        DrawGammaSetMarkerTGraphAsym(graphXSecTheoryNLOpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
-        graphXSecTheoryNLOpp8TeV->Draw("3,same");
-        graphXSecTheoryNLOpp8TeV->SetLineWidth(widthLineNLO*1.5);
-    }
+
     TLegend* legendULXSecDirGamma      = GetAndSetLegend2(0.17, 0.12+(4.2*textSizeLabelsRel*0.85), 0.5, 0.12+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
     legendULXSecDirGamma->SetTextAlign(12);
     legendULXSecDirGamma->AddEntry((TObject*)0, "#gamma_{dir} data","");
@@ -2652,14 +2674,26 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     fitXSecTCMGammaComb->SetRange(0.28, 17);
     fitXSecTCMGammaComb->Draw("same");
     legendTCMfitXSec->Draw();
+    if (graphXSecTheoryJETPHOXpp8TeV) {
+      DrawGammaSetMarkerTGraphAsym(graphXSecTheoryJETPHOXpp8TeV, 0, 0, colorJETPHOX, colorJETPHOX, 0.2, kTRUE, colorJETPHOXBand);
+        graphXSecTheoryJETPHOXpp8TeV->Draw("3,same");
+        graphXSecTheoryJETPHOXpp8TeV->SetLineWidth(widthLineNLO*1.5);
+    }
+    if (graphXSecTheoryJETPHOXpp8TeVCenter) {
+        DrawGammaNLOTGraph( graphXSecTheoryJETPHOXpp8TeVCenter, 2, styleLineJETPHOX, colorJETPHOX );
+          graphXSecTheoryJETPHOXpp8TeVCenter->Draw("lX,same");
+          graphXSecTheoryJETPHOXpp8TeVCenter->SetLineWidth(widthLineNLO*1.5);
+    }
+    if (graphXSecTheoryNLOpp8TeVCenter) {
+        // DrawGammaSetMarkerTGraphAsym(graphXSecTheoryNLOpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
+        // graphXSecTheoryNLOpp8TeV->Draw("3,same");
+        // graphXSecTheoryNLOpp8TeV->SetLineWidth(widthLineNLO*1.5);
+        DrawGammaNLOTGraph( graphXSecTheoryNLOpp8TeVCenter, 2, styleLineNLOWerner, colorNLOWerner );
+        graphXSecTheoryNLOpp8TeVCenter->Draw("lX,same");
+    }
     if (graphXSecTheoryPaquettpp8TeV) {
         DrawGammaNLOTGraph( graphXSecTheoryPaquettpp8TeV, 2, styleLineMcGill, colorNLOMcGill );
         graphXSecTheoryPaquettpp8TeV->Draw("lc,same");
-    }
-    if (graphXSecTheoryJETPHOXpp8TeV) {
-      DrawGammaNLOTGraph( graphXSecTheoryJETPHOXpp8TeV, 2, styleLineJETPHOX, colorJETPHOX );
-        graphXSecTheoryJETPHOXpp8TeV->Draw("l,same");
-        graphXSecTheoryJETPHOXpp8TeV->SetLineWidth(widthLineNLO*1.5);
     }
     if (graphXSecCombDirGammaNonFitSpectrumSystErr){
         DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSystErr, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV, widthLinesBoxes, kTRUE);
@@ -2667,7 +2701,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM           = "Combin
     }
     if (graphXSecCombDirGammaNonFitSpectrumStatErrPlot){
         DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumStatErrPlot, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV);
-        graphXSecCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,E1Z,same");
+        graphXSecCombDirGammaNonFitSpectrumStatErrPlot->Draw("p,same");//Draw("p,E1Z,same");
     }
     if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
         DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSumErrAr , 1, 3, colorCombpp8TeV, colorCombpp8TeV, 1.8, kTRUE);
