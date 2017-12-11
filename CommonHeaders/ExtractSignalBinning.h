@@ -2068,6 +2068,22 @@
             //********************************** Pi0 for pp 2.76TeV****************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("2.76TeV") == 0) {
+                if (triggerSet == -1){
+                    if (trigger.CompareTo("52") == 0){
+                        specialTrigg = 1;    // L0
+                    } else if ( trigger.CompareTo("85") == 0 ){
+                        specialTrigg = 2; //L1 G2 (lower threshold)
+                    } else if ( trigger.CompareTo("83") == 0    ){
+                        specialTrigg = 3; //L1 G1 (higher threshold)
+                    } else if ( trigger.CompareTo("51") == 0    ){
+                        specialTrigg = 4; //L0 LHC11a
+                    } else if ( trigger.CompareTo("01") == 0  || trigger.CompareTo("00") == 0   ){
+                        specialTrigg = 5; //INT7 LHC13g
+                    }
+                } else {
+                    specialTrigg        = triggerSet;
+                }
+
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     fColumn         = 5;
@@ -2078,31 +2094,23 @@
                     if (fNBinsPt > 14 && isDCA) {
                         cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
                         fNBinsPt    = 14;
-                    } else if (fNBinsPt > 21) {
+                    } else if (fNBinsPt > 21 && specialTrigg == 5 && modi!=0) {
                         cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
                         fNBinsPt    = 21;
+                    } else if (fNBinsPt > 21 && modi ==0) {
+                        cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
+                        fNBinsPt    = 21;
+                    } else if (fNBinsPt > 24 && modi!=0) {
+                        cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
+                        fNBinsPt    = 24;
                     }
+
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         fBinsPt[i]  = fBinsDirGamma2760GeVPt[i];
                         if (i < fNBinsPt+1)
                             fNRebin[i] = fBinsDirGamma2760GeVPtRebin[i];
                     }
                 } else {
-                    if (triggerSet == -1){
-                        if (trigger.CompareTo("52") == 0){
-                            specialTrigg = 1;    // L0
-                        } else if ( trigger.CompareTo("85") == 0 ){
-                            specialTrigg = 2; //L1 G2 (lower threshold)
-                        } else if ( trigger.CompareTo("83") == 0    ){
-                            specialTrigg = 3; //L1 G1 (higher threshold)
-                        } else if ( trigger.CompareTo("51") == 0    ){
-                            specialTrigg = 4; //L0 LHC11a
-                        } else if ( trigger.CompareTo("01") == 0  || trigger.CompareTo("00") == 0   ){
-                            specialTrigg = 5; //INT7 LHC13g
-                        }
-                    } else {
-                        specialTrigg        = triggerSet;
-                    }
                     fStartPtBin     = 1;
                     if (modi == 2 && specialTrigg == 0)
                         fStartPtBin = 3;

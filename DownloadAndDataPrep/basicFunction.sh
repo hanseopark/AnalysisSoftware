@@ -78,45 +78,52 @@ function SeparateCutsIfNeeded()
 
 function CopyFileIfNonExisitent()
 {
+    echo "file path: "$1
+    echo "alien path: " $2
+    echo "number of subdirectories: " $3
+    echo "detailed path subdirs: " $4
+    echo "separate also the tree: " $5
     if [ $DOWNLOADON == 1 ]; then
-      if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
-          echo "$1/root_archive.zip exists";
-      else
-          mkdir -p $1
-          alien_cp alien:$2/root_archive.zip file:$1/
-          if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
-            echo "copied correctly"
-          else
-            rm locallog.txt
-            alien_ls $4/ > locallog.txt
-            echo "********** log output ***********"
-            cat locallog.txt
-            dirNumbers=`cat locallog.txt`
-            firstDir=`head -n1 locallog.txt`
-            for dirName in $dirNumbers; do
-                mkdir -p $1/Stage1/$dirName
-                if [ -f $1/Stage1/$dirName/root_archive.zip ] && [ -s $1/Stage1/$dirName/root_archive.zip ]; then
-                    echo "$1/Stage1/$dirName/root_archive.zip exists";
-                else
-                    alien_cp alien:$4/$dirName/root_archive.zip file:$1/Stage1/$dirName/
-                    unzip -u $1/Stage1/$dirName/root_archive.zip -d $1/Stage1/$dirName/
+        if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
+            echo "$1/root_archive.zip exists";
+        else
+            mkdir -p $1
+            alien_cp alien:$2/root_archive.zip file:$1/
+            if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
+                echo "copied correctly"
+            else
+                rm locallog.txt
+                if [ $4 != "none" ]; then
+                    alien_ls $4/ > locallog.txt
+                    echo "********** log output ***********"
+                    cat locallog.txt
+                    dirNumbers=`cat locallog.txt`
+                    firstDir=`head -n1 locallog.txt`
+                    for dirName in $dirNumbers; do
+                        mkdir -p $1/Stage1/$dirName
+                        if [ -f $1/Stage1/$dirName/root_archive.zip ] && [ -s $1/Stage1/$dirName/root_archive.zip ]; then
+                            echo "$1/Stage1/$dirName/root_archive.zip exists";
+                        else
+                            alien_cp alien:$4/$dirName/root_archive.zip file:$1/Stage1/$dirName/
+                            unzip -u $1/Stage1/$dirName/root_archive.zip -d $1/Stage1/$dirName/
+                        fi
+                    done
+                    rm locallog.txt
+                    BASEDIR=$PWD
+                    cd $1/Stage1/$firstDir/
+                    ls G*.root > $BASEDIR/locallog.txt
+                    cd -
+                    echo "********** log output 2 for merging***********"
+                    cat $BASEDIR/locallog.txt
+                    fileNumbers=`cat $BASEDIR/locallog.txt`
+                    for fileName in $fileNumbers; do
+                        hadd -f $1/$fileName $1/Stage1/*/$fileName
+                    done
+                    cd $1/
+                    zip root_archive.zip *.root
+                    cd -
                 fi
-            done
-            rm locallog.txt
-            BASEDIR=$PWD
-            cd $1/Stage1/$firstDir/
-            ls G*.root > $BASEDIR/locallog.txt
-            cd -
-            echo "********** log output 2 for merging***********"
-            cat $BASEDIR/locallog.txt
-            fileNumbers=`cat $BASEDIR/locallog.txt`
-            for fileName in $fileNumbers; do
-                hadd -f $1/$fileName $1/Stage1/*/$fileName
-            done
-            cd $1/
-            zip root_archive.zip *.root
-            cd -
-          fi
+            fi
       fi
       unzip -u $1/root_archive.zip -d $1/
     fi
