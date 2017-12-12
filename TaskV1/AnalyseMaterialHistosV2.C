@@ -311,8 +311,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasNTracks->SetLogy(1);
     TH2F * histoDummyNTracks = new TH2F("histoDummyNTracks","histoDummyNTracks",1000,0.,2000.,1000,1.e-10,10);
 		SetStyleHistoTH2ForGraphs(histoDummyNTracks, "Good TPC tracks","Counts", 0.035,0.04,0.035,0.04,1.,1.);
-// 		histoDummyNTracks->GetYaxis()->SetRangeUser(2.e-9, 1.);
-		histoDummyNTracks->DrawCopy();
+        histoDummyNTracks->DrawCopy();
 
 		DrawGammaSetMarker(histoNumberOfGoodESDTracksData, 20, 1.5, colorData, colorData);
         histoNumberOfGoodESDTracksData->Draw("same,hist");
