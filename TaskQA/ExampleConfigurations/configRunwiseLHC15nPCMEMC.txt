@@ -1,0 +1,10 @@
+select	LHC15nPCMEMC
+mode	2
+cutNr	0
+nSets	4
+nData   2
+energy	5TeV
+filePath    /Users/hannahbossi/Desktop/DataQA/20170809
+fileName    GammaConvCalo_401.root
+DataSets    LHC15n_pass2    LHC15n_pass3    LHC16h8b    LHC16k5b STOP
+plotDataSets    LHC15n_pass2  LHC15n_pass3  LHC16h8b  LHC16k5b STOP

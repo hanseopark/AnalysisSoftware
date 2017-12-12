@@ -348,6 +348,9 @@ DownloadRunwise(){
 #DownloadRunwise "GammaConv" "ESD" "LHC16h4" "669_20171106-1019" "sim" "pass1_pidfix"
 #DownloadRunwise "GammaConv" "ESD" "LHC16h4" "668_20171106-1019" "sim" "pass3_lowIR_pidfix"
 
-DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/352_20171130-1612/merge_runlist_4/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list1_train352.root" "yes"
-DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/353_20171130-1607/merge/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list2_train353.root" "yes"
-DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/354_20171130-1608/merge/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list3_train354.root" "yes"
+#DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/352_20171130-1612/merge_runlist_4/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list1_train352.root" "yes"
+#DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/353_20171130-1607/merge/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list2_train353.root" "yes"
+#DownloadMerged "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/354_20171130-1608/merge/GammaConvV1_254.root" "/home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_254_list3_train354.root" "yes"
+
+
+
