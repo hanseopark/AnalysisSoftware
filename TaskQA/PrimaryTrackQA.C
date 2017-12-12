@@ -297,6 +297,43 @@ void PrimaryTrackQA(
     std::vector<std::vector <TH1D*>> vecMCvsTrueAllNegPions_Pt(nSetsIn,std::vector<TH1D*>(2));
     std::vector<std::vector <TH1D*>> vecMCvsTruePosPionsFromNeutralMeson_Pt(nSetsIn,std::vector<TH1D*>(2));
     std::vector<std::vector <TH1D*>> vecMCvsTrueNegPionsFromNeutralMeson_Pt(nSetsIn,std::vector<TH1D*>(2));
+    //---------------------------------------------Projections-----------------------------------------------------------------------
+    std::vector<TH2D*> vecESD_PrimaryNegPions_ClsTPC_ProjPt;            //Pt was x
+    std::vector<TH2D*> vecESD_PrimaryPosPions_ClsTPC_ProjPt;            //Pt was x
+    std::vector<TH2D*> vecESD_PrimaryPions_DCAxy_ProjPt;                //Pt was y
+    std::vector<TH2D*> vecESD_PrimaryPions_DCAz_ProjPt;                 //Pt was y
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_ProjPt;              //Pt was x
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;        //Pt was x
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt;        //Pt was x
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt;  //Pt was x
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;        //Pt was y
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;  //Pt was y
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;       //Pt was y
+    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt; //Pt was y
+    //AfterQA
+    std::vector<TH2D*> vecPion_ITS_after_AfterQA_ProjPt;                //Pt was x
+    std::vector<TH2D*> vecPion_dEdx_after_AfterQA_ProjPt;               //Pt was x
+    std::vector<TH2D*> vecPion_dEdxSignal_after_AfterQA_ProjPt;         //Pt was x
+    std::vector<TH2D*> vecPion_TOF_after_AfterQA_ProjPt;                //Pt was x
+    std::vector<TH2D*> vechTrack_DCAxy_Pt_after_AfterQA_ProjPt;         //Pt was y
+    std::vector<TH2D*> vechTrack_DCAz_Pt_after_AfterQA_ProjPt;          //Pt was y
+    std::vector<TH2D*> vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt;  //Pt was x
+    //Pre Selection
+    std::vector<TH2D*> vecPion_ITS_before_PreSel;
+    std::vector<TH2D*> vecPion_dEdx_before_PreSel;
+    std::vector<TH2D*> vecPion_dEdxSignal_before_PreSel;
+    std::vector<TH2D*> vecPion_TOF_before_PreSel;
+    std::vector<TH2D*> vechTrack_DCAxy_Pt_before_PreSel;
+    std::vector<TH2D*> vechTrack_DCAz_Pt_before_PreSel;
+    std::vector<TH2D*> vechTrack_NFindCls_Pt_TPC_before_PreSel;
+    std::vector<TH2D*> vecPion_ITS_after_PreSel;
+    std::vector<TH2D*> vecPion_dEdx_after_PreSel;
+    std::vector<TH2D*> vecPion_dEdxSignal_after_PreSel;
+    std::vector<TH2D*> vecPion_TOF_after_PreSel;
+    std::vector<TH2D*> vechTrack_DCAxy_Pt_after_PreSel;
+    std::vector<TH2D*> vechTrack_DCAz_Pt_after_PreSel;
+    std::vector<TH2D*> vechTrack_NFindCls_Pt_TPC_after_PreSel;
+    //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     Double_t* nEventsAll    = new Double_t[nSets];
     Double_t* nEvents       = new Double_t[nSets];
@@ -461,7 +498,7 @@ void PrimaryTrackQA(
         if(fHistESD_PrimaryNegPions_Pt){
             GetMinMaxBin(fHistESD_PrimaryNegPions_Pt,minB,maxB);
             SetXRange(fHistESD_PrimaryNegPions_Pt,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kFALSE,
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                  fHistESD_PrimaryNegPions_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
                                  processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             //WriteHistogram(fHistESD_PrimaryNegPions_Pt);
@@ -476,7 +513,7 @@ void PrimaryTrackQA(
         if(fHistESD_PrimaryPosPions_Pt){
             GetMinMaxBin(fHistESD_PrimaryPosPions_Pt,minB,maxB);
             SetXRange(fHistESD_PrimaryPosPions_Pt,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kFALSE,
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                  fHistESD_PrimaryPosPions_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","# Entries",1,1,
                                  processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             //WriteHistogram(fHistESD_PrimaryPosPions_Pt);
@@ -549,17 +586,19 @@ void PrimaryTrackQA(
         if (iParticleType==1){StrNameOfHistogram="";}
         TH2D* fHistESD_PrimaryNegPions_ClsTPC = (TH2D*)ESDContainer->FindObject(Form("%s",StrNameOfHistogram.Data()));
         if(fHistESD_PrimaryNegPions_ClsTPC){
-            GetMinMaxBin(fHistESD_PrimaryNegPions_ClsTPC,minB,maxB);
-            SetXRange(fHistESD_PrimaryNegPions_ClsTPC,minB-1,maxB+1);
-            GetMinMaxBinY(fHistESD_PrimaryNegPions_ClsTPC,minYB,maxYB);
-            SetYRange(fHistESD_PrimaryNegPions_ClsTPC,minYB,maxYB+1);
-            SetZMinMaxTH2(fHistESD_PrimaryNegPions_ClsTPC,1,maxB+1,minYB,maxYB+1);
+            TH2D* fHistESD_PrimaryNegPions_ClsTPC_switchedAxis=SwitchTF2DAxis(fHistESD_PrimaryNegPions_ClsTPC);
+            GetMinMaxBin(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis,minB,maxB);
+            SetXRange(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis,minB-1,maxB+1);
+            GetMinMaxBinY(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis,minYB,maxYB);
+            SetYRange(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                 fHistESD_PrimaryNegPions_ClsTPC,"",
-                                 "Findable Clusters","#it{p}_{T, #pi^{-}} (GeV/#it{c}) TPC",1,1.4,
+                                 fHistESD_PrimaryNegPions_ClsTPC_switchedAxis,"", "#it{p}_{T, #pi^{-}} (GeV/#it{c}) TPC",
+                                 "Findable Clusters",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryNegPions_ClsTPC, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
-            vecESD_PrimaryNegPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryNegPions_ClsTPC));
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryNegPions_ClsTPC_switchedAxis, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryNegPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryNegPions_ClsTPC_switchedAxis));
+            delete fHistESD_PrimaryNegPions_ClsTPC_switchedAxis;
         } else cout << Form("INFO: Object |ESD_PrimaryNegPions_ClsTPC %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPosPions_ClsTPC
@@ -567,17 +606,19 @@ void PrimaryTrackQA(
         if (iParticleType==1){StrNameOfHistogram="";}
         TH2D* fHistESD_PrimaryPosPions_ClsTPC = (TH2D*)ESDContainer->FindObject(Form("%s",StrNameOfHistogram.Data()));
         if(fHistESD_PrimaryPosPions_ClsTPC){
-            GetMinMaxBin(fHistESD_PrimaryPosPions_ClsTPC,minB,maxB);
-            SetXRange(fHistESD_PrimaryPosPions_ClsTPC,minB-1,maxB+1);
-            GetMinMaxBinY(fHistESD_PrimaryPosPions_ClsTPC,minYB,maxYB);
-            SetYRange(fHistESD_PrimaryPosPions_ClsTPC,minYB,maxYB+1);
-            SetZMinMaxTH2(fHistESD_PrimaryPosPions_ClsTPC,1,maxB+1,minYB,maxYB+1);
+            TH2D* fHistESD_PrimaryPosPions_ClsTPC_switchedAxis=SwitchTF2DAxis(fHistESD_PrimaryPosPions_ClsTPC);
+            GetMinMaxBin(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis,minB,maxB);
+            SetXRange(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis,minB-1,maxB+1);
+            GetMinMaxBinY(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis,minYB,maxYB);
+            SetYRange(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                 fHistESD_PrimaryPosPions_ClsTPC,"",
-                                 "Findable Clusters","#it{p}_{T, #pi^{+}} (GeV/#it{c}) TPC",1,1.4,
+                                 fHistESD_PrimaryPosPions_ClsTPC_switchedAxis,"","#it{p}_{T, #pi^{+}} (GeV/#it{c}) TPC",
+                                 "Findable Clusters",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPosPions_ClsTPC, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
-            vecESD_PrimaryPosPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryPosPions_ClsTPC));
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPosPions_ClsTPC_switchedAxis, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryPosPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryPosPions_ClsTPC_switchedAxis));
+            delete fHistESD_PrimaryPosPions_ClsTPC_switchedAxis;
         } else cout << Form("INFO: Object |ESD_PrimaryPosPions_ClsTPC %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPions_DCAxy
@@ -628,7 +669,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistESD_PrimaryPions_TPCdEdx,1,maxB+1,minB-1,maxB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistESD_PrimaryPions_TPCdEdx,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdx.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx));
@@ -647,7 +688,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistESD_PrimaryPions_TPCdEdx_LowPt,1,maxB+1,minB-1,maxB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistESD_PrimaryPions_TPCdEdx_LowPt,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx_LowPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdx_LowPt.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx_LowPt));
@@ -666,7 +707,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistESD_PrimaryPions_TPCdEdx_MidPt,1,maxB+1,minB-1,maxB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistESD_PrimaryPions_TPCdEdx_MidPt,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx_MidPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdx_MidPt.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx_MidPt));
@@ -687,7 +728,7 @@ void PrimaryTrackQA(
             fHistESD_PrimaryPions_TPCdEdx_HighPt->GetXaxis()->SetNdivisions(300000,kFALSE);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistESD_PrimaryPions_TPCdEdx_HighPt,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx_HighPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdx_HighPt.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx_HighPt));
@@ -705,7 +746,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistESD_PrimaryPions_TPCdEdxSignal,1,maxB+1,minB-1,maxB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistESD_PrimaryPions_TPCdEdxSignal,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdxSignal, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdxSignal.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdxSignal));
@@ -791,7 +832,7 @@ void PrimaryTrackQA(
             if(fHistESD_TruePosPion_Pt){
                 GetMinMaxBin(fHistESD_TruePosPion_Pt,minB,maxB);
                 SetXRange(fHistESD_TruePosPion_Pt,minB,maxB);
-                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kFALSE,
+                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
                                      fHistESD_TruePosPion_Pt,"","#it{p}_{T, #pi^{+}} (GeV/#it{c})","# Entries",1,1,
                                      processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 //WriteHistogram(fHistESD_TruePosPion_Pt);
@@ -806,8 +847,8 @@ void PrimaryTrackQA(
             if(fHistESD_TrueNegPion_Pt){
                 GetMinMaxBin(fHistESD_TrueNegPion_Pt,minB,maxB);
                 SetXRange(fHistESD_TrueNegPion_Pt,minB,maxB);
-                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kFALSE,
-                                     fHistESD_TrueNegPion_Pt,"","","# Entries",1,1,
+                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
+                                     fHistESD_TrueNegPion_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
                                      processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 //WriteHistogram(fHistESD_TrueNegPion_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistESD_TrueNegPion_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
@@ -821,8 +862,8 @@ void PrimaryTrackQA(
             if(fHistESD_TruePosPionFromNeutralMeson_Pt){
                 GetMinMaxBin(fHistESD_TruePosPionFromNeutralMeson_Pt,minB,maxB);
                 SetXRange(fHistESD_TruePosPionFromNeutralMeson_Pt,minB,maxB);
-                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kFALSE,
-                                     fHistESD_TruePosPionFromNeutralMeson_Pt,"","","# Entries",1,1,
+                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
+                                     fHistESD_TruePosPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
                                      processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 //WriteHistogram(fHistESD_TruePosPionFromNeutralMeson_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistESD_TruePosPionFromNeutralMeson_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
@@ -836,8 +877,8 @@ void PrimaryTrackQA(
             if(fHistESD_TrueNegPionFromNeutralMeson_Pt){
                 GetMinMaxBin(fHistESD_TrueNegPionFromNeutralMeson_Pt,minB,maxB);
                 SetXRange(fHistESD_TrueNegPionFromNeutralMeson_Pt,minB,maxB);
-                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kFALSE,kFALSE,
-                                     fHistESD_TrueNegPionFromNeutralMeson_Pt,"","","# Entries",1,1,
+                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
+                                     fHistESD_TrueNegPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
                                      processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 //WriteHistogram(fHistESD_TrueNegPionFromNeutralMeson_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistESD_TrueNegPionFromNeutralMeson_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
@@ -913,7 +954,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_dEdx_after_AfterQA,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdx_after_AfterQA,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_AfterQA, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_dEdx_after_AfterQA.push_back(new TH2D(*fHistPion_dEdx_after_AfterQA));
@@ -931,7 +972,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_dEdxSignal_after_AfterQA,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdxSignal_after_AfterQA,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_AfterQA, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_dEdxSignal_after_AfterQA.push_back(new TH2D(*fHistPion_dEdxSignal_after_AfterQA));
@@ -949,7 +990,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_TOF_after_AfterQA,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_TOF_after_AfterQA,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_AfterQA, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_TOF_after_AfterQA.push_back(new TH2D(*fHistPion_TOF_after_AfterQA));
@@ -1060,7 +1101,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_ITS_before_PreSel,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_ITS_before_PreSel,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_before_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_ITS_before_PreSel.push_back(new TH2D(*fHistPion_ITS_before_PreSel));
@@ -1078,7 +1119,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_dEdx_before_PreSel,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdx_before_PreSel,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_before_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_dEdx_before_PreSel.push_back(new TH2D(*fHistPion_dEdx_before_PreSel));
@@ -1096,7 +1137,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_dEdxSignal_before_PreSel,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdxSignal_before_PreSel,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_before_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_dEdxSignal_before_PreSel.push_back(new TH2D(*fHistPion_dEdxSignal_before_PreSel));
@@ -1208,7 +1249,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_dEdx_after_PreSel,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdx_after_PreSel,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_dEdx_after_PreSel.push_back(new TH2D(*fHistPion_dEdx_after_PreSel));
@@ -1226,7 +1267,7 @@ void PrimaryTrackQA(
             SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel,1,maxB+1,minYB,maxYB+1);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                  fHistPion_dEdxSignal_after_PreSel,"",
-                                 "#it{p}_{T, #pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_PreSel, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecPion_dEdxSignal_after_PreSel.push_back(new TH2D(*fHistPion_dEdxSignal_after_PreSel));
@@ -1368,7 +1409,7 @@ void PrimaryTrackQA(
     SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
     TGaxis::SetExponentOffset(0, 0, "x");
     DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPosPions_Pt,"","#t#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
+                                     vecESD_PrimaryPosPions_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
                                      labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                      0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Pt.%s", outputDir.Data(), suffix.Data()));
