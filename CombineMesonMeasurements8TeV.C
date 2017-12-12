@@ -1646,6 +1646,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasRelTotErr->SaveAs(Form("%s/Pi0_Reldecomp.%s",outputDir.Data(),suffix.Data()));
 
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "combined Pi0 uncertainties: " << endl;
+    fLog << "pT-bin \t stat. \t sys. \t tot." << endl;
+    for(Int_t iBin=0; iBin<graphCombPi0InvXSectionRelTotA->GetN(); iBin++){
+      fLog << graphCombPi0InvXSectionRelTotA->GetX()[iBin] << "\t" << graphCombPi0InvXSectionRelStatA->GetY()[iBin] << "\t" << graphCombPi0InvXSectionRelSysA->GetY()[iBin] << "\t" << graphCombPi0InvXSectionRelTotA->GetY()[iBin] << endl;
+    }
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     // **********************************************************************************************************************
     // ************************************* Calculating bin shifted spectra & fitting **************************************
@@ -2944,6 +2951,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasRelTotErr->SaveAs(Form("%s/Eta_RelMethodAdecomp.%s",outputDir.Data(),suffix.Data()));
 
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "combined Eta uncertainties: " << endl;
+    fLog << "pT-bin \t stat. \t sys. \t tot." << endl;
+    for(Int_t iBin=0; iBin<graphCombEtaInvXSectionRelTotA->GetN(); iBin++){
+      fLog << graphCombEtaInvXSectionRelTotA->GetX()[iBin] << "\t" << graphCombEtaInvXSectionRelStatA->GetY()[iBin] << "\t" << graphCombEtaInvXSectionRelSysA->GetY()[iBin] << "\t" << graphCombEtaInvXSectionRelTotA->GetY()[iBin] << endl;
+    }
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     // **********************************************************************************************************************
     // ************************************* Calculating bin shifted spectra & fitting **************************************
@@ -4068,6 +4082,13 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasRelTotErr->SaveAs(Form("%s/EtaToPi0_RelMethodAdecomp.%s",outputDir.Data(),suffix.Data()));
 
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fLog << "combined Eta/Pi0 uncertainties: " << endl;
+    fLog << "pT-bin \t stat. \t sys. \t tot." << endl;
+    for(Int_t iBin=0; iBin<graphCombEtaToPi0RelTotA->GetN(); iBin++){
+      fLog << graphCombEtaToPi0RelTotA->GetX()[iBin] << "\t" << graphCombEtaToPi0RelStatA->GetY()[iBin] << "\t" << graphCombEtaToPi0RelSysA->GetY()[iBin] << "\t" << graphCombEtaToPi0RelTotA->GetY()[iBin] << endl;
+    }
+    fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     // **********************************************************************************************************************
     // ******************************************* Mass and width for pi0 at 8TeV ****************************************
