@@ -585,19 +585,38 @@
     //****************************************************************************************************
     //******************** Pt binning for pp, 13 TeV *****************************************************
     //****************************************************************************************************
-    Double_t fBinsPi013TeVPt[18]                    = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-                                                        2.2, 2.5, 2.8, 3.2, 3.8, 5., 7., 10.};                  // Pi0 single period binning
-    //Double_t fBinsPi013TeVPt[21]                  = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-    //                                                  2.2, 2.4, 2.6, 2.9, 3.3, 3.9, 5.1, 6.5, 8.0, 11.0,
-    //                                                  16.0};                                                  // Pi0 merged period binning (3 periods)
-    Int_t fBinsPi013TeVPtRebin[24]                  = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,                           // Rebinning Pi0
-                                                        2, 2, 2, 2, 2, 2, 4, 4, 4, 8,
-                                                        8, 8, 8, 8};
-    Double_t fBinsPi013TeVPtDCA[9]                  = { 0.0, 0.4, 0.7, 1.0, 1.3, 1.7, 2.5, 4.0, 8.0};           // Pi0 single period DCA binning
+ 
+   Double_t fBinsPi013TeVPt[44]                    =    { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                        1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
+                                                        2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
+                                                        4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0,
+                                                        10.0,12.0,16.0,20.0,25.0};             // Pi0  binning LHC16X
 
-    //Double_t fBinsPi013TeVPtDCA[21]               = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-    //                                                  2.2, 2.4, 2.6, 2.9, 3.3, 3.9, 5.1, 6.5, 8.0, 11.0,
-    //                                                  16.0};                                                  // Pi0 merged period DCA binning (3 periods)
+ 
+  Int_t fBinsPi013TeVPtRebin[43]                  = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 2, 2, 3, 3, 4, 4, 4, 4,
+                                                        4, 4, 4, 5};
+
+  Double_t fBinsPi013TeVPtDCA[28]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                        1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
+                                                        4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 20.0, 25.0};
+
+
+  Double_t fBinsPi013TeVDalitzPt[23]               =  {0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.5, 5.0, 6.0,
+                                                        8.0, 10.0, 15.};
+  Int_t fBinsPi013TeVDalitzPtRebin[22]             =  {5, 5, 5, 5, 4, 4, 4, 4, 4, 4,
+                                                        4, 5, 5, 5, 5,  5, 5, 5, 8, 8,
+                                                        8, 10};
+
+
+//Double_t fBinsPi013TeVPtDCA[14]                  = { 0.0, 0.3, 0.4, 0.5,0.6,0.8, 1.0, 1.3, 1.7, 2.5, 4.0, 6.0,8.0, 12.0};           // Pi0 single period DCA binning
+
+ //Double_t fBinsPi013TeVPtDCA[21]               = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+ //                                                  2.2, 2.4, 2.6, 2.9, 3.3, 3.9, 5.1, 6.5, 8.0, 11.0,
+//                                                  16.0};                                                  // Pi0 merged period DCA binning (3 periods)
     Double_t fBinsPi013TeVPCMEMCPt[38]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,       // Pi0 PCM-EMC merged period binning (3 periods)
                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.4, 4.8, 5.2, 5.6, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0,
@@ -606,14 +625,19 @@
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
                                                         4, 4, 8, 8, 8, 8, 8};
+    Double_t fBinsEta13TeVPt[18]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0,
+							 3.5, 4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 25.0};
 
-    Double_t fBinsEta13TeVPt[8]                     = { 0., 0.4, 1.1, 1.6, 2.0, 3.0, 4.0, 6.0};                 // Eta binning for LHC15f
-    //Double_t fBinsEta13TeVPt[14]                  = { 0.0, 0.4, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0,       // Eta binning for LHC15f+LHC15h+LHC15i
-    //                                                  6.0, 7.0, 9.0, 12.0};
-    Int_t fBinsEta13TeVPtRebin[13]                  = { 8, 8, 5, 5, 5, 8, 8, 8, 8, 8,                           // Rebinning Eta
-                                                        10, 10, 10};
-    Double_t fBinsEta13TeVPtDCA[6]                  = { 0., 0.4, 1.1, 1.6, 2.2, 4.0};                           // Eta DCA binning for LHC15f
-    //Double_t fBinsEta13TeVPtDCA[9]                = { 0.0, 0.4, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};          // Eta DCA binning forLHC15f+LHC15h+LHC15i
+    Int_t fBinsEta13TeVPtRebin[17]                  = { 8, 7, 7, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 8, 8};
+ 
+    //Double_t fBinsEta13TeVPtDCA[6]                  = { 0., 0.4, 1.1, 1.6, 2.2, 4.0};                           // Eta DCA binning for LHC15f
+    Double_t fBinsEta13TeVPtDCA[10]                = { 0.0, 0.4, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};          // Eta DCA binning forLHC15f+LHC15h+LHC15i
+
+    Double_t fBinsEta13TeVDalitzPt[10]               = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4.4, 6., 10.};
+    Int_t fBinsEta13TeVDalitzPtRebin[9]              = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
+
+    Int_t fBinsPi0EtaBinning13TeVDalitzPtRebin[9]    = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
+
 
     Double_t fBinsEta13TeVPCMEMCPt[25]               = { 0.0, 0.8, 1.1, 1.4, 1.7, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                          4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10., 12., 14.,
@@ -1257,6 +1281,8 @@
             } else if (energy.CompareTo("13TeV") == 0) {
                 if (mode == 0){
                     return 2;
+		} else if ( mode == 1 ){
+                    return 5;
                 } else {
                     return 10;
                 }
@@ -2622,12 +2648,13 @@
                     }
                 } else {
                     fStartPtBin         = 1;
-                    if (fNBinsPt > 20 && modi == 0) {
-                        cout << "You have chosen to have more than 20 bins, this is not possible, it will be reduced to 20" << endl;
-                        fNBinsPt        = 20;
-                    } else if (fNBinsPt > 37 ) {
-                        cout << "You have chosen to have more than 37 bins, this is not possible, it will be reduced to 37" << endl;
-                        fNBinsPt        = 37;
+		    if (fNBinsPt > 27 && isDCA) {
+                        cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
+                        fNBinsPt    = 27;
+                    } else if (fNBinsPt > 45) {
+                        cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
+                        fNBinsPt    = 45;
+                 
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
@@ -3531,8 +3558,8 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeV") == 0) {
                 fStartPtBin         = 1;
-                if (fNBinsPt > 13 && modi == 0) {
-                    cout << "You have chosen to have more than 13 bins for Eta, this is not possible, it will be reduced to 13" << endl;
+                if (fNBinsPt > 17 && modi == 0) {
+                    cout << "You have chosen to have more than 17 bins for Eta, this is not possible, it will be reduced to 17" << endl;
                     fNBinsPt        = 13;
                 } else if (fNBinsPt > 24 ) {
                     cout << "You have chosen to have more than 24 bins for Eta, this is not possible, it will be reduced to 34" << endl;

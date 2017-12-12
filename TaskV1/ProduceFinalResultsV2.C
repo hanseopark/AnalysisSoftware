@@ -128,13 +128,13 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         minPtForFitsEta=0.4;
 
         if (useSameBinningPi0Eta.CompareTo("")==0){         
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeV_5_Aug_2013.dat";
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_Dummy_pp13TeV.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_5_Aug_2013.dat"; 
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_Dummy_pp13TeV.dat"; 
             minPtForFits=0.4;
         }    
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
-        cout << "You have choosen 13TeV. Note that you will use 2.76TeV systematic errors." << endl;
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat"; 
+        cout << "You have choosen 13TeV. Note that you will use Dummy systematic errors." << endl;
         
     } else if( optionEnergy.CompareTo("5TeV") == 0) {
         minPtForFits=0.4;
@@ -390,6 +390,10 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     if (optionEnergy.CompareTo("8TeV") == 0){
         isV0AND             = 1;
     }    
+    if (optionEnergy.CompareTo("13TeV") == 0){
+        isV0AND             = 1;
+    }    
+
     xSection                = ReturnCorrectXSection( optionEnergy, isV0AND);
     
     
@@ -469,6 +473,12 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     Double_t maxCorrYieldPi0 = 5.0*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetMaximumBin());
     Double_t minCorrYieldEta = 0.2*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX());
     Double_t maxCorrYieldEta = 5.0*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetMaximumBin());
+
+   if( optionEnergy.CompareTo("13TeV") == 0) {
+      minCorrYieldPi0 = 0.02*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetNbinsX()-2);
+      minCorrYieldEta = 0.02*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX()-2);
+    }
+
 
     if (!isMC.CompareTo("kFALSE")&&!useSameBinningPi0Eta.CompareTo("")){
 		PlotFinalOutput("CorrPi0",histoCorrectedYieldPi0,NULL,NULL,NULL,minCorrYieldPi0,maxCorrYieldPi0,"#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
