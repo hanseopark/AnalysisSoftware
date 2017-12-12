@@ -36,10 +36,10 @@ HAVELHC16o=1
 HAVELHC16p=1
 HAVELHC16e=1
 HAVETOBUILDData=0
-HAVELHC17d20a1=1
-HAVELHC17d20a1Ex=1
-HAVELHC17d20a2=1
-HAVELHC17d20a2Ex=1
+HAVELHC17d20a1=0
+HAVELHC17d20a1Ex=0
+HAVELHC17d20a2=0
+HAVELHC17d20a2Ex=0
 HAVETOBUILDMC=0
 
 # default trainconfigurations
@@ -70,7 +70,7 @@ if [ $1 = "fbock" ]; then
     NSlashes2=7
     NSlashes3=9
     NSlashes4=10
-elif [$1 = "hannahbossi"]; then
+elif [ $1 = "hannahbossi" ]; then
     BASEDIR=/Users/hannahbossi/data/OutputLegoTrains
     NSlashes=8
     NSlashes2=7
@@ -79,25 +79,25 @@ elif [$1 = "hannahbossi"]; then
 elif [ $1 = "dmuhlhei" ]; then
     BASEDIR=~/data/work/Grid
     NSlashes=9;
-elif [ $1 = "jlueh"]; then
-    BASEDIR=~/data/work/Grid
+elif [ $1 = "jlueh" ]; then
+    BASEDIR=~/Daten/GridDownload
     NSlashes=9;
 fi
 
 TRAINDIR=Legotrain-vAN-20171126-1-QA
 
 # LHC 16 data
-LHC16Data="2254"; #pass 1
-LHC16dData = "child_1"; #pass 1
-LHC16gData = "child_2"; #pass 1
-LHC16hData = "child_3"; #pass 1
-LHC16iData = "child_4"; #pass 1
-LHC16jData = "child_5"; #pass 1
-LHC16kData = "child_6"; #pass 1
-#LHC16lData ="child_7"; #pass 1
-#LHC16oData = "child_8"; #pass 1
-#LHC16pData = "child_9"; #pass 1
-LHC16eData = "child_10"; #pass 1
+LHC16Data="2265"; #pass 1
+LHC16dData="child_1"; #pass 1
+LHC16gData="child_2"; #pass 1
+LHC16hData="child_3"; #pass 1
+LHC16iData="child_4"; #pass 1
+LHC16jData="child_5"; #pass 1
+LHC16kData="child_6"; #pass 1
+LHC16lData="child_7"; #pass 1
+LHC16oData="child_8"; #pass 1
+LHC16pData="child_9"; #pass 1
+LHC16eData="child_10"; #pass 1
 
 #LHC17MCPythia="3176"; #pass 1
 #LHC17d20a1MC="child_7";
