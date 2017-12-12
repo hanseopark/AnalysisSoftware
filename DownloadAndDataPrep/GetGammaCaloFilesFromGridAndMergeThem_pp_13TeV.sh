@@ -19,8 +19,16 @@ CLEANUPMAYOR=$2
 number=""
 
 # check if train configuration has actually been given
+HAVELHC16d=1
+HAVELHC16g=1
+HAVELHC16h=1
+HAVELHC16i=1
+HAVELHC16j=1
 HAVELHC16k=1
 HAVELHC16l=1
+HAVELHC16o=1
+HAVELHC16p=1
+HAVELHC16e=1
 HAVETOBUILDData=0
 HAVELHC17d20a1=1
 HAVELHC17d20a1Ex=1
@@ -29,15 +37,19 @@ HAVELHC17d20a2Ex=1
 HAVETOBUILDMC=0
 
 # default trainconfigurations
-
-LHC16kData="";
-LHC16lData="";
-LHC16Data="";
-LHC17MCPythia="";
-LHC17MCEPOS="";
-LHC17d20a1MC="";
+LHC16dData = "";
+LHC16gData = "";
+LHC16hData = "";
+LHC16iData = "";
+LHC16jData = "";
+LHC16kData ="";
+LHC16lData ="";
+LHC16Data  ="";
+LHC17MCPythia ="";
+LHC17MCEPOS   ="";
+LHC17d20a1MC  ="";
 LHC17d20a1ExMC="";
-LHC17d20a2MC="";
+LHC17d20a2MC  ="";
 LHC17d20a2ExMC="";
 
 passNr="1";
@@ -62,23 +74,23 @@ fi
 
 TRAINDIR=Legotrain-vAN20171105-QA
 
-LHC16Data="2254"; #pass 1
+LHC16Data  ="2254"; #pass 1
 LHC16dData = "child_1"; #pass 1
 LHC16gData = "child_2"; #pass 1
 LHC16hData = "child_3"; #pass 1
 LHC16iData = "child_4"; #pass 1
 LHC16jData = "child_5"; #pass 1
-LHC16kData = "child_6"; #pass 1
-LHC16lData = "child_7"; #pass 1
+# LHC16kData = "child_6"; #pass 1
+# LHC16lData = "child_7"; #pass 1
 LHC16oData = "child_8"; #pass 1
 LHC16pData = "child_9"; #pass 1
 LHC16eData = "child_10"; #pass 1
 
-LHC17MCPythia="3176"; #pass 1
-LHC17d20a1MC="child_7";
-LHC17d20a1ExMC="child_8";
-LHC17d20a2MC="child_9";
-LHC17d20a2ExMC="child_10";
+# LHC17MCPythia="3176"; #pass 1
+# LHC17d20a1MC="child_7";
+# LHC17d20a1ExMC="child_8";
+# LHC17d20a2MC="child_9";
+# LHC17d20a2ExMC="child_10";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 echo $BASEDIR
