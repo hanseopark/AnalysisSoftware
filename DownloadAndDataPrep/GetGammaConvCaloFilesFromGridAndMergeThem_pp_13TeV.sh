@@ -26,15 +26,15 @@ echo $PATH
 # check if train configuration has actually been given
 
 HAVELHC16d=1
-HAVELHC16g=1
-HAVELHC16h=1
-HAVELHC16i=1
-HAVELHC16j=1
-HAVELHC16k=1
-HAVELHC16l=1
-HAVELHC16o=1
-HAVELHC16p=1
-HAVELHC16e=1
+HAVELHC16g=0
+HAVELHC16h=0
+HAVELHC16i=0
+HAVELHC16j=0
+HAVELHC16k=0
+HAVELHC16l=0
+HAVELHC16o=0
+HAVELHC16p=0
+HAVELHC16e=0
 HAVETOBUILDData=0
 HAVELHC17d20a1=0
 HAVELHC17d20a1Ex=0
@@ -89,6 +89,7 @@ TRAINDIR=Legotrain-vAN-20171126-1-QA
 # LHC 16 data
 LHC16Data="2265"; #pass 1
 LHC16dData="child_1"; #pass 1
+#echo $LHC16dData;
 LHC16gData="child_2"; #pass 1
 LHC16hData="child_3"; #pass 1
 LHC16iData="child_4"; #pass 1
@@ -166,11 +167,17 @@ mkdir -p $OUTPUTDIR/CutSelections
 # Get data directory for 16d period
 if [ $HAVELHC16d == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
-        LHC16dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ | grep $LHC16dData`
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC16dData
+        echo $InterMediate
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC16dData="$InterMediate"
     else
         LHC16dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16dData\_`
-    fi
-    if [ "$LHC16dData" == "" ]; then
+fi
+    #if [ "$LHC16dData" == "" ]; then
+    if [ "$InterMediateExists" == "" ]; then
         HAVELHC16d=0;
     else
         OUTPUTDIR_LHC16d=$BASEDIR/$TRAINDIR/GA_pp-$LHC16dData
@@ -372,10 +379,10 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16d == 1 ]; then
         echo "downloading LHC16d"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16d.txt`
+            runNumbers=`cat runlists/runNumbersLHC16d_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
-                CopyFileIfNonExisitent $OUTPUTDIR_LHC16d/$runNumber "/alice/data/2016/LHC16d/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16dData" $NSlashes3 "/alice/data/2016/LHC16d/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16dData/" kTRUE
+                CopyFileIfNonExisitent $OUTPUTDIR_LHC16d/$runNumber "/alice/data/2016/LHC16d/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16dData" $NSlashes3 "/alice/data/2016/LHC16d/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16dData" kTRUE
             done;
             if [ $MERGEONSINGLEData == 1 ] && [ ! -f $OUTPUTDIR_LHC16d/mergedAllConv.txt ]; then
                 rm $OUTPUTDIR_LHC16d/GammaConvCalo*.root*
@@ -393,7 +400,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16g == 1 ]; then
         echo "downloading LHC16g"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16g.txt`
+            runNumbers=`cat runlists/runNumbersLHC16g_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16g/$runNumber "/alice/data/2016/LHC16g/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16gData" $NSlashes3 "/alice/data/2016/LHC16g/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16gData/" kTRUE
@@ -414,7 +421,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16h == 1 ]; then
         echo "downloading LHC16h"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16h.txt`
+            runNumbers=`cat runlists/runNumbersLHC16h_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16h/$runNumber "/alice/data/2016/LHC16h/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16hData" $NSlashes3 "/alice/data/2016/LHC16h/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16hData/" kTRUE
@@ -435,7 +442,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16i == 1 ]; then
         echo "downloading LHC16i"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16i.txt`
+            runNumbers=`cat runlists/runNumbersLHC16i_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16i/$runNumber "/alice/data/2016/LHC16i/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16iData" $NSlashes3 "/alice/data/2016/LHC16i/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16iData/" kTRUE
@@ -456,7 +463,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16j == 1 ]; then
         echo "downloading LHC16j"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16j.txt`
+            runNumbers=`cat runlists/runNumbersLHC16j_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16j/$runNumber "/alice/data/2016/LHC16j/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16jData" $NSlashes3 "/alice/data/2016/LHC16j/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16jData/" kTRUE
@@ -477,7 +484,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16k == 1 ]; then
         echo "downloading LHC16k"
         if [ $SINGLERUN == 1 ]; then
-            runNumbers=`cat runlists/runNumbersLHC16k.txt`
+            runNumbers=`cat runlists/runNumbersLHC16k_pass1.txt`
             echo $runNumbers
             for runNumber in $runNumbers; do
                 CopyFileIfNonExisitent $OUTPUTDIR_LHC16k/$runNumber "/alice/data/2016/LHC16k/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16kData" $NSlashes3 "/alice/data/2016/LHC16k/000$runNumber/pass$passNr/PWGGA/GA_pp/$LHC16kData/" kTRUE
