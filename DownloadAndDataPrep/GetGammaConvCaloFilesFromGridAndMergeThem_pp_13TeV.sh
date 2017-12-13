@@ -9,10 +9,10 @@
 source basicFunction.sh
 
 DOWNLOADON=1
-MERGEON=0
+MERGEON=1
 SINGLERUN=1
 SEPARATEON=0
-MERGEONSINGLEData=0
+MERGEONSINGLEData=1
 MERGEONSINGLEMC=0
 CLEANUP=1
 CLEANUPMAYOR=$2
@@ -26,21 +26,21 @@ echo $PATH
 # check if train configuration has actually been given
 
 HAVELHC16d=1
-HAVELHC16g=0
-HAVELHC16h=0
-HAVELHC16i=0
-HAVELHC16j=0
-HAVELHC16k=0
-HAVELHC16l=0
-HAVELHC16o=0
-HAVELHC16p=0
-HAVELHC16e=0
-HAVETOBUILDData=0
-HAVELHC17d20a1=0
-HAVELHC17d20a1Ex=0
-HAVELHC17d20a2=0
-HAVELHC17d20a2Ex=0
-HAVETOBUILDMC=0
+HAVELHC16g=1
+HAVELHC16h=1
+HAVELHC16i=1
+HAVELHC16j=1
+HAVELHC16k=1
+HAVELHC16l=1
+HAVELHC16o=1
+HAVELHC16p=1
+HAVELHC16e=1
+HAVETOBUILDData=1
+HAVELHC17d20a1=1
+HAVELHC17d20a1Ex=1
+HAVELHC17d20a2=1
+HAVELHC17d20a2Ex=1
+HAVETOBUILDMC=1
 
 # default trainconfigurations
 LHC16dData="";
@@ -81,7 +81,10 @@ elif [ $1 = "dmuhlhei" ]; then
     NSlashes=9;
 elif [ $1 = "jlueh" ]; then
     BASEDIR=~/Daten/GridDownload
-    NSlashes=9;
+    NSlashes=8
+    NSlashes2=7
+    NSlashes3=9
+    NSlashes4=10
 fi
 
 TRAINDIR=Legotrain-vAN-20171126-1-QA
@@ -90,15 +93,15 @@ TRAINDIR=Legotrain-vAN-20171126-1-QA
 LHC16Data="2265"; #pass 1
 LHC16dData="child_1"; #pass 1
 #echo $LHC16dData;
-LHC16gData="child_2"; #pass 1
-LHC16hData="child_3"; #pass 1
-LHC16iData="child_4"; #pass 1
-LHC16jData="child_5"; #pass 1
-LHC16kData="child_6"; #pass 1
-LHC16lData="child_7"; #pass 1
-LHC16oData="child_8"; #pass 1
-LHC16pData="child_9"; #pass 1
-LHC16eData="child_10"; #pass 1
+#LHC16gData="child_2"; #pass 1
+#LHC16hData="child_3"; #pass 1
+#LHC16iData="child_4"; #pass 1
+#LHC16jData="child_5"; #pass 1
+#LHC16kData="child_6"; #pass 1
+#LHC16lData="child_7"; #pass 1
+#LHC16oData="child_8"; #pass 1
+#LHC16pData="child_9"; #pass 1
+#LHC16eData="child_10"; #pass 1
 
 #LHC17MCPythia="3176"; #pass 1
 #LHC17d20a1MC="child_7";
@@ -170,7 +173,6 @@ if [ $HAVELHC16d == 1 ]; then
         alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ > listGrid.txt
         sort listGrid.txt -o listGrid.txt
         InterMediate=`head -n1 listGrid.txt`"_"$LHC16dData
-        echo $InterMediate
         InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
         LHC16dData="$InterMediate"
     else
@@ -300,11 +302,16 @@ fi
 # Get data directory for 16e period
 if [ $HAVELHC16e == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
-        LHC16eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ | grep $LHC16eData`
+        rm listGrid.txt
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC16eData
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC16eData="$InterMediate"
     else
         LHC16eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16eData\_`
     fi
-    if [ "$LHC16eData" == "" ]; then
+    if [ "$InterMediateExists" == "" ]; then
         HAVELHC16e=0;
     else
         OUTPUTDIR_LHC16e=$BASEDIR/$TRAINDIR/GA_pp-$LHC16eData
