@@ -92,7 +92,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     // factor needed for Run1 simulations. LHC10b
     //static const Float_t mcGasCorrectionFactor = 0.960035693454;
     Double_t mcGasCorrectionFactor = 1.;
-    if (optionPeriod.CompareTo("LHC10b") == 0 || optionPeriod.CompareTo("LHC10bc") == 0 ){
+    if (optionPeriod.CompareTo("LHC10b") == 0 || optionPeriod.CompareTo("LHC10bc") == 0 || optionEnergy.Contains("PbPb") ){
       mcGasCorrectionFactor = 0.960035693454;
     }
 
@@ -304,24 +304,12 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
     }
 
-    //______________________________________Plotting histograms___________________________________
-
-    TLine *linePhi = new TLine(0,1,2*TMath::Pi(),1);
-    linePhi->SetLineColor(1);
-    TLine *lineZ = new TLine(-100,1,100.,1.);
-    lineZ->SetLineColor(1);
-    TLine *lineR = new TLine (0,1,190.,1);
-    lineR->SetLineColor(1);
-    TLine *linePt = new TLine(0,1,20.,1);
-    lineR->SetLineColor(1);
-
-
     //______________________________________ Multiplicity _________________________________________
     TCanvas * canvasNTracks = new TCanvas("canvasNTracks","",1200,1000);
     DrawGammaCanvasSettings( canvasNTracks, 0.1, 0.03, 0.05, 0.09);
     //canvasNTracks->Divide(2,2);
     canvasNTracks->SetLogy(1);
-    TH2F * histoDummyNTracks = new TH2F("histoDummyNTracks","histoDummyNTracks",1000,0.,100.,1000,1.e-10,10);
+    TH2F * histoDummyNTracks = new TH2F("histoDummyNTracks","histoDummyNTracks",1000,0.,2000.,1000,1.e-10,10);
 		SetStyleHistoTH2ForGraphs(histoDummyNTracks, "Good TPC tracks","Counts", 0.035,0.04,0.035,0.04,1.,1.);
 // 		histoDummyNTracks->GetYaxis()->SetRangeUser(2.e-9, 1.);
 		histoDummyNTracks->DrawCopy();
@@ -872,10 +860,10 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
             textsizeFacDown = (Double_t)1./padZInRbinsLower->YtoPixel(padZInRbinsLower->GetY1());
         }
 
-    TH2F *histoDummyZInRbinsUp = new TH2F("histoDummyZInRbinsUp","histoDummyZInRbinsUp",1000,-20,20,10000,-0.001,.1);
+    TH2F *histoDummyZInRbinsUp = new TH2F("histoDummyZInRbinsUp","histoDummyZInRbinsUp",1000,-160,160,10000,-0.001,.1);
     SetStyleHistoTH2ForGraphs(histoDummyZInRbinsUp, "Z (cm)","Counts", 0.9*textsizeLabelsUp, textsizeLabelsUp,0.9*textsizeLabelsUp,textsizeLabelsUp, 1,0.15/(textsizeFacUp*marginXRatio));
 
-    TH2F *histoDummyZInRbinsDown =  new TH2F("histoDummyZInRbinsDown","histoDummyZInRbinsDown",1000,-20,20,1000,0.,2.);
+    TH2F *histoDummyZInRbinsDown =  new TH2F("histoDummyZInRbinsDown","histoDummyZInRbinsDown",1000,-160,160,1000,0.,2.);
     SetStyleHistoTH2ForGraphs(histoDummyZInRbinsDown, "Z (cm)","#frac{Data}{MC} ", 0.9*textsizeLabelsDown, textsizeLabelsDown,0.9*textsizeLabelsDown,textsizeLabelsDown, 1,0.15/(textsizeFacDown*marginXRatio));
     histoDummyZInRbinsDown->GetYaxis()->SetRangeUser(0.3,1.55);
 
