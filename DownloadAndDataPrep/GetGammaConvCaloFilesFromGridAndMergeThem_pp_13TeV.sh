@@ -1025,7 +1025,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
 else
     if [ $HAVELHC16d == 1 ]; then
-        echo "removing all GammaConv files in runFolders for LHC16l";
+        echo "removing all GammaConv files in runFolders for LHC16d";
         rm $OUTPUTDIR_LHC16d/*/GammaConvCalo_*.root
         rm $OUTPUTDIR_LHC16d/*/*/*GammaConvCalo_*.root
     fi
