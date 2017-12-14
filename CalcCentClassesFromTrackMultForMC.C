@@ -63,6 +63,7 @@ void CalcCentClassesFromTrackMultForMC(){
   const Int_t minBinContent = 100;        
   const Int_t maxBin = 2000;
   const TString outputDir = "eps";
+  const TString energy="PbPb_5.02TeV";   // for default colors
 
   // read files
   std::vector<TList*> lists;
@@ -91,6 +92,14 @@ void CalcCentClassesFromTrackMultForMC(){
   if(!logX) canvas.SetRightMargin(0.04);
   canvas.SetLeftMargin(0.08);
 
+
+  TH1F histoDummy("histoDummy","histoDummy",maxX,0,maxX);
+  histoDummy.SetTitle("");
+  histoDummy.GetYaxis()->SetRangeUser(1,maxY);
+  histoDummy.GetXaxis()->SetTitle("N_{Good Tracks}");
+  histoDummy.GetYaxis()->SetTitle("#frac{dN}{dN_{Good Tracks}}");
+  histoDummy.Draw("copy");
+
   TLegend legend = TLegend(0.85,0.13,0.95,0.93);
   legend.SetLineColor(0);
   std::vector<TH1F*> histos;
@@ -102,12 +111,7 @@ void CalcCentClassesFromTrackMultForMC(){
     if(cutList){
       TList *subList=(TList*)cutList->FindObject(Form("%s ESD histograms",cutNumbers.at(nCut).Data()));
       TH1F *histoTracks=(TH1F*)subList->FindObject("GoodESDTracks");
-      histoTracks->SetLineColor(46-nCut);
-      histoTracks->SetTitle("");
-      histoTracks->GetXaxis()->SetTitle("N_{Good Tracks}");
-      histoTracks->GetYaxis()->SetTitle("#frac{dN}{dN_{Good Tracks}}");
-      histoTracks->GetXaxis()->SetRangeUser(1,maxX);
-      histoTracks->GetYaxis()->SetRangeUser(1,maxY);
+      histoTracks->SetLineColor(GetColorDefaultColor(energy,"", GetCentralityString(cutNumbers.at(nCut))));
       legend.AddEntry(histoTracks, GetCentralityString(cutNumbers.at(nCut)).Data());
       histoTracks->Draw("same");
       histos.push_back(histoTracks);
@@ -116,18 +120,14 @@ void CalcCentClassesFromTrackMultForMC(){
       TList *cutList=(TList*)(lists.at(fileNo)->FindObject(Form("Cut Number %s",cutNumbers.at(nCut).Data())));
       TList *subList=(TList*)cutList->FindObject(Form("%s ESD histograms",cutNumbers.at(nCut).Data()));
       TH1F *histoTracks=(TH1F*)subList->FindObject("GoodESDTracks");
-      histoTracks->SetLineColor(46-nCut);
+      histoTracks->SetLineColor(GetColorDefaultColor(energy,"", GetCentralityString(cutNumbers.at(nCut))));
       histoTracks->SetTitle("");
-      histoTracks->GetXaxis()->SetTitle("N_{Good Tracks}");
-      histoTracks->GetYaxis()->SetTitle("#frac{dN}{dN_{Good Tracks}}");
-      histoTracks->GetXaxis()->SetRangeUser(1,maxX);
-      histoTracks->GetYaxis()->SetRangeUser(1,maxY);
       legend.AddEntry(histoTracks, GetCentralityString(cutNumbers.at(nCut)).Data());
       histoTracks->Draw("same");
       histos.push_back(histoTracks);
     }
   }
-
+  histoDummy.Draw("copy,same");
   if(drawLegend) legend.Draw("same");
 
   // calculate intersections between histograms

@@ -3786,7 +3786,26 @@
                 } else if (!centrality.CompareTo("50-90%")){
                     return kGreen+1;
                 } else return kRed+2;
-            }
+            } else if (!generator.CompareTo("")){
+	      if (!centrality.CompareTo("0-5%"))        return 46;
+	      else if (!centrality.CompareTo("5-10%"))  return 45;
+	      else if (!centrality.CompareTo("10-15%")) return 44;
+	      else if (!centrality.CompareTo("15-20%")) return 43;
+	      else if (!centrality.CompareTo("20-25%")) return 42;
+	      else if (!centrality.CompareTo("25-30%")) return 41;
+	      else if (!centrality.CompareTo("30-35%")) return 40;
+	      else if (!centrality.CompareTo("35-40%")) return 39;
+	      else if (!centrality.CompareTo("40-45%")) return 38;
+	      else if (!centrality.CompareTo("45-50%")) return 37;
+	      else if (!centrality.CompareTo("50-55%")) return 36;
+	      else if (!centrality.CompareTo("55-60%")) return 35;
+	      else if (!centrality.CompareTo("60-65%")) return 34;
+	      else if (!centrality.CompareTo("65-70%")) return 33;
+	      else if (!centrality.CompareTo("70-75%")) return 32;
+	      else if (!centrality.CompareTo("75-80%")) return 31;
+	      else if (!centrality.CompareTo("80-85%")) return 30;
+	      else if (!centrality.CompareTo("85-90%")) return 29;
+	    }
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
             if (!generator.CompareTo("LHC17n")){
