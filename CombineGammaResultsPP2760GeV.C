@@ -75,7 +75,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
       strBinShifted                           = "_BinShifted";
       cout << "using bin shifted input spectra" << endl;
     }
-    
+
     TString dateForOutput                                       = ReturnDateStringForOutput();
     TString outputDir                                           = Form("%s/%s/CombineGammaMeasurementspp2760GeV%s",suffix.Data(),dateForOutput.Data(),strBinShifted.Data());
     TString fileNameTheorypp2760GeV                             = "ExternalInput/Theory/TheoryCompilationPP.root";
@@ -90,7 +90,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TString nameFinalResDat                                     = Form("%s/CombinedResultsGamma_FitResults_%s.dat",outputDir.Data(),dateForOutput.Data());
     fstream fileFinalResults;
     fileFinalResults.open(nameFinalResDat.Data(), ios::out);
-    
+
     TString addNamePi0Output                      = "";
     Bool_t writeFitsToPi0File                     = kFALSE;
     if (inputFileFits.CompareTo("") != 0){
@@ -198,7 +198,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     for (Int_t i = 0; i< maxNBinsGamma; i++){
         cout << i << ": "<< xPtLimitsGamma[i] <<" - " << xPtLimitsGamma[i+1]<< ", " <<endl;
     }
-    
+
     //*******************************************************************************************************************************************
     //*********************************************** Create histogram arrays *************************************************
     //*******************************************************************************************************************************************
@@ -244,7 +244,6 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         histoEffSecCorr[1][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0l");
         histoEffSecCorr[2][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Lambda");
         histoEffSecCorr[3][0]                           = (TH1D*) directoryPCMGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Rest");
-        
     //*******************************************************************************************************************************************
     //*********************************************** Load PCMEMC histograms from 2.76TeV PCM file **********************************************
     //*******************************************************************************************************************************************
@@ -932,7 +931,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphCombIncGammaSys->RemovePoint(0);
     }
     graphCombIncGammaTot->Print();
-    
+
     //*******************************************************************************************************************************************
     //*********************************************** Combining PCM IncGamma spectra ************************************************************
     //*******************************************************************************************************************************************
@@ -1138,7 +1137,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                                     graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],NULL,"QNRME+");
     TString forOutput               = WriteParameterToFile(fitHagGammaComb);
     cout << forOutput.Data() << endl;
-    
+
     Double_t paramTCM[5] = {graphCombIncGammaTot->GetY()[1],0.1,graphCombIncGammaTot->GetY()[4],0.6,3};
     TF1* fitTCMGammaComb            = FitObject("tcm", "fitTCMGammaComb","Gamma", graphCombIncGammaTot, graphCombIncGammaTot->GetX()[0], graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()], paramTCM,"QNRME+");
     forOutput               = WriteParameterToFile(fitTCMGammaComb);
@@ -1171,7 +1170,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     graphRatioGammaCombCombFitStat                       = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitStat, fitTCMGammaComb);
     TGraphAsymmErrors* graphRatioGammaCombCombFitSys     = (TGraphAsymmErrors*)graphCombIncGammaSys->Clone();
     graphRatioGammaCombCombFitSys                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitSys, fitTCMGammaComb);
-    
+
     TGraphAsymmErrors* graphRatioGammaPCMCombCombFitTot     = (TGraphAsymmErrors*)graphCombPCMIncGammaTot->Clone();
     graphRatioGammaPCMCombCombFitTot                        = CalculateGraphErrRatioToFit(graphRatioGammaPCMCombCombFitTot, fitTCMGammaComb);
     TGraphAsymmErrors* graphRatioGammaPCMCombCombFitStat    = (TGraphAsymmErrors*)graphCombPCMIncGammaStat->Clone();
@@ -1314,7 +1313,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit.%s",outputDir.Data(),suffix.Data()));
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit.pdf",outputDir.Data()));
-    
+
     histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.73,1.27);
     histo2DGammaRatioToCombFit->Draw("copy");
     cout << __LINE__ << endl;
@@ -1715,31 +1714,31 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV.pdf", outputDir.Data()));
 
     hist2DDRDummySingle->DrawCopy();
-    
+
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
         for (Int_t i = 10; i > -1; i--){
             if (graphDRNonFitSysErr[i]){
                 DrawGammaSetMarkerTGraphAsym(graphDRNonFitSysErr[i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
                 graphDRNonFitSysErr[i]->Draw("E2same");
-    
+
             }
             if (histoDRNonFitStatErr[i]){
                 DrawGammaSetMarker(histoDRNonFitStatErr[i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
                 histoDRNonFitStatErr[i]->Draw("p,same,e0,X0");
             }
         }
-    
+
         if (histoDRNonFitStatErr[2]) histoDRNonFitStatErr[2]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[0]) histoDRNonFitStatErr[0]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[4]) histoDRNonFitStatErr[4]->Draw("p,same,e0,X0");
         legendDRSingle->Draw();
         labelDRSingle->Draw();
-    
+
         hist2DDRDummySingle->Draw("same,axis");
-    
+
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV_NonFit.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV_NonFit.pdf", outputDir.Data()));
-    
+
     TF1* pol0DRfitslow[11];
     TF1* pol0DRfitshigh[11];
     for (Int_t i = 0; i < 11; i++){
@@ -1762,14 +1761,14 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                 DrawGammaSetMarkerTGraphAsym(graphDRNonFitSysErr[i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
                 graphDRNonFitSysErr[i]->Draw("E2same");
                 if (graphDRNonFitSysErr[i])legendDRSingle->AddEntry(graphDRNonFitSysErr[i],Form("%s: %1.3f #pm %1.3f",nameMeasGlobalLabel[i].Data(),pol0DRfitslow[i]->GetParameter(0),pol0DRfitslow[i]->GetParError(0)),"pf");
-    
+
             }
             if (histoDRNonFitStatErr[i]){
                 DrawGammaSetMarker(histoDRNonFitStatErr[i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
                 histoDRNonFitStatErr[i]->Draw("p,same,e0,X0");
             }
         }
-    
+
         if (histoDRNonFitStatErr[2]) histoDRNonFitStatErr[2]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[0]) histoDRNonFitStatErr[0]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[4]) histoDRNonFitStatErr[4]->Draw("p,same,e0,X0");
@@ -1781,12 +1780,12 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendDRSingle->Draw();
         labelDRSingle->Draw();
-    
+
         hist2DDRDummySingle->Draw("same,axis");
-    
+
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV_NonFit_lowpol0fit.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV_NonFit_lowpol0fit.pdf", outputDir.Data()));
-    
+
     hist2DDRDummySingle->DrawCopy();
     legendDRSingle->Clear();
     legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*4,0.31,0.953, textSizeSinglePad, 1, "Pol0 1-6 GeV/#it{c} fit:", 42, 0.3);
@@ -1796,14 +1795,14 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                 DrawGammaSetMarkerTGraphAsym(graphDRNonFitSysErr[i], markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i],widthLinesBoxes, kTRUE);
                 graphDRNonFitSysErr[i]->Draw("E2same");
                 if (graphDRNonFitSysErr[i])legendDRSingle->AddEntry(graphDRNonFitSysErr[i],Form("%s: %1.3f #pm %1.3f",nameMeasGlobalLabel[i].Data(),pol0DRfitshigh[i]->GetParameter(0),pol0DRfitshigh[i]->GetParError(0)),"pf");
-    
+
             }
             if (histoDRNonFitStatErr[i]){
                 DrawGammaSetMarker(histoDRNonFitStatErr[i],  markerStyleDet[i], markerSizeDet[i], colorDet[i] , colorDet[i]);
                 histoDRNonFitStatErr[i]->Draw("p,same,e0,X0");
             }
         }
-    
+
         if (histoDRNonFitStatErr[2]) histoDRNonFitStatErr[2]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[0]) histoDRNonFitStatErr[0]->Draw("p,same,e0,X0");
         if (histoDRNonFitStatErr[4]) histoDRNonFitStatErr[4]->Draw("p,same,e0,X0");
@@ -1815,9 +1814,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendDRSingle->Draw();
         labelDRSingle->Draw();
-    
+
         hist2DDRDummySingle->Draw("same,axis");
-    
+
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV_NonFit_highpol0fit.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_IndMeasurements_pp2760GeV_NonFit_highpol0fit.pdf", outputDir.Data()));
 
@@ -2223,7 +2222,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
 
     Double_t minYSecCorr[4]             = {0.0, 0.0, 0.0, 0.0};
-    Double_t maxYSecCorr[4]             = {0.06, 0.004, 0.8e-3, 0.041};
+    Double_t maxYSecCorr[4]             = {0.06, 0.004, 0.3e-3, 0.041};
     TString nameLabelSec[4]             = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "Rest"};
     TString nameOutputSec[4]            = {"K0s", "K0l", "Lambda", "Rest"};
     for (Int_t k = 0; k < 4; k++){
@@ -2578,7 +2577,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         if (graphTheoryJETPHOXpp2760GeVCenter) {
             legendYieldDirGammaTheo2->AddEntry(dummyJETPHOXforLegend,"JETPHOX","fl");
         }
-  
+
         legendYieldDirGammaTheo2->Draw();
 
         if (graphCombDirGammaSpectrumStatErrPlot){
@@ -2653,21 +2652,21 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TGraph* graphXSecTheoryNLOpp2760GeVPaquettCenter                    = ScaleGraph( graphTheoryNLOpp2760GeVPaquettCenter,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecTheoryJETPHOXpp2760GeV                  = ScaleGraph( graphTheoryJETPHOXpp2760GeV,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecTheoryJETPHOXpp2760GeVCenter            = ScaleGraph( graphTheoryJETPHOXpp2760GeVCenter,xSection2760GeV*recalcBarn);
-    
+
     TLegend* legendXsecDirGamma        = GetAndSetLegend2(0.68, 0.87-(1*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendXsecDirGamma->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
-    
+
     TLegend* legendULXSecDirGamma      = GetAndSetLegend2(0.17, 0.12+(4.2*textSizeLabelsRel*0.85), 0.5, 0.12+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
     legendULXSecDirGamma->SetTextAlign(12);
     legendULXSecDirGamma->AddEntry((TObject*)0, "#gamma_{dir} data","");
-    
+
     TH1F * histo2DXSecGamma              = new TH1F("histo2DXSecGamma","histo2DXSecGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(histo2DXSecGamma, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.7);
     histo2DXSecGamma->GetYaxis()->SetRangeUser(2e1,7e11);
     histo2DXSecGamma->GetXaxis()->SetMoreLogLabels();
     histo2DXSecGamma->GetXaxis()->SetNoExponent();
     histo2DXSecGamma->Draw("copy");
-    
+
     DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaSys, markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV+0.2, colorCombpp2760GeVBox , colorCombpp2760GeVBox,widthLinesBoxes, kTRUE);
     DrawGammaSetMarkerTGraphAsym(graphXSecCombIncGammaStatPlot, markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV+0.2, colorCombpp2760GeVBox , colorCombpp2760GeVBox, widthLinesBoxes);
     graphXSecCombIncGammaSys->Draw("E2same");
@@ -2696,9 +2695,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
           graphXSecTheoryJETPHOXpp2760GeVCenter->Draw("lX,same");
           graphXSecTheoryJETPHOXpp2760GeVCenter->SetLineWidth(widthLineNLO*1.5);
     }
-    
+
     legendYieldDirGammaTheo2->Draw();
-    
+
     if (graphXSecCombDirGammaNonFitSpectrumSystErr){
         DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSystErr, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes, kTRUE);
         graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
@@ -2724,20 +2723,20 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
-        
-        
+
+
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.pdf",outputDir.Data()));
-    
+
     histo2DXSecGamma->Draw("copy");
 
     graphXSecCombIncGammaSys->Draw("E2same");
     graphXSecCombIncGammaStatPlot->Draw("Epsame");
-    
+
     TLegend* legendTCMfitXSec      = GetAndSetLegend2(0.68, 0.87-(2*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendTCMfitXSec->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
-    
+
     TF1* fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb,xSection2760GeV*recalcBarn,"xsecTCMfit");
     DrawGammaSetMarkerTF1( fitXSecTCMGammaComb, 4, 2, kBlue+2);
     legendTCMfitXSec->AddEntry(fitXSecTCMGammaComb,"#gamma_{inc} TCM fit","l");
@@ -2758,7 +2757,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphXSecTheoryJETPHOXpp2760GeVCenter->Draw("lX,same");
     }
     legendYieldDirGammaTheo2->Draw();
-    
+
     if (graphXSecCombDirGammaNonFitSpectrumSystErr){
         graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
     }
@@ -2777,8 +2776,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         legendULXSecDirGamma->Draw();
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
-        
-        
+
+
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_TCM.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_TCM.pdf",outputDir.Data()));
@@ -2981,7 +2980,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     dummyHist->Draw("same,axis");
 
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums.%s",outputDir.Data(),suffix.Data()));
-    
+
     dummyHist->Draw();
     for (Int_t i=0; i<14; i++) {
         if (graphGammaFractionsCocktailPartialSums[i][5]) {
