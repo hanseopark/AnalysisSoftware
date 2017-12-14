@@ -9,7 +9,7 @@
 source basicFunction.sh
 
 DOWNLOADON=1
-MERGEON=1
+MERGEON=0
 SINGLERUN=1
 SEPARATEON=0
 MERGEONSINGLEData=1
@@ -36,11 +36,19 @@ HAVELHC16o=1
 HAVELHC16p=1
 HAVELHC16e=1
 HAVETOBUILDData=1
+HAVELHC17f6=1;
+HAVELHC17f9=1;
+HAVELHC17d17=1;
+HAVELHC17f5=1;
+HAVELHC17d3=1;
+HAVELHC17e5=1;
 HAVELHC17d20a1=1
 HAVELHC17d20a1Ex=1
 HAVELHC17d20a2=1
 HAVELHC17d20a2Ex=1
 HAVETOBUILDMC=1
+HAVELHC17d16=1;
+HAVELHC17d18=1;
 
 # default trainconfigurations
 LHC16dData="";
@@ -56,11 +64,18 @@ LHC16eData="";
 LHC16Data="";
 LHC17MCPythia="";
 LHC17MCEPOS="";
+LHC17f6MC="";
+LHC17f9MC="";
+LHC17d17MC="";
+LHC17f5MC="";
+LHC17d3MC="";
+LHC17e5MC="";
 LHC17d20a1MC="";
 LHC17d20a1ExMC="";
 LHC17d20a2MC="";
 LHC17d20a2ExMC="";
-
+LHC17d16MC="";
+LHC17d18MC="";
 passNr="1";
 NSlashes=10;
 
@@ -92,22 +107,29 @@ TRAINDIR=Legotrain-vAN-20171126-1-QA
 # LHC 16 data
 LHC16Data="2265"; #pass 1
 LHC16dData="child_1"; #pass 1
-#echo $LHC16dData;
-#LHC16gData="child_2"; #pass 1
-#LHC16hData="child_3"; #pass 1
-#LHC16iData="child_4"; #pass 1
-#LHC16jData="child_5"; #pass 1
-#LHC16kData="child_6"; #pass 1
-#LHC16lData="child_7"; #pass 1
-#LHC16oData="child_8"; #pass 1
-#LHC16pData="child_9"; #pass 1
-#LHC16eData="child_10"; #pass 1
+LHC16gData="child_2"; #pass 1
+LHC16hData="child_3"; #pass 1
+LHC16iData="child_4"; #pass 1
+LHC16jData="child_5"; #pass 1
+LHC16kData="child_6"; #pass 1
+LHC16lData="child_7"; #pass 1
+LHC16oData="child_8"; #pass 1
+LHC16pData="child_9"; #pass 1
+LHC16eData="child_10"; #pass 1
 
-#LHC17MCPythia="3176"; #pass 1
-#LHC17d20a1MC="child_7";
-#LHC17d20a1ExMC="child_8";
-#LHC17d20a2MC="child_9";
-#LHC17d20a2ExMC="child_10";
+LHC17MCPythia="3184"; #pass 1
+LHC17f6MC="child_1";
+LHC17f9MC="child_2";
+LHC17d17MC="child_3";
+LHC17f5MC="child_4";
+LHC17d3MC="child_5";
+LHC17e5MC="child_6";
+LHC17d20a1MC="child_7";
+LHC17d20a1ExMC="child_8";
+LHC17d20a2MC="child_9";
+LHC17d20a2ExMC="child_10";
+LHC17d16MC="child_11";
+LHC17d18MC="child_12";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 if [ "$LHC16dData" == "" ]; then
@@ -143,7 +165,24 @@ fi
 if [ "$LHC16Data" != "" ]; then
     HAVETOBUILDData=1;
 fi
-
+if [ "$LHC17f6MC" == "" ]; then
+    HAVELHC17f6=0;
+fi
+if [ "$LHC17f9MC" == "" ]; then
+    HAVELHC17f9=0;
+fi
+if [ "$LHC17d17MC" == "" ]; then
+    HAVELHC17d17=0;
+fi
+if [ "$LHC17f5MC" == "" ]; then
+    HAVELHC17f5=0;
+fi
+if [ "$LHC17d3MC" == "" ]; then
+    HAVELHC17d3=0;
+fi
+if [ "$LHC17e5MC" == "" ]; then
+    HAVELHC17e5=0;
+fi
 if [ "$LHC17d20a1MC" == "" ]; then
     HAVELHC17d20a1=0;
     echo $LHC17d20a1MC
@@ -157,6 +196,12 @@ if [ "$LHC17d20a2MC" == "" ]; then
 fi
 if [ "$LHC17d20a2ExMC" == "" ]; then
     HAVELHC17d20a2Ex=0;
+fi
+if [ "$LHC17d16MC" == "" ]; then
+    HAVELHC17d16=0;
+fi
+if [ "$LHC17d18" == "" ]; then
+    HAVELHC17d18=0;
 fi
 if [ "$LHC17MCPythia" != "" ]; then
     HAVETOBUILDMC=1;
@@ -184,7 +229,8 @@ fi
     else
         OUTPUTDIR_LHC16d=$BASEDIR/$TRAINDIR/GA_pp-$LHC16dData
     fi
-    echo $OUTPUTDIR_LHC16d
+    rm listGrid.txt
+    echo OUTPUTDIR_LHC16d $OUTPUTDIR_LHC16d
 fi
 # Get data directory for 16g period
 if [ $HAVELHC16g == 1 ]; then
@@ -198,9 +244,8 @@ if [ $HAVELHC16g == 1 ]; then
     else
         OUTPUTDIR_LHC16g=$BASEDIR/$TRAINDIR/GA_pp-$LHC16gData
     fi
-    echo $OUTPUTDIR_LHC16g
+    echo OUTPUTDIR_LHC16g $OUTPUTDIR_LHC16g
 fi
-
 # Get data directory for 16h period
 if [ $HAVELHC16h == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
@@ -213,7 +258,7 @@ if [ $HAVELHC16h == 1 ]; then
     else
         OUTPUTDIR_LHC16h=$BASEDIR/$TRAINDIR/GA_pp-$LHC16hData
     fi
-    echo $OUTPUTDIR_LHC16h
+    echo OUTPUTDIR_LHC16h $OUTPUTDIR_LHC16h
 fi
 # Get data directory for 16i period
 if [ $HAVELHC16i == 1 ]; then
@@ -227,7 +272,7 @@ if [ $HAVELHC16i == 1 ]; then
     else
         OUTPUTDIR_LHC16i=$BASEDIR/$TRAINDIR/GA_pp-$LHC16iData
     fi
-    echo $OUTPUTDIR_LHC16i
+    echo OUTPUTDIR_LHC16i $OUTPUTDIR_LHC16i
 fi
 # Get data directory for 16j period
 if [ $HAVELHC16j == 1 ]; then
@@ -241,7 +286,7 @@ if [ $HAVELHC16j == 1 ]; then
     else
         OUTPUTDIR_LHC16j=$BASEDIR/$TRAINDIR/GA_pp-$LHC16jData
     fi
-    echo $OUTPUTDIR_LHC16j
+    echo OUTPUTDIR_LHC16j $OUTPUTDIR_LHC16j
 fi
 # Get data directory for 16k period
 if [ $HAVELHC16k == 1 ]; then
@@ -255,7 +300,7 @@ if [ $HAVELHC16k == 1 ]; then
     else
         OUTPUTDIR_LHC16k=$BASEDIR/$TRAINDIR/GA_pp-$LHC16kData
     fi
-    echo $OUTPUTDIR_LHC16k
+    echo OUTPUTDIR_LHC16k $OUTPUTDIR_LHC16k
 fi
 # Get data directory for 16l period
 if [ $HAVELHC16l == 1 ]; then
@@ -269,7 +314,7 @@ if [ $HAVELHC16l == 1 ]; then
     else
         OUTPUTDIR_LHC16l=$BASEDIR/$TRAINDIR/GA_pp-$LHC16lData
     fi
-    echo $OUTPUTDIR_LHC16l
+    echo OUTPUTDIR_LHC16l $OUTPUTDIR_LHC16l
 fi
 # Get data directory for 16o period
 if [ $HAVELHC16o == 1 ]; then
@@ -283,7 +328,7 @@ if [ $HAVELHC16o == 1 ]; then
     else
         OUTPUTDIR_LHC16o=$BASEDIR/$TRAINDIR/GA_pp-$LHC16oData
     fi
-    echo $OUTPUTDIR_LHC16o
+    echo OUTPUTDIR_LHC16o $OUTPUTDIR_LHC16o
 fi
 # Get data directory for 16p period
 if [ $HAVELHC16p == 1 ]; then
@@ -297,12 +342,11 @@ if [ $HAVELHC16p == 1 ]; then
     else
         OUTPUTDIR_LHC16p=$BASEDIR/$TRAINDIR/GA_pp-$LHC16pData
     fi
-    echo $OUTPUTDIR_LHC16p
+    echo OUTPUTDIR_LHC16p $OUTPUTDIR_LHC16p
 fi
 # Get data directory for 16e period
 if [ $HAVELHC16e == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
-        rm listGrid.txt
         alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ > listGrid.txt
         sort listGrid.txt -o listGrid.txt
         InterMediate=`head -n1 listGrid.txt`"_"$LHC16eData
@@ -316,9 +360,123 @@ if [ $HAVELHC16e == 1 ]; then
     else
         OUTPUTDIR_LHC16e=$BASEDIR/$TRAINDIR/GA_pp-$LHC16eData
     fi
-    echo $OUTPUTDIR_LHC16e
+    rm listGrid.txt
+    echo OUTPUTDIR_LHC16e $OUTPUTDIR_LHC16e
 fi
 
+if [ $HAVELHC17f6 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17f6MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17f6MC="$InterMediate"
+    else
+        LHC17f6MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17f6MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17f6=0;
+    else
+       OUTPUTDIR_LHC17f6=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f6MC
+    fi
+    rm listGrid.txt
+    echo OUTPUTDIR_LHC17f6 $OUTPUTDIR_LHC17f6
+fi
+
+if [ $HAVELHC17f9 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17f9MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17f9MC="$InterMediate"
+    else
+        LHC17f9MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17f9MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17f9=0;
+    else
+        OUTPUTDIR_LHC17=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f9MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17f9 $OUTPUTDIR_LHC17f9
+fi
+
+if [ $HAVELHC17d17 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17d17MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17d17MC="$InterMediate"
+    else
+        LHC17d17MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17d17MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17d17=0;
+    else
+        OUTPUTDIR_LHC17d17=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d17MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17d17 $OUTPUTDIR_LHC17d17
+fi
+
+if [ $HAVELHC17f5 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17f5MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17f5MC="$InterMediate"
+    else
+        LHC17f5MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17f5MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17f5=0;
+    else
+        OUTPUTDIR_LHC17f5=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17f5MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17f5 $OUTPUTDIR_LHC17f5
+fi
+
+if [ $HAVELHC17d3 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17d3MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17d3MC="$InterMediate"
+    else
+        LHC17d3MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17d3MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17d3=0;
+    else
+        OUTPUTDIR_LHC17d3=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d3MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17d3 $OUTPUTDIR_LHC17d3
+fi
+
+if [ $HAVELHC17e5 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17e5MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17e5MC="$InterMediate"
+    else
+        LHC17MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17e5MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17e5=0;
+    else
+        OUTPUTDIR_LHC17e5=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17e5MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17e5 $OUTPUTDIR_LHC17e5
+fi
 
 # Get MC directory for LHC17d20a1 MC anchored to LHC16k
 if [ $HAVELHC17d20a1 == 1 ]; then
@@ -380,7 +538,43 @@ if [ $HAVELHC17d20a2Ex == 1 ]; then
     echo $OUTPUTDIR_LHC17d20a2Ex
 fi
 
+if [ $HAVELHC17d16 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17d16MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17d16MC="$InterMediate"
+    else
+        LHC17d16MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17d16MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17d16=0;
+    else
+        OUTPUTDIR_LHC17d16=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d16MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17d16 $OUTPUTDIR_LHC17d16
+fi
 
+if [ $HAVELHC17d18 == 1 ]; then
+    if [ $HAVETOBUILDMC == 1 ]; then
+        alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17MCPythia\_ > listGrid.txt
+        sort listGrid.txt -o listGrid.txt
+        InterMediate=`head -n1 listGrid.txt`"_"$LHC17d18MC
+        InterMediateExists="$( cat listGrid.txt | grep -w "$InterMediate" )"
+        LHC17d18MC="$InterMediate"
+    else
+        LHC17MC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC/ | grep $LHC17d18MC\_`
+    fi
+    if [ "$InterMediateExists" == "" ]; then
+        HAVELHC17d18=0;
+    else
+        OUTPUTDIR_LHC17d18=$BASEDIR/$TRAINDIR/GA_pp_MC-$LHC17d18MC
+    fi
+rm listGrid.txt
+echo OUTPUTDIR_LHC17d18 $OUTPUTDIR_LHC17d18
+fi
 
 if [ $CLEANUPMAYOR == 0 ]; then
     if [ $HAVELHC16d == 1 ]; then
@@ -705,6 +899,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
             echo $fileName
             ChangeStructureIfNeededPCMCalo $fileName $OUTPUTDIR_LHC16d $NSlashes "LHC16d-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
         done;
+        echo "16d done"
     fi
 
     if [ $HAVELHC16g == 1 ]; then
@@ -979,7 +1174,10 @@ if [ $CLEANUPMAYOR == 0 ]; then
         done;
     fi
 
+    echo "Download Done"
+
     if [ $MERGEON == 1 ]; then
+        echo "Starting Merging"
         ls $OUTPUTDIR/GammaConvCalo_LHC16o-pass$passNr-DPGTrackAndCalo\_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
@@ -1021,7 +1219,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
         done
 
 
-
+    echo "Merging Done"
     fi
 else
     if [ $HAVELHC16d == 1 ]; then
