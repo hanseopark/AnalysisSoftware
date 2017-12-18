@@ -664,7 +664,7 @@ void FinaliseSystematicErrorsConvCalo_Gammas_pp (   TString nameDataFileErrors  
             // fix ClusterMaterialTRD sys #15
             if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")){
               if(!energy.CompareTo("2.76TeV")){
-                errorFixed                  = 2.8;
+                errorFixed                  = 2.1;
               }else if(!energy.CompareTo("8TeV")){
                 errorFixed                  = 2.1;
               }

@@ -220,6 +220,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                                                         {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL},
                                                         {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL} };
     TH1D* histoPileupCorr[11]                       = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
+    TH1D* histoEMCIncGammaStatTemp                  = NULL;
+    TGraphAsymmErrors* graphEMCIncGammaSysTemp      = NULL;
+
     //*******************************************************************************************************************************************
     //*********************************************** Load PCM histograms from 2.76TeV PCM file *************************************************
     //*******************************************************************************************************************************************
@@ -291,10 +294,16 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             histoResolCorr[2]                               = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaResolCorr");
             histoIncGammaStatErr[2]                         = (TH1D*) directoryEMCGammapp2760GeV->Get(Form("IncGammaStatError%s",strBinShifted.Data()));
             graphIncGammaSysErr[2]                          = (TGraphAsymmErrors*) directoryEMCGammapp2760GeV->Get(Form("IncGammaSystError%s",strBinShifted.Data()));
+            histoEMCIncGammaStatTemp                        = (TH1D*) histoIncGammaStatErr[2]->Clone("IncGammaStatErrorTemp");
+            graphEMCIncGammaSysTemp                         = (TGraphAsymmErrors*) graphIncGammaSysErr[2]->Clone("IncGammaSystErrorTemp");
+            histoIncGammaStatErr[2]                         = NULL;
+            graphIncGammaSysErr[2]                          = NULL;
             histoEffSecCorr[0][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0s");
             histoEffSecCorr[1][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_K0l");
             histoEffSecCorr[2][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Lambda");
             histoEffSecCorr[3][2]                           = (TH1D*) directoryEMCGammapp2760GeV->Get("GammaEffectiveSecondaryCorr_Rest");
+
+
 
     }
     //*******************************************************************************************************************************************
@@ -896,10 +905,124 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
     }
 
-    // **********************************************************************************************************************
-    // ******************************************* Assuming maximal correlation *********************************************
-    // **********************************************************************************************************************
+    //*******************************************************************************************************************************************
+    //*********************************************** Combining PCM IncGamma spectra ************************************************************
+    //*******************************************************************************************************************************************
+    TGraph* graphWeightsPCMIncGamma[11];
+    for (Int_t i = 0; i< 11; i++){
+        graphWeightsPCMIncGamma[i]                   = NULL;
+    }
 
+    // Declaration & calculation of combined spectrum
+    TString fileNamePCMIncGammaOutputWeighting       = Form("%s/PCMIncGamma_WeightingMethod.dat",outputDir.Data());
+    TGraphAsymmErrors* graphCombPCMIncGammaStat      = NULL;
+    TGraphAsymmErrors* graphCombPCMIncGammaSys       = NULL;
+    TGraphAsymmErrors* graphCombPCMIncGammaTot       = CombinePtPointsSpectraFullCorrMat(   histoIncGammaStatErr,    graphIncGammaSysErr,
+                                                                                            xPtLimitsGamma, maxNBinsGamma-1,
+                                                                                            offSetsIncGamma, offSetsIncGammaSys,
+                                                                                            graphCombPCMIncGammaStat, graphCombPCMIncGammaSys,
+                                                                                            fileNamePCMIncGammaOutputWeighting, "2.76TeV", "GammaInc", kTRUE,
+                                                                                            NULL, fileNameCorrelations );
+    if (graphCombPCMIncGammaTot == NULL) {
+        cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
+        return;
+    }
+    while (graphCombPCMIncGammaStat->GetX()[0] < 0.4){
+        graphCombPCMIncGammaStat->RemovePoint(0);
+    }
+    while (graphCombPCMIncGammaTot->GetX()[0] < 0.4){
+        graphCombPCMIncGammaTot->RemovePoint(0);
+    }
+    while (graphCombPCMIncGammaSys->GetX()[0] < 0.4){
+        graphCombPCMIncGammaSys->RemovePoint(0);
+    }
+    cout<< "stat" << endl;
+    graphCombPCMIncGammaStat->Print();
+    cout<< "syst" << endl;
+    graphCombPCMIncGammaSys->Print();
+
+    // Reading weights from output file for plotting
+    ifstream fileWeightsPCMIncGammaRead;
+    fileWeightsPCMIncGammaRead.open(fileNamePCMIncGammaOutputWeighting,ios_base::in);
+    cout << "reading" << fileNamePCMIncGammaOutputWeighting << endl;
+    Double_t xValuesPCMIncGammaRead[50];
+    Double_t weightsPCMIncGammaRead[11][50];
+    Int_t availablePCMIncGammaMeas[11]      = { -1, -1, -1, -1, -1,
+                                                -1, -1, -1, -1, -1,
+                                                -1};
+    Int_t nMeasSetPCMIncGamma               = 2;
+    Int_t nPtBinsPCMIncGammaRead            = 0;
+    while(!fileWeightsPCMIncGammaRead.eof() && nPtBinsPCMIncGammaRead < 50){
+        TString garbage             = "";
+        if (nPtBinsPCMIncGammaRead == 0){
+            fileWeightsPCMIncGammaRead >> garbage ;
+            for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+                fileWeightsPCMIncGammaRead >> availablePCMIncGammaMeas[i] ;
+            }
+            cout << "read following measurements: ";
+            for (Int_t i = 0; i < 11; i++){
+                cout << availablePCMIncGammaMeas[i] << "\t" ;
+            }
+            cout << endl;
+        } else {
+            fileWeightsPCMIncGammaRead >> xValuesPCMIncGammaRead[nPtBinsPCMIncGammaRead-1];
+            for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+                fileWeightsPCMIncGammaRead >> weightsPCMIncGammaRead[availablePCMIncGammaMeas[i]][nPtBinsPCMIncGammaRead-1] ;
+            }
+            cout << "read: "<<  nPtBinsPCMIncGammaRead << "\t"<< xValuesPCMIncGammaRead[nPtBinsPCMIncGammaRead-1] << "\t" ;
+            for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+                cout << weightsPCMIncGammaRead[availablePCMIncGammaMeas[i]][nPtBinsPCMIncGammaRead-1] << "\t";
+            }
+            cout << endl;
+        }
+        nPtBinsPCMIncGammaRead++;
+    }
+    nPtBinsPCMIncGammaRead                  = nPtBinsPCMIncGammaRead-2 ;
+    fileWeightsPCMIncGammaRead.close();
+
+    for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+        graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]                        = new TGraph(nPtBinsPCMIncGammaRead,xValuesPCMIncGammaRead,weightsPCMIncGammaRead[availablePCMIncGammaMeas[i]]);
+        Int_t bin = 0;
+        for (Int_t n = 0; n< nPtBinsPCMIncGammaRead; n++){
+            if (graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]->GetY()[bin] == 0) graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]->RemovePoint(bin);
+            else bin++;
+        }
+    }
+
+    // **********************************************************************************************************************
+    // ******************************************* add EMC to vector as well *********************************************
+    // **********************************************************************************************************************
+    histoIncGammaStatErr[2]                         = histoEMCIncGammaStatTemp;
+    histoIncGammaStatErr[2]->SetName(Form("IncGammaStatError%s",strBinShifted.Data()));
+    graphIncGammaSysErr[2]                          = graphEMCIncGammaSysTemp;
+    graphIncGammaSysErr[2]->SetName(Form("IncGammaSystError%s",strBinShifted.Data()));
+    if (histoIncGammaStatErr[2]){
+        statErrorGraphCollectionIncGamma[2]    = new TGraphAsymmErrors(histoIncGammaStatErr[2]);
+        while (statErrorGraphCollectionIncGamma[2]->GetY()[0] == 0) statErrorGraphCollectionIncGamma[2]->RemovePoint(0);
+        while (statErrorGraphCollectionIncGamma[2]->GetY()[statErrorGraphCollectionIncGamma[2]->GetN()-1] == 0) statErrorGraphCollectionIncGamma[2]->RemovePoint(statErrorGraphCollectionIncGamma[2]->GetN()-1);
+        statErrorGraphCollectionIncGamma[2]->SetName(Form("statErrorIncGamma_%s", nameMeasGlobal[2].Data()));
+    }
+
+    if (histoIncGammaStatErr[2]){
+        statErrorRelCollectionIncGamma[2]    = new TGraphAsymmErrors(histoIncGammaStatErr[2]);
+        while (statErrorRelCollectionIncGamma[2]->GetY()[0] == 0) statErrorRelCollectionIncGamma[2]->RemovePoint(0);
+        while (statErrorRelCollectionIncGamma[2]->GetY()[statErrorRelCollectionIncGamma[2]->GetN()-1] == 0) statErrorRelCollectionIncGamma[2]->RemovePoint(statErrorRelCollectionIncGamma[2]->GetN()-1);
+        statErrorRelCollectionIncGamma[2]    = CalculateRelErrUpAsymmGraph( statErrorRelCollectionIncGamma[2], Form("relativeStatErrorIncGamma_%s", nameMeasGlobal[2].Data()));
+    }
+
+    if (graphIncGammaSysErr[2]){
+        sysErrorRelCollectionIncGamma[2]     = (TGraphAsymmErrors*)graphIncGammaSysErr[2]->Clone(Form("relativeSysErrorIncGamma_%s", nameMeasGlobal[2].Data()));
+        sysErrorRelCollectionIncGamma[2]->Print();
+        while (sysErrorRelCollectionIncGamma[2]->GetY()[0] == 0) sysErrorRelCollectionIncGamma[2]->RemovePoint(0);
+        while (sysErrorRelCollectionIncGamma[2]->GetY()[sysErrorRelCollectionIncGamma[2]->GetN()-1] == 0) sysErrorRelCollectionIncGamma[2]->RemovePoint(sysErrorRelCollectionIncGamma[2]->GetN()-1);
+        sysErrorRelCollectionIncGamma[2]     = CalculateRelErrUpAsymmGraph( sysErrorRelCollectionIncGamma[2], Form("relativeSysErrorIncGamma_%s", nameMeasGlobal[2].Data()));
+        cout << "after" << endl;
+        sysErrorRelCollectionIncGamma[2]->Print();
+    }
+
+    // **********************************************************************************************************************
+    // ******************************************* Do full GammaInc combination *********************************************
+    // **********************************************************************************************************************
     TGraph* graphWeightsIncGamma[11];
     for (Int_t i = 0; i< 11; i++){
         graphWeightsIncGamma[i]                   = NULL;
@@ -931,42 +1054,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         graphCombIncGammaSys->RemovePoint(0);
     }
     graphCombIncGammaTot->Print();
-
-    //*******************************************************************************************************************************************
-    //*********************************************** Combining PCM IncGamma spectra ************************************************************
-    //*******************************************************************************************************************************************
-    // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
-    // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
-    Int_t offSetsGammaPCM[11]       = { 0,  0,  9,  0,  0,
-                                        0,  0,  0,  0,  0,
-                                        0};
-    Int_t offSetsGammaPCMSys[11]    = { 1,  0,  9,  0,  3,
-                                        0,  0,  0,  0,  0,
-                                        0};
-
-    // Declaration & calculation of combined spectrum
-    TString fileNamePCMIncGammaOutputWeighting       = Form("%s/PCMIncGamma_WeightingMethod.dat",outputDir.Data());
-    TGraphAsymmErrors* graphCombPCMIncGammaStat      = NULL;
-    TGraphAsymmErrors* graphCombPCMIncGammaSys       = NULL;
-    TGraphAsymmErrors* graphCombPCMIncGammaTot       = CombinePtPointsSpectraFullCorrMat(      histoIncGammaStatErr,    graphIncGammaSysErr,
-                                                                                            xPtLimitsGamma, maxNBinsGamma-1,
-                                                                                            offSetsGammaPCM, offSetsGammaPCMSys,
-                                                                                            graphCombPCMIncGammaStat, graphCombPCMIncGammaSys,
-                                                                                            fileNamePCMIncGammaOutputWeighting, "2.76TeV", "GammaInc", kTRUE,
-                                                                                            NULL, fileNameCorrelations );
-    if (graphCombPCMIncGammaTot == NULL) {
-        cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
-        return;
-    }
-    while (graphCombPCMIncGammaStat->GetX()[0] < 0.4){
-        graphCombPCMIncGammaStat->RemovePoint(0);
-    }
-    while (graphCombPCMIncGammaTot->GetX()[0] < 0.4){
-        graphCombPCMIncGammaTot->RemovePoint(0);
-    }
-    while (graphCombPCMIncGammaSys->GetX()[0] < 0.4){
-        graphCombPCMIncGammaSys->RemovePoint(0);
-    }
+    cout<< "stat" << endl;
+    graphCombIncGammaStat->Print();
+    cout<< "syst" << endl;
+    graphCombIncGammaSys->Print();
 
     // Reading weights from output file for plotting
     ifstream fileWeightsIncGammaRead;
@@ -1048,6 +1139,27 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     canvasWeights->SaveAs(Form("%s/IncGamma_Weights.%s",outputDir.Data(),suffix.Data()));
     canvasWeights->SaveAs(Form("%s/IncGamma_Weights.pdf",outputDir.Data()));
+
+    histo2DIncGammaWeights->Draw("copy");
+
+    TLegend* legendWeightsPCMIncGamma   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*(nMeasSetPCMIncGamma+1)/2), textSizeLabelsPixel, 2, "", 43, 0);
+    for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+        DrawGammaSetMarkerTGraph(graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]], markerStyleDet[availablePCMIncGammaMeas[i]], markerSizeDet[availablePCMIncGammaMeas[i]], colorDet[availablePCMIncGammaMeas[i]] , colorDet[availablePCMIncGammaMeas[i]]);
+        graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]->Draw("p,same,z");
+        legendWeightsPCMIncGamma->AddEntry(graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]],nameMeasGlobalLabelGamma[availablePCMIncGammaMeas[i]],"p");
+    }
+    legendWeightsPCMIncGamma->Draw();
+
+    labelWeightsEnergy->Draw();
+    labelWeightsIncGamma->Draw();
+
+    DrawGammaLines(0.23, 25. , 0.5, 0.5,0.1, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.4, 0.4,0.1, kGray, 1);
+    DrawGammaLines(0.23, 25. , 0.3, 0.3,0.1, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.2, 0.2,0.1, kGray, 3);
+
+    canvasWeights->SaveAs(Form("%s/IncGamma_Weights_PCM.%s",outputDir.Data(),suffix.Data()));
+    canvasWeights->SaveAs(Form("%s/IncGamma_Weights_PCM.pdf",outputDir.Data()));
 
     //  *********************************************************************************************************************
     //  ************************************ Visualize relative errors ******************************************************
@@ -1318,9 +1430,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     histo2DGammaRatioToCombFit->Draw("copy");
     cout << __LINE__ << endl;
 
-    if (graphRatioGammaPCMCombCombFitTot){ // NOTE NOTE NOTE NOTE : debug last sys bin and set sys here!
-        DrawGammaSetMarkerTGraphAsym(graphRatioGammaPCMCombCombFitTot, markerStyleDet[0] ,markerSizeDet[0], colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
-        graphRatioGammaPCMCombCombFitTot->Draw("E2same");
+    if (graphRatioGammaPCMCombCombFitSys){
+        DrawGammaSetMarkerTGraphAsym(graphRatioGammaPCMCombCombFitSys, markerStyleDet[0] ,markerSizeDet[0], colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
+        graphRatioGammaPCMCombCombFitSys->Draw("E2same");
     }
     if (graphRatioGammaPCMCombCombFitStat){
         ProduceGraphAsymmWithoutXErrors(graphRatioGammaPCMCombCombFitStat);
@@ -2644,8 +2756,11 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSystErr       = ScaleGraph( graphCombDirGammaSpectrumNonFitSystErr,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumStatErrPlot   = ScaleGraph( graphCombDirGammaSpectrumNonFitStatErrPlot,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumStatErr       = ScaleGraph( graphCombDirGammaSpectrumNonFitStatErr,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSumErrAr      = ScaleGraph( graphCombDirGammaSpectrumNonFitSumErrAr,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecCombIncGammaSys                         = ScaleGraph( graphCombIncGammaSys,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombIncGammaStat                        = ScaleGraph( graphCombIncGammaStat,xSection2760GeV*recalcBarn);
+    TGraphAsymmErrors* graphXSecCombIncGammaTot                         = ScaleGraph( graphCombIncGammaTot,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecCombIncGammaStatPlot                    = ScaleGraph( graphCombIncGammaStatPlot,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecTheoryNLOpp2760GeV                      = ScaleGraph( graphTheoryNLOpp2760GeV,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecTheoryNLOpp2760GeVCenter                = ScaleGraph( graphTheoryNLOpp2760GeV,xSection2760GeV*recalcBarn);
@@ -3012,12 +3127,25 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         if (graphCombDRStat) graphCombDRStat->Write("graphRGammaCombStatErr");
         if (graphCombDRSys) graphCombDRSys->Write("graphRGammaCombSysErr");
         if (graphCombDRTot) graphCombDRTot->Write("graphRGammaCombTotErr");
+        if (graphCombDRNonFitStat) graphCombDRNonFitStat->Write("graphRGammaNonFitCombStatErr");
+        if (graphCombDRNonFitSys) graphCombDRNonFitSys->Write("graphRGammaNonFitCombSysErr");
+        if (graphCombDRNonFitTot) graphCombDRNonFitTot->Write("graphRGammaNonFitCombTotErr");
         if (graphCombIncGammaStat) graphCombIncGammaStat->Write("graphInvYieldIncGammaStatErr");
         if (graphCombIncGammaSys) graphCombIncGammaSys->Write("graphInvYieldIncGammaSysErr");
         if (graphCombIncGammaTot) graphCombIncGammaTot->Write("graphInvYieldIncGammaTotErr");
         if (graphCombDirGammaSpectrumSystErr) graphCombDirGammaSpectrumSystErr->Write("graphInvYieldDirGammaSysErr");
         if (graphCombDirGammaSpectrumStatErr) graphCombDirGammaSpectrumStatErr->Write("graphInvYieldDirGammaStatErr");
         if (graphCombDirGammaSpectrumSumErrAr) graphCombDirGammaSpectrumSumErrAr->Write("graphInvYieldDirGammaSumErrAr");
+        if (graphCombDirGammaSpectrumNonFitSystErr) graphCombDirGammaSpectrumNonFitSystErr->Write("graphInvYieldDirGammaNonFitSysErr");
+        if (graphCombDirGammaSpectrumNonFitStatErr) graphCombDirGammaSpectrumNonFitStatErr->Write("graphInvYieldDirGammaNonFitStatErr");
+        if (graphCombDirGammaSpectrumNonFitSumErrAr) graphCombDirGammaSpectrumNonFitSumErrAr->Write("graphInvYieldDirGammaNonFitSumErrAr");
+
+        if (graphXSecCombIncGammaSys) graphXSecCombIncGammaSys->Write("graphInvXSectionIncGammaSysErr");
+        if (graphXSecCombIncGammaStat) graphXSecCombIncGammaStat->Write("graphInvXSectionIncGammaStatErr");
+        if (graphXSecCombIncGammaTot) graphXSecCombIncGammaTot->Write("graphInvXSectionIncGammaTotErr");
+        if (graphXSecCombDirGammaNonFitSpectrumSystErr) graphXSecCombDirGammaNonFitSpectrumStatErr->Write("graphInvXSectionDirGammaNonFitSysErr");
+        if (graphXSecCombDirGammaNonFitSpectrumStatErr) graphXSecCombDirGammaNonFitSpectrumSystErr->Write("graphInvXSectionDirGammaNonFitStatErr");
+        if (graphXSecCombDirGammaNonFitSpectrumSumErrAr) graphXSecCombDirGammaNonFitSpectrumSumErrAr->Write("graphInvXSectionDirGammaNonFitSumErrAr");
 
         for (Int_t i = 0; i < 11; i++){
             if (graphIndGammaIncSys[i]) graphIndGammaIncSys[i]->Write(Form("graphInvYieldIncGamma%sSysErr",nameMeasGlobal[i].Data()));
@@ -3025,6 +3153,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             if (histoIncGammaStatErr[i]) histoIncGammaStatErr[i]->Write(Form("histoInvYieldIncGamma%sStatErr_Unshifted",nameMeasGlobal[i].Data()));
             if (histoDRPi0FitStatErr[i]) histoDRPi0FitStatErr[i]->Write(Form("histoRGamma%sStatErr",nameMeasGlobal[i].Data()));
             if (graphDRPi0FitSysErr[i]) graphDRPi0FitSysErr[i]->Write(Form("graphRGamma%sSysErr",nameMeasGlobal[i].Data()));
+            if (histoDRNonFitStatErr[i]) histoDRNonFitStatErr[i]->Write(Form("histoRGammaNonFit%sStatErr",nameMeasGlobal[i].Data()));
+            if (graphDRNonFitSysErr[i]) graphDRNonFitSysErr[i]->Write(Form("graphRGammaNonFit%sSysErr",nameMeasGlobal[i].Data()));
         }
         directoryGamma->mkdir("Supporting");
         directoryGamma->cd("Supporting");

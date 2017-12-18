@@ -124,7 +124,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TString collisionSystempp2760GeV                = "pp #sqrt{#it{s}} = 2.76 TeV";
     TString collisionSystemPbPb760GeV               = "Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
     TString collisionSystempPb5TeV                  = "p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
-    TString textALICE                               = "ALICE this thesis";
+    TString textALICE                               = "ALICE";
 
     Color_t colorCombpp2760GeV                      = kBlack;
     Style_t markerStyleCombpp2760GeV                = 20;
@@ -142,11 +142,11 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     //*************************************************************************************************************************************************
     //--------------------------------------- pp 2.76TeV --------------------------------------------
     TFile* fileCombPP2760GeV                                = new TFile( inputFileNamePP2760GeV.Data());
-    TGraphAsymmErrors* graphDRStatpp2760GeV                 = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphRGammaCombStatErr");
-    TGraphAsymmErrors* graphDRSyspp2760GeV                  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphRGammaCombSysErr");
-    TGraphAsymmErrors* graphInvYieldDirGammaStatpp2760GeV   = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaStatErr");
-    TGraphAsymmErrors* graphInvYieldDirGammaSyspp2760GeV    = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaSysErr");
-    TGraphAsymmErrors* graphInvYieldDirGammaTotArpp2760GeV  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaSumErrAr");
+    TGraphAsymmErrors* graphDRStatpp2760GeV                 = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphRGammaNonFitCombStatErr");
+    TGraphAsymmErrors* graphDRSyspp2760GeV                  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphRGammaNonFitCombSysErr");
+    TGraphAsymmErrors* graphInvYieldDirGammaStatpp2760GeV   = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitStatErr");
+    TGraphAsymmErrors* graphInvYieldDirGammaSyspp2760GeV    = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitSysErr");
+    TGraphAsymmErrors* graphInvYieldDirGammaTotArpp2760GeV  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitSumErrAr");
     //--------------------------------------- pPb 5TeV --------------------------------------------
     TFile* fileCombPPb5TeV                                  = new TFile( inputFileNamePPb5TeV.Data());
     TGraphAsymmErrors* graphDRStatpPb5TeV                   = (TGraphAsymmErrors*) fileCombPPb5TeV->Get("Gamma_pPb5TeV/graphRGammaCombStatErr");
@@ -179,14 +179,12 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TFile* fileTheoryPP                                     = new TFile( fileNameTheoryPP.Data());
     TGraph* graphTheoryNLODRpp2760GeVPaquettCenter          = (TGraph*) fileTheoryPP->Get("DirectPhoton/graphDRNLOPaquett_2760GeV_ALICECocktail");
 
-    TFile* fileTheoryPPb                                    = new TFile( fileNameTheoryPPb.Data());
-    TGraph* graphTheoryNLODRpPbCenter                       = (TGraph*) fileTheoryPPb->Get("pPb_5.023TeV/graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10_ALICECocktail_Center");
-    while (graphTheoryNLODRpPbCenter->GetX()[0] < 3)    graphTheoryNLODRpPbCenter->RemovePoint(0);
-    TGraph* graphTheoryMCGillDRpPbCenter                    = (TGraph*) fileTheoryPPb->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center");
+//     TFile* fileTheoryPPb                                    = new TFile( fileNameTheoryPPb.Data());
+//     TGraph* graphTheoryNLODRpPbCenter                       = (TGraph*) fileTheoryPPb->Get("pPb_5.023TeV/graphRGammaDirectPhotonNLOVogelsangInvYieldINT7_pPb5TeV_CT10_ALICECocktail_Center");
+//     while (graphTheoryNLODRpPbCenter->GetX()[0] < 3)    graphTheoryNLODRpPbCenter->RemovePoint(0);
+//     TGraph* graphTheoryMCGillDRpPbCenter                    = (TGraph*) fileTheoryPPb->Get("pPb_5.023TeV/graphRGammaDirectPhotonSpecMcGill5023GeV_ALICECocktail_Center");
 
-
-
-    TFile* fileTheoryPbPb                                   = new TFile( fileNameTheorypp2760GeV.Data());
+//     TFile* fileTheoryPbPb                                   = new TFile( fileNameTheorypp2760GeV.Data());
 
     //*************************************************************************************************************************************************
     //*************************************** Prepare for plotting ************************************************************************************
@@ -291,6 +289,17 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
             graphInvYieldDirGammaTotArPbPb4080->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArPbPb4080);
         }
+
+        if (graphInvYieldDirGammaSyspp2760GeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspp2760GeV , markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV, colorCombpp2760GeV, widthLinesBoxes, kTRUE);
+            graphInvYieldDirGammaSyspp2760GeV->Draw("E2same");
+        }
+        if (graphInvYieldDirGammaStatpp2760GeV){
+            ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaStatpp2760GeV);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpp2760GeV, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV, colorCombpp2760GeV);
+            graphInvYieldDirGammaStatpp2760GeV->Draw("p,E1Z,same");
+        }
+
         if (graphInvYieldDirGammaTotArpp2760GeV){
             DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpp2760GeV , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
             graphInvYieldDirGammaTotArpp2760GeV->Draw(">,same");
@@ -319,11 +328,13 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         TLatex *labelALICEDirGamma = new TLatex(0.95,0.94,textALICE);
         SetStyleTLatex( labelALICEDirGamma, 42, 4, 1, 43, kTRUE, 31);
 
-        labelALICEDirGamma->Draw();
+//         labelALICEDirGamma->Draw();
 
         TLegend* legendDirGammaPP = GetAndSetLegend2(0.21, 0.10+(6*textsizeLabelsDirGamma*0.85), 0.21+0.21, 0.10+(8*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1,
                                                      collisionSystempp2760GeV.Data(), 42, 0.25);
-        legendDirGammaPP->AddEntry((TObject*)0,"ALICE","");
+//         legendDirGammaPP->AddEntry((TObject*)0,"ALICE","");
+        legendDirGammaPP->AddEntry(graphInvYieldDirGammaSyspp2760GeV,"ALICE","pf");
+
         legendDirGammaPP->Draw();
         TLegend* legendDirGammaPPb = GetAndSetLegend2(0.21, 0.10+(4*textsizeLabelsDirGamma*0.85), 0.21+0.21, 0.10+(6*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1,
                                                       collisionSystempPb5TeV.Data(), 42, 0.25);
@@ -336,12 +347,12 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         legendDirGamma->AddEntry(graphInvYieldDirGammaSysPbPb4080,"40-80% ALICE","pf");
         legendDirGamma->Draw();
 
-        TGraphAsymmErrors* dummyForLegend    = new TGraphAsymmErrors(1);
-        dummyForLegend->SetPoint(0,0.315,1e-6);
-        dummyForLegend->SetPointError(0,0,0,4e-7,0);
-        DrawGammaSetMarkerTGraphAsym(dummyForLegend , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
-        dummyForLegend->Draw(">,same");
-        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend,0.01);
+//         TGraphAsymmErrors* dummyForLegend    = new TGraphAsymmErrors(1);
+//         dummyForLegend->SetPoint(0,0.315,1e-6);
+//         dummyForLegend->SetPointError(0,0,0,4e-7,0);
+//         DrawGammaSetMarkerTGraphAsym(dummyForLegend , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
+//         dummyForLegend->Draw(">,same");
+//         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend,0.01);
 
 
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_Unscaled.%s",outputDir.Data(),suffix.Data()));
@@ -417,47 +428,83 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
             graphInvYieldDirGammaTotArpp2760GeVScaled4080Excl->SetPoint(i,graphInvYieldDirGammaTotArpp2760GeVScaled4080->GetX()[i],graphInvYieldDirGammaTotArpp2760GeVScaled4080->GetY()[i]);
         }
         if (graphInvYieldDirGammaTotArpp2760GeVScaled4080){
-            //             graphInvYieldDirGammaTotArpp2760GeVScaled4080Excl->SetLineColor(colorComb4080Ar);
-            //             graphInvYieldDirGammaTotArpp2760GeVScaled4080Excl->SetLineWidth(-1002);
-            //             graphInvYieldDirGammaTotArpp2760GeVScaled4080Excl->SetFillStyle(3004);
-            //             graphInvYieldDirGammaTotArpp2760GeVScaled4080Excl->SetFillColor(colorComb4080Ar);
-            //             graphInvYieldDirGammaTotArpp2760GeVScaled4080Excl->Draw("same,C");
-
             DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpp2760GeVScaled4080 , 1, 3, colorComb4080Ar, colorComb4080Ar, 2.0, kTRUE);
             graphInvYieldDirGammaTotArpp2760GeVScaled4080->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp2760GeVScaled4080);
         }
 
-        labelALICEDirGamma->Draw();
+
+        TGraphAsymmErrors* graphInvYieldDirGammaSyspp2760GeVScaled0020    = ScaleGraph(graphInvYieldDirGammaSyspp2760GeV,nColl0020*100);
+        if (graphInvYieldDirGammaSyspp2760GeVScaled0020){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspp2760GeVScaled0020 , markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV, colorComb0020Ar, colorComb0020Ar, widthLinesBoxes, kTRUE);
+            graphInvYieldDirGammaSyspp2760GeVScaled0020->Draw("E2,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaSyspp2760GeVScaled0020);
+        }
+        TGraphAsymmErrors* graphInvYieldDirGammaSyspp2760GeVScaled2040    = ScaleGraph(graphInvYieldDirGammaSyspp2760GeV,nColl2040*1);
+        if (graphInvYieldDirGammaSyspp2760GeVScaled2040){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspp2760GeVScaled2040 ,markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV, colorComb2040Ar, colorComb2040Ar, widthLinesBoxes, kTRUE);
+            graphInvYieldDirGammaSyspp2760GeVScaled2040->Draw("E2,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaSyspp2760GeVScaled2040);
+        }
+        TGraphAsymmErrors* graphInvYieldDirGammaSyspp2760GeVScaled4080    = ScaleGraph(graphInvYieldDirGammaSyspp2760GeV,nColl4080*1e-2);
+        if (graphInvYieldDirGammaSyspp2760GeVScaled4080){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspp2760GeVScaled4080 , markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV, colorComb4080Ar, colorComb4080Ar, widthLinesBoxes, kTRUE);
+            graphInvYieldDirGammaSyspp2760GeVScaled4080->Draw("E2,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaSyspp2760GeVScaled4080);
+        }
+
+        TGraphAsymmErrors* graphInvYieldDirGammaStatpp2760GeVScaled0020    = ScaleGraph(graphInvYieldDirGammaStatpp2760GeV,nColl0020*100);
+        if (graphInvYieldDirGammaStatpp2760GeVScaled0020){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpp2760GeVScaled0020 , markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV, colorComb0020Ar, colorComb0020Ar);
+            graphInvYieldDirGammaStatpp2760GeVScaled0020->Draw("p,E1Z,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaStatpp2760GeVScaled0020);
+        }
+        TGraphAsymmErrors* graphInvYieldDirGammaStatpp2760GeVScaled2040    = ScaleGraph(graphInvYieldDirGammaStatpp2760GeV,nColl2040*1);
+        if (graphInvYieldDirGammaStatpp2760GeVScaled2040){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpp2760GeVScaled2040 ,markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV, colorComb2040Ar, colorComb2040Ar);
+            graphInvYieldDirGammaStatpp2760GeVScaled2040->Draw("p,E1Z,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaStatpp2760GeVScaled2040);
+        }
+        TGraphAsymmErrors* graphInvYieldDirGammaStatpp2760GeVScaled4080    = ScaleGraph(graphInvYieldDirGammaStatpp2760GeV,nColl4080*1e-2);
+        if (graphInvYieldDirGammaStatpp2760GeVScaled4080){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpp2760GeVScaled4080 , markerStyleCombpp2760GeV+4, markerSizeCombpp2760GeV, colorComb4080Ar, colorComb4080Ar);
+            graphInvYieldDirGammaStatpp2760GeVScaled4080->Draw("p,E1Z,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaStatpp2760GeVScaled4080);
+        }
+
+//         labelALICEDirGamma->Draw();
 
         TLegend* legendDirGammaPP2 = GetAndSetLegend2(0.21, 0.10+(4*textsizeLabelsDirGamma*0.85), 0.21+0.21, 0.10+(8*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1,
                                                      collisionSystempp2760GeV.Data(), 42, 0.25);
-        legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl0020),"");
-        legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl2040),"");
-        legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl4080),"");
+        legendDirGammaPP2->AddEntry(graphInvYieldDirGammaSyspp2760GeVScaled0020,Form("ALICE x %1.1f",nColl0020),"pf");
+        legendDirGammaPP2->AddEntry(graphInvYieldDirGammaSyspp2760GeVScaled2040,Form("ALICE x %1.1f",nColl2040),"pf");
+        legendDirGammaPP2->AddEntry(graphInvYieldDirGammaSyspp2760GeVScaled4080,Form("ALICE x %1.1f",nColl4080),"pf");
+//         legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl0020),"");
+//         legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl2040),"");
+//         legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl4080),"");
         legendDirGammaPP2->Draw();
         legendDirGamma->Draw();
 
-        TGraphAsymmErrors* dummyForLegend2   = new TGraphAsymmErrors(1);
-        dummyForLegend2->SetPoint(0,0.312,2.2e-6);
-        dummyForLegend2->SetPointError(0,0,0,1.2e-6,0);
-        DrawGammaSetMarkerTGraphAsym(dummyForLegend2 , 1, 3, colorComb0020Ar, colorComb0020Ar, 2.0, kTRUE);
-        dummyForLegend2->Draw(">,same");
-        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend2,0.01);
-
-        TGraphAsymmErrors* dummyForLegend3    = new TGraphAsymmErrors(1);
-        dummyForLegend3->SetPoint(0,0.312,6.3e-7);
-        dummyForLegend3->SetPointError(0,0,0,3.3e-7,0);
-        DrawGammaSetMarkerTGraphAsym(dummyForLegend3 , 1, 3, colorComb2040Ar, colorComb2040Ar, 2.0, kTRUE);
-        dummyForLegend3->Draw(">,same");
-        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend3,0.01);
-
-        TGraphAsymmErrors* dummyForLegend4    = new TGraphAsymmErrors(1);
-        dummyForLegend4->SetPoint(0,0.312,1.8e-7);
-        dummyForLegend4->SetPointError(0,0,0,0.92e-7,0);
-        DrawGammaSetMarkerTGraphAsym(dummyForLegend4 , 1, 3, colorComb4080Ar, colorComb4080Ar, 2.0, kTRUE);
-        dummyForLegend4->Draw(">,same");
-        PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend4,0.01);
+//         TGraphAsymmErrors* dummyForLegend2   = new TGraphAsymmErrors(1);
+//         dummyForLegend2->SetPoint(0,0.312,2.2e-6);
+//         dummyForLegend2->SetPointError(0,0,0,1.2e-6,0);
+//         DrawGammaSetMarkerTGraphAsym(dummyForLegend2 , 1, 3, colorComb0020Ar, colorComb0020Ar, 2.0, kTRUE);
+//         dummyForLegend2->Draw(">,same");
+//         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend2,0.01);
+//
+//         TGraphAsymmErrors* dummyForLegend3    = new TGraphAsymmErrors(1);
+//         dummyForLegend3->SetPoint(0,0.312,6.3e-7);
+//         dummyForLegend3->SetPointError(0,0,0,3.3e-7,0);
+//         DrawGammaSetMarkerTGraphAsym(dummyForLegend3 , 1, 3, colorComb2040Ar, colorComb2040Ar, 2.0, kTRUE);
+//         dummyForLegend3->Draw(">,same");
+//         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend3,0.01);
+//
+//         TGraphAsymmErrors* dummyForLegend4    = new TGraphAsymmErrors(1);
+//         dummyForLegend4->SetPoint(0,0.312,1.8e-7);
+//         dummyForLegend4->SetPointError(0,0,0,0.92e-7,0);
+//         DrawGammaSetMarkerTGraphAsym(dummyForLegend4 , 1, 3, colorComb4080Ar, colorComb4080Ar, 2.0, kTRUE);
+//         dummyForLegend4->Draw(">,same");
+//         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend4,0.01);
 
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP.%s",outputDir.Data(),suffix.Data()));
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP.pdf",outputDir.Data()));
@@ -622,100 +669,5 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     canvasRatioIndDR->SaveAs(Form("%s/DR_PbPbWithRefPP.%s", outputDir.Data(), suffix.Data()));
     canvasRatioIndDR->SaveAs(Form("%s/DR_PbPbWithRefPP.pdf", outputDir.Data()));
-
-    //*******************************************************************************************************************************************
-    //******************************************* DR plot with scaled pp and PbPb measurements **************************************************
-    //*******************************************************************************************************************************************
-    cout << "0-20% stat scaled" << endl;
-    TGraphAsymmErrors* graphDRStatpp2760GeVPlotScaled0020   = SubtractConstantFromGraph(graphDRStatpp2760GeVPlot,1,kTRUE);
-    graphDRStatpp2760GeVPlotScaled0020                      = ScaleGraph(graphDRStatpp2760GeVPlotScaled0020,nColl0020);
-    graphDRStatpp2760GeVPlotScaled0020                      = AddConstantToGraph(graphDRStatpp2760GeVPlotScaled0020,1,kTRUE);
-    graphDRStatpp2760GeVPlotScaled0020->Print();
-    cout << "20-40% stat scaled" << endl;
-    TGraphAsymmErrors* graphDRStatpp2760GeVPlotScaled2040   = SubtractConstantFromGraph(graphDRStatpp2760GeVPlot,1,kTRUE);
-    graphDRStatpp2760GeVPlotScaled2040                      = ScaleGraph(graphDRStatpp2760GeVPlotScaled2040,nColl2040);
-    graphDRStatpp2760GeVPlotScaled2040                      = AddConstantToGraph(graphDRStatpp2760GeVPlotScaled2040,1,kTRUE);
-    graphDRStatpp2760GeVPlotScaled2040->Print();
-    cout << "40-80% stat scaled" << endl;
-    TGraphAsymmErrors* graphDRStatpp2760GeVPlotScaled4080   = SubtractConstantFromGraph(graphDRStatpp2760GeVPlot,1,kTRUE);
-    graphDRStatpp2760GeVPlotScaled4080                      = ScaleGraph(graphDRStatpp2760GeVPlotScaled4080,nColl4080);
-    graphDRStatpp2760GeVPlotScaled4080                      = AddConstantToGraph(graphDRStatpp2760GeVPlotScaled4080,1,kTRUE);
-    graphDRStatpp2760GeVPlotScaled4080->Print();
-    cout << "0-20% sys scaled" << endl;
-    TGraphAsymmErrors* graphDRSyspp2760GeVPlotScaled0020    = SubtractConstantFromGraph(graphDRSyspp2760GeV,1,kTRUE);
-    graphDRSyspp2760GeVPlotScaled0020                       = ScaleGraph(graphDRSyspp2760GeVPlotScaled0020,nColl0020);
-    graphDRSyspp2760GeVPlotScaled0020                       = AddConstantToGraph(graphDRSyspp2760GeVPlotScaled0020,1,kTRUE);
-    graphDRSyspp2760GeVPlotScaled0020->Print();
-    cout << "20-40% sys scaled" << endl;
-    TGraphAsymmErrors* graphDRSyspp2760GeVPlotScaled2040    = SubtractConstantFromGraph(graphDRSyspp2760GeV,1,kTRUE);
-    graphDRSyspp2760GeVPlotScaled2040                       = ScaleGraph(graphDRSyspp2760GeVPlotScaled2040,nColl2040);
-    graphDRSyspp2760GeVPlotScaled2040                       = AddConstantToGraph(graphDRSyspp2760GeVPlotScaled2040,1,kTRUE);
-    graphDRSyspp2760GeVPlotScaled2040->Print();
-    cout << "40-80% sys scaled" << endl;
-    TGraphAsymmErrors* graphDRSyspp2760GeVPlotScaled4080    = SubtractConstantFromGraph(graphDRSyspp2760GeV,1,kTRUE);
-    graphDRSyspp2760GeVPlotScaled4080                       = ScaleGraph(graphDRSyspp2760GeVPlotScaled4080,nColl4080);
-    graphDRSyspp2760GeVPlotScaled4080                       = AddConstantToGraph(graphDRSyspp2760GeVPlotScaled4080,1,kTRUE);
-    graphDRSyspp2760GeVPlotScaled4080->Print();
-    //_______________________________________________________________ 0-20% panel _______________________________________________________________
-    padPartRatioInDR1->cd();
-    padPartRatioInDR1->SetLogx(1);
-        dummyDR1->Draw("");
-        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
-
-        graphDRSysPbPb0020->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphDRSyspp2760GeVPlotScaled0020, markerStyleComb0020MC, markerSizeComb0020, colorComb0020Ar , colorComb0020Ar, kTRUE, colorComb0020Ar);
-        graphDRSyspp2760GeVPlotScaled0020->Draw("E2same");
-        graphDRStatPbPb0020Plot->Draw("p,E1Z,same");
-        DrawGammaSetMarkerTGraphAsym(graphDRStatpp2760GeVPlotScaled0020, markerStyleComb0020MC, markerSizeComb0020, colorComb0020Ar , colorComb0020Ar);
-        graphDRStatpp2760GeVPlotScaled0020->Draw("p,E1Z,same");
-
-        TLegend* legendDR0020_sc = GetAndSetLegend2(0.12, 0.9-(3*textsizeLabelsPad1), 0.12+0.21, 0.9,textsizeLabelsPad1, 1,
-                                                 textALICE, 42, 0.3);
-        legendDR0020_sc->AddEntry(graphDRSysPbPb0020,Form("%s %s", "0-20%", collisionSystemPbPb760GeV.Data()),"pf");
-        legendDR0020_sc->AddEntry(graphDRSyspp2760GeVPlotScaled0020,Form("#it{N}_{coll} scaled %s",collisionSystempp2760GeV.Data()),"pf");
-        legendDR0020_sc->Draw();
-
-    //_______________________________________________________________ 20-40% panel _______________________________________________________________
-    padPartRatioInDR2->cd();
-    padPartRatioInDR2->SetLogx(1);
-        dummyDR2->Draw("");
-        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
-
-        graphDRSysPbPb2040->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphDRSyspp2760GeVPlotScaled2040, markerStyleComb2040MC, markerSizeComb2040, colorComb2040Ar , colorComb2040Ar, kTRUE, colorComb2040Ar);
-        graphDRSyspp2760GeVPlotScaled2040->Draw("E2same");
-        graphDRStatPbPb2040Plot->Draw("p,E1Z,same");
-        DrawGammaSetMarkerTGraphAsym(graphDRStatpp2760GeVPlotScaled2040, markerStyleComb2040MC, markerSizeComb2040, colorComb2040Ar , colorComb2040Ar);
-        graphDRStatpp2760GeVPlotScaled2040->Draw("p,E1Z,same");
-
-        TLegend* legendDR2040_sc = GetAndSetLegend2(0.12, 0.94-(2*textsizeLabelsPad2), 0.12+0.21, 0.94,textsizeLabelsPad2, 1,
-                                                 "", 42, 0.3);
-        legendDR2040_sc->AddEntry(graphDRSysPbPb2040,Form("%s %s", "20-40%", collisionSystemPbPb760GeV.Data()),"pf");
-        legendDR2040_sc->AddEntry(graphDRSyspp2760GeVPlotScaled2040,Form("#it{N}_{coll} scaled %s",collisionSystempp2760GeV.Data()),"pf");
-        legendDR2040_sc->Draw();
-
-    //_______________________________________________________________ 40-80% panel _______________________________________________________________
-    padPartRatioInDR3->cd();
-    padPartRatioInDR3->SetLogx(1);
-
-        dummyDR3->Draw("");
-        DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
-
-        graphDRSysPbPb4080->Draw("E2same");
-        DrawGammaSetMarkerTGraphAsym(graphDRSyspp2760GeVPlotScaled4080, markerStyleComb4080MC, markerSizeComb4080, colorComb4080Ar , colorComb4080Ar, kTRUE, colorComb4080Ar);
-        graphDRSyspp2760GeVPlotScaled4080->Draw("E2same");
-        graphDRStatPbPb4080Plot->Draw("p,E1Z,same");
-        DrawGammaSetMarkerTGraphAsym(graphDRStatpp2760GeVPlotScaled4080, markerStyleComb4080MC, markerSizeComb4080, colorComb4080Ar , colorComb4080Ar);
-        graphDRStatpp2760GeVPlotScaled4080->Draw("p,E1Z,same");
-
-        TLegend* legendDR4080_sc = GetAndSetLegend2(0.12, 0.94-(2*textsizeLabelsPad3), 0.12+0.21, 0.94,textsizeLabelsPad3, 1,
-                                                      "", 42, 0.3);
-        legendDR4080_sc->AddEntry(graphDRSysPbPb4080,Form("%s %s","40-80%",collisionSystemPbPb760GeV.Data()),"pf");
-        legendDR4080_sc->AddEntry(graphDRSyspp2760GeVPlotScaled4080,Form("#it{N}_{coll} scaled %s",collisionSystempp2760GeV.Data()),"pf");
-        legendDR4080_sc->Draw();
-
-    canvasRatioIndDR->SaveAs(Form("%s/DR_PbPbWithRefPPscaledNcoll.%s", outputDir.Data(), suffix.Data()));
-    canvasRatioIndDR->SaveAs(Form("%s/DR_PbPbWithRefPPscaledNcoll.pdf", outputDir.Data()));
-
 
 }

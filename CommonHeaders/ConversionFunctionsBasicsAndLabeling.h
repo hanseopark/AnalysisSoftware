@@ -3475,47 +3475,92 @@
             case 12:
                 fMaxM02=0.32;
                 break;
-            case 20:
+            case 13: // d
+                fMaxM02=0.4;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 4.2: (0.27+0.0072#it{E}^{2}, #it{E} > 4.2: 0.4)";
+                break;
+            case 14: // e
                 fMaxM02=0.5;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.27+0.0092*(E_clus)^2 < 0.5; then 0.5)";
+                pTdepM02="#it{E} #leq 5.1: (0.31+0.0072#it{E}^{2}, #it{E} > 5.1: 0.5)";
                 break;
-            case 21:
+            case 15: // f
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 6.9: (0.36+0.0072#it{E}^{2}, #it{E} > 6.9: 0.7)";
+                break;
+            case 16: // g
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 6.8: (0.37+0.0072#it{E}^{2}, #it{E} > 6.8: 0.7)";
+                break;
+            case 17: // h
                 fMaxM02=0.5;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.32+0.0072*(E_clus)^2 < 0.5; then 0.5)";
+                pTdepM02="#it{E} #leq 5.3: (0.30+0.0072#it{E}^{2}, #it{E} > 5.3: 0.5)";
                 break;
-            case 22:
+            case 18: // i
                 fMaxM02=0.7;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.32+0.0152*(E_clus)^2 < 0.7; then 0.7)";
+                pTdepM02="#it{E} #leq 7.0: (0.35+0.0072#it{E}^{2}, #it{E} > 7.0: 0.7)";
                 break;
-            case 23:
+            case 19: // j
+                fMaxM02=0.39;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 4.4: (0.25+0.0072#it{E}^{2}, #it{E} > 4.4: 0.39)";
+                break;
+            case 20: // k
+                fMaxM02=0.5;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 5.0: (0.27+0.0092#it{E}^{2}, #it{E} > 5.0: 0.5)";
+                break;
+            case 21: // l
+                fMaxM02=0.5;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 5.0: (0.32+0.0072#it{E}^{2}, #it{E} > 5.0: 0.5)";
+                break;
+            case 22: // m
+                fMaxM02=0.5;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 3.4: (0.32+0.0152#it{E}^{2}, #it{E} > 3.4: 0.5)";
+                break;
+            case 23: // n
+                fMaxM02=0.5;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 2.8: (0.32+0.0238#it{E}^{2}, #it{E} > 2.8: 0.5)";
+                break;
+            case 24: // o
                 fMaxM02=0.7;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.32+0.0238*(E_clus)^2 < 0.7; then 0.7)";
+                pTdepM02="#it{E} #leq 6.8: (0.27+0.0092#it{E}^{2}, #it{E} > 6.8: 0.7)";
                 break;
-            case 24:
+            case 25: // p
                 fMaxM02=0.7;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.27+0.0092*(E_clus)^2 < 0.5; then 0.7)";
+                pTdepM02="#it{E} #leq 7.3: (0.32+0.0072#it{E}^{2}, #it{E} > 7.3: 0.7)";
                 break;
-            case 25:
+            case 26: // q
                 fMaxM02=0.7;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.32+0.0072*(E_clus)^2 < 0.5; then 0.7)";
+                pTdepM02="#it{E} #leq 7.1: (0.34+0.0072#it{E}^{2}, #it{E} > 7.1: 0.7)";
                 break;
-            case 26:
+            case 27: // r
                 fMaxM02=0.7;
                 isPtDepM02=kTRUE;
-                pTdepM02="(0.34+0.0072*(E_clus)^2 < 0.5; then 0.7)";
+                pTdepM02="#it{E} #leq 5.9: (0.25+0.0072#it{E}^{2}, #it{E} > 5.9: 0.5)";
+                break;
+            case 28: // s
+                fMaxM02=0.7;
+                isPtDepM02=kTRUE;
+                pTdepM02="#it{E} #leq 4.0: (0.32+0.0238#it{E}^{2}, #it{E} > 4.0: 0.7)";
                 break;
             default:
                 fMaxM02 = -10;
                 break;
         }
-        if(isPtDepM02) return Form("%1.1f < M_{02} < %s", fMinM02, pTdepM02.Data());
-        else return Form("%1.1f < M_{02} < %3.2f", fMinM02, fMaxM02);
+        if(isPtDepM02) return Form("#scale[0.7]{%1.1f < #sigma_{long}^{2} < for %s}", fMinM02, pTdepM02.Data());
+        else return Form("%1.1f < #sigma_{long}^{2} < %3.2f", fMinM02, fMaxM02);
 
     }
 

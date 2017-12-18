@@ -4946,7 +4946,7 @@
         if ( variationName.CompareTo("ClusterTrackMatchingCalo") == 0 )
             return "tr. match. to cl.";
         if ( variationName.CompareTo("ClusterM02") == 0 )
-            return "#lambda_{0}^{2}";
+            return "#sigma_{long}^{2}";
         if ( variationName.CompareTo("CellTiming") == 0 )
             return "cell time";
         if ( variationName.CompareTo("ClusterMaterialTRD") == 0 )

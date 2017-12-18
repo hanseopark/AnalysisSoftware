@@ -180,11 +180,11 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
     // ***************************************************************************************************
     Bool_t bsmooth[15]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0 };
-    Bool_t bsmoothIncGammapp2760GeV[15]         = { 1, 0, 1, 1, 1,  1, 1, 1, 0, 0,
+    Bool_t bsmoothIncGammapp2760GeV[15]         = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 0,
                                                     0, 0, 1, 0, 0 };
-    Bool_t bsmoothIncRatiopp2760GeV[15]         = { 1, 0, 1, 1, 1,  1, 1, 1, 0, 1,
+    Bool_t bsmoothIncRatiopp2760GeV[15]         = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
                                                     0, 0, 1, 1, 0 };
-    Bool_t bsmoothDRpp2760GeV[15]               = { 1, 0, 1, 1, 1,  1, 1, 1, 0, 1,
+    Bool_t bsmoothDRpp2760GeV[15]               = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
                                                     0, 0, 1, 1, 0 };
 
     Bool_t bsmoothIncGammapp8TeV[15]            = { 1, 1, 1, 1, 1,  1, 1, 1, 0, 1,
@@ -395,8 +395,11 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
                         if(!energy.CompareTo("2.76TeV")){
-                          if (ptBins[k] > 2.8)
-                          errorFixed              =  1.45+(0.06)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k];
+                            if (ptBins[k] > 1.7){
+                                errorFixed              =  2.6;
+                                if(ptBins[k] > 2.5)
+                                    errorFixed          += 0.2*(ptBins[k]-2.5)+0.02*(ptBins[k]-2.5)*(ptBins[k]-2.5);
+                            }
                         }else if(!energy.CompareTo("8TeV")){
                           errorFixed              =  0.9;
                           if(ptBins[k] > 5.)
@@ -413,8 +416,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
                         if(!energy.CompareTo("2.76TeV")){
-                          if (ptBins[k] > 5.5)
-                              errorFixed              =  10.5;
+                            errorFixed              =  2.6;
                         }else if(!energy.CompareTo("8TeV")){
                           errorFixed              =  1.5;
                           if(ptBins[k] > 6.)
@@ -526,13 +528,13 @@ void FinaliseSystematicErrorsCalo_Gammas_pp(    TString nameDataFileErrors      
             if (!nameCutVariationSC[i].CompareTo("ClusterMaterialTRD")){
                 if (spectrumName.Contains("Ratio")){
                     if(!energy.CompareTo("2.76TeV")){
-                      errorFixed                      = 4.2;
+                      errorFixed                      = 3.0;
                     }else if(!energy.CompareTo("8TeV")){
                       errorFixed                      = 3.0;
                     }
                 }else{
                     if(!energy.CompareTo("2.76TeV")){
-                        errorFixed                   = 2.8;
+                        errorFixed                   = 2.1;
                     }else if(!energy.CompareTo("8TeV")){
                         errorFixed                   = 2.1;
                     }
