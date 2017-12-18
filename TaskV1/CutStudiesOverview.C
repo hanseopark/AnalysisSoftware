@@ -171,6 +171,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
     TH1D*   histoAcceptanceCut          [ConstNumberOfCuts];
     TH1D*   histoRawYieldCut            [ConstNumberOfCuts];
     TH1D*   histoRawYieldCutRelUnc      [ConstNumberOfCuts];
+    TH1D*   histoTrueEffiCutRelUnc      [ConstNumberOfCuts];
     TH1D*   histoMassRatioCut           [ConstNumberOfCuts];
     TH1D*   histoWidthRatioCut          [ConstNumberOfCuts];
     TH1D*   histoEtaToPi0Cut            [ConstNumberOfCuts];
@@ -424,6 +425,18 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             histoCorrectedYieldCut[i]->SetName(Form("%s_%s", nameCorrectedYield.Data(),cutNumber[i].Data()));
             histoTrueEffiCut[i]                                 = (TH1D*)Cutcorrfile[i]->Get(nameEfficiency.Data());
             histoTrueEffiCut[i]->SetName(Form("%s_%s", nameEfficiency.Data(), cutNumber[i].Data()));
+
+	    histoTrueEffiCutRelUnc[i]                               = (TH1D*)histoTrueEffiCut[i]->Clone("histoTrueEffiCutRelUnc");
+	    for (Int_t k = 1; k < histoTrueEffiCutRelUnc[i]->GetNbinsX()+1; k++){
+	      if (histoTrueEffiCutRelUnc[i]->GetBinContent(k) != 0){
+                histoTrueEffiCutRelUnc[i]->SetBinContent(k, histoTrueEffiCutRelUnc[i]->GetBinError(k)/histoTrueEffiCutRelUnc[i]->GetBinContent(k)*100);
+                histoTrueEffiCutRelUnc[i]->SetBinError(k, 0);
+	      } else {
+                histoTrueEffiCutRelUnc[i]->SetBinContent(k, 0);
+                histoTrueEffiCutRelUnc[i]->SetBinError(k, 0);
+	      }
+	    }
+
             histoAcceptanceCut[i]                               = (TH1D*)Cutcorrfile[i]->Get(nameAcceptance.Data());
             histoAcceptanceCut[i]->SetName(Form("%s_%s", nameAcceptance.Data(), cutNumber[i].Data()));
             histoMassRatioCut[i]                                = (TH1D*)Cutcorrfile[i]->Get("histoRatioRecMass");
@@ -1565,6 +1578,53 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         canvasTrueEffiMeson->Update();
         canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
         delete canvasTrueEffiMeson;
+
+	//*************************************************************************************
+        //**************************** Plotting true efficiency error  *****************************
+        //*************************************************************************************
+
+        TCanvas* canvasRelUncTrueEffi = new TCanvas("canvasRelUncTrueEffi","",1000,1000);  // gives the page size
+        DrawGammaCanvasSettings( canvasRelUncTrueEffi,  0.1, 0.02, 0.04, 0.08);
+
+        // Set legend
+        Int_t nRows         = ((NumberOfCuts+1)/2);
+        TLegend* legendTrueEffi = GetAndSetLegend2(0.11,0.93-(1.05*0.032*nRows),0.65,0.93, 1000*0.032, 2);
+
+        // Draw Raw yield for different triggers
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if(i == 0){
+                Double_t scaleFactorRaw = 2.;
+                Double_t minRaw         = 0;
+                if (cutVariationName.Contains("Cent") && optionEnergy.Contains("pPb")){
+                    scaleFactorRaw      = 2.;
+                    minRaw              = -1;
+                }
+                DrawGammaSetMarker(histoTrueEffiCutRelUnc[i], 20, 1., color[0], color[0]);
+                DrawAutoGammaMesonHistos( histoTrueEffiCutRelUnc[i],
+                                          "", "#it{p}_{T} (GeV/#it{c})", Form("%s rel unc. [%%]",textMeson.Data()),
+                                          kTRUE, scaleFactorRaw, minRaw, kFALSE,
+                                          kFALSE, 0.0, 0.030,
+                                          kFALSE, 0., 10.);
+                histoTrueEffiCutRelUnc[i]->DrawCopy("same,c,p");
+                legendTrueEffi->AddEntry(histoTrueEffiCutRelUnc[i],Form("standard: %s",cutStringsName[i].Data()));
+            } else {
+                if(i<20){
+                    DrawGammaSetMarker(histoTrueEffiCutRelUnc[i], 20+i, 1.,color[i],color[i]);
+                } else {
+                    DrawGammaSetMarker(histoTrueEffiCutRelUnc[i], 20+i, 1.,color[i-20],color[i-20]);
+                }
+                histoTrueEffiCutRelUnc[i]->DrawCopy("same,c,p");
+                legendTrueEffi->AddEntry(histoTrueEffiCutRelUnc[i],cutStringsName[i].Data());
+            }
+        }
+        legendTrueEffi->Draw();
+        // labeling of the plot
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
+        canvasRelUncTrueEffi->Update();
+        canvasRelUncTrueEffi->SaveAs(Form("%s/%s_%s_RelUncTrueEffi%s.%s",outputDir.Data(),meson.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
+        delete canvasRelUncTrueEffi;
+
 
 
         //**************************************************************************************
