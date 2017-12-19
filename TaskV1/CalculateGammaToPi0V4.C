@@ -77,15 +77,15 @@ Double_t FindSmallestBin1DHist(TH1* hist, Double_t maxStart = 1e6 ){
 //*****************************************************************************************************
 //*****************************************************************************************************
 //*****************************************************************************************************
-void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
-                                TString nameFilePi0     = "",
-                                TString nameFileCocktail= "",
-                                TString cutSel          = "",
-                                TString suffix          = "pdf",
-                                TString nameMeson       = "",
-                                TString isMC            = "",
-                                TString fEnergy          = "",
-                                Int_t mode              = 0,
+void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
+                                TString nameFilePi0         = "",
+                                TString nameFileCocktail    = "",
+                                TString cutSel              = "",
+                                TString suffix              = "pdf",
+                                TString nameMeson           = "",
+                                TString isMC                = "",
+                                TString fEnergy             = "",
+                                Int_t mode                  = 0,
                                 TString nameFileFitsShift   = ""
 
                             ){
@@ -108,7 +108,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         collisionSystem                          = Form("%s %s", centrality.Data(), collisionSystem.Data());
     }
     TString centralityString2                    = GetCentralityString(fEventCutSelection);
-    
+
     // check if fit file for binshifting has to be adjusted for every energy
     TF1* fitBinShiftPi0                          = 0x0;
     TF1* fitBinShiftGamma                        = 0x0;
@@ -134,7 +134,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
           cout << "missing pi0 bin shift fit... will not do binshifting!" << endl;
           doBinShiftForDR                         = kFALSE;
         }
-          
+
         fitBinShiftGamma                          = (TF1*)fileFitsBinShift->Get(Form("TsallisFitGamma"));
         if(!fitBinShiftGamma)
           fitBinShiftGamma                        = (TF1*)fileFitsBinShift->Get(Form("TwoComponentModelFitGamma"));
@@ -275,7 +275,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
       histoGammaSpecCorrPurityBinShiftCorr->Draw();
       PlotLatexLegend(0.95, 0.96-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
       canvasBinShifting->Print(Form("%s/%s_Gamma_BinShiftCorrection.%s",outputDir.Data(),nameRec.Data(),suffix.Data()));
-      
+
       canvasBinShifting->cd();
       histoCorrectedPi0YieldBinShiftCorr = (TH1D*)histoCorrectedPi0YieldBinShift->Clone("InclusiveRatioBinShiftCorrection");
       histoCorrectedPi0YieldBinShiftCorr->Divide(histoCorrectedPi0YieldBinShiftCorr,histoCorrectedPi0Yield[0],1,1,"");
@@ -285,7 +285,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
       PlotLatexLegend(0.95, 0.96-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
       canvasBinShifting->Print(Form("%s/%s_Pi0_BinShiftCorrection.%s",outputDir.Data(),nameRec.Data(),suffix.Data()));
     }
-    
+
     //**********************************************************************************
     //***                      Cocktail                                              ***
     //**********************************************************************************
@@ -325,7 +325,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
         histoIncRatioPurityTrueEff[0]->Draw();
         PlotLatexLegend(0.95, 0.96-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
         canvasIncRatio->Print(Form("%s/%s_%s_IncRatioPurity_trueEff.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
-        
+
         if(doBinShiftForDR){
           canvasIncRatio->cd();
           SetHistogramm(histoIncRatioPurityTrueEffBinShift, "#it{p}_{T} (GeV/#it{c})", "Ratio Inclusive #gamma/#pi^{0}",0,2);
@@ -333,14 +333,14 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
           histoIncRatioPurityTrueEffBinShift->Draw();
           PlotLatexLegend(0.95, 0.96-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
           canvasIncRatio->Print(Form("%s/%s_%s_IncRatioPurity_trueEff_%s.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),addNameBinshift.Data(),suffix.Data()));
-          
+
           // canvasIncRatio->cd();
           // SetHistogramm(histoIncRatioPurityTrueEffBinShift, "#it{p}_{T} (GeV/#it{c})", "Ratio Inclusive #gamma/#pi^{0}",0,2);
           // histoIncRatioPurityTrueEff[0]->Draw();
           // histoIncRatioPurityTrueEffBinShift->Draw("same");
           // PlotLatexLegend(0.95, 0.96-2*0.045, 0.045,collisionSystem,detectionProcess,2,31);
           // canvasIncRatio->Print(Form("%s/%s_%s_IncRatioPurity_trueEff_BinShiftComparison.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
-          
+
           canvasIncRatio->cd();
           histoIncRatioPurityTrueEffBinShiftCorr = (TH1D*)histoIncRatioPurityTrueEffBinShift->Clone("InclusiveRatioBinShiftCorrection");
           histoIncRatioPurityTrueEffBinShiftCorr->Divide(histoIncRatioPurityTrueEffBinShiftCorr,histoIncRatioPurityTrueEff[0],1,1,"");
@@ -939,28 +939,28 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma   = "",
               DrawGammaLines(0., 20. , 1.0, 1.0,2.0, kGray+2 ,7);
               histoDoubleRatioTrueEffPurity[0]->DrawCopy("same,E1");
               histoDoubleRatioTrueEffPurityBinShift->DrawCopy("same,E1");
-          
+
               legendDoubleConversionFit->Clear();
               legendDoubleConversionFit->AddEntry(histoDoubleRatioTrueEffPurity[0],"Data","p");
               legendDoubleConversionFit->AddEntry(histoDoubleRatioTrueEffPurityBinShift,"Data Bin Shifted","p");
               legendDoubleConversionFit->Draw();
               PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
-          
+
           canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatioBinShiftComparison.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
         }
-        
+
         // double ratio fit
         canvasDoubleRatio->cd();
         histo2DDoubleRatioPlotting->DrawCopy();
-        
+
             DrawGammaLines(0., 20. , 1.0, 1.0,2.0, kGray+2 ,7);
             histoDoubleRatioFitPi0YieldPurity[0]->DrawCopy("same,E1");
-        
+
             TLegend* legendDoubleConversionFit2       = GetAndSetLegend2(0.14,0.93-1*0.045,0.5,0.93,0.045,1,"",42,0.2);
             legendDoubleConversionFit2->AddEntry(histoDoubleRatioFitPi0YieldPurity[0],"Data, fitted #pi^{0}","p");
             legendDoubleConversionFit2->Draw();
             PlotLatexLegend(0.93, 0.96-3*0.045, 0.045,collisionSystem,detectionProcess,3,31);
-        
+
         canvasDoubleRatio->Print(Form("%s/%s_%s_DoubleRatioFit.%s",outputDir.Data(),nameOutputLabel.Data(),nameRec.Data(),suffix.Data()));
 
         // double ratio no fit

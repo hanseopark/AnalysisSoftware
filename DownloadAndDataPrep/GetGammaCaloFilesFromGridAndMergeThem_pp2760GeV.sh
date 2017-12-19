@@ -475,6 +475,7 @@ LHC12f1bMC="3202";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
+mkdir -p $OUTPUTDIR/CutSelections
 
 echo "************************************************************************************************";
 echo "Directory to be writen into " $OUTPUTDIR

@@ -46,6 +46,7 @@ MaxPtToyLambda=90
 ExtInputFile=""
 BinsPtGamma=0
 energy=""
+FileWeightingGamma=""
 
 function GiveBinning5TeV()
 {
@@ -236,6 +237,10 @@ function GiveBinningDirectPhoton2760TeV()
         echo "Pi0 Binning was not set correctly. Please try again.";
         correctPi0=0
     fi
+
+    FileWeightingGamma="FitsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer_Gamma_2017_12_18.root";
+    echo "Setting weighting file to: " $FileWeightingGamma
+
     BinsPtGamma=$BinsPtPi0
 }
 
@@ -819,6 +824,9 @@ function GiveBinning2760GeV()
     else
         correctEta=1
     fi
+    FileWeightingGamma="FitsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer_Gamma_2017_12_18.root";
+    echo "Setting weighting file to: " $FileWeightingGamma
+
     BinsPtGamma=$BinsPtPi0
 }
 
@@ -865,6 +873,9 @@ function GiveBinning2760GeVMerged()
     DoPi0InEtaBinning=0;
     correctEta=1;
     BinsPtGamma=$BinsPtPi0
+    FileWeightingGamma="FitsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer_Gamma_2017_12_18.root";
+    echo "Setting weighting file to: " $FileWeightingGamma
+
 }
 
 
@@ -1125,7 +1136,7 @@ function CreateGammaFinalResults()
 function CreateGammaFinalResultsV3()
 {
     if  [ $energy = "900GeV" ] || [ $energy = "2.76TeV" ] || [ $energy = "7TeV" ] || [ $energy = "8TeV" ] || [ $energy = "13TeV" ]  || [ $energy = "pPb_5.023TeV" ] ; then
-        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
     else
         root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
     fi
