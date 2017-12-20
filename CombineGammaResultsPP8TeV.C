@@ -994,42 +994,6 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         graphCombIncGammaSys->RemovePoint(0);
     }
     graphCombIncGammaTot->Print();
-    //*******************************************************************************************************************************************
-    //*********************************************** Combining PCM IncGamma spectra ************************************************************
-    //*******************************************************************************************************************************************
-    // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
-    // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
-
-    Int_t offSetsGammaPCM[11]       = { 0,  0,  9,  0,  0,
-                                        0,  0,  0,  0,  0,
-                                        0};
-    Int_t offSetsGammaPCMSys[11]    = { 1,  0,  9,  0,  4,
-                                        0,  0,  0,  0,  0,
-                                        0};
-
-    // Declaration & calculation of combined spectrum
-    TString fileNamePCMIncGammaOutputWeighting       = Form("%s/PCMIncGamma_WeightingMethod.dat",outputDir.Data());
-    TGraphAsymmErrors* graphCombPCMIncGammaStat      = NULL;
-    TGraphAsymmErrors* graphCombPCMIncGammaSys       = NULL;
-    TGraphAsymmErrors* graphCombPCMIncGammaTot       = CombinePtPointsSpectraFullCorrMat(      histoIncGammaStatErr,    graphIncGammaSysErr,
-                                                                                            xPtLimitsGamma, maxNBinsGamma,
-                                                                                            offSetsGammaPCM, offSetsGammaPCMSys,
-                                                                                            graphCombPCMIncGammaStat, graphCombPCMIncGammaSys,
-                                                                                            fileNameIncGammaOutputWeighting, "8TeV", "GammaInc", kTRUE,
-                                                                                            NULL, fileNameCorrelations );
-    if (graphCombIncGammaTot == NULL) {
-        cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
-        return;
-    }
-    while (graphCombPCMIncGammaStat->GetX()[0] < 0.3){
-        graphCombPCMIncGammaStat->RemovePoint(0);
-    }
-    while (graphCombPCMIncGammaTot->GetX()[0] < 0.3){
-        graphCombPCMIncGammaTot->RemovePoint(0);
-    }
-    while (graphCombPCMIncGammaSys->GetX()[0] < 0.3){
-        graphCombPCMIncGammaSys->RemovePoint(0);
-    }  
 
     // Reading weights from output file for plotting
     ifstream fileWeightsIncGammaRead;
@@ -1078,6 +1042,95 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
             else bin++;
         }
     }
+    //*******************************************************************************************************************************************
+    //*********************************************** Combining PCM IncGamma spectra ************************************************************
+    //*******************************************************************************************************************************************
+    // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
+    // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
+
+    Int_t offSetsGammaPCM[11]       = { 0,  0,  9,  0,  0,
+                                        0,  0,  0,  0,  0,
+                                        0};
+    Int_t offSetsGammaPCMSys[11]    = { 1,  0,  9,  0,  4,
+                                        0,  0,  0,  0,  0,
+                                        0};
+
+    TGraph* graphWeightsPCMIncGamma[11];
+    for (Int_t i = 0; i< 11; i++){
+        graphWeightsPCMIncGamma[i]                   = NULL;
+    }
+
+    // Declaration & calculation of combined spectrum
+    TString fileNamePCMIncGammaOutputWeighting       = Form("%s/PCMIncGamma_WeightingMethod.dat",outputDir.Data());
+    TGraphAsymmErrors* graphCombPCMIncGammaStat      = NULL;
+    TGraphAsymmErrors* graphCombPCMIncGammaSys       = NULL;
+    TGraphAsymmErrors* graphCombPCMIncGammaTot       = CombinePtPointsSpectraFullCorrMat(      histoIncGammaStatErr,    graphIncGammaSysErr,
+                                                                                            xPtLimitsGamma, maxNBinsGamma,
+                                                                                            offSetsGammaPCM, offSetsGammaPCMSys,
+                                                                                            graphCombPCMIncGammaStat, graphCombPCMIncGammaSys,
+                                                                                            fileNamePCMIncGammaOutputWeighting, "8TeV", "GammaInc", kTRUE,
+                                                                                            NULL, fileNameCorrelations );
+    if (graphCombIncGammaTot == NULL) {
+        cout << "Aborting: something went wrong during the combination of the new spectra" << endl;
+        return;
+    }
+    while (graphCombPCMIncGammaStat->GetX()[0] < 0.3){
+        graphCombPCMIncGammaStat->RemovePoint(0);
+    }
+    while (graphCombPCMIncGammaTot->GetX()[0] < 0.3){
+        graphCombPCMIncGammaTot->RemovePoint(0);
+    }
+    while (graphCombPCMIncGammaSys->GetX()[0] < 0.3){
+        graphCombPCMIncGammaSys->RemovePoint(0);
+    }  
+
+    // Reading weights from output file for plotting
+    ifstream fileWeightsPCMIncGammaRead;
+    fileWeightsPCMIncGammaRead.open(fileNamePCMIncGammaOutputWeighting,ios_base::in);
+    cout << "reading" << fileNamePCMIncGammaOutputWeighting << endl;
+    Double_t xValuesPCMIncGammaRead[50];
+    Double_t weightsPCMIncGammaRead[11][50];
+    Int_t availablePCMIncGammaMeas[11]      = { -1, -1, -1, -1, -1,
+                                                -1, -1, -1, -1, -1,
+                                                -1};
+    Int_t nMeasSetPCMIncGamma               = 3;
+    Int_t nPtBinsPCMIncGammaRead            = 0;
+    while(!fileWeightsPCMIncGammaRead.eof() && nPtBinsPCMIncGammaRead < 50){
+        TString garbage             = "";
+        if (nPtBinsPCMIncGammaRead == 0){
+            fileWeightsPCMIncGammaRead >> garbage ;
+            for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+                fileWeightsPCMIncGammaRead >> availablePCMIncGammaMeas[i] ;
+            }
+            cout << "read following measurements: ";
+            for (Int_t i = 0; i < 11; i++){
+                cout << availablePCMIncGammaMeas[i] << "\t" ;
+            }
+            cout << endl;
+        } else {
+            fileWeightsPCMIncGammaRead >> xValuesPCMIncGammaRead[nPtBinsPCMIncGammaRead-1];
+            for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+                fileWeightsPCMIncGammaRead >> weightsPCMIncGammaRead[availablePCMIncGammaMeas[i]][nPtBinsPCMIncGammaRead-1] ;
+            }
+            cout << "read: "<<  nPtBinsPCMIncGammaRead << "\t"<< xValuesPCMIncGammaRead[nPtBinsPCMIncGammaRead-1] << "\t" ;
+            for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+                cout << weightsPCMIncGammaRead[availablePCMIncGammaMeas[i]][nPtBinsPCMIncGammaRead-1] << "\t";
+            }
+            cout << endl;
+        }
+        nPtBinsPCMIncGammaRead++;
+    }
+    nPtBinsPCMIncGammaRead                  = nPtBinsPCMIncGammaRead-2 ;
+    fileWeightsPCMIncGammaRead.close();
+
+    for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+        graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]                        = new TGraph(nPtBinsPCMIncGammaRead,xValuesPCMIncGammaRead,weightsPCMIncGammaRead[availablePCMIncGammaMeas[i]]);
+        Int_t bin = 0;
+        for (Int_t n = 0; n< nPtBinsPCMIncGammaRead; n++){
+            if (graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]->GetY()[bin] == 0) graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]->RemovePoint(bin);
+            else bin++;
+        }
+    }
 
     // **********************************************************************************************************************
     // ******************************************* Plotting weights method only EMC *****************************************
@@ -1111,6 +1164,27 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
     canvasWeights->SaveAs(Form("%s/IncGamma_Weights_8.%s",outputDir.Data(),suffix.Data()));
     canvasWeights->SaveAs(Form("%s/IncGamma_Weights_8.pdf",outputDir.Data()));
+
+    histo2DIncGammaWeights->Draw("copy");
+
+    TLegend* legendWeightsPCMIncGamma   = GetAndSetLegend2(0.12, 0.14, 0.45, 0.14+(0.04*(nMeasSetPCMIncGamma+1)/2), textSizeLabelsPixel, 2, "", 43, 0);
+    for (Int_t i = 0; i < nMeasSetPCMIncGamma; i++){
+        DrawGammaSetMarkerTGraph(graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]], markerStyleDet[availablePCMIncGammaMeas[i]], markerSizeDet[availablePCMIncGammaMeas[i]], colorDet[availablePCMIncGammaMeas[i]] , colorDet[availablePCMIncGammaMeas[i]]);
+        graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]]->Draw("p,same,z");
+        legendWeightsPCMIncGamma->AddEntry(graphWeightsPCMIncGamma[availablePCMIncGammaMeas[i]],nameMeasGlobalLabelGamma[availablePCMIncGammaMeas[i]],"p");
+    }
+    legendWeightsPCMIncGamma->Draw();
+
+    labelWeightsEnergy->Draw();
+    labelWeightsIncGamma->Draw();
+
+    DrawGammaLines(0.23, 25. , 0.5, 0.5,0.1, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.4, 0.4,0.1, kGray, 1);
+    DrawGammaLines(0.23, 25. , 0.3, 0.3,0.1, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.2, 0.2,0.1, kGray, 3);
+
+    canvasWeights->SaveAs(Form("%s/IncGamma_Weights_8_PCM.%s",outputDir.Data(),suffix.Data()));
+    canvasWeights->SaveAs(Form("%s/IncGamma_Weights_8_PCM.pdf",outputDir.Data()));
 
     //  *********************************************************************************************************************
     //  ************************************ Visualize relative errors ******************************************************
