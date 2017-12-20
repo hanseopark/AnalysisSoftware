@@ -1982,7 +1982,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         hist2DDRDummySingle->DrawCopy();
 
         TLegend* legendDRTheoryComb         = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1.2,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
-        TLegend* legendDRTheoryComb2        = GetAndSetLegend2(0.12,0.94-textSizeSinglePad*5,0.5,0.94-textSizeSinglePad*1, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
+        TLegend* legendDRTheoryComb2        = GetAndSetLegend2(0.12,0.94-textSizeSinglePad*6,0.5,0.94-textSizeSinglePad*1, textSizeSinglePad, 1, "NLO pQCD:", 42, 0.15);
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRSys, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV,widthLinesBoxes, kTRUE);
         DrawGammaSetMarkerTGraphAsym(graphCombDRStatPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes);
@@ -2013,6 +2013,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         if (graphTheoryJETPHOXDRpp2760GeV) {
             legendDRTheoryComb2->AddEntry(dummyJETPHOXforLegend,"JETPHOX","fl");
+            legendDRTheoryComb2->AddEntry((TObject*)0,"PDF: NNPDF2.3QED, FF: BFG2","");
         }
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
 
@@ -2599,6 +2600,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         if (graphCombDirGammaSpectrumSystErr){
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSystErr, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes, kTRUE);
             graphCombDirGammaSpectrumSystErr->Draw("E2same");
+            legendYieldDirGamma->AddEntry(graphCombDirGammaSpectrumSystErr, "#gamma_{dir} data","pf");
         }
         if (graphCombDirGammaSpectrumStatErrPlot){
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumStatErrPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV);
@@ -2608,17 +2610,16 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             DrawGammaSetMarkerTGraphAsym(graphCombDirGammaSpectrumSumErrAr , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
             graphCombDirGammaSpectrumSumErrAr->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
-            legendYieldDirGamma->AddEntry((TObject*)0, "#gamma_{dir} data","");
         }
 
-        TGraphAsymmErrors* dummyForLegend    = new TGraphAsymmErrors(1);
-        dummyForLegend->SetPoint(0,6.2,0.06);
-        dummyForLegend->SetPointError(0,0,0,0.03,0);
-        DrawGammaSetMarkerTGraphAsym(dummyForLegend , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
-        if (graphCombDirGammaSpectrumSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
-        }
+        // TGraphAsymmErrors* dummyForLegend    = new TGraphAsymmErrors(1);
+        // dummyForLegend->SetPoint(0,6.2,0.06);
+        // dummyForLegend->SetPointError(0,0,0,0.03,0);
+        // DrawGammaSetMarkerTGraphAsym(dummyForLegend , 1, 3, colorCombpp2760GeV, colorCombpp2760GeV, 1.8, kTRUE);
+        // if (graphCombDirGammaSpectrumSumErrAr){
+        //     dummyForLegend->Draw(">,same");
+        //     PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
+        // }
         legendYieldDirGamma->Draw();
 
         labelEnergyDGInvYieldPaperAll->Draw();
@@ -2649,10 +2650,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
 
 
-        if (graphCombDirGammaSpectrumNonFitSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
-        }
+        // if (graphCombDirGammaSpectrumNonFitSumErrAr){
+        //     dummyForLegend->Draw(">,same");
+        //     PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
+        // }
         legendYieldDirGamma->Draw();
 
         labelEnergyDGInvYieldPaperAll->Draw();
@@ -2663,7 +2664,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_NonFit.pdf",outputDir.Data()));
     histo2DYieldGamma->Draw("copy");
 
-    TLegend* legendYieldDirGammaTheo2      = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(4*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "#gamma_{dir} NLO pQCD:", 43, 0.23);
+    TLegend* legendYieldDirGammaTheo2      = GetAndSetLegend2(0.20, 0.1, 0.5, 0.1+(4*textSizeLabelsRel*0.87),textSizeLabelsPixel,1, "#gamma_{dir} NLO pQCD:", 43, 0.23);
     legendYieldDirGammaTheo2->SetTextAlign(12);
     graphCombIncGammaSys->Draw("E2same");
     graphCombIncGammaStatPlot->Draw("Epsame");
@@ -2700,6 +2701,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         if (graphTheoryJETPHOXpp2760GeVCenter) {
             legendYieldDirGammaTheo2->AddEntry(dummyJETPHOXforLegend,"JETPHOX","fl");
+            legendYieldDirGammaTheo2->AddEntry((TObject*)0,"PDF: NNPDF2.3QED, FF: BFG2","");
         }
 
         legendYieldDirGammaTheo2->Draw();
@@ -2711,10 +2713,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             graphCombDirGammaSpectrumSumErrAr->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
         }
-        if (graphCombDirGammaSpectrumSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
-        }
+        // if (graphCombDirGammaSpectrumSumErrAr){
+        //     dummyForLegend->Draw(">,same");
+        //     PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
+        // }
 
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
@@ -2754,10 +2756,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             graphCombDirGammaSpectrumNonFitSumErrAr->Draw(">,same");
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphCombDirGammaSpectrumNonFitSumErrAr,0.05,kFALSE,graphCombDRStat);
         }
-        if (graphCombDirGammaSpectrumNonFitSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
-        }
+        // if (graphCombDirGammaSpectrumNonFitSumErrAr){
+        //     dummyForLegend->Draw(">,same");
+        //     PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend);
+        // }
 
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
@@ -2783,10 +2785,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TLegend* legendXsecDirGamma        = GetAndSetLegend2(0.68, 0.87-(1*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendXsecDirGamma->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
 
-    TLegend* legendULXSecDirGamma      = GetAndSetLegend2(0.17, 0.12+(4.2*textSizeLabelsRel*0.85), 0.5, 0.12+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
+    TLegend* legendULXSecDirGamma      = GetAndSetLegend2(0.2, 0.12+(4.2*textSizeLabelsRel*0.85), 0.53, 0.12+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
     legendULXSecDirGamma->SetTextAlign(12);
-    legendULXSecDirGamma->AddEntry((TObject*)0, "#gamma_{dir} data","");
-
+    
     TH1F * histo2DXSecGamma              = new TH1F("histo2DXSecGamma","histo2DXSecGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(histo2DXSecGamma, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.7);
     histo2DXSecGamma->GetYaxis()->SetRangeUser(2e1,7e11);
@@ -2828,6 +2829,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     if (graphXSecCombDirGammaNonFitSpectrumSystErr){
         DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumSystErr, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV, widthLinesBoxes, kTRUE);
         graphXSecCombDirGammaNonFitSpectrumSystErr->Draw("E2same");
+        legendULXSecDirGamma->AddEntry(graphXSecCombDirGammaNonFitSpectrumSystErr, "#gamma_{dir} data","pf");
     }
     if (graphXSecCombDirGammaNonFitSpectrumStatErrPlot){
         DrawGammaSetMarkerTGraphAsym(graphXSecCombDirGammaNonFitSpectrumStatErrPlot, markerStyleCombpp2760GeV, markerSizeCombpp2760GeV, colorCombpp2760GeV , colorCombpp2760GeV);
@@ -2839,12 +2841,12 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphXSecCombDirGammaNonFitSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
     }
 
-    dummyForLegend->SetPoint(0,0.32,1e4);
-    dummyForLegend->SetPointError(0,0,0,5e3,0);
-        if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend,0.015);
-        }
+    // dummyForLegend->SetPoint(0,0.32,1e4);
+    // dummyForLegend->SetPointError(0,0,0,5e3,0);
+    //     if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+    //         dummyForLegend->Draw(">,same");
+    //         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend,0.015);
+    //     }
         legendXsecDirGamma->Draw();
         legendULXSecDirGamma->Draw();
 
@@ -2896,10 +2898,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphXSecCombDirGammaNonFitSpectrumSumErrAr,0.05,kFALSE,graphCombDRStat);
     }
 
-        if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
-            dummyForLegend->Draw(">,same");
-            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend,0.015);
-        }
+        // if (graphXSecCombDirGammaNonFitSpectrumSumErrAr){
+        //     dummyForLegend->Draw(">,same");
+        //     PlotErrorBarAtUpperEdgeOfTGraphAsymErr(dummyForLegend,0.015);
+        // }
         legendULXSecDirGamma->Draw();
         labelEnergyDGInvYieldPaperAll->Draw();
         labelALICEDGNormUnPaperAll->Draw();
