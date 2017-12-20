@@ -894,6 +894,13 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
     canvasRelSysErr->SaveAs(Form("%s/DR_Reldecomp_NonFit_8.%s",outputDir.Data(),suffix.Data()));
 
+    cout << __LINE__ << endl;
+    cout << "DR - tot" << endl;
+    graphCombDRNonFitRelTot->Print();
+    cout << "DR - stat" << endl;
+    graphCombDRNonFitRelStat->Print();
+    cout << "DR - sys" << endl;
+    graphCombDRNonFitRelSys->Print();
 
     //*******************************************************************************************************************************************
     //*********************************************** Combining IncGamma spectra ****************************************************************
@@ -1266,6 +1273,46 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
     canvasRelSysErr->SaveAs(Form("%s/IncGamma_Reldecomp_8.%s",outputDir.Data(),suffix.Data()));
 
+    cout << __LINE__ << endl;
+    cout << "IncGamma - tot" << endl;
+    graphCombIncGammaRelTot->Print();
+    cout << "IncGamma - stat" << endl;
+    graphCombIncGammaRelStat->Print();
+    cout << "IncGamma - sys" << endl;
+    graphCombIncGammaRelSys->Print();
+
+
+    TGraphAsymmErrors* graphCombPCMIncGammaRelStat     = CalculateRelErrUpAsymmGraph( graphCombPCMIncGammaStat, "relativeStatErrorIncGammaPCM");
+    TGraphAsymmErrors* graphCombPCMIncGammaRelSys      = CalculateRelErrUpAsymmGraph( graphCombPCMIncGammaSys, "relativeSysErrorIncGammaPCM");
+    TGraphAsymmErrors* graphCombPCMIncGammaRelTot      = CalculateRelErrUpAsymmGraph( graphCombPCMIncGammaTot, "relativeTotalErrorIncGammaPCM");
+
+    canvasRelSysErr->cd();
+        histo2DRelErr->GetYaxis()->SetRangeUser(0,12.5);
+        histo2DRelErr->Draw("copy");
+
+        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelTot, markerStyleComb, markerSizeComb, colorComb , colorComb);
+        graphCombPCMIncGammaRelTot->Draw("p,same,z");
+        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelStat, markerStyleComb, markerSizeComb, colorComb-6 , colorComb-6);
+        graphCombPCMIncGammaRelStat->Draw("l,x0,same,e1");
+        DrawGammaSetMarkerTGraphAsym(graphCombPCMIncGammaRelSys, markerStyleComb, markerSizeComb, colorComb+2, colorComb+2);
+        graphCombPCMIncGammaRelSys->SetLineStyle(7);
+        graphCombPCMIncGammaRelSys->Draw("l,x0,same,e1");
+
+        legendRelTotErr->Draw();
+        labelRelTotErrEnergy->Draw();
+        TLatex *labelRelTotErrPCMIncGamma      = new TLatex(0.95,0.85,"#gamma_{inc} PCM");
+        SetStyleTLatex( labelRelTotErrPCMIncGamma, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+        labelRelTotErrPCMIncGamma->Draw();
+
+    canvasRelSysErr->SaveAs(Form("%s/IncGamma_Reldecomp_8_PCM.%s",outputDir.Data(),suffix.Data()));
+
+    cout << __LINE__ << endl;
+    cout << "PCMIncGamma - tot" << endl;
+    graphCombPCMIncGammaRelTot->Print();
+    cout << "PCMIncGamma - stat" << endl;
+    graphCombPCMIncGammaRelStat->Print();
+    cout << "PCMIncGamma - sys" << endl;
+    graphCombPCMIncGammaRelSys->Print();
 
     //*******************************************************************************************************************************************
     //************************************************* Fitting gamma spectrum ******************************************************************
