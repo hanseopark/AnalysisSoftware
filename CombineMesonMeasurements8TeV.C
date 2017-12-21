@@ -2103,7 +2103,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     histo2DPi0RatioToCombFit->GetXaxis()->SetNoExponent(kTRUE);
 //  histo2DPi0RatioToCombFit->GetXaxis()->SetLabelOffset(-0.01);
 //  histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(-10,10);
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.6,2.1);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.6,1.8);
     histo2DPi0RatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitSysA, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
@@ -2184,7 +2184,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
 
     canvasRatioToCombFit->cd();
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.4,2.2);
     histo2DPi0RatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -2221,7 +2221,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         //****************************** Definition of the Legend ******************************************
         //**************** Row def ************************
         Double_t rowsLegendOnlyPi0Ratio[6]          = {0.91, 0.855, 0.805, 0.755, 0.705, 0.655};
-        Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.91, 2.165, 2.035, 1.905, 1.765, 1.635};
+        Double_t rowsLegendOnlyPi0RatioAbs[6]       = {0.91, 1.965, 1.860, 1.755, 1.650, 1.545};
         Double_t columnsLegendOnlyPi0Ratio[3]       = {0.185, 0.385, 0.47};
         Double_t columnsLegendOnlyPi0RatioAbs[3]    = {0.115, 1.8, 2.7};
         Double_t lengthBox                          = 0.2;
@@ -2367,7 +2367,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasRatioToCombFit->cd();
     histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(0.23,16);
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.5,2.4);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.5,1.9);
     histo2DPi0RatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -2448,7 +2448,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     canvasRatioToCombFit->SetLogx();
     histo2DPi0RatioToCombFit->GetXaxis()->SetRangeUser(0.23,50);
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.6,2.1);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.6,1.8);
     histo2DPi0RatioToCombFit->SetYTitle("Data/Tsallis fit");
     histo2DPi0RatioToCombFit->Draw("copy");
 
@@ -2472,7 +2472,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
 
     canvasRatioToCombFit->cd();
-    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.45);
+    histo2DPi0RatioToCombFit->GetYaxis()->SetRangeUser(0.4,2.2);
     histo2DPi0RatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioTsallisPi0PCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -2492,7 +2492,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
         graphRatioTsallisPi0PCMCombFitStat_WOXErr->Draw("p,same,z");
         graphRatioTsallisPi0PHOSCombFitStat_WOXErr->Draw("p,same,z");
         graphRatioTsallisPi0EMCALCombFitStat_WOXErr->Draw("p,same,z");
-        graphRatioTsallisPi0PCMEMCALCombFitStat_WOXErr->Draw("p,same,z");
+        graphRatioTsallisPi0PCMEMCALCombFitStat_WOXErr->Draw("indivip,same,z");
 
         DrawGammaLines(0.23, 50. , 1., 1.,0.5, kGray+2);
         DrawGammaLines(0.23, 50. , 1.1, 1.1,0.5, kGray, 7);
@@ -3577,7 +3577,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
 
     canvasRatioToCombFit->cd();
-    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.55);
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.4,2.2);
     histo2DEtaRatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaPCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
@@ -3605,7 +3605,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
         //****************************** Definition of the Legend ******************************************
         Double_t rowsLegendOnlyEtaRatio[4]          = {0.91, 0.86, 0.81, 0.76};
-        Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 2.245, 2.11, 1.975};
+        Double_t rowsLegendOnlyEtaRatioAbs[4]       = {0.91, 1.970, 1.865, 1.760};
         Double_t columnsLegendOnlyEtaRatio[3]       = {0.115, 0.355, 0.43};
         Double_t columnsLegendOnlyEtaRatioAbs[3]    = {0.115, 1.38, 1.92};
 
@@ -3688,7 +3688,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // ******************************************* Ratio of Comb to Fit ****************************************
     // **********************************************************************************************************************
     canvasRatioToCombFit->cd();
-    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.3,1.8);
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.4,1.8);
     histo2DEtaRatioToCombFit->SetYTitle("Data/Tsallis fit");
     histo2DEtaRatioToCombFit->Draw("copy");
 
@@ -3712,7 +3712,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // **********************************************************************************************************************
 
     canvasRatioToCombFit->cd();
-    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.05,2.55);
+    histo2DEtaRatioToCombFit->GetYaxis()->SetRangeUser(0.4,2.2);
     histo2DEtaRatioToCombFit->Draw("copy");
 
         DrawGammaSetMarkerTGraphAsym(graphRatioEtaTsallisPCMCombFitSys, markerStyleDet[0] ,markerSizeDet[0]*0.5, colorDet[0], colorDet[0], widthLinesBoxes, kTRUE);
