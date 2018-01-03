@@ -223,6 +223,12 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
     //************************* Get background histos  ***************************************************************
 
+    // Switches for Debugging:
+    // Disabled Groups will not be added to total background (all other histos will still be plottet)
+    Bool_t UseGroup2 = kTRUE;
+    Bool_t UseGroup3 = kTRUE;
+    Bool_t UseGroup4 = kTRUE;
+
     TString ObjectNameESD           = "ESD_Mother_InvMass_Pt";
     TString ObjectNameBck[4]        = { "ESD_Background_1_InvMass_Pt",
                                         "ESD_Background_2_InvMass_Pt",
@@ -279,19 +285,22 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
     if(fBackMixingMode.CompareTo("a")!=0){
         if(fBckInvMassVSPt[1]) fBckInvMassVSPt[0]  =(TH2D*) fBckInvMassVSPt[1]->Clone("hist_bck0");
-        if(fBckInvMassVSPt[2]) fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[2]);
-        if(fBckInvMassVSPt[3]) fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[3]);
-        if(fBckInvMassVSPt[4]) fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[4]);
+        fBckInvMassVSPt[0]->Scale(1./(fBckInvMassVSPt[0]->Integral()));
+        if(UseGroup2 && fBckInvMassVSPt[2]) fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[2],1./(fBckInvMassVSPt[2]->Integral()));
+        if(UseGroup3 && fBckInvMassVSPt[3]) fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[3],1./(fBckInvMassVSPt[3]->Integral()));
+        if(UseGroup4 && fBckInvMassVSPt[4]) fBckInvMassVSPt[0]->Add(fBckInvMassVSPt[4],1./(fBckInvMassVSPt[4]->Integral()));
 
         if(fBckInvMassVSPt_SubPiZero[1]) fBckInvMassVSPt_SubPiZero[0]  =(TH2D*) fBckInvMassVSPt_SubPiZero[1]->Clone("hist_bck0_SubPiZero");
-        if(fBckInvMassVSPt_SubPiZero[2]) fBckInvMassVSPt_SubPiZero[0]->Add(fBckInvMassVSPt_SubPiZero[2]);
-        if(fBckInvMassVSPt_SubPiZero[3]) fBckInvMassVSPt_SubPiZero[0]->Add(fBckInvMassVSPt_SubPiZero[3]);
-        if(fBckInvMassVSPt_SubPiZero[4]) fBckInvMassVSPt_SubPiZero[0]->Add(fBckInvMassVSPt_SubPiZero[4]);
+        fBckInvMassVSPt_SubPiZero[0]->Scale(1./(fBckInvMassVSPt_SubPiZero[0]->Integral()));
+        if(UseGroup2 && fBckInvMassVSPt_SubPiZero[2]) fBckInvMassVSPt_SubPiZero[0]->Add(fBckInvMassVSPt_SubPiZero[2],1./(fBckInvMassVSPt_SubPiZero[2]->Integral()));
+        if(UseGroup3 && fBckInvMassVSPt_SubPiZero[3]) fBckInvMassVSPt_SubPiZero[0]->Add(fBckInvMassVSPt_SubPiZero[3],1./(fBckInvMassVSPt_SubPiZero[3]->Integral()));
+        if(UseGroup4 && fBckInvMassVSPt_SubPiZero[4]) fBckInvMassVSPt_SubPiZero[0]->Add(fBckInvMassVSPt_SubPiZero[4],1./(fBckInvMassVSPt_SubPiZero[4]->Integral()));
 
         if(fBckInvMassVSPt_FixedPzPiZero[1]) fBckInvMassVSPt_FixedPzPiZero[0]  =(TH2D*) fBckInvMassVSPt_FixedPzPiZero[1]->Clone("hist_bck0_FixedPzPiZero");
-        if(fBckInvMassVSPt_FixedPzPiZero[2]) fBckInvMassVSPt_FixedPzPiZero[0]->Add(fBckInvMassVSPt_FixedPzPiZero[2]);
-        if(fBckInvMassVSPt_FixedPzPiZero[3]) fBckInvMassVSPt_FixedPzPiZero[0]->Add(fBckInvMassVSPt_FixedPzPiZero[3]);
-        if(fBckInvMassVSPt_FixedPzPiZero[4]) fBckInvMassVSPt_FixedPzPiZero[0]->Add(fBckInvMassVSPt_FixedPzPiZero[4]);
+        fBckInvMassVSPt_FixedPzPiZero[0]->Scale(1./(fBckInvMassVSPt_FixedPzPiZero[0]->Integral()));
+        if(UseGroup2 && fBckInvMassVSPt_FixedPzPiZero[2]) fBckInvMassVSPt_FixedPzPiZero[0]->Add(fBckInvMassVSPt_FixedPzPiZero[2],1./(fBckInvMassVSPt_FixedPzPiZero[2]->Integral()));
+        if(UseGroup3 && fBckInvMassVSPt_FixedPzPiZero[3]) fBckInvMassVSPt_FixedPzPiZero[0]->Add(fBckInvMassVSPt_FixedPzPiZero[3],1./(fBckInvMassVSPt_FixedPzPiZero[3]->Integral()));
+        if(UseGroup4 && fBckInvMassVSPt_FixedPzPiZero[4]) fBckInvMassVSPt_FixedPzPiZero[0]->Add(fBckInvMassVSPt_FixedPzPiZero[4],1./(fBckInvMassVSPt_FixedPzPiZero[4]->Integral()));
     }
 
     const char* FileDataLogname     = Form("%s/%s/%s_%s_EffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(), fCutSelectionRead.Data());
@@ -1587,19 +1596,20 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
         // Function to subtract GG minus Bck
         cout << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-        ProcessEMLeftRight( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[0][iPt], fBGFitRangeLeft, fBGFitRange); // only done for added background so far
+
+        ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[0][iPt], fBGFitRangeLeft); // only done for added background so far
         fHistoMappingSignalInvMassLeftPtBin[iPt] = fSignal;
         fHistoMappingBackNormInvMassLeftPtBin[iPt] = fBckNorm;
 
         // Function to subtract GG minus Bck (pi0 mass subtracted)
         cout << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-        ProcessEMLeftRight( fHistoMappingGGInvMassPtBin_SubPiZero[iPt], fHistoMappingBackInvMassPtBin_SubPiZero[0][iPt], fBGFitRangeLeft_SubPiZero, fBGFitRange_SubPiZero); // only done for added background so far
+        ProcessEM( fHistoMappingGGInvMassPtBin_SubPiZero[iPt], fHistoMappingBackInvMassPtBin_SubPiZero[0][iPt], fBGFitRangeLeft_SubPiZero); // only done for added background so far
         fHistoMappingSignalInvMassLeftPtBin_SubPiZero[iPt] = fSignal;
         fHistoMappingBackNormInvMassLeftPtBin_SubPiZero[iPt] = fBckNorm;
 
         // Function to subtract GG minus Bck (pi0 pz fixed)
         cout << fBinsPt[iPt] <<"-" << fBinsPt[iPt+1] << endl;
-        ProcessEMLeftRight( fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt], fHistoMappingBackInvMassPtBin_FixedPzPiZero[0][iPt], fBGFitRangeLeft_FixedPzPiZero, fBGFitRange_FixedPzPiZero); // only done for added background so far
+        ProcessEM( fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt], fHistoMappingBackInvMassPtBin_FixedPzPiZero[0][iPt], fBGFitRangeLeft_FixedPzPiZero); // only done for added background so far
         fHistoMappingSignalInvMassLeftPtBin_FixedPzPiZero[iPt] = fSignal;
         fHistoMappingBackNormInvMassLeftPtBin_FixedPzPiZero[iPt] = fBckNorm;
 
@@ -3578,9 +3588,28 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     } else {
         mesonAmplitudeMin = mesonAmplitude*98./100.;
         mesonAmplitudeMax = mesonAmplitude*115./100.;
-        if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 ||  fMode == 41 || fMode == 42 || fMode == 44 || fMode == 45){
+        if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
-        }
+        } else if(fMode == 41){
+            mesonAmplitudeMin = mesonAmplitude*70./100.;
+            if(fIsMC) mesonAmplitudeMin = mesonAmplitude*85./100.;
+            mesonAmplitudeMax = mesonAmplitude*150./100.;
+        } else if(fMode == 42){
+            mesonAmplitudeMin = mesonAmplitude*70./100.;
+            if(fIsMC) mesonAmplitudeMin = mesonAmplitude*85./100.;
+            mesonAmplitudeMax = mesonAmplitude*150./100.;
+        } else if(fMode == 44){
+            mesonAmplitudeMin = mesonAmplitude*70./100.;
+            mesonAmplitudeMax = mesonAmplitude*150./100.;
+            if(fIsMC){
+               mesonAmplitudeMin = mesonAmplitude*95./100.;
+               mesonAmplitudeMax = mesonAmplitude*120./100.;
+            }
+        } else if(fMode == 45){
+            mesonAmplitudeMin = mesonAmplitude*70./100.;
+            if(fIsMC) mesonAmplitudeMin = mesonAmplitude*85./100.;
+            mesonAmplitudeMax = mesonAmplitude*150./100.;
+       }
     }
 
     // determine fitrange (special case for SubPiZero and FixedPzPiZero)
@@ -4020,6 +4049,16 @@ fFitGausExp = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((
 
 fFitLinearBck = NULL;
 fFitLinearBck = new TF1("Linear","[0]+[1]*x+[2]*x*x",fitRange[0] ,fitRange[1]);
+
+// fit with linear back witch a function excluding the peak area (fMesonMassExpect +/- fMesonIntRangeNarrow)
+fFitPol2BckExcl = NULL;
+fFitPol2BckExcl = new TF1("Pol2Ex",Pol2BGExclusion,fitRange[0],fitRange[1],2);
+fHistoMappingSignalInvMassPtBinSingle->Fit(fFitPol2BckExcl,"RME0");
+
+// set Results as start parameters
+fFitReco->SetParameter(4,fFitPol2BckExcl->GetParameter(0));
+fFitReco->SetParameter(5,fFitPol2BckExcl->GetParameter(1));
+fFitReco->SetParameter(6,fFitPol2BckExcl->GetParameter(2));
 
 fFitReco->SetParameter(0,mesonAmplitude);
 if(InvMassType==0){
@@ -4895,6 +4934,13 @@ Double_t LinearBGExclusion(Double_t *x, Double_t *par) {
         return 0;
     }
     return par[0] + par[1]*x[0];
+}
+Double_t Pol2BGExclusion(Double_t *x, Double_t *par) {
+    if (x[0] > fMesonMassExpect+fMesonIntDeltaRangeNarrow[0] && x[0] < fMesonMassExpect+fMesonIntDeltaRangeNarrow[1]) {
+        TF1::RejectPoint();
+        return 0;
+    }
+    return par[0] + par[1]*x[0] + par[2]*x[0]*x[0];
 }
 //Crystal ball function for signal +linear background, parameters are 0:normalization,1:mean,2:sigma,3:n,4:alpha;
 Double_t CrystalBallBck(Double_t *x,Double_t *par) {
