@@ -295,194 +295,6 @@ elif [ $1 = "dmuhlhei" ]; then
 fi
 
 
-# TRAINDIR=Legotrain-Sys-ConvCalo
-# LHC13bData="527";
-# LHC13cData="528";
-# LHC13dData="529";
-# LHC13eData="530";
-# LHC13fData="531";
-
-# LHC13bData="532";
-# LHC13cData="533";
-
-# LHC13bData="534";
-# LHC13cData="535";
-
-# LHC13e7MC="708";
-# LHC13b2_efix_p1MC="704";
-# LHC13b2_efix_p2MC="705";
-# LHC13b2_efix_p3MC="706" ;
-# LHC13b2_efix_p4MC="707";
-
-# LHC13b2_efix_p1MC="709";
-# LHC13b2_efix_p2MC="710";
-# LHC13b2_efix_p3MC="711" ;
-# LHC13b2_efix_p4MC="712";
-
-# LHC13b2_efix_p1MC="713";
-# LHC13b2_efix_p2MC="714";
-# LHC13b2_efix_p3MC="715" ;
-# LHC13b2_efix_p4MC="716";
-
-# LHC13b2_efix_p1MC="717";
-# LHC13b2_efix_p2MC="718";
-# LHC13b2_efix_p3MC="719" ;
-# LHC13b2_efix_p4MC="720";
-
-# TRAINDIR=Legotrain-Sys-ConvCalo-100ns
-# LHC13bData="541";
-# LHC13cData="542";
-
-# TRAINDIR=Legotrain-Sys-ConvCalo-200ns
-# LHC13bData="543";
-# LHC13cData="544";
-
-# TRAINDIR=Legotrain-vAN20160901-sys-PCMEMC
-# LHC13bData="563";
-# LHC13cData="564";
-
-# LHC13b2_efix_p1MC="763";
-# LHC13b2_efix_p2MC="767";
-# LHC13b2_efix_p3MC="768";
-# LHC13b2_efix_p4MC="769";
-
-# LHC13b2_efix_p1MC="770";
-# LHC13b2_efix_p2MC="771";
-# LHC13b2_efix_p3MC="772";
-# LHC13b2_efix_p4MC="773";
-
-# LHC13b2_efix_p1MC="774";
-# LHC13b2_efix_p2MC="775";
-# LHC13b2_efix_p3MC="776";
-# LHC13b2_efix_p4MC="777";
-
-# TRAINDIR=Legotrain-vAN20161211-sys-PCMEMC
-# LHC13bData="571";
-# LHC13cData="572";
-# LHC13dData="573";
-# LHC13eData="574";
-# LHC13fData="575";
-#
-# LHC13b2_efix_p1MC="807";
-# LHC13b2_efix_p2MC="808";
-# LHC13b2_efix_p3MC="809";
-# LHC13b2_efix_p4MC="810";
-# LHC13e7MC="806";
-
-# TRAINDIR=Legotrain-vAN20170411-dirGamma
-# LHC13bData="593";
-# LHC13cData="595";
-# # LHC13dData="573";
-# # LHC13eData="574";
-# # LHC13fData="575";
-#
-# # LHC13b2_efix_p1MC="889";
-# # LHC13b2_efix_p2MC="890";
-# # LHC13b2_efix_p3MC="891";
-# # LHC13b2_efix_p4MC="892";
-# # LHC13e7MC="893";
-# LHC13b2_efix_p1MC="894";
-# LHC13b2_efix_p2MC="895";
-# LHC13b2_efix_p3MC="896";
-# LHC13b2_efix_p4MC="897";
-# LHC13e7MC="898";
-
-# TRAINDIR=Legotrain-vAN20170417-Weighting
-# LHC13bData="599"; #pass 3
-# LHC13cData="601"; #pass 2
-# LHC13b2_efix_p1MC="904";
-# LHC13b2_efix_p2MC="905";
-# LHC13b2_efix_p3MC="906";
-# LHC13b2_efix_p4MC="907";
-# LHC13e7MC="908";
-
-# TRAINDIR=Legotrain-vAN20170406-PHOSrelated
-# LHC13bData="593"; #pass 3
-# LHC13cData="595"; #pass 2
-# LHC13b2_efix_p1MC="894";
-# LHC13b2_efix_p2MC="895";
-# LHC13b2_efix_p3MC="896";
-# LHC13b2_efix_p4MC="897";
-# LHC13e7MC="898";
-
-# TRAINDIR=Legotrain-pPb-CalibMike
-# LHC13bData="448"; #pass 3
-# LHC13cData="449"; #pass 2
-# LHC13dData="450"; #pass 2
-# LHC13eData="451"; #pass 2
-# LHC13b2_efix_p1MC="596";
-# LHC13b2_efix_p2MC="597";
-# LHC13b2_efix_p3MC="598";
-# LHC13b2_efix_p4MC="599";
-
-# TRAINDIR=Legotrain-vAN20170501-EMCwoCalib
-# LHC13bData="615"; #pass 3
-# LHC13cData="616"; #pass 2
-# LHC13dData="617"; #pass 2
-# LHC13eData="618"; #pass 2
-# LHC13b2_efix_p1MC="909";
-# LHC13b2_efix_p2MC="911";
-# LHC13b2_efix_p3MC="913";
-# LHC13b2_efix_p4MC="915";
-# LHC13e7MC="917";
-
-# TRAINDIR=Legotrain-vAN20170506-EMCrecalibAndWithMultWeights
-# LHC13bData="625"; #pass 3
-# LHC13cData="626"; #pass 2
-# LHC13dData="617"; #pass 2
-# LHC13eData="618"; #pass 2
-# LHC13b2_efix_p1MC="920";
-# LHC13b2_efix_p2MC="921";
-# LHC13b2_efix_p3MC="922";
-# LHC13b2_efix_p4MC="923";
-# LHC13e7MC="924";
-# LHC13b2_efix_p1MC="925";
-# LHC13b2_efix_p2MC="926";
-# LHC13b2_efix_p3MC="927";
-# LHC13b2_efix_p4MC="928";
-# LHC13e7MC="929";
-#
-# TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte1
-# LHC13b2_efix_p1MC="930";
-# LHC13b2_efix_p2MC="931";
-# LHC13b2_efix_p3MC="932";
-# LHC13b2_efix_p4MC="933";
-# LHC13e7MC="934";
-
-# TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte2
-# LHC13b2_efix_p1MC="935";
-# LHC13b2_efix_p2MC="936";
-# LHC13b2_efix_p3MC="937";
-# LHC13b2_efix_p4MC="938";
-# LHC13e7MC="945";
-# LHC13b2_efix_p1MC="940";
-# LHC13b2_efix_p2MC="941";
-# LHC13b2_efix_p3MC="942";
-# LHC13b2_efix_p4MC="943";
-# LHC13e7MC="944";
-
-# TRAINDIR=Legotrain-vAN20170511-EMCrecalibIte3
-# LHC13b2_efix_p1MC="946";
-# LHC13b2_efix_p2MC="947";
-# LHC13b2_efix_p3MC="948";
-# LHC13b2_efix_p4MC="949";
-# LHC13e7MC="950";
-
-# TRAINDIR=Legotrain-vAN20170519-EMCrecalibIte4
-# LHC13bData="629"; #pass 3
-# LHC13cData="630"; #pass 2
-# LHC13b2_efix_p1MC="951";
-# LHC13b2_efix_p2MC="953";
-# LHC13b2_efix_p3MC="955";
-# LHC13b2_efix_p4MC="957";
-# LHC13e7MC="959";
-# LHC13b2_efix_p1MC="952";
-# LHC13b2_efix_p2MC="954";
-# LHC13b2_efix_p3MC="956";
-# LHC13b2_efix_p4MC="958";
-# LHC13e7MC="960";
-
-
 TRAINDIR=Legotrain-vAN20170525FF-newDefaultPlusSys
 # LHC13bData="637"; #pass 3
 # LHC13cData="638"; #pass 2
@@ -1049,21 +861,21 @@ if [ $CLEANUPMAYOR == 0 ]; then
 #             done
 #         fi
 
-#         ls $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_*.root | sed 's/.*p1_p2.*//' | sed '/^$/d' > filesForMergingMC.txt
-#         filesForMerging=`cat filesForMergingMC.txt`
-#         for fileName in $filesForMerging; do
-#             echo $fileName
-#             GetFileNumberMerging $fileName $((NSlashes-1)) 6
-#             echo "number:"$number
-#             if [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root ] ; then
-#                 hadd -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root
-#                 echo "moving single output files"
-#                 mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root $OUTPUTDIR/SingleFiles/
-#                 mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root $OUTPUTDIR/SingleFiles/
-#                 mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root $OUTPUTDIR/SingleFiles/
-#                 mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root $OUTPUTDIR/SingleFiles/
-#             fi
-#         done
+        ls $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_*.root | sed 's/.*p1_p2.*//' | sed '/^$/d' > filesForMergingMC.txt
+        filesForMerging=`cat filesForMergingMC.txt`
+        for fileName in $filesForMerging; do
+            echo $fileName
+            GetFileNumberMerging $fileName $((NSlashes-1)) 6
+            echo "number:"$number
+            if [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root ] && [ -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root ] ; then
+                hadd -f $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_p2_p3_p4_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root
+                echo "moving single output files"
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p1_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p2_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p3_$number.root $OUTPUTDIR/SingleFiles/
+                mv $OUTPUTDIR/GammaConvCalo_MC_LHC13b2_efix_p4_$number.root $OUTPUTDIR/SingleFiles/
+            fi
+        done
         ls $OUTPUTDIR/GammaConvCalo_MC_LHC13e7_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do

@@ -40,13 +40,13 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
-#include "CommonHeaders/PlottingGammaConversionHistos.h"
-#include "CommonHeaders/PlottingGammaConversionAdditional.h"
-#include "CommonHeaders/FittingGammaConversion.h"
-#include "CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
-#include "CommonHeaders/ConversionFunctions.h"
-#include "CommonHeaders/CombinationFunctions.h"
+#include "TGraphAsymmErrors.h"
+#include "../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../CommonHeaders/FittingGammaConversion.h"
+#include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
+#include "../CommonHeaders/ConversionFunctions.h"
+#include "../CommonHeaders/CombinationFunctions.h"
 
 struct SysErrorConversion {
    Double_t value;
@@ -54,12 +54,12 @@ struct SysErrorConversion {
    //   TString name;
 };
 
-void CompareDifferentDirectoriesMerged( TString FolderList          = "", 
-                                        TString suffix              = "gif", 
-                                        TString meson               = "", 
-                                        Bool_t kIsMC                = kFALSE, 
-                                        TString optionEnergy        = "", 
-                                        Int_t NumberOfCuts          = 1, 
+void CompareDifferentDirectoriesMerged( TString FolderList          = "",
+                                        TString suffix              = "gif",
+                                        TString meson               = "",
+                                        Bool_t kIsMC                = kFALSE,
+                                        TString optionEnergy        = "",
+                                        Int_t NumberOfCuts          = 1,
                                         TString optionPeriod        = "No",
                                         Int_t mode                  = 10,
                                         TString cutVariationName    = "NonLinearity"
@@ -68,13 +68,13 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     if (!(mode == 10 || mode == 11 )){
         cout << "incorrect mode: " << mode << endl;
         return ;
-    }    
-    
+    }
+
     // Initialize arrays
     TString     fileDirectory[50];
     TString     cutNumber[50];
     TString     cutStringsName[50];
-    
+
     // prepare nice plotting algorithms
     StyleSettingsThesis();
     SetPlotStyle();
@@ -99,21 +99,21 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     } else {
         prefix2 =           "data";
     }
-    
+
     // Determine collsision system string
-    TString collisionSystem= ReturnFullCollisionsSystem(optionEnergy);   
+    TString collisionSystem= ReturnFullCollisionsSystem(optionEnergy);
     if (collisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
-        return;     
+        return;
     }
 
-    TString detProcess                                      = ReturnFullTextReconstructionProcess(mode, 0, textMeson);   
+    TString detProcess                                      = ReturnFullTextReconstructionProcess(mode, 0, textMeson);
     TString fNLMString                                      = "";
     Int_t fNLMmin                                           = 0;
 
     // Define colors for comparisons
     Color_t color[20] = {kBlack, kAzure, kGreen+2,kOrange+2,kRed, kViolet,  kBlue-9, kSpring+10,
-                        kCyan+3, kCyan-10, kCyan, kGreen+4, kGreen-9, 
+                        kCyan+3, kCyan-10, kCyan, kGreen+4, kGreen-9,
                         kGreen,  kYellow+4, kYellow+3, kMagenta+4,
                         kMagenta-8, kGray, kGray+3};
 
@@ -132,7 +132,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         cutNumber[Number] = cutNr;
         cout<< fileDirectory[Number]<< "\t" << cutNumber[Number]<< "\t"<< cutStringsName[Number] <<endl;
         Number++;
-    }   
+    }
     cout<<"=========================="<<endl;
 
     // Definition of necessary histogram arrays
@@ -152,10 +152,10 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     TH1D *histoRatioAcceptanceCut[ConstNumberOfCuts];
     TH1D *histoRatioPurityCut[ConstNumberOfCuts];
     TH1D *histoRatioRawYieldCut[ConstNumberOfCuts];
-    
+
     Double_t maxPt  = 0;
     for (Int_t i=0; i< NumberOfCuts; i++){
-        
+
         // Decode individual cutnumber
         TString fEventCutSelection                  = "";
         TString fClusterCutSelection                = "";
@@ -163,33 +163,33 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         TString dummyString                         = "";
         TString fMesonCutSelection                  = "";
         ReturnSeparatedCutNumberAdvanced( cutNumber[i].Data(), fEventCutSelection, fClusterCutSelection, fClusterMergedCutSelection, dummyString, fMesonCutSelection, mode);
-      
+
         // read file with corrections
         FileNameCorrected[i] = Form("%s%s/%s/%s_%s_GammaMergedCorrection_%s.root", fileDirectory[i].Data(), cutNumber[i].Data(), optionEnergy.Data(), meson.Data(), prefix2.Data(), cutNumber[i].Data());
         cout<< FileNameCorrected[i] << endl;
-        Cutcorrfile[i] = new TFile(FileNameCorrected[i]);   
+        Cutcorrfile[i] = new TFile(FileNameCorrected[i]);
         if (Cutcorrfile[i]->IsZombie()) return;
-        
+
         if (i == 0){
             fNLMmin = ReturnClusterNLM(fClusterMergedCutSelection);
             if (fNLMmin)
-                fNLMString                          = Form("%i local maximum", fNLMmin);        
-            else 
+                fNLMString                          = Form("%i local maximum", fNLMmin);
+            else
                 fNLMString                          = Form("%i local maxima", fNLMmin);
         } else {
             if ( fNLMmin != ReturnClusterNLM(fClusterMergedCutSelection)){
                 fNLMString                          = "";
                 fNLMmin                             = 0;
-            }    
+            }
         }
 
-        
+
         // Set correct histogram name for corrected yield and efficiency
         TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
         TString nameEfficiency                              = "PrimaryMesonEfficiency";
         TString namePurity                                  = "MesonPurity";
         TString nameAcceptance                              = "fHistoMCAcceptancePt";
-        
+
         // Read histograms and rename them from the original files for each cut
         histoCorrectedYieldCut[i]   = (TH1D*)Cutcorrfile[i]->Get(nameCorrectedYield.Data());
         histoCorrectedYieldCut[i]->SetName(Form("%s_%s",nameCorrectedYield.Data(),cutStringsName[i].Data()));
@@ -202,7 +202,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
 
         histoRawYieldCut[i]         = (TH1D*)Cutcorrfile[i]->Get("histoYieldMesonPerEvent");
         histoRawYieldCut[i]->SetName(Form("histoYieldMesonPerEvent_%s",cutStringsName[i].Data()));
-        
+
         // Calculate ratios for comparisons
         histoRatioCorrectedYieldCut[i] = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s",cutStringsName[i].Data()));
         histoRatioCorrectedYieldCut[i]->Divide(histoRatioCorrectedYieldCut[i],histoCorrectedYieldCut[0],1.,1.,"B");
@@ -227,7 +227,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     //**************************************************************************************
 
         // Canvas Definition
-        TCanvas* canvasRawYieldMeson = new TCanvas("canvasRawYieldMeson","",1350,1500);  
+        TCanvas* canvasRawYieldMeson = new TCanvas("canvasRawYieldMeson","",1350,1500);
         DrawGammaCanvasSettings( canvasRawYieldMeson,  0.13, 0.02, 0.02, 0.09);
         // Upper pad definition
         TPad* padRawYield = new TPad("padRawYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -241,11 +241,11 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
 
         // Plot raw yield in uppper panel
         padRawYield->cd();
-        TLegend* legendRawMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032); 
+        TLegend* legendRawMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
         if (cutVariationName.Contains("dEdxPi")){
             legendRawMeson->SetTextSize(0.02);
         }
-        
+
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 Double_t scaleFactorRaw = 5.;
@@ -265,7 +265,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                 }
                 histoRawYieldCut[i]->DrawCopy("same,e1,p");
                 legendRawMeson->AddEntry(histoRawYieldCut[i],cutStringsName[i].Data());
-            }   
+            }
         }
         legendRawMeson->Draw();
         // Labeling of plot
@@ -280,13 +280,13 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
             if (detProcess.CompareTo("")!= 0){
                 labelDetProcess = new TLatex(0.55,0.81,detProcess.Data());
                 SetStyleTLatex( labelDetProcess, 0.038,4);
-                labelDetProcess->Draw();            
+                labelDetProcess->Draw();
             }
-        } else {   
+        } else {
             if (detProcess.CompareTo("")!= 0){
                 labelDetProcess = new TLatex(0.55,0.86,detProcess.Data());
                 SetStyleTLatex( labelDetProcess, 0.038,4);
-                labelDetProcess->Draw();            
+                labelDetProcess->Draw();
             }
         }
         // Plot ratio of raw yields in lower panel
@@ -307,10 +307,10 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                     DrawGammaSetMarker(histoRatioRawYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
                 }
                 histoRatioRawYieldCut[i]->DrawCopy("same,e1,p");
-            }   
+            }
         }
         DrawGammaLines(0., maxPt,1., 1.,0.1);
-        
+
         canvasRawYieldMeson->Update();
         canvasRawYieldMeson->SaveAs(Form("%s/%s_%s_RAWYield.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
         delete canvasRawYieldMeson;
@@ -320,7 +320,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     //******************* Compare Corrected Yields ********************************************
     //*****************************************************************************************
     // Define canvas
-    TCanvas* canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);  
+    TCanvas* canvasCorrectedYieldMeson = new TCanvas("canvasCorrectedYieldMeson","",1350,1500);
     DrawGammaCanvasSettings( canvasCorrectedYieldMeson,  0.13, 0.02, 0.02, 0.09);
     // Define upper panel
     TPad* padCorrectedYield = new TPad("padCorrectedYield", "", 0., 0.33, 1., 1.,-1, -1, -2);
@@ -334,8 +334,8 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     padCorrectedYieldRatios->Draw();
 
     // Plot corrected yield in upper panel
-    padCorrectedYield->cd();            
-        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032); 
+    padCorrectedYield->cd();
+        TLegend* legendCorrectedYieldMeson = GetAndSetLegend2(0.15,0.02,0.3,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 DrawAutoGammaMesonHistos( histoCorrectedYieldCut[i],
@@ -356,10 +356,10 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                 histoCorrectedYieldCut[i]->DrawCopy("same,e1,p");
                 legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[i], cutStringsName[i].Data());
             }
-            
+
         }
         legendCorrectedYieldMeson->Draw();
-        // Labeling of plot     
+        // Labeling of plot
         TLatex *labelCollisionSystem3 = new TLatex(0.55,0.91,collisionSystem.Data());
         SetStyleTLatex( labelCollisionSystem3, 0.038,4);
         labelCollisionSystem3->Draw();
@@ -367,9 +367,9 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
             TLatex *labelPeriod = new TLatex(0.55,0.86,optionPeriod.Data());
             SetStyleTLatex( labelPeriod, 0.038,4);
             labelPeriod->Draw();
-        }      
-        if (labelDetProcess) labelDetProcess->Draw();   
-        // plot ratio of corrected yields in lower panel    
+        }
+        if (labelDetProcess) labelDetProcess->Draw();
+        // plot ratio of corrected yields in lower panel
         padCorrectedYieldRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -396,7 +396,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield.%s",outputDir.Data(), meson.Data(),prefix2.Data(),suffix.Data()));
     delete canvasCorrectedYieldMeson;
 
-        
+
     //**************************************************************************************
     //********************* Plotting Efficiency *********************************************
     //**************************************************************************************
@@ -414,7 +414,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
 
       // draw efficiency in upper panel
       padTrueEffi->cd();
-      TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.93-0.03*NumberOfCuts,0.3,0.93, 1500*0.75*0.032); 
+      TLegend* legendEffiMeson = GetAndSetLegend2(0.15,0.93-0.03*NumberOfCuts,0.3,0.93, 1500*0.75*0.032);
       for(Int_t i = 0; i< NumberOfCuts; i++){
           if(i == 0){
               DrawGammaSetMarker(histoTrueEffiCut[i], 20, 1., color[0], color[0]);
@@ -427,7 +427,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
               if (mode == 10 && fNLMmin == 2) histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.01,0.35);
               histoTrueEffiCut[i]->DrawCopy("e1,p");
               legendEffiMeson->AddEntry(histoTrueEffiCut[i],Form("standard: %s",cutStringsName[i].Data()));
-          } else {          
+          } else {
               if(i<20){
                   DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
               } else {
@@ -438,11 +438,11 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           }
       }
       legendEffiMeson->Draw();
-      
+
       // Efficiency plot labeling
       TLatex *labelCollisionSystem4 = new TLatex(0.55,0.10,collisionSystem.Data());
       SetStyleTLatex( labelCollisionSystem4, 0.038,4);
-      labelCollisionSystem4->Draw();        
+      labelCollisionSystem4->Draw();
       TLatex* labelDetProcess2 = NULL;
       if (optionPeriod.CompareTo("No") != 0){
           TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
@@ -451,16 +451,16 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           if (detProcess.CompareTo("")!= 0){
               labelDetProcess2 = new TLatex(0.55,0.86,detProcess.Data());
               SetStyleTLatex( labelDetProcess2, 0.038,4);
-              labelDetProcess2->Draw();         
+              labelDetProcess2->Draw();
           }
-      } else {   
+      } else {
           if (detProcess.CompareTo("")!= 0){
               labelDetProcess2 = new TLatex(0.55,0.05,detProcess.Data());
               SetStyleTLatex( labelDetProcess2, 0.038,4);
-              labelDetProcess2->Draw();         
+              labelDetProcess2->Draw();
           }
-      }    
-      
+      }
+
       // Draw ratio of efficiencies in lower panel
       padTrueEffiRatios->cd();
       if( optionEnergy.Contains("Pb") ) padTrueEffiRatios->SetLogy(0);
@@ -486,7 +486,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           DrawGammaLines(0., maxPt, 1.1, 1.1, 0.1, kGray+1, 7);
           DrawGammaLines(0., maxPt, 0.9, 0.9, 0.1, kGray+1, 7);
       }
-      
+
     canvasTrueEffiMeson->Update();
     canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
     delete canvasTrueEffiMeson;
@@ -512,9 +512,9 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
       for (Int_t j = 1; j < histoAcceptanceCut[0]->GetNbinsX()+1; j++){
           if (histoAcceptanceCut[0]->GetBinContent(j) > 0){
             if (histoAcceptanceCut[0]->GetBinContent(j) < minAccept) minAccept = histoAcceptanceCut[0]->GetBinContent(j);
-          }  
-      }  
-      
+          }
+      }
+
       TLegend* legendAcceptance = GetAndSetLegend2(0.55, 0.93-(1.1*NumberOfCuts*0.038), 0.95, 0.93,38);
       for(Int_t i = 0; i< NumberOfCuts; i++){
           if(i == 0){
@@ -526,7 +526,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                                       kFALSE, 0., 10.);
               histoAcceptanceCut[i]->DrawCopy("e1,p");
               legendAcceptance->AddEntry(histoAcceptanceCut[i],Form("standard: %s",cutStringsName[i].Data()));
-          } else {          
+          } else {
               if(i<20){
                   DrawGammaSetMarker(histoAcceptanceCut[i], 20+i, 1.,color[i],color[i]);
               } else {
@@ -537,11 +537,11 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           }
       }
       legendAcceptance->Draw();
-      
+
       // Efficiency plot labeling
       TLatex *labelCollisionSystem5 = new TLatex(0.55,0.10,collisionSystem.Data());
       SetStyleTLatex( labelCollisionSystem5, 0.038,4);
-      labelCollisionSystem5->Draw();        
+      labelCollisionSystem5->Draw();
       TLatex* labelDetProcess3 = NULL;
       if (optionPeriod.CompareTo("No") != 0){
           TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
@@ -550,16 +550,16 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           if (detProcess.CompareTo("")!= 0){
               labelDetProcess3 = new TLatex(0.55,0.86,detProcess.Data());
               SetStyleTLatex( labelDetProcess3, 0.038,4);
-              labelDetProcess3->Draw();         
+              labelDetProcess3->Draw();
           }
-      } else {   
+      } else {
           if (detProcess.CompareTo("")!= 0){
               labelDetProcess3 = new TLatex(0.55,0.05,detProcess.Data());
               SetStyleTLatex( labelDetProcess3, 0.038,4);
-              labelDetProcess3->Draw();         
+              labelDetProcess3->Draw();
           }
-      }    
-      
+      }
+
       // Draw ratio of efficiencies in lower panel
       padAcceptanceRatios->cd();
       if( optionEnergy.Contains("Pb") ) padAcceptanceRatios->SetLogy(0);
@@ -583,7 +583,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           }
           DrawGammaLines(0., maxPt,1., 1.,0.1);
       }
-      
+
     canvasAcceptanceMeson->Update();
     canvasAcceptanceMeson->SaveAs(Form("%s/%s_%s_Acceptance.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
     delete canvasAcceptanceMeson;
@@ -609,9 +609,9 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
       for (Int_t j = 1; j < histoPurityCut[0]->GetNbinsX()+1; j++){
           if (histoPurityCut[0]->GetBinContent(j) > 0){
             if (histoPurityCut[0]->GetBinContent(j) < minPurity) minPurity = histoPurityCut[0]->GetBinContent(j);
-          }  
-      }  
-      
+          }
+      }
+
       TLegend* legendPurity = GetAndSetLegend2(0.55, 0.93-(1.1*NumberOfCuts*0.038), 0.95, 0.93,38);
       for(Int_t i = 0; i< NumberOfCuts; i++){
           if(i == 0){
@@ -623,7 +623,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
                                       kFALSE, 0., 10.);
               histoPurityCut[i]->DrawCopy("e1,p");
               legendPurity->AddEntry(histoPurityCut[i],Form("standard: %s",cutStringsName[i].Data()));
-          } else {          
+          } else {
               if(i<20){
                   DrawGammaSetMarker(histoPurityCut[i], 20+i, 1.,color[i],color[i]);
               } else {
@@ -634,11 +634,11 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           }
       }
       legendPurity->Draw();
-      
+
       // Efficiency plot labeling
       TLatex *labelCollisionSystem6 = new TLatex(0.55,0.10,collisionSystem.Data());
       SetStyleTLatex( labelCollisionSystem6, 0.038,4);
-      labelCollisionSystem6->Draw();        
+      labelCollisionSystem6->Draw();
       TLatex* labelDetProcess4 = NULL;
       if (optionPeriod.CompareTo("No") != 0){
           TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
@@ -647,16 +647,16 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           if (detProcess.CompareTo("")!= 0){
               labelDetProcess4 = new TLatex(0.55,0.86,detProcess.Data());
               SetStyleTLatex( labelDetProcess4, 0.038,4);
-              labelDetProcess4->Draw();         
+              labelDetProcess4->Draw();
           }
-      } else {   
+      } else {
           if (detProcess.CompareTo("")!= 0){
               labelDetProcess4 = new TLatex(0.55,0.05,detProcess.Data());
               SetStyleTLatex( labelDetProcess4, 0.038,4);
-              labelDetProcess4->Draw();         
+              labelDetProcess4->Draw();
           }
-      }    
-      
+      }
+
       // Draw ratio of efficiencies in lower panel
       padPurityRatios->cd();
       if( optionEnergy.Contains("Pb") ) padPurityRatios->SetLogy(0);
@@ -680,11 +680,11 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
           }
           DrawGammaLines(0., maxPt,1., 1.,0.1);
       }
-      
+
     canvasPurityMeson->Update();
     canvasPurityMeson->SaveAs(Form("%s/%s_%s_Purity.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix.Data()));
     delete canvasPurityMeson;
-    
+
 
   //*************************************************************************************************
   //******************** Output of the systematic Error due to Signal extraction for Pi0 ************
@@ -692,7 +692,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     // Determine number of bins
     Int_t NBinsPt = histoCorrectedYieldCut[0]->GetNbinsX();
     const Int_t NBinstPtConst = NBinsPt+1;
-    
+
     // Create array of bin boundaries
     Double_t  BinsXCenter[NBinstPtConst];
     Double_t  BinsXWidth[NBinstPtConst];
@@ -747,7 +747,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         }
     }
 
-    // Calculate largest difference among cut variation 
+    // Calculate largest difference among cut variation
     for(Int_t j = 1; j < NumberOfCuts; j++){
         for (Int_t i = 1; i < NBinsPt +1; i++){
             // Calculate difference (rel/abs) and error for corrected yield
@@ -766,16 +766,16 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
             } else {
                 RelDifferenceRawCut[j][i] = -10000.;
             }
-            // Calculate largest differences in positiv and negative direction  
+            // Calculate largest differences in positiv and negative direction
             if(DifferenceCut[j][i] < 0){ // largest negativ deviation
-                // Take deviation if larger than previous largest deviation 
+                // Take deviation if larger than previous largest deviation
                 // and relative raw yield loss less than 75%
                 if (TMath::Abs(LargestDiffNeg[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                     LargestDiffNeg[i] = DifferenceCut[j][i];
                     LargestDiffErrorNeg[i] = DifferenceErrorCut[j][i];
                 }
             } else { // largest positive deviation
-                // Take deviation if larger than previous largest deviation 
+                // Take deviation if larger than previous largest deviation
                 // and relative raw yield loss less than 75%
                 if (TMath::Abs(LargestDiffPos[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
                     LargestDiffPos[i] = DifferenceCut[j][i];
@@ -795,7 +795,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
         if (l == 0) {
             SysErrDat << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
             for(Int_t i = 1; i < (NBinsPt +1); i++){
-                SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;  
+                SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;
             }
         } else{
             SysErrDat << endl <<"Bin" << "\t" << cutNumber[l] << "\t" << "Error " << "\t Dif to Cut1" << endl;
@@ -822,14 +822,14 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
             LargestDiffRelPos[i] = LargestDiffPos[i]/SysErrCut[0][i].value*100.;
             LargestDiffRelErrorNeg[i] = - LargestDiffErrorNeg[i]/SysErrCut[0][i].value*100.;
             LargestDiffRelErrorPos[i] = LargestDiffErrorPos[i]/SysErrCut[0][i].value*100.;
-            if (i > 0){ 
+            if (i > 0){
               SysErrDat << BinsXCenter[i] << "\t" << LargestDiffNeg[i]/SysErrCut[0][i].value*100. << "\t" << LargestDiffErrorNeg[i]/SysErrCut[0][i].value*100. << "\t" << LargestDiffPos[i]/SysErrCut[0][i].value*100. << "\t" << LargestDiffErrorPos[i]/SysErrCut[0][i].value*100.<<endl;
             } else {
               LargestDiffRelNeg[i] = 0.;
               LargestDiffRelPos[i] = 0.;
               LargestDiffRelErrorNeg[i] = 0.;
               LargestDiffRelErrorPos[i] = 0.;
-            }  
+            }
         } else {
             LargestDiffRelNeg[i] = 0.;
             LargestDiffRelPos[i] = 0.;
@@ -844,7 +844,7 @@ void CompareDifferentDirectoriesMerged( TString FolderList          = "",
     SystErrGraphNeg->SetName(Form("%s_SystErrorRelNeg_%s",meson.Data(),cutVariationName.Data()));
     TGraphAsymmErrors* SystErrGraphPos = new TGraphAsymmErrors(NBinsPt+1, BinsXCenter, LargestDiffRelPos, BinsXWidth, BinsXWidth, LargestDiffRelErrorPos, LargestDiffRelErrorPos);
     SystErrGraphPos->SetName(Form("%s_SystErrorRelPos_%s",meson.Data(),cutVariationName.Data()));
-    
+
     // Write sys-err graph to root output file
     TString Outputname = Form("%s/%s_%s_SystematicErrorCuts.root",outputDirRootFile.Data(),meson.Data(),prefix2.Data());
     TFile* SystematicErrorFile = new TFile(Outputname.Data(),"UPDATE");

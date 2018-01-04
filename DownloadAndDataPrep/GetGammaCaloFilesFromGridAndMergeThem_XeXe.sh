@@ -41,22 +41,6 @@ elif [ $1 = "dmuhlhei" ]; then
     NSlashes=9;
 fi
 
-# TRAINDIR=Legotrain-vAN20171029-XeXeQA
-# LHC17nData="340"; #pass 3
-# LHC17j7MC="1090";
-
-# TRAINDIR=Legotrain-vAN20171105-XeXeQA
-# LHC17nData="341"; #pass 1
-# LHC17j7MC="664"
-# LHC17j7MC="665"
-
-# TRAINDIR=Legotrain-vAN20171109-XeXeQA
-# LHC17nData="345"; #pass 1
-#  LHC17nData="344"; #pass 1
-# LHC17j7MC="673";
-# LHC17j7MC="672";
-# LHC17j7MC="674";
-
 TRAINDIR=Legotrain-vAN20171115-XeXeQA
 # LHC17nData="348"; #pass 1
 #  LHC17nData="349"; #pass 1
