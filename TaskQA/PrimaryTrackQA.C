@@ -298,41 +298,41 @@ void PrimaryTrackQA(
     std::vector<std::vector <TH1D*>> vecMCvsTruePosPionsFromNeutralMeson_Pt(nSetsIn,std::vector<TH1D*>(2));
     std::vector<std::vector <TH1D*>> vecMCvsTrueNegPionsFromNeutralMeson_Pt(nSetsIn,std::vector<TH1D*>(2));
     //---------------------------------------------Projections-----------------------------------------------------------------------
-    std::vector<TH2D*> vecESD_PrimaryNegPions_ClsTPC_ProjPt;            //Pt was x
-    std::vector<TH2D*> vecESD_PrimaryPosPions_ClsTPC_ProjPt;            //Pt was x
-    std::vector<TH2D*> vecESD_PrimaryPions_DCAxy_ProjPt;                //Pt was y
-    std::vector<TH2D*> vecESD_PrimaryPions_DCAz_ProjPt;                 //Pt was y
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_ProjPt;              //Pt was x
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;        //Pt was x
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt;        //Pt was x
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt;  //Pt was x
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;        //Pt was y
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;  //Pt was y
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;       //Pt was y
-    std::vector<TH2D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt; //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryNegPions_ClsTPC_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPosPions_ClsTPC_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_DCAxy_ProjPt;                //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_DCAz_ProjPt;                 //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;        //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt;        //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt;  //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;        //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;  //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;       //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt; //Pt was y
     //AfterQA
-    std::vector<TH2D*> vecPion_ITS_after_AfterQA_ProjPt;                //Pt was x
-    std::vector<TH2D*> vecPion_dEdx_after_AfterQA_ProjPt;               //Pt was x
-    std::vector<TH2D*> vecPion_dEdxSignal_after_AfterQA_ProjPt;         //Pt was x
-    std::vector<TH2D*> vecPion_TOF_after_AfterQA_ProjPt;                //Pt was x
-    std::vector<TH2D*> vechTrack_DCAxy_Pt_after_AfterQA_ProjPt;         //Pt was y
-    std::vector<TH2D*> vechTrack_DCAz_Pt_after_AfterQA_ProjPt;          //Pt was y
-    std::vector<TH2D*> vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt;  //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_AfterQA_ProjPt;                //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_ProjPt;               //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_ProjPt;         //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_AfterQA_ProjPt;                //Pt was x
+    std::vector<TH1D*> vechTrack_DCAxy_Pt_after_AfterQA_ProjPt;         //Pt was y
+    std::vector<TH1D*> vechTrack_DCAz_Pt_after_AfterQA_ProjPt;          //Pt was y
+    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt;  //Pt was x
     //Pre Selection
-    std::vector<TH2D*> vecPion_ITS_before_PreSel;
-    std::vector<TH2D*> vecPion_dEdx_before_PreSel;
-    std::vector<TH2D*> vecPion_dEdxSignal_before_PreSel;
-    std::vector<TH2D*> vecPion_TOF_before_PreSel;
-    std::vector<TH2D*> vechTrack_DCAxy_Pt_before_PreSel;
-    std::vector<TH2D*> vechTrack_DCAz_Pt_before_PreSel;
-    std::vector<TH2D*> vechTrack_NFindCls_Pt_TPC_before_PreSel;
-    std::vector<TH2D*> vecPion_ITS_after_PreSel;
-    std::vector<TH2D*> vecPion_dEdx_after_PreSel;
-    std::vector<TH2D*> vecPion_dEdxSignal_after_PreSel;
-    std::vector<TH2D*> vecPion_TOF_after_PreSel;
-    std::vector<TH2D*> vechTrack_DCAxy_Pt_after_PreSel;
-    std::vector<TH2D*> vechTrack_DCAz_Pt_after_PreSel;
-    std::vector<TH2D*> vechTrack_NFindCls_Pt_TPC_after_PreSel;
+    std::vector<TH1D*> vecPion_ITS_before_PreSel_ProjPt;                //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_before_PreSel_ProjPt;               //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_ProjPt;         //Pt was x
+    std::vector<TH1D*> vecPion_TOF_before_PreSel_ProjPt;                //Pt was x
+    std::vector<TH1D*> vechTrack_DCAxy_Pt_before_PreSel_ProjPt;         //Pt was y
+    std::vector<TH1D*> vechTrack_DCAz_Pt_before_PreSel_ProjPt;          //Pt was y
+    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt;  //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_PreSel_ProjPt;                 //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_PreSel_ProjPt;                //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_ProjPt;          //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_PreSel_ProjPt;                 //Pt was x
+    std::vector<TH1D*> vechTrack_DCAxy_Pt_after_PreSel_ProjPt;          //Pt was y
+    std::vector<TH1D*> vechTrack_DCAz_Pt_after_PreSel_ProjPt;           //Pt was y
+    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt;   //Pt was x
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     Double_t* nEventsAll    = new Double_t[nSets];
@@ -598,7 +598,15 @@ void PrimaryTrackQA(
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryNegPions_ClsTPC_switchedAxis, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryNegPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryNegPions_ClsTPC_switchedAxis));
+            TH1D* fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt= (TH1D*)fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->ProjectionX(Form("%s_ProjPt",StrNameOfHistogram.Data()),1,fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->GetNbinsY());
+            GetMinMaxBin(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,minB,maxB);
+            SetXRange(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
+                                 fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             delete fHistESD_PrimaryNegPions_ClsTPC_switchedAxis;
+            delete fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt;
         } else cout << Form("INFO: Object |ESD_PrimaryNegPions_ClsTPC %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPosPions_ClsTPC
