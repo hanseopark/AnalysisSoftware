@@ -598,13 +598,15 @@ void PrimaryTrackQA(
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryNegPions_ClsTPC_switchedAxis, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryNegPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryNegPions_ClsTPC_switchedAxis));
-            TH1D* fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt= (TH1D*)fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->ProjectionX(Form("%s_ProjPt",StrNameOfHistogram.Data()),1,fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->GetNbinsY());
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt= (TH1D*)fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->ProjectionY(Form("%s",StrNameOfHistogram.Data()),1,fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->GetNbinsY());
             GetMinMaxBin(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,minB,maxB);
             SetXRange(fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
-                                 fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt,"","Findable Clusters","# Entries",1,1,
                                  processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryNegPions_ClsTPC_ProjPt.push_back(new TH1D(*fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt));
             delete fHistESD_PrimaryNegPions_ClsTPC_switchedAxis;
             delete fHistESD_PrimaryNegPions_ClsTPC_switchedAxis_ProjPt;
         } else cout << Form("INFO: Object |ESD_PrimaryNegPions_ClsTPC %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
@@ -626,7 +628,17 @@ void PrimaryTrackQA(
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPosPions_ClsTPC_switchedAxis, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPosPions_ClsTPC.push_back(new TH2D(*fHistESD_PrimaryPosPions_ClsTPC_switchedAxis));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt= (TH1D*)fHistESD_PrimaryPosPions_ClsTPC_switchedAxis->ProjectionY(Form("%s",StrNameOfHistogram.Data()),1,fHistESD_PrimaryPosPions_ClsTPC_switchedAxis->GetNbinsY());
+            GetMinMaxBin(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt,minB,maxB);
+            SetXRange(fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt,"","Findable Clusters","# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryPosPions_ClsTPC_ProjPt.push_back(new TH1D(*fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt));
             delete fHistESD_PrimaryPosPions_ClsTPC_switchedAxis;
+            delete fHistESD_PrimaryPosPions_ClsTPC_switchedAxis_ProjPt;
         } else cout << Form("INFO: Object |ESD_PrimaryPosPions_ClsTPC %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPions_DCAxy
@@ -645,6 +657,16 @@ void PrimaryTrackQA(
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_DCAxy, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_DCAxy.push_back(new TH2D(*fHistESD_PrimaryPions_DCAxy));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistESD_PrimaryPions_DCAxy_ProjPt= (TH1D*)fHistESD_PrimaryPions_DCAxy->ProjectionX(Form("%s",StrNameOfHistogram.Data()),1,fHistESD_PrimaryPions_DCAxy->GetNbinsY());
+            GetMinMaxBin(fHistESD_PrimaryPions_DCAxy_ProjPt,minB,maxB);
+            SetXRange(fHistESD_PrimaryPions_DCAxy_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistESD_PrimaryPions_DCAxy_ProjPt,"","Findable Clusters","# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryPions_DCAxy_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryPions_DCAxy_ProjPt.push_back(new TH1D(*fHistESD_PrimaryPions_DCAxy_ProjPt));
+            delete fHistESD_PrimaryPions_DCAxy_ProjPt;
         } else cout << Form("INFO: Object |ESD_PrimaryPions_DCAxy %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPions_DCAz
@@ -663,6 +685,16 @@ void PrimaryTrackQA(
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_DCAz, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_DCAz.push_back(new TH2D(*fHistESD_PrimaryPions_DCAz));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistESD_PrimaryPions_DCAz_ProjPt= (TH1D*)fHistESD_PrimaryPions_DCAz->ProjectionY(Form("%s",StrNameOfHistogram.Data()),1,fHistESD_PrimaryPions_DCAz->GetNbinsY());
+            GetMinMaxBin(fHistESD_PrimaryPions_DCAz_ProjPt,minB,maxB);
+            SetXRange(fHistESD_PrimaryPions_DCAz_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistESD_PrimaryPions_DCAz_ProjPt,"","Findable Clusters","# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryPions_DCAz_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryPions_DCAz_ProjPt.push_back(new TH1D(*fHistESD_PrimaryPions_DCAz_ProjPt));
+            delete fHistESD_PrimaryPions_DCAz_ProjPt;
         } else cout << Form("INFO: Object |ESD_PrimaryPions_DCAz %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPions_TPCdEdx
@@ -681,6 +713,16 @@ void PrimaryTrackQA(
                                  processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistESD_PrimaryPions_TPCdEdx, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
             vecESD_PrimaryPions_TPCdEdx.push_back(new TH2D(*fHistESD_PrimaryPions_TPCdEdx));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistESD_PrimaryPions_TPCdEdx_ProjPt= (TH1D*)fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->ProjectionY(Form("%s",StrNameOfHistogram.Data()),1,fHistESD_PrimaryNegPions_ClsTPC_switchedAxis->GetNbinsY());
+            GetMinMaxBin(fHistESD_PrimaryPions_TPCdEdx_ProjPt,minB,maxB);
+            SetXRange(fHistESD_PrimaryPions_TPCdEdx_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistESD_PrimaryPions_TPCdEdx_ProjPt,"","Findable Clusters","# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistESD_PrimaryPions_TPCdEdx_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecESD_PrimaryPions_TPCdEdx_ProjPt.push_back(new TH1D(*fHistESD_PrimaryPions_TPCdEdx_ProjPt));
+            delete fHistESD_PrimaryPions_TPCdEdx_ProjPt;
         } else cout << Form("INFO: Object |ESD_PrimaryPions_TPCdEdx %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //ESD_PrimaryPions_TPCdEdx_LowPt

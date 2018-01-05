@@ -13,6 +13,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
                     Bool_t  doPhotonQA      = kFALSE,               // switch on PCM-PhotonQA
                     Bool_t  doClusterQA     = kFALSE,               // switch on ClusterQA
                     Bool_t  doMergedQA      = kFALSE,               // switch on merged ClusterQA
+                    Bool_t doPrimaryTrackQA = kFALSE,           // switch on primary electron and pion QA
                     Int_t   doExtQA         = 2,                    // 0: switched off, 1: normal extQA, 2: with Cell level plots
                     TString suffix          = "eps"                 // output format of plots
 ){
@@ -217,5 +218,6 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
                                             doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
     if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
                                             1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kTRUE );
+    if ( doPrimaryTrackQA ) PrimaryTrackQA (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     return;
 }
