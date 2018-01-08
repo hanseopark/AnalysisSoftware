@@ -3018,7 +3018,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         if (histoGammaResolCorrUnfold_Pt){
             for (Int_t ipt = 1; ipt < histoGammaResolCorrUnfold_Pt->GetNbinsX()+1; ipt++){
                 if (TMath::IsNaN(histoGammaResolCorrUnfold_Pt->GetBinContent(ipt)) || TMath::Finite(histoGammaResolCorrUnfold_Pt->GetBinContent(ipt))){
-                    cout << "needed correction" << endl;
+//                     cout << "needed correction" << endl;
                     histoGammaResolCorrUnfold_Pt->SetBinContent(ipt,-10000);
                 }
             }

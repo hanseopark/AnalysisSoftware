@@ -220,7 +220,7 @@ if [ $2 = "LHC11a" ]; then
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJ=`cat binNumbersJJToMerge.txt`
+                binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
                 for binNumber in $binNumbersJJ; do
                     echo $binNumber
                     CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a/$binNumber/$runNumber "/alice/sim/2015/LHC15g1a/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1aMC" $NSlashes3 "none" kFALSE
@@ -274,7 +274,7 @@ if [ $2 = "LHC11a" ]; then
         done;
 
         if [ $MERGEONBINSSingle = 1 ]; then
-            binNumbersJJ=`cat binNumbersJJToMerge.txt`
+            binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
             echo $binNumbersJJ
             ls $OUTPUTDIR_LHC15g1a/GammaCalo_*.root > filetemp.txt
             mkdir -p $OUTPUTDIR/LHC15g1aFineBins
@@ -333,7 +333,7 @@ if [ $2 = "LHC11a" ]; then
     filesForMerging=`cat filesForMerging.txt`
     if [ $MERGEONBINS == 1 ]; then
         for fileName in $filesForMerging; do
-            binsForMerging=`cat binNumbersJJToMerge.txt`
+            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
             TOMERGE="";
             for bin in $binsForMerging; do
@@ -435,7 +435,7 @@ elif [ $2 = "LHC13g" ]; then
         echo $runNumbers
         for runNumber in $runNumbers; do
             echo $runNumber
-            binNumbersJJ=`cat binNumbersJJToMerge.txt`
+            binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
             if [ $DOWNLOADON = 1 ]; then
                 for binNumber in $binNumbersJJ; do
                     echo $binNumber
@@ -497,7 +497,7 @@ elif [ $2 = "LHC13g" ]; then
     fi
 
     if [ $MERGEONBINSSingle = 1 ]; then
-        binNumbersJJ=`cat binNumbersJJToMerge.txt`
+        binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
         echo $binNumbersJJ
         ls $OUTPUTDIR_LHC15a3a/GammaCalo_*.root > filetemp.txt
         mkdir -p $OUTPUTDIR/LHC15a3aXFineBins
@@ -563,7 +563,7 @@ elif [ $2 = "LHC13g" ]; then
         rm $OUTPUTDIR/GammaCalo_MC_LHC15a3aFinerPtHardBins_LHC15a3aplusFinerPtHardBins_*.root
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
-            binsForMerging=`cat binNumbersJJToMerge.txt`
+            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
             TOMERGE="";
             for bin in $binsForMerging; do

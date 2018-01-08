@@ -40,8 +40,6 @@
 
 
     // ---------------------------- Function definiton --------------------------------------------------------------------------------------------
-
-
     /* StyleSettingsThesis will make some standard settings for gStyle
     */
     void StyleSettingsThesis( TString format = ""){
@@ -75,7 +73,7 @@
         if (format.CompareTo("eps") == 0 ||format.CompareTo("pdf") == 0  ) gStyle->SetLineScalePS(1);
     }
 
-
+    //__________________________________________________________________________________________________________
     /* StyleSettings will make some standard settings for gStyle
     */
     void StyleSettings(){
@@ -107,7 +105,7 @@
         TGaxis::SetMaxDigits(3);
     }
 
-
+   //__________________________________________________________________________________________________________
     void SetPlotStyle() {
     // 	const Int_t nRGBs = 7;
         const Int_t nRGBs = 5;
@@ -129,6 +127,7 @@
         gStyle->SetNumberContours(nCont);
     }
 
+    //__________________________________________________________________________________________________________
     void SetPlotStyleNConts(    Int_t nCont = 255) {
         const Int_t nRGBs = 5;
         Double_t stops[nRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
@@ -139,6 +138,7 @@
         gStyle->SetNumberContours(nCont);
     }
 
+    //__________________________________________________________________________________________________________
     void DrawCanvasSettings( TCanvas* c1,
                             Double_t leftMargin,
                             Double_t rightMargin,
@@ -157,6 +157,131 @@
         c1->SetFillColor(0);
     }
 
+    //__________________________________________________________________________________________________________
+    TCanvas *GetAndSetCanvas( TString name,
+                              Double_t leftmargin = 0.11,
+                              Double_t bottommargin = 0.1,
+                              Double_t x = 1400,
+                              Double_t y = 1000){
+
+        TCanvas *canvas =  new TCanvas(name,name,x,y);
+        canvas->SetLeftMargin(leftmargin);
+        canvas->SetRightMargin(0.015);
+        canvas->SetTopMargin(0.03);
+        canvas->SetBottomMargin(bottommargin);
+        canvas->SetFillColor(0);
+
+        return canvas;
+
+    }
+
+    //__________________________________________________________________________________________________________
+    TLegend *GetAndSetLegend( Double_t positionX,
+                            Double_t positionY,
+                            Double_t entries,
+                            Int_t Columns = 1,
+                            TString header =""){
+
+        if(header.CompareTo("") != 0) entries++;
+        Double_t positionYPlus = 0.04*1.1*(Double_t)entries;
+        TLegend *legend = new TLegend(positionX,positionY,positionX+(0.25*Columns),positionY+positionYPlus);
+        legend->SetNColumns(Columns);
+        legend->SetLineColor(0);
+        legend->SetLineWidth(0);
+        legend->SetFillColor(0);
+        legend->SetFillStyle(0);
+        legend->SetLineStyle(0);
+        legend->SetTextSize(0.04);
+        legend->SetTextFont(42);
+        if(header.CompareTo("") != 0)legend->SetHeader(header);
+        return legend;
+    }
+
+    //__________________________________________________________________________________________________________
+    TLegend *GetAndSetLegend2(  Double_t positionX,
+                                Double_t positionY,
+                                Double_t positionXRight,
+                                Double_t positionYUp,
+                                Size_t textSize,
+                                Int_t columns               = 1,
+                                TString header              = "",
+                                Font_t textFont             = 43,
+                                Double_t margin             = 0
+    ){
+
+        TLegend *legend = new TLegend(positionX,positionY,positionXRight,positionYUp);
+        legend->SetNColumns(columns);
+        legend->SetLineColor(0);
+        legend->SetLineWidth(0);
+        legend->SetFillColor(0);
+        legend->SetFillStyle(0);
+        legend->SetLineStyle(0);
+        legend->SetBorderSize(0);
+        legend->SetTextFont(textFont);
+        legend->SetTextSize(textSize);
+        if (margin != 0) legend->SetMargin(margin);
+        if (header.CompareTo("")!= 0) legend->SetHeader(header);
+        return legend;
+    }
+
+    //__________________________________________________________________________________________________________
+    void SetHistogramm( TH1 *hist,
+                        TString xLabel,
+                        TString yLabel,
+                        Double_t rangeYlow  = -99.,
+                        Double_t rangeYhigh = -99.,
+                        Double_t xOffset    = 1.0,
+                        Double_t yOffset    = 1.15,
+                        Font_t font         = 42
+    ){
+
+        Double_t scale = 1./gPad->GetAbsHNDC();
+        //hist->GetXaxis()->SetRangeUser(rangeX[0],rangeX[1]);
+        if(rangeYlow != -99.) hist->GetYaxis()->SetRangeUser(rangeYlow,rangeYhigh);
+        hist->SetTitle("");
+        hist->SetXTitle(xLabel);
+        hist->SetYTitle(yLabel);
+        hist->GetYaxis()->SetDecimals();
+        hist->GetYaxis()->SetTitleOffset(yOffset/scale);
+        hist->GetXaxis()->SetTitleOffset(xOffset);
+        hist->GetXaxis()->SetTitleSize(0.04*scale);
+        hist->GetYaxis()->SetTitleSize(0.04*scale);
+        hist->GetXaxis()->SetLabelSize(0.035*scale);
+        hist->GetYaxis()->SetLabelSize(0.035*scale);
+        hist->GetXaxis()->SetLabelFont(font);
+        hist->GetYaxis()->SetLabelFont(font);
+        hist->SetMarkerSize(1.);
+        hist->SetMarkerStyle(20);
+    }
+
+    //__________________________________________________________________________________________________________
+    void SetGraph( TGraph *graph,
+                   TString xLabel,
+                   TString yLabel,
+                   Double_t rangeYlow = -99.,
+                   Double_t rangeYhigh = -99.,
+                   Double_t xOffset = 1.0,
+                   Double_t yOffset = 1.15){
+
+        Double_t scale = 1./gPad->GetAbsHNDC();
+        //graph->GetXaxis()->SetRangeUser(rangeX[0],rangeX[1]);
+        if(rangeYlow != -99.) graph->GetYaxis()->SetRangeUser(rangeYlow,rangeYhigh);
+        graph->GetXaxis()->SetTitle(xLabel);
+        graph->GetYaxis()->SetTitle(yLabel);
+        graph->GetYaxis()->SetDecimals();
+        graph->GetYaxis()->SetTitleOffset(yOffset/scale);
+        graph->GetXaxis()->SetTitleOffset(xOffset);
+        graph->GetXaxis()->SetTitleSize(0.04*scale);
+        graph->GetYaxis()->SetTitleSize(0.04*scale);
+        graph->GetXaxis()->SetLabelSize(0.035*scale);
+        graph->GetYaxis()->SetLabelSize(0.035*scale);
+        graph->GetXaxis()->SetLabelFont(42);
+        graph->GetYaxis()->SetLabelFont(42);
+        graph->SetMarkerSize(1.);
+        graph->SetMarkerStyle(20);
+    }
+
+    //__________________________________________________________________________________________________________
     void DrawGammaSetMarker(    TH1* histo1,
                                 Style_t markerStyle,
                                 Size_t markerSize,
@@ -172,6 +297,7 @@
         histo1->GetXaxis()->SetTitleFont(62);
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaSetMarkerProfile( TProfile* prof,
                                     Style_t markerStyle,
                                     Size_t markerSize,
@@ -187,24 +313,27 @@
         prof->GetXaxis()->SetTitleFont(62);
     }
 
-
+    //__________________________________________________________________________________________________________
     // GammaScalingHistogram will scale the histogram by "Factor"
     void GammaScalingHistogramm(TH1 *histo, Double_t Factor){
         histo->Sumw2();
         histo->Scale(Factor);
     }
 
+    //__________________________________________________________________________________________________________
     // GammaScalingHistogram will scale the histogram by "Factor"
     void GammaScalingHistogramm(TH2 *histo, Double_t Factor){
         histo->Sumw2();
         histo->Scale(Factor);
     }
 
+    //__________________________________________________________________________________________________________
     void StylingSliceHistos(TH1 *histo, Float_t markersize){
         histo->SetMarkerStyle(20);
         histo->SetMarkerSize(markersize);
     }
 
+    //__________________________________________________________________________________________________________
     void ConvGammaRebinWithBinCorrection(TH1 *histo, Int_t rebinFactor, Int_t bin = 3){
         histo->Sumw2();
         histo->Rebin(rebinFactor);
@@ -215,6 +344,7 @@
         }
     }
 
+    //__________________________________________________________________________________________________________
     void ConvGammaRebinWithBinCorrection2D(TH2 *histo, Int_t rebinFactor1, Int_t rebinFactor2, Int_t bin = 3){
     // 	histo->Sumw2();
         histo->Rebin2D(rebinFactor1,rebinFactor2);
@@ -223,6 +353,7 @@
         histo->Scale(1/binWidthY*1/binWidthX);
     }
 
+    //__________________________________________________________________________________________________________
     void ConvGammaRebinWithBinCorrection2DSumw2(TH2 *histo, Int_t rebinFactor1, Int_t rebinFactor2, Int_t bin = 3){
         histo->Sumw2();
         histo->Rebin2D(rebinFactor1,rebinFactor2);
@@ -231,6 +362,7 @@
         histo->Scale(1/binWidthY*1/binWidthX);
     }
 
+    //__________________________________________________________________________________________________________
     /* DrawAutoGammaHistos is function used for styling the histograms of the gamma conversion group for two histos and standart settings
     * histo1 - first histogram (Data)
     * histo2 - second histogram (MC)
@@ -248,7 +380,6 @@
     *XMin - minimum Y
     *XMax - maximum Y
     */
-
     void DrawAutoGammaHistos(   TH1* histo1,
                                 TH1*histo2,
                                 TString Title,
@@ -340,6 +471,7 @@
 
     }
 
+    //__________________________________________________________________________________________________________
     void DrawAutoGammaHistosMaterial(   TH1* histo1,
                                         TH1*histo2,
                                         TString Title,
@@ -427,6 +559,7 @@
         leg1->Draw();
     }
 
+    //__________________________________________________________________________________________________________
     void DrawAutoGammaHistosMaterialP(  TH1* histo1,
                                         TH1*histo2,
                                         TString Title,
@@ -515,7 +648,7 @@
 
     }
 
-
+    //__________________________________________________________________________________________________________
     void DrawAutoGamma3Histos(  TH1* histo1,
                                 TH1* histo2,
                                 TH1* histo3,
@@ -613,7 +746,7 @@
 
     }
 
-
+    //__________________________________________________________________________________________________________
     void DrawAutoGammaHistosWOLeg(  TH1* histo1,
                                     TH1*histo2,
                                     TString Title,
@@ -695,7 +828,7 @@
 
     }
 
-
+    //__________________________________________________________________________________________________________
     /* DrawAutoGammaHisto is function used for styling a histograma of the gamma conversion group with standart settings
     * histo1 - first histogram (Data)
     * Title - histogram title
@@ -776,6 +909,7 @@
         histo1->DrawCopy("e,hist");
     }
 
+    //__________________________________________________________________________________________________________
     /*DrawAutoGammaHisto2D is a function for drawing a 2D-histogram of the gamma conversion group
     * histo - histogramm which need to be drawn
     * Title - histogram title
@@ -852,7 +986,7 @@
         }
     }
 
-
+    //__________________________________________________________________________________________________________
     /* DrawRatioGammaHisto is function used for styling the ratio-histograms of the gamma conversion group
     * histo1 - histogram
     * Title - histogram title
@@ -937,6 +1071,7 @@
         histo1->DrawCopy("same,p");
     }
 
+    //__________________________________________________________________________________________________________
     /* DrawCutGammaHistos is function used for styling the Cut-histograms of the gamma conversion group for 4 histos combined
     * histo1 - histogram Data
     * histo2 - histogram Data Comparision
@@ -1056,6 +1191,7 @@
         leg1->Draw();
     }
 
+    //__________________________________________________________________________________________________________
     /* DrawCutGammaHisto is function used for styling the Cut-histograms of the gamma conversion group for 2 histos combined
     * histo1 - histogram Data
     * histo2 - histogram Data Comparision
@@ -1148,6 +1284,7 @@
         leg1->Draw();
     }
 
+    //__________________________________________________________________________________________________________
     /* DrawRatioGammaHisto is function used for styling the ratio-histograms of the gamma conversion group
     * histo1 - histogram
     * Title - histogram title
@@ -1229,6 +1366,7 @@
         histo1->DrawCopy("e1");
     }
 
+    //__________________________________________________________________________________________________________
     /*DrawAutoGammaHisto2Dres is a function for drawing a resolution 2D-histogram of the gamma conversion group
     * histo - histogramm which need to be drawn
     * Title - histogram title
@@ -1297,7 +1435,7 @@
         }
     }
 
-
+    //__________________________________________________________________________________________________________
     /* DrawAutoGammaMesonHistos is function used for styling the histograms of the gamma conversion group for two histos and standart settings
     * histo1 - first histogram
     * Title - histogram title
@@ -1314,7 +1452,6 @@
     *XMin - minimum Y
     *XMax - maximum Y
     */
-
     void DrawAutoGammaMesonHistos(  TH1* histo1,
                                     TString Title,
                                     TString XTitle,
@@ -1396,7 +1533,7 @@
 
     }
 
-
+    //__________________________________________________________________________________________________________
     void DrawGammaCanvasSettings( TCanvas* c1,
                                 Double_t leftMargin,
                                 Double_t rightMargin,
@@ -1414,6 +1551,7 @@
         c1->SetFillColor(0);
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaPadSettings( TPad* pad1,
                             Double_t leftMargin,
                             Double_t rightMargin,
@@ -1430,6 +1568,7 @@
         pad1->SetTicky();
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaSetMarkerTGraph(  TGraph* graph,
                                     Style_t markerStyle,
                                     Size_t markerSize,
@@ -1461,6 +1600,7 @@
         }
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaSetMarkerTGraphErr(   TGraphErrors* graph,
                                         Style_t markerStyle,
                                         Size_t markerSize,
@@ -1489,6 +1629,7 @@
         }
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaNLOTGraphAsymm( TGraphAsymmErrors* graph,
                                   Width_t lineWidth,
                                   Style_t lineStyle,
@@ -1498,6 +1639,7 @@
         graph->SetLineStyle(lineStyle);
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaNLOTGraph( TGraph* graph,
                             Width_t lineWidth,
                             Style_t lineStyle,
@@ -1507,6 +1649,7 @@
         graph->SetLineStyle(lineStyle);
     }
 
+    //__________________________________________________________________________________________________________
     void SetStyleGammaNLOTGraphWithBand( TGraph* graph,
                                         Width_t lineWidth,
                                         Style_t lineStyle,
@@ -1523,7 +1666,7 @@
         graph->SetMarkerSize(markerSize);
     }
 
-
+    //__________________________________________________________________________________________________________
     void DrawGammaSetMarkerTGraphAsym(  TGraphAsymmErrors* graph,
                                         Style_t markerStyle,
                                         Size_t markerSize,
@@ -1553,7 +1696,7 @@
         }
     }
 
-
+    //__________________________________________________________________________________________________________
     void DrawGammaSetMarkerTF1( TF1* fit1,
                                 Style_t lineStyle,
                                 Size_t lineWidth,
@@ -1563,6 +1706,7 @@
         fit1->SetLineWidth(lineWidth);
     }
 
+    //__________________________________________________________________________________________________________
     void SetStyleTLatex( TLatex* text,
                         Size_t textSize,
                         Width_t lineWidth,
@@ -1579,6 +1723,7 @@
         text->SetTextAlign(align);
     }
 
+    //__________________________________________________________________________________________________________
     void SetStyleHisto( TH1* histo,
                         Width_t lineWidth,
                         Style_t lineStyle,
@@ -1588,6 +1733,7 @@
         histo->SetLineColor(lineColor);
     }
 
+    //__________________________________________________________________________________________________________
     void SetStyleFit(   TF1* fit,
                         Double_t xRangeStart,
                         Double_t xRangeEnd,
@@ -1600,6 +1746,7 @@
         fit->SetLineColor(lineColor);
     }
 
+    //__________________________________________________________________________________________________________
     void SetStyleHistoTH2ForGraphs( TH2* histo,
                                     TString XTitle,
                                     TString YTitle,
@@ -1635,6 +1782,7 @@
         histo->GetYaxis()->SetNdivisions(yNDivisions,kTRUE);
     }
 
+    //__________________________________________________________________________________________________________
     void SetStyleHistoTH1ForGraphs( TH1* histo,
                                     TString XTitle,
                                     TString YTitle,
@@ -1670,6 +1818,7 @@
         histo->GetYaxis()->SetNdivisions(yNDivisions,kTRUE);
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaHistoWithTitleAndFit(     TH1* histo1,
                                             TH1* histo2,
                                             TF1* fit1,
@@ -1746,6 +1895,7 @@
         }
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaHistoWithTitle2(  TH1* histo1,
                                     TString Title,
                                     TString XTitle,
@@ -1801,6 +1951,7 @@
         }
     }
 
+    //__________________________________________________________________________________________________________
     void DrawGammaHistoRatioLowerPanel(     TH1* histo1,
                                             TString yTitle,
                                             Float_t yMin,
@@ -1840,7 +1991,7 @@
         cout << "here" << endl;
     }
 
-
+    //__________________________________________________________________________________________________________
     void DrawGammaHistoWithTitle(   TH1* histo1,
                                     TH1* histo2,
                                     TString Title,
@@ -1904,6 +2055,7 @@
         histo2->DrawCopy("p,e1,same");
     }
 
+    //__________________________________________________________________________________________________________
     void DrawFitResultsTwoSpecies(  TH1* histo1,
                                     TH1* histo2,
                                     TH1* histo3,
@@ -1988,7 +2140,7 @@
 
     }
 
-
+    //__________________________________________________________________________________________________________
     /*DrawAutoGammaHisto2D is a function for drawing a 2D-histogram of the gamma conversion group
     * histo - histogramm which need to be drawn
     * Title - histogram title
@@ -2061,6 +2213,7 @@
         histo->DrawCopy(optionDraw.Data());
     }
 
+    //__________________________________________________________________________________________________________
     /* DrawAutoGammaMesonHistos is function used for styling the histograms of the gamma conversion group for two histos and standart settings
     * histo1 - first histogram
     * Title - histogram title
@@ -2077,7 +2230,6 @@
     *XMin - minimum Y
     *XMax - maximum Y
     */
-
     void DrawCorrelationHisto1D(    TH1* histo1,
                                     TString Title,
                                     TString XTitle,
@@ -2144,6 +2296,7 @@
 
     }
 
+    //__________________________________________________________________________________________________________
     void ReturnCorrectValuesForCanvasScaling(   Int_t sizeX,
                                                 Int_t sizeY,
                                                 Int_t nCols,
@@ -2214,6 +2367,7 @@
         return;
     }
 
+    //__________________________________________________________________________________________________________
     void ReturnCorrectValuesTextSize(   TPad * pad,
                                         Double_t &textsizeLabels,
                                         Double_t &textsizeFac,

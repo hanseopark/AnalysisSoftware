@@ -8,35 +8,35 @@
 DEPTH=12;
 NSlashes=9
 NSlashes2=8
-if [ $1 = "fbock" ]; then 
+if [ $1 = "fbock" ]; then
    BASEDIR=/home/fbock/Photon/Grid/OutputLegoTrains/pp
-elif [ $1 = "fbockGSI" ]; then 
+elif [ $1 = "fbockGSI" ]; then
    BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/pp
-elif [ $1 = "leardini" ]; then 
+elif [ $1 = "leardini" ]; then
    BASEDIR=/Users/lucy/
-elif [ $1 = "leardiniALICESERV1" ]; then 
+elif [ $1 = "leardiniALICESERV1" ]; then
    BASEDIR=/alidata50/alice_u/leardini/GridOutput/PbPb/
-elif [ $1 = "leardiniGSI" ]; then 
+elif [ $1 = "leardiniGSI" ]; then
    BASEDIR=/hera/alice/leardini/Grid/OutputLegoTrains/pp
-elif [ $1 = "passfeld" ]; then 
+elif [ $1 = "passfeld" ]; then
    BASEDIR=~/work/Gridoutput/pp
-elif [ $1 = "passfeldMAF" ]; then 
+elif [ $1 = "passfeldMAF" ]; then
    BASEDIR=/data9/a_pass02/gamma_test/AnalysisSoftware/LegoTrain/
-elif [ $1 = "passfeldGSI" ]; then  
+elif [ $1 = "passfeldGSI" ]; then
    BASEDIR=/hera/alice/passfeld/Grid/OutputLegoTrains/pp
-elif [ $1 = "amarin" ]; then     
+elif [ $1 = "amarin" ]; then
    BASEDIR=/Users/marin/
-elif [ $1 = "amarinGSI" ]; then     
-   BASEDIR=/hera/alice/marin/Grid/OutputLegoTrains/pp 
-elif [ $1 = "amarinALICESERV1" ]; then     
-   BASEDIR=/alidata50/alice_u/amarin/GridOutput/PbPb/   
-elif [ $1 = "mwilde" ]; then        
-   BASEDIR=~/work/GridOutput 
-elif [ $1 = "mwildeGSI" ]; then           
-   BASEDIR=/hera/alice/mwilde/Grid/OutputLegoTrains/pp 
-elif [ $1 = "pgonzales" ]; then     
-   BASEDIR=~/work/GridOutput 
-elif [ $1 = "pgonzalesGSI" ]; then        
+elif [ $1 = "amarinGSI" ]; then
+   BASEDIR=/hera/alice/marin/Grid/OutputLegoTrains/pp
+elif [ $1 = "amarinALICESERV1" ]; then
+   BASEDIR=/alidata50/alice_u/amarin/GridOutput/PbPb/
+elif [ $1 = "mwilde" ]; then
+   BASEDIR=~/work/GridOutput
+elif [ $1 = "mwildeGSI" ]; then
+   BASEDIR=/hera/alice/mwilde/Grid/OutputLegoTrains/pp
+elif [ $1 = "pgonzales" ]; then
+   BASEDIR=~/work/GridOutput
+elif [ $1 = "pgonzalesGSI" ]; then
    BASEDIR=/hera/alice/pgonzales/Grid/OutputLegoTrains/pp
 elif [ $1 = "dmuhlhei" ]; then
    BASEDIR=~/data/work/Grid
@@ -112,7 +112,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10b-pass4_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC10b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10b-pass4_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC10b-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10b_$number.log\"\,4\)
 done;
 
@@ -122,7 +122,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10c-pass4_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC10c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10c-pass4_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC10c-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10c_$number.log\"\,4\)
 done;
 
@@ -132,7 +132,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10d-pass4_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC10d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10d-pass4_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC10d-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10d_$number.log\"\,4\)
 done;
 
@@ -142,7 +142,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10e-pass4_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC10e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10e-pass4_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC10e-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10e_$number.log\"\,4\)
 done;
 
@@ -152,7 +152,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC10f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10f-pass4_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC10f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_LHC10f-pass4_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_LHC10f-pass4_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC10f_$number.log\"\,4\)
 done;
 
@@ -163,7 +163,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14j4b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4b_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC14j4b/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4b_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14j4b_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4b_$number.log\"\,4\)
 done;
 
@@ -173,7 +173,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14j4c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4c_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC14j4c/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4c_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14j4c_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4c_$number.log\"\,4\)
 done;
 
@@ -183,7 +183,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14j4d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4d_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC14j4d/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4d_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14j4d_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4d_$number.log\"\,4\)
 done;
 
@@ -193,7 +193,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14j4e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4e_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC14j4e/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4e_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14j4e_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4e_$number.log\"\,4\)
 done;
 
@@ -204,7 +204,7 @@ for fileName in $fileNumbers; do
 echo $fileName
 number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
 echo $number
-root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$OUTPUTDIR_LHC14j4f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4f_$number.root\"\,\"GammaCalo_$number\"\)
+root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC14j4f/GammaCalo_$number.root\"\,\"$OUTPUTDIR/GammaCalo_MC_LHC14j4f_$number.root\"\,\"GammaCalo_$number\"\,4\)
 root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14j4f_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC14j4f_$number.log\"\,4\)
 done;
 

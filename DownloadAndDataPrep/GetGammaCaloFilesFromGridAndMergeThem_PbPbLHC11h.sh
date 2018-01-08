@@ -16,7 +16,7 @@ function ChangeStructureIfNeeded()
     if [ -f $2 ]; then
         echo "already changed"
     else
-        root -l -b -q -x ChangeStructureToStandardCalo.C\(\"$1\"\,\"$2\"\,\"GammaCalo_$3\"\)
+        mv $1 $2
     fi
 }
 

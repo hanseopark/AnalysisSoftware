@@ -16,7 +16,6 @@ AdvMesonQA=""
 NEWGammaMacros=1
 
 ONLYCORRECTION=0
-ONLYRESULTS=0
 HIRUN=0
 ONLYCUTS=0
 Suffix=eps
@@ -1122,23 +1121,12 @@ function CreateFinalResults()
     fi
 }
 
-function ProduceFinalResultspPb()
-{
-    root -x -l -b -q TaskV1/ProduceFinalResultspPb.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,kFALSE\)
-
-}
-
-function CreateGammaFinalResults()
-{
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\",$mode\,\"$ESTIMATEPILEUP\"\)
-}
-
 function CreateGammaFinalResultsV3()
 {
-    if  [ $energy = "900GeV" ] || [ $energy = "2.76TeV" ] || [ $energy = "7TeV" ] || [ $energy = "8TeV" ] || [ $energy = "13TeV" ]  || [ $energy = "pPb_5.023TeV" ] ; then
-        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
-    else
+    if  [ $energy = "PbPb_2.76TeV" ]  ; then
         root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    else
+        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
     fi
 }
 
@@ -1845,11 +1833,6 @@ elif [[ "$1" == -d* ]] ; then
     ONLYCUTS=1
     DataRootFile=$2
     Suffix=$3;
-elif [[ "$1" == *-r* ]] ; then
-    ONLYCORRECTION=1
-    ONLYRESULTS=1
-    DataRootFile=$2
-    Suffix=$3;
 elif [[ "$1" == *-HI* ]] ; then
     HIRUN=1
     DataRootFile=$2
@@ -2192,11 +2175,9 @@ do
             else
                 directphoton="Gamma"
             fi
-            if [ $ONLYRESULTS -eq 0 ]; then
-                GiveBinning2760GeV
-                correctPi0=1
-                correctEta=1
-            fi
+            GiveBinning2760GeV
+            correctPi0=1
+            correctEta=1
             if [ $correctPi0 -eq 0 ]; then
                 correct=0
             elif [ $correctEta -eq 0 ]; then
@@ -2205,21 +2186,20 @@ do
                 correct=1
             fi
 
-            if [ $ONLYRESULTS -eq 0 ]; then
-                if [ $ONLYCORRECTION -eq 0 ];  then
-                    echo "Do you want to use THnSparse for the background? Yes/No?";
-                    read answer
-                    if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                        echo "Will use THnSparse for the background ...";
-                        useTHnSparse=1
-                    elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                        echo "Will NOT use THnSparse for the background ...";
-                        useTHnSparse=0
-                    else
-                        echo "Command not found. Please try again.";
-                    fi
+            if [ $ONLYCORRECTION -eq 0 ];  then
+                echo "Do you want to use THnSparse for the background? Yes/No?";
+                read answer
+                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                    echo "Will use THnSparse for the background ...";
+                    useTHnSparse=1
+                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                    echo "Will NOT use THnSparse for the background ...";
+                    useTHnSparse=0
+                else
+                    echo "Command not found. Please try again.";
                 fi
             fi
+
         fi
     elif [ $energy = "5TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
@@ -2257,21 +2237,19 @@ do
         else
             echo "Command not found. Please try again.";
         fi
-            if [ $ONLYRESULTS -eq 0 ]; then
-                if [ $ONLYCORRECTION -eq 0 ];  then
-                    echo "Do you want to use THnSparse for the background? Yes/No?";
-                    read answer
-                    if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                        echo "Will use THnSparse for the background ...";
-                        useTHnSparse=1
-                    elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                        echo "Will NOT use THnSparse for the background ...";
-                        useTHnSparse=0
-                    else
-                        echo "Command not found. Please try again.";
-                    fi
-                fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
             fi
+        fi
 
     elif [ $energy = "7TeV" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
@@ -2440,19 +2418,17 @@ do
         else
             echo "Command not found. Please try again.";
         fi
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                echo "Do you want to use THnSparse for the background? Yes/No?";
-                read answer
-                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
-                    useTHnSparse=1
-                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
-                    useTHnSparse=0
-                else
-                    echo "Command not found. Please try again.";
-                fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
             fi
         fi
 
@@ -2462,7 +2438,7 @@ do
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             echo "Will produce Direct Photon plots ...";
             directphoton="directPhoton"
-            if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningpPbDirGamma
                 correctPi0=1
                 correctEta=1
@@ -2477,7 +2453,7 @@ do
         elif [ $answer = "YesPCMEMC" ] || [ $answer = "YPCMEMC" ] || [ $answer = "yPCMEMC" ] || [ $answer = "yesPCMEMC" ]; then
             echo "Will produce Direct Photon plots with special PCMEMC binning...";
             directphoton="directPhotonA"
-            if [ $ONLYRESULTS -eq 0 ]; then
+            if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningpPbDirGamma
                 correctPi0=1
                 correctEta=1
@@ -2527,19 +2503,17 @@ do
                 echo "Command not found. Please try again.";
             fi
         done
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                echo "Do you want to use THnSparse for the background? Yes/No?";
-                read answer
-                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
-                    useTHnSparse=1
-                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
-                    useTHnSparse=0
-                else
-                    echo "Command not found. Please try again.";
-                fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
             fi
         fi
     elif [ $energy = "PbPb_2.76TeV" ]; then
@@ -2583,19 +2557,17 @@ do
             echo "Command not found. Please try again.";
         fi
 
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                echo "Do you want to use THnSparse for the background? Yes/No?";
-                read answer
-                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
-                    useTHnSparse=1
-                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
-                    useTHnSparse=0
-                else
-                    echo "Command not found. Please try again.";
-                fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
             fi
         fi
    elif [ $energy = "PbPb_5.02TeV" ]; then
@@ -2639,45 +2611,41 @@ do
             echo "Command not found. Please try again.";
         fi
 
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                echo "Do you want to use THnSparse for the background? Yes/No?";
-                read answer
-                if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
-                    useTHnSparse=1
-                elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
-                    useTHnSparse=0
-                else
-                    echo "Command not found. Please try again.";
-                fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
             fi
         fi
-   elif [ $energy = "XeXe_5.44TeV" ]; then
-            echo "No Direct Photon plots will be produced ...";
-            directphoton="No"
-            if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningXeXe5440GeV
-                correctPi0=1
-                correctEta=1
-            else
-                correctPi0=1
-                correctEta=1
-            fi
+    elif [ $energy = "XeXe_5.44TeV" ]; then
+        echo "No Direct Photon plots will be produced ...";
+        directphoton="No"
+        if [ $ONLYCORRECTION -eq 0 ]; then
+            GiveBinningXeXe5440GeV
+            correctPi0=1
+            correctEta=1
+        else
+            correctPi0=1
+            correctEta=1
+        fi
 
-            if [ $correctPi0 -eq 0 ]; then
-                correct=0
-            elif [ $correctEta -eq 0 ]; then
-                correct=0
-            else
-                correct=1
-            fi
+        if [ $correctPi0 -eq 0 ]; then
+            correct=0
+        elif [ $correctEta -eq 0 ]; then
+            correct=0
+        else
+            correct=1
+        fi
 
-        if [ $ONLYRESULTS -eq 0 ]; then
-            if [ $ONLYCORRECTION -eq 0 ];  then
-                useTHnSparse=0
-            fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            useTHnSparse=0
         fi
     fi
 done
@@ -2707,455 +2675,449 @@ echo "mode has been chosen: $mode "
 
 if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
     echo "I went into standard modes";
-    if [ $ONLYRESULTS = 0 ] ; then
-        if [ $ONLYCORRECTION -eq 0 ];  then
-    #        echo "Extraction will be done using modified Gaussian.";
-    #        crystal=Gaussian
+    if [ $ONLYCORRECTION -eq 0 ];  then
+#        echo "Extraction will be done using modified Gaussian.";
+#        crystal=Gaussian
 
-            correct=0
-            while [ $correct -eq 0 ]
-            do
-                echo "Which fit do you want to do? CrystalBall or gaussian convoluted with an exponential function? CrystalBall/Gaussian?";
-                read answer
-                if [ $answer = "CrystalBall" ] || [ $answer = "C" ] || [ $answer = "c" ]; then
-                    echo "CrystalBall chosen ...";
-                    correct=1
-                    crystal=CrystalBall
-                elif [ $answer = "Gaussian" ] || [ $answer = "G" ] || [ $answer = "g" ]; then
-                    echo "Gaussian chosen ...";
-                    correct=1
-                    crystal=Gaussian
-                else
-                    echo "Command not found. Please try again.";
-                fi
-            done
-        fi
-
-    #    echo "Hauptroutine stimmt"
         correct=0
         while [ $correct -eq 0 ]
         do
-            echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Remember at first all gamma cutstudies will be carried out. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
+            echo "Which fit do you want to do? CrystalBall or gaussian convoluted with an exponential function? CrystalBall/Gaussian?";
             read answer
-            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Continuing ...";
+            if [ $answer = "CrystalBall" ] || [ $answer = "C" ] || [ $answer = "c" ]; then
+                echo "CrystalBall chosen ...";
                 correct=1
-            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Aborting ...";
-                exit
+                crystal=CrystalBall
+            elif [ $answer = "Gaussian" ] || [ $answer = "G" ] || [ $answer = "g" ]; then
+                echo "Gaussian chosen ...";
+                correct=1
+                crystal=Gaussian
             else
                 echo "Command not found. Please try again.";
             fi
         done
+    fi
 
-        echo $DoPi0
-        echo $DoPi0InEtaBinning
-        echo $DoEta
-    #Read the different cuts form the Cut selection log file
-        CutSelections=`cat CutSelection.log`
-        for cutSelection in $CutSelections; do
-            if [ -d $cutSelection ]; then
-                echo "CutSelection $cutSelection directory already exists, all files will be overwritten ";
-                mkdir $cutSelection/$energy
+#    echo "Hauptroutine stimmt"
+    correct=0
+    while [ $correct -eq 0 ]
+    do
+        echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Remember at first all gamma cutstudies will be carried out. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Continuing ...";
+            correct=1
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "Aborting ...";
+            exit
+        else
+            echo "Command not found. Please try again.";
+        fi
+    done
+
+    echo $DoPi0
+    echo $DoPi0InEtaBinning
+    echo $DoEta
+#Read the different cuts form the Cut selection log file
+    CutSelections=`cat CutSelection.log`
+    for cutSelection in $CutSelections; do
+        if [ -d $cutSelection ]; then
+            echo "CutSelection $cutSelection directory already exists, all files will be overwritten ";
+            mkdir $cutSelection/$energy
+        else
+            mkdir $cutSelection
+            mkdir $cutSelection/$energy
+        fi
+
+        if [ $ONLYCUTS -eq 0 ]; then
+            if [ -d $cutSelection/$energy/$Suffix ]; then
+                echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
             else
-                mkdir $cutSelection
-                mkdir $cutSelection/$energy
+                mkdir $cutSelection/$energy/$Suffix
             fi
 
-            if [ $ONLYCUTS -eq 0 ]; then
-                if [ -d $cutSelection/$energy/$Suffix ]; then
-                    echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
-                else
-                    mkdir $cutSelection/$energy/$Suffix
-                fi
+            if [ $disableToyMC -eq 0 ] && [ $useCocktail -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
+                rm ToyMCOutputs.txt
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+            fi
+            if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
+                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
+            fi
 
-                if [ $disableToyMC -eq 0 ] && [ $useCocktail -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
-                    rm ToyMCOutputs.txt
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                fi
-                if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
-                    root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
-                fi
-
-                if [ $ONLYCORRECTION -eq 0 ]; then
-                    echo "CutSelection is $cutSelection";
-                    if [ $DoPi0 -eq 1 ]; then
-                        optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                        if [ -f $DataRootFile ]; then
-                            ExtractSignal $optionsPi0Data
-                        fi
-                        Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
-                        if [ $MCFILE -eq 1 ]; then
-                            optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                            ExtractSignal $optionsPi0MC
-                            Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
-                            Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
-                            if [ $MERGINGMC -eq 1 ]; then
-                                if [ $addedSig -eq 1 ]; then
-                                    optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kTRUE
-                                    ExtractSignal $optionsPi0MC2
-                                    Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
-                                    Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosAddSig_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\)
-                                elif [ $addedSig -eq 2 ]; then
-                                    optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                                    ExtractSignal $optionsPi0MC2
-                                    Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
-                                    Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\,$minPtMergePi0\)
-
-                                else
-                                    optionsPi0MCBC=\"Pi0\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                                    echo $optionsPi0MCBC
-                                    ExtractSignal $optionsPi0MCBC
-                                    optionsPi0MCDE=\"Pi0\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
-                                    echo $optionsPi0MCDE
-                                    ExtractSignal $optionsPi0MCDE
-                                    Pi0MCcorrectionBCFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosBC_*.root`
-                                    Pi0MCcorrectionDFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosD_*.root`
-                                    root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0\",\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$Pi0MCcorrectionBCFILE\",\"$Pi0MCcorrectionDFILE\"\)
-                                fi
-                            fi
-
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtPi0\,$mode\)
-                        fi
-                    fi
-                    if [ $DoGamma -eq 1 ]; then
-                        optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0\,kFALSE
-                        if [ $NEWGammaMacros == 0 ]; then
-                            ExtractSignalGamma $optionsPi0Data
-                        else
-                            optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
-                            ExtractSignalGammaV2 $optionsGammaData
-                        fi
-                        if [ $MCFILE -eq 1 ]; then
-                            optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0
-                            if [ $NEWGammaMacros == 0 ]; then
-                                ExtractSignalGamma $optionsPi0MC
-                            else
-                                optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
-                                ExtractSignalGammaV2 $optionsGammaMC
-                            fi
-                        fi
-                    fi
-
-                    if [ $DoPi0InEtaBinning -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                        fi
-                        Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_$cutSelection.root`
-                        if [ $MCFILE -eq 1 ]; then
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                            Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
-                            Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
-                            if [ $MERGINGMC -eq 1 ]; then
-                                if [ $addedSig -eq 1 ]; then
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
-                                    Pi0EtaMCcorrection=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*.root`
-                                    Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosAddSig_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\)
-                                elif [ $addedSig -eq 2 ]; then
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                    Pi0EtaMCcorrection=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*.root`
-                                    Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\,$minPtMergePi0\)
-
-                                else
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                    Pi0EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosBC_*.root`
-                                    Pi0EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosD_*.root`
-                                    root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0EtaBinning\",\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrectionFILE\"\,\"$Pi0EtaMCcorrectionBCFILE\",\"$Pi0EtaMCcorrectionDFILE\"\)
-                                fi
-                            fi
-
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0EtadataRAWFILE\"\,\"$Pi0EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
-                        fi
-                    fi
-                    if [ $DoEta -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                        fi
-                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection.root`
-                        if [ $MCFILE -eq 1 ]; then
-                            root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                            EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
-                            EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
-
-                            if [ $MERGINGMC -eq 1 ]; then
-                                if [ $addedSig -eq 1 ]; then
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
-                                    EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
-                                    EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosAddSig_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
-                                elif [ $addedSig -eq 2 ]; then
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                    EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
-                                    EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)
-                                else
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                    root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                    EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosBC_*.root`
-                                    EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosD_*.root`
-
-                                    root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Eta\",\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrectionFILE\"\,\"$EtaMCcorrectionBCFILE\",\"$EtaMCcorrectionDFILE\"\)
-                                fi
-                            fi
-                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
-                        fi
-                    fi
-                fi
-
-                Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
-                Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
-                EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
-                EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
-
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                echo "CutSelection is $cutSelection";
                 if [ $DoPi0 -eq 1 ]; then
-                    if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton
-                    else
-                        PARTLY=1
+                    optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                    if [ -f $DataRootFile ]; then
+                        ExtractSignal $optionsPi0Data
                     fi
-                    if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton
-                    else
-                        PARTLY=1
+                    Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                        ExtractSignal $optionsPi0MC
+                        Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                        Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
+                        if [ $MERGINGMC -eq 1 ]; then
+                            if [ $addedSig -eq 1 ]; then
+                                optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kTRUE
+                                ExtractSignal $optionsPi0MC2
+                                Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
+                                Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosAddSig_*.root`
+                                root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\)
+                            elif [ $addedSig -eq 2 ]; then
+                                optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                                ExtractSignal $optionsPi0MC2
+                                Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
+                                Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
+                                root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\,$minPtMergePi0\)
+
+                            else
+                                optionsPi0MCBC=\"Pi0\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                                echo $optionsPi0MCBC
+                                ExtractSignal $optionsPi0MCBC
+                                optionsPi0MCDE=\"Pi0\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                                echo $optionsPi0MCDE
+                                ExtractSignal $optionsPi0MCDE
+                                Pi0MCcorrectionBCFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosBC_*.root`
+                                Pi0MCcorrectionDFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosD_*.root`
+                                root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0\",\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$Pi0MCcorrectionBCFILE\",\"$Pi0MCcorrectionDFILE\"\)
+                            fi
+                        fi
+
+                        root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtPi0\,$mode\)
                     fi
                 fi
                 if [ $DoGamma -eq 1 ]; then
-
-                    if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                    optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0\,kFALSE
+                    if [ $NEWGammaMacros == 0 ]; then
+                        ExtractSignalGamma $optionsPi0Data
+                    else
+                        optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
+                        ExtractSignalGammaV2 $optionsGammaData
+                    fi
+                    if [ $MCFILE -eq 1 ]; then
+                        optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0
                         if [ $NEWGammaMacros == 0 ]; then
-                            CorrectSignalGamma $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
+                            ExtractSignalGamma $optionsPi0MC
                         else
-                            CorrectSignalGammaV2 $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $directphoton
+                            optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
+                            ExtractSignalGammaV2 $optionsGammaMC
                         fi
-                    else
-                        PARTLY=1
-                    fi
-                    if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        if [ $NEWGammaMacros == 0 ]; then
-                            CorrectSignalGamma $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE
-                        else
-                            CorrectSignalGammaV2 $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $directphoton
-                        fi
-                    else
-                        PARTLY=1
-                    fi
-                    Pi0dataCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
-                    GammaPi0dataCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
-                    Pi0MCCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
-                    GammaPi0MCCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
-                    if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorrFILE ]; then
-                        root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorrFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
-                    fi
-                    GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
-                    if [ $useCocktail  ]; then
-                        if [ $DoPi0Tagging = 1  ]; then
-                          Pi0dataUnCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
-                          Pi0MCUnCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*.root`
-
-                          RunPi0Tagging $GammaPi0dataCorrFILE $Pi0dataUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix kFALSE;
-                          RunPi0Tagging $GammaPi0MCCorrFILE $Pi0MCUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix kTRUE;
-                        else
-                          CreateGammaFinalResultsV3 $GammaPi0dataCorrFILE $Pi0dataCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
-                          CreateGammaFinalResultsV3 $GammaPi0MCCorrFILE $Pi0MCCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
-                        fi
-                    else
-                        CreateGammaFinalResults $GammaPi0dataCorrFILE $Pi0dataCorrFILE $cutSelection $Suffix Pi0 kTRUE;
                     fi
                 fi
 
                 if [ $DoPi0InEtaBinning -eq 1 ]; then
-                    if [ -f $Pi0EtadataRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
-                        CorrectSignal $Pi0EtadataRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kFALSE $ESTIMATEPILEUP $directphoton
-                    else
-                            PARTLY=1
+                    if [ -f $DataRootFile ]; then
+                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                     fi
-                    if [ -f $Pi0EtaMCRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
-                        CorrectSignal $Pi0EtaMCRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kTRUE $ESTIMATEPILEUP $directphoton
-                    else
-                            PARTLY=1
+                    Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_$cutSelection.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                        Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
+                        if [ $MERGINGMC -eq 1 ]; then
+                            if [ $addedSig -eq 1 ]; then
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
+                                Pi0EtaMCcorrection=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*.root`
+                                Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosAddSig_*.root`
+                                root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\)
+                            elif [ $addedSig -eq 2 ]; then
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                Pi0EtaMCcorrection=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*.root`
+                                Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
+                                root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\,$minPtMergePi0\)
+
+                            else
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                Pi0EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosBC_*.root`
+                                Pi0EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosD_*.root`
+                                root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0EtaBinning\",\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrectionFILE\"\,\"$Pi0EtaMCcorrectionBCFILE\",\"$Pi0EtaMCcorrectionDFILE\"\)
+                            fi
+                        fi
+
+                        root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0EtadataRAWFILE\"\,\"$Pi0EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
                     fi
                 fi
                 if [ $DoEta -eq 1 ]; then
-                    if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                        CorrectSignal $EtadataRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kFALSE $ESTIMATEPILEUP $directphoton
-                    else
-                            PARTLY=1
+                    if [ -f $DataRootFile ]; then
+                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
                     fi
-                    if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                            CorrectSignal $EtaMCRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kTRUE $ESTIMATEPILEUP $directphoton
-                    else
-                            PARTLY=1
-                    fi
+                    EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                        EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
 
+                        if [ $MERGINGMC -eq 1 ]; then
+                            if [ $addedSig -eq 1 ]; then
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
+                                EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
+                                EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosAddSig_*.root`
+                                root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
+                            elif [ $addedSig -eq 2 ]; then
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
+                                EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
+                                root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)
+                            else
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosBC_*.root`
+                                EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosD_*.root`
+
+                                root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Eta\",\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrectionFILE\"\,\"$EtaMCcorrectionBCFILE\",\"$EtaMCcorrectionDFILE\"\)
+                            fi
+                        fi
+                        root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
+                    fi
                 fi
             fi
-            NORMALCUTS=`expr $NORMALCUTS + 1`
-        done
 
-        if [ $NEWGammaMacros == 1 ]; then
-            if [ $DoGamma == 1 ]; then
-                root -x -q -l -b TaskV1/GammaCutStudiesV3.C\+\(\"CutSelection.log\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,\"$Suffix\"\,$mode\)
+            Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
+            Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
+            EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
+
+            if [ $DoPi0 -eq 1 ]; then
+                if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                    CorrectSignal $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $ESTIMATEPILEUP $directphoton
+                else
+                    PARTLY=1
+                fi
+                if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                    CorrectSignal $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $ESTIMATEPILEUP $directphoton
+                else
+                    PARTLY=1
+                fi
             fi
-            DoGamma=0;
+            if [ $DoGamma -eq 1 ]; then
+
+                if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                    if [ $NEWGammaMacros == 0 ]; then
+                        CorrectSignalGamma $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE
+                    else
+                        CorrectSignalGammaV2 $Pi0dataRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kFALSE $directphoton
+                    fi
+                else
+                    PARTLY=1
+                fi
+                if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                    if [ $NEWGammaMacros == 0 ]; then
+                        CorrectSignalGamma $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE
+                    else
+                        CorrectSignalGammaV2 $Pi0MCRAWFILE $Pi0MCcorrectionFILE $cutSelection $Suffix Pi0 kTRUE $directphoton
+                    fi
+                else
+                    PARTLY=1
+                fi
+                Pi0dataCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1Correction_*.root`
+                GammaPi0dataCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_data_GammaConvV1Correction_*.root`
+                Pi0MCCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
+                GammaPi0MCCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
+                if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorrFILE ]; then
+                    root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorrFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
+                fi
+                GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
+                if [ $useCocktail  ]; then
+                    if [ $DoPi0Tagging = 1  ]; then
+                      Pi0dataUnCorrFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
+                      Pi0MCUnCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*.root`
+
+                      RunPi0Tagging $GammaPi0dataCorrFILE $Pi0dataUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix kFALSE;
+                      RunPi0Tagging $GammaPi0MCCorrFILE $Pi0MCUnCorrFILE $Pi0MCcorrectionFILE $GammaCocktailFile $cutSelection $Suffix kTRUE;
+                    else
+                      CreateGammaFinalResultsV3 $GammaPi0dataCorrFILE $Pi0dataCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kFALSE;
+                      CreateGammaFinalResultsV3 $GammaPi0MCCorrFILE $Pi0MCCorrFILE $GammaCocktailFile $cutSelection $Suffix Pi0 kTRUE;
+                    fi
+                fi
+            fi
+
+            if [ $DoPi0InEtaBinning -eq 1 ]; then
+                if [ -f $Pi0EtadataRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
+                    CorrectSignal $Pi0EtadataRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kFALSE $ESTIMATEPILEUP $directphoton
+                else
+                        PARTLY=1
+                fi
+                if [ -f $Pi0EtaMCRAWFILE ] && [ -f $Pi0EtaMCcorrectionFILE ] ; then
+                    CorrectSignal $Pi0EtaMCRAWFILE $Pi0EtaMCcorrectionFILE $cutSelection $Suffix Pi0EtaBinning kTRUE $ESTIMATEPILEUP $directphoton
+                else
+                        PARTLY=1
+                fi
+            fi
+            if [ $DoEta -eq 1 ]; then
+                if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
+                    CorrectSignal $EtadataRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kFALSE $ESTIMATEPILEUP $directphoton
+                else
+                        PARTLY=1
+                fi
+                if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
+                        CorrectSignal $EtaMCRAWFILE $EtaMCcorrectionFILE $cutSelection $Suffix Eta kTRUE $ESTIMATEPILEUP $directphoton
+                else
+                        PARTLY=1
+                fi
+
+            fi
         fi
-        if [ $DoPi0 -eq 1 ]; then
-            root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,$DoGamma\,\"\"\,\"$PERIODNAME\"\,$mode\)
-            root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,$DoGamma\,\"\"\,\"$PERIODNAME\"\,$mode\)
+        NORMALCUTS=`expr $NORMALCUTS + 1`
+    done
+
+    if [ $NEWGammaMacros == 1 ]; then
+        if [ $DoGamma == 1 ]; then
+            root -x -q -l -b TaskV1/GammaCutStudiesV3.C\+\(\"CutSelection.log\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,\"$Suffix\"\,$mode\)
         fi
-        if [ $DoPi0InEtaBinning -eq 1 ]; then
-            root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0EtaBinning\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-            root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0EtaBinning\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-        fi
-        if [ $DoEta -eq 1 ]; then
-            root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-            root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
-        fi
+        DoGamma=0;
+    fi
+    if [ $DoPi0 -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,$DoGamma\,\"\"\,\"$PERIODNAME\"\,$mode\)
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,$DoGamma\,\"\"\,\"$PERIODNAME\"\,$mode\)
+    fi
+    if [ $DoPi0InEtaBinning -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0EtaBinning\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0EtaBinning\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+    fi
+    if [ $DoEta -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
     fi
 else
-    if [ $ONLYRESULTS -eq 0 ]; then
-        correct=0
-        while [ $correct -eq 0 ]
-        do
-            echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
-            read answer
-            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Continuing ...";
-                correct=1
-            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Aborting ...";
-                exit
-            else
-                echo "Command not found. Please try again.";
-            fi
-        done
+    correct=0
+    while [ $correct -eq 0 ]
+    do
+        echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Continuing ...";
+            correct=1
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "Aborting ...";
+            exit
+        else
+            echo "Command not found. Please try again.";
+        fi
+    done
 
-        echo $DoPi0
-        echo $DoEta
-        #Read the different cuts form the Cut selection log file
-        CutSelections=`cat CutSelection.log`
-        for cutSelection in $CutSelections; do
-            if [ -d $cutSelection ]; then
-                echo "CutSelection $cutSelection directory already exists, all files will be overwritten ";
-                mkdir $cutSelection/$energy
+    echo $DoPi0
+    echo $DoEta
+    #Read the different cuts form the Cut selection log file
+    CutSelections=`cat CutSelection.log`
+    for cutSelection in $CutSelections; do
+        if [ -d $cutSelection ]; then
+            echo "CutSelection $cutSelection directory already exists, all files will be overwritten ";
+            mkdir $cutSelection/$energy
+        else
+            mkdir $cutSelection
+            mkdir $cutSelection/$energy
+        fi
+
+        if [ $ONLYCUTS -eq 0 ]; then
+            if [ -d $cutSelection/$energy/$Suffix ]; then
+                echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
             else
-                mkdir $cutSelection
-                mkdir $cutSelection/$energy
+                mkdir $cutSelection/$energy/$Suffix
             fi
 
-            if [ $ONLYCUTS -eq 0 ]; then
-                if [ -d $cutSelection/$energy/$Suffix ]; then
-                    echo "Graphical Output $Suffix directory already exists, all files will be overwritten ";
+            if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
+                rm ToyMCOutputs.txt
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToyLambda\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+            fi
+
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                echo "CutSelection is $cutSelection";
+                if [ $DoPi0 -eq 1 ]; then
+                    if [ -f $DataRootFile ]; then
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
+                    fi
+                    Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_*.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
+                        Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
+                        Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
+                        if [ $MERGINGMC -eq 1 ]; then
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
+                            Pi0MCcorrectionFILEJJG=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJGammaTrigg_*.root`
+                            root -b -x -q -l TaskV1/MergeCorrFactorsJJandJJGammaTrigMergedCluster.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJ_$cutSelection.root\"\,\"$Pi0MCcorrectionFILEJJG\"\)
+
+                        fi
+                        echo $Pi0dataRAWFILE
+                        echo $Pi0MCRAWFILE
+                        echo $cutSelection
+                        root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
+                    fi
+                fi
+
+                if [ $DoEta -eq 1 ]; then
+                    if [ -f $DataRootFile ]; then
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
+                    fi
+                    EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_*.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
+                        EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
+                        EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
+                        if [ $MERGINGMC -eq 1 ]; then
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
+                        fi
+                        root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
+                    fi
+                fi
+            fi
+
+            if [ $DoPi0 -eq 1 ]; then
+                Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_$cutSelection*.root`
+                Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
+                Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
+            fi
+            if [ $DoEta -eq 1 ]; then
+                EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_$cutSelection*.root`
+                EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
+                EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
+            fi
+
+            if [ $DoPi0 -eq 1 ]; then
+                if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                      root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
                 else
-                    mkdir $cutSelection/$energy/$Suffix
+                    PARTLY=1
                 fi
-
-                if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
-                    rm ToyMCOutputs.txt
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToyLambda\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                fi
-
-                if [ $ONLYCORRECTION -eq 0 ]; then
-                    echo "CutSelection is $cutSelection";
-                    if [ $DoPi0 -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
-                        fi
-                        Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_*.root`
-                        if [ $MCFILE -eq 1 ]; then
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\)
-                            Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
-                            Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
-                            if [ $MERGINGMC -eq 1 ]; then
-                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Pi0\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,$mode\,1\)
-                                Pi0MCcorrectionFILEJJG=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJGammaTrigg_*.root`
-                                root -b -x -q -l TaskV1/MergeCorrFactorsJJandJJGammaTrigMergedCluster.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistosJJ_$cutSelection.root\"\,\"$Pi0MCcorrectionFILEJJG\"\)
-
-                            fi
-                            echo $Pi0dataRAWFILE
-                            echo $Pi0MCRAWFILE
-                            echo $cutSelection
-                            root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtPi0\,$mode\)
-                        fi
-                    fi
-
-                    if [ $DoEta -eq 1 ]; then
-                        if [ -f $DataRootFile ]; then
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
-                        fi
-                        EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_*.root`
-                        if [ $MCFILE -eq 1 ]; then
-                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\)
-                            EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
-                            EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
-                            if [ $MERGINGMC -eq 1 ]; then
-                                root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"Eta\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,$mode\,1\)
-                            fi
-                            root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
-                        fi
-                    fi
-                fi
-
-                if [ $DoPi0 -eq 1 ]; then
-                    Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaMergedWithoutCorrection_$cutSelection*.root`
-                    Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
-                    Pi0MCcorrectionFILE=`ls $cutSelection/$energy/Pi0_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
-                fi
-                if [ $DoEta -eq 1 ]; then
-                    EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_$cutSelection*.root`
-                    EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
-                    EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
-                fi
-
-                if [ $DoPi0 -eq 1 ]; then
-                    if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                          root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else
-                        PARTLY=1
-                    fi
-                    if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
-                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0MCRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else
-                        PARTLY=1
-                    fi
-                fi
-                if [ $DoEta -eq 1 ]; then
-                    if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else
-                            PARTLY=1
-                    fi
-                    if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
-                        root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
-                    else
-                            PARTLY=1
-                    fi
+                if [ -f $Pi0MCRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
+                    root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$Pi0MCRAWFILE\"\,\"$Pi0MCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Pi0\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                else
+                    PARTLY=1
                 fi
             fi
-            NORMALCUTS=`expr $NORMALCUTS + 1`
-        done
+            if [ $DoEta -eq 1 ]; then
+                if [ -f $EtadataRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
+                    root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                else
+                        PARTLY=1
+                fi
+                if [ -f $EtaMCRAWFILE ] && [ -f $EtaMCcorrectionFILE ]; then
+                    root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtaMCRAWFILE\"\,\"$EtaMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"Eta\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                else
+                        PARTLY=1
+                fi
+            fi
+        fi
+        NORMALCUTS=`expr $NORMALCUTS + 1`
+    done
 
-        if [ $DoPi0 -eq 1 ]; then
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
-        fi
-        if [ $DoEta -eq 1 ]; then
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
-            root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
-        fi
+    if [ $DoPi0 -eq 1 ]; then
+        root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+        root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+    fi
+    if [ $DoEta -eq 1 ]; then
+        root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+        root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
     fi
 fi
 

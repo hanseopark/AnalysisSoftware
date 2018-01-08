@@ -18,11 +18,6 @@ function CopyFileIfNonExisitent()
 function ChangeStructureIfNeeded()
 {
     cp $1 $2
-#     if [ -f $2 ]; then
-#         echo "already changed"
-#     else
-#         root -l -b -q -x ChangeStructureToStandardCaloMerged.C\(\"$1\"\,\"$2\"\,\"GammaCaloMerged_$3\"\)
-#     fi
 }
 
 NSlashes=10
@@ -211,7 +206,7 @@ if [ $2 = "LHC11a" ]; then
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJ=`cat binNumbersJJToMerge.txt`
+                binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
                 for binNumber in $binNumbersJJ; do
                     echo $binNumber
                     CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1a/$binNumber/$runNumber "/alice/sim/2015/LHC15g1a/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1aMC"
@@ -226,7 +221,7 @@ if [ $2 = "LHC11a" ]; then
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJGamma=`cat binNumbersJJGamma.txt`
+                binNumbersJJGamma=`cat runlists/binNumbersJJGamma.txt`
                 for binNumber in $binNumbersJJGamma; do
                     echo $binNumber
                     CopyFileIfNonExisitent $OUTPUTDIR_LHC15g1b/$binNumber/$runNumber "/alice/sim/2015/LHC15g1b/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15g1bMC"
@@ -284,7 +279,7 @@ if [ $2 = "LHC11a" ]; then
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g1a_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15g1a_$number.log\"\,10\)
         done;
 
-        binNumbersJJ=`cat binNumbersJJToMerge.txt`
+        binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
         echo $binNumbersJJ
         if [ $MERGEONBINSSingle = 1 ]; then
             ls $OUTPUTDIR_LHC15g1a/GammaCaloMerged_*.root > filetemp.txt
@@ -314,7 +309,7 @@ if [ $2 = "LHC11a" ]; then
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_MC_LHC15g1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaMergedCalo_MC_LHC15g1b_$number.log\"\,10\)
         done;
         if [ $MERGEONBINSSingle = 1 ]; then
-            binNumbersJJGamma=`cat binNumbersJJGamma.txt`
+            binNumbersJJGamma=`cat runlists/binNumbersJJGamma.txt`
             ls $OUTPUTDIR_LHC15g1b/GammaCaloMerged_*.root > filetemp.txt
             mkdir $OUTPUTDIR/LHC15g1aFineBins
             for binNumber in $binNumbersJJGamma; do
@@ -335,7 +330,7 @@ if [ $2 = "LHC11a" ]; then
         ls $OUTPUTDIR/GammaCaloMerged_MC_LHC15g1a_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
-            binsForMerging=`cat binNumbersJJToMerge.txt`
+            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
             TOMERGE="";
             for bin in $binsForMerging; do
@@ -442,7 +437,7 @@ elif [ $2 = "LHC13g" ]; then
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJ=`cat binNumbersJJToMerge.txt`
+                binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
                 for binNumber in $binNumbersJJ; do
                     echo $binNumber
                     CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3a/$binNumber/$runNumber "/alice/sim/2015/LHC15a3a/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15a3aMC"
@@ -459,7 +454,7 @@ elif [ $2 = "LHC13g" ]; then
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJ=`cat binNumbersJJToMerge.txt`
+                binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
                 for binNumber in $binNumbersJJ; do
                     echo $binNumber
                     CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3aplus/$binNumber/$runNumber "/alice/sim/2015/LHC15a3a_plus/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15a3aplusMC"
@@ -475,7 +470,7 @@ elif [ $2 = "LHC13g" ]; then
             echo $runNumbers
             for runNumber in $runNumbers; do
                 echo $runNumber
-                binNumbersJJGamma=`cat binNumbersJJGamma.txt`
+                binNumbersJJGamma=`cat runlists/binNumbersJJGamma.txt`
                 for binNumber in $binNumbersJJGamma; do
                     echo $binNumber
                     CopyFileIfNonExisitent $OUTPUTDIR_LHC15a3b/$binNumber/$runNumber "/alice/sim/2015/LHC15a3b/$binNumber/$runNumber/PWGGA/GA_pp_MC/$LHC15a3bMC"
@@ -510,7 +505,7 @@ elif [ $2 = "LHC13g" ]; then
 
 
     if [ $HAVELHC15a3a == 1 ]; then
-        binNumbersJJ=`cat binNumbersJJToMerge.txt`
+        binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
         echo $binNumbersJJ
         ls $OUTPUTDIR_LHC15a3a/GammaCaloMerged_*.root > filetemp.txt
         mkdir -p $OUTPUTDIR/LHC15a3aXFineBins
@@ -541,7 +536,7 @@ elif [ $2 = "LHC13g" ]; then
     fi
 
     if [ $HAVELHC15a3aplus == 1 ]; then
-        binNumbersJJ=`cat binNumbersJJToMerge.txt`
+        binNumbersJJ=`cat runlists/binNumbersJJToMerge.txt`
         echo $binNumbersJJ
         mkdir -p $OUTPUTDIR/LHC15a3aXFineBins
         ls $OUTPUTDIR_LHC15a3aplus/GammaCaloMerged_*.root > filetemp.txt
@@ -601,7 +596,7 @@ elif [ $2 = "LHC13g" ]; then
         ls $OUTPUTDIR/GammaCaloMerged_MC_LHC15a3a_*.root > filesForMerging.txt
         filesForMerging=`cat filesForMerging.txt`
         for fileName in $filesForMerging; do
-            binsForMerging=`cat binNumbersJJToMerge.txt`
+            binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
             TOMERGE="";
             for bin in $binsForMerging; do

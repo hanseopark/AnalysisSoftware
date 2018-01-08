@@ -4,6 +4,9 @@
 #ifndef GAMMACONV_Fitting
 #define GAMMACONV_Fitting
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     TF1* FitObject( TString type,
                     TString FunctionName,
                     TString mesonType       = "Pi0",
@@ -981,6 +984,9 @@
         return FitFunction;
     }
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     void SetParametersLimitsForFit (TF1* fit, Int_t nParams, Double_t parameters[] = NULL){
         for (Int_t i = 0; i < nParams; i++){
             fit->SetParLimits(i, parameters[i*2], parameters[i*2+1]);
@@ -988,6 +994,9 @@
         }
     }
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     TString WriteParameterToFile(TF1 *Funktion){
 
         TString name = Funktion->GetName();
@@ -1018,6 +1027,9 @@
         return stringOutput;
     }
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     TString WriteParameterToFileLatexTable(TF1 *Funktion, Bool_t isRad = 0){
 
         TString name = Funktion->GetName();
@@ -1048,7 +1060,9 @@
         return stringOutput;
     }
 
-
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     TH1D *FitToHist(TF1* FitFunction, TH1 *FittedHist, TString FitHistName){
 
         TH1D *FitHist = new TH1D();
@@ -1064,6 +1078,9 @@
         return FitHist;
     }
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     TF1* FitTH1DRecursivelyGaussian (TH1D* histo, Double_t precision, Double_t fitRangeMin, Double_t fitRangeMax ){
         TF1 *f0 = new TF1("f0", "gaus", fitRangeMin,fitRangeMax);
         histo->Fit(f0,"0RMEQ");
@@ -1090,7 +1107,9 @@
         return f1;
     }
 
-
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     void ResolutionFitting( TH2* histoRebinned,
                             TH1D** histoArray,
                             TF1** fitArray,
@@ -1179,7 +1198,22 @@
         } //end of fitting
     }
 
-    void ResolutionFittingNormalized( TH2* histoRebinned, TH1D** histoArray, TF1** fitArray , TH1D* histoNorm, Int_t nBins, TH1F* histoMean, TH1F* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, TString defaultName){
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void ResolutionFittingNormalized(   TH2* histoRebinned,
+                                        TH1D** histoArray,
+                                        TF1** fitArray ,
+                                        TH1D* histoNorm,
+                                        Int_t nBins,
+                                        TH1F* histoMean,
+                                        TH1F* histoSigma,
+                                        TString fitName,
+                                        Double_t rangeMin,
+                                        Double_t rangeMax,
+                                        Double_t precision,
+                                        TString defaultName
+                                    ){
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             fitArray[i-1] = 0x00;
             histoArray[i-1] = histoRebinned->ProjectionY(Form("%s_%i",defaultName.Data(),i-1), i, i);
@@ -1261,20 +1295,23 @@
         } //end of fitting
     }
 
-
-    void ResolutionFittingRebined( TH2* histo,
-                                TH1D** histoArray,
-                                TF1** fitArray ,
-                                Int_t nBins,
-                                Double_t* ptRanges,
-                                Int_t* rebin,
-                                TH1F* histoMean,
-                                TH1F* histoSigma,
-                                TString fitName,
-                                Double_t rangeMin,
-                                Double_t rangeMax,
-                                Double_t precision,
-                                TString defaultName){
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void ResolutionFittingRebined(  TH2* histo,
+                                    TH1D** histoArray,
+                                    TF1** fitArray ,
+                                    Int_t nBins,
+                                    Double_t* ptRanges,
+                                    Int_t* rebin,
+                                    TH1F* histoMean,
+                                    TH1F* histoSigma,
+                                    TString fitName,
+                                    Double_t rangeMin,
+                                    Double_t rangeMax,
+                                    Double_t precision,
+                                    TString defaultName
+                                 ){
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             cout << "Bin \t" << i-1 << "\t pt range: "<< ptRanges[i-1]<< " - " << ptRanges[i] <<  endl;
             fitArray[i-1] = 0x00;
@@ -1358,7 +1395,23 @@
         } //end of fitting
     }
 
-    void ResolutionFittingArray(TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1F* histoMean, TH1F* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, Double_t meanInput =0., Double_t sigmaInput=0.5, Double_t offsetMean = 0, Double_t fractionSecondGauss=0.5){
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void ResolutionFittingArray(    TH1D** histoArray,
+                                    TF1** fitArray ,
+                                    Int_t nBins,
+                                    TH1F* histoMean,
+                                    TH1F* histoSigma,
+                                    TString fitName,
+                                    Double_t rangeMin,
+                                    Double_t rangeMax,
+                                    Double_t precision,
+                                    Double_t meanInput =0.,
+                                    Double_t sigmaInput=0.5,
+                                    Double_t offsetMean = 0,
+                                    Double_t fractionSecondGauss=0.5
+                               ){
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             fitArray[i-1] = 0x00;
             if (histoArray[i-1]->GetEntries() > 0){
@@ -1436,7 +1489,23 @@
         } //end of fitting
     }
 
-    void ResolutionFittingArrayTH1D(TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1D* histoMean, TH1D* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, Double_t meanInput =0., Double_t sigmaInput=0.5, Double_t offsetMean = 0, Double_t fractionSecondGauss=0.5){
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void ResolutionFittingArrayTH1D(    TH1D** histoArray,
+                                        TF1** fitArray ,
+                                        Int_t nBins,
+                                        TH1D* histoMean,
+                                        TH1D* histoSigma,
+                                        TString fitName,
+                                        Double_t rangeMin,
+                                        Double_t rangeMax,
+                                        Double_t precision,
+                                        Double_t meanInput =0.,
+                                        Double_t sigmaInput=0.5,
+                                        Double_t offsetMean = 0,
+                                        Double_t fractionSecondGauss=0.5
+                                   ){
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             fitArray[i-1] = 0x00;
             if (histoArray[i-1]->GetEntries() > 0){
@@ -1514,7 +1583,21 @@
         } //end of fitting
     }
 
-    void ResolutionFittingTH1D( TH2* histoRebinned, TH1D** histoArray, TF1** fitArray , Int_t nBins, TH1D* histoMean, TH1D* histoSigma, TString fitName, Double_t rangeMin, Double_t rangeMax, Double_t precision, TString defaultName){
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void ResolutionFittingTH1D( TH2* histoRebinned,
+                                TH1D** histoArray,
+                                TF1** fitArray ,
+                                Int_t nBins,
+                                TH1D* histoMean,
+                                TH1D* histoSigma,
+                                TString fitName,
+                                Double_t rangeMin,
+                                Double_t rangeMax,
+                                Double_t precision,
+                                TString defaultName
+                              ){
         for (Int_t i = 1; i < nBins + 1 ; i ++){
             fitArray[i-1] = 0x00;
             histoArray[i-1] = histoRebinned->ProjectionY(Form("%s_%i",defaultName.Data(),i-1), i, i);
@@ -1594,65 +1677,71 @@
     //*****************************************************************/
     //* BOLTZMANN
     //*****************************************************************/
+    Double_t  Boltzmann_Func( const Double_t *x,
+                              const Double_t *p
+                            ){
+        /* dN/dpt */
 
-    Double_t
-    Boltzmann_Func(const Double_t *x, const Double_t *p)
-    {
-    /* dN/dpt */
+        Double_t pt = x[0];
+        Double_t mass = p[0];
+        Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
+        Double_t T = p[1];
+        Double_t norm = p[2];
 
-    Double_t pt = x[0];
-    Double_t mass = p[0];
-    Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
-    Double_t T = p[1];
-    Double_t norm = p[2];
-
-    return pt * norm * mt * TMath::Exp(-mt / T);
+        return pt * norm * mt * TMath::Exp(-mt / T);
     }
 
-    TF1 *
-    Boltzmann(const Char_t *name, Double_t mass, Double_t T = 0.1, Double_t norm = 1.)
-    {
+    TF1 *Boltzmann( const Char_t *name,
+                    Double_t mass,
+                    Double_t T = 0.1,
+                    Double_t norm = 1.
+                  ){
 
-    TF1 *fBoltzmann = new TF1(name, Boltzmann_Func, 0., 10., 3);
-    fBoltzmann->SetParameters(mass, T, norm);
-    fBoltzmann->SetParNames("mass", "T", "norm");
-    fBoltzmann->FixParameter(0, mass);
-    return fBoltzmann;
+        TF1 *fBoltzmann = new TF1(name, Boltzmann_Func, 0., 10., 3);
+        fBoltzmann->SetParameters(mass, T, norm);
+        fBoltzmann->SetParNames("mass", "T", "norm");
+        fBoltzmann->FixParameter(0, mass);
+        return fBoltzmann;
     }
 
     /*****************************************************************/
     /* LEVY-TSALLIS */
     /*****************************************************************/
+    Double_t LevyTsallis_Func( const Double_t *x,
+                               const Double_t *p
+                             ){
+        /* dN/dpt */
 
-    Double_t
-    LevyTsallis_Func(const Double_t *x, const Double_t *p)
-    {
-    /* dN/dpt */
+        Double_t pt = x[0];
+        Double_t mass = p[0];
+        Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
+        Double_t n = p[1];
+        Double_t C = p[2];
+        Double_t norm = p[3];
 
-    Double_t pt = x[0];
-    Double_t mass = p[0];
-    Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
-    Double_t n = p[1];
-    Double_t C = p[2];
-    Double_t norm = p[3];
-
-    Double_t part1 = (n - 1.) * (n - 2);
-    Double_t part2 = n * C * (n * C + mass * (n - 2.));
-    Double_t part3 = part1 / part2;
-    Double_t part4 = 1. + (mt - mass) / n / C;
-    Double_t part5 = TMath::Power(part4, -n);
-    return pt * norm * part3 * part5;
+        Double_t part1 = (n - 1.) * (n - 2);
+        Double_t part2 = n * C * (n * C + mass * (n - 2.));
+        Double_t part3 = part1 / part2;
+        Double_t part4 = 1. + (mt - mass) / n / C;
+        Double_t part5 = TMath::Power(part4, -n);
+        return pt * norm * part3 * part5;
     }
 
-    TF1 *
-    LevyTsallis(const Char_t *name, Double_t mass, Double_t n = 5., Double_t C = 0.1, Double_t norm = 1.)
-    {
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1 *LevyTsallis(   const Char_t *name,
+                        Double_t mass,
+                        Double_t n = 5.,
+                        Double_t C = 0.1,
+                        Double_t norm = 1.
+                    ){
 
-    TF1 *fLevyTsallis = new TF1(name, LevyTsallis_Func, 0., 10., 4);
-    fLevyTsallis->SetParameters(mass, n, C, norm);
-    fLevyTsallis->SetParNames("mass", "n", "C", "norm");
-    fLevyTsallis->FixParameter(0, mass);
-    return fLevyTsallis;
+        TF1 *fLevyTsallis = new TF1(name, LevyTsallis_Func, 0., 10., 4);
+        fLevyTsallis->SetParameters(mass, n, C, norm);
+        fLevyTsallis->SetParNames("mass", "n", "C", "norm");
+        fLevyTsallis->FixParameter(0, mass);
+        return fLevyTsallis;
     }
 
     /*****************************************************************/
@@ -1660,788 +1749,863 @@
     /*****************************************************************/
 
     static TF1 *fBGBlastWave_Integrand = NULL;
-    Double_t
-    BGBlastWave_Integrand(const Double_t *x, const Double_t *p)
-    {
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t BGBlastWave_Integrand( const Double_t *x,
+                                    const Double_t *p
+                                  ) {
+        /*
+            x[0] -> r (radius)
+            p[0] -> mT (transverse mass)
+            p[1] -> pT (transverse momentum)
+            p[2] -> beta_max (surface velocity)
+            p[3] -> T (freezout temperature)
+            p[4] -> n (velocity profile)
+        */
 
-    /*
-        x[0] -> r (radius)
-        p[0] -> mT (transverse mass)
-        p[1] -> pT (transverse momentum)
-        p[2] -> beta_max (surface velocity)
-        p[3] -> T (freezout temperature)
-        p[4] -> n (velocity profile)
-    */
+        Double_t r = x[0];
+        Double_t mt = p[0];
+        Double_t pt = p[1];
+        Double_t beta_max = p[2];
+        Double_t temp_1 = 1. / p[3];
+        Double_t n = p[4];
 
-    Double_t r = x[0];
-    Double_t mt = p[0];
-    Double_t pt = p[1];
-    Double_t beta_max = p[2];
-    Double_t temp_1 = 1. / p[3];
-    Double_t n = p[4];
-
-    Double_t beta = beta_max * TMath::Power(r, n);
-    if (beta > 0.9999999999999999) beta = 0.9999999999999999;
-    Double_t rho = TMath::ATanH(beta);
-    Double_t argI0 = pt * TMath::SinH(rho) * temp_1;
-    if (argI0 > 700.) argI0 = 700.;
-    Double_t argK1 = mt * TMath::CosH(rho) * temp_1;
-    //  if (argI0 > 100 || argI0 < -100)
-    //    printf("r=%f, pt=%f, beta_max=%f, temp=%f, n=%f, mt=%f, beta=%f, rho=%f, argI0=%f, argK1=%f\n", r, pt, beta_max, 1. / temp_1, n, mt, beta, rho, argI0, argK1);
-    return r * mt * TMath::BesselI0(argI0) * TMath::BesselK1(argK1);
+        Double_t beta = beta_max * TMath::Power(r, n);
+        if (beta > 0.9999999999999999) beta = 0.9999999999999999;
+        Double_t rho = TMath::ATanH(beta);
+        Double_t argI0 = pt * TMath::SinH(rho) * temp_1;
+        if (argI0 > 700.) argI0 = 700.;
+        Double_t argK1 = mt * TMath::CosH(rho) * temp_1;
+        //  if (argI0 > 100 || argI0 < -100)
+        //    printf("r=%f, pt=%f, beta_max=%f, temp=%f, n=%f, mt=%f, beta=%f, rho=%f, argI0=%f, argK1=%f\n", r, pt, beta_max, 1. / temp_1, n, mt, beta, rho, argI0, argK1);
+        return r * mt * TMath::BesselI0(argI0) * TMath::BesselK1(argK1);
 
     }
 
-    Double_t
-    BGBlastWave_Func(const Double_t *x, const Double_t *p)
-    {
-    /* dN/dpt */
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t BGBlastWave_Func( const Double_t *x,
+                               const Double_t *p
+                             ){
+        /* dN/dpt */
 
-    Double_t pt = x[0];
-    Double_t mass = p[0];
-    Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
-    Double_t beta_max = p[1];
-    Double_t temp = p[2];
-    Double_t n = p[3];
-    Double_t norm = p[4];
+        Double_t pt = x[0];
+        Double_t mass = p[0];
+        Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
+        Double_t beta_max = p[1];
+        Double_t temp = p[2];
+        Double_t n = p[3];
+        Double_t norm = p[4];
 
-    if (!fBGBlastWave_Integrand)
-        fBGBlastWave_Integrand = new TF1("fBGBlastWave_Integrand", BGBlastWave_Integrand, 0., 1., 5);
-    fBGBlastWave_Integrand->SetParameters(mt, pt, beta_max, temp, n);
-    Double_t integral = fBGBlastWave_Integrand->Integral(0., 1.);
-    return norm * pt * integral;
+        if (!fBGBlastWave_Integrand)
+            fBGBlastWave_Integrand = new TF1("fBGBlastWave_Integrand", BGBlastWave_Integrand, 0., 1., 5);
+        fBGBlastWave_Integrand->SetParameters(mt, pt, beta_max, temp, n);
+        Double_t integral = fBGBlastWave_Integrand->Integral(0., 1.);
+        return norm * pt * integral;
     }
 
-    Double_t
-    BGBlastWave_Func_OneOverPt(const Double_t *x, const Double_t *p)
-    {
-    /* 1/pt dN/dpt */
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t BGBlastWave_Func_OneOverPt( const Double_t *x,
+                                         const Double_t *p
+                                       ){
+        /* 1/pt dN/dpt */
 
-    Double_t pt = x[0];
-    Double_t mass = p[0];
-    Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
-    Double_t beta_max = p[1];
-    Double_t temp = p[2];
-    Double_t n = p[3];
-    Double_t norm = p[4];
+        Double_t pt = x[0];
+        Double_t mass = p[0];
+        Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
+        Double_t beta_max = p[1];
+        Double_t temp = p[2];
+        Double_t n = p[3];
+        Double_t norm = p[4];
 
-    if (!fBGBlastWave_Integrand)
-        fBGBlastWave_Integrand = new TF1("fBGBlastWave_Integrand", BGBlastWave_Integrand, 0., 1., 5);
-    fBGBlastWave_Integrand->SetParameters(mt, pt, beta_max, temp, n);
-    Double_t integral = fBGBlastWave_Integrand->Integral(0., 1.);
+        if (!fBGBlastWave_Integrand)
+            fBGBlastWave_Integrand = new TF1("fBGBlastWave_Integrand", BGBlastWave_Integrand, 0., 1., 5);
+        fBGBlastWave_Integrand->SetParameters(mt, pt, beta_max, temp, n);
+        Double_t integral = fBGBlastWave_Integrand->Integral(0., 1.);
 
-    return norm * integral;
+        return norm * integral;
     }
 
 
-    TF1 *
-    BGBlastWave(const Char_t *name, Double_t mass, Double_t xmin = 0, Double_t xmax = 10,Double_t beta_max = 0.9, Double_t temp = 0.1, Double_t n = 1., Double_t norm = 1.e6)
-    {
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1 *BGBlastWave(   const Char_t *name,
+                        Double_t mass,
+                        Double_t xmin = 0,
+                        Double_t xmax = 10,
+                        Double_t beta_max = 0.9,
+                        Double_t temp = 0.1,
+                        Double_t n = 1.,
+                        Double_t norm = 1.e6
+                    ) {
 
-    TF1 *fBGBlastWave = new TF1(name, BGBlastWave_Func, xmin, xmax, 5);
-    fBGBlastWave->SetParameters(mass, beta_max, temp, n, norm);
-    fBGBlastWave->SetParNames("mass", "beta_max", "T", "n", "norm");
-    fBGBlastWave->FixParameter(0, mass);
-    fBGBlastWave->SetParLimits(1, 0.01, 0.99);
-    fBGBlastWave->SetParLimits(2, 0.01, 1.);
-    fBGBlastWave->SetParLimits(3, 0.01, 10.);
-    return fBGBlastWave;
+        TF1 *fBGBlastWave = new TF1(name, BGBlastWave_Func, xmin, xmax, 5);
+        fBGBlastWave->SetParameters(mass, beta_max, temp, n, norm);
+        fBGBlastWave->SetParNames("mass", "beta_max", "T", "n", "norm");
+        fBGBlastWave->FixParameter(0, mass);
+        fBGBlastWave->SetParLimits(1, 0.01, 0.99);
+        fBGBlastWave->SetParLimits(2, 0.01, 1.);
+        fBGBlastWave->SetParLimits(3, 0.01, 10.);
+        return fBGBlastWave;
     }
 
-    TF1 * BGBlastWave_OneOverPT(const Char_t *name, Double_t mass, Double_t xmin = 0, Double_t xmax = 1, Double_t beta_max = 0.9, Double_t temp = 0.1, Double_t n = 1., Double_t norm = 1.e6)
-    {
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1 * BGBlastWave_OneOverPT(    const Char_t *name,
+                                    Double_t mass,
+                                    Double_t xmin = 0,
+                                    Double_t xmax = 1,
+                                    Double_t beta_max = 0.9,
+                                    Double_t temp = 0.1,
+                                    Double_t n = 1.,
+                                    Double_t norm = 1.e6
+                               ){
 
-    TF1 *fBGBlastWave = new TF1(name, BGBlastWave_Func_OneOverPt, xmin, xmax, 5);
-    fBGBlastWave->SetParameters(mass, beta_max, temp, n, norm);
-    fBGBlastWave->SetParNames("mass", "beta_max", "T", "n", "norm");
-    fBGBlastWave->FixParameter(0, mass);
-    fBGBlastWave->SetParLimits(1, 0.01, 0.99);
-    fBGBlastWave->SetParLimits(2, 0.01, 1.);
-    fBGBlastWave->SetParLimits(3, 0.01, 10.);
-    return fBGBlastWave;
+        TF1 *fBGBlastWave = new TF1(name, BGBlastWave_Func_OneOverPt, xmin, xmax, 5);
+        fBGBlastWave->SetParameters(mass, beta_max, temp, n, norm);
+        fBGBlastWave->SetParNames("mass", "beta_max", "T", "n", "norm");
+        fBGBlastWave->FixParameter(0, mass);
+        fBGBlastWave->SetParLimits(1, 0.01, 0.99);
+        fBGBlastWave->SetParLimits(2, 0.01, 1.);
+        fBGBlastWave->SetParLimits(3, 0.01, 10.);
+        return fBGBlastWave;
     }
 
     /*****************************************************************/
     /* TSALLIS BLAST-WAVE */
     /*****************************************************************/
-
     static TF1 *fTsallisBlastWave_Integrand_r = NULL;
-    Double_t
-    TsallisBlastWave_Integrand_r(const Double_t *x, const Double_t *p)
-    {
-    /*
-        x[0] -> r (radius)
-        p[0] -> mT (transverse mass)
-        p[1] -> pT (transverse momentum)
-        p[2] -> beta_max (surface velocity)
-        p[3] -> T (freezout temperature)
-        p[4] -> n (velocity profile)
-        p[5] -> q
-        p[6] -> y (rapidity)
-        p[7] -> phi (azimuthal angle)
-    */
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t TsallisBlastWave_Integrand_r(  const Double_t *x,
+                                            const Double_t *p
+                                         ){
+        /*
+            x[0] -> r (radius)
+            p[0] -> mT (transverse mass)
+            p[1] -> pT (transverse momentum)
+            p[2] -> beta_max (surface velocity)
+            p[3] -> T (freezout temperature)
+            p[4] -> n (velocity profile)
+            p[5] -> q
+            p[6] -> y (rapidity)
+            p[7] -> phi (azimuthal angle)
+        */
 
-    Double_t r = x[0];
-    Double_t mt = p[0];
-    Double_t pt = p[1];
-    Double_t beta_max = p[2];
-    Double_t temp_1 = 1. / p[3];
-    Double_t n = p[4];
-    Double_t q = p[5];
-    Double_t y = p[6];
-    Double_t phi = p[7];
+        Double_t r = x[0];
+        Double_t mt = p[0];
+        Double_t pt = p[1];
+        Double_t beta_max = p[2];
+        Double_t temp_1 = 1. / p[3];
+        Double_t n = p[4];
+        Double_t q = p[5];
+        Double_t y = p[6];
+        Double_t phi = p[7];
 
-    if (q <= 1.) return r;
+        if (q <= 1.) return r;
 
-    Double_t beta = beta_max * TMath::Power(r, n);
-    Double_t rho = TMath::ATanH(beta);
+        Double_t beta = beta_max * TMath::Power(r, n);
+        Double_t rho = TMath::ATanH(beta);
 
-    Double_t part1 = mt * TMath::CosH(y) * TMath::CosH(rho);
-    Double_t part2 = pt * TMath::SinH(rho) * TMath::Cos(phi);
-    Double_t part3 = part1 - part2;
-    Double_t part4 = 1 + (q - 1.) * temp_1 * part3;
-    Double_t expo = -1. / (q - 1.);
-    //  printf("part1=%f, part2=%f, part3=%f, part4=%f, expo=%f\n", part1, part2, part3, part4, expo);
-    Double_t part5 = TMath::Power(part4, expo);
+        Double_t part1 = mt * TMath::CosH(y) * TMath::CosH(rho);
+        Double_t part2 = pt * TMath::SinH(rho) * TMath::Cos(phi);
+        Double_t part3 = part1 - part2;
+        Double_t part4 = 1 + (q - 1.) * temp_1 * part3;
+        Double_t expo = -1. / (q - 1.);
+        //  printf("part1=%f, part2=%f, part3=%f, part4=%f, expo=%f\n", part1, part2, part3, part4, expo);
+        Double_t part5 = TMath::Power(part4, expo);
 
-    return r * part5;
+        return r * part5;
     }
 
     static TF1 *fTsallisBlastWave_Integrand_phi = NULL;
-    Double_t
-    TsallisBlastWave_Integrand_phi(const Double_t *x, const Double_t *p)
-    {
-    /*
-        x[0] -> phi (azimuthal angle)
-    */
-    if(p){};
-    Double_t phi = x[0];
-    fTsallisBlastWave_Integrand_r->SetParameter(7, phi);
-    Double_t integral = fTsallisBlastWave_Integrand_r->Integral(0., 1.);
-    return integral;
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t TsallisBlastWave_Integrand_phi( const Double_t *x,
+                                             const Double_t *p
+                                           ){
+        /*
+            x[0] -> phi (azimuthal angle)
+        */
+        if(p){};
+        Double_t phi = x[0];
+        fTsallisBlastWave_Integrand_r->SetParameter(7, phi);
+        Double_t integral = fTsallisBlastWave_Integrand_r->Integral(0., 1.);
+        return integral;
     }
 
     static TF1 *fTsallisBlastWave_Integrand_y = NULL;
-    Double_t
-    TsallisBlastWave_Integrand_y(const Double_t *x, const Double_t *p)
-    {
-    /*
-        x[0] -> y (rapidity)
-    */
-    if(p){};
-    Double_t y = x[0];
-    fTsallisBlastWave_Integrand_r->SetParameter(6, y);
-    Double_t integral = fTsallisBlastWave_Integrand_phi->Integral(-TMath::Pi(), TMath::Pi());
-    return TMath::CosH(y) * integral;
-    }
-
-    Double_t
-    TsallisBlastWave_Func(const Double_t *x, const Double_t *p)
-    {
-    /* dN/dpt */
-
-    Double_t pt = x[0];
-    Double_t mass = p[0];
-    Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
-    Double_t beta_max = p[1];
-    Double_t temp = p[2];
-    Double_t n = p[3];
-    Double_t q = p[4];
-    Double_t norm = p[5];
-
-    if (!fTsallisBlastWave_Integrand_r)
-        fTsallisBlastWave_Integrand_r = new TF1("fTsallisBlastWave_Integrand_r", TsallisBlastWave_Integrand_r, 0., 1., 8);
-    if (!fTsallisBlastWave_Integrand_phi)
-        fTsallisBlastWave_Integrand_phi = new TF1("fTsallisBlastWave_Integrand_phi", TsallisBlastWave_Integrand_phi, -TMath::Pi(), TMath::Pi(), 0);
-    if (!fTsallisBlastWave_Integrand_y)
-        fTsallisBlastWave_Integrand_y = new TF1("fTsallisBlastWave_Integrand_y", TsallisBlastWave_Integrand_y, -0.5, 0.5, 0);
-
-    fTsallisBlastWave_Integrand_r->SetParameters(mt, pt, beta_max, temp, n, q, 0., 0.);
-    Double_t integral = fTsallisBlastWave_Integrand_y->Integral(-0.5, 0.5);
-    return norm * pt * integral;
-    }
-
-    TF1 *
-    TsallisBlastWave(const Char_t *name, Double_t mass, Double_t xmin =0., Double_t xmax = 10.,  Double_t beta_max = 0.9, Double_t temp = 0.1, Double_t n = 1., Double_t q = 2., Double_t norm = 1.e6)
-    {
-
-    TF1 *fTsallisBlastWave = new TF1(name, TsallisBlastWave_Func, xmin, xmax, 6);
-    fTsallisBlastWave->SetParameters(mass, beta_max, temp, n, q, norm);
-    fTsallisBlastWave->SetParNames("mass", "beta_max", "T", "n", "q", "norm");
-    fTsallisBlastWave->FixParameter(0, mass);
-    fTsallisBlastWave->SetParLimits(1, 0.01, 0.99);
-    fTsallisBlastWave->SetParLimits(2, 0.01, 1.);
-    fTsallisBlastWave->SetParLimits(3, 0.1, 10.);
-    fTsallisBlastWave->SetParLimits(4, 1., 10.);
-    return fTsallisBlastWave;
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t TsallisBlastWave_Integrand_y( const Double_t *x,
+                                           const Double_t *p
+                                         ) {
+        /*
+            x[0] -> y (rapidity)
+        */
+        if(p){};
+        Double_t y = x[0];
+        fTsallisBlastWave_Integrand_r->SetParameter(6, y);
+        Double_t integral = fTsallisBlastWave_Integrand_phi->Integral(-TMath::Pi(), TMath::Pi());
+        return TMath::CosH(y) * integral;
     }
 
     /*****************************************************************/
     /*****************************************************************/
     /*****************************************************************/
+    Double_t  TsallisBlastWave_Func( const Double_t *x,
+                                     const Double_t *p
+                                   ){
+        /* dN/dpt */
+        Double_t pt = x[0];
+        Double_t mass = p[0];
+        Double_t mt = TMath::Sqrt(pt * pt + mass * mass);
+        Double_t beta_max = p[1];
+        Double_t temp = p[2];
+        Double_t n = p[3];
+        Double_t q = p[4];
+        Double_t norm = p[5];
 
+        if (!fTsallisBlastWave_Integrand_r)
+            fTsallisBlastWave_Integrand_r = new TF1("fTsallisBlastWave_Integrand_r", TsallisBlastWave_Integrand_r, 0., 1., 8);
+        if (!fTsallisBlastWave_Integrand_phi)
+            fTsallisBlastWave_Integrand_phi = new TF1("fTsallisBlastWave_Integrand_phi", TsallisBlastWave_Integrand_phi, -TMath::Pi(), TMath::Pi(), 0);
+        if (!fTsallisBlastWave_Integrand_y)
+            fTsallisBlastWave_Integrand_y = new TF1("fTsallisBlastWave_Integrand_y", TsallisBlastWave_Integrand_y, -0.5, 0.5, 0);
 
-    TF1 *
-    BGBlastWave_SingleFit(TH1 *h, Double_t mass, Option_t *opt = "", Double_t xmin = 0., Double_t xmax = 10.)
-    {
+        fTsallisBlastWave_Integrand_r->SetParameters(mt, pt, beta_max, temp, n, q, 0., 0.);
+        Double_t integral = fTsallisBlastWave_Integrand_y->Integral(-0.5, 0.5);
+        return norm * pt * integral;
+    }
 
-    TF1 *f = BGBlastWave(Form("fBGBW_%s", h->GetName()), mass, xmin, xmax);
-    //   h->Fit(f);
-    //   h->Fit(f);
-    h->Fit(f, opt);
-    return f;
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1 *TsallisBlastWave( const Char_t *name,
+                           Double_t mass,
+                           Double_t xmin =0.,
+                           Double_t xmax = 10.,
+                           Double_t beta_max = 0.9,
+                           Double_t temp = 0.1,
+                           Double_t n = 1.,
+                           Double_t q = 2.,
+                           Double_t norm = 1.e6
+                         ){
+
+        TF1 *fTsallisBlastWave = new TF1(name, TsallisBlastWave_Func, xmin, xmax, 6);
+        fTsallisBlastWave->SetParameters(mass, beta_max, temp, n, q, norm);
+        fTsallisBlastWave->SetParNames("mass", "beta_max", "T", "n", "q", "norm");
+        fTsallisBlastWave->FixParameter(0, mass);
+        fTsallisBlastWave->SetParLimits(1, 0.01, 0.99);
+        fTsallisBlastWave->SetParLimits(2, 0.01, 1.);
+        fTsallisBlastWave->SetParLimits(3, 0.1, 10.);
+        fTsallisBlastWave->SetParLimits(4, 1., 10.);
+        return fTsallisBlastWave;
+    }
+
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1 *BGBlastWave_SingleFit( TH1 *h,
+                                Double_t mass,
+                                Option_t *opt = "",
+                                Double_t xmin = 0.,
+                                Double_t xmax = 10.
+                              ){
+
+        TF1 *f = BGBlastWave(Form("fBGBW_%s", h->GetName()), mass, xmin, xmax);
+        //   h->Fit(f);
+        //   h->Fit(f);
+        h->Fit(f, opt);
+        return f;
 
     }
 
-    TF1 *
-    TsallisBlastWave_SingleFit(TH1 *h, Double_t mass, Option_t *opt = "", Double_t xmin = 0., Double_t xmax = 10.)
-    {
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1 *TsallisBlastWave_SingleFit( TH1 *h,
+                                     Double_t mass,
+                                     Option_t *opt = "",
+                                     Double_t xmin = 0.,
+                                     Double_t xmax = 10.
+                                   ){
 
-    TF1 *f = TsallisBlastWave(Form("fTsBW_%s", h->GetName()), mass, xmin, xmax);
-    //   h->Fit(f);
-    //   h->Fit(f);
-    h->Fit(f, opt);
-    return f;
-
-    }
-
-
-    TF1 *
-    BGBlastWave_SingleFit_OneOverPT(TObject *h, Double_t mass, Option_t *opt = "", Double_t xmin = 0., Double_t xmax = 10.)
-    {
-    TF1 *f = BGBlastWave_OneOverPT(Form("fBGBW_%s", h->GetName()), mass,xmin,xmax);
-    TString ClassName = h->ClassName();
-    if(ClassName.BeginsWith("TH1")){
-        TH1 *Obj = (TH1*)h;
-    //    h->Fit(f);
-    //    h->Fit(f);
-        Obj->Fit(f, opt);
-    }
-    if(ClassName.BeginsWith("TGraphErrors")){
-        TGraphErrors *Obj = (TGraphErrors*)h;
-    //    h->Fit(f);
-    //    h->Fit(f);
-        Obj->Fit(f, opt);
-    }
-    if(ClassName.BeginsWith("TGraphAsymmErrors")){
-        TGraphAsymmErrors *Obj = (TGraphAsymmErrors*)h;
-    //    h->Fit(f);
-    //    h->Fit(f);
-        Obj->Fit(f, opt);
-    }
-    return f;
+        TF1 *f = TsallisBlastWave(Form("fTsBW_%s", h->GetName()), mass, xmin, xmax);
+        //   h->Fit(f);
+        //   h->Fit(f);
+        h->Fit(f, opt);
+        return f;
 
     }
 
-    void GetYieldAndMean(TH1 *h, TF1 *f, Double_t &yield, Double_t &yielderr, Double_t &yielderrcorr, Double_t &mean, Double_t &meanerr, Double_t &meanerrcorr, Double_t min, Double_t max, Double_t *partyield, Double_t *partyielderr, Double_t *partyielderrcorr)
-    {
-
-    /* find lowest edge in histo */
-    Int_t binlo = 0;
-    Double_t lo = 0;
-    for (Int_t ibin = 1; ibin < h->GetNbinsX() + 1; ibin++) {
-        if (h->GetBinContent(ibin) != 0.) {
-        binlo = ibin;
-        lo = h->GetBinLowEdge(ibin);
-        break;
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    TF1* BGBlastWave_SingleFit_OneOverPT( TObject *h,
+                                          Double_t mass,
+                                          Option_t *opt = "",
+                                          Double_t xmin = 0.,
+                                          Double_t xmax = 10.
+                                        ){
+        TF1 *f = BGBlastWave_OneOverPT(Form("fBGBW_%s", h->GetName()), mass,xmin,xmax);
+        TString ClassName = h->ClassName();
+        if(ClassName.BeginsWith("TH1")){
+            TH1 *Obj = (TH1*)h;
+        //    h->Fit(f);
+        //    h->Fit(f);
+            Obj->Fit(f, opt);
         }
+        if(ClassName.BeginsWith("TGraphErrors")){
+            TGraphErrors *Obj = (TGraphErrors*)h;
+        //    h->Fit(f);
+        //    h->Fit(f);
+            Obj->Fit(f, opt);
+        }
+        if(ClassName.BeginsWith("TGraphAsymmErrors")){
+            TGraphAsymmErrors *Obj = (TGraphAsymmErrors*)h;
+        //    h->Fit(f);
+        //    h->Fit(f);
+            Obj->Fit(f, opt);
+        }
+        return f;
+
     }
 
-    /* find highest edge in histo */
-    Int_t binhi = 0;
-    Double_t hi = 0;
-    for (Int_t ibin = h->GetNbinsX(); ibin > 0; ibin--) {
-        if (h->GetBinContent(ibin) != 0.) {
-        binhi = ibin + 1;
-        hi = h->GetBinLowEdge(ibin + 1);
-        break;
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void GetYieldAndMean(   TH1 *h,
+                            TF1 *f,
+                            Double_t &yield,
+                            Double_t &yielderr,
+                            Double_t &yielderrcorr,
+                            Double_t &mean,
+                            Double_t &meanerr,
+                            Double_t &meanerrcorr,
+                            Double_t min,
+                            Double_t max,
+                            Double_t *partyield,
+                            Double_t *partyielderr,
+                            Double_t *partyielderrcorr
+                        ){
+
+        /* find lowest edge in histo */
+        Int_t binlo = 0;
+        Double_t lo = 0;
+        for (Int_t ibin = 1; ibin < h->GetNbinsX() + 1; ibin++) {
+            if (h->GetBinContent(ibin) != 0.) {
+            binlo = ibin;
+            lo = h->GetBinLowEdge(ibin);
+            break;
+            }
         }
-    }
 
-    /* integrate the data */
-    Double_t cont, err, width, cent, integral_data = 0., integralerr_data = 0., integralerrcorr_data = 0., meanintegral_data = 0., meanintegralerr_data = 0., meanintegralerrcorr_data = 0.;
-    for (Int_t ibin = binlo; ibin < binhi; ibin++) {
-        cent = h->GetBinCenter(ibin);
-        width = h->GetBinWidth(ibin);
-        cont = h->GetBinContent(ibin);
-        err = h->GetBinError(ibin);
-        /* check we didn't get an empty bin in between */
-        if (cont != 0. && err != 0.) {
-        /* all right, use data */
-        integral_data += cont * width;
-        integralerr_data += err * err * width * width;
-        integralerrcorr_data += err * width;
-        meanintegral_data += cont * width * cent;
-        meanintegralerr_data += err * err * width * width * cent * cent;
-        meanintegralerrcorr_data += err * width * cent;
+        /* find highest edge in histo */
+        Int_t binhi = 0;
+        Double_t hi = 0;
+        for (Int_t ibin = h->GetNbinsX(); ibin > 0; ibin--) {
+            if (h->GetBinContent(ibin) != 0.) {
+            binhi = ibin + 1;
+            hi = h->GetBinLowEdge(ibin + 1);
+            break;
+            }
         }
-        else {
-        /* missing data-point, complain and use function */
-        printf("WARNING: missing data-point at %f\n", cent);
-        printf("         using function as a patch\n");
-        integral_data += f->Integral(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1));
-        integralerr_data += f->IntegralError(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1), 0, 0, 1.e-6);
-        meanintegral_data += f->Mean(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1)) * f->Integral(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1));
-        meanintegralerr_data += f->Mean(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1)) * f->IntegralError(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1), 0, 0, 1.e-6);
+
+        /* integrate the data */
+        Double_t cont, err, width, cent, integral_data = 0., integralerr_data = 0., integralerrcorr_data = 0., meanintegral_data = 0., meanintegralerr_data = 0., meanintegralerrcorr_data = 0.;
+        for (Int_t ibin = binlo; ibin < binhi; ibin++) {
+            cent = h->GetBinCenter(ibin);
+            width = h->GetBinWidth(ibin);
+            cont = h->GetBinContent(ibin);
+            err = h->GetBinError(ibin);
+            /* check we didn't get an empty bin in between */
+            if (cont != 0. && err != 0.) {
+            /* all right, use data */
+            integral_data += cont * width;
+            integralerr_data += err * err * width * width;
+            integralerrcorr_data += err * width;
+            meanintegral_data += cont * width * cent;
+            meanintegralerr_data += err * err * width * width * cent * cent;
+            meanintegralerrcorr_data += err * width * cent;
+            }
+            else {
+            /* missing data-point, complain and use function */
+            printf("WARNING: missing data-point at %f\n", cent);
+            printf("         using function as a patch\n");
+            integral_data += f->Integral(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1));
+            integralerr_data += f->IntegralError(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1), 0, 0, 1.e-6);
+            meanintegral_data += f->Mean(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1)) * f->Integral(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1));
+            meanintegralerr_data += f->Mean(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1)) * f->IntegralError(h->GetBinLowEdge(ibin), h->GetBinLowEdge(ibin+1), 0, 0, 1.e-6);
+            }
         }
-    }
-    integralerr_data = TMath::Sqrt(integralerr_data);
-    meanintegralerr_data = TMath::Sqrt(meanintegralerr_data);
+        integralerr_data = TMath::Sqrt(integralerr_data);
+        meanintegralerr_data = TMath::Sqrt(meanintegralerr_data);
 
-    /* integrate below the data */
-    Double_t integral_lo = min < lo ? f->Integral(min, lo) : 0.;
-    Double_t integralerr_lo = min < lo ? f->IntegralError(min, lo, 0, 0, 1.e-6) : 0.;
-    Double_t meanintegral_lo = min < lo ? f->Mean(min, lo) * integral_lo : 0.;
-    Double_t meanintegralerr_lo = min < lo ? f->Mean(min, lo) * integralerr_lo : 0.;
+        /* integrate below the data */
+        Double_t integral_lo = min < lo ? f->Integral(min, lo) : 0.;
+        Double_t integralerr_lo = min < lo ? f->IntegralError(min, lo, 0, 0, 1.e-6) : 0.;
+        Double_t meanintegral_lo = min < lo ? f->Mean(min, lo) * integral_lo : 0.;
+        Double_t meanintegralerr_lo = min < lo ? f->Mean(min, lo) * integralerr_lo : 0.;
 
-    /* integrate above the data */
-    Double_t integral_hi = max > hi ? f->Integral(hi, max) : 0.;
-    Double_t integralerr_hi = max > hi ? f->IntegralError(hi, max, 0, 0, 1.e-6) : 0.;
-    Double_t meanintegral_hi = max > hi ? f->Mean(hi, max) * integral_hi : 0.;
-    Double_t meanintegralerr_hi = max > hi ? f->Mean(hi, max) * integralerr_hi : 0.;
+        /* integrate above the data */
+        Double_t integral_hi = max > hi ? f->Integral(hi, max) : 0.;
+        Double_t integralerr_hi = max > hi ? f->IntegralError(hi, max, 0, 0, 1.e-6) : 0.;
+        Double_t meanintegral_hi = max > hi ? f->Mean(hi, max) * integral_hi : 0.;
+        Double_t meanintegralerr_hi = max > hi ? f->Mean(hi, max) * integralerr_hi : 0.;
 
-    /* compute integrated yield */
-    yield = integral_data + integral_lo + integral_hi;
-    yielderr = TMath::Sqrt(integralerr_data * integralerr_data +
-            integralerr_lo * integralerr_lo +
-            integralerr_hi * integralerr_hi);
-    yielderrcorr = TMath::Sqrt(integralerrcorr_data * integralerrcorr_data +
+        /* compute integrated yield */
+        yield = integral_data + integral_lo + integral_hi;
+        yielderr = TMath::Sqrt(integralerr_data * integralerr_data +
                 integralerr_lo * integralerr_lo +
                 integralerr_hi * integralerr_hi);
+        yielderrcorr = TMath::Sqrt(integralerrcorr_data * integralerrcorr_data +
+                    integralerr_lo * integralerr_lo +
+                    integralerr_hi * integralerr_hi);
 
-    /* compute integrated mean */
-    mean = (meanintegral_data + meanintegral_lo + meanintegral_hi) / yield;
-    meanerr = TMath::Sqrt(meanintegralerr_data * meanintegralerr_data +
-            meanintegralerr_lo * meanintegralerr_lo +
-            meanintegralerr_hi * meanintegralerr_hi) / yield;
-    meanerrcorr = TMath::Sqrt(meanintegralerrcorr_data * meanintegralerrcorr_data +
+        /* compute integrated mean */
+        mean = (meanintegral_data + meanintegral_lo + meanintegral_hi) / yield;
+        meanerr = TMath::Sqrt(meanintegralerr_data * meanintegralerr_data +
                 meanintegralerr_lo * meanintegralerr_lo +
                 meanintegralerr_hi * meanintegralerr_hi) / yield;
+        meanerrcorr = TMath::Sqrt(meanintegralerrcorr_data * meanintegralerrcorr_data +
+                    meanintegralerr_lo * meanintegralerr_lo +
+                    meanintegralerr_hi * meanintegralerr_hi) / yield;
 
-    /* set partial yields */
-    partyield[0] = integral_data;
-    partyielderr[0] = integralerr_data;
-    partyielderrcorr[0] = integralerrcorr_data;
-    partyield[1] = integral_lo;
-    partyielderr[1] = integralerr_lo;
-    partyielderrcorr[1] = integralerr_lo;
-    partyield[2] = integral_hi;
-    partyielderr[2] = integralerr_hi;
-    partyielderrcorr[2] = integralerr_hi;
+        /* set partial yields */
+        partyield[0] = integral_data;
+        partyielderr[0] = integralerr_data;
+        partyielderrcorr[0] = integralerrcorr_data;
+        partyield[1] = integral_lo;
+        partyielderr[1] = integralerr_lo;
+        partyielderrcorr[1] = integralerr_lo;
+        partyield[2] = integral_hi;
+        partyielderr[2] = integralerr_hi;
+        partyielderrcorr[2] = integralerr_hi;
 
     }
 
     /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    void IntegratedProduction(  TH1 *h,
+                                Double_t mass,
+                                Option_t *opt = "",
+                                Double_t xmin = 0.,
+                                Double_t xmax = 10.
+                             ){
 
-    void IntegratedProduction(TH1 *h, Double_t mass, Option_t *opt = "", Double_t xmin = 0., Double_t xmax = 10.)
-    {
+        Double_t yield, yielderr, yielderrcorr, mean, meanerr, meanerrcorr, partyield[3], partyielderr[3], partyielderrcorr[3];
+        TF1 *f = BGBlastWave_SingleFit(h, mass, opt,xmin,xmax);
+        GetYieldAndMean(h, f, yield, yielderr, yielderrcorr, mean, meanerr, meanerrcorr, 0., 10., partyield, partyielderr, partyielderrcorr);
 
-    Double_t yield, yielderr, yielderrcorr, mean, meanerr, meanerrcorr, partyield[3], partyielderr[3], partyielderrcorr[3];
-    TF1 *f = BGBlastWave_SingleFit(h, mass, opt,xmin,xmax);
-    GetYieldAndMean(h, f, yield, yielderr, yielderrcorr, mean, meanerr, meanerrcorr, 0., 10., partyield, partyielderr, partyielderrcorr);
+        //  Double_t fint = f->Integral(0.,10.);
+        //  Double_t finte = f->IntegralError(0.,10.);
+        //  Double_t fmean = f->Mean(0., 10.);
 
-    //  Double_t fint = f->Integral(0.,10.);
-    //  Double_t finte = f->IntegralError(0.,10.);
-    //  Double_t fmean = f->Mean(0., 10.);
+        printf("dN/dy        = %f +- %f (%f)\n", yield, yielderr, yielderrcorr);
+        printf("<pt>         = %f +- %f (%f)\n", mean, meanerr, meanerrcorr);
+        printf("dN/dy (data) = %f +- %f (%f)\n", partyield[0], partyielderr[0], partyielderrcorr[0]);
+        printf("dN/dy (low)  = %f +- %f (%f)\n", partyield[1], partyielderr[1], partyielderrcorr[1]);
+        printf("dN/dy (high) = %f +- %f (%f)\n", partyield[2], partyielderr[2], partyielderrcorr[2]);
 
-    printf("dN/dy        = %f +- %f (%f)\n", yield, yielderr, yielderrcorr);
-    printf("<pt>         = %f +- %f (%f)\n", mean, meanerr, meanerrcorr);
-    printf("dN/dy (data) = %f +- %f (%f)\n", partyield[0], partyielderr[0], partyielderrcorr[0]);
-    printf("dN/dy (low)  = %f +- %f (%f)\n", partyield[1], partyielderr[1], partyielderrcorr[1]);
-    printf("dN/dy (high) = %f +- %f (%f)\n", partyield[2], partyielderr[2], partyielderrcorr[2]);
+        //  printf("----\n");
+        //  printf("dN/dy (func) = %f +- %f\n", fint, finte);
+        //  printf("<pT> (func)  = %f +- %f\n", fmean, 0.);
 
-    //  printf("----\n");
-    //  printf("dN/dy (func) = %f +- %f\n", fint, finte);
-    //  printf("<pT> (func)  = %f +- %f\n", fmean, 0.);
+        //  TH1 *hr = (TH1 *)h->Clone("hr");
+        //  hr->Divide(f);
+        //  new TCanvas;
+        //  hr->Draw();
 
-    //  TH1 *hr = (TH1 *)h->Clone("hr");
-    //  hr->Divide(f);
-    //  new TCanvas;
-    //  hr->Draw();
-
-    //  TProfile *p = new TProfile("p", "", 100, 0., 10.);
-    //  gROOT->LoadMacro("HistoUtils.C");
-    //  HistoUtils_Function2Profile(f, p);
-    //  p->Draw();
+        //  TProfile *p = new TProfile("p", "", 100, 0., 10.);
+        //  gROOT->LoadMacro("HistoUtils.C");
+        //  HistoUtils_Function2Profile(f, p);
+        //  p->Draw();
     }
 
 
     /*****************************************************************/
-
-    Double_t
-    y2eta(Double_t pt, Double_t mass, Double_t y){
-    Double_t mt = TMath::Sqrt(mass * mass + pt * pt);
-    return TMath::ASinH(mt / pt * TMath::SinH(y));
-    }
-    Double_t
-    eta2y(Double_t pt, Double_t mass, Double_t eta){
-    Double_t mt = TMath::Sqrt(mass * mass + pt * pt);
-    return TMath::ASinH(pt / mt * TMath::SinH(eta));
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t y2eta(Double_t pt, Double_t mass, Double_t y){
+        Double_t mt = TMath::Sqrt(mass * mass + pt * pt);
+        return TMath::ASinH(mt / pt * TMath::SinH(y));
     }
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
+    Double_t  eta2y(Double_t pt, Double_t mass, Double_t eta){
+        Double_t mt = TMath::Sqrt(mass * mass + pt * pt);
+        return TMath::ASinH(pt / mt * TMath::SinH(eta));
+    }
 
 
+    /*****************************************************************/
+    /*****************************************************************/
+    /*****************************************************************/
     void GetFitParameter(TString type, TString centrality, Double_t* params){
-    if(!centrality.CompareTo("pp")){
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 2.1064;
-            params[1] = 0.134723;
-            params[2] = 5.15457;
-            params[3] = 262.57;
-            params[4] = 2667.16;
-            params[5] = 4.79596;
-            params[6] = -2.77055;
+        if(!centrality.CompareTo("pp")){
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 2.1064;
+                params[1] = 0.134723;
+                params[2] = 5.15457;
+                params[3] = 262.57;
+                params[4] = 2667.16;
+                params[5] = 4.79596;
+                params[6] = -2.77055;
+            }
         }
-    }
-    if(!centrality.CompareTo("0-40%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 2.05231e+04;
-            params[1] = -2.63361e-01;
-            params[2] = 6.33381e-01;
-            params[3] = 4.62521e-01;
-            params[4] = 6.74947e+00;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 16.9746;
-            params[1] = 5.92734;
-            params[2] = -21.6339;
-            params[3] = 2.56968;
-            params[4] = 7.64226;
-        }
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 33.376;
-            params[1] = 1.57542;
-            params[2] = 6.73397;
-            params[3] = 33.5075;
-            params[4] = -8.48103;
-            params[5] = 3.04902;
-            params[6] = -1.40645;
-        }
-    }
-    else if(!centrality.CompareTo("0-5%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 153111;
-            params[1] = -0.567233;
-            params[2] = 0.648865;
-            params[3] = 0.416557;
-            params[4] = 7.15563;
+        if(!centrality.CompareTo("0-40%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 2.05231e+04;
+                params[1] = -2.63361e-01;
+                params[2] = 6.33381e-01;
+                params[3] = 4.62521e-01;
+                params[4] = 6.74947e+00;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 16.9746;
+                params[1] = 5.92734;
+                params[2] = -21.6339;
+                params[3] = 2.56968;
+                params[4] = 7.64226;
+            }
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 33.376;
+                params[1] = 1.57542;
+                params[2] = 6.73397;
+                params[3] = 33.5075;
+                params[4] = -8.48103;
+                params[5] = 3.04902;
+                params[6] = -1.40645;
+            }
+        } else if(!centrality.CompareTo("0-5%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 153111;
+                params[1] = -0.567233;
+                params[2] = 0.648865;
+                params[3] = 0.416557;
+                params[4] = 7.15563;
 
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 2.71598e+01;
-            params[1] = 5.94784e+00;
-            params[2] = -3.36471e+01;
-            params[3] = 2.87856e+00;
-            params[4] = 1.23700e+01;
-        }
-        if(!type.CompareTo("rad")){
-            params[0] = 89.3562;
-            params[1] = 19.9729;
-            params[2] = 0.211878;
-            params[3] = 3.14135;
-            params[4] = 7.80294;
-        }
-    }
-    else if(!centrality.CompareTo("5-10%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 1.61223e+05;
-            params[1] = -6.21140e-01;
-            params[2] = 6.23594e-01;
-            params[3] = 3.92189e-01;
-            params[4] = 6.99367e+00;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 2.27531e+01;
-            params[1] = 5.93873e+00;
-            params[2] = -4.08455e+01;
-            params[3] = 2.82786e+00;
-            params[4] = 1.65429e+01;
-        }
-        if(!type.CompareTo("rad")){
-            params[0] = 85.5714;
-            params[1] = 14.3427;
-            params[2] = 0.186864;
-            params[3] = 3.8672;
-            params[4] = 7.81067;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 22.5395;
-            params[1] = 5.88241;
-            params[2] = -2.53228;
-            params[3] = 0.0322852;
-            params[4] = 0.0640679;
-            params[5] = 2.84297;
-        }
-    }
-    else if(!centrality.CompareTo("0-20%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 6.76330e+04;
-            params[1] = -5.37960e-01;
-            params[2] = 7.21961e-01;
-            params[3] = 4.20035e-01;
-            params[4] = 6.88750e+00;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 21.5687;
-            params[1] = 5.99981;
-            params[2] = -20.0468;
-            params[3] = 2.37839;
-            params[4] = 6.21999;
-        }
-        if(!type.CompareTo("rad")){
-            params[0] = 87.8356;
-            params[1] = 15.3679;
-            params[2] = 0.186791;
-            params[3] = 2.45483;
-            params[4] = 7.84368;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 21.0163;
-            params[1] = 5.76098;
-            params[2] = -174.133;
-            params[3] = 4.20146;
-            params[4] = 62.0668;
-            params[5] = 0.605968;
-        }
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 122.169;
-            params[1] = 0.916029;
-            params[2] = 6.02524;
-            params[3] = 27.0573;
-            params[4] = -5.84535;
-            params[5] = 3.9012;
-            params[6] = -2.68122;
-        }
-    }
-    else if(!centrality.CompareTo("0-10%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 30463.8;
-            params[1] = -0.185472;
-            params[2] = 0.488276;
-            params[3] = 0.506966;
-            params[4] = 7.06264;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 24.8867;
-            params[1] = 5.9897;
-            params[2] = -36.6162;
-            params[3] = 2.83522;
-            params[4] = 13.6085;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 24.2976;
-            params[1] = 5.82612;
-            params[2] = -435.844;
-            params[3] = 4.69103;
-            params[4] = 142.667;
-            params[5] = 0.738401;
-        }
-        if(!type.CompareTo("rad")){
-            params[0] = 79.2539;
-            params[1] = 19.0808;
-            params[2] = 0.211468;
-            params[3] = 3.27727;
-            params[4] = 7.79216;
-        }
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 1549.6;
-            params[1] = 0.419372;
-            params[2] = 5.5094;
-            params[3] = 18.8853;
-            params[4] = -3.3233;
-            params[5] = 4.5521;
-            params[6] = -3.47764;
-        }
-    }
-    else if(!centrality.CompareTo("10-20%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 814.152;
-            params[1] = 0.549949;
-            params[2] = 0.314121;
-            params[3] = 0.757416;
-            params[4] = 6.7398;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 19.4279;
-            params[1] = 6.0361;
-            params[2] = -10.7205;
-            params[3] = 1.90016;
-            params[4] = 2.65789;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 22.5395;
-            params[1] = 5.88241;
-            params[2] = -2.53228;
-            params[3] = 0.0322852;
-            params[4] = 0.0640679;
-            params[5] = 2.84297;
-        }
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 2.09114;
-            params[1] = 2.7482;
-            params[2] = 6.911;
-            params[3] = 51.1383;
-            params[4] = -10.6896;
-            params[5] = 1.30818;
-            params[6] = -1.59137;
-        }
-    }
-    else if(!centrality.CompareTo("20-40%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 600.761;
-            params[1] = 0.615125;
-            params[2] = -0.238326;
-            params[3] = 0.724804;
-            params[4] = 6.64027;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 11.8906;
-            params[1] = 5.9101;
-            params[2] = -5.0689;
-            params[3] = 2.02887;
-            params[4] = 3.4672;
-        }
-        if(!type.CompareTo("rad")){
-            params[0] = 6.89306e+01;
-            params[1] = 1.15234e+01;
-            params[2] = 1.48406e-01;
-            params[3] = 2.59509e+00;
-            params[4] = 7.56185e+00;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 11.4355;
-            params[1] = 5.72001;
-            params[2] = -667.524;
-            params[3] = 4.83608;
-            params[4] = 254.033;
-            params[5] = 0.925496;
-            /* params[0] = 11.8869; */
-            /* params[1] = 5.60128; */
-            /* params[2] = -24570.1; */
-            /* params[3] = 7.79897; */
-            /* params[4] = 9435.37; */
-            /* params[5] = 1.17752; */
-        }
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 3.14272;
-            params[1] = 2.8254;
-            params[2] = 7.47365;
-            params[3] = 39.5217;
-            params[4] = -9.03567;
-            params[5] = 0.978345;
-            params[6] = -0.821876;
-        }
-    }
-    else if(!centrality.CompareTo("20-50%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 600.761;
-            params[1] = 0.615125;
-            params[2] = -0.238326;
-            params[3] = 0.724804;
-            params[4] = 6.64027;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 11.8906;
-            params[1] = 5.9101;
-            params[2] = -5.0689;
-            params[3] = 2.02887;
-            params[4] = 3.4672;
-        }
-        if(!type.CompareTo("rad")){
-            params[0] = 6.89306e+01;
-            params[1] = 1.15234e+01;
-            params[2] = 1.48406e-01;
-            params[3] = 2.59509e+00;
-            params[4] = 7.56185e+00;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 11.4355;
-            params[1] = 5.72001;
-            params[2] = -667.524;
-            params[3] = 4.83608;
-            params[4] = 254.033;
-            params[5] = 0.925496;
-            /* params[0] = 11.8869; */
-            /* params[1] = 5.60128; */
-            /* params[2] = -24570.1; */
-            /* params[3] = 7.79897; */
-            /* params[4] = 9435.37; */
-            /* params[5] = 1.17752; */
-        }
-        if(!type.CompareTo("dmtsal")){
-            params[0] = 3.14272;
-            params[1] = 2.8254;
-            params[2] = 7.47365;
-            params[3] = 39.5217;
-            params[4] = -9.03567;
-            params[5] = 0.978345;
-            params[6] = -0.821876;
-        }
-    }
-    else if(!centrality.CompareTo("40-80%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 1.30488e+03;
-            params[1] = 1.22506e-01;
-            params[2] = 4.29101e-01;
-            params[3] = 4.75866e-01;
-            params[4] = 6.29019e+00;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 2.61438;
-            params[1] = 5.77234;
-            params[2] = -7.78985;
-            params[3] = 1.70584;
-            params[4] = 2.36665;
-        }
-        if(!type.CompareTo("xqcd")){
-            params[0] = 2.47731;
-            params[1] = 5.95872;
-            params[2] = -4.1513;
-            params[3] = 1.1465;
-            params[4] = 0.963824;
-            params[5] =  -1.50422;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 2.71598e+01;
+                params[1] = 5.94784e+00;
+                params[2] = -3.36471e+01;
+                params[3] = 2.87856e+00;
+                params[4] = 1.23700e+01;
+            }
+            if(!type.CompareTo("rad")){
+                params[0] = 89.3562;
+                params[1] = 19.9729;
+                params[2] = 0.211878;
+                params[3] = 3.14135;
+                params[4] = 7.80294;
+            }
+        } else if(!centrality.CompareTo("5-10%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 1.61223e+05;
+                params[1] = -6.21140e-01;
+                params[2] = 6.23594e-01;
+                params[3] = 3.92189e-01;
+                params[4] = 6.99367e+00;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 2.27531e+01;
+                params[1] = 5.93873e+00;
+                params[2] = -4.08455e+01;
+                params[3] = 2.82786e+00;
+                params[4] = 1.65429e+01;
+            }
+            if(!type.CompareTo("rad")){
+                params[0] = 85.5714;
+                params[1] = 14.3427;
+                params[2] = 0.186864;
+                params[3] = 3.8672;
+                params[4] = 7.81067;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 22.5395;
+                params[1] = 5.88241;
+                params[2] = -2.53228;
+                params[3] = 0.0322852;
+                params[4] = 0.0640679;
+                params[5] = 2.84297;
+            }
+        } else if(!centrality.CompareTo("0-20%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 6.76330e+04;
+                params[1] = -5.37960e-01;
+                params[2] = 7.21961e-01;
+                params[3] = 4.20035e-01;
+                params[4] = 6.88750e+00;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 21.5687;
+                params[1] = 5.99981;
+                params[2] = -20.0468;
+                params[3] = 2.37839;
+                params[4] = 6.21999;
+            }
+            if(!type.CompareTo("rad")){
+                params[0] = 87.8356;
+                params[1] = 15.3679;
+                params[2] = 0.186791;
+                params[3] = 2.45483;
+                params[4] = 7.84368;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 21.0163;
+                params[1] = 5.76098;
+                params[2] = -174.133;
+                params[3] = 4.20146;
+                params[4] = 62.0668;
+                params[5] = 0.605968;
+            }
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 122.169;
+                params[1] = 0.916029;
+                params[2] = 6.02524;
+                params[3] = 27.0573;
+                params[4] = -5.84535;
+                params[5] = 3.9012;
+                params[6] = -2.68122;
+            }
+        } else if(!centrality.CompareTo("0-10%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 30463.8;
+                params[1] = -0.185472;
+                params[2] = 0.488276;
+                params[3] = 0.506966;
+                params[4] = 7.06264;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 24.8867;
+                params[1] = 5.9897;
+                params[2] = -36.6162;
+                params[3] = 2.83522;
+                params[4] = 13.6085;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 24.2976;
+                params[1] = 5.82612;
+                params[2] = -435.844;
+                params[3] = 4.69103;
+                params[4] = 142.667;
+                params[5] = 0.738401;
+            }
+            if(!type.CompareTo("rad")){
+                params[0] = 79.2539;
+                params[1] = 19.0808;
+                params[2] = 0.211468;
+                params[3] = 3.27727;
+                params[4] = 7.79216;
+            }
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 1549.6;
+                params[1] = 0.419372;
+                params[2] = 5.5094;
+                params[3] = 18.8853;
+                params[4] = -3.3233;
+                params[5] = 4.5521;
+                params[6] = -3.47764;
+            }
+        } else if(!centrality.CompareTo("10-20%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 814.152;
+                params[1] = 0.549949;
+                params[2] = 0.314121;
+                params[3] = 0.757416;
+                params[4] = 6.7398;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 19.4279;
+                params[1] = 6.0361;
+                params[2] = -10.7205;
+                params[3] = 1.90016;
+                params[4] = 2.65789;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 22.5395;
+                params[1] = 5.88241;
+                params[2] = -2.53228;
+                params[3] = 0.0322852;
+                params[4] = 0.0640679;
+                params[5] = 2.84297;
+            }
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 2.09114;
+                params[1] = 2.7482;
+                params[2] = 6.911;
+                params[3] = 51.1383;
+                params[4] = -10.6896;
+                params[5] = 1.30818;
+                params[6] = -1.59137;
+            }
+        } else if(!centrality.CompareTo("20-40%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 600.761;
+                params[1] = 0.615125;
+                params[2] = -0.238326;
+                params[3] = 0.724804;
+                params[4] = 6.64027;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 11.8906;
+                params[1] = 5.9101;
+                params[2] = -5.0689;
+                params[3] = 2.02887;
+                params[4] = 3.4672;
+            }
+            if(!type.CompareTo("rad")){
+                params[0] = 6.89306e+01;
+                params[1] = 1.15234e+01;
+                params[2] = 1.48406e-01;
+                params[3] = 2.59509e+00;
+                params[4] = 7.56185e+00;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 11.4355;
+                params[1] = 5.72001;
+                params[2] = -667.524;
+                params[3] = 4.83608;
+                params[4] = 254.033;
+                params[5] = 0.925496;
+                /* params[0] = 11.8869; */
+                /* params[1] = 5.60128; */
+                /* params[2] = -24570.1; */
+                /* params[3] = 7.79897; */
+                /* params[4] = 9435.37; */
+                /* params[5] = 1.17752; */
+            }
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 3.14272;
+                params[1] = 2.8254;
+                params[2] = 7.47365;
+                params[3] = 39.5217;
+                params[4] = -9.03567;
+                params[5] = 0.978345;
+                params[6] = -0.821876;
+            }
+        } else if(!centrality.CompareTo("20-50%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 600.761;
+                params[1] = 0.615125;
+                params[2] = -0.238326;
+                params[3] = 0.724804;
+                params[4] = 6.64027;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 11.8906;
+                params[1] = 5.9101;
+                params[2] = -5.0689;
+                params[3] = 2.02887;
+                params[4] = 3.4672;
+            }
+            if(!type.CompareTo("rad")){
+                params[0] = 6.89306e+01;
+                params[1] = 1.15234e+01;
+                params[2] = 1.48406e-01;
+                params[3] = 2.59509e+00;
+                params[4] = 7.56185e+00;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 11.4355;
+                params[1] = 5.72001;
+                params[2] = -667.524;
+                params[3] = 4.83608;
+                params[4] = 254.033;
+                params[5] = 0.925496;
+                /* params[0] = 11.8869; */
+                /* params[1] = 5.60128; */
+                /* params[2] = -24570.1; */
+                /* params[3] = 7.79897; */
+                /* params[4] = 9435.37; */
+                /* params[5] = 1.17752; */
+            }
+            if(!type.CompareTo("dmtsal")){
+                params[0] = 3.14272;
+                params[1] = 2.8254;
+                params[2] = 7.47365;
+                params[3] = 39.5217;
+                params[4] = -9.03567;
+                params[5] = 0.978345;
+                params[6] = -0.821876;
+            }
+        } else if(!centrality.CompareTo("40-80%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 1.30488e+03;
+                params[1] = 1.22506e-01;
+                params[2] = 4.29101e-01;
+                params[3] = 4.75866e-01;
+                params[4] = 6.29019e+00;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 2.61438;
+                params[1] = 5.77234;
+                params[2] = -7.78985;
+                params[3] = 1.70584;
+                params[4] = 2.36665;
+            }
+            if(!type.CompareTo("xqcd")){
+                params[0] = 2.47731;
+                params[1] = 5.95872;
+                params[2] = -4.1513;
+                params[3] = 1.1465;
+                params[4] = 0.963824;
+                params[5] =  -1.50422;
 
 
-    /* params[0] = 2.58789; */
-    /*       params[1] = 6.3124; */
-    /*       params[2] = -29333.9; */
-    /*       params[3] = 1.10274; */
-    /*       params[4] = 9993.26; */
-    /*       params[5] = 0.644336; */
-        }
-        if(!type.CompareTo("dmtsal")){
-            /* params[0] = 37.1902; */
-            /* params[1] = 0.222623; */
-            /* params[2] = 5.03864; */
-            /* params[3] = 138.652; */
-            /* params[4] = 289.536; */
-            /* params[5] = 3.36717; */
-            /* params[6] = -2.33195; */
+        /* params[0] = 2.58789; */
+        /*       params[1] = 6.3124; */
+        /*       params[2] = -29333.9; */
+        /*       params[3] = 1.10274; */
+        /*       params[4] = 9993.26; */
+        /*       params[5] = 0.644336; */
+            }
+            if(!type.CompareTo("dmtsal")){
+                /* params[0] = 37.1902; */
+                /* params[1] = 0.222623; */
+                /* params[2] = 5.03864; */
+                /* params[3] = 138.652; */
+                /* params[4] = 289.536; */
+                /* params[5] = 3.36717; */
+                /* params[6] = -2.33195; */
 
-            params[0] = 14.4026;
-            params[1] = 0.404077;
-            params[2] = 5.09444;
-            params[3] = 120.794;
-            params[4] = 29.8208;
-            params[5] = 3.64673;
-            params[6] = -2.20963;
+                params[0] = 14.4026;
+                params[1] = 0.404077;
+                params[2] = 5.09444;
+                params[3] = 120.794;
+                params[4] = 29.8208;
+                params[5] = 3.64673;
+                params[6] = -2.20963;
+            }
+        } else if(!centrality.CompareTo("60-80%")){
+            if(!type.CompareTo("oHag")){
+                params[0] = 2.56880e+01;
+                params[1] = 8.03456e-01;
+                params[2] = -7.88919e-16;
+                params[3] = 8.27464e-01;
+                params[4] = 6.42907e+00;
+            }
+            if(!type.CompareTo("qcd")){
+                params[0] = 0.988512;
+                params[1] = 7.74394;
+                params[2] = -0.533419;
+                params[3] = 0.0559894;
+                params[4] = -0.887449;
+            }
         }
     }
-    else if(!centrality.CompareTo("60-80%")){
-        if(!type.CompareTo("oHag")){
-            params[0] = 2.56880e+01;
-            params[1] = 8.03456e-01;
-            params[2] = -7.88919e-16;
-            params[3] = 8.27464e-01;
-            params[4] = 6.42907e+00;
-        }
-        if(!type.CompareTo("qcd")){
-            params[0] = 0.988512;
-            params[1] = 7.74394;
-            params[2] = -0.533419;
-            params[3] = 0.0559894;
-            params[4] = -0.887449;
-        }
-    }
-}
 #endif

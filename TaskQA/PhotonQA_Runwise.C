@@ -6,7 +6,7 @@
  *******************************************************************************/
 
 #include "QA.h"
-#include "../TaskV1/BuildHistogramsForGammaQAAdvV3.C"
+#include "../TaskQA/BuildHistogramsForGammaQAAdvV3.C"
 
 void PhotonQA_Runwise(
                         Int_t nSetsIn,
