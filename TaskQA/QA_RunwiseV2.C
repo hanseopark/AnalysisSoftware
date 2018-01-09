@@ -7,6 +7,7 @@
 #include "EventQA_Runwise.C"
 #include "PhotonQA_Runwise.C"
 #include "ClusterQA_Runwise.C"
+#include "PrimaryTrackQA_Runwise.C"
 
 void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selected config file
                     Bool_t  doEventQA       = kFALSE,               // switch on EventQA
@@ -218,6 +219,6 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
                                             doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist );
     if (doMergedQA)     ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
                                             1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, addLabelRunlist, kTRUE );
-    if ( doPrimaryTrackQA ) PrimaryTrackQA (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    //if ( doPrimaryTrackQA ) PrimaryTrackQA_Runwise (nSets, fEnergyFlag, DataSets, plotDataSets);
     return;
 }
