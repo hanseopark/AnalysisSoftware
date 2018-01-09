@@ -33,18 +33,21 @@ LHC17f2bMC="";
 LHC17f2a_fixMC="";
 
 passNr="1";
-NSlashes=10;
 
 if [ $1 = "fbock" ]; then
     BASEDIR=/mnt/additionalStorageExternal/OutputLegoTrains/pPb
-    NSlashes=8
-    NSlashes2=7
-    NSlashes3=9
-    NSlashes4=10
 elif [ $1 = "dmuhlhei" ]; then
     BASEDIR=~/data/work/Grid
-    NSlashes=9;
 fi
+
+# Definitition of number of slashes in your path to different depths
+NSlashesBASE=`tr -dc '/' <<<"$BASEDIR" | wc -c`
+NSlashes=`expr $NSlashesBASE + 4`
+NSlashes2=`expr $NSlashes - 1`
+NSlashes3=`expr $NSlashes + 1`
+NSlashes4=`expr $NSlashes + 2`
+echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
+
 
 TRAINDIR=Legotrain-vAN20171005-dirGammaRun2
 # woSDD (CENT)
