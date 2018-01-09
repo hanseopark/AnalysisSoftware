@@ -47,13 +47,13 @@ void PhotonQA_Runwise(
     TString fTextMeasurement = Form("#pi^{0} #rightarrow #gamma#gamma");
     TString fCentrality[30];
     for(Int_t i=0; i<nSets; i++) {
-    if(fEnergyFlag.Contains("PbPb")){
-        if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
-        else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
-        else fCentrality[i] = "";
-    } else {
-        fCentrality[i] = "";
-    }
+        if(fEnergyFlag.Contains("PbPb")){
+            if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
+            else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
+            else fCentrality[i] = "";
+        } else {
+            fCentrality[i] = "";
+        }
     }
 
     const Int_t maxSets = 20;
@@ -103,10 +103,37 @@ void PhotonQA_Runwise(
     }
 
     //******************************************************************************
+    cout << "creating: " << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(),fileName.Data()) << endl;
     TFile* fPhotonQAFile = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(),fileName.Data()));
     if(fPhotonQAFile->IsZombie()) {
-        cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl;
-        return;
+        cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, testing stages output!" << endl;
+        delete fPhotonQAFile;
+
+        // check wether there are subfiles
+        TString listForTesting  = Form("%s/%s/%s/Stage*/*/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data());
+        TString listName        = Form("fileList%s.txt", ((TString)vecRuns.at(0)).Data());
+        gSystem->Exec("ls "+listForTesting+ " > " + listName);
+
+        ifstream fileListName;
+        fileListName.open(listName,ios_base::in);
+        if (!fileListName) {
+            cout << "ERROR: settings " << listName.Data() << " not found!" << endl;
+            return;
+        }
+
+        Bool_t hasStagedFile    = kFALSE ;
+        for( TString tempLine; tempLine.ReadLine(fileListName, kTRUE) && !hasStagedFile ; ) {
+            cout << tempLine.Data() << endl;
+            fPhotonQAFile = new TFile(tempLine.Data(),"READ");
+            if(!fPhotonQAFile->IsZombie()) {
+                hasStagedFile = kTRUE;
+                cout << "found corresponding file in Stages output" << endl;
+            }
+        }
+        if (!hasStagedFile){
+            cout << "could not find any merges of Stages either, return!" << endl;
+            return;
+        }
     }
 
     TString nameCutsPQA;

@@ -5,8 +5,8 @@ cutNr   0
 nSets   4
 nData   2
 energy  pPb_5.023TeV
-filePath    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
-filePathPhoton    /mnt/additionalStorage/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
+filePath    /mnt/additionalStorageExternal/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
+filePathPhoton  /mnt/additionalStorageExternal/OutputLegoTrains/pPb/Legotrain-vAN20171005-dirGammaRun2/
 fileName    GammaConvCalo_201.root
 fileNamePhoton    AnalysisResults.root
 DataSets    LHC16q_fast    LHC16t_fast  LHC17f2b_fast  LHC17f2a_fix_fast  STOP
