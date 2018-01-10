@@ -961,42 +961,30 @@ function GiveBinningHI()
 #    DoPi0InEtaBinning=1
 }
 
-function GiveBinningHI5020GeV()
+function GiveBinningPbPb5TeV()
 {
     if [ $DoPi0 -eq 1 ] ; then
-        echo "How many p_T bins do you want to use for Pi0? 13 (7GeV), 24(20GeV)";
+        echo "How many p_T bins do you want to use for Pi0? up to 24(20GeV)";
         read answer
-        if [ $answer = 13 ]; then
-            echo "13 Bins --> Max p_T = 7 GeV ...";
+        if [ "$answer" -le "24" ]; then
             correctPi0=1
-            BinsPtPi0=13
-	elif [ $answer = 24 ]; then
-            echo "24 Bins --> Max p_T = 20 GeV ...";
-            correctPi0=1
-            BinsPtPi0=24
+            BinsPtPi0=$answer
         else
             echo "Pi0 Binning was not set correctly. Please try again.";
             correctPi0=0
         fi
     fi
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
-        echo "How many p_T bins do you want to use for Eta? 3 (6GeV), 22 (30GeV)";
+        echo "How many p_T bins do you want to use for Eta? up to 22 (30GeV)";
         read answer
-        if [ $answer = 3 ]; then
-            echo "3 Bins --> Max p_T = 6 GeV ...";
+        if [ "$answer" -le "22" ]; then
             correctEta=1
-            BinsPtEta=3
-	elif [ $answer = 22 ]; then
-            echo "22 Bins --> Max p_T = 22 GeV ...";
-            correctEta=1
-            BinsPtEta=22
+            BinsPtEta=$answer
         else
-            echo "Pi0 Binning was not set correctly. Please try again.";
+            echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0
         fi
     fi
-#    DoEta=1
-#    DoPi0InEtaBinning=1
     BinsPtGamma=$BinsPtPi0
 }
 
@@ -1112,13 +1100,6 @@ function CorrectSignalGammaV2()
 {
     root -x -b -q -l CompileCorrectGammaV2.C\+\+
     root -x -l -b -q TaskV1/CorrectGammaV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\,\"$7\"\)
-}
-
-function CreateFinalResults()
-{
-    if [ $mode != 2 ] && [ $mode != 4 ] && [ $mode != 12 ] && [ $mode != 13 ]; then
-        root -x -l -b -q TaskV1/ProduceFinalResultsV2.C\+\($1,\"\"\,\"kTRUE\"\,$AddPileUpCorr\,$mode\)
-    fi
 }
 
 function CreateGammaFinalResultsV3()
@@ -2592,7 +2573,7 @@ do
             echo "No Direct Photon plots will be produced ...";
             directphoton="No"
             if [ $ONLYCORRECTION -eq 0 ]; then
-                GiveBinningHI5020GeV
+                GiveBinningPbPb5TeV
                 correctPi0=1
                 correctEta=1
             else

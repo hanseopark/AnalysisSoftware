@@ -589,14 +589,14 @@
     //****************************************************************************************************
     //******************** Pt binning for pp, 13 TeV *****************************************************
     //****************************************************************************************************
- 
+
    Double_t fBinsPi013TeVPt[44]                    =    { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
                                                         1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
                                                         2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
                                                         4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0,
                                                         10.0,12.0,16.0,20.0,25.0};             // Pi0  binning LHC16X
 
- 
+
   Int_t fBinsPi013TeVPtRebin[43]                  = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -635,7 +635,7 @@
 							 3.5, 4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 25.0};
 
     Int_t fBinsEta13TeVPtRebin[17]                  = { 8, 7, 7, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 8, 8};
- 
+
     //Double_t fBinsEta13TeVPtDCA[6]                  = { 0., 0.4, 1.1, 1.6, 2.2, 4.0};                           // Eta DCA binning for LHC15f
     Double_t fBinsEta13TeVPtDCA[10]                = { 0.0, 0.4, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};          // Eta DCA binning forLHC15f+LHC15h+LHC15i
 
@@ -1059,7 +1059,13 @@
     //*************************************************************************************************
     //******************** Initialize Single bin for invariant mass plot ******************************
     //*************************************************************************************************
-    Int_t ReturnSingleInvariantMassBinPlotting (TString meson, TString energy, Int_t mode, Int_t trigger, Double_t &scaleFac, Int_t triggerSet = -1){
+    Int_t ReturnSingleInvariantMassBinPlotting (    TString meson,
+                                                    TString energy,
+                                                    Int_t mode,
+                                                    Int_t trigger,
+                                                    Double_t &scaleFac,
+                                                    Int_t triggerSet                    = -1,
+                                                    TString directPhotonRunningOption   = ""  ){
 
         if (triggerSet != -1){
             if (energy.CompareTo("2.76TeV") == 0){
@@ -1087,14 +1093,23 @@
 
         if (meson.CompareTo("Pi0") == 0){
             if (energy.CompareTo("900GeV") == 0) {
-                if (mode == 1)              // PCM-Dalitz
-                    return 4;
-                else if (mode == 2 || mode == 13)
-                    return 4;
-                else if (mode == 4 || mode == 12 )
-                    return 4;
-                else
-                    return 5;
+                if (directPhotonRunningOption.CompareTo("directPhoton") != 0){
+                    if (mode == 1)              // PCM-Dalitz
+                        return 4;
+                    else if (mode == 2 || mode == 13)
+                        return 4;
+                    else if (mode == 4 || mode == 12 )
+                        return 4;
+                    else
+                        return 5;
+                } else {
+                    if (mode == 2)
+                        return 4;
+                    else if (mode == 4)
+                        return 7;
+                    else
+                        return 5;
+                }
             } else if (energy.CompareTo("2.76TeV") == 0) {
                 if (mode == 0){             // PCM-PCM
                     return 7;
@@ -1204,6 +1219,7 @@
                 else
                     return 14;
             } else if (energy.CompareTo("8TeV") == 0) {
+
                 if (mode == 0){             // PCM- PCM
                     switch (trigger){
                         case 0:
@@ -1229,44 +1245,73 @@
                             break;
                     }
                 } else if (mode == 2 || mode == 13){      // PCM-EMC
-                    switch (trigger){
-                        case 0:
-                        case 1:
-                        case 10:
-                        case 11:
-                            return 3;       // INT triggers
-                            break;
-                        case 52:
-                        case 53:
-                            return 31;      // EMC triggers
-                            break;
-                        case 81:
-                        case 82:
-                            return 41;      // EGA triggers
-                            break;
-                        default:
-                            return 3;
-                            break;
+                    if (directPhotonRunningOption.CompareTo("directPhoton") == 0){
+                        return 5;
+                    } else if (directPhotonRunningOption.CompareTo("directPhotonTagging") == 0){
+                        return 1;
+                    } else {
+                        switch (trigger){
+                            case 0:
+                            case 1:
+                            case 10:
+                            case 11:
+                                return 3;       // INT triggers
+                                break;
+                            case 52:
+                            case 53:
+                                return 31;      // EMC triggers
+                                break;
+                            case 81:
+                            case 82:
+                                return 41;      // EGA triggers
+                                break;
+                            default:
+                                return 3;
+                                break;
+                        }
                     }
                 } else if (mode == 4 || mode == 12 ){      // EMC-EMC
-                    switch (trigger){
-                        case 0:
-                        case 1:
-                        case 10:
-                        case 11:
-                            return 8;      // INT triggers
-                            break;
-                        case 52:
-                        case 53:
-                            return 31;      // EMC triggers
-                            break;
-                        case 81:
-                        case 82:
-                            return 35;      // EGA triggers
-                            break;
-                        default:
-                            return 13;
-                            break;
+                    if (directPhotonRunningOption.CompareTo("directPhoton") != 0 ){
+                        switch (trigger){
+                            case 0:
+                            case 1:
+                            case 10:
+                            case 11:
+                                return 8;      // INT triggers
+                                break;
+                            case 52:
+                            case 53:
+                                return 31;      // EMC triggers
+                                break;
+                            case 81:
+                            case 82:
+                                return 35;      // EGA triggers
+                                break;
+                            default:
+                                return 13;
+                                break;
+                        }
+                    } else {
+                        switch (trigger){
+                            case 0:
+                            case 1:
+                            case 10:
+                            case 11:
+                                return 7;      // INT triggers
+                                break;
+                            case 52:
+                            case 53:
+                                return 25;      // EMC triggers
+                                break;
+                            case 81:
+                            case 82:
+                                return 36;      // EGA triggers
+                                break;
+                            default:
+                                return 13;
+                                break;
+                        }
+
                     }
                 } else if (mode == 10){      // EMC-EMC
                     switch (trigger){
@@ -1294,7 +1339,7 @@
             } else if (energy.CompareTo("13TeV") == 0) {
                 if (mode == 0){
                     return 2;
-		} else if ( mode == 1 ){
+                } else if ( mode == 1 ){
                     return 5;
                 } else {
                     return 10;
@@ -1307,32 +1352,39 @@
                 } else if (mode == 1){
                     return 5;
                 } else if (mode == 2 || mode == 13){
-                    switch (trigger){
-                        case 0:
-                        case 1:
-                        case 10:
-                        case 11:
-                            return 7;      // INT triggers
-                            break;
-                        case 51:
-                        case 52:
-                        case 53:
-                            return 20;      // EMC triggers
-                            break;
-                        case 85:
-                            return 26;
-                            break;
-                        case 81:
-                        case 82:
-                        case 83:
-                            return 32;      // EGA triggers
-                            break;
-                        default:
-                            return 7;
-                            break;
+                    if (directPhotonRunningOption.CompareTo("directPhotonTagging") == 0){
+                        return 10;
+                    } else {
+                        switch (trigger){
+                            case 0:
+                            case 1:
+                            case 10:
+                            case 11:
+                                return 7;      // INT triggers
+                                break;
+                            case 51:
+                            case 52:
+                            case 53:
+                                return 20;      // EMC triggers
+                                break;
+                            case 85:
+                                return 26;
+                                break;
+                            case 81:
+                            case 82:
+                            case 83:
+                                return 32;      // EGA triggers
+                                break;
+                            default:
+                                return 7;
+                                break;
+                        }
                     }
                 } else if (mode == 4 || mode == 12 ){
-                    return 25;
+                    if (directPhotonRunningOption.CompareTo("directPhoton") == 0)
+                        return 13;
+                    else
+                        return 25;
                 } else if (mode == 5){
                     return 25;
                 } else if (mode == 6){
@@ -1348,32 +1400,39 @@
                 } else if (mode == 1){
                     return 5;
                 } else if (mode == 2 || mode == 13){
-                    switch (trigger){
-                        case 0:
-                        case 1:
-                        case 10:
-                        case 11:
-                            return 7;      // INT triggers
-                            break;
-                        case 51:
-                        case 52:
-                        case 53:
-                            return 20;      // EMC triggers
-                            break;
-                        case 85:
-                            return 26;
-                            break;
-                        case 81:
-                        case 82:
-                        case 83:
-                            return 32;      // EGA triggers
-                            break;
-                        default:
-                            return 7;
-                            break;
+                    if (directPhotonRunningOption.CompareTo("directPhotonTagging") == 0){
+                        return 10;
+                    } else {
+                        switch (trigger){
+                            case 0:
+                            case 1:
+                            case 10:
+                            case 11:
+                                return 7;      // INT triggers
+                                break;
+                            case 51:
+                            case 52:
+                            case 53:
+                                return 20;      // EMC triggers
+                                break;
+                            case 85:
+                                return 26;
+                                break;
+                            case 81:
+                            case 82:
+                            case 83:
+                                return 32;      // EGA triggers
+                                break;
+                            default:
+                                return 7;
+                                break;
+                        }
                     }
                 } else if (mode == 4 || mode == 12 ){
-                    return 25;
+                    if (directPhotonRunningOption.CompareTo("directPhoton") == 0)
+                        return 13;
+                    else
+                        return 25;
                 } else if (mode == 5){
                     return 25;
                 } else if (mode == 6){
@@ -1384,6 +1443,21 @@
                     return 7;
                 }
             } else if( energy.CompareTo("PbPb_2.76TeV") == 0) {
+                if (mode == 0){
+                    scaleFac    = 10;
+                    return 4;
+                } else if (mode == 1){
+                    scaleFac    = 20;
+                    return 3;
+                } else if (mode == 2 || mode == 13){
+                    scaleFac    = 5;
+                    return 8;
+                } else if (mode == 4 || mode == 12 ){
+                    scaleFac    = 1.5;
+                    return 10;
+                } else
+                    return 4;
+            } else if( energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("PbPb_5TeV") == 0) {
                 if (mode == 0){
                     scaleFac    = 10;
                     return 4;
@@ -1994,7 +2068,12 @@
     //*************************************************************************************************
     //******************** Initialize binning for analysis stream  ************************************
     //*************************************************************************************************
-    void InitializeBinning(TString setPi0, Int_t numberOfBins, TString energy, TString directPhoton, Int_t modi, TString eventCutSelection, TString clusterCutSelection, Int_t triggerSet = -1, Bool_t isDCA = kFALSE, TString centDCA = "", TString periodDCA = ""){
+    void InitializeBinning( TString setPi0,
+                            Int_t numberOfBins,
+                            TString energy,
+                            TString directPhoton,
+                            Int_t modi,
+                            TString eventCutSelection, TString clusterCutSelection, Int_t triggerSet = -1, Bool_t isDCA = kFALSE, TString centDCA = "", TString periodDCA = ""){
         //*************************************************************************************************
         //************************************ Binning for Cluster ****************************************
         //*************************************************************************************************
@@ -2007,7 +2086,7 @@
         Int_t specialTrigg      = 0;
 
         // Initialize bin for single invariant mass plot
-        fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet);
+        fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet, directPhoton);
 
         //*************************************************************************************************
         //************************************ Binning for Pi0 ********************************************
@@ -2024,10 +2103,8 @@
                     fStartPtBin     = 1;
                     if( modi == 2){
                       fStartPtBin = 3;
-                      fExampleBin = 4;
                     }else if(modi == 4){
                       fStartPtBin = 6;
-                      fExampleBin = 7;
                     }
 
                     if (fNBinsPt > 13) {
@@ -2086,8 +2163,6 @@
 
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
-                    fColumn         = 5;
-                    fRow            = 5;
                     if (modi == 2)
                         fStartPtBin = 3;
 
@@ -2104,6 +2179,7 @@
                         cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
                         fNBinsPt    = 24;
                     }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         fBinsPt[i]  = fBinsDirGamma2760GeVPt[i];
@@ -2217,12 +2293,11 @@
             } else if (energy.CompareTo("5TeV") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
-                    fColumn         = 5;
-                    fRow            = 5;
                     if (fNBinsPt > 17) {
                         cout << "You have chosen Direct Photon Plots and more than 17 bins, this is not possible, it will be reduced to 17 bins." << endl;
                         fNBinsPt    = 17;
                     }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         fBinsPt[i]         = fBinsDirGamma5TeVPt[i];
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma5TeVPtRebin[i];
@@ -2398,57 +2473,25 @@
             //********************************** Pi0 for pp 8TeV*******************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("8TeV") == 0) {
-                if (directPhoton.CompareTo("directPhoton") == 0){
-                    if (triggerSet == -1){
-                        if (trigger.CompareTo("52") == 0){
-                            specialTrigg = 1; // L0 EMC7
-                        } else if ( trigger.CompareTo("81") == 0 ){
-                            specialTrigg = 2; //L1 INT7 EGA
-                        } else if ( trigger.CompareTo("53") == 0 ){
-                            specialTrigg = 3; // L0 EMC8
-                        } else if ( trigger.CompareTo("82") == 0 ) {
-                            specialTrigg = 4; // L1 INT8 EGA
-                        }
-                    } else {
-                        specialTrigg        = triggerSet;
+                if (triggerSet == -1){
+                    if (trigger.CompareTo("52") == 0){
+                        specialTrigg = 1; // L0 EMC7
+                    } else if ( trigger.CompareTo("81") == 0 ){
+                        specialTrigg = 2; //L1 INT7 EGA
+                    } else if ( trigger.CompareTo("53") == 0 ){
+                        specialTrigg = 3; // L0 EMC8
+                    } else if ( trigger.CompareTo("82") == 0 ) {
+                        specialTrigg = 4; // L1 INT8 EGA
                     }
-
+                } else {
+                    specialTrigg        = triggerSet;
+                }
+                if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     if( modi == 2){
                       fStartPtBin = 4;
-                      fExampleBin = 5;
                     }else if(modi == 4){
                       fStartPtBin = 6;
-                      fExampleBin = 7;
-                      if (modi == 4 && specialTrigg == 1){ fStartPtBin = 22; fExampleBin = 25;}
-                      if (modi == 4 && specialTrigg == 2){ fStartPtBin = 33; fExampleBin = 36;}
-                    }
-                    fColumn         = 5;
-                    fRow            = 5;
-                    if ((fNBinsPt - fStartPtBin) > 28){
-                        fColumn     = 6;
-                        fRow        = 6;
-                    } else if ((fNBinsPt - fStartPtBin) < 4){
-                        fColumn     = 2;
-                        fRow        = 2;
-                    } else if ((fNBinsPt - fStartPtBin) < 8){
-                        fColumn     = 4;
-                        fRow        = 2;
-                    } else if ((fNBinsPt - fStartPtBin) < 12){
-                        fColumn     = 4;
-                        fRow        = 3;
-                    } else if ((fNBinsPt - fStartPtBin) < 16){
-                        fColumn     = 4;
-                        fRow        = 4;
-                    } else if ((fNBinsPt - fStartPtBin) < 20){
-                        fColumn     = 5;
-                        fRow        = 4;
-                    } else if ((fNBinsPt - fStartPtBin) < 25){
-                        fColumn     = 5;
-                        fRow        = 5;
-                    }  else if ((fNBinsPt - fStartPtBin) < 29){
-                      fColumn     = 6;
-                      fRow        = 5;
                     }
                     if (fNBinsPt > 32 && (modi ==4)){
                       if( specialTrigg == 2 && fNBinsPt > 42){
@@ -2465,6 +2508,8 @@
                         cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
                         fNBinsPt    = 23;
                     }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         fBinsPt[i]         = fBinsDirGamma8TeVPt[i];
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
@@ -2488,66 +2533,24 @@
                             }
                         }
                     }
-                }else if (directPhoton.CompareTo("directPhotonTagging") == 0){
-                        if (triggerSet == -1){
-                            if (trigger.CompareTo("52") == 0){
-                                specialTrigg = 1; // L0 EMC7
-                            } else if ( trigger.CompareTo("81") == 0 ){
-                                specialTrigg = 2; //L1 INT7 EGA
-                            } else if ( trigger.CompareTo("53") == 0 ){
-                                specialTrigg = 3; // L0 EMC8
-                            } else if ( trigger.CompareTo("82") == 0 ) {
-                                specialTrigg = 4; // L1 INT8 EGA
-                            }
-                        } else {
-                            specialTrigg        = triggerSet;
-                        }
-
-                        fStartPtBin     = 1;
-                        if( modi == 2){
-                          fStartPtBin = 1;
-                          fExampleBin = 1;
-                        }
-                        fColumn         = 6;
-                        fRow            = 5;
-                        if ((fNBinsPt - fStartPtBin) > 29){
-                            fColumn     = 6;
-                            fRow        = 6;
-                        } else if ((fNBinsPt - fStartPtBin) < 20){
-                            fColumn     = 5;
-                            fRow        = 4;
-                        } else if ((fNBinsPt - fStartPtBin) < 25){
-                            fColumn     = 5;
-                            fRow        = 5;
-                        }
-                        if (fNBinsPt > 29 ) {
-                            cout << "You have chosen Direct Photon Plots and more than 29 bins, this is not possible, it will be reduced to 29 bins." << endl;
-                            fNBinsPt    = 29;
-                        }
-                        for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                            fBinsPt[i]         = fBinsDirGammaTagging8TeVPt[i];
-                            if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGammaTagging8TeVPtRebin[i];
-                        }
-                } else {
-                    if (triggerSet == -1){
-                        if (trigger.CompareTo("52") == 0){
-                            specialTrigg = 1; // L0 EMC7
-                        } else if ( trigger.CompareTo("81") == 0 ){
-                            specialTrigg = 2; //L1 INT7 EGA
-                        } else if ( trigger.CompareTo("53") == 0 ){
-                            specialTrigg = 3; // L0 EMC8
-                        } else if ( trigger.CompareTo("82") == 0 ) {
-                            specialTrigg = 4; // L1 INT8 EGA
-                        }
-                    } else {
-                        specialTrigg        = triggerSet;
+                } else if (directPhoton.CompareTo("directPhotonTagging") == 0){
+                    fStartPtBin     = 1;
+                    if( modi == 2){
+                        fStartPtBin = 1;
                     }
-
+                    if (fNBinsPt > 29 ) {
+                        cout << "You have chosen Direct Photon Plots and more than 29 bins, this is not possible, it will be reduced to 29 bins." << endl;
+                        fNBinsPt    = 29;
+                    }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+                    for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                        fBinsPt[i]         = fBinsDirGammaTagging8TeVPt[i];
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGammaTagging8TeVPtRebin[i];
+                    }
+                } else {
                     fStartPtBin = 1;
                     if (modi == 4 ) fStartPtBin = 7;
                     if (modi == 2 ) fStartPtBin = 2;
-
-
                     if (modi == 0 && specialTrigg == 1) fStartPtBin = 21;
                     if (modi == 0 && specialTrigg == 2) fStartPtBin = 27;
                     if (modi == 2 && specialTrigg == 1) fStartPtBin = 21;
@@ -2558,33 +2561,6 @@
                     if (modi == 10 && specialTrigg == 1) fStartPtBin = 28;
                     if (modi == 10 && specialTrigg == 2) fStartPtBin = 28;
 
-                    fColumn             = 4;
-                    fRow                = 2;
-                    if ((fNBinsPt - fStartPtBin) > 28){
-                        fColumn     = 6;
-                        fRow        = 6;
-                } else if ((fNBinsPt - fStartPtBin) < 4){
-                    fColumn     = 2;
-                    fRow        = 2;
-                    } else if ((fNBinsPt - fStartPtBin) < 8){
-                        fColumn     = 4;
-                        fRow        = 2;
-                    } else if ((fNBinsPt - fStartPtBin) < 12){
-                        fColumn     = 4;
-                        fRow        = 3;
-                    } else if ((fNBinsPt - fStartPtBin) < 16){
-                        fColumn     = 4;
-                        fRow        = 4;
-                    } else if ((fNBinsPt - fStartPtBin) < 20){
-                        fColumn     = 5;
-                        fRow        = 4;
-                    } else if ((fNBinsPt - fStartPtBin) < 25){
-                        fColumn     = 5;
-                        fRow        = 5;
-                    } else if ((fNBinsPt - fStartPtBin) < 29){
-                        fColumn     = 6;
-                        fRow        = 5;
-                    }
                     if (fNBinsPt > 21 && isDCA) {
                         cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
                         fNBinsPt                        = 21;
@@ -2625,6 +2601,7 @@
                         cout << "You have chosen to have more than 55 bins, this is not possible, it will be reduced to 55" << endl;
                         fNBinsPt        = 55;
                     }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         if (modi == 4 ){
@@ -2689,10 +2666,6 @@
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
                     optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
 
-                    Int_t nBinsPlot = fColumn*fRow -1;
-                    if ((fNBinsPt-fStartPtBin) > nBinsPlot) fColumn++;
-                    nBinsPlot           = fColumn*fRow -1;
-                    if ((fNBinsPt-fStartPtBin) > nBinsPlot) fRow++;
                 }
             //*********************************************************************************************
             //********************************** Pi0 for pp 13TeV******************************************
@@ -2716,13 +2689,13 @@
                     }
                 } else {
                     fStartPtBin         = 1;
-		    if (fNBinsPt > 27 && isDCA) {
+                    if (fNBinsPt > 27 && isDCA) {
                         cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
                         fNBinsPt    = 27;
                     } else if (fNBinsPt > 45) {
                         cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
                         fNBinsPt    = 45;
-                 
+
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
@@ -2802,12 +2775,10 @@
                     fStartPtBin     = 1;
                     if (modi == 2 && directPhoton.CompareTo("directPhoton") == 0){
                         fStartPtBin     = 1;
-                    } else if (modi == 2 && directPhoton.CompareTo("directPhotonA") == 0){
+                    } else if (modi == 2 && directPhoton.CompareTo("directPhotonTagging") == 0){
                         fStartPtBin     = 8;
-                        fExampleBin     = 10;
                     } else if (modi == 4){
                         fStartPtBin     = 8;
-                        fExampleBin     = 13;
                     }
 
                     if (specialTrigg == 0 && ( modi == 2 || modi == 4 ) && fNBinsPt > 28 ){
@@ -2912,17 +2883,11 @@
             } else if( energy.CompareTo("PbPb_2.76TeV") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 3;
-                    fColumn         = 4;
-                    fRow            = 4;
-                    if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
-                        fRow++;
-                    if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
-                        fColumn++;
-
                     if (fNBinsPt > 22) {
                         cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
                         fNBinsPt    = 22;
                     }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         if(fNBinsPt==22){
                             fBinsPt[i]  = fBinsDirGammaPbPb2760GeVPtLHC11h[i];
@@ -2940,25 +2905,12 @@
                     }
                 } else {
                     fStartPtBin     = 1;
-                    fColumn         = 5;
-                    fRow            = 4;
-
-                    if (isDCA) {
-                        fRow            = 3;
-                    } else if (modi == 5) {
+                    if (modi == 5) {
                         fStartPtBin = 4;
                     } else if (modi == 4){
                         fStartPtBin     = 6;
-                        fColumn         = 5;
-                        fRow            = 4;
                     } else if (modi == 2){
                         fStartPtBin     = 4;
-                        fColumn         = 6;
-                        fRow            = 4;
-                    } else if (modi == 0){
-                        if (fNBinsPt > 20){
-                                fColumn         = 4;
-                        }
                     }
                     if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
                         fRow++;
@@ -2971,6 +2923,7 @@
                         cout << "You have chosen to have more than 26 bins, this is not possible, it will be reduced to 24" << endl;
                         fNBinsPt    = 26;
                     }
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         if (isDCA) {
                             if (!centDCA.CompareTo("60-80%") || !centDCA.CompareTo("70-80%") || !centDCA.CompareTo("75-90%") ){
@@ -3318,13 +3271,7 @@
                     cout << "You have chosen to have more than 23 bins for Eta, this is not possible, it will be reduced to 23" << endl;
                     fNBinsPt        = 23;
                 }
-
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-                if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
-                  fColumn         = 5;
-                  fRow            = 5;
-                }
-
 
                 for (Int_t i = 0; i < fNBinsPt+2; i++) {
                     if (isDCA){
@@ -3426,8 +3373,6 @@
                       if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEta7TeVPHOSPtRebin[i];
                     }else if(modi == 40){
-                      fColumn         = 4;
-                      fRow            = 3;
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCM[i];
                         if (i < fNBinsPt+1)
@@ -3493,35 +3438,6 @@
                 if (modi == 4 && specialTrigg == 1) fStartPtBin = 10;
                 if (modi == 4 && specialTrigg == 2) fStartPtBin = 14;
 
-                fColumn             = 6;
-                fRow                = 5;
-
-                if ((fNBinsPt - fStartPtBin) > 29){
-                    fColumn     = 6;
-                    fRow        = 6;
-                } else if ((fNBinsPt - fStartPtBin) < 4){
-                fColumn     = 2;
-                fRow        = 2;
-                } else if ((fNBinsPt - fStartPtBin) < 8){
-                    fColumn     = 4;
-                    fRow        = 2;
-                } else if ((fNBinsPt - fStartPtBin) < 12){
-                    fColumn     = 4;
-                    fRow        = 3;
-                } else if ((fNBinsPt - fStartPtBin) < 16){
-                    fColumn     = 4;
-                    fRow        = 4;
-                } else if ((fNBinsPt - fStartPtBin) < 20){
-                    fColumn     = 5;
-                    fRow        = 4;
-                } else if ((fNBinsPt - fStartPtBin) < 25){
-                    fColumn     = 5;
-                    fRow        = 5;
-                }
-                if (isDCA) {
-                    fColumn     = 5;
-                    fRow        = 3;
-                }
                 if ( fNBinsPt > 17 && isDCA ) {
                     cout << "You have chosen to have more than 17 bins for Eta, this is not possible, it will be reduced to 12" << endl;
                     fNBinsPt            = 17;
@@ -3563,6 +3479,7 @@
                         fNBinsPt        = 19;
                     }
                 }
+                GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     if( modi == 0 ){
@@ -3634,8 +3551,6 @@
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeV") == 0) {
                 fStartPtBin         = 1;
-
-
                 if(modi == 40 || modi == 41 || modi == 42 || modi == 44 || modi == 45) fStartPtBin     = GetStartBin("Eta","13TeV",modi);
 
                 if (fNBinsPt > 17 && modi == 0) {
@@ -3810,29 +3725,18 @@
             //*********************************************************************************************
             } else if( energy.CompareTo("PbPb_2.76TeV") == 0) {
                 fStartPtBin         = 2;
-                fColumn             = 3;
-                fRow                = 3;
                 if (modi == 4){
                     fStartPtBin     = 5;
-                    fRow            = 2;
                 } else if (modi == 2) {
                     fStartPtBin     = 3;
                 }
-                if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
-                    fColumn++;
-                if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
-                    fRow++;
                 if (isDCA){
                     if (!setPi0.CompareTo("Pi0EtaBinning"))
                         fStartPtBin     = 1; //otherwise usually 3
                     else
                         fStartPtBin     = 4; //otherwise usually 3
-                    fColumn         = 5;
-                    fRow            = 3;
                 }
                 if (isDCA) {
-                    fColumn             = 3;
-                    fRow                = 3;
                     if (!setPi0.CompareTo("Pi0EtaBinning")) {
                         if (fNBinsPt > 10) {
                             cout << "You have chosen to have more than 10 bins, this is not possible, it will be reduced to 10" << endl;
@@ -3840,20 +3744,19 @@
                         }
                     } else {
                         if (fNBinsPt > 16) {
-                        cout << "You have chosen to have more than 16 bins, this is not possible, it will be reduced to 16" << endl;
-                        fNBinsPt                    = 16;
+                            cout << "You have chosen to have more than 16 bins, this is not possible, it will be reduced to 16" << endl;
+                            fNBinsPt                    = 16;
                         }
                     }
                 } else if (modi != 4 && modi != 2 &&    fNBinsPt > 12) {
                     cout << "You have chosen to have more than 12 bins, this is not possible, it will be reduced to 12" << endl;
                     fNBinsPt        = 12;
                 }
-                if (modi == 4 || modi == 2)
-                    fColumn         = 4;
                 if ((modi == 4 || modi == 2) &&   fNBinsPt > 14) {
                     cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
                     fNBinsPt        = 14;
                 }
+                GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                 for (Int_t i = 0; i < fNBinsPt+1; i++) {
                     if (isDCA){
                         if (!setPi0.CompareTo("Pi0EtaBinning")) {

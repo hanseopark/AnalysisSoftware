@@ -291,6 +291,7 @@ void ExtractSignalV2(   TString meson                   = "",
 
     //***************************** Initialization of variables according to meson type ******************************
     if(meson.CompareTo("Pi0") == 0){
+        cout << "entering Pi0" << endl;
         Initialize("Pi0",numberOfBins, triggerSet);
     } else if (meson.CompareTo("Eta") == 0) {
         Initialize("Eta",numberOfBins, triggerSet);
@@ -2795,6 +2796,7 @@ void ProduceBckProperWeighting(TList* fBackgroundContainer,TList* fMotherContain
 //****************************************************************************
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
+    cout << "meson in intialize function" <<  setPi0.Data() << endl;
     InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "");
 
     TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
