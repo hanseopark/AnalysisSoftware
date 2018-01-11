@@ -905,7 +905,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 			if(nameMeson.CompareTo("Eta") == 0 ) legendMass2->AddEntry(histoTrueMassCaloMergedClusterMeson,"True reconstructed #eta, merged cluster #gamma");
 			if(nameMeson.CompareTo("Omega") == 0 ) legendMass2->AddEntry(histoTrueMassMeson,"True reconstructed #omega, merged cluster #gamma");
 		}
-		
+
 		DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
 		
 		

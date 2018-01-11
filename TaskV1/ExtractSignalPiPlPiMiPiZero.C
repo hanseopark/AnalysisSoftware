@@ -264,6 +264,9 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
             if(hist_bck[k-1]) fBckInvMassVSPt[k]                              = (TH2D*)hist_bck[k-1]->Clone(Form("hist_bck%i",k));
             if(hist_bck_SubPiZero[k-1]) fBckInvMassVSPt_SubPiZero[k]          = (TH2D*)hist_bck_SubPiZero[k-1]->Clone(Form("hist_bck%i_SubPiZero",k));
             if(hist_bck_FixedPzPiZero[k-1]) fBckInvMassVSPt_FixedPzPiZero[k]  = (TH2D*)hist_bck_FixedPzPiZero[k-1]->Clone(Form("hist_bck%i_FixedPzPiZero",k));
+            if(hist_bck[k-1]) fBckInvMassVSPt[k]->Sumw2();
+            if(hist_bck_SubPiZero[k-1]) fBckInvMassVSPt_SubPiZero[k]->Sumw2();
+            if(hist_bck_FixedPzPiZero[k-1]) fBckInvMassVSPt_FixedPzPiZero[k]->Sumw2();
         }
     } else{ // likesign exent mixing was chosen (rest of array will be empty because there is only one group for likesign mixing)
         hist_bck[0]                                                           = (TH2D*) ESDContainer->FindObject("ESD_Background_LikeSign_InvMass_Pt");
@@ -681,8 +684,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
         for(Int_t k=0;k<5;k++){
           if((fHistoMappingGGInvMassBackFitPtBin[iPt]!=NULL) && (fHistoMappingBackInvMassPtBin[k][iPt]!=NULL )){
             ProcessEM( fHistoMappingGGInvMassPtBin[iPt], fHistoMappingBackInvMassPtBin[k][iPt], fBGFitRange);
-            if(k==0) fNormTot = fNorm; // k==0 means tot back was just scaled -> store value
-            fHistoMappingSignalInvMassPtBin[iPt] = fSignal;
+            if(k==0){
+                fNormTot = fNorm; // k==0 means tot back was just scaled -> store value for using for samescale
+                fHistoMappingSignalInvMassPtBin[iPt] = fSignal; // only use signal that was obtained by subtracting total background
+            }
             fHistoMappingBackNormInvMassPtBin[k][iPt] = fBckNorm;
 
             fHistoMappingBackSameNormInvMassPtBin[k][iPt] = (TH1D*) fHistoMappingBackInvMassPtBin[k][iPt]->Clone(Form("BckSameNorm%i",k)); // clone all the unscaled bckgroups
@@ -692,8 +697,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
           if((fHistoMappingGGInvMassBackFitPtBin_SubPiZero[iPt]!=NULL) && (fHistoMappingBackInvMassPtBin_SubPiZero[k][iPt]!=NULL )){
             ProcessEM( fHistoMappingGGInvMassPtBin_SubPiZero[iPt], fHistoMappingBackInvMassPtBin_SubPiZero[k][iPt], fBGFitRange_SubPiZero);
-            if(k==0) fNormTot = fNorm; // k==0 means tot back was just scaled -> store value
-            fHistoMappingSignalInvMassPtBin_SubPiZero[iPt] = fSignal;
+            if(k==0){
+                fNormTot = fNorm; // k==0 means tot back was just scaled -> store value for using for samescale
+                fHistoMappingSignalInvMassPtBin_SubPiZero[iPt] = fSignal; // only use signal that was obtained by subtracting total background
+            }
             fHistoMappingBackNormInvMassPtBin_SubPiZero[k][iPt] = fBckNorm;
 
             fHistoMappingBackSameNormInvMassPtBin_SubPiZero[k][iPt] = (TH1D*) fHistoMappingBackInvMassPtBin_SubPiZero[k][iPt]->Clone(Form("BckSameNorm%i_SubPiZero",k)); // clone all the unscaled bckgroups
@@ -703,8 +710,10 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
           if((fHistoMappingGGInvMassBackFitPtBin_FixedPzPiZero[iPt]!=NULL) && (fHistoMappingBackInvMassPtBin_FixedPzPiZero[k][iPt]!=NULL )){
             ProcessEM( fHistoMappingGGInvMassPtBin_FixedPzPiZero[iPt], fHistoMappingBackInvMassPtBin_FixedPzPiZero[k][iPt], fBGFitRange_FixedPzPiZero);
-            if(k==0) fNormTot = fNorm; // k==0 means tot back was just scaled -> store value
-            fHistoMappingSignalInvMassPtBin_FixedPzPiZero[iPt] = fSignal;
+            if(k==0){
+                fNormTot = fNorm; // k==0 means tot back was just scaled -> store value for using for samescale
+                fHistoMappingSignalInvMassPtBin_FixedPzPiZero[iPt] = fSignal; // only use signal that was obtained by subtracting total background
+            }
             fHistoMappingBackNormInvMassPtBin_FixedPzPiZero[k][iPt] = fBckNorm;
 
             fHistoMappingBackSameNormInvMassPtBin_FixedPzPiZero[k][iPt] = (TH1D*) fHistoMappingBackInvMassPtBin_FixedPzPiZero[k][iPt]->Clone(Form("BckSameNorm%i_FixedPzPiZero",k)); // clone all the unscaled bckgroups
@@ -3590,6 +3599,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         mesonAmplitudeMax = mesonAmplitude*115./100.;
         if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5){
             mesonAmplitudeMin = mesonAmplitude*98./100.;
+        } else if(fMode == 40){
+            mesonAmplitudeMin = mesonAmplitude*85./100.;
+            if(fIsMC) mesonAmplitudeMin = mesonAmplitude*85./100.;
+            mesonAmplitudeMax = mesonAmplitude*150./100.;
         } else if(fMode == 41){
             mesonAmplitudeMin = mesonAmplitude*70./100.;
             if(fIsMC) mesonAmplitudeMin = mesonAmplitude*85./100.;

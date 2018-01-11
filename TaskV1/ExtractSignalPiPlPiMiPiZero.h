@@ -790,8 +790,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         } else if (mode == 41){
-            fBGFitRange[0]                = 0.83;
-            fBGFitRange[1]                = 0.88;
+            fBGFitRange[0]                = 0.815;
+            fBGFitRange[1]                = 0.865;
             fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
             fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
@@ -829,8 +829,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         } else if (mode == 45){
-            fBGFitRange[0]                = 0.81;
-            fBGFitRange[1]                = 0.86;
+            fBGFitRange[0]                = 0.80;
+            fBGFitRange[1]                = 0.89;
             fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
             fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
@@ -927,7 +927,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1] ;
          } else if (mode == 44){
              fMesonFitRange[0]                 = 0.62;
-             fMesonFitRange[1]                 = 0.93;
+             fMesonFitRange[1]                 = 0.87;
 
              fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0] -0.134;
              fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1] -0.134;
@@ -948,8 +948,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
 
          // Set remaining parameters for fitting
          if(mode == 40){
-             fMesonWidthExpect            = 0.080;
-             fMesonWidthRange[0]          = 0.005;
+             fMesonWidthExpect            = 0.010;
+             fMesonWidthRange[0]          = 0.001;
              fMesonWidthRange[1]          = 0.100;
              fMesonWidthRangeTrue[0]      = 0.005;
              fMesonWidthRangeTrue[1]      = 0.100;
