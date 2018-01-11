@@ -68,9 +68,10 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   //input files
 							        //PaperPlots_Tsallis_2017_02_09.root
                                                                 //18
-  TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_09_20.root";
-  TString fileNamepPbOutput              = "InputMakePaperPlots/PaperPlots_Tsallis_2017_09_21_ALL.root";
-  TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_09_21.root";
+  TString fileNamepPbSpectra             = "InputMakePaperPlots/PaperPlots_Tsallis_2017_12_18.root";
+  TString fileNamepPbOutput              = "InputMakePaperPlots/PaperPlots_Tsallis_2017_12_18_ALL.root";
+  //TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_11_03.root";
+  TString fileNameRpPb                   = "InputMakePaperPlots/PaperPlotsRpPb_2017_12_17.root";
   TString fileNamePeaks                  = "InputMakePaperPlots/PaperPlotsPeaks_2016_11_28.root";
   TString fileNameEPOS3                  = "InputMakePaperPlots/pi0_eta_EPOS3.root";
   TString fileNameTAPS                   = "InputMakePaperPlots/TAPS_eta2pi0.root";
@@ -142,33 +143,33 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   
 
-  TF1* FitCombPi0                      = (TF1*)filepPbSpectra->Get("FitCombPi0");
-  TF1* FitCombEta                      = (TF1*)filepPbSpectra->Get("FitCombEta");
-  TGraphAsymmErrors* CombPi0Syst  =(TGraphAsymmErrors*)filepPbSpectra->Get("CombPi0Syst");
-  TGraphAsymmErrors* CombPi0Stat =(TGraphAsymmErrors*)filepPbSpectra->Get("CombPi0Stat");
-  TGraphAsymmErrors* CombEtaSyst  =(TGraphAsymmErrors*)filepPbSpectra->Get("CombEtaSyst");
-  TGraphAsymmErrors* CombEtaStat =(TGraphAsymmErrors*)filepPbSpectra->Get("CombEtaStat");
-  TGraphAsymmErrors*RatioTsallisCombPi0Syst  =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisCombPi0Syst");
-  TGraphAsymmErrors* RatioTsallisCombPi0Stat =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisCombPi0Stat");
-  TGraphAsymmErrors* RatioTsallisCombEtaSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisCombEtaSyst");
-  TGraphAsymmErrors* RatioTsallisCombEtaStat =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisCombEtaStat");
-  TGraphAsymmErrors* RatioTsallisPCMSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisPCMSyst");
-  TH1D* RatioTsallisPCMStat =(TH1D*)filepPbSpectra->Get("RatioTsallisPCMStat");
-  TGraphAsymmErrors* RatioTsallisDalitzSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisDalitzSyst");
-  TH1D*  RatioTsallisDalitzStat=(TH1D*)filepPbSpectra->Get("RatioTsallisDalitzStat");
-  TGraphAsymmErrors* RatioTsallisEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisEMCalSyst");
-  TH1D* RatioTsallisEMCalStat =(TH1D*)filepPbSpectra->Get("RatioTsallisEMCalStat");
-  TGraphAsymmErrors*RatioTsallisPHOSSyst  =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisPHOSSyst");
-  TH1D* RatioTsallisPHOSStat =(TH1D*)filepPbSpectra->Get("RatioTsallisPHOSStat");
-  TGraphAsymmErrors* RatioTsallisPCMEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioTsallisPCMEMCalSyst");
-  TH1D* RatioTsallisPCMEMCalStat =(TH1D*)filepPbSpectra->Get("RatioTsallisPCMEMCalStat");
+  TF1* FitCombPi0                      = (TF1*)filepPbSpectra->Get("Pi0pPb/FitCombPi0");
+  TF1* FitCombEta                      = (TF1*)filepPbSpectra->Get("EtapPb/FitCombEta");
+  TGraphAsymmErrors* CombPi0Syst  =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/graphInvYieldPi0CombpPb5023GeVSystErr_xShifted_NSD");
+  TGraphAsymmErrors* CombPi0Stat =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/graphInvYieldPi0CombpPb5023GeVStatErr_xShifted_NSD");
+  TGraphAsymmErrors* CombEtaSyst  =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/graphInvYieldEtaCombpPb5023GeVSystErr_xShifted_NSD");
+  TGraphAsymmErrors* CombEtaStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/graphInvYieldEtaCombpPb5023GeVStatErr_xShifted_NSD");
+  TGraphAsymmErrors* RatioTsallisCombPi0Syst =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisCombPi0Syst");
+  TGraphAsymmErrors* RatioTsallisCombPi0Stat =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisCombPi0Stat");
+  TGraphAsymmErrors* RatioTsallisCombEtaSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioTsallisCombEtaSyst");
+  TGraphAsymmErrors* RatioTsallisCombEtaStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioTsallisCombEtaStat");
+  TGraphAsymmErrors* RatioTsallisPCMSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisPCMSyst");
+  TGraphAsymmErrors* RatioTsallisPCMStat =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisPCMStat");
+  TGraphAsymmErrors* RatioTsallisDalitzSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisDalitzSyst");
+  TGraphAsymmErrors*  RatioTsallisDalitzStat=(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisDalitzStat");
+  TGraphAsymmErrors* RatioTsallisEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisEMCalSyst");
+  TGraphAsymmErrors* RatioTsallisEMCalStat =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisEMCalStat");
+  TGraphAsymmErrors*RatioTsallisPHOSSyst  =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisPHOSSyst");
+  TGraphAsymmErrors* RatioTsallisPHOSStat =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisPHOSStat");
+  TGraphAsymmErrors* RatioTsallisPCMEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisPCMEMCalSyst");
+  TGraphAsymmErrors* RatioTsallisPCMEMCalStat =(TGraphAsymmErrors*)filepPbSpectra->Get("Pi0pPb/RatioTsallisPCMEMCalStat");
  
-  TGraphAsymmErrors* RatioEtaTsallisPCMSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioEtaTsallisPCMSyst");
-  TH1D* RatioEtaTsallisPCMStat =(TH1D*)filepPbSpectra->Get("RatioEtaTsallisPCMStat");
-  TGraphAsymmErrors* RatioEtaTsallisEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioEtaTsallisEMCalSyst");
-  TH1D* RatioEtaTsallisEMCalStat = (TH1D*)filepPbSpectra->Get("RatioEtaTsallisEMCalStat");
-  TGraphAsymmErrors* RatioEtaTsallisPCMEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("RatioEtaTsallisPCMEMCalSyst");
-  TH1D* RatioEtaTsallisPCMEMCalStat =(TH1D*)filepPbSpectra->Get("RatioEtaTsallisPCMEMCalStat");
+  TGraphAsymmErrors* RatioEtaTsallisPCMSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioEtaTsallisPCMSyst");
+  TGraphAsymmErrors* RatioEtaTsallisPCMStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioEtaTsallisPCMStat");
+  TGraphAsymmErrors* RatioEtaTsallisEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioEtaTsallisEMCalSyst");
+  TGraphAsymmErrors* RatioEtaTsallisEMCalStat = (TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioEtaTsallisEMCalStat");
+  TGraphAsymmErrors* RatioEtaTsallisPCMEMCalSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioEtaTsallisPCMEMCalSyst");
+  TGraphAsymmErrors* RatioEtaTsallisPCMEMCalStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/RatioEtaTsallisPCMEMCalStat");
   
   
   
@@ -248,16 +249,16 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   
   
-  TF1*  mTScaling=(TF1*)filepPbSpectra->Get("mTScaling");
-  TF1*  EtaSpectrum_mT_pPb=(TF1*)filepPbSpectra->Get("EtaSpectrum_mT_pPb");
-  TGraphAsymmErrors* EtaPi07TeVStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi07TeVStat");
-  TGraphAsymmErrors* EtaPi07TeVSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi07TeVSyst");
-  TGraphAsymmErrors* EtaPi0pPbStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi0pPbStat");
-  TGraphAsymmErrors* EtaPi0pPbSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi0pPbSyst");
+  TF1*  mTScaling=(TF1*)filepPbSpectra->Get("EtapPb/mTScaling");
+  TF1*  EtaSpectrum_mT_pPb=(TF1*)filepPbSpectra->Get("EtapPb/EtaSpectrum_mT_pPb");
+  TGraphAsymmErrors* EtaPi07TeVStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/EtaPi07TeVStat");
+  TGraphAsymmErrors* EtaPi07TeVSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/EtaPi07TeVSyst");
+  TGraphAsymmErrors* EtaPi0pPbStat =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/EtaPi0pPbStat");
+  TGraphAsymmErrors* EtaPi0pPbSyst =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/EtaPi0pPbSyst");
   TGraphAsymmErrors* EtaPi07TeVStat_mT =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi0Ratio_vsmT_Stat_pp7TeV");
   TGraphAsymmErrors* EtaPi07TeVSyst_mT =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi0Ratio_vsmT_Sys_pp7TeV");
-  TGraphAsymmErrors* EtaPi0pPbStat_mT =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi0Ratio_vsmT_Stat");
-  TGraphAsymmErrors* EtaPi0pPbSyst_mT =(TGraphAsymmErrors*)filepPbSpectra->Get("EtaPi0Ratio_vsmT_Sys");
+  TGraphAsymmErrors* EtaPi0pPbStat_mT =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/EtaPi0Ratio_vsmT_Stat");
+  TGraphAsymmErrors* EtaPi0pPbSyst_mT =(TGraphAsymmErrors*)filepPbSpectra->Get("EtapPb/EtaPi0Ratio_vsmT_Sys");
 
 
  TGraphAsymmErrors* graphEtaPi0pPbTot = AddErrorsOfGraphsQuadratically(EtaPi0pPbStat,EtaPi0pPbSyst);
@@ -269,6 +270,54 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   TGraphAsymmErrors*CombinedEtaRpPbSystErr=(TGraphAsymmErrors*)fileRpPb->Get("CombinedEtaRpPbSystErr");
   TGraphAsymmErrors*CombinedEtaRpPbStatErr=(TGraphAsymmErrors*)fileRpPb->Get("CombinedEtaRpPbStatErr");
   
+
+  
+  //PPRef
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionSystErrPPRef=(TGraphAsymmErrors*)fileRpPb->Get("Pi0PPReferenceSystErr");
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionStatErrPPRef=(TGraphAsymmErrors*)fileRpPb->Get("Pi0PPReferenceStatErr");
+  TF1* fitTsallisPi0ppRef5023GeVPt = (TF1*)fileRpPb->Get("Pi0PPReferenceTSallisFit");
+  TF1* fitTCMPi0ppRef5023GeVPt     = (TF1*)fileRpPb->Get("Pi0PPReferenceTCMFit");
+  
+  
+  
+  
+  
+  
+  
+  
+  TGraphAsymmErrors* graphRatioEtappRefTsallisFitStatErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioEtappRefTsallisFitStatErr");   
+  TGraphAsymmErrors* graphRatioEtappRefTsallisFitSystErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioEtappRefTsallisFitSystErr");   
+ 
+  
+  TGraphAsymmErrors* graphRatioEtappRefTCMFitStatErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioEtappRefTCMFitStatErr");   
+  TGraphAsymmErrors* graphRatioEtappRefTCMFitSystErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioEtappRefTCMFitSystErr");   
+ 
+  TGraphAsymmErrors* graphRatioPi0ppRefTCMFitStatErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioPi0ppRefTCMFitStatErr");     
+  TGraphAsymmErrors* graphRatioPi0ppRefTCMFitSystErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioPi0ppRefTCMFitSystErr"); 
+  
+  TGraphAsymmErrors* graphRatioPi0ppRefTsallisFitStatErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioPi0ppRefTsallisFitStatErr");     
+  TGraphAsymmErrors* graphRatioPi0ppRefTsallisFitSystErr = (TGraphAsymmErrors*)fileRpPb->Get("graphRatioPi0ppRefTsallisFitSystErr"); 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionSystErrPPRef=(TGraphAsymmErrors*)fileRpPb->Get("EtaPPReferenceSystErr");
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionStatErrPPRef=(TGraphAsymmErrors*)fileRpPb->Get("EtaPPReferenceStatErr");
+  TF1* fitTsallisEtappRef5023GeVPt = (TF1*)fileRpPb->Get("EtaPPReferenceTSallisFit");
+  TF1* fitTCMEtappRef5023GeVPt     = (TF1*)fileRpPb->Get("EtaPPReferenceTCMFit");
+  
   
   
   TGraph*EPS09s_KKP_NLO=(TGraph*)fileRpPb->Get("EPS09s_KKP_NLO");
@@ -276,6 +325,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    TGraph*	EPS09s_fDSS_NLO=(TGraph*)fileRpPb->Get("EPS09s_fDSS_NLO");
    TGraphAsymmErrors*	EPS09s_fDSS_errors=(TGraphAsymmErrors*)fileRpPb->Get("EPS09s_fDSS_errors");
    TGraph*	CGC=(TGraph*)fileRpPb->Get("CGC");
+   TGraph*      CGCline = (TGraph*)CGC->Clone("CGCline");
+   
    TGraphAsymmErrors*ppRefStat=(TGraphAsymmErrors*)fileRpPb->Get("ppRefStat");
    TGraphAsymmErrors*ppRefSyst=(TGraphAsymmErrors*)fileRpPb->Get("ppRefSyst");
 
@@ -465,6 +516,15 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Double_t CMarginT=0.02;
   Double_t CMarginR=0.02;
   Double_t CMarginB=0.12;
+  
+  Double_t CMarginEtaToPi0L=0.12;
+  Double_t CMarginEtaToPi0T=0.02;
+  Double_t CMarginEtaToPi0R=0.02;
+  Double_t CMarginEtaToPi0B=0.12;
+  
+  
+  
+  
 
   Int_t CDimX=500;
   Int_t CDimY=400;
@@ -473,6 +533,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Double_t TitleOffsetY=1.;
   Double_t TitleSizeX=0.05;
   Double_t TitleSizeY=0.05;
+  Double_t TitleSizeYEtaToPi0 = 0.07;
+  Double_t TitleOffsetYEtaToPi0 = 0.78;
 
   Double_t LabelOffsetX=1;
   Double_t LabelOffsetY=1.;
@@ -503,6 +565,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Color_t colormTScaling  	= kRed+2;
   Color_t RpPb   		= kBlue+2;
   Color_t ppRef   		= kGray+2;
+  Color_t colorPPRef            = kGray+2;
   Color_t  colorDPMJet          = kViolet+2;
   Color_t  colorDPMJetPi0       = kViolet+2;
   Color_t  colorDPMJetEta       = kViolet+2; //-2
@@ -523,9 +586,9 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Color_t  colorMcGillPi0	= kPink + 2;
   Color_t  colorMcGillEta	= kPink + 2; //-6
   
-  Color_t  colorIlkka           = kYellow - 7;//41;
-  Color_t  colorIlkkaline       = kYellow + 1;
-  Color_t  colorIlkkaPi0	= kYellow - 7;//41;
+  Color_t  colorIlkka           = kGray;// kYellow - 10;//41;
+  Color_t  colorIlkkaline       = kYellow + 2 ;
+  Color_t  colorIlkkaPi0	= kGray;//kYellow - ;//41;
   Color_t  colorEtaPi07TeV	= kBlue - 3;
   
   Color_t colornCTEQPi0Line     = kBlue-5;
@@ -547,12 +610,14 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Style_t  styleLineIlkka		      = 3;
   Style_t  styleLineIlkkaRatio                = 3;
   Style_t  styleLineTsallis                   = 1;
+  Style_t  styleLineTCM                       = 2;
   Style_t  styleLineDSSnPDFEPPS               = 2;
   
   Int_t     lineWidthMcGill  = 2;
   Int_t     lineWidthIlkka   = 2;
   Int_t     lineWidthEPOS3   = 2;
   Int_t     lineWidthTsallis = 2;
+  Int_t     lineWidthTCM     = 2;
 
   
   Style_t markerStylePi0	= 20;
@@ -600,17 +665,13 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   FitCombPi0->SetLineWidth(lineWidthTsallis);  
   if (!EPOS)  FitCombPi0->Draw("same"); 
   FitCombEta->SetLineWidth(lineWidthTsallis);  
-   if (!EPOS) FitCombEta->Draw("same");
-  // DrawGammaSetMarker(Pi0EPOS,8,1,kRed+2,kRed+2 );
-  // DrawGammaSetMarker(EtaEPOS,8,1,kCyan,kCyan ); 
-
-
+  if (!EPOS) FitCombEta->Draw("same");
 
   TGraphAsymmErrors*ppRefStat_scale=(TGraphAsymmErrors*)ScaleGraph(ppRefStat,(0.0983e-9));
-  //  TGraphAsymmErrors*ppRefSyst_scale=(TGraphAsymmErrors*)ScaleGraph(ppRefSyst,( 0.0983e-9));
   Double_t* EXh = ppRefStat_scale->GetEXhigh();
   Double_t* EXl = ppRefStat_scale->GetEXlow();
   Double_t* EYh = ppRefStat_scale->GetEYhigh();
+  
   Double_t* EYl = ppRefStat_scale->GetEYlow();
   for(Int_t i = 0; i<ppRefStat_scale->GetN(); i++){
     EXh[i]=0.;
@@ -687,8 +748,6 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   if (EPOS) leg1->AddEntry(graphEtaEPOS,"#eta EPOS3","l");
   if (mT) leg1->AddEntry(EtaSpectrum_mT_pPb,"#eta from #it{m}_{T} scaled #pi^{0}","l");
   if (CGCPi0) leg1->AddEntry(graphAsymmErrCGCTheoryPi0y0pA5020,"#pi^{0} CGC","l");
-//  leg1->AddEntry(ppRefStat_scale,"pp Reference x #it{T}_{pA}","l");
-  //leg1->AddEntry(ppRefStat_scale,"pp Reference x 1/#sigma_{NN}","l");
   leg1->Draw("same");
 
  	
@@ -738,25 +797,11 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   TGraphAsymmErrors* RatioDSS14nCTEQFitPi05023GeV = (TGraphAsymmErrors*)graphNLOCalcDSS14InvYieldPi05023GeV_nCTEQ->Clone("RatioDSS14nCTEQFitPi05023GeV");
   RatioDSS14nCTEQFitPi05023GeV=(TGraphAsymmErrors*)CalculateGraphErrRatioToFit(RatioDSS14nCTEQFitPi05023GeV,FitCombPi0);
 
-  // the next ratios do not exist (TGraph!!)
-  //  graphNLOCalcDSS14InvYieldPi0MuTwo5023GeV_nCTEQ->Print();
-  //  TGraph * RatioDSS14nCTEQFitPi0MuTwo5023GeV = (TGraph*)graphNLOCalcDSS14InvYieldPi0MuTwo5023GeV_nCTEQ->Clone("RatioDSS14nCTEQFitPi0MuTwo5023GeV");
-  //  RatioDSS14nCTEQFitPi0MuTwo5023GeV=(TGraph*)CalculateGraphErrRatioToFit(RatioDSS14nCTEQFitPi0MuTwo5023GeV,FitCombPi0);
-  //  TGraph* RatioDSS14nCTEQFitPi0MuOne5023GeV = (TGraph*)graphNLOCalcDSS14InvYieldPi0MuOne5023GeV_nCTEQ->Clone("RatioDSS14nCTEQFitPi0MuOne5023GeV");
-  //  RatioDSS14nCTEQFitPi0MuOne5023GeV=(TGraph*)CalculateGraphErrRatioToFit(RatioDSS14nCTEQFitPi0MuOne5023GeV,FitCombPi0);
-  // TGraph* RatioDSS14nCTEQFitPi0MuHalf5023GeV = (TGraph*)graphNLOCalcDSS14InvYieldPi0MuHalf5023GeV_nCTEQ->Clone("RatioDSS14nCTEQFitPi0MuHalf5023GeV");
-  // RatioDSS14nCTEQFitPi0MuHalf5023GeV=(TGraph*)CalculateGraphErrRatioToFit(RatioDSS14nCTEQFitPi0MuHalf5023GeV,FitCombPi0);
 
 
   cout<< " second addition AM : Ratio to Fit  for eta "<< endl;  
   TGraphAsymmErrors* RatioAESSSnCTEQFitEta5023GeV = (TGraphAsymmErrors*)graphNLOCalcAESSSInvYieldEta5023GeV_nCTEQ->Clone("RatioAESSSnCTEQFitEta5023GeV");
   RatioAESSSnCTEQFitEta5023GeV=(TGraphAsymmErrors*)CalculateGraphErrRatioToFit(RatioAESSSnCTEQFitEta5023GeV,FitCombEta);
-  // TGraph* RatioAESSSnCTEQFitEtaMuTwo5023GeV = (TGraph*)graphNLOCalcAESSSInvYieldEtaMuTwo5023GeV_nCTEQ->Clone("RatioAESSSnCTEQFitEtaMuTwo5023GeV");
-  // RatioAESSSnCTEQFitEtaMuTwo5023GeV=(TGraph*)CalculateGraphErrRatioToFit(RatioAESSSnCTEQFitEtaMuTwo5023GeV,FitCombEta);
-  // TGraph* RatioAESSSnCTEQFitEtaMuOne5023GeV = (TGraph*)graphNLOCalcAESSSInvYieldEtaMuOne5023GeV_nCTEQ->Clone("RatioAESSSnCTEQFitEtaMuOne5023GeV");
-  // RatioAESSSnCTEQFitEtaMuOne5023GeV=(TGraph*)CalculateGraphErrRatioToFit(RatioAESSSnCTEQFitEtaMuOne5023GeV,FitCombEta);
-  // TGraph* RatioAESSSnCTEQFitEtaMuHalf5023GeV = (TGraph*)graphNLOCalcAESSSInvYieldEtaMuHalf5023GeV_nCTEQ->Clone("RatioAESSSnCTEQFitEtaMuHalf5023GeV");
-  // RatioAESSSnCTEQFitEtaMuHalf5023GeV=(TGraph*)CalculateGraphErrRatioToFit(RatioAESSSnCTEQFitEtaMuHalf5023GeV,FitCombEta);
 
 
 
@@ -818,21 +863,21 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    SetEx(RatioTsallisCombEtaStat,0.); //Set the x-errors bars to 0
    RatioTsallisCombEtaStat->Draw("Ez,p,same");
    
-   
-   
-   
-   // }
-
- // if (mT){ TEMP
- //    Ratio_mT_Fit->SetLineColor(kGreen-3);
- //    Ratio_mT_Fit->SetLineStyle(2);
- //    Ratio_mT_Fit->Draw("same");
- //  }
   c1->Update();
   if(EPOS) c1->Print(Form("%s/MesonYields_EPOS.%s",outputDir.Data(),suffix.Data()));
   else if(mT) c1->Print(Form("%s/MesonYields_mT.%s",outputDir.Data(),suffix.Data()));
   else c1->Print(Form("%s/MesonYields.%s",outputDir.Data(),suffix.Data()));
   
+
+  
+  
+  
+  
+  
+  
+  
+
+
   //Inv Yields Ratio Pi0
  
 
@@ -841,7 +886,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    c2->SetLogx();
    TH2F * hist2;
    hist2 = new TH2F("hist2","hist2",1000,0.25,25.,1000,0.34,2.8  );
-   SetStyleHistoTH2ForGraphs(hist2, "#it{p}_{T} (GeV/#it{c})","Data/ Fit",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508); 
+   SetStyleHistoTH2ForGraphs(hist2, "#it{p}_{T} (GeV/#it{c})","Data/Fit",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508); 
    hist2->GetXaxis()->SetLabelOffset(LabelOffsetLog);
    hist2->DrawCopy(); 
 
@@ -852,28 +897,34 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
    DrawGammaSetMarkerTGraphAsym(RatioTsallisPHOSSyst,markerStylePHOS,markerSizePHOS, colorPHOS, colorPHOS, 1, kTRUE);  
    RatioTsallisPHOSSyst->Draw("E2same");
-   DrawGammaSetMarker(RatioTsallisPHOSStat, markerStylePHOS,markerSizePHOS, colorPHOS, colorPHOS );
-   RatioTsallisPHOSStat->Draw("EX0,same") ;
+   SetEx(RatioTsallisPHOSStat,0);
+   DrawGammaSetMarkerTGraphAsym(RatioTsallisPHOSStat, markerStylePHOS,markerSizePHOS, colorPHOS, colorPHOS );
+   RatioTsallisPHOSStat->Draw("same,pz") ;
  
    DrawGammaSetMarkerTGraphAsym(RatioTsallisEMCalSyst,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal, 1, kTRUE);  
    RatioTsallisEMCalSyst->Draw("E2same");
-   DrawGammaSetMarker(RatioTsallisEMCalStat,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal );
-   RatioTsallisEMCalStat->Draw("EX0,same") ; 
+   SetEx(RatioTsallisEMCalStat,0);
+   DrawGammaSetMarkerTGraphAsym(RatioTsallisEMCalStat,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal );
+   RatioTsallisEMCalStat->Draw("same,pz") ; 
 
    DrawGammaSetMarkerTGraphAsym(RatioTsallisPCMSyst,markerStylePCM,markerSizePCM, colorPCM, colorPCM, 1, kTRUE);  
    RatioTsallisPCMSyst->Draw("E2same");
-   DrawGammaSetMarker(RatioTsallisPCMStat,markerStylePCM,markerSizePCM, colorPCM, colorPCM );
-   RatioTsallisPCMStat->Draw("EX0,same") ;
+   SetEx(RatioTsallisPCMStat,0);
+   DrawGammaSetMarkerTGraphAsym(RatioTsallisPCMStat,markerStylePCM,markerSizePCM, colorPCM, colorPCM );
+   RatioTsallisPCMStat->Draw("same,pz") ;
  
    DrawGammaSetMarkerTGraphAsym(RatioTsallisDalitzSyst,markerStyleDalitz,markerSizeDalitz, colorDalitz, colorDalitz, 1, kTRUE);  
    RatioTsallisDalitzSyst->Draw("E2same");
-   DrawGammaSetMarker(RatioTsallisDalitzStat,markerStyleDalitz,markerSizeDalitz, colorDalitz, colorDalitz );
-   RatioTsallisDalitzStat->Draw("EX0,same") ; 
+   SetEx(RatioTsallisDalitzStat,0);
+   DrawGammaSetMarkerTGraphAsym(RatioTsallisDalitzStat,markerStyleDalitz,markerSizeDalitz, colorDalitz, colorDalitz );
+   RatioTsallisDalitzStat->Draw("same,pz") ; 
+
   
   DrawGammaSetMarkerTGraphAsym(RatioTsallisPCMEMCalSyst,markerStylePCMEMCal,markerSizePCMEMCal,colorPCMEMCal,colorPCMEMCal,1,kTRUE);
   RatioTsallisPCMEMCalSyst->Draw("E2same");
-  DrawGammaSetMarker(RatioTsallisPCMEMCalStat,markerStylePCMEMCal,markerSizePCMEMCal, colorPCMEMCal, colorPCMEMCal );
-  RatioTsallisPCMEMCalStat->Draw("EX0,same") ; 
+  SetEx(RatioTsallisPCMEMCalStat,0);
+  DrawGammaSetMarkerTGraphAsym(RatioTsallisPCMEMCalStat,markerStylePCMEMCal,markerSizePCMEMCal, colorPCMEMCal, colorPCMEMCal );
+  RatioTsallisPCMEMCalStat->Draw("same,pz") ; 
   
   
   
@@ -893,11 +944,11 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   leg2->SetLineColor(0);
   leg2->SetTextFont(Font);
   leg2->SetTextSize(TextSize);
-  leg2->AddEntry(RatioTsallisPHOSStat,Form("PHOS"),"pf");
-  leg2->AddEntry(RatioTsallisEMCalStat,Form("EMC"),"pf");
-  leg2->AddEntry(RatioTsallisPCMStat,Form("PCM"),"pf");
-  leg2->AddEntry(RatioTsallisPCMEMCalStat,Form("PCM-EMC"),"pf");
-  leg2->AddEntry(RatioTsallisDalitzStat,Form("PCM-#gamma*#gamma"),"pf");
+  leg2->AddEntry(RatioTsallisPHOSSyst,Form("PHOS"),"pef");
+  leg2->AddEntry(RatioTsallisEMCalSyst,Form("EMC"),"pef");
+  leg2->AddEntry(RatioTsallisPCMSyst,Form("PCM"),"pef");
+  leg2->AddEntry(RatioTsallisPCMEMCalSyst,Form("PCM-EMC"),"pef");
+  leg2->AddEntry(RatioTsallisDalitzSyst,Form("PCM-#gamma*#gamma"),"pef");
   leg2->Draw("same");
 
 
@@ -924,20 +975,26 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   DrawGammaLines(0.0,25.,1.,1.,2.0,kGray+2,2);
   
-  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisEMCalSyst,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal, 1, kTRUE);  
-  DrawGammaSetMarker(RatioEtaTsallisEMCalStat,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal );
+  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisEMCalSyst,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal, 1, kTRUE);
+  SetEx(RatioEtaTsallisEMCalStat,0);  
+  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisEMCalStat,markerStyleEMCal,markerSizeEMCal, colorEMCal, colorEMCal );
   RatioEtaTsallisEMCalSyst->Draw("E2same");
-  RatioEtaTsallisEMCalStat->Draw("EX0,same") ;
+  RatioEtaTsallisEMCalStat->Draw("pz,same") ;
 
-  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisPCMSyst,markerStylePCM,markerSizePCM, colorPCM, colorPCM, 1, kTRUE);  
-  DrawGammaSetMarker(RatioEtaTsallisPCMStat,markerStylePCM,markerSizePCM, colorPCM, colorPCM ); 
+  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisPCMSyst,markerStylePCM,markerSizePCM, colorPCM, colorPCM, 1, kTRUE);
+  SetEx(RatioEtaTsallisPCMStat,0);    
+  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisPCMStat,markerStylePCM,markerSizePCM, colorPCM, colorPCM ); 
   RatioEtaTsallisPCMSyst->Draw("E2same");
-  RatioEtaTsallisPCMStat->Draw("EX0,same") ;	
+  RatioEtaTsallisPCMStat->Draw("pz,same") ;	
    
   DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisPCMEMCalSyst,markerStylePCMEMCal,markerSizePCMEMCal, colorPCMEMCal, colorPCMEMCal, 1, kTRUE);  
-  DrawGammaSetMarker(RatioEtaTsallisPCMEMCalStat,markerStylePCMEMCal,markerSizePCMEMCal, colorPCMEMCal, colorPCMEMCal); 
+  SetEx(RatioEtaTsallisPCMEMCalStat,0); 
+  DrawGammaSetMarkerTGraphAsym(RatioEtaTsallisPCMEMCalStat,markerStylePCMEMCal,markerSizePCMEMCal, colorPCMEMCal, colorPCMEMCal); 
   RatioEtaTsallisPCMEMCalSyst->Draw("E2same");
-  RatioEtaTsallisPCMEMCalStat->Draw("EX0,same") ;
+  RatioEtaTsallisPCMEMCalStat->Draw("pz,same") ;
+  
+  RatioEtaTsallisPCMEMCalStat->Print();
+  return;
 
 
   TLegend* leg3 = new TLegend(0.13,0.8,0.45,0.95);
@@ -945,9 +1002,9 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   leg3->SetLineColor(0);
   leg3->SetTextFont(Font);
   leg3->SetTextSize(TextSize);
-  leg3->AddEntry(RatioEtaTsallisEMCalStat,Form("EMC"),"pf");
-  leg3->AddEntry(RatioEtaTsallisPCMStat,Form("PCM"),"pf");
-  leg3->AddEntry(RatioEtaTsallisPCMEMCalStat,Form("PCM-EMC"),"pf");
+  leg3->AddEntry(RatioEtaTsallisEMCalSyst,Form("EMC"),"pef");
+  leg3->AddEntry(RatioEtaTsallisPCMSyst,Form("PCM"),"pef");
+  leg3->AddEntry(RatioEtaTsallisPCMEMCalSyst,Form("PCM-EMC"),"pef");
   leg3->Draw("same");
   
   TLatex * lt3 = new TLatex(3.1,2.61,"ALICE");
@@ -970,24 +1027,21 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
 
   TCanvas* c4 = new TCanvas("c4","",200,10,CDimX,CDimY);  // gives the page size
-  DrawGammaCanvasSettings( c4, CMarginL, CMarginR,CMarginT ,CMarginB);
+  DrawGammaCanvasSettings( c4, CMarginEtaToPi0L, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
 
   TH2F * hist4;
   if (TAPS)  hist4 = new TH2F("hist4","hist4",1000,-0.2,16.,1000,-0.02,.99   );
   else  hist4 = new TH2F("hist4","hist4",1000,0.3,16.,1000,0.0,.99   );
 
-  SetStyleHistoTH2ForGraphs(hist4, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY, TitleOffsetX,TitleOffsetY, 512, 508);
+  SetStyleHistoTH2ForGraphs(hist4, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeYEtaToPi0, TitleOffsetX,TitleOffsetYEtaToPi0, 512, 508);
   hist4->DrawCopy(); 
   if (EPOS){
       
     graphEtaPi0EPOS->SetLineColor(kGreen+1);
     graphEtaPi0EPOS->SetFillColor(kGreen+1);
-    //  graphEtaPi0EPOS->SetLineStyle(2);
     graphEtaPi0EPOS->SetLineWidth(2);
     graphEtaPi0EPOS->Draw("C3same");
-    
-    
-    
+
   }      
   
  // if (!EPOS || (EPOS && TAPS)) mTScaling->Draw("same"); TEMP
@@ -996,7 +1050,10 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
  //  graphEtaPi0Ratio_mTScaled_pPb->SetFillColor(kRed+2);
 
    if (TAPS){
-     DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.4,kGreen, kGreen);
+       
+     //DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.4,kGreen+1, kGreen+1);
+     //DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.4,colorCombYieldEta+1, colorCombYieldEta+1);
+     DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.4,kBlack,kBlack);
      DrawGammaSetMarkerTGraphErr(eta2pi0_pBe, 27, 1.4,kRed, kRed);
      eta2pi0_pAu->Draw("same,zp");
      eta2pi0_pBe->Draw("same,pz");
@@ -1035,20 +1092,18 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   if (EPOS) c4->Print(Form("%s/EtaPi0Ratio_EPOS.%s",outputDir.Data(),suffix.Data()));
   else if (TAPS) c4->Print(Form("%s/EtaPi0Ratio_TAPS.%s",outputDir.Data(),suffix.Data()));
   else c4->Print(Form("%s/EtaPi0Ratio.%s",outputDir.Data(),suffix.Data()));
-//Eta/Pi0 Ratio Logx
+
 
   
 
   TCanvas* c4a = new TCanvas("c4a","",200,10,CDimX,CDimY);  // gives the page size
-  DrawGammaCanvasSettings( c4a, CMarginL, CMarginR,CMarginT ,CMarginB);
+  DrawGammaCanvasSettings( c4a, CMarginEtaToPi0L, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
   c4a->SetLogx(); 
   // c4a->SetLogy();
   TH2F * hist4a;
-  if (TAPS)   hist4a = new TH2F("hist4a","hist4a",1000,0.09,25.,1000,0.01,1.2   );
-//else   hist4a = new TH2F("hist4a","hist4a",1000,0.6,20.,1000,0.0,.99   );
+  if (TAPS)   hist4a = new TH2F("hist4a","hist4a",1000,0.101,25.,1000,-0.05,1.2   );
   else hist4a = new TH2F("hist4a","hist4a",1000,0.3,25.,1000,0.0,.99   );
-  //  hist4a = new TH2F("hist4a","hist4a",1000,0.03,7.,1000,0.007,1.   );
-  SetStyleHistoTH2ForGraphs(hist4a, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY, TitleOffsetX,TitleOffsetY, 512, 508);
+  SetStyleHistoTH2ForGraphs(hist4a, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeYEtaToPi0, TitleOffsetX,TitleOffsetYEtaToPi0, 512, 508);
   hist4a->GetYaxis()->SetLabelOffset(0.01);
   hist4a->GetXaxis()->SetLabelOffset(LabelOffsetLog); 
   hist4a->DrawCopy(); 
@@ -1068,7 +1123,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
     graphEtaPi0EPOS->Draw("lXZsame");
   }  
   
-   if (!EPOS || (EPOS && TAPS)) mTScaling->Draw("same"); //NOTE TEMP
+   if (!EPOS || (EPOS && TAPS)) mTScaling->Draw("same"); 
    
    
    if( graphEta2Pi0dAuPhenix ) {
@@ -1079,10 +1134,11 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    }
  
    if (TAPS){
-     DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.4,kGreen+1, kGreen+1);
-     DrawGammaSetMarkerTGraphErr(eta2pi0_pBe, 27, 1.4,kRed, kRed);
+     DrawGammaSetMarkerTGraphErr(eta2pi0_pAu, 27, 1.5,colorCombYieldEta,colorCombYieldEta);
+     DrawGammaSetMarkerTGraphErr(eta2pi0_pBe, 27, 1.5,kRed, kRed);
+     eta2pi0_pBe->Draw("same,zp");
      eta2pi0_pAu->Draw("same,zp");
-     eta2pi0_pBe->Draw("same,pz");
+     //eta2pi0_pBe->Draw("same,pz");
    }
    if( HIJINGPi0 ){
    SetStyleHisto(histoDPMJetEtaToPi0, 3, styleLineDPMJet, colorDPMJet );  
@@ -1094,14 +1150,16 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
    histoHIJINGEtaToPi0->Draw("same,hist,l");
    }
    
+
    
+  TGraphAsymmErrors* EtaPi07TeVStat_noXerrors = (TGraphAsymmErrors*)EtaPi07TeVStat->Clone();
+  SetEx(EtaPi07TeVStat_noXerrors,0);
    
 
   if (!EPOS || (EPOS && TAPS)){ 
     
-  TGraphAsymmErrors* EtaPi07TeVStat_noXerrors = (TGraphAsymmErrors*)EtaPi07TeVStat->Clone();
   
-  SetEx(EtaPi07TeVStat_noXerrors,0);
+ 
     
   DrawGammaSetMarkerTGraphAsym(EtaPi07TeVStat_noXerrors, 34, 1, colorEtaPi07TeV, colorEtaPi07TeV);
   EtaPi07TeVStat_noXerrors->Draw("same,zp");
@@ -1202,7 +1260,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   if( graphEta2Pi0dAuPhenix ) {
       
       
-     TLatex * lt4c = new TLatex(2.2,1.12,"PHENIX");
+     TLatex * lt4c = new TLatex(2.7,1.12,"PHENIX");
      lt4c->SetTextColor(kBlack);
      lt4c->SetTextSize(TextSize);
      lt4c->SetTextFont(Font);
@@ -1231,7 +1289,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
 
   TCanvas* c4b = new TCanvas("c4b","",200,10,CDimX,CDimY);  // gives the page size
-  DrawGammaCanvasSettings( c4b, CMarginL, CMarginR,CMarginT ,CMarginB);
+  DrawGammaCanvasSettings( c4b, CMarginEtaToPi0L, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
 
   TH2F * hist4b;
   hist4b = new TH2F("hist4b","hist4b",1000,0.,20.,1000,0.01,.99   );
@@ -1276,24 +1334,15 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
 
   TCanvas* c4c = new TCanvas("c4c","",200,10,CDimX,CDimY);  // gives the page size
-  DrawGammaCanvasSettings( c4c, CMarginL, CMarginR,CMarginT ,CMarginB);
+  DrawGammaCanvasSettings( c4c, CMarginEtaToPi0L, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
   c4c->SetLogx();
   TH2F * hist4c;
   hist4c = new TH2F("hist4c","hist4c",1000,0.6,20.,1000,0.0,.99   );
-  SetStyleHistoTH2ForGraphs(hist4c, "#it{m}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY, TitleOffsetX,TitleOffsetY, 512, 508);
+  SetStyleHistoTH2ForGraphs(hist4c, "#it{m}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeYEtaToPi0, TitleOffsetX,TitleOffsetYEtaToPi0, 512, 508);
   hist4c->GetXaxis()->SetLabelOffset(LabelOffsetLog); 
   hist4c->DrawCopy(); 
     
-/*   TEMP
-  DrawGammaSetMarkerTGraphAsym(EtaPi07TeVStat_mT, 25, 1,kBlue, kBlue);
-  EtaPi07TeVStat_mT->Draw("same,zp");
-  DrawGammaSetMarkerTGraphAsym(EtaPi07TeVSyst_mT, 25, 1, kBlue, kBlue, 1., kTRUE);
-  EtaPi07TeVSyst_mT->Draw("same,E2");
-   
-  DrawGammaSetMarkerTGraphAsym(EtaPi0pPbStat_mT,20,1,1,1);  
-  EtaPi0pPbStat_mT->Draw("pz,same");
-  DrawGammaSetMarkerTGraphAsym(EtaPi0pPbSyst_mT,20,1, 1,1, 1, kTRUE);  
-  EtaPi0pPbSyst_mT->Draw("E2,same");*/
+
      
 
   TLegend* leg4c = new TLegend(0.15,0.70,0.45,0.90);
@@ -1301,11 +1350,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   leg4c->SetLineColor(0);
   leg4c->SetTextFont(Font);
   leg4c->SetTextSize(0.045);
-  //leg4c->AddEntry(EtaPi0pPbSyst,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV","pef"); TEMP
-  //leg4c->AddEntry(EtaPi07TeVSyst,"pp, #sqrt{#it{s}} = 7 TeV (PLB717 (2012) 162)","pef"); TEMP
-  // leg4c->AddEntry(mTScaling,"#eta from #it{m}_{T} scaled #pi^{0}","pl");  
   leg4c->Draw("same");
- TLine* line4c=new TLine(0.6,0.47,20.,0.47);
+  TLine* line4c=new TLine(0.6,0.47,20.,0.47);
   line4c->SetLineColor(kRed+2);
   line4c->SetLineStyle(2);
   line4c->Draw("same");
@@ -1316,32 +1362,28 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
 
   TCanvas* c4d = new TCanvas("c4d","",200,10,CDimX,CDimY);  // gives the page size
-  DrawGammaCanvasSettings( c4d, CMarginL+0.01, CMarginR,CMarginT ,CMarginB);
+  DrawGammaCanvasSettings( c4d, CMarginEtaToPi0L+0.02, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
   c4d->SetLogx();
   TH2F * hist4d;
   hist4d = new TH2F("hist4d","hist4d",1000,0.6,25.,1000,0.21,1.39   );
-  SetStyleHistoTH2ForGraphs(hist4d, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}_{measured} / #eta/#pi^{0}_{#it{m}_{T} scaling}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY, TitleOffsetX,TitleOffsetY+0.05, 512, 508);
+  SetStyleHistoTH2ForGraphs(hist4d, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0}_{measured}/#eta/#pi^{0}_{#it{m}_{T} scaling}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeYEtaToPi0, TitleOffsetX,TitleOffsetYEtaToPi0+0.05, 512, 508);
   hist4d->GetXaxis()->SetLabelOffset(LabelOffsetLog); 
  
   hist4d->DrawCopy(); 
   
-     //TEMP
-   TGraphAsymmErrors* EtaPi0Stat_div_mT=(TGraphAsymmErrors*)EtaPi0pPbStat->Clone("EtaPi0Stat_div_mT");
-   TGraphAsymmErrors* EtaPi0Syst_div_mT=(TGraphAsymmErrors*)EtaPi0pPbSyst->Clone("EtaPi0Syst_div_mT");
-   EtaPi0Stat_div_mT=CalculateGraphErrRatioToFit (EtaPi0pPbStat ,mTScaling  );  
-   EtaPi0Syst_div_mT=CalculateGraphErrRatioToFit (EtaPi0pPbSyst ,mTScaling  );  
+  TGraphAsymmErrors* EtaPi0Stat_div_mT=(TGraphAsymmErrors*)EtaPi0pPbStat->Clone("EtaPi0Stat_div_mT");
+  TGraphAsymmErrors* EtaPi0Syst_div_mT=(TGraphAsymmErrors*)EtaPi0pPbSyst->Clone("EtaPi0Syst_div_mT");
+  EtaPi0Stat_div_mT=CalculateGraphErrRatioToFit (EtaPi0pPbStat ,mTScaling  );  
+  EtaPi0Syst_div_mT=CalculateGraphErrRatioToFit (EtaPi0pPbSyst ,mTScaling  );  
    
-   TGraphAsymmErrors* EtaPi0Stat_div_mT_noXErrors = (TGraphAsymmErrors*)EtaPi0Stat_div_mT->Clone();
-   SetEx(EtaPi0Stat_div_mT_noXErrors,0.);
-   DrawGammaSetMarkerTGraphAsym(EtaPi0Stat_div_mT_noXErrors, 20, 1,kBlack, kBlack);
-   EtaPi0Stat_div_mT_noXErrors->Draw("same,zp");
+  TGraphAsymmErrors* EtaPi0Stat_div_mT_noXErrors = (TGraphAsymmErrors*)EtaPi0Stat_div_mT->Clone();
+  SetEx(EtaPi0Stat_div_mT_noXErrors,0.);
+  DrawGammaSetMarkerTGraphAsym(EtaPi0Stat_div_mT_noXErrors, 20, 1,kBlack, kBlack);
+  EtaPi0Stat_div_mT_noXErrors->Draw("same,zp");
    
-   DrawGammaSetMarkerTGraphAsym(EtaPi0Syst_div_mT, 20, 1, kBlack, kBlack, 1., kTRUE);
-   EtaPi0Syst_div_mT->Draw("same,E2"); //TEMP
+  DrawGammaSetMarkerTGraphAsym(EtaPi0Syst_div_mT, 20, 1, kBlack, kBlack, 1., kTRUE);
+  EtaPi0Syst_div_mT->Draw("same,E2"); //TEMP
    
-   
-
-
   TLegend* leg4d = new TLegend(0.45,0.25,0.95,0.35);
   leg4d->SetFillColor(0);
   leg4d->SetLineColor(0);
@@ -1357,7 +1399,6 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   Prelim4d->SetTextSize(TextSize) ;
   Prelim4d->SetTextFont(Font) ;
   Prelim4d->DrawLatex(0.7,1.22,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
-  
   Prelim4d->Draw() ;
 
   
@@ -1365,6 +1406,154 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   c4d->Print(Form("%s/EtaPi0Ratio2mTScaling.%s",outputDir.Data(),suffix.Data()));
 
 
+  
+  TCanvas* c4e = new TCanvas("c4e","",200,10,CDimX,CDimY);  // gives the page size
+  DrawGammaCanvasSettings( c4e, CMarginEtaToPi0L, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
+  c4e->SetLogx(); 
+  
+  TH2F* hist4e = new TH2F("hist4e","hist4e",1000,0.101,25.,1000,-0.05,1.2); //0.101,25.,1000,-0.01,1.2
+                                                      //          1000,0.09,25.,1000,0.01,1.2
+  
+  SetStyleHistoTH2ForGraphs(hist4e, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeYEtaToPi0, TitleOffsetX,TitleOffsetYEtaToPi0, 512, 508);
+  hist4e->GetYaxis()->SetLabelOffset(0.01);
+  hist4e->GetXaxis()->SetLabelOffset(LabelOffsetLog); 
+  hist4e->DrawCopy(); 
+
+  EtaPi0pPbStat_noXerrors->Draw("pz,same");
+  EtaPi0pPbSyst->Draw("E2,same");
+  mTScaling->Draw("same"); 
+  graphEta2Pi0dAuPhenix->Draw("same,zp");
+  eta2pi0_pAu->Draw("same,zp");
+  eta2pi0_pBe->Draw("same,pz");
+  EtaPi07TeVStat_noXerrors->Draw("same,zp");
+  EtaPi07TeVSyst->Draw("same,E2");
+
+  
+  
+  TLatex * lt4e = new TLatex(.12,1.12,"ALICE");
+  lt4e->SetTextColor(kBlack);
+  lt4e->SetTextSize(TextSize);
+  lt4e->SetTextFont(Font);
+  //lt4e->DrawLatex(0.64,0.89,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  lt4e->Draw() ;
+  
+  
+    
+  TLegend* leg4e = new TLegend(0.15,0.73,0.45,0.90);
+  leg4e->SetFillColor(0);
+  leg4e->SetLineColor(0);
+  leg4e->SetTextFont(Font);
+  leg4e->SetTextSize(0.041);
+  leg4e->AddEntry(EtaPi0pPbSyst,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  leg4e->AddEntry(mTScaling,"#eta from #it{m}_{T} scaled #pi^{0}","pl"); 
+  leg4e->AddEntry(EtaPi07TeVSyst,"pp, #sqrt{#it{s}} = 7 TeV","pef");// (PLB717 (2012) 162)","pef");
+  leg4e->Draw("same");
+  
+  
+  TLatex* lt4ea = new TLatex(0.12,0.63,"CERES-TAPS #sqrt{#it{s}_{NN}} = 29.1 GeV");
+  lt4ea->SetTextColor(kBlack); 
+  lt4ea->SetTextSize(TextSize);
+  lt4ea->SetTextFont(Font);
+  lt4ea->Draw();
+     
+  
+  TLegend* leg4ea = new TLegend(0.15,0.45,0.35,0.54);
+  leg4ea->SetFillColor(0);
+  leg4ea->SetLineColor(0);
+  leg4ea->SetTextFont(Font);
+  leg4ea->SetTextSize(0.041);
+  leg4ea->AddEntry( eta2pi0_pAu,"p-Au","p");  
+  leg4ea->AddEntry( eta2pi0_pBe,"p-Be","p");  
+  leg4ea->Draw("same");
+  
+  
+  TLatex* lt4eb = new TLatex(2.7,1.12,"PHENIX");
+  lt4eb->SetTextColor(kBlack);
+  lt4eb->SetTextSize(TextSize);
+  lt4eb->SetTextFont(Font);
+  lt4eb->Draw();
+     
+  TLegend* leg4ec = new TLegend(0.6,0.85,0.9,0.9);
+  leg4ec->SetFillColor(0);
+  leg4ec->SetLineColor(0);
+  leg4ec->SetTextFont(Font);
+  leg4ec->SetTextSize(0.041);
+  leg4ec->AddEntry( graphEta2Pi0dAuPhenix,"d-Au, #sqrt{#it{s}_{NN}} = 200 GeV","p"); 
+  leg4ec->Draw("same");
+      
+  
+  c4e->Update();
+  c4e->Print(Form("%s/EtaPi0Ratio_WO_Models.%s",outputDir.Data(),suffix.Data()));
+  
+  
+  
+  TCanvas* c4f = new TCanvas("c4f","",200,10,CDimX,CDimY);  // gives the page size
+  DrawGammaCanvasSettings( c4f, CMarginEtaToPi0L, CMarginEtaToPi0R,CMarginEtaToPi0T ,CMarginEtaToPi0B);
+  c4f->SetLogx(); 
+  
+  TH2F* hist4f = new TH2F("hist4f","hist4f",1000,0.101,25.,1000,-0.05,1.2   );
+  SetStyleHistoTH2ForGraphs(hist4f, "#it{p}_{T} (GeV/#it{c})","#eta/#pi^{0} ",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeYEtaToPi0, TitleOffsetX,TitleOffsetYEtaToPi0, 512, 508);
+  hist4f->GetYaxis()->SetLabelOffset(0.01);
+  hist4f->GetXaxis()->SetLabelOffset(LabelOffsetLog); 
+  hist4f->DrawCopy(); 
+  
+   
+   graphMcGillEtaToPi0->Draw("C3same");
+   graphMcGillEtaToPi0->Draw("lXZsame");
+
+  
+   graphEtaPi0EPOS->Draw("C3same");
+   graphEtaPi0EPOS->Draw("lXZsame");
+  
+   mTScaling->Draw("same"); 
+   
+   
+   
+   if( HIJINGPi0 ){
+   SetStyleHisto(histoDPMJetEtaToPi0, 3, styleLineDPMJet, colorDPMJet );  
+   histoDPMJetEtaToPi0->Draw("same,hist,l");
+   }
+
+   if( DPMJetPi0 ){
+   SetStyleHisto(histoHIJINGEtaToPi0,3, 8, colorHIJING);  
+   histoHIJINGEtaToPi0->Draw("same,hist,l");
+   }
+   
+
+  EtaPi0pPbStat_noXerrors->Draw("pz,same");
+  EtaPi0pPbSyst->Draw("E2,same");
+  
+
+  
+  TLatex * lt4f = new TLatex(.12,1.12,"ALICE");
+  lt4f->SetTextColor(kBlack);
+  lt4f->SetTextSize(TextSize);
+  lt4f->SetTextFont(Font);
+  lt4f->Draw() ;
+  
+  TLegend* leg4fa = new TLegend(0.15,0.56,0.45,0.90);
+  leg4fa->SetFillColor(0);
+  leg4fa->SetLineColor(0);
+  leg4fa->SetTextFont(Font);
+  leg4fa->SetTextSize(0.041);
+  leg4fa->AddEntry(EtaPi0pPbSyst,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV","pef");
+  leg4fa->AddEntry(mTScaling,"#eta from #it{m}_{T} scaled #pi^{0}","pl"); 
+  leg4fa->AddEntry(graphEtaPi0EPOS,"EPOS3","fl");
+  leg4fa->AddEntry(graphMcGillEtaToPi0,"VISHNU","fl");
+  leg4fa->AddEntry(histoHIJINGEtaToPi0,"HIJING","l"); 
+  if( DPMJetPi0 ){
+     leg4fa->AddEntry(histoDPMJetEtaToPi0,"DPMJet","l"); 
+  }
+  leg4fa->Draw("same");
+  
+  
+
+
+  c4f->Update();
+  c4f->Print(Form("%s/EtaPi0Ratio_LogX_EPOS_TAPSv2.%s",outputDir.Data(),suffix.Data()));
+  
+  
+  
 
 
   //RpPb
@@ -1442,6 +1631,15 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   TBox* BoxNorm =new TBox(-0.5, 1.-NormalizationError, -0.15, 1.+NormalizationError);
   BoxNorm->SetFillColor(kBlack);
   BoxNorm->Draw("same");
+  
+  TBox* BoxNormEta = (TBox*) BoxNorm->Clone();
+  TBox* BoxNormPi0 = (TBox*) BoxNorm->Clone();
+  
+  BoxNormEta->SetFillColor(colorCombYieldEta);
+  BoxNormPi0->SetFillColor(colorCombYieldPi0);
+  
+  
+  
 
   c5->Update();
   c5->Print(Form("%s/CombRpA_Models.%s",outputDir.Data(),suffix.Data()));
@@ -1505,6 +1703,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   c5a->Print(Form("%s/CombRpA_Models_V2.%s",outputDir.Data(),suffix.Data()));
   
   
+  
   //RpPb version 3
   
   TCanvas* c5aa = new TCanvas("c5aa","",200,10,CDimX,CDimY);  // gives the page size
@@ -1517,7 +1716,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   SetStyleHistoTH2ForGraphs(hist5aa, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
   hist5aa->DrawCopy(); 
   
-  TLegend* leg5abcde = new TLegend(0.16,0.81,0.41,0.86);
+  TLegend* leg5abcde = new TLegend(0.16,0.79,0.40,0.86);
   leg5abcde->SetFillColor(0);
   leg5abcde->SetLineColor(0);
   leg5abcde->SetTextFont(Font);
@@ -1534,8 +1733,8 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("same,E3");
   graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("lXYsame");
   
-  CGC->SetMarkerSize(0.65);
-  CGC->Draw("same,p");
+  //CGC->SetMarkerSize(0.65);
+  //CGC->Draw("same,p");
   
   //-AM
   cout<< " Drawing  graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc"<< endl;
@@ -1552,28 +1751,26 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   //-AM For the R_pA of eta meson
   cout<< " Drawing graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc"<< endl;
-  // graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_onlypPbErrs->Print();
-  // graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_onlypPbErrs->SetLineColor(3);
-  // graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_onlypPbErrs->SetLineWidth(3);
-  // graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_onlypPbErrs->Draw("same");
-
-  //graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->Print();
-  //graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->SetLineColor(3);
-  //graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->SetLineWidth(3);
-  //graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->Draw("same");
-  //graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->Draw("same,E3");
-  //graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->Draw("lXYsame");
-  //cout << "after drawing new NLO"<<endl;
-
+  
   TGraphAsymmErrors* CombinedPi0RpPbStatErr_noXerrors = (TGraphAsymmErrors*)CombinedPi0RpPbStatErr->Clone();
   SetEx(CombinedPi0RpPbStatErr_noXerrors,0);
   
-  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr_noXerrors, 20, 1, kBlack, kBlack);
-  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr, 20, 1, kBlack, kBlack, 1., kTRUE);
+  //DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr_noXerrors, 20, 1, kBlack, kBlack);
+  //DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr, 20, 1, kBlack, kBlack, 1., kTRUE);
+  
+  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr,markerStylePi0,1.2,colorCombYieldPi0 ,colorCombYieldPi0 , 1, kTRUE);  
+  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr_noXerrors,markerStylePi0,1.2,colorCombYieldPi0, colorCombYieldPi0 );  
    
+  
   
   CombinedPi0RpPbSystErr->Draw("E2,same");
   CombinedPi0RpPbStatErr_noXerrors->Draw("pz,same"); 
+  
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("same,E3");
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("lXYsame");
+  
+  //CGC->SetMarkerSize(0.65);
+  CGC->Draw("lXYsame");
   
  
   cout <<"=========RpPb binning================="<< endl;  
@@ -1607,97 +1804,11 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   
 
-  BoxNorm->Draw("same");
+  BoxNormPi0->Draw("same");
   DrawGammaLines(-1.5,22.,1.,1.,2.0,kGray+2,2);
  
   c5aa->Update();
   c5aa->Print(Form("%s/Comb_Pi0_RpA_Models_V3.%s",outputDir.Data(),suffix.Data()));
-  
-    
-  
-  
-  TCanvas* c5ab = new TCanvas("c5ab","",200,10,CDimX,CDimY);  // gives the page size
-  DrawGammaCanvasSettings( c5ab, CMarginL, CMarginR,CMarginT ,CMarginB);
-  c5ab->SetLogx();
-  
-
-  TH2F * hist5ab;
-  hist5ab = new TH2F("hist5ab","hist5ab",1000,0.2,25.,1000,0.37,1.5);
-  SetStyleHistoTH2ForGraphs(hist5ab, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
-  
-  
-  
-  hist5ab->GetYaxis()->SetLabelOffset(0.01);
-  hist5ab->GetXaxis()->SetLabelOffset(LabelOffsetLog);
-  hist5ab->DrawCopy(); 
-  
-  TLegend* leg5abcdef = new TLegend(0.16,0.81,0.41,0.86);
-  leg5abcdef->SetFillColor(0);
-  leg5abcdef->SetLineColor(0);
-  leg5abcdef->SetTextFont(Font);
-  leg5abcdef->SetTextSize(TextSizeRpA);
-  leg5abcdef->AddEntry(CombinedPi0RpPbSystErr,"#pi^{0}","pef");
-  leg5abcdef->Draw("same");
- 
-  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("same,E3");
-  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("lXYsame");
-  
-  CGC->SetMarkerSize(0.65);
-  CGC->Draw("same,p");
-  
-  
-  graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc->Draw("lZXsame");
-  graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc->Draw("3,same");
-  
- 
-  
-
-  
-  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr_noXerrors, 20, 1, kBlack, kBlack);
-  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr, 20, 1, kBlack, kBlack, 1., kTRUE);
-   
-  
-  CombinedPi0RpPbSystErr->Draw("E2,same");
-  CombinedPi0RpPbStatErr_noXerrors->Draw("pz,same"); 
-  
- 
-  TLegend* leg5abd = new TLegend(0.59,0.20,0.84,0.34);
-  leg5abd->SetFillColor(0);
-  leg5abd->SetLineColor(0);
-  leg5abd->SetTextFont(Font);
-  leg5abd->SetTextSize(TextSizeRpA);
-  leg5abd->AddEntry(graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14,"NLO: EPPS16, DSS14","lf");
-  leg5abd->AddEntry(graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc,"NLO: nCTEQ, DSS14","lf");
-  leg5abd->AddEntry(CGC,"CGC","p");
-  leg5abd->Draw("same");
-
-  
-  TLegend* leg5abce = new TLegend(0.48,0.38,0.61,0.41);
-  leg5abce->SetFillColor(0);
-  leg5abce->SetLineColor(0);
-  leg5abce->SetTextFont(Font);
-  leg5abce->SetTextSize(TextSizeRpA);
-
-  
-  
-  
-  TLatex * lt4ac = new TLatex(0.27,1.4,"ALICE");
-  lt4ac->SetTextColor(kBlack) ;
-  lt4ac->SetTextSize(TextSize) ;
-  lt4ac->SetTextFont(Font) ;
-  lt4ac->DrawLatex(0.27,1.35,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
-  lt4ac->Draw();
-
-  TBox* BoxNorma =new TBox(0.22, 1.-NormalizationError, 0.245, 1.+NormalizationError);
-  BoxNorma->SetFillColor(kBlack);
-  BoxNorma->Draw("same");
-  
-
-  
-  DrawGammaLines(0.2,25.,1.,1.,2.0,kGray+2,2);
- 
-  c5ab->Update();
-  c5ab->Print(Form("%s/Comb_Pi0_RpA_Models_LogX_V3.%s",outputDir.Data(),suffix.Data()));
   
   
   
@@ -1717,7 +1828,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
  
   
-  TLegend* leg5abcdf = new TLegend(0.16,0.81,0.41,0.86);
+  TLegend* leg5abcdf = new TLegend(0.16,0.79,0.40,0.86);
   leg5abcdf->SetFillColor(0);
   leg5abcdf->SetLineColor(0);
   leg5abcdf->SetTextFont(Font);
@@ -1742,8 +1853,14 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   TGraphAsymmErrors* CombinedEtaRpPbStatErr_noXerrors = (TGraphAsymmErrors*)CombinedEtaRpPbStatErr->Clone();
   SetEx(CombinedEtaRpPbStatErr_noXerrors,0);
   
-  DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbStatErr_noXerrors, 20, 1, kBlack, kBlack);
-  DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbSystErr, 20, 1, kBlack, kBlack, 1., kTRUE);
+  //DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbStatErr_noXerrors, 20, 1, kBlack, kBlack);
+  //DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbSystErr, 20, 1, kBlack, kBlack, 1., kTRUE);
+  
+  
+  DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbSystErr,markerStyleEta,1,colorCombYieldEta ,colorCombYieldEta, 1, kTRUE);
+  DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbStatErr_noXerrors,markerStyleEta,1,colorCombYieldEta, colorCombYieldEta ); 
+
+  
    
   
   CombinedEtaRpPbSystErr->Draw("E2,same");
@@ -1776,7 +1893,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
   
 
-  BoxNorm->Draw("same");
+  BoxNormEta->Draw("same");
   DrawGammaLines(-1.5,22.,1.,1.,2.0,kGray+2,2);
  
   c5ac->Update();
@@ -1786,9 +1903,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   
   
-  
-  
-  
+
   TCanvas* c5ad = new TCanvas("c5ad","",200,10,CDimX,CDimY);  // gives the pagesize
   DrawGammaCanvasSettings( c5ad, CMarginL, CMarginR,CMarginT ,CMarginB);
   c5ad->SetLogx();
@@ -1797,23 +1912,19 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   TH2F * hist5ad;
   hist5ad = new TH2F("hist5ad","hist5ad",1000,0.5,25.,1000,0.37,1.5);
   SetStyleHistoTH2ForGraphs(hist5ad, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#eta}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
-  hist5ad->GetYaxis()->SetLabelOffset(0.01);
+  hist5ad->GetYaxis()->SetLabelOffset(0.005);
   hist5ad->GetXaxis()->SetLabelOffset(LabelOffsetLog);
   hist5ad->DrawCopy(); 
   
   
   
   
-  
-  
- // TLegend* leg5abcdf = new TLegend(0.16,0.81,0.41,0.86);
-  
-  TLegend* leg5abcdeg = new TLegend(0.16,0.81,0.41,0.86);
+  TLegend* leg5abcdeg = new TLegend(0.16,0.79,0.40,0.86);
   leg5abcdeg->SetFillColor(0);
   leg5abcdeg->SetLineColor(0);
   leg5abcdeg->SetTextFont(Font);
   leg5abcdeg->SetTextSize(TextSizeRpA);
-  leg5abcdeg->AddEntry(CombinedPi0RpPbSystErr,"#eta","pef");
+  leg5abcdeg->AddEntry(CombinedEtaRpPbSystErr,"#eta","pef");
   leg5abcdeg->Draw("same");
   
   graphNLOCalcAESSSRpAEta5023GeV_nCTEQ_SepCalc->Draw("lZXsame");
@@ -1850,7 +1961,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   lt4ae->Draw();
 
   TBox* BoxNormb =new TBox(0.55, 1.-NormalizationError, 0.60, 1.+NormalizationError);
-  BoxNormb->SetFillColor(kBlack);
+  BoxNormb->SetFillColor(colorCombYieldEta);
   BoxNormb->Draw("same");
   
 
@@ -1862,10 +1973,199 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
   
   
+
+  TCanvas* c5ab = new TCanvas("c5ab","",200,10,CDimX,CDimY);  // gives the page size
+  DrawGammaCanvasSettings( c5ab, CMarginL, CMarginR,CMarginT ,CMarginB);
+  c5ab->SetLogx();
+  
+
+  TH2F * hist5ab;
+  hist5ab = new TH2F("hist5ab","hist5ab",1000,0.2,25.,1000,0.37,1.5);
+  SetStyleHistoTH2ForGraphs(hist5ab, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
+
+  
+  hist5ab->GetYaxis()->SetLabelOffset(0.005);
+  hist5ab->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+  hist5ab->DrawCopy(); 
+  
+ 
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("same,E3");
+  graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14->Draw("lXYsame");
+  
+ 
+  
+  graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc->Draw("lZXsame");
+  graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc->Draw("3,same");
+  
+ 
+  
+  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr,markerStylePi0,1.2,colorCombYieldPi0 ,colorCombYieldPi0 , 1, kTRUE);  
+  DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr_noXerrors,markerStylePi0,1.2,colorCombYieldPi0, colorCombYieldPi0 );  
+ 
+  
+  //DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr_noXerrors, 20, 1, kBlack, kBlack);
+  //DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr, 20, 1, kBlack, kBlack, 1., kTRUE);
+   
+  
+  CombinedPi0RpPbSystErr->Draw("E2,same");
+  CombinedPi0RpPbStatErr_noXerrors->Draw("pz,same"); 
+  
+  CGCline->RemovePoint(0);
+  CGCline->SetFillColor(0);
+  CGCline->SetMarkerColor(kMagenta-2); 
+  CGCline->SetMarkerStyle(21);
+  CGCline->SetMarkerSize(1.5);
+  CGCline->SetLineColor(kOrange+1);
+  CGCline->SetLineWidth(3);
+  CGCline->SetLineStyle(1);
+  CGCline->Draw("lZXsame");
+  CGCline->Draw("3,same");
+  
+    cout<<"///////////////tetwerewrwerwere////////////////////////////////"<<endl;
+    CGCline->Print();
+    cout<<"///////////////////////////////////////////////"<<endl;
+
+  
+  TLegend* leg5abcef = new TLegend(0.16,0.79,0.40,0.86);
+  leg5abcef->SetFillColor(0);
+  leg5abcef->SetLineColor(0);
+  leg5abcef->SetTextFont(Font);
+  leg5abcef->SetTextSize(TextSizeRpA);
+  leg5abcef->AddEntry(CombinedPi0RpPbSystErr,"#pi^{0}","pef");
+  leg5abcef->Draw("same");
+  
+  
+ 
+  TLegend* leg5abd = new TLegend(0.59,0.20,0.84,0.34);
+  leg5abd->SetFillColor(0);
+  leg5abd->SetLineColor(0);
+  leg5abd->SetTextFont(Font);
+  leg5abd->SetTextSize(TextSizeRpA);
+  leg5abd->AddEntry(graphAsymmErrRpPb5020_pi0_ct14_epps16_dss14,"NLO: EPPS16, DSS14","lf");
+  leg5abd->AddEntry(graphNLOCalcDSS14RpAPi05023GeV_nCTEQ_SepCalc,"NLO: nCTEQ, DSS14","lf");
+  leg5abd->AddEntry(CGCline,"CGC","l");
+  leg5abd->Draw("same");
+
+  
+  TLegend* leg5abce = new TLegend(0.48,0.38,0.61,0.41);
+  leg5abce->SetFillColor(0);
+  leg5abce->SetLineColor(0);
+  leg5abce->SetTextFont(Font);
+  leg5abce->SetTextSize(TextSizeRpA);
+
   
   
   
+  TLatex * lt4ac = new TLatex(0.27,1.4,"ALICE");
+  lt4ac->SetTextColor(kBlack) ;
+  lt4ac->SetTextSize(TextSize) ;
+  lt4ac->SetTextFont(Font) ;
+  lt4ac->DrawLatex(0.27,1.35,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  lt4ac->Draw();
+
+  TBox* BoxNorma =new TBox(0.22, 1.-NormalizationError, 0.245, 1.+NormalizationError);
+  BoxNorma->SetFillColor(colorCombYieldPi0);
+  BoxNorma->Draw("same");
   
+
+  
+  DrawGammaLines(0.2,25.,1.,1.,2.0,kGray+2,2);
+ 
+  c5ab->Update();
+  c5ab->Print(Form("%s/Comb_Pi0_RpA_Models_LogX_V3.%s",outputDir.Data(),suffix.Data()));
+  
+  //////////////////////////////////////////////////////////////////////////////
+  
+
+  TCanvas* c5ae = new TCanvas("c5ae","",200,10,CDimX,CDimY);  // gives the page size
+  DrawGammaCanvasSettings( c5ae, CMarginL, CMarginR,CMarginT ,CMarginB);
+  c5ae->SetLogx();
+  
+
+  TH2F* hist5ae = new TH2F("hist5ae","hist5ae",1000,0.2,25.,1000,0.37,1.5);
+  SetStyleHistoTH2ForGraphs(hist5ae, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#pi^{0}}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
+  hist5ae->GetYaxis()->SetLabelOffset(0.005);
+  hist5ae->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+  hist5ae->DrawCopy(); 
+  
+  
+  CombinedPi0RpPbSystErr->Draw("E2,same");
+  CombinedPi0RpPbStatErr_noXerrors->Draw("pz,same"); 
+  
+  
+  TLegend* leg5ae = new TLegend(0.16,0.79,0.40,0.86);
+  leg5ae->SetFillColor(0);
+  leg5ae->SetLineColor(0);
+  leg5ae->SetTextFont(Font);
+  leg5ae->SetTextSize(TextSizeRpA);
+  leg5ae->AddEntry(CombinedPi0RpPbSystErr,"#pi^{0}","pef");
+  leg5ae->Draw("same");
+  
+ 
+  
+  TLatex * lt5ae = new TLatex(0.27,1.4,"ALICE");
+  lt5ae->SetTextColor(kBlack) ;
+  lt5ae->SetTextSize(TextSize) ;
+  lt5ae->SetTextFont(Font) ;
+  lt5ae->DrawLatex(0.27,1.35,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  lt5ae->Draw();
+
+  BoxNorma->Draw("same");
+  
+
+  
+  DrawGammaLines(0.2,25.,1.,1.,2.0,kGray+2,2);
+ 
+  c5ae->Update();
+  c5ae->Print(Form("%s/Comb_Pi0_RpA_WO_Models_LogX_V3.%s",outputDir.Data(),suffix.Data()));
+  
+  /////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  TCanvas* c5af = new TCanvas("c5af","",200,10,CDimX,CDimY);  // gives the pagesize
+  DrawGammaCanvasSettings( c5af, CMarginL, CMarginR,CMarginT ,CMarginB);
+  c5af->SetLogx();
+  
+
+  TH2F * hist5af = new TH2F("hist5af","hist5af",1000,0.5,25.,1000,0.37,1.5);
+  SetStyleHistoTH2ForGraphs(hist5af, "#it{p}_{T} (GeV/#it{c})","#it{R}^{#eta}_{p-Pb}",LabelSizeX,TitleSizeX,LabelSizeY,TitleSizeY,TitleOffsetX,TitleOffsetY, 512, 508);
+  hist5af->GetYaxis()->SetLabelOffset(0.005);
+  hist5af->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+  hist5af->DrawCopy(); 
+  
+  
+  
+  CombinedEtaRpPbSystErr->Draw("E2,same");
+  CombinedEtaRpPbStatErr_noXerrors->Draw("pz,same"); 
+  
+  TLegend* leg5af = new TLegend(0.16,0.79,0.40,0.86);
+  leg5af->SetFillColor(0);
+  leg5af->SetLineColor(0);
+  leg5af->SetTextFont(Font);
+  leg5af->SetTextSize(TextSizeRpA);
+  leg5af->AddEntry(CombinedEtaRpPbSystErr,"#eta","pef");
+  leg5af->Draw("same");
+  
+ 
+  
+  
+  
+  TLatex * lt4af = new TLatex(0.65,1.4,"ALICE");
+  lt4af->SetTextColor(kBlack) ;
+  lt4af->SetTextSize(TextSize) ;
+  lt4af->SetTextFont(Font) ;
+  lt4af->DrawLatex(0.65,1.35,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  lt4af->Draw();
+
+  BoxNormb->Draw("same");
+  
+
+  
+  DrawGammaLines(0.5,25.,1.,1.,2.0,kGray+2,2);
+ 
+  c5af->Update();
+  c5af->Print(Form("%s/Comb_Eta_RpA_WO_Models_LogX_V3.%s",outputDir.Data(),suffix.Data()));
+
 
   //Width Pi0
   TCanvas* c10 = new TCanvas("c10","",200,10,CDimX,CDimY);  // gives the page size
@@ -2358,7 +2658,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   DrawGammaCanvasSettings( canvasInvYieldTSallisTheoryOnlyPi0AndEtaSpectra,  0.3, 0.02, 0.02, 0.16);
 	
   TPad* padComparisonInvYieldTSallisTheoryOnlyPi0AndEtaSpectra = new TPad("padComparisonInvYieldTSallisTheoryOnlyPi0AndEtaSpectra", "", 0., 0., 1., 1.,-1, -1, -2);
-  DrawGammaPadSettings( padComparisonInvYieldTSallisTheoryOnlyPi0AndEtaSpectra, 0.15, 0.02, 0.02, 0.06);
+  DrawGammaPadSettings( padComparisonInvYieldTSallisTheoryOnlyPi0AndEtaSpectra, 0.15, 0.02, 0.02, 0.07);
   padComparisonInvYieldTSallisTheoryOnlyPi0AndEtaSpectra->Draw();
 	
   	
@@ -2397,7 +2697,10 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   FitCombPi0->Draw("lsame"); 
   FitCombEtaScaled->Draw("lsame");
  
- 
+ TGraphAsymmErrors* graphPi0EPOSNoErr;
+ TGraphAsymmErrors* graphEtaEPOSScaledNoErr;
+ TGraphAsymmErrors* graphErrMcGillTheoryPion_p_hydroNoErr;
+  
   if (EPOS){
       while(graphPi0EPOS->GetX()[0] < pi0PtMin)
           graphPi0EPOS->RemovePoint(0); 
@@ -2406,7 +2709,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
     graphPi0EPOS->SetLineColor(colorEPOSline);
     graphPi0EPOS->SetFillColor(colorEPOS);
     
-    TGraphAsymmErrors* graphPi0EPOSNoErr = (TGraphAsymmErrors*)graphPi0EPOS->Clone();
+   graphPi0EPOSNoErr  = (TGraphAsymmErrors*)graphPi0EPOS->Clone();
     
     
     
@@ -2419,7 +2722,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
     graphEtaEPOSScaled->SetLineColor(colorEPOSline);
     graphEtaEPOSScaled->SetFillColor(colorEPOS);
     
-    TGraphAsymmErrors* graphEtaEPOSScaledNoErr = (TGraphAsymmErrors*)graphEtaEPOSScaled->Clone();
+    graphEtaEPOSScaledNoErr = (TGraphAsymmErrors*)graphEtaEPOSScaled->Clone();
     
     
     
@@ -2438,7 +2741,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
     graphErrMcGillTheoryPion_p_hydro->SetLineColor(colorMcGillline);
     graphErrMcGillTheoryPion_p_hydro->SetFillColor(colorMcGill);
     
-    TGraphAsymmErrors* graphErrMcGillTheoryPion_p_hydroNoErr = (TGraphAsymmErrors*)graphErrMcGillTheoryPion_p_hydro->Clone();
+    graphErrMcGillTheoryPion_p_hydroNoErr = (TGraphAsymmErrors*)graphErrMcGillTheoryPion_p_hydro->Clone();
     
     graphErrMcGillTheoryPion_p_hydro->Draw("C3same");
     graphErrMcGillTheoryPion_p_hydroNoErr->Draw("lXYsame");
@@ -2597,8 +2900,529 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
   
    
    
+  TCanvas* canvasInvYieldTSallisOnlyPi0AndEtaSpectra = new TCanvas("canvasInvYieldTSallisOnlyPi0AndEtaSpectra","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvYieldTSallisOnlyPi0AndEtaSpectra,  0.3, 0.02, 0.02, 0.16);
+	
+  TPad* padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra = new TPad("padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra", "", 0., 0., 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra, 0.15, 0.02, 0.02, 0.06);
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra->Draw();
+	
+  	
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra->cd();
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra->SetLogy();		
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra->SetLogx();		
+	
+  TH2F * histo2DInvYieldTSallisOnlyPi0AndEtaSpectra;
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectra = new TH2F("histo2DInvYieldTSallisOnlyPi0AndEtaSpectra","histo2DInvYieldTSallisOnlyPi0AndEtaSpectra",1000,0.2,30.,1000,3e-10,20 );
+  SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyPi0AndEtaSpectra, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035,0.035,0.035, 0.8,1.9, 512, 510);
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectra->GetXaxis()->SetLabelOffset(-0.009);
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectra->DrawCopy(); 
+	
+ 
+  
+  FitCombPi0->SetLineWidth(lineWidthTsallis);  
+  FitCombEtaScaled->SetLineWidth(lineWidthTsallis);  
+  FitCombPi0->SetLineColor(kBlack);  
+  FitCombEtaScaled->SetLineColor(kBlack);
+  FitCombPi0->SetLineStyle(styleLineTsallis);  
+  FitCombEtaScaled->SetLineStyle(styleLineTsallis);
+  
+   
+  FitCombPi0->Draw("lsame"); 
+  FitCombEtaScaled->Draw("lsame");
+ 
+  
+  
+
+
+  CombPi0Syst->Draw("E2,same"); 
+  CombPi0Stat_noXerrors->Draw("pz,same"); 
+  CombEtaScaledSyst->Draw("E2,same");
+  CombEtaScaledStat_noXerrors->Draw("pz,same"); 
+
+  
+  TLatex * latexInvYieldTSallisOnlyPi0AndEtaSpectra = new TLatex(2.5,4,"ALICE") ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectra->SetTextColor(kBlack) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectra->SetTextSize(TextSize-0.013) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectra->SetTextFont(Font) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectra->DrawLatex(2.5,2,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  latexInvYieldTSallisOnlyPi0AndEtaSpectra->Draw() ;
+  
+  
+
+  TLegend* legendInvYieldTSallisOnlyPi0AndEtaSpectra;
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra   = new TLegend(0.20,0.35,0.4,0.45); 
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->SetFillColor(0);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->SetLineColor(0);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->SetTextFont(Font);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->SetTextSize(TextSize-0.015);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->AddEntry(CombEtaScaledSyst,"#eta #times 10^{-1}","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->AddEntry(FitCombPi0,"Tsallis fit","l");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectra->Draw();
+  
+  
+  
+  
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectra->Update();
+
+  canvasInvYieldTSallisOnlyPi0AndEtaSpectra->Update();	
+  canvasInvYieldTSallisOnlyPi0AndEtaSpectra->Print(Form("%s/MesonYields_WOModels.%s",outputDir.Data(),suffix.Data()));
    
    
+  
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  TCanvas* canvasInvYieldTSallisOnlyPi0AndEtaSpectraPPRef = new TCanvas("canvasInvYieldTSallisOnlyPi0AndEtaSpectraPPRef","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvYieldTSallisOnlyPi0AndEtaSpectraPPRef,  0.3, 0.02, 0.02, 0.16);
+	
+  TPad* padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef = new TPad("padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef", "", 0., 0., 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef, 0.15, 0.02, 0.02, 0.06);
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->Draw();
+	
+  	
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->cd();
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetLogy();		
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetLogx();		
+	
+  TH2F * histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef;
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef = new TH2F("histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef","histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef",1000,0.2,30.,1000,1e01,2e11);
+  SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035,0.035,0.035, 0.8,1.9, 512, 510);
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->GetXaxis()->SetLabelOffset(-0.009);
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->DrawCopy(); 
+	
+   TH1F* fitTsallisEtappRef5023GeVPtScaled = (TH1F*)fitTsallisEtappRef5023GeVPt->GetHistogram();
+   fitTsallisEtappRef5023GeVPtScaled->Scale(scaleFacEtaYield);
+  
+   
+ 
+  
+  fitTsallisPi0ppRef5023GeVPt->SetLineWidth(lineWidthTsallis);  
+  fitTsallisEtappRef5023GeVPtScaled->SetLineWidth(lineWidthTsallis);  
+  fitTsallisPi0ppRef5023GeVPt->SetLineColor(kBlack);  
+  fitTsallisEtappRef5023GeVPtScaled->SetLineColor(kBlack);
+  fitTsallisPi0ppRef5023GeVPt->SetLineStyle(styleLineTsallis);  
+  fitTsallisEtappRef5023GeVPtScaled->SetLineStyle(styleLineTsallis);
+  
+   
+  fitTsallisPi0ppRef5023GeVPt->Draw("lsame"); 
+  fitTsallisEtappRef5023GeVPtScaled->Draw("lsame");
+ 
+ 
+  
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionSystErrPPRef,markerStylePi0,1,colorCombYieldPi0 ,colorCombYieldPi0, 1, kTRUE);
+  graphCombPi0InvCrossSectionSystErrPPRef->Draw("E2,same"); 
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionStatErrPPRef_noXerrors = (TGraphAsymmErrors*)graphCombPi0InvCrossSectionStatErrPPRef->Clone();
+  SetEx(graphCombPi0InvCrossSectionStatErrPPRef_noXerrors,0.);
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionStatErrPPRef_noXerrors,markerStylePi0,1,colorCombYieldPi0, colorCombYieldPi0 ); 
+  graphCombPi0InvCrossSectionStatErrPPRef_noXerrors->Draw("pz,same");
+  
+  
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionStatErrPPRef_noXerrors = (TGraphAsymmErrors*)graphCombEtaInvCrossSectionStatErrPPRef->Clone();
+  SetEx(graphCombEtaInvCrossSectionStatErrPPRef_noXerrors,0.);
+  
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionSystErrPPRefScaled = (TGraphAsymmErrors*)ScaleGraph(graphCombEtaInvCrossSectionSystErrPPRef,scaleFacEtaYield);
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors = (TGraphAsymmErrors*)ScaleGraph(graphCombEtaInvCrossSectionStatErrPPRef_noXerrors,scaleFacEtaYield);
+  
+  
+  
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionSystErrPPRefScaled,markerStyleEta,1,colorCombYieldEta ,colorCombYieldEta, 1, kTRUE);
+  graphCombEtaInvCrossSectionSystErrPPRefScaled->Draw("E2,same");
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors,markerStyleEta,1,colorCombYieldEta, colorCombYieldEta ); 
+  graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors->Draw("pz,same");
+
+
+
+  
+  TLatex * latexInvYieldTSallisOnlyPi0AndEtaSpectraPPRef = new TLatex(2.5,0.8e11,"ALICE") ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetTextColor(kBlack) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetTextSize(TextSize-0.013) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetTextFont(Font) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->DrawLatex(2.5,0.4e11,"p-p reference, #sqrt{#it{s}} = 5.02 TeV");
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->Draw() ;
+  
+  
+
+  TLegend* legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef;
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef   = new TLegend(0.20,0.35,0.4,0.45); 
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetFillColor(0);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetLineColor(0);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetTextFont(Font);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->SetTextSize(TextSize-0.015);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->AddEntry(CombEtaScaledSyst,"#eta #times 10^{-1}","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->AddEntry(FitCombPi0,"Tsallis fit","l");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->Draw();
+  
+  
+  
+  
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->Update();
+
+  canvasInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->Update();	
+  canvasInvYieldTSallisOnlyPi0AndEtaSpectraPPRef->Print(Form("%s/MesonYields_PPRef_Eta_Pi0_Tsallis.%s",outputDir.Data(),suffix.Data()));
+   
+   
+   
+  
+  TCanvas* canvasInvYieldTCMOnlyPi0AndEtaSpectraPPRef = new TCanvas("canvasInvYieldTCMOnlyPi0AndEtaSpectraPPRef","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvYieldTCMOnlyPi0AndEtaSpectraPPRef,  0.3, 0.02, 0.02, 0.16);
+	
+  TPad* padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef = new TPad("padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef", "", 0., 0., 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef, 0.15, 0.02, 0.02, 0.06);
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef->Draw();
+	
+  	
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef->cd();
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetLogy();		
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetLogx();		
+	
+  TH2F * histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef;
+  histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef = new TH2F("histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef","histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef",1000,0.2,30.,1000,1e01,2e11);
+  SetStyleHistoTH2ForGraphs(histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035,0.035,0.035, 0.8,1.9, 512, 510);
+  histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef->GetXaxis()->SetLabelOffset(-0.009);
+  histo2DInvYieldTCMOnlyPi0AndEtaSpectraPPRef->DrawCopy(); 
+	
+   TH1F* fitTCMEtappRef5023GeVPtScaled = (TH1F*)fitTCMEtappRef5023GeVPt->GetHistogram();
+   fitTCMEtappRef5023GeVPtScaled->Scale(scaleFacEtaYield);
+  
+   
+ 
+  
+  fitTCMPi0ppRef5023GeVPt->SetLineWidth(lineWidthTsallis);  
+  fitTCMEtappRef5023GeVPtScaled->SetLineWidth(lineWidthTsallis);  
+  fitTCMPi0ppRef5023GeVPt->SetLineColor(kBlack);  
+  fitTCMEtappRef5023GeVPtScaled->SetLineColor(kBlack);
+  fitTCMPi0ppRef5023GeVPt->SetLineStyle(styleLineTsallis);  
+  fitTCMEtappRef5023GeVPtScaled->SetLineStyle(styleLineTsallis);
+  
+   
+  fitTCMPi0ppRef5023GeVPt->Draw("lsame"); 
+  fitTCMEtappRef5023GeVPtScaled->Draw("lsame");
+ 
+ 
+  
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionSystErrPPRef,markerStylePi0,1,colorCombYieldPi0 ,colorCombYieldPi0, 1, kTRUE);
+  graphCombPi0InvCrossSectionSystErrPPRef->Draw("E2,same"); 
+  //TGraphAsymmErrors* graphCombPi0InvCrossSectionStatErrPPRef_noXerrors = (TGraphAsymmErrors*)graphCombPi0InvCrossSectionStatErrPPRef->Clone();
+  //SetEx(graphCombPi0InvCrossSectionStatErrPPRef_noXerrors,0.);
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionStatErrPPRef_noXerrors,markerStylePi0,1,colorCombYieldPi0, colorCombYieldPi0 ); 
+  graphCombPi0InvCrossSectionStatErrPPRef_noXerrors->Draw("pz,same");
+  
+  
+  //TGraphAsymmErrors* graphCombEtaInvCrossSectionStatErrPPRef_noXerrors = (TGraphAsymmErrors*)graphCombEtaInvCrossSectionStatErrPPRef->Clone();
+  //SetEx(graphCombEtaInvCrossSectionStatErrPPRef_noXerrors,0.);
+  
+  //TGraphAsymmErrors* graphCombEtaInvCrossSectionSystErrPPRefScaled = (TGraphAsymmErrors*)ScaleGraph(graphCombEtaInvCrossSectionSystErrPPRef,scaleFacEtaYield);
+  //TGraphAsymmErrors* graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors = (TGraphAsymmErrors*)ScaleGraph(graphCombEtaInvCrossSectionStatErrPPRef_noXerrors,scaleFacEtaYield);
+  
+  
+  
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionSystErrPPRefScaled,markerStyleEta,1,colorCombYieldEta ,colorCombYieldEta, 1, kTRUE);
+  graphCombEtaInvCrossSectionSystErrPPRefScaled->Draw("E2,same");
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors,markerStyleEta,1,colorCombYieldEta, colorCombYieldEta ); 
+  graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors->Draw("pz,same");
+
+
+
+  
+  TLatex * latexInvYieldTCMOnlyPi0AndEtaSpectraPPRef = new TLatex(2.5,0.8e11,"ALICE") ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetTextColor(kBlack) ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetTextSize(TextSize-0.013) ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetTextFont(Font) ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraPPRef->DrawLatex(2.5,0.4e11,"p-p reference, #sqrt{#it{s}} = 5.02 TeV");
+  latexInvYieldTCMOnlyPi0AndEtaSpectraPPRef->Draw() ;
+  
+  
+
+  TLegend* legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef;
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef   = new TLegend(0.20,0.35,0.4,0.45); 
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetFillColor(0);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetLineColor(0);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetTextFont(Font);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->SetTextSize(TextSize-0.015);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->AddEntry(CombEtaScaledSyst,"#eta #times 10^{-1}","pef");
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->AddEntry(FitCombPi0,"TCM fit","l");
+  legendInvYieldTCMOnlyPi0AndEtaSpectraPPRef->Draw();
+  
+  
+  
+  
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraPPRef->Update();
+
+  canvasInvYieldTCMOnlyPi0AndEtaSpectraPPRef->Update();	
+  canvasInvYieldTCMOnlyPi0AndEtaSpectraPPRef->Print(Form("%s/MesonYields_PPRef_Eta_Pi0_TCM.%s",outputDir.Data(),suffix.Data()));
+   
+   
+   
+   
+  
+  
+  TCanvas* canvasInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef = new TCanvas("canvasInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef,  0.3, 0.02, 0.02, 0.16);
+	
+  TPad* padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef = new TPad("padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef", "", 0., 0., 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef, 0.15, 0.02, 0.02, 0.06);
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->Draw();
+	
+  	
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->cd();
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetLogy();		
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetLogx();		
+	
+  TH2F * histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef;
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef = new TH2F("histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef","histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef",1000,0.2,30.,1000,3e-10,20 );
+  SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035,0.035,0.035, 0.8,1.9, 512, 510);
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->GetXaxis()->SetLabelOffset(-0.009);
+  histo2DInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->DrawCopy(); 
+	
+ 
+  
+  FitCombPi0->SetLineWidth(lineWidthTsallis);  
+  FitCombEtaScaled->SetLineWidth(lineWidthTsallis);  
+  FitCombPi0->SetLineColor(kBlack);  
+  FitCombEtaScaled->SetLineColor(kBlack);
+  FitCombPi0->SetLineStyle(styleLineTsallis);  
+  FitCombEtaScaled->SetLineStyle(styleLineTsallis);
+  
+  Double_t fTpPb              = 0.0983e3*(1/recalcBarn);
+  //Double_t ScalingPPRef = 
+  
+  TH1D* fitTsallisPi0ppRef5023GeVPtTpPbScaled = (TH1D*)fitTsallisPi0ppRef5023GeVPt->GetHistogram();
+  fitTsallisPi0ppRef5023GeVPtTpPbScaled->Scale(fTpPb);
+  TH1D* fitTsallisEtappRef5023GeVPtTpPbScaled = (TH1D*)fitTsallisEtappRef5023GeVPtScaled->Clone();
+  fitTsallisEtappRef5023GeVPtTpPbScaled->Scale(fTpPb);
+  
+  
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled = (TGraphAsymmErrors*) ScaleGraph(graphCombPi0InvCrossSectionSystErrPPRef,fTpPb);
+  TGraphAsymmErrors* graphCombPi0InvCrossSectionStatErrPPRef_noXerrorsTpPbScaled = (TGraphAsymmErrors*)ScaleGraph( graphCombPi0InvCrossSectionStatErrPPRef_noXerrors,fTpPb);
+  
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionSystErrPPReTpPbScaled = (TGraphAsymmErrors*) ScaleGraph(graphCombEtaInvCrossSectionSystErrPPRefScaled,fTpPb);
+  TGraphAsymmErrors* graphCombEtaInvCrossSectionStatErrPPRef_noXerrorsTpPbScaled = (TGraphAsymmErrors*)ScaleGraph( graphCombEtaInvCrossSectionStatErrPPRefScaled_noXerrors,fTpPb);
+  
+  
+  
+  fitTsallisPi0ppRef5023GeVPtTpPbScaled->SetLineWidth(lineWidthTsallis);  
+  fitTsallisPi0ppRef5023GeVPtTpPbScaled->SetLineColor(kBlack);  
+  fitTsallisPi0ppRef5023GeVPtTpPbScaled->SetLineStyle(styleLineTsallis);  
+  
+  fitTsallisEtappRef5023GeVPtTpPbScaled->SetLineWidth(lineWidthTsallis);  
+  fitTsallisEtappRef5023GeVPtTpPbScaled->SetLineColor(kBlack);  
+  fitTsallisEtappRef5023GeVPtTpPbScaled->SetLineStyle(styleLineTsallis);  
+  
+  
+  
+
+  CombPi0Syst->Draw("E2,same"); 
+  CombPi0Stat_noXerrors->Draw("pz,same");
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled,markerStylePi0+4,1,colorCombYieldPi0 ,colorCombYieldPi0, 1, kTRUE);
+  graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled->Draw("E2,same"); 
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionStatErrPPRef_noXerrorsTpPbScaled,markerStylePi0+4,1,colorCombYieldPi0, colorCombYieldPi0 ); 
+  graphCombPi0InvCrossSectionStatErrPPRef_noXerrorsTpPbScaled->Draw("pz,same"); 
+ 
+  
+  
+  FitCombPi0->Draw("lsame"); 
+  fitTsallisPi0ppRef5023GeVPtTpPbScaled->Draw("lsame");
+ 
+ 
+  
+  CombEtaScaledSyst->Draw("E2,same");
+  CombEtaScaledStat_noXerrors->Draw("pz,same"); 
+  
+  
+    
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionSystErrPPReTpPbScaled,markerStyleEta+4,1,colorCombYieldEta ,colorCombYieldEta, 1, kTRUE);
+  graphCombEtaInvCrossSectionSystErrPPReTpPbScaled->Draw("E2,same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionStatErrPPRef_noXerrorsTpPbScaled,markerStyleEta+4,1,colorCombYieldEta, colorCombYieldEta ); 
+  graphCombEtaInvCrossSectionStatErrPPRef_noXerrorsTpPbScaled->Draw("pz,same"); 
+ 
+  FitCombEtaScaled->Draw("lsame");
+  fitTsallisEtappRef5023GeVPtTpPbScaled->Draw("lsame");
+  
+ 
+  
+  TLatex * latexInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef = new TLatex(2.5,4,"ALICE") ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetTextColor(kBlack) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetTextSize(TextSize-0.013) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetTextFont(Font) ;
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->DrawLatex(2.5,2,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  latexInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->Draw() ;
+  
+  
+
+  TLegend* legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef;
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef   = new TLegend(0.20,0.35,0.4,0.5); 
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetFillColor(0);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetLineColor(0);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetTextFont(Font);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->SetTextSize(TextSize-0.015);
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->AddEntry(CombEtaScaledSyst,"#eta #times 10^{-1}","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->AddEntry(graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled,"#pi^{0} pp reference #times <TpPb>","pef");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->AddEntry(graphCombEtaInvCrossSectionSystErrPPReTpPbScaled,"#eta  pp reference #times <TpPb> #times 10^{-1}","pef");
+  
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->AddEntry(FitCombPi0,"Tsallis fit","l");
+  legendInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->Draw();
+  
+  
+  
+  
+  padComparisonInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->Update();
+
+  canvasInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->Update();	
+  canvasInvYieldTSallisOnlyPi0AndEtaSpectraAndPPRef->Print(Form("%s/MesonYields_And_PPReferences_Tsallis.%s",outputDir.Data(),suffix.Data()));  
+   
+  
+  
+  
+  
+ 
+  
+  
+  TCanvas* canvasInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef = new TCanvas("canvasInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef,  0.3, 0.02, 0.02, 0.16);
+	
+  TPad* padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef = new TPad("padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef", "", 0., 0., 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef, 0.15, 0.02, 0.02, 0.07);
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->Draw();
+	
+  	
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->cd();
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetLogy();		
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetLogx();		
+	
+  TH2F * histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef;
+  histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef = new TH2F("histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef","histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef",1000,0.2,30.,1000,3e-10,20 );
+  SetStyleHistoTH2ForGraphs(histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035,0.035,0.035, 0.8,1.9, 512, 510);
+  histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->GetXaxis()->SetLabelOffset(-0.009);
+  histo2DInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->DrawCopy(); 
+	
+ 
+  
+  FitCombPi0->SetLineWidth(lineWidthTsallis);  
+  FitCombEtaScaled->SetLineWidth(lineWidthTsallis);  
+  FitCombPi0->SetLineColor(kBlack);  
+  FitCombEtaScaled->SetLineColor(kBlack);
+  FitCombPi0->SetLineStyle(styleLineTsallis);  
+  FitCombEtaScaled->SetLineStyle(styleLineTsallis);
+  
+   
+  
+  TH1D* fitTCMPi0ppRef5023GeVPtTpPbScaled = (TH1D*)fitTCMPi0ppRef5023GeVPt->GetHistogram();
+  fitTCMPi0ppRef5023GeVPtTpPbScaled->Scale(fTpPb);
+  TH1D* fitTCMEtappRef5023GeVPtTpPbScaled = (TH1D*)fitTCMEtappRef5023GeVPtScaled->Clone();
+  fitTCMEtappRef5023GeVPtTpPbScaled->Scale(fTpPb);
+  
+  
+ 
+  fitTCMPi0ppRef5023GeVPtTpPbScaled->SetLineWidth(lineWidthTCM);  
+  fitTCMPi0ppRef5023GeVPtTpPbScaled->SetLineColor(kBlack);  
+  fitTCMPi0ppRef5023GeVPtTpPbScaled->SetLineStyle(styleLineTCM);  
+  
+  fitTCMEtappRef5023GeVPtTpPbScaled->SetLineWidth(lineWidthTCM);  
+  fitTCMEtappRef5023GeVPtTpPbScaled->SetLineColor(kBlack);  
+  fitTCMEtappRef5023GeVPtTpPbScaled->SetLineStyle(styleLineTCM+1);  
+  
+  
+  
+
+  CombPi0Syst->Draw("E2,same"); 
+  CombPi0Stat_noXerrors->Draw("pz,same");
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled,markerStylePi0+4,1,colorPPRef ,colorPPRef, 1, kTRUE);
+  //graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled->Draw("E2,same"); 
+  DrawGammaSetMarkerTGraphAsym(graphCombPi0InvCrossSectionStatErrPPRef_noXerrorsTpPbScaled,markerStylePi0+4,1,colorPPRef, colorPPRef ); 
+  //graphCombPi0InvCrossSectionStatErrPPRef_noXerrorsTpPbScaled->Draw("pz,same"); 
+ 
+  
+  
+  FitCombPi0->Draw("lsame"); 
+  fitTCMPi0ppRef5023GeVPtTpPbScaled->Draw("lsame");
+ 
+ 
+  
+  CombEtaScaledSyst->Draw("E2,same");
+  CombEtaScaledStat_noXerrors->Draw("pz,same"); 
+  
+  
+    
+  
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionSystErrPPReTpPbScaled,markerStyleEta+4,1,colorPPRef ,colorPPRef, 1, kTRUE);
+  //graphCombEtaInvCrossSectionSystErrPPReTpPbScaled->Draw("E2,same");
+  DrawGammaSetMarkerTGraphAsym(graphCombEtaInvCrossSectionStatErrPPRef_noXerrorsTpPbScaled,markerStyleEta+4,1,colorPPRef, colorPPRef ); 
+  //graphCombEtaInvCrossSectionStatErrPPRef_noXerrorsTpPbScaled->Draw("pz,same"); 
+ 
+  FitCombEtaScaled->Draw("lsame");
+  fitTCMEtappRef5023GeVPtTpPbScaled->Draw("lsame");
+  
+ 
+  
+  TLatex * latexInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef = new TLatex(2.5,4,"ALICE") ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetTextColor(kBlack) ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetTextSize(TextSize-0.013) ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetTextFont(Font) ;
+  latexInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->DrawLatex(2.5,2,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  latexInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->Draw() ;
+  
+  
+
+  TLegend* legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef;
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef   = new TLegend(0.20,0.30,0.4,0.48); 
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetFillColor(0);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetLineColor(0);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetTextFont(Font);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->SetTextSize(TextSize-0.015);
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(CombEtaScaledSyst,"#eta #times 10^{-1}","pef");
+  //legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(graphCombPi0InvCrossSectionSystErrPPRefTpPbScaled,"#pi^{0} pp reference #times <TpPb>","pef");
+  //legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(graphCombEtaInvCrossSectionSystErrPPReTpPbScaled,"#eta  pp reference #times <TpPb> #times 10^{-1}","pef");
+  
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(FitCombPi0,"Tsallis fit","l");
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(fitTCMEtappRef5023GeVPtTpPbScaled,"TCM fit #pi^{0} pp reference #times <TpPb>","l");
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->AddEntry(fitTCMPi0ppRef5023GeVPtTpPbScaled,"TCM fit #eta pp reference #times <TpPb> #times 10^{-1}","l");
+  
+  legendInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->Draw();
+  
+  
+  
+  
+  padComparisonInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->Update();
+
+  canvasInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->Update();	
+  canvasInvYieldTCMOnlyPi0AndEtaSpectraAndPPRef->Print(Form("%s/MesonYields_And_PPReferences_TCM_NoPoints.%s",outputDir.Data(),suffix.Data())); 
+  
+   
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////
+   
+
    
    
    ///////////////////////////////////////////////////////////////
@@ -2882,6 +3706,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
  	
  	padComparisonInvYieldTSallisTheoryOnlyRatioPi0->cd();
  	padComparisonInvYieldTSallisTheoryOnlyRatioPi0->SetLogx();
+        //padComparisonInvYieldTSallisTheoryOnlyRatioPi0->SetLogy();
 	
 	
  	
@@ -3018,10 +3843,11 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 
 	padComparisonInvYieldTSallisTheoryOnlyRatioEta->cd();
 	padComparisonInvYieldTSallisTheoryOnlyRatioEta->SetLogx();
+        //padComparisonInvYieldTSallisTheoryOnlyRatioEta->SetLogy();
       
       
 	TH2F * histo2DInvYieldTSallisTheoryOnlyRatioEta;
-	histo2DInvYieldTSallisTheoryOnlyRatioEta = new TH2F("histo2DInvYieldTSallisTheoryOnlyRatioEta","histo2DRatioAllppreferencesEtaandEta",1000,.2,25.,1000,0.001,4.2);//1.89
+	histo2DInvYieldTSallisTheoryOnlyRatioEta = new TH2F("histo2DInvYieldTSallisTheoryOnlyRatioEta","histo2DRatioAllppreferencesEtaandEta",1000,.2,25.,1000,0.001,4.4);//1.89
 	SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisTheoryOnlyRatioEta, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{fit}",0.08,0.08,0.08,0.08,1.,0.5, 502, 505); 
 	histo2DInvYieldTSallisTheoryOnlyRatioEta->GetYaxis()->SetLabelOffset(0.005);
 	histo2DInvYieldTSallisTheoryOnlyRatioEta->GetXaxis()->SetLabelOffset(LabelOffsetLog);
@@ -3086,9 +3912,6 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
         DrawGammaSetMarkerTGraphAsym(RatioAESSSnCTEQFitEta5023GeV, 0, 0, colorDSSnPDFEPPSBand, colorDSSnPDFEPPSBand, widthLinesBoxes, kTRUE, colorDSSnPDFEPPSBand, kTRUE);
         RatioAESSSnCTEQFitEta5023GeV->Draw("3,same");
 
-        
-        
-        
   
   
 	RatioTsallisCombEtaSyst->Draw("E2same");
@@ -3103,7 +3926,7 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	legendInvYieldTSallisTheoryOnlyRatioEta->SetTextSize((TextSize+0.035)*0.82);
 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioTsallisCombEtaSyst,"#eta","pef");
         legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(RatioDSS14nCTEQFitPi05023GeV,"NLO:","fl");
-        legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry((TObject*)0,"nCTEQ, DSS14/AESSS","");
+        legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry((TObject*)0,"nCTEQ, AESSS","");
  	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(histoRatioPi0HIJINGToFit,"HIJING","l");
 	legendInvYieldTSallisTheoryOnlyRatioEta->AddEntry(histoRatioPi0DPMJetToFit,"DPMJet","l");
 	legendInvYieldTSallisTheoryOnlyRatioEta->Draw();
@@ -3114,8 +3937,917 @@ void MakePaperPlotspPb5023GeV(Bool_t EPOS=kFALSE, Bool_t mT=kFALSE, Bool_t TAPS=
 	if(EPOS) canvasInvYieldTSallisTheoryOnlyRatioPi0AndEtaSpectra->Print(Form("%s/MesonYields_EPOS_OnlyRatiov2.%s",outputDir.Data(),suffix.Data()));
         else if(mT) canvasInvYieldTSallisTheoryOnlyRatioPi0AndEtaSpectra->Print(Form("%s/MesonYields_mT_OnlyRatiov2.%s",outputDir.Data(),suffix.Data()));
         else canvasInvYieldTSallisTheoryOnlyRatioPi0AndEtaSpectra->Print(Form("%s/MesonYields_OnlyRatiov2.%s",outputDir.Data(),suffix.Data()));
-  
+        
+        
+        
+        
+	TCanvas*    canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectra  	= new TCanvas("canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectra","",200,10,1000,800);  // gives the page size
+	DrawGammaCanvasSettings( canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectra,  0.15, 0.02, 0.00, 0.00);  
+
+	TPad* padComparisonInvYieldTSallisOnlyRatioPi0 		= new TPad("padComparisonInvYieldTSallisOnlyRatioPi0", "", 0.,0.55, 1., 1,   -1, -1, -2);
+	DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyRatioPi0,  0.15, 0.02, 0.02, 0.0);
+	padComparisonInvYieldTSallisOnlyRatioPi0->Draw();
 	
+ 	TPad* padComparisonInvYieldTSallisOnlyRatioEta		= new TPad("padComparisonInvYieldTSallisOnlyRatioEta", "", 0.,0.0,  1., 0.55,-1, -1, -2);
+ 	DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyRatioEta,  0.15, 0.02, 0.00,  0.20);
+ 	padComparisonInvYieldTSallisOnlyRatioEta->Draw();
+ 	
+ 	
+ 	padComparisonInvYieldTSallisOnlyRatioPi0->cd();
+ 	padComparisonInvYieldTSallisOnlyRatioPi0->SetLogx();
+	
+	
+ 	
+	TH2F * histo2DInvYieldTSallisOnlyRatioPi0;
+	histo2DInvYieldTSallisOnlyRatioPi0 = new TH2F("histo2DInvYieldTSallisOnlyRatioPi0","histo2DRatioAllppreferencesEtaandPi0",1000,.2,25.,1000,0.41,2.2);//1.89
+	SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyRatioPi0, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{fit}", 0.098,0.098, 0.098,0.098, 1.,0.56, 502, 505); 
+	histo2DInvYieldTSallisOnlyRatioPi0->GetYaxis()->SetLabelOffset(0.005);
+	histo2DInvYieldTSallisOnlyRatioPi0->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+	histo2DInvYieldTSallisOnlyRatioPi0->GetXaxis()->SetTickLength(0.07);
+	histo2DInvYieldTSallisOnlyRatioPi0->GetYaxis()-> CenterTitle();
+	histo2DInvYieldTSallisOnlyRatioPi0->DrawCopy();
+	
+	
+        
+	
+	DrawGammaLines(0., 25.,1., 1.,2.0,kGray+2,2);
+	
+	
+	
+	  
+   
+	RatioTsallisCombPi0Syst->Draw("E2,same");
+	RatioTsallisCombPi0Stat->Draw("Ez,p,same"); 
+	
+	TLatex * latexInvYieldTSallisOnlyRatioPi0 = new TLatex(2.3,2.0,"ALICE") ;
+	latexInvYieldTSallisOnlyRatioPi0->SetTextColor(kBlack) ;
+	latexInvYieldTSallisOnlyRatioPi0->SetTextSize(TextSize+0.045) ;
+	latexInvYieldTSallisOnlyRatioPi0->SetTextFont(Font) ;
+	latexInvYieldTSallisOnlyRatioPi0->DrawLatex(2.3,1.8,"p-Pb, NSD, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+	latexInvYieldTSallisOnlyRatioPi0->Draw() ;
+	
+	
+  
+	TLegend* legendInvYieldTSallisOnlyRatioPi01;
+	legendInvYieldTSallisOnlyRatioPi01   = new TLegend(0.18,0.80,0.38,0.93); 
+	legendInvYieldTSallisOnlyRatioPi01->SetFillColor(0);
+	legendInvYieldTSallisOnlyRatioPi01->SetFillStyle(0);
+	legendInvYieldTSallisOnlyRatioPi01->SetLineColor(0);
+	legendInvYieldTSallisOnlyRatioPi01->SetTextFont(Font);
+	legendInvYieldTSallisOnlyRatioPi01->SetTextSize(TextSize+0.035);
+	legendInvYieldTSallisOnlyRatioPi01->AddEntry(RatioTsallisCombPi0Syst,"#pi^{0}","pef");
+        legendInvYieldTSallisOnlyRatioPi01->Draw();
+        
+
+	padComparisonInvYieldTSallisOnlyRatioEta->cd();
+	padComparisonInvYieldTSallisOnlyRatioEta->SetLogx();
+      
+      
+	TH2F * histo2DInvYieldTSallisOnlyRatioEta;
+	histo2DInvYieldTSallisOnlyRatioEta = new TH2F("histo2DInvYieldTSallisOnlyRatioEta","histo2DRatioAllppreferencesEtaandEta",1000,.2,25.,1000,0.41,2.4);//1.89
+	SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyRatioEta, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{fit}",0.08,0.08,0.08,0.08,1.,0.7, 502, 505); 
+	histo2DInvYieldTSallisOnlyRatioEta->GetYaxis()->SetLabelOffset(0.005);
+	histo2DInvYieldTSallisOnlyRatioEta->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+	histo2DInvYieldTSallisOnlyRatioEta->GetXaxis()->SetTickLength(0.07);
+	histo2DInvYieldTSallisOnlyRatioEta->GetYaxis()-> CenterTitle();
+	histo2DInvYieldTSallisOnlyRatioEta->DrawCopy();
+
+        
+        
+	RatioTsallisCombEtaSyst->Draw("E2,same");
+	RatioTsallisCombEtaStat->Draw("Ez,p,same"); 
+	
+	DrawGammaLines(0., 25.,1., 1.,2.0,kGray+2,2);
+	
+	
+	
+	
+	TLegend* legendInvYieldTSallisOnlyRatioEta;
+	legendInvYieldTSallisOnlyRatioEta   = new TLegend(0.18,0.83,0.38,0.95); 
+	legendInvYieldTSallisOnlyRatioEta->SetFillColor(0);
+	legendInvYieldTSallisOnlyRatioEta->SetLineColor(0);
+	legendInvYieldTSallisOnlyRatioEta->SetTextFont(Font);
+	legendInvYieldTSallisOnlyRatioEta->SetTextSize((TextSize+0.035)*0.82);
+	legendInvYieldTSallisOnlyRatioEta->AddEntry(RatioTsallisCombEtaSyst,"#eta","pef");
+	legendInvYieldTSallisOnlyRatioEta->Draw();
+	
+
+	canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectra->Update();
+	
+        canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectra->Print(Form("%s/MesonYields_WOModels_OnlyRatio.%s",outputDir.Data(),suffix.Data()));
+       
+        
+        
+        
+        
+        TCanvas*    canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectraPPRef  	= new TCanvas("canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectraPPRef","",200,10,1000,800);  // gives the page size
+	DrawGammaCanvasSettings( canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectraPPRef,  0.15, 0.02, 0.00, 0.00);  
+
+	TPad* padComparisonInvYieldTSallisOnlyRatioPi0PPRef 		= new TPad("padComparisonInvYieldTSallisOnlyRatioPi0PPRef", "", 0.,0.55, 1., 1,   -1, -1, -2);
+	DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyRatioPi0PPRef,  0.15, 0.02, 0.02, 0.0);
+	padComparisonInvYieldTSallisOnlyRatioPi0PPRef->Draw();
+	
+ 	TPad* padComparisonInvYieldTSallisOnlyRatioEtaPPRef		= new TPad("padComparisonInvYieldTSallisOnlyRatioEtaPPRef", "", 0.,0.0,  1., 0.55,-1, -1, -2);
+ 	DrawGammaPadSettings( padComparisonInvYieldTSallisOnlyRatioEtaPPRef,  0.15, 0.02, 0.00,  0.20);
+ 	padComparisonInvYieldTSallisOnlyRatioEtaPPRef->Draw();
+ 	
+ 	
+ 	padComparisonInvYieldTSallisOnlyRatioPi0PPRef->cd();
+ 	padComparisonInvYieldTSallisOnlyRatioPi0PPRef->SetLogx();
+	
+	
+ 	
+        
+	TH2F * histo2DInvYieldTSallisOnlyRatioPi0PPRef;
+	histo2DInvYieldTSallisOnlyRatioPi0PPRef = new TH2F("histo2DInvYieldTSallisOnlyRatioPi0PPRef","histo2DRatioAllppreferencesEtaandPi0",1000,.2,25.,1000,0.41,2.2);//1.89
+	SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyRatioPi0PPRef, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{fit}", 0.098,0.098, 0.098,0.098, 1.,0.56, 502, 505); 
+	histo2DInvYieldTSallisOnlyRatioPi0PPRef->GetYaxis()->SetLabelOffset(0.005);
+	histo2DInvYieldTSallisOnlyRatioPi0PPRef->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+	histo2DInvYieldTSallisOnlyRatioPi0PPRef->GetXaxis()->SetTickLength(0.07);
+	histo2DInvYieldTSallisOnlyRatioPi0PPRef->GetYaxis()-> CenterTitle();
+	histo2DInvYieldTSallisOnlyRatioPi0PPRef->DrawCopy();
+	
+	
+        
+	
+	DrawGammaLines(0., 25.,1., 1.,2.0,kGray+2,2);
+	
+	
+	
+	  
+   
+        
+        
+        
+         DrawGammaSetMarkerTGraphAsym(graphRatioPi0ppRefTsallisFitSystErr,markerStylePi0,1.2,colorCombYieldPi0 ,colorCombYieldPi0 , 1, kTRUE);  
+         graphRatioPi0ppRefTsallisFitSystErr->Draw("E2same");
+         DrawGammaSetMarkerTGraphAsym(graphRatioPi0ppRefTsallisFitStatErr,markerStylePi0,1.2,colorCombYieldPi0, colorCombYieldPi0 );  
+         SetEx(graphRatioPi0ppRefTsallisFitStatErr,0.); //Set the x-errors bars to 0
+         graphRatioPi0ppRefTsallisFitStatErr->Draw("Ez,p,same");
+   
+  
+        
+        
+	
+	TLatex * latexInvYieldTSallisOnlyRatioPi0PPRef = new TLatex(2.3,2.0,"ALICE") ;
+	latexInvYieldTSallisOnlyRatioPi0PPRef->SetTextColor(kBlack) ;
+	latexInvYieldTSallisOnlyRatioPi0PPRef->SetTextSize(TextSize+0.045) ;
+	latexInvYieldTSallisOnlyRatioPi0PPRef->SetTextFont(Font) ;
+	latexInvYieldTSallisOnlyRatioPi0PPRef->DrawLatex(2.3,1.8,"p-p, reference, #sqrt{#it{s}} = 5.02 TeV");
+	latexInvYieldTSallisOnlyRatioPi0PPRef->Draw() ;
+	
+	
+  
+	TLegend* legendInvYieldTSallisOnlyRatioPi01PPRef;
+	legendInvYieldTSallisOnlyRatioPi01PPRef   = new TLegend(0.18,0.80,0.38,0.93); 
+	legendInvYieldTSallisOnlyRatioPi01PPRef->SetFillColor(0);
+	legendInvYieldTSallisOnlyRatioPi01PPRef->SetFillStyle(0);
+	legendInvYieldTSallisOnlyRatioPi01PPRef->SetLineColor(0);
+	legendInvYieldTSallisOnlyRatioPi01PPRef->SetTextFont(Font);
+	legendInvYieldTSallisOnlyRatioPi01PPRef->SetTextSize(TextSize+0.035);
+	legendInvYieldTSallisOnlyRatioPi01PPRef->AddEntry(RatioTsallisCombPi0Syst,"#pi^{0}","pef");
+        legendInvYieldTSallisOnlyRatioPi01PPRef->Draw();
+        
+
+	padComparisonInvYieldTSallisOnlyRatioEtaPPRef->cd();
+	padComparisonInvYieldTSallisOnlyRatioEtaPPRef->SetLogx();
+      
+      
+	TH2F * histo2DInvYieldTSallisOnlyRatioEtaPPRef;
+	histo2DInvYieldTSallisOnlyRatioEtaPPRef = new TH2F("histo2DInvYieldTSallisOnlyRatioEtaPPRef","histo2DRatioAllppreferencesEtaandEta",1000,.2,25.,1000,0.41,2.1);//1.89
+	SetStyleHistoTH2ForGraphs(histo2DInvYieldTSallisOnlyRatioEtaPPRef, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{fit}",0.08,0.08,0.08,0.08,1.,0.7, 502, 505); 
+	histo2DInvYieldTSallisOnlyRatioEtaPPRef->GetYaxis()->SetLabelOffset(0.005);
+	histo2DInvYieldTSallisOnlyRatioEtaPPRef->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+	histo2DInvYieldTSallisOnlyRatioEtaPPRef->GetXaxis()->SetTickLength(0.07);
+	histo2DInvYieldTSallisOnlyRatioEtaPPRef->GetYaxis()-> CenterTitle();
+	histo2DInvYieldTSallisOnlyRatioEtaPPRef->DrawCopy();
+
+        
+        
+	
+        
+        
+       DrawGammaSetMarkerTGraphAsym(graphRatioEtappRefTsallisFitSystErr,markerStyleEta,1.2,colorCombYieldEta ,colorCombYieldEta, 1, kTRUE);  
+       graphRatioEtappRefTsallisFitSystErr->Draw("E2same");
+       DrawGammaSetMarkerTGraphAsym(graphRatioEtappRefTsallisFitStatErr,markerStyleEta,1.2,colorCombYieldEta ,colorCombYieldEta );  
+       SetEx(graphRatioEtappRefTsallisFitStatErr,0.); //
+       graphRatioEtappRefTsallisFitStatErr->Draw("Ez,p,same");
+        
+        
+	
+	DrawGammaLines(0., 25.,1., 1.,2.0,kGray+2,2);
+	
+	
+	
+	
+	TLegend* legendInvYieldTSallisOnlyRatioEtaPPRef;
+	legendInvYieldTSallisOnlyRatioEtaPPRef   = new TLegend(0.18,0.83,0.38,0.95); 
+	legendInvYieldTSallisOnlyRatioEtaPPRef->SetFillColor(0);
+	legendInvYieldTSallisOnlyRatioEtaPPRef->SetLineColor(0);
+	legendInvYieldTSallisOnlyRatioEtaPPRef->SetTextFont(Font);
+	legendInvYieldTSallisOnlyRatioEtaPPRef->SetTextSize((TextSize+0.035)*0.82);
+	legendInvYieldTSallisOnlyRatioEtaPPRef->AddEntry(graphRatioEtappRefTsallisFitSystErr,"#eta","pef");
+	legendInvYieldTSallisOnlyRatioEtaPPRef->Draw();
+	
+
+	canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectraPPRef->Update();
+	
+        canvasInvYieldTSallisOnlyRatioPi0AndEtaSpectraPPRef->Print(Form("%s/MesonYields_PPRef_Eta_Pi0_Tsallis_OnlyRatios.%s",outputDir.Data(),suffix.Data()));
+       
+        
+        
+        
+        
+        
+        
+        TCanvas*    canvasInvYieldTCMOnlyRatioPi0AndEtaSpectraPPRef  	= new TCanvas("canvasInvYieldTCMOnlyRatioPi0AndEtaSpectraPPRef","",200,10,1000,800);  // gives the page size
+	DrawGammaCanvasSettings( canvasInvYieldTCMOnlyRatioPi0AndEtaSpectraPPRef,  0.15, 0.02, 0.00, 0.00);  
+
+	TPad* padComparisonInvYieldTCMOnlyRatioPi0PPRef 		= new TPad("padComparisonInvYieldTCMOnlyRatioPi0PPRef", "", 0.,0.55, 1., 1,   -1, -1, -2);
+	DrawGammaPadSettings( padComparisonInvYieldTCMOnlyRatioPi0PPRef,  0.15, 0.02, 0.02, 0.0);
+	padComparisonInvYieldTCMOnlyRatioPi0PPRef->Draw();
+	
+ 	TPad* padComparisonInvYieldTCMOnlyRatioEtaPPRef		= new TPad("padComparisonInvYieldTCMOnlyRatioEtaPPRef", "", 0.,0.0,  1., 0.55,-1, -1, -2);
+ 	DrawGammaPadSettings( padComparisonInvYieldTCMOnlyRatioEtaPPRef,  0.15, 0.02, 0.00,  0.20);
+ 	padComparisonInvYieldTCMOnlyRatioEtaPPRef->Draw();
+ 	
+ 	
+ 	padComparisonInvYieldTCMOnlyRatioPi0PPRef->cd();
+ 	padComparisonInvYieldTCMOnlyRatioPi0PPRef->SetLogx();
+	
+	
+ 	
+        
+	TH2F * histo2DInvYieldTCMOnlyRatioPi0PPRef;
+	histo2DInvYieldTCMOnlyRatioPi0PPRef = new TH2F("histo2DInvYieldTCMOnlyRatioPi0PPRef","histo2DRatioAllppreferencesEtaandPi0",1000,.2,25.,1000,0.41,2.2);//1.89
+	SetStyleHistoTH2ForGraphs(histo2DInvYieldTCMOnlyRatioPi0PPRef, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{fit}", 0.098,0.098, 0.098,0.098, 1.,0.56, 502, 505); 
+	histo2DInvYieldTCMOnlyRatioPi0PPRef->GetYaxis()->SetLabelOffset(0.005);
+	histo2DInvYieldTCMOnlyRatioPi0PPRef->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+	histo2DInvYieldTCMOnlyRatioPi0PPRef->GetXaxis()->SetTickLength(0.07);
+	histo2DInvYieldTCMOnlyRatioPi0PPRef->GetYaxis()-> CenterTitle();
+	histo2DInvYieldTCMOnlyRatioPi0PPRef->DrawCopy();
+	
+	
+        
+	
+	DrawGammaLines(0., 25.,1., 1.,2.0,kGray+2,2);
+	
+	
+	
+	  
+   
+        
+        
+        
+         DrawGammaSetMarkerTGraphAsym(graphRatioPi0ppRefTCMFitSystErr,markerStylePi0,1.2,colorCombYieldPi0 ,colorCombYieldPi0 , 1, kTRUE);  
+         graphRatioPi0ppRefTCMFitSystErr->Draw("E2same");
+         DrawGammaSetMarkerTGraphAsym(graphRatioPi0ppRefTCMFitStatErr,markerStylePi0,1.2,colorCombYieldPi0, colorCombYieldPi0 );  
+         SetEx(graphRatioPi0ppRefTCMFitStatErr,0.); //Set the x-errors bars to 0
+         graphRatioPi0ppRefTCMFitStatErr->Draw("Ez,p,same");
+   
+  
+        
+        
+	
+	TLatex * latexInvYieldTCMOnlyRatioPi0PPRef = new TLatex(2.3,2.0,"ALICE") ;
+	latexInvYieldTCMOnlyRatioPi0PPRef->SetTextColor(kBlack) ;
+	latexInvYieldTCMOnlyRatioPi0PPRef->SetTextSize(TextSize+0.045) ;
+	latexInvYieldTCMOnlyRatioPi0PPRef->SetTextFont(Font) ;
+	latexInvYieldTCMOnlyRatioPi0PPRef->DrawLatex(2.3,1.8,"p-p, reference, #sqrt{#it{s}} = 5.02 TeV");
+	latexInvYieldTCMOnlyRatioPi0PPRef->Draw() ;
+	
+	
+  
+	TLegend* legendInvYieldTCMOnlyRatioPi01PPRef;
+	legendInvYieldTCMOnlyRatioPi01PPRef   = new TLegend(0.18,0.80,0.38,0.93); 
+	legendInvYieldTCMOnlyRatioPi01PPRef->SetFillColor(0);
+	legendInvYieldTCMOnlyRatioPi01PPRef->SetFillStyle(0);
+	legendInvYieldTCMOnlyRatioPi01PPRef->SetLineColor(0);
+	legendInvYieldTCMOnlyRatioPi01PPRef->SetTextFont(Font);
+	legendInvYieldTCMOnlyRatioPi01PPRef->SetTextSize(TextSize+0.035);
+	legendInvYieldTCMOnlyRatioPi01PPRef->AddEntry(graphRatioPi0ppRefTCMFitSystErr,"#pi^{0}","pef");
+        legendInvYieldTCMOnlyRatioPi01PPRef->Draw();
+        
+
+	padComparisonInvYieldTCMOnlyRatioEtaPPRef->cd();
+	padComparisonInvYieldTCMOnlyRatioEtaPPRef->SetLogx();
+      
+      
+	TH2F * histo2DInvYieldTCMOnlyRatioEtaPPRef;
+	histo2DInvYieldTCMOnlyRatioEtaPPRef = new TH2F("histo2DInvYieldTCMOnlyRatioEtaPPRef","histo2DRatioAllppreferencesEtaandEta",1000,.2,25.,1000,0.41,2.1);//1.89
+	SetStyleHistoTH2ForGraphs(histo2DInvYieldTCMOnlyRatioEtaPPRef, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{fit}",0.08,0.08,0.08,0.08,1.,0.7, 502, 505); 
+	histo2DInvYieldTCMOnlyRatioEtaPPRef->GetYaxis()->SetLabelOffset(0.005);
+	histo2DInvYieldTCMOnlyRatioEtaPPRef->GetXaxis()->SetLabelOffset(LabelOffsetLog);
+	histo2DInvYieldTCMOnlyRatioEtaPPRef->GetXaxis()->SetTickLength(0.07);
+	histo2DInvYieldTCMOnlyRatioEtaPPRef->GetYaxis()-> CenterTitle();
+	histo2DInvYieldTCMOnlyRatioEtaPPRef->DrawCopy();
+
+        
+        
+	
+        
+        
+       DrawGammaSetMarkerTGraphAsym(graphRatioEtappRefTCMFitSystErr,markerStyleEta,1.2,colorCombYieldEta ,colorCombYieldEta, 1, kTRUE);  
+       graphRatioEtappRefTCMFitSystErr->Draw("E2same");
+       DrawGammaSetMarkerTGraphAsym(graphRatioEtappRefTCMFitStatErr,markerStyleEta,1.2,colorCombYieldEta ,colorCombYieldEta );  
+       SetEx(graphRatioEtappRefTCMFitStatErr,0.); //
+       graphRatioEtappRefTCMFitStatErr->Draw("Ez,p,same");
+        
+        
+	
+	DrawGammaLines(0., 25.,1., 1.,2.0,kGray+2,2);
+	
+	
+	
+	
+	TLegend* legendInvYieldTCMOnlyRatioEtaPPRef;
+	legendInvYieldTCMOnlyRatioEtaPPRef   = new TLegend(0.18,0.83,0.38,0.95); 
+	legendInvYieldTCMOnlyRatioEtaPPRef->SetFillColor(0);
+	legendInvYieldTCMOnlyRatioEtaPPRef->SetLineColor(0);
+	legendInvYieldTCMOnlyRatioEtaPPRef->SetTextFont(Font);
+	legendInvYieldTCMOnlyRatioEtaPPRef->SetTextSize((TextSize+0.035)*0.82);
+	legendInvYieldTCMOnlyRatioEtaPPRef->AddEntry(graphRatioEtappRefTCMFitSystErr,"#eta","pef");
+	legendInvYieldTCMOnlyRatioEtaPPRef->Draw();
+	
+
+	canvasInvYieldTCMOnlyRatioPi0AndEtaSpectraPPRef->Update();
+	
+        canvasInvYieldTCMOnlyRatioPi0AndEtaSpectraPPRef->Print(Form("%s/MesonYields_PPRef_Eta_Pi0_TCM_OnlyRatios.%s",outputDir.Data(),suffix.Data()));
+       
+        
+        
+        
+        
+        
+        
+       
+
+    /////////////////////////////////////////////////////////////////////////////////
+        
+    ///Invariant pi0 yield
+  
+    TCanvas* canvasInvPi0YieldAndRatios = new TCanvas("canvasInvPi0YieldAndRatios","",200,10,1000,1200);  // gives the page size
+    DrawGammaCanvasSettings( canvasInvPi0YieldAndRatios, 0.3, 0.02, 0.02, 0.16);
+    TPad* padInvPi0YieldAndRatios = new TPad("padInvPi0YieldAndRatios", "", 0., 0.25, 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padInvPi0YieldAndRatios, 0.18, 0.02, 0.02, 0.);
+    padInvPi0YieldAndRatios->Draw();
+
+    TPad* padRatiosPi0AndModels = new TPad("padRatiosPi0AndModels", "", 0., 0., 1., 0.25,-1, -1, -2);
+    DrawGammaPadSettings( padRatiosPi0AndModels, 0.18, 0.02, 0., 0.3);
+    padRatiosPi0AndModels->Draw();
+
+    padInvPi0YieldAndRatios->cd(); 
+    padInvPi0YieldAndRatios->SetLogx();
+    padInvPi0YieldAndRatios->SetLogy();
+    TH2F * histoInvPi0YieldAndModels;
+    histoInvPi0YieldAndModels = new TH2F("histoInvPi0YieldAndModels","histoInvPi0YieldAndModels",1000,0.2,30.,1000,1.2e-9,20 );
+    SetStyleHistoTH2ForGraphs(histoInvPi0YieldAndModels, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035, 0.035,0.035, 0.8,1.9, 512, 510);
+    histoInvPi0YieldAndModels->GetXaxis()->SetLabelOffset(-0.009);
+    histoInvPi0YieldAndModels->DrawCopy(); 
+
+  
+
+  
+  graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err->Draw("c3same");
+  graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_Noerr->Draw("lZXsame");
+  
+  FitCombPi0->SetLineWidth(lineWidthTsallis); 
+  
+  
+  
+  
+  
+  graphPi0EPOS->Draw("C3same"); //C
+  graphPi0EPOSNoErr->Draw("lZXsame");
+  
+  
+  
+  
+  graphErrMcGillTheoryPion_p_hydro->Draw("C3same");
+  graphErrMcGillTheoryPion_p_hydroNoErr->Draw("lXYsame");
+  
+ 
+
+
+  //if (EPOS){
+  //  graphPi0EPOS->Draw("C3same"); //C
+ // }
+  
+  if( CGCPi0 ) {
+    
+      graphAsymmErrCGCTheoryPi0y0pA5020->Draw("C3same");
+    
+  }
+  
+  
+  if( HIJINGPi0 ){
+    histoHIJINGPi0->Draw("same,hist,l");
+  }
+  
+  if( DPMJetPi0 ){
+    
+   histoDPMJetPi0->Draw("same,hist,l"); 
+  }
+  
+  graphNLOCalcDSS14InvYieldPi05023GeV_nCTEQ->Draw("3,same");
+  graphNLOCalcDSS14InvYieldPi05023GeV_nCTEQ->Draw("lZXsame");
+  
+  
+  
+  CombPi0Syst->Draw("E2,same"); 
+  CombPi0Stat_noXerrors->Draw("pz,same"); 
+  
+  
+  
+  
+  
+  
+   TLegend* legInvPi0YieldAndRatios;
+  legInvPi0YieldAndRatios   = new TLegend(0.25,0.08,0.6,0.41); 
+  legInvPi0YieldAndRatios->SetFillColor(0);
+  legInvPi0YieldAndRatios->SetLineColor(0);
+  legInvPi0YieldAndRatios->SetTextFont(Font);
+  legInvPi0YieldAndRatios->SetTextSize(TextSize-0.015);
+  legInvPi0YieldAndRatios->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legInvPi0YieldAndRatios->AddEntry(graphPi0EPOS,"EPOS3","fl");
+  legInvPi0YieldAndRatios->AddEntry(graphErrMcGillTheoryPion_p_hydro,"VISHNU","fl");
+  legInvPi0YieldAndRatios->AddEntry(histoDPMJetPi0,"DPMJet","l");
+  legInvPi0YieldAndRatios->AddEntry(histoHIJINGPi0,"HIJING","l");
+  legInvPi0YieldAndRatios->AddEntry(graphAsymmErrCGCTheoryPi0y0pA5020,"CGC MV^{#gamma}","l");
+  legInvPi0YieldAndRatios->AddEntry(graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err,"NLO: EPPS16, DSS14","fl");
+  legInvPi0YieldAndRatios->AddEntry(graphNLOCalcDSS14InvYieldPi05023GeV_nCTEQ,"NLO: nCTEQ, DSS14","fl");
+  legInvPi0YieldAndRatios->AddEntry(FitCombPi0,"Tsallis fit","l");
+  legInvPi0YieldAndRatios->Draw();
+  
+  
+  
+ 	
+  TLatex * ltInvPi0YieldAndRatios = new TLatex(2.,2.1,"ALICE") ;
+  ltInvPi0YieldAndRatios->SetTextColor(kBlack) ;
+  ltInvPi0YieldAndRatios->SetTextSize(TextSize-0.015) ;
+  ltInvPi0YieldAndRatios->SetTextFont(Font) ;
+  ltInvPi0YieldAndRatios->DrawLatex(2.,1,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  ltInvPi0YieldAndRatios->Draw() ;
+
+  ltInvPi0YieldAndRatios->Draw() ;
+
+  padRatiosPi0AndModels->cd();
+    
+  padRatiosPi0AndModels->SetLogx();
+
+  
+ 
+  
+  
+  TH2F * canvasRatioPi0YieldAndModels;
+  canvasRatioPi0YieldAndModels = new TH2F("canvasRatioPi0YieldAndModels","histo2DRatioAllppreferencesEtaandPi0",1000,.2,30.,1000,0.001,4.2);//1.89
+  
+  //1000,.2,25.,1000,0.001,4.2
+  SetStyleHistoTH2ForGraphs(canvasRatioPi0YieldAndModels, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.1,0.1, 0.1,0.1,1.,0.5, 502, 505); 
+  canvasRatioPi0YieldAndModels->GetYaxis()->SetLabelOffset(0.005);
+  canvasRatioPi0YieldAndModels->GetXaxis()->SetLabelOffset(LabelOffsetLog+0.05);
+  canvasRatioPi0YieldAndModels->GetXaxis()->SetTickLength(0.07);
+  canvasRatioPi0YieldAndModels->DrawCopy();
+  
+  
+ 	
+  
+
+  TLine *lineRatioPi0YieldAndModels=new TLine(0.,1.,30.,1.);
+  lineRatioPi0YieldAndModels->SetLineColor(kGray+1);
+  lineRatioPi0YieldAndModels->Draw("same");
+
+  RatioIlkkaFitPi0scaleerr->Draw("C3same");
+  RatioIlkkaFitPi0NoErr->Draw("lEsame");
+	
+  if (EPOS){
+    RatioEPOSFitPi0->Draw("C3same");
+    RatioEPOSFitPi0->Draw("lZXsame");
+  }
+  
+  if( CGCPi0){
+	    RatioCGCFitPi0->Draw("C3same");
+  }
+	
+  RatioMcGillFitPi0->Draw("C3same");
+  RatioMcGillFitPi0->Draw("lZXsame");
+  RatioDSS14nCTEQFitPi05023GeVNoErr->Draw("lZXsame");
+  RatioDSS14nCTEQFitPi05023GeV->Draw("3,same");
+
+  if( HIJINGPi0 ){
+    histoRatioPi0HIJINGToFit->Draw("same,hist,l");  
+  }
+
+  if( DPMJetPi0 ){
+    	   histoRatioPi0DPMJetToFit->Draw("same,hist,l");  
+  }
+  
+  RatioTsallisCombPi0Syst->Draw("E2,same");
+  RatioTsallisCombPi0Stat->Draw("Ez,p,same"); 
+	
+   
+  
+  canvasInvPi0YieldAndRatios->Update();
+  canvasInvPi0YieldAndRatios->Print(Form("%s/MesonPi0YieldAndModelswithRatios.%s",outputDir.Data(),suffix.Data()));
+  
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  TCanvas* canvasInvPi0YieldAndRatiosb = new TCanvas("canvasInvPi0YieldAndRatiosb","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvPi0YieldAndRatiosb, 0.3, 0.02, 0.02, 0.16);
+  TPad* padInvPi0YieldAndRatiosb = new TPad("padInvPi0YieldAndRatiosb", "", 0., 0.25, 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padInvPi0YieldAndRatiosb, 0.18, 0.02, 0.02, 0.);
+  padInvPi0YieldAndRatiosb->Draw();
+
+  TPad* padRatiosPi0AndModelsb = new TPad("padRatiosPi0AndModelsb", "", 0., 0., 1., 0.25,-1, -1, -2);
+  DrawGammaPadSettings( padRatiosPi0AndModelsb, 0.18, 0.02, 0., 0.3);
+  padRatiosPi0AndModelsb->Draw();
+
+  padInvPi0YieldAndRatiosb->cd(); 
+  padInvPi0YieldAndRatiosb->SetLogx();
+  padInvPi0YieldAndRatiosb->SetLogy();
+  TH2F * histoInvPi0YieldAndModelsb;
+  histoInvPi0YieldAndModelsb = new TH2F("histoInvPi0YieldAndModelsb","histoInvPi0YieldAndModelsb",1000,0.2,30.,1000,1.2e-8,20 );
+  SetStyleHistoTH2ForGraphs(histoInvPi0YieldAndModelsb, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.040,0.040, 0.040,0.040, 0.8,1.9, 512, 510);
+  histoInvPi0YieldAndModelsb->GetXaxis()->SetLabelOffset(-0.009);
+  histoInvPi0YieldAndModelsb->DrawCopy(); 
+
+  
+
+  
+  
+  FitCombPi0->SetLineWidth(lineWidthTsallis); 
+  
+ 
+
+  
+  CombPi0Syst->Draw("E2,same"); 
+  CombPi0Stat_noXerrors->Draw("pz,same"); 
+  
+  FitCombPi0->Draw("same");
+  
+  
+  TLegend* legInvPi0YieldAndRatiosb;
+  legInvPi0YieldAndRatiosb   = new TLegend(0.25,0.31,0.45,0.41); 
+  legInvPi0YieldAndRatiosb->SetFillColor(0);
+  legInvPi0YieldAndRatiosb->SetLineColor(0);
+  legInvPi0YieldAndRatiosb->SetTextFont(Font);
+  legInvPi0YieldAndRatiosb->SetTextSize(TextSize-0.005);
+  legInvPi0YieldAndRatiosb->AddEntry(CombPi0Syst,"#pi^{0}","pef");
+  legInvPi0YieldAndRatiosb->AddEntry(FitCombPi0,"Tsallis fit","l");
+  legInvPi0YieldAndRatiosb->Draw();
+  
+  TLatex * ltInvPi0YieldAndRatiosb = new TLatex(3.,6.0,"ALICE") ;
+  ltInvPi0YieldAndRatiosb->SetTextColor(kBlack) ;
+  ltInvPi0YieldAndRatiosb->SetTextSize(TextSize-0.005) ;
+  ltInvPi0YieldAndRatiosb->SetTextFont(Font) ;
+  ltInvPi0YieldAndRatiosb->DrawLatex(3.,2,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  ltInvPi0YieldAndRatiosb->Draw() ;
+
+  padRatiosPi0AndModelsb->cd();
+    
+  padRatiosPi0AndModelsb->SetLogx();
+
+  
+ 
+  
+  
+  TH2F* canvasRatioPi0YieldAndModelsb = new TH2F("canvasRatioPi0YieldAndModelsb","histo2DRatioAllppreferencesEtaandPi0",1000,.2,30.,1000,0.001,2.2);//1.89
+  
+  SetStyleHistoTH2ForGraphs(canvasRatioPi0YieldAndModelsb, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.125,0.12,0.125,0.125,1.0,0.5, 502, 505); 
+  canvasRatioPi0YieldAndModelsb->GetYaxis()->SetLabelOffset(0.005);
+  canvasRatioPi0YieldAndModelsb->GetXaxis()->SetLabelOffset(LabelOffsetLog+0.00);
+  canvasRatioPi0YieldAndModelsb->GetXaxis()->SetTickLength(0.07);
+  canvasRatioPi0YieldAndModelsb->DrawCopy();
+  
+  
+ 	
+ 
+  RatioTsallisCombPi0Syst->Draw("E2,same");
+  RatioTsallisCombPi0Stat->Draw("Ez,p,same"); 
+	
+   
+  DrawGammaLines(0.2, 30.,1.,1.,2.0,kGray+2,2);
+  
+  canvasInvPi0YieldAndRatiosb->Update();
+  canvasInvPi0YieldAndRatiosb->Print(Form("%s/MesonPi0YieldAndWOModelswithRatios.%s",outputDir.Data(),suffix.Data()));
+
+    
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  
+  TCanvas* canvasInvEtaYieldAndRatios = new TCanvas("canvasInvEtaYieldAndRatios","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvEtaYieldAndRatios, 0.3, 0.02, 0.02, 0.16);
+  TPad* padInvEtaYieldAndRatios = new TPad("padInvEtaYieldAndRatios", "", 0., 0.25, 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padInvEtaYieldAndRatios, 0.18, 0.02, 0.02, 0.);
+  padInvEtaYieldAndRatios->Draw();
+
+  TPad* padRatiosEtaAndModels = new TPad("padRatiosEtaAndModels", "", 0., 0., 1., 0.25,-1, -1, -2);
+  DrawGammaPadSettings( padRatiosEtaAndModels, 0.18, 0.02, 0., 0.3);
+  padRatiosEtaAndModels->Draw();
+
+  padInvEtaYieldAndRatios->cd(); 
+  padInvEtaYieldAndRatios->SetLogx();
+  padInvEtaYieldAndRatios->SetLogy();
+  TH2F * histoInvEtaYieldAndModels;
+  histoInvEtaYieldAndModels = new TH2F("histoInvEtaYieldAndModels","histoInvEtaYieldAndModels",1000,0.2,30.,1000,1.2e-9,20 );
+  SetStyleHistoTH2ForGraphs(histoInvEtaYieldAndModels, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.035,0.035, 0.035,0.035, 0.8,1.9, 512, 510);
+  histoInvEtaYieldAndModels->GetXaxis()->SetLabelOffset(-0.009);
+  histoInvEtaYieldAndModels->DrawCopy(); 
+
+  
+
+  
+  
+  FitCombEta->SetLineWidth(lineWidthTsallis); 
+  
+  
+    while(graphEtaEPOS->GetX()[0] < 0.7)
+          graphEtaEPOS->RemovePoint(0); 
+    graphEtaEPOS->SetLineWidth(2);
+    graphEtaEPOS->SetLineStyle(styleLineEPOS3);
+    graphEtaEPOS->SetLineColor(colorEPOSline);
+    graphEtaEPOS->SetFillColor(colorEPOS);
+    
+   TGraphAsymmErrors* graphEtaEPOSNoErr = (TGraphAsymmErrors*)graphEtaEPOS->Clone();
+    
+    
+    
+    
+  
+  
+  
+  graphEtaEPOS->Draw("C3same"); //C
+  graphEtaEPOSNoErr->Draw("lZXsame");
+  
+  
+  //graphErrMcGillTheoryPion_p_hydro->Draw("C3same");
+ // graphErrMcGillTheoryPion_p_hydroNoErr->Draw("lXYsame");
+  
+ 
+
+
+  //if (EPOS){
+  //  graphEtaEPOS->Draw("C3same"); //C
+ // }
+  
+  //if( CGCEta ) {
+    
+  //    graphAsymmErrCGCTheoryEtay0pA5020->Draw("C3same");
+    
+  //}
+  
+  
+  if( HIJINGPi0 ){
+    histoHIJINGEta->Draw("same,hist,l");
+    histoHIJINGEta->GetXaxis()->SetRangeUser(0.7,20);
+  }
+  
+  if( DPMJetPi0 ){
+    
+   histoDPMJetEta->Draw("same,hist,l"); 
+   histoDPMJetEta->GetXaxis()->SetRangeUser(0.7,20);
+   
+  }
+  
+  
+  
+  
+   DrawGammaSetMarkerTGraphAsym(graphNLOCalcAESSSInvYieldEta5023GeV_nCTEQ, 0, 0, colorDSSnPDFEPPSBand, colorDSSnPDFEPPSBand, widthLinesBoxes, kTRUE, colorDSSnPDFEPPSBand, kTRUE);
+   
+   graphNLOCalcAESSSInvYieldEta5023GeV_nCTEQ->SetLineStyle(styleLineDSSnPDFEPPS);
+   graphNLOCalcAESSSInvYieldEta5023GeV_nCTEQ->Draw("3,same");
+   graphNLOCalcAESSSInvYieldEta5023GeV_nCTEQ->Draw("lZXsame");
+  
+  
+    while(graphErrMcGillTheoryEta_p_hydro->GetX()[0] < 0.7)
+          graphErrMcGillTheoryEta_p_hydro->RemovePoint(0);   
+    graphErrMcGillTheoryEta_p_hydro->SetLineWidth(3);
+    graphErrMcGillTheoryEta_p_hydro->SetLineStyle(styleLineMcGill);
+    graphErrMcGillTheoryEta_p_hydro->SetLineColor(colorMcGillline);
+    graphErrMcGillTheoryEta_p_hydro->SetFillColor(colorMcGill);
+   
+   
+    TGraphAsymmErrors* graphErrMcGillTheoryEta_p_hydroNoErr = (TGraphAsymmErrors*)graphErrMcGillTheoryEta_p_hydro->Clone();
+   
+    graphErrMcGillTheoryEta_p_hydro->Draw("c3same");
+    graphErrMcGillTheoryEta_p_hydroNoErr->Draw("lZXsame");
+   
+
+  
+  
+  CombEtaSyst->Draw("E2,same"); 
+  CombEtaStat_noXerrors->Draw("pz,same"); 
+  
+  
+  
+  TLegend* legInvEtaYieldAndRatios;
+  legInvEtaYieldAndRatios   = new TLegend(0.25,0.08,0.6,0.41); 
+  legInvEtaYieldAndRatios->SetFillColor(0);
+  legInvEtaYieldAndRatios->SetLineColor(0);
+  legInvEtaYieldAndRatios->SetTextFont(Font);
+  legInvEtaYieldAndRatios->SetTextSize(TextSize-0.015);
+  legInvEtaYieldAndRatios->AddEntry(CombEtaSyst,"#pi^{0}","pef");
+  legInvEtaYieldAndRatios->AddEntry(graphEtaEPOS,"EPOS3","fl");
+  legInvEtaYieldAndRatios->AddEntry(graphErrMcGillTheoryPion_p_hydro,"VISHNU","fl");
+  legInvEtaYieldAndRatios->AddEntry(histoDPMJetEta,"DPMJet","l");
+  legInvEtaYieldAndRatios->AddEntry(histoHIJINGEta,"HIJING","l");
+  //legInvEtaYieldAndRatios->AddEntry(graphAsymmErrCGCTheoryEtay0pA5020,"CGC MV^{#gamma}","l");
+  //legInvEtaYieldAndRatios->AddEntry(graphAsymmErrIlkkapPb5020_pi0_ct14_epps16_dss14_scale_err,"NLO: EPPS16, DSS14","fl");
+  legInvEtaYieldAndRatios->AddEntry(graphNLOCalcAESSSInvYieldEta5023GeV_nCTEQ,"NLO: nCTEQ, DSS14","fl");
+  legInvEtaYieldAndRatios->AddEntry(FitCombEta,"Tsallis fit","l");
+  legInvEtaYieldAndRatios->Draw();
+  
+  
+  
+ 	
+  TLatex * ltInvEtaYieldAndRatios = new TLatex(2.,2.1,"ALICE") ;
+  ltInvEtaYieldAndRatios->SetTextColor(kBlack) ;
+  ltInvEtaYieldAndRatios->SetTextSize(TextSize-0.015) ;
+  ltInvEtaYieldAndRatios->SetTextFont(Font) ;
+  ltInvEtaYieldAndRatios->DrawLatex(2.,1,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  ltInvEtaYieldAndRatios->Draw() ;
+
+  ltInvEtaYieldAndRatios->Draw() ;
+
+  padRatiosEtaAndModels->cd();
+    
+  padRatiosEtaAndModels->SetLogx();
+
+  
+ 
+  
+  
+  TH2F * canvasRatioEtaYieldAndModels;
+  canvasRatioEtaYieldAndModels = new TH2F("canvasRatioEtaYieldAndModels","histo2DRatioAllppreferencesEtaandEta",1000,.2,30.,1000,0.001,4.2);//1.89
+  
+  //1000,.2,25.,1000,0.001,4.2
+  SetStyleHistoTH2ForGraphs(canvasRatioEtaYieldAndModels, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.1,0.1, 0.1,0.1,1.,0.5, 502, 505); 
+  canvasRatioEtaYieldAndModels->GetYaxis()->SetLabelOffset(0.005);
+  canvasRatioEtaYieldAndModels->GetXaxis()->SetLabelOffset(LabelOffsetLog+0.05);
+  canvasRatioEtaYieldAndModels->GetXaxis()->SetTickLength(0.07);
+  canvasRatioEtaYieldAndModels->DrawCopy();
+  
+  
+ 	
+  
+
+  TLine *lineRatioEtaYieldAndModels=new TLine(0.,1.,30.,1.);
+  lineRatioEtaYieldAndModels->SetLineColor(kGray+1);
+  lineRatioEtaYieldAndModels->Draw("same");
+
+  //RatioIlkkaFitEtascaleerr->Draw("C3same");
+  //RatioIlkkaFitEtaNoErr->Draw("lEsame");
+	
+  if (EPOS){
+    RatioEPOSFitEta->Draw("C3same");
+    RatioEPOSFitEta->Draw("lZXsame");
+  }
+  
+  //if( CGCEta){
+	  //  RatioCGCFitEta->Draw("C3same");
+  //}
+	
+  //RatioMcGillFitEta->Draw("C3same");
+  //RatioMcGillFitEta->Draw("lZXsame");
+  //RatioDSS14nCTEQFitEta5023GeVNoErr->Draw("lZXsame");
+  //RatioDSS14nCTEQFitEta5023GeV->Draw("3,same");
+
+  if( HIJINGPi0 ){
+    histoRatioEtaHIJINGToFit->Draw("same,hist,l");  
+  }
+
+  if( DPMJetPi0 ){
+    	   histoRatioEtaDPMJetToFit->Draw("same,hist,l");  
+  }
+  
+  RatioMcGillFitEta->Draw("C3same");
+  RatioMcGillFitEtaNoErr->Draw("lZXsame");
+	
+	//-AM	
+        
+        
+  RatioAESSSnCTEQFitEta5023GeVNoErr->Draw("lZXsame");
+        
+  RatioAESSSnCTEQFitEta5023GeV->Draw("3,same");
+  
+  
+  
+  RatioTsallisCombEtaSyst->Draw("E2,same");
+  RatioTsallisCombEtaStat->Draw("Ez,p,same"); 
+	
+   
+  
+  canvasInvEtaYieldAndRatios->Update();
+  canvasInvEtaYieldAndRatios->Print(Form("%s/MesonEtaYieldAndModelswithRatios.%s",outputDir.Data(),suffix.Data()));
+   
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  TCanvas* canvasInvEtaYieldAndRatiosb = new TCanvas("canvasInvEtaYieldAndRatiosb","",200,10,1000,1200);  // gives the page size
+  DrawGammaCanvasSettings( canvasInvEtaYieldAndRatiosb, 0.3, 0.02, 0.02, 0.16);
+  TPad* padInvEtaYieldAndRatiosb = new TPad("padInvEtaYieldAndRatiosb", "", 0., 0.25, 1., 1.,-1, -1, -2);
+  DrawGammaPadSettings( padInvEtaYieldAndRatiosb, 0.18, 0.02, 0.02, 0.);
+  padInvEtaYieldAndRatiosb->Draw();
+
+  TPad* padRatiosEtaAndModelsb = new TPad("padRatiosEtaAndModelsb", "", 0., 0., 1., 0.25,-1, -1, -2);
+  DrawGammaPadSettings( padRatiosEtaAndModelsb, 0.18, 0.02, 0., 0.3);
+  padRatiosEtaAndModelsb->Draw();
+
+  padInvEtaYieldAndRatiosb->cd(); 
+  padInvEtaYieldAndRatiosb->SetLogx();
+  padInvEtaYieldAndRatiosb->SetLogy();
+  
+  TH2F* histoInvEtaYieldAndModelsb = new TH2F("histoInvEtaYieldAndModelsb","histoInvEtaYieldAndModelsb",1000,0.5,30.,1000,1.2e-8,1 );
+  SetStyleHistoTH2ForGraphs(histoInvEtaYieldAndModelsb, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2} ",0.040,0.040, 0.040,0.040, 0.8,1.9, 512, 510);
+  histoInvEtaYieldAndModelsb->GetXaxis()->SetLabelOffset(-0.009);
+  histoInvEtaYieldAndModelsb->DrawCopy(); 
+
+  
+  
+  FitCombEta->SetLineWidth(lineWidthTsallis); 
+
+  
+  CombEtaSyst->Draw("E2,same"); 
+  CombEtaStat_noXerrors->Draw("pz,same"); 
+  
+  FitCombEta->Draw("same");
+  
+  
+  
+  TLegend* legInvEtaYieldAndRatiosb;
+  legInvEtaYieldAndRatiosb   = new TLegend(0.25,0.31,0.45,0.41); 
+  legInvEtaYieldAndRatiosb->SetFillColor(0);
+  legInvEtaYieldAndRatiosb->SetLineColor(0);
+  legInvEtaYieldAndRatiosb->SetTextFont(Font);
+  legInvEtaYieldAndRatiosb->SetTextSize(TextSize-0.005);
+  legInvEtaYieldAndRatiosb->AddEntry(CombEtaSyst,"#pi^{0}","pef");
+  legInvEtaYieldAndRatiosb->AddEntry(FitCombEta,"Tsallis fit","l");
+  legInvEtaYieldAndRatiosb->Draw();
+  
+  
+  
+ 	
+  TLatex * ltInvEtaYieldAndRatiosb = new TLatex(4.5,0.3,"ALICE") ;
+  ltInvEtaYieldAndRatiosb->SetTextColor(kBlack) ;
+  ltInvEtaYieldAndRatiosb->SetTextSize(TextSize-0.005) ;
+  ltInvEtaYieldAndRatiosb->SetTextFont(Font) ;
+  ltInvEtaYieldAndRatiosb->DrawLatex(4.5,0.08,"p-Pb, #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  ltInvEtaYieldAndRatiosb->Draw() ;
+
+
+  padRatiosEtaAndModelsb->cd();
+    
+  padRatiosEtaAndModelsb->SetLogx();
+
+  
+ 
+  
+  
+  TH2F * canvasRatioEtaYieldAndModelsb;
+  canvasRatioEtaYieldAndModelsb = new TH2F("canvasRatioEtaYieldAndModelsb","histo2DRatioAllppreferencesEtaandEta",1000,.5,30.,1000,0.001,2.2);//1.89
+  
+  //1000,.2,25.,1000,0.001,4.2
+  SetStyleHistoTH2ForGraphs(canvasRatioEtaYieldAndModelsb, "#it{p}_{T} (GeV/#it{c})","Data/Fit", 0.125,0.125, 0.125,0.125,1.,0.5, 502, 505); 
+  canvasRatioEtaYieldAndModelsb->GetYaxis()->SetLabelOffset(0.005);
+  canvasRatioEtaYieldAndModelsb->GetXaxis()->SetLabelOffset(LabelOffsetLog+0.00);
+  canvasRatioEtaYieldAndModelsb->GetXaxis()->SetTickLength(0.07);
+  canvasRatioEtaYieldAndModelsb->DrawCopy();
+ 
+  
+  
+ 	
+  
+
+  TLine *lineRatioEtaYieldAndModelsb=new TLine(0.,1.,30.,1.);
+  lineRatioEtaYieldAndModelsb->SetLineColor(kGray+1);
+  lineRatioEtaYieldAndModelsb->Draw("same");
+
+  
+  
+
+  
+  RatioTsallisCombEtaSyst->Draw("E2,same");
+  RatioTsallisCombEtaStat->Draw("Ez,p,same"); 
+	
+   
+  
+  canvasInvEtaYieldAndRatiosb->Update();
+  canvasInvEtaYieldAndRatiosb->Print(Form("%s/MesonEtaYieldAndWOModelswithRatios.%s",outputDir.Data(),suffix.Data()));
+  
+  ///////////////////////////////////////////////////////////////////////////////////////////
+        
+   
+  
+  
+  
+  
+  
+  
+   
+        
+        
+        
 	
 	
 	TCanvas* canvasInvYieldTSallisTheoryOnlyRatioPi0Spectrum 	= new TCanvas("canvasInvYieldTSallisTheoryOnlyRatioPi0Spectrum","",200,10,1000,800);  // gives the page size
