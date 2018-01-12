@@ -216,7 +216,7 @@ void CombineMesonMeasurementspPb5023GeV(TString FittingType = "Tsallis",Bool_t I
   //Correlation factors file for PCM and Dalitz
   //TString corrFactorsFile = "ExternalInputpPb/CorrelationFactors_PCM_Dalitz_2016_10_06_pPb_5.023TeV.root";
   //TString corrFactorsFile = "ExternalInputpPb/CorrFactorsFiles/pPb5TeV_2017_01_17.root";
-  TString corrFactorsFile = "/opt/AnalysisSoftware/pPb5TeV.root";
+  TString corrFactorsFile = "/opt/AnalysisSoftware/ExternalInputpPb/CorrFactorsFiles/pPb5TeV_2017_08_15.root";
 
   ////////////////////////////////////Theory///////////////////////////////////////////////////////7
 
