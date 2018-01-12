@@ -267,7 +267,7 @@ void CombineRpPb5023GeV(Bool_t IsNSD=kFALSE){
   
   
   //TString corrFactorsFileName                 = "eps/2017_06_07/ComputeCorrelationFactors_pPb5TeV/pPb5TeV.root";
-   TString corrFactorsFileName                 = "/opt/AnalysisSoftware/pPb5TeV.root";
+   TString corrFactorsFileName                 = "/opt/AnalysisSoftware/ExternalInputpPb/CorrFactorsFiles/pPb5TeV_2017_08_15.root";
   
   
   TFile* fileNeutralPionRpPb                           	= new TFile(fileNameRpPb.Data());
