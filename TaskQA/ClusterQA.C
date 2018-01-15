@@ -131,7 +131,6 @@ void ClusterQA(
             for(Int_t j = 0; j<listInput->GetSize(); j++){
                 TList *listCuts     = (TList*)listInput->At(j);
                 TString nameCuts    = listCuts->GetName();
-                cout << nameCuts.Data() << endl;
                 if(nameCuts.BeginsWith("Cut Number")){
                 nameCuts.Replace(0,11,"");
                 if(i==0) {
@@ -283,7 +282,7 @@ void ClusterQA(
         nCaloModules        = 6;
         nCaloCells          = 19000;
     } else {
-        cout << "No correct calorimeter type found: " << fClusterCutSelection[0].Data() << calo.Data() << ", returning..." << endl; return;
+        cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;
     }
 
     //*****************************************************************************************************

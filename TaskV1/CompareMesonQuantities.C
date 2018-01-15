@@ -176,7 +176,8 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     Double_t ratioLowMass[100]                      = {1.};
     Double_t ratioErrLowMass[100]                   = {1.};
     for(Int_t j=0;j<3;j++){
-        TCanvas * canvasDummy = new TCanvas("canvasDummy","",2800,1800);  // gives the page siz        canvasDummy->SetTopMargin(0.02);
+        TCanvas * canvasDummy = new TCanvas("canvasDummy","",2800,1800);  // gives the page size
+        canvasDummy->SetTopMargin(0.02);
         canvasDummy->SetBottomMargin(0.02);
         canvasDummy->SetRightMargin(0.02);
         canvasDummy->SetLeftMargin(0.02);
@@ -370,7 +371,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                                 "M_{#gamma#gamma} (GeV/c^{2})", "",
                                 fMesonRange[0],fMesonRange[1],0,860,1,0.8);
                     }
-                } else if(j == 1){
+                } else {
                     if (histoSignalDataInvMassPtBin[iPt]) {
                         histoSignalDataInvMassPtBin[iPt]->GetYaxis()->SetRangeUser(minY,maxY);
                         DrawGammaHistoColored( histoSignalDataInvMassPtBin[iPt],

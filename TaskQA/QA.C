@@ -998,14 +998,18 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC15n")==0){
       // pp 5.02TeV
-//      mode=12;
-      nSets = 2;
+      mode=0;
+      nSets = 3;
       cutNr = 0;
       fEnergyFlag = "5TeV";
-      DataSets[0]="LHC15n"; DataSets[1]="LHC17e2"; DataSets[2]="LHC17e2";     
-      plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC17e2"; 
-      pathDataSets[0]="/home/adrian/grid_data/Legotrain_pp502_pass4/GammaCalo_601.root";
-      pathDataSets[1]="/home/adrian/grid_data/Legotrain_pp502_pass4/GammaCalo_MC_LHC17e2_601.root";
+      DataSets[0]="LHC15n"; DataSets[1]="LHC16k5a"; DataSets[2]="LHC16k5b";     
+      plotDataSets[0]="LHC15n"; plotDataSets[1]="LHC16k5a PYT8"; plotDataSets[2]="LHC16k5b PYT6";
+      pathDataSets[0]="~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy/LHC15n/GammaConvV1_LHC15n_p3_51.root";
+      pathDataSets[1]="~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy/LHC16k5a/GammaConvV1_LHC16k5a_51.root";
+      pathDataSets[2]="~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy/LHC16k5b/GammaConvV1_LHC16k5b_51.root ";
+      pathPhotonQA[0]="~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy/LHC15n/PhotonQA_LHC15n.root"; 
+      pathPhotonQA[1]="~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy/LHC16k5a/PhotonQA_LHC16k5a.root";
+      pathPhotonQA[2]="~/Hikari/Photon/Grid/OutputLegoTrains/pp/Legotrain-vAN-20170112-SystStudy/LHC16k5b/PhotonQA_LHC16k5b.root";
 
       //      markerSize=1.5;
       //      doEquidistantXaxis=kTRUE;

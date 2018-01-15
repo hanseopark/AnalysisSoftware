@@ -665,6 +665,7 @@ void CorrectCaloNonLinearityV4(
 
             // special setting for PCM-PHOS
             } else if( mode == 3 ){
+<<<<<<< d2607906b14572474336e10f35b752209532526a
                 if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
                     if (fBinsPt[iClusterPt] < 1.5)
                         minMax[1]       = 0.18;
@@ -678,6 +679,12 @@ void CorrectCaloNonLinearityV4(
                     else
                         minMax[1]       = 0.25;
                 }
+=======
+                if (fBinsPt[iClusterPt] < 1)
+                    minMax[1]       = 0.20;
+                else
+                    minMax[1]       = 0.25;
+>>>>>>> merging to master
                 minMax[0]       = 0.03;
 
             // special setting for EMC
@@ -686,6 +693,7 @@ void CorrectCaloNonLinearityV4(
                 Double_t min    = 0.02*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
+<<<<<<< d2607906b14572474336e10f35b752209532526a
 
                 if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
                     minMax[1]   = 0.3;
@@ -700,6 +708,8 @@ void CorrectCaloNonLinearityV4(
                         minMax[1]       = 0.3;
                 }
 
+=======
+>>>>>>> merging to master
             // special setting for PHOS
             } else if( mode == 5){
                 minMax[1]       = 0.25;
@@ -778,7 +788,7 @@ void CorrectCaloNonLinearityV4(
     histoDummyMeanMassVsPDG = new TH2F("histoDummyMeanMassVsPDG", "histoDummyMeanMassVsPDG", 11000, fBinsPt[ptBinRange[0]]/1.5, fBinsPt[ptBinRange[1]]*1.5, 1000, minMass, maxMass);
     SetStyleHistoTH2ForGraphs(histoDummyMeanMassVsPDG, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC/data)} #GT / M_{#pi^{0} (PDG)}", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyMeanMassVsPDG->GetXaxis()->SetMoreLogLabels();
-    histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(0.02);
+    histoDummyMeanMassVsPDG->GetXaxis()->SetLabelOffset(-0.01);
     histoDummyMeanMassVsPDG->DrawCopy("");
 
     Double_t rangeExponent[2]   = {-0.5, -0.08};
@@ -820,10 +830,15 @@ void CorrectCaloNonLinearityV4(
 
     TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassDataVsPDG2->SetParameter(0, fitMassDataVsPDGConst->GetParameter(0));
+<<<<<<< d2607906b14572474336e10f35b752209532526a
     if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.1*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.1*fitMassDataVsPDGConst->GetParError(0));
     else if (mode == 2 || mode == 4 || mode == 12)
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
+=======
+    if (mode == 2 || mode == 4 || mode == 12)
+      fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
+>>>>>>> merging to master
     else
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
 
@@ -843,12 +858,19 @@ void CorrectCaloNonLinearityV4(
 
     TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
+<<<<<<< d2607906b14572474336e10f35b752209532526a
     if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
     else if (mode == 2 || mode == 4 || mode == 12)
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
     else
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
+=======
+    if (mode == 2 || mode == 4 || mode == 12)
+      fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
+    else
+      fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
+>>>>>>> merging to master
 
     histMCResultsVsPDG->Fit(fitMassMCVsPDG2,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDG2) << endl;
@@ -996,7 +1018,7 @@ void CorrectCaloNonLinearityV4(
     if(mode == 2 || mode == 3) SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M^{2}_{#pi^{0} (MC)} #GT / #LT M^{2}_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     else SetStyleHistoTH2ForGraphs(histoDummyDataMCRatio, "#it{E}_{Cluster} (GeV)","#LT M_{#pi^{0} (MC)} #GT / #LT M_{#pi^{0} (data)} #GT", 0.035, 0.043, 0.035, 0.043, 0.82, 0.9);
     histoDummyDataMCRatio->GetXaxis()->SetMoreLogLabels();
-    histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(0.02);
+    histoDummyDataMCRatio->GetXaxis()->SetLabelOffset(-0.01);
     histoDummyDataMCRatio->DrawCopy("");
 
     DrawGammaSetMarker(histDataMCResults, 20, 1, color[0], color[0]);
@@ -1044,11 +1066,11 @@ void CorrectCaloNonLinearityV4(
     // plotting total correction
     //*******************************************************************************
     canvasMassRatioMCData->cd();
-    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,20);
+    TH1D* totalCorrection = new TH1D("Total Correction","; #it{E}_{Cluster} (GeV); correction factor",1000,0.3,50);
     SetStyleHistoTH1ForGraphs(totalCorrection, "#it{E}_{Cluster} (GeV)","correction factor",0.035,0.043, 0.035,0.043, 1.,0.9);
     totalCorrection->GetYaxis()->SetRangeUser(minPlotY+0.031,1.1);
     totalCorrection->GetXaxis()->SetMoreLogLabels();
-    totalCorrection->GetXaxis()->SetLabelOffset(0.02);
+    totalCorrection->GetXaxis()->SetLabelOffset(-0.01);
     SetLogBinningXTH(totalCorrection);
     totalCorrection->DrawCopy("p");
 
@@ -1150,8 +1172,8 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
     fFitReco->SetParameter(0,1.);
 
     if (mode == 3 || mode == 5){
-      fFitReco->SetParameter(2,-0.5);
-      fFitReco->SetParameter(1,-1.);
+      fFitReco->SetParameter(2,0.5);
+      fFitReco->SetParameter(1,1.);
     } else {
       fFitReco->SetParameter(2,-0.5);
       fFitReco->SetParameter(1,-1.);

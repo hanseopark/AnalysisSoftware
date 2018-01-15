@@ -1,6 +1,6 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
  *******************************************************************************/
 
 #include "QA.h"
@@ -18,23 +18,13 @@ void ClusterQA_HotCellCompare(TString suffix = "eps", Int_t mode = 2)
 
 	TString outputDir ="ClusterQA_HotCellCompare";
 
-
-	const Int_t nSets = 1;
-	const Int_t nTrigger = 1;
-	TString fEnergyFlag = "pPb_5.023TeV";
-	outputDir+="/LHC16t";
-	TString DataSets[nSets]={"LHC16t"};
-	TString Triggers[nTrigger]={""};
-	TString cut[nTrigger] = {"80000513_2444400051013200000_0163103100000010"};
-
-
-    // const Int_t nSets = 5;
-    // const Int_t nTrigger = 1;
-    // TString fEnergyFlag = "7TeV";
-    // outputDir+="/LHC10";
-    // TString DataSets[nSets]={"LHC10b_pass4","LHC10c_pass4","LHC10d_pass4","LHC10e_pass4","LHC10f_pass4"};
-    // TString Triggers[nTrigger]={""};
-    // TString cut[nTrigger] = {"00000113_00200009327000008250400000_1111100013032230000_0163103100000010"};
+    const Int_t nSets = 5;
+    const Int_t nTrigger = 1;
+    TString fEnergyFlag = "7TeV";
+    outputDir+="/LHC10";
+    TString DataSets[nSets]={"LHC10b_pass4","LHC10c_pass4","LHC10d_pass4","LHC10e_pass4","LHC10f_pass4"};
+    TString Triggers[nTrigger]={""};
+    TString cut[nTrigger] = {"00000113_00200009327000008250400000_1111100013032230000_0163103100000010"};
 
 
 //	const Int_t nSets = 8;
@@ -118,8 +108,7 @@ void ClusterQA_HotCellCompare(TString suffix = "eps", Int_t mode = 2)
 		fLogOutputDetailed.open(Form("%s/%s-Detailed.log",outputDir.Data(),DataSets[j].Data()),ios::out);
 		for(Int_t i=0; i<nTrigger; i++)
 		{
-            // fLogRunwiseBadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/%s/HotCellsRunwise-%s%s.log",cut[i].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),DataSets[j].Data(),Triggers[i].Data()), ios::in);
-						fLogRunwiseBadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/HotCellsRunwise-%s%s.log",cut[i].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),Triggers[i].Data()), ios::in);
+            fLogRunwiseBadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/%s/HotCellsRunwise-%s%s.log",cut[i].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),DataSets[j].Data(),Triggers[i].Data()), ios::in);
 			if(fLogRunwiseBadCells.good())
 			{
 				fLogRunwiseBadCells.seekg(0L, ios::beg);
@@ -223,3 +212,4 @@ void ClusterQA_HotCellCompare(TString suffix = "eps", Int_t mode = 2)
 	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 	return;
 }
+

@@ -1,6 +1,6 @@
 ﻿/*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
  *******************************************************************************/
 
 #include "QA.h"
@@ -20,17 +20,21 @@ void ClusterQA_DeadCellCompare(TString suffix = "eps", Int_t mode = 2)
 	TString outputDir ="ClusterQA_DeadCellCompare";
 
 // LHC10, with MC comparison
-    const Int_t nCaloCells = 13000;
-    const Int_t nSets = 1;
+    const Int_t nCaloCells = 4608;
+    const Int_t nSets = 5;
     const Int_t nTrigger = 1;
-    const Int_t nMCSets = 1;
-    outputDir+="/LHC16t";
-    TString fEnergyFlag = "pPb_5.023TeV";
-    TString DataSets[nSets]={"LHC16t"};
-    TString MCSets[nMCSets]={"LHC17f2a"};
-    TString MCcut[nMCSets] = {"80000513_2444400051013200000_0163103100000010"};
+    const Int_t nMCSets = 5;
+    outputDir+="/LHC10";
+    TString fEnergyFlag = "7TeV";
+    TString DataSets[nSets]={"LHC10b_pass4","LHC10c_pass4","LHC10d_pass4","LHC10e_pass4","LHC10f_pass4"};
+    TString MCSets[nMCSets]={"LHC14j4b","LHC14j4c","LHC14j4d","LHC14j4e","LHC14j4f"};
+    TString MCcut[nMCSets] = {"00000113_00200009327000008250400000_1111100013032230000_0163103100000010",
+                              "00000113_00200009327000008250400000_1111100013032230000_0163103100000010",
+                              "00000113_00200009327000008250400000_1111100013032230000_0163103100000010",
+                              "00000113_00200009327000008250400000_1111100013032230000_0163103100000010",
+                              "00000113_00200009327000008250400000_1111100013032230000_0163103100000010"};
     TString Triggers[nTrigger]={""};
-    TString cut[nTrigger] = {"80000513_2444400051013200000_0163103100000010"};
+    TString cut[nTrigger] = {"00000113_00200009327000008250400000_1111100013032230000_0163103100000010"};
 
 
 // LHC12 only MB, with MC comparison
@@ -109,11 +113,10 @@ void ClusterQA_DeadCellCompare(TString suffix = "eps", Int_t mode = 2)
 		//readin of MC cold/dead cells
 		if(nMCSets>0){
           runs.clear();
-          fileRuns = Form("../DownloadAndDataPrep/runlists/runNumbers%s.txt",MCSets[j].Data());
+          fileRuns = Form("runNumbers%s.txt",MCSets[j].Data());
           if(!readin(fileRuns, runs, kFALSE)) {cout << Form("INFO, no Run Numbers could be found for %s!",MCSets[j].Data()) << endl;}
 
-          // fLogRunwiseDeadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/%s/ColdCellsRunwise-%s.log",MCcut[j].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),MCSets[j].Data()), ios::in);
-					fLogRunwiseDeadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/ColdCellsRunwise-%s.log",MCcut[j].Data(),fEnergyFlag.Data(),suffix.Data(),MCSets[j].Data()), ios::in);
+          fLogRunwiseDeadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/%s/ColdCellsRunwise-%s.log",MCcut[j].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),MCSets[j].Data()), ios::in);
           if(fLogRunwiseDeadCells.good())
           {
             fLogRunwiseDeadCells.seekg(0L, ios::beg);
@@ -121,7 +124,7 @@ void ClusterQA_DeadCellCompare(TString suffix = "eps", Int_t mode = 2)
             while(!fLogRunwiseDeadCells.eof())
             {
               fLogRunwiseDeadCells >> fVar;
-	            if(fVar.BeginsWith("Run-")) {
+              if(fVar.BeginsWith("Run-")) {
                 TString curr = fVar;
                 currentRun = curr.Remove(0,4);
               }
@@ -136,7 +139,6 @@ void ClusterQA_DeadCellCompare(TString suffix = "eps", Int_t mode = 2)
                 TString vecString = rString->GetString();
                 it = find (vecMC[vecString.Atoi()].begin(), vecMC[vecString.Atoi()].end(), currentRun.Atoi());
                 if( it == vecMC[vecString.Atoi()].end() ) vecMC[vecString.Atoi()].push_back(currentRun.Atoi());
-								// vecMC[vecString.Atoi()].push_back(currentRun.Atoi());
               }
             }
           }else{
@@ -151,10 +153,10 @@ void ClusterQA_DeadCellCompare(TString suffix = "eps", Int_t mode = 2)
 		{
 //			cout << i << " - '" << Triggers[i].Data() << "'" << endl;
 			runs.clear();
-			fileRuns = Form("../DownloadAndDataPrep/runlists/runNumbers%s%s.txt", DataSets[j].Data(),Triggers[i].Data());
+			fileRuns = Form("runNumbers%s%s.txt", DataSets[j].Data(),Triggers[i].Data());
 			if(!readin(fileRuns, runs, kFALSE)) {cout << Form("INFO, no Run Numbers could be found for %s%s!",DataSets[j].Data(),Triggers[i].Data()) << endl;}
 
-            fLogRunwiseDeadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/ColdCellsRunwise-%s%s.log",cut[i].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),Triggers[i].Data()), ios::in);
+            fLogRunwiseDeadCells.open(Form("%s/%s/ClusterQA/%s/Runwise/%s/ColdCellsRunwise-%s%s.log",cut[i].Data(),fEnergyFlag.Data(),suffix.Data(),DataSets[j].Data(),DataSets[j].Data(),Triggers[i].Data()), ios::in);
 			if(fLogRunwiseDeadCells.good())
 			{
 				fLogRunwiseDeadCells.seekg(0L, ios::beg);
@@ -314,3 +316,4 @@ void ClusterQA_DeadCellCompare(TString suffix = "eps", Int_t mode = 2)
 	cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 	return;
 }
+

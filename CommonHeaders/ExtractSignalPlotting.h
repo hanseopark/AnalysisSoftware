@@ -3829,21 +3829,21 @@
 
                 if (fHistoTrueSignalElectrons != NULL){
                     fHistoTrueSignalElectrons[iPt]->SetMarkerColor(kBlue+2);
-                    fHistoTrueSignalElectrons[iPt]->SetMarkerStyle(20);
+                    fHistoTrueSignalElectrons[iPt]->SetMarkerStyle(33);
                     fHistoTrueSignalElectrons[iPt]->SetMarkerSize(0.5);
                     fHistoTrueSignalElectrons[iPt]->SetLineColor(kBlue+2);
                     fHistoTrueSignalElectrons[iPt]->DrawCopy("same,p,e1");
                 }
 
                 fHistoTrueSignalConvPhotons[iPt]->SetMarkerColor(kCyan+2);
-                fHistoTrueSignalConvPhotons[iPt]->SetMarkerStyle(20);
+                fHistoTrueSignalConvPhotons[iPt]->SetMarkerStyle(27);
                 fHistoTrueSignalConvPhotons[iPt]->SetMarkerSize(0.3);
                 fHistoTrueSignalConvPhotons[iPt]->SetLineColor(kCyan+2);
                 fHistoTrueSignalConvPhotons[iPt]->DrawCopy("same,p,e1");
 
                 if (fHistoTrueSignalMixed != NULL){
                     fHistoTrueSignalMixed[iPt]->SetMarkerColor(kViolet+2);
-                    fHistoTrueSignalMixed[iPt]->SetMarkerStyle(20);
+                    fHistoTrueSignalMixed[iPt]->SetMarkerStyle(24);
                     fHistoTrueSignalMixed[iPt]->SetMarkerSize(0.3);
                     fHistoTrueSignalMixed[iPt]->SetLineColor(kViolet+2);
                     fHistoTrueSignalMixed[iPt]->DrawCopy("same,p,e1");
