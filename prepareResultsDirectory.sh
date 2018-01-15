@@ -24,8 +24,10 @@ elif [ $1 = "nschmidt" ]; then
    PHOTONCONVDIR=/home/nschmidt/AnalysisSoftware
 elif [ $1 = "fjonas" ]; then
    PHOTONCONVDIR=/home/florianjonas/tools/alice/AnalysisSoftware
-elif [ $1 = "amarin" ]; then     
+elif [ $1 = "amarin" ]; then
    PHOTONCONVDIR=/Users/marin/analysis/GIT/AnalysisSoftware
+elif [ $1 = "amechler" ]; then
+   PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR

@@ -131,6 +131,7 @@ void ClusterQA(
             for(Int_t j = 0; j<listInput->GetSize(); j++){
                 TList *listCuts     = (TList*)listInput->At(j);
                 TString nameCuts    = listCuts->GetName();
+                cout << nameCuts.Data() << endl;
                 if(nameCuts.BeginsWith("Cut Number")){
                 nameCuts.Replace(0,11,"");
                 if(i==0) {

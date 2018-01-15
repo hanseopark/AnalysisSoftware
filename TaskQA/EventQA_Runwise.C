@@ -1352,7 +1352,6 @@ void EventQA_Runwise(
             vecRuns.clear();
             fDataSet                = vecDataSet.at(i);
             outputDirDataSet        = Form("%s/%s",outputDir.Data(), DataSets[i].Data());
-            cout << "Reading runs from: " << fileRuns.Data() <<      endl;
 
             if(useDataRunListForMC && i>=nData) {
                 outputDirDataSet    = Form("%s/%s-%s", outputDir.Data(), DataSets[i].Data(),DataSets[0].Data());

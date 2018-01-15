@@ -254,15 +254,15 @@ public:
         fFitRecoPi->SetParLimits(1,0.1,0.2);
 
         if(mode==2){
-        fFitRecoPi->SetParameter(2,0.008);
-        fFitRecoPi->SetParameter(3,0.015);
-        fFitRecoPi->SetParLimits(2,0.005,0.02);
-        fFitRecoPi->SetParLimits(3,0.010,0.04);
-        }else if(mode==4 || mode == 12){
-        fFitRecoPi->SetParameter(2,0.012);
-        fFitRecoPi->SetParameter(3,0.020);
-        fFitRecoPi->SetParLimits(2,0.01,0.03);
-        fFitRecoPi->SetParLimits(3,0.01,0.04);
+            fFitRecoPi->SetParameter(2,0.008);
+            fFitRecoPi->SetParameter(3,0.015);
+            fFitRecoPi->SetParLimits(2,0.005,0.02);
+            fFitRecoPi->SetParLimits(3,0.010,0.04);
+        }else if(mode==4){
+            fFitRecoPi->SetParameter(2,0.012);
+            fFitRecoPi->SetParameter(3,0.020);
+            fFitRecoPi->SetParLimits(2,0.01,0.03);
+            fFitRecoPi->SetParLimits(3,0.01,0.04);
         }else{
             fFitRecoPi->SetParameter(2,0.003);
             fFitRecoPi->SetParameter(3,0.020);
@@ -374,7 +374,6 @@ public:
                 fFitRecoEta->SetParLimits(3,0.005,0.026);
             }
 
-<<<<<<< 1abc59076cfe2d30ff955589f9f7f53db3f8fcc3
             fSignalEta->Draw("");
             fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.45,0.65);
             TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.45,0.65);
@@ -412,68 +411,6 @@ public:
                 ratioEta = (Double_t)	(integralEta-integralEtaBG)/nEventsBin1;
                 ratioEtaErr = sqrt( pow(integralEtaErr/nEventsBin1,2)  + pow( sqrt(nEventsBin1)*(integralEta-integralEtaBG)/pow(nEventsBin1,2),2) );
             }
-=======
-        fFitRecoEta = new TF1("GaussExpLinearEta","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",0.45,0.65);
-        Double_t mesonAmplitudeEta =fSignalEta->GetMaximum();
-        Double_t mesonAmplitudeMinEta  = mesonAmplitudeEta*80./110.;
-        Double_t mesonAmplitudeMaxEta = mesonAmplitudeEta*115./100.;
-
-        fFitRecoEta->SetParameter(0,mesonAmplitudeEta);
-        fFitRecoEta->SetParameter(1,0.540);
-        fFitRecoEta->SetParLimits(0,mesonAmplitudeMinEta,mesonAmplitudeMaxEta);
-        fFitRecoEta->SetParLimits(1,0.45,0.60);
-
-        if(mode==2){
-        fFitRecoEta->SetParameter(2,0.020);
-        fFitRecoEta->SetParameter(3,0.020);
-        fFitRecoEta->SetParLimits(2,0.010,0.040);
-        fFitRecoEta->SetParLimits(3,0.010,0.030);
-        }else if(mode==4 || mode == 12){
-        fFitRecoEta->SetParameter(2,0.030);
-        fFitRecoEta->SetParameter(3,0.025);
-        fFitRecoEta->SetParLimits(2,0.015,0.050);
-        fFitRecoEta->SetParLimits(3,0.010,0.040);
-        }else{
-        fFitRecoEta->SetParameter(2,0.010);
-        fFitRecoEta->SetParameter(3,0.007);
-        fFitRecoEta->SetParLimits(2,0.002,0.050);
-        fFitRecoEta->SetParLimits(3,0.005,0.026);
-        }
-
-        fSignalEta->Draw("");
-        fSignalEta->Fit(fFitRecoEta,"SINRMQEC+","",0.45,0.65);
-        TFitResultPtr resultEta = fSignalEta->Fit(fFitRecoEta,"SINRQMEC+","",0.45,0.65);
-
-        fFitRecoEta->SetLineColor(3);
-        fFitRecoEta->SetLineWidth(1);
-        fFitRecoEta->SetLineStyle(1);
-        fFitRecoEta->Draw("same");
-        canvasMass->SaveAs(Form("%s/Eta_%s.eps",saveCanvas.Data(),name.Data()));
-
-        Double_t integralEta = 0;
-        Double_t integralEtaErr = 0;
-        Double_t integralEtaBG = 0;
-
-        if(doPrint) cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        if(doLog) fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        if(!(TString(gMinuit->fCstatu.Data()).CompareTo("CONVERGED") == 0 || TString(gMinuit->fCstatu.Data()).CompareTo("SUCCESSFUL") == 0) ){
-            if(doPrint) cout << "Fitting failed in with status " << gMinuit->fCstatu.Data() <<endl << endl;
-            if(doLog) fLog << "Fitting failed in with status " << gMinuit->fCstatu.Data() <<endl << endl;
-        } else {
-            CalculateFWHM(fFitRecoEta,0.5,0.57);
-            widthEta = fFWHMFunc;
-            widthEtaErr = fFWHMFuncError;
-            massEta = fFitRecoEta->GetParameter(1);
-            massEtaErr = fFitRecoEta->GetParError(1);
-            if(doPrint) cout << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
-            if(doLog) fLog << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
-
-            integralEta = fFitRecoEta->Integral(0.5,0.57, resultEta->GetParams()) / fSignalEta->GetBinWidth(10);
-            integralEtaErr = fFitRecoEta->IntegralError(0.5,0.57, resultEta->GetParams(), resultEta->GetCovarianceMatrix().GetMatrixArray() ) / fSignalEta->GetBinWidth(10);
-            integralEtaBG = fFitRecoEta->GetParameter(4)*0.57 + fFitRecoEta->GetParameter(5)/2 *0.57*0.57- (fFitRecoEta->GetParameter(4)*0.5 + fFitRecoEta->GetParameter(5)/2 *0.5*0.5);
-            if(doPrint) cout << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
-            if(doLog) fLog << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
->>>>>>> Changes for DCal Analysis
         }
         ratioPi0 = (Double_t)	(integral-integralBG)/nEventsBin1;
         ratioPi0Err = sqrt( pow(integralErr/nEventsBin1,2)  + pow( sqrt(nEventsBin1)*(integral-integralBG)/pow(nEventsBin1,2),2) );
