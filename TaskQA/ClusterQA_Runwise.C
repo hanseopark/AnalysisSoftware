@@ -182,8 +182,7 @@ void ClusterQA_Runwise(
     TString fElectronCutSelection    = "";
     TString fMesonCutSelection       = "";
     if (!isMerged){
-      if( fMode == 12 ) ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection,       fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, 4);
-      else ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
+        ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection, fEventCutSelection, fClusterCutSelection, fMClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
     }

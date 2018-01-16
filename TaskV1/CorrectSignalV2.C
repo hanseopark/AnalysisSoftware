@@ -278,10 +278,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         fEventCutSelection          = fGammaCutSelection(0,7);
         fGammaCutSelection          = fGammaCutSelection(7,fGammaCutSelection.Length()-7);
         cout << fEventCutSelection.Data() << "\t" << fGammaCutSelection.Data() << endl;
-    } else if(mode == 12) {
-        ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection,fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, 4);
-    } else if(mode == 13) {
-        ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection,fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, 2);
     } else {
         ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     }
@@ -331,7 +327,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     TString rapidityRange   = "";
     Double_t deltaRapid     = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
-   // deltaRapid = 0.867082;//needs to be adjusted in ConversionFunction
 
     TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
 

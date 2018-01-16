@@ -182,8 +182,7 @@ void ClusterQA(
         fElectronCutSelection[i]    = "";
         fMesonCutSelection[i]       = "";
         if (!isMerged){
-          if(fMode == 12) ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i],                 fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], 4);
-          else ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
+            ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fGammaCutSelection[i], fClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         } else {
             ReturnSeparatedCutNumberAdvanced(fCutSelection[i], fEventCutSelection[i], fClusterCutSelection[i], fMClusterCutSelection[i], fElectronCutSelection[i], fMesonCutSelection[i], fMode);
         }
