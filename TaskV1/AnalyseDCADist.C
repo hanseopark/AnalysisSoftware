@@ -111,7 +111,7 @@ void AnalyseDCADist(    TString meson           ="",
     }
 
     Bool_t doFitEstimate                    = kTRUE;
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0)
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0)
         doFitEstimate                       = kFALSE;
     else if ( optionPeriod.CompareTo("") != 0 || meson.Contains("Eta"))
         doFitEstimate                       = kFALSE;
@@ -887,14 +887,14 @@ void AnalyseDCADist(    TString meson           ="",
 
         for (Int_t k = 0; k< 5; k++){
             for (Int_t i = 0; i< 3; i++){
-                if (i == 0){
+	         if (i == 0){
                     DrawAutoGammaMesonHistos(   fHistFracIntHistBGvsPt[k][0],
                                                 "", Form("#it{p}_{T,%s} (GeV/#it{c})",fMesonType.Data()), "BG/Total (%)",
                                                 kFALSE, 2.5,1e-8, kFALSE,
                                                 kTRUE, 0, fMaxYFracBGOverIntHist,
                                                 kFALSE, 0., 10.);
-                    fHistFracIntHistBGvsPt[0][0]->GetYaxis()->SetTitleOffset(0.8);
-                }
+                    fHistFracIntHistBGvsPt[k][0]->GetYaxis()->SetTitleOffset(0.75);
+	         }
 
                 DrawGammaSetMarker(fHistFracIntHistBGvsPt[k][i], styleCat[i], 1., colorCat[i], colorCat[i]);
                 fitFracIntHistBGvsPt[k][i]                 = new TF1(Form("fitFracIntHistBGvsPt_%i_%i",k,i),"[0]/pow(x,[1])");
@@ -996,7 +996,13 @@ void AnalyseDCADist(    TString meson           ="",
 
     canvasCorrFrac->cd();
 
-        fHistCorrectionFactorsHist[0]->DrawCopy("e1,p");
+    DrawAutoGammaMesonHistos( fHistCorrectionFactorsHist[0],
+			      "", Form("#it{p}_{T,%s} (GeV/#it{c})",fMesonType.Data()), "Correction factor (%)",
+			      kFALSE, 2.,1e-8, kFALSE,
+			      kTRUE, -1, fMaxYFracBGOverIntHist*0.8,
+			      kFALSE, 0., 10.);
+    fHistCorrectionFactorsHist[0]->GetYaxis()->SetTitleOffset(0.7);
+    fHistCorrectionFactorsHist[0]->DrawCopy("e1,p");
 
         TLegend* legendCorrFractionCatHist = GetAndSetLegend2(0.75,0.94-4*1.1*0.04, 0.93,0.94, 0.04, 1, "", 42, 0.25);
         legendCorrFractionCatHist->AddEntry(fHistCorrectionFactorsHist[0],"Total","p");
@@ -1006,6 +1012,7 @@ void AnalyseDCADist(    TString meson           ="",
             fHistCorrectionFactorsHistCat[0][i]->DrawCopy("same,e1,p");
             legendCorrFractionCatHist->AddEntry(fHistCorrectionFactorsHistCat[0][i],Form("Category %i",i+1),"p");
         }
+
         legendCorrFractionCatHist->Draw();
         labelEnergy->Draw();
         labelMeson->Draw();
