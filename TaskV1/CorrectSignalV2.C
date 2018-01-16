@@ -563,7 +563,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         histoSecAcceptance[j]                       = (TH1D*)fileCorrections->Get(Form("fMCSecPi0From%sAccepPt",nameSecMeson[j].Data()));
         if (histoSecAcceptance[j]){
             if ( (mode == 4 || mode == 12) &&  ( j == 1 || j == 2) ){
-                Double_t    accSec                  = ReturnDeltaEtaCalo(fClusterCutSelection)/deltaRapid*ReturnDeltaPhiCalo(fClusterCutSelection)/(2*TMath::Pi());
+                Double_t    accSec                  = ReturnDeltaEtaCalo(fClusterCutSelection, mode)/deltaRapid*ReturnDeltaPhiCalo(fClusterCutSelection)/(2*TMath::Pi());
                 for (Int_t iPt = histoSecAcceptance[j]->FindBin(minPtMeson); iPt< histoSecAcceptance[j]->GetNbinsX()+1; iPt++ ){
                     histoSecAcceptance[j]->SetBinContent(iPt, accSec);
                     histoSecAcceptance[j]->SetBinError(iPt, accSec*0.1);

@@ -1827,12 +1827,12 @@
 
             TLegend* legendMC  = GetAndSetLegend2(0.62, 0.87-nSignals*0.75*textsizeLabelsPP, 0.9, 0.87, 0.85*textSizeLabelsPixel, 1, "", 43, 0.22);
             legendMC->AddEntry(fHistoTrueSignal,"validated meson","ep");
-            if (mode == 4 || mode == 5){
+            if ((mode == 4 || mode == 12) || mode == 5){
                 legendMC->AddEntry(fHistoTrueSignalPhotons,"val. #gamma#gamma","ep");
                 if (fHistoTrueSignalElectrons != NULL)legendMC->AddEntry(fHistoTrueSignalElectrons,"val. e^{#pm}e^{#pm}","ep");
                 legendMC->AddEntry(fHistoTrueSignalConvPhotons,"val. #gamma_{conv}#gamma_{conv}","ep");
                 if (fHistoTrueSignalMixed != NULL) legendMC->AddEntry(fHistoTrueSignalMixed,"val. #gamma#gamma_{conv}","ep");
-            } else if (mode == 2 || mode == 3) {
+            } else if ((mode == 2 || mode == 13) || mode == 3) {
                 legendMC->AddEntry(fHistoTrueSignalPhotons,"val. #gamma_{conv}#gamma","ep");
                 if (fHistoTrueSignalElectrons != NULL)legendMC->AddEntry(fHistoTrueSignalElectrons,"val. #gamma_{conv}e^{#pm}","ep");
                 legendMC->AddEntry(fHistoTrueSignalConvPhotons,"val. #gamma_{conv}#gamma_{conv}","ep");
@@ -3206,7 +3206,7 @@
 
                             TString nameOfPlot = fHistoMappingSignalInvMassPtBinPlot[iPt]->GetName();
                             Double_t mass;
-                            if(MassArray == NULL){                             
+                            if(MassArray == NULL){
                                 // no array was given by user
                                 mass = fMesonMass[iPt];
                                 if (nameOfPlot.Contains("Left"))
@@ -4405,12 +4405,12 @@
                 fHistoTrueSignalConvPhotons[iPt-1]->SetMarkerSize(3*markersize2);
                 if (fHistoTrueSignalMixed != NULL)fHistoTrueSignalMixed[iPt-1]->SetMarkerSize(3*markersize2);
                 legendMC->AddEntry(fHistoTrueSignal[iPt-1],"validated meson","ep");
-                if (mode == 4 || mode == 5){
+                if ((mode == 4 || mode == 12) || mode == 5){
                     legendMC->AddEntry(fHistoTrueSignalPhotons[iPt-1],"val. #gamma#gamma","ep");
                     if (fHistoTrueSignalElectrons != NULL)legendMC->AddEntry(fHistoTrueSignalElectrons[iPt-1],"val. e^{#pm}e^{#pm}","ep");
                     legendMC->AddEntry(fHistoTrueSignalConvPhotons[iPt-1],"val. #gamma_{conv}#gamma_{conv}","ep");
                     if (fHistoTrueSignalMixed != NULL) legendMC->AddEntry(fHistoTrueSignalMixed[iPt-1],"val. #gamma#gamma_{conv}","ep");
-                } else if (mode == 2 || mode == 3) {
+                } else if ((mode == 2 || mode == 13) || mode == 3) {
                     legendMC->AddEntry(fHistoTrueSignalPhotons[iPt-1],"val. #gamma_{conv}#gamma","ep");
                     if (fHistoTrueSignalElectrons != NULL)legendMC->AddEntry(fHistoTrueSignalElectrons[iPt-1],"val. #gamma_{conv}e^{#pm}","ep");
                     legendMC->AddEntry(fHistoTrueSignalConvPhotons[iPt-1],"val. #gamma_{conv}#gamma_{conv}","ep");
@@ -4595,7 +4595,7 @@
                 fHistoTrueSignalMerged[iPt-1]->SetMarkerSize(3*markersize2);
                 fHistoTrueSignalMergedPartConv[iPt-1]->SetMarkerSize(3*markersize2);
                 legendMC->AddEntry(fHistoTrueSignal[iPt-1],"validated meson","ep");
-                if (mode == 4 || mode == 5){
+                if ((mode == 4 || mode == 12) || mode == 5){
                     legendMC->AddEntry(fHistoTrueSignalMerged[iPt-1],"at least 1 E#it{M}_{merged}","ep");
                     legendMC->AddEntry(fHistoTrueSignalMergedPartConv[iPt-1],"at least 1 E#it{M}_{merged}, part conv","ep");
                 } else {

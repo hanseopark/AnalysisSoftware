@@ -57,7 +57,7 @@ void EventQA(
     //          11 // merged PHOS
     if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
         isConv                          = kTRUE;
-    if (fMode == 2 || fMode == 3 || fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11)
+    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12) || fMode == 5 || fMode == 10 || fMode == 11)
         isCalo                          = kTRUE;
     if (fMode == 10 || fMode == 11)
         isMergedCalo                    = kTRUE;
@@ -235,6 +235,9 @@ void EventQA(
             fClusters       = Form("%s clusters", calo.Data());
         } else if(fClusterCutSelection[0].BeginsWith('2')){
             calo            = "PHOS";
+            fClusters       = Form("%s clusters", calo.Data());
+        } else if(fClusterCutSelection[0].BeginsWith('3')){
+            calo            = "DCal";
             fClusters       = Form("%s clusters", calo.Data());
         } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
     }
@@ -1743,4 +1746,3 @@ void EventQA(
     return;
 
 }//end
-

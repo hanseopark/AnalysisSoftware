@@ -49,11 +49,19 @@ FileWeightingGamma=""
 
 function GiveBinning5TeV()
 {
-     echo "how many p_t bins do you want to use for the pi0? 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c)";
+     echo "how many p_t bins do you want to use for the pi0? 13 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c)";
 
      read answer
      if [ $answer -gt 19 ] && [ $answer -lt 40 ]; then
        echo "$answer bins --> max p_t = XX GeV/c ...";
+       correctPi0=1
+       BinsPtPi0=$answer
+     elif [ $answer = 13 ]; then
+         echo "13 bins --> max p_t = 12??? GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=13
+     elif [ $answer = 19 ]; then
+         echo "19 bins --> max p_t = XX GeV/c ...";
          correctPi0=1
          BinsPtPi0=$answer
      else

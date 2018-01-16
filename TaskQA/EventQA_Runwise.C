@@ -237,6 +237,9 @@ void EventQA_Runwise(
         }else if(fClusterCutSelection.BeginsWith('2')){
             calo                = "PHOS";
             fClusters           = Form("%s clusters", calo.Data());
+        } else if(fClusterCutSelection.BeginsWith('3')){
+            calo                = "DCal";
+            fClusters           = Form("%s clusters", calo.Data());
         }else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
     }
 

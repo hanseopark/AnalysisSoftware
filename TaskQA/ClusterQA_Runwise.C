@@ -227,6 +227,11 @@ void ClusterQA_Runwise(
             nCaloModules            = 5;
             nCaloCells              = 6000;
         }
+    } else if(fClusterCutSelection.BeginsWith('3')){
+        calo                        = "DCal";
+        iCalo                       = 3;
+        nCaloModules                = 18;
+        nCaloCells                  = 18000;
     } else {cout << "No correct calorimeter type found: " << calo.Data() << ", returning..." << endl; return;}
 
 

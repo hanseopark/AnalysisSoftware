@@ -203,7 +203,7 @@
             gammaCutNumber      = objstrGamma->GetString();
             electronCutNumber   = objstrElectron->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        } else if (type == 2){ //PCM-EMCal
+        } else if (type == 2 || type == 13){ //PCM-EMCal (PCM-DCal)
             objstrEvent         = (TObjString*)arr->At(0);
             objstrGamma         = (TObjString*)arr->At(1);
             objstrCluster       = (TObjString*)arr->At(2);
@@ -223,7 +223,7 @@
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        }  else if (type == 4){ //EMCal-EMCal
+        }  else if (type == 4 || type == 12){ //EMCal-EMCal (DCal-DCal)
             objstrEvent         = (TObjString*)arr->At(0);
             objstrCluster       = (TObjString*)arr->At(1);
             objstrMeson         = (TObjString*)arr->At(2);
@@ -293,12 +293,12 @@
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        } else if (type == 12){ // flow
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-
-            eventCutNumber      = objstrEvent->GetString();
-            gammaCutNumber      = objstrGamma->GetString();
+        // } else if (type == 12){ // flow
+        //     objstrEvent         = (TObjString*)arr->At(0);
+        //     objstrGamma         = (TObjString*)arr->At(1);
+        //
+        //     eventCutNumber      = objstrEvent->GetString();
+        //     gammaCutNumber      = objstrGamma->GetString();
 
         }
 
@@ -583,6 +583,10 @@
                 return "mEMC";
             case 11:
                 return "mPHOS";
+            case 12:
+                return "DMC";
+            case 13:
+                return "DMC-PCM";
             case 20:
                 return "Comb";
             // Cases added for omega analysis
@@ -1320,6 +1324,8 @@
                 return -0.3;
             case 7:
                 return -0.4;
+            case 8:
+                return -0.66112;
             default:
                 return 0;
         }
@@ -1346,6 +1352,8 @@
                 return 0.3;
             case 7:
                 return 0.4;
+            case 8:
+                return 0.66112;
             default:
                 return 0;
         }
@@ -1366,6 +1374,8 @@
                 return 2.45;
             case 4:
                 return 4.54;
+            case 5:
+                return 4.5572;
             default:
                 return 0;
         }
@@ -1386,6 +1396,8 @@
                 return 2.10;
             case 4:
                 return 5.59;
+            case 5:
+                return 5.5658;
             default:
                 return 0;
         }
@@ -1410,7 +1422,7 @@
     //************************************************************************************
     //****** Analyzes photon (cluster) eta cut, returns double for normalization *********
     //************************************************************************************
-    Double_t ReturnDeltaEtaCalo(TString caloCutNumber){
+    Double_t ReturnDeltaEtaCalo(TString caloCutNumber, Int_t mode = -1){
 
         TString etaMinCutNumber(caloCutNumber(GetClusterEtaMinCutPosition(caloCutNumber),1));
         TString etaMaxCutNumber(caloCutNumber(GetClusterEtaMaxCutPosition(caloCutNumber),1));
@@ -1418,6 +1430,7 @@
         Float_t minEtaCut   = AnalyseClusterMinEtaCut(CutNumberToInteger(etaMinCutNumber));
         Float_t maxEtaCut   = AnalyseClusterMaxEtaCut(CutNumberToInteger(etaMaxCutNumber));
         Float_t deltaEtaCut = TMath::Abs(minEtaCut) + TMath::Abs(maxEtaCut);
+        if(mode == 12) deltaEtaCut = TMath::Abs(minEtaCut) + TMath::Abs(maxEtaCut) - 2*0.227579;
 
         return deltaEtaCut;
     }
@@ -4353,9 +4366,9 @@
     //************************************************************************************
     Double_t ReturnMeanR(Int_t mode){
         Double_t meanR   = 1.;
-        if(mode == 0 || mode == 2 || mode == 3){
+        if(mode == 0 || (mode == 2 || mode == 13) || mode == 3){
         meanR = 60.;
-        }else if(mode == 4 || mode == 10){
+        }else if((mode == 4 || mode == 12) || mode == 10){
         meanR = 428.;
         }else if(mode == 5 || mode == 11){
         meanR = 460.;

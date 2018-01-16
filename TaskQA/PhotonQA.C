@@ -66,7 +66,7 @@ void PhotonQA(
     //          9 // old output PCM-PCM
     //          10 // merged EMCal
     //          11 // merged PHOS
-    if(fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11){ cout << "Returning, given mode contains no PCM information: " << fMode << endl; return;}
+    if(fMode == 4 || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 12){ cout << "Returning, given mode contains no PCM information: " << fMode << endl; return;}
 
     for(Int_t i=0; i<nSets; i++){
         TFile* fFile = new TFile(pathDataSets[i].Data(),"READ");

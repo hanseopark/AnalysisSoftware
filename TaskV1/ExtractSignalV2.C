@@ -6588,4 +6588,3 @@ void Delete(){
     if (fFileCocktailInput)                                     delete fFileCocktailInput;
 
 }
-
