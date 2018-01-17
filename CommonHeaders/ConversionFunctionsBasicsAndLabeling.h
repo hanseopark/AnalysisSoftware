@@ -3249,6 +3249,23 @@
         return multiplicityString;
     }
 
+    //************************************************************************************
+    //***** Analyzes the photon quality gamma cut, return correct cut label **************
+    //************************************************************************************
+    TString AnalyseHeaderSelection(Int_t eventHeader ){
+        switch(eventHeader) {
+            case 0:
+                return "All headers";
+            case 1:
+                return "only MB header";
+            case 2:
+                return "specified added signal header";
+            case 3:
+                return "only MB header for gamma, specified headers for rest";
+            default:
+                return "header cut not defined";
+        }
+    }
 
     //************************************************************************************
     //******** Analyzes the cluster track matching cuts, return correct cut label ********

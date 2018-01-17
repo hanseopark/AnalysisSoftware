@@ -220,6 +220,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         nameEfficiency                                  = "MesonEffiPt";
         nameMassMC                                      = "histoMassMesonRecMC";
         nameWidthMC                                     = "histoFWHMMesonRecMC";
+        if (optionEnergy.CompareTo("PbPb_2.76TeV")==0){
+            nameMassMC                                  = "histoTrueMassMeson";
+            nameWidthMC                                 = "histoTrueFWHMMeson";
+            nameCorrectedYield                          = "CorrectedYieldTrueEff";
+            nameEfficiency                              = "TrueMe   sonEffiPt";
+        }
     } else if ( (mode == 2 || mode == 3) && !(optionEnergy.CompareTo("8TeV")==0 || optionEnergy.CompareTo("pPb_5.023TeV")==0)){
         cout << "using rec quantities for PCM-EMC/PCM-PHOS" << endl;
         nameMassMC                                      = "histoMassMesonRecMC";
@@ -332,6 +338,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     TString fNLMStringOutput= "";
     TString fMergedClusterCutNrExampl   = "";
     Int_t fNLMmin           = 0;
+    TString fCent           = "";
+    TString fCentOutput     = "";
 
     // put correct color setting for different triggers
     for (Int_t i = 0; i < numberOfTrigg; i++){
@@ -370,14 +378,28 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     fNLMmin                             = 0;
                 }
             }
+            if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
+                fCent                                   = GetCentralityString(fEventCutSelection);
+                fCentOutput                             = GetCentralityStringOutput(fEventCutSelection);
+            }
+        } else {
+            if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
+                fCent                                   = GetCentralityString(cutNumber[i]);
+                fCentOutput                             = GetCentralityStringOutput(cutNumber[i]);
+            }
         }
     }
+
+
 
     // defining output directory
     TString outputDir =    Form("%s/%s/%s/FinalResultsTriggersPatched%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
     if(optionEnergy.CompareTo("900GeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
       if(mode == 4) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_EMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
       if(mode == 2) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_PCMEMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
+    }
+    if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
+        outputDir       = outputDir+fCentOutput;
     }
     gSystem->Exec("mkdir -p "+outputDir);
 

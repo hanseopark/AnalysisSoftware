@@ -1462,7 +1462,7 @@
                     return 8;
                 } else if (mode == 4 || mode == 12 ){
                     scaleFac    = 1.5;
-                    return 10;
+                    return 14;
                 } else
                     return 4;
             } else if( energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("PbPb_5TeV") == 0) {
@@ -1784,7 +1784,8 @@
                         TString   energy,
                         Int_t     mode,
                         Int_t     specialTrigg  =-1,
-                        TString   centrality    = ""
+                        TString   centrality    = "",
+                        TString   minECut       = ""
     ){
 
         Int_t startPtBin = 0;
@@ -1874,6 +1875,28 @@
                     startPtBin     = 1;
                 } else {
                     startPtBin     = 1;
+                }
+            } else if (energy.CompareTo("PbPb_2.76TeV") == 0){
+                if ( mode == 0 ){
+                    startPtBin      = 1;
+                } else if ( mode == 1 ){
+                    startPtBin      = 2;
+                } else if ( mode == 2 || mode == 13 ){
+                    startPtBin      = 4;
+                } else if ( mode == 3 ){
+                    startPtBin      = 3;
+                } else if ( mode == 4 || mode == 12 ){
+                    cout << minECut << endl;
+                    if (minECut.Atoi() != 3)
+                        startPtBin      = 12;
+                    else
+                        startPtBin      = 6;
+                } else if ( mode == 5){
+                    startPtBin      = 4;
+                } else if (mode == 20){
+                    startPtBin      = 1;
+                } else {
+                    startPtBin      = 1;
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
                 if ( mode == 0 ){
@@ -2291,9 +2314,9 @@
                     }
                     fMaxYFracBGOverIntHist              = 50;
                     nIterBGFit                          = 13;
-                    TString optionBGSmoothingStandard   = "BackSmoothing9";
-                    TString optionBGSmoothingVar1       = "BackSmoothing7";
-                    TString optionBGSmoothingVar2       = "BackSmoothing11";
+                    optionBGSmoothingStandard           = "BackSmoothing9";
+                    optionBGSmoothingVar1               = "BackSmoothing7";
+                    optionBGSmoothingVar2               = "BackSmoothing11";
                 }
             //*********************************************************************************************
             //********************************** Pi0 for pp 5TeV*******************************************
@@ -2912,18 +2935,7 @@
                         }
                     }
                 } else {
-                    fStartPtBin     = 1;
-                    if (modi == 5) {
-                        fStartPtBin = 4;
-                    } else if (modi == 4){
-                        fStartPtBin     = 6;
-                    } else if (modi == 2){
-                        fStartPtBin     = 4;
-                    }
-                    if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
-                        fRow++;
-                    if ( (fNBinsPt-fStartPtBin+1) > fColumn*fRow)
-                        fColumn++;
+                    fStartPtBin     = GetStartBin("Pi0", energy, modi, specialTrigg, clusterCutSelection(GetClusterMinEnergyCutPosition(clusterCutSelection),1));
                     if (fNBinsPt > 15 && isDCA) {
                         cout << "You have chosen to have more than 15 bins, this is not possible, it will be reduced to 15" << endl;
                         fNBinsPt    = 15;

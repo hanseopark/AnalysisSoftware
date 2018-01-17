@@ -264,6 +264,9 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         if (cutVariationName.Contains("SpecialTrigg")){
             fTrigger                                            = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
             cutStringsName[i]                                   = AnalyseSpecialTriggerCut(CutNumberToInteger(fTrigger), optionPeriod);
+        } else if (cutVariationName.Contains("HeaderSelection")){
+            TString fHeaderCut                                  = fEventCutSelection(GetEventRejectExtraSignalsCutPosition(),1);
+            cutStringsName[i]                                   = AnalyseHeaderSelection(CutNumberToInteger(fHeaderCut));
         } else if (cutVariationName.Contains("MultiplicityPP")){
             TString minMult                                     = fEventCutSelection(GetEventCentralityMinCutPosition(),1);
             TString maxMult                                     = fEventCutSelection(GetEventCentralityMaxCutPosition(),1);
@@ -413,7 +416,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             TString nameCorrectedYield                          = "CorrectedYieldTrueEff";
             TString nameEfficiency                              = "TrueMesonEffiPt";
             TString nameAcceptance                              = "fMCMesonAccepPt";
-            if ( mode == 4 || mode == 5 ){
+            if ( (mode == 4 || mode == 5 ) && !optionEnergy.Contains("PbPb_2.76TeV")){
                 nameCorrectedYield                              = "CorrectedYieldNormEff";
                 nameEfficiency                                  = "MesonEffiPt";
             }
@@ -1513,7 +1516,14 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                                         kFALSE, 0., 10.);
                 if (mode == 9 || mode == 0 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
                 if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.1);
-                if (mode == 4 || mode == 5 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
+                if (mode == 4 || mode == 5 ){
+                    if (optionEnergy.Contains("PbPb_2.76TeV") && meson.Contains("Pi0") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.4);
+                    else if (optionEnergy.Contains("PbPb_2.76TeV") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
+                    else
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
+                }
                 histoTrueEffiCut[i]->DrawCopy("e1,p");
                 legendEffiMeson->AddEntry(histoTrueEffiCut[i],Form("standard: %s",cutStringsName[i].Data()));
             } else {

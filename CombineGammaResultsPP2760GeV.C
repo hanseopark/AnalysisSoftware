@@ -317,7 +317,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         TGraphAsymmErrors* graphTheoryNLOpp2760GeVCenter  = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonNLOVogelsangInvYieldINT1_2760GeV");
         while(graphTheoryNLODRpp2760GeV->GetX()[graphTheoryNLODRpp2760GeV->GetN()-1] > xmaxNLO) graphTheoryNLODRpp2760GeV->RemovePoint(graphTheoryNLODRpp2760GeV->GetN()-1);
         while(graphTheoryNLODRpp2760GeVCenter->GetX()[graphTheoryNLODRpp2760GeVCenter->GetN()-1] > xmaxNLO) graphTheoryNLODRpp2760GeVCenter->RemovePoint(graphTheoryNLODRpp2760GeVCenter->GetN()-1);
-        while(graphTheoryNLOpp2760GeV->GetX()[graphTheoryNLOpp2760GeV->GetN()-1] > xmaxNLO) graphTheoryNLOpp2760GeV->RemovePoint(graphTheoryNLOpp2760GeV->GetN()-1);
+            while(graphTheoryNLOpp2760GeV->GetX()[graphTheoryNLOpp2760GeV->GetN()-1] > xmaxNLO) graphTheoryNLOpp2760GeV->RemovePoint(graphTheoryNLOpp2760GeV->GetN()-1);
         while(graphTheoryNLOpp2760GeVCenter->GetX()[graphTheoryNLOpp2760GeVCenter->GetN()-1] > xmaxNLO) graphTheoryNLOpp2760GeVCenter->RemovePoint(graphTheoryNLOpp2760GeVCenter->GetN()-1);
         TGraph* graphTheoryNLODRpp2760GeVPaquettCenter  = (TGraph*) fileTheory->Get("DirectPhoton/graphDRNLOPaquett_2760GeV_ALICECocktail");
         TGraph* graphTheoryNLOpp2760GeVPaquettCenter    = (TGraph*) fileTheory->Get("DirectPhoton/graphNLOPaquett_2760GeV");
@@ -2768,6 +2768,10 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory_NonFit.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_DirGamma_IncGamma_Theory_NonFit.pdf",outputDir.Data()));
 
+    // **********************************************************************************************************************
+    // ********************************calculation of InvXSection for combined dir gamma measurement ************************
+    // **********************************************************************************************************************
+
     TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumSystErr       = ScaleGraph( graphCombDirGammaSpectrumNonFitSystErr,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumStatErrPlot   = ScaleGraph( graphCombDirGammaSpectrumNonFitStatErrPlot,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecCombDirGammaNonFitSpectrumStatErr       = ScaleGraph( graphCombDirGammaSpectrumNonFitStatErr,xSection2760GeV*recalcBarn);
@@ -2782,12 +2786,15 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TGraphAsymmErrors* graphXSecTheoryJETPHOXpp2760GeV                  = ScaleGraph( graphTheoryJETPHOXpp2760GeV,xSection2760GeV*recalcBarn);
     TGraphAsymmErrors* graphXSecTheoryJETPHOXpp2760GeVCenter            = ScaleGraph( graphTheoryJETPHOXpp2760GeVCenter,xSection2760GeV*recalcBarn);
 
+    // **********************************************************************************************************************
+    // ******************************** plotting  InvXSection with theory ***************************************************
+    // **********************************************************************************************************************
     TLegend* legendXsecDirGamma        = GetAndSetLegend2(0.68, 0.87-(1*textSizeLabelsRel*0.85), 0.93, 0.87,textSizeLabelsPixel, 1, "", 43, 0.3);
     legendXsecDirGamma->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
 
     TLegend* legendULXSecDirGamma      = GetAndSetLegend2(0.2, 0.12+(4.2*textSizeLabelsRel*0.85), 0.53, 0.12+(5.2*textSizeLabelsRel*0.85),textSizeLabelsPixel,1, "", 43, 0.23);
     legendULXSecDirGamma->SetTextAlign(12);
-    
+
     TH1F * histo2DXSecGamma              = new TH1F("histo2DXSecGamma","histo2DXSecGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
     SetStyleHistoTH1ForGraphs(histo2DXSecGamma, "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3} )",0.035,0.04, 0.035,0.04, 0.9,1.7);
     histo2DXSecGamma->GetYaxis()->SetRangeUser(2e1,7e11);
@@ -2854,10 +2861,13 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         labelALICEDGNormUnPaperAll->Draw();
 
 
-    histo2DYieldGamma->Draw("same,axis");
+    histo2DXSecGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory.pdf",outputDir.Data()));
 
+    // **********************************************************************************************************************
+    // ******************************** plotting  InvXSection with theory and TCM fit ***************************************
+    // **********************************************************************************************************************
     histo2DXSecGamma->Draw("copy");
 
     graphXSecCombIncGammaSys->Draw("E2same");
@@ -2907,9 +2917,63 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         labelALICEDGNormUnPaperAll->Draw();
 
 
-    histo2DYieldGamma->Draw("same,axis");
+    histo2DXSecGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_TCM.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_TCM.pdf",outputDir.Data()));
+
+    // **********************************************************************************************************************
+    // ******************************** plotting  InvXSection with theory only **********************************************
+    // **********************************************************************************************************************
+
+    histo2DXSecGamma->Draw("copy");
+
+    if (graphXSecTheoryNLOpp2760GeV) {
+        // graphXSecTheoryNLOpp2760GeV->Draw("3,same");
+        graphXSecTheoryNLOpp2760GeVCenter->Draw("lX,same");
+    }
+
+    if (graphXSecTheoryNLOpp2760GeVPaquettCenter) {
+        graphXSecTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
+    }
+    if (graphXSecTheoryJETPHOXpp2760GeV) {
+        graphXSecTheoryJETPHOXpp2760GeV->Draw("3,same");
+        graphXSecTheoryJETPHOXpp2760GeVCenter->Draw("lX,same");
+    }
+    legendYieldDirGammaTheo2->Draw();
+    TLatex *labelEnergyYield = new TLatex(0.94, 0.965-0.04*1, collisionSystempp2760GeV.Data());
+    SetStyleTLatex( labelEnergyYield, textSizeLabelsPixel,4, 1, 43, kTRUE, 31);
+    labelEnergyYield->Draw();
+
+    histo2DXSecGamma->Draw("same,axis");
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_Theory.%s",outputDir.Data(),suffix.Data()));
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_Theory.pdf",outputDir.Data()));
+
+    // **********************************************************************************************************************
+    // ******************************** plotting  InvXSection with theory only zoomed ***************************************
+    // **********************************************************************************************************************
+    histo2DXSecGamma->GetYaxis()->SetRangeUser(2e1,7e8);
+    histo2DXSecGamma->Draw("copy");
+
+    if (graphXSecTheoryNLOpp2760GeV) {
+        // graphXSecTheoryNLOpp2760GeV->Draw("3,same");
+        graphXSecTheoryNLOpp2760GeVCenter->Draw("lX,same");
+    }
+
+    if (graphXSecTheoryNLOpp2760GeVPaquettCenter) {
+        graphXSecTheoryNLOpp2760GeVPaquettCenter->Draw("lc,same");
+    }
+    if (graphXSecTheoryJETPHOXpp2760GeV) {
+        graphXSecTheoryJETPHOXpp2760GeV->Draw("3,same");
+        graphXSecTheoryJETPHOXpp2760GeVCenter->Draw("lX,same");
+    }
+    legendYieldDirGammaTheo2->Draw();
+    labelEnergyYield->Draw();
+
+    histo2DXSecGamma->Draw("same,axis");
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_Theory_zoomed.%s",outputDir.Data(),suffix.Data()));
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_Theory_zoomed.pdf",outputDir.Data()));
+
+
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
     // Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
     Style_t     cocktailColorPartialSums[14]                   = {kBlue+1,  kRed+1,   kOrange-2,  kGreen-2,   kPink-2,
@@ -2923,15 +2987,27 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TGraphAsymmErrors* graphGammaFractionsCocktailPartialSums[14][11];
     TGraphAsymmErrors* graphGammaFractionsCocktailBand[14];
     TGraphAsymmErrors* graphGammaFractionsCocktailPartialSumsBand[14];
+    TH1D* histoGammaSpectraCocktail[14][11];
+    TGraphAsymmErrors* graphGammaSpectraCocktail[14][11];
+    TH1D* histoGammaSpectraCocktailPartialSums[14][11];
+    TGraphAsymmErrors* graphGammaSpectraCocktailPartialSums[14][11];
+    TGraphAsymmErrors* graphGammaSpectraCocktailBand[14];
+    TGraphAsymmErrors* graphGammaSpectraCocktailPartialSumsBand[14];
     for(Int_t i=0;i<14;i++){
         for(Int_t j=0;j<11;j++){
             histoGammaFractionsCocktail[i][j]= NULL;
             graphGammaFractionsCocktail[i][j]= NULL;
             histoGammaFractionsCocktailPartialSums[i][j]= NULL;
             graphGammaFractionsCocktailPartialSums[i][j]= NULL;
+            histoGammaSpectraCocktail[i][j]= NULL;
+            graphGammaSpectraCocktail[i][j]= NULL;
+            histoGammaSpectraCocktailPartialSums[i][j]= NULL;
+            graphGammaSpectraCocktailPartialSums[i][j]= NULL;
         }
         graphGammaFractionsCocktailBand[i]= NULL;
         graphGammaFractionsCocktailPartialSumsBand[i]= NULL;
+        graphGammaSpectraCocktailBand[i]= NULL;
+        graphGammaSpectraCocktailPartialSumsBand[i]= NULL;
     }
     TFile* fileCocktailGamma2760GeV                    = new TFile( inputFileNameCocktail.Data());
     directoryCocktailpp2760GeV[0]       = (TDirectory*)fileCocktailGamma2760GeV->Get("2.76TeV_PCM");
@@ -2941,12 +3017,17 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     for(Int_t k=0;k<11;k++){
         if(directoryCocktailpp2760GeV[k]){
             for(Int_t i=0;i<14;i++){
-                // histoGammaFractionsCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_OrBin_RatioToAll",fParticle[i].Data()));
-                histoGammaFractionsCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_RatioToAll_Rebin",fParticle[i].Data()));
-                graphGammaFractionsCocktail[i][k] = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
+                histoGammaFractionsCocktail[i][k]               = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt_RatioToAll_Rebin",fParticle[i].Data()));
+                graphGammaFractionsCocktail[i][k]               = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
                 if(k==5)
-                    graphGammaFractionsCocktailBand[i] = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
-                histoGammaFractionsCocktailPartialSums[i][k] = histoGammaFractionsCocktail[i][k];
+                    graphGammaFractionsCocktailBand[i]          = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
+                histoGammaFractionsCocktailPartialSums[i][k]    = histoGammaFractionsCocktail[i][k];
+
+                histoGammaSpectraCocktail[i][k]                 = (TH1D*) directoryCocktailpp2760GeV[k]->Get(Form("Gamma_From_%s_Pt",fParticle[i].Data()));
+                graphGammaSpectraCocktail[i][k]                 = new TGraphAsymmErrors(histoGammaSpectraCocktail[i][k]);
+                if(k==5)
+                    graphGammaSpectraCocktailBand[i]            = new TGraphAsymmErrors(histoGammaFractionsCocktail[i][k]);
+                histoGammaSpectraCocktailPartialSums[i][k]      = histoGammaSpectraCocktail[i][k];
             }
         }
     }
@@ -2982,6 +3063,38 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         while(graphGammaFractionsCocktailBand[i]->GetX()[0] < 0.2) graphGammaFractionsCocktailBand[i]->RemovePoint(0);
     }
+
+    newBinErrorLow  = 0.;
+    newBinErrorHigh  = 0.;
+    lowChanged=kFALSE;
+    highChanged=kFALSE;
+
+    for(Int_t i=0;i<14;i++){
+        for(Int_t k = 0; k <= graphGammaSpectraCocktail[i][5]->GetN()-1; k++){
+            newBinErrorLow        = graphGammaSpectraCocktail[i][5]->GetY()[k]-graphGammaSpectraCocktail[i][5]->GetEYlow()[k];
+            newBinErrorHigh       = graphGammaSpectraCocktail[i][5]->GetY()[k]+graphGammaSpectraCocktail[i][5]->GetEYhigh()[k];
+            lowChanged=kFALSE;
+            highChanged=kFALSE;
+            for(Int_t j=0;j<11;j++){
+                if(graphGammaSpectraCocktail[i][j]){
+                    if((newBinErrorLow-graphGammaSpectraCocktail[i][j]->GetY()[k]-graphGammaSpectraCocktail[i][j]->GetEYlow()[k])>0){
+                        newBinErrorLow = graphGammaSpectraCocktail[i][j]->GetY()[k]-graphGammaSpectraCocktail[i][j]->GetEYlow()[k];
+                        lowChanged = kTRUE;
+                    }
+                    if((newBinErrorHigh-(graphGammaSpectraCocktail[i][j]->GetY()[k]+graphGammaSpectraCocktail[i][j]->GetEYlow()[k]))<0){
+                        newBinErrorHigh = graphGammaSpectraCocktail[i][j]->GetY()[k]+graphGammaSpectraCocktail[i][j]->GetEYhigh()[k];
+                        highChanged=kTRUE;
+                    }
+                }
+            }
+            if(lowChanged)
+                graphGammaSpectraCocktailBand[i]->SetPointEYlow(k,     graphGammaSpectraCocktail[i][5]->GetY()[k]-newBinErrorLow);
+            if(highChanged)
+                graphGammaSpectraCocktailBand[i]->SetPointEYhigh(k,     newBinErrorHigh-graphGammaSpectraCocktail[i][5]->GetY()[k]);
+        }
+        while(graphGammaSpectraCocktailBand[i]->GetX()[0] < 0.2) graphGammaSpectraCocktailBand[i]->RemovePoint(0);
+    }
+
 
     TCanvas *canvasGammasRatio2                                 = new TCanvas("canvasGammasRatio2","",1100,1200);
     DrawGammaCanvasSettings(canvasGammasRatio2, 0.12, 0.01, 0.01, 0.075);
@@ -3066,36 +3179,78 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
     }
 
+    for(Int_t j=0;j<11;j++){
+        if(histoGammaSpectraCocktail[0][j]){
+            for(Int_t i=0;i<14;i++){
+                if(i==5||i==8){
+                    histoGammaSpectraCocktailPartialSums[i][j]->Sumw2();
+                    histoGammaSpectraCocktailPartialSums[i+1][j]->Sumw2();
+                    histoGammaSpectraCocktailPartialSums[i][j]->Add(histoGammaSpectraCocktail[i+1][j]);
+                }
+                if(i==6||i==9)
+                    histoGammaSpectraCocktailPartialSums[i][j] = NULL;
+                if(histoGammaSpectraCocktailPartialSums[i][j])
+                    graphGammaSpectraCocktailPartialSums[i][j] = new TGraphAsymmErrors(histoGammaSpectraCocktailPartialSums[i][j]);
+                if(histoGammaSpectraCocktailPartialSums[i][j]&&j==5)
+                    graphGammaSpectraCocktailPartialSumsBand[i] = new TGraphAsymmErrors(histoGammaSpectraCocktailPartialSums[i][j]);
+
+            }
+        }
+    }
+    for(Int_t i=0;i<14;i++){
+        if(graphGammaSpectraCocktailPartialSums[i][5]){
+            for(Int_t k = 0; k <= graphGammaSpectraCocktailPartialSums[i][5]->GetN()-1; k++){
+                cout << i << "\t" << k<< endl;
+                newBinErrorLow        = graphGammaSpectraCocktailPartialSums[i][5]->GetY()[k]-graphGammaSpectraCocktailPartialSums[i][5]->GetEYlow()[k];
+                newBinErrorHigh       = graphGammaSpectraCocktailPartialSums[i][5]->GetY()[k]+graphGammaSpectraCocktailPartialSums[i][5]->GetEYhigh()[k];
+                lowChanged=kFALSE;
+                highChanged=kFALSE;
+                for(Int_t j=0;j<11;j++){
+                    if(graphGammaSpectraCocktailPartialSums[i][j]){
+                        if((newBinErrorLow-graphGammaSpectraCocktailPartialSums[i][j]->GetY()[k]-graphGammaSpectraCocktailPartialSums[i][j]->GetEYlow()[k])>0){
+                            newBinErrorLow = graphGammaSpectraCocktailPartialSums[i][j]->GetY()[k]-graphGammaSpectraCocktailPartialSums[i][j]->GetEYlow()[k];
+                            lowChanged = kTRUE;
+                        }
+                        if((newBinErrorHigh-(graphGammaSpectraCocktailPartialSums[i][j]->GetY()[k]+graphGammaSpectraCocktailPartialSums[i][j]->GetEYlow()[k]))<0){
+                            newBinErrorHigh = graphGammaSpectraCocktailPartialSums[i][j]->GetY()[k]+graphGammaSpectraCocktailPartialSums[i][j]->GetEYhigh()[k];
+                            highChanged=kTRUE;
+                        }
+                    }
+                }
+                if(lowChanged)
+                    graphGammaSpectraCocktailPartialSumsBand[i]->SetPointEYlow(k,     graphGammaSpectraCocktailPartialSums[i][5]->GetY()[k]-newBinErrorLow);
+                if(highChanged)
+                    graphGammaSpectraCocktailPartialSumsBand[i]->SetPointEYhigh(k,     newBinErrorHigh-graphGammaSpectraCocktailPartialSums[i][5]->GetY()[k]);
+            }
+            while(graphGammaSpectraCocktailPartialSumsBand[i]->GetX()[0] < 0.2) graphGammaSpectraCocktailPartialSumsBand[i]->RemovePoint(0);
+        }
+    }
 
     dummyHist->Draw();
     legendGammasRatio2->Clear();
     legendGammasRatio2                                 = GetAndSetLegend2(0.3, 0.90-(40*1.15*(2)/1200), 1.03, 0.90, 46, 6);
     // legendGammasRatio2->SetHeader("#gamma from");
     for (Int_t i=0; i<14; i++) {
-        if (histoGammaFractionsCocktailPartialSums[i][0]) {
+        if (graphGammaFractionsCocktailPartialSums[i][5]) {
             cout << i << " being plotted - particle " << fParticleLatexPartialSums[i].Data() << endl;
-            DrawGammaSetMarker(             histoGammaFractionsCocktailPartialSums[i][5], cocktailMarker[i], 1, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
-            histoGammaFractionsCocktailPartialSums[i][5]->SetLineWidth(3);
-            if(i!=8)
-                legendGammasRatio2->AddEntry(   histoGammaFractionsCocktailPartialSums[i][5], fParticleLatexPartialSums[i].Data(), "l");
-            // if(i<4)
+            DrawGammaSetMarkerTGraphAsym(            graphGammaFractionsCocktailPartialSums[i][5], cocktailMarker[i], 1, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
+            DrawGammaSetMarkerTGraphAsym(            graphGammaFractionsCocktailPartialSumsBand[i], cocktailMarker[i], 1, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
+            graphGammaFractionsCocktailPartialSums[i][5]->SetLineWidth(3);
+            graphGammaFractionsCocktailPartialSumsBand[i]->SetLineWidth(3);
+            graphGammaFractionsCocktailPartialSumsBand[i]->SetLineColor(cocktailColorPartialSums[i]);
             graphGammaFractionsCocktailPartialSumsBand[i]->SetFillColor(cocktailColorPartialSums[i]);
-            // else
-            // graphGammaFractionsCocktailPartialSumsBand[i]->SetFillColorAlpha(cocktailColorPartialSums[i],0.7);
-            graphGammaFractionsCocktailPartialSumsBand[i]->SetFillStyle(4050);
-
-            if(i==5)  // continue to draw rho above phi
-                continue;
-
+            if (i < 4 || i == 7 || i == 8 || i == 9 || i == 10)
+                graphGammaFractionsCocktailPartialSumsBand[i]->SetFillStyle(1001);
+            else if (i == 5 || i == 11 )
+                graphGammaFractionsCocktailPartialSumsBand[i]->SetFillStyle(3244);
+            else
+                graphGammaFractionsCocktailPartialSumsBand[i]->SetFillStyle(3115);
+            if(i!=8)
+                legendGammasRatio2->AddEntry(   graphGammaFractionsCocktailPartialSums[i][5], fParticleLatexPartialSums[i].Data(), "l");
             graphGammaFractionsCocktailPartialSumsBand[i]->Draw("3same");
-            if(i==7)
-                graphGammaFractionsCocktailPartialSumsBand[5]->Draw("3same");
-
-            if(i<4)
-                graphGammaFractionsCocktailPartialSumsBand[i]->Draw("LXsame");
         }
     }
-    legendGammasRatio2->AddEntry(   histoGammaFractionsCocktailPartialSums[8][5], fParticleLatexPartialSums[8].Data(), "l");
+    legendGammasRatio2->AddEntry(   graphGammaFractionsCocktailPartialSums[8][5], fParticleLatexPartialSums[8].Data(), "l");
     legendGammasRatio2->Draw("same");
     TLatex* labelALICECocktailPlot   = new TLatex(0.16,0.92,"ALICE simulation");
     SetStyleTLatex( labelALICECocktailPlot, 46, 4, 1, 43, kTRUE, 41);
@@ -3125,6 +3280,72 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     labelEnergyCocktailPlot->Draw();
     labelGammaFromCocktailPlot->Draw();
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSumsCentral.%s",outputDir.Data(),suffix.Data()));
+
+
+    dummyHist->GetYaxis()->SetRangeUser(3e-3,5);
+    dummyHist->Draw();
+    for (Int_t i=0; i<14; i++) {
+        if (graphGammaFractionsCocktailPartialSums[i][5]) {
+            cout << i << " being plotted - particle " << fParticleLatexPartialSums[i].Data() << endl;
+            graphGammaFractionsCocktailPartialSumsBand[i]->Draw("3same");
+        }
+    }
+    legendGammasRatio2->Draw("same");
+    labelALICECocktailPlot->Draw();
+    labelEnergyCocktailPlot->Draw();
+    labelGammaFromCocktailPlot->Draw();
+    dummyHist->Draw("same,axis");
+
+    canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums_zoomed.%s",outputDir.Data(),suffix.Data()));
+
+    TCanvas *canvasGammaSpectra                     = new TCanvas("canvasGammaSpectra","",1100,1200);
+    DrawGammaCanvasSettings(canvasGammaSpectra, 0.15, 0.01, 0.01, 0.075);
+    canvasGammaSpectra->SetLogy();
+    canvasGammaSpectra->SetLogx();
+    TLegend* legendGammaSpectra                     = GetAndSetLegend2(0.3, 0.96-(40*1.15*(2+1)/1200), 1.03, 0.96, 46, 6);
+    legendGammaSpectra->SetHeader("#gamma from");
+    TH1D* dummyHistSpectra                          = new TH1D("dummyHistSpectra", "", 1000,  0.25, 20);
+    SetHistogramm(dummyHistSpectra, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
+                  1e-12, 3e2, 1.0, 1.6);
+    dummyHistSpectra->SetLabelOffset(-0.013, "X");
+    dummyHistSpectra->SetTitleOffset(0.8, "X");
+    dummyHistSpectra->GetYaxis()->SetTitleFont(62);
+    dummyHistSpectra->GetXaxis()->SetTitleFont(62);
+    dummyHistSpectra->Draw();
+
+    for (Int_t i=0; i<14; i++) {
+        if (graphGammaSpectraCocktailPartialSums[i][5]){
+            while (graphGammaSpectraCocktailPartialSums[i][5]->GetX()[graphGammaSpectraCocktailPartialSums[i][5]->GetN()-1] > 20 )
+                graphGammaSpectraCocktailPartialSums[i][5]->RemovePoint(graphGammaSpectraCocktailPartialSums[i][5]->GetN()-1);
+            while (graphGammaSpectraCocktailPartialSumsBand[i]->GetX()[graphGammaSpectraCocktailPartialSumsBand[i]->GetN()-1] > 20 )
+                graphGammaSpectraCocktailPartialSumsBand[i]->RemovePoint(graphGammaSpectraCocktailPartialSumsBand[i]->GetN()-1);
+            cout << i << " being plotted - particle " << fParticleLatexPartialSums[i].Data() << endl;
+            DrawGammaSetMarkerTGraphAsym(            graphGammaSpectraCocktailPartialSums[i][5], cocktailMarker[i], 1, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
+            DrawGammaSetMarkerTGraphAsym(            graphGammaSpectraCocktailPartialSumsBand[i], cocktailMarker[i], 1, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
+            graphGammaSpectraCocktailPartialSums[i][5]->SetLineWidth(3);
+            graphGammaSpectraCocktailPartialSumsBand[i]->SetLineWidth(3);
+            graphGammaSpectraCocktailPartialSumsBand[i]->SetLineColor(cocktailColorPartialSums[i]);
+            graphGammaSpectraCocktailPartialSumsBand[i]->SetFillColor(cocktailColorPartialSums[i]);
+            if (i < 4 || i == 7 || i == 8 || i == 9 || i == 10)
+                graphGammaSpectraCocktailPartialSumsBand[i]->SetFillStyle(1001);
+            else if (i == 5 || i == 11 )
+                graphGammaSpectraCocktailPartialSumsBand[i]->SetFillStyle(3244);
+            else
+                graphGammaSpectraCocktailPartialSumsBand[i]->SetFillStyle(3115);
+
+            if(i!=8)
+                legendGammaSpectra->AddEntry(   graphGammaSpectraCocktailPartialSums[i][5], fParticleLatexPartialSums[i].Data(), "l");
+            graphGammaSpectraCocktailPartialSumsBand[i]->Draw("3same");
+        }
+    }
+    legendGammaSpectra->AddEntry(   graphGammaFractionsCocktailPartialSums[8][5], fParticleLatexPartialSums[8].Data(), "l");
+    legendGammaSpectra->Draw("same");
+    PutProcessLabelAndEnergyOnPlot(                 0.19, 0.22, 40, "", collisionSystempp2760GeV.Data(), "", 43, 0.03);
+    PutALICESimulationLabel(                   0.19, 0.15, 40, 0.03, 1.25, 43);
+    dummyHistSpectra->Draw("same,axis");
+
+    canvasGammaSpectra->SaveAs(Form("%s/CocktailGammasSpectraWithBand.%s",outputDir.Data(),suffix.Data()));
+
 
     // ****************************************************************************************************************
     // ************************** Store final results including corr factors in 1 file ********************************
