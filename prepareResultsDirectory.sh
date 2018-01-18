@@ -58,6 +58,11 @@ if [ $1 = "leardini" ]; then
 	ln -sf $PHOTONCONVDIR/LHC11hExternalInputs/* LHC11hExternalInputs/
 fi
 
+if [ $1 = "mdanisch" ]; then
+    mkdir -p TaskQA/ExampleConfigurations
+    ln -sf $PHOTONCONVDIR/TaskQA/ExampleConfigurations/*LHC15o*.txt TaskQA/ExampleConfigurations/
+fi
+
 ln -sf $PHOTONCONVDIR/*.eps .
 ln -sf $PHOTONCONVDIR/*.C .
 ln -sf $PHOTONCONVDIR/*.h .
@@ -108,7 +113,7 @@ elif [ $2 = "pp13TeV" ]; then
 elif [ $2 = "PbPb5TeV" ]; then
     rm *PP*
     rm *pp*
-    rm *pPb*
+    rm -r *pPb*
     rm *900G*
     rm *2760*
     rm *7TeV*
