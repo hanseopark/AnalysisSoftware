@@ -1,0 +1,11 @@
+select  LHC15o
+mode    0
+nSets   2
+cutNr   0
+labelData   Data
+energy  PbPb_5.02TeV
+pathDataSets    /home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_270_list1_train355.root /home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/GammaConvV1_270_MC_HighIRMerged.root MC file> STOP
+pathPhotonQA    /home/meike/analysis/data/GridOutput/PhotonQA/PbPb/ESD/LHC15o/PhotonQA_LHC15o.root /home/meike/analysis/data/GridOutput/PhotonQA/PbPb/ESD/LHC16g1/PhotonQA_LHC16g1.root STOP
+DataSetNames    LHC15o  LHC16g1  STOP
+DataSetNamesPlot LHC15o  LHC16g1  STOP
+addPhotonCutNr	 0005314140
