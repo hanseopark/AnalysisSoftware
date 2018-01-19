@@ -70,6 +70,7 @@
     Double_t            bin_shift_x(TF1 *, Double_t , Double_t , Double_t );
     Int_t               GetBinning(TObject *, Double_t* );
     TString             AutoDetectMainTList(Int_t);
+    TString             AutoDetectTreeList(TList*);
     TH1D*               GetUpperLimitsHisto(  TH1D*, TGraphAsymmErrors*, Double_t, Double_t, Int_t );
     Double_t            GetUpperLimit( Double_t, Double_t, Double_t, Double_t, Double_t&, Double_t, Int_t );
     void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*& ,Bool_t ,TString);
@@ -4593,6 +4594,20 @@
             return mainDir;
         else
             return "";
+    }
+
+    TString AutoDetectTreeList(TList* fList){
+        TString listName = "";
+        TString nominalListName = "TreeList";
+	TList *readList = (TList*)fList->Last();
+	listName = readList->GetName();
+	if (listName.Contains(nominalListName)) {
+	  cout << Form("-> found : %s",listName.Data()) << endl;
+	  return listName;
+	} else {
+	  cout << "Could not find list named *TreeList* as last object of main list" << endl;
+	  return "";
+	}
     }
 
     // ****************************************************************************************************************

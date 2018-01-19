@@ -290,8 +290,11 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
         mainList                    = (TList*)f->Get(Form("GammaConv_V1QA_%s",fCutSelection.Data()));
     }
     if (!mainList) cout << "main List not found" << endl;
-    TList* treeList                 = (TList*)mainList->FindObject("TreeList");
+
+    TString autoDetectedTreeList    = AutoDetectTreeList(mainList);
+    TList* treeList                 = (TList*)mainList->FindObject(autoDetectedTreeList.Data());
     if (!treeList) cout << "Tree List not found" << endl;
+
     TList* ESDQADirectory           = (TList*)mainList->FindObject("ESD QA");
     if (!ESDQADirectory){
     cout << "ESDQADirectory List not found" << endl;}
