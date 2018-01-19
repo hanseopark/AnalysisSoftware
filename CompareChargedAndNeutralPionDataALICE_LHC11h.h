@@ -11,7 +11,7 @@
 	TGraphErrors* graphChargedPionSpecHighPtStat0010LHC11hHighPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecHighPtSyst0010LHC11hHighPtPCM 	= NULL;
 	TGraphErrors* graphYieldPCMStatPi00010LHC11hRebinnedLowPtPCM 		= NULL;
-	TGraphErrors* graphYieldPCMSysPi00010LHC11hRebinnedLowPtPCM 		= NULL;   
+	TGraphErrors* graphYieldPCMSysPi00010LHC11hRebinnedLowPtPCM 		= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtStat0010LHC11hLowPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtSyst0010LHC11hLowPtPCM 	= NULL;
 	TGraphErrors* graphYieldPCMStatPi02040LHC11hRebinnedHighPtPCM 	= NULL;
@@ -19,7 +19,7 @@
 	TGraphErrors* graphChargedPionSpecHighPtStat2040LHC11hHighPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecHighPtSyst2040LHC11hHighPtPCM 	= NULL;
 	TGraphErrors* graphYieldPCMStatPi02040LHC11hRebinnedLowPtPCM 		= NULL;
-	TGraphErrors* graphYieldPCMSysPi02040LHC11hRebinnedLowPtPCM 		= NULL;   
+	TGraphErrors* graphYieldPCMSysPi02040LHC11hRebinnedLowPtPCM 		= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtStat2040LHC11hLowPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtSyst2040LHC11hLowPtPCM 	= NULL;
     TGraphErrors* graphYieldEMCalStatPi00010LHC11hRebinnedHighPtEMCal   = NULL;
@@ -60,7 +60,64 @@
     TGraphErrors* graphYieldEMCalSysEta0010LHC11hFullPtPtEMCal    = NULL;
     TGraphErrors* graphChargedKaonSpecFullPtStat0010LHC11hFullPtEMCal   = NULL;
     TGraphErrors* graphChargedKaonSpecFullPtSyst0010LHC11hFullPtEMCal   = NULL;
-    
+
+	TGraphErrors* graphChargedPionSpec5TeVStat0010LHC11hFullPtComb 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVSyst0010LHC11hFullPtComb 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVStat0010LHC11hFullPtPCM 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVSyst0010LHC11hFullPtPCM 		= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVStat2040LHC11hFullPtPCM 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVSyst2040LHC11hFullPtPCM 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVStat2050LHC11hFullPtPCM 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVSyst2050LHC11hFullPtPCM 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVStat0010LHC11hFullPtEMCal 	= NULL;
+	TGraphErrors* graphChargedPionSpec5TeVSyst0010LHC11hFullPtEMCal 	= NULL;
+	TGraphErrors* graphChargedKaonSpec5TeVStat0010LHC11hFullPtComb 	= NULL;
+	TGraphErrors* graphChargedKaonSpec5TeVSyst0010LHC11hFullPtComb 	= NULL;
+	TGraphErrors* graphChargedKaonSpec5TeVStat0010LHC11hFullPtPCM 	= NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVSyst0010LHC11hFullPtPCM     = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVStat2040LHC11hFullPtPCM  = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVSyst2040LHC11hFullPtPCM    = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVStat2050LHC11hFullPtPCM    = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVSyst2050LHC11hFullPtPCM        = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVStat0010LHC11hFullPtEMCal     = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVSyst0010LHC11hFullPtEMCal     = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVStat2050LHC11hFullPtEMCal   = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVSyst2050LHC11hFullPtEMCal        = NULL;
+    TGraphErrors* graphChargedPionSpec5TeVStat2050LHC11hFullPtComb    = NULL;
+    TGraphErrors* graphChargedPionSpec5TeVSyst2050LHC11hFullPtComb    = NULL;
+
+    TGraphErrors* graphChargedPionSpecFullPtSyst2050LHC11hFullPtEMCal    = NULL;
+    TGraphErrors* graphChargedPionSpecFullPtStat2050LHC11hFullPtEMCal    = NULL;
+    TGraphErrors* graphYieldPCMSysPi02050LHC11hFullPtPtPCM   = NULL;
+    TGraphErrors* graphYieldPCMStatPi02050LHC11hFullPtPtPCM        = NULL;
+    TGraphErrors* graphChargedPionSpecFullPtSyst2050LHC11hFullPtPCM    = NULL;
+    TGraphErrors* graphChargedPionSpecFullPtStat2050LHC11hFullPtPCM    = NULL;
+    TGraphErrors* graphChargedPionSpecFullPtStat2050LHC11hFullPtComb    = NULL;
+    TGraphErrors* graphChargedPionSpecFullPtSyst2050LHC11hFullPtComb    = NULL;
+    TGraphErrors* graphYieldCombStatPi02050LHC11hFullPtPtComb    = NULL;
+    TGraphErrors* graphYieldCombSysPi02050LHC11hFullPtPtComb        = NULL;
+    TGraphErrors* graphYieldEMCalStatPi02050LHC11hFullPtPtEMCal     = NULL;
+    TGraphErrors* graphYieldEMCalSysPi02050LHC11hFullPtPtEMCal     = NULL;
+    TGraphErrors* graphChargedPionSpec5TeVStat2050LHC11hFullPtEMCal   = NULL;
+    TGraphErrors* graphChargedPionSpec5TeVSyst2050LHC11hFullPtEMCal        = NULL;
+    TGraphErrors* graphYieldPCMStatEta2050LHC11hFullPtPtPCM    = NULL;
+    TGraphErrors* graphYieldPCMSysEta2050LHC11hFullPtPtPCM    = NULL;
+    TGraphErrors* graphYieldEMCalStatEta2050LHC11hFullPtPtEMCal   = NULL;
+    TGraphErrors* graphYieldEMCalSysEta2050LHC11hFullPtPtEMCal        = NULL;
+    TGraphErrors* graphRatioFullPtChargedPionsEMCal2050LHC11h    = NULL;
+    TGraphErrors* graphRatioFullPtChargedPionsPCM2050LHC11h    = NULL;
+
+    TGraphErrors* graphYieldCombStatEta2050LHC11hFullPtPtComb     = NULL;
+    TGraphErrors* graphYieldCombSysEta2050LHC11hFullPtPtComb     = NULL;
+    TGraphErrors* graphChargedKaonSpecFullPtStat2050LHC11hFullPtComb   = NULL;
+    TGraphErrors* graphChargedKaonSpecFullPtSyst2050LHC11hFullPtComb        = NULL;
+    TGraphErrors* graphChargedKaonSpecFullPtStat2050LHC11hFullPtPCM    = NULL;
+    TGraphErrors* graphChargedKaonSpecFullPtSyst2050LHC11hFullPtPCM    = NULL;
+    TGraphErrors* graphChargedKaonSpecFullPtStat2050LHC11hFullPtEMCal   = NULL;
+    TGraphErrors* graphChargedKaonSpecFullPtSyst2050LHC11hFullPtEMCal        = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVStat2050LHC11hFullPtComb    = NULL;
+    TGraphErrors* graphChargedKaonSpec5TeVSyst2050LHC11hFullPtComb    = NULL;
+
     TGraphErrors *graphRatioFullPtChargedPionsComb2040 = NULL;
     TGraphErrors* graphRatioLowPtChargedPionsComb2040  = NULL;
     TGraphErrors* graphRatioHighPtChargedPionsComb2040  = NULL;
@@ -70,25 +127,26 @@
     TGraphErrors* graphRatioLowPtChargedPionsPHOS2040  = NULL;
     TGraphErrors* graphRatioFullPtChargedPionsPCM2040  = NULL;
 
-    	
+
 	Double_t xSection2760GeVpp 			= 55.416*1e-3;
 	Double_t xSection2760GeVErrpp 		= 3.9;
 	Double_t xSection2760GeVppINEL 		= 62.8*1e9;
 	Double_t xSection900GeVppINEL 		= 52.5*1e9;
-	Double_t xSection7TeVppINEL 		= 73.2*1e9;	
-	
-	TString collisionSystemPP 		= "pp #sqrt{#it{s}} = 2.76 TeV";		
-	TString collisionSystemCent10 	= "0-10% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemCent0 	= "0-5% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemCent1 	= "5-10% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemCent2 	= "10-20% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemCent 	= "0-20% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemSemiCent = "20-40% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemSemiPer 	= "40-60% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
-	TString collisionSystemPer 		= "60-80% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";		
+	Double_t xSection7TeVppINEL 		= 73.2*1e9;
+
+	TString collisionSystemPP 		= "pp #sqrt{#it{s}} = 2.76 TeV";
+	TString collisionSystemCent10 	= "0-10% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemCent0 	= "0-5% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemCent1 	= "5-10% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemCent2 	= "10-20% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemCent 	= "0-20% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemSemiCent = "20-40% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystem2050 = "20-50% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemSemiPer 	= "40-60% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
+	TString collisionSystemPer 		= "60-80% Pb-Pb #sqrt{s_{_{NN}}} = 2.76 TeV";
 
 	Style_t markerStyleCombLowPt	= 20;
-	Style_t markerStyleCombHighPt	= 20;	
+	Style_t markerStyleCombHighPt	= 20;
 	Style_t markerStylePCMLowPt		= 20;
 	Style_t markerStylePCMHighPt	= 21;
 	Style_t markerStylePHOSLowPt	= 20;
@@ -105,7 +163,7 @@
 	Style_t markerStylePCMEMCALHighPt	= 21;
 	Style_t markerStylePCMPHOSLowPt	= 20;
 	Style_t markerStylePCMPHOSHighPt= 21;
-	
+
 	Size_t markerSizeComparison = 1.5;
 
 	Color_t colorCombLowPt 			= GetDefaultColorDiffDetectors("Comb", kFALSE, kFALSE, kFALSE);
@@ -122,7 +180,7 @@
 	Color_t colorPCMEMCALHighPt 	= GetDefaultColorDiffDetectors("PCM-EMCal", kFALSE, kFALSE, kTRUE);
 	Color_t colorPCMPHOSLowPt 		= GetDefaultColorDiffDetectors("PCM-PHOS", kFALSE, kFALSE, kFALSE);
 	Color_t colorPCMPHOSHighPt 		= GetDefaultColorDiffDetectors("PCM-PHOS", kFALSE, kFALSE, kTRUE);
-	
+
 		TGraphErrors* graphYieldCombStatPi00005RebinnedHighPtComb 	= NULL;
 	TGraphErrors* graphYieldCombSysPi00005RebinnedHighPtComb 	= NULL;
 	TGraphErrors* graphChargedPionSpecHighPtStat0005HighPtComb 	= NULL;
@@ -136,7 +194,7 @@
 	TGraphErrors* graphChargedPionSpecHighPtStat0005HighPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecHighPtSyst0005HighPtPCM 	= NULL;
 	TGraphErrors* graphYieldPCMStatPi00005RebinnedLowPtPCM 		= NULL;
-	TGraphErrors* graphYieldPCMSysPi00005RebinnedLowPtPCM 		= NULL;   
+	TGraphErrors* graphYieldPCMSysPi00005RebinnedLowPtPCM 		= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtStat0005LowPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtSyst0005LowPtPCM 	= NULL;
 	TGraphErrors* graphYieldPHOSStatPi00005RebinnedHighPtPHOS 	= NULL;
@@ -160,7 +218,7 @@
 	TGraphErrors* graphChargedPionSpecHighPtStat0510HighPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecHighPtSyst0510HighPtPCM 	= NULL;
 	TGraphErrors* graphYieldPCMStatPi00510RebinnedLowPtPCM 		= NULL;
-	TGraphErrors* graphYieldPCMSysPi00510RebinnedLowPtPCM 		= NULL;   
+	TGraphErrors* graphYieldPCMSysPi00510RebinnedLowPtPCM 		= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtStat0510LowPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtSyst0510LowPtPCM 	= NULL;
 	TGraphErrors* graphYieldPHOSStatPi00510RebinnedHighPtPHOS 	= NULL;
@@ -184,7 +242,7 @@
 	TGraphErrors* graphChargedPionSpecHighPtStat0010HighPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecHighPtSyst0010HighPtPCM 	= NULL;
 	TGraphErrors* graphYieldPCMStatPi00010RebinnedLowPtPCM 		= NULL;
-	TGraphErrors* graphYieldPCMSysPi00010RebinnedLowPtPCM 		= NULL;   
+	TGraphErrors* graphYieldPCMSysPi00010RebinnedLowPtPCM 		= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtStat0010LowPtPCM 	= NULL;
 	TGraphErrors* graphChargedPionSpecLowPtSyst0010LowPtPCM 	= NULL;
 	TGraphErrors* graphYieldPHOSStatPi00010RebinnedHighPtPHOS 	= NULL;
@@ -208,7 +266,7 @@
 	TGraphErrors* graphYieldPHOSSysPi00010FullPtPtPHOS 	= NULL;
 	TGraphErrors* graphChargedPionSpecFullPtStat0010FullPtPHOS 	= NULL;
 	TGraphErrors* graphChargedPionSpecFullPtSyst0010FullPtPHOS 	= NULL;
-    
+
     	TGraphErrors* graphYieldEMCalStatPi00010LHC11hFullPtPtEMCal 	= NULL;
 
             TGraphErrors* graphYieldPCMStatEta0010LHC11hFullPtPtPCM   = NULL;

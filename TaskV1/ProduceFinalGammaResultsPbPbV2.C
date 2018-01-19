@@ -41,7 +41,6 @@
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
-#include "CalculateGammaToPi0V3.h"
 
 void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
                                     TString optionEnergy  = "PbPb_2.76TeV",
@@ -106,10 +105,10 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 //     TGraphAsymmErrors* graphDRSysErr            = (TGraphAsymmErrors*) fileInput->Get("DoubleRatioTrueEffPurity_SystErr");
 //     TGraphAsymmErrors* graphDRPi0FitSysErr      = (TGraphAsymmErrors*) fileInput->Get("DoubleRatioFitPurity_SystErr");
     // read theory graphs
-    TGraphAsymmErrors* graphNLODR               = (TGraphAsymmErrors*) fileInput->Get("graphNLODoubleRatio");
-    TGraphAsymmErrors* graphNLOGammaDir         = (TGraphAsymmErrors*) fileInput->Get("graphNLODirGamma");
-    TGraphAsymmErrors* graphNLOGammaPrompt      = (TGraphAsymmErrors*) fileInput->Get("graphPromptPhotonNLO");
-    TGraphAsymmErrors* graphNLOGammaFrag        = (TGraphAsymmErrors*) fileInput->Get("graphFragmentationPhotonNLO");
+//     TGraphAsymmErrors* graphNLODR               = (TGraphAsymmErrors*) fileInput->Get("graphNLODoubleRatio");
+//     TGraphAsymmErrors* graphNLOGammaDir         = (TGraphAsymmErrors*) fileInput->Get("graphNLODirGamma");
+//     TGraphAsymmErrors* graphNLOGammaPrompt      = (TGraphAsymmErrors*) fileInput->Get("graphPromptPhotonNLO");
+//     TGraphAsymmErrors* graphNLOGammaFrag        = (TGraphAsymmErrors*) fileInput->Get("graphFragmentationPhotonNLO");
 
     TH1D *histoPi0SpectrumFit                   = (TH1D*) fileInput->Get("fitPi0YieldC");
     TH1D *histoPi0SpectrumFitA                  = (TH1D*) fileInput->Get("fitPi0YieldA");
@@ -321,11 +320,49 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     TString fileNameSysErrPi0               = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
     TString fileNameSysErrPi0Fit            = Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveragedSepErrType_Pi0_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());//= Form("GammaSystematicErrorsCalculated_2017_08_28/SystematicErrorAveraged_Pi0Fit_PbPb2760GeV%s_2017_08_28.dat",centralityW0Per.Data());
 
+    //***********************************************************************************************
+    //****************** variable setting for the different error graphs ****************************
+    //***********************************************************************************************
+    Double_t ptSysPi0Fit[50];
+    Double_t ptSysPi0[50];
+
+    ifstream fileSysErrGamma;
+    Int_t nPointsGamma                                          = 0;
+    Double_t ptSysGamma[50];
+    Double_t relSystErrorGammaUp[50];
+    Double_t relSystErrorGammaDown[50];
+    Double_t relSystErrorWOMaterialGammaUp[50];
+    Double_t relSystErrorWOMaterialGammaDown[50];
+    Double_t systErrorGammaUp[50];
+    Double_t systErrorGammaDown[50];
+
+    ifstream fileSysErrInclRatio;
+    Int_t nPointsInclRatio                                      = 0;
+    Double_t ptSysInclRatioFit[50];
+    Double_t ptSysInclRatio[50];
+    Double_t relSystErrorInclRatioUp[50];
+    Double_t relSystErrorInclRatioDown[50];
+    Double_t relSystErrorWOMaterialInclRatioUp[50];
+    Double_t relSystErrorWOMaterialInclRatioDown[50];
+    Double_t systErrorInclRatioUp[50];
+    Double_t systErrorInclRatioDown[50];
+
+
+    TGraphAsymmErrors*  graphGammaYieldSysErr                   = NULL;
+    TGraphAsymmErrors*  graphInclRatioSysErr                    = NULL;
+    TGraphAsymmErrors*  graphInclRatioFitSysErr                 = NULL;
+    TGraphAsymmErrors*  graphDoubleRatioFitSysErr               = NULL;
+
     // ******************************************************************
     // *********** reading systematic errors for double ratio ***********
     // ******************************************************************
     ifstream         fileSysErrDoubleRatio;
     fileSysErrDoubleRatio.open(fileNameSysErrDoubleRatio,ios_base::in);
+    Int_t nPointsDoubleRatio                                    = 0;
+    Double_t         ptSysDoubleRatioFit[50];
+    Double_t         ptSysDoubleRatio[50];
+    Double_t         systErrorDoubleRatioUp[50];
+    Double_t         systErrorDoubleRatioDown[50];
     Double_t         relSystErrorDoubleRatioUp[50];
     Double_t         relSystErrorDoubleRatioDown[50];
     Double_t         relSystErrorWOMaterialDoubleRatioUp[50];
@@ -525,8 +562,37 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
     // ******************************************************************
     // ***** read NL0 calculations and put them in proper format ********
     // ******************************************************************
-    TGraphErrors *NLODoubleRatio     = (TGraphErrors*) fileInput->Get("graphNLODoubleRatio");
-    TGraphErrors *NLO                = (TGraphErrors*) fileInput->Get("graphNLODirGamma");
+    TFile* fileTheoryCompilation                   = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
+    TDirectoryFile* directoryGamma                          = (TDirectoryFile*)fileTheoryCompilation->Get("DirectPhoton");
+    // Load NLO input from TheoryCompilationPP.root
+    TGraphAsymmErrors* graphDirectPhotonNLO            = (TGraphAsymmErrors*)directoryGamma->Get("graphDirectPhotonNLOVogelsangInvYieldINT7_2760GeV");
+    graphDirectPhotonNLO                    = (TGraphAsymmErrors*)ScaleGraph(graphDirectPhotonNLO, fNcoll);
+    TGraphAsymmErrors* graphDirectPhotonNLOCopy        = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLOCalcCopy");
+    graphDirectPhotonNLOCopy->Print();
+
+    Double_t* yValNLO                       = graphDirectPhotonNLO->GetY();
+    Double_t* xVal                          = graphDirectPhotonNLOCopy->GetX();
+    Double_t* xErr                          = graphDirectPhotonNLOCopy->GetEX();
+    Double_t* yVal                          = graphDirectPhotonNLOCopy->GetY();
+    Double_t* yErrUp                        = graphDirectPhotonNLOCopy->GetEYhigh();
+    Double_t* yErrDown                      = graphDirectPhotonNLOCopy->GetEYlow();
+
+    TString cocktailFit                     = "xqcd";
+    TString fitOptions                      = "QNRME+";
+    TF1* fitCocktailAllGammaForNLO          = (TF1*)FitObject(cocktailFit,"cocktailFit","Pi0",histoCocktailAllGamma,2.0,16,NULL,fitOptions);
+
+    for (Int_t bin=0; bin<graphDirectPhotonNLOCopy->GetN(); bin++) {
+        yVal[bin]                           = (1 + ( yValNLO[bin] / (fitCocktailAllGammaForNLO->Eval(xVal[bin]))));
+        cout << yVal[bin] << endl;
+    }
+
+    // ------------------------------ NLO Calculations -----------------------------
+    TGraphAsymmErrors* graphNLODoubleRatio                     = new TGraphAsymmErrors(graphDirectPhotonNLOCopy->GetN(), xVal, yVal, xErr, xErr, yErrDown, yErrUp);
+    graphNLODoubleRatio->SetName("graphNLODoubleRatio");
+    TGraphAsymmErrors* graphNLODirGammaSpectra                 = (TGraphAsymmErrors*)graphDirectPhotonNLO->Clone("graphNLODirGammaSpectra");
+
+    TGraphErrors *NLODoubleRatio     = (TGraphErrors*) graphNLODoubleRatio->Clone("NLODoubleRatio");
+    TGraphErrors *NLO                = (TGraphErrors*) graphNLODirGammaSpectra->Clone("NLO");
     SetStyleGammaNLOTGraphWithBand( NLODoubleRatio, 3.0, 1, colorNLOcalc, 1001, colorNLOcalc, 0);
     SetStyleGammaNLOTGraphWithBand( NLO, 3.0, 1, colorNLOcalc, 1001, colorNLOcalc, 0);
 
@@ -969,7 +1035,7 @@ void ProduceFinalGammaResultsPbPbV2(TString cutSel        = "",
 
     TLegend* legendDoubleRatioWP = GetAndSetLegend(0.15,0.75,5);
     legendDoubleRatioWP->SetHeader(Form("%s",collisionSystem.Data()));
-    legendDoubleRatioWP->AddEntry(graphDoubleRatioSysErr,"0-10% PCM"),"pf");
+    legendDoubleRatioWP->AddEntry(graphDoubleRatioSysErr,"0-10% PCM","pf");
     legendDoubleRatioWP->AddEntry(graphPublishedCombDoubleRatioSyst,"0-20% comb published","pf");
     legendDoubleRatioWP->AddEntry(NLODoubleRatio,"NLO prediction: 1 + (#it{N}_{coll}#it{N}_{#gamma_{direct,pp,NLO}}/#it{N}_{#gamma_{decay}})","l");
     legendDoubleRatioWP->AddEntry((TObject*)0, "for #mu = 0.5 to 2.0 #it{p}_{T}", "");

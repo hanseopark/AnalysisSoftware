@@ -1112,11 +1112,7 @@ function CorrectSignalGammaV2()
 
 function CreateGammaFinalResultsV3()
 {
-    if  [ $energy = "PbPb_2.76TeV" ]  ; then
-        root -x -l -b -q TaskV1/CalculateGammaToPi0V3.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
-    else
-        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
-    fi
+    root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
 }
 
 function RunPi0Tagging()
