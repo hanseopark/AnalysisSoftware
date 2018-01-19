@@ -107,10 +107,10 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             nData               = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("energy",TString::kIgnoreCase)){
             fEnergyFlag         = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("filePath",TString::kIgnoreCase)){
-            filePath            = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("filePathPhoton",TString::kIgnoreCase)){
             filePathPhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("filePath",TString::kIgnoreCase)){
+            filePath            = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("fileNamePhoton",TString::kIgnoreCase)){
             fileNamePhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("fileName",TString::kIgnoreCase)){
