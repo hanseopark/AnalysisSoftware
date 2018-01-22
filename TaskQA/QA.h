@@ -2803,46 +2803,18 @@ void SaveBadCellCandidates(std::vector<Int_t> vec,TString str){
     return;
 }
 
-void PlotBadCellComparison(TH2* fHistBadCellCandData, TH2* fHistBadCellCandMCPyt, TH2* fHistBadCellCandMCPho, std::vector<Int_t> allCells, TCanvas* canvas, TString outputDir, TString suffix, TString calo, TString fPlotData, TString fPlotMCPyt, TString fPlotMCPho, TString fCollisionSystem){
-    SetXRange(fHistBadCellCandData,1,fHistBadCellCandData->GetNbinsX());
-    SetXRange(fHistBadCellCandMCPyt,1,fHistBadCellCandMCPyt->GetNbinsX());
-    SetXRange(fHistBadCellCandMCPho,1,fHistBadCellCandMCPho->GetNbinsX());
 
-    for(Int_t iCell=0; iCell<(Int_t)allCells.size(); iCell++)
-    {
-        TH1D* fHistDataProject = (TH1D*) fHistBadCellCandData->ProjectionX(Form("dataProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1);
-        TH1D* fHistMCPytProject = (TH1D*) fHistBadCellCandMCPyt->ProjectionX(Form("mcPytProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1);
-        TH1D* fHistMCPhoProject = (TH1D*) fHistBadCellCandMCPho->ProjectionX(Form("mcPhoProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1);
-
-        DrawAutoGammaCompare3H(fHistMCPytProject, fHistMCPhoProject, fHistDataProject,
-                            "",
-                            "Cell Energy (GeV)",
-                            Form("CellID %i",allCells.at(iCell)),
-                            0,0,0,
-                            1,0.5,1E5,
-                            1,0,10,
-                            1,1.3,fPlotData.Data(),fPlotMCPyt.Data(),fPlotMCPho.Data());
-        PutProcessLabelAndEnergyOnPlot(0.8, 0.8, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), "");
-        canvas->SetLogx(0); canvas->SetLogy(1); canvas->SetLogz(0); canvas->Update();
-        canvas->SaveAs(Form("%s/Cells/Detailed/Cell%i_EnergyComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()));
-        canvas->Clear();
-
-        delete fHistDataProject;
-        delete fHistMCPytProject;
-        delete fHistMCPhoProject;
-    }
-    return;
-}
-
+//******************************************************************************************************************
+//********************* Plotting for bad cell comparions in a vector ***********************************************
+//******************************************************************************************************************
 void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, std::vector<Int_t> allCells, TCanvas* canvas, TString outputDir, TString suffix, TString calo, TString* plotDataSets, TString fCollisionSystem)
 {
     std::vector<TH1D*> fVecDataMC;
     for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
-    SetXRange(DataMCHists.at(i),1,DataMCHists.at(i)->GetNbinsX());
+        SetXRange(DataMCHists.at(i),1,DataMCHists.at(i)->GetNbinsX());
     }
 
-    for(Int_t iCell=0; iCell<(Int_t)allCells.size(); iCell++)
-    {
+    for(Int_t iCell=0; iCell<(Int_t)allCells.size(); iCell++){
         TLegend* leg1 = new TLegend( 0.6,0.81,0.97,0.95);
         leg1->SetTextSize(0.04);
         leg1->SetFillColor(0);
@@ -2852,12 +2824,15 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, s
             else fVecDataMC.push_back((TH1D*) DataMCHists.at(i)->ProjectionX(Form("mcProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1));
         }
 
-        AdjustHistRange(fVecDataMC,5,5,kTRUE);
+        // adjusting the pt range in the histo
+        AdjustHistRange(fVecDataMC,100,100,kTRUE);
         Int_t iStart = (Int_t) fVecDataMC.size()-1;
         Int_t minB=0; Int_t maxB=0;
         for(Int_t i=iStart; i>=0; i--){
             TH1D* fHistDataMC = fVecDataMC.at(i);
             GetMinMaxBin(fHistDataMC,minB,maxB);
+            if (calo.Contains("EMC"))
+                minB = fHistDataMC->FindBin(0.101);
             SetXRange(fHistDataMC,minB,maxB+10);
             fHistDataMC->SetTitle("");
             fHistDataMC->SetXTitle("Cell Energy (GeV)");
@@ -2879,7 +2854,7 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, s
             fHistDataMC->GetYaxis()->SetLabelSize(0.035);
             fHistDataMC->GetYaxis()->SetTitleSize(0.04);
             fHistDataMC->GetYaxis()->SetDecimals();
-            fHistDataMC->GetYaxis()->SetTitleOffset(1.3);
+            fHistDataMC->GetYaxis()->SetTitleOffset(0.9);
             fHistDataMC->GetXaxis()->SetTitleSize(0.04);
             fHistDataMC->GetXaxis()->SetLabelSize(0.035);
             fHistDataMC->GetXaxis()->SetTitleOffset(1.0);
@@ -2889,7 +2864,7 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, s
         }
         leg1->Draw("same");
 
-        PutProcessLabelAndEnergyOnPlot(0.7, 0.8, 0.03, fCollisionSystem.Data(), Form("%s clusters", calo.Data()), "");
+        PutProcessLabelAndEnergyOnPlot(0.93, 0.8, 0.03, fCollisionSystem.Data(), Form("%s", calo.Data()), "", 42, 0.03, "", 1, 1.25, 31);
         SaveCanvas(canvas,Form("%s/Cells/Detailed/Cell%i_EnergyComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()),0,1,0);
         delete leg1;
 

@@ -2095,7 +2095,8 @@ void ClusterQA(
                 PutProcessLabelAndEnergyOnPlot(0.87, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), 42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCells2D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kFALSE, kTRUE);
 
-                canvas->SetRightMargin(rightMargin);
+                if (mode==5 || mode == 3) canvas->SetRightMargin(rightMargin*1.2);
+                else canvas->SetRightMargin(rightMargin);
                 PlotHotCells(cellQA,0,nCaloCells,fHistCellTimeVsCellID,
                             "N_{Cell fired}",
                             "#frac{dN_{Cell fired with E>0.2 GeV}}{dN}",
@@ -2108,7 +2109,8 @@ void ClusterQA(
                 PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCells_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kTRUE);
 
-                canvas->SetRightMargin(rightMargin);
+                if (mode==5 || mode == 3) canvas->SetRightMargin(rightMargin*1.2);
+                else canvas->SetRightMargin(rightMargin);
                 PlotHotCells(cellQA,0,nCaloCells,fHistCellTimeVsCellID,
                              "N_{Cell fired}",
                              "#frac{dN_{Cell fired with E>0.2 GeV}}{dN}",
@@ -4141,7 +4143,7 @@ void ClusterQA(
                 PlotBadCellOverview(kTRUE,kTRUE,DataMCHists.at(j),allCells,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
                 PlotBadCellOverview(kFALSE,kTRUE,DataMCHistsTime.at(j),allCells,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
             }
-            canvas->SetLeftMargin(0.11);canvas->SetRightMargin(0.02);canvas->SetTopMargin(0.04);canvas->SetBottomMargin(0.11);
+            canvas->SetLeftMargin(0.08);canvas->SetRightMargin(0.02);canvas->SetTopMargin(0.04);canvas->SetBottomMargin(0.11);
             PlotBadCellComparisonVec(DataMCHists,colorCompare,allCells,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem);
         }
 

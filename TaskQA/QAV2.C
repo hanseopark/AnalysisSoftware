@@ -8,15 +8,18 @@
 #include "PhotonQA.C"
 #include "ClusterQA.C"
 #include "PrimaryTrackQA.C"
+#include "ClusterQA_DeadCellCompareV2.C"
+#include "ClusterQA_HotCellCompareV2.C"
 
-void QAV2(      TString configFileName  = "config.txt",         // set selected
+void QAV2(      TString configFileName  = "config.txt",     // set selected
                 Bool_t doEventQA        = kFALSE,           // switch on EventQA
                 Bool_t doPhotonQA       = kFALSE,           // switch on PCM-PhotonQA
                 Bool_t doClusterQA      = kFALSE,           // switch on ClusterQA
                 Bool_t doMergedQA       = kFALSE,           // switch on merged ClusterQA
                 Bool_t doPrimaryTrackQA = kFALSE,           // switch on primary electron and pion QA
                 Int_t doExtQA           = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
-                TString suffix          = "eps"             // output format of plots
+                TString suffix          = "eps",            // output format of plots
+                Bool_t doCellQASummary  = kFALSE            // enables the summary for the cell QA
          ){
 
     //**************************************************************************************************************
@@ -52,6 +55,13 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
         pathDataSets[i]             = "";
         pathPhotonQA[i]             = "";
     }
+
+    // basic dead cell settings
+    Int_t nSetsDeadCell             = 0;
+    Int_t nMCSetsDeadCell           = 0;
+    Bool_t doDeadCellCompare        = kFALSE;
+    Int_t nSetsHotCell              = 0;
+    Bool_t doHotCellCompare         = kFALSE;
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -189,6 +199,14 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
                 else
                     i                   = tempArr->GetEntries();
             }
+        // checking if basic dead cell processing variable are around
+        } else if (tempValue.BeginsWith("deadCellNSets",TString::kIgnoreCase)){
+            nSetsDeadCell   = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+        } else if (tempValue.BeginsWith("deadCellNMCSets",TString::kIgnoreCase)){
+            nMCSetsDeadCell = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+        // checking if basic hot cell processing variable are around
+        } else if (tempValue.BeginsWith("hotCellNSets",TString::kIgnoreCase)){
+            nSetsHotCell    = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         }
 
         delete tempArr;
@@ -228,6 +246,24 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     }
     cout << "**************************************************************************" << endl;
     cout << "**************************************************************************" << endl;
+    if (doCellQASummary){
+        if (nSetsDeadCell > 0 || nMCSetsDeadCell > 0){
+            cout << "INFO: enabling also DeadCell QA" << endl;
+            doDeadCellCompare               = kTRUE;
+        } else {
+            cout << "WARNING: you requested to run the dead cell QA, but neighter the 'deadCellNSets' nor the 'deadCellNMCSets' has been provided...\n disabled running DeadCellCompare-macro... " << endl;
+
+        }
+        cout << "**************************************************************************" << endl;
+        if (nSetsHotCell > 0 ){
+            cout << "INFO: enabling also HotCell QA" << endl;
+            doHotCellCompare                = kTRUE;
+        } else {
+            cout << "WARNING: you requested to run the hot cell QA, but neighter the 'hotCellNSets' has been provided...\n disabled running HotCellCompare-macro... " << endl;
+        }
+        cout << "**************************************************************************" << endl;
+    }
+
 
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
@@ -242,6 +278,13 @@ void QAV2(      TString configFileName  = "config.txt",         // set selected
     }
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);
     if ( doPrimaryTrackQA ) PrimaryTrackQA (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+
+    // **************************************************************************************************************
+    // ************************** Cell comparison macros ************************************************************
+    //               CAVEAT: These can only be started once the runwise cell QA had been run
+    // **************************************************************************************************************
+    if ( doDeadCellCompare ) ClusterQA_DeadCellCompareV2(configFileName,suffix);
+    if ( doHotCellCompare ) ClusterQA_HotCellCompareV2(configFileName,suffix);
     return;
 
 }
