@@ -445,13 +445,6 @@ fi
 # fi
 
 
-
-# # # OUTPUTDIR_LHC14a1c=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1c
-# # # mkdir -p $OUTPUTDIR_LHC14a1c
-# # # alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1c/merge/Gam* file:$OUTPUTDIR_LHC14a1c/
-# # #
-
-
 if [ $2 = "AODmc" ]; then
 #################################### normal selection cut ######################################################
    ls $OUTPUTDIR_LHC14a1a/GammaConvV1_*.root > fileLHC14a1a.txt
