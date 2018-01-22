@@ -937,8 +937,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
         histoMappingRData->Write("Data");
         histoMappingRMC->Write("MC");
-        histoMappingMidPtRData->Write("DataMidtPt");
-        histoMappingMidPtRMC->Write("MCMidPt");
+//         histoMappingMidPtRData->Write("DataMidtPt");
+//         histoMappingMidPtRMC->Write("MCMidPt");
         histoMappingRDataScaledToGas->Write("DataScaledToGas");
         histoMappingRMCScaledToGas->Write("MCScaledToGas");
     outFile.Close();
