@@ -174,7 +174,7 @@
     //                                                     3.3, 3.6, 4.0, 4.5, 5.0,
     //                                                     6.0, 8.0, 12.0, 20.0, 30.0};
 
-    
+
     Double_t fBinsPi05TeVPtPCMDCal[25]              = { 0.0, 1., 1.2, 1.4, 1.6,
                                                         1.7, 1.8, 1.9, 2.0, 2.1,
                                                         2.2, 2.4, 2.6, 2.8, 3.0,
@@ -1898,6 +1898,28 @@
                 } else {
                     startPtBin      = 1;
                 }
+            } else if (energy.CompareTo("PbPb_5.02TeV") == 0){
+                if ( mode == 0 ){
+                    startPtBin      = 1;
+                } else if ( mode == 1 ){
+                    startPtBin      = 2;
+                } else if ( mode == 2 || mode == 13 ){
+                    startPtBin      = 4;
+                } else if ( mode == 3 ){
+                    startPtBin      = 3;
+                } else if ( mode == 4 || mode == 12 ){
+                    cout << minECut << endl;
+                    if (minECut.Atoi() != 3)
+                        startPtBin      = 12;
+                    else
+                        startPtBin      = 6;
+                } else if ( mode == 5){
+                    startPtBin      = 4;
+                } else if (mode == 20){
+                    startPtBin      = 1;
+                } else {
+                    startPtBin      = 1;
+                }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
                 if ( mode == 0 ){
                     if (centrality.CompareTo("0-90%") == 0)
@@ -3027,12 +3049,7 @@
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGammaPbPb5TeVPtRebin[i];
                     }
                 } else{
-                    fStartPtBin     = 1;
-                    if (modi == 4){
-                        fStartPtBin     = 6;
-                    } else if (modi == 2){
-                        fStartPtBin     = 3;
-                    }
+                    fStartPtBin     = GetStartBin("Pi0", energy, modi, specialTrigg, clusterCutSelection(GetClusterMinEnergyCutPosition(clusterCutSelection),1));
                     if (fNBinsPt > 12 && isDCA) {
                         cout << "You have chosen to have more than 12 bins, this is not possible, it will be reduced to 12" << endl;
                         fNBinsPt        = 12;
