@@ -45,16 +45,6 @@ void PhotonQA_Runwise(
 //**************************************************************************************************************
     TString fDate = ReturnDateString();
     TString fTextMeasurement = Form("#pi^{0} #rightarrow #gamma#gamma");
-    TString fCentrality[30];
-    for(Int_t i=0; i<nSets; i++) {
-        if(fEnergyFlag.Contains("PbPb")){
-            if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
-            else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
-            else fCentrality[i] = "";
-        } else {
-            fCentrality[i] = "";
-        }
-    }
 
     const Int_t maxSets = 20;
     if(nSets>maxSets){
@@ -72,9 +62,6 @@ void PhotonQA_Runwise(
 //**************************************************************************************************************
     for(Int_t i=0; i<nSets; i++){
         vecDataSet.push_back(DataSets[i].Data());
-        hMarkerStyle[i]=GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
-        hMarkerColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
-        hLineColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentrality[i].Data());
         hMarkerSize[i]=markerSize;
     }
 
@@ -167,6 +154,15 @@ void PhotonQA_Runwise(
     cout << "Processing Cut Number: " << cutNr << endl;
     nameCutsPQA      = cutsPQA.at(cutNr);
     nameCutsPQAshort = cutsPQAshort.at(cutNr);
+
+    TString fCentralityFromCut = GetCentralityString(nameCutsPQAshort);
+    cout << "Corresponding to centrality: " << fCentralityFromCut << endl;
+    // plotting settings according to default for energy, dataset and centrality
+    for(Int_t i=0; i<nSets; i++){
+        hMarkerStyle[i]=GetDefaultMarkerStyle(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut.Data());
+        hMarkerColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut.Data());
+        hLineColor[i]=GetColorDefaultColor(fEnergyFlag.Data(),DataSets[i].Data(),fCentralityFromCut.Data());
+    }
 
     Bool_t cutTreeStdCut = kFALSE;
     if (cutTreeProjection.CompareTo("") == 0 ){
