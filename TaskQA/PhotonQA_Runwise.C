@@ -17,7 +17,7 @@ void PhotonQA_Runwise(
                         TString* DataSets,
                         TString* plotDataSets,
                         Int_t mode                      = 2,
-                        Int_t cutNr                     = -1,               // if -1: you have to choose number at runtime
+                        Int_t cutNr                     = 0,               // if -1: you have to choose number at runtime, if 0 the first or only number is chosen
                         Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots
                         Bool_t doEquidistantXaxis       = kFALSE,
                         Bool_t doTrigger                = kTRUE,
@@ -136,21 +136,37 @@ void PhotonQA_Runwise(
         }
     }
 
-    TString nameCutsPQA;
-    TString nameCutsPQAshort;
+    TString nameCutsPQA;        // full cut number
+    TString nameCutsPQAshort;   // event cut number
+    vector <TString> cutsPQA;   // in case there are several different event cut selections (eg centralities) saved in one AnalysisResults.root file
+    vector <TString> cutsPQAshort;
     TString nameMainDir;
-
     TKey *keyPQA;
     TIter nextPQA(fPhotonQAFile->GetListOfKeys());
     while ((keyPQA=(TKey*)nextPQA())){
-        cout << Form("Found TopDir: '%s' ",keyPQA->GetName());
+      cout << Form("Found TopDir: '%s' ",keyPQA->GetName()) << endl;
         nameMainDir = keyPQA->GetName();
+	  if(nameMainDir.Contains("GammaConvV1_QA_")){
+	    nameCutsPQA = Form("%s",nameMainDir.Data());
+	    nameCutsPQAshort = Form("%s",nameMainDir.Data());
+	    nameCutsPQA.Replace(0,15,"");
+	    nameCutsPQAshort.Replace(0,15,"");
+	    nameCutsPQAshort.Replace(8,35,"");
+	    cutsPQA.push_back(nameCutsPQA);
+	    cutsPQAshort.push_back(nameCutsPQAshort);
+	  }
     }
-    nameCutsPQA = Form("%s",nameMainDir.Data());
-    nameCutsPQAshort = Form("%s",nameMainDir.Data());
-    nameCutsPQA.Replace(0,15,"");
-    nameCutsPQAshort.Replace(0,15,"");
-    nameCutsPQAshort.Replace(8,35,"");
+    cout << "The following cuts are available:" << endl;
+    for(Int_t i = 0; i < (Int_t) cutsPQA.size(); i++) {
+      cout << Form("(%i) -- %s", i, cutsPQA[i].Data()) << endl;
+    }
+    if(cutNr == -1){
+        do{ cin >> cutNr;}
+        while( (cutNr < 0) || (cutNr > (Int_t) cutsPQA.size()) );
+    }
+    cout << "Processing Cut Number: " << cutNr << endl;
+    nameCutsPQA      = cutsPQA.at(cutNr);
+    nameCutsPQAshort = cutsPQAshort.at(cutNr);
 
     Bool_t cutTreeStdCut = kFALSE;
     if (cutTreeProjection.CompareTo("") == 0 ){
