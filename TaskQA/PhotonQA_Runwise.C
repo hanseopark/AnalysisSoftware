@@ -716,7 +716,6 @@ void PhotonQA_Runwise(
                             cout << "\t\t----------------------------------------------------------------------------" << endl;
                         }
                     }
-                    continue;
                 } else {
                     RootFilePQA->Close();
                     delete RootFilePQA;
