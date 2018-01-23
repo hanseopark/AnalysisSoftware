@@ -3410,35 +3410,20 @@
                       if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEta7TeVPHOSPtRebin[i];
                     }else if(modi == 40){
-                      for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCM[i];
-                        if (i < fNBinsPt+1)
-                          fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[i];
-                      }
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPCM[i];
                     } else if(modi == 41){
-                      for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMEMC[i];
-                        if (i < fNBinsPt+1)
-                          fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[i];
-                      }
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMEMC[i];
                     } else if(modi == 42){
-                      for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[i];
-                        if (i < fNBinsPt+1)
-                          fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[i];
-                      }
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[i];
                     } else if(modi == 44){
-                      for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtEMC[i];
-                        if (i < fNBinsPt+1)
-                          fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[i];
-                      }
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinEMC[i];
                     } else if(modi == 45){
-                      for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
-                        if (i < fNBinsPt+1)
-                          fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[i];
-                      }
+                        if (i < fNBinsPt+1) fNRebin[i] = fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[i];
                     } else {
                       fBinsPt[i]      = fBinsEta7TeVPt[i];
                       if (i < fNBinsPt+1)
