@@ -3091,7 +3091,15 @@
                     return kGreen+4;
                 } else if (!generator.CompareTo("LHC13f")){
                     return 418;
+				} else if (generator.Contains("LHC16q_fast")){
+                    return 597;
+				} else if (generator.Contains("LHC16q_woSSD")){
+                    return 419;
                 } else if (generator.Contains("LHC16q")){
+                    return 633;
+				} else if (generator.Contains("LHC16t_fast")){
+                    return 807;
+				} else if (generator.Contains("LHC16t_woSSD")){
                     return 633;
                 } else if (generator.Contains("LHC16t")){
                     return 807;
