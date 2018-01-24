@@ -70,7 +70,7 @@ Double_t p_value_to_n_sigma(const Double_t &pvalue);
 const Int_t nPtBins = 16;
 
 //
-// the main function
+// the main function and entry point
 //
 void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_dir = ".") {
 
@@ -584,7 +584,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     c1->SaveAs(output_dir + filename_c1);
 
     //
-    // write root outout file
+    // write root output file
     //
     TFile f_out(fn_out, "recreate");
 
@@ -686,6 +686,17 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
         h_v2_dir_phos_Rphos_toterr[i]->Write();
         h_v2_dir_comb_toterr[i]->Write();
     }
+
+    // write also Rgamma
+    TGraphErrors g_Rgamma_toterr(nPtBins);
+    for (Int_t i=0; i<nPtBins; ++i) {
+        g_Rgamma_toterr.SetPoint(i, pt(i), Rgamma_meas_vec_comb(i));
+        g_Rgamma_toterr.SetPointError(i, 0, TMath::Sqrt(cov_Rgamma_comb_toterr(i,i)));
+    }
+
+    g_Rgamma_toterr.SetName("g_Rgamma_toterr");
+    g_Rgamma_toterr.SetTitle("g_Rgamma_toterr");
+    g_Rgamma_toterr.Write();
 
     f_out.Close();
 
@@ -1281,6 +1292,7 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     TString filename_c5b = "v2inc_ratio_daniel_" + centr + ".pdf";
     c5b->SaveAs(output_dir + filename_c5b);
 
+
     //
     // p-values w.r.t. to null hypotheses
     //
@@ -1806,6 +1818,8 @@ Double_t chi2(const TVectorD &x, const TVectorD &mu, const TMatrixDSym &V) {
 }
 
 Double_t p_value_to_n_sigma(const Double_t &pvalue) {
+
+    // two-sided p-value calculation
 
     TF1 f("f", "1-TMath::Erf(x/sqrt(2.)) - [0]", -100, 100);
     f.SetParameter(0, pvalue);
