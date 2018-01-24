@@ -1,6 +1,6 @@
 select	LHC15o
 mode	0
-cutNr	-1
+cutNr	6
 nSets	2
 nData	1
 energy	PbPb_5.02TeV
@@ -9,7 +9,7 @@ filePathPhoton	/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/ESD/
 fileName	GammaConvV1_246.root
 fileNamePhoton	AnalysisResults.root
 DataSets	LHC15o	LHC16g1	STOP
-plotDataSets	Data	MC	STOP
+plotDataSets	Data:80-90%	MC:80-90%	STOP
 doEquidistantXaxis	kTRUE
 addPhotonCutNr		0005314140
 addLabelRunlist

@@ -1,7 +1,7 @@
 select  LHC15o
 mode    0
 nSets   2
-cutNr   0
+cutNr   -1
 labelData   Data
 energy  PbPb_5.02TeV
 pathDataSets    /home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/LHC15o/GammaConvV1_270_list1_train355.root /home/meike/analysis/data/GridOutput/GammaConv/PbPb/ESD/GammaConvV1_270_MC_HighIRMerged.root MC file> STOP
