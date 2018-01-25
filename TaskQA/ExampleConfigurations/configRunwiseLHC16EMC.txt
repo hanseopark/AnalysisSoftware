@@ -1,0 +1,38 @@
+#example config	LHC16o,p - EMC
+select	LHC16EMC
+mode	4
+cutNr	0
+nSets	2
+nData   2
+energy	13TeV
+filePath    /Volumes/external_memory/CERN_data/pp/2016/13TeV/Legotrain-vAN-20171126-1-QA
+fileName    GammaCalo_510.root
+doTrigger   kTRUE
+DataSets      LHC16o_pass1 LHC16p_pass1  LHC17d16 LHC17d18  STOP
+plotDataSets        LHC16o  LHC16p    Pythia8  Pythia8  STOP
+
+# Settings for dead cell compare macro
+addLabelRunlist _DPG
+deadCellNSets   2
+deadCellNMCSets 2
+deadCellNTrigger    1
+deadCellDataSetNames   LHC16o_pass1 LHC16p_pass1  STOP
+deadCellMCSetNames     LHC17d16 LHC17d18  STOP
+deadCellAdditionalOutputDirName LHC16p
+nCaloCells  18000
+# deadCellTriggerNames  INT7    STOP
+deadCellMCCuts  00010113_3885500081041220000_01631031000000d0   STOP
+deadCellDataCuts    00010113_3885500081041220000_01631031000000d0   STOP
+deadCellFractionThesh   0.6
+
+
+# Settings for hot cell compare macro
+hotCellNSets   2
+hotCellNTrigger    1
+hotCellDataSetNames   LHC16p_pass1   STOP
+hotCellMCSetNames   LHC17d18 STOP
+hotCellAdditionalOutputDirName LHC16p
+# hotCellTriggerNames  INT7    STOP
+hotCellDataCuts    00010113_3885500081041220000_01631031000000d0   STOP
+hotCellThreshNFired   0
+hotCellThreshNTotalFired   60

@@ -12,8 +12,8 @@ DOWNLOADON=1
 MERGEON=0
 SINGLERUN=1
 SEPARATEON=0
-MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEData=1
+MERGEONSINGLEMC=1
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -106,6 +106,7 @@ TRAINDIR=Legotrain-vAN-20171126-1-QA
 
 # LHC 16 data
 LHC16Data="2265"; #pass 1
+#LHC16Data= "2296"; #pass 1 SECOND TRAIN RUN
 #LHC16dData="child_1"; #pass 1
 #LHC16gData="child_2"; #pass 1
 #LHC16hData="child_3"; #pass 1
@@ -117,19 +118,20 @@ LHC16Data="2265"; #pass 1
 #LHC16pData="child_9"; #pass 1
 #LHC16eData="child_10"; #pass 1
 
-LHC17MCPythia="3184"; #pass 1
-LHC17f6MC="child_1";
-LHC17f9MC="child_2";
-LHC17d17MC="child_3";
-LHC17f5MC="child_4";
-LHC17d3MC="child_5";
-LHC17e5MC="child_6";
-LHC17d20a1MC="child_7";
-LHC17d20a1ExMC="child_8";
-LHC17d20a2MC="child_9";
-LHC17d20a2ExMC="child_10";
-LHC17d16MC="child_11";
-LHC17d18MC="child_12";
+LHC17MCPythia="3184"; #pass 1 FIRST TRAIN RUN
+#LHC17MCPythia="3225"; #pass 1 SECOND TRAIN RUN
+# LHC17f6MC="child_1";
+# LHC17f9MC="child_2";
+# LHC17d17MC="child_3";
+# LHC17f5MC="child_4";
+# LHC17d3MC="child_5";
+# LHC17e5MC="child_6";
+# LHC17d20a1MC="child_7";
+# LHC17d20a1ExMC="child_8";
+# LHC17d20a2MC="child_9";
+# LHC17d20a2ExMC="child_10";
+# LHC17d16MC="child_11";
+# LHC17d18MC="child_12";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 if [ "$LHC16dData" == "" ]; then
@@ -477,49 +479,6 @@ if [ $HAVELHC17e5 == 1 ]; then
 rm listGrid.txt
 echo OUTPUTDIR_LHC17e5 $OUTPUTDIR_LHC17e5
 fi
-# Get data directory for 16o period
-if [ $HAVELHC16o == 1 ]; then
-    if [ $HAVETOBUILDData == 1 ]; then
-        LHC16oData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ | grep $LHC16oData`
-    else
-        LHC16oData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16oData\_`
-    fi
-    if [ "$LHC16oData" == "" ]; then
-        HAVELHC16o=0;
-    else
-        OUTPUTDIR_LHC16o=$BASEDIR/$TRAINDIR/GA_pp-$LHC16oData
-    fi
-    echo $OUTPUTDIR_LHC16o
-fi
-# Get data directory for 16p period
-if [ $HAVELHC16p == 1 ]; then
-    if [ $HAVETOBUILDData == 1 ]; then
-        LHC16pData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ | grep $LHC16pData`
-    else
-        LHC16pData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16pData\_`
-    fi
-    if [ "$LHC16pData" == "" ]; then
-        HAVELHC16p=0;
-    else
-        OUTPUTDIR_LHC16p=$BASEDIR/$TRAINDIR/GA_pp-$LHC16pData
-    fi
-    echo $OUTPUTDIR_LHC16p
-fi
-# Get data directory for 16e period
-if [ $HAVELHC16e == 1 ]; then
-    if [ $HAVETOBUILDData == 1 ]; then
-        LHC16eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16Data\_ | grep $LHC16eData`
-    else
-        LHC16eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pp/ | grep $LHC16eData\_`
-    fi
-    if [ "$LHC16eData" == "" ]; then
-        HAVELHC16e=0;
-    else
-        OUTPUTDIR_LHC16e=$BASEDIR/$TRAINDIR/GA_pp-$LHC16eData
-    fi
-    echo $OUTPUTDIR_LHC16e
-fi
-
 
 # Get MC directory for LHC17d20a1 MC anchored to LHC16k
 if [ $HAVELHC17d20a1 == 1 ]; then
