@@ -205,6 +205,9 @@ void PhotonQA_Runwise(
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
+    if (fCentralityFromCut.CompareTo("pp")!=0 && !fCentralityFromCut.Contains("0-100%") ){
+      fCollisionSystem    = Form("%s %s", fCentralityFromCut.Data(), fCollisionSystem.Data());
+    }
 
     TString fDetectionProcess = ReturnFullTextReconstructionProcess(fMode);
 

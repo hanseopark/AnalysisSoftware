@@ -9,7 +9,7 @@ filePathPhoton	/home/meike/analysis/data/GridOutput/PhotonQA/PbPb/ESD/
 fileName	GammaConvV1_246.root
 fileNamePhoton	AnalysisResults.root
 DataSets	LHC15o	LHC16g1	STOP
-plotDataSets	Data	MC	STOP
+plotDataSets	LHC15o	LHC16g1	STOP
 doEquidistantXaxis	kTRUE
 addPhotonCutNr		0005314140
 addLabelRunlist
