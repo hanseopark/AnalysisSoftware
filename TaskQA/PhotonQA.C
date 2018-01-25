@@ -15,7 +15,7 @@ void PhotonQA(
                 TString* plotDataSets,
                 TString* pathDataSets,
                 Int_t mode                      = 2,
-                Int_t cutNr                     = -1,         // if -1: you have to choose number at runtime
+                Int_t cutNr                     = 0,         // if -1: you have to choose number at runtime, if 0: the first or only number is chosen
                 Int_t doExtQA                   = 2,          // 0: switched off, 1: normal extQA, 2: with Cell level plots
                 TString suffix                  = "eps",
                 TString labelData               = "Data",
@@ -54,6 +54,8 @@ void PhotonQA(
     TString nameCutsPQA[maxSets];
     TString nameCutsPQAEvent[maxSets];
     TString nameCutsPQAmain[maxSets];
+    vector <TString> mainDir[maxSets];
+    vector <TString> cutsPQA[maxSets];
     Bool_t isMC [maxSets];
 
     Int_t fMode = mode;
@@ -73,19 +75,34 @@ void PhotonQA(
         if(fFile->IsZombie()){cout << "ERROR: File " << pathDataSets[i].Data() << " could not be openend! Returning..." << endl; return;}
         else{
             cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-            cout << "Processing file: " << pathDataSets[i].Data();
+            cout << "Processing file: " << pathDataSets[i].Data() << endl;
             TKey *key;
             TIter next(fFile->GetListOfKeys());
             while ((key=(TKey*)next())){
-                cout << Form(" - found TopDir: %s",key->GetName());
+	        cout << Form(" - found TopDir: %s",key->GetName()) << endl;
                 nameMainDir[i] = key->GetName();
-            }
-            nameCutsPQA[i] = Form("%s",nameMainDir[i].Data());
+		if(nameMainDir[i].Contains("GammaConvV1_QA_")){
+		  nameCutsPQA[i] = Form("%s",nameMainDir[i].Data());
+		  nameCutsPQA[i].Replace(0,15,"");
+		  mainDir[i].push_back(nameMainDir[i]);
+		  cutsPQA[i].push_back(nameCutsPQA[i]);
+		}
+	    }
+	    cout << "Found " << cutsPQA[i].size() << " different cuts. The following cuts are available:" << endl;
+	    for(Int_t j = 0; j < (Int_t) cutsPQA[i].size(); j++) {
+	      cout << Form("(%i) -- %s", j, cutsPQA[i].at(j).Data()) << endl;
+	    }
+	    if(cutNr == -1){
+	      do{ cin >> cutNr;}
+	      while( (cutNr < 0) || (cutNr > (Int_t) cutsPQA[i].size()) );
+	    }
+	    cout << "Processing Cut Number: " << cutNr << endl;
+	    nameMainDir[i]      = mainDir[i].at(cutNr);
+	    nameCutsPQA[i]      = cutsPQA[i].at(cutNr);
             nameCutsPQAEvent[i] = Form("%s",nameMainDir[i].Data());
-            nameCutsPQAmain[i] = Form("%s",nameMainDir[i].Data());
-            nameCutsPQA[i].Replace(0,15,"");
             nameCutsPQAEvent[i].Replace(0,15,"");
             nameCutsPQAEvent[i].Replace(8,38,"");
+            nameCutsPQAmain[i] = Form("%s",nameMainDir[i].Data());
             nameCutsPQAmain[i].Replace(0,15,"");
             nameCutsPQAmain[i].Replace(35,11,"");
 
