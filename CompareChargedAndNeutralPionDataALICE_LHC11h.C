@@ -1841,6 +1841,61 @@ void CompareChargedAndNeutralPionDataALICE_LHC11h(
 	canvas6PartCompChargedIndPionsLHC11h->Update();
 	canvas6PartCompChargedIndPionsLHC11h->SaveAs(Form("%s/ComparisonCharged5TeVToNeutralPCMeEMCAL_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
 
+    TCanvas* canvasCompIndiv5to276TeV = new TCanvas("canvasCompIndiv5to276TeV","",200,10,700,500);  // gives the page size
+    DrawGammaCanvasSettings( canvasCompIndiv5to276TeV,  0.12, 0.02, 0.02, 0.12);
+
+    canvasCompIndiv5to276TeV->SetLogx();
+    histo2DCompCharged5to2760->DrawCopy();
+
+		DrawGammaSetMarkerTGraphErr(graphRatio5TeVto2760GeVChargedPions0010, markerStylePHOSHighPt, markerSizeComparison, kGray+1 , kGray+1);
+		graphRatio5TeVto2760GeVChargedPions0010->Draw("E1psame");
+        //Comb to 5TeV
+		DrawGammaSetMarkerTGraphErr(graphRatio5TeVChargedPionsComb0010LHC11h, 33, markerSizeComparison+0.5,  kCyan+2 , kCyan+2);
+		graphRatio5TeVChargedPionsComb0010LHC11h->Draw("E1psame");
+//         //PCM to 5TeV
+// 		DrawGammaSetMarkerTGraphErr(graphRatio5TeVChargedPionsPCM0010LHC11h, 33, markerSizeComparison+0.5,  kCyan+2 , kCyan+2);
+// 		graphRatio5TeVChargedPionsPCM0010LHC11h->Draw("E1psame");
+        //EMCAL to 5TeV
+		DrawGammaSetMarkerTGraphErr(graphRatio5TeVChargedPionsEMCal0010LHC11h, markerStylePHOSHighPt, markerSizeComparison, colorPHOSHighPt , colorPHOSHighPt);
+		graphRatio5TeVChargedPionsEMCal0010LHC11h->Draw("E1psame");
+
+        labelPi0CompChargedPionsPbPbLHC11h0010->Draw();
+		DrawGammaLines(0., 19.5 , 1, 1 ,1,kGray, 2);
+
+		legendCompCharged5and2760->Draw();
+
+
+	histo2DCompCombinedRatioLHC11h2->Draw("axis,same");
+    canvasCompIndiv5to276TeV->Update();
+    canvasCompIndiv5to276TeV->Print(Form("%s/ComparisonChargedPion5TeVTo2760GeV_0010_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+
+    canvasCompIndiv5to276TeV->cd();
+    histo2DCompCharged5to2760->DrawCopy();
+
+		DrawGammaSetMarkerTGraphErr(graphRatio5TeVto2760GeVChargedKaons0010, markerStylePHOSHighPt, markerSizeComparison, kGray+1 , kGray+1);
+		graphRatio5TeVto2760GeVChargedKaons0010->Draw("E1psame");
+        //comb to 5TeV
+		graphRatio5TeVChargedKaonsComb0010LHC11h_lowPt->Draw("E1psame");
+		DrawGammaSetMarkerTGraphErr(graphRatio5TeVChargedKaonsComb0010LHC11h, 33, markerSizeComparison+0.5,  kCyan+2 , kCyan+2);
+		graphRatio5TeVChargedKaonsComb0010LHC11h->Draw("E1psame");
+        //PCM to 5TeV
+// 		DrawGammaSetMarkerTGraphErr(graphRatio5TeVChargedKaonsPCM0010LHC11h, 33, markerSizeComparison+0.5,  kCyan+2 , kCyan+2);
+// 		graphRatio5TeVChargedKaonsPCM0010LHC11h->Draw("E1psame");
+        //EMCAL to 5TeV
+		DrawGammaSetMarkerTGraphErr(graphRatio5TeVChargedKaonsEMCal0010LHC11h, markerStylePHOSHighPt, markerSizeComparison, colorPHOSHighPt , colorPHOSHighPt);
+		graphRatio5TeVChargedKaonsEMCal0010LHC11h->Draw("E1psame");
+
+        labelPi0CompChargedPionsPbPbLHC11h0010->Draw();
+		DrawGammaLines(0., 19.5 , 1, 1 ,1,kGray, 2);
+
+		legendCompChargedKaon5and2760->Draw();
+
+
+	histo2DCompCharged5to2760->Draw("axis,same");
+    canvasCompIndiv5to276TeV->Update();
+    canvasCompIndiv5to276TeV->Print(Form("%s/ComparisonChargedKaon5TeVTo2760GeV_0010_%s.%s",outputDir.Data(),dateForOutput.Data(),suffix.Data()));
+    delete canvasCompIndiv5to276TeV;
+
 
 
 // 	// ***************************************************************************************************************
