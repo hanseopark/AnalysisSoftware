@@ -117,10 +117,14 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH2F *histoREtaData           = (TH2F*)ESDContainer->FindObject("ESD_Conversion_REta");
     TH2F *histoRZData             = (TH2F*)ESDContainer->FindObject("ESD_Conversion_RZ");
     TH2F *histoRPtData            = (TH2F*)ESDContainer->FindObject("ESD_Conversion_RPt");
+    TH2F *histoRElecdEdxData      = (TH2F*)ESDContainer->FindObject("Electron_RdEdx");
+    TH2F *histoRElecNSdEdxData    = (TH2F*)ESDContainer->FindObject("Electron_RNSigmadEdx");
     TH1F *histoDCAData            = (TH1F*)ESDContainer->FindObject("ESD_Conversion_DCA");
     TH1F *histoPsiPairData        = (TH1F*)ESDContainer->FindObject("ESD_Conversion_PsiPair");
     TH1F *histoChi2Data           = (TH1F*)ESDContainer->FindObject("ESD_Conversion_Chi2");
     TH1F *histoMassData           = (TH1F*)ESDContainer->FindObject("ESD_Conversion_Mass");
+    TH1F *histoRRejLargeData      = (TH1F*)ESDContainer->FindObject("ESD_Conversion_RLarge");
+    TH1F *histoRRejSmallData      = (TH1F*)ESDContainer->FindObject("ESD_Conversion_RSmall");
 
     //________________________ MC ________________________
     TFile fMC(fileNameMC.Data());
@@ -142,10 +146,14 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH2F *histoREtaMC             = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_REta");
     TH2F *histoRZMC               = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RZ");
     TH2F *histoRPtMC              = (TH2F*)ESDContainerMC->FindObject("ESD_Conversion_RPt");
+    TH2F *histoRElecdEdxMC        = (TH2F*)ESDContainerMC->FindObject("Electron_RdEdx");
+    TH2F *histoRElecNSdEdxMC      = (TH2F*)ESDContainerMC->FindObject("Electron_RNSigmadEdx");
     TH1F *histoDCAMC              = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_DCA");
     TH1F *histoPsiPairMC          = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_PsiPair");
     TH1F *histoChi2MC             = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_Chi2");
     TH1F *histoMassMC             = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_Mass");
+    TH1F *histoRRejLargeMC        = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_RLarge");
+    TH1F *histoRRejSmallMC        = (TH1F*)ESDContainerMC->FindObject("ESD_Conversion_RSmall");
 
     TList *MCContainer            = (TList*)HistosGammaConversionMC->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
     TList *TrueMCContainer        = (TList*)HistosGammaConversionMC->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
@@ -158,6 +166,8 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoPsiPairTrueMC      = (TH1F*)TrueMCContainer->FindObject("ESD_TrueConversion_PsiPair");
     TH1F *histoChi2TrueMC         = (TH1F*)TrueMCContainer->FindObject("ESD_TrueConversion_Chi2");
     TH1F *histoMassTrueMC         = (TH1F*)TrueMCContainer->FindObject("ESD_TrueConversion_Mass");
+    TH1F *histoRRejLargeTrueMC    = (TH1F*)TrueMCContainer->FindObject("ESD_TrueConversion_RLarge");
+    TH1F *histoRRejSmallTrueMC    = (TH1F*)TrueMCContainer->FindObject("ESD_TrueConversion_RSmall");
 
     TH1F *histoPi0DalRPtTrueMC    = (TH1F*)TrueMCContainer->FindObject("ESD_TruePi0DalConversion_RPt");
     TH1F *histoPi0DalREtaTrueMC   = (TH1F*)TrueMCContainer->FindObject("ESD_TruePi0DalConversion_REta");
@@ -198,6 +208,10 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoRZData,normFactorReconstData);
     GammaScalingHistogramm(histoRZMC,normFactorReconstMC);
     GammaScalingHistogramm(histoRZTrueMC,normFactorReconstMC);
+    GammaScalingHistogramm(histoRElecdEdxData,normFactorReconstData);
+    GammaScalingHistogramm(histoRElecdEdxMC,normFactorReconstMC);
+    GammaScalingHistogramm(histoRElecNSdEdxData,normFactorReconstData);
+    GammaScalingHistogramm(histoRElecNSdEdxMC,normFactorReconstMC);
 
     GammaScalingHistogramm(histoDCAData,normFactorReconstData);
     GammaScalingHistogramm(histoDCAMC,normFactorReconstMC);
@@ -207,16 +221,20 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     GammaScalingHistogramm(histoChi2MC,normFactorReconstMC);
     GammaScalingHistogramm(histoMassData,normFactorReconstData);
     GammaScalingHistogramm(histoMassMC,normFactorReconstMC);
+    GammaScalingHistogramm(histoRRejLargeData,normFactorReconstData);
+    GammaScalingHistogramm(histoRRejLargeMC,normFactorReconstMC);
+    GammaScalingHistogramm(histoRRejSmallData,normFactorReconstData);
+    GammaScalingHistogramm(histoRRejSmallMC,normFactorReconstMC);
 
 
     //___________________ Projecting histos ___________________
 
     cout << "******************** projection data histograms... ******************** " << endl;
-    TH1F *histoRData        = (TH1F*)histoRPtData->ProjectionX("histoRData");
+    TH1F *histoRData        = (TH1F*)histoRPtData->ProjectionY("histoRData");
     Double_t *projRBins[4]  = {0., 5., 35., 180.};
     TH1F *histoPtinRBinData[4];
     for(Int_t i=0; i<4; i++){
-        histoPtinRBinData[i] = (TH1F*)histoRPtData->ProjectionX(Form("histoPtinRBinData_%i",i),
+        histoPtinRBinData[i] = (TH1F*)histoRPtData->ProjectionY(Form("histoPtinRBinData_%i",i),
                                                                 histoRPtData->GetXaxis()->FindBin(projRBins[i]+0.001),
                                                                 histoRPtData->GetXaxis()->FindBin(projRBins[i+1]+0.001),"e");
         cout << "Projecting Pt in R bin " << projRBins[i] << " - " << projRBins[i+1] << endl;
@@ -224,11 +242,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoRDataRebin = (TH1F*)histoRData->Clone("histoRDataRebin");
     ConvGammaRebinWithBinCorrection(histoRDataRebin,rebinRPlots);
 
-    TH1F *histoPtData       = (TH1F*)histoRPtData->ProjectionY("histoPtData");
+    TH1F *histoPtData       = (TH1F*)histoRPtData->ProjectionX("histoPtData");
     Double_t *projPtBins[5]  = {0.4, 4., 8., 12., 20.};
     TH1F *histoRinPtBinData[5];
     for(Int_t i=0; i<5; i++){
-        histoRinPtBinData[i] = (TH1F*)histoRPtData->ProjectionY(Form("histoRinPtBinData_%i",i),
+        histoRinPtBinData[i] = (TH1F*)histoRPtData->ProjectionX(Form("histoRinPtBinData_%i",i),
                                                                 histoRPtData->GetYaxis()->FindBin(projPtBins[i]+0.001),
                                                                 histoRPtData->GetYaxis()->FindBin(projPtBins[i+1]+0.001),"e");
         cout << "Projecting R in Pt bin " << projPtBins[i] << " - " << projPtBins[i+1] << endl;
@@ -238,11 +256,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
     cout << "******************** projection MC histograms... ******************** " << endl;
-    TH1F *histoRMC        = (TH1F*)histoRPtMC->ProjectionX("histoRMC");
+    TH1F *histoRMC        = (TH1F*)histoRPtMC->ProjectionY("histoRMC");
     Double_t *projRBins[4]  = {0., 5., 35., 180.};
     TH1F *histoPtinRBinMC[4];
     for(Int_t i=0; i<4; i++){
-        histoPtinRBinMC[i] = (TH1F*)histoRPtMC->ProjectionX(Form("histoPtinRBinMC_%i",i),
+        histoPtinRBinMC[i] = (TH1F*)histoRPtMC->ProjectionY(Form("histoPtinRBinMC_%i",i),
                                                                 histoRPtMC->GetXaxis()->FindBin(projRBins[i]+0.001),
                                                                 histoRPtMC->GetXaxis()->FindBin(projRBins[i+1]+0.001),"e");
         cout << "Projecting Pt in R bin " << projRBins[i] << " - " << projRBins[i+1] << endl;
@@ -250,11 +268,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoRMCRebin = (TH1F*)histoRMC->Clone("histoRMCRebin");
     ConvGammaRebinWithBinCorrection(histoRMCRebin,rebinRPlots);
 
-    TH1F *histoPtMC       = (TH1F*)histoRPtMC->ProjectionY("histoPtMC");
+    TH1F *histoPtMC       = (TH1F*)histoRPtMC->ProjectionX("histoPtMC");
     Double_t *projPtBins[5]  = {0.4, 4., 8., 12., 20.};
     TH1F *histoRinPtBinMC[5];
     for(Int_t i=0; i<5; i++){
-        histoRinPtBinMC[i] = (TH1F*)histoRPtMC->ProjectionY(Form("histoRinPtBinMC_%i",i),
+        histoRinPtBinMC[i] = (TH1F*)histoRPtMC->ProjectionX(Form("histoRinPtBinMC_%i",i),
                                                                 histoRPtMC->GetYaxis()->FindBin(projPtBins[i]+0.001),
                                                                 histoRPtMC->GetYaxis()->FindBin(projPtBins[i+1]+0.001),"e");
         cout << "Projecting R in Pt bin " << projPtBins[i] << " - " << projPtBins[i+1] << endl;
@@ -264,14 +282,14 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
 
     cout << "******************** projection true MC histograms... ******************** " << endl;
-    TH1F *histoRTrueMC       = (TH1F*)histoRPtTrueMC->ProjectionX("histoRTrueMC");
-    TH1F *histoPi0DalRTrueMC = (TH1F*)histoPi0DalRPtTrueMC->ProjectionX("histoPi0DalRTrueMC");
-    TH1F *histoEtaDalRTrueMC = (TH1F*)histoEtaDalRPtTrueMC->ProjectionX("histoEtaDalRTrueMC");
-    TH1F *histoCombRTrueMC   = (TH1F*)histoCombRPtTrueMC->ProjectionX("histoCombRTrueMC");
+    TH1F *histoRTrueMC       = (TH1F*)histoRPtTrueMC->ProjectionY("histoRTrueMC");
+    TH1F *histoPi0DalRTrueMC = (TH1F*)histoPi0DalRPtTrueMC->ProjectionY("histoPi0DalRTrueMC");
+    TH1F *histoEtaDalRTrueMC = (TH1F*)histoEtaDalRPtTrueMC->ProjectionY("histoEtaDalRTrueMC");
+    TH1F *histoCombRTrueMC   = (TH1F*)histoCombRPtTrueMC->ProjectionY("histoCombRTrueMC");
     Double_t *projRBins[4]  = {0., 5., 35., 180.};
     TH1F *histoPtinRBinTrueMC[4];
     for(Int_t i=0; i<4; i++){
-        histoPtinRBinTrueMC[i] = (TH1F*)histoRPtTrueMC->ProjectionX(Form("histoPtinRBinTrueMC_%i",i),
+        histoPtinRBinTrueMC[i] = (TH1F*)histoRPtTrueMC->ProjectionY(Form("histoPtinRBinTrueMC_%i",i),
                                                                 histoRPtTrueMC->GetXaxis()->FindBin(projRBins[i]+0.001),
                                                                 histoRPtTrueMC->GetXaxis()->FindBin(projRBins[i+1]+0.001),"e");
         cout << "Projecting Pt in R bin " << projRBins[i] << " - " << projRBins[i+1] << endl;
@@ -285,14 +303,14 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     TH1F *histoCombRTrueMCRebin = (TH1F*)histoCombRTrueMC->Clone("histoCombRTrueMCRebin");
     ConvGammaRebinWithBinCorrection(histoCombRTrueMCRebin,rebinRPlots);
 
-    TH1F *histoPtTrueMC       = (TH1F*)histoRPtTrueMC->ProjectionY("histoPtTrueMC");
-    TH1F *histoPi0DalPtTrueMC = (TH1F*)histoPi0DalRPtTrueMC->ProjectionY("histoPi0DalPtTrueMC");
-    TH1F *histoEtaDalPtTrueMC = (TH1F*)histoEtaDalRPtTrueMC->ProjectionY("histoEtaDalPtTrueMC");
-    TH1F *histoCombPtTrueMC   = (TH1F*)histoCombRPtTrueMC->ProjectionY("histoCombPtTrueMC");
+    TH1F *histoPtTrueMC       = (TH1F*)histoRPtTrueMC->ProjectionX("histoPtTrueMC");
+    TH1F *histoPi0DalPtTrueMC = (TH1F*)histoPi0DalRPtTrueMC->ProjectionX("histoPi0DalPtTrueMC");
+    TH1F *histoEtaDalPtTrueMC = (TH1F*)histoEtaDalRPtTrueMC->ProjectionX("histoEtaDalPtTrueMC");
+    TH1F *histoCombPtTrueMC   = (TH1F*)histoCombRPtTrueMC->ProjectionX("histoCombPtTrueMC");
     Double_t *projPtBins[5]  = {0.4, 4., 8., 12., 20.};
     TH1F *histoRinPtBinTrueMC[5];
     for(Int_t i=0; i<5; i++){
-        histoRinPtBinTrueMC[i] = (TH1F*)histoRPtTrueMC->ProjectionY(Form("histoRinPtBinTrueMC_%i",i),
+        histoRinPtBinTrueMC[i] = (TH1F*)histoRPtTrueMC->ProjectionX(Form("histoRinPtBinTrueMC_%i",i),
                                                                 histoRPtTrueMC->GetYaxis()->FindBin(projPtBins[i]+0.001),
                                                                 histoRPtTrueMC->GetYaxis()->FindBin(projPtBins[i+1]+0.001),"e");
         cout << "Projecting R in Pt bin " << projPtBins[i] << " - " << projPtBins[i+1] << endl;
@@ -471,12 +489,9 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
 
         DrawGammaSetMarker(histoDataMCRatioRScaledToGas, 20, 1.5, colorData, colorData);
         histoDataMCRatioRScaledToGas->Draw("same");
-		DrawGammaSetMarker(histoDataMCRatioRFullPtScaledToGas, 24, 1.5, colorData, colorData);
-        histoDataMCRatioRFullPtScaledToGas->Draw("same");
 
         TLegend* legenLowPanel = GetAndSetLegend2(0.7, 0.85-(2*0.9*textsizeLabelsDown), 0.9, 0.85, textSizeLabels);
         legenLowPanel->AddEntry(histoDataMCRatioRScaledToGas,"From proj","lp");
-        legenLowPanel->AddEntry(histoDataMCRatioRFullPtScaledToGas,"Full pT","lp");
         legenLowPanel->Draw();
 
 
@@ -484,6 +499,89 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     canvasTwoPanels->Print(Form("%s/PhotonConvRScaledToGas%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
 
+    TCanvas * canvasPhiR = new TCanvas("canvasPhiR","",480,440);  // gives the page size
+    DrawGammaCanvasSettings( canvasPhiR, 0.09, 0.105, 0.02, 0.085);
+    canvasPhiR->SetLogz(1);
+    canvasPhiR->cd();
+
+        SetStyleHistoTH2ForGraphs(  histoRPhiData, "#varphi (rad)","R (cm)", 0.035, 0.04,
+                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+        histoRPhiData->GetYaxis()->SetRangeUser(0,200.);
+        histoRPhiData->GetXaxis()->SetRangeUser(0.,2*TMath::Pi());
+
+        histoRPhiData->Draw("colz");
+
+    canvasPhiR->Print(Form("%s/PhotonConvRPhi%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    TCanvas * canvasEtaR = new TCanvas("canvasEtaR","",480,440);  // gives the page size
+    DrawGammaCanvasSettings( canvasEtaR, 0.09, 0.105, 0.02, 0.085);
+    canvasEtaR->SetLogz(1);
+    canvasEtaR->cd();
+
+        SetStyleHistoTH2ForGraphs(  histoREtaData, "#eta","R (cm)", 0.035, 0.04,
+                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+        histoREtaData->GetYaxis()->SetRangeUser(0,200.);
+        histoREtaData->GetXaxis()->SetRangeUser(-2., 2.);
+
+        histoREtaData->Draw("colz");
+
+    canvasEtaR->Print(Form("%s/PhotonConvREta%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    TCanvas * canvasZR = new TCanvas("canvasZR","",480,440);  // gives the page size
+    DrawGammaCanvasSettings( canvasZR, 0.09, 0.105, 0.02, 0.085);
+    canvasZR->SetLogz(1);
+    canvasZR->cd();
+
+        SetStyleHistoTH2ForGraphs(  histoRZData, "Z (cm)","R (cm)", 0.035, 0.04,
+                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+        histoRZData->GetYaxis()->SetRangeUser(0,200.);
+        histoRZData->GetXaxis()->SetRangeUser(-180., 180.);
+
+        histoRZData->Draw("colz");
+
+    canvasZR->Print(Form("%s/PhotonConvRZ%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    TCanvas * canvasPtR = new TCanvas("canvasPtR","",480,440);  // gives the page size
+    DrawGammaCanvasSettings( canvasPtR, 0.09, 0.105, 0.02, 0.085);
+    canvasPtR->SetLogz(1);
+    canvasPtR->cd();
+
+        SetStyleHistoTH2ForGraphs(  histoRPtData, "#it{p}_{T} (GeV/#it{c})","R (cm)", 0.035, 0.04,
+                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+        histoRPtData->GetYaxis()->SetRangeUser(0,200.);
+        histoRPtData->GetXaxis()->SetRangeUser(0., 20.);
+
+        histoRPtData->Draw("colz");
+
+    canvasPtR->Print(Form("%s/PhotonConvRPt%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    TCanvas * canvasElecdEdxR = new TCanvas("canvasElecdEdxR","",480,440);  // gives the page size
+    DrawGammaCanvasSettings( canvasElecdEdxR, 0.09, 0.105, 0.02, 0.085);
+    canvasElecdEdxR->SetLogz(1);
+    canvasElecdEdxR->cd();
+
+        SetStyleHistoTH2ForGraphs(  histoRElecdEdxData, "electron dEdx","R (cm)", 0.035, 0.04,
+                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+        histoRElecdEdxData->GetYaxis()->SetRangeUser(0,200.);
+        histoRElecdEdxData->GetXaxis()->SetRangeUser(0.,200.);
+
+        histoRElecdEdxData->Draw("colz");
+
+    canvasElecdEdxR->Print(Form("%s/PhotonConvRElecdEdx%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
+
+    TCanvas * canvasElecNSdEdxR = new TCanvas("canvasElecNSdEdxR","",480,440);  // gives the page size
+    DrawGammaCanvasSettings( canvasElecNSdEdxR, 0.09, 0.105, 0.02, 0.085);
+    canvasElecNSdEdxR->SetLogz(1);
+    canvasElecNSdEdxR->cd();
+
+        SetStyleHistoTH2ForGraphs(  histoRElecNSdEdxData, "electron n#sigma dEdx","R (cm)", 0.035, 0.04,
+                                    0.035, 0.04, 0.9, 1.0, 510, 510);
+        histoRElecNSdEdxData->GetYaxis()->SetRangeUser(0,200.);
+        histoRElecNSdEdxData->GetXaxis()->SetRangeUser(-10., 10.);
+
+        histoRElecNSdEdxData->Draw("colz");
+
+    canvasElecNSdEdxR->Print(Form("%s/PhotonConvRElecNSdEdx%s_%s.%s",outputDirectory.Data(),optionPeriod.Data(),fCutSelectionRead.Data(),suffix.Data()));
 
     //______________________________________ R distribution ______________________________
     Double_t arrayXRdistrib[3];
@@ -981,21 +1079,11 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         fProfileContainingMaterialBudgetWeights->Fill(arrayRBins[i],histoDataMCRatioR->GetBinContent(i+1));
     }
 
-    cout<< " pT 300"<< endl;
-    TProfile* fProfileContainingMaterialBudgetWeightsFullPt = new TProfile("profileContainingMaterialBudgetWeightsFullPt_manyRadialBins","profileContainingMaterialBudgetWeightsFullPt_manyRadialBins",nBinsR,arrayRBins);
-    fProfileContainingMaterialBudgetWeightsFullPt->GetXaxis()->SetTitle("R (cm)");
-    fProfileContainingMaterialBudgetWeightsFullPt->GetYaxis()->SetTitle("weight_per_gamma");
-
-    for(Int_t i=0; i<nBinsR; i++){
-        cout << "R bin: " << arrayRBins[i] << " ratio Data/MC scaled to gas " << histoDataMCRatioRFullPtScaledToGas->GetBinContent(i+1) <<endl;
-        fProfileContainingMaterialBudgetWeightsFullPt->Fill(arrayRBins[i],histoDataMCRatioRFullPtScaledToGas->GetBinContent(i+1));
-    }
     //Form("%s/PhotonChar_%s.%s",optionPeriod.Data(),fCutSelectionRead.Data() ))
     cout<< Form("MCInputFileMaterialBudgetWeights%s_%s.root",optionPeriod.Data(),fCutSelectionRead.Data())<< endl;
     TFile outFile(Form("MCInputFileMaterialBudgetWeights%s_%s.root",optionPeriod.Data(),fCutSelectionRead.Data()) ,"RECREATE");
 
         fProfileContainingMaterialBudgetWeights->Write();
-        fProfileContainingMaterialBudgetWeightsFullPt->Write();
 
         histoRData->Write("Data");
         histoRMC->Write("MC");
