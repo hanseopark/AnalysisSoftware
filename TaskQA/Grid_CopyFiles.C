@@ -1099,18 +1099,19 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
           "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"
         };
 
-        TString train = "Legotrain-vAN-20171213-8TeV-dirGamma_EMC_SysVar";
+        TString train = "Legotrain-vAN-20180123-8TeV-dirGamma-JetJet";
         Int_t trainRuns[nSets] = {
-                                  2282,2282,2282,2282,2282,2282,2282
+                                  2298,2298,2298,2298,2298,2298,2298
                                  };
 
         TString runlist[nSets] = {
                                   "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
                                  };
 
-        const Int_t nFiles = 3;
+        const Int_t nFiles = 6;
         TString Files[nFiles] = {
-          "GammaCalo_165","GammaCalo_166","GammaCalo_167"
+          "GammaCalo_120", "GammaCalo_140", "GammaCalo_160",
+          "GammaConvCalo_130", "GammaConvCalo_159", "GammaConvCalo_181"
                                 };
 
         const Int_t nMerge = 1;
