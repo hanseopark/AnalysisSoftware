@@ -35,6 +35,7 @@ elif [ $1 = "dmuhlhei" ]; then
     BASEDIR=~/data/work/Grid
 fi
 
+# Definitition of number of slashes in your path to different depths
 NSlashesBASE=`tr -dc '/' <<<"$BASEDIR" | wc -c`
 NSlashes=`expr $NSlashesBASE + 4`
 NSlashes2=`expr $NSlashes - 1`
@@ -43,13 +44,17 @@ NSlashes4=`expr $NSlashes + 2`
 echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
 
-TRAINDIR=Legotrain-vAN20171115-XeXeQA
+# TRAINDIR=Legotrain-vAN20171115-XeXeQA
 # LHC17nData="348"; #pass 1
 #  LHC17nData="349"; #pass 1
 # LHC17j7MC="687";
 # LHC17j7MC="688";
 # LHC17j7MC="689";
-LHC17j7MC="690";
+# LHC17j7MC="690";
+
+TRAINDIR=Legotrain-vAN20180122-XeXeQA
+LHC17nData="374"; #pass 1
+LHC17j7MC="791";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

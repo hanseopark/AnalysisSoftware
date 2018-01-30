@@ -1517,8 +1517,10 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                 if (mode == 9 || mode == 0 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
                 if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.1);
                 if (mode == 4 || mode == 5 ){
-                    if (optionEnergy.Contains("PbPb_2.76TeV") && meson.Contains("Pi0") )
+                    if (optionEnergy.Contains("PbPb_2") && meson.Contains("Pi0") )
                         histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.4);
+                    else if (optionEnergy.Contains("PbPb_5") && meson.Contains("Pi0") )
+                      histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.05,0.25);
                     else if (optionEnergy.Contains("PbPb_2.76TeV") )
                         histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
                     else

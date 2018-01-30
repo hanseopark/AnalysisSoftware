@@ -9,7 +9,7 @@ source basicFunction.sh
 
 # switches to enable/disable certain procedures
 DOWNLOADON=1
-MERGEON=1
+MERGEON=0
 MERGEONBINSSingle=1
 MERGEONBINS=1
 SEPARATEON=0
@@ -113,10 +113,10 @@ TRAINDIR=Legotrain-vAN20171204_DirGamma
 # LHC12f1aMC="3194";
 # LHC12f1bMC="3195";
 # LHC15g1aMC="3196";
-# LHC15g1aMC="3200";
-LHC11aData="2272";
-LHC12f1aMC="3201";
-LHC12f1bMC="3202";
+LHC15g1aMC="3200";
+# LHC11aData="2272";
+# LHC12f1aMC="3201";
+# LHC12f1bMC="3202";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -286,7 +286,7 @@ if [ $2 = "LHC11a" ]; then
                     number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
                     echo $number
                     hadd -f $OUTPUTDIR_LHC15g1a/$binNumber/GammaCalo_$number.root $OUTPUTDIR_LHC15g1a/$binNumber/*/GammaCalo_$number.root
-                    cp $OUTPUTDIR_LHC15g1a/$binNumber/GammaCalo_$number.root $OUTPUTDIR/LHC15g1aFineBins/GammaCalo_MC_LHC15g1a$binNumber\_$number.root $number
+                    cp $OUTPUTDIR_LHC15g1a/$binNumber/GammaCalo_$number.root $OUTPUTDIR/LHC15g1aFineBins/GammaCalo_MC_LHC15g1a$binNumber\_$number.root
                 done;
             done;
         fi
@@ -333,6 +333,7 @@ if [ $2 = "LHC11a" ]; then
     filesForMerging=`cat filesForMerging.txt`
     if [ $MERGEONBINS == 1 ]; then
         for fileName in $filesForMerging; do
+            echo "I am here for $fileName"
             binsForMerging=`cat runlists/binNumbersJJToMerge.txt`
             number=`echo $fileName  | cut -d "/" -f $NSlashes2 | cut -d "_" -f 4 | cut -d "." -f1`
             TOMERGE="";

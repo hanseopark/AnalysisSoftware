@@ -1477,7 +1477,7 @@
                     return 8;
                 } else if (mode == 4 || mode == 12 ){
                     scaleFac    = 1.5;
-                    return 10;
+                    return 18;
                 } else
                     return 4;
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
@@ -4153,6 +4153,28 @@
                         binning[i] = fBinsPi0pPb5TeVEMCPt[i];
                     }
                 }
+            } else if (energy.CompareTo("PbPb_5.02TeV") == 0 ){
+              if (mode == 0 ){ // PCM
+                maxNBins = 15;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi0PbPb5TeVPt[i];
+                }
+              } else if ( mode == 2 || mode == 13 ) {
+                maxNBins = 24;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi0PbPb5TeVPCMEMCPt[i];
+                }
+              } else if ( mode == 4 || mode == 12  ) {
+                maxNBins = 24;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi0PbPb5TeVEMCPt[i];
+                }
+              } else if (mode == 20){ //combined
+                maxNBins = 15;
+                for(Int_t i = 0; i < maxNBins+1; i++){
+                  binning[i] = fBinsPi0PbPb5TeVPt[i];
+                }
+              }
             }
         } else if (meson.Contains("Eta")){
             if (energy.CompareTo("2.76TeV") == 0){

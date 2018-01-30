@@ -381,11 +381,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
                 fCent                                   = GetCentralityString(fEventCutSelection);
                 fCentOutput                             = GetCentralityStringOutput(fEventCutSelection);
+                collisionSystem                         = fCent+ " "+collisionSystem;
             }
         } else {
             if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
                 fCent                                   = GetCentralityString(cutNumber[i]);
                 fCentOutput                             = GetCentralityStringOutput(cutNumber[i]);
+                collisionSystem                         = fCent+ " "+collisionSystem;
             }
         }
     }
@@ -1455,16 +1457,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     legendEffiPi0->Draw();
 
-    TLatex *labelEnergyEffi = new TLatex(0.62, maxYLegendEffi+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-    SetStyleTLatex( labelEnergyEffi, 0.85*textSizeSpectra,4);
+    TLatex *labelEnergyEffi = new TLatex(0.95, maxYLegendEffi+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+    SetStyleTLatex( labelEnergyEffi, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
     labelEnergyEffi->Draw();
 
-    TLatex *labelPi0Effi = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-    SetStyleTLatex( labelPi0Effi, 0.85*textSizeSpectra,4);
+    TLatex *labelPi0Effi = new TLatex(0.95, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+    SetStyleTLatex( labelPi0Effi, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
     labelPi0Effi->Draw();
 
-    TLatex *labelDetProcEffi = new TLatex(0.62, maxYLegendEffi+0.02,detectionProcess.Data());
-    SetStyleTLatex( labelDetProcEffi, 0.85*textSizeSpectra,4);
+    TLatex *labelDetProcEffi = new TLatex(0.95, maxYLegendEffi+0.02,detectionProcess.Data());
+    SetStyleTLatex( labelDetProcEffi, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
     labelDetProcEffi->Draw();
 
     canvasEffi->Update();
@@ -1540,16 +1542,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             legendEffectSec->Draw();
 
-            TLatex *labelEnergyEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4);
+            TLatex *labelEnergyEffSec = new TLatex(0.95, maxYLegendEffecSec+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyEffSec, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelEnergyEffSec->Draw();
 
-            TLatex *labelPi0EffSec = new TLatex(0.62, maxYLegendEffecSec+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-            SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4);
+            TLatex *labelPi0EffSec = new TLatex(0.95, maxYLegendEffecSec+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelPi0EffSec, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelPi0EffSec->Draw();
 
-            TLatex *labelDetProcEffSec = new TLatex(0.62, maxYLegendEffecSec+0.02,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4);
+            TLatex *labelDetProcEffSec = new TLatex(0.95, maxYLegendEffecSec+0.02,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcEffSec, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelDetProcEffSec->Draw();
 
             canvasEffi->Update();
@@ -1724,16 +1726,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
         legendPurityPi0->Draw();
 
-        TLatex *labelEnergyPurity = new TLatex(0.62, maxYLegendPur+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-        SetStyleTLatex( labelEnergyPurity, 0.85*textSizeSpectra,4);
+        TLatex *labelEnergyPurity = new TLatex(0.95, maxYLegendPur+0.02+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyPurity, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelEnergyPurity->Draw();
 
-        TLatex *labelPi0Purity = new TLatex(0.62, maxYLegendPur+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelPi0Purity, 0.85*textSizeSpectra,4);
+        TLatex *labelPi0Purity = new TLatex(0.95, maxYLegendPur+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0Purity, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelPi0Purity->Draw();
 
-        TLatex *labelDetProcPurity = new TLatex(0.62, maxYLegendPur+0.02,detectionProcess.Data());
-        SetStyleTLatex( labelDetProcPurity, 0.85*textSizeSpectra,4);
+        TLatex *labelDetProcPurity = new TLatex(0.95, maxYLegendPur+0.02,detectionProcess.Data());
+        SetStyleTLatex( labelDetProcPurity, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelDetProcPurity->Draw();
 
         canvasPurity->Update();
@@ -2718,16 +2720,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             legendWeightsPi0->Draw();
 
-            TLatex *labelWeightsEnergy = new TLatex(0.7,0.24,collisionSystem.Data());
-            SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
+            TLatex *labelWeightsEnergy = new TLatex(0.95,0.24,collisionSystem.Data());
+            SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
             labelWeightsEnergy->SetTextFont(43);
             labelWeightsEnergy->Draw();
-            TLatex *labelWeightsPi0 = new TLatex(0.7,0.20,"#pi^{0} #rightarrow #gamma#gamma");
-            SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel,4);
+            TLatex *labelWeightsPi0 = new TLatex(0.95,0.20,"#pi^{0} #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelWeightsPi0, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
             labelWeightsPi0->SetTextFont(43);
             labelWeightsPi0->Draw();
-            TLatex *labelDetProcWeights    = new TLatex(0.7, 0.16,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4);
+            TLatex *labelDetProcWeights    = new TLatex(0.95, 0.16,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
             labelDetProcWeights->SetTextFont(43);
             labelDetProcWeights->Draw();
 
@@ -3155,19 +3157,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 legendMeanNew->Draw();
 
                 // labeling
-                TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
-                labelEnergySysDetailed->SetTextAlign(31);
-                SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
+                SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                 labelEnergySysDetailed->Draw();
 
-                TLatex *labelPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-                labelPi0SysDetailed->SetTextAlign(31);
-                SetStyleTLatex( labelPi0SysDetailed, 0.85*textSizeSpectra,4);
+                TLatex *labelPi0SysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+                SetStyleTLatex( labelPi0SysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                 labelPi0SysDetailed->Draw();
 
-                TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
-                labelDetProcSysDetailed->SetTextAlign(31);
-                SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                 labelDetProcSysDetailed->Draw();
 
             canvasNewSysErrMean->Update();
@@ -3465,20 +3464,56 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         DrawGammaSetMarkerTGraphAsym(graphEfficiencyPi0Weighted, 20, 1, kGray+2, kGray+2);
         graphEfficiencyPi0Weighted->Draw("p,e1,same");
 
-        TLatex *labelEnergyEffiWOTrigg = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-        SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4);
+        TLatex *labelEnergyEffiWOTrigg = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelEnergyEffiWOTrigg->Draw();
 
-        TLatex *labelPi0EffiWOTrigg = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelPi0EffiWOTrigg, 0.85*textSizeSpectra,4);
+        TLatex *labelPi0EffiWOTrigg = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0EffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelPi0EffiWOTrigg->Draw();
 
-        TLatex *labelDetProcEffiWOTrigg = new TLatex(0.62, 0.15,detectionProcess.Data());
-        SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4);
+        TLatex *labelDetProcEffiWOTrigg = new TLatex(0.95, 0.15,detectionProcess.Data());
+        SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelDetProcEffiWOTrigg->Draw();
 
         canvasEffi->Update();
         canvasEffi->SaveAs(Form("%s/Pi0_EfficiencyW0TriggEff_Weighted.%s",outputDir.Data(),suffix.Data()));
+    }
+
+    //***************************************************************************************************************
+    //************************************* Efficiency weighted *****************************************************
+    //***************************************************************************************************************
+    if (graphEffTimesAccPi0Weighted){
+      DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.015, 0.08);
+      canvasEffi->SetLogy(1);
+      canvasEffi->SetLogx(1);
+      canvasEffi->cd();
+      TH2F * histo2DAccEff;
+      histo2DAccEff                = new TH2F("histo2DAccEff", "histo2DAccEff",1000, 0.23,  maxPtGlobalPi0*2, 1000, 8e-5, 2e-0 );
+      SetStyleHistoTH2ForGraphs( histo2DAccEff, "#it{p}_{T} (GeV/#it{c})", Form("%s%s","#it{#varepsilon} = 2#pi#upoint#Delta","#it{y}#upoint#it{A}#upoint#it{#varepsilon}_{rec} / #it{P}"),
+                                 0.85*textSizeSpectra, textSizeSpectra, 0.85*textSizeSpectra, textSizeSpectra, 0.9, 1.04);//(#times #epsilon_{pur})
+      histo2DAccEff->GetYaxis()->SetLabelOffset(0.001);
+      histo2DAccEff->GetXaxis()->SetLabelOffset(-0.01);
+      histo2DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
+      histo2DAccEff->DrawCopy();
+
+      DrawGammaSetMarkerTGraphAsym(graphEffTimesAccPi0Weighted, 20, 1, kGray+2, kGray+2);
+      graphEffTimesAccPi0Weighted->Draw("p,e1,same");
+
+      TLatex *labelEnergyEffiWOTrigg = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+      SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
+      labelEnergyEffiWOTrigg->Draw();
+
+      TLatex *labelPi0EffiWOTrigg = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+      SetStyleTLatex( labelPi0EffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
+      labelPi0EffiWOTrigg->Draw();
+
+      TLatex *labelDetProcEffiWOTrigg = new TLatex(0.95, 0.15,detectionProcess.Data());
+      SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
+      labelDetProcEffiWOTrigg->Draw();
+
+      canvasEffi->Update();
+      canvasEffi->SaveAs(Form("%s/Pi0_EfficiencyTimesAcceptanceW0TriggEff_Weighted.%s",outputDir.Data(),suffix.Data()));
     }
 
     //***************************************************************************************************************
@@ -3650,16 +3685,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         DrawGammaSetMarkerTGraphAsym(graphPurityPi0Weighted, 20, 1, kGray+2, kGray+2);
         graphPurityPi0Weighted->Draw("p,e1,same");
 
-        TLatex *labelEnergyPurityWeighted = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-        SetStyleTLatex( labelEnergyPurityWeighted, 0.85*textSizeSpectra,4);
+        TLatex *labelEnergyPurityWeighted = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyPurityWeighted, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelEnergyPurityWeighted->Draw();
 
-        TLatex *labelPi0PurityWeighted = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelPi0PurityWeighted, 0.85*textSizeSpectra,4);
+        TLatex *labelPi0PurityWeighted = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0PurityWeighted, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelPi0PurityWeighted->Draw();
 
-        TLatex *labelDetProcPurityWeighted = new TLatex(0.62, 0.15,detectionProcess.Data());
-        SetStyleTLatex( labelDetProcPurityWeighted, 0.85*textSizeSpectra,4);
+        TLatex *labelDetProcPurityWeighted = new TLatex(0.95, 0.15,detectionProcess.Data());
+        SetStyleTLatex( labelDetProcPurityWeighted, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelDetProcPurityWeighted->Draw();
 
 
@@ -3680,16 +3715,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         DrawGammaSetMarkerTGraphAsym(graphAcceptancePi0Weighted, 20, 1, kGray+2, kGray+2);
         graphAcceptancePi0Weighted->Draw("p,e1,same");
 
-        TLatex *labelEnergyAcc = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-        SetStyleTLatex( labelEnergyAcc, 0.85*textSizeSpectra,4);
+        TLatex *labelEnergyAcc = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+        SetStyleTLatex( labelEnergyAcc, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelEnergyAcc->Draw();
 
-        TLatex *labelPi0Acc = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelPi0Acc, 0.85*textSizeSpectra,4);
+        TLatex *labelPi0Acc = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelPi0Acc, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelPi0Acc->Draw();
 
-        TLatex *labelDetProcAcc = new TLatex(0.62, 0.15,detectionProcess.Data());
-        SetStyleTLatex( labelDetProcAcc, 0.85*textSizeSpectra,4);
+        TLatex *labelDetProcAcc = new TLatex(0.95, 0.15,detectionProcess.Data());
+        SetStyleTLatex( labelDetProcAcc, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelDetProcAcc->Draw();
 
         canvasAcc->Update();
@@ -3871,16 +3906,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     legendRatioSpecPi0->Draw();
 
-    TLatex *labelEnergyRatio = new TLatex(0.6, 0.93, collisionSystem.Data());
-    SetStyleTLatex( labelEnergyRatio, 0.85*textSizeSpectra,4);
+    TLatex *labelEnergyRatio = new TLatex(0.95, 0.93, collisionSystem.Data());
+    SetStyleTLatex( labelEnergyRatio, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
     labelEnergyRatio->Draw();
 
-    TLatex *labelPi0Ratio = new TLatex(0.6, 0.93-textSizeSpectra*0.85*1.04, "#pi^{0} #rightarrow #gamma#gamma");
-    SetStyleTLatex( labelPi0Ratio, 0.85*textSizeSpectra,4);
+    TLatex *labelPi0Ratio = new TLatex(0.95, 0.93-textSizeSpectra*0.85*1.04, "#pi^{0} #rightarrow #gamma#gamma");
+    SetStyleTLatex( labelPi0Ratio, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
     labelPi0Ratio->Draw();
 
-    TLatex *labelDetProcRatio = new TLatex(0.6, 0.93-(2*textSizeSpectra*0.85), detectionProcess.Data());
-    SetStyleTLatex( labelDetProcRatio, 0.85*textSizeSpectra,4);
+    TLatex *labelDetProcRatio = new TLatex(0.95, 0.93-(2*textSizeSpectra*0.85), detectionProcess.Data());
+    SetStyleTLatex( labelDetProcRatio, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
     labelDetProcRatio->Draw();
 
     canvasRatioSpec->Update();
@@ -4298,8 +4333,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           legendBinShift->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
-          SetStyleTLatex( labelBinShiftPi0, 0.85*textSizeSpectra,4);
+          TLatex *labelBinShiftPi0 = new TLatex(0.95, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#pi^{0} #rightarrow #gamma#gamma");
+          SetStyleTLatex( labelBinShiftPi0, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
           labelBinShiftPi0->Draw();
           labelDetProcEffi->Draw();
 
@@ -4321,8 +4356,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           legendBinShift2->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftEta = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
-          SetStyleTLatex( labelBinShiftEta, 0.85*textSizeSpectra,4);
+          TLatex *labelBinShiftEta = new TLatex(0.95, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+          SetStyleTLatex( labelBinShiftEta, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
           labelBinShiftEta->Draw();
           labelDetProcEffi->Draw();
 
@@ -4356,8 +4391,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
           legendBinShift3->Draw();
 
           labelEnergyEffi->Draw();
-          TLatex *labelBinShiftEtaToPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
-          SetStyleTLatex( labelBinShiftEtaToPi0, 0.85*textSizeSpectra,4);
+          TLatex *labelBinShiftEtaToPi0 = new TLatex(0.95, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+          SetStyleTLatex( labelBinShiftEtaToPi0, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
           labelBinShiftEtaToPi0->Draw();
           labelDetProcEffi->Draw();
 
@@ -4410,8 +4445,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         legendEffiEta->Draw();
 
         labelEnergyEffi->Draw();
-        TLatex *labelEtaEffi = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelEtaEffi, 0.85*textSizeSpectra,4);
+        TLatex *labelEtaEffi = new TLatex(0.95, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelEtaEffi, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelEtaEffi->Draw();
         labelDetProcEffi->Draw();
 
@@ -5297,16 +5332,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 }
                 legendWeightsEta->Draw();
 
-                TLatex *labelWeightsEnergy = new TLatex(0.7,0.24,collisionSystem.Data());
-                SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
+                TLatex *labelWeightsEnergy = new TLatex(0.95,0.24,collisionSystem.Data());
+                SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                 labelWeightsEnergy->SetTextFont(43);
                 labelWeightsEnergy->Draw();
-                TLatex *labelWeightsEta = new TLatex(0.7,0.20,"#eta #rightarrow #gamma#gamma");
-                SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4);
+                TLatex *labelWeightsEta = new TLatex(0.95,0.20,"#eta #rightarrow #gamma#gamma");
+                SetStyleTLatex( labelWeightsEta, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                 labelWeightsEta->SetTextFont(43);
                 labelWeightsEta->Draw();
-                TLatex *labelDetProcWeights    = new TLatex(0.7, 0.16,detectionProcess.Data());
-                SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4);
+                TLatex *labelDetProcWeights    = new TLatex(0.05, 0.16,detectionProcess.Data());
+                SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                 labelDetProcWeights->SetTextFont(43);
                 labelDetProcWeights->Draw();
 
@@ -5620,19 +5655,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     legendMeanNew->Draw();
 
                     // labeling
-                    TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
+                    TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
                     labelEnergySysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                    SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                     labelEnergySysDetailed->Draw();
 
-                    TLatex *labelEtaSysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+                    TLatex *labelEtaSysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
                     labelEtaSysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4);
+                    SetStyleTLatex( labelEtaSysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                     labelEtaSysDetailed->Draw();
 
-                    TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                    TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
                     labelDetProcSysDetailed->SetTextAlign(31);
-                    SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                    SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                     labelDetProcSysDetailed->Draw();
 
                 canvasNewSysErrMean->Update();
@@ -5833,16 +5868,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             DrawGammaSetMarkerTGraphAsym(graphEfficiencyEtaWeighted, 20, 1, kGray+2, kGray+2);
             graphEfficiencyEtaWeighted->Draw("p,e1,same");
 
-            TLatex *labelEnergyEffiWOTrigg = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4);
+            TLatex *labelEnergyEffiWOTrigg = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelEnergyEffiWOTrigg->Draw();
 
-            TLatex *labelEtaEffiWOTrigg = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
-            SetStyleTLatex( labelEtaEffiWOTrigg, 0.85*textSizeSpectra,4);
+            TLatex *labelEtaEffiWOTrigg = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelEtaEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelEtaEffiWOTrigg->Draw();
 
-            TLatex *labelDetProcEffiWOTrigg = new TLatex(0.62, 0.15,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4);
+            TLatex *labelDetProcEffiWOTrigg = new TLatex(0.95, 0.15,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcEffiWOTrigg, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelDetProcEffiWOTrigg->Draw();
 
             canvasEffi->Update();
@@ -5861,16 +5896,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             DrawGammaSetMarkerTGraphAsym(graphAcceptanceEtaWeighted, 20, 1, kGray+2, kGray+2);
             graphAcceptanceEtaWeighted->Draw("p,e1,same");
 
-            TLatex *labelEnergyAcc = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyAcc, 0.85*textSizeSpectra,4);
+            TLatex *labelEnergyAcc = new TLatex(0.95, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyAcc, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelEnergyAcc->Draw();
 
-            TLatex *labelEtaAcc = new TLatex(0.62, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
-            SetStyleTLatex( labelEtaAcc, 0.85*textSizeSpectra,4);
+            TLatex *labelEtaAcc = new TLatex(0.95, 0.15+0.99*textSizeSpectra*0.85,"#eta #rightarrow #gamma#gamma");
+            SetStyleTLatex( labelEtaAcc, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelEtaAcc->Draw();
 
-            TLatex *labelDetProcAcc = new TLatex(0.62, 0.15,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcAcc, 0.85*textSizeSpectra,4);
+            TLatex *labelDetProcAcc = new TLatex(0.95, 0.15,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcAcc, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
             labelDetProcAcc->Draw();
 
             canvasAcc->Update();
@@ -6103,8 +6138,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
         labelEnergyRatio->Draw();
 
-        TLatex *labelEtaRatio = new TLatex(0.6, 0.93-textSizeSpectra*0.85*1.04, "#eta #rightarrow #gamma#gamma");
-        SetStyleTLatex( labelEtaRatio, 0.85*textSizeSpectra,4);
+        TLatex *labelEtaRatio = new TLatex(0.95, 0.93-textSizeSpectra*0.85*1.04, "#eta #rightarrow #gamma#gamma");
+        SetStyleTLatex( labelEtaRatio, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
         labelEtaRatio->Draw();
 
         labelDetProcRatio->Draw();
@@ -6661,8 +6696,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         //          legendBinShift3->Draw();
 
                   labelEnergyEffi->Draw();
-                  TLatex *labelBinShiftEtaToPi0 = new TLatex(0.62, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
-                  SetStyleTLatex( labelBinShiftEtaToPi0, 0.85*textSizeSpectra,4);
+                  TLatex *labelBinShiftEtaToPi0 = new TLatex(0.95, maxYLegendEffi+0.02+0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+                  SetStyleTLatex( labelBinShiftEtaToPi0, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                   labelBinShiftEtaToPi0->Draw();
                   labelDetProcEffi->Draw();
 
@@ -6699,16 +6734,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     }
                     legendWeightsEtaToPi0->Draw();
 
-                    TLatex *labelWeightsEnergy = new TLatex(0.7,0.24,collisionSystem.Data());
-                    SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4);
+                    TLatex *labelWeightsEnergy = new TLatex(0.95,0.24,collisionSystem.Data());
+                    SetStyleTLatex( labelWeightsEnergy, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                     labelWeightsEnergy->SetTextFont(43);
                     labelWeightsEnergy->Draw();
-                    TLatex *labelWeightsEtaToPi0 = new TLatex(0.7,0.20,"#eta/#pi^{0}");
-                    SetStyleTLatex( labelWeightsEtaToPi0, 0.85*textSizeLabelsPixel,4);
+                    TLatex *labelWeightsEtaToPi0 = new TLatex(0.95,0.20,"#eta/#pi^{0}");
+                    SetStyleTLatex( labelWeightsEtaToPi0, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                     labelWeightsEtaToPi0->SetTextFont(43);
                     labelWeightsEtaToPi0->Draw();
-                    TLatex *labelDetProcWeights    = new TLatex(0.7, 0.16,detectionProcess.Data());
-                    SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4);
+                    TLatex *labelDetProcWeights    = new TLatex(0.95, 0.16,detectionProcess.Data());
+                    SetStyleTLatex( labelDetProcWeights, 0.85*textSizeLabelsPixel,4,1,42,kTRUE, 31);
                     labelDetProcWeights->SetTextFont(43);
                     labelDetProcWeights->Draw();
 
@@ -6936,19 +6971,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                       legendMeanNew->Draw();
 
                       // labeling
-                      TLatex *labelEnergySysDetailed = new TLatex(0.7, 0.93,collisionSystem.Data());
+                      TLatex *labelEnergySysDetailed = new TLatex(0.95, 0.93,collisionSystem.Data());
                       labelEnergySysDetailed->SetTextAlign(31);
-                      SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4);
+                      SetStyleTLatex( labelEnergySysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                       labelEnergySysDetailed->Draw();
 
-                      TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.7, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
+                      TLatex *labelEtaToPi0SysDetailed     = new TLatex(0.95, 0.93-0.99*textSizeSpectra*0.85,"#eta/#pi^{0}");
                       labelEtaToPi0SysDetailed->SetTextAlign(31);
-                      SetStyleTLatex( labelEtaToPi0SysDetailed, 0.85*textSizeSpectra,4);
+                      SetStyleTLatex( labelEtaToPi0SysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                       labelEtaToPi0SysDetailed->Draw();
 
-                      TLatex *labelDetProcSysDetailed = new TLatex(0.7, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
+                      TLatex *labelDetProcSysDetailed = new TLatex(0.95, 0.93-2*0.99*textSizeSpectra*0.85,detectionProcess.Data());
                       labelDetProcSysDetailed->SetTextAlign(31);
-                      SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4);
+                      SetStyleTLatex( labelDetProcSysDetailed, 0.85*textSizeSpectra,4,1,42,kTRUE, 31);
                       labelDetProcSysDetailed->Draw();
 
                   canvasNewSysErrMean->Update();
@@ -7038,16 +7073,16 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             }
             legendEtaToPi0->Draw();
 
-            TLatex *labelEnergyEtaToPi0 = new TLatex(0.65, 0.15+(2*textSizeEtaToPi0*0.85),collisionSystem.Data());
-            SetStyleTLatex( labelEnergyEtaToPi0, 0.85*textSizeEtaToPi0,4);
+            TLatex *labelEnergyEtaToPi0 = new TLatex(0.95, 0.15+(2*textSizeEtaToPi0*0.85),collisionSystem.Data());
+            SetStyleTLatex( labelEnergyEtaToPi0, 0.85*textSizeEtaToPi0,4,1,42,kTRUE, 31);
             labelEnergyEtaToPi0->Draw();
 
-            TLatex *labelPi0EtaToPi0 = new TLatex(0.65, 0.15+textSizeEtaToPi0*0.85,"#eta/#pi^{0}");
-            SetStyleTLatex( labelPi0EtaToPi0, 0.85*textSizeEtaToPi0,4);
+            TLatex *labelPi0EtaToPi0 = new TLatex(0.95, 0.15+textSizeEtaToPi0*0.85,"#eta/#pi^{0}");
+            SetStyleTLatex( labelPi0EtaToPi0, 0.85*textSizeEtaToPi0,4,1,42,kTRUE, 31);
             labelPi0EtaToPi0->Draw();
 
-            TLatex *labelDetProcEtaToPi0 = new TLatex(0.65, 0.15,detectionProcess.Data());
-            SetStyleTLatex( labelDetProcEtaToPi0, 0.85*textSizeEtaToPi0,4);
+            TLatex *labelDetProcEtaToPi0 = new TLatex(0.95, 0.15,detectionProcess.Data());
+            SetStyleTLatex( labelDetProcEtaToPi0, 0.85*textSizeEtaToPi0,4,1,42,kTRUE, 31);
             labelDetProcEtaToPi0->Draw();
 
             histo2DEtatoPi0combo->Draw("axis,same");
@@ -7258,9 +7293,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (histoRatioRawClusterE[i])           histoRatioRawClusterE[i]->Write(Form("TriggRejectvsE_%s_%s",triggerName[i].Data(), triggerName[trigSteps[i][0]].Data()),TObject::kOverwrite);
             }
         }
-        fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s",optionEnergy.Data()));
-        TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s",optionEnergy.Data()));
-        fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s",optionEnergy.Data()));
+        fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s",fCent.Data(),optionEnergy.Data()));
+        TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s",fCent.Data(),optionEnergy.Data()));
+        fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s",fCent.Data(),optionEnergy.Data()));
         if (graphCorrectedYieldWeightedAveragePi0Stat)  graphCorrectedYieldWeightedAveragePi0Stat->Write("graphCorrectedYieldPi0",TObject::kOverwrite);
         if (histoInvYieldWeightedAveragePi0Stat)  histoInvYieldWeightedAveragePi0Stat->Write("CorrectedYieldPi0",TObject::kOverwrite);
         if (graphCorrectedYieldWeightedAveragePi0Sys)   graphCorrectedYieldWeightedAveragePi0Sys->Write("Pi0SystError",TObject::kOverwrite);
@@ -7342,9 +7377,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
 
         if (enableEta && mode != 10){
-            fileOutputForComparisonFullyCorrected->mkdir(Form("Eta%s",optionEnergy.Data()));
-            TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s",optionEnergy.Data()));
-            fileOutputForComparisonFullyCorrected->cd(Form("Eta%s",optionEnergy.Data()));
+          fileOutputForComparisonFullyCorrected->mkdir(Form("Eta%s%s",fCent.Data(),optionEnergy.Data()));
+          TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s%s",fCent.Data(),optionEnergy.Data()));
+            fileOutputForComparisonFullyCorrected->cd(Form("Eta%s%s",fCent.Data(),optionEnergy.Data()));
             if (graphCorrectedYieldWeightedAverageEtaStat)  graphCorrectedYieldWeightedAverageEtaStat->Write("graphCorrectedYieldEta",TObject::kOverwrite);
             if (histoInvYieldWeightedAverageEtaStat)  histoInvYieldWeightedAverageEtaStat->Write("CorrectedYieldEta",TObject::kOverwrite);
             if (graphCorrectedYieldWeightedAverageEtaSys)   graphCorrectedYieldWeightedAverageEtaSys->Write("EtaSystError",TObject::kOverwrite);

@@ -411,10 +411,14 @@ void ClusterQA(
     line->SetLineWidth(2);
     line->SetLineColor(1);
     if(useCellQAcutsExt==1){
+        cout << "setting cuts externally" << endl;
         doCellQA                = kTRUE;
         cellQAData              = new CellQAObj();
+        cout << arrSetQAEnergy[0] << "\t"<< arrSetQAEnergy[1] << "\t"<< arrSetQAEnergy[2] << "\t"<< arrSetQAEnergy[3] << endl;
         setQAEnergy(cellQAData,arrSetQAEnergy[0],arrSetQAEnergy[1],arrSetQAEnergy[2],arrSetQAEnergy[3]);
+        cout << arrSetQATime[0] << "\t"<< arrSetQATime[1] << "\t"<< arrSetQATime[2] << "\t"<< arrSetQATime[3] << endl;
         setQATime(cellQAData,arrSetQATime[0],arrSetQATime[1],arrSetQATime[2],arrSetQATime[3]);
+        cout << arrSetQAHotCells1D[0] << "\t"<< arrSetQAHotCells1D[1] << "\t"<< arrSetQAHotCells1D[2] << "\t"<< arrSetQAHotCells1D[3] << endl;
         setQAHotCells1D(cellQAData,arrSetQAHotCells1D[0],arrSetQAHotCells1D[1],arrSetQAHotCells1D[2],arrSetQAHotCells1D[3]);
         const Int_t dim2D       = 9;
         Double_t min2D[dim2D];
@@ -4106,7 +4110,7 @@ void ClusterQA(
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "AllCells.size before sort and unique: " << allCells.size() << ".";
         fLog << "AllCells.size before sort and unique: " << allCells.size() << ".";
-        if((Int_t)allCells.size()>2000){
+        if((Int_t)allCells.size()>3000){
             cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
             cout << "ERROR: allCells.size() too big " << allCells.size() << ", check cuts!" << endl;
             cout << "RETURNING..." << endl;

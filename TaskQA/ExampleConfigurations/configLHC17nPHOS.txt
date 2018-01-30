@@ -5,7 +5,8 @@ nSets   2
 cutNr   0
 labelData   Data
 energy  XeXe_5.44TeV
-pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_LHC17n-pass1-All_400.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_MC_LHC17j7-All_400.root STOP
+pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180122-XeXeQA/GammaCalo_LHC17n-pass1-All_400.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180122-XeXeQA/GammaCalo_MC_LHC17j7-All_400.root STOP
+#pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_LHC17n-pass1-All_400.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_MC_LHC17j7-All_400.root STOP
 DataSetNames    LHC17n    LHC17j7   STOP
 DataSetNamesPlot    LHC17n    Hijing   STOP
 
@@ -28,8 +29,8 @@ deadCellMCSetNames  LHC17j7 STOP
 deadCellAdditionalOutputDirName LHC17n_PHOS
 nCaloCells  12544
 # deadCellTriggerNames  INT7    STOP
-deadCellMCCuts  10910113_2446600040013300000_0163103100000010   STOP
-deadCellDataCuts    10910113_2446600040013300000_0163103100000010   STOP
+deadCellMCCuts  10810113_2446600040013300000_0163103100000010   STOP
+deadCellDataCuts    10810113_2446600040013300000_0163103100000010   STOP
 deadCellFractionThesh   0.6
 
 # Settings for hot cell compare macro
@@ -38,6 +39,6 @@ hotCellNTrigger    1
 hotCellDataSetNames LHC17n    STOP
 hotCellAdditionalOutputDirName LHC17n_PHOS
 # hotCellTriggerNames  INT7    STOP
-hotCellDataCuts    10910113_2446600040013300000_0163103100000010   STOP
+hotCellDataCuts    10810113_2446600040013300000_0163103100000010   STOP
 hotCellThreshNFired   0
 hotCellThreshNTotalFired   60

@@ -91,9 +91,13 @@ fi
 #   LHC14a1a=186_20141124-1555;
 #   LHC14a1b=187_20141124-1556; #ESD
 
-TRAINDIR=Legotrain-vAN20171215_EMCrerun
-LHC11hData=364;
-LHC14a1aMC=715;
+# TRAINDIR=Legotrain-vAN20171215_EMCrerun
+# LHC11hData=364;
+# LHC14a1aMC=715;
+
+TRAINDIR=Legotrain-vAN20180125_EMCtrackMult
+LHC11hData=378;
+LHC14a1aMC=801;
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -112,7 +116,7 @@ fi
 
 if [ $HAVELHC11h == 1 ]; then
     LHC11hData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/ | grep $LHC11hData\_`
-    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/GA_pp-$LHC11hData
+    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/GA_PbPb-$LHC11hData
 fi
 if [ $HAVELHC14a1a == 1 ]; then
     LHC14a1aMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/ | grep $LHC14a1aMC\_`

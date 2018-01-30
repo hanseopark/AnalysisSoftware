@@ -1901,11 +1901,20 @@ void ExtractSignalV2(   TString meson                   = "",
 
     DrawGammaSetMarker(fHistoMassMeson, 20, 1., kBlack, kBlack);
     if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
-        DrawAutoGammaMesonHistos( fHistoMassMeson,
-                                "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
-                                kFALSE, 3.,0.,  kFALSE,
-                                kTRUE, 0.132,0.140,
-                                kFALSE, 0., 10.);
+        if (fEnergyFlag.Contains("PbPb")){
+            DrawAutoGammaMesonHistos( fHistoMassMeson,
+                                      "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
+                                      kFALSE, 3.,0.,  kFALSE,
+                                      kTRUE, 0.130,0.160,
+                                      kFALSE, 0., 10.);
+        } else {
+          DrawAutoGammaMesonHistos( fHistoMassMeson,
+                                    "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
+                                    kFALSE, 3.,0.,  kFALSE,
+                                    kTRUE, 0.132,0.140,
+                                    kFALSE, 0., 10.);
+
+        }
     } else {
         DrawAutoGammaMesonHistos( fHistoMassMeson,
                                 "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
@@ -4095,7 +4104,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     Double_t mesonAmplitudeMax  = mesonAmplitude*400./100.;
 
     // Settings specific for PbPb collisions
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+    if (fEnergyFlag.Contains("PbPb")){
         if (fPrefix.CompareTo("Pi0") == 0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
             //pi0 meson amplitude settings
             if(fMode == 0){
@@ -4114,7 +4123,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             }
             if (fMode == 4 || fMode == 12 || fMode == 5) {
                 mesonAmplitudeMin = mesonAmplitude*10./100.;
-                mesonAmplitudeMax = mesonAmplitude*400./100.;
+                mesonAmplitudeMax = mesonAmplitude*800./100.;
             }
 
         } else {
@@ -4323,12 +4332,36 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     // set mass start value
     fFitReco->SetParameter(1,fMesonMassExpect);
     // set ranges for mass fitting
-    if( (fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.Contains("pPb") ) && (fMode == 4 || fMode == 12 )){
-        fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
-    } else if( fEnergyFlag.Contains("pPb_5.023TeV")  && fMode == 2 && fPrefix.CompareTo("Eta") ==0){
-        fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.3);
+    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if( (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
+        if(fEnergyFlag.Contains("pPb") ){
+            if(fMode == 4) {
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
+                fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.5,fMesonWidthRange[1]*2.);
+                if(ptBin >= 31) {fFitReco->FixParameter(3,0.015); fFitReco->SetParameter(1,0.156); }
+            }else if(fMode == 3) {
+                if (fBinsPt[ptBin] > 7. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.995,fMesonMassExpect*1.15);
+                if (fBinsPt[ptBin] > 9. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.2);
+            }
+        } else if (fEnergyFlag.CompareTo("8TeV") == 0 ){
+            if (fMode == 4 || fMode == 12 )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+        } else if ( fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("XeXe") ){
+            if (fMode == 4 || fMode == 12 )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
+        }
     } else {
-        fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+        if( fEnergyFlag.Contains("pPb") ){
+            if ( fMode == 2 )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.3);
+            else if  ( fMode == 3 )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
+            else if  ( fMode == 4 || fMode == 12 )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+        } else if (fEnergyFlag.CompareTo("8TeV") == 0 || fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("XeXe") ) {
+            if ( fMode == 4 || fMode == 12 )
+                fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+        }
     }
 
     // set width start value
@@ -4345,26 +4378,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     }
     //--------------------------------------------------------------------------------------
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
-    fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
-    if( fEnergyFlag.CompareTo("8TeV") == 0 && (fMode == 4 || fMode == 12 )){
-      fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
-    }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
-    if(fEnergyFlag.Contains("pPb") && (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
-      if(fMode == 4) {
-        fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*2);
-        fFitReco->SetParLimits(2,fMesonWidthRange[0]*0.5,fMesonWidthRange[1]*2.);
-        if(ptBin >= 31) {fFitReco->FixParameter(3,0.015); fFitReco->SetParameter(1,0.156); }
-      }else if(fMode == 3) {
-        if (fBinsPt[ptBin] > 7. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.995,fMesonMassExpect*1.15);
-        if (fBinsPt[ptBin] > 9. ) fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.2);
-      }
-    }
-    if(fEnergyFlag.Contains("pPb") && (fPrefix.CompareTo("Eta") ==0 )){
-      if(fMode == 3){
-        fFitReco->SetParLimits(1,fMesonMassExpect*0.985,fMesonMassExpect*1.15);
-      }
-    }
 
     //--------------------------------------------------------------------------------------
     //------------------------- start fitting & set style fit ------------------------------
@@ -4835,7 +4849,7 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     Double_t mesonAmplitudeMin      = 0;
     Double_t mesonAmplitudeMax      = 0;
 
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+    if (fEnergyFlag.Contains("PbPb")){
         if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0 ){
             if(ptBin == 1) mesonAmplitudeMin = mesonAmplitude*70./100.;
             else if(ptBin > 1 && ptBin < 4) mesonAmplitudeMin = mesonAmplitude*90./100.;
@@ -4947,6 +4961,9 @@ void FitSubtractedExp2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     }
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
+    if (fEnergyFlag.Contains("PbPb")){
+        fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
+    }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
 
@@ -5031,13 +5048,16 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
             mesonAmplitudeMin = mesonAmplitude*10./100.;
             mesonAmplitudeMax = mesonAmplitude*400./100.;
             if( fEnergyFlag.CompareTo("8TeV") == 0  ){
-              mesonAmplitudeMin = mesonAmplitude*90./100.;
-              mesonAmplitudeMax = mesonAmplitude*400./100.;
-              TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
-              if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13. && fPrefix.CompareTo("Pi0EtaBinning")){
-                fMesonFitRange[0] = 0.08;
-                fMesonFitRange[1] = 0.29;
-              }
+                mesonAmplitudeMin = mesonAmplitude*90./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
+                TString trigger = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
+                if(trigger.CompareTo("52") == 0 && fBinsPt[ptBin]>=13. && fPrefix.CompareTo("Pi0EtaBinning")){
+                    fMesonFitRange[0] = 0.08;
+                    fMesonFitRange[1] = 0.29;
+                }
+            } else if (fEnergyFlag.Contains("PbPb")){
+                mesonAmplitudeMin = mesonAmplitude*10./100.;
+                mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
         }
 
@@ -5078,7 +5098,9 @@ void FitSubtractedPureGaussianInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPt
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitReco->SetParLimits(1,fMesonMassExpect*0.8,fMesonMassExpect*1.2);
     if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
-      fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+        fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+    } else if( fEnergyFlag.Contains("PbPb") && fMode == 4 ){
+        fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
     }
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]*2);
 
@@ -5268,7 +5290,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         }
         if (fMode == 4 || fMode == 12 || fMode == 5) {
             mesonAmplitudeMin = mesonAmplitude*10./100.;
-            mesonAmplitudeMax = mesonAmplitude*400./100.;
+            mesonAmplitudeMax = mesonAmplitude*800./100.;
         }
     } else {
         mesonAmplitudeMin       = mesonAmplitude*95./100.;
@@ -5326,16 +5348,25 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
                         fMesonFitRange[1]);
     }
 
+    // prefitting the true distributions
     fFitRecoPre->SetParameter(0,mesonAmplitude);
     fFitRecoPre->SetParameter(1,fMesonMassExpect);
     fFitRecoPre->SetParameter(2,fMesonWidthExpect);
     fFitRecoPre->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     fFitRecoPre->SetParLimits(1,fMesonMassRange[0],fMesonMassRange[1]);
-    if (fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12) fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.2);
-    if( fEnergyFlag.CompareTo("8TeV") == 0 && fMode == 4 ){
-      fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+    if (fMode == 2 || fMode == 13 ){
+        fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.2);
+    } else if(  fMode == 4 || fMode == 12){
+        if ( fEnergyFlag.CompareTo("8TeV") == 0 )
+            fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+        else if ( fEnergyFlag.Contains("PbPb") )
+            fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
+        else
+            fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.2);
     }
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitRecoPre,"QRME0");
+
+
 
     cout << "MC tail params: " << fMesonLambdaTailMC  << "\t" << fMesonLambdaTailRangeMC[0] << "\t" << fMesonLambdaTailRangeMC[1] << endl;
     if (fMesonLambdaTailMC == fMesonLambdaTailRangeMC[0] && fMesonLambdaTailMC == fMesonLambdaTailRangeMC[1] ){
@@ -5351,9 +5382,10 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         }
     }
 
-    Double_t mass = fMesonMassExpect;
+    // take parameters from prefit
+    Double_t mass   = fMesonMassExpect;
     if (fMode == 4 || fMode == 12){
-        mass = fFitRecoPre->GetParameter(1);
+        mass        = fFitRecoPre->GetParameter(1);
         fFitReco->SetParameter(0,fFitRecoPre->GetParameter(0));
         fFitReco->SetParameter(1,mass);
         fFitReco->SetParameter(2,fFitRecoPre->GetParameter(2));
@@ -5362,7 +5394,6 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         fFitReco->SetParameter(1,fMesonMassExpect);
         fFitReco->SetParameter(2,fMesonWidthExpect);
     }
-
     fFitReco->SetParLimits(0,mesonAmplitudeMin,mesonAmplitudeMax);
     if (fMode == 2 || fMode == 13){
         if (fBinsPt[ptBin] > 12 && fEnergyFlag.Contains("pPb_5.023TeV")  && fPrefix.Contains("Pi0") ){

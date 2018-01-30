@@ -1776,17 +1776,21 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
     //******************** Response Matrix Plot ****************************************
     //**********************************************************************************
     TCanvas * canvasResponseMatrix = new TCanvas("canvasResponseMatrix","",480,440);  // gives the page size
-    DrawGammaCanvasSettings( canvasResponseMatrix, 0.09, 0.105, 0.02, 0.085);
+    DrawGammaCanvasSettings( canvasResponseMatrix, 0.09, 0.11, 0.02, 0.085);
     canvasResponseMatrix->SetLogz(1);
     canvasResponseMatrix->cd();
 
         if (isPCM){
+            cout << "Responsematrix conv entries: "<< histoGammaTruePrimaryConv_recPt_MCPt->GetMinimum(0) << "\t"<< histoGammaTruePrimaryConv_recPt_MCPt->GetMaximum() << endl;
+            histoGammaTruePrimaryConv_recPt_MCPt->GetZaxis()->SetRangeUser(histoGammaTruePrimaryConv_recPt_MCPt->GetMinimum(0), 2*histoGammaTruePrimaryConv_recPt_MCPt->GetMaximum());
             histoGammaTruePrimaryConv_recPt_MCPt->Draw("colz");
             PutProcessLabelAndEnergyOnPlot( 0.15, 0.95, 0.035, cent, detectionProcess, "", 42, 0.03);
             canvasResponseMatrix->SaveAs(Form("%s/%s_ResponseMatrix_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }
 
         if (isCalo){
+            cout << "Responsematrix calo entries: "<< histoGammaTruePrimaryCalo_recPt_MCPt->GetMinimum(0) << "\t"<< histoGammaTruePrimaryCalo_recPt_MCPt->GetMaximum() << endl;
+            histoGammaTruePrimaryCalo_recPt_MCPt->GetZaxis()->SetRangeUser(histoGammaTruePrimaryCalo_recPt_MCPt->GetMinimum(0), 2*histoGammaTruePrimaryCalo_recPt_MCPt->GetMaximum());
             histoGammaTruePrimaryCalo_recPt_MCPt->Draw("colz");
             if (isPCM)  PutProcessLabelAndEnergyOnPlot( 0.15, 0.95, 0.035, cent, detectionProcess2, "", 42, 0.03);
             else        PutProcessLabelAndEnergyOnPlot( 0.15, 0.95, 0.035, cent, detectionProcess,  "", 42, 0.03);
@@ -1803,6 +1807,8 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         canvasResponseMatrixSec->cd();
 
         if (isPCM || isCalo){
+            cout << "Responsematrix conv entries: "<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0) << "\t"<< histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum() << endl;
+            histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetZaxis()->SetRangeUser(histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMinimum(0), 2*histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetMaximum());
             SetStyleHistoTH2ForGraphs(  histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0], "Reconstructed #it{p}_{T} (GeV/#it{c})","MC #it{p}_{T} (GeV/#it{c})", 0.035, 0.04,
                                       0.035, 0.04, 0.9, 1.0, 510, 510);
             histoGammaTrueSecondaryFromX_MCPt_recPt_OrBin[0]->GetYaxis()->SetRangeUser(0,25);

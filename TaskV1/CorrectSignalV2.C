@@ -2313,11 +2313,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     Bool_t scaleTrueEffiWithFit     = kTRUE;
     if (    optionEnergy.CompareTo("PbPb_5.02TeV") == 0                     ||
-            (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )             )
+            (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
+            optionEnergy.CompareTo("2.76TeV") == 0
+        )
         scaleTrueEffiWithFit        = kFALSE;
 
     if (    (containsWOWeights && ( nameMeson.Contains("Pi0") || (mode == 4 && optionEnergy.Contains("pPb_5.023TeV") && nameMeson.CompareTo("Eta") == 0) ))
-            || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) ){
+        || (mode == 4 && optionEnergy.Contains("PbPb_5.02TeV")) || (mode == 4 && optionEnergy.Contains("2.76TeV"))){
         cout << "\n\n\nINFO:: Entered ratio ftting of efficiency " << endl;
         if (scaleTrueEffiWithFit)
             cout << "INFO:: will be scaling true effi with ratio fit of normal/true effi to correct for offset " << endl;
@@ -2349,6 +2351,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol0[k]);
             histoRatioEffWOWeightingEffCFPol0[k]->SetStats(kFALSE);
             histoRatioEffWOWeightingEffCFPol0[k]->SetFillColor(colorEffiShadePol0[k]);
+            histoRatioEffWOWeightingEffCFPol0[k]->SetLineColor(colorEffiShadePol0[k]);
+            histoRatioEffWOWeightingEffCFPol0[k]->SetFillStyle(0);
             histoRatioEffWOWeightingEffCFPol0[k]->SetMarkerSize(0);
 
             // fitting with 2nd functional form
@@ -2359,7 +2363,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }else{
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.4,maxPtMeson    );
             }
-            cout << "fitting ratio norm/true eff with pol1" << endl;
+            cout << "fitting ratio norm/true eff with exp" << endl;
             cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;
             fitEffiBiasWOWeightsPol1[k]->SetLineColor(colorEffiShadePol1[k]);
             fitEffiBiasWOWeightsPol1[k]->SetLineStyle(7);
@@ -2369,6 +2373,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             (TVirtualFitter::GetFitter())->GetConfidenceIntervals(histoRatioEffWOWeightingEffCFPol1[k]);
             histoRatioEffWOWeightingEffCFPol1[k]->SetStats(kFALSE);
             histoRatioEffWOWeightingEffCFPol1[k]->SetFillColor(colorEffiShadePol1[k]);
+            histoRatioEffWOWeightingEffCFPol1[k]->SetLineColor(colorEffiShadePol1[k]);
             histoRatioEffWOWeightingEffCFPol1[k]->SetFillStyle(3003);
             histoRatioEffWOWeightingEffCFPol1[k]->SetMarkerSize(0);
             for (Int_t i=1; i< histoTrueEffiPt[k]->GetNbinsX(); i++){
@@ -2405,8 +2410,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 legendRatioNormToTrueEff->AddEntry((TObject*)0,"","");
                 legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol0[k],"pol0 fit","l");
                 legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol0[k],"pol0 CI","f");
-                legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol1[k],"pol1 fit","l");
-                legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol1[k],"pol1 CI","f");
+                legendRatioNormToTrueEff->AddEntry(fitEffiBiasWOWeightsPol1[k],"exp fit","l");
+                legendRatioNormToTrueEff->AddEntry(histoRatioEffWOWeightingEffCFPol1[k],"exp CI","f");
                 legendRatioNormToTrueEff->Draw();
 
                 PutProcessLabelAndEnergyOnPlot(0.72, 0.25, 28, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 43, 0.03);
