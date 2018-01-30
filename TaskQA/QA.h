@@ -2190,8 +2190,20 @@ void PlotCaloQAModule(TH2* src, Int_t nCaloModules, TString xLabel, TString yLab
     return;
 }
 
-void PlotCellMeanVsSigma(CellQAObj* obj, Int_t nCaloCells, TH2* hist, TString xLabel, TString yLabel, Bool_t XRange, Float_t XMin, Float_t XMax, Bool_t YRange, Float_t YMin, Float_t YMax, Bool_t kEnergy, Bool_t kMC, Double_t titleOffsetX, Double_t titleOffsetY)
-{
+
+//*****************************************************************************************************
+//***************** Plot mean cell energy or time vs corresponding sigma ******************************
+// - if cuts are set in the cellQAObj the corresponding bad cell candidates will be stored in addition*
+//*****************************************************************************************************
+void PlotCellMeanVsSigma(   CellQAObj* obj,
+                            Int_t nCaloCells,
+                            TH2* hist, TString xLabel, TString yLabel,
+                            Bool_t XRange, Float_t XMin, Float_t XMax,
+                            Bool_t YRange, Float_t YMin, Float_t YMax,
+                            Bool_t kEnergy, Bool_t kMC,
+                            Double_t titleOffsetX, Double_t titleOffsetY){
+
+    // Plotting 2-dimensional distributions for mean cell E/time vs corresponding sigma
     TH2D* outHist;
     if(kEnergy){
         if(obj) outHist = new TH2D("CellEnergy","CellEnergy",(obj->EnergyMean[1]+0.15)*200,0,obj->EnergyMean[1]+0.15,(obj->EnergySigma[1]+0.15)*200,0,obj->EnergySigma[1]+0.15);
@@ -2230,8 +2242,8 @@ void PlotCellMeanVsSigma(CellQAObj* obj, Int_t nCaloCells, TH2* hist, TString xL
     outHist->GetXaxis()->SetTitleSize(0.04);
     outHist->GetXaxis()->SetTitleOffset(titleOffsetX);
 
-    for(Int_t iY=1; iY<nCaloCells+1; iY++)
-    {
+    // loop over all cells to fill corresponding 2D histo and determine bad cell candidates
+    for(Int_t iY=1; iY<nCaloCells+1; iY++) {
         TH1D* temp;
         if(kEnergy) temp = (TH1D*) hist->ProjectionX("energy",iY,iY);
         else temp = (TH1D*) hist->ProjectionX("time",iY,iY);
@@ -2241,11 +2253,14 @@ void PlotCellMeanVsSigma(CellQAObj* obj, Int_t nCaloCells, TH2* hist, TString xL
 //         if (!kEnergy) cout << iY << "\t" << mean << "\t" << rms << endl;
         if(rms>=outHist->GetYaxis()->GetBinUpEdge(outHist->GetNbinsY())){ rms = outHist->GetYaxis()->GetBinCenter(outHist->GetNbinsY());}
         if(temp->Integral(1,temp->GetNbinsX())>0){
+            // fill histogram for plotting
             outHist->Fill(mean,rms);
             if(obj){
+                // check if mean cell energy or sigma is outside of defined 2D cuts
                 if(kEnergy && ( mean < obj->EnergyMean[0] || mean > obj->EnergyMean[1] || rms < obj->EnergySigma[0] || rms > obj->EnergySigma[1] )){
                     if(!CheckGoodCell(obj,iY-1)) obj->cellIDsEnergy.push_back(iY-1);
                 }
+                // check if mean cell time or sigma is outside of defined 2D cuts
                 if(!kEnergy && ( mean < obj->TimeMean[0] || mean > obj->TimeMean[1] || rms < obj->TimeSigma[0] || rms > obj->TimeSigma[1]) ){
                     if(!CheckGoodCell(obj,iY-1)) obj->cellIDsTime.push_back(iY-1);
                 }
@@ -2330,7 +2345,10 @@ TH2D** PlotCellMeanVsSigmaForRunwise(Int_t nCaloCells, TH2* histEnergy, TH2* his
 }
 
 
-
+//*****************************************************************************************************
+//***************** Plot frequency of a certain cell firing *******************************************
+// - if cuts are set in the cellQAObj the corresponding bad cell candidates will be stored in addition*
+//*****************************************************************************************************
 void PlotHotCells(  CellQAObj* obj,
                     Int_t iSw,
                     Int_t nCaloCells,
@@ -2341,8 +2359,8 @@ void PlotHotCells(  CellQAObj* obj,
                     Bool_t kMC,
                     Double_t titleOffsetX, Double_t titleOffsetY,
                     Bool_t reScaledToCutRange
-                 )
-{
+                 ){
+    // 1D - cell frequency based on 1D energy distribution
     if(iSw==0){
         Double_t min = 0;
         Double_t max = 0;
@@ -2399,8 +2417,8 @@ void PlotHotCells(  CellQAObj* obj,
         outHist->GetXaxis()->SetTitleSize(0.04);
         outHist->GetXaxis()->SetTitleOffset(titleOffsetX);
 
-        for(Int_t iY=1; iY<nCaloCells+1; iY++)
-        {
+        for(Int_t iY=1; iY<nCaloCells+1; iY++){
+            // determine entry for frequency histogram
             TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntries",iY,iY);
             if(temp->Integral(1,temp->GetNbinsX())>0) {
                 Double_t nFired = temp->Integral(1,temp->GetXaxis()->GetNbins());
@@ -2408,6 +2426,7 @@ void PlotHotCells(  CellQAObj* obj,
                 else if(nFired>=(max+(max/10)-1)) nFired = outHist->GetBinCenter(outHist->GetNbinsX()-1);
                 outHist->Fill(nFired);
                 if (!reScaledToCutRange){
+                    // determine whether frequency is out of bound of accepted range - add to bad cell candidates
                     if(obj && ( nFired <= obj->HotCells1D[0] || nFired >= obj->HotCells1D[1] )){
                         if(!CheckGoodCell(obj,iY-1)) obj->cellIDsHotCells1D.push_back(iY-1);
                     }
@@ -2420,6 +2439,7 @@ void PlotHotCells(  CellQAObj* obj,
         outHist->DrawCopy();
         delete outHist;
         return;
+    // 2D - cell frequency based on 2D energy distribution with cut offs
     }else if(iSw==1){
         TH2D* outHist2D = new TH2D("CellHotCells2D","", 100,0.00009,110, 9,0.2,1.1);
         SetLogBinningXTH(outHist2D);
@@ -2446,8 +2466,8 @@ void PlotHotCells(  CellQAObj* obj,
         for(Int_t iY=1; iY<nCaloCells+1; iY++)
         {
             TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntriesAbove",iY,iY);
-            for(Int_t iBin=2; iBin<11; iBin++)
-            {
+            for(Int_t iBin=2; iBin<11; iBin++) {
+                // determine frequency above certain energy threshold for different energy thresholds
                 if(temp->Integral(1,temp->GetNbinsX())>0){
                     //Double_t nTotal = temp->Integral(1,temp->GetXaxis()->GetNbins());
                     Double_t nCell = temp->Integral(1,iBin);
@@ -2457,7 +2477,10 @@ void PlotHotCells(  CellQAObj* obj,
                     if(nCell>0) fraction = nCellAbove / nCell;
                     if(fraction>100) fraction = 100;
                     if(fraction<0.0001) fraction = 0.0001;
+                    // fill corresponding 2D histogram
                     outHist2D->Fill(fraction,((Double_t)iBin+0.05)/10.);
+                    // if boundary conditions are given check if cell is within the limits for the corresponding bin,
+                    // otherwise write it to the bad channel canditate list
                     if(obj && (fraction < obj->HotCells2D[iBin-2][0] || fraction > obj->HotCells2D[iBin-2][1] )){
                         if(!CheckGoodCell(obj,iY-1)&&nCellTotal>1000) obj->cellIDsHotCells2D.push_back(iY-1);
                     }
@@ -2470,6 +2493,7 @@ void PlotHotCells(  CellQAObj* obj,
         outHist2D->DrawCopy("COLZ");
         delete outHist2D;
         return;
+    // 1D - cell frequency based on 1D time distribution
     }else if(iSw==2){
         TH1D* outHist1D;
         if(obj && (obj->HotCellsTime1D[1]+0.7 > 1)) outHist1D = new TH1D("CellTime1D","", ((obj->HotCellsTime1D[1]+0.7)-1)*100,1,(obj->HotCellsTime1D[1]+0.7));
@@ -2499,8 +2523,8 @@ void PlotHotCells(  CellQAObj* obj,
         if(obj) fracLimit = obj->HotCellsTime1D[1]+0.6;
         else fracLimit = 2;
 
-        for(Int_t iY=1; iY<nCaloCells+1; iY++)
-        {
+        for(Int_t iY=1; iY<nCaloCells+1; iY++){
+            // calculate integral for time distribution in within +-0.02E-6s
             TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntriesAbove",iY,iY);
             if(temp->Integral(1,temp->GetNbinsX())>0){
                 Double_t nTotal = temp->Integral(1,temp->GetXaxis()->GetNbins());
@@ -2670,6 +2694,44 @@ void CollectAndPlotBadCellCandidates(fstream &str, std::vector<Int_t> &allCell, 
     return;
 }
 
+//************************************************************************************************
+// Determine good cell candidates excluding the suspicious cells determined before ***************
+//************************************************************************************************
+void DetermineGoodCellCandidates(std::vector<Int_t> &allCell, CellQAObj* obj, Int_t nCaloCells){
+
+    std::vector<Int_t> cellIDsEnergy            = obj->cellIDsEnergy;
+    std::vector<Int_t> cellIDsTime              = obj->cellIDsEnergy;
+    std::vector<Int_t> cellIDsHotCells1D        = obj->cellIDsEnergy;
+    std::vector<Int_t> cellIDsHotCellsTime1D    = obj->cellIDsEnergy;
+    std::vector<Int_t> cellIDsHotCells2D        = obj->cellIDsEnergy;
+    std::vector<Int_t> cellIDsMissing           = obj->cellIDsEnergy;
+    if (obj){
+        cellIDsEnergy            = obj->cellIDsEnergy;
+        cellIDsTime              = obj->cellIDsTime;
+        cellIDsHotCells1D        = obj->cellIDsHotCells1D;
+        cellIDsHotCellsTime1D    = obj->cellIDsHotCellsTime1D;
+        cellIDsHotCells2D        = obj->cellIDsHotCells2D;
+        cellIDsMissing           = obj->cellIDsMissing;
+    }
+
+    for(Int_t iC=0; iC<nCaloCells; iC++){
+        if (obj){
+            if ( std::find(cellIDsEnergy.begin(), cellIDsEnergy.end(), iC) != cellIDsEnergy.end() ) continue;
+            if ( std::find(cellIDsTime.begin(), cellIDsTime.end(), iC) != cellIDsTime.end() ) continue;
+            if ( std::find(cellIDsHotCells1D.begin(), cellIDsHotCells1D.end(), iC) != cellIDsHotCells1D.end() ) continue;
+            if ( std::find(cellIDsHotCellsTime1D.begin(), cellIDsHotCellsTime1D.end(), iC) != cellIDsHotCellsTime1D.end() ) continue;
+            if ( std::find(cellIDsHotCells2D.begin(), cellIDsHotCells2D.end(), iC) != cellIDsHotCells2D.end() ) continue;
+            if ( std::find(cellIDsMissing.begin(), cellIDsMissing.end(), iC) != cellIDsMissing.end() ) continue;
+        }
+        allCell.push_back(iC);
+        cout << iC << ", ";
+    }
+    cout << endl;
+    return;
+}
+
+
+
 void PlotBadCellReasons(CellQAObj* obj, std::vector<Int_t> allCells, TCanvas* canvas, TString outputDir, TString suffix, TString fClusters, TString fPlot, TString outputPlot, TString fCollisionSystem){
     Int_t atPlotting = 50;
     Int_t iCount = 0;
@@ -2807,7 +2869,19 @@ void SaveBadCellCandidates(std::vector<Int_t> vec,TString str){
 //******************************************************************************************************************
 //********************* Plotting for bad cell comparions in a vector ***********************************************
 //******************************************************************************************************************
-void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, std::vector<Int_t> allCells, TCanvas* canvas, TString outputDir, TString suffix, TString calo, TString* plotDataSets, TString fCollisionSystem)
+void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists,
+                               Color_t *color,
+                               std::vector<Int_t> allCells,
+                               TCanvas* canvas,
+                               TString outputDir,
+                               TString suffix,
+                               TString calo,
+                               TString* plotDataSets,
+                               TString fCollisionSystem,
+                               Bool_t  isGoodCell           = kFALSE,
+                               Int_t iGoodCellTot           = 50,
+                               Int_t iCellJump              = 50
+                             )
 {
     std::vector<TH1D*> fVecDataMC;
     for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
@@ -2815,10 +2889,23 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, s
     }
 
     for(Int_t iCell=0; iCell<(Int_t)allCells.size(); iCell++){
+        if (isGoodCell && iGoodCellTot > 0){
+            if ( (iCellJump+iCell) < (Int_t)allCells.size()){
+                iCell           = iCellJump+iCell;
+                iGoodCellTot--;
+            } else {
+                iCell           = iCellJump+iCell-(Int_t)allCells.size();
+                iGoodCellTot--;
+            }
+        } else {
+            continue;
+        }
+
         TLegend* leg1 = new TLegend( 0.6,0.81,0.97,0.95);
         leg1->SetTextSize(0.04);
         leg1->SetFillColor(0);
 
+        Bool_t allEmpty = kTRUE;
         for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
             if(i==0) fVecDataMC.push_back((TH1D*) DataMCHists.at(i)->ProjectionX(Form("dataProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1));
             else fVecDataMC.push_back((TH1D*) DataMCHists.at(i)->ProjectionX(Form("mcProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1));
@@ -2830,6 +2917,7 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, s
         Int_t minB=0; Int_t maxB=0;
         for(Int_t i=iStart; i>=0; i--){
             TH1D* fHistDataMC = fVecDataMC.at(i);
+            if (fHistDataMC->GetEntries() > 0) allEmpty = kFALSE;
             GetMinMaxBin(fHistDataMC,minB,maxB);
             if (calo.Contains("EMC"))
                 minB = fHistDataMC->FindBin(0.101);
@@ -2865,7 +2953,15 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists, Color_t *color, s
         leg1->Draw("same");
 
         PutProcessLabelAndEnergyOnPlot(0.93, 0.8, 0.03, fCollisionSystem.Data(), Form("%s", calo.Data()), "", 42, 0.03, "", 1, 1.25, 31);
-        SaveCanvas(canvas,Form("%s/Cells/Detailed/Cell%i_EnergyComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()),0,1,0);
+        if (!isGoodCell){
+            SaveCanvas(canvas,Form("%s/Cells/Detailed/Cell%i_EnergyComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()),0,1,0);
+        } else{
+            if (allEmpty){
+                iGoodCellTot++;
+            }else{
+                SaveCanvas(canvas,Form("%s/Cells/Detailed/Good/Cell%i_EnergyComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()),0,1,0);
+            }
+        }
         delete leg1;
 
         for(Int_t i=0; i<(Int_t)fVecDataMC.size(); i++) delete fVecDataMC.at(i);

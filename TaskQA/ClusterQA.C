@@ -236,11 +236,9 @@ void ClusterQA(
         outputDir       +=Form("/%s",DataSets[0].Data());
 
     gSystem->Exec("mkdir -p "+outputDir);
-    gSystem->Exec("mkdir -p "+outputDir+"/Comparison");
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison/Ratios");
     if (doExtQA > 0 && !runMergedClust){
-        gSystem->Exec("mkdir -p "+outputDir+"/Cells");
-        gSystem->Exec("mkdir -p "+outputDir+"/Cells/Detailed");
+        gSystem->Exec("mkdir -p "+outputDir+"/Cells/Detailed/Good");
     }
     //*****************************************************************************************************
     //************************** Set proper cluster nomenclature ******************************************
@@ -2070,6 +2068,7 @@ void ClusterQA(
                 SaveCanvasAndWriteHistogram(canvas, fHistCellEnergyVsCellID, Form("%s/CellEnergyVsCellID_LowEnergy_%s.pdf", outputDir.Data(), DataSets[i].Data()));
 
                 // Calculate correlatio between mean and sigma of energy distribution per cell
+                // if limits are set in cellQA object also the bad cell candidates for 2D energy vs sigma will be evaluated
                 PlotCellMeanVsSigma(cellQA,nCaloCells,fHistCellEnergyVsCellID,
                                     "Mean Cell Energy (GeV)",
                                     "#sigma_{Cell Energy} (GeV)",
@@ -2138,6 +2137,7 @@ void ClusterQA(
             //---------------------------------------------------------------------------------------------------------------
             // cell ID vs energy and time of the cells
             if(fHistCellTimeVsCellID){
+                // cell ID vs energy and time of the cells
                 fHistCellTimeVsCellID->GetYaxis()->SetRangeUser(0,nCaloCells);
                 DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistCellTimeVsCellID,Form("%s - %s %s- %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), fClusters.Data()),
@@ -2145,6 +2145,8 @@ void ClusterQA(
                 SaveCanvasAndWriteHistogram(canvas, fHistCellTimeVsCellID, Form("%s/CellTimeVsCellID_%s.pdf", outputDir.Data(), DataSets[i].Data()));
                 vecCellTimingForComparison.push_back(new TH2D(*fHistCellTimeVsCellID));
 
+                // Calculate correlatio between mean and sigma of time distribution per cell
+                // if limits are set in cellQA object also the bad cell candidates for 2D energy vs sigma will be evaluated
                 PlotCellMeanVsSigma(cellQA,nCaloCells,fHistCellTimeVsCellID,
                                     "Mean Cell Time (#mus)",
                                     "#sigma_{Cell Time} (#mus)",
@@ -4097,58 +4099,71 @@ void ClusterQA(
             DataMCHistsTime.push_back(fHistDataMCCellTime);
         }
 
-        vector<Int_t> allCells;
-        CollectAndPlotBadCellCandidates(fLog, allCells, cellQA->cellIDsEnergy,"Energy - Mean/Sigma");
-        CollectAndPlotBadCellCandidates(fLog, allCells, cellQA->cellIDsTime,"Time - Mean/Sigma");
-        CollectAndPlotBadCellCandidates(fLog, allCells, cellQA->cellIDsHotCells1D,"HotCells1D");
+        vector<Int_t> allCellsBad;
+        vector<Int_t> allCellsGood;
+
+        CollectAndPlotBadCellCandidates(fLog, allCellsBad, cellQA->cellIDsEnergy,"Energy - Mean/Sigma");
+        CollectAndPlotBadCellCandidates(fLog, allCellsBad, cellQA->cellIDsTime,"Time - Mean/Sigma");
+        CollectAndPlotBadCellCandidates(fLog, allCellsBad, cellQA->cellIDsHotCells1D,"HotCells1D");
         CheckBadCellCandidatesVec(DataMCHistsTime, cellQA->cellIDsHotCellsTime1D,"HotCellsTime1D");
-        CollectAndPlotBadCellCandidates(fLog, allCells, cellQA->cellIDsHotCellsTime1D,"HotCellsTime1D");
-        CollectAndPlotBadCellCandidates(fLog, allCells, cellQA->cellIDsHotCells2D,"HotCells2D");
-        CollectAndPlotBadCellCandidates(fLog, allCells, cellQA->cellIDsMissing,"Missing MC-Data");
+        CollectAndPlotBadCellCandidates(fLog, allCellsBad, cellQA->cellIDsHotCellsTime1D,"HotCellsTime1D");
+        CollectAndPlotBadCellCandidates(fLog, allCellsBad, cellQA->cellIDsHotCells2D,"HotCells2D");
+        CollectAndPlotBadCellCandidates(fLog, allCellsBad, cellQA->cellIDsMissing,"Missing MC-Data");
+
+        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        cout << "GOOD cells:" << endl;
+        DetermineGoodCellCandidates(allCellsGood, cellQA, nCaloCells);
+        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "AllCells.size before sort and unique: " << allCells.size() << ".";
-        fLog << "AllCells.size before sort and unique: " << allCells.size() << ".";
-        if((Int_t)allCells.size()>3000){
+        cout << "allCellsBad.size before sort and unique: " << allCellsBad.size() << ".";
+        fLog << "allCellsBad.size before sort and unique: " << allCellsBad.size() << ".";
+        if((Int_t)allCellsBad.size()>3000){
             cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-            cout << "ERROR: allCells.size() too big " << allCells.size() << ", check cuts!" << endl;
+            cout << "ERROR: allCellsBad.size() too big " << allCellsBad.size() << ", check cuts!" << endl;
             cout << "RETURNING..." << endl;
             fLog << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-            fLog << "ERROR: allCells.size() too big " << allCells.size() << ", check cuts!" << endl;
+            fLog << "ERROR: allCellsBad.size() too big " << allCellsBad.size() << ", check cuts!" << endl;
             fLog << "RETURNING..." << endl;
             return;
         }
-        selection_sort(allCells.begin(),allCells.end());
+        selection_sort(allCellsBad.begin(),allCellsBad.end());
         vector<Int_t>::iterator it;
-        it = unique(allCells.begin(),allCells.end());
-        allCells.resize( distance(allCells.begin(),it) );
-        cout << "Finally " << allCells.size() << " different cells found!" << endl;
-        fLog << "Finally " << allCells.size() << " different cells found!" << endl;
+        it = unique(allCellsBad.begin(),allCellsBad.end());
+        allCellsBad.resize( distance(allCellsBad.begin(),it) );
+        cout << "Finally " << allCellsBad.size() << " different cells found!" << endl;
+        fLog << "Finally " << allCellsBad.size() << " different cells found!" << endl;
 
         fstream fBadCells;
         fBadCells.open(Form("%s/Cells/%s.log",outputDir.Data(),DataSets[0].Data()), ios::out);
-        for(Int_t iC=0; iC<(Int_t)allCells.size(); iC++){
-            cout << allCells.at(iC) << ", ";
-            fLog << allCells.at(iC) << ", ";
-            fBadCells << allCells.at(iC) << endl;
+        for(Int_t iC=0; iC<(Int_t)allCellsBad.size(); iC++){
+            cout << allCellsBad.at(iC) << ", ";
+            fLog << allCellsBad.at(iC) << ", ";
+            fBadCells << allCellsBad.at(iC) << endl;
         }
         fBadCells.close();
         cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         fLog << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
         canvas->SetLeftMargin(0.1);canvas->SetRightMargin(0.1);canvas->SetTopMargin(0.06);canvas->SetBottomMargin(0.1);
-        if((Int_t)allCells.size()>0){
-            PlotBadCellReasons(cellQA,allCells,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
+        if((Int_t)allCellsBad.size()>0){
+            PlotBadCellReasons(cellQA,allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
 
-            PlotBadCellOverview(kTRUE,kFALSE,DataMCHists.at(0),allCells,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
-            PlotBadCellOverview(kFALSE,kFALSE,DataMCHistsTime.at(0),allCells,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
+            PlotBadCellOverview(kTRUE,kFALSE,DataMCHists.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
+            PlotBadCellOverview(kFALSE,kFALSE,DataMCHistsTime.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
             for(Int_t j=1; j<nSets; j++){
-                PlotBadCellOverview(kTRUE,kTRUE,DataMCHists.at(j),allCells,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
-                PlotBadCellOverview(kFALSE,kTRUE,DataMCHistsTime.at(j),allCells,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
+                PlotBadCellOverview(kTRUE,kTRUE,DataMCHists.at(j),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
+                PlotBadCellOverview(kFALSE,kTRUE,DataMCHistsTime.at(j),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
             }
             canvas->SetLeftMargin(0.08);canvas->SetRightMargin(0.02);canvas->SetTopMargin(0.04);canvas->SetBottomMargin(0.11);
-            PlotBadCellComparisonVec(DataMCHists,colorCompare,allCells,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem);
+            PlotBadCellComparisonVec(DataMCHists,colorCompare,allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem);
+        }
+
+        if ((Int_t)allCellsGood.size()>0){
+            canvas->SetLeftMargin(0.08);canvas->SetRightMargin(0.02);canvas->SetTopMargin(0.04);canvas->SetBottomMargin(0.11);
+            PlotBadCellComparisonVec(DataMCHists,colorCompare,allCellsGood,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem, kTRUE, 50,100);
         }
 
         char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[0].Data());
@@ -4166,7 +4181,7 @@ void ClusterQA(
         SaveBadCellCandidates(cellQA->cellIDsHotCellsTime1D,"HotCellsTime1D");
         SaveBadCellCandidates(cellQA->cellIDsHotCells2D,"HotCells2D");
         SaveBadCellCandidates(cellQA->cellIDsMissing,"Missing");
-        SaveBadCellCandidates(allCells,"allCells");
+        SaveBadCellCandidates(allCellsBad,"allCellsBad");
 
         fOutput->Write();
         fOutput->Close();
