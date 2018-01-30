@@ -45,40 +45,25 @@ LHC14a1cMC="";
 
 if [ $1 = "fbock" ]; then
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/PbPb
-    NSlashes=8
-    NSlashes2=7
-    NSlashes3=9
-elif [ $1 = "fbockGSI" ]; then
-   BASEDIR=/hera/alice/fbock/Grid/OutputLegoTrains/PbPb
 elif [ $1 = "leardini" ]; then
    BASEDIR=/Users/lucy/
 elif [ $1 = "leardiniALICESERV1" ]; then
    BASEDIR=/alidata50/alice_u/leardini/GridOutput/PbPb/
 elif [ $1 = "leardiniGSI" ]; then
    BASEDIR=/hera/alice/leardini/Grid/OutputLegoTrains/PbPb
-elif [ $1 = "passfeld" ]; then
-   BASEDIR=~/work/Gridoutput/PbPb
-elif [ $1 = "passfeldMAF" ]; then
-   BASEDIR=/data9/a_pass02/gamma_test/AnalysisSoftware/LegoTrain/
-elif [ $1 = "passfeldGSI" ]; then
-   BASEDIR=/hera/alice/passfeld/Grid/OutputLegoTrains/PbPb
-elif [ $1 = "amarin" ]; then
-   BASEDIR=/Users/marin/
-elif [ $1 = "amarinGSI" ]; then
-   BASEDIR=/hera/alice/marin/Grid/OutputLegoTrains/PbPb
-elif [ $1 = "amarinALICESERV1" ]; then
-   BASEDIR=/alidata50/alice_u/amarin/GridOutput/PbPb/
-elif [ $1 = "mwilde" ]; then
-   BASEDIR=~/work/GridOutput
-elif [ $1 = "mwildeGSI" ]; then
-   BASEDIR=/hera/alice/mwilde/Grid/OutputLegoTrains/PbPb
-elif [ $1 = "pgonzales" ]; then
-   BASEDIR=~/work/GridOutput
-elif [ $1 = "pgonzalesGSI" ]; then
-   BASEDIR=/hera/alice/pgonzales/Grid/OutputLegoTrains/PbPb
 elif [ $1 = "dmuhlheim" ]; then
    BASEDIR=/home/daniel/Desktop/Grid
+elif [ $1 = "loizides" ]; then
+   BASEDIR=/home/loizides/Downloads
 fi
+
+# Definitition of number of slashes in your path to different depths
+NSlashesBASE=`tr -dc '/' <<<"$BASEDIR" | wc -c`
+NSlashes=`expr $NSlashesBASE + 4`
+NSlashes2=`expr $NSlashes - 1`
+NSlashes3=`expr $NSlashes + 1`
+NSlashes4=`expr $NSlashes + 2`
+echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
 #   TRAINDIR=Legotrain-vAN-20141110-Calo
 #   LHC11hData=144_20141111-1840; #ESD
