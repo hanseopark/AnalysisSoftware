@@ -1,0 +1,17 @@
+#example config LHC17pq - PCM - runwise
+select  LHC17pq
+mode    0
+cutNr   0
+nSets   4
+nData   2
+energy  5TeV
+filePath    /home/admin1/leardini/GridOutput/pp/Legotrain-/
+filePathPhoton  /home/admin1/leardini/GridOutput/pp/Legotrain-/
+fileName    GammaConvV1_.root
+fileNamePhoton    AnalysisResults.root
+DataSetNames	LHC17p_woSDD    LHC17q_woSDD LHC17l3 LHC17l3 STOP
+DataSetNamesPlot	LHC17p_woSDD    LHC17q_woSDD	GEANT3	GEANT4	STOP
+doEquidistantXaxis  kTRUE
+addPhotonCutNr   0005314140
+addLabelRunlist
+doHistsForEverySet  kTRUE

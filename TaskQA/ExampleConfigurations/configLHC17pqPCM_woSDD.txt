@@ -1,0 +1,10 @@
+#example config	LHC17pq	- PCM
+select	LHC17pq
+mode	0
+nSets	4
+cutNr	0
+labelData	Data
+energy	5TeV
+pathDataSets	/home/admin1/leardini/GridOutput/pp/Legotrain-/GammaConvV1_.root	/home/admin1/leardini/GridOutput/pp/Legotrain-/GammaConvV1_.root	/home/admin1/leardini/GridOutput/pp/Legotrain-/GammaConvV1_.root	/home/admin1/leardini/GridOutput/pp/Legotrain-/GammaConvV1_.root	STOP
+DataSetNames	LHC17p_woSDD    LHC17q_woSDD LHC17l3 LHC17l3 STOP
+DataSetNamesPlot	LHC17p_woSDD    LHC17q_woSDD	GEANT3	GEANT4	STOP
