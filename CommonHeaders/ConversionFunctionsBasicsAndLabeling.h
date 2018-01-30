@@ -801,6 +801,8 @@
             return "Xe-Xe, #sqrt{#it{s}_{_{NN}}} = 5.44 TeV";
         } else if( fEnergyFlagOpt.CompareTo("pPb_5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("pPb_5.023TeVRun2") == 0) {
             return "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
+        } else if( fEnergyFlagOpt.CompareTo("pPb_8TeV") == 0) {
+            return "p-Pb, #sqrt{#it{s}_{_{NN}}} = 8 TeV";
         } else {
             cout << "No correct collision system specification, has been given" << endl;
             return "";

@@ -3394,6 +3394,21 @@
                 return 27;
             }
         }
+        if (!energy.CompareTo("pPb_8TeV") ){
+            if (!generator.CompareTo("")){
+                return 33;
+            } else if (!generator.CompareTo("LHC16r")){
+                return 20;
+            } else if (!generator.CompareTo("LHC16s")){
+                return 21;
+            } else if (generator.Contains("LHC17g8b")){
+                return 24;
+            } else if (generator.Contains("LHC17g8c")){
+                return 25;
+            } else {
+                return 27;
+            }
+        }
 
         if (!energy.CompareTo("PbPb_2.76TeV")){
             if (!generator.CompareTo("")){

@@ -2044,7 +2044,7 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV), 5TeV2017 (2017 pp@5.02TeV), PbPb_2.76TeV (PbPb@2.76TeV), PbPb_5.02TeV (PbPb@5.02TeV), XeXe_5.44TeV(XeXe@5.44TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV), 5TeV2017 (2017 pp@5.02TeV), PbPb_2.76TeV (PbPb@2.76TeV), PbPb_5.02TeV (PbPb@5.02TeV), XeXe_5.44TeV(XeXe@5.44TeV), pPb_5.023TeV (pPb@5.023TeV), pPb_8TeV (pPb@8TeV)"
     read answer
     if [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
         energy="900GeV";
@@ -2084,6 +2084,9 @@ do
         ExtInputFile="";
     elif [ $answer = "pPb_5.023TeVRun2" ] || [ $answer = "pPb_5.023R2" ] || [ $answer = "pPb5R2" ];  then
         energy="pPb_5.023TeVRun2";
+        ExtInputFile="";
+    elif [ $answer = "pPb_8TeV" ] || [ $answer = "pPb_8" ] || [ $answer = "pPb8" ];  then
+        energy="pPb_8TeV";
         ExtInputFile="";
     fi
     echo "The collision system has been selected to be $energy."
@@ -2585,6 +2588,75 @@ do
                 echo "Command not found. Please try again.";
             fi
         fi
+    elif [ $energy = "pPb_8TeV" ]  ; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningpPbDirGamma
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningpPb
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+
+            if [ $mode = 2 ] || [ $mode = 3 ] || [ $mode = 4 ] || [ $mode = 5 ] || [ $mode = 12 ] || [ $mode = 13 ]; then
+                useTHnSparse=0
+            fi
+        fi
+
+        correct=0
+        while [ $correct -eq 0 ]
+        do
+            echo "Do you want to use MinBias Efficiencies only? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                OPTMINBIASEFF="MinBiasEffOnly"
+                echo "Calculating MinBias Efficiecy only ...";
+                correct=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                OPTMINBIASEFF=""
+                echo "Nothing to be done ...";
+                correct=1
+            else
+                echo "Command not found. Please try again.";
+            fi
+        done
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
+            fi
+        fi
     elif [ $energy = "PbPb_2.76TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
@@ -2824,6 +2896,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                     fi
                     Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*.root`
                     if [ $MCFILE -eq 1 ]; then
+                      useTHnSparse=0
                         optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                         ExtractSignal $optionsPi0MC
                         Pi0MCRAWFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
