@@ -60,6 +60,9 @@ void CompileCorrectGammaV2(){
     } else if (homedirectory.CompareTo("/home/meike") == 0){
       gSystem->AddIncludePath("-I/home/meike/analysis/software/photonconv/AnalysisSoftware/RooUnfold/src");
       gSystem->Load("/home/meike/analysis/software/photonconv/AnalysisSoftware/RooUnfold/libRooUnfold");
+    } else if (homedirectory.CompareTo("/home/loizides") == 0){
+      gSystem->AddIncludePath("-I/home/loizides/sw/pcm_git/RooUnfold/src");
+      gSystem->Load("/home/loizides/sw/pcm_git/RooUnfold/libRooUnfold");
     } else if (homedirectory.CompareTo("/home/nschmidt") == 0){
       gSystem->AddIncludePath("-I/home/nschmidt/AnalysisSoftware/RooUnfold/src");
       gSystem->Load("/home/nschmidt/AnalysisSoftware/RooUnfold/libRooUnfold");

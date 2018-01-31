@@ -1,4 +1,5 @@
 #! /bin/bash
+source /tmp/gclient_env_25384
 
 function CopyFileIfNonExisitent()
 {
@@ -19,8 +20,6 @@ function ChangeStructureIfNeeded()
         mv $1 $2
     fi
 }
-
-
 
 # switches to enable/disable certain procedures
 DOWNLOADON=1
@@ -45,12 +44,6 @@ LHC14a1cMC="";
 
 if [ $1 = "fbock" ]; then
     BASEDIR=/mnt/additionalStorage/OutputLegoTrains/PbPb
-elif [ $1 = "leardini" ]; then
-   BASEDIR=/Users/lucy/
-elif [ $1 = "leardiniALICESERV1" ]; then
-   BASEDIR=/alidata50/alice_u/leardini/GridOutput/PbPb/
-elif [ $1 = "leardiniGSI" ]; then
-   BASEDIR=/hera/alice/leardini/Grid/OutputLegoTrains/PbPb
 elif [ $1 = "dmuhlheim" ]; then
    BASEDIR=/home/daniel/Desktop/Grid
 elif [ $1 = "loizides" ]; then
@@ -76,13 +69,17 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 #   LHC14a1a=186_20141124-1555;
 #   LHC14a1b=187_20141124-1556; #ESD
 
-# TRAINDIR=Legotrain-vAN20171215_EMCrerun
-# LHC11hData=364;
-# LHC14a1aMC=715;
+#TRAINDIR=Legotrain-vAN20171215_EMCrerun
+#LHC11hData=364;
+#LHC14a1aMC=715;
 
-TRAINDIR=Legotrain-vAN20180125_EMCtrackMult
-LHC11hData=378;
-LHC14a1aMC=801;
+#TRAINDIR=Legotrain-vAN20180125_EMCastridtrkcut
+#LHC11hData=378;
+#LHC14a1aMC=801;
+
+TRAINDIR=Legotrain-vAN201801
+LHC11hData=371;
+LHC14a1aMC=784;
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

@@ -1728,7 +1728,7 @@
                 if (mode == 2 || mode == 13){
                     return 8;
                 }else if (mode == 4 || mode == 12 ){
-                    return 8;
+                    return 10;
                 }else
                     return 1;
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
@@ -1910,7 +1910,7 @@
                 } else if ( mode == 4 || mode == 12 ){
                     cout << minECut << endl;
                     if (minECut.Atoi() != 3)
-                        startPtBin      = 12;
+                        startPtBin      = 6;
                     else
                         startPtBin      = 6;
                 } else if ( mode == 5){
@@ -2140,7 +2140,7 @@
 
         // Initialize bin for single invariant mass plot
         fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet, directPhoton);
-
+	cout << "Example pt bin: " <<  fExampleBin << endl; 
         //*************************************************************************************************
         //************************************ Binning for Pi0 ********************************************
         //*************************************************************************************************

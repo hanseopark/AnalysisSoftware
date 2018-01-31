@@ -12,6 +12,8 @@ elif [ $1 = "jokonig" ]; then
    PHOTONCONVDIR=PHOTONCONVDIR=/home/joshua/AnalysisSoftware
 elif [ $1 = "mdanisch" ]; then
    PHOTONCONVDIR=/home/meike/analysis/software/photonconv/AnalysisSoftware
+elif [ $1 = "loizides" ]; then
+   PHOTONCONVDIR=/home/loizides/sw/pcm_git
 elif [ $1 = "amechler" ]; then
    PHOTONCONVDIR=/home/adrian/git-Framework/AnalysisSoftware
 fi
