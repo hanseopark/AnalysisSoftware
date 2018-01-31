@@ -2337,7 +2337,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",2.2,12.0);
             }else{
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",0.5,maxPtMeson);
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol0[k],"NRME+","",3.5,maxPtMeson);
+		cout << "Fit result: " << k << " " <<  fitEffiBiasWOWeightsPol0[k]->GetParameter(0) << endl;
             }
             cout << "fitting ratio norm/true eff with pol0" << endl;
             cout << WriteParameterToFile(fitEffiBiasWOWeightsPol0[k]) << endl;
@@ -2359,7 +2360,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
             }else{
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.5,maxPtMeson    );
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",3.5,maxPtMeson    );
             }
             cout << "fitting ratio norm/true eff with exp" << endl;
             cout << WriteParameterToFile(fitEffiBiasWOWeightsPol1[k]) << endl;

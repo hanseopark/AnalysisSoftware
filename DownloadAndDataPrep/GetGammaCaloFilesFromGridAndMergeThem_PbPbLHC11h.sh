@@ -1,4 +1,5 @@
 #! /bin/bash
+source /tmp/gclient_env_25384
 
 function CopyFileIfNonExisitent()
 {
@@ -76,13 +77,13 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 #TRAINDIR=Legotrain-vAN20180125_EMCastridtrkcut
 #LHC11hData=378;
 #LHC14a1aMC=801;
-
 TRAINDIR=Legotrain-vAN201801
 LHC11hData=379;
 
 # LHC14a1aMC=784;
 LHC14a1bMC=804;
 LHC14a1cMC=806;
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
