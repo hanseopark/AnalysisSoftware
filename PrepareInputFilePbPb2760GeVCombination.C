@@ -934,13 +934,16 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t ypi0ErrorAdded_0010[pi0PbPbEMCalbins];
     Double_t ypi0relErrorAdded_0010[pi0PbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN();i++){
-        if(xpi0_0010[i]>=15){
-            ypi0relErr_0010[i] = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorYlow(i);
-            ypi0Err_0010[i] = (ypi0relErr_0010[i] * 100.)/ypi0_0010[i];
-            ypi0ErrorAdded_0010[i] = TMath::Sqrt( (ypi0Err_0010[i]*ypi0Err_0010[i]) + (5.*5. + 5.*5.) );
-            ypi0relErrorAdded_0010[i] = (ypi0_0010[i]*ypi0ErrorAdded_0010[i])/100.;
-            graphEMCalPi0InvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),ypi0relErrorAdded_0010[i],ypi0relErrorAdded_0010[i]);
-        }
+        ypi0relErr_0010[i] = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorYlow(i);
+        ypi0Err_0010[i] = (ypi0relErr_0010[i] * 100.)/ypi0_0010[i];
+        cout << xpi0_0010[i] << endl;
+        if(xpi0_0010[i]<15)
+            ypi0ErrorAdded_0010[i] = TMath::Sqrt( (ypi0Err_0010[i]*ypi0Err_0010[i]) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        else if(xpi0_0010[i]>=15)
+            ypi0ErrorAdded_0010[i] = TMath::Sqrt( (ypi0Err_0010[i]*ypi0Err_0010[i]) + (5.*5. + 5.*5.) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        ypi0relErrorAdded_0010[i] = (ypi0_0010[i]*ypi0ErrorAdded_0010[i])/100.;
+        cout << ypi0relErrorAdded_0010[i] << endl;
+        graphEMCalPi0InvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),ypi0relErrorAdded_0010[i],ypi0relErrorAdded_0010[i]);
     }
 
     TH1D* histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("EMCalSysPion010forRAA");
@@ -953,13 +956,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t ypi0RAAErrorAdded_0010[pi0PbPbEMCalbins];
     Double_t ypi0RAArelErrorAdded_0010[pi0PbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetN();i++){
-        if(xpi0RAA_0010[i]>=15){
-            ypi0RAArelErr_0010[i] = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorYlow(i);
-            ypi0RAAErr_0010[i] = (ypi0RAArelErr_0010[i] * 100.)/ypi0RAA_0010[i];
-            ypi0RAAErrorAdded_0010[i] = TMath::Sqrt( (ypi0RAAErr_0010[i]*ypi0RAAErr_0010[i]) + (5.*5. + 5.*5.) );
-            ypi0RAArelErrorAdded_0010[i] = (ypi0RAA_0010[i]*ypi0RAAErrorAdded_0010[i])/100.;
-            graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),ypi0RAArelErrorAdded_0010[i],ypi0RAArelErrorAdded_0010[i]);
-        }
+        ypi0RAArelErr_0010[i] = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorYlow(i);
+        ypi0RAAErr_0010[i] = (ypi0RAArelErr_0010[i] * 100.)/ypi0RAA_0010[i];
+        if(xpi0RAA_0010[i]<15)
+            ypi0RAAErrorAdded_0010[i] = TMath::Sqrt( (ypi0RAAErr_0010[i]*ypi0RAAErr_0010[i]) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        else if(xpi0RAA_0010[i]>=15)
+            ypi0RAAErrorAdded_0010[i] = TMath::Sqrt( (ypi0RAAErr_0010[i]*ypi0RAAErr_0010[i]) + (5.*5. + 5.*5.) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        ypi0RAArelErrorAdded_0010[i] = (ypi0RAA_0010[i]*ypi0RAAErrorAdded_0010[i])/100.;
+        graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),ypi0RAArelErrorAdded_0010[i],ypi0RAArelErrorAdded_0010[i]);
     }
 
     TH1D* histoEMCalPi0InvYieldStatPbPb2760GeV_2050         = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbStatErrPi_2050");
@@ -978,13 +982,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t ypi0ErrorAdded_2050[pi0PbPbEMCalbins];
     Double_t ypi0relErrorAdded_2050[pi0PbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetN();i++){
-        if(xpi0_2050[i]>=15){
-            ypi0relErr_2050[i] = graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorYlow(i);
-            ypi0Err_2050[i] = (ypi0relErr_2050[i] * 100.)/ypi0_2050[i];
-            ypi0ErrorAdded_2050[i] = TMath::Sqrt( (ypi0Err_2050[i]*ypi0Err_2050[i]) + (5.*5. + 5.*5.) );
-            ypi0relErrorAdded_2050[i] = (ypi0_2050[i]*ypi0ErrorAdded_2050[i])/100.;
-            graphEMCalPi0InvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),ypi0relErrorAdded_2050[i],ypi0relErrorAdded_2050[i]);
-        }
+        ypi0relErr_2050[i] = graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorYlow(i);
+        ypi0Err_2050[i] = (ypi0relErr_2050[i] * 100.)/ypi0_2050[i];
+        if(xpi0_2050[i]<15)
+            ypi0ErrorAdded_2050[i] = TMath::Sqrt( (ypi0Err_2050[i]*ypi0Err_2050[i]) - (6.*6.) + (8.6*8.6) + (2.*2.));
+        else if(xpi0_2050[i]>=15)
+            ypi0ErrorAdded_2050[i] = TMath::Sqrt( (ypi0Err_2050[i]*ypi0Err_2050[i]) + (5.*5. + 5.*5.) - (6.*6.) + (8.6*8.6) + (2.*2.));
+        ypi0relErrorAdded_2050[i] = (ypi0_2050[i]*ypi0ErrorAdded_2050[i])/100.;
+        graphEMCalPi0InvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),ypi0relErrorAdded_2050[i],ypi0relErrorAdded_2050[i]);
     }
 
     TH1D* histoEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("EMCalSysPion2050forRAA");
@@ -997,13 +1002,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t ypi0RAAErrorAdded_2050[pi0PbPbEMCalbins];
     Double_t ypi0RAArelErrorAdded_2050[pi0PbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetN();i++){
-        if(xpi0RAA_2050[i]>=15){
-            ypi0RAArelErr_2050[i] = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorYlow(i);
-            ypi0RAAErr_2050[i] = (ypi0RAArelErr_2050[i] * 100.)/ypi0RAA_2050[i];
-            ypi0RAAErrorAdded_2050[i] = TMath::Sqrt( (ypi0RAAErr_2050[i]*ypi0RAAErr_2050[i]) + (5.*5. + 5.*5.) );
-            ypi0RAArelErrorAdded_2050[i] = (ypi0RAA_2050[i]*ypi0RAAErrorAdded_2050[i])/100.;
-            graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),ypi0RAArelErrorAdded_2050[i],ypi0RAArelErrorAdded_2050[i]);
-        }
+        ypi0RAArelErr_2050[i] = graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorYlow(i);
+        ypi0RAAErr_2050[i] = (ypi0RAArelErr_2050[i] * 100.)/ypi0RAA_2050[i];
+        if(xpi0RAA_2050[i]<15)
+            ypi0RAAErrorAdded_2050[i] = TMath::Sqrt( (ypi0RAAErr_2050[i]*ypi0RAAErr_2050[i]) - (6.* 6.) + (8.6*8.6) + (2.*2.));
+        if(xpi0RAA_2050[i]>=15)
+            ypi0RAAErrorAdded_2050[i] = TMath::Sqrt( (ypi0RAAErr_2050[i]*ypi0RAAErr_2050[i]) + (5.*5. + 5.*5.) - (6.* 6.) + (8.6*8.6) + (2.*2.));
+        ypi0RAArelErrorAdded_2050[i] = (ypi0RAA_2050[i]*ypi0RAAErrorAdded_2050[i])/100.;
+        graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),ypi0RAArelErrorAdded_2050[i],ypi0RAArelErrorAdded_2050[i]);
     }
 
 
@@ -1038,13 +1044,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t yetaErrorAdded_0010[etaPbPbEMCalbins];
     Double_t yetarelErrorAdded_0010[etaPbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN();i++){
-        if(xeta_0010[i]>=15){
-            yetarelErr_0010[i] = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorYlow(i);
-            yetaErr_0010[i] = (yetarelErr_0010[i] * 100.)/yeta_0010[i];
-            yetaErrorAdded_0010[i] = TMath::Sqrt( (yetaErr_0010[i]*yetaErr_0010[i]) + (5.*5.) );
-            yetarelErrorAdded_0010[i] = (yeta_0010[i]*yetaErrorAdded_0010[i])/100.;
-            graphEMCalEtaInvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),yetarelErrorAdded_0010[i],yetarelErrorAdded_0010[i]);
-        }
+        yetarelErr_0010[i] = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorYlow(i);
+        yetaErr_0010[i] = (yetarelErr_0010[i] * 100.)/yeta_0010[i];
+        if(xeta_0010[i]<15)
+            yetaErrorAdded_0010[i] = TMath::Sqrt( (yetaErr_0010[i]*yetaErr_0010[i]) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        if(xeta_0010[i]>=15)
+            yetaErrorAdded_0010[i] = TMath::Sqrt( (yetaErr_0010[i]*yetaErr_0010[i]) + (5.*5.) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        yetarelErrorAdded_0010[i] = (yeta_0010[i]*yetaErrorAdded_0010[i])/100.;
+        graphEMCalEtaInvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),yetarelErrorAdded_0010[i],yetarelErrorAdded_0010[i]);
     }
     // added 5% for opening angle and 5% for jet environment above 15GeV
     Double_t *xetaRAA_0010 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetX();
@@ -1054,13 +1061,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t yetaRAAErrorAdded_0010[etaPbPbEMCalbins];
     Double_t yetaRAArelErrorAdded_0010[etaPbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetN();i++){
-        if(xetaRAA_0010[i]>=15){
-            yetaRAArelErr_0010[i] = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorYlow(i);
-            yetaRAAErr_0010[i] = (yetaRAArelErr_0010[i] * 100.)/yetaRAA_0010[i];
-            yetaRAAErrorAdded_0010[i] = TMath::Sqrt( (yetaRAAErr_0010[i]*yetaRAAErr_0010[i]) + (5.*5.) );
-            yetaRAArelErrorAdded_0010[i] = (yetaRAA_0010[i]*yetaRAAErrorAdded_0010[i])/100.;
-            graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),yetaRAArelErrorAdded_0010[i],yetaRAArelErrorAdded_0010[i]);
-        }
+        yetaRAArelErr_0010[i] = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorYlow(i);
+        yetaRAAErr_0010[i] = (yetaRAArelErr_0010[i] * 100.)/yetaRAA_0010[i];
+        if(xetaRAA_0010[i]<15)
+            yetaRAAErrorAdded_0010[i] = TMath::Sqrt( (yetaRAAErr_0010[i]*yetaRAAErr_0010[i]) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        if(xetaRAA_0010[i]>=15)
+            yetaRAAErrorAdded_0010[i] = TMath::Sqrt( (yetaRAAErr_0010[i]*yetaRAAErr_0010[i]) + (5.*5.) - (6.*6.) + (8.6*8.6) + (7.*7.));
+        yetaRAArelErrorAdded_0010[i] = (yetaRAA_0010[i]*yetaRAAErrorAdded_0010[i])/100.;
+        graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),yetaRAArelErrorAdded_0010[i],yetaRAArelErrorAdded_0010[i]);
     }
 
     TH1D* histoEMCalEtaInvYieldStatPbPb2760GeV_2050         = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbStatErrEta_2050");
@@ -1090,13 +1098,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t yetaErrorAdded_2050[etaPbPbEMCalbins];
     Double_t yetarelErrorAdded_2050[etaPbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetN();i++){
-        if(xeta_2050[i]>=15){
-            yetarelErr_2050[i] = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorYlow(i);
-            yetaErr_2050[i] = (yetarelErr_2050[i] * 100.)/yeta_2050[i];
-            yetaErrorAdded_2050[i] = TMath::Sqrt( (yetaErr_2050[i]*yetaErr_2050[i]) + (5.*5.) );
-            yetarelErrorAdded_2050[i] = (yeta_2050[i]*yetaErrorAdded_2050[i])/100.;
-            graphEMCalEtaInvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),yetarelErrorAdded_2050[i],yetarelErrorAdded_2050[i]);
-        }
+        yetarelErr_2050[i] = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorYlow(i);
+        yetaErr_2050[i] = (yetarelErr_2050[i] * 100.)/yeta_2050[i];
+        if(xeta_2050[i]<15)
+            yetaErrorAdded_2050[i] = TMath::Sqrt( (yetaErr_2050[i]*yetaErr_2050[i]) - (6.* 6.) + (8.6*8.6) + (2.*2.));
+        if(xeta_2050[i]>=15)
+            yetaErrorAdded_2050[i] = TMath::Sqrt( (yetaErr_2050[i]*yetaErr_2050[i]) + (5.*5.) - (6.* 6.) + (8.6*8.6) + (2.*2.));
+        yetarelErrorAdded_2050[i] = (yeta_2050[i]*yetaErrorAdded_2050[i])/100.;
+        graphEMCalEtaInvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),yetarelErrorAdded_2050[i],yetarelErrorAdded_2050[i]);
     }
     // added 5% for opening angle and 5% for jet environment above 15GeV
     Double_t *xetaRAA_2050 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetX();
@@ -1106,13 +1115,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     Double_t yetaRAAErrorAdded_2050[etaPbPbEMCalbins];
     Double_t yetaRAArelErrorAdded_2050[etaPbPbEMCalbins];
     for(Int_t i = 0;i<graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetN();i++){
-        if(xetaRAA_2050[i]>=15){
-            yetaRAArelErr_2050[i] = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorYlow(i);
-            yetaRAAErr_2050[i] = (yetaRAArelErr_2050[i] * 100.)/yetaRAA_2050[i];
-            yetaRAAErrorAdded_2050[i] = TMath::Sqrt( (yetaRAAErr_2050[i]*yetaRAAErr_2050[i]) + (5.*5.) );
-            yetaRAArelErrorAdded_2050[i] = (yetaRAA_2050[i]*yetaRAAErrorAdded_2050[i])/100.;
-            graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),yetaRAArelErrorAdded_2050[i],yetaRAArelErrorAdded_2050[i]);
-        }
+        yetaRAArelErr_2050[i] = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorYlow(i);
+        yetaRAAErr_2050[i] = (yetaRAArelErr_2050[i] * 100.)/yetaRAA_2050[i];
+        if(xetaRAA_2050[i]<15)
+            yetaRAAErrorAdded_2050[i] = TMath::Sqrt( (yetaRAAErr_2050[i]*yetaRAAErr_2050[i]) - (6.* 6.) + (8.6*8.6) + (2.*2.));
+        if(xetaRAA_2050[i]>=15)
+            yetaRAAErrorAdded_2050[i] = TMath::Sqrt( (yetaRAAErr_2050[i]*yetaRAAErr_2050[i]) + (5.*5.) - (6.* 6.) + (8.6*8.6) + (2.*2.));
+        yetaRAArelErrorAdded_2050[i] = (yetaRAA_2050[i]*yetaRAAErrorAdded_2050[i])/100.;
+        graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),yetaRAArelErrorAdded_2050[i],yetaRAArelErrorAdded_2050[i]);
     }
 
     TDirectory* directoryEMCalRAAPbPb2760GeV                = (TDirectory*)fileEMCal->Get("RAA2.76TeV_PbPb");

@@ -185,11 +185,11 @@ void PlotExampleInvMass(  TH1D* histoInvMassSignalWithBG,
     TH1F * histo1DInvMassDummy;
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
         histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
-        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),Form("Counts per %2.f MeV/#it{c^{2}}",histoPi0InvMassSigPlusBG->GetBinWidth(1)*1000),0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
     } else {
         histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
-        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),Form("Counts per %2.f MeV/#it{c^{2}}",histoPi0InvMassSigPlusBG->GetBinWidth(1)*1000),0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
     }
 
@@ -354,7 +354,7 @@ void PlotExampleInvMassEMCal(  TH1D* histoInvMassSignalWithBG,
 
     Double_t textSizeLabelsPixel                 = 100*3/5;
     TCanvas* canvasInvMassSamplePlot    = new TCanvas("canvasInvMassSamplePlotNew","",0,0,1500,1500);  // gives the page size
-    DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.09, 0.012, 0.035, 0.08);
+    DrawGammaCanvasSettings( canvasInvMassSamplePlot,  0.095, 0.012, 0.035, 0.08);
 
     Double_t startPt                    = fRangeBinsPt[exampleBin];
     Double_t endPt                      = fRangeBinsPt[exampleBin+1];
@@ -388,13 +388,15 @@ void PlotExampleInvMassEMCal(  TH1D* histoInvMassSignalWithBG,
     TH1F * histo1DInvMassDummy;
     if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
         histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
-        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),Form("Counts per %2.f MeV/#it{c^{2}}",histoPi0InvMassSigPlusBG->GetBinWidth(1)*1000),0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+
     } else {
         histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
-        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+        SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),Form("Counts per %2.f MeV/#it{c^{2}}",histoPi0InvMassSigPlusBG->GetBinWidth(1)*1000),0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                 0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
     }
+//     histo1DInvMassDummy->GetYaxis()->SetNoExponent(kFALSE);
 
     // Set range for fits and labels
     TLatex *labelInvMassPtRange;
