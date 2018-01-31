@@ -1,13 +1,13 @@
-#example config LHC16p -   EMC
-select  LHC16p
+#example config LHC16k -   EMC
+select  LHC16k
 mode    4
 cutNr   0
 energy  13TeV
 labelData   Data
 nSets   2
-pathDataSets    /Volumes/external_memory/CERN_data/pp/2016/13TeV/Legotrain-vAN-20171126-1-QA/LHC16p_pass1/GammaCalo-All_510.root   /Volumes/external_memory/CERN_data/pp/2016/13TeV/Legotrain-vAN-20171126-1-QA/LHC17d18/GammaCalo-All_510.root  STOP
-DataSetNames    LHC16p_pass1    LHC17d18   STOP
-DataSetNamesPlot    Data    Pythia8   STOP
+pathDataSets    /Volumes/external_memory/CERN_data/pp/2016/13TeV/Legotrain-vAN-20171126-1-QA/GammaCalo_LHC16k-pass1-All_510.root  /Volumes/external_memory/CERN_data/QA/Legotrain-vAN-20171126-1-QA/GammaCalo_MC_LHC17d20a1_extra-anchor16k-All_510.root   STOP
+DataSetNames    LHC16k_pass1  LHC17d20a1_extra  STOP
+DataSetNamesPlot    Data  Pythia8 STOP
 
 #nSets   1
 #labelData   MC

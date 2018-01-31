@@ -172,6 +172,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
     fstream fLogRunwiseBadCells;
     fstream fLogOutput;
     fstream fLogOutputDetailed;
+    fstream fLogOutputRunwise;
     std::map <Int_t,Int_t> ma;
     std::map <Int_t,Float_t> maNFired;
     std::map <Int_t,Float_t> maNTimes;
@@ -184,6 +185,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
         cout << dataSets[j].Data() << endl;
         fLogOutput.open(Form("%s/%s.log",outputDir.Data(),dataSets[j].Data()),ios::out);
         fLogOutputDetailed.open(Form("%s/%s-Detailed.log",outputDir.Data(),dataSets[j].Data()),ios::out);
+        fLogOutputRunwise.open(Form("%s/%s-Runwise.log",outputDir.Data(),dataSets[j].Data()),ios::out);
         for(Int_t i=0; i<nTrigger; i++) {
             TString logFileName                     = Form("%s/%s/ClusterQA/%s/Runwise/HotCellsRunwise-%s%s.log", cuts[i].Data(), fEnergyFlag.Data(), suffix.Data(), dataSets[j].Data(),
                                                            triggers[i].Data());
@@ -232,6 +234,8 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
                             maNFired[vecString.Atoi()] = vecStringNFired.Atof();
                             maNTimes[vecString.Atoi()] = vecStringNTimes.Atof();
                         }
+                        // Add the runwise output. For each occurence should be CellID-Run-Sigma
+                        fLogOutputRunwise << currentRunVecString << "-" << (Float_t) (vecStringNFired.Atof()/vecStringNTimes.Atof()) << endl; 
                     }
                 }
             }else{
@@ -241,6 +245,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
             fLogRunwiseBadCells.close();
         }
 
+      
         selection_sort(vec.begin(), vec.end());
 
         Int_t beforeCellID=vec.at(0);
@@ -248,6 +253,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
         for(Int_t iVec=1; iVec<(Int_t)vec.size(); iVec++) {
             //cout << "iVec: " << iVec << endl;
             currentCellID               = vec.at(iVec);
+
             if(beforeCellID!=currentCellID){
                 //cout << beforeCellID << " " << nFired << " " << ma[beforeCellID] << endl;
                 if( (nFired>threshNFired && maNFired[beforeCellID]>threshNTotalFired) || (maNFired[beforeCellID]>threshNTotalFired && (maNFired[beforeCellID]/maNTimes[beforeCellID]>5)) ) {
@@ -279,6 +285,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
         uniqueCellIDRun.clear();
         fLogOutput.close();
         fLogOutputDetailed.close();
+        fLogOutputRunwise.close(); 
     }
 
     cout << "Done with ClusterQA_HotCellCompare" << endl;
