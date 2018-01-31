@@ -1,5 +1,4 @@
 #! /bin/bash
-source /tmp/gclient_env_25384
 
 function CopyFileIfNonExisitent()
 {
@@ -48,6 +47,7 @@ elif [ $1 = "dmuhlheim" ]; then
    BASEDIR=/home/daniel/Desktop/Grid
 elif [ $1 = "loizides" ]; then
    BASEDIR=/home/loizides/Downloads
+    source /tmp/gclient_env_25384
 fi
 
 # Definitition of number of slashes in your path to different depths
@@ -78,8 +78,11 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 #LHC14a1aMC=801;
 
 TRAINDIR=Legotrain-vAN201801
-LHC11hData=371;
-LHC14a1aMC=784;
+LHC11hData=379;
+
+# LHC14a1aMC=784;
+LHC14a1bMC=804;
+LHC14a1cMC=806;
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -89,10 +92,10 @@ fi
 if [ "$LHC14a1aMC" = "" ]; then
     HAVELHC14a1a=0;
 fi
-if [ "$LHC14a1aMC" = "" ]; then
+if [ "$LHC14a1bMC" = "" ]; then
     HAVELHC14a1b=0;
 fi
-if [ "$LHC14a1aMC" = "" ]; then
+if [ "$LHC14a1bMC" = "" ]; then
     HAVELHC14a1c=0;
 fi
 
@@ -140,14 +143,23 @@ if [ $DOWNLOADON == 1 ]; then
             hadd -f $OUTPUTDIR_LHC14a1a/GammaCalo_$number.root $OUTPUTDIR_LHC14a1a/runList7/GammaCalo_$number.root $OUTPUTDIR_LHC14a1a/runList8/GammaCalo_$number.root
         done;
     fi
-#     if [ $HAVELHC14a1b == 1 ]; then
-#         echo "downloading LHC14a1b"
-#         CopyFileIfNonExisitent $OUTPUTDIR_LHC14a1b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/$LHC14a1bMC/merge_runlist_1"
-#     fi
-#     if [ $HAVELHC14a1c == 1 ]; then
-#         echo "downloading LHC14a1c"
-#         CopyFileIfNonExisitent $OUTPUTDIR_LHC14a1c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/$LHC14a1cMC/merge_runlist_1"
-#     fi
+    if [ $HAVELHC14a1b == 1 ]; then
+        echo "downloading LHC14a1b"
+        CopyFileIfNonExisitent $OUTPUTDIR_LHC14a1b/runList7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/$LHC14a1bMC/merge_runlist_7"
+        CopyFileIfNonExisitent $OUTPUTDIR_LHC14a1b/runList8 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/$LHC14a1bMC/merge_runlist_8"
+        ls $OUTPUTDIR_LHC14a1b/runList7/GammaCalo_*.root > fileLHC11h2.txt
+        fileNumbers=`cat fileLHC11h2.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f $NSlashes3 | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            hadd -f $OUTPUTDIR_LHC14a1b/GammaCalo_$number.root $OUTPUTDIR_LHC14a1b/runList7/GammaCalo_$number.root $OUTPUTDIR_LHC14a1b/runList8/GammaCalo_$number.root
+        done;
+    fi
+    if [ $HAVELHC14a1c == 1 ]; then
+        echo "downloading LHC14a1c"
+        CopyFileIfNonExisitent $OUTPUTDIR_LHC14a1c "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/$LHC14a1cMC/merge_runlist_6"
+    fi
 fi
 
 if [ $HAVELHC11h == 1 ]; then
@@ -174,26 +186,26 @@ if [ $HAVELHC14a1a == 1 ]; then
     done;
 fi
 #
-# if [ $HAVELHC14a1b == 1 ]; then
-#     ls $OUTPUTDIR_LHC14a1b/GammaCalo_*.root > fileLHC14a1b.txt
-#     fileNumbers=`cat fileLHC14a1b.txt`
-#     for fileName in $fileNumbers; do
-#         echo $fileName
-#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-#         echo $number
-#         ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1b/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root $number
-#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1b_$number.log\"\,4\)
-#     done;
-# fi
-#
-# if [ $HAVELHC14a1c == 1 ]; then
-#     ls $OUTPUTDIR_LHC14a1c/GammaCalo_*.root > fileLHC14a1c.txt
-#     fileNumbers=`cat fileLHC14a1c.txt`
-#     for fileName in $fileNumbers; do
-#         echo $fileName
-#         number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-#         echo $number
-#         ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1c/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root $number
-#         root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1c_$number.log\"\,4\)
-#     done;
-# fi
+if [ $HAVELHC14a1b == 1 ]; then
+    ls $OUTPUTDIR_LHC14a1b/GammaCalo_*.root > fileLHC14a1b.txt
+    fileNumbers=`cat fileLHC14a1b.txt`
+    for fileName in $fileNumbers; do
+        echo $fileName
+        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number
+        ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1b/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root $number
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1b_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1b_$number.log\"\,4\)
+    done;
+fi
+
+if [ $HAVELHC14a1c == 1 ]; then
+    ls $OUTPUTDIR_LHC14a1c/GammaCalo_*.root > fileLHC14a1c.txt
+    fileNumbers=`cat fileLHC14a1c.txt`
+    for fileName in $fileNumbers; do
+        echo $fileName
+        number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number
+        ChangeStructureIfNeeded $OUTPUTDIR_LHC14a1c/GammaCalo_$number.root $OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root $number
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCalo_MC_LHC14a1c_$number.root\"\,\"$OUTPUTDIR/CutSelection_GammaCalo_MC_LHC14a1c_$number.log\"\,4\)
+    done;
+fi
