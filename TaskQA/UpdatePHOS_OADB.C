@@ -70,16 +70,16 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     //     updateFile(fileNameOADBtemp,"BadChannels15o_V1","LHC15o/LHC15o_badCellList.log",252666,260000,1);
 
     // LHC15n pass3 Nico update pp 5TeV
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_2.log",244453,244479,1);
-    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_2.log",244453,244479,1);
+//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
 
     // LHC16qt pass1 Friederike & Andrea & Toon pPb 5TeV
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265309-265335.log",265309,265335,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265336-265388.log",265336,265388,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265389-265525.log",265389,265525,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16t_addCells.log",267163,267166,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265309-265335.log",265309,265335,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265336-265388.log",265336,265388,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265389-265525.log",265389,265525,1);
+//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16t_addCells.log",267163,267166,1);
 
     // LHC17n pass1 Friederike Xe-Xe 5TeV
     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235.log",280234,280235,1);

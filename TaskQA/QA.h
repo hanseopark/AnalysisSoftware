@@ -2897,7 +2897,7 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists,
                 iCell           = iCellJump+iCell-(Int_t)allCells.size();
                 iGoodCellTot--;
             }
-        } else {
+        } else if (isGoodCell){
             continue;
         }
 
