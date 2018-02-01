@@ -11,6 +11,7 @@
 #include "ClusterQA_DeadCellCompareV2.C"
 #include "ClusterQA_HotCellCompareV2.C"
 #include "ClusterQA_CellCompareV2.C"
+#include "ClusterQA_CleanCellLogs.C"
 
 void QAV2(      TString configFileName  = "config.txt",     // set selected
                 Bool_t doEventQA        = kFALSE,           // switch on EventQA
@@ -65,6 +66,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     Bool_t doHotCellCompare         = kFALSE;
     Bool_t doCellCompare            = kFALSE;
     Int_t CellCompareNSets          = 0;
+    Bool_t doCellCleaning           = kFALSE;
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -212,8 +214,10 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             nSetsHotCell    = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         }  else if (tempValue.BeginsWith("CellCompareNSets",TString::kIgnoreCase)){
             CellCompareNSets    = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+        // checking for variables needed for cell cleaning
+        } else if (tempValue.BeginsWith("cellCleaningUseMaybe",TString::kIgnoreCase)){
+            doCellCleaning = kTRUE;
         }
-
         delete tempArr;
     }
 
@@ -260,6 +264,11 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
 
         }
         cout << "**************************************************************************" << endl;
+        if (doCellCleaning){
+            cout << "INFO: enabling cleaning of log files " << endl;
+        }
+        cout << "**************************************************************************" << endl;
+
         if (nSetsHotCell > 0 ){
             cout << "INFO: enabling also HotCell QA" << endl;
             doHotCellCompare                = kTRUE;
@@ -275,6 +284,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
         } else {
             cout << "WARNING: you requested to run the Cell Compare QA, but the 'CellCompareNSets' has not been provided...\n disabled running CellCompare-macro... " << endl;
         }
+        cout << "**************************************************************************" << endl;
         cout << "**************************************************************************" << endl;
     }
 
@@ -299,6 +309,8 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     // **************************************************************************************************************
     if ( doDeadCellCompare ) ClusterQA_DeadCellCompareV2(configFileName,suffix);
     if ( doHotCellCompare ) ClusterQA_HotCellCompareV2(configFileName,suffix);
+    if ( doCellCompare) ClusterQA_CellCompareV2(configFileName, suffix);
+    if ( doCellCleaning ) ClusterQA_CleanCellLogs(configFileName,suffix);
     if ( doCellCompare) ClusterQA_CellCompareV2(configFileName, suffix);
     return;
 
