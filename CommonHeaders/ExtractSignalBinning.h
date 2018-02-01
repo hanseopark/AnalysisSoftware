@@ -1623,46 +1623,30 @@
                     return 7;
                 } else if (mode == 1){
                     return 5;
-                } else if (mode == 2 || mode == 13){
-                    if (directPhotonRunningOption.CompareTo("directPhotonTagging") == 0){
-                        return 10;
-                    } else {
-                        switch (trigger){
-                            case 0:
-                            case 1:
-                            case 10:
-                            case 11:
-                                return 7;      // INT triggers
-                                break;
-                            case 51:
-                            case 52:
-                            case 53:
-                                return 20;      // EMC triggers
-                                break;
-                            case 85:
-                                return 26;
-                                break;
-                            case 81:
-                            case 82:
-                            case 83:
-                                return 32;      // EGA triggers
-                                break;
-                            default:
-                                return 7;
-                                break;
-                        }
-                    }
-                } else if (mode == 4 || mode == 12 ){
-                    if (directPhotonRunningOption.CompareTo("directPhoton") == 0)
-                        return 13;
-                    else
-                        return 25;
                 } else if (mode == 5){
                     return 25;
                 } else if (mode == 6){
                     return 7;
                 } else if (mode == 7){
                     return 6;
+                } else if (mode == 10){
+                    switch (trigger){
+                        case 10:            // INT7 13g
+                            return 15;
+                            break;
+                        case 52:            // EMC7
+                            return 15;
+                            break;
+                        case 85:            // EG2
+                            return 18;
+                            break;
+                        case 83:            // EG1
+                            return 24;
+                            break;
+                        default:
+                            return 7;
+                            break;
+                    }
                 } else {
                     return 7;
                 }
@@ -2136,25 +2120,15 @@
             } else if (energy.CompareTo("pPb_8TeV") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
-                } else if ( mode == 1 ){
-                    startPtBin     = 1;
-                } else if ( mode == 2 || mode == 13 ){
-                    if (specialTrigg == 1)
-                        fStartPtBin     = 14;
-                    else if (specialTrigg == 2)
-                        fStartPtBin     = 24;
-                    else if (specialTrigg == 3)
-                        fStartPtBin     = 29;
-                    else
-                        startPtBin     = 5;
-                } else if ( mode == 3 ){
-                    startPtBin     = 2;
-                } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 8;
-                } else if ( mode == 5){
-                    startPtBin     = 4;
-                } else if (mode == 20){
-                    startPtBin     = 1;
+                } else if (mode == 10){
+                  if (specialTrigg == 1)
+                      startPtBin     = 14;
+                  else if (specialTrigg == 2)
+                      startPtBin     = 24;
+                  else if (specialTrigg == 3)
+                      startPtBin     = 29;
+                  else
+                      startPtBin     = 5;
                 } else {
                     startPtBin     = 1;
                 }
