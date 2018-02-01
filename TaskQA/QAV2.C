@@ -255,6 +255,11 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     }
     cout << "**************************************************************************" << endl;
     cout << "**************************************************************************" << endl;
+    cout << "**************************************************************************" << endl;
+    if (doCellCleaning){
+        cout << "INFO: enabling cleaning of log files " << endl;
+    }
+    cout << "**************************************************************************" << endl;
     if (doCellQASummary){
         if (nSetsDeadCell > 0 || nMCSetsDeadCell > 0){
             cout << "INFO: enabling also DeadCell QA" << endl;
@@ -263,11 +268,6 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             cout << "WARNING: you requested to run the dead cell QA, but neither the 'deadCellNSets' nor the 'deadCellNMCSets' has been provided...\n disabled running DeadCellCompare-macro... " << endl;
 
         }
-        cout << "**************************************************************************" << endl;
-        if (doCellCleaning){
-            cout << "INFO: enabling cleaning of log files " << endl;
-        }
-        cout << "**************************************************************************" << endl;
 
         if (nSetsHotCell > 0 ){
             cout << "INFO: enabling also HotCell QA" << endl;

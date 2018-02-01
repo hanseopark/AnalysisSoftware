@@ -380,8 +380,8 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
 						}
 					}
 				}
-				Int_t binx;
-				Int_t biny;
+                                Int_t binx = -1;
+                                Int_t biny = -1;
 				// Get proper bin
 				for(UInt_t d = 0; d < vecRuns.size(); d++){
 					if(vecRuns.at(d).Atof() == vecRunsInd.at(r)){
@@ -396,7 +396,12 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
 					}
 				}
 
-				RunwiseHist->SetBinContent(binx,biny, vecSigma.at(r));
+                                if((binx!=-1)&&(biny!=-1)) {
+                                    RunwiseHist->SetBinContent(binx,biny, vecSigma.at(r));
+                                } else{
+                                    cout << "Error filling RunwiseHist!" << endl;
+                                    return;
+                                }
 				//cout << "binx: " << binx << " biny: " << biny << "with value: " << vecSigma.at(r) << endl;
 			}
 			fLogRunRange.close();

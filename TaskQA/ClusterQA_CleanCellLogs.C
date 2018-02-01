@@ -23,7 +23,8 @@
  * Usage (add to config used by QAV2.C, make sure cellQASummary is enabled:
  *
  * cellCleaningUseMaybe 0 : run the cleaning of log files but ignore a maybe folder
- * cellCleaningUseMaybe 1 : consider all cells in ok and maybe folder as good
+ * cellCleaningUseMaybe 1 : consider all cells in maybe folder as good aswell
+ * cellCleaningUseMaybe 2 : consider all cells in maybe folder as bad aswell
  *
  * Optional:
  * userGoodCellDirName $PATH
@@ -58,7 +59,7 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     //**************************************************************************************************************
     //******************* global settings **************************************************************************
     //**************************************************************************************************************
-    Bool_t useMaybe     = kFALSE;
+    Int_t useMaybe     = 0;
     const Int_t maxSets = 1 ;
 
     TString inputDirHotCellCompare = "ClusterQA_HotCellCompare";
@@ -75,6 +76,8 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     TString hotCellDataCuts                 = "";
     TString deadCellDataCuts                = "";
     TString energy                          = "";
+
+    vector<Int_t> CellsThatNeedCheck;
 
     // initialize arrays
     for (Int_t i = 0; i< maxSets; i++){
@@ -174,7 +177,7 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
         cout << "INFO: inputDirUserGood was not found. Will try to use default location ..." << endl;
         inputDirUserGood = Form("%s/%s/ClusterQA/%s/Cells/Detailed/ok",hotCellDataCuts.Data(),energy.Data(),suffix.Data());
     }
-    if((!inputDirUserMaybe.CompareTo(""))&&useMaybe){
+    if((!inputDirUserMaybe.CompareTo(""))&&(useMaybe>0)){
         cout << "INFO: inputDirUserMaybe was not found. Will try to use default location ..." << endl;
         inputDirUserMaybe = Form("%s/%s/ClusterQA/%s/Cells/Detailed/maybe",hotCellDataCuts.Data(),energy.Data(),suffix.Data());
     }
@@ -187,8 +190,10 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     cout << "**************** Settings found in config file ***************************" << endl;
     cout << "**************************************************************************" << endl;
     cout << "userGoodCellDirName:           " << inputDirUserGood.Data()         << endl;
-    if(useMaybe){
+    if(useMaybe>0){
         cout << "userMaybeCellDirName:           " << inputDirUserMaybe.Data()         << endl;
+        if(useMaybe==1) cout<<"Cells in maybe folder will be considered as good" << endl;
+        if(useMaybe==2) cout<<"Cells in maybe folder will be considered as bad" << endl;
     } else{
         cout << "using maybe folder disabled" << endl;
     }
@@ -217,32 +222,10 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     //******************************* Get cells flagged by user ****************************************************
     //**************************************************************************************************************
 
-    // Get Cells flagged as bad by user
-    vector<TString> filenamesBad;
-    vector<Int_t> CellNumbersOwnBad;
-    read_directory(inputDirUserBad,filenamesBad);
-
-    for(UInt_t i =0;i<filenamesBad.size();i++){
-        if((filenamesBad.at(i).CompareTo(""))&&(filenamesBad.at(i).CompareTo("."))&&(filenamesBad.at(i).CompareTo(".."))){
-            TObjArray* fileTokenBad = filenamesBad.at(i).Tokenize('_');
-            TString cellNmbBad  = ((TObjString*)fileTokenBad->At(0))->GetString();
-            cellNmbBad.Remove(0,4);
-            CellNumbersOwnBad.push_back(cellNmbBad.Atoi());
-        }
-    }
-    sort(CellNumbersOwnBad.begin(),CellNumbersOwnBad.end());
-    cout << "-----------------------------------------------------------------------------------" <<endl;
-    cout << "Cells flagged as bad by user:" <<endl;
-    cout << "-----------------------------------------------------------------------------------" <<endl;
-    for(UInt_t i =0;i<CellNumbersOwnBad.size();i++){
-        cout <<CellNumbersOwnBad.at(i) << ", ";
-    }
-    cout << endl;
-
     // Get Cells flagged as maybe by user (if given)
     vector<TString> filenamesMaybe;
     vector<Int_t> CellNumbersOwnMaybe;
-    if(useMaybe){
+    if(useMaybe>0){
         read_directory(inputDirUserMaybe,filenamesMaybe);
         for(UInt_t i =0;i<filenamesMaybe.size();i++){
             if((filenamesMaybe.at(i).CompareTo(""))&&(filenamesMaybe.at(i).CompareTo("."))&&(filenamesMaybe.at(i).CompareTo(".."))){
@@ -260,11 +243,44 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
             cout <<CellNumbersOwnMaybe.at(i) <<", ";
         }
         cout << endl;
-        cout << "-----------------------------------------------------------------------------------" <<endl;
-        cout << "ATTENTION: Because the maybe folder was given, runs in maybe will be flagged as good from now ...." <<endl;
-        cout << "-----------------------------------------------------------------------------------" <<endl;
 
     }
+
+    // Get Cells flagged as bad by user
+    vector<TString> filenamesBad;
+    vector<Int_t> CellNumbersOwnBad;
+    read_directory(inputDirUserBad,filenamesBad);
+
+    for(UInt_t i =0;i<filenamesBad.size();i++){
+        if((filenamesBad.at(i).CompareTo(""))&&(filenamesBad.at(i).CompareTo("."))&&(filenamesBad.at(i).CompareTo(".."))){
+            TObjArray* fileTokenBad = filenamesBad.at(i).Tokenize('_');
+            TString cellNmbBad  = ((TObjString*)fileTokenBad->At(0))->GetString();
+            cellNmbBad.Remove(0,4);
+            CellNumbersOwnBad.push_back(cellNmbBad.Atoi());
+        }
+    }
+    if(useMaybe==2){
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        cout << "ATTENTION: Because the maybe option 1 was given, runs in maybe will be flagged as bad from now ...." <<endl;
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        for(UInt_t i=0; i<CellNumbersOwnMaybe.size();i++){
+            CellNumbersOwnBad.push_back(CellNumbersOwnMaybe[i]);
+        }
+    }
+    sort(CellNumbersOwnBad.begin(),CellNumbersOwnBad.end());
+    if(useMaybe==2){
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        cout << "Cells flagged as bad or maybeby user:" <<endl;
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+    } else{
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        cout << "Cells flagged as bad by user:" <<endl;
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+    }
+    for(UInt_t i =0;i<CellNumbersOwnBad.size();i++){
+        cout <<CellNumbersOwnBad.at(i) << ", ";
+    }
+    cout << endl;
 
     // Get Cells flagged as good by user
     vector<TString> filenamesGood;
@@ -280,7 +296,10 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
         }
     }
     // Push all the maybe flagged ones to good, in case user gave maybes
-    if(useMaybe){
+    if(useMaybe==1){
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        cout << "ATTENTION: Because the maybe option 1 was given, runs in maybe will be flagged as good from now ...." <<endl;
+        cout << "-----------------------------------------------------------------------------------" <<endl;
         for(UInt_t i=0; i<CellNumbersOwnMaybe.size();i++){
             CellNumbersOwnGood.push_back(CellNumbersOwnMaybe[i]);
         }
@@ -342,6 +361,10 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     ifstream fileHotCellsDetailed(Form("%s/%s-Detailed.log",inputDirHotCellCompare.Data(),dataSetsHot[0].Data()));
     ofstream fileHotCellsDetailedCleaned(Form("%s/%s-Detailed-Cleaned.log",inputDirHotCellCompare.Data(),dataSetsHot[0].Data()));
 
+    // We only have a vector for the detailed log, because we will use it
+    // to check if there are any cells flagged as bad by user that are not in the detailed log file.
+    vector<Int_t> DeadAndHotCellsFromDetailed;
+
     if(fileHotCellsDetailed.is_open()){
         while (std::getline(fileHotCellsDetailed, fullInputString)){
             TString fullInputTSting(fullInputString);
@@ -351,6 +374,7 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
             if(find(CellNumbersOwnGood.begin(),CellNumbersOwnGood.end(),cellNmb) == CellNumbersOwnGood.end()){
                 // Cell not present in cells flagged by user -> write away
                 fileHotCellsDetailedCleaned << fullInputString << endl;
+                DeadAndHotCellsFromDetailed.push_back(cellNmb);
             }else{
                 cout <<  cellNmb << ", ";
             }
@@ -470,6 +494,10 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
             if(find(CellNumbersOwnGood.begin(),CellNumbersOwnGood.end(),cellNmb) == CellNumbersOwnGood.end()){
                 // Cell not present in cells flagged by user -> write away
                 fileDeadCellsDetailedCleaned << fullInputString << endl;
+                DeadAndHotCellsFromDetailed.push_back(cellNmb);
+                if(find(CellNumbersOwnGood.begin(),CellNumbersOwnGood.end(),cellNmb) == CellNumbersOwnGood.end()){
+                    // The Cell wasn't flagged as good, b
+                }
             }else{
                 cout <<cellNmb << ", ";
             }
@@ -478,6 +506,14 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     } else{
         cout << Form("ERROR: Could not open %s/%s-Detailed.log !",inputDirDeadCellCompare.Data(),dataSetsCold[0].Data()) << endl;
         return;
+    }
+
+    sort(DeadAndHotCellsFromDetailed.begin(),DeadAndHotCellsFromDetailed.end());
+    for(UInt_t i = 0; i<CellNumbersOwnBad.size();i++){
+        if(find(DeadAndHotCellsFromDetailed.begin(),DeadAndHotCellsFromDetailed.end(),CellNumbersOwnBad.at(i)) == DeadAndHotCellsFromDetailed.end()){
+            // bad cell flagged by user was not found in log file
+            CellsThatNeedCheck.push_back(CellNumbersOwnBad.at(i));
+        }
     }
     fileDeadCellsDetailed.close();
     fileDeadCellsDetailedCleaned.close();
@@ -537,4 +573,22 @@ void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",
     }
     fileDeadCellsRunwise.close();
     fileDeadCellsRunwiseCleaned.close();
+
+    if(CellsThatNeedCheck.size()==0){
+    cout << "-----------------------------------------------------------------------------------" <<endl;
+    cout << "----------------------- Finished cleaning log files -------------------------------" << endl;
+    cout << "-----------------------------------------------------------------------------------" <<endl;
+    } else{
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        cout << "| ATTENTION ATTENTION ATTENTION ATTENTION ATTENTION ATTENTION ATTENTION ATTENTION |"<< endl;
+        cout << "-----------------------------------------------------------------------------------" <<endl;
+        cout << " Finished cleaning the log files, however there were " << CellsThatNeedCheck.size()<< " cells found that were" << endl;
+        cout << " flagged as bad by you, but not by HotCellCompare or DeadCellCompare. Please check" << endl;
+        cout << " these cells again and add them to the log file by hand if they are realy bad!" << endl;
+        cout << endl;
+        for(UInt_t i = 0; i < CellsThatNeedCheck.size();i++){
+            cout << CellsThatNeedCheck.at(i) << ", ";
+        }
+        cout << endl;
+    }
 }
