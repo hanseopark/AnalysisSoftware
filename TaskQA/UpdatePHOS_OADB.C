@@ -70,16 +70,16 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     //     updateFile(fileNameOADBtemp,"BadChannels15o_V1","LHC15o/LHC15o_badCellList.log",252666,260000,1);
 
     // LHC15n pass3 Nico update pp 5TeV
-//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
-//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
-//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_2.log",244453,244479,1);
-//     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_2.log",244453,244479,1);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
 
     // LHC16qt pass1 Friederike & Andrea & Toon pPb 5TeV
-//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265309-265335.log",265309,265335,1);
-//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265336-265388.log",265336,265388,1);
-//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265389-265525.log",265389,265525,1);
-//     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16t_addCells.log",267163,267166,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265309-265335.log",265309,265335,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265336-265388.log",265336,265388,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265389-265525.log",265389,265525,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16t_addCells.log",267163,267166,1);
 
     // LHC17n pass1 Friederike Xe-Xe 5TeV
     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235.log",280234,280235,1);
@@ -102,7 +102,7 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
     printf("\n\nAdding %s maps to OADB file:\n",arrName.Data());
 
     // number of super modules in PHOS
-    const Int_t nSM = 4;
+    const Int_t nSM = 5;
 
     // load OADB file and make it a temporary container
     TFile *f                                    = TFile::Open(fileNameOADB);
@@ -143,20 +143,22 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
         hBadMap[i]                              = NULL;
         hBadMapOverhead[i]                      = NULL;
         if(updateExistingMap){
-            cout << "Trying to initialize " << Form("PHOS_BadMap_mod%d",i+1) << " from current AliPhysics OADB file!" << endl;
+            cout << "Trying to initialize " << Form("PHOS_BadMap_mod%d",i) << " from current AliPhysics OADB file!" << endl;
             if(arrayBClow){
-                hBadMap[i]                      = (TH2I*)arrayBClow->FindObject(Form("PHOS_BadMap_mod%d",i+1));
+                hBadMap[i]                      = (TH2I*)arrayBClow->FindObject(Form("PHOS_BadMap_mod%d",i));
                 if(hBadMap[i])
-                    hBadMapOverhead[i]          = (TH2I*)hBadMap[i]->Clone(Form("PHOS_BadMap_mod%d",i+1));
+                    hBadMapOverhead[i]          = (TH2I*)hBadMap[i]->Clone(Form("PHOS_BadMap_mod%d",i));
             } else if (arrayBChigh){
-                hBadMap[i]                      = (TH2I*)arrayBChigh->FindObject(Form("PHOS_BadMap_mod%d",i+1));
+                hBadMap[i]                      = (TH2I*)arrayBChigh->FindObject(Form("PHOS_BadMap_mod%d",i));
                 if(hBadMap[i])
-                    hBadMapOverhead[i]          = (TH2I*)hBadMap[i]->Clone(Form("PHOS_BadMap_mod%d",i+1));
+                    hBadMapOverhead[i]          = (TH2I*)hBadMap[i]->Clone(Form("PHOS_BadMap_mod%d",i));
             }
         }
         if(!hBadMap[i]){
-            cout << "Creating new map for " << Form("PHOS_BadMap_mod%d!",i+1) << endl;
-            hBadMap[i]                          = new TH2I(Form("PHOS_BadMap_mod%d",i+1),"",64,0.,64.,56,0.,56.) ;
+            if (i != 0){
+                cout << "Creating new map for " << Form("PHOS_BadMap_mod%d!",i) << endl;
+                hBadMap[i]                          = new TH2I(Form("PHOS_BadMap_mod%d",i),"",64,0.,64.,56,0.,56.) ;
+            }
         }
     }
 
@@ -165,17 +167,15 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
     for(Int_t j=0; j<(Int_t) vecBadChannels.size(); j++){
         // Get the position (module, row, column) from the cellID and fill it in 2D map
         ReturnPHOSModuleAndPositionFromID(vecBadChannels.at(j).Atoi(),positionFromID);
-        cout << "supmod: " << positionFromID[0]-1 << "  pos1: " << positionFromID[1] << "  pos2: " << positionFromID[2] << endl;
-        hBadMap[positionFromID[0]-1]->SetBinContent(positionFromID[1],positionFromID[2],1);
+        cout << "supmod: " << positionFromID[0] << "  pos1: " << positionFromID[1] << "  pos2: " << positionFromID[2] << endl;
+        hBadMap[positionFromID[0]]->SetBinContent(positionFromID[1],positionFromID[2],1);
     }
 
     // add histograms to a new array
-    for (Int_t mod=0;mod<nSM;mod++){
-        arrayAdd.Add(hBadMap[mod]);
-        if(hBadMapOverhead[mod]){
-            arrayAddOverheadLow.Add(hBadMapOverhead[mod]);
-            arrayAddOverheadHigh.Add(hBadMapOverhead[mod]);
-        }
+    for (Int_t mod=1;mod<nSM;mod++){
+        arrayAdd.AddAt(hBadMap[mod],mod);
+        arrayAddOverheadLow.AddAt(hBadMapOverhead[mod],mod);
+        arrayAddOverheadHigh.AddAt(hBadMapOverhead[mod],mod);
     }
     Int_t replacedContainerLowLimit             = -1;
     Int_t replacedContainerHighLimit            = -1;
@@ -228,6 +228,7 @@ void sortOutput(const char *fileNameOADB=""){
     Int_t largerthan                            = 0;
     Int_t currentvalue                          = 0;
 
+    gSystem->Exec("rm PHOSBadMapsNEW.root");
     AliOADBContainer *con2                      = new AliOADBContainer("phosBadMap");
     con2->AddDefaultObject(con->GetObjectByIndex(0));
     con2->AppendObject(con->GetObjectByIndex(0),con->LowerLimit(0),con->UpperLimit(0));
