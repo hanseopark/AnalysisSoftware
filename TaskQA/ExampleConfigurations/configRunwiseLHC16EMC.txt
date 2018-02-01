@@ -14,11 +14,11 @@ plotDataSets  LHC16i  LHC16k  LHC16o  LHC16p  Pythia8 Pythia8 Pythia8 Pythia8 ST
 
 # Settings for dead cell compare macro
 addLabelRunlist _DPG
-deadCellNSets   4
-deadCellNMCSets 4
+deadCellNSets   2
+deadCellNMCSets 2
 deadCellNTrigger    1
-deadCellDataSetNames   LHC16i_pass1 LHC16k_pass1 LHC16o_pass1 LHC16p_pass1  STOP
-deadCellMCSetNames     LHC17d3  LHC17d20a1_extra  LHC17d16 LHC17d18  STOP
+deadCellDataSetNames    LHC16k_pass1  LHC16p_pass1  STOP
+deadCellMCSetNames       LHC17d20a1_extra   LHC17d18  STOP
 deadCellAdditionalOutputDirName LHC16_EMC
 nCaloCells  18000
 # deadCellTriggerNames  INT7    STOP
@@ -37,3 +37,5 @@ hotCellAdditionalOutputDirName LHC16_EMC
 hotCellDataCuts 00010113_3885500081041220000_01631031000000d0 STOP
 hotCellThreshNFired 0
 hotCellThreshNTotalFired  60
+
+

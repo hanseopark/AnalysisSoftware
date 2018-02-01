@@ -1,0 +1,32 @@
+#example config for the Cell Compare using LHC16pEMC
+
+# settings needed when running with QAV2.C
+nSets 2
+mode 4
+
+
+# Settings needed for Cell Compare Macro
+CellCompareNSets  1
+CellCompareNTrigger 1
+
+# energy flag
+energy  13TeV
+
+
+# cut number used
+cut  00010113_3885500081041220000_01631031000000d0 STOP
+
+# output directories for the hot/cold cell compare
+hotCellDirName ClusterQA_HotCellCompare/LHC16_EMC STOP
+coldCellDirName ClusterQA_DeadCellCompare/LHC16_EMC STOP
+
+# Data Set Name (should agree with runlist file name)
+DataSetNames LHC16p_pass1 STOP
+
+# Specification of Run Range
+# If set to 1, Cell Compare will output a log file of all bad cells in run range specified.
+# If set to 0, Cell Compare will output a log file of all bad cells.
+# note runEnd must be greater than runStart
+runRange 1
+runStart 264076
+runEnd 264088

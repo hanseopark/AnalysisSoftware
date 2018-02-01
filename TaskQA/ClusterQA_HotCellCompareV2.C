@@ -245,7 +245,6 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
             fLogRunwiseBadCells.close();
         }
 
-      
         selection_sort(vec.begin(), vec.end());
 
         Int_t beforeCellID=vec.at(0);
@@ -285,7 +284,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
         uniqueCellIDRun.clear();
         fLogOutput.close();
         fLogOutputDetailed.close();
-        fLogOutputRunwise.close(); 
+        fLogOutputRunwise.close();
     }
 
     cout << "Done with ClusterQA_HotCellCompare" << endl;

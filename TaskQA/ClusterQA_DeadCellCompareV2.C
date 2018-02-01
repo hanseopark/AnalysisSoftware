@@ -202,6 +202,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
     fstream fLogOutput;
     fstream fLogOutputFinal;
     fstream fLogOutputDetailed;
+    fstream fLogOutputRunwise; 
     std::vector<Int_t>::iterator it;
     std::vector<Int_t> vec[nCaloCells];
     std::vector<Int_t> vecMC[nCaloCells];
@@ -260,6 +261,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
 
         fLogOutput.open(Form("%s/%s.log",outputDir.Data(),dataSets[j].Data()),ios::out);
         fLogOutputDetailed.open(Form("%s/%s-Detailed.log",outputDir.Data(),dataSets[j].Data()),ios::out);
+        fLogOutputRunwise.open(Form("%s/%s-Runwise.log",outputDir.Data(),dataSets[j].Data()),ios::out);
         for(Int_t i=0; i<nTrigger; i++){
             runs.clear();
             fileRuns                        = Form("%srunNumbers%s%s.txt", pathRunLists.Data(), dataSets[j].Data(), addLabelRunlist.Data() );
@@ -296,6 +298,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
 
                         it                  = find (globalRuns.begin(), globalRuns.end(), currentRun.Atoi());
                         if( it == globalRuns.end() ) globalRuns.push_back(currentRun.Atoi());
+                        //cout << "currentRun: " << currentRun << "Vec String: " << vecString << endl;
                     }
                 }
             }else{
@@ -316,7 +319,10 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
             //if(vec[iCell].size()>0)cout << ", " << iCell << " - " << vec[iCell].size() << endl;
             if(vec[iCell].size()>0){
                 fLogOutputDetailed << "CellID:" << iCell+offSetBadChannel << ",cold/notFiredInRuns:";
-                for(Int_t j=0; j<(Int_t)vec[iCell].size(); j++){fLogOutputDetailed << vec[iCell].at(j) << ",";}
+                for(Int_t j=0; j<(Int_t)vec[iCell].size(); j++){
+                  fLogOutputDetailed << vec[iCell].at(j) << ",";
+                  fLogOutputRunwise << iCell+offSetBadChannel << "-"<< vec[iCell].at(j) << "-" <<"10" <<endl;
+                }
                 fLogOutputDetailed << endl;
             }
             vecNCellRuns.push_back((Int_t)vec[iCell].size());
@@ -375,6 +381,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
         }
         cout << "\t discarded " << sortedOutFinal << " deadcell ranges while generating final list." << endl;
         fLogOutputFinal.close();
+        fLogOutputRunwise.close();
 
         checkDoubleCellsThreshold.clear();
         for(Int_t iCell=0;iCell<nCaloCells;iCell++){vec[iCell].clear(); vecMC[iCell].clear();}
