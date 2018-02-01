@@ -42,6 +42,7 @@ ln -sf $PHOTONCONVDIR/TaskV1/*.h TaskV1/
 ln -sf $PHOTONCONVDIR/TaskV1/*.C TaskV1/
 ln -sf $PHOTONCONVDIR/TaskQA/*.h TaskQA/
 ln -sf $PHOTONCONVDIR/TaskQA/*.C TaskQA/
+ln -sf $PHOTONCONVDIR/TaskQA/*.sh TaskQA/
 ln -sf $PHOTONCONVDIR/ExternalInput/* ExternalInput/
 ln -sf $PHOTONCONVDIR/ExternalInputPbPb/* ExternalInputPbPb/
 ln -sf $PHOTONCONVDIR/ExternalInputpPb/* ExternalInputpPb/
