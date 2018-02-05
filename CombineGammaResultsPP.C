@@ -145,12 +145,12 @@ void plotLuminosity (Double_t ymin, Double_t ymax, TString ylabel,TString plotNa
     // TGaxis::SetMaxDigits(6);
     // TCanvas* canvasDummy     = new TCanvas("canvasDummy","",0,0,1650,900);  // gives the page size
     // DrawGammaCanvasSettings( canvasDummy,  0., 0., 0., 0.0);
-    // 
+    //
     // TPad* pad900and7               = new TPad("pad900and7", "",0, 0, 0.5, 1,-1, -1, -2);
     // DrawGammaPadSettings( pad900and7, 0.12, 0.,           0.02, 0.07);
     // //                                       ^rechts     ^oben
     // pad900and7->Draw();
-    // 
+    //
     // TPad* pad8                = new TPad("pad8", "", 0.5, 0, 1,1,-1, -1, -2);
     // DrawGammaPadSettings( pad8, 0, 0.01, 0.02, 0.07);
     // pad8->Draw();
@@ -191,7 +191,7 @@ void plotLuminosity (Double_t ymin, Double_t ymax, TString ylabel,TString plotNa
                 legend7900->AddEntry(graphAliceLuminosity2010[0],nameMeasGlobal[0].Data(),"p");
                 legend7900->AddEntry(graphAliceLuminosity2010[1],nameMeasGlobal[1].Data(),"p");
         legend7900->Draw();
-        
+
     padLumi2760->cd();
     padLumi2760->SetLogy();
     TH2F * histoPlottingDummy276;
@@ -204,8 +204,8 @@ void plotLuminosity (Double_t ymin, Double_t ymax, TString ylabel,TString plotNa
     TLegend* legend2760           = GetAndSetLegend2(0.07, 0.84+textsizeLabelsPP, 0.37, 0.84+2*textsizeLabelsPP,50);
                 legend2760->AddEntry(graphAliceLuminosity2011,nameMeasGlobal[3].Data(),"p");
         legend2760->Draw();
-  
-  
+
+
     padLumi8->cd();
     padLumi8->SetLogy();
     TH2F * histoPlottingDummy2;
@@ -978,8 +978,8 @@ void plotCrossSection(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsS
         histoDummy->Draw("sameaxis");
     canvasDummy->Update();
     canvasDummy->Print(Form("%s/%s.%s",outputDir.Data(),plotName.Data(),suffix.Data()));
-    
-    
+
+
     // **********************************************************************************************************************
     // ******************************** InvYield for combined inc gamma measurement *****************************************
     // **********************************************************************************************************************
@@ -1004,7 +1004,7 @@ void plotCrossSection(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsS
     //  incRatio[0]         = 0.0;      incRatio[1]         = 1.7;
     doubleRatioX[0]     = 0.7;      doubleRatioX[1]     = 14.5;
     doubleRatioXpp[0]   = 0.23;     doubleRatioXpp[1]   = 14.5  ;     doubleRatioXpp[2]   = 19.5  ;
-    
+
     TCanvas* canvasInvYieldGamma          = new TCanvas("canvasInvYieldGamma","",200,10,1350,1350*1.15);  // gives the page size
     DrawGammaCanvasSettings( canvasInvYieldGamma, 0.16, 0.02, 0.02, 0.08);
     canvasInvYieldGamma->SetLogx();
@@ -1017,7 +1017,7 @@ void plotCrossSection(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsS
     histo2DYieldGamma->GetXaxis()->SetMoreLogLabels();
     histo2DYieldGamma->GetXaxis()->SetLabelOffset(-0.01);
     histo2DYieldGamma->Draw("copy");
-    
+
     TLegend* legendYieldIncGammaInd       = GetAndSetLegend2(0.20, 0.11, 0.5, 0.11+(3*textSizeLabelsRel*0.85),textSizeLabelsPixel);
     for (Int_t i = 0; i < 3; i++){
       if(csGraphsSys[i]){
@@ -1029,7 +1029,7 @@ void plotCrossSection(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsS
           }
         }
     legendYieldIncGammaInd->Draw();
-    
+
     TLatex *labelEnergyInvYieldPaperAll = new TLatex(0.20, 0.20+0.04*3, "pp #sqrt{#it{s}} = 2.76 TeV");
     SetStyleTLatex( labelEnergyInvYieldPaperAll, textSizeLabelsPixel,4, 1, 43, kTRUE, 11);
     labelEnergyInvYieldPaperAll->Draw();
@@ -1039,14 +1039,14 @@ void plotCrossSection(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsS
     TLatex *labelALICENormUnPaperAll    = new TLatex(0.20,0.20+0.05*1,"Norm. unc. 2.5%");
     SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixel*0.85,4, 1, 43, kTRUE, 11);
     labelALICENormUnPaperAll->Draw();
-    
+
     labelEnergyInvYieldPaperAll->Draw();
     labelALICEInvYieldPaperAll->Draw();
     labelALICENormUnPaperAll->Draw();
 
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvYield_IncGamma_IndMeas.%s",outputDir.Data(),suffix.Data()));
-    
+
     }
 
 void plotEtaToPi0(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGraphsSys[], Double_t yMin, Double_t yMax, TString yTitle, TString plotName){
@@ -1754,7 +1754,7 @@ void plotTriggeredRawYields(){
     Double_t arrayBoundariesY1_XSec2[3];
     Double_t relativeMarginsXXSec2[3];
     Double_t relativeMarginsYXSec2[3];
-    
+
     Double_t textSizeLabelsPixel = 48;
     ReturnCorrectValuesForCanvasScaling(1250,1300, 1, 1,0.135, 0.005, 0.003,0.09,arrayBoundariesX1_XSec2,arrayBoundariesY1_XSec2,relativeMarginsXXSec2,relativeMarginsYXSec2);
 
@@ -1802,7 +1802,7 @@ void plotTriggeredRawYields(){
         DrawGammaSetMarkerTGraph(csGraphsPi0[i], markerstylesFULL[i], 0.9*markersizeFULL[i], colorDataFULL[i] , colorDataFULL[i]);
         DrawGammaSetMarkerTGraph(csGraphsEta[i], markerstylesFULL[i], 0.9*markersizeFULL[i], colorDataFULL[i] , colorDataFULL[i]);
     }
-        
+
 
         csGraphsPi0[2]->Draw("p,same,z");
         csGraphsPi0[1]->Draw("p,same,z");
@@ -1853,7 +1853,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
       csGraphsSys[1]     = (TGraphAsymmErrors*)directoryPi07TeV   ->Get("graphInvCrossSectionPi0Comb7TeVASysErr");
       csGraphs[0]     = (TGraphAsymmErrors*)directoryPi0900GeV    ->Get("graphInvCrossSectionPi0Comb900GeVAStatErr");
       csGraphsSys[0]     = (TGraphAsymmErrors*)directoryPi0900GeV ->Get("graphInvCrossSectionPi0Comb900GeVASysErr");
-    
+
         } else {
           csGraphs[3]       = (TGraphAsymmErrors*)directoryPi0276TeV->Get("graphInvCrossSectionPi0PCM2760GeVStatErr");
           csGraphsSys[3]    = (TGraphAsymmErrors*)directoryPi0276TeV->Get("graphInvCrossSectionPi0PCM2760GeVSysErr");
@@ -1863,12 +1863,12 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           csGraphsSys[1]    = (TGraphAsymmErrors*)directoryPi07TeV  ->Get("graphInvCrossSectionPi0PCM7TeVSysErr");
           csGraphs[0]       = (TGraphAsymmErrors*)directoryPi0900GeV->Get("graphInvCrossSectionPi0PCM900GeVStatErr");
           csGraphsSys[0]    = (TGraphAsymmErrors*)directoryPi0900GeV->Get("graphInvCrossSectionPi0PCM900GeVSysErr");
-          
+
         }
     Style_t markerstylesFULL[4]                         ={34,20,33,29};
     Size_t markersizeFULL[4]                        ={2.3,2.3,3.4,3.4};
     Color_t colorDataFULL[4]                        ={kRed+2,kBlue+2,kGreen+2,kMagenta+2};
-  
+
     // systematics
 
         for (int j=0;j<csGraphsSys[2]->GetN();j++){
@@ -1877,7 +1877,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
             csGraphsSys[2]->GetEYlow()[j] *= 1000;
         }
         DrawGammaSetMarkerTGraphAsym(csGraphsSys[2], markerstylesFULL[2], markersizeFULL[2], colorDataFULL[2], colorDataFULL[2], widthLinesBoxes, kTRUE);
-        
+
         for (int j=0;j<csGraphsSys[1]->GetN();j++){
             csGraphsSys[1]->GetY()[j] *= 100;
             csGraphsSys[1]->GetEYhigh()[j] *= 100;
@@ -1893,14 +1893,14 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
         DrawGammaSetMarkerTGraphAsym(csGraphsSys[0], markerstylesFULL[0], markersizeFULL[0], colorDataFULL[0], colorDataFULL[0], widthLinesBoxes, kTRUE);
         //
         // statistics
-        
+
         for (int j=0;j<csGraphs[2]->GetN();j++){
             csGraphs[2]->GetY()[j] *= 1000;
             csGraphs[2]->GetEYhigh()[j] *= 1000;
             csGraphs[2]->GetEYlow()[j] *= 1000;
         }
         DrawGammaSetMarkerTGraph(csGraphs[2], markerstylesFULL[2], 0.7*markersizeFULL[2], colorDataFULL[2] , colorDataFULL[2]);
-        
+
         for (int j=0;j<csGraphs[1]->GetN();j++){
             csGraphs[1]->GetY()[j] *= 100;
             csGraphs[1]->GetEYhigh()[j] *= 100;
@@ -2189,14 +2189,14 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
           graphPi0DSS148TeV->SetFillStyle(1001);
           graphPi0DSS148TeV->SetFillColor(colorNLO);
           graphPi0DSS148TeV->Draw("same,e3");
-          
+
           graphPi0DSS147TeV->SetLineWidth(widthCommonFit);
           graphPi0DSS147TeV->SetLineColor(colorNLO);
           graphPi0DSS147TeV->SetLineStyle(1);
           graphPi0DSS147TeV->SetFillStyle(1001);
           graphPi0DSS147TeV->SetFillColor(colorNLO);
           graphPi0DSS147TeV->Draw("same,e3");
-          
+
           graphPi0DSS14276TeV->SetLineWidth(widthCommonFit);
           graphPi0DSS14276TeV->SetLineColor(colorNLO);
           graphPi0DSS14276TeV->SetLineStyle(1);
@@ -2254,7 +2254,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
         cout << WriteParameterToFile(fitTCMInvXSectionPi07TeV) << endl;
         DrawGammaSetMarkerTF1( fitTCMInvXSectionPi0Plot7TeV, 7, 2, kGray+2);
         fitTCMInvXSectionPi0Plot7TeV->Draw("same");
-        
+
          Double_t paramTCMPi0New276TeV[5]  = { csGraphs[3]->GetY()[1],0.1,csGraphs[3]->GetY()[4],0.6,3.0};
          Double_t fitmaxx276TeV = 8;
          if(usecombinedspectra)
@@ -2485,7 +2485,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
 
 
         DrawGammaLines(0.23, maxX , 1., 1.,0.5, kGray+2);
-        
+
     padInvSection2760GeVRatio->cd();
     padInvSection2760GeVRatio->SetLogx(1);
         TH2F * ratio276TeVdummy               = new TH2F("ratio276TeVdummy","ratio276TeVdummy",1000,0.23,maxX,1000,0.6,1.95);
@@ -2781,14 +2781,14 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     }
     graphRatioPi0CombCombFitSysA->Draw("2,same");
     graphRatioPi0CombCombFitStatA_WOXErr->Draw("p,same");
-    
+
     TLegend* legend8TeVsingleratio    = GetAndSetLegend2(0.96, 0.9, 0.9, 0.93, textSizeLabelsPixel);
     legend8TeVsingleratio->SetNColumns(1);
     legend8TeVsingleratio->SetMargin(0.2);
     legend8TeVsingleratio->SetTextAlign(33);
     legend8TeVsingleratio->AddEntry((TObject*)0,"pp, #sqrt{s} = 8 TeV","");
     legend8TeVsingleratio->Draw();
-    
+
     DrawGammaLines(0.23, maxX , 1., 1.,0.5, kGray+2);
 
     padInvSectionPythiaRatioSignle->cd();
@@ -2838,7 +2838,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     // graphRatioPythia8ToFit7TeV->Draw("3,same");
     graphRatioPi0CombCombFitSysA7TeV->Draw("2,same");
     graphRatioPi0CombCombFitStatA7TeV_WOXErr->Draw("p,same");
-    
+
     TLegend* legend7TeVsingleratio    = GetAndSetLegend2(0.96, 0.9, 0.9, 0.93, textSizeLabelsPixel);
     legend7TeVsingleratio->SetNColumns(1);
     legend7TeVsingleratio->SetMargin(0.2);
@@ -2858,14 +2858,14 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     graphRatioPi0CombCombFitSysA276TeV->Draw("2,same");
 
     graphRatioPi0CombCombFitStatA276TeV_WOXErr->Draw("p,same");
-    
+
     TLegend* legend276TeVsingleratio    = GetAndSetLegend2(0.96, 0.9, 0.9, 0.93, textSizeLabelsPixel);
     legend276TeVsingleratio->SetNColumns(1);
     legend276TeVsingleratio->SetMargin(0.2);
     legend276TeVsingleratio->SetTextAlign(33);
     legend276TeVsingleratio->AddEntry((TObject*)0,"pp, #sqrt{s} = 2.76 TeV","");
     legend276TeVsingleratio->Draw();
-    
+
     DrawGammaLines(0.23, maxX , 1., 1.,0.5, kGray+2);
     padInvSection900GeVRatioSingle->cd();
     padInvSection900GeVRatioSingle->SetLogx(1);
@@ -2885,7 +2885,7 @@ void plotCrossSectionFULL(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* csGra
     legend900GeVsingleratio->SetTextAlign(33);
     legend900GeVsingleratio->AddEntry((TObject*)0,"pp, #sqrt{s} = 0.9 TeV","");
     legend900GeVsingleratio->Draw();
-    
+
     DrawGammaLines(0.23, maxX , 1., 1.,0.5, kGray+2);
 
 
@@ -3149,16 +3149,16 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     Style_t markerstylesFULL[4]                         ={34,20,33,29};
     Size_t markersizeFULL[4]                        ={2.3,2.3,3.4,3.4};
     Color_t colorDataFULL[4]                        ={kRed+2,kBlue+2,kGreen+2,kMagenta+2};
-  
+
     //
-  
+
             for (int j=0;j<csGraphsSys[2]->GetN();j++){
                 csGraphsSys[2]->GetY()[j] *= 1000;
                 csGraphsSys[2]->GetEYhigh()[j] *= 1000;
                 csGraphsSys[2]->GetEYlow()[j] *= 1000;
             }
             DrawGammaSetMarkerTGraphAsym(csGraphsSys[2], markerstylesFULL[2], markersizeFULL[2], colorDataFULL[2], colorDataFULL[2], widthLinesBoxes, kTRUE);
-            
+
             for (int j=0;j<csGraphsSys[1]->GetN();j++){
                 csGraphsSys[1]->GetY()[j] *= 100;
                 csGraphsSys[1]->GetEYhigh()[j] *= 100;
@@ -3174,14 +3174,14 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
             DrawGammaSetMarkerTGraphAsym(csGraphsSys[0], markerstylesFULL[0], markersizeFULL[0], colorDataFULL[0], colorDataFULL[0], widthLinesBoxes, kTRUE);
             //
             // statistics
-            
+
             for (int j=0;j<csGraphs[2]->GetN();j++){
                 csGraphs[2]->GetY()[j] *= 1000;
                 csGraphs[2]->GetEYhigh()[j] *= 1000;
                 csGraphs[2]->GetEYlow()[j] *= 1000;
             }
             DrawGammaSetMarkerTGraph(csGraphs[2], markerstylesFULL[2], 0.7*markersizeFULL[2], colorDataFULL[2] , colorDataFULL[2]);
-            
+
             for (int j=0;j<csGraphs[1]->GetN();j++){
                 csGraphs[1]->GetY()[j] *= 100;
                 csGraphs[1]->GetEYhigh()[j] *= 100;
@@ -3271,7 +3271,7 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     }
     while(graphPythia8InvXSection7TeV->GetX()[0] < 0.4) graphPythia8InvXSection7TeV->RemovePoint(0);
     while(graphPythia8InvXSection7TeV->GetX()[graphPythia8InvXSection7TeV->GetN()-1] > 35.) graphPythia8InvXSection7TeV->RemovePoint(graphPythia8InvXSection7TeV->GetN()-1);
-    
+
     TGraphErrors* graphPythia8InvXSection276TeV               = new TGraphErrors((TH1F*) fileTheoryCompilation->Get("histoInvSecPythia8Monash2013LegoEta2760GeV"));
     for (int j=0;j<graphPythia8InvXSection276TeV->GetN();j++){
         graphPythia8InvXSection276TeV->GetY()[j] *= 10;
@@ -3329,7 +3329,7 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
 
 
 
-  
+
     Double_t arrayBoundariesX1_XSec[2];
     Double_t arrayBoundariesY1_XSec[10];
     Double_t relativeMarginsXXSec[3];
@@ -3403,7 +3403,7 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
         textsizeLabelsXSecDown2          = (Double_t)textSizeLabelsPixel/padInvSection900GeVRatio->YtoPixel(padInvSection900GeVRatio->GetY1());
         textsizeFacXSecDown2             = (Double_t)1./padInvSection900GeVRatio->YtoPixel(padInvSection900GeVRatio->GetY1());
     }
-    
+
     Double_t maxX = 49;
 
     padInvSectionSpec->cd();
@@ -3473,10 +3473,10 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     cout << WriteParameterToFile(fitTCMInvXSectionPi08TeV) << endl;
     DrawGammaSetMarkerTF1( fitTCMInvXSectionPi0Plot8TeV, 7, 2, kGray+2);
     // fitTCMInvXSectionPi0Plot8TeV->Draw("same");
-    
+
     Double_t paramTCMPi0New7TeV[5]  = { csGraphs[1]->GetY()[1],0.1, csGraphs[1]->GetY()[4],0.6,3.0};
     TF1* fitTCMInvXSectionPi07TeV   = FitObject("tcm","fitTCMInvCrossSectionEta7TeV","Pi0",csGraphs[1],0.4,25. ,paramTCMPi0New7TeV,"QNRMEX0+","", kFALSE);
-    
+
     TF1* fitTCMInvXSectionPi0Plot7TeV = new TF1("twoCompModel_plottingEta7TeV",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mesonMassExpectPi0,mesonMassExpectPi0,mesonMassExpectPi0));
     fitTCMInvXSectionPi0Plot7TeV->SetRange(0.4,35.);
     fitTCMInvXSectionPi0Plot7TeV->SetParameters(fitTCMInvXSectionPi07TeV->GetParameters());
@@ -3484,10 +3484,10 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     cout << WriteParameterToFile(fitTCMInvXSectionPi07TeV) << endl;
     DrawGammaSetMarkerTF1( fitTCMInvXSectionPi0Plot7TeV, 7, 2, kGray+2);
     fitTCMInvXSectionPi0Plot7TeV->Draw("same");
-    
+
     Double_t paramTCMPi0New276TeV[5]  = { csGraphs[3]->GetY()[1],0.1, csGraphs[3]->GetY()[4],0.6,3.0};
     TF1* fitTCMInvXSectionPi0276TeV   = FitObject("tcm","fitTCMInvCrossSectionEta7TeV","Pi0",csGraphs[3],0.5,20. ,paramTCMPi0New276TeV,"QNRMEX0+","", kFALSE);
-    
+
     TF1* fitTCMInvXSectionPi0Plot276TeV = new TF1("twoCompModel_plottingEta7TeV",Form("[0]*exp(-(TMath::Sqrt(x*x+%.10f*%.10f)-%.10f)/[1]) + [2]/(TMath::Power(1+x*x/([3]*[3]*[4]),[4]) )",mesonMassExpectPi0,mesonMassExpectPi0,mesonMassExpectPi0));
     fitTCMInvXSectionPi0Plot276TeV->SetRange(0.5,21.);
     fitTCMInvXSectionPi0Plot276TeV->SetParameters(fitTCMInvXSectionPi0276TeV->GetParameters());
@@ -3652,10 +3652,10 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     if(plotTheorycurves)
     SetStyleHistoTH2ForGraphs(ratio7TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                             0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
-    else                             
+    else
     SetStyleHistoTH2ForGraphs(ratio7TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                             0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
-    
+
     ratio7TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
     ratio7TeVdummy->GetYaxis()->SetNdivisions(505);
     ratio7TeVdummy->GetYaxis()->SetNoExponent(kTRUE);
@@ -3715,14 +3715,14 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
 
 
     DrawGammaLines(0.33, maxX , 1., 1.,0.5, kGray+2);
-    
+
     padInvSection2760GeVRatio->cd();
     padInvSection2760GeVRatio->SetLogx(1);
     TH2F * ratio276TeVdummy               = new TH2F("ratio276TeVdummy","ratio276TeVdummy",1000,0.33,maxX,1000,yrangeLowRatio,yrangeHighRatio);
     if(plotTheorycurves)
     SetStyleHistoTH2ForGraphs(ratio276TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Theory, Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                               0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
-    else                            
+    else
     SetStyleHistoTH2ForGraphs(ratio276TeVdummy, "#it{p}_{T} (GeV/#it{c})","#frac{Data}{Tsallis fit}", 0.85*textsizeLabelsXSecDown, textsizeLabelsXSecDown,
                               0.85*textsizeLabelsXSecDown,0.9*textsizeLabelsXSecDown, 1,0.2/(textsizeFacXSecMiddle*marginXSec), 510, 505);
     ratio276TeVdummy->GetYaxis()->SetMoreLogLabels(kTRUE);
@@ -3736,8 +3736,8 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     ratio276TeVdummy->GetYaxis()->SetLabelOffset(+0.01);
     ratio276TeVdummy->GetXaxis()->SetTickLength(0.07);
     ratio276TeVdummy->DrawCopy();
-    
-    
+
+
     TGraphAsymmErrors* graphRatioPi0CombCombFitStatA276TeV    = (TGraphAsymmErrors*)csGraphs[3]->Clone();
     graphRatioPi0CombCombFitStatA276TeV                       = CalculateGraphErrRatioToFit(graphRatioPi0CombCombFitStatA276TeV, fitInvXSectionPi0276TeV);
     TGraphAsymmErrors* graphRatioPi0CombCombFitStatA276TeV_WOXErr = (TGraphAsymmErrors*) graphRatioPi0CombCombFitStatA276TeV->Clone("graphRatioPi0CombCombFitStatA276TeV_WOXErr");
@@ -3751,9 +3751,9 @@ void plotCrossSectionFULLEta(TGraphAsymmErrors* csGraphs[],TGraphAsymmErrors* cs
     DrawGammaSetMarkerTGraphAsym(graphRatioPi0CombCombFitStatA276TeV_WOXErr, markerstylesFULL[3], markersizeFULL[3], colorDataFULL[3], colorDataFULL[3], widthLinesBoxes, kFALSE);
     graphRatioPi0CombCombFitStatA276TeV_WOXErr->SetLineWidth(widthLinesBoxes);
     graphRatioPi0CombCombFitStatA276TeV_WOXErr->Draw("p,same");
-    
+
     DrawGammaLines(0.33, maxX , 1., 1.,0.5, kGray+2);
-    
+
     padInvSection900GeVRatio->cd();
     padInvSection900GeVRatio->SetLogx(1);
     TH2F * ratio900GeVdummy            = new TH2F("ratio900GeVdummy","ratio900GeVdummy",1000,0.33,maxX,1000,-1.01,5.);
@@ -5273,7 +5273,7 @@ void CombineGammaResultsPP(
         PileUpCorrectionFactor[i]                            = (TH1D*)inputFileGamma[i]->Get("PileUpCorrectionFactor");
         if(i==2)
         PileUpCorrectionFactor[3]                            = (TH1D*)inputFileGamma[3]->Get("PileUpCorrectionFactor");
-        
+
         // LOAD INPUT
         histoNumberOfEvents[i]              = (TH1D*)inputFileData[i]->Get("histoNumberOfEvents7TeV");
         BGEstimateFromPileup[i]              = (TH1D*)inputFileSecondary[i]->Get("BGEstimateFromPileup");
@@ -5537,7 +5537,7 @@ cout << __LINE__ << endl;
     plotDCA(1, fHistFracIntHistBGvsPt_Cat_1_Variant_1,fHistFracIntHistBGvsPt_Cat_2_Variant_1, fHistFracIntHistBGvsPt_Cat_3_Variant_1, fHistFracIntHistBGvsPt_Cat_4_Variant_1, fHistFracIntHistBGvsPt_Cat_5_Variant_1,fHistFracIntHistBGvsPt_Cat_6_Variant_1,-0.3,14.9, "BG/Total (%)", 0, "FracDCABGcat7");
     plotDCA(2, fHistFracIntHistBGvsPt_Cat_1_Variant_1,fHistFracIntHistBGvsPt_Cat_2_Variant_1, fHistFracIntHistBGvsPt_Cat_3_Variant_1, fHistFracIntHistBGvsPt_Cat_4_Variant_1, fHistFracIntHistBGvsPt_Cat_5_Variant_1,fHistFracIntHistBGvsPt_Cat_6_Variant_1,-0.3,27.9, "BG/Total (%)", 0, "FracDCABGcat8");
 
-    
+
 
 
     plotEverything(histoGammaPurity_Pt, 0.89, 1.03,0, "#epsilon_{pur,#gamma} in |#eta| < 0.9", "PhotonPurity");
@@ -5548,8 +5548,8 @@ cout << __LINE__ << endl;
 
 
     plotLuminosity(2e-4,99,"Peak Luminosity [Hz/#mub]","Luminosity");
-    
-    
-    
-    
+
+
+
+
 }

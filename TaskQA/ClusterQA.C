@@ -620,8 +620,10 @@ void ClusterQA(
     //*****************************************************************************************************
 
     TCanvas* canvas         = new TCanvas("canvas","",10,10,750,500);  // gives the page size
+    TCanvas* canvas2NTEO    = new TCanvas("canvas2NTEO","",10,10,1500,500);  // gives the page size
     TCanvas* canvasJPG      = new TCanvas("canvasJPG","",10,10,1500,1000);  // gives the page size
     TCanvas* cvsQuadratic   = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
+
     Double_t leftMargin         = 0.09;
     Double_t rightMargin        = 0.02;
     Double_t topMargin          = 0.04;
@@ -630,8 +632,23 @@ void ClusterQA(
     Double_t bottomMarginQuad   = 0.092;
     Double_t leftMarginQuad     = 0.117;
     Double_t rightMarginQuad    = 0.117;
+    Double_t leftMargin2NTEO    = 0.075;
+    Double_t rightMargin2NTEO   = 0.005;
+    Double_t topMargin2NTEO     = 0.005;
+    Double_t bottomMargin2NTEO  = 0.085;
+
     DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
     DrawGammaCanvasSettings(canvasJPG,leftMargin,rightMargin,topMargin,bottomMargin);
+    DrawGammaCanvasSettings(canvas2NTEO,leftMargin2NTEO,rightMargin2NTEO,topMargin2NTEO,bottomMargin2NTEO);
+    canvas2NTEO->cd();
+    TPad* padL2NTEO          = new TPad("padL2NTEO", "", 0., 0., 0.5, 1.,-1, -1, -2);
+    TPad* padR2NTEO          = new TPad("padR2NTEO", "", 0.5, 0., 1., 1.,-1, -1, -2);
+    DrawGammaPadSettings( padL2NTEO, leftMargin2NTEO, rightMargin2NTEO, topMargin2NTEO, bottomMargin2NTEO);
+    DrawGammaPadSettings( padR2NTEO, leftMargin2NTEO, rightMargin2NTEO, topMargin2NTEO, bottomMargin2NTEO);
+    padL2NTEO->Draw();
+    padR2NTEO->Draw();
+
+
 
     for(Int_t i=0; i<nSets; i++){
 
@@ -2057,7 +2074,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistCellEnergyVsCellID,Form("%s - %s %s- %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), fClusters.Data()),
                                     "Cell Energy (GeV)","CellID",1,1);
-                SaveCanvasAndWriteHistogram(canvas, fHistCellEnergyVsCellID, Form("%s/CellEnergyVsCellID_%s.pdf", outputDir.Data(), DataSets[i].Data()));
+                SaveCanvasAndWriteHistogram(canvas, fHistCellEnergyVsCellID, Form("%s/CellEnergyVsCellID_%s.%s", outputDir.Data(), DataSets[i].Data(),suffix.Data()));
                 vecCellEnergyForComparison.push_back(new TH2D(*fHistCellEnergyVsCellID));
 
                 // plot cell ID vs Energy - zoom in on low energies
@@ -2065,7 +2082,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistCellEnergyVsCellID,Form("%s - %s %s- %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), fClusters.Data()),
                                     "Cell Energy (GeV)","CellID",1,1);
-                SaveCanvasAndWriteHistogram(canvas, fHistCellEnergyVsCellID, Form("%s/CellEnergyVsCellID_LowEnergy_%s.pdf", outputDir.Data(), DataSets[i].Data()));
+                SaveCanvasAndWriteHistogram(canvas, fHistCellEnergyVsCellID, Form("%s/CellEnergyVsCellID_LowEnergy_%s.%s", outputDir.Data(), DataSets[i].Data(),suffix.Data()));
 
                 // Calculate correlatio between mean and sigma of energy distribution per cell
                 // if limits are set in cellQA object also the bad cell candidates for 2D energy vs sigma will be evaluated
@@ -2142,7 +2159,7 @@ void ClusterQA(
                 DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
                                     fHistCellTimeVsCellID,Form("%s - %s %s- %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), fClusters.Data()),
                                     "Cell Time (#mus)","CellID",1,1);
-                SaveCanvasAndWriteHistogram(canvas, fHistCellTimeVsCellID, Form("%s/CellTimeVsCellID_%s.pdf", outputDir.Data(), DataSets[i].Data()));
+                SaveCanvasAndWriteHistogram(canvas, fHistCellTimeVsCellID, Form("%s/CellTimeVsCellID_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
                 vecCellTimingForComparison.push_back(new TH2D(*fHistCellTimeVsCellID));
 
                 // Calculate correlatio between mean and sigma of time distribution per cell
@@ -4094,7 +4111,9 @@ void ClusterQA(
         std::vector<TH2D*> DataMCHistsTime;
         for(Int_t j=0; j<nSets; j++){
             TH2D* fHistDataMCCell = (TH2D*) vecCellEnergyForComparison.at(j)->Clone(Form("vecEnergyComp_%i",j));
+            fHistDataMCCell->Sumw2();
             TH2D* fHistDataMCCellTime = (TH2D*) vecCellTimingForComparison.at(j)->Clone(Form("vecTimeComp_%i",j));
+            fHistDataMCCellTime->Sumw2();
             DataMCHists.push_back(fHistDataMCCell);
             DataMCHistsTime.push_back(fHistDataMCCellTime);
         }
@@ -4112,7 +4131,9 @@ void ClusterQA(
 
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "GOOD cells:" << endl;
-        DetermineGoodCellCandidates(allCellsGood, cellQA, nCaloCells);
+        Int_t emptyCells = 0;
+        DetermineGoodCellCandidates(allCellsGood, cellQA, nCaloCells, DataMCHists, emptyCells);
+        cout << "found " << allCellsGood.size() << " good cells and " << emptyCells << " empty cells" << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
@@ -4157,13 +4178,15 @@ void ClusterQA(
                 PlotBadCellOverview(kTRUE,kTRUE,DataMCHists.at(j),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
                 PlotBadCellOverview(kFALSE,kTRUE,DataMCHistsTime.at(j),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[j],DataSets[j],fCollisionSystem);
             }
-            canvas->SetLeftMargin(0.08);canvas->SetRightMargin(0.02);canvas->SetTopMargin(0.04);canvas->SetBottomMargin(0.11);
-            PlotBadCellComparisonVec(DataMCHists,colorCompare,allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem);
+            // plot for each bad cell the energy distribution together with the MC one as well as the time distribution together with that of a good cell
+            PlotBadCellComparisonVecBoth(DataMCHists,DataMCHistsTime,colorCompare,allCellsBad, allCellsGood, nEvents, canvas2NTEO, padL2NTEO, padR2NTEO, outputDir, suffix, fClusters, plotDataSets,
+                                         fCollisionSystem, kFALSE, 50,100);
         }
 
         if ((Int_t)allCellsGood.size()>0){
-            canvas->SetLeftMargin(0.08);canvas->SetRightMargin(0.02);canvas->SetTopMargin(0.04);canvas->SetBottomMargin(0.11);
-            PlotBadCellComparisonVec(DataMCHists,colorCompare,allCellsGood,canvas,outputDir,suffix,fClusters,plotDataSets,fCollisionSystem, kTRUE, 50,100);
+            // plot for 50 good cells the energy distribution together with the MC one as well as the time distribution together with that of another good cell
+            PlotBadCellComparisonVecBoth(DataMCHists,DataMCHistsTime,colorCompare,allCellsGood, allCellsGood, nEvents, canvas2NTEO, padL2NTEO, padR2NTEO, outputDir, suffix, fClusters, plotDataSets,
+                                         fCollisionSystem, kTRUE, 50,100);
         }
 
         char* nameOutput = Form("%s/ClusterQA_%s.root",outputDirRootFiles.Data(),DataSets[0].Data());

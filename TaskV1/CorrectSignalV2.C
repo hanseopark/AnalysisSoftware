@@ -53,27 +53,6 @@ struct SysErrorConversion {
     // TString name;
 };
 
-Double_t FindLargestBin1DHist(TH1* hist ){
-    Double_t largestContent     = 0;
-    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
-        if (largestContent < hist->GetBinContent(i)){
-            largestContent = hist->GetBinContent(i);
-        }
-    }
-    return largestContent;
-}
-
-Double_t FindSmallestBin1DHist(TH1* hist, Double_t maxStart = 1e6 ){
-    Double_t smallesContent     = maxStart;
-    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
-        if (hist->GetBinContent(i) != 0 && smallesContent > hist->GetBinContent(i)){
-            smallesContent = hist->GetBinContent(i);
-        }
-    }
-    return smallesContent;
-}
-
-
 void CorrectYieldDalitz(TH1D* histoCorrectedYield,TH1D* histoRawGGYield, TH1D* histoEffiPt, TH1D* histoAcceptance, Double_t deltaRapid, Double_t scaling, Double_t nEvt, TString nameMeson){
     histoCorrectedYield->Sumw2();
     histoCorrectedYield->Add(histoRawGGYield,-1.);
@@ -519,7 +498,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t maxPtMeson     = histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX());
     Double_t minPtMeson     = 0;
     Int_t ptBin             = 1;
-    while (histoUnCorrectedYield[0]->GetBinContent(ptBin) == 0.){
+    while (histoUnCorrectedYield[0]->GetBinContent(ptBin) == 0. && ptBin < histoUnCorrectedYield[0]->GetNbinsX()+1){
         ptBin++;
         minPtMeson          = histoUnCorrectedYield[0]->GetXaxis()->GetBinLowEdge(ptBin);
     }

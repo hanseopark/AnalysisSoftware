@@ -67,6 +67,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     Bool_t doCellCompare            = kFALSE;
     Int_t CellCompareNSets          = 0;
     Bool_t doCellCleaning           = kFALSE;
+    Bool_t doCellCleaningTemp       = kFALSE;
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -216,7 +217,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             CellCompareNSets    = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         // checking for variables needed for cell cleaning
         } else if (tempValue.BeginsWith("cellCleaningUseMaybe",TString::kIgnoreCase)){
-            doCellCleaning = kTRUE;
+            doCellCleaningTemp = kTRUE;
         }
         delete tempArr;
     }
@@ -253,13 +254,6 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
         if (doPhotonQA && diffPhotonQAPath) cout << "\t" << pathPhotonQA[i].Data();
         cout << endl;
     }
-    cout << "**************************************************************************" << endl;
-    cout << "**************************************************************************" << endl;
-    cout << "**************************************************************************" << endl;
-    if (doCellCleaning){
-        cout << "INFO: enabling cleaning of log files " << endl;
-    }
-    cout << "**************************************************************************" << endl;
     if (doCellQASummary){
         if (nSetsDeadCell > 0 || nMCSetsDeadCell > 0){
             cout << "INFO: enabling also DeadCell QA" << endl;
@@ -274,6 +268,15 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             doHotCellCompare                = kTRUE;
         } else {
             cout << "WARNING: you requested to run the hot cell QA, but the 'hotCellNSets' has not been provided...\n disabled running HotCellCompare-macro... " << endl;
+        }
+        cout << "**************************************************************************" << endl;
+
+        cout << "**************************************************************************" << endl;
+        cout << "**************************************************************************" << endl;
+        cout << "**************************************************************************" << endl;
+        if (doCellCleaningTemp){
+            doCellCleaning                  = kTRUE;
+            cout << "INFO: enabling cleaning of log files " << endl;
         }
         cout << "**************************************************************************" << endl;
 

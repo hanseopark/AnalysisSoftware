@@ -60,6 +60,7 @@ using namespace std;
 #include <TString.h>
 #include <TSystem.h>
 #include <TVirtualFitter.h>
+#include <TRandom3.h>
 
 #include "../CommonHeaders/PlottingMeson.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
@@ -70,6 +71,8 @@ using namespace std;
 #include "../CommonHeaders/AdjustHistRange.h"
 // #include "../CommonHeaders/ExtractSignalBinning.h"
 // #include "../CommonHeaders/ExtractSignalPlotting.h"
+
+TRandom3 randy1;
 
 //**************************************************************************************************************************
 Double_t 	fFWHMFunc;
@@ -796,9 +799,8 @@ void SetTH1RangeForLogY(TH1* hist, Int_t minX, Int_t maxX){
     return;
 }
 
-void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax){
+void GetMinMaxBin(TH1* hist, Int_t &iMin, Int_t &iMax, Double_t very_small_number=1e-5){
     if(!hist) {cout << "INFO: NULL pointer given to GetMinMaxBin!'" << endl; return;}
-    Double_t very_small_number=1e-5;
     iMin = 1;
     iMax = hist->GetNbinsX();
     Double_t min = hist->GetBinContent(iMin);
@@ -2697,7 +2699,7 @@ void CollectAndPlotBadCellCandidates(fstream &str, std::vector<Int_t> &allCell, 
 //************************************************************************************************
 // Determine good cell candidates excluding the suspicious cells determined before ***************
 //************************************************************************************************
-void DetermineGoodCellCandidates(std::vector<Int_t> &allCell, CellQAObj* obj, Int_t nCaloCells){
+void DetermineGoodCellCandidates(std::vector<Int_t> &allCell, CellQAObj* obj, Int_t nCaloCells, std::vector<TH2D*> DataMCHists, Int_t &emptyCells){
 
     std::vector<Int_t> cellIDsEnergy            = obj->cellIDsEnergy;
     std::vector<Int_t> cellIDsTime              = obj->cellIDsEnergy;
@@ -2722,11 +2724,15 @@ void DetermineGoodCellCandidates(std::vector<Int_t> &allCell, CellQAObj* obj, In
             if ( std::find(cellIDsHotCellsTime1D.begin(), cellIDsHotCellsTime1D.end(), iC) != cellIDsHotCellsTime1D.end() ) continue;
             if ( std::find(cellIDsHotCells2D.begin(), cellIDsHotCells2D.end(), iC) != cellIDsHotCells2D.end() ) continue;
             if ( std::find(cellIDsMissing.begin(), cellIDsMissing.end(), iC) != cellIDsMissing.end() ) continue;
+            if ( !(((TH1D*) DataMCHists.at(0)->ProjectionX(Form("dataProject_%i",iC),iC+1,iC+1))->GetEntries() > 0)){
+                emptyCells++;
+                continue;
+            }
         }
         allCell.push_back(iC);
-        cout << iC << ", ";
+//         cout << iC << ", ";
     }
-    cout << endl;
+//     cout << endl;
     return;
 }
 
@@ -2918,7 +2924,7 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists,
         for(Int_t i=iStart; i>=0; i--){
             TH1D* fHistDataMC = fVecDataMC.at(i);
             if (fHistDataMC->GetEntries() > 0) allEmpty = kFALSE;
-            GetMinMaxBin(fHistDataMC,minB,maxB);
+            GetMinMaxBin(fHistDataMC,minB,maxB,1e-11);
             if (calo.Contains("EMC"))
                 minB = fHistDataMC->FindBin(0.101);
             SetXRange(fHistDataMC,minB,maxB+10);
@@ -2970,6 +2976,174 @@ void PlotBadCellComparisonVec( std::vector<TH2D*> DataMCHists,
 
     return;
 }
+
+//******************************************************************************************************************
+//********************* Plotting for bad cell comparions in a vector ***********************************************
+//******************************************************************************************************************
+void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
+                                    std::vector<TH2D*> DataMCHistsTime,
+                                    Color_t *color,
+                                    std::vector<Int_t> allCells,
+                                    std::vector<Int_t> allCellsGood,
+                                    Double_t* nEvents,
+                                    TCanvas* canvas,
+                                    TPad* padL,
+                                    TPad* padR,
+                                    TString outputDir,
+                                    TString suffix,
+                                    TString calo,
+                                    TString* plotDataSets,
+                                    TString fCollisionSystem,
+                                    Bool_t  isGoodCell           = kFALSE,
+                                    Int_t iGoodCellTot           = 50,
+                                    Int_t iCellJump              = 50
+)
+{
+    std::vector<TH1D*> fVecDataMC;
+    std::vector<TH1D*> fVecDataMCTime;
+    for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
+        SetXRange(DataMCHists.at(i),1,DataMCHists.at(i)->GetNbinsX());
+    }
+
+    for(Int_t iCell=0; iCell<(Int_t)allCells.size(); iCell++){
+
+        if (isGoodCell && iGoodCellTot > 0){
+            if ( (iCellJump+iCell) < (Int_t)allCells.size()){
+                iCell           = iCellJump+iCell;
+                iGoodCellTot--;
+            } else {
+                iCell           = iCellJump+iCell-(Int_t)allCells.size();
+                iGoodCellTot--;
+            }
+        } else if (isGoodCell){
+            continue;
+        }
+
+        TLegend* leg1 = new TLegend( 0.6,0.81,0.97,0.95);
+        leg1->SetTextSize(0.04);
+        leg1->SetFillColor(0);
+        TLegend* leg2 = new TLegend( 0.6,0.81,0.97,0.95);
+        leg2->SetTextSize(0.04);
+        leg2->SetFillColor(0);
+
+        Bool_t allEmpty = kTRUE;
+        for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
+            if(i==0) fVecDataMC.push_back((TH1D*) DataMCHists.at(i)->ProjectionX(Form("dataProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1));
+            else fVecDataMC.push_back((TH1D*) DataMCHists.at(i)->ProjectionX(Form("mcProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1));
+        }
+
+        canvas->cd();
+        padL->cd();
+        padL->SetLogy(1);
+
+        // adjusting the pt range in the histo
+        AdjustHistRange(fVecDataMC,100,100,kTRUE);
+        Int_t iStart = (Int_t) fVecDataMC.size()-1;
+        Int_t minB=0; Int_t maxB=0;
+        for(Int_t i=iStart; i>=0; i--){
+            TH1D* fHistDataMC = fVecDataMC.at(i);
+            fHistDataMC->Scale(1./nEvents[i]);
+            if (fHistDataMC->GetEntries() > 0) allEmpty = kFALSE;
+            GetMinMaxBin(fHistDataMC,minB,maxB,1e-11);
+            if (calo.Contains("EMC"))
+                minB = fHistDataMC->FindBin(0.101);
+            SetXRange(fHistDataMC,minB,maxB+10);
+            SetStyleHistoTH1ForGraphs(fHistDataMC, "Cell Energy (GeV)",Form("normalized counts for Cell ID %i",allCells.at(iCell)),0.035,0.04, 0.035,0.04, 1.0,0.9);
+            if(i==0){
+                DrawGammaSetMarker(fHistDataMC, 24, 0.5, color[i], color[i]);
+                leg1->AddEntry(fHistDataMC,plotDataSets[i].Data(),"p");
+            }else{
+                DrawGammaSetMarker(fHistDataMC, 1, 0.5, color[i], color[i]);
+                leg1->AddEntry(fHistDataMC,plotDataSets[i].Data());
+            }
+            if(i==0) fHistDataMC->DrawCopy("x0,e,p,same");
+            else if(i==iStart) fHistDataMC->DrawCopy("e,hist");
+            else fHistDataMC->DrawCopy("e,hist,same");
+        }
+        leg1->Draw("same");
+
+        PutProcessLabelAndEnergyOnPlot(0.93, 0.8, 0.03, fCollisionSystem.Data(), Form("%s", calo.Data()), "", 42, 0.03, "", 1, 1.25, 31);
+        padR->cd();
+        padR->SetLogy(1);
+
+        TH1D* timingBad     =  (TH1D*) DataMCHistsTime.at(0)->ProjectionX(Form("badProject_%i",allCells.at(iCell)),allCells.at(iCell)+1,allCells.at(iCell)+1);
+
+        Int_t randomCell    = -1;
+        Int_t randomCellID  = -1;
+        TH1D* timingGood    = NULL;
+        if (!isGoodCell){
+            if (allCellsGood.size()>0){
+                while (!timingGood) {
+                    randomCell      = (Int_t)randy1.Uniform(allCellsGood.size());
+                    randomCellID    = allCellsGood.at(randomCell);
+                    timingGood      = (TH1D*) DataMCHistsTime.at(0)->ProjectionX(Form("goodProject_%i",randomCellID),randomCellID+1,randomCellID+1);
+                    if (!timingGood->GetEntries()>0) timingGood = NULL;
+                }
+            }
+        }
+        Double_t minT   = 0.0001;
+        Double_t maxT   = 1e9;
+        Double_t minT2  = 0.0001;
+        Double_t maxT2  = 1e9;
+        if (timingBad){
+            timingBad->Scale(1./nEvents[0]);
+            timingBad->GetXaxis()->UnZoom();
+            minT        = FindSmallestBin1DHist(timingBad);
+            maxT        = FindLargestBin1DHist(timingBad);
+        }
+        if (timingGood){
+            timingGood->Scale(1./nEvents[0]);
+            minT2       = FindSmallestBin1DHist(timingGood);
+            maxT2       = FindLargestBin1DHist(timingGood);
+
+            timingGood->GetXaxis()->UnZoom();
+            if (timingBad && maxT > 0)
+                timingGood->Scale(maxT/maxT2);
+            else
+                maxT    = maxT2;
+            if (minT > minT2)
+                minT    = minT2;
+        }
+        if (timingGood){
+            timingGood->GetYaxis()->SetRangeUser(minT*0.5, maxT*2.);
+            SetStyleHistoTH1ForGraphs(timingGood, "Cell time (s)","normalized counts",0.035,0.04, 0.035,0.04, 0.9,0.9);
+            DrawGammaSetMarker(timingGood, 1, 0.5, color[1], color[1]);
+            leg2->AddEntry(timingGood,Form("good Cell ID %i",randomCellID),"l");
+            timingGood->Draw("e,hist");
+        }
+
+        if (timingBad){
+            timingBad->GetYaxis()->SetRangeUser(minT*0.5, maxT*2.);
+            SetStyleHistoTH1ForGraphs(timingBad, "Cell time (s)","normalized counts",0.035,0.04, 0.035,0.04, 0.9,0.9);
+            DrawGammaSetMarker(timingBad, 24, 0.5, color[0], color[0]);
+            leg2->AddEntry(timingBad,Form("Cell ID %i",allCells.at(iCell)),"p");
+            if (!timingGood) timingBad->Draw("x0,e,p");
+            else timingBad->Draw("x0,e,p,same");
+
+        }
+        leg2->Draw("same");
+
+        canvas->cd();
+        canvas->Update();
+        if (!isGoodCell){
+            canvas->SaveAs(Form("%s/Cells/Detailed/Cell%i_EnergyAndTimeComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()));
+        } else{
+            if (allEmpty){
+                iGoodCellTot++;
+            }else{
+                canvas->SaveAs(Form("%s/Cells/Detailed/Good/Cell%i_EnergyAndTimeComparison.%s", outputDir.Data(), allCells.at(iCell), suffix.Data()));
+            }
+        }
+        delete leg1;
+        delete leg2;
+
+        fVecDataMC.clear();
+        for(Int_t i=0; i<(Int_t)fVecDataMC.size(); i++) if (fVecDataMC.at(i)) delete fVecDataMC.at(i);
+    }
+
+    return;
+}
+
 
 void CheckHotAndColdCellsEFracRunwise(fstream &fLogRunwiseHotCells, fstream &fLogRunwiseColdCells, TH1D* tempClusEFraccCellBefore, TProfile* BadCells, Int_t nCaloCells, Bool_t simpleOutput){
     if(tempClusEFraccCellBefore->Integral()<1E4){

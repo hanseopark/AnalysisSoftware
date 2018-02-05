@@ -9,7 +9,7 @@
 source basicFunction.sh
 
 DOWNLOADON=1
-MERGEON=1
+MERGEON=0
 SINGLERUN=1
 SEPARATEON=0
 MERGEONSINGLEData=1
@@ -93,7 +93,7 @@ TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
 # LHC16qData="child_1"; #pass 3
 # LHC16tData="child_2"; #pass 2
 # LHC17f2bMC="1151";
-# LHC17f2a_fixMC="1149_20180124";
+LHC17f2a_fixMC="1149_20180124";
 
 # # woSDD (CENT) PHOS
 # LHC16qtData="710"; #pass 2
@@ -102,12 +102,12 @@ TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
 # LHC17f2bMC="1146";
 # LHC17f2a_fixMC="1144";
 
-# FAST EMC
-LHC16qtData="709_20180125"; #pass 2
-LHC16qData="child_1"; #pass 3
-LHC16tData="child_2"; #pass 2
-LHC17f2bMC="1147";
-LHC17f2a_fixMC="1145";
+# FAST PHOS
+# LHC16qtData="709_20180125"; #pass 2
+# LHC16qData="child_1"; #pass 3
+# LHC16tData="child_2"; #pass 2
+# LHC17f2bMC="1147";
+# LHC17f2a_fixMC="1145";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -179,8 +179,8 @@ if [ $HAVELHC17f2b == 1 ]; then
 fi
 if [ $HAVELHC17f2afix == 1 ]; then
     echo $LHC17f2a_fixMC
-#     LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`
-    LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\_`
+    LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`
+#     LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\_`
     if [ "$LHC17f2a_fixMC" == "" ]; then
         HAVELHC17f2afix=0;
     else
@@ -253,6 +253,13 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo All runlists/runNumbersLHC17f2b_$3_all.txt
                 MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo DPGTrack runlists/runNumbersLHC17f2b_$3_dpgTracks.txt
                 MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo DPGTrackAndCalo runlists/runNumbersLHC17f2b_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo All runlists/runNumbersLHC17f2b_$3_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo All-LHC16q runlists/runNumbersLHC16q_woSDD_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo DPGTrack-LHC16q runlists/runNumbersLHC17f2b_woSDD_dpgTracks-LHC16q.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo DPGTrackAndCalo-LHC16q runlists/runNumbersLHC17f2b_woSDD_dpgTracks-LHC16q.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo All-LHC16t runlists/runNumbersLHC16t_woSDD_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo DPGTrack-LHC16t runlists/runNumbersLHC17f2b_woSDD_dpgTracks-LHC16t.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaCalo DPGTrackAndCalo-LHC16t runlists/runNumbersLHC17f2b_woSDD_dpgTracks-LHC16t.txt
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMC/merge" $NSlashes "" kTRUE
@@ -272,9 +279,15 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC17f2a_fix_$3_all.txt`
                 ls $OUTPUTDIR_LHC17f2a_fix/$firstrunNumber/GammaCalo_*.root > fileLHC17f2a_fix.txt
                 fileNumbers=`cat fileLHC17f2a_fix.txt`
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All runlists/runNumbersLHC17f2a_fix_$3_all.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt
+#                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All runlists/runNumbersLHC17f2a_fix_$3_all.txt
+#                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt
+#                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All-LHC16q runlists/runNumbersLHC16q_woSDD_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack-LHC16q runlists/runNumbersLHC17f2a_fix_woSDD_dpgTracks-LHC16q.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo-LHC16q runlists/runNumbersLHC17f2a_fix_woSDD_dpgTracksAndCalo-LHC16q.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All-LHC16t runlists/runNumbersLHC16t_woSDD_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack-LHC16t runlists/runNumbersLHC17f2a_fix_woSDD_dpgTracks-LHC16t.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo-LHC16t runlists/runNumbersLHC17f2a_fix_woSDD_dpgTracksAndCalo-LHC16t.txt
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC/merge" $NSlashes "" kTRUE

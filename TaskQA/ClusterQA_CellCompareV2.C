@@ -1,9 +1,31 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
  ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Hannah Bossi, hannah.bossi@cern.ch                             *****
  *******************************************************************************/
 
 #include "QA.h"
+
+//***********************************************************************************************
+// Helper functions
+//***********************************************************************************************
+void FillVector(TH1* hist, std::vector<Int_t> &vec){
+    if(hist){
+        for(Int_t i=1; i<hist->GetXaxis()->GetNbins()+1;i++){
+            TString st = hist->GetXaxis()->GetBinLabel(i);
+            vec.push_back((Int_t)st.Atoi());
+        }
+    }
+    return;
+}
+
+void FillGlobalCellsVector(std::vector<Int_t> &vec,std::vector<Int_t> &vec2){
+    for(Int_t i=0; i<(Int_t)vec.size();i++){
+        vec2.push_back((Int_t)vec.at(i));
+    }
+    return;
+}
+
 
 //***********************************************************************************************
 //****************** ClusterQA_CellCompareV2 ****************************************************
@@ -48,8 +70,8 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
     Int_t runRange                  = 0; // If 1 will output a log file investigating bad cells in provided range.
     TString DataPath                = "";// path for the hot cell compare output
     TString DataPath_cold           = "";// path for the cold cell compare output
-
-
+    TString manualFileLog           = "";
+    Double_t minAverageSigma        = 2.0;
 
     // initialize arrays
     for (Int_t i = 0; i< maxSets; i++){
@@ -108,18 +130,24 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
             nTrigger        = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("energy",TString::kIgnoreCase)){
             fEnergyFlag     = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("cut",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("CellCompareCut",TString::kIgnoreCase)){
             cut             = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("hotCellDirName",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("CellCompareHotCellDirName",TString::kIgnoreCase)){
             DataPath        = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("coldCellDirName",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("CellCompareDeadCellDirName",TString::kIgnoreCase)){
             DataPath_cold   = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("runRange",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("CellCompareRunRange",TString::kIgnoreCase)){
             runRange        = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
-        } else if (tempValue.BeginsWith("runStart",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("CellCompareRunStart",TString::kIgnoreCase)){
             runStart        = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
-        } else if (tempValue.BeginsWith("runEnd",TString::kIgnoreCase)){
+        } else if (tempValue.BeginsWith("CellCompareRunEnd",TString::kIgnoreCase)){
             runEnd          = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
+        } else if (tempValue.BeginsWith("addLabelRunlist",TString::kIgnoreCase)){
+            addLabelRunlist = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("CellCompareManualBadChannels",TString::kIgnoreCase)){
+            manualFileLog   = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("CellCompareMinAverageSigma",TString::kIgnoreCase)){
+            minAverageSigma = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
         } else if (tempValue.BeginsWith("DataSetNames",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
@@ -148,7 +176,8 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
     cout << "cut:                   " << cut                        << endl;
     cout << "hotCellDirName:        " << DataPath                   << endl;
     cout << "coldCellDirName:       " << DataPath_cold              << endl;
-
+    cout << "manualFileLog:         " << manualFileLog.Data()       << endl;
+    cout << "minAverageSigma:       " << minAverageSigma            << endl;
     // ******************************* Config Error Checking *******************************************************
     if (CellCompareNSets == 0 || !fEnergyFlag.CompareTo("") ){
         cout << "ABORTING: You are missing the CellCompareNSets  energy setting, can't continue like that" << endl;
@@ -204,6 +233,7 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
         temp[5] = (TH1D*) File->Get(vecStr[5]);
         temp[6] = (TH1D*) File->Get(vecStr[6]);
         for(Int_t j=0; j<7; j++) cout << " - "<< temp[j] << ", ";
+        cout << endl;
         FillVector(temp[0],cellIDsEnergy[i]);
         FillVector(temp[1],cellIDsTime[i]);
         FillVector(temp[2],cellIDsHotCells1D[i]);
@@ -246,11 +276,15 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
             cout << "\t\t############################################################################" << endl;
         }
 
+        fstream fLogInputManual;
+        if (manualFileLog.CompareTo("") != 0){
+            fLogInputManual.open(manualFileLog.Data(), ios::in);
+        }
 
         // read in the runlist
         std::vector<TString> vecRuns;
         TString fileRuns[CellCompareNSets];
-        fileRuns[i]             = Form("DownloadAndDataPrep/runlists/runNumbers%s.txt", DataSets[i].Data());
+        fileRuns[i]             = Form("DownloadAndDataPrep/runlists/runNumbers%s%s.txt", DataSets[i].Data(), addLabelRunlist.Data());
         cout << "trying to read: " << fileRuns[i].Data() << endl;
         if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
 
@@ -314,72 +348,148 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 cout << "\nThere is an error opening the  cold cell log file: " << logFileNameCold << endl;
+            }
+
+            if (fLogInputManual.good() && manualFileLog.CompareTo("") != 0){
+                while(!fLogInputManual.eof()){
+                    TString fCurrentLine;
+                    fLogInputManual >> fCurrentLine;
+                    if(fCurrentLine.Sizeof()>1) {
+                        TString fCellID             = fCurrentLine;
+                        for (Int_t i = 0; i < (Int_t)vecRuns.size(); i++){
+                            vecRunsInd.push_back(((TString)vecRuns.at(i)).Atoi());
+                            vecCellIDs.push_back(fCellID.Atoi());
+                            vecSigma.push_back(5);
+                            // check to see if it is a unique cell
+                            if (std::find(uniqueCells.begin(), uniqueCells.end(), fCellID.Atof()) != uniqueCells.end()){
+                            } else {
+                                uniqueCells.push_back(fCellID.Atof());
+                            }
+                        }
+                    }
+                }
+            } else if (manualFileLog.CompareTo("") != 0) {
+                cout << "\nThere is an error opening the  manaul cell log file: " << manualFileLog << endl;
             }
             // Create the binning for the histogram.
             std::sort(uniqueCells.begin(), uniqueCells.end());
             Double_t ybins[uniqueCells.size()];
-            for(UInt_t j = 0; j< vecRuns.size(); j++){
+            for(UInt_t j = 0; j< vecRuns.size()+1; j++){
                 xbins[j] = j;
             }
-            for(UInt_t h = 0; h< uniqueCells.size(); h++){
+            for(UInt_t h = 0; h< uniqueCells.size()+1; h++){
                 ybins[h] = h;
             }
 
+            Double_t canvasWidth    = vecRuns.size()*50;
+            if (canvasWidth < 500)
+                canvasWidth         = 500;
+            Double_t canvasHeight   = uniqueCells.size()*20;
+            if (canvasHeight < 500)
+                canvasHeight        = 500;
+
             // Create the canvas as a function of # of Cells and # of Runs
-            TCanvas* canvas2 = new TCanvas("canvas2","",200,10,vecRuns.size()*50,uniqueCells.size()*20);  // gives the page size
-            Double_t leftMargin = 0.1; Double_t rightMargin = 0.15; Double_t topMargin = 0.1; Double_t bottomMargin = 0.1;
+            TCanvas* canvas2 = new TCanvas("canvas2","",200,10,canvasWidth,canvasHeight);  // gives the page size
+            Double_t leftMargin = 0.07; Double_t rightMargin = 0.09; Double_t topMargin = 0.04; Double_t bottomMargin = 0.11;
             DrawGammaCanvasSettings(canvas2, leftMargin, rightMargin, topMargin, bottomMargin);
             TH2D* RunwiseHist;
-            RunwiseHist = new TH2D(Form("Bad Cells Runwise %s", DataSets[i].Data()), Form("Bad Cells Runwise %s", DataSets[i].Data()),vecRuns.size()-1, xbins, uniqueCells.size()-1, ybins );
-            for(UInt_t z= 1; z< vecRuns.size();z++){
-                RunwiseHist->GetXaxis()->SetBinLabel(z, vecRuns.at(z));
+            RunwiseHist = new TH2D(Form("Bad Cells Runwise %s", DataSets[i].Data()), "" ,vecRuns.size(), xbins, uniqueCells.size(), ybins );
+            SetStyleHistoTH2ForGraphs(RunwiseHist, "Run number","CellID",0.035,0.04, 0.015,0.04, 1.4,0.8);
+//             cout << "Setting labels for runs" << endl;
+            Double_t boundLowRange = -1;
+            Double_t boundUpRange  = -1;
+            for(UInt_t z= 1; z< vecRuns.size()+1;z++){
+//                 cout << vecRuns.at(z-1) << endl;
+                RunwiseHist->GetXaxis()->SetBinLabel(z, vecRuns.at(z-1));
+                if (runRange == 1){
+                    if (vecRuns.at(z-1).Atoi() == runStart)
+                        boundLowRange   = (Double_t)z;
+                    if (vecRuns.at(z-1).Atoi() == runEnd)
+                        boundUpRange    = (Double_t)z;
+                }
             }
+            RunwiseHist->LabelsOption("v", "X");
 
             fstream fLogRunRange;
+            fstream fLogRunRangeCleaned;
             TString name;
             if(runRange == 1){
                 cout << endl << "Creating Bad Cell log file for Run Range for Run " << runStart << " to Run " << runEnd << endl;
                 name = outputPath + "/" +"BadCells_"+ DataSets[i].Data() + "_" + std::to_string(runStart) + "_" + std::to_string(runEnd) +".log";
                 cout << "Log File Path: " << name << endl;
                 fLogRunRange.open(name, ios::out);
+                name = outputPath + "/" +"BadCellsCleaned_"+ DataSets[i].Data() + "_" + std::to_string(runStart) + "_" + std::to_string(runEnd) +".log";
+                fLogRunRangeCleaned.open(name, ios::out);
             }
             else{
                 cout << endl << "Creating Bad Cell log file" << endl;
                 name = outputPath + "/" +"BadCells" + DataSets[i].Data() +".log";
                 cout << "Log File Path: " << name << endl;
                 fLogRunRange.open(name, ios::out);
+                name = outputPath + "/" +"BadCellsCleaned_" + DataSets[i].Data() +".log";
+                fLogRunRangeCleaned.open(name, ios::out);
+
             }
 
             if (uniqueCells.size()>500){
                 cout << "----- Histogram labels may not be clear since there are so many cells. Consider cleaning first.-----" << endl;
             }
 
-
-            for(UInt_t z= 1; z< uniqueCells.size();z++){
+//             cout << "setting labels for cells" << endl;
+            for(UInt_t z= 1; z< uniqueCells.size()+1;z++){
                 TString s;
-                s.Form("%.0f", uniqueCells.at(z));
+                s.Form("%.0f", uniqueCells.at(z-1));
+//                 cout << s << endl;
                 RunwiseHist->GetYaxis()->SetBinLabel(z, s);
-                RunwiseHist->GetYaxis()->SetLabelSize(0.01);
-                if (runRange == 0){
-                    fLogRunRange << uniqueCells.at(z) << endl;
-                }
             }
 
             // Loop over runs to populate hist
             std::vector<Double_t> vecOutput;
+            std::vector<Double_t> vecOutputSigma;
+            Int_t nRunsTot  = vecRuns.size();
+            if (runRange == 1){
+                nRunsTot    = 0;
+                for (UInt_t r= 0; r < vecRuns.size(); r++){
+                    if ( ((TString)vecRuns.at(r)).Atoi() >= runStart && ((TString)vecRuns.at(r)).Atoi() <= runEnd)
+                        nRunsTot++;
+                }
+                cout << "new number of runs has been calculated: " << nRunsTot << endl;
+            }
+
             for(UInt_t r= 0; r< vecRunsInd.size();r++){
                 if(runRange == 1){
-                    if( (runStart <= vecRunsInd.at(r) <= runEnd)){
+                    if ( vecRunsInd.at(r) >= runStart && vecRunsInd.at(r) <= runEnd){
                         if (std::find(vecOutput.begin(), vecOutput.end(), vecCellIDs.at(r)) != vecOutput.end()){
                             // Do nothing if it is already there.
-                        }
-                        else{
+                            UInt_t iC = 0;
+                            while (vecCellIDs.at(r) != (vecOutput.at(iC)) && iC < vecOutput.size())
+                                iC++;
+//                             cout << vecCellIDs.at(r)  << "\t" << iC  <<"\t"<< vecOutput.at(iC) << "\t" << vecOutputSigma.at(iC) << endl;
+                            vecOutputSigma.at(iC) = vecOutputSigma.at(iC) + vecSigma.at(r);
+                        } else {
                             vecOutput.push_back(vecCellIDs.at(r));
+                            vecOutputSigma.push_back(vecSigma.at(r));
+//                             cout << "first occurrance: " <<  vecCellIDs.at(r) << "\t" << vecSigma.at(r) << endl;
                             fLogRunRange << vecCellIDs.at(r) << endl;
                         }
+                    } else {
+//                         cout << "run: " << vecRunsInd.at(r) << " outside of desired run range!" << endl;
+                    }
+                } else {
+                    if (std::find(vecOutput.begin(), vecOutput.end(), vecCellIDs.at(r)) != vecOutput.end()){
+                        // Do nothing if it is already there.
+                        UInt_t iC = 0;
+                        while (vecCellIDs.at(r) != (vecOutput.at(iC)) && iC < vecOutput.size())
+                            iC++;
+//                         cout << vecCellIDs.at(r)  << "\t" << iC  <<"\t"<< vecOutput.at(iC) << "\t" << vecOutputSigma.at(iC) << endl;
+                        vecOutputSigma.at(iC) = vecOutputSigma.at(iC) + vecSigma.at(r);
+                    } else {
+                        vecOutput.push_back(vecCellIDs.at(r));
+                        vecOutputSigma.push_back(vecSigma.at(r));
+//                         cout << "first occurrance: " <<  vecCellIDs.at(r) << "\t" << vecSigma.at(r) << endl;
+                        fLogRunRange << vecCellIDs.at(r) << endl;
                     }
                 }
                 Int_t binx  = -1;
@@ -387,13 +497,13 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
                 // Get proper bin
                 for(UInt_t d = 0; d < vecRuns.size(); d++){
                     if(vecRuns.at(d).Atof() == vecRunsInd.at(r)){
-                        binx = d;
+                        binx = d+1;
                         break;
                     }
                 }
                 for(UInt_t d = 0; d < uniqueCells.size(); d++){
                     if( vecCellIDs.at(r) == uniqueCells.at(d)){
-                        biny = d;
+                        biny = d+1;
                         break;
                     }
                 }
@@ -407,16 +517,43 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
                 //cout << "binx: " << binx << " biny: " << biny << "with value: " << vecSigma.at(r) << endl;
             }
             fLogRunRange.close();
-            RunwiseHist->LabelsOption("v", "X");
-            RunwiseHist->GetXaxis()->SetTitle("Run Number");
-            RunwiseHist->GetXaxis()->SetTitleOffset(1.4);
-            RunwiseHist->GetYaxis()->SetTitle("CellID");
             // Make the bad cells very obvious
-            RunwiseHist->GetZaxis()->SetRangeUser(0,20);
+            RunwiseHist->GetZaxis()->SetRangeUser(0,10);
             RunwiseHist->Draw("COLZ");
+
+            // indicate runRange
+            if (runRange == 1){
+                DrawGammaLines(boundLowRange-0.99, boundLowRange-0.99 , 0, uniqueCells.size(),3, kBlack, 7 );
+                DrawGammaLines(boundUpRange-0.01, boundUpRange-0.01 , 0, uniqueCells.size(),3, kBlack, 7 );
+            }
+
+            TLatex *labelHist      = new TLatex(0.5,0.99,Form("Bad Cells Runwise %s", DataSets[i].Data()));
+            SetStyleTLatex( labelHist, 0.035, 4, 1, 42, kTRUE, 23);
+            labelHist->Draw();
+
             canvas2->Update();
-            canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_%s.pdf", outputPath.Data(),DataSets[i].Data()));
+            canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_%s.%s", outputPath.Data(),DataSets[i].Data(), suffix.Data()));
+
+            for (UInt_t z =0; z < vecOutput.size(); z++){
+                cout << "Cell: " << vecOutput.at(z) << " deviates by \t"<< vecOutputSigma.at(z)/(Double_t)nRunsTot << endl;
+                if (vecOutputSigma.at(z)/(Double_t)nRunsTot > minAverageSigma ){
+                    fLogRunRangeCleaned << vecOutput.at(z) << endl;
+                } else {
+                    cout << "rejected:" << vecOutput.at(z) << "\t"<< vecOutputSigma.at(z)/(Double_t)nRunsTot << endl;
+                    UInt_t cc = 0;
+                    while (vecOutput.at(z) != uniqueCells.at(cc) && cc < uniqueCells.size()) cc++;
+                    if (runRange == 1)
+                        DrawGammaLines(boundLowRange-0.99, boundUpRange-0.01 , cc+0.5, cc+0.5,3, kRed+2, 5 );
+                    else
+                        DrawGammaLines(0, vecRuns.size() , cc+0.5, cc+0.5,3, kRed+2, 5 );
+                }
+            }
+            fLogRunRangeCleaned.close();
+
+            canvas2->Update();
+            canvas2->SaveAs(Form("%s/BadCellCandidates_Runwise_withLines_%s.%s", outputPath.Data(),DataSets[i].Data(), suffix.Data()));
             canvas2->Clear();
+
             delete RunwiseHist;
 
         }
@@ -441,70 +578,52 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
     cout << "done" << endl;
     cout << "vector.size after sort and unique: " << globalCells.size() << "." << endl;
 
-    // --------------------------- Begin other bad cell plotting ----------------------------------------------------------------------
-    TCanvas* canvas = new TCanvas("canvas","",200,10,1350,1800);  // gives the page size
-    Double_t leftMargin = 0.1; Double_t rightMargin = 0.1; Double_t topMargin = 0.06; Double_t bottomMargin = 0.1;
-    DrawGammaCanvasSettings(canvas, leftMargin, rightMargin, topMargin, bottomMargin);
+    if ((Int_t)globalCells.size() > 0){
+        // --------------------------- Begin other bad cell plotting ----------------------------------------------------------------------
+        TCanvas* canvas = new TCanvas("canvas","",200,10,1350,1800);  // gives the page size
+        Double_t leftMargin = 0.1; Double_t rightMargin = 0.1; Double_t topMargin = 0.06; Double_t bottomMargin = 0.1;
+        DrawGammaCanvasSettings(canvas, leftMargin, rightMargin, topMargin, bottomMargin);
 
-    TH2D* hist;
+        TH2D* hist;
 
-    Int_t atPlotting = 0;
-    Int_t iCount = 0;
-    Int_t stepSize = 150;
-    do{
-        atPlotting = (iCount+1)*stepSize;
-        if((Int_t)globalCells.size()<=atPlotting) atPlotting = (Int_t)globalCells.size();
-        hist = new TH2D("BadCellCandidates","BadCellCandidates",CellCompareNSets,0,CellCompareNSets,atPlotting-iCount*stepSize,0+iCount*stepSize,atPlotting);
-        for(Int_t iX=0; iX<CellCompareNSets; iX++) hist->GetXaxis()->SetBinLabel(iX+1,DataSets[iX]);
-        for(Int_t iC=iCount*stepSize; iC<atPlotting; iC++){
-            hist->GetYaxis()->SetBinLabel(iC+1-iCount*stepSize,Form("%i",globalCells.at(iC)));
-            for(Int_t iX=0; iX<CellCompareNSets; iX++){
-                std::vector<Int_t>::iterator it;
-                it = find (allCells[iX].begin(), allCells[iX].end(), globalCells.at(iC));
-                if (it != allCells[iX].end()){
-                    hist->SetBinContent(iX+1,iC+1-iCount*stepSize,1);
-                    out[iX] << globalCells.at(iC) << endl;
+        Int_t atPlotting = 0;
+        Int_t iCount = 0;
+        Int_t stepSize = 150;
+        do{
+            atPlotting = (iCount+1)*stepSize;
+            if((Int_t)globalCells.size()<=atPlotting) atPlotting = (Int_t)globalCells.size();
+            hist = new TH2D("BadCellCandidates","BadCellCandidates",CellCompareNSets,0,CellCompareNSets,atPlotting-iCount*stepSize,0+iCount*stepSize,atPlotting);
+            for(Int_t iX=0; iX<CellCompareNSets; iX++) hist->GetXaxis()->SetBinLabel(iX+1,DataSets[iX]);
+            for(Int_t iC=iCount*stepSize; iC<atPlotting; iC++){
+                hist->GetYaxis()->SetBinLabel(iC+1-iCount*stepSize,Form("%i",globalCells.at(iC)));
+                for(Int_t iX=0; iX<CellCompareNSets; iX++){
+                    std::vector<Int_t>::iterator it;
+                    it = find (allCells[iX].begin(), allCells[iX].end(), globalCells.at(iC));
+                    if (it != allCells[iX].end()){
+                        hist->SetBinContent(iX+1,iC+1-iCount*stepSize,1);
+                        out[iX] << globalCells.at(iC) << endl;
+                    }
                 }
             }
-        }
 
-        hist->GetZaxis()->SetRangeUser(0,2);
-        DrawAutoGammaHisto2D(hist,
-                             "Bad Cell Candidates",
-                             "Period",
-                             "CellID",
-                             "",
-                             0,0,0,
-                             0,0,0,
-                             1,1,0.035,0.035,0.015,0.035);
-        canvas->SetLogx(0); canvas->SetLogy(0); canvas->SetLogz(0); canvas->Update();
-        canvas->SaveAs(Form("%s/BadCellCandidates_%i.%s", outputPath.Data(),iCount++,suffix.Data()));
-        canvas->Clear();
-        delete hist;
-    }while(atPlotting != (Int_t)globalCells.size());
-
+            hist->GetZaxis()->SetRangeUser(0,2);
+            DrawAutoGammaHisto2D(hist,
+                                "Bad Cell Candidates",
+                                "Period",
+                                "CellID",
+                                "",
+                                0,0,0,
+                                0,0,0,
+                                1,1,0.035,0.035,0.015,0.035);
+            canvas->SetLogx(0); canvas->SetLogy(0); canvas->SetLogz(0); canvas->Update();
+            canvas->SaveAs(Form("%s/BadCellCandidates_%i.%s", outputPath.Data(),iCount++,suffix.Data()));
+            canvas->Clear();
+            delete hist;
+        }while(atPlotting != (Int_t)globalCells.size());
+    }
     for(Int_t i=0; i<CellCompareNSets; i++) out[i].close();
 
     cout << "Done with ClusterQA_CellCompare" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     return;
-    >>>>>>> fixed indentations
 }
-
-void FillVector(TH1* hist, std::vector<Int_t> &vec){
-    if(hist){
-        for(Int_t i=1; i<hist->GetXaxis()->GetNbins()+1;i++){
-            TString st = hist->GetXaxis()->GetBinLabel(i);
-            vec.push_back((Int_t)st.Atoi());
-        }
-    }
-    return;
-}
-
-void FillGlobalCellsVector(std::vector<Int_t> &vec,std::vector<Int_t> &vec2){
-    for(Int_t i=0; i<(Int_t)vec.size();i++){
-        vec2.push_back((Int_t)vec.at(i));
-    }
-    return;
-}
-

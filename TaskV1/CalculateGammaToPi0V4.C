@@ -51,32 +51,6 @@ extern TSystem    *gSystem;
 //*****************************************************************************************************
 //*****************************************************************************************************
 //*****************************************************************************************************
-Double_t FindLargestBin1DHist(TH1* hist ){
-    Double_t largestContent     = 0;
-    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
-        if (largestContent < hist->GetBinContent(i)){
-            largestContent = hist->GetBinContent(i);
-        }
-    }
-    return largestContent;
-}
-
-//*****************************************************************************************************
-//*****************************************************************************************************
-//*****************************************************************************************************
-Double_t FindSmallestBin1DHist(TH1* hist, Double_t maxStart = 1e6 ){
-    Double_t smallesContent     = maxStart;
-    for (Int_t i= 0; i < hist->GetNbinsX(); i++){
-        if (hist->GetBinContent(i) != 0 && smallesContent > hist->GetBinContent(i)){
-            smallesContent = hist->GetBinContent(i);
-        }
-    }
-    return smallesContent;
-}
-
-//*****************************************************************************************************
-//*****************************************************************************************************
-//*****************************************************************************************************
 void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
                                 TString nameFilePi0         = "",
                                 TString nameFileCocktail    = "",
