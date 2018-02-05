@@ -1,0 +1,60 @@
+# select LHC16qt
+mode 4
+nSets 3
+cutNr 0
+energy pPb_5.023TeV
+pathDataSets    /mnt/additionalStorageExternal/OutputLegoTrains/pPb/Legotrain-vAN20180122-CellQAPHOSandEMC/GammaCalo_LHC16qt_fast_woSDD-pass1-DPGTrackAndCalo_204.root /mnt/additionalStorageExternal/OutputLegoTrains/pPb/Legotrain-vAN20180122-CellQAPHOSandEMC/GammaCalo_MC_LHC17f2b_fast_woSDD-DPGTrackAndCalo_204.root    /mnt/additionalStorageExternal/OutputLegoTrains/pPb/Legotrain-vAN20180122-CellQAPHOSandEMC/GammaCalo_MC_LHC17f2a_fix_fast_woSDD-DPGTrackAndCalo_204.root    STOP
+DataSetNames    LHC16qt    LHC17f2b   LHC17f2a_fix  STOP
+DataSetNamesPlot    LHC16qt DPMJet  EPOS    STOP
+labelData Data  STOP
+
+enableCellQACuts    1
+setQAEnergy 0.05 0.2 0.0 0.2 STOP
+setQATime -0.05E-7 0.15E-7 -0.01E-7 0.35E-7 STOP
+
+setQAHotCells1D 0.7E5 2.8E5 0 1.7 STOP
+min2D 0.15 0.05 0.04  0.03  0.015    0.015  0.012 0.01 0.009 STOP
+max2D 101  40  25  15  10  7 5 4 3 STOP
+
+# Settings for dead cell compare macro
+addLabelRunlist _dpgTracksAndCalo
+deadCellNSets   1
+deadCellNMCSets 1
+deadCellNTrigger    1
+deadCellDataSetNames LHC16qt    STOP
+deadCellMCSetNames  LHC17f2b STOP
+deadCellAdditionalOutputDirName LHC16qt
+nCaloCells  11520
+## deadCellTriggerNames  INT7    STOP
+deadCellMCCuts  80000513_1111100057032230000_01631031000000d0   STOP
+deadCellDataCuts    80000513_1111100057032230000_01631031000000d0   STOP
+deadCellFractionThesh   0.6
+
+# Settings for hot cell compare macro
+hotCellNSets   1
+hotCellNTrigger    1
+hotCellDataSetNames LHC16qt    STOP
+hotCellAdditionalOutputDirName LHC16qt
+## hotCellTriggerNames  INT7    STOP
+hotCellDataCuts    80000513_1111100057032230000_01631031000000d0   STOP
+hotCellThreshNFired   0
+hotCellThreshNTotalFired   60
+
+# Settings for cleanup of cell-logs
+cellCleaningUseMaybe    1
+#userGoodCellDirName bla
+#userMaybeCellDirName bla
+#userBadCellDirName bla
+
+
+# Settings for CellCompare
+CellCompareNSets    1
+CellCompareNTrigger 1
+CellCompareCut 80000513_1111100057032230000_01631031000000d0
+CellCompareHotCellDirName  ClusterQA_HotCellCompare/LHC16qt
+CellCompareDeadCellDirName ClusterQA_DeadCellCompare/LHC16qt
+CellCompareRunRange    1
+CellCompareRunStart    265305
+CellCompareRunEnd  2635525
+CellCompareManualBadChannels    /home/fbock/Photon/Results/pPb5TeV_QARun2CellRerun/ClusterQA_ManualHotCell/ManualLHC16qt_addDeadCells.txt
+CellCompareMinAverageSigma  1.5
