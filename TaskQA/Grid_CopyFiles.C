@@ -1093,19 +1093,25 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
 //*********************************************************************************************************************************
 //*********************************************************************************************************************************
 
-        const Int_t nSets = 7;
-        const Int_t nData = 7;
+        const Int_t nSets = 18;
+        const Int_t nData = 18;
         TString DataSets[nSets]={
-          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"
+          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
+          "LHC12b-kEMC7", "LHC12c-kEMC7", "LHC12d-kEMC7", "LHC12f-kEMC7", "LHC12h-kEMC7", "LHC12i-kEMC7",
+          "LHC12c-kEMCEGA", "LHC12d-kEMCEGA", "LHC12f-kEMCEGA", "LHC12h-kEMCEGA", "LHC12i-kEMCEGA"
         };
 
         TString train = "Legotrain-vAN-20180123-8TeV-dirGamma-JetJet";
         Int_t trainRuns[nSets] = {
-                                  2298,2298,2298,2298,2298,2298,2298
+                                  2300,2300,2300,2300,2300,2300,2300,
+                                  2300,2300,2300,2300,2300,2300,
+                                  2300,2300,2300,2300,2300
                                  };
 
         TString runlist[nSets] = {
-                                  "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2"
+                                  "_child_1/merge_runlist_2","_child_2/merge_runlist_2","_child_3/merge_runlist_2","_child_4/merge_runlist_2","_child_5/merge_runlist_2","_child_6/merge_runlist_2","_child_7/merge_runlist_2",
+                                  "_child_2/merge_runlist_3","_child_3/merge_runlist_3","_child_4/merge_runlist_3","_child_5/merge_runlist_3","_child_6/merge_runlist_3","_child_7/merge_runlist_3",
+                                  "_child_3/merge_runlist_4","_child_4/merge_runlist_4","_child_5/merge_runlist_4","_child_6/merge_runlist_4","_child_7/merge_runlist_4"
                                  };
 
         const Int_t nFiles = 6;
@@ -1114,12 +1120,14 @@ void Grid_CopyFiles(TString system = "pp", TString type = "ESD", TString folder 
           "GammaConvCalo_130", "GammaConvCalo_159", "GammaConvCalo_181"
                                 };
 
-        const Int_t nMerge = 1;
-        TString strMerge[nMerge]={"LHC12"};
+        const Int_t nMerge = 3;
+        TString strMerge[nMerge]={"LHC12", "LHC12-kEMC7", "LHC12-kEMCEGA"};
         std::vector<Int_t> mergeVec[nMerge];
         std::vector<Int_t>::iterator it;
         for(Int_t i=0; i<nSets; i++){
           if(0<=i && i<=6) mergeVec[0].push_back(i);
+          if(7<=i && i<=12) mergeVec[1].push_back(i);
+          if(13<=i && i<=17) mergeVec[2].push_back(i);
         }
 
 //*********************************************************************************************************************************

@@ -603,6 +603,15 @@
                                                         2, 2, 2, 3, 3, 4, 4, 4, 5, 5,
                                                         5, 5, 5};
 
+    Double_t fBinsDirGamma8TeVEMCalTriggerPt[42]    = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
+                                                        1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
+                                                        3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,
+                                                        8.5, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 16.0, 18.0, 20.0, 25.0, 30.0};
+    Int_t fBinsDirGamma8TeVEMCalTriggerPtRebin[41]  = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 4, 4, 5, 4, 4, 4, 5, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5};
+
     Double_t fBinsDirGammaTagging8TeVPt[28]         = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7,
                                                         0.8, 0.9, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.7, 3.0, 3.5, 4.0, 5.0,
@@ -2829,20 +2838,20 @@
                     if( modi == 2){
                       fStartPtBin = 4;
                     }else if(modi == 4){
-                      fStartPtBin = 6;
+                      fStartPtBin = 15;
                     }
-                    if (fNBinsPt > 32 && (modi ==4)){
-                      if( specialTrigg == 2 && fNBinsPt > 42){
-                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                        fNBinsPt                        = 42;
-                      } else if ( specialTrigg == 1 && fNBinsPt > 42){
-                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
-                        fNBinsPt                        = 42;
+                    if (fNBinsPt > 32 && (modi == 4 || modi == 2) ){
+                      if( specialTrigg == 2 && fNBinsPt > 41){
+                        cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                        fNBinsPt                        = 41;
+                      } else if ( specialTrigg == 1 && fNBinsPt > 41){
+                        cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                        fNBinsPt                        = 41;
                       } else if (specialTrigg!=1 && specialTrigg!=2){
                         cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
                         fNBinsPt                        = 23;
                       }
-                    } else if (fNBinsPt > 23 && (modi !=4) ) {
+                    } else if (fNBinsPt > 23 && (modi !=4 && modi !=2) ) {
                         cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
                         fNBinsPt    = 23;
                     }
@@ -2852,20 +2861,20 @@
                         fBinsPt[i]         = fBinsDirGamma8TeVPt[i];
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
 
-                        if (modi == 4 ){
+                        if (modi == 4 || modi == 2){
                             if( specialTrigg == 1 ){
-                                fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger1Pt[i];
+                                fBinsPt[i]                 = fBinsDirGamma8TeVEMCalTriggerPt[i];
                             } else if ( specialTrigg == 2 ){
-                                fBinsPt[i]                 = fBinsPi08TeVEMCalTrigger2Pt[i];
+                                fBinsPt[i]                 = fBinsDirGamma8TeVEMCalTriggerPt[i];
                             } else
                                 fBinsPt[i]                 = fBinsDirGamma8TeVPt[i];
                         }
 
-                        if(modi == 4) {
+                        if(modi == 4 || modi == 2) {
                             if( specialTrigg == 1 ){
-                                if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger1PtRebin[i];
+                                if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVEMCalTriggerPtRebin[i];
                             } else if( specialTrigg == 2 ){
-                                if (i < fNBinsPt+1) fNRebin[i] = fBinsPi08TeVEMCTrigger2PtRebin[i];
+                                if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVEMCalTriggerPtRebin[i];
                             } else{
                                 if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
                             }
