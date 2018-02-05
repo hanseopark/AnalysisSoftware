@@ -272,6 +272,12 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
       histoPi0InvXSection[i]                      = (TH1D*)directoryPi0[i]->Get("InvCrossSectionPi0");
       graphPi0InvXSectionStat[i]                  = new TGraphAsymmErrors(histoPi0InvXSection[i]);
       graphPi0InvXSectionSys[i]                   = (TGraphAsymmErrors*)directoryPi0[i]->Get("InvCrossSectionPi0Sys");
+      if(i==0){
+        histoPi0InvXSection[i]                      = (TH1D*)directoryPi0[i]->Get("CorrectedYieldPi0");
+        histoPi0InvXSection[i]->Scale(51.2*1e-3*recalcBarn);
+        graphPi0InvXSectionStat[i]                  = new TGraphAsymmErrors(histoPi0InvXSection[i]);
+        graphPi0InvXSectionSys[i]                   = ScaleGraph((TGraphAsymmErrors*)directoryPi0[i]->Get("Pi0SystError"),51.2*1e-3*recalcBarn);
+      }
       
       cout << nameMeasGlobal[i].Data() << " pi0 stat:" << graphPi0InvXSectionStat[i] << endl;
       if(doOutput) graphPi0InvXSectionStat[i]->Print();
@@ -304,12 +310,18 @@ void CombineMesonMeasurements5TeV(      TString fileNamePCM     = "",
 
       histoEtaAccTimesEff[i]                      = (TH1D*)histoEtaTrueEffPt[i]->Clone(Form("histoEtaAccTimesEff%s",nameMeasGlobal[i].Data()));
       histoEtaAccTimesEff[i]->Multiply(histoEtaAcc[i]);
-      histoEtaAccTimesEff[i->Scale(2*TMath::Pi()*rapidityMeas[i]);
+      histoEtaAccTimesEff[i]->Scale(2*TMath::Pi()*rapidityMeas[i]);
     
       // load cross section systematics and datapoints
       histoEtaInvXSection[i]                      = (TH1D*)directoryEta[i]->Get("InvCrossSectionEta");
       graphEtaInvXSectionStat[i]                  = new TGraphAsymmErrors(histoEtaInvXSection[i]);
       graphEtaInvXSectionSys[i]                   = (TGraphAsymmErrors*)directoryEta[i]->Get("InvCrossSectionEtaSys");
+      if(i==0){
+        histoEtaInvXSection[i]                      = (TH1D*)directoryEta[i]->Get("CorrectedYieldEta");
+        histoPi0InvXSection[i]->Scale(51.2*1e-3*recalcBarn);
+        graphEtaInvXSectionStat[i]                  = new TGraphAsymmErrors(histoEtaInvXSection[i]);
+        graphEtaInvXSectionSys[i]                   = ScaleGraph((TGraphAsymmErrors*)directoryEta[i]->Get("EtaSystError"),51.2*1e-3*recalcBarn);
+      }
 
       cout << nameMeasGlobal[i].Data() << " eta stat:" << graphEtaInvXSectionStat[i] << endl;
       if(doOutput) graphEtaInvXSectionStat[i]->Print();

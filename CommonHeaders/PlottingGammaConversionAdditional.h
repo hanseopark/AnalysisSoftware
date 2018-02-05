@@ -3081,6 +3081,45 @@
                 return kViolet+6;
             }
         }
+        if (!energy.CompareTo("pPb_8TeV") ){
+            if (!kBox){
+                if (!generator.CompareTo("")){
+                    return kViolet+2;
+                } else if (!generator.CompareTo("Hijing")){
+                    return kViolet+1;
+                } else if (!generator.CompareTo("DPMJET")){
+                    return kViolet+6;
+                } else if (!generator.CompareTo("LHC16r")){
+                    return 633;
+                } else if (!generator.CompareTo("LHC16s")){
+                    return 807;
+                } else if (generator.Contains("LHC17f3a")){
+                    return 418;
+                } else if (generator.Contains("LHC17f4a")){
+                    return 601;
+                } else if (!generator.CompareTo("HijingAddSig")){
+                    return kViolet-3;
+                } else if (!generator.CompareTo("LHC16r_pass1_woSDD") || !generator.CompareTo("LHC16r_woSDD")){
+                    return 633;
+                } else if (!generator.CompareTo("LHC16r_pass1_wSDD") || !generator.CompareTo("LHC16r_wSDD")){
+                    return 807;
+                } else if (!generator.CompareTo("LHC16r_pass1_fast") || !generator.CompareTo("LHC16r_fast")){
+                    return 800;
+                } else if (!generator.CompareTo("LHC16s_pass1_woSDD") || !generator.CompareTo("LHC16s_woSDD")){
+                    return kGreen+4;
+                } else if (!generator.CompareTo("LHC16s_pass1_wSDD") || !generator.CompareTo("LHC16s_wSDD")){
+                    return 418;
+                } else if (!generator.CompareTo("LHC16s_pass1_fast") || !generator.CompareTo("LHC16s_fast")){
+                    return 633;
+                } else if (generator.Contains("LHC17g8b") || generator.Contains("EPOS")){
+                    return kViolet+1;
+                } else if (generator.Contains("LHC17g8c") || generator.Contains("DPMJET")){
+                    return kGreen+2;
+                }
+            } else {
+                return kViolet+6;
+            }
+        }
 
         if (!energy.CompareTo("PbPb_2.76TeV")){
             if (!kBox){
