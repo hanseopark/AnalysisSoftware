@@ -334,77 +334,77 @@ void PrimaryTrackQA(
     std::vector<std::vector <TH1D*>> vecMCvsTruePosPionsFromNeutralMeson_Pt(nSetsIn,std::vector<TH1D*>(2));
     std::vector<std::vector <TH1D*>> vecMCvsTrueNegPionsFromNeutralMeson_Pt(nSetsIn,std::vector<TH1D*>(2));
     //---------------------------------------------Projections-----------------------------------------------------------------------
-    std::vector<TH1D*> vecESD_PrimaryNegPions_ClsTPC_ProjPt;            //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPosPions_ClsTPC_ProjPt;            //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_DCAxy_ProjPt;                //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_DCAz_ProjPt;                 //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_ProjPt;              //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;        //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt;        //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt;  //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;        //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;  //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;       //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt; //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryNegPions_ClsTPC_ProjPt;                //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPosPions_ClsTPC_ProjPt;                //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_DCAxy_ProjPt;                    //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_DCAz_ProjPt;                     //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_ProjPt;                  //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt;      //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;            //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;      //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;           //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt;     //Pt was y
     //AfterQA
-    std::vector<TH1D*> vecPion_ITS_after_AfterQA_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_AfterQA_LowPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_AfterQA_MidPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_AfterQA_HighPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_ProjPt;               //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_LowPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_MidPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_HighPt_ProjPt;        //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt;   //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt;   //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt;  //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_AfterQA_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_AfterQA_LowPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_AfterQA_MidPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_AfterQA_HighPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vechTrack_DCAxy_Pt_after_AfterQA_ProjPt;         //Pt was y
-    std::vector<TH1D*> vechTrack_DCAz_Pt_after_AfterQA_ProjPt;          //Pt was y
-    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt;  //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_AfterQA_ProjPt;                    //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_AfterQA_LowPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_AfterQA_MidPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_AfterQA_HighPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_ProjPt;                   //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_LowPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_MidPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_AfterQA_HighPt_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt;       //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt;       //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt;      //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_AfterQA_ProjPt;                    //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_AfterQA_LowPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_AfterQA_MidPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_AfterQA_HighPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vechTrack_DCAxy_Pt_after_AfterQA_ProjPt;             //Pt was y
+    std::vector<TH1D*> vechTrack_DCAz_Pt_after_AfterQA_ProjPt;              //Pt was y
+    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt;      //Pt was x
     //Pre Selection
-    std::vector<TH1D*> vecPion_ITS_before_PreSel_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_ITS_before_PreSel_LowPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_ITS_before_PreSel_MidPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_ITS_before_PreSel_HighPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_before_PreSel_ProjPt;               //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_before_PreSel_LowPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_before_PreSel_MidPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_before_PreSel_HighPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt;         //Pt was x
-    std::vector<TH1D*> vecPion_TOF_before_PreSel_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_TOF_before_PreSel_LowPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_TOF_before_PreSel_MidPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_TOF_before_PreSel_HighPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vechTrack_DCAxy_Pt_before_PreSel_ProjPt;         //Pt was y
-    std::vector<TH1D*> vechTrack_DCAz_Pt_before_PreSel_ProjPt;          //Pt was y
-    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt;  //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_PreSel_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_PreSel_LowPt_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_PreSel_MidPt_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_ITS_after_PreSel_HighPt_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_PreSel_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_PreSel_LowPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_PreSel_MidPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_dEdx_after_PreSel_HighPt_ProjPt;                //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_ProjPt;          //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_LowPt_PreSel_ProjPt;          //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt;          //Pt was x
-    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt;          //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_PreSel_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_PreSel_LowPt_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_PreSel_MidPt_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vecPion_TOF_after_PreSel_HighPt_ProjPt;                 //Pt was x
-    std::vector<TH1D*> vechTrack_DCAxy_Pt_after_PreSel_ProjPt;          //Pt was y
-    std::vector<TH1D*> vechTrack_DCAz_Pt_after_PreSel_ProjPt;           //Pt was y
-    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt;   //Pt was x
+    std::vector<TH1D*> vecPion_ITS_before_PreSel_ProjPt;                    //Pt was x
+    std::vector<TH1D*> vecPion_ITS_before_PreSel_LowPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_ITS_before_PreSel_MidPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_ITS_before_PreSel_HighPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_before_PreSel_ProjPt;                   //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_before_PreSel_LowPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_before_PreSel_MidPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_before_PreSel_HighPt_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt;       //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt;       //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt;      //Pt was x
+    std::vector<TH1D*> vecPion_TOF_before_PreSel_ProjPt;                    //Pt was x
+    std::vector<TH1D*> vecPion_TOF_before_PreSel_LowPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_TOF_before_PreSel_MidPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_TOF_before_PreSel_HighPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vechTrack_DCAxy_Pt_before_PreSel_ProjPt;             //Pt was y
+    std::vector<TH1D*> vechTrack_DCAz_Pt_before_PreSel_ProjPt;              //Pt was y
+    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt;      //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_PreSel_ProjPt;                     //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_PreSel_LowPt_ProjPt;               //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_PreSel_MidPt_ProjPt;               //Pt was x
+    std::vector<TH1D*> vecPion_ITS_after_PreSel_HighPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_PreSel_ProjPt;                    //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_PreSel_LowPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_PreSel_MidPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_dEdx_after_PreSel_HighPt_ProjPt;             //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_ProjPt;              //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt;        //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt;        //Pt was x
+    std::vector<TH1D*> vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt;       //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_PreSel_ProjPt;                     //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_PreSel_LowPt_ProjPt;               //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_PreSel_MidPt_ProjPt;               //Pt was x
+    std::vector<TH1D*> vecPion_TOF_after_PreSel_HighPt_ProjPt;              //Pt was x
+    std::vector<TH1D*> vechTrack_DCAxy_Pt_after_PreSel_ProjPt;              //Pt was y
+    std::vector<TH1D*> vechTrack_DCAz_Pt_after_PreSel_ProjPt;               //Pt was y
+    std::vector<TH1D*> vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt;       //Pt was x
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     Double_t* nEventsAll    = new Double_t[nSets];
@@ -1211,6 +1211,96 @@ void PrimaryTrackQA(
             fHistPion_ITS_after_AfterQA_ProjPt=NULL;
         } else cout << Form("INFO: Object |AfterQA: Pion_ITS_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_ITS_after_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_after_AfterQA_LowPt = new TH2D (*fHistPion_ITS_after_AfterQA);
+        if(fHistPion_ITS_after_AfterQA_LowPt){
+            fHistPion_ITS_after_AfterQA_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_ITS_after_AfterQA_LowPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_AfterQA_LowPt,0,fHistPion_ITS_after_AfterQA_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_ITS_after_AfterQA_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_after_AfterQA_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_after_AfterQA_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_after_AfterQA_LowPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_after_AfterQA_LowPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_AfterQA_LowPt.push_back(new TH2D(*fHistPion_ITS_after_AfterQA_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_after_AfterQA_LowPt_ProjPt= (TH1D*)fHistPion_ITS_after_AfterQA_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_after_AfterQA_LowPt->GetXaxis()->GetFirst(),fHistPion_ITS_after_AfterQA_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_after_AfterQA_LowPt_ProjPt,"",fHistPion_ITS_after_AfterQA_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_after_AfterQA_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_AfterQA_LowPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_after_AfterQA_LowPt_ProjPt));
+            delete fHistPion_ITS_after_AfterQA_LowPt_ProjPt;
+            fHistPion_ITS_after_AfterQA_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_ITS_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_ITS_after_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_after_AfterQA_MidPt = new TH2D (*fHistPion_ITS_after_AfterQA);
+        if(fHistPion_ITS_after_AfterQA_MidPt){
+            fHistPion_ITS_after_AfterQA_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_ITS_after_AfterQA_MidPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_AfterQA_MidPt,fHistPion_ITS_after_AfterQA_MidPt->GetXaxis()->FindBin(2),fHistPion_ITS_after_AfterQA_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_ITS_after_AfterQA_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_after_AfterQA_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_after_AfterQA_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_after_AfterQA_MidPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_after_AfterQA_MidPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_AfterQA_MidPt.push_back(new TH2D(*fHistPion_ITS_after_AfterQA_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_after_AfterQA_MidPt_ProjPt= (TH1D*)fHistPion_ITS_after_AfterQA_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_after_AfterQA_MidPt->GetXaxis()->GetFirst(),fHistPion_ITS_after_AfterQA_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_after_AfterQA_MidPt_ProjPt,"",fHistPion_ITS_after_AfterQA_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_after_AfterQA_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_AfterQA_MidPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_after_AfterQA_MidPt_ProjPt));
+            delete fHistPion_ITS_after_AfterQA_MidPt_ProjPt;
+            fHistPion_ITS_after_AfterQA_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_ITS_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_ITS_after_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_after_AfterQA_HighPt = new TH2D (*fHistPion_ITS_after_AfterQA);
+        if(fHistPion_ITS_after_AfterQA_HighPt){
+            fHistPion_ITS_after_AfterQA_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_ITS_after_AfterQA_HighPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_AfterQA_HighPt,fHistPion_ITS_after_AfterQA_MidPt->GetXaxis()->FindBin(3),fHistPion_ITS_after_AfterQA_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_ITS_after_AfterQA_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_after_AfterQA_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_after_AfterQA_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_after_AfterQA_HighPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_after_AfterQA_HighPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_AfterQA_HighPt.push_back(new TH2D(*fHistPion_ITS_after_AfterQA_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_after_AfterQA_HighPt_ProjPt= (TH1D*)fHistPion_ITS_after_AfterQA_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_after_AfterQA_HighPt->GetXaxis()->GetFirst(),fHistPion_ITS_after_AfterQA_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_after_AfterQA_HighPt_ProjPt,"",fHistPion_ITS_after_AfterQA_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_after_AfterQA_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_AfterQA_HighPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_after_AfterQA_HighPt_ProjPt));
+            delete fHistPion_ITS_after_AfterQA_HighPt_ProjPt;
+            fHistPion_ITS_after_AfterQA_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_ITS_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
         //AfterQA: Pion_dEdx_after
         if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after";}
         if (iParticleType==1){StrNameOfHistogram="";}
@@ -1242,6 +1332,102 @@ void PrimaryTrackQA(
             fHistPion_dEdx_after_AfterQA_ProjPt=NULL;
         } else cout << Form("INFO: Object |AfterQA: Pion_dEdx_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdx_after_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_after_AfterQA_LowPt = new TH2D (*fHistPion_dEdx_after_AfterQA);
+        if(fHistPion_dEdx_after_AfterQA_LowPt){
+            fHistPion_dEdx_after_AfterQA_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdx_after_AfterQA_LowPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_AfterQA_LowPt,0,fHistPion_dEdx_after_AfterQA_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_dEdx_after_AfterQA_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_after_AfterQA_LowPt,minYB-1,maxYB+1);
+            //cout<<"minYB: "<<minYB<<"; maxYB: "<<maxYB<<endl;
+            //SetYRange(fHistPion_dEdx_after_AfterQA_LowPt,-2,2);
+            SetZMinMaxTH2(fHistPion_dEdx_after_AfterQA_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_after_AfterQA_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_AfterQA_LowPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_AfterQA_LowPt.push_back(new TH2D(*fHistPion_dEdx_after_AfterQA_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_after_AfterQA_LowPt_ProjPt= (TH1D*)fHistPion_dEdx_after_AfterQA_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_after_AfterQA_LowPt->GetXaxis()->GetFirst(),fHistPion_dEdx_after_AfterQA_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_after_AfterQA_LowPt_ProjPt,"",fHistPion_dEdx_after_AfterQA_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_after_AfterQA_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_AfterQA_LowPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_after_AfterQA_LowPt_ProjPt));
+            delete fHistPion_dEdx_after_AfterQA_LowPt_ProjPt;
+            fHistPion_dEdx_after_AfterQA_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdx_after_LowPt %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdx_after_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_after_AfterQA_MidPt = new TH2D (*fHistPion_dEdx_after_AfterQA);
+        if(fHistPion_dEdx_after_AfterQA_MidPt){
+            fHistPion_dEdx_after_AfterQA_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdx_after_AfterQA_MidPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_AfterQA_MidPt,fHistPion_dEdx_after_AfterQA_MidPt->GetXaxis()->FindBin(2),fHistPion_dEdx_after_AfterQA_MidPt->GetXaxis()->FindBin(2));
+            GetMinMaxBinY(fHistPion_dEdx_after_AfterQA_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_after_AfterQA_MidPt,minYB-1,maxYB+1);
+            //cout<<"minYB: "<<minYB<<"; maxYB: "<<maxYB<<endl;
+            //SetYRange(fHistPion_dEdx_after_AfterQA_MidPt,-2,2);
+            SetZMinMaxTH2(fHistPion_dEdx_after_AfterQA_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_after_AfterQA_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_AfterQA_MidPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_AfterQA_MidPt.push_back(new TH2D(*fHistPion_dEdx_after_AfterQA_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_after_AfterQA_MidPt_ProjPt= (TH1D*)fHistPion_dEdx_after_AfterQA_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_after_AfterQA_MidPt->GetXaxis()->GetFirst(),fHistPion_dEdx_after_AfterQA_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_after_AfterQA_MidPt_ProjPt,"",fHistPion_dEdx_after_AfterQA_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_after_AfterQA_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_AfterQA_MidPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_after_AfterQA_MidPt_ProjPt));
+            delete fHistPion_dEdx_after_AfterQA_MidPt_ProjPt;
+            fHistPion_dEdx_after_AfterQA_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdx_after_MidPt %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdx_after_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_after_AfterQA_HighPt = new TH2D (*fHistPion_dEdx_after_AfterQA);
+        if(fHistPion_dEdx_after_AfterQA_HighPt){
+            fHistPion_dEdx_after_AfterQA_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdx_after_AfterQA_HighPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_AfterQA_HighPt,fHistPion_dEdx_after_AfterQA_HighPt->GetXaxis()->FindBin(3),fHistPion_dEdx_after_AfterQA_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_dEdx_after_AfterQA_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_after_AfterQA_HighPt,minYB-1,maxYB+1);
+            //cout<<"minYB: "<<minYB<<"; maxYB: "<<maxYB<<endl;
+            //SetYRange(fHistPion_dEdx_after_AfterQA_HighPt,-2,2);
+            SetZMinMaxTH2(fHistPion_dEdx_after_AfterQA_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_after_AfterQA_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_AfterQA_HighPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_AfterQA_HighPt.push_back(new TH2D(*fHistPion_dEdx_after_AfterQA_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_after_AfterQA_HighPt_ProjPt= (TH1D*)fHistPion_dEdx_after_AfterQA_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_after_AfterQA_HighPt->GetXaxis()->GetFirst(),fHistPion_dEdx_after_AfterQA_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_after_AfterQA_HighPt_ProjPt,"",fHistPion_dEdx_after_AfterQA_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_after_AfterQA_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_AfterQA_HighPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_after_AfterQA_HighPt_ProjPt));
+            delete fHistPion_dEdx_after_AfterQA_HighPt_ProjPt;
+            fHistPion_dEdx_after_AfterQA_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdx_after_HighPt %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
         //AfterQA: Pion_dEdxSignal_after
         if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after";}
         if (iParticleType==1){StrNameOfHistogram="";}
@@ -1269,6 +1455,96 @@ void PrimaryTrackQA(
             vecPion_dEdxSignal_after_AfterQA_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_AfterQA_ProjPt));
             delete fHistPion_dEdxSignal_after_AfterQA_ProjPt;
             fHistPion_dEdxSignal_after_AfterQA_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdxSignal_after_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_after_AfterQA_LowPt = new TH2D (*fHistPion_dEdxSignal_after_AfterQA);
+        if(fHistPion_dEdxSignal_after_AfterQA_LowPt){
+            fHistPion_dEdxSignal_after_AfterQA_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA_LowPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_AfterQA_LowPt,0,fHistPion_dEdxSignal_after_AfterQA_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_dEdxSignal_after_AfterQA_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_after_AfterQA_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_after_AfterQA_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_after_AfterQA_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_AfterQA_LowPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_AfterQA_LowPt.push_back(new TH2D(*fHistPion_dEdxSignal_after_AfterQA_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_after_AfterQA_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_after_AfterQA_LowPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_AfterQA_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt,"",fHistPion_dEdxSignal_after_AfterQA_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt));
+            delete fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt;
+            fHistPion_dEdxSignal_after_AfterQA_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdxSignal_after_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_after_AfterQA_MidPt = new TH2D (*fHistPion_dEdxSignal_after_AfterQA);
+        if(fHistPion_dEdxSignal_after_AfterQA_MidPt){
+            fHistPion_dEdxSignal_after_AfterQA_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA_MidPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_AfterQA_MidPt,fHistPion_dEdxSignal_after_AfterQA_MidPt->GetXaxis()->FindBin(2),fHistPion_dEdxSignal_after_AfterQA_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_dEdxSignal_after_AfterQA_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_after_AfterQA_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_after_AfterQA_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_after_AfterQA_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_AfterQA_MidPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_AfterQA_MidPt.push_back(new TH2D(*fHistPion_dEdxSignal_after_AfterQA_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_after_AfterQA_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_after_AfterQA_MidPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_AfterQA_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt,"",fHistPion_dEdxSignal_after_AfterQA_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt));
+            delete fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt;
+            fHistPion_dEdxSignal_after_AfterQA_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdxSignal_after_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_after_AfterQA_HighPt = new TH2D (*fHistPion_dEdxSignal_after_AfterQA);
+        if(fHistPion_dEdxSignal_after_AfterQA_HighPt){
+            fHistPion_dEdxSignal_after_AfterQA_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA_HighPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_AfterQA_HighPt,fHistPion_dEdxSignal_after_AfterQA_HighPt->GetXaxis()->FindBin(3),fHistPion_dEdxSignal_after_AfterQA_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_dEdxSignal_after_AfterQA_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_after_AfterQA_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_after_AfterQA_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_after_AfterQA_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_AfterQA_HighPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_AfterQA_HighPt.push_back(new TH2D(*fHistPion_dEdxSignal_after_AfterQA_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_after_AfterQA_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_after_AfterQA_HighPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_AfterQA_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt,"",fHistPion_dEdxSignal_after_AfterQA_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt));
+            delete fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt;
+            fHistPion_dEdxSignal_after_AfterQA_HighPt_ProjPt=NULL;
         } else cout << Form("INFO: Object |AfterQA: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //AfterQA: Pion_TOF_after
@@ -1299,6 +1575,96 @@ void PrimaryTrackQA(
             delete fHistPion_TOF_after_AfterQA_ProjPt;
             fHistPion_TOF_after_AfterQA_ProjPt=NULL;
         } else cout << Form("INFO: Object |AfterQA: Pion_TOF_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_TOF_after_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_after_AfterQA_LowPt = new TH2D (*fHistPion_TOF_after_AfterQA);
+        if(fHistPion_TOF_after_AfterQA_LowPt){
+            fHistPion_TOF_after_AfterQA_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_TOF_after_AfterQA_LowPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_AfterQA_LowPt,0,fHistPion_TOF_after_AfterQA_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_TOF_after_AfterQA_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_after_AfterQA_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_after_AfterQA_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_after_AfterQA_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_AfterQA_LowPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_AfterQA_LowPt.push_back(new TH2D(*fHistPion_TOF_after_AfterQA_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_after_AfterQA_LowPt_ProjPt= (TH1D*)fHistPion_TOF_after_AfterQA_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_after_AfterQA_LowPt->GetXaxis()->GetFirst(),fHistPion_TOF_after_AfterQA_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_AfterQA_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_after_AfterQA_LowPt_ProjPt,"",fHistPion_TOF_after_AfterQA_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_after_AfterQA_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_AfterQA_LowPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_after_AfterQA_LowPt_ProjPt));
+            delete fHistPion_TOF_after_AfterQA_LowPt_ProjPt;
+            fHistPion_TOF_after_AfterQA_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_TOF_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdxSignal_after_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_after_AfterQA_MidPt = new TH2D (*fHistPion_TOF_after_AfterQA);
+        if(fHistPion_TOF_after_AfterQA_MidPt){
+            fHistPion_TOF_after_AfterQA_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_TOF_after_AfterQA_MidPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_AfterQA_MidPt,fHistPion_TOF_after_AfterQA_MidPt->GetXaxis()->FindBin(2),fHistPion_TOF_after_AfterQA_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_TOF_after_AfterQA_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_after_AfterQA_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_after_AfterQA_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_after_AfterQA_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_AfterQA_MidPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_AfterQA_MidPt.push_back(new TH2D(*fHistPion_TOF_after_AfterQA_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_after_AfterQA_MidPt_ProjPt= (TH1D*)fHistPion_TOF_after_AfterQA_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_after_AfterQA_MidPt->GetXaxis()->GetFirst(),fHistPion_TOF_after_AfterQA_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_AfterQA_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_after_AfterQA_MidPt_ProjPt,"",fHistPion_TOF_after_AfterQA_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_after_AfterQA_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_AfterQA_MidPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_after_AfterQA_MidPt_ProjPt));
+            delete fHistPion_TOF_after_AfterQA_MidPt_ProjPt;
+            fHistPion_TOF_after_AfterQA_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //AfterQA: Pion_dEdxSignal_after_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_after_AfterQA_HighPt = new TH2D (*fHistPion_TOF_after_AfterQA);
+        if(fHistPion_TOF_after_AfterQA_HighPt){
+            fHistPion_TOF_after_AfterQA_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_TOF_after_AfterQA_HighPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_AfterQA_HighPt,fHistPion_TOF_after_AfterQA_HighPt->GetXaxis()->FindBin(3),fHistPion_TOF_after_AfterQA_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_TOF_after_AfterQA_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_after_AfterQA_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_after_AfterQA_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_after_AfterQA_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_AfterQA_HighPt, Form("%s/%s_AfterQA_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_AfterQA_HighPt.push_back(new TH2D(*fHistPion_TOF_after_AfterQA_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_after_AfterQA_HighPt_ProjPt= (TH1D*)fHistPion_TOF_after_AfterQA_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_after_AfterQA_HighPt->GetXaxis()->GetFirst(),fHistPion_TOF_after_AfterQA_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_AfterQA_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_after_AfterQA_HighPt_ProjPt,"",fHistPion_TOF_after_AfterQA_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_after_AfterQA_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_AfterQA_HighPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_after_AfterQA_HighPt_ProjPt));
+            delete fHistPion_TOF_after_AfterQA_HighPt_ProjPt;
+            fHistPion_TOF_after_AfterQA_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |AfterQA: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCutsContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //AfterQA: hTrack_DCAxy_Pt_after
         if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_after";}
@@ -1457,6 +1823,96 @@ void PrimaryTrackQA(
             fHistPion_ITS_before_PreSel_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_ITS_before_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_before_PreSel_LowPt = new TH2D (*fHistPion_ITS_before_PreSel);
+        if(fHistPion_ITS_before_PreSel_LowPt){
+            fHistPion_ITS_before_PreSel_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_ITS_before_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_ITS_before_PreSel_LowPt,0,fHistPion_ITS_before_PreSel_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_ITS_before_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_before_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_before_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_before_PreSel_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_before_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_before_PreSel.push_back(new TH2D(*fHistPion_ITS_before_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_before_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_ITS_before_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_before_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_before_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_before_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_before_PreSel_LowPt_ProjPt,"",fHistPion_ITS_before_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_before_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_before_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_before_PreSel_LowPt_ProjPt));
+            delete fHistPion_ITS_before_PreSel_LowPt_ProjPt;
+            fHistPion_ITS_before_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_ITS_before_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_before_PreSel_MidPt = new TH2D (*fHistPion_ITS_before_PreSel);
+        if(fHistPion_ITS_before_PreSel_MidPt){
+            fHistPion_ITS_before_PreSel_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_ITS_before_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_ITS_before_PreSel_MidPt,fHistPion_ITS_before_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_ITS_before_PreSel_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_ITS_before_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_before_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_before_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_before_PreSel_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_before_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_before_PreSel.push_back(new TH2D(*fHistPion_ITS_before_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_before_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_ITS_before_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_before_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_before_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_before_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_before_PreSel_MidPt_ProjPt,"",fHistPion_ITS_before_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_before_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_before_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_before_PreSel_MidPt_ProjPt));
+            delete fHistPion_ITS_before_PreSel_MidPt_ProjPt;
+            fHistPion_ITS_before_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_ITS_before_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_before_PreSel_HighPt = new TH2D (*fHistPion_ITS_before_PreSel);
+        if(fHistPion_ITS_before_PreSel_HighPt){
+            fHistPion_ITS_before_PreSel_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_ITS_before_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_ITS_before_PreSel_HighPt,fHistPion_ITS_before_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_ITS_before_PreSel_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_ITS_before_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_before_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_before_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_before_PreSel_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_before_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_before_PreSel.push_back(new TH2D(*fHistPion_ITS_before_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_before_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_ITS_before_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_before_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_before_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_before_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_before_PreSel_HighPt_ProjPt,"",fHistPion_ITS_before_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_before_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_before_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_before_PreSel_HighPt_ProjPt));
+            delete fHistPion_ITS_before_PreSel_HighPt_ProjPt;
+            fHistPion_ITS_before_PreSel_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: Pion_dEdx_before
         if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before";}
         if (iParticleType==1){StrNameOfHistogram="";}
@@ -1484,6 +1940,96 @@ void PrimaryTrackQA(
             vecPion_dEdx_before_PreSel_ProjPt.push_back(new TH1D(*fHistPion_dEdx_before_PreSel_ProjPt));
             delete fHistPion_dEdx_before_PreSel_ProjPt;
             fHistPion_dEdx_before_PreSel_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdx_before_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_before_PreSel_LowPt = new TH2D (*fHistPion_dEdx_before_PreSel);
+        if(fHistPion_dEdx_before_PreSel_LowPt){
+            fHistPion_dEdx_before_PreSel_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdx_before_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_before_PreSel_LowPt,0,fHistPion_dEdx_before_PreSel_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_dEdx_before_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_before_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdx_before_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_before_PreSel_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_before_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_before_PreSel_LowPt.push_back(new TH2D(*fHistPion_dEdx_before_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_before_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_dEdx_before_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_before_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_dEdx_before_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_before_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_before_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_before_PreSel_LowPt_ProjPt,"",fHistPion_dEdx_before_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_before_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_before_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_before_PreSel_LowPt_ProjPt));
+            delete fHistPion_dEdx_before_PreSel_LowPt_ProjPt;
+            fHistPion_dEdx_before_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdx_before_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_before_PreSel_MidPt = new TH2D (*fHistPion_dEdx_before_PreSel);
+        if(fHistPion_dEdx_before_PreSel_MidPt){
+            fHistPion_dEdx_before_PreSel_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdx_before_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_before_PreSel_MidPt,fHistPion_dEdx_before_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_dEdx_before_PreSel_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_dEdx_before_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_before_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdx_before_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_before_PreSel_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_before_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_before_PreSel_MidPt.push_back(new TH2D(*fHistPion_dEdx_before_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_before_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_dEdx_before_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_before_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_dEdx_before_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_before_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_before_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_before_PreSel_MidPt_ProjPt,"",fHistPion_dEdx_before_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_before_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_before_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_before_PreSel_MidPt_ProjPt));
+            delete fHistPion_dEdx_before_PreSel_MidPt_ProjPt;
+            fHistPion_dEdx_before_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdx_before_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_before_PreSel_HighPt = new TH2D (*fHistPion_dEdx_before_PreSel);
+        if(fHistPion_dEdx_before_PreSel_HighPt){
+            fHistPion_dEdx_before_PreSel_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdx_before_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_before_PreSel_HighPt,fHistPion_dEdx_before_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_dEdx_before_PreSel_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_dEdx_before_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_before_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdx_before_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_before_PreSel_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_before_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_before_PreSel_HighPt.push_back(new TH2D(*fHistPion_dEdx_before_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_before_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_dEdx_before_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_before_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_dEdx_before_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_before_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_before_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_before_PreSel_HighPt_ProjPt,"",fHistPion_dEdx_before_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_before_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_before_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_before_PreSel_HighPt_ProjPt));
+            delete fHistPion_dEdx_before_PreSel_HighPt_ProjPt;
+            fHistPion_dEdx_before_PreSel_HighPt_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: Pion_dEdxSignal_before
@@ -1515,6 +2061,96 @@ void PrimaryTrackQA(
             fHistPion_dEdxSignal_before_PreSel_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdxSignal_before_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_before_PreSel_LowPt = new TH2D (*fHistPion_dEdxSignal_before_PreSel);
+        if(fHistPion_dEdxSignal_before_PreSel_LowPt){
+            fHistPion_dEdxSignal_before_PreSel_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdxSignal_before_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_before_PreSel_LowPt,0,fHistPion_dEdxSignal_before_PreSel_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_dEdxSignal_before_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_before_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_before_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_before_PreSel_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_before_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_before_PreSel_LowPt.push_back(new TH2D(*fHistPion_dEdxSignal_before_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_before_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_before_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_before_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt,"",fHistPion_dEdxSignal_before_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt));
+            delete fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt;
+            fHistPion_dEdxSignal_before_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdxSignal_before_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_before_PreSel_MidPt = new TH2D (*fHistPion_dEdxSignal_before_PreSel);
+        if(fHistPion_dEdxSignal_before_PreSel_MidPt){
+            fHistPion_dEdxSignal_before_PreSel_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdxSignal_before_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_before_PreSel_MidPt,fHistPion_dEdxSignal_before_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_dEdxSignal_before_PreSel_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_dEdxSignal_before_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_before_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_before_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_before_PreSel_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_before_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_before_PreSel_MidPt.push_back(new TH2D(*fHistPion_dEdxSignal_before_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_before_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_before_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_before_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt,"",fHistPion_dEdxSignal_before_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt));
+            delete fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt;
+            fHistPion_dEdxSignal_before_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdxSignal_before_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_before_PreSel_HighPt = new TH2D (*fHistPion_dEdxSignal_before_PreSel);
+        if(fHistPion_dEdxSignal_before_PreSel_HighPt){
+            fHistPion_dEdxSignal_before_PreSel_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_dEdxSignal_before_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_before_PreSel_HighPt,fHistPion_dEdxSignal_before_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_dEdxSignal_before_PreSel_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_dEdxSignal_before_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_before_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_before_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_before_PreSel_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_before_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_before_PreSel_HighPt.push_back(new TH2D(*fHistPion_dEdxSignal_before_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_before_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_before_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_before_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt,"",fHistPion_dEdxSignal_before_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt));
+            delete fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt;
+            fHistPion_dEdxSignal_before_PreSel_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: Pion_TOF_before_PreSel
         if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before";}
         if (iParticleType==1){StrNameOfHistogram="";}
@@ -1542,6 +2178,96 @@ void PrimaryTrackQA(
             vecPion_TOF_before_PreSel_ProjPt.push_back(new TH1D(*fHistPion_TOF_before_PreSel_ProjPt));
             delete fHistPion_TOF_before_PreSel_ProjPt;
             fHistPion_TOF_before_PreSel_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_TOF_before_PreSel_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_before_PreSel_LowPt = new TH2D (*fHistPion_TOF_before_PreSel);
+        if(fHistPion_TOF_before_PreSel_LowPt){
+            fHistPion_TOF_before_PreSel_LowPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_TOF_before_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_TOF_before_PreSel_LowPt,0,fHistPion_TOF_before_PreSel_LowPt->GetXaxis()->FindBin(0.2));
+            GetMinMaxBinY(fHistPion_TOF_before_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_before_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_before_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_before_PreSel_LowPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_before_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_before_PreSel_LowPt.push_back(new TH2D(*fHistPion_TOF_before_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_before_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_TOF_before_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_before_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_TOF_before_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_before_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_before_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_before_PreSel_LowPt_ProjPt,"",fHistPion_TOF_before_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_before_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_before_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_before_PreSel_LowPt_ProjPt));
+            delete fHistPion_TOF_before_PreSel_LowPt_ProjPt;
+            fHistPion_TOF_before_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_TOF_before_PreSel_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_before_PreSel_MidPt = new TH2D (*fHistPion_TOF_before_PreSel);
+        if(fHistPion_TOF_before_PreSel_MidPt){
+            fHistPion_TOF_before_PreSel_MidPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_TOF_before_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_TOF_before_PreSel_MidPt,fHistPion_TOF_before_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_TOF_before_PreSel_MidPt->GetXaxis()->FindBin(3));
+            GetMinMaxBinY(fHistPion_TOF_before_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_before_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_before_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_before_PreSel_MidPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_before_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_before_PreSel_MidPt.push_back(new TH2D(*fHistPion_TOF_before_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_before_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_TOF_before_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_before_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_TOF_before_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_before_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_before_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_before_PreSel_MidPt_ProjPt,"",fHistPion_TOF_before_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_before_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_before_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_before_PreSel_MidPt_ProjPt));
+            delete fHistPion_TOF_before_PreSel_MidPt_ProjPt;
+            fHistPion_TOF_before_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_TOF_before_PreSel_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_before_PreSel_HighPt = new TH2D (*fHistPion_TOF_before_PreSel);
+        if(fHistPion_TOF_before_PreSel_HighPt){
+            fHistPion_TOF_before_PreSel_HighPt->SetName(StrNameOfHistogram);
+            GetMinMaxBin(fHistPion_TOF_before_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_TOF_before_PreSel_HighPt,fHistPion_TOF_before_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_TOF_before_PreSel_HighPt->GetNbinsX());
+            GetMinMaxBinY(fHistPion_TOF_before_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_before_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_before_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_before_PreSel_HighPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_before_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_before_PreSel_HighPt.push_back(new TH2D(*fHistPion_TOF_before_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_before_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_TOF_before_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_before_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_TOF_before_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_before_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_before_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_before_PreSel_HighPt_ProjPt,"",fHistPion_TOF_before_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_before_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_before_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_before_PreSel_HighPt_ProjPt));
+            delete fHistPion_TOF_before_PreSel_HighPt_ProjPt;
+            fHistPion_TOF_before_PreSel_HighPt_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_before %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: hTrack_DCAxy_Pt_before
@@ -1665,6 +2391,93 @@ void PrimaryTrackQA(
             fHistPion_ITS_after_PreSel_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_after %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_ITS_after_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_after_PreSel_LowPt = new TH2D (*fHistPion_ITS_after_PreSel);
+        if(fHistPion_ITS_after_PreSel_LowPt){
+            GetMinMaxBin(fHistPion_ITS_after_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_PreSel_LowPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_ITS_after_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_after_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_after_PreSel_LowPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_after_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_PreSel_LowPt.push_back(new TH2D(*fHistPion_ITS_after_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_after_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_ITS_after_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_after_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_ITS_after_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_after_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_after_PreSel_LowPt_ProjPt,"",fHistPion_ITS_after_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_after_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_after_PreSel_LowPt_ProjPt));
+            delete fHistPion_ITS_after_PreSel_LowPt_ProjPt;
+            fHistPion_ITS_after_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_after_LowPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_ITS_after_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_after_PreSel_MidPt = new TH2D (*fHistPion_ITS_after_PreSel);
+        if(fHistPion_ITS_after_PreSel_MidPt){
+            GetMinMaxBin(fHistPion_ITS_after_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_PreSel_MidPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_ITS_after_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_after_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_after_PreSel_MidPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_after_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_PreSel_MidPt.push_back(new TH2D(*fHistPion_ITS_after_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_after_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_ITS_after_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_after_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_ITS_after_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_after_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_after_PreSel_MidPt_ProjPt,"",fHistPion_ITS_after_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_after_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_after_PreSel_MidPt_ProjPt));
+            delete fHistPion_ITS_after_PreSel_MidPt_ProjPt;
+            fHistPion_ITS_after_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_after_MidPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_ITS_after_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_ITS_after_PreSel_HighPt = new TH2D (*fHistPion_ITS_after_PreSel);
+        if(fHistPion_ITS_after_PreSel_HighPt){
+            GetMinMaxBin(fHistPion_ITS_after_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_PreSel_HighPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_ITS_after_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_ITS_after_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_ITS_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_ITS_after_PreSel_HighPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_ITS_after_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_PreSel_HighPt.push_back(new TH2D(*fHistPion_ITS_after_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_ITS_after_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_ITS_after_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_ITS_after_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_ITS_after_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_ITS_after_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_ITS_after_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_ITS_after_PreSel_HighPt_ProjPt,"",fHistPion_ITS_after_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_ITS_after_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_ITS_after_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_ITS_after_PreSel_HighPt_ProjPt));
+            delete fHistPion_ITS_after_PreSel_HighPt_ProjPt;
+            fHistPion_ITS_after_PreSel_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_ITS_after_HighPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: Pion_dEdx_after
         if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after";}
         if (iParticleType==1){StrNameOfHistogram="";}
@@ -1693,6 +2506,93 @@ void PrimaryTrackQA(
             delete fHistPion_dEdx_after_PreSel_ProjPt;
             fHistPion_dEdx_after_PreSel_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_after %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdx_after_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_after_PreSel_LowPt = new TH2D (*fHistPion_dEdx_after_PreSel);
+        if(fHistPion_dEdx_after_PreSel_LowPt){
+            GetMinMaxBin(fHistPion_dEdx_after_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_PreSel_LowPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_dEdx_after_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_after_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdx_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_after_PreSel_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_PreSel_LowPt.push_back(new TH2D(*fHistPion_dEdx_after_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_after_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_dEdx_after_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_after_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_dEdx_after_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_after_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_after_PreSel_LowPt_ProjPt,"",fHistPion_dEdx_after_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_after_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_after_PreSel_LowPt_ProjPt));
+            delete fHistPion_dEdx_after_PreSel_LowPt_ProjPt;
+            fHistPion_dEdx_after_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_after_LowPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdx_after_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_after_PreSel_MidPt = new TH2D (*fHistPion_dEdx_after_PreSel);
+        if(fHistPion_dEdx_after_PreSel_MidPt){
+            GetMinMaxBin(fHistPion_dEdx_after_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_PreSel_MidPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_dEdx_after_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_after_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdx_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_after_PreSel_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_PreSel_MidPt.push_back(new TH2D(*fHistPion_dEdx_after_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_after_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_dEdx_after_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_after_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_dEdx_after_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_after_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_after_PreSel_MidPt_ProjPt,"",fHistPion_dEdx_after_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_after_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_after_PreSel_MidPt_ProjPt));
+            delete fHistPion_dEdx_after_PreSel_MidPt_ProjPt;
+            fHistPion_dEdx_after_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_after_MidPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdx_after_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdx_after_PreSel_HighPt = new TH2D (*fHistPion_dEdx_after_PreSel);
+        if(fHistPion_dEdx_after_PreSel_HighPt){
+            GetMinMaxBin(fHistPion_dEdx_after_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_PreSel_HighPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_dEdx_after_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdx_after_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdx_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdx_after_PreSel_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdx_after_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_PreSel_HighPt.push_back(new TH2D(*fHistPion_dEdx_after_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdx_after_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_dEdx_after_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdx_after_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_dEdx_after_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdx_after_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdx_after_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdx_after_PreSel_HighPt_ProjPt,"",fHistPion_dEdx_after_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdx_after_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdx_after_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_dEdx_after_PreSel_HighPt_ProjPt));
+            delete fHistPion_dEdx_after_PreSel_HighPt_ProjPt;
+            fHistPion_dEdx_after_PreSel_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdx_after_HighPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: Pion_dEdxSignal_after_AfterQA
         if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after";}
@@ -1723,6 +2623,93 @@ void PrimaryTrackQA(
             fHistPion_dEdxSignal_after_PreSel_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_after %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdxSignal_after_AfterQA_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_after_PreSel_LowPt = new TH2D (*fHistPion_dEdxSignal_after_PreSel);
+        if(fHistPion_dEdxSignal_after_PreSel_LowPt){
+            GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_LowPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_dEdxSignal_after_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_after_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_after_PreSel_LowPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_PreSel_LowPt.push_back(new TH2D(*fHistPion_dEdxSignal_after_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_after_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_after_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt,"",fHistPion_dEdxSignal_after_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt));
+            delete fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt;
+            fHistPion_dEdxSignal_after_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_after_LowPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdxSignal_after_AfterQA_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_after_PreSel_MidPt = new TH2D (*fHistPion_dEdxSignal_after_PreSel);
+        if(fHistPion_dEdxSignal_after_PreSel_MidPt){
+            GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_MidPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_dEdxSignal_after_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_after_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_after_PreSel_MidPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_PreSel_MidPt.push_back(new TH2D(*fHistPion_dEdxSignal_after_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_after_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_after_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt,"",fHistPion_dEdxSignal_after_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt));
+            delete fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt;
+            fHistPion_dEdxSignal_after_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_after_MidPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_dEdxSignal_after_AfterQA_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_dEdxSignal_after_PreSel_HighPt = new TH2D (*fHistPion_dEdxSignal_after_PreSel);
+        if(fHistPion_dEdxSignal_after_PreSel_HighPt){
+            GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_HighPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_dEdxSignal_after_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_dEdxSignal_after_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_dEdxSignal_after_PreSel_HighPt,"",
+                                 "#it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_dEdxSignal_after_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_PreSel_HighPt.push_back(new TH2D(*fHistPion_dEdxSignal_after_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_dEdxSignal_after_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_dEdxSignal_after_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt,"",fHistPion_dEdxSignal_after_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt));
+            delete fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt;
+            fHistPion_dEdxSignal_after_PreSel_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_dEdxSignal_after_HighPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: Pion_TOF_after_PreSel
         if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after";}
         if (iParticleType==1){StrNameOfHistogram="";}
@@ -1751,6 +2738,93 @@ void PrimaryTrackQA(
             delete fHistPion_TOF_after_PreSel_ProjPt;
             fHistPion_TOF_after_PreSel_ProjPt=NULL;
         } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_after %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_TOF_after_PreSel_LowPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_LowPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_after_PreSel_LowPt = new TH2D (*fHistPion_TOF_after_PreSel);
+        if(fHistPion_TOF_after_PreSel_LowPt){
+            GetMinMaxBin(fHistPion_TOF_after_PreSel_LowPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_PreSel_LowPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_TOF_after_PreSel_LowPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_after_PreSel_LowPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_after_PreSel_LowPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_PreSel_LowPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_PreSel_LowPt.push_back(new TH2D(*fHistPion_TOF_after_PreSel_LowPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_after_PreSel_LowPt_ProjPt= (TH1D*)fHistPion_TOF_after_PreSel_LowPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_after_PreSel_LowPt->GetXaxis()->GetFirst(),fHistPion_TOF_after_PreSel_LowPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_after_PreSel_LowPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_PreSel_LowPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_after_PreSel_LowPt_ProjPt,"",fHistPion_TOF_after_PreSel_LowPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_after_PreSel_LowPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_PreSel_LowPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_after_PreSel_LowPt_ProjPt));
+            delete fHistPion_TOF_after_PreSel_LowPt_ProjPt;
+            fHistPion_TOF_after_PreSel_LowPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_after_LowPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_TOF_after_PreSel_MidPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_MidPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_after_PreSel_MidPt = new TH2D (*fHistPion_TOF_after_PreSel);
+        if(fHistPion_TOF_after_PreSel_MidPt){
+            GetMinMaxBin(fHistPion_TOF_after_PreSel_MidPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_PreSel_MidPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_TOF_after_PreSel_MidPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_after_PreSel_MidPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_after_PreSel_MidPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_PreSel_MidPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_PreSel_MidPt.push_back(new TH2D(*fHistPion_TOF_after_PreSel_MidPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_after_PreSel_MidPt_ProjPt= (TH1D*)fHistPion_TOF_after_PreSel_MidPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_after_PreSel_MidPt->GetXaxis()->GetFirst(),fHistPion_TOF_after_PreSel_MidPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_after_PreSel_MidPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_PreSel_MidPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_after_PreSel_MidPt_ProjPt,"",fHistPion_TOF_after_PreSel_MidPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_after_PreSel_MidPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_PreSel_MidPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_after_PreSel_MidPt_ProjPt));
+            delete fHistPion_TOF_after_PreSel_MidPt_ProjPt;
+            fHistPion_TOF_after_PreSel_MidPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_after_MidPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        //Pre Selection: Pion_TOF_after_PreSel_HighPt
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_HighPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        TH2D* fHistPion_TOF_after_PreSel_HighPt = new TH2D (*fHistPion_TOF_after_PreSel);
+        if(fHistPion_TOF_after_PreSel_HighPt){
+            GetMinMaxBin(fHistPion_TOF_after_PreSel_HighPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_PreSel_HighPt,minB-1,maxB+1);
+            GetMinMaxBinY(fHistPion_TOF_after_PreSel_HighPt,minYB,maxYB);
+            SetYRange(fHistPion_TOF_after_PreSel_HighPt,minYB,maxYB+1);
+            SetZMinMaxTH2(fHistPion_TOF_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
+                                 fHistPion_TOF_after_PreSel_HighPt,"",
+                                 "#it{p}_{T, #pi} (GeV/#it{c})","#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF",1,1.4,
+                                 processLabelOffsetX2,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistPion_TOF_after_PreSel_HighPt, Form("%s/%s_PreSel_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_PreSel_HighPt.push_back(new TH2D(*fHistPion_TOF_after_PreSel_HighPt));
+            StrNameOfHistogram+="_ProjPt";
+            TH1D* fHistPion_TOF_after_PreSel_HighPt_ProjPt= (TH1D*)fHistPion_TOF_after_PreSel_HighPt->ProjectionY(Form("%s",StrNameOfHistogram.Data()),fHistPion_TOF_after_PreSel_HighPt->GetXaxis()->GetFirst(),fHistPion_TOF_after_PreSel_HighPt->GetXaxis()->GetLast());
+            GetMinMaxBin(fHistPion_TOF_after_PreSel_HighPt_ProjPt,minB,maxB);
+            SetXRange(fHistPion_TOF_after_PreSel_HighPt_ProjPt,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistPion_TOF_after_PreSel_HighPt_ProjPt,"",fHistPion_TOF_after_PreSel_HighPt->GetYaxis()->GetTitle(),"# Entries",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistPion_TOF_after_PreSel_HighPt_ProjPt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
+            vecPion_TOF_after_PreSel_HighPt_ProjPt.push_back(new TH1D(*fHistPion_TOF_after_PreSel_HighPt_ProjPt));
+            delete fHistPion_TOF_after_PreSel_HighPt_ProjPt;
+            fHistPion_TOF_after_PreSel_HighPt_ProjPt=NULL;
+        } else cout << Form("INFO: Object |Pre Selection: Pion_TOF_after_HighPt %s| could not be found! Skipping Draw...",fPionCuts2ContainerCutString.Data()) << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         //Pre Selection: hTrack_DCAxy_Pt_after
         if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_after";}
@@ -1865,340 +2939,368 @@ void PrimaryTrackQA(
     //-------------------------------------------|Compare Histograms: ESD-Histograms|------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryNegPions_Pt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryNegPions_Pt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryNegPions_Pt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryNegPions_Pt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryNegPions_Pt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryNegPions_Pt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryNegPions_Pt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryNegPions_Pt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryNegPions_Pt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryNegPions_Pt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryNegPions_Pt,"",vecESD_PrimaryNegPions_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryNegPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryNegPions_Pt,"",vecESD_PrimaryNegPions_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryNegPions_Pt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryNegPions_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryNegPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryNegPions_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryNegPions_Pt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPosPions_Pt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPosPions_Pt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPosPions_Pt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPosPions_Pt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPosPions_Pt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPosPions_Pt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPosPions_Pt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPosPions_Pt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPosPions_Pt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPosPions_Pt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPosPions_Pt,"",vecESD_PrimaryPosPions_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPosPions_Pt,"",vecESD_PrimaryPosPions_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Pt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPosPions_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPosPions_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Pt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryNegPions_Phi
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryNegPions_Phi";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryNegPions_Phi,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryNegPions_Phi.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryNegPions_Phi.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryNegPions_Phi.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryNegPions_Phi";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryNegPions_Phi,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryNegPions_Phi.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryNegPions_Phi.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryNegPions_Phi,"",vecESD_PrimaryNegPions_Phi.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryNegPions_Phi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryNegPions_Phi,"",vecESD_PrimaryNegPions_Phi.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryNegPions_Phi.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryNegPions_Phi,"","#it{#varphi}_{#it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryNegPions_Phi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryNegPions_Phi,"","#it{#varphi}_{#it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryNegPions_Phi.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPosPions_Phi
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPosPions_Phi";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPosPions_Phi,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPosPions_Phi.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPosPions_Phi.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPosPions_Phi.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPosPions_Phi";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPosPions_Phi,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPosPions_Phi.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPosPions_Phi.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPosPions_Phi,"",vecESD_PrimaryPosPions_Phi.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Phi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPosPions_Phi,"",vecESD_PrimaryPosPions_Phi.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Phi.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPosPions_Phi,"","#it{#varphi}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Phi.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPosPions_Phi,"","#it{#varphi}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Phi.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryNegPions_Eta
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryNegPions_Eta";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryNegPions_Eta,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryNegPions_Eta.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryNegPions_Eta.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryNegPions_Eta.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryNegPions_Eta";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryNegPions_Eta,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryNegPions_Eta.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryNegPions_Eta.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryNegPions_Eta,"",vecESD_PrimaryNegPions_Eta.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryNegPions_Eta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryNegPions_Eta,"",vecESD_PrimaryNegPions_Eta.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryNegPions_Eta.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryNegPions_Eta,"","#it{#eta}_{#it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryNegPions_Eta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryNegPions_Eta,"","#it{#eta}_{#it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryNegPions_Eta.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPosPions_Eta
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPosPions_Eta";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPosPions_Eta,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPosPions_Eta.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPosPions_Eta.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPosPions_Eta.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPosPions_Eta";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPosPions_Eta,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPosPions_Eta.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPosPions_Eta.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPosPions_Eta,"",vecESD_PrimaryPosPions_Eta.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Eta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPosPions_Eta,"",vecESD_PrimaryPosPions_Eta.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Eta.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPosPions_Eta,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPosPions_Eta.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPosPions_Eta,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPosPions_Eta.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdx_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdx_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdx_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdx_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdx_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdx_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdx_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdx_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdx_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdxSignal_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdxSignal_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdxSignal_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdxSignal_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdxSignal_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt
-    if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.size(); iVec++){
-        TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt,"",vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt,"","#it{#eta}_{#it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     //---------------------------------------|Compare Histograms: MC vs True Histograms|---------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -2216,92 +3318,100 @@ void PrimaryTrackQA(
         for (Int_t iVecLoop=0; iVecLoop<(Int_t)vecMCvsTrueAllPosPions_Pt.size();iVecLoop++){
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTrueAllPosPions_Pt
-            GetMinMaxBin(vecMCvsTrueAllPosPions_Pt[iVecLoop],minB,maxB);
-            for(Int_t iVec=0; iVec<(Int_t)vecMCvsTrueAllPosPions_Pt[iVecLoop].size(); iVec++){
-                TH1D* temp = vecMCvsTrueAllPosPions_Pt[iVecLoop].at(iVec);
-                temp->Sumw2();
-                //temp->Scale(1./temp->Integral());
-                //temp->Scale(1./nEvents[iVec]);
-                SetXRange(temp,minB,maxB);
+            if ((Int_t)vecMCvsTrueAllPosPions_Pt[iVecLoop].size()>0){
+                GetMinMaxBin(vecMCvsTrueAllPosPions_Pt[iVecLoop],minB,maxB);
+                for(Int_t iVec=0; iVec<(Int_t)vecMCvsTrueAllPosPions_Pt[iVecLoop].size(); iVec++){
+                    TH1D* temp = vecMCvsTrueAllPosPions_Pt[iVecLoop].at(iVec);
+                    temp->Sumw2();
+                    //temp->Scale(1./temp->Integral());
+                    //temp->Scale(1./nEvents[iVec]);
+                    SetXRange(temp,minB,maxB);
+                }
+                TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+                DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                            vecMCvsTrueAllPosPions_Pt[iVecLoop],"",vecMCvsTrueAllPosPions_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Counts",1,1.1,
+                                            "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                            0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueAllPosPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
+                TGaxis::SetExponentOffset(0, 0, "x");
+                DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                                 vecMCvsTrueAllPosPions_Pt[iVecLoop],"",vecMCvsTrueAllPosPions_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                                 "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                                 0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueAllPosPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             }
-            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                        vecMCvsTrueAllPosPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Counts",1,1.1,
-                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueAllPosPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
-            TGaxis::SetExponentOffset(0, 0, "x");
-            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                             vecMCvsTrueAllPosPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueAllPosPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTrueAllNegPions_Pt
-            GetMinMaxBin(vecMCvsTrueAllNegPions_Pt[iVecLoop],minB,maxB);
-            for(Int_t iVec=0; iVec<(Int_t)vecMCvsTrueAllNegPions_Pt[iVecLoop].size(); iVec++){
-                TH1D* temp = vecMCvsTrueAllNegPions_Pt[iVecLoop].at(iVec);
-                temp->Sumw2();
-                //temp->Scale(1./temp->Integral());
-                //temp->Scale(1./nEvents[iVec]);
-                SetXRange(temp,minB,maxB);
+            if ((Int_t)vecMCvsTrueAllNegPions_Pt[iVecLoop].size()>0){
+                GetMinMaxBin(vecMCvsTrueAllNegPions_Pt[iVecLoop],minB,maxB);
+                for(Int_t iVec=0; iVec<(Int_t)vecMCvsTrueAllNegPions_Pt[iVecLoop].size(); iVec++){
+                    TH1D* temp = vecMCvsTrueAllNegPions_Pt[iVecLoop].at(iVec);
+                    temp->Sumw2();
+                    //temp->Scale(1./temp->Integral());
+                    //temp->Scale(1./nEvents[iVec]);
+                    SetXRange(temp,minB,maxB);
+                }
+                TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+                DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                            vecMCvsTrueAllNegPions_Pt[iVecLoop],"",vecMCvsTrueAllNegPions_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Counts",1,1.1,
+                                            "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                            0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueAllNegPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
+                TGaxis::SetExponentOffset(0, 0, "x");
+                DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                                 vecMCvsTrueAllNegPions_Pt[iVecLoop],"",vecMCvsTrueAllNegPions_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                                 "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                                 0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueAllNegPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             }
-            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                        vecMCvsTrueAllNegPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Counts",1,1.1,
-                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueAllNegPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
-            TGaxis::SetExponentOffset(0, 0, "x");
-            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                             vecMCvsTrueAllNegPions_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueAllNegPions_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTruePosPionsFromNeutralMeson_Pt
-            GetMinMaxBin(vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],minB,maxB);
-            for(Int_t iVec=0; iVec<(Int_t)vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].size(); iVec++){
-                TH1D* temp = vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].at(iVec);
-                temp->Sumw2();
-                //->Scale(1./temp->Integral());
-                //temp->Scale(1./nEvents[iVec]);
-                SetXRange(temp,minB,maxB);
+            if ((Int_t)vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].size()>0){
+                GetMinMaxBin(vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],minB,maxB);
+                for(Int_t iVec=0; iVec<(Int_t)vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].size(); iVec++){
+                    TH1D* temp = vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].at(iVec);
+                    temp->Sumw2();
+                    //->Scale(1./temp->Integral());
+                    //temp->Scale(1./nEvents[iVec]);
+                    SetXRange(temp,minB,maxB);
+                }
+                TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+                DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                            vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],"",vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Counts",1,1.1,
+                                            "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                            0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/MCvsTruePosPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
+                TGaxis::SetExponentOffset(0, 0, "x");
+                DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                                 vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],"",vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                                 "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                                 0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTruePosPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             }
-            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                        vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Counts",1,1.1,
-                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/MCvsTruePosPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
-            TGaxis::SetExponentOffset(0, 0, "x");
-            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                             vecMCvsTruePosPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTruePosPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             //-------------------------------------------------------------------------------------------------------------------------------
             // MCvsTrueNegPionsFromNeutralMeson_Pt
-            GetMinMaxBin(vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],minB,maxB);
-            for(Int_t iVec=0; iVec<(Int_t)vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].size(); iVec++){
-                TH1D* temp = vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].at(iVec);
-                temp->Sumw2();
-                //temp->Scale(1./temp->Integral());
-                //temp->Scale(1./nEvents[iVec]);
-                SetXRange(temp,minB,maxB);
+            if ((Int_t)vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].size()>0){
+                GetMinMaxBin(vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],minB,maxB);
+                for(Int_t iVec=0; iVec<(Int_t)vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].size(); iVec++){
+                    TH1D* temp = vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].at(iVec);
+                    temp->Sumw2();
+                    //temp->Scale(1./temp->Integral());
+                    //temp->Scale(1./nEvents[iVec]);
+                    SetXRange(temp,minB,maxB);
+                }
+                TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+                DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                            vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],"",vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Counts",1,1.1,
+                                            "MC", colorCompare, kTRUE, 5, 5, kFALSE,
+                                            0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueNegPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
+                TGaxis::SetExponentOffset(0, 0, "x");
+                DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                                 vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],"",vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop].at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                                 "MC", colorCompare, kTRUE, 5, 5, kTRUE,
+                                                 0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
+                SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueNegPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
             }
-            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                        vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Counts",1,1.1,
-                                        "MC", colorCompare, kTRUE, 5, 5, kFALSE,
-                                        0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/MCvsTrueNegPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()), kFALSE, kTRUE);
-            TGaxis::SetExponentOffset(0, 0, "x");
-            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                             vecMCvsTrueNegPionsFromNeutralMeson_Pt[iVecLoop],"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                             "MC", colorCompare, kTRUE, 5, 5, kTRUE,
-                                             0.95,0.92,0.03,fCollisionSystem,DataSetsMC,fTrigger[0],31);
-            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MCvsTrueNegPionsFromNeutralMeson_Pt_%s.%s", outputDir.Data(), DataSets[iVecLoop].Data(), suffix.Data()));
         }
     }
     //-------------------------------------------------------------------------------------------------------------------------------
@@ -2309,790 +3419,1792 @@ void PrimaryTrackQA(
     //-------------------------------------------------------------------------------------------------------------------------------
     if(isMC){
         // MC_AllPosPions_Pt
-        GetMinMaxBin(vecMC_AllPosPions_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecMC_AllPosPions_Pt.size(); iVec++){
-            TH1D* temp = vecMC_AllPosPions_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecMC_AllPosPions_Pt.size()>0){
+            GetMinMaxBin(vecMC_AllPosPions_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecMC_AllPosPions_Pt.size(); iVec++){
+                TH1D* temp = vecMC_AllPosPions_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecMC_AllPosPions_Pt,"",vecMC_AllPosPions_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/MC_AllPosPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecMC_AllPosPions_Pt,"",vecMC_AllPosPions_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_AllPosPions_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecMC_AllPosPions_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/MC_AllPosPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecMC_AllPosPions_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_AllPosPions_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // MC_AllNegPions_Pt
-        GetMinMaxBin(vecMC_AllNegPions_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecMC_AllNegPions_Pt.size(); iVec++){
-            TH1D* temp = vecMC_AllNegPions_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecMC_AllNegPions_Pt.size()>0){
+            GetMinMaxBin(vecMC_AllNegPions_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecMC_AllNegPions_Pt.size(); iVec++){
+                TH1D* temp = vecMC_AllNegPions_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecMC_AllNegPions_Pt,"",vecMC_AllNegPions_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/MC_AllNegPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecMC_AllNegPions_Pt,"",vecMC_AllNegPions_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_AllNegPions_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecMC_AllNegPions_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/MC_AllNegPions_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecMC_AllNegPions_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_AllNegPions_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // MC_PosPionsFromNeutralMeson_Pt
-        GetMinMaxBin(vecMC_PosPionsFromNeutralMeson_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecMC_PosPionsFromNeutralMeson_Pt.size(); iVec++){
-            TH1D* temp = vecMC_PosPionsFromNeutralMeson_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecMC_PosPionsFromNeutralMeson_Pt.size()>0){
+            GetMinMaxBin(vecMC_PosPionsFromNeutralMeson_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecMC_PosPionsFromNeutralMeson_Pt.size(); iVec++){
+                TH1D* temp = vecMC_PosPionsFromNeutralMeson_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecMC_PosPionsFromNeutralMeson_Pt,"",vecMC_PosPionsFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/MC_PosPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecMC_PosPionsFromNeutralMeson_Pt,"",vecMC_PosPionsFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_PosPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecMC_PosPionsFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/MC_PosPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecMC_PosPionsFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_PosPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // MC_NegPionsFromNeutralMeson_Pt
-        GetMinMaxBin(vecMC_NegPionsFromNeutralMeson_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecMC_NegPionsFromNeutralMeson_Pt.size(); iVec++){
-            TH1D* temp = vecMC_NegPionsFromNeutralMeson_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecMC_NegPionsFromNeutralMeson_Pt.size()>0){
+            GetMinMaxBin(vecMC_NegPionsFromNeutralMeson_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecMC_NegPionsFromNeutralMeson_Pt.size(); iVec++){
+                TH1D* temp = vecMC_NegPionsFromNeutralMeson_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecMC_NegPionsFromNeutralMeson_Pt,"",vecMC_NegPionsFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/MC_NegPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecMC_NegPionsFromNeutralMeson_Pt,"",vecMC_NegPionsFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_NegPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecMC_NegPionsFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/MC_NegPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecMC_NegPionsFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_MC_NegPionsFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
     }
     //-------------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------|Compare Histograms: True Histograms|-------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     if (isMC){
         // ESD_TruePosPion_Pt
-        GetMinMaxBin(vecESD_TruePosPion_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecESD_TruePosPion_Pt.size(); iVec++){
-            TH1D* temp = vecESD_TruePosPion_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecESD_TruePosPion_Pt.size()>0){
+            GetMinMaxBin(vecESD_TruePosPion_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecESD_TruePosPion_Pt.size(); iVec++){
+                TH1D* temp = vecESD_TruePosPion_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecESD_TruePosPion_Pt,"",vecESD_TruePosPion_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/ESD_TruePosPion_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecESD_TruePosPion_Pt,"",vecESD_TruePosPion_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TruePosPion_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecESD_TruePosPion_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/ESD_TruePosPion_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecESD_TruePosPion_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TruePosPion_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // ESD_TrueNegPion_Pt
-        GetMinMaxBin(vecESD_TrueNegPion_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecESD_TrueNegPion_Pt.size(); iVec++){
-            TH1D* temp = vecESD_TrueNegPion_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecESD_TrueNegPion_Pt.size()>0){
+            GetMinMaxBin(vecESD_TrueNegPion_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecESD_TrueNegPion_Pt.size(); iVec++){
+                TH1D* temp = vecESD_TrueNegPion_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecESD_TrueNegPion_Pt,"",vecESD_TrueNegPion_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/ESD_TrueNegPion_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecESD_TrueNegPion_Pt,"",vecESD_TrueNegPion_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TrueNegPion_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecESD_TrueNegPion_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/ESD_TrueNegPion_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecESD_TrueNegPion_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TrueNegPion_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // ESD_TruePosPionFromNeutralMeson_Pt
-        GetMinMaxBin(vecESD_TruePosPionFromNeutralMeson_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecESD_TruePosPionFromNeutralMeson_Pt.size(); iVec++){
-            TH1D* temp = vecESD_TruePosPionFromNeutralMeson_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecESD_TruePosPionFromNeutralMeson_Pt.size()>0){
+            GetMinMaxBin(vecESD_TruePosPionFromNeutralMeson_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecESD_TruePosPionFromNeutralMeson_Pt.size(); iVec++){
+                TH1D* temp = vecESD_TruePosPionFromNeutralMeson_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecESD_TruePosPionFromNeutralMeson_Pt,"",vecESD_TruePosPionFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/ESD_TruePosPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecESD_TruePosPionFromNeutralMeson_Pt,"",vecESD_TruePosPionFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TruePosPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecESD_TruePosPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/ESD_TruePosPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecESD_TruePosPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TruePosPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
         //-------------------------------------------------------------------------------------------------------------------------------
         // ESD_TrueNegPionFromNeutralMeson_Pt
-        GetMinMaxBin(vecESD_TrueNegPionFromNeutralMeson_Pt,minB,maxB);
-        for(Int_t iVec=0; iVec<(Int_t)vecESD_TrueNegPionFromNeutralMeson_Pt.size(); iVec++){
-            TH1D* temp = vecESD_TrueNegPionFromNeutralMeson_Pt.at(iVec);
-            temp->Sumw2();
-            temp->Scale(1./temp->Integral());
-            //temp->Scale(1./nEvents[iVec]);
-            SetXRange(temp,minB,maxB);
+        if ((Int_t)vecESD_TrueNegPionFromNeutralMeson_Pt.size()>0){
+            GetMinMaxBin(vecESD_TrueNegPionFromNeutralMeson_Pt,minB,maxB);
+            for(Int_t iVec=0; iVec<(Int_t)vecESD_TrueNegPionFromNeutralMeson_Pt.size(); iVec++){
+                TH1D* temp = vecESD_TrueNegPionFromNeutralMeson_Pt.at(iVec);
+                temp->Sumw2();
+                temp->Scale(1./temp->Integral());
+                //temp->Scale(1./nEvents[iVec]);
+                SetXRange(temp,minB,maxB);
+            }
+            TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+            DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecESD_TrueNegPionFromNeutralMeson_Pt,"",vecESD_TrueNegPionFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/ESD_TrueNegPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+            TGaxis::SetExponentOffset(0, 0, "x");
+            DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                             vecESD_TrueNegPionFromNeutralMeson_Pt,"",vecESD_TrueNegPionFromNeutralMeson_Pt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                             labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                             0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+            SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TrueNegPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
         }
-        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                    vecESD_TrueNegPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Normalized Counts",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/ESD_TrueNegPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-        TGaxis::SetExponentOffset(0, 0, "x");
-        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                         vecESD_TrueNegPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","Ratio",1,1.1,
-                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_ESD_TrueNegPionFromNeutralMeson_Pt.%s", outputDir.Data(), suffix.Data()));
     }
     //-------------------------------------------------------------------------------------------------------------------------------
     //-------------------------------------------|Compare Histograms: AfterQA-Histograms|-----------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     //AfterQA
     // AfterQA: IsPionSelected
-    if (iParticleType==0){StrNameOfHistogram="IsPionSelected_AfterQA";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecIsPionSelected_AfterQA,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecIsPionSelected_AfterQA.size(); iVec++){
-        TH1D* temp = vecIsPionSelected_AfterQA.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecIsPionSelected_AfterQA.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="IsPionSelected_AfterQA";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecIsPionSelected_AfterQA,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecIsPionSelected_AfterQA.size(); iVec++){
+            TH1D* temp = vecIsPionSelected_AfterQA.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecIsPionSelected_AfterQA,"",vecIsPionSelected_AfterQA.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    plotDataSets[0], colorCompare, kTRUE, 5, 5, kFALSE,
+                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/IsPionSelected_AfterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecIsPionSelected_AfterQA,"",vecIsPionSelected_AfterQA.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         plotDataSets[0], colorCompare, kTRUE, 5, 5, kTRUE,
+                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_IsPionSelected_AfterQA.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecIsPionSelected_AfterQA,"","","Normalized Counts",1,1.1,
-                                plotDataSets[0], colorCompare, kTRUE, 5, 5, kFALSE,
-            0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/IsPionSelected_AfterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecIsPionSelected_AfterQA,"","","Ratio",1,1.1,
-                                     plotDataSets[0], colorCompare, kTRUE, 5, 5, kTRUE,
-            0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_IsPionSelected_AfterQA.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: dEdxCuts
-    if (iParticleType==0){StrNameOfHistogram="dEdxCuts_AfterQA";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecdEdxCuts_AfterQA,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecdEdxCuts_AfterQA.size(); iVec++){
-        TH1D* temp = vecdEdxCuts_AfterQA.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecdEdxCuts_AfterQA.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="dEdxCuts_AfterQA";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecdEdxCuts_AfterQA,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecdEdxCuts_AfterQA.size(); iVec++){
+            TH1D* temp = vecdEdxCuts_AfterQA.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecdEdxCuts_AfterQA,"",vecdEdxCuts_AfterQA.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/dEdxCuts_AfterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecdEdxCuts_AfterQA,"",vecdEdxCuts_AfterQA.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_dEdxCuts_AfterQA.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecdEdxCuts_AfterQA,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/dEdxCuts_AfterQA.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecdEdxCuts_AfterQA,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_dEdxCuts_AfterQA.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: Pion_ITS_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_ITS_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_ITS_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_ITS_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_AfterQA_ProjPt,"",vecPion_ITS_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_AfterQA_ProjPt,"",vecPion_ITS_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_ITS_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_ITS_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_ITS_after_LowPt
+    if ((Int_t)vecPion_ITS_after_AfterQA_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_AfterQA_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_AfterQA_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_AfterQA_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_AfterQA_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_AfterQA_LowPt_ProjPt,"",vecPion_ITS_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_AfterQA_LowPt_ProjPt,"",vecPion_ITS_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_ITS_after_MidPt
+    if ((Int_t)vecPion_ITS_after_AfterQA_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_AfterQA_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_AfterQA_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_AfterQA_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_AfterQA_MidPt_ProjPt,"",vecPion_ITS_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_AfterQA_MidPt_ProjPt,"",vecPion_ITS_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_ITS_after_HighPt
+    if ((Int_t)vecPion_ITS_after_AfterQA_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_AfterQA_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_AfterQA_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_AfterQA_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_AfterQA_HighPt_ProjPt,"",vecPion_ITS_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_AfterQA_HighPt_ProjPt,"",vecPion_ITS_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: Pion_dEdx_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_dEdx_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_dEdx_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_dEdx_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_AfterQA_ProjPt,"",vecPion_dEdx_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_AfterQA_ProjPt,"",vecPion_dEdx_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_dEdx_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_dEdx_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_dEdx_after_LowPt
+    if ((Int_t)vecPion_dEdx_after_AfterQA_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_AfterQA_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_AfterQA_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_AfterQA_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_AfterQA_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_AfterQA_LowPt_ProjPt,"",vecPion_dEdx_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_AfterQA_LowPt_ProjPt,"",vecPion_dEdx_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_dEdx_after_MidPt
+    if ((Int_t)vecPion_dEdx_after_AfterQA_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_AfterQA_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_AfterQA_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_AfterQA_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_AfterQA_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_AfterQA_MidPt_ProjPt,"",vecPion_dEdx_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_AfterQA_MidPt_ProjPt,"",vecPion_dEdx_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_dEdx_after_HighPt
+    if ((Int_t)vecPion_dEdx_after_AfterQA_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_AfterQA_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_AfterQA_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_AfterQA_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_AfterQA_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_AfterQA_HighPt_ProjPt,"",vecPion_dEdx_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_AfterQA_HighPt_ProjPt,"",vecPion_dEdx_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: Pion_dEdxSignal_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_dEdxSignal_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_dEdxSignal_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_dEdxSignal_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_AfterQA_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_AfterQA_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_dEdxSignal_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_dEdxSignal_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_dEdxSignal_after_LowPt
+    if ((Int_t)vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_AfterQA_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_dEdxSignal_after_MidPt
+    if ((Int_t)vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_AfterQA_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_dEdxSignal_after_HighPt
+    if ((Int_t)vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_AfterQA_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt,"",vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: Pion_TOF_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_TOF_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_TOF_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_TOF_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_AfterQA_ProjPt,"",vecPion_TOF_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_AfterQA_ProjPt,"",vecPion_TOF_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_TOF_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_TOF_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_TOF_after_LowPt
+    if ((Int_t)vecPion_TOF_after_AfterQA_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_AfterQA_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_AfterQA_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_AfterQA_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_AfterQA_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_AfterQA_LowPt_ProjPt,"",vecPion_TOF_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_AfterQA_LowPt_ProjPt,"",vecPion_TOF_after_AfterQA_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_AfterQA_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_TOF_after_MidPt
+    if ((Int_t)vecPion_TOF_after_AfterQA_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_AfterQA_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_AfterQA_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_AfterQA_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_AfterQA_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_AfterQA_MidPt_ProjPt,"",vecPion_TOF_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_AfterQA_MidPt_ProjPt,"",vecPion_TOF_after_AfterQA_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_AfterQA_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // AfterQA: Pion_TOF_after_HighPt
+    if ((Int_t)vecPion_TOF_after_AfterQA_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_AfterQA_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_AfterQA_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_AfterQA_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_AfterQA_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_AfterQA_HighPt_ProjPt,"",vecPion_TOF_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_AfterQA_HighPt_ProjPt,"",vecPion_TOF_after_AfterQA_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_AfterQA_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: hTrack_DCAxy_Pt_after
-    if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_DCAxy_Pt_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_DCAxy_Pt_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_DCAxy_Pt_after_AfterQA_ProjPt,"",vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAxy_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_DCAxy_Pt_after_AfterQA_ProjPt,"",vechTrack_DCAxy_Pt_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAxy_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_DCAxy_Pt_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAxy_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_DCAxy_Pt_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAxy_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: hTrack_DCAz_Pt_after
-    if (iParticleType==0){StrNameOfHistogram="hTrack_DCAz_Pt_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_DCAz_Pt_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAz_Pt_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_DCAz_Pt_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_DCAz_Pt_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_DCAz_Pt_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_DCAz_Pt_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAz_Pt_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_DCAz_Pt_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_DCAz_Pt_after_AfterQA_ProjPt,"",vechTrack_DCAz_Pt_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAz_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_DCAz_Pt_after_AfterQA_ProjPt,"",vechTrack_DCAz_Pt_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAz_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_DCAz_Pt_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAz_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_DCAz_Pt_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAz_Pt_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // AfterQA: hTrack_NFindCls_Pt_TPC_after
-    if (iParticleType==0){StrNameOfHistogram="hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt,"",vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt,"",vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt,"","","Ratio",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------|Compare Histograms: Pre Selection-Histograms|-------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: IsPionSelected
-    if (iParticleType==0){StrNameOfHistogram="IsPionSelected_PreSel";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecIsPionSelected_PreSel,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecIsPionSelected_PreSel.size(); iVec++){
-        TH1D* temp = vecIsPionSelected_PreSel.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecIsPionSelected_PreSel.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="IsPionSelected_PreSel";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecIsPionSelected_PreSel,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecIsPionSelected_PreSel.size(); iVec++){
+            TH1D* temp = vecIsPionSelected_PreSel.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecIsPionSelected_PreSel,"",vecIsPionSelected_PreSel.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/IsPionSelected_PreSel.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecIsPionSelected_PreSel,"",vecIsPionSelected_PreSel.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_IsPionSelected_PreSel.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecIsPionSelected_PreSel,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/IsPionSelected_PreSel.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecIsPionSelected_PreSel,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_IsPionSelected_PreSel.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: dEdxCuts
-    if (iParticleType==0){StrNameOfHistogram="dEdxCuts_PreSel";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecdEdxCuts_PreSel,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecdEdxCuts_PreSel.size(); iVec++){
-        TH1D* temp = vecdEdxCuts_PreSel.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecdEdxCuts_PreSel.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="dEdxCuts_PreSel";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecdEdxCuts_PreSel,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecdEdxCuts_PreSel.size(); iVec++){
+            TH1D* temp = vecdEdxCuts_PreSel.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecdEdxCuts_PreSel,"",vecdEdxCuts_PreSel.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/dEdxCuts_PreSel.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecdEdxCuts_PreSel,"",vecdEdxCuts_PreSel.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_dEdxCuts_PreSel.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecdEdxCuts_PreSel,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/dEdxCuts_PreSel.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecdEdxCuts_PreSel,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_dEdxCuts_PreSel.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_ITS_before
-    if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_ITS_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_ITS_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_ITS_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_before_PreSel_ProjPt,"",vecPion_ITS_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_before_PreSel_ProjPt,"",vecPion_ITS_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_ITS_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_ITS_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_ITS_before_LowPt
+    if ((Int_t)vecPion_ITS_before_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_before_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_before_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_before_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_before_PreSel_LowPt_ProjPt,"",vecPion_ITS_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_before_PreSel_LowPt_ProjPt,"",vecPion_ITS_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_ITS_before_MidPt
+    if ((Int_t)vecPion_ITS_before_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_before_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_before_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_before_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_before_PreSel_MidPt_ProjPt,"",vecPion_ITS_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_before_PreSel_MidPt_ProjPt,"",vecPion_ITS_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_ITS_before_HighPt
+    if ((Int_t)vecPion_ITS_before_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_before_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_before_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_before_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_before_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_before_PreSel_HighPt_ProjPt,"",vecPion_ITS_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_before_PreSel_HighPt_ProjPt,"",vecPion_ITS_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_dEdx_before
-    if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_dEdx_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_dEdx_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_dEdx_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_before_PreSel_ProjPt,"",vecPion_dEdx_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_before_PreSel_ProjPt,"",vecPion_dEdx_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_dEdx_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_dEdx_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdx_before_LowPt
+    if ((Int_t)vecPion_dEdx_before_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_before_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_before_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_before_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_before_PreSel_LowPt_ProjPt,"",vecPion_dEdx_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_before_PreSel_LowPt_ProjPt,"",vecPion_dEdx_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdx_before_MidPt
+    if ((Int_t)vecPion_dEdx_before_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_before_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_before_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_before_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_before_PreSel_MidPt_ProjPt,"",vecPion_dEdx_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_before_PreSel_MidPt_ProjPt,"",vecPion_dEdx_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdx_before_HighPt
+    if ((Int_t)vecPion_dEdx_before_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_before_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_before_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_before_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_before_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_before_PreSel_HighPt_ProjPt,"",vecPion_dEdx_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_before_PreSel_HighPt_ProjPt,"",vecPion_dEdx_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_dEdxSignal_before
-    if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_dEdxSignal_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_dEdxSignal_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_dEdxSignal_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_before_PreSel_ProjPt,"",vecPion_dEdxSignal_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_before_PreSel_ProjPt,"",vecPion_dEdxSignal_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_dEdxSignal_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_dEdxSignal_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdxSignal_before_LowPt
+    if ((Int_t)vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt,"",vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt,"",vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdxSignal_before
+    if ((Int_t)vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt,"",vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt,"",vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdxSignal_before_HighPt
+    if ((Int_t)vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_before_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt,"",vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt,"",vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_TOF_before
-    if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_TOF_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_TOF_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_TOF_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_before_PreSel_ProjPt,"",vecPion_TOF_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_before_PreSel_ProjPt,"",vecPion_TOF_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_TOF_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_TOF_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_TOF_before_LowPt
+    if ((Int_t)vecPion_TOF_before_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_before_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_before_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_before_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_before_PreSel_LowPt_ProjPt,"",vecPion_TOF_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_before_PreSel_LowPt_ProjPt,"",vecPion_TOF_before_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_before_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_TOF_before_MidPt
+    if ((Int_t)vecPion_TOF_before_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_before_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_before_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_before_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_before_PreSel_MidPt_ProjPt,"",vecPion_TOF_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_before_PreSel_MidPt_ProjPt,"",vecPion_TOF_before_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_before_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_TOF_before_HighPt
+    if ((Int_t)vecPion_TOF_before_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_before_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_before_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_before_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_before_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_before_PreSel_HighPt_ProjPt,"",vecPion_TOF_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_before_PreSel_HighPt_ProjPt,"",vecPion_TOF_before_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_before_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: hTrack_DCAxy_Pt_before
-    if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_DCAxy_Pt_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAxy_Pt_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_DCAxy_Pt_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_DCAxy_Pt_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_DCAxy_Pt_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAxy_Pt_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_DCAxy_Pt_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_DCAxy_Pt_before_PreSel_ProjPt,"",vechTrack_DCAxy_Pt_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAxy_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_DCAxy_Pt_before_PreSel_ProjPt,"",vechTrack_DCAxy_Pt_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAxy_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_DCAxy_Pt_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAxy_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_DCAxy_Pt_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAxy_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: hTrack_DCAz_Pt_before
-    if (iParticleType==0){StrNameOfHistogram="hTrack_DCAz_Pt_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_DCAz_Pt_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAz_Pt_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_DCAz_Pt_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_DCAz_Pt_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_DCAz_Pt_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_DCAz_Pt_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAz_Pt_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_DCAz_Pt_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_DCAz_Pt_before_PreSel_ProjPt,"",vechTrack_DCAz_Pt_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAz_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_DCAz_Pt_before_PreSel_ProjPt,"",vechTrack_DCAz_Pt_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAz_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_DCAz_Pt_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAz_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_DCAz_Pt_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAz_Pt_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: hTrack_NFindCls_Pt_TPC_before
-    if (iParticleType==0){StrNameOfHistogram="hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt,"",vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt,"",vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_ITS_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_ITS_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_ITS_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_ITS_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_PreSel_ProjPt,"",vecPion_ITS_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_PreSel_ProjPt,"",vecPion_ITS_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_ITS_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_ITS_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_ITS_after_LowPt
+    if ((Int_t)vecPion_ITS_after_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_PreSel_LowPt_ProjPt,"",vecPion_ITS_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_PreSel_LowPt_ProjPt,"",vecPion_ITS_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_ITS_after_MidPt
+    if ((Int_t)vecPion_ITS_after_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_PreSel_MidPt_ProjPt,"",vecPion_ITS_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_PreSel_MidPt_ProjPt,"",vecPion_ITS_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_ITS_after_HighPt
+    if ((Int_t)vecPion_ITS_after_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_ITS_after_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_ITS_after_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_ITS_after_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_ITS_after_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_ITS_after_PreSel_HighPt_ProjPt,"",vecPion_ITS_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_ITS_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_ITS_after_PreSel_HighPt_ProjPt,"",vecPion_ITS_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_ITS_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_dEdx_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_dEdx_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_dEdx_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_dEdx_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_PreSel_ProjPt,"",vecPion_dEdx_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_PreSel_ProjPt,"",vecPion_dEdx_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_dEdx_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_dEdx_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdx_after_LowPt
+    if ((Int_t)vecPion_dEdx_after_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_PreSel_LowPt_ProjPt,"",vecPion_dEdx_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_PreSel_LowPt_ProjPt,"",vecPion_dEdx_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdx_after_MidPt
+    if ((Int_t)vecPion_dEdx_after_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_PreSel_MidPt_ProjPt,"",vecPion_dEdx_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_PreSel_MidPt_ProjPt,"",vecPion_dEdx_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdx_after_HighPt
+    if ((Int_t)vecPion_dEdx_after_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdx_after_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdx_after_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdx_after_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdx_after_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdx_after_PreSel_HighPt_ProjPt,"",vecPion_dEdx_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdx_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdx_after_PreSel_HighPt_ProjPt,"",vecPion_dEdx_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdx_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_dEdxSignal_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_dEdxSignal_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_dEdxSignal_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_dEdxSignal_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_PreSel_ProjPt,"",vecPion_dEdxSignal_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_PreSel_ProjPt,"",vecPion_dEdxSignal_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_dEdxSignal_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_dEdxSignal_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdxSignal_after_LowPt
+    if ((Int_t)vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt,"",vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt,"",vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdxSignal_after_MidPt
+    if ((Int_t)vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt,"",vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt,"",vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_dEdxSignal_after_HighPt
+    if ((Int_t)vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_dEdxSignal_after_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt,"",vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_dEdxSignal_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt,"",vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_dEdxSignal_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: Pion_TOF_after
-    if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vecPion_TOF_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vecPion_TOF_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vecPion_TOF_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_PreSel_ProjPt,"",vecPion_TOF_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_PreSel_ProjPt,"",vecPion_TOF_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPion_TOF_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vecPion_TOF_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_TOF_after_LowPt
+    if ((Int_t)vecPion_TOF_after_PreSel_LowPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_PreSel_LowPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_PreSel_LowPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_PreSel_LowPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_PreSel_LowPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_PreSel_LowPt_ProjPt,"",vecPion_TOF_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_PreSel_LowPt_ProjPt,"",vecPion_TOF_after_PreSel_LowPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_PreSel_LowPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_TOF_after_MidPt
+    if ((Int_t)vecPion_TOF_after_PreSel_MidPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_PreSel_MidPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_PreSel_MidPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_PreSel_MidPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_PreSel_MidPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_PreSel_MidPt_ProjPt,"",vecPion_TOF_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_PreSel_MidPt_ProjPt,"",vecPion_TOF_after_PreSel_MidPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_PreSel_MidPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Pre Selection: Pion_TOF_after_HighPt
+    if ((Int_t)vecPion_TOF_after_PreSel_HighPt_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="Pion_TOF_after_PreSel_HighPt_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vecPion_TOF_after_PreSel_HighPt_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPion_TOF_after_PreSel_HighPt_ProjPt.size(); iVec++){
+            TH1D* temp = vecPion_TOF_after_PreSel_HighPt_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vecPion_TOF_after_PreSel_HighPt_ProjPt,"",vecPion_TOF_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Pion_TOF_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vecPion_TOF_after_PreSel_HighPt_ProjPt,"",vecPion_TOF_after_PreSel_HighPt_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pion_TOF_after_PreSel_HighPt_ProjPt.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: hTrack_DCAxy_Pt_after
-    if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_DCAxy_Pt_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAxy_Pt_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_DCAxy_Pt_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_DCAxy_Pt_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_DCAxy_Pt_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_DCAxy_Pt_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAxy_Pt_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_DCAxy_Pt_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_DCAxy_Pt_after_PreSel_ProjPt,"",vechTrack_DCAxy_Pt_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAxy_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_DCAxy_Pt_after_PreSel_ProjPt,"",vechTrack_DCAxy_Pt_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAxy_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_DCAxy_Pt_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAxy_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_DCAxy_Pt_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAxy_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: hTrack_DCAz_Pt_after
-    if (iParticleType==0){StrNameOfHistogram="hTrack_DCAz_Pt_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_DCAz_Pt_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAz_Pt_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_DCAz_Pt_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_DCAz_Pt_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_DCAz_Pt_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_DCAz_Pt_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_DCAz_Pt_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_DCAz_Pt_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_DCAz_Pt_after_PreSel_ProjPt,"",vechTrack_DCAz_Pt_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAz_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_DCAz_Pt_after_PreSel_ProjPt,"",vechTrack_DCAz_Pt_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAz_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_DCAz_Pt_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_DCAz_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_DCAz_Pt_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_DCAz_Pt_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
     // Pre Selection: hTrack_NFindCls_Pt_TPC_after
-    if (iParticleType==0){StrNameOfHistogram="hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt";}
-    if (iParticleType==1){StrNameOfHistogram="";}
-    GetMinMaxBin(vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.size(); iVec++){
-        TH1D* temp = vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
+    if ((Int_t)vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.size()>0){
+        if (iParticleType==0){StrNameOfHistogram="hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt";}
+        if (iParticleType==1){StrNameOfHistogram="";}
+        GetMinMaxBin(vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.size(); iVec++){
+            TH1D* temp = vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                    vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt,"",vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Normalized Counts",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                         vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt,"",vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.at(0)->GetXaxis()->GetTitle(),"Ratio",1,1.1,
+                                         labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                         0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-                                     vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt,"","","Normalized Counts",1,1.1,
-                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
-                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt.%s", outputDir.Data(), suffix.Data()));
     //*****************************************************************************************************
     //***************************** Cleanup vectors *******************************************************
     //*****************************************************************************************************
@@ -3107,27 +5219,63 @@ void PrimaryTrackQA(
     DeleteVecTH2D(vecESD_PrimaryPions_DCAxy);
     DeleteVecTH2D(vecESD_PrimaryPions_DCAz);
     DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdx);
+    DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdx_LowPt);
+    DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdx_MidPt);
+    DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdx_HighPt);
     DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdxSignal);
+    DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdxSignal_LowPt);
+    DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdxSignal_MidPt);
+    DeleteVecTH2D(vecESD_PrimaryPions_TPCdEdxSignal_HighPt);
     DeleteVecTH1D(vecESD_PrimaryNegPions_ClsTPC_ProjPt);
     DeleteVecTH1D(vecESD_PrimaryPosPions_ClsTPC_ProjPt);
     DeleteVecTH1D(vecESD_PrimaryPions_DCAxy_ProjPt);
     DeleteVecTH1D(vecESD_PrimaryPions_DCAz_ProjPt);
     DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdx_ProjPt);
+    DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt);
+    DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt);
+    DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt);
     DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdxSignal_ProjPt);
+    DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt);
+    DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt);
+    DeleteVecTH1D(vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt);
     //-------------------------------------------------------------------------------------------------------------------------------
     DeleteVecTH1D(vecIsPionSelected_AfterQA);
     DeleteVecTH1D(vecdEdxCuts_AfterQA);
     DeleteVecTH2D(vecPion_ITS_after_AfterQA);
+    DeleteVecTH2D(vecPion_ITS_after_AfterQA_LowPt);
+    DeleteVecTH2D(vecPion_ITS_after_AfterQA_MidPt);
+    DeleteVecTH2D(vecPion_ITS_after_AfterQA_HighPt);
     DeleteVecTH2D(vecPion_dEdx_after_AfterQA);
+    DeleteVecTH2D(vecPion_dEdx_after_AfterQA_LowPt);
+    DeleteVecTH2D(vecPion_dEdx_after_AfterQA_MidPt);
+    DeleteVecTH2D(vecPion_dEdx_after_AfterQA_HighPt);
     DeleteVecTH2D(vecPion_dEdxSignal_after_AfterQA);
+    DeleteVecTH2D(vecPion_dEdxSignal_after_AfterQA_LowPt);
+    DeleteVecTH2D(vecPion_dEdxSignal_after_AfterQA_MidPt);
+    DeleteVecTH2D(vecPion_dEdxSignal_after_AfterQA_HighPt);
     DeleteVecTH2D(vecPion_TOF_after_AfterQA);
+    DeleteVecTH2D(vecPion_TOF_after_AfterQA_LowPt);
+    DeleteVecTH2D(vecPion_TOF_after_AfterQA_MidPt);
+    DeleteVecTH2D(vecPion_TOF_after_AfterQA_HighPt);
     DeleteVecTH2D(vechTrack_DCAxy_Pt_after_AfterQA);
     DeleteVecTH2D(vechTrack_DCAz_Pt_after_AfterQA);
     DeleteVecTH2D(vechTrack_NFindCls_Pt_TPC_after_AfterQA);
     DeleteVecTH1D(vecPion_ITS_after_AfterQA_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_after_AfterQA_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_after_AfterQA_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_after_AfterQA_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_dEdx_after_AfterQA_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_after_AfterQA_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_after_AfterQA_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_after_AfterQA_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_dEdxSignal_after_AfterQA_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_after_AfterQA_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_after_AfterQA_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_after_AfterQA_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_TOF_after_AfterQA_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_after_AfterQA_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_after_AfterQA_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_after_AfterQA_HighPt_ProjPt);
     DeleteVecTH1D(vechTrack_DCAxy_Pt_after_AfterQA_ProjPt);
     DeleteVecTH1D(vechTrack_DCAz_Pt_after_AfterQA_ProjPt);
     DeleteVecTH1D(vechTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt);
@@ -3135,30 +5283,78 @@ void PrimaryTrackQA(
     DeleteVecTH1D(vecIsPionSelected_PreSel);
     DeleteVecTH1D(vecdEdxCuts_PreSel);
     DeleteVecTH2D(vecPion_ITS_before_PreSel);
+    DeleteVecTH2D(vecPion_ITS_before_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_ITS_before_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_ITS_before_PreSel_HighPt);
     DeleteVecTH2D(vecPion_dEdx_before_PreSel);
+    DeleteVecTH2D(vecPion_dEdx_before_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_dEdx_before_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_dEdx_before_PreSel_HighPt);
     DeleteVecTH2D(vecPion_dEdxSignal_before_PreSel);
+    DeleteVecTH2D(vecPion_dEdxSignal_before_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_dEdxSignal_before_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_dEdxSignal_before_PreSel_HighPt);
     DeleteVecTH2D(vecPion_TOF_before_PreSel);
+    DeleteVecTH2D(vecPion_TOF_before_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_TOF_before_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_TOF_before_PreSel_HighPt);
     DeleteVecTH2D(vechTrack_DCAxy_Pt_before_PreSel);
     DeleteVecTH2D(vechTrack_DCAz_Pt_before_PreSel);
     DeleteVecTH2D(vechTrack_NFindCls_Pt_TPC_before_PreSel);
     DeleteVecTH2D(vecPion_ITS_after_PreSel);
+    DeleteVecTH2D(vecPion_ITS_after_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_ITS_after_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_ITS_after_PreSel_HighPt);
     DeleteVecTH2D(vecPion_dEdx_after_PreSel);
+    DeleteVecTH2D(vecPion_dEdx_after_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_dEdx_after_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_dEdx_after_PreSel_HighPt);
     DeleteVecTH2D(vecPion_dEdxSignal_after_PreSel);
+    DeleteVecTH2D(vecPion_dEdxSignal_after_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_dEdxSignal_after_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_dEdxSignal_after_PreSel_HighPt);
     DeleteVecTH2D(vecPion_TOF_after_PreSel);
+    DeleteVecTH2D(vecPion_TOF_after_PreSel_LowPt);
+    DeleteVecTH2D(vecPion_TOF_after_PreSel_MidPt);
+    DeleteVecTH2D(vecPion_TOF_after_PreSel_HighPt);
     DeleteVecTH2D(vechTrack_DCAxy_Pt_after_PreSel);
     DeleteVecTH2D(vechTrack_DCAz_Pt_after_PreSel);
     DeleteVecTH2D(vechTrack_NFindCls_Pt_TPC_after_PreSel);
     DeleteVecTH1D(vecPion_ITS_before_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_before_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_before_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_before_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_dEdx_before_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_before_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_before_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_before_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_dEdxSignal_before_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_before_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_before_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_before_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_TOF_before_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_before_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_before_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_before_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vechTrack_DCAxy_Pt_before_PreSel_ProjPt);
     DeleteVecTH1D(vechTrack_DCAz_Pt_before_PreSel_ProjPt);
     DeleteVecTH1D(vechTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt);
     DeleteVecTH1D(vecPion_ITS_after_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_after_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_after_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_ITS_after_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_dEdx_after_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_after_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_after_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdx_after_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_dEdxSignal_after_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_after_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_after_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_dEdxSignal_after_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vecPion_TOF_after_PreSel_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_after_PreSel_LowPt_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_after_PreSel_MidPt_ProjPt);
+    DeleteVecTH1D(vecPion_TOF_after_PreSel_HighPt_ProjPt);
     DeleteVecTH1D(vechTrack_DCAxy_Pt_after_PreSel_ProjPt);
     DeleteVecTH1D(vechTrack_DCAz_Pt_after_PreSel_ProjPt);
     DeleteVecTH1D(vechTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt);
