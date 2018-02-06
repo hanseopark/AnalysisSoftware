@@ -2,6 +2,12 @@ root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(55,"0","20","5020
 
 root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(55,"20","40","52400013_00200009007000008250400000")'
 
+root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(58,"0","20","50200013_00200009007002008750400000")'
+root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(58,"20","40","52400013_00200009007002008750400000")'
+
+root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(59,"0","20","50200013_00200009007002009760600000")'
+root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(59,"20","40","52400013_00200009007002009760600000")'
+
 root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(60,"0","20","50200013_04200009007000008250400000")'
 root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(60,"0","20","50200013_00500009007000008250400000")'
 root -b -x -q -l 'Software/BackgroundPhotonFlowCalculation.C++(60,"0","20","50200013_00200049007000008250400000")'

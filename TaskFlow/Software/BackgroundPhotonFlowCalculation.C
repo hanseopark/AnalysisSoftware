@@ -11,8 +11,8 @@ void  BackgroundPhotonFlowCalculation(
   //Opening files and creating histograms
   //========================================================
   
-  TString InputFileNameBkg = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/Results_%s/InclusivePhotonv2_uncorrected_%s.root",Cutnumber.Data(),Cutnumber.Data());
-  TString InputFileNamePurity   = Form("/home/mike/3_PbPb_dirg/0_analysis/170216_v2_final_systematics/purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_Data LHC10h.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
+  TString InputFileNameBkg = Form("Results_%s/InclusivePhotonv2_uncorrected_%s.root",Cutnumber.Data(),Cutnumber.Data());
+  TString InputFileNamePurity   = Form("purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_Data LHC10h.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data());
   
   //open datafile with v2 background 1
   TFile* fileBkg  = new TFile(InputFileNameBkg.Data());
@@ -87,7 +87,7 @@ void  BackgroundPhotonFlowCalculation(
   histov2Empty->GetYaxis()->SetRangeUser(0,0.49);
   
   TH1F*  histoPurityEmpty = (TH1F*)GetNHistStyle();
-  histoPurityEmpty->GetYaxis()->SetRangeUser(0,1.19);
+  histoPurityEmpty->GetYaxis()->SetRangeUser(0,1.39);
   
   TH1F*  histov2C = (TH1F*)histov2Bkg3->Clone();
   histov2C->SetLineColor(kRed+2);
@@ -218,7 +218,7 @@ void  BackgroundPhotonFlowCalculation(
   leg2->AddEntry(histov2BkgRegionSignal,"v_{2}^{background}","lp");
   leg2->SetBorderSize(0);
   
-  TLegend* leg3 = new TLegend(0.65,0.7,0.95,0.95);
+  TLegend* leg3 = new TLegend(0.65,0.8,0.95,0.95);
   leg3->SetTextSize(0.04);
   leg3->AddEntry(GraphPurityBkg1NA,"Region 1: n_{#pi#pi}","lp");
   leg3->AddEntry(GraphPurityBkg1NB,"Region 1: n_{rem}","lp");

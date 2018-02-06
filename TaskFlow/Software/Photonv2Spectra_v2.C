@@ -46,7 +46,7 @@ void Photonv2Spectra_v2(
   TString directoryQaRedo;
   TString directoryQbRedo;
   
-  if(Trainconfig == 55){
+  if(Trainconfig == 55 || Trainconfig == 58 || Trainconfig == 59 || Trainconfig == 81 || Trainconfig == 82){
     directoryQaRedo = Form("SPVZEROQa_in_0080cc_tC%i_v2%sSPv2Qa_%s",Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
     directoryQbRedo= Form("SPVZEROQb_in_0080cc_tC%i_v2%sSPv2Qb_%s",Trainconfig,AdditionalDirName.Data(),CutNumber.Data());
   }else{

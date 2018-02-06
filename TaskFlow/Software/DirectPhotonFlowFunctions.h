@@ -41,8 +41,9 @@
 #include "Riostream.h"
 #include "/home/mike/alice/ali-master/AliPhysics/PWG/FLOW/Base/AliFlowCommonHistResults.h"
 #include "/home/mike/alice/ali-master/AliPhysics/PWG/FLOW/Base/AliFlowCommonHist.h"
-#include "/home/mike/git_afterburner/AnalysisSoftware/CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "/home/mike/git_afterburner/AnalysisSoftware/CommonHeaders/PlottingGammaConversionHistos.h"
+#include "/home/mike/git_afterburner/AnalysisSoftware/CommonHeaders/PlottingGammaConversionAdditional.h"
+
 
 void SetStyle(Bool_t graypalette=kTRUE);
 void myPadSetUp(TPad *currentPad, float currentLeft=0.11, float currentTop=0.04, float currentRight=0.04, float currentBottom=0.15);
@@ -129,7 +130,7 @@ TH1F* GetPurityHistStyle(){
   histoEmpty->GetXaxis()->SetTitleOffset(0.8);
   histoEmpty->GetYaxis()->SetTitleOffset(0.85);
   histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
-  histoEmpty->GetYaxis()->SetRangeUser(0.6,1.0);
+  histoEmpty->GetYaxis()->SetRangeUser(0.49,1.0);
   
   return histoEmpty;
 }
@@ -183,7 +184,7 @@ TH1F* Getv2InclRatioHistStyle(){
   histoEmpty->GetXaxis()->SetTitleOffset(0.8);
   histoEmpty->GetYaxis()->SetTitleOffset(0.85);
   histoEmpty->GetXaxis()->SetRangeUser(0.0,6.2);
-  histoEmpty->GetYaxis()->SetRangeUser(0.8,1.2);
+  histoEmpty->GetYaxis()->SetRangeUser(0.71,1.29);
   
   return histoEmpty;
 }

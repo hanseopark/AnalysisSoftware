@@ -40,3 +40,25 @@ root -b -x -q -l 'Software/projectionPt_v9.C++(65,"20","40","52400013_0020000900
 root -b -x -q -l 'Software/projectionPt_v9.C++(65,"20","40","52400013_00200009007000008270400000",0)'
 root -b -x -q -l 'Software/projectionPt_v9.C++(65,"20","40","52400013_00200009007000008250600000",0)'
 root -b -x -q -l 'Software/projectionPt_v9.C++(65,"20","40","52400013_00200009007000008250300000",0)'
+
+
+
+root -b -x -q -l 'Software/projectionPt_v9.C++(86,"0","20","50200013_00200009067000008250400000",0)'
+root -b -x -q -l 'Software/projectionPt_v9.C++(86,"20","40","52400013_00200009067000008250400000",0)'
+
+root -b -x -q -l 'Software/projectionPt_v9.C++(86,"0","20","50200013_00200009087000008250400000",0)'
+root -b -x -q -l 'Software/projectionPt_v9.C++(86,"20","40","52400013_00200009087000008250400000",0)'
+
+root -b -x -q -l 'Software/projectionPt_v9.C++(85,"0","20","50200013_00200009037000008250400000",0)'
+root -b -x -q -l 'Software/projectionPt_v9.C++(85,"20","40","52400013_00200009037000008250400000",0)'
+
+root -b -x -q -l 'Software/projectionPt_v9.C++(85,"0","20","50200013_00200009047000008250400000",0)'
+root -b -x -q -l 'Software/projectionPt_v9.C++(85,"20","40","52400013_00200009047000008250400000",0)'
+
+root -b -x -q -l 'Software/projectionPt_v9.C++(87,"0","20","50200013_00200009497000008250400000",0)'
+root -b -x -q -l 'Software/projectionPt_v9.C++(87,"20","40","52400013_00200009497000008250400000",0)'
+
+
+
+
+

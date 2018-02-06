@@ -42,7 +42,7 @@
 void  projectionPt_v9(  Int_t Trainconfig = 60,
                         TString CentralityLow = "0",
                         TString CentralityHigh = "20",
-                        TString Cutnumber = "50200013_04200009007000008250400000",
+                        TString Cutnumber = "50200013_00200009007000008250400000",
                         Bool_t kMC = 0
                      ){
   
@@ -71,7 +71,9 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     //TString SigmaStarForm = "#Kappa = #sqrt{#frac{#kappa^{+}^{2}+#kappa^{+}^{2}}{2}}";
     
 //     TFile* fileData = new TFile("PhotonQA_0705415160_redefinedkappalarge_MC.root");
-    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
+//     TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
+//     TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/180202_PbPb_TPC_variations/mc/GammaConvFlow_%i.root",Trainconfig));
     TList* listMC_1   = new TList();
     listMC_1     = (TList*)fileMC->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     cout << listMC_1 << endl;
@@ -82,7 +84,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     listMC_3     = (TList*)listMC_2->FindObject(Form("%s ESD histograms",Cutnumber.Data()));
     cout << listMC_3 << endl;
     
-    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/data/GammaConvFlow_%i.root",Trainconfig));
+//     TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/data/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/180202_PbPb_TPC_variations/data/GammaConvFlow_%i.root",Trainconfig));
     TList* listData_1   = new TList();
     listData_1     = (TList*)fileData->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     
@@ -302,6 +305,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 	data->GetXaxis()->SetTitleSize(0.05);
 	data->GetXaxis()->SetTitleOffset(0.8);
 	data->GetXaxis()->SetRangeUser(nSigmaLow,nSigmaHigh);
+  data->SetLineWidth(2.0);
+  data->SetLineColor(kBlue+2);
 	
 	Double_t NTotal = h1d00->GetEntries()+h1d01->GetEntries()+h1d11->GetEntries()+h1d13->GetEntries();
 
@@ -331,22 +336,6 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 	T1.DrawLatex(0.65, 0.9, "#pi^{#pm} + e^{#mp}");
 	T1.DrawLatex(0.65, 0.85, Form("%f",h1d13->GetEntries()/NTotal));
 
-	c1->cd(5);
-	h1sum->Draw("HIST");
-	h1d00->Draw("HIST same");
-	h1d01->Draw("HIST same");
-	h1d11->Draw("HIST same");
-	h1d13->Draw("HIST same");
-	
-	TLegend* leg = new TLegend(0.7,0.6,0.9,0.9);
-	leg->SetTextSize(0.04);
-	leg->AddEntry(h1sum,"total","lp");
-	leg->AddEntry(h1d00,"real e^{+}e^{-}","f");
-	leg->AddEntry(h1d01,"remaining","f");
-	leg->AddEntry(h1d11,"#pi^{#pm} + #pi^{#mp}","f");
-	leg->AddEntry(h1d13,"#pi^{#pm} + e^{#mp}","f");
-	leg->SetBorderSize(0);
-	leg->Draw();
   
   TLegend* leg5 = new TLegend(0.7,0.7,0.9,0.9);
   leg5->SetTextSize(0.04);
@@ -363,8 +352,16 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 	h1d01->Draw("HIST same");
 	h1d11->Draw("HIST same");
 	h1d13->Draw("HIST same");
-  
-	leg->Draw();
+//   data->Scale(h1sum->GetMaximum()/data->GetMaximum());
+//   data->Draw("SAME");
+  TLegend* leg = new TLegend(0.7,0.6,0.9,0.9);
+	leg->SetTextSize(0.04);
+	leg->AddEntry(h1sum,"total","lp");
+	leg->AddEntry(h1d00,"real e^{+}e^{-}","f");
+	leg->AddEntry(h1d01,"remaining","f");
+	leg->AddEntry(h1d11,"#pi^{#pm} + #pi^{#mp}","f");
+	leg->AddEntry(h1d13,"#pi^{#pm} + e^{#mp}","f");
+	leg->SetBorderSize(0);
 	
 	T1.SetTextSize(0.03);
 	T1.DrawLatex(0.15, 0.97, InfoSystem.Data());
@@ -414,7 +411,614 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
   if(CentralityLow.CompareTo("0")==0) fracwidth = 1.3;
   if(CentralityLow.CompareTo("20")==0) fracwidth = 1.2;
   if(CentralityLow.CompareTo("40")==0) fracwidth = 2.0;
+  
+//   if(CentralityLow.CompareTo("0")==0){
+//     
+//   }
+  //Double_t newBinsComb[19] = {0.0, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 3.0, 3.3, 3.7, 4.1, 4.6, 5.4, 6.2, 7.0};
+//   if(CentralityLow.CompareTo("20")==0){
+//     Int_t nbins = h1d00->GetNbinsX();
+//     if(newBinsComb[i]==0.0){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//       }
+//     }
+//     if(newBinsComb[i]==0.9){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//       }
+//     }
+//     if(newBinsComb[i]==1.1){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
+//       }
+//     }
+//     if(newBinsComb[i]==1.3){
+//       for(Int_t p=5;p<nbins-5;p++){
+// //         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+//       }
+//     }
+//     if(newBinsComb[i]==1.5){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+//       }
+//     }
+//     if(newBinsComb[i]==1.7){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+//       }
+//     }
+//     if(newBinsComb[i]==1.9){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+//       }
+//     }
+//     if(newBinsComb[i]==2.1){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+//       }
+//     }
+//     if(newBinsComb[i]==2.3){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-7;p>7;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+//       }
+//     }
+//     if(newBinsComb[i]==2.5){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-7;p>7;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+//       }
+//     }
+//     if(newBinsComb[i]==2.7){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+//       }
+//       for(Int_t p=nbins-7;p>7;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+//       }
+//     }
+//     if(newBinsComb[i]==3.0){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+//       }
+//     }
+//     if(newBinsComb[i]==3.3){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+//       }
+//     }
+//     if(newBinsComb[i]==3.7){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
+//       }
+//     }
+//     if(newBinsComb[i]==4.1){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+//       }
+//     }
+//     if(newBinsComb[i]==4.6){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+//       }
+//     }
+//     if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+//       }
+//     }
+//   }
+   if(CentralityLow.CompareTo("20")==0){
+    Int_t nbins = h1d00->GetNbinsX();
+    if(newBinsComb[i]==0.0){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+    }
+    if(newBinsComb[i]==0.9){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+    }
+    if(newBinsComb[i]==1.1){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
+      }
+    }
+    if(newBinsComb[i]==1.3){
+      for(Int_t p=5;p<nbins-5;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      }
+    }
+    if(newBinsComb[i]==1.5){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      }
+    }
+    if(newBinsComb[i]==1.7){
+      for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==1.9){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==2.1){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==2.3){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-7;p>7;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==2.5){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-7;p>7;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==2.7){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-7;p>7;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==3.0){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==3.3){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==3.7){
+      for(Int_t p=12;p<nbins-12;p++){
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
+      }
+    }
+    if(newBinsComb[i]==4.1){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+      }
+    }
+    if(newBinsComb[i]==4.6){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+      }
+    }
+    if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+      }
+    }
+  }
+//   if(CentralityLow.CompareTo("0")==0){
+//     Int_t nbins = h1d00->GetNbinsX();
+//     if(newBinsComb[i]==0.0){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//       }
+//     }
+//     if(newBinsComb[i]==0.9){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
+//       }
+//     }
+//     if(newBinsComb[i]==1.1){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
+//       }
+//       for(Int_t p=nbins-5;p>5;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
+//       }
+//     }
+//     if(newBinsComb[i]==1.3){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
+//       }
+//     }
+//     if(newBinsComb[i]==1.5){
+//       for(Int_t p=5;p<nbins-5;p++){
+// //         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+// //         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
+//       }
+//     }
+//     if(newBinsComb[i]==1.7){
+//       for(Int_t p=5;p<nbins-5;p++){
+// //         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+//       }
+//     }
+//     if(newBinsComb[i]==1.9){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//       }
+//     }
+//     if(newBinsComb[i]==2.1){
+//       for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+//       }
+//     }
+//     if(newBinsComb[i]==2.3){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+//       }
+//     }
+//     if(newBinsComb[i]==2.5){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+//       }
+//     }
+//     if(newBinsComb[i]==2.7){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
+//       }
+//     }
+//     if(newBinsComb[i]==3.0){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
+//       }
+//     }
+//     if(newBinsComb[i]==3.3){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+6));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+//       }
+//     }
+//     if(newBinsComb[i]==3.7){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+//       }
+//     }
+//     if(newBinsComb[i]==4.1){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+//       }
+//     }
+//     if(newBinsComb[i]==4.6){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+//       }
+//     }
+//     if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
+//       for(Int_t p=12;p<nbins-12;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+//       }
+//       for(Int_t p=nbins-12;p>12;p--){
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+//       }
+//     }
+//   }
+if(CentralityLow.CompareTo("0")==0){
+    Int_t nbins = h1d00->GetNbinsX();
+    if(newBinsComb[i]==0.0){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+    }
+    if(newBinsComb[i]==0.9){
+      for(Int_t p=5;p<nbins-5;p++){
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
+      }
+    }
+    if(newBinsComb[i]==1.1){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+2));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
+      }
+    }
+    if(newBinsComb[i]==1.3){
+      for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+2));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+6));
+      }
+    }
+    if(newBinsComb[i]==1.5){
+      for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
+      }
+    }
+    if(newBinsComb[i]==1.7){
+      for(Int_t p=5;p<nbins-5;p++){
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+      }
+    }
+    if(newBinsComb[i]==1.9){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+    }
+    if(newBinsComb[i]==2.1){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+      }
+    }
+    if(newBinsComb[i]==2.3){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+      }
+    }
+    if(newBinsComb[i]==2.5){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
+      }
+    }
+    if(newBinsComb[i]==2.7){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
+      }
+    }
+    if(newBinsComb[i]==3.0){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
+      }
+    }
+    if(newBinsComb[i]==3.3){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+6));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      }
+    }
+    if(newBinsComb[i]==3.7){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+      }
+    }
+    if(newBinsComb[i]==4.1){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+      }
+    }
+    if(newBinsComb[i]==4.6){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      }
+    }
+    if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      }
+    }
+  }
+  
+  TH1D *h1sum_2=(TH1D*)h1d00->Clone();
+	h1sum_2->GetXaxis()->SetTitleOffset(0.8);
+	h1sum_2->SetFillColor(0);
+	h1sum_2->SetLineColor(kBlack);
+	h1sum_2->SetLineWidth(2.0);
+	h1sum_2->Add(h1d01);
+	h1sum_2->Add(h1d11);
+	h1sum_2->Add(h1d13);
+  
+	c1->cd(5);
+	h1sum_2->Draw("HIST");
+	h1d00->Draw("HIST same");
+	h1d01->Draw("HIST same");
+	h1d11->Draw("HIST same");
+	h1d13->Draw("HIST same");
+	leg->Draw();
+	c1->cd(6);
 	
+  
 	if(kMC){
 	  NEntriesData = data->GetEntries();
 	  frac00[i] = h1d00->GetEntries()/NEntriesData;
@@ -445,10 +1049,28 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 	//configure the TFractionFitter
 	TFractionFitter* fit = new TFractionFitter(data, mc);
 	if(kUseFitConstraints){
-	  fit->Constrain(1,frac00[i]*constraint_low,frac00[i]*constraint_high);
-	  fit->Constrain(2,frac01[i]*constraint_low,frac01[i]*constraint_high);
-	  fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high);
-	  fit->Constrain(4,frac13[i]*constraint_low,frac13[i]*constraint_high);
+	  fit->Constrain(1,frac00[i]*constraint_low*0.1,frac00[i]*constraint_high*10.);
+	  fit->Constrain(2,frac01[i]*constraint_low,frac01[i]*constraint_high*2.);
+	  fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*20.);
+	  fit->Constrain(4,frac13[i]*constraint_low,frac13[i]*constraint_high*10.);
+    if(newBinsComb[i]>=3.3 && CentralityLow.CompareTo("20")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*25.);
+    }
+//     if(newBinsComb[i]>=1.3 && CentralityLow.CompareTo("0")==0){
+//       fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*30.);
+//     }
+    if(newBinsComb[i]>=1.3 && CentralityLow.CompareTo("0")==0){
+      fit->Constrain(3,frac11[i]*constraint_low*0.4,frac11[i]*constraint_high*30.);
+    }
+    if(newBinsComb[i]>=4.1 && CentralityLow.CompareTo("0")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*12.);
+    }
+    if(newBinsComb[i]==1.5 && CentralityLow.CompareTo("0")==0){
+      fit->Constrain(4,frac13[i]*constraint_low,frac13[i]*constraint_high*20.);
+    }
+    if(newBinsComb[i]>=4.6 && CentralityLow.CompareTo("0")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*13.);
+    }
 	}
 	
 	TH1D* template1 = NULL;
@@ -459,9 +1081,11 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
   TH1D* hsumMC = NULL;
 	//Fit the templates
 	Int_t status = fit->Fit();
-	//cout << "fit status: " << status << endl;
+//   Int_t status = 1;
+// 	cout << "fit status: " << status << endl;
+  TH1D* result = NULL;
 	if (status == 0) {
-	  TH1D* result = (TH1D*)fit->GetPlot();
+	  result = (TH1D*)fit->GetPlot();
 	  result->GetXaxis()->SetRangeUser(nSigmaLow,nSigmaHigh);
 	  result->SetLineColor(kRed);
 	  result->Draw("HIST same");
@@ -491,37 +1115,31 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     
     cout << " value[3] = " << value[3] << endl;
     
-    cout << " frac00[" << i << "] = " << frac00[i] << endl;
-    cout << " frac01[" << i << "] = " << frac01[i] << endl;
-    cout << " frac11[" << i << "] = " << frac11[i] << endl;
-    cout << " frac13[" << i << "] = " << frac13[i] << endl;
+//     cout << " frac00[" << i << "] = " << frac00[i] << endl;
+//     cout << " frac01[" << i << "] = " << frac01[i] << endl;
+//     cout << " frac11[" << i << "] = " << frac11[i] << endl;
+//     cout << " frac13[" << i << "] = " << frac13[i] << endl;
     
-    cout << "NEntriesData = " << NEntriesData << endl;
-    cout << "NTotalMC = " << NTotalMC << endl;
+//     cout << "NEntriesData = " << NEntriesData << endl;
+//     cout << "NTotalMC = " << NTotalMC << endl;
+    
+    Double_t valueSum = value[0]+value[1]+value[2]+value[3];
     
     template1 = (TH1D*)h1d00->Clone();
-    template1->Scale(value[0]/frac00[i]*(NEntriesData/NTotalMC));
-//     template1->Scale((value[0]-frac00[i])/frac00[i]+1);
-//     template1->Scale((NEntriesData/NTotalMC));
-//     template1->Draw("HIST same");
+    template1->Scale(valueSum*NEntriesData*value[0]/(template1->Integral(template1->GetXaxis()->FindBin(-20),template1->GetXaxis()->FindBin(20))));
+//     template1->Scale(value[0]/frac00[i]*(NEntriesData/NTotalMC));
     
     template2 = (TH1D*)h1d01->Clone();
-    template2->Scale(value[1]/frac01[i]*(NEntriesData/NTotalMC));
-//     template2->Scale((value[1]-frac01[i])/frac01[i]+1);
-//     template2->Scale((NEntriesData/NTotalMC));
-//     template2->Draw("HIST same");
+    template2->Scale(valueSum*NEntriesData*value[1]/(template2->Integral(template2->GetXaxis()->FindBin(-20),template2->GetXaxis()->FindBin(20))));
+//     template2->Scale(value[1]/frac01[i]*(NEntriesData/NTotalMC));
     
     template3= (TH1D*)h1d11->Clone();
-    template3->Scale(value[2]/frac11[i]*(NEntriesData/NTotalMC));
-//     template3->Scale((value[2]-frac11[i])/frac11[i]+1);
-//     template3->Scale((NEntriesData/NTotalMC));
-//     template3->Draw("HIST same");
+    template3->Scale(valueSum*NEntriesData*value[2]/(template3->Integral(template3->GetXaxis()->FindBin(-20),template3->GetXaxis()->FindBin(20))));
+//     template3->Scale(value[2]/frac11[i]*(NEntriesData/NTotalMC));
     
     template4 = (TH1D*)h1d13->Clone();
-    template4->Scale(value[3]/frac13[i]*(NEntriesData/NTotalMC));
-//     template4->Scale((value[3]-frac13[i])/frac13[i]+1);
-//     template4->Scale((NEntriesData/NTotalMC));
-//     template4->Draw("HIST same");
+    template4->Scale(valueSum*NEntriesData*value[3]/(template4->Integral(template4->GetXaxis()->FindBin(-20),template4->GetXaxis()->FindBin(20))));
+//     template4->Scale(value[3]/frac13[i]*(NEntriesData/NTotalMC));
     
     TLegend* leg2 = new TLegend(0.7,0.7,0.9,0.9);
     leg2->AddEntry(data,"data","lp");
@@ -538,11 +1156,23 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     templatesum=(TH1D*)template1->Clone();
     templatesum->GetXaxis()->SetTitleOffset(0.8);
     templatesum->SetFillColor(0);
-    templatesum->SetLineColor(kBlack);
+    templatesum->SetLineColor(kRed+2);
     templatesum->SetLineWidth(2.0);
     templatesum->Add(template2);
     templatesum->Add(template3);
     templatesum->Add(template4);
+    
+    cout << "PtLow= " << PtLow << " PtHigh = " << PtHigh << endl;
+    cout<< "template1->Integral() = " << template1->Integral(template1->GetXaxis()->FindBin(-20),template1->GetXaxis()->FindBin(20)) << endl;
+    cout<< "template2->Integral() = " << template2->Integral(template2->GetXaxis()->FindBin(-20),template2->GetXaxis()->FindBin(20)) << endl;
+    cout<< "template3->Integral() = " << template3->Integral(template3->GetXaxis()->FindBin(-20),template3->GetXaxis()->FindBin(20)) << endl;
+    cout<< "template4->Integral() = " << template4->Integral(template4->GetXaxis()->FindBin(-20),template4->GetXaxis()->FindBin(20)) << endl;
+    cout << "Rescaled templates:" << endl;
+    cout << "template 1 fraction = " << template1->Integral(template1->GetXaxis()->FindBin(-20),template1->GetXaxis()->FindBin(20))/templatesum->Integral(templatesum->GetXaxis()->FindBin(-20),templatesum->GetXaxis()->FindBin(20)) << endl;
+    cout << "template 2 fraction = " << template2->Integral(template2->GetXaxis()->FindBin(-20),template2->GetXaxis()->FindBin(20))/templatesum->Integral(templatesum->GetXaxis()->FindBin(-20),templatesum->GetXaxis()->FindBin(20)) << endl;
+    cout << "template 3 fraction = " << template3->Integral(template3->GetXaxis()->FindBin(-20),template3->GetXaxis()->FindBin(20))/templatesum->Integral(templatesum->GetXaxis()->FindBin(-20),templatesum->GetXaxis()->FindBin(20)) << endl;
+    cout << "template 4 fraction = " << template4->Integral(template4->GetXaxis()->FindBin(-20),template4->GetXaxis()->FindBin(20))/templatesum->Integral(templatesum->GetXaxis()->FindBin(-20),templatesum->GetXaxis()->FindBin(20)) << endl;
+    cout << "Done..." << endl << endl;
     
     hsumMC=(TH1D*)h1d00->Clone();
     hsumMC->Add(h1d01);
@@ -577,25 +1207,38 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
   cout << Signalpurity[i] << endl;
   cout << " " << endl;
   
-  TCanvas* c13 = new TCanvas("c12","",800,800);
+  TCanvas* c13 = new TCanvas("c13","",800,800);
 //   c13->SetLeftMargin(0.08);
   c13->SetTopMargin(0.05);
 //   c13->SetBottomMargin(0.08);
   if (status == 0) {
+    data->SetLineColor(kBlack);
+    data->SetLineWidth(2.0);
   Double_t maximum = template1->GetMaximum();
   if(template2->GetMaximum()>maximum) maximum = template2->GetMaximum();
   if(template3->GetMaximum()>maximum) maximum = template3->GetMaximum();
   if(template3->GetMaximum()>maximum) maximum = template4->GetMaximum();
   if(templatesum->GetMaximum()>maximum) maximum = templatesum->GetMaximum();
-  template1->GetYaxis()->SetRangeUser(0, maximum*1.2);
+//   if(data->GetMaximum()>maximum) maximum = data->GetMaximum();
+  templatesum->GetYaxis()->SetRangeUser(0, maximum*1.5);
   templatesum->Draw("HIST same");
+//   result->Draw("HIST same");
+  data->Draw("same");
   template1->Draw("HIST same");
   template2->Draw("HIST same");
   template3->Draw("HIST same");
   template4->Draw("HIST same");
   }
-  
-  leg->Draw();
+  TLegend* legTFrac = new TLegend(0.7,0.6,0.9,0.9);
+	legTFrac->SetTextSize(0.04);
+  legTFrac->AddEntry(data,"data","lp");
+	legTFrac->AddEntry(templatesum,"Fit","lp");
+	legTFrac->AddEntry(template1,"real e^{+}e^{-}","f");
+	legTFrac->AddEntry(template2,"remaining","f");
+	legTFrac->AddEntry(template3,"#pi^{#pm} + #pi^{#mp}","f");
+	legTFrac->AddEntry(template4,"#pi^{#pm} + e^{#mp}","f");
+	legTFrac->SetBorderSize(0);
+	legTFrac->Draw();
   
   T1.SetTextSize(0.03);
   T1.DrawLatex(0.2, 0.97, InfoSystem.Data());
@@ -604,8 +1247,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
   }else{
     T1.DrawLatex(0.65, 0.97, InfoData.Data());
   }
-  T1.DrawLatex(0.18, 0.75, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
-	T1.DrawLatex(0.18, 0.65,  SigmaStarForm.Data());
+  T1.DrawLatex(0.18, 0.85, Form("%2.1f < P_{t}(GeV/c) < %2.1f",newBinsComb[i],newBinsComb[i+1]));
+	T1.DrawLatex(0.18, 0.8,  SigmaStarForm.Data());
 //   T1.DrawLatex(0.65, 0.4,  Form("p(-5.0<K<10.0)= %2.3f",Signalpurity[i]));
   
 	gSystem->mkdir(Form("purity_studies_%s",Cutnumber.Data()));
@@ -975,6 +1618,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
   }else{
     Purity_file = new TFile(Form("purity_studies_%s/Purity_InclusivePhotonSample_%s%s_%s_%s.root",Cutnumber.Data(),CentralityLow.Data(),CentralityHigh.Data(),Cutnumber.Data(), InfoData.Data()),"RECREATE");
   }
+  graphPurityMC->Write(Form("Gamma_Purity_MCdriven_%s%s",CentralityLow.Data(),CentralityHigh.Data()));
   graphPurity->Write(Form("Gamma_Purity_%s%s",CentralityLow.Data(),CentralityHigh.Data()));
   graphSignalNA->Write(Form("Gamma_NA_%s%s",CentralityLow.Data(),CentralityHigh.Data()));
   graphSignalNB->Write(Form("Gamma_NB_%s%s",CentralityLow.Data(),CentralityHigh.Data()));
