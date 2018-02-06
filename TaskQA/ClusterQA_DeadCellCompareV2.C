@@ -82,7 +82,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
         if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
             continue;
         }
-        cout << tempLine.Data() << endl;
+//         cout << tempLine.Data() << endl;
 
         // Separate the string according to tabulators
         TObjArray *tempArr  = tempLine.Tokenize("\t");
@@ -202,7 +202,7 @@ void ClusterQA_DeadCellCompareV2(   TString configFileName  = "",
     fstream fLogOutput;
     fstream fLogOutputFinal;
     fstream fLogOutputDetailed;
-    fstream fLogOutputRunwise; 
+    fstream fLogOutputRunwise;
     std::vector<Int_t>::iterator it;
     std::vector<Int_t> vec[nCaloCells];
     std::vector<Int_t> vecMC[nCaloCells];

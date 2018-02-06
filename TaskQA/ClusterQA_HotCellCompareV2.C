@@ -73,7 +73,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
         if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
             continue;
         }
-        cout << tempLine.Data() << endl;
+//         cout << tempLine.Data() << endl;
 
         // Separate the string according to tabulators
         TObjArray *tempArr  = tempLine.Tokenize("\t");
@@ -235,7 +235,7 @@ void ClusterQA_HotCellCompareV2(    TString configFileName  = "configFile.txt",
                             maNTimes[vecString.Atoi()] = vecStringNTimes.Atof();
                         }
                         // Add the runwise output. For each occurence should be CellID-Run-Sigma
-                        fLogOutputRunwise << currentRunVecString << "-" << (Float_t) (vecStringNFired.Atof()/vecStringNTimes.Atof()) << endl; 
+                        fLogOutputRunwise << currentRunVecString << "-" << (Float_t) (vecStringNFired.Atof()/vecStringNTimes.Atof()) << endl;
                     }
                 }
             }else{

@@ -9,7 +9,7 @@
 source basicFunction.sh
 
 DOWNLOADON=1
-MERGEON=0
+MERGEON=1
 SINGLERUN=1
 SEPARATEON=0
 MERGEONSINGLEData=1
@@ -80,7 +80,7 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17f2bMC="1092";
 # LHC17f2a_fixMC="1091";
 
-TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
+# TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
 # # woSDD (CENT) EMC
 # LHC16qtData="707"; #pass 2
 # LHC16qData="child_1"; #pass 3
@@ -93,7 +93,7 @@ TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
 # LHC16qData="child_1"; #pass 3
 # LHC16tData="child_2"; #pass 2
 # LHC17f2bMC="1151";
-LHC17f2a_fixMC="1149_20180124";
+# LHC17f2a_fixMC="1149_20180124";
 
 # # woSDD (CENT) PHOS
 # LHC16qtData="710"; #pass 2
@@ -108,6 +108,21 @@ LHC17f2a_fixMC="1149_20180124";
 # LHC16tData="child_2"; #pass 2
 # LHC17f2bMC="1147";
 # LHC17f2a_fixMC="1145";
+
+TRAINDIR=Legotrain-vAN20180122-CellQAPHOSandEMC
+# woSDD (CENT) PHOS
+# LHC16qtData="712"; #pass 2
+# LHC16qData="child_1"; #pass 3
+# LHC16tData="child_2"; #pass 2
+# LHC17f2bMC="1162";
+# LHC17f2a_fixMC="1160";
+
+# FAST PHOS
+# LHC16qtData="711"; #pass 2
+# LHC16qData="child_1"; #pass 3
+# LHC16tData="child_2"; #pass 2
+# LHC17f2bMC="1163";
+# LHC17f2a_fixMC="1161";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -138,11 +153,11 @@ mkdir -p $OUTPUTDIR/CutSelections
 
 if [ $HAVELHC16q == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
-#         LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\_ | grep $LHC16qData`
-        LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\- | grep $LHC16qData`
+        LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\_ | grep $LHC16qData`
+#         LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\- | grep $LHC16qData`
     else
-#         LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qData\_`
-        LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qData\-`
+        LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qData\_`
+#         LHC16qData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qData\-`
     fi
     if [ "$LHC16qData" == "" ]; then
         HAVELHC16q=0;
@@ -153,11 +168,11 @@ if [ $HAVELHC16q == 1 ]; then
 fi
 if [ $HAVELHC16t == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
-#         LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\_ | grep $LHC16tData`
-        LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\- | grep $LHC16tData`
+        LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\_ | grep $LHC16tData`
+#         LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16qtData\- | grep $LHC16tData`
     else
-#         LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16tData\_`
-        LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16tData\-`
+        LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16tData\_`
+#         LHC16tData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC16tData\-`
     fi
     if [ "$LHC16tData" == "" ]; then
         HAVELHC16t=0;
@@ -179,8 +194,8 @@ if [ $HAVELHC17f2b == 1 ]; then
 fi
 if [ $HAVELHC17f2afix == 1 ]; then
     echo $LHC17f2a_fixMC
-    LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`
-#     LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\_`
+#     LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`
+    LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\_`
     if [ "$LHC17f2a_fixMC" == "" ]; then
         HAVELHC17f2afix=0;
     else
@@ -279,9 +294,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC17f2a_fix_$3_all.txt`
                 ls $OUTPUTDIR_LHC17f2a_fix/$firstrunNumber/GammaCalo_*.root > fileLHC17f2a_fix.txt
                 fileNumbers=`cat fileLHC17f2a_fix.txt`
-#                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All runlists/runNumbersLHC17f2a_fix_$3_all.txt
-#                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt
-#                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All runlists/runNumbersLHC17f2a_fix_$3_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt
                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo All-LHC16q runlists/runNumbersLHC16q_woSDD_all.txt
                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrack-LHC16q runlists/runNumbersLHC17f2a_fix_woSDD_dpgTracks-LHC16q.txt
                 MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaCalo DPGTrackAndCalo-LHC16q runlists/runNumbersLHC17f2a_fix_woSDD_dpgTracksAndCalo-LHC16q.txt

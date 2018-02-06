@@ -1,6 +1,7 @@
 //!  PHOS bad channel map creation macro
 /*!
- *   With this macro, the 2D histogram bad channel maps can be added to OADB/PHOS/phosBadMap.root.
+* provide by Nicolas Schmidt:
+*   With this macro, the 2D histogram bad channel maps can be added to OADB/PHOS/phosBadMap.root.
  */
 //**************************************************************************************************
 //************************* Function to convert the absolute cellID ********************************
@@ -82,7 +83,7 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16t_addCells.log",267163,267166,1);
 
     // LHC17n pass1 Friederike Xe-Xe 5TeV
-    updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235.log",280234,280235,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull.log",280234,280235,1);
 
     // add completely new bad channels, replacing existing map in range (last argument == 0)
     //     updateFile(fileNameOADBtemp,"BadChannelsLHC10c_20171213Update","LHC10c/LHC10c_addCells.log",138125,139517,0);

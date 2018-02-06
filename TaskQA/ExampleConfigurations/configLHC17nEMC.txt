@@ -52,3 +52,22 @@ hotCellAdditionalOutputDirName LHC17n_EMC
 hotCellDataCuts    10910113_1111100007032230000_01631031000000d0   STOP
 hotCellThreshNFired   0
 hotCellThreshNTotalFired   60
+
+
+# Settings for cleanup of cell-logs
+cellCleaningUseMaybe    1
+#userGoodCellDirName bla
+#userMaybeCellDirName bla
+#userBadCellDirName bla
+
+# Settings for CellCompare
+CellCompareNSets    1
+CellCompareNTrigger 1
+CellCompareCut 10910113_1111100007032230000_01631031000000d0
+CellCompareHotCellDirName  ClusterQA_HotCellCompare/LHC17n_EMC
+CellCompareDeadCellDirName ClusterQA_DeadCellCompare/LHC17n_EMC
+CellCompareRunRange    0
+CellCompareRunStart    265305
+CellCompareRunEnd  2635525
+CellCompareManualBadChannels    /home/fbock/Photon/Results/XeXe5440GeV_QA/ClusterQA_ManualHotCell/ManualLHC17n_addDeadCells.txt
+CellCompareMinAverageSigma  1.5

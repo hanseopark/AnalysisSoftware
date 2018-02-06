@@ -100,7 +100,7 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
         if (tempLine.BeginsWith("%") || tempLine.BeginsWith("#")){
             continue;
         }
-        cout << tempLine.Data() << endl;
+//         cout << tempLine.Data() << endl;
 
         // Separate the string according to tabulators
         TObjArray *tempArr  = tempLine.Tokenize("\t");
