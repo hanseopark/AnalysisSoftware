@@ -5,12 +5,12 @@ cutNr   0
 nSets   4
 nData   2
 energy  5TeV
-filePath    /home/admin1/leardini/GridOutput/pp/Legotrain-/
-filePathPhoton  /home/admin1/leardini/GridOutput/pp/Legotrain-/
-fileName    GammaConvV1_.root
+filePath    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180129-1_firstpp
+filePathPhoton  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180129-1_firstpp
+fileName    GammaConvV1_51.root
 fileNamePhoton    AnalysisResults.root
-DataSetNames	LHC17p_wSDD    LHC17q_wSDD LHC17l3 LHC17l3 STOP
-DataSetNamesPlot	LHC17p_wSDD    LHC17q_wSDD	GEANT3	GEANT4	STOP
+DataSets    LHC17p_wSDD LHC17q_wSDD LHC17l3b_wSDD   LHC17l4b_wSDD   STOP
+plotDataSets    LHC17p_wSDD LHC17q_wSDD GEANT3  GEANT4  STOP
 doEquidistantXaxis  kTRUE
 addPhotonCutNr   0005314140
 addLabelRunlist

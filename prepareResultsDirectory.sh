@@ -115,6 +115,14 @@ elif [ $2 = "pp13TeV" ]; then
     rm *8TeV*
     rm *LHC11h*
     rm *LHC10*
+elif [ $2 = "pp5TeV" ]; then
+    rm *PbPb*
+    rm *pPb*
+    rm *2760*
+    rm *7TeV*
+    rm *8TeV*
+    rm *LHC11h*
+    rm *LHC10*
 elif [ $2 = "PbPb5TeV" ]; then
     rm *PP*
     rm *pp*

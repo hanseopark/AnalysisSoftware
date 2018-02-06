@@ -133,11 +133,17 @@ void EventQA_Runwise(
         xPosLabel = 0.75;
     if(fEnergyFlag.Contains("PbPb")){
         xPosLabel = 0.75;
-	if (fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
-	  drawVerticalLines = kTRUE;
-	  nLines = 4;
-	  runRanges[0] = 5; runRanges[1] = 37; runRanges[2] = 70; runRanges[3] = 72;
-	}
+        if (fEnergyFlag.CompareTo("PbPb_5.02TeV") == 0){
+            drawVerticalLines = kTRUE;
+            nLines = 4;
+            runRanges[0] = 5; runRanges[1] = 37; runRanges[2] = 70; runRanges[3] = 72;
+        }
+    }
+    if (fEnergyFlag.CompareTo("5TeV") == 0){
+        xPosLabel = 0.75;
+        drawVerticalLines = kTRUE;
+        nLines = 7;
+        runRanges[0] = 6; runRanges[1] = 8; runRanges[2] = 11; runRanges[3] = 19; runRanges[4] = 28; runRanges[5] = 38; runRanges[6] = 42;
     }
     if (nLines > 10) cout << "ERROR: nLines cannot be larger than 10. Increase size of runRanges[10] and verticalLines[10]" << endl;
 

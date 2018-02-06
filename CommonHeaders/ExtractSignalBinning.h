@@ -162,6 +162,11 @@
     Double_t fBinsPi05TeVPt[27]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0};
+    Double_t fBinsPi05TeV2017Pt[44]                 = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
+                                                        4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4,
+                                                        6.6, 6.8, 7.2, 7.6, 8.0, 8.6, 9.2, 10., 12., 16., 18.};
+
 
     Double_t fBinsPi05TeVPtDCal[16]                 = { 0.0, 1.0, 1.4, 1.8, 2.2,
                                                         2.6, 3.0, 3.4, 3.8, 4.4,
@@ -199,6 +204,10 @@
     Int_t fBinsPi05TeVPtRebin[26]                   = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         4, 4, 4, 4 ,4, 4};
+    Int_t fBinsPi05TeV2017PtRebin[43]               = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        4, 4, 4, 4 ,4, 4, 4, 4, 4, 4};
     Double_t fBinsPi05TeVPtRebinDCal[24]              = { 1, 1, 8, 4, 4,
                                                         4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4,
@@ -231,6 +240,8 @@
                                                         5, 5, 5};
     Double_t fBinsEta5TeVPt[14]                     = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0,
                                                         13.0, 14.0, 20.0, 30.0};
+    Double_t fBinsEta5TeV2017Pt[14]                 = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.2, 3.0, 3.5, 4.0, 5.0,
+                                                        6.0, 8.0, 12.0, 18.0};
     Int_t fBinsEta5TeVPtRebin[13]                   = { 8, 8, 5, 5, 5, 8, 8, 8, 8, 8,
                                                         10, 10, 10};
     Double_t fBinsEta5TeVPCMEMCPt[23]               = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,
@@ -1058,6 +1069,9 @@
             rows        = 5;
         } else if ( (totBins+1-startBin) < 41){
             columns     = 8;
+            rows        = 5;
+        } else if ( (totBins+1-startBin) < 45){
+            columns     = 9;
             rows        = 5;
         } else {
             columns     = 10;
@@ -2418,6 +2432,10 @@
                         } else if ( modi == 13 ) {
                           fBinsPt[i]     = fBinsPi05TeVPtPCMDCal[i];
                           if ( i < fNBinsPt )   fNRebin[i] = fBinsPi05TeVPtRebinPCMDCal[i];
+                        } else if(modi == 0 && fNBinsPt > 40){
+                            fBinsPt[i]          = fBinsPi05TeV2017Pt[i];
+                            if (i < fNBinsPt)
+                            fNRebin[i]  = fBinsPi05TeV2017PtRebin[i];
                         } else  {
                             fBinsPt[i]          = fBinsPi05TeVPt[i];
                             if (i < fNBinsPt)
@@ -3322,6 +3340,8 @@
                               }else{
                                 fBinsPt[i]  = fBinsEta5TeVEMCPt[i];
                               }
+                            } else if (fNBinsPt == 12){
+                                fBinsPt[i]  = fBinsEta5TeV2017Pt[i];
                             } else {
                                 fBinsPt[i]  = fBinsEta5TeVPt[i];
                             }

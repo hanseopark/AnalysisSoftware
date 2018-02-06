@@ -7393,9 +7393,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphCombEtatoPi0StatPbPb2760GeV_2050);
             graphCombEtatoPi0StatPbPb2760GeV_2050->Draw("p,same");
 
-            TF1* pol = new TF1("pol","[0]",minPtRange,maxPtRange);
-            pol->SetLineColor(kBlack);
-            graphCombEtatoPi0StatPbPb2760GeV_0010->Fit(pol,"NRMEX0+","",3,maxPtRange);
+            TF1* linEtaToPi0 = new TF1("linEtaToPi0","[0]",minPtRange,maxPtRange);
+            linEtaToPi0->SetLineColor(kBlack);
+            graphCombEtatoPi0StatPbPb2760GeV_0010->Fit(linEtaToPi0,"NRMEX0+","",3,maxPtRange);
+            graphCombEtatoPi0SysPbPb2760GeV_0010->Fit(linEtaToPi0,"NRMEX0+","",3,maxPtRange);
 //             pol->Draw("same");
 
             TLegend* legendEtatoPi0combo_onlyPbPb = new TLegend(0.12,0.76,0.53,0.92);
