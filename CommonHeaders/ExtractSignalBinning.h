@@ -201,6 +201,10 @@
                                                         17., 18., 19., 20., 21., 22., 23., 24., 25., 30., 40.};
     Double_t fBinsPi05TeVPtDCA[16]                  = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
                                                         2.0, 2.4, 3.0, 5.0, 10., 12.0};
+    Double_t fBinsPi05TeV2017PtDCA[44]              = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
+                                                        4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4,
+                                                        6.6, 6.8, 7.2, 7.6, 8.0, 8.6, 9.2, 10., 12., 16., 18.};
     Int_t fBinsPi05TeVPtRebin[26]                   = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         4, 4, 4, 4 ,4, 4};
@@ -261,6 +265,8 @@
                                                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                                                         8, 8, 8, 8, 8, 8, 8, 8, 8};
     Double_t fBinsEta5TeVPtDCA[9]                   = { 0.0, 0.4, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};
+    Double_t fBinsEta5TeV2017PtDCA[13]              = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.2, 3.0, 3.5, 4.0, 5.0,
+                                                        6.0, 8.0, 12.0};
     Double_t fBinsEtaPrim5TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
     Int_t fBinsEtaPrim5TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
     Int_t fBinsPi0EtaBinning5TeVPtRebin[13]         = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
@@ -1220,7 +1226,7 @@
                 } else {
                     return 7;
                 }
-            } else if (energy.CompareTo("5TeV") == 0) {
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
                 if ( mode == 2 )
                     return 9;
                 if ( mode == 4 )
@@ -1575,7 +1581,7 @@
                 } else {
                     return 4;
                 }
-            } else if (energy.CompareTo("5TeV") == 0) {
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
                 if (mode == 2 )
                     return 8;
                 else if (mode == 4 || mode == 12 )
@@ -1820,7 +1826,7 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
-            } else if (energy.CompareTo("5TeV") == 0){
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
                 if ( mode == 20 ){
                     startPtBin     = 1;
                 }
@@ -1971,7 +1977,7 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
-            } else if (energy.CompareTo("5TeV") == 0){
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
                 if ( mode == 20 ){
                     startPtBin     = 1;
                 }
@@ -2111,7 +2117,7 @@
 
     void InitializeClusterBinning (TString energy, Int_t modi ){
         fBinsClusterPt          = new Double_t[100];
-        if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("5TeV") == 0 || energy.CompareTo("XeXe_5.44TeV") == 0 ){
+        if( energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("PbPb_2.76TeV") == 0 || energy.CompareTo("PbPb_5.02TeV") == 0 || energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 || energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0 || energy.CompareTo("XeXe_5.44TeV") == 0 ){
             fNBinsClusterPt       = fNBinsCluster2760GeVPt;
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
@@ -2154,7 +2160,7 @@
 
         // Initialize bin for single invariant mass plot
         fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet, directPhoton);
-	cout << "Example pt bin: " <<  fExampleBin << endl; 
+	cout << "Example pt bin: " <<  fExampleBin << endl;
         //*************************************************************************************************
         //************************************ Binning for Pi0 ********************************************
         //*************************************************************************************************
@@ -2357,7 +2363,7 @@
             //*********************************************************************************************
             //********************************** Pi0 for pp 5TeV*******************************************
             //*********************************************************************************************
-            } else if (energy.CompareTo("5TeV") == 0) {
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     if (fNBinsPt > 17) {
@@ -2411,7 +2417,20 @@
 
                     for (Int_t i = 0; i < fNBinsPt+1; i++) {
                         if (isDCA) {
-                            fBinsPt[i]         = fBinsPi05TeVPtDCA[i];
+                            if ( modi == 0 && energy.Contains("2017"))
+                                fBinsPt[i] = fBinsPi05TeV2017PtDCA[i];
+                            else
+                                fBinsPt[i] = fBinsPi05TeVPtDCA[i];
+                        } else if ( modi == 0 ) {
+                            if(energy.Contains("2017")){
+                                fBinsPt[i]          = fBinsPi05TeV2017Pt[i];
+                                if (i < fNBinsPt)
+                                fNRebin[i]  = fBinsPi05TeV2017PtRebin[i];
+                            } else {
+                                fBinsPt[i]          = fBinsPi05TeVPt[i];
+                                if (i < fNBinsPt)
+                                fNRebin[i]  = fBinsPi05TeVPtRebin[i];
+                            }
                         } else if ( modi == 2 ) {
                             fBinsPt[i]     = fBinsPi05TeVPtPCMEMC[i];
                             if ( i < fNBinsPt )
@@ -2432,10 +2451,6 @@
                         } else if ( modi == 13 ) {
                           fBinsPt[i]     = fBinsPi05TeVPtPCMDCal[i];
                           if ( i < fNBinsPt )   fNRebin[i] = fBinsPi05TeVPtRebinPCMDCal[i];
-                        } else if(modi == 0 && fNBinsPt > 40){
-                            fBinsPt[i]          = fBinsPi05TeV2017Pt[i];
-                            if (i < fNBinsPt)
-                            fNRebin[i]  = fBinsPi05TeV2017PtRebin[i];
                         } else  {
                             fBinsPt[i]          = fBinsPi05TeVPt[i];
                             if (i < fNBinsPt)
@@ -3296,7 +3311,7 @@
             //*********************************************************************************************
             //********************************** Eta for pp 5TeV*******************************************
             //*********************************************************************************************
-            } else if (energy.CompareTo("5TeV") == 0) {
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
 
                 if (triggerSet == -1){
                     if (trigger.CompareTo("52") == 0){
@@ -3330,9 +3345,18 @@
 
                 for (Int_t i = 0; i < fNBinsPt+2; i++) {
                     if (isDCA){
-                        fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
+                        if ( modi == 0 && energy.Contains("2017"))
+                            fBinsPt[i]  = fBinsEta5TeV2017PtDCA[i];
+                        else
+                            fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
                     } else {
-                            if        ( modi == 2 ) {
+                            if        ( modi == 0 ) {
+                                if(energy.Contains("2017")){
+                                    fBinsPt[i]  = fBinsEta5TeV2017Pt[i];
+                                } else {
+                                    fBinsPt[i]  = fBinsEta5TeVPt[i];
+                                }
+                            } else if ( modi == 2 ) {
                               fBinsPt[i]  = fBinsEta5TeVPCMEMCPt[i];
                             } else if ( modi == 4 ) {
                               if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
@@ -3340,8 +3364,6 @@
                               }else{
                                 fBinsPt[i]  = fBinsEta5TeVEMCPt[i];
                               }
-                            } else if (fNBinsPt == 12){
-                                fBinsPt[i]  = fBinsEta5TeV2017Pt[i];
                             } else {
                                 fBinsPt[i]  = fBinsEta5TeVPt[i];
                             }
@@ -4080,7 +4102,7 @@
                         binning[i] = fBinsPi02760GeVFullHaitaomEMC[i];
                     }
                 }
-            } else if (energy.CompareTo("5TeV") == 0){
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
                 if ( mode == 2 || mode == 20){
                     maxNBins = 34;
                     for(Int_t i = 0; i < maxNBins+1; i++){
@@ -4092,9 +4114,16 @@
                         binning[i] = fBinsPi05TeVPtEMC[i];
                     }
                 } else if ( mode == 0 ){
-                    maxNBins = 24;
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsPi05TeVPt[i];
+                    if(energy.Contains("2017")){
+                        maxNBins = 43;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                            binning[i] = fBinsPi05TeV2017Pt[i];
+                        }
+                    } else {
+                        maxNBins = 24;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                            binning[i] = fBinsPi05TeVPt[i];
+                        }
                     }
                 }
             } else if (energy.CompareTo("7TeV") == 0){
@@ -4202,7 +4231,7 @@
                 for(Int_t i = 0; i < maxNBins+1; i++){
                     binning[i] = fBinsEta2760GeVPtTrig11a[i];
                 }
-            } else if (energy.CompareTo("5TeV") == 0){
+            } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
                 if ( mode == 2 || mode == 13 || mode == 12  ){
                     maxNBins = 22;
                     for(Int_t i = 0; i < maxNBins+1; i++){
@@ -4214,9 +4243,16 @@
                         binning[i] = fBinsEta5TeVEMCPt[i];
                     }
                 } else if ( mode == 0 ){
-                    maxNBins = 13;
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEta5TeVPt[i];
+                    if(energy.Contains("2017")){
+                        maxNBins = 12;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                            binning[i] = fBinsEta5TeV2017Pt[i];
+                        }
+                    } else {
+                        maxNBins = 13;
+                        for(Int_t i = 0; i < maxNBins+1; i++){
+                            binning[i] = fBinsEta5TeVPt[i];
+                        }
                     }
                 } else if ( mode == 20 ){
                     maxNBins = 22;

@@ -86,6 +86,33 @@ function GiveBinning5TeV()
      BinsPtGamma=$BinsPtPi0
 }
 
+function GiveBinning5TeV2017()
+{
+     echo "How many p_T bins do you want to use for the Pi0? 42 (16 GeV/c)";
+
+     read answer
+     if [ $answer = 42 ]; then
+         echo "42 bins --> Max p_T = 16 GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=42
+     else
+         echo "Pi0 binning was not set correctly. Please try again.";
+         correctPi0=0
+     fi
+
+     echo "How many p_T bins do you want to use for the eta? 12 (12 GeV/c)";
+     read answer
+     if [ $answer -gt 4 ] && [ $answer -lt 25 ]; then
+        echo "$answer bins --> Max p_t = XX GeV/c ...";
+        correctEta=1
+        BinsPtEta=$answer
+     else
+        echo "Eta binning was not set correctly. Please try again.";
+        correctEta=0
+     fi
+     BinsPtGamma=$BinsPtPi0
+}
+
 function GiveBinningDirectPhoton5TeV()
 {
     DoPi0InEtaBinning=0;
@@ -2017,7 +2044,7 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV),  PbPb_2.76TeV (PbPb@2.76TeV), PbPb_5.02TeV (PbPb@5.02TeV), XeXe_5.44TeV(XeXe@5.44TeV), pPb_5.023TeV (pPb@5.023TeV)"
+    echo "Which collision system do you want to process? 13TeV (pp@13TeV), 13TeVLowB (pp@13TeV), 8TeV (pp@8TeV), 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), 5TeV (pp@5.02TeV), 5TeV2017 (2017 pp@5.02TeV), PbPb_2.76TeV (PbPb@2.76TeV), PbPb_5.02TeV (PbPb@5.02TeV), XeXe_5.44TeV(XeXe@5.44TeV), pPb_5.023TeV (pPb@5.023TeV)"
     read answer
     if [ $answer = "900GeV" ] || [ $answer = "900" ] || [ $answer = "9" ] || [ $answer = "0.9" ]; then
         energy="900GeV";
@@ -2027,6 +2054,9 @@ do
         ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "5TeV" ] || [ $answer = "5.02TeV" ] || [ $answer = "5" ] || [ $answer = "5.02" ]; then
         energy="5TeV";
+        ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
+    elif [ $answer = "5TeV2017" ] || [ $answer = "5.02TeV2017" ] || [ $answer = "52" ] || [ $answer = "5.022017" ]; then
+        energy="5TeV2017";
         ExtInputFile="ExternalInput/IdentifiedCharged/ChargedIdentifiedSpectraPP_2016_08_14.root";
     elif [ $answer = "7TeV" ] || [ $answer = "7" ]; then
         energy="7TeV";
@@ -2190,7 +2220,7 @@ do
             fi
 
         fi
-    elif [ $energy = "5TeV" ] ; then
+    elif [ $energy = "5TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
@@ -2213,6 +2243,56 @@ do
             directphoton="No"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning5TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        else
+            echo "Command not found. Please try again.";
+        fi
+        if [ $ONLYCORRECTION -eq 0 ];  then
+            echo "Do you want to use THnSparse for the background? Yes/No?";
+            read answer
+            if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+                echo "Will use THnSparse for the background ...";
+                useTHnSparse=1
+            elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+                echo "Will NOT use THnSparse for the background ...";
+                useTHnSparse=0
+            else
+                echo "Command not found. Please try again.";
+            fi
+        fi
+
+    elif [ $energy = "5TeV2017" ]; then
+        echo "Do you want to produce Direct Photon plots? Yes/No?";
+        read answer
+        if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
+            echo "Will produce Direct Photon plots ...";
+            directphoton="directPhoton"
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinningDirectPhoton5TeV
+                correctPi0=1
+                correctEta=1
+            fi
+            if [ $correctPi0 -eq 0 ]; then
+                correct=0
+            elif [ $correctEta -eq 0 ]; then
+                correct=0
+            else
+                correct=1
+            fi
+        elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
+            echo "No Direct Photon plots will be produced ...";
+            directphoton="No"
+            if [ $ONLYCORRECTION -eq 0 ]; then
+                GiveBinning5TeV2017
                 correctPi0=1
                 correctEta=1
             fi
