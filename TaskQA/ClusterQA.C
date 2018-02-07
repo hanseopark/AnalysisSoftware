@@ -3481,7 +3481,7 @@ void ClusterQA(
                         }
 
                         EditTH1NoRunwise(mcFractionMatchesTooManyPt,24,1,kAzure,kAzure,1.2,0.9);
-                        mcFractionMatchesTooManyPt->SetLineWidth(0.6);
+                        mcFractionMatchesTooManyPt->SetLineWidth(1);
                         mcFractionMatchesTooManyPt->GetXaxis()->SetRangeUser(fBinsAnalysisPt[0],fBinsAnalysisPt[fNBinsAnalysisPt]+2);
                         mcFractionMatchesTooManyPt->GetXaxis()->SetTitle("#it{p}_{T, #gamma#gamma} (GeV/#it{c})");
                         mcFractionMatchesTooManyPt->GetYaxis()->SetRangeUser(1E-3,120);
@@ -3490,7 +3490,7 @@ void ClusterQA(
                         mcFractionMatchesTooManyPt->Draw("p");
 
                         EditTH1NoRunwise(mcFractionMatchesMissingPt,20,1,kRed,kRed,1.2,0.9);
-                        mcFractionMatchesMissingPt->SetLineWidth(0.6);
+                        mcFractionMatchesMissingPt->SetLineWidth(1);
                         mcFractionMatchesMissingPt->Sumw2();
                         mcFractionMatchesMissingPt->Draw("p, same");
 

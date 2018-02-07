@@ -30,9 +30,10 @@
     - DrawGammaLines
     // */
 
-    #include <Riostream.h>
-    #include <TH3.h>
-
+    #ifndef __CLING__
+        #include <Riostream.h>
+        #include <TH3.h>
+    #endif
     /*********************************************************************************************************
     DrawAliceLogoPi0Performance
     * will draw you the ALICE Logo as well the text "ALICE Performance", "pp @ 7 TeV" and the date

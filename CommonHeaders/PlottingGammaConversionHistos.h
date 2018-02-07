@@ -31,9 +31,10 @@
     - DrawGammaLines
     */
 
-    #include <Riostream.h>
-    #include <TProfile.h>
-
+    #ifndef __CLING__
+        #include <Riostream.h>
+        #include <TProfile.h>
+    #endif
     // extern TRandom *kgRandom;
     // extern TBenchmark *kgBenchmark;
     // extern TSystem *kgSystem;
@@ -157,7 +158,7 @@
         c1->SetFillColor(0);
     }
 
-    //__________________________________________________________________________________________________________
+
     TCanvas *GetAndSetCanvas( TString name,
                               Double_t leftmargin = 0.11,
                               Double_t bottommargin = 0.1,
@@ -175,7 +176,6 @@
 
     }
 
-    //__________________________________________________________________________________________________________
     TLegend *GetAndSetLegend( Double_t positionX,
                             Double_t positionY,
                             Double_t entries,
@@ -197,7 +197,6 @@
         return legend;
     }
 
-    //__________________________________________________________________________________________________________
     TLegend *GetAndSetLegend2(  Double_t positionX,
                                 Double_t positionY,
                                 Double_t positionXRight,

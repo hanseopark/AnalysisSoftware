@@ -16,7 +16,6 @@ void PhotonQA(
                 TString* pathDataSets,
                 Int_t mode                      = 2,
                 Int_t cutNr                     = 0,         // if -1: you have to choose number at runtime, if 0: the first or only number is chosen
-                Int_t doExtQA                   = 2,          // 0: switched off, 1: normal extQA, 2: with Cell level plots
                 TString suffix                  = "eps",
                 TString labelData               = "Data",
                 Bool_t addSubfolder             = kFALSE,

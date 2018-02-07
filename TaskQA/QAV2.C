@@ -295,8 +295,8 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
-    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
-    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, addPhotonCutNr);
+    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, suffix, labelData, addSubfolder);
+    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder, addPhotonCutNr);
     if ( doClusterQA){
         if(fuseClusterQAValues==1)
             ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kFALSE, fuseClusterQAValues, arrQAEnergy, arrQATime, arrQAHotCells1D, arrmin2D, arrmax2D);
@@ -304,7 +304,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     }
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);
-    if ( doPrimaryTrackQA ) PrimaryTrackQA (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    if ( doPrimaryTrackQA ) PrimaryTrackQA (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, suffix, labelData, addSubfolder);
 
     // **************************************************************************************************************
     // ************************** Cell comparison macros ************************************************************

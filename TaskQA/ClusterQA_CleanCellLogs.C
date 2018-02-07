@@ -1,6 +1,4 @@
 #include "QA.h"
-#include <sys/types.h>
-#include <dirent.h>
 #include <vector>
 #include <algorithm>
 #include <iterator>
@@ -38,14 +36,17 @@
  * $CUTNUMBER/$ENERGY/ClusterQA/$SUFFIX/Cells/Detailed/bad
  */
 
-void read_directory(const TString& name, vector<TString>& v)
-{
-    DIR* dirp = opendir(name.Data());
-    struct dirent * dp;
-    while ((dp = readdir(dirp)) != NULL) {
-        v.push_back((TString) dp->d_name);
+void read_directory(const TString& name, vector<TString>& v){
+
+    TString list        = gSystem->GetFromPipe(Form("ls -w 1 %s", name.Data()));
+    TObjArray *tempArr  = list.Tokenize("\n");
+
+    for (Int_t i = 0; i < tempArr->GetEntries(); i++){
+        TString current = (TString)((TObjString*)tempArr->At(i))->GetString();
+        if (current.CompareTo("") != 0 && current.CompareTo(" ") != 0 )
+            v.push_back(current);
     }
-    closedir(dirp);
+    delete tempArr;
 }
 
 void ClusterQA_CleanCellLogs(    TString configFileName  = "configFile.txt",

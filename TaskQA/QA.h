@@ -13,54 +13,56 @@
 
 using namespace std;
 
-#include <Riostream.h>
-#include <stdlib.h>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <map>
-#include <math.h>
-#include <queue>
-#include <algorithm>
+#ifndef __CLING__
+    #include <Riostream.h>
+    #include <stdlib.h>
+    #include <iostream>
+    #include <fstream>
+    #include <vector>
+    #include <map>
+    #include <math.h>
+    #include <queue>
+    #include <algorithm>
 
-#include <TApplication.h>
-#include <TArrow.h>
-#include <TASImage.h>
-#include <TAxis.h>
-#include <TAttAxis.h>
-#include <TCanvas.h>
-#include <TDatabasePDG.h>
-#include <TFile.h>
-#include <TFitResult.h>
-#include <TFitResultPtr.h>
-#include <TFrame.h>
-#include <TF1.h>
-#include <TGaxis.h>
-#include <TGraph.h>
-#include <TGraphAsymmErrors.h>
-#include <TGraphErrors.h>
-#include <THnSparse.h>
-#include <TH1.h>
-#include <TH2.h>
-#include <TKey.h>
-#include <TLatex.h>
-#include <TLegend.h>
-#include <TList.h>
-#include <TMath.h>
-#include <TMarker.h>
-#include <TMinuit.h>
-#include <TMultiGraph.h>
-#include <TObject.h>
-#include <TPaletteAxis.h>
-#include <TPaveLabel.h>
-#include <TPostScript.h>
-#include <TProfile2D.h>
-#include <TROOT.h>
-#include <TStyle.h>
-#include <TString.h>
-#include <TSystem.h>
-#include <TVirtualFitter.h>
-#include <TRandom3.h>
+    #include <TApplication.h>
+    #include <TArrow.h>
+    #include <TASImage.h>
+    #include <TAxis.h>
+    #include <TAttAxis.h>
+    #include <TCanvas.h>
+    #include <TDatabasePDG.h>
+    #include <TFile.h>
+    #include <TFitResult.h>
+    #include <TFitResultPtr.h>
+    #include <TFrame.h>
+    #include <TF1.h>
+    #include <TGaxis.h>
+    #include <TGraph.h>
+    #include <TGraphAsymmErrors.h>
+    #include <TGraphErrors.h>
+    #include <THnSparse.h>
+    #include <TH1.h>
+    #include <TH2.h>
+    #include <TKey.h>
+    #include <TLatex.h>
+    #include <TLegend.h>
+    #include <TList.h>
+    #include <TMath.h>
+    #include <TMarker.h>
+    #include <TMinuit.h>
+    #include <TMultiGraph.h>
+    #include <TObject.h>
+    #include <TPaletteAxis.h>
+    #include <TPaveLabel.h>
+    #include <TPostScript.h>
+    #include <TProfile2D.h>
+    #include <TROOT.h>
+    #include <TStyle.h>
+    #include <TString.h>
+    #include <TSystem.h>
+    #include <TVirtualFitter.h>
+    #include <TRandom3.h>
+#endif
 
 #include "../CommonHeaders/PlottingMeson.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
@@ -1418,6 +1420,10 @@ void DrawPeriodQACompareHistoRatioTH1(  TCanvas* canvas,Double_t leftMargin,Doub
         vecTemp.at(iVec)->GetYaxis()->SetDecimals();
         //draw
         vecTemp.at(iVec)->SetTitle(title.Data());
+    }
+
+    if(adjustRange){
+        cout << "ATTENTION: range min and max will not be applied \t" << rangeMin << "\t" << rangeMax << "\t" << useErrors << endl;
     }
 
     //if(adjustRange) AdjustHistRange(vecTemp,rangeMin,rangeMax,useErrors);
@@ -3077,7 +3083,7 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
                     randomCell      = (Int_t)randy1.Uniform(allCellsGood.size());
                     randomCellID    = allCellsGood.at(randomCell);
                     timingGood      = (TH1D*) DataMCHistsTime.at(0)->ProjectionX(Form("goodProject_%i",randomCellID),randomCellID+1,randomCellID+1);
-                    if (!timingGood->GetEntries()>0) timingGood = NULL;
+                    if (!(timingGood->GetEntries()>0)) timingGood = NULL;
                 }
             }
         }
@@ -3223,7 +3229,7 @@ Float_t GetMedianTH2(TH2* hist)
     {
         for(Int_t y=1; y<=hist->GetYaxis()->GetNbins(); y++)
         {
-            if(!hist->GetBinContent(x,y)==0) vectorMedian.push_back(hist->GetBinContent(x,y));
+            if(!(hist->GetBinContent(x,y)==0)) vectorMedian.push_back(hist->GetBinContent(x,y));
         }
     }
     selection_sort(vectorMedian.begin(), vectorMedian.end());

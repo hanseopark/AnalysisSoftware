@@ -1,15 +1,18 @@
 #ifndef GAMMACONV_ConversionFunctions
 #define GAMMACONV_ConversionFunctions
 
-    #include "Math/WrappedTF1.h"
-    #include "Math/BrentRootFinder.h"
-    #include "TFitResultPtr.h"
-    #include "TFitResult.h"
-    #include "TObjString.h"
-    #include "TRandom.h"
-    #include "TSpline.h"
-    #include "TKey.h"
-
+    #ifndef __CLING__
+        #include "Math/WrappedTF1.h"
+        #include "Math/BrentRootFinder.h"
+        #include "TFitResultPtr.h"
+        #include "TFitResult.h"
+        #include "TObjString.h"
+        #include "TString.h"
+        #include "TRandom.h"
+        #include "TSpline.h"
+        #include "TKey.h"
+        #include <vector>
+    #endif
     // ****************************************************************************************************************
     // *********************** declaration of functions defined in this header ****************************************
     // ****************************************************************************************************************
@@ -2896,18 +2899,21 @@
                 Double_t ptEnd                  = xBinsPbPb[i] + xBinsErrPbPb[i];
                 Double_t binWidth               = ptEnd-ptStart;
 
-                Double_t yieldPP                = fitPP->Integral(ptStart, ptEnd, resultPP->GetParams())/binWidth;
+                for(UInt_t ipar = 0; ipar < resultPP->NPar(); ipar++) fitPP->SetParameter(ipar, resultPP->GetParams()[ipar]);
+                Double_t yieldPP                = fitPP->Integral(ptStart, ptEnd)/binWidth;
                 Double_t errorYieldPP           = fitPP->IntegralError(ptStart, ptEnd, resultPP->GetParams(), resultPP->GetCovarianceMatrix().GetMatrixArray())/binWidth;
                 Double_t relErrPP               = abs(errorYieldPP)/yieldPP *100;
 
                 cout << "yieldPP: " << yieldPP << " relErrPP: " << relErrPP << endl;
-                Double_t yieldPPPowerlaw        = fitPPPowerlaw->Integral(ptStart, ptEnd, resultPPPowerlaw->GetParams())/binWidth;
+                for(UInt_t ipar = 0; ipar < resultPPPowerlaw->NPar(); ipar++) fitPPPowerlaw->SetParameter(ipar, resultPPPowerlaw->GetParams()[ipar]);
+                Double_t yieldPPPowerlaw        = fitPPPowerlaw->Integral(ptStart, ptEnd)/binWidth;
                 Double_t errorYieldPPPowerlaw   = fitPPPowerlaw->IntegralError(ptStart, ptEnd, resultPPPowerlaw->GetParams(), resultPPPowerlaw->GetCovarianceMatrix().GetMatrixArray())/binWidth;
                 if(!quiet) cout << "pt: " << ptStart << " " << ptEnd << " , yieldPPvar1 " << yieldPPPowerlaw << "+-" << errorYieldPPPowerlaw << endl;
                 Double_t relErrPow1             = abs(yieldPPPowerlaw-yieldPP)/yieldPP*100;
                 if(!quiet) cout << "relErrPP var1: " << relErrPow1 << endl;
 
-                Double_t yieldPPPowerlaw2       = fitPPPowerlaw2->Integral(ptStart, ptEnd, resultPPPowerlaw2->GetParams())/binWidth;
+                for(UInt_t ipar = 0; ipar < resultPPPowerlaw2->NPar(); ipar++) fitPPPowerlaw2->SetParameter(ipar, resultPPPowerlaw2->GetParams()[ipar]);
+                Double_t yieldPPPowerlaw2       = fitPPPowerlaw2->Integral(ptStart, ptEnd)/binWidth;
                 Double_t errorYieldPPPowerlaw2  = fitPPPowerlaw2->IntegralError(ptStart, ptEnd, resultPPPowerlaw2->GetParams(), resultPPPowerlaw2->GetCovarianceMatrix().GetMatrixArray())/binWidth;
                 if(!quiet) cout<< "pt: "<< ptStart << " " << ptEnd << " , yieldPPvar2 " << yieldPPPowerlaw2 << "+-" << errorYieldPPPowerlaw2 << endl;
                 Double_t relErrPow2             = abs(yieldPPPowerlaw2-yieldPP)/yieldPP *100;
