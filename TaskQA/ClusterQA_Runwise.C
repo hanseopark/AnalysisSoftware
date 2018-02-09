@@ -221,11 +221,11 @@ void ClusterQA_Runwise(
     } else if(fClusterCutSelection.BeginsWith('2')){
         calo                        = "PHOS";
         iCalo                       = 2;
-        nCaloModules                = 5;
-        nCaloCells                  = 6000;
-        if((vecDataSet.at(0)).Contains("LHC10")){
-            nCaloModules            = 5;
-            nCaloCells              = 6000;
+        nCaloModules                = 4;
+        nCaloCells                  = 12544;
+        if((vecDataSet.at(0)).Contains("LHC10") || (vecDataSet.at(0)).Contains("LHC11") || (vecDataSet.at(0)).Contains("LHC12") || (vecDataSet.at(0)).Contains("LHC13")){
+            nCaloModules            = 3;
+            nCaloCells              = 10752;
         }
     } else if(fClusterCutSelection.BeginsWith('3')){
         calo                        = "DCal";
