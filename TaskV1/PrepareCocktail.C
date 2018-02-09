@@ -2387,6 +2387,9 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
   TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrime", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
                                              "NRho", "CRho", "NDelta", "CDelta", "NKaonSubS", "Lambda", "NSigma", "CSigma", "COmega", "CXi", "JPsi",
                                              "DZero", "DPlus", "DStarPlus", "DSPlus", "CSigmaStar", "NXiStar", "NKaonSubL"};
+  Style_t fParticleLineStyle[nParticles]  = {1, 2, 3, 4, 1, 2, 1, 1, 1, 8, 1,
+                                             5, 5, 1, 1, 7, 4, 1, 1, 1, 1, 1,
+                                             1, 1, 1, 1, 1, 1, 3};
   TString fParticleLatex[nParticles]      = {"#pi^{0}", "#eta", "#omega", "#eta'", "#gamma_{dir}", "(#pi^{+}+#pi^{-})/2", "(K^{+}+K^{-})/2", "(p+#bar{p})/2", "(h^{+}+h^{-})/2",
                                              "#phi", "K^{0*}", "#rho^{0}", "(#rho^{+}+#rho^{-})/2", "#Delta^{0}", "(#Delta^{+}+#Delta^{-})/2", "K^{0}_{s}", "#Lambda", "#Sigma^{0}",
                                              "(#Sigma^{+}+#Sigma^{-})/2", "(#Omega^{-}+#bar{#Omega}^{+})/2", "(#Xi^{-}+#bar{#Xi}^{+})/ 2", "J/#psi", "D^{0}", "D^{+}", "D^{*+}",
@@ -2455,7 +2458,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     // create legend
     Int_t textSizeLabelsPixel                 = 2000*0.038;
     TLegend* legend                              = GetAndSetLegend2(0.2,  0.09, 0.65, 0.08+(1.05*0.028*nRows),textSizeLabelsPixel, 2, "", 43, 0);
-    TLatex *labelEnergy                     = new TLatex(0.94, 0.925, Form("ALICE %s", collSys.Data()));
+    TLatex *labelEnergy                     = new TLatex(0.94, 0.925, Form("ALICE, %s", collSys.Data()));
     SetStyleTLatex( labelEnergy, 0.043,4, 1, 42, kTRUE, 31);
 
     if (hasHeavyParticle && xMax < 5){
@@ -2464,7 +2467,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     }
     // dummy histogram
     TH1D* dummyHisto                          = new TH1D("dummyHisto", "", 100000, xMin*0.4, xMax*1.9);
-    SetHistogramm(dummyHisto,"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}d#it{y}} ((GeV/#it{c})^{-1})", yMin, yMax, 0.7, 1.65);
+    SetHistogramm(dummyHisto,"#it{p}_{T} (GeV/#it{c})","#frac{1}{#it{N}_{inel}} #frac{d#it{N}^{2}}{d#it{p}_{T}d#it{y}} ((GeV/#it{c})^{-1})", yMin, yMax, 0.7, 1.65);
     dummyHisto->GetXaxis()->SetLabelOffset(-0.01);
     dummyHisto->GetXaxis()->SetTickLength(0.02);
     dummyHisto->GetYaxis()->SetTitleFont(62);
@@ -2537,17 +2540,17 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
           }
           if (cocktailParamList->FindObject(Form("%d_pt", fParticlePDG[i]))) {
               tempFit       = (TF1*)cocktailParamList->FindObject(Form("%d_pt", fParticlePDG[i]));
-              DrawGammaSetMarkerTF1(tempFit, 1,1.5, GetParticleColor(fParticle[i]));
+              DrawGammaSetMarkerTF1(tempFit, fParticleLineStyle[i],1.5, GetParticleColor(fParticle[i]));
               tempFit->SetRange(xMin*0.5, xMax*1.5);
               tempFit->Draw("l,same");
           } else if (cocktailParamList->FindObject(Form("%d_pt_mtScaled", fParticlePDG[i]))) {
               tempFit       = (TF1*)cocktailParamList->FindObject(Form("%d_pt_mtScaled", fParticlePDG[i]));
-              DrawGammaSetMarkerTF1(tempFit, 1, 1.5, GetParticleColor(fParticle[i]));
+              DrawGammaSetMarkerTF1(tempFit, fParticleLineStyle[i], 1.5, GetParticleColor(fParticle[i]));
               tempFit->SetRange(xMin*0.5, xMax*1.5);
               tempFit->Draw("l,same");
           } else if (addParamsAvail && listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data()))) {
               tempFit       = (TF1*)listAddParam->FindObject(Form("%s%sStat_Fit", fParticle[i].Data(),methodMeson.Data()));
-              DrawGammaSetMarkerTF1(tempFit, 1, 1.5, GetParticleColor(fParticle[i]));
+              DrawGammaSetMarkerTF1(tempFit, fParticleLineStyle[i], 1.5, GetParticleColor(fParticle[i]));
               tempFit->SetRange(xMin*0.5, xMax*1.5);
               tempFit->Draw("l,same");
           }

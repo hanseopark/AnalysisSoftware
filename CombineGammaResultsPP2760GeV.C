@@ -2979,7 +2979,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     Style_t     cocktailColorPartialSums[14]                   = {kBlue+1,  kRed+1,   kOrange-2,  kGreen-2,   kPink-2,
                                                                   kOrange+2,  kAzure,   kGreen+3,   kAzure+2,   24,
                                                                   kGray+1,      kPink+9,  kPink+5,        kViolet+1};
-
+    Style_t     cocktailLineStylePartSums[14]                  = {1,  2,   3,  4,   5,
+                                                                  6,  -1,   8,   9,   -1,
+                                                                  10,      7,  3,        4};
     TDirectory* directoryCocktailpp2760GeV[11]     = {NULL, NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL,  NULL};
     TH1D* histoGammaFractionsCocktail[14][11];
     TGraphAsymmErrors* graphGammaFractionsCocktail[14][11];
@@ -3229,6 +3231,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     dummyHist->Draw();
     legendGammasRatio2->Clear();
     legendGammasRatio2                                 = GetAndSetLegend2(0.3, 0.90-(40*1.15*(2)/1200), 1.03, 0.90, 46, 6);
+    legendGammasRatio2->SetMargin(0.4);
     // legendGammasRatio2->SetHeader("#gamma from");
     for (Int_t i=0; i<14; i++) {
         if (graphGammaFractionsCocktailPartialSums[i][5]) {
@@ -3271,6 +3274,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             DrawGammaSetMarkerTGraphAsym(             graphGammaFractionsCocktailPartialSums[i][5], cocktailMarker[i], 0, cocktailColorPartialSums[i],  cocktailColorPartialSums[i]);
             graphGammaFractionsCocktailPartialSums[i][5]->SetLineWidth(3);
             graphGammaFractionsCocktailPartialSums[i][5]->SetLineColor(cocktailColorPartialSums[i]);
+            graphGammaFractionsCocktailPartialSums[i][5]->SetLineStyle(cocktailLineStylePartSums[i]);
             graphGammaFractionsCocktailPartialSums[i][5]->Draw("sameCX");
         }
     }

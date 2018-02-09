@@ -461,12 +461,12 @@
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0,
                                                         16.0, 20.0, 25.0};
-    Double_t fBinsPi08TeVPtmEMC[56]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+    Double_t fBinsPi08TeVPtmEMC[58]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0,
                                                         6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 11.0, 12.0,
                                                         13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 22.0, 24.0,
                                                         26.0, 28.0, 30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 45.0, 50.0,
-                                                        55.0, 60.0, 65.0, 70.0, 80.0, 100.0};
+                                                        55.0, 60.0, 65.0, 70.0, 80.0, 100.0, 125.0, 150.0};
     Double_t fBinsPi08TeVPtmEMCComb[61]             = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6,
                                                         3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0,
@@ -517,12 +517,12 @@
     Int_t fBinsPi08TeVPCMEMCPtRebin[30]             = { 2, 2, 4, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         4, 4, 4, 4, 5, 5, 5, 8, 16, 2};
-    Int_t fBinsPi08TeVPtmEMCRebin[53]               = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    Int_t fBinsPi08TeVPtmEMCRebin[55]               = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 5, 5,
-                                                        5, 5, 5};
+                                                        5, 5, 5, 5, 5};
 
     Double_t fBinsEtaComb8TeVPt[27]                 = { 0.5, 0.8, 1.1, 1.4, 1.7, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 14.0, 16.0,
@@ -2935,9 +2935,9 @@
                         cout << "You have chosen to have more than 31 bins, this is not possible, it will be reduced to 31" << endl;
                         fNBinsPt        = 29;
                         }
-                    } else if (fNBinsPt > 55 && (modi == 10)){
-                        cout << "You have chosen to have more than 55 bins, this is not possible, it will be reduced to 55" << endl;
-                        fNBinsPt        = 55;
+                    } else if (fNBinsPt > 57 && (modi == 10)){
+                        cout << "You have chosen to have more than 57 bins, this is not possible, it will be reduced to 57" << endl;
+                        fNBinsPt        = 57;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
