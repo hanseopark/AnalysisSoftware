@@ -55,6 +55,19 @@ function GetFileNumberListCalo()
     cat $3
 }
 
+function GetFileNumberListCaloMerged()
+{
+    ls $1/GammaCaloMerged_*.root > filesTemp.txt
+    fileNumbers=`cat filesTemp.txt`
+    rm fileNumbers.txt
+    for fileName in $fileNumbers; do
+        number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number >> fileNumbers.txt
+    done
+    sort -u fileNumbers.txt > $3
+    cat $3
+}
+
 
 function SeparateCutsIfNeeded()
 {
@@ -94,7 +107,11 @@ function CopyFileIfNonExisitent()
             else
                 rm locallog.txt
                 if [ $4 != "none" ]; then
-                    alien_ls $4/ > locallog.txt
+                    if [ $4 == "*Stage*" ]; then
+                        alien_ls -F $4/ | grep "/" > locallog.txt
+                    else
+                        alien_ls -F $4/ | grep "/" | grep -v "Stage" > locallog.txt
+                    fi
                     echo "********** log output ***********"
                     cat locallog.txt
                     dirNumbers=`cat locallog.txt`
@@ -117,7 +134,7 @@ function CopyFileIfNonExisitent()
                     cat $BASEDIR/locallog.txt
                     fileNumbers=`cat $BASEDIR/locallog.txt`
                     for fileName in $fileNumbers; do
-                        hadd -f $1/$fileName $1/Stage1/*/$fileName
+                        hadd -n 10 -f $1/$fileName $1/Stage1/*/$fileName
                     done
                     cd $1/
                     zip root_archive.zip *.root
@@ -225,6 +242,29 @@ function ChangeStructureIfNeededCalo()
    fi
 }
 
+function ChangeStructureIfNeededCaloMerged()
+{
+    if [[ $1 == *"Basic.root"* ]]; then
+        echo "Nothing to be done"
+    else
+        number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
+        number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
+        if [ -z "$number2" ]; then
+            number=$number1
+        else
+            echo $number2
+            number=$number1\_$number2
+        fi
+        echo $number
+        cp $2/GammaCaloMerged$5_$number.root $OUTPUTDIR/GammaCaloMerged_$4\_$number.root
+        if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log ]; then
+            echo "nothing to be done";
+        else
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log\"\,10\)
+        fi
+   fi
+}
+
 
 function GetFileNumberMerging()
 {
@@ -290,3 +330,26 @@ function MergeAccordingToSpecificRunlist()
     done;
     echo "done" > $2/mergedAll$4.txt
 }
+
+function MergeAccordingToList()
+{
+    echo "fileList $1"
+    echo "final-Output $2"
+    fileNamesMerging=`cat $1`
+    TOMERGE="";
+    counter=0
+    for fileName in $fileNamesMerging; do
+        if [ -f $fileName ]; then
+            TOMERGE="$TOMERGE $fileName"
+            counter=$((counter+1))
+        else
+            echo "I couldn't find the file for bin $fileName";
+        fi
+    done;
+    if [ $counter -gt 1 ]; then
+        hadd -n 10 -f $2 $TOMERGE
+    else
+        cp $TOMERGE $2
+    fi
+}
+

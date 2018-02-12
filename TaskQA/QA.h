@@ -3025,12 +3025,9 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
             continue;
         }
 
-        TLegend* leg1 = new TLegend( 0.6,0.81,0.97,0.95);
-        leg1->SetTextSize(0.04);
-        leg1->SetFillColor(0);
-        TLegend* leg2 = new TLegend( 0.6,0.81,0.97,0.95);
-        leg2->SetTextSize(0.04);
-        leg2->SetFillColor(0);
+//         cout << canvas->GetWindowHeight() << endl;
+        TLegend* leg1 = GetAndSetLegend2(0.75, 0.95-(0.04*(Int_t)DataMCHists.size()), 0.95, 0.95, 0.04*canvas->GetWindowHeight(), 1, "", 43, 0);
+        TLegend* leg2 = GetAndSetLegend2(0.12, 0.95-(0.04*2), 0.34, 0.97, 0.04*canvas->GetWindowHeight(), 1, "", 43, 0);
 
         Bool_t allEmpty = kTRUE;
         for(Int_t i=0; i<(Int_t)DataMCHists.size(); i++){
@@ -3045,15 +3042,22 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
         // adjusting the pt range in the histo
         AdjustHistRange(fVecDataMC,100,100,kTRUE);
         Int_t iStart = (Int_t) fVecDataMC.size()-1;
-        Int_t minB=0; Int_t maxB=0;
+        Int_t minB=100; Int_t maxB=0;
+        Int_t minBC=100; Int_t maxBC=0;
+        for(Int_t i=iStart; i>=0; i--){
+            TH1D* fHistDataMC = fVecDataMC.at(i);
+            GetMinMaxBin(fHistDataMC,minBC,maxBC,1e-11);
+            if (calo.Contains("EMC"))
+                minBC = fHistDataMC->FindBin(0.101);
+            if (minBC < minB )
+                minB    = minBC;
+            if (maxBC > maxB)
+                maxB    = maxBC;
+        }
         for(Int_t i=iStart; i>=0; i--){
             TH1D* fHistDataMC = fVecDataMC.at(i);
             fHistDataMC->Scale(1./nEvents[i]);
-            if (fHistDataMC->GetEntries() > 0) allEmpty = kFALSE;
-            GetMinMaxBin(fHistDataMC,minB,maxB,1e-11);
-            if (calo.Contains("EMC"))
-                minB = fHistDataMC->FindBin(0.101);
-            SetXRange(fHistDataMC,minB,maxB+10);
+            SetXRange(fHistDataMC,minB,maxB+3);
             SetStyleHistoTH1ForGraphs(fHistDataMC, "Cell Energy (GeV)",Form("normalized counts for Cell ID %i",allCells.at(iCell)),0.035,0.04, 0.035,0.04, 1.0,0.9);
             if(i==0){
                 DrawGammaSetMarker(fHistDataMC, 24, 0.5, color[i], color[i]);

@@ -5,7 +5,7 @@ cutNr   -1
 nSets   2
 nData   1
 energy  XeXe_5.44TeV
-filePath    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/
+filePath    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/
 fileName    GammaConvV1_401.root
 DataSets    LHC17n    LHC17j7 STOP
 plotDataSets    LHC17n  Hijing    STOP

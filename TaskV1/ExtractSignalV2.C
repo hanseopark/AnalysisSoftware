@@ -5281,7 +5281,7 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     Double_t mesonAmplitude         = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
     Double_t mesonAmplitudeMin      = 0;
     Double_t mesonAmplitudeMax      = 0;
-    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0){
+    if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 || fEnergyFlag.Contains("XeXe")){
         mesonAmplitudeMin = mesonAmplitude*99./100.;
         mesonAmplitudeMax = mesonAmplitude*110./100.;
         if (fMode == 2 || fMode == 13 || fMode == 3){
@@ -5338,11 +5338,9 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
 
     fFitReco = NULL;
     TF1* fFitRecoPre = new TF1("fGauss","([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0], fMesonFitRange[1]);
-    if (fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12){
+    if (fMode == 2 || fMode == 13 || fMode == 4 || fMode == 12 || fMode == 5 || fMode == 3){
         fFitReco = new TF1("GaussExpLinear","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2)))+[4]+[5]*x)+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2)+[4]+[5]*x)",
                         fMesonFitRange[0], fMesonFitRange[1]);
-    } else if (fMode == 3) {
-        fFitReco = new TF1("GaussLinearBG","gaus(0)",fMesonFitRange[0],fMesonFitRange[1]);
     } else {
         fFitReco = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))", fMesonFitRange[0],
                         fMesonFitRange[1]);
@@ -5360,6 +5358,8 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
         if ( fEnergyFlag.CompareTo("8TeV") == 0 )
             fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
         else if ( fEnergyFlag.Contains("PbPb") )
+            fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
+        else if ( fEnergyFlag.Contains("XeXe") )
             fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
         else
             fFitRecoPre->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.2);
@@ -5426,6 +5426,8 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     if ( (fMode == 2 || fMode == 4 || fMode == 12 || fMode == 13) && fEnergyFlag.Contains("pPb_5.023TeV")  )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
     else if ( fMode == 2  && fEnergyFlag.CompareTo("2.76TeV") == 0 )
+        fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
+    else if ( (fMode == 2 || fMode == 4 || fMode == 3 || fMode == 5 || fMode == 12 || fMode == 13) && fEnergyFlag.Contains("XeXe")  )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
     else
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");

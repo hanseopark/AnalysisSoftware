@@ -77,10 +77,10 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_1.log",244480,244628,1);
 
     // LHC16qt pass1 Friederike & Andrea & Toon pPb 5TeV
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265309-265335.log",265309,265335,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265336-265388.log",265336,265388,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16q_addCells_265389-265525.log",265389,265525,1);
-    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Friederike","badChannelListsPHOS/LHC16t_addCells.log",267163,267166,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265309-265335.log",265309,265335,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265336-265388.log",265336,265388,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16q_265419-265525.log",265389,265525,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16t_267163-267166.log",267163,267166,1);
 
     // LHC17n pass1 Friederike Xe-Xe 5TeV
     updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull.log",280234,280235,1);
@@ -105,7 +105,7 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
     // number of super modules in PHOS
     const Int_t nSM = 5;
 
-    // load OADB file and make it a temporary container
+    // load OADB file and make it a temporary containerzeig mal
     TFile *f                                    = TFile::Open(fileNameOADB);
     f->ls();
     AliOADBContainer *con                       =(AliOADBContainer*)f->Get("phosBadMap");

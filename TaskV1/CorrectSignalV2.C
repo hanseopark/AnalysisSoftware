@@ -315,14 +315,11 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
     TString centralityString    = GetCentralityString(fEventCutSelection);
     TString centralityString2   = GetCentralityString(fEventCutSelection);
-    TString fTextCent       ="";
     if (centralityString.CompareTo("pp")==0){
-        fTextCent           = "MinBias";
         centralityString    = "";
     } else {
-        fTextCent = Form("%s central", centralityString.Data());
         if ( !centralityString.Contains("0-100%") )
-            collisionSystem = Form("%s", collisionSystem.Data());
+            collisionSystem = Form("%s %s", centralityString.Data(), collisionSystem.Data());
     }
     if (optionPeriod.CompareTo("") != 0 ){
         collisionSystem     = Form("%s, %s",collisionSystem.Data(),optionPeriod.Data());

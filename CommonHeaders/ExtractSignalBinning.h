@@ -1699,6 +1699,9 @@
                 } else if (mode == 4){
                   scaleFac    = 2;
                   return 15;
+                } else if (mode == 5){
+                    scaleFac    = 2;
+                    return 12;
                 } else {
                     scaleFac    = 2;
                     return 10;
@@ -2200,7 +2203,7 @@
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 9;
                 } else if ( mode == 5){
-                    startPtBin     = 7;
+                    startPtBin     = 8;
                 } else if (mode == 20){
                     startPtBin     = 2;
                 }

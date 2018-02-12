@@ -59,12 +59,16 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17j7MC="672";
 # LHC17j7MC="674";
 
-TRAINDIR=Legotrain-vAN20171115-XeXeQA
+# TRAINDIR=Legotrain-vAN20171115-XeXeQA
 # LHC17nData="348"; #pass 1
- LHC17nData="349"; #pass 1
-LHC17j7MC="687";
+#  LHC17nData="349"; #pass 1
+# LHC17j7MC="687";
 # LHC17j7MC="688";
 # LHC17j7MC="689";
+
+TRAINDIR=Legotrain-vAN20180207-XeXeQA
+LHC17nData="387"; #pass 1
+LHC17j7MC="816";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

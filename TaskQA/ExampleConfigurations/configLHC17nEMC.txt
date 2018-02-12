@@ -5,7 +5,7 @@ cutNr   0
 energy  XeXe_5.44TeV
 labelData   Data
 nSets   2
-pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_LHC17n-pass1-All_300.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_MC_LHC17j7-All_300.root STOP
+pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/GammaCalo_LHC17n-pass1-All_300.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/GammaCalo_MC_LHC17j7-All_300.root STOP
 DataSetNames    LHC17n    LHC17j7   STOP
 DataSetNamesPlot    LHC17n    Hijing   STOP
 
@@ -13,13 +13,13 @@ DataSetNamesPlot    LHC17n    Hijing   STOP
 #labelData   MC
 #DataSetNames    LHC17j7   STOP
 #DataSetNamesPlot    Hijing   STOP
-#pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_MC_LHC17j7-All_300.root STOP
+#pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/GammaCalo_MC_LHC17j7-All_300.root STOP
 
 #nSets   1
 #labelData   Data
 #DataSetNames    LHC17n   STOP
 #DataSetNamesPlot    LHC17n   STOP
-#pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_LHC17n-pass1-All_300.root STOP
+#pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/GammaCalo_LHC17n-pass1-All_300.root STOP
 
 enableCellQACuts 1
 setQAEnergy 0.05 0.2 0.05 0.2 STOP

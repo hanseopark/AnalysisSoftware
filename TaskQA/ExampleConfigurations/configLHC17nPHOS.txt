@@ -5,7 +5,7 @@ nSets   2
 cutNr   0
 labelData   Data
 energy  XeXe_5.44TeV
-pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180201-XeXeQA/GammaCalo_LHC17n-pass1-All_400.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180201-XeXeQA/GammaCalo_MC_LHC17j7-All_400.root STOP
+pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/GammaCalo_LHC17n-pass1-All_400.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20180207-XeXeQA/GammaCalo_MC_LHC17j7-All_400.root STOP
 #pathDataSets    /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_LHC17n-pass1-All_400.root   /mnt/additionalStorage/OutputLegoTrains/XeXe/Legotrain-vAN20171115-XeXeQA/GammaCalo_MC_LHC17j7-All_400.root STOP
 DataSetNames    LHC17n    LHC17j7   STOP
 DataSetNamesPlot    LHC17n    Hijing   STOP
