@@ -22,6 +22,8 @@ elif [ $1 = "ahornung" ]; then
    PHOTONCONVDIR=/Users/andreahornung/pcg-software/AnalysisSoftware
 elif [ $1 = "nschmidt" ]; then
    PHOTONCONVDIR=/home/nschmidt/AnalysisSoftware
+elif [ $1 = "fjonas" ]; then
+   PHOTONCONVDIR=/home/florianjonas/tools/alice/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR
@@ -70,6 +72,12 @@ fi
 if [ $1 = "mdanisch" ]; then
     mkdir -p TaskQA/ExampleConfigurations
     ln -sf $PHOTONCONVDIR/TaskQA/ExampleConfigurations/*LHC15o*.txt TaskQA/ExampleConfigurations/
+fi
+
+if [ $1 = "fjonas" ]; then
+    mkdir -p TaskQA/ExampleConfigurations
+    ln -sf $PHOTONCONVDIR/TaskQA/ExampleConfigurations/*.txt TaskQA/ExampleConfigurations/
+    ln -sf $PHOTONCONVDIR/DataQA DataQA
 fi
 
 ln -sf $PHOTONCONVDIR/*.eps .

@@ -15,10 +15,10 @@
 
 /*
  * This macro will go through log files in ClusterQA_HotCellCompare and ClusterQA_DeadCellCompare and check if some of the cells in there were already
- * flagged as bad by the user. The cleaned logs will be written to $ORIGINALFILE-Cleaned.log
+ * flagged as good by the user. The cleaned logs will be written to $ORIGINALFILE-Cleaned.log
  * The information for which folders were flagged as good(+maybe) by user are taken from folders containing the Cell*_EnergyComparison files.
  *
- * Usage (add to config used by QAV2.C, make sure cellQASummary is enabled:
+ * Usage (add to config used by QAV2.C)
  *
  * cellCleaningUseMaybe 0 : run the cleaning of log files but ignore a maybe folder
  * cellCleaningUseMaybe 1 : consider all cells in maybe folder as good aswell
