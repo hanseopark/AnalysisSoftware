@@ -82,39 +82,30 @@ void CompareDifferentDirectories(   TString FolderList              = "",
 
     // Set meson name for plotting
     TString textMeson;
+    Bool_t isEta                                                = kFALSE;
     if (meson.CompareTo("Pi0")==0 || meson.CompareTo("Pi0EtaBinning")==0){
-        textMeson = "#pi^{0}";
+        textMeson                                               = "#pi^{0}";
     } else {
-        textMeson = "#eta";
+        textMeson                                               = "#eta";
+        isEta                                                   = kTRUE;
     }
-
-    // Set MC/data string for output
-    TString 	prefix2;
+    // Define input and output MC/data
+    TString prefix2                                             = "";
     if (kIsMC){
-        prefix2 = 			"MC";
+        prefix2                                                 = "MC";
     } else {
-        prefix2 = 			"data";
+        prefix2                                                 = "data";
     }
 
-    // Determine collsision system string
-    TString collisionSystem= ReturnFullCollisionsSystem(optionEnergy);
+    // Set collisions system
+    TString collisionSystem     = ReturnFullCollisionsSystem(optionEnergy);
     if (collisionSystem.CompareTo("") == 0){
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
+    TString detectionProcess    = ReturnFullTextReconstructionProcess(mode);
+    TString process             = Form("%s #rightarrow #gamma#gamma", textMeson.Data());
 
-    TString detProcess = "";
-    if (mode == 0 || mode == 9){
-        detProcess = "#gamma with PCM";
-    } else if (mode == 2 ){
-        detProcess = "#gamma with PCM, EMCal";
-    } else if (mode == 4 ){
-        detProcess = "#gamma with EMCal";
-    } else if (mode == 3 ){
-        detProcess = "#gamma with PCM, PHOS";
-    } else if (mode == 5 ){
-        detProcess = "#gamma with PHOS";
-    }
     // Define colors for comparisons
     Color_t color[20] = {kBlack, kAzure, kGreen+2,kOrange+2,kRed, kViolet,  kBlue-9, kSpring+10,
                         kCyan+3, kCyan-10, kCyan, kGreen+4, kGreen-9,
@@ -311,26 +302,10 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         }
         legendRawMeson->Draw();
         // Labeling of plot
-        TLatex *labelCollisionSystem = new TLatex(0.55,0.91,collisionSystem.Data());
-        SetStyleTLatex( labelCollisionSystem, 0.038,4);
-        labelCollisionSystem->Draw();
-        TLatex *labelDetProcess = NULL;
-        if (optionPeriod.CompareTo("No") != 0){
-            TLatex *labelPeriod = new TLatex(0.55,0.86,optionPeriod.Data());
-            SetStyleTLatex( labelPeriod, 0.038,4);
-            labelPeriod->Draw();
-            if (detProcess.CompareTo("")!= 0){
-                labelDetProcess = new TLatex(0.55,0.81,detProcess.Data());
-                SetStyleTLatex( labelDetProcess, 0.038,4);
-                labelDetProcess->Draw();
-            }
-        } else {
-            if (detProcess.CompareTo("")!= 0){
-                labelDetProcess = new TLatex(0.55,0.86,detProcess.Data());
-                SetStyleTLatex( labelDetProcess, 0.038,4);
-                labelDetProcess->Draw();
-            }
-        }
+
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
+
         // Plot ratio of raw yields in lower panel
         padRawYieldRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -411,15 +386,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
           }
           legendCorrectedYieldMeson->Draw();
           // Labeling of plot
-          TLatex *labelCollisionSystem3 = new TLatex(0.55,0.91,collisionSystem.Data());
-          SetStyleTLatex( labelCollisionSystem3, 0.038,4);
-          labelCollisionSystem3->Draw();
-          if (optionPeriod.CompareTo("No") != 0){
-              TLatex *labelPeriod = new TLatex(0.55,0.86,optionPeriod.Data());
-              SetStyleTLatex( labelPeriod, 0.038,4);
-              labelPeriod->Draw();
-          }
-          if (labelDetProcess) labelDetProcess->Draw();
+          PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
           // plot ratio of corrected yields in lower panel
           padCorrectedYieldRatios->cd();
           for(Int_t i = 0; i< NumberOfCuts; i++){
@@ -485,14 +453,24 @@ void CompareDifferentDirectories(   TString FolderList              = "",
             if(i == 0){
                 DrawGammaSetMarker(histoTrueEffiCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoTrueEffiCut[i],
-                                        "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{%s}",textMeson.Data()),
-                                        kTRUE, 5., 10e-10,kFALSE,
-                                        kTRUE, -0.1, 0.00030,
-                                        kFALSE, 0., 10.);
+                                          "", "#it{p}_{T} (GeV/#it{c})", Form("#epsilon_{%s}",textMeson.Data()),
+                                          kTRUE, 5., 10e-10,kFALSE,
+                                          kTRUE, -0.1, 0.00030,
+                                          kFALSE, 0., 10.);
                 if (mode == 9 || mode == 0 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.0,0.003);
-  //               if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(1.e-7,2);
-                if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.07);
-                if (mode == 4 || mode == 5 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.7);
+                if (mode == 2 || mode == 3 )histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.1);
+                if (mode == 4 || mode == 5 ){
+                    if (optionEnergy.Contains("PbPb_2") && meson.Contains("Pi0") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.4);
+                    else if (optionEnergy.Contains("PbPb_5") && meson.Contains("Pi0") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.05,0.25);
+                    else if (optionEnergy.Contains("pPb") && meson.Contains("Pi0") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.3);
+                    else if (optionEnergy.Contains("PbPb_2.76TeV") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
+                    else
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
+                }
                 histoTrueEffiCut[i]->DrawCopy("e1,p");
                 legendEffiMeson->AddEntry(histoTrueEffiCut[i],Form("standard: %s",cutStringsName[i].Data()));
             } else {
@@ -508,23 +486,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         legendEffiMeson->Draw();
 
         // Efficiency plot labeling
-        labelCollisionSystem4->Draw();
-        if (optionPeriod.CompareTo("No") != 0){
-            TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
-            SetStyleTLatex( labelPeriod, 0.038,4);
-            labelPeriod->Draw();
-            if (detProcess.CompareTo("")!= 0){
-                labelDetProcess2 = new TLatex(0.55,0.86,detProcess.Data());
-                SetStyleTLatex( labelDetProcess2, 0.038,4);
-                labelDetProcess2->Draw();
-            }
-        } else {
-            if (detProcess.CompareTo("")!= 0){
-                labelDetProcess2 = new TLatex(0.55,0.05,detProcess.Data());
-                SetStyleTLatex( labelDetProcess2, 0.038,4);
-                labelDetProcess2->Draw();
-            }
-        }
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.2, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
         // Draw ratio of efficiencies in lower panel
         padTrueEffiRatios->cd();
@@ -622,27 +584,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         }
         legendAcceptance->Draw();
 
-        // Efficiency plot labeling
-        TLatex *labelCollisionSystem5 = new TLatex(0.55,0.10,collisionSystem.Data());
-        SetStyleTLatex( labelCollisionSystem5, 0.038,4);
-        labelCollisionSystem5->Draw();
-        TLatex* labelDetProcess3 = NULL;
-        if (optionPeriod.CompareTo("No") != 0){
-            TLatex *labelPeriod = new TLatex(0.55,0.91,optionPeriod.Data());
-            SetStyleTLatex( labelPeriod, 0.038,4);
-            labelPeriod->Draw();
-            if (detProcess.CompareTo("")!= 0){
-                labelDetProcess3 = new TLatex(0.55,0.86,detProcess.Data());
-                SetStyleTLatex( labelDetProcess3, 0.038,4);
-                labelDetProcess3->Draw();
-            }
-        } else {
-            if (detProcess.CompareTo("")!= 0){
-                labelDetProcess3 = new TLatex(0.55,0.05,detProcess.Data());
-                SetStyleTLatex( labelDetProcess3, 0.038,4);
-                labelDetProcess3->Draw();
-            }
-        }
+        // Acceptance plot labeling
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
         // Draw ratio of efficiencies in lower panel
         padAcceptanceRatios->cd();
@@ -721,9 +664,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         }
     }
     legendMass->Draw();
-
-    labelCollisionSystem4->Draw();
-    if (labelDetProcess2)labelDetProcess2->Draw();
+    PutProcessLabelAndEnergyOnPlot( 0.94, 0.20, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
     // Draw ratio of efficiencies in lower panel
     padMassRatios->cd();
@@ -797,9 +738,7 @@ void CompareDifferentDirectories(   TString FolderList              = "",
         }
     }
     legendWidth->Draw();
-
-    labelCollisionSystem4->Draw();
-    if (labelDetProcess2)labelDetProcess2->Draw();
+    PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
 
     // Draw ratio of efficiencies in lower panel
     padWidthRatios->cd();
@@ -875,6 +814,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
 
         }
         legendSB->Draw();
+        PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, process, detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
         padSBRatios->cd();
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
@@ -952,6 +893,8 @@ void CompareDifferentDirectories(   TString FolderList              = "",
 
           }
           legendClusE->Draw();
+          PutProcessLabelAndEnergyOnPlot( 0.94, 0.95, 0.032, collisionSystem, "#gamma candidates", detectionProcess, 42, 0.03, optionPeriod, 1, 1.25, 31);
+
           padClusERatios->cd();
           for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){

@@ -2907,6 +2907,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                 echo "CutSelection is $cutSelection";
                 if [ $DoPi0 -eq 1 ]; then
                     optionsPi0Data=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
+                    echo $DataRootFile
                     if [ -f $DataRootFile ]; then
                         ExtractSignal $optionsPi0Data
                     fi
@@ -3181,11 +3182,14 @@ else
                 mkdir $cutSelection/$energy/$Suffix
             fi
 
-            if [ $disableToyMC -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
+            if [ $disableToyMC -eq 0 ] && [ $useCocktail -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
                 rm ToyMCOutputs.txt
                 root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
                 root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToyLambda\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+            fi
+            if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
+                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
             fi
 
             if [ $ONLYCORRECTION -eq 0 ]; then

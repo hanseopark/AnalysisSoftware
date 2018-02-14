@@ -305,6 +305,7 @@ function MergeAccordingToSpecificRunlist()
     echo "general name root file $4"
     echo "name list for output $5"
     echo "runlist $6"
+    echo "binlist $7"
 
     fileNumbers=`cat $1`
     for fileName in $fileNumbers; do
@@ -316,17 +317,54 @@ function MergeAccordingToSpecificRunlist()
         else
             TOMERGE="";
             runs=`cat $6`
-            for run in $runs; do
-                nameCurrFile=`echo $2/$run/$4\_$number.root`
-                if [ -f $nameCurrFile ]; then
-                    TOMERGE="$TOMERGE $nameCurrFile"
-                else
-                    echo "I couldn't find the file for bin $run, $nameCurrFile";
-                fi
-            done
-            hadd -n 10 -f $2/$4-$5_$number.root $TOMERGE
-        fi
+            if [ $7 == "" ]; then
+                for run in $runs; do
+                    nameCurrFile=`echo $2/$run/$4\_$number.root`
+                    if [ -f $nameCurrFile ]; then
+                        TOMERGE="$TOMERGE $nameCurrFile"
+                    else
+                        echo "I couldn't find the file for bin $run, $nameCurrFile";
+                    fi
+                done
+                hadd -n 10 -f $2/$4-$5_$number.root $TOMERGE
+            else
+                bins=`cat $7`
+                TOMERGEJJ="";
+                for bin in $bins; do
+                    TOMERGE="";
+                    for run in $runs; do
+                        nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
+                        if [ -f $nameCurrFile ]; then
+                            TOMERGE="$TOMERGE $nameCurrFile"
+                        else
+                            echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
+                        fi
+                    done
+                    nameCurrJJFile=`echo "$2/$bin/$4-$5""_$number.root"`
+                    hadd -n 10 -f $nameCurrJJFile $TOMERGE
+                    if [ -f $nameCurrJJFile ]; then
+                        TOMERGEJJ="$TOMERGEJJ $nameCurrJJFile"
+                    fi
+                done
+                hadd -n 10 -f "$2/$4-$5""_$number.root" $TOMERGEJJ
 
+                for run in $runs; do
+                    TOMERGERun="";
+                    for bin in $bins; do
+                        nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
+                        if [ -f $nameCurrFile ]; then
+                            TOMERGERun="$TOMERGERun $nameCurrFile"
+                        else
+                            echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
+                        fi
+                    done
+                    mkdir -p $2/$run/
+                    nameCurrJJFileRun=`echo "$2/$run/$4-$5""_$number.root"`
+                    hadd -n 10 -f $nameCurrJJFileRun $TOMERGERun
+                done
+
+            fi
+        fi
     done;
     echo "done" > $2/mergedAll$4.txt
 }
@@ -348,7 +386,7 @@ function MergeAccordingToList()
     done;
     if [ $counter -gt 1 ]; then
         hadd -n 10 -f $2 $TOMERGE
-    else
+    elif [ $counter -eq 1 ]; then
         cp $TOMERGE $2
     fi
 }

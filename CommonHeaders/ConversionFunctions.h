@@ -1,18 +1,17 @@
 #ifndef GAMMACONV_ConversionFunctions
 #define GAMMACONV_ConversionFunctions
 
-    #ifndef __CLING__
-        #include "Math/WrappedTF1.h"
-        #include "Math/BrentRootFinder.h"
-        #include "TFitResultPtr.h"
-        #include "TFitResult.h"
-        #include "TObjString.h"
-        #include "TString.h"
-        #include "TRandom.h"
-        #include "TSpline.h"
-        #include "TKey.h"
-        #include <vector>
-    #endif
+    #include "TFitResultPtr.h"
+    #include "TObjString.h"
+    #include "TString.h"
+    #include "TRandom.h"
+    #include "TKey.h"
+    #include <vector>
+    #include "TSpline.h"
+    #include "Math/WrappedTF1.h"
+    #include "Math/BrentRootFinder.h"
+    #include "TFitResult.h"
+
     // ****************************************************************************************************************
     // *********************** declaration of functions defined in this header ****************************************
     // ****************************************************************************************************************
@@ -2579,7 +2578,7 @@
         // printf("%4.1f < pt < %4.1f GeV/c, pt0 = %6.3f GeV/c, y=%g, int=%g\n",ptMin,ptMax,pt0,yValue,meas);
         return pt0;
 
-    if(yValue == 0) {}
+        if(yValue == 0) {}
     }
 
     // ****************************************************************************************************************

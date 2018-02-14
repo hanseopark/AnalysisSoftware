@@ -66,16 +66,16 @@ void PrepareSecondaries(    TString     meson                       = "",
                             Bool_t      producePlotsForThesis       = kFALSE,
                             Int_t       nMotherParticleToAnalyseCur = 16
                      ) {
-    
+
     gROOT->Reset();
-    
+
     //************************** Set number of particles to be analyzed *********************************************
     nMotherParticleToAnalyse                                    = nMotherParticleToAnalyseCur;
-    
+
     //************************** Set general style settings *********************************************************
     StyleSettingsThesis();
     SetPlotStyle();
-    
+
     //************************** Set output directory ***************************************************************
     TString outputDir                                           = Form("%s/%s/%s/PrepareSecondaries",cutSelection.Data(),option.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+outputDir);
@@ -88,10 +88,10 @@ void PrepareSecondaries(    TString     meson                       = "",
     fMode                                                       = mode;
     fRapidity                                                   = rapidity;
     cout << "Pictures are saved as " << suffix.Data() << endl;
-    
+
     //************************** direct photon ana ******************************************************************
     Bool_t doSecondaryGamma                                     = kTRUE;
-    
+
     //***************************** Separate cutstrings *************************************************************
     if(cutSelection.Length() == 0){
         cout<<"ERROR: Cut selection is not set, please do!"<<endl;
@@ -99,17 +99,17 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
     fCutSelection                                               = cutSelection;
     ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, fMode);
-    
+
     Bool_t isPCM                                                = 0;
     Bool_t isCalo                                               = 0;
-    if ( mode == 0 || mode == 2 || mode == 3)
+    if ( mode == 0 || mode == 2 || mode == 3 || mode == 13)
         isPCM                                                   = 1;
-    if ( mode == 2 || mode == 3 || mode == 4 || mode == 5)
+    if ( mode == 2 || mode == 3 || mode == 4 || mode == 5 || mode == 10 || mode == 12 )
         isCalo                                                  = 1;
 
     //***************************** Calculate scaling factor ********************************************************
     eventNormScalingFactor                                      = ReturnCocktailNormalization(fEnergyFlag, fEventCutSelection);
-    
+
     //**************************** Determine Centrality *************************************************************
     TString centrality                                          = GetCentralityString(fEventCutSelection);
     TString collisionSystem                                     = ReturnFullCollisionsSystem(option);
@@ -117,7 +117,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     TString textMeasurement                                     = ""; //"#gamma";
     if (option.Contains("PbPb")) cent                           = Form("%s %s", centrality.Data(), collisionSystem.Data());
     else                         cent                           = collisionSystem;
-    
+
     //***************************** Load binning for spectrum *******************************************************
     fAnalyzedMeson                                              = "";
     if(meson.CompareTo("Pi0") == 0){
@@ -170,9 +170,9 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << "ERROR: Cocktail settings not contained in cocktail file!" << endl;
         return;
     }
-    
- 
- 
+
+
+
     //***************************** read cocktail settings **********************************************************
     histMtScalingFactors                                        = (TH1F*)cocktailSettingsList->FindObject("histoMtScaleFactor");
     // initialize mt scaling factors
@@ -186,14 +186,14 @@ void PrepareSecondaries(    TString     meson                       = "",
                 mtScaleFactor[j]                                = histMtScalingFactors->GetBinContent(i);
         }
     }
-    
+
     TObject* tempObject                                         = NULL;
     TString tempObjectName                                      = "";
     TObjArray* arr                                              = NULL;
     for (Int_t i=0; i<cocktailSettingsList->GetEntries(); i++) {
         tempObject                                              = (TObject*)cocktailSettingsList->At(i);
         tempObjectName                                          = (TString)tempObject->GetName();
-        
+
         if (tempObjectName.BeginsWith("selectMothers")) {
             arr                                                 = tempObjectName.Tokenize("_");
             selectedMothers                                     = (((TObjString*)arr->At(1))->GetString()).Atoi();
@@ -282,14 +282,14 @@ void PrepareSecondaries(    TString     meson                       = "",
         minPhiCalo                                              = AnalyseClusterMinPhiCut(CutNumberToInteger(phiMinCut));
         maxPhiCalo                                              = AnalyseClusterMaxPhiCut(CutNumberToInteger(phiMaxCut));
     }
-    
+
     Double_t scalingEta                                         = 1.;
     Double_t scalingPhi                                         = 1.;
     if (isCalo && !isPCM) {
         scalingEta                                              = deltaEtaCalo/deltaEta;
         scalingPhi                                              = deltaPhiCalo/deltaPhi;
     }
-    
+
     cout << "========================================"  << endl;
     cout << "deltaRapGen      = "     << deltaRapGen    << endl;
     cout << "deltaRap         = "     << deltaRap       << endl;
@@ -340,22 +340,22 @@ void PrepareSecondaries(    TString     meson                       = "",
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {
         if (hasMother[i]) {
             histoDecayChannels[i]                               = (TH1F*)histoListCocktail->FindObject(Form("DecayChannels_%s",motherParticles[i].Data()));
-            
+
             histoMesonDaughterPtY[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_%s_From_%s",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtY[i]->SetName(Form("%s_From_%s_Pt_Y_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtY[i]->Sumw2();
             histoMesonDaughterPtY[i]->Scale(eventNormScalingFactor);
-            
+
             histoMesonDaughterPtPhi[i]                          = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s_From_%s",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtPhi[i]->SetName(Form("%s_From_%s_Pt_Phi_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()));
             histoMesonDaughterPtPhi[i]->Sumw2();
             histoMesonDaughterPtPhi[i]->Scale(eventNormScalingFactor);
-            
+
             histoMesonMotherPtY[i]                              = (TH2F*)histoListCocktail->FindObject(Form("Pt_Y_%s",motherParticles[i].Data()));
             histoMesonMotherPtY[i]->SetName(Form("%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoMesonMotherPtY[i]->Sumw2();
             histoMesonMotherPtY[i]->Scale(eventNormScalingFactor);
-            
+
             histoMesonMotherPtPhi[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s",motherParticles[i].Data()));
             histoMesonMotherPtPhi[i]->SetName(Form("%s_Pt_Phi_OrBin", motherParticles[i].Data()));
             histoMesonMotherPtPhi[i]->Sumw2();
@@ -368,7 +368,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtPhi[i]                            = NULL;
         }
     }
-    
+
     // gammas
     histoGammaFromXFromMotherPtY                                = new TH2F*[nMotherParticles];
     histoGammaFromXFromMotherPtPhi                              = new TH2F*[nMotherParticles];
@@ -381,7 +381,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                     histoGammaFromXFromMotherPtY[i]->Sumw2();
                     histoGammaFromXFromMotherPtY[i]->Scale(eventNormScalingFactor);
                 }
-                
+
                 histoGammaFromXFromMotherPtPhi[i]               = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_Gamma_From_X_From_%s",motherParticles[i].Data()));
                 if (histoGammaFromXFromMotherPtPhi[i]) {
                     histoGammaFromXFromMotherPtPhi[i]->SetName(Form("Gamma_From_X_From_%s_Pt_Phi_OrBin", motherParticles[i].Data()));
@@ -404,7 +404,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             decayChannelsLatex[i][j]                            = "";
         }
     }
-    
+
     tempBinLabel                                                = "";
     Int_t counter                                               = 0;
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {
@@ -418,7 +418,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             }
         }
     }
-    
+
     //***************************** Correct for non-flat y distributions ********************************************
     histoMesonDaughterPtYCorr                                   = new TH2F*[nMotherParticles];
     histoGammaFromXFromMotherPtYCorr                            = new TH2F*[nMotherParticles];
@@ -435,7 +435,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoMesonDaughterPtYCorr[i]                    = NULL;
                 listYSlicesMesonDaughter[i]                     = NULL;
             }
-            
+
             if (histoGammaFromXFromMotherPtY[i]) {
                 histoGammaFromXFromMotherPtYCorr[i]             = (TH2F*)histoGammaFromXFromMotherPtY[i]->Clone(Form("%s_yCorr", histoGammaFromXFromMotherPtY[i]->GetName()));
                 listYSlicesGammaFromXFromMother[i]              = new TList;
@@ -468,7 +468,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     histoMesonMotherYOrBin                                      = new TH1F*[nMotherParticles];
     histoMesonMotherPhiOrBin                                    = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {
-        
+
         if (histoMesonDaughterPtYCorr[i]) {
             // project pt distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
             histoMesonDaughterPtOrBin[i]                        = (TH1F*)histoMesonDaughterPtYCorr[i]->ProjectionX(Form("%s_From_%s_Pt_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsY(),"e");
@@ -481,7 +481,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonDaughterPtOrBin[i]->Scale(1/deltaPhi);
             histoMesonDaughterPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
             SetHistogramTitles(histoMesonDaughterPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
-            
+
             // project y distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
             histoMesonDaughterYOrBin[i]                         = (TH1F*)histoMesonDaughterPtYCorr[i]->ProjectionY(Form("%s_From_%s_Y_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtY[i]->GetNbinsX(),"e");
             histoMesonDaughterYOrBin[i]->Sumw2();
@@ -495,7 +495,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonDaughterPtOrBin[i]                        = NULL;
             histoMesonDaughterYOrBin[i]                         = NULL;
         }
-        
+
         // project phi distributions
         if (histoMesonDaughterPtPhi[i]) {
             histoMesonDaughterPhiOrBin[i]                       = (TH1F*)histoMesonDaughterPtPhi[i]->ProjectionY(Form("%s_From_%s_Phi_OrBin",fAnalyzedMeson.Data(),motherParticles[i].Data()),1,histoMesonDaughterPtPhi[i]->GetNbinsX(),"e");
@@ -508,7 +508,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             SetHistogramTitles(histoMesonDaughterPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else
             histoMesonDaughterPhiOrBin[i]                       = NULL;
-        
+
         if (histoMesonMotherPtY[i]) {
             // project pt distributions
             histoMesonMotherPtOrBin[i]                          = (TH1F*)histoMesonMotherPtY[i]->ProjectionX(Form("%s_Pt_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtY[i]->GetNbinsY(),"e");
@@ -533,7 +533,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtOrBin[i]                          = NULL;
             histoMesonMotherYOrBin[i]                           = NULL;
         }
-        
+
         // project phi distributions
         if (histoMesonMotherPtPhi[i]) {
             histoMesonMotherPhiOrBin[i]                         = (TH1F*)histoMesonMotherPtPhi[i]->ProjectionY(Form("%s_Phi_OrBin",motherParticles[i].Data()),1,histoMesonMotherPtPhi[i]->GetNbinsX(),"e");
@@ -551,14 +551,14 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << "ERROR: Didn't get K0s pt spectrum, returning!" << endl;
         return;
     }
-    
+
     // gammas
     histoGammaFromXFromMotherPtOrBin                            = new TH1F*[nMotherParticles];
     histoGammaFromXFromMotherYOrBin                             = new TH1F*[nMotherParticles];
     histoGammaFromXFromMotherPhiOrBin                           = new TH1F*[nMotherParticles];
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {
         if (doSecondaryGamma) {
-            
+
             if (histoGammaFromXFromMotherPtYCorr[i]) {
                 // project pt distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
                 histoGammaFromXFromMotherPtOrBin[i]             = (TH1F*)histoGammaFromXFromMotherPtYCorr[i]->ProjectionX(Form("Gamma_From_X_From_%s_Pt_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsY(),"e");
@@ -571,7 +571,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPhi);
                 histoGammaFromXFromMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
                 SetHistogramTitles(histoGammaFromXFromMotherPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
-                
+
                 // project y distributions (from corrected pt-y histograms, if doRapidityCorrection = true, otherwise from uncorrected one)
                 histoGammaFromXFromMotherYOrBin[i]              = (TH1F*)histoGammaFromXFromMotherPtYCorr[i]->ProjectionY(Form("Gamma_From_X_From_%s_Y_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtY[i]->GetNbinsX(),"e");
                 histoGammaFromXFromMotherYOrBin[i]->Sumw2();
@@ -585,7 +585,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherPtOrBin[i]             = NULL;
                 histoGammaFromXFromMotherYOrBin[i]              = NULL;
             }
-            
+
             // project phi distributions
             if (histoGammaFromXFromMotherPtPhi[i]) {
                 histoGammaFromXFromMotherPhiOrBin[i]            = (TH1F*)histoGammaFromXFromMotherPtPhi[i]->ProjectionY(Form("Gamma_From_X_From_%s_Phi_OrBin",motherParticles[i].Data()),1,histoGammaFromXFromMotherPtPhi[i]->GetNbinsX(),"e");
@@ -697,7 +697,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                         binContent                              = histoRatioPi0FromXToPi0Param[i]->GetBinContent(i) * histoRatioPi0FromXToPi0Param[i]->GetBinWidth(i);
                         binError                                = histoRatioPi0FromXToPi0Param[i]->GetBinError(i);
                         binIntegralParam                        = cocktailInputParametrizationPi0->Integral(histoRatioPi0FromXToPi0Param[i]->GetXaxis()->GetBinLowEdge(i),histoRatioPi0FromXToPi0Param[i]->GetXaxis()->GetBinUpEdge(i));
-                        
+
                         // set new bin content & error
                         if(binIntegralParam) {
                             histoRatioPi0FromXToPi0Param[i]->SetBinContent( i, binContent/binIntegralParam);
@@ -720,7 +720,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         for (Int_t i=0; i<nMotherParticleToAnalyse; i++)
             histoRatioPi0FromXToPi0Param[i]                     = NULL;
     }
-    
+
     TH1D* dummyHist                                             = NULL;
     //***************************** Plot cocktail mothers (pt) ******************************************************
     TCanvas *canvasMothers                                      = new TCanvas("canvasMothers","",1100,1200);
@@ -845,7 +845,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     canvasMothersPhi->SaveAs(Form("%s/CocktailMothersPhi_%.2f_%s.%s",outputDir.Data(),fRapidity,cutSelection.Data(),suffix.Data()));
     delete legendMothersPhi;
     delete canvasMothersPhi;
-    
+
     //***************************** Plot K0s, K0l and Lambda cross check ********************************************
     TCanvas* canvasInputCrossCheck                              = NULL;
     TLegend* legendInputCrossCheck                              = NULL;
@@ -902,7 +902,7 @@ void PrepareSecondaries(    TString     meson                       = "",
 
             histoMesonMotherCocktailInputPtMeasBin[i]->Draw("e1,same");
             histoMesonMotherPtMeasBin[i]->Draw("e1,same");
-            
+
             legendInputCrossCheck->AddEntry(histoMesonMotherCocktailInputPtMeasBin[i], Form("%s cocktail input (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "p");
             legendInputCrossCheck->AddEntry(histoMesonMotherPtMeasBin[i], Form("%s generated (#times %.3e)", motherParticlesLatex[i+1].Data(), motherFactorDecayLength[i+1]), "p");
 
@@ -954,7 +954,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             }
 
             canvasInputCrossCheck->SaveAs(Form("%s/InputCrossCheck%s_%.2f_%s.%s",outputDir.Data(), motherParticles[i+1].Data(),fRapidity,cutSelection.Data(),suffix.Data()));
-        }            
+        }
     }
     delete dummyHist;
     delete dummyHistRatio;
@@ -967,15 +967,15 @@ void PrepareSecondaries(    TString     meson                       = "",
 
 //************************** Initialize binning *********************************************************************
 void Initialize(TString meson, TString energy, Int_t numberOfBins){
-    
+
     InitializeBinning(meson, numberOfBins, energy, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection);
-    
+
     fDeltaPt                                    = new TH1F("deltaPt","",fNBinsPt,fBinsPt);
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
         fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
         fDeltaPt->SetBinError(iPt,0);
     }
-    
+
     ptMin                                       = fBinsPt[0];
     ptMax                                       = fBinsPt[fNBinsPt];
     cout << "Using " << ptMin << " <= p_T <= " << ptMax << " GeV/c" << endl;
@@ -988,7 +988,7 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
 
     if(NewName.CompareTo("")==0)
         NewName                     = Spectrum->GetName();
-    
+
     Double_t newBinContent          = 0.;
     Double_t newBinError            = 0.;
     for (Int_t i=1; i<Spectrum->GetNbinsX()+1; i++) {
@@ -1004,7 +1004,7 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
         if (i<nBins)    binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinLowEdge(i+1);
         else            binsPt[i]   = SpectrumForBinning->GetXaxis()->GetBinUpEdge(i);
     }
-    
+
     TH1D* deltaPt                   = new TH1D("deltaPt","",nBins,binsPt);
     for(Int_t iPt=1;iPt<nBins+1;iPt++){
         deltaPt->SetBinContent(iPt, binsPt[iPt]-binsPt[iPt-1]);
@@ -1017,9 +1017,9 @@ void RebinSpectrum(TH1F* Spectrum, TH1F* SpectrumForBinning, TString NewName){
 
 //************************** Calculate ratio of TF1 to TH1D *********************************************************
 TH1D* CalculateRatioToTF1(TH1D* hist, TF1* func) {
-    
+
     if (!hist) return NULL;
-    
+
     TH1D* resultHist            = (TH1D*)hist->Clone(Form("%s_to_%s", hist->GetName(), func->GetName()));
 
     Double_t tempValHist        = 0.;
@@ -1051,11 +1051,11 @@ TH1D* CalculateRatioToTF1(TH1D* hist, TF1* func) {
 
 //************************** Return partile mass ********************************************************************
 Double_t GetMass(TString particleName) {
-    
+
     TDatabasePDG* pdg                       = new TDatabasePDG;
     TParticlePDG* particle                  = NULL;
     Double_t mass                           = 0;
-    
+
     if (particleName.CompareTo("Pi0") == 0) {
         particle                            = pdg->GetParticle(111);
         mass                                = particle->Mass();
@@ -1110,16 +1110,16 @@ Double_t GetMass(TString particleName) {
     } else {
         mass                                = -1;
     }
-    
+
     delete pdg;
     return mass;
 }
 
 //************************** Routine to set histogram titles *********************************************************
 void SetHistogramTitles(TH1F* input, TString title, TString xTitle, TString yTitle) {
-    
+
     if (!input) return;
-    
+
     input->SetTitle(title);
     input->GetXaxis()->SetTitle(xTitle);
     input->GetYaxis()->SetTitle(yTitle);
@@ -1130,17 +1130,17 @@ void SaveMesonHistos() {
     TString nameOutput                  = Form("%s/%s/Secondary%s%s_%.2f_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fAnalyzedMeson.Data(),fPeriodFlag.Data(),fRapidity,fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
-    
+
     // write number of events
     histoNEvents->Write("NEvents", TObject::kOverwrite);
-    
+
     // write y vs pt histograms
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {
         if (histoMesonDaughterPtY[i])       histoMesonDaughterPtY[i]->Write(        histoMesonDaughterPtY[i]->GetName(),        TObject::kOverwrite);
         if (histoMesonDaughterPtYCorr[i])   histoMesonDaughterPtYCorr[i]->Write(    histoMesonDaughterPtYCorr[i]->GetName(),    TObject::kOverwrite);
         if (listYSlicesMesonDaughter[i])    listYSlicesMesonDaughter[i]->Write(     listYSlicesMesonDaughter[i]->GetName(),     TObject::kSingleKey);
     }
-    
+
     // write projections
     for (Int_t i=0; i<nMotherParticleToAnalyse; i++) {
         if (histoMesonDaughterPtOrBin[i])   histoMesonDaughterPtOrBin[i]->Write(    histoMesonDaughterPtOrBin[i]->GetName(),    TObject::kOverwrite);
@@ -1208,23 +1208,23 @@ void SavePhotonHistos() {
 
 //************************** Create tex file containing BR table ****************************************************
 void CreateBRTableLatex() {
-    
+
     // tex file
     TString texFileName                  = Form("%s/%s/HadronicCocktail%s_%.2f_%s_BranchingRatioTable.tex", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
     ofstream texFile;
     texFile.open(texFileName);
-    
+
     // table
     texFile << "{\\def\\arraystretch{1.2}\\tabcolsep=5pt" << endl;
     texFile << "  \\begin{tabular}{c | c | c | c}" << endl;
     texFile << "    particle & mass (MeV) & decay & branching ratio \\\\" << endl;
     texFile << "    \\hline" << endl;
-    
+
     TString tempMother                  = "";
     TString tempChannel                 = "";
     TString tempBR                      = "";
     Int_t counter                       = 0;
-    
+
     // last mother
     Int_t lastMother                    = 0;
     for (Int_t i=nMotherParticleToAnalyse-1; i>=0; i--) {
@@ -1233,26 +1233,26 @@ void CreateBRTableLatex() {
             break;
         }
     }
-    
+
     // loop over particles
     for(Int_t particle=0; particle<nMotherParticleToAnalyse; particle++) {
         if(!hasMother[particle]) continue;
-        
+
         tempMother                      = motherParticlesLatex[particle];
         tempMother.ReplaceAll("#", "\\");
-        
+
         // loop over channels
         counter                         = 0;
         for (Int_t channel=0; channel<18; channel++) {
             if (decayChannelsLatex[particle][channel]=="") continue;
-            
+
             tempChannel                 = decayChannelsLatex[particle][channel];
             tempChannel.ReplaceAll("#", "\\");
-            
+
             tempBR                      = Form("%.3e", decayChannelsBR[particle][channel]);
             tempBR.ReplaceAll("e", " \\times 10^{");
             tempBR                      = tempBR + "}";
-            
+
             if (counter==0) {
                 if (cocktailInputParametrizations[particle])
                     texFile << "    $" << Form("%s", tempMother.Data()) << "$ & $" << Form("%.2f", GetMass(motherParticles[particle].Data())*1e3) << "$ & ";
@@ -1260,16 +1260,16 @@ void CreateBRTableLatex() {
                     texFile << "    $" << Form("%s (%.2f)", tempMother.Data(), mtScaleFactor[particle]) << "$ & $" << Form("%.2f", GetMass(motherParticles[particle].Data())*1e3) << "$ & ";
             } else
                 texFile << "    &  & ";
-            
+
             texFile << "$" << tempChannel.Data() << "$ & ";
             texFile << "$" << tempBR.Data() << "$ \\\\" << endl;
-            
+
             counter++;
         }
-        
+
         if (counter && particle<lastMother) texFile << "    \\hline" << endl;
     }
-    
+
     texFile << "  \\end{tabular}" << endl;
     texFile << "}";
     texFile.close();
@@ -1277,7 +1277,7 @@ void CreateBRTableLatex() {
 
 //************************** Function to correct for non-flat rapidity distribution *********************************
 void CorrectForNonFlatRapidity(TH2F* histCorr, TH2F* histOr, TList* list) {
-    
+
     Int_t       nBinsPt                     = histOr->GetNbinsX();
     TH1F**      ySlice                      = new TH1F*[nBinsPt];
     TH1F*       ySliceTemp                  = NULL;
@@ -1291,17 +1291,17 @@ void CorrectForNonFlatRapidity(TH2F* histCorr, TH2F* histOr, TList* list) {
     Double_t    histoMaxdNdyErr             = 0.;
     Double_t    corrFactor                  = 0.;
     Int_t       fitStatus                   = 0;
-    
+
     for (Int_t ptBin=1; ptBin<nBinsPt+1; ptBin++) {
 
         // initialize
         ySlice[ptBin-1]                     = NULL;
         yFit[ptBin-1]                       = NULL;
-        
+
         // project y distribution
         ySlice[ptBin-1]                     = (TH1F*)histOr->ProjectionY(Form("%s_ptBin%d", histOr->GetName(), ptBin),ptBin,ptBin,"e");
         ySlice[ptBin-1]->Sumw2();
-        
+
         // test for entries
         if (ptBin==1) nEntriesFirstSlice    = ySlice[ptBin-1]->GetEntries();
         if (ySlice[ptBin-1]->GetEntries()<nEntriesFirstSlice*0.1) continue;
@@ -1311,28 +1311,28 @@ void CorrectForNonFlatRapidity(TH2F* histCorr, TH2F* histOr, TList* list) {
         TFitResultPtr fitResult             = ySlice[ptBin-1]->Fit(yFit[ptBin-1], "SQNRIME");
         fitStatus                           = fitResult;
         if (!(fitStatus==0 || fitStatus>=1000)) continue;
-        
+
         // get fit value
         fitdNdy                             = yFit[ptBin-1]->GetParameter(0);
         fitdNdyErr                          = yFit[ptBin-1]->GetParError(0);
-        
+
         // test for maximum deviation from fit value in histogram
         histoMindNdy                        = ySlice[ptBin-1]->GetMinimum(0.);
         histoMindNdyErr                     = ySlice[ptBin-1]->GetBinError(GetMinimumBinAboveThreshold(ySlice[ptBin-1],0.));
         histoMaxdNdy                        = ySlice[ptBin-1]->GetMaximum();
         histoMaxdNdyErr                     = ySlice[ptBin-1]->GetBinError(ySlice[ptBin-1]->GetMaximumBin());
         if ( ((fitdNdy-fitdNdyErr)<(histoMindNdy+histoMindNdyErr)) || ((fitdNdy+fitdNdyErr)>(histoMaxdNdy-histoMaxdNdyErr)) ) continue;
-        
+
         // correct y vs. pt hist for non-flat y dist.
         for (Int_t yBin=1; yBin<histOr->GetNbinsY()+1; yBin++) {
-            
+
             if (!histOr->GetBinContent(ptBin, yBin)) continue;
-            
+
             corrFactor                      = fitdNdy / histOr->GetBinContent(ptBin, yBin);
             histCorr->SetBinContent(ptBin,  yBin, histOr->GetBinContent(ptBin, yBin)*corrFactor);
             histCorr->SetBinError(ptBin,    yBin, histOr->GetBinError(ptBin, yBin)*corrFactor);
         }
-        
+
         // add to list
         list->Add(ySlice[ptBin-1]);
         list->Add(yFit[ptBin-1]);
@@ -1344,13 +1344,13 @@ Int_t GetMinimumBinAboveThreshold(TH1F* hist, Double_t thres) {
 
     TH1F*       histTemp        = (TH1F*)hist->Clone("histTemp");
     Double_t    tempBinContent  = 0.;
-    
+
     for (Int_t i=1; i<hist->GetNbinsX()+1; i++) {
         tempBinContent          = histTemp->GetBinContent(i);
         if (tempBinContent>thres)   histTemp->SetBinContent(i, 1/tempBinContent);
         else                        histTemp->SetBinContent(i, 0);
     }
-    
+
     return histTemp->GetMaximumBin();
 }
 

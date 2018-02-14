@@ -1151,13 +1151,13 @@ void EventQA(
             Bool_t kScs = fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog, fCollisionSystem);
 
             if(kScs){
-            TH1D* tempPi = new TH1D(*fitter.GetSignalPi0());
-            tempPi->GetXaxis()->SetRangeUser(0.,0.25);
-            signalPi0.push_back(tempPi);
+                TH1D* tempPi = new TH1D(*fitter.GetSignalPi0());
+                tempPi->GetXaxis()->SetRangeUser(0.,0.25);
+                signalPi0.push_back(tempPi);
 
-            TH1D* tempEta = new TH1D(*fitter.GetSignalEta());
-            tempEta->GetXaxis()->SetRangeUser(0.4,0.7);
-            signalEta.push_back(tempEta);
+                TH1D* tempEta = new TH1D(*fitter.GetSignalEta());
+                tempEta->GetXaxis()->SetRangeUser(0.4,0.7);
+                signalEta.push_back(tempEta);
             }
             Double_t ratioPi0 = 0; Double_t ratioPi0Err = 0;
             Double_t ratioEta = 0; Double_t ratioEtaErr = 0;

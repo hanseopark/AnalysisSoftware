@@ -4170,6 +4170,7 @@ void ClusterQA(
 
         canvas->SetLeftMargin(0.1);canvas->SetRightMargin(0.1);canvas->SetTopMargin(0.06);canvas->SetBottomMargin(0.1);
         if((Int_t)allCellsBad.size()>0){
+            cout << "start plotting bad cells" << endl;
             PlotBadCellReasons(cellQA,allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
 
             PlotBadCellOverview(kTRUE,kFALSE,DataMCHists.at(0),allCellsBad,canvas,outputDir,suffix,fClusters,plotDataSets[0],DataSets[0],fCollisionSystem);
@@ -4184,6 +4185,7 @@ void ClusterQA(
         }
 
         if ((Int_t)allCellsGood.size()>0){
+            cout << "start plotting good cells" << endl;
             // plot for 50 good cells the energy distribution together with the MC one as well as the time distribution together with that of another good cell
             PlotBadCellComparisonVecBoth(DataMCHists,DataMCHistsTime,colorCompare,allCellsGood, allCellsGood, nEvents, canvas2NTEO, padL2NTEO, padR2NTEO, outputDir, suffix, fClusters, plotDataSets,
                                          fCollisionSystem, kTRUE, 50,100);

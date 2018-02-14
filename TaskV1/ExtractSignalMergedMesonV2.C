@@ -48,17 +48,17 @@
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "THnSparse.h"
 
-                                                                  
+
 //****************************************************************************
 //********* Main function for extraction of signal for merged mesons *********
 //****************************************************************************
-void ExtractSignalMergedMesonV2(    TString meson                   = "", 
-                                    TString file                    = "", 
-                                    TString cutSelection            = "", 
-                                    TString suffix                  = "", 
-                                    Bool_t  optionMC                = kFALSE, 
-                                    TString optionEnergy            = "", 
-                                    TString optionPeriod            = "", 
+void ExtractSignalMergedMesonV2(    TString meson                   = "",
+                                    TString file                    = "",
+                                    TString cutSelection            = "",
+                                    TString suffix                  = "",
+                                    Bool_t  optionMC                = kFALSE,
+                                    TString optionEnergy            = "",
+                                    TString optionPeriod            = "",
                                     TString optionAdvancedMesonQA   = "",
                                     Int_t   numberOfBins            = 30,
                                     Int_t   mode                    = 10,
@@ -77,17 +77,17 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout << "ERROR: You are running the wrong macro, this macro is only designed for merged cluster analysis." << endl;
         return;
     }
-    
+
     if(optionAdvancedMesonQA.Contains("AdvancedMesonQA")){
         fAdvancedMesonQA            = kTRUE;
     }
-    
+
     if (kJJGammaTriggMC){
         fAdditionalName             = "JJGammaTrigg";
     }
-        
-    fAdditionalLabels               = kTRUE;    
-        
+
+    fAdditionalLabels               = kTRUE;
+
     fCutSelection                   = cutSelection;
     TString fCutSelectionRead       = cutSelection;
     TString dummyString             = "";
@@ -95,24 +95,24 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     StyleSettingsThesis(suffix);
     SetPlotStyle();
-    
+
     fEnergyFlag                     = optionEnergy;
     fPrefix                         = meson;
     fPeriodFlag                     = optionPeriod;
 
     TString outputDir               = Form("%s/%s/%s/ExtractSignalMergedMeson",cutSelection.Data(),optionEnergy.Data(),suffix.Data());
     gSystem->Exec("mkdir -p "+outputDir);
-    
+
     cout<<"Pictures are saved as "<< suffix.Data()<< endl;
     fdate                           = ReturnDateString();
-    
+
     //****************************** Specification of collision system ************************************************
     TString textProcess             = ReturnMesonString (fPrefix);
     if(textProcess.CompareTo("") == 0 ){
         cout << "Meson unknown" << endl;
         return ;
     }
-    
+
     fTextMeasurement                = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
     fCollisionSystem                = ReturnFullCollisionsSystem(fEnergyFlag);
     fDecayChannel                   = "#gamma#gamma";
@@ -126,14 +126,14 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     fNLMString                      = "";
     fNLMmin                         = ReturnClusterNLM(fClusterMergedCutSelection);
     if (ReturnClusterNLM(fClusterMergedCutSelection) == 1)
-        fNLMString                  = Form("%i local maximum", ReturnClusterNLM(fClusterMergedCutSelection));        
-    else 
+        fNLMString                  = Form("%i local maximum", ReturnClusterNLM(fClusterMergedCutSelection));
+    else
         fNLMString                  = Form("%i local maxima", ReturnClusterNLM(fClusterMergedCutSelection));
-    
+
     Double_t startXLabelInvMass     = 0.12;
     if (ReturnClusterNLM(fClusterMergedCutSelection) == 2)
         startXLabelInvMass          = 0.55;
-        
+
     if(cutSelection.Length() == 0){
         cout<<"ERROR: Cut selection is not set, please do!"<<endl;
         return;
@@ -147,12 +147,12 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         if ( (file.Contains("LHC15a3b") || file.Contains("LHC15g1b")) && mode == 10){
             fIsMCGammaTrig          = 1;
             cout << "WARNING: running on JetJet MC trigger on EMC photons, need to correct for acceptance factor" << endl;
-        }    
+        }
     } else {
         fIsMC                       = 0;
         fPrefix2                    = "data";
     }
-    
+
     //**************************** Determine Centrality *************************************************************
     fCentralityString                = GetCentralityString(fEventCutSelection);
     if (fCentralityString.CompareTo("pp")==0){
@@ -163,7 +163,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     if (fCentralityString.CompareTo("pp")!=0 && !fCentralityString.Contains("0-100%") ){
         fCollisionSystem            = Form("%s %s", fCentralityString.Data(), fCollisionSystem.Data());
     }
-    
+
     //***************************** Initialization of variables according to meson type ******************************
     if(meson.CompareTo("Pi0") == 0){
         Initialize("Pi0", numberOfBins, triggerSet);
@@ -175,9 +175,9 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout<<"ERROR: First argument in the ExtractSignalMergedMeson(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrim"<<endl;
         return;
     }
-            
+
     //************************* Start of Main routine ***************************************************************
-    const char* fFileErrLogDatname  = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), 
+    const char* fFileErrLogDatname  = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(),
                                            fPeriodFlag.Data(), fCutSelectionRead.Data());
     fFileErrLog.open(fFileErrLogDatname, ios::out);
 
@@ -187,13 +187,13 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
         return;
     }
-    
+
     TList *TopDir                   = (TList*)f->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
         return;
     }
-    
+
     TList *HistosGammaConversion    = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if(HistosGammaConversion == NULL){
         cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
@@ -211,12 +211,12 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     fHistoClustersMergedEM02AccMeson    = (TH2F*)ESDContainer->FindObject("ClusMerged_E_M02_AcceptedMeson");
     if (fHistoClustersMergedEM02AccMeson)
         fHistoClustersMergedE           = (TH1D*)fHistoClustersMergedEM02AccMeson->ProjectionX("ClusMerged_E");
-    
+
     fHistoClusterCandidates             = (TH1D*)ESDContainer->FindObject("GammaCandidates");
     fHistoClusterMergedCandidates       = (TH1D*)ESDContainer->FindObject("MergedCandidates");
     fHistoTrackVsClusterCandidates      = (TH2F*)ESDContainer->FindObject("GoodESDTracksVsGammaCandidates");
     fHistoSPDtrackletvsSPDclusters      = (TH2F*)ESDContainer->FindObject("SPD tracklets vs SPD clusters");
-    
+
     fHistoClusterNCellsPt               = (TH2F*)ESDContainer->FindObject("Clus_NCells_Pt");
     fHistoClusterMergedNCellsPt         = (TH2F*)ESDContainer->FindObject("ClusMerged_NCells_Pt");
     fHistoClusterMergedNCellsArClPt     = (TH2F*)ESDContainer->FindObject("ClusMerged_NCellsAroundClus_Pt");
@@ -226,19 +226,19 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     if (fHistoClustersMergedNLMPt){
         for (Int_t i = 0; i< 11; i++ ){
             fHistoClustersMergedPtNLMBins[i] = FillProjectionY(fHistoClustersMergedNLMPt, Form("ClusterMergedNLM%d",i+1), i+1, i+1, fNBinsClusterPt, fBinsClusterPt);
-        } 
-    }    
+        }
+    }
     if (fIsMC){
         fHistoClusterMergedNPartPt      = (TH2F*)ESDContainer->FindObject("ClusMerged_NPart_Pt");
     }
-    
+
     if (fHistoClusterNCellsPt && fHistoClusterMergedNCellsPt && fHistoClusterMergedNCellsArClPt && fHistoClusterMergedNCellsArAInclPt && fHistoClusterMergedEAroundClE ){
         fAdvancedClusterQA              = kTRUE;
         cout << "**************************************************************" << endl;
         cout << "INFO: Enabeling QA for clusters" << endl;
         cout << "**************************************************************" << endl;
     }
-        
+
     fNumberOfGoodESDTracks              = (TH1D*)ESDContainer->FindObject("GoodESDTracks");
     fEventQuality                       = (TH1D*)ESDContainer->FindObject("NEvents");
     if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb") ){
@@ -246,7 +246,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     } else {
         fNEvents                        =  GetNEvents(fEventQuality);
     }
-    
+
     cout << Form("CaloCuts_%s",fClusterCutSelection.Data()) << endl;
     TList *CaloPreCuts                  = (TList*) HistosGammaConversion->FindObject(Form("CaloCuts_%s",fClusterCutSelection.Data()));
     if(CaloPreCuts == NULL){
@@ -263,35 +263,35 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         if (fHistoExoticsEvsEstar) cout << "found EvEstar for exotics" << endl;
         if (fHistoExoticsEtaPhi && fHistoExoticsEvsM02 && fHistoExoticsEvsNCells && fHistoExoticsEvsEstar)
             fEnableExoticsQA            = kTRUE;
-        
+
         if (fEnableExoticsQA){
             FillExoticsM02HistosArray(fHistoExoticsEvsM02);
-        }    
-        
-        
+        }
+
+
     }
-    
+
     TString rapidityRange;
     fYMaxMeson                          = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
-        
+
     TString ObjectNameESD               = "ESD_Mother_InvMass_Pt";
-    
+
     cout << "line " << __LINE__ << endl;
     fHistoInvMassVsPt                   = (TH2F*)ESDContainer->FindObject(ObjectNameESD.Data());
     fHistoInvMassVsPt->Sumw2();
-    
+
     const char* FileDataLogname         = Form("%s/%s/%s_%s_EffiCheck_RAWDATA%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(), fPeriodFlag.Data(),
                                                fCutSelectionRead.Data());
     fFileDataLog.open(FileDataLogname, ios::out);
-    
-    
+
+
     fMesonMassExpect                    = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
 
     FillDataHistosArray( fHistoInvMassVsPt, fHistoClustersMergedPtM02AccMeson );
-    
+
     if ( fIsMC ){
         SetCorrectMCHistogrammNames(meson);
-        
+
         TList *TrueContainer                    = (TList*) HistosGammaConversion->FindObject(Form("%s True histograms",fCutSelectionRead.Data()));
         fHistoTrueClustersMergedPtM02           = (TH2F*) TrueContainer->FindObject(fObjectNameTrueMergedM02.Data());
         if (fHistoTrueClustersMergedPtM02) fHistoTrueClustersMergedPtM02->Sumw2();
@@ -305,8 +305,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoTrueClustersPi0GGPtM02        = (TH2F*) fHistoTrueClustersPi0PtM02->Clone(fObjectNameTrueFromPi0GGM02.Data());
             fHistoTrueClustersPi0GGPtM02->Sumw2();
             fHistoTrueClustersPi0GGPtM02->Add(fHistoTrueClustersPi0DalitzPtM02,-1);
-        }    
-        
+        }
+
         fHistoTrueClustersEtaPtM02              = (TH2F*) TrueContainer->FindObject(fObjectNameTrueFromEtaM02.Data());
         if (fHistoTrueClustersEtaPtM02) fHistoTrueClustersEtaPtM02->Sumw2();
         fHistoTrueClustersEtaDCPtM02            = (TH2F*) TrueContainer->FindObject(fObjectNameTrueFromEtaDCM02.Data());
@@ -317,7 +317,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoTrueClustersEtaGGPtM02        = (TH2F*) fHistoTrueClustersEtaPtM02->Clone(fObjectNameTrueFromEtaGGM02.Data());
             fHistoTrueClustersEtaGGPtM02->Sumw2();
             fHistoTrueClustersEtaGGPtM02->Add(fHistoTrueClustersEtaDalitzPtM02,-1);
-        }    
+        }
 
         fHistoTrueClustersBGPtM02               = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusBGM02.Data());
         if (fHistoTrueClustersBGPtM02) fHistoTrueClustersBGPtM02->Sumw2();
@@ -334,16 +334,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fHistoTrueClusPartConvMergedFromPi0PtM02->Sumw2();
                 fHistoTrueClusPartConvMergedPtM02       = (TH2F*) fHistoTrueClusPartConvMergedFromPi0PtM02->Clone(fObjectNameTrueMergedPartConvM02.Data());
                 fHistoTrueClusPartConvMergedPtM02->Sumw2();
-            }    
+            }
             fHistoTrueClusPartConvMergedFromEtaPtM02    = (TH2F*) TrueContainer->FindObject(fObjectNameTrueMergedPartConvFromEtaM02.Data());
             if (fHistoTrueClusPartConvMergedFromEtaPtM02){
                 fHistoTrueClusPartConvMergedFromEtaPtM02->Sumw2();
                 if (fHistoTrueClusPartConvMergedPtM02){
                     fHistoTrueClusPartConvMergedPtM02->Add(fHistoTrueClusPartConvMergedFromEtaPtM02);
-                }    
-                    
-            }    
-        }    
+                }
+
+            }
+        }
         fHistoTrueClusPureMergedPtM02           = (TH2F*) TrueContainer->FindObject(fObjectNameTrueMergedPureM02.Data());
         if (fHistoTrueClusPureMergedPtM02){
             fHistoTrueClusPureMergedPtM02->Sumw2();
@@ -353,15 +353,15 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fHistoTrueClusPureMergedFromPi0PtM02->Sumw2();
                 fHistoTrueClusPureMergedPtM02           = (TH2F*) fHistoTrueClusPureMergedFromPi0PtM02->Clone(fObjectNameTrueMergedPureM02.Data());
                 fHistoTrueClusPureMergedPtM02->Sumw2();
-            }    
+            }
             fHistoTrueClusPureMergedFromEtaPtM02        = (TH2F*) TrueContainer->FindObject(fObjectNameTrueMergedPureFromEtaM02.Data());
             if (fHistoTrueClusPureMergedFromEtaPtM02){
                 fHistoTrueClusPureMergedFromEtaPtM02->Sumw2();
                 if (fHistoTrueClusPureMergedPtM02){
                     fHistoTrueClusPureMergedPtM02->Add(fHistoTrueClusPureMergedFromEtaPtM02);
-                }    
-                    
-            }    
+                }
+
+            }
         }
         fHistoTrueClusOneGammaFromPi0PtM02      = (TH2F*) TrueContainer->FindObject(fObjectNameTrueMergedOneGammaFromPi0M02.Data());
         if (fHistoTrueClusOneGammaFromPi0PtM02) fHistoTrueClusOneGammaFromPi0PtM02->Sumw2();
@@ -371,7 +371,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         if (fHistoTrueClusOneElectronFromPi0PtM02) fHistoTrueClusOneElectronFromPi0PtM02->Sumw2();
         fHistoTrueClusOneElectronFromEtaPtM02   = (TH2F*) TrueContainer->FindObject(fObjectNameTrueMergedOneElectronFromEtaM02.Data());
         if (fHistoTrueClusOneElectronFromEtaPtM02) fHistoTrueClusOneElectronFromEtaPtM02->Sumw2();
-        
+
         if (fHistoTrueClusOneGammaFromPi0PtM02){
             fHistoTrueClusOneGammaPtM02             = (TH2F*)fHistoTrueClusOneGammaFromPi0PtM02->Clone(fObjectNameTrueMergedOneGammaM02.Data());
             fHistoTrueClusOneGammaPtM02->Sumw2();
@@ -384,19 +384,19 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             if (fHistoTrueClusOneElectronFromEtaPtM02)
                 fHistoTrueClusOneElectronPtM02->Add(fHistoTrueClusOneElectronFromEtaPtM02);
         }
-        
-        
-        FillMCM02HistosArray(       fHistoTrueClustersMergedPtM02, fHistoTrueClustersPi0PtM02, fHistoTrueClustersEtaPtM02, fHistoTrueClustersGammaPtM02, 
+
+
+        FillMCM02HistosArray(       fHistoTrueClustersMergedPtM02, fHistoTrueClustersPi0PtM02, fHistoTrueClustersEtaPtM02, fHistoTrueClustersGammaPtM02,
                                     fHistoTrueClustersElectronPtM02, fHistoTrueClustersBGPtM02
                             );
-        FillMCM02AdditionHistosArray(   fHistoTrueClusPureMergedPtM02, fHistoTrueClusPartConvMergedPtM02, fHistoTrueClusOneGammaPtM02, fHistoTrueClusOneGammaFromPi0PtM02, 
+        FillMCM02AdditionHistosArray(   fHistoTrueClusPureMergedPtM02, fHistoTrueClusPartConvMergedPtM02, fHistoTrueClusOneGammaPtM02, fHistoTrueClusOneGammaFromPi0PtM02,
                                         fHistoTrueClusOneGammaFromEtaPtM02, fHistoTrueClusOneElectronPtM02, fHistoTrueClusOneElectronFromPi0PtM02, fHistoTrueClusOneElectronFromEtaPtM02,
                                         fHistoTrueClustersPi0GGPtM02, fHistoTrueClustersPi0DalitzPtM02, fHistoTrueClustersEtaGGPtM02, fHistoTrueClustersEtaDalitzPtM02,
                                         fHistoTrueClustersPi0DCPtM02, fHistoTrueClustersEtaDCPtM02, fHistoTrueClusPureMergedFromPi0PtM02, fHistoTrueClusPureMergedFromEtaPtM02,
                                         fHistoTrueClusPartConvMergedFromPi0PtM02, fHistoTrueClusPartConvMergedFromEtaPtM02
                                     );
 
-        
+
         fHistoTrueClustersBGPtSource            = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusBG_Source.Data());
         if (fHistoTrueClustersBGPtSource){
             fHistoTrueClustersBGPtSource->Sumw2();
@@ -412,38 +412,38 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoTrueClustersGammaPtSource->Sumw2();
             FillMCGammaSeparated(fHistoTrueClustersGammaPtSource);
         }
-        
+
         if (meson.Contains("Pi0")){
             fHistoTrueClustersPrimPi0PtM02                  = (TH2F*) TrueContainer->FindObject(fObjectNameTrueClusPrimMesonM02.Data());
             if (fHistoTrueClustersPrimPi0PtM02) fHistoTrueClustersPrimPi0PtM02->Sumw2();
-            
-            
+
+
             fHistoTrueClustersSecPi0PtM02[0]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0sM02.Data());
             fHistoTrueClustersSecPi0PtM02[1]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromLambdaM02.Data());
             fHistoTrueClustersSecPi0PtM02[2]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonFromK0lM02.Data());
             fHistoTrueClustersSecPi0PtM02[3]                        = (TH2F*)TrueContainer->FindObject(fObjectNameTrueClusSecMesonM02.Data());
             for (Int_t j = 0; j < 4; j++){
                 if (fHistoTrueClustersSecPi0PtM02[j]) fHistoTrueClustersSecPi0PtM02[j]->Sumw2();
-            }    
+            }
             // remove pi0 from other source (K0s, K0l, Lambda) from secondary yield
             for (Int_t j = 0; j<3; j++){
                 if (fHistoTrueClustersSecPi0PtM02[j]) fHistoTrueClustersSecPi0PtM02[3]->Add(fHistoTrueClustersSecPi0PtM02[j],-1);
-            }    
+            }
 
-            
+
             FillMCPrimSecM02HistosArray(    fHistoTrueClustersPrimPi0PtM02, fHistoTrueClustersSecPi0PtM02 );
         }
-        
-        
+
+
         TList *MCContainer                      = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",fCutSelectionRead.Data()));
-        
+
         fHistoMCMesonGGWithinAccepPt            = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonAcc.Data());
-        fHistoMCMesonGGPt                       = (TH1D*)MCContainer->FindObject(fObjectNameMCMeson.Data());  
+        fHistoMCMesonGGPt                       = (TH1D*)MCContainer->FindObject(fObjectNameMCMeson.Data());
         fHistoMCMesonGGPtWOWeights              = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonWOWeights.Data());
         fHistoMCMesonDalitzWithinAccepPt        = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonDalitzAcc.Data());
-        fHistoMCMesonDalitzPt                   = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonDalitz.Data());  
+        fHistoMCMesonDalitzPt                   = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonDalitz.Data());
         fHistoMCMesonDalitzPtWOWeights          = (TH1D*)MCContainer->FindObject(fObjectNameMCMesonDalitzWOWeights.Data());
-        
+
         // sum all mesons including Dalitz
         fHistoMCMesonWithinAccepPt              = (TH1D*)fHistoMCMesonGGWithinAccepPt->Clone("Meson_inAcc");
         fHistoMCMesonWithinAccepPt->Sumw2();
@@ -454,7 +454,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoMCMesonPtWOWeights                = (TH1D*)fHistoMCMesonGGPtWOWeights->Clone("Meson_All_WOWeights");
         fHistoMCMesonPtWOWeights->Sumw2();
         fHistoMCMesonPtWOWeights->Add(fHistoMCMesonDalitzPtWOWeights);
-        
+
         if (meson.Contains("Pi0")){
             cout << "trying to load sec output" << endl;
             fHistoMCSecPi0WithinAccepPtSource   = (TH2D*)MCContainer->FindObject(fObjectNameMCMesonAccSecPi0.Data());
@@ -463,33 +463,33 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fHistoMCSecPi0WithinAccepPtSource->Sumw2();
                 fHistoMCSecPi0PtSource->Sumw2();
                 fNewMCOutput                    = kTRUE;
-                cout << "new MC output is being processed" << endl; 
-            }    
-        }    
-        
+                cout << "new MC output is being processed" << endl;
+            }
+        }
+
         if (fIsMCGammaTrig){
             Double_t acceptanceCorrFacEMC       = 1/0.277; //Jet-Jet Gamma trigg on EMC phi (80-180), \eta \pm 0.7
             fHistoMCMesonPt->Sumw2();
             fHistoMCMesonPtWOWeights->Sumw2();
             fHistoMCMesonPt->Scale(acceptanceCorrFacEMC);
             fHistoMCMesonPtWOWeights->Scale(acceptanceCorrFacEMC);
-        }    
+        }
     }
 
     //******************************************************************************************
     //************************* Analysing single pt bin ****************************************
-    //******************************************************************************************    
+    //******************************************************************************************
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){ // BEGIN ANALYSIS for each Pt bin
-        cout << "BIN: " << iPt << endl; 
+        cout << "BIN: " << iPt << endl;
         IntegrateHistoM02(fHistoM02PtBin[iPt], fMesonM02IntRange );
         fMesonM02Yields[iPt]        = fYields;
         fMesonM02YieldsError[iPt]   = fYieldsError;
-        
+
         if (fIsMC){
             IntegrateHistoM02(fHistoTrueClusMergedM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueMergedYields[iPt]               = fYields;
             fMesonM02TrueMergedYieldsError[iPt]          = fYieldsError;
-            
+
             IntegrateHistoM02(fHistoTrueClusPartConvMergedM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueMergedPartConvYields[iPt]       = fYields;
             fMesonM02TrueMergedPartConvYieldsError[iPt]  = fYieldsError;
@@ -504,7 +504,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fMesonM02TrueMergedPartConvFromEtaYields[iPt]       = fYields;
                 fMesonM02TrueMergedPartConvFromEtaYieldsError[iPt]  = fYieldsError;
             }
-            
+
             IntegrateHistoM02(fHistoTrueClusPureMergedM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueMergedPureYields[iPt]       = fYields;
             fMesonM02TrueMergedPureYieldsError[iPt]  = fYieldsError;
@@ -520,7 +520,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 fMesonM02TrueMergedPureFromEtaYieldsError[iPt]      = fYieldsError;
             }
 
-            
+
             IntegrateHistoM02(fHistoTrueClusOneGammaM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueMergedOneGammaYields[iPt]       = fYields;
             fMesonM02TrueMergedOneGammaYieldsError[iPt]  = fYieldsError;
@@ -544,7 +544,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             IntegrateHistoM02(fHistoTrueClusOneElectronFromEtaM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueMergedOneElectronFromEtaYields[iPt]       = fYields;
             fMesonM02TrueMergedOneElectronFromEtaYieldsError[iPt]  = fYieldsError;
-            
+
             IntegrateHistoM02(fHistoTrueClusPi0M02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TruePi0Yields[iPt]                  = fYields;
             fMesonM02TruePi0YieldsError[iPt]             = fYieldsError;
@@ -560,7 +560,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             IntegrateHistoM02(fHistoTrueClusPi0DalitzM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TruePi0DalitzYields[iPt]            = fYields;
             fMesonM02TruePi0DalitzYieldsError[iPt]       = fYieldsError;
-            
+
             IntegrateHistoM02(fHistoTrueClusEtaM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueEtaYields[iPt]                  = fYields;
             fMesonM02TrueEtaYieldsError[iPt]             = fYieldsError;
@@ -575,8 +575,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
             IntegrateHistoM02(fHistoTrueClusEtaDalitzM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueEtaDalitzYields[iPt]            = fYields;
-            fMesonM02TrueEtaDalitzYieldsError[iPt]       = fYieldsError;            
-            
+            fMesonM02TrueEtaDalitzYieldsError[iPt]       = fYieldsError;
+
             IntegrateHistoM02(fHistoTrueClusGammaM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueGammaYields[iPt]                = fYields;
             fMesonM02TrueGammaYieldsError[iPt]           = fYieldsError;
@@ -588,7 +588,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             IntegrateHistoM02(fHistoTrueClusBGM02PtBin[iPt], fMesonM02IntRange );
             fMesonM02TrueBGYields[iPt]                   = fYields;
             fMesonM02TrueBGYieldsError[iPt]              = fYieldsError;
-            
+
             if (meson.Contains("Pi0")){
                 IntegrateHistoM02(fHistoTrueClusPrimPi0M02PtBin[iPt], fMesonM02IntRange );
                 fMesonM02TruePrimPi0Yields[iPt]                     = fYields;
@@ -602,29 +602,26 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             }
         }
     }
-    
+
     CreatePtHistos();
     FillPtHistos();
-    
+
     if (!fIsMC && meson.Contains("Pi0") ){
         fHaveToyMCInputForSec   = LoadSecondaryPionsFromExternalFile();
         if (fHaveToyMCInputForSec){
             cout << "I am gonna add the toy MC ouput to the uncorrected file" << endl;
         } else {
             cout << "no ToyMC input has been found for the secondaries" << endl;
-        }    
+        }
     }
 
-    
-    
-    
     if (fIsMC){
         FillHistosArrayMC(fHistoMCMesonWithinAccepPt, fHistoMCMesonPt, fDeltaPt);
         if (meson.Contains("Pi0") && fNewMCOutput){
             FillHistosArrayMCSecAndCalcAcceptance(fHistoMCSecPi0WithinAccepPtSource, fHistoMCSecPi0PtSource);
-        }    
-    } 
-    
+        }
+    }
+
     //******************************************************************************************
     //************************* Plotting gamma/merged candidates per event *********************
     //******************************************************************************************
@@ -637,29 +634,29 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     canvasNClusters->SetLogy(1);
         Double_t maxYNClus = 30;
         if (fEnergyFlag.Contains("Pb")) maxYNClus = 100;
-        DrawAutoGammaMesonHistos(   fHistoClusterCandidates, 
-                                    "", "cluster candidates", "counts/event", 
+        DrawAutoGammaMesonHistos(   fHistoClusterCandidates,
+                                    "", "cluster candidates", "counts/event",
                                     kTRUE, 2.,1e-6, kFALSE,
-                                    kFALSE, 0, 20, 
+                                    kFALSE, 0, 20,
                                     kTRUE, 0., maxYNClus);
         fHistoClusterCandidates->GetYaxis()->SetTitleOffset(0.9);
-        DrawGammaSetMarker(fHistoClusterCandidates, 20, 1.5, kBlack, kBlack); 
+        DrawGammaSetMarker(fHistoClusterCandidates, 20, 1.5, kBlack, kBlack);
         fHistoClusterCandidates->Draw("e,p");
-        DrawGammaSetMarker(fHistoClusterMergedCandidates, 24, 1.5, kRed+2, kRed+2); 
+        DrawGammaSetMarker(fHistoClusterMergedCandidates, 24, 1.5, kRed+2, kRed+2);
         fHistoClusterMergedCandidates->Draw("same,e,p");
 
         PutProcessLabelAndEnergyOnPlot(0.55, 0.97, 0.045, fCollisionSystem.Data(), fDetectionProcess.Data(), "", 42, 0.03, "", 1, 1.1);
-        
+
         TLegend* legendNClusters = GetAndSetLegend(0.5,0.75,2);
         legendNClusters->AddEntry(fHistoClusterCandidates,"passed general clusters cuts");
         legendNClusters->AddEntry(fHistoClusterMergedCandidates,"passed merged cluster cuts");
         legendNClusters->Draw();
 
-        
+
     canvasNClusters->Update();
     canvasNClusters->SaveAs(Form("%s/%s_NClusterPerEvent%s.%s", outputDir.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
-    
-    
+
+
     //******************************************************************************************
     //************************* Plotting 2D M02 vs Pt ******************************************
     //******************************************************************************************
@@ -673,12 +670,12 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     }
     TCanvas* canvasPtM02 = new TCanvas("canvasPtM02","",2250,1500);
     DrawGammaCanvasSettings(canvasPtM02, 0.085, 0.12, 0.02, 0.1);
-    canvasPtM02->SetLogx(1); 
-    canvasPtM02->SetLogy(0); 
-    canvasPtM02->SetLogz(1); 
-            
+    canvasPtM02->SetLogx(1);
+    canvasPtM02->SetLogy(0);
+    canvasPtM02->SetLogz(1);
+
     canvasPtM02->cd();
-    
+
     if(fHistoClustersMergedPtM02){
         fHistoClustersMergedPtM02->Sumw2();
         fHistoClustersMergedPtM02->Scale(1./fNEvents);
@@ -701,20 +698,20 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         PutProcessLabelAndEnergyOnPlot(0.55, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
 
 //         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //**************** Plotting 2D M02 vs Pt merged clusters passing meson cuts ****************
-    //******************************************************************************************    
+    //******************************************************************************************
     if(fHistoClustersMergedPtM02AccMeson){
         fHistoClustersMergedPtM02AccMeson->Sumw2();
         fHistoClustersMergedPtM02AccMeson->Scale(1./fNEvents);
         if (minZM02 == 0) minZM02       = FindSmallestEntryIn2D(fHistoClustersMergedPtM02AccMeson);
         if (maxZM02 == 0) maxZM02       = fHistoClustersMergedPtM02AccMeson->GetMaximum();
-        
+
         DrawAutoGammaHistoPaper2D(fHistoClustersMergedPtM02AccMeson,
                                 " ",
                                 "#it{p}_{T} (GeV/#it{c})",
@@ -729,16 +726,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedPtM02AccMeson->GetXaxis()->SetTickLength(0.05);
         fHistoClustersMergedPtM02AccMeson->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-        
+
 //         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //**************** Plotting 2D M02 vs E merged clusters passing meson cuts ****************
-    //******************************************************************************************    
+    //******************************************************************************************
     if(fHistoClustersMergedEM02AccMeson){
         fHistoClustersMergedEM02AccMeson->Sumw2();
         fHistoClustersMergedEM02AccMeson->Scale(1./fNEvents);
@@ -758,16 +755,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoClustersMergedEM02AccMeson->GetXaxis()->SetTickLength(0.05);
         fHistoClustersMergedEM02AccMeson->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-        
+
         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_EVsM02_AllAcceptedMesons%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
-    
+
     //******************************************************************************************
     //************** Plotting 2D M02 vs Pt validated merged clusters part conv *****************
-    //******************************************************************************************        
+    //******************************************************************************************
     if (fHistoTrueClusPartConvMergedPtM02){
         fHistoTrueClusPartConvMergedPtM02->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(fHistoTrueClusPartConvMergedPtM02,
@@ -785,19 +782,19 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoTrueClusPartConvMergedPtM02->GetXaxis()->SetTickLength(0.05);
         fHistoTrueClusPartConvMergedPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-        
+
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, part conv");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedPartConv%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //************** Plotting 2D M02 vs Pt validated merged clusters part conv *****************
-    //******************************************************************************************        
+    //******************************************************************************************
     if (fHistoTrueClusPureMergedPtM02){
         fHistoTrueClusPureMergedPtM02->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(fHistoTrueClusPureMergedPtM02,
@@ -815,19 +812,19 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoTrueClusPureMergedPtM02->GetXaxis()->SetTickLength(0.05);
         fHistoTrueClusPureMergedPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-        
+
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, pure");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedPure%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //********** Plotting 2D M02 vs Pt validated merged clusters one decay gamma ***************
-    //******************************************************************************************        
+    //******************************************************************************************
     if (fHistoTrueClusOneGammaPtM02){
         fHistoTrueClusOneGammaPtM02->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(fHistoTrueClusOneGammaPtM02,
@@ -845,19 +842,19 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoTrueClusOneGammaPtM02->GetXaxis()->SetTickLength(0.05);
         fHistoTrueClusOneGammaPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-        
+
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, 1 #gamma from decay");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedOneDecayGamma%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //******** Plotting 2D M02 vs Pt validated merged clusters one electron from decay *********
-    //******************************************************************************************        
+    //******************************************************************************************
     if (fHistoTrueClusOneElectronPtM02){
         fHistoTrueClusOneElectronPtM02->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(fHistoTrueClusOneElectronPtM02,
@@ -875,23 +872,23 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fHistoTrueClusOneElectronPtM02->GetXaxis()->SetTickLength(0.05);
         fHistoTrueClusOneElectronPtM02->DrawCopy("COLZ");
         PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-        
+
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged clusters, 1 e^{+/-} from decay");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueMergedOneDecayElectron%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
-    
+
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged pi0s *************************
-    //******************************************************************************************        
+    //******************************************************************************************
     if (fHistoTrueClustersPi0PtM02 ){
         fHistoTrueClustersPi0PtM02->Sumw2();
         TH2F* dumm2D = (TH2F*)fHistoTrueClustersPi0PtM02->Clone("forplotting");
-        
+
         dumm2D->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(dumm2D,
                                 " ",
@@ -913,15 +910,15 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged #pi^{0}");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-        
-        
+
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TruePi0%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged etas *************************
-    //******************************************************************************************            
+    //******************************************************************************************
     if (fHistoTrueClustersEtaPtM02 ){
         fHistoTrueClustersEtaPtM02->Sumw2();
         TH2F* dumm2D = (TH2F*)fHistoTrueClustersEtaPtM02->Clone("forplotting");
@@ -945,16 +942,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. merged #eta");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-        
+
 //         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueEta%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated gammas ******************************
-    //******************************************************************************************            
+    //******************************************************************************************
     if (fHistoTrueClustersGammaPtM02){
         fHistoTrueClustersGammaPtM02->Scale(1./fNEvents);
         DrawAutoGammaHistoPaper2D(fHistoTrueClustersGammaPtM02,
@@ -977,14 +974,14 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
 //         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueGamma%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated electrons ***************************
-    //******************************************************************************************            
+    //******************************************************************************************
     if (fHistoTrueClustersElectronPtM02){
         fHistoTrueClustersElectronPtM02->Sumw2();
         fHistoTrueClustersElectronPtM02->Scale(1./fNEvents);
@@ -1007,16 +1004,16 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "val. e^{#pm}");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-     
+
 //         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueElectron%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
-     
+
     //******************************************************************************************
     //******************** Plotting 2D M02 vs Pt validated merged BG ***************************
-    //******************************************************************************************            
+    //******************************************************************************************
     if (fHistoTrueClustersBGPtM02){
         fHistoTrueClustersBGPtM02->Sumw2();
         fHistoTrueClustersBGPtM02->Scale(1./fNEvents);
@@ -1039,14 +1036,14 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         TLatex *labelM02 = new TLatex(0.11, 0.15, "background");
         SetStyleTLatex( labelM02, 0.05,4);
         labelM02->Draw();
-        
+
 //         if (fAdditionalLabels) DrawMergedClusterLambdaCuts(fNLMmin, maxPtPlotting);
-        
+
         canvasPtM02->Update();
         canvasPtM02->SaveAs(Form("%s/%s_%s_PtVsM02_TrueBG%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
 
-    
+
     //******************************************************************************************
     //***************** Plotting gamma candidates per event vs track candidates ****************
     //******************************************************************************************
@@ -1054,7 +1051,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         TCanvas* canvasTracksVsGamma = new TCanvas("canvasTracksVsGamma","",2250,1500);
         DrawGammaCanvasSettings(canvasTracksVsGamma, 0.08, 0.12, 0.015, 0.1);
         canvasTracksVsGamma->SetLogz(1);
-        
+
             Double_t maxXNTracks = 100;
             fHistoTrackVsClusterCandidates->Sumw2();
             fHistoTrackVsClusterCandidates->Scale(1./fNEvents);
@@ -1077,15 +1074,15 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         canvasTracksVsGamma->Update();
         canvasTracksVsGamma->SaveAs(Form("%s/%s_TrackVsGamma%s.%s", outputDir.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
     }
-    
+
     //******************************************************************************************
     //**************************** Plotting SPD tracklet vs SPD clusters ***********************
-    //******************************************************************************************    
+    //******************************************************************************************
     if (fHistoSPDtrackletvsSPDclusters){
         TCanvas* canvasSPDTracksVsCluster = new TCanvas("canvasSPDTracksVsCluster","",2250,1500);
         DrawGammaCanvasSettings(canvasSPDTracksVsCluster, 0.08, 0.12, 0.045, 0.1);
         canvasSPDTracksVsCluster->SetLogz(1);
-        
+
             fHistoSPDtrackletvsSPDclusters->Sumw2();
             fHistoSPDtrackletvsSPDclusters->Scale(1./fNEvents);
             Double_t minZSPD        = FindSmallestEntryIn2D(fHistoSPDtrackletvsSPDclusters);
@@ -1110,14 +1107,14 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     //******************************************************************************************
     //******************************** Plotting InvMass versus Pt ******************************
-    //******************************************************************************************        
+    //******************************************************************************************
     TCanvas* canvasInvMassVsPt = new TCanvas("canvasInvMassVsPt","",2250,1500);
     DrawGammaCanvasSettings(canvasInvMassVsPt, 0.08, 0.12, 0.045, 0.1);
     canvasInvMassVsPt->SetLogz(1);
     Double_t minZInv        = 0;
     Double_t maxZInv        = 0;
- 
-    if (fHistoInvMassVsPt){        
+
+    if (fHistoInvMassVsPt){
         fHistoInvMassVsPt->Sumw2();
         minZInv             = FindSmallestEntryIn2D(fHistoInvMassVsPt);
         maxZInv             = fHistoInvMassVsPt->GetMaximum();
@@ -1141,11 +1138,11 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     //******************************************************************************************
     //********************** Plotting extended exotics QA if available *************************
-    //******************************************************************************************            
+    //******************************************************************************************
     if (fEnableExoticsQA){
         if(fHistoExoticsEvsM02){
             canvasPtM02->cd();
-            
+
             fHistoExoticsEvsM02->Sumw2();
             fHistoExoticsEvsM02->Scale(1./fNEvents);
             if (minZM02 == 0) minZM02     = FindSmallestEntryIn2D(fHistoExoticsEvsM02);
@@ -1164,17 +1161,17 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoExoticsEvsM02->GetXaxis()->SetTickLength(0.05);
             fHistoExoticsEvsM02->DrawCopy("COLZ");
             PutProcessLabelAndEnergyOnPlot(0.12, 0.97, 0.045, fCollisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.1);
-            
+
             canvasPtM02->Update();
             canvasPtM02->SaveAs(Form("%s/%s_%s_EVsM02_RejectedExotics%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
         }
 
         TCanvas* canvasYieldExo = new TCanvas("canvasYieldExo","",1900,2100);
         DrawGammaCanvasSettings(canvasYieldExo, 0.08, 0.015, 0.02, 0.08);
-        canvasYieldExo->SetLogx(0); 
-        canvasYieldExo->SetLogy(1); 
+        canvasYieldExo->SetLogx(0);
+        canvasYieldExo->SetLogy(1);
         canvasYieldExo->cd();
-        
+
         if (fHistoExoticsAboveM02MinCut && fHistoExoticsBelowM02MinBaseCut && fHistoExoticsBelowM02MinCut){
             fHistoExoticsAboveM02MinCut->Sumw2();
             fHistoExoticsAboveM02MinCut->Scale(1./fNEvents);
@@ -1185,7 +1182,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoExoticsBelowM02MinCut->Sumw2();
             fHistoExoticsBelowM02MinCut->Scale(1./fNEvents);
             fHistoExoticsBelowM02MinCut->Divide(fDeltaPt);
-                        
+
             TH1D* clusterEdummy     = NULL;
             if (fHistoClustersE){
                 clusterEdummy   = (TH1D*)fHistoClustersE->Clone("fHistoClusterEDummy");
@@ -1193,7 +1190,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 clusterEdummy->Sumw2();
                 clusterEdummy->Scale(1./fNEvents);
                 clusterEdummy->Divide(fDeltaPt);
-            }    
+            }
             TH1D* clusterEmdummy  = NULL;
             if (fHistoClustersMergedE){
                 clusterEmdummy   = (TH1D*)fHistoClustersMergedE->Clone("fHistoClusterEmergedDummy");
@@ -1201,7 +1198,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
                 clusterEmdummy->Sumw2();
                 clusterEmdummy->Scale(1./fNEvents);
                 clusterEmdummy->Divide(fDeltaPt);
-            }    
+            }
             Double_t maxYExo   = fHistoExoticsAboveM02MinCut->GetMaximum();
             Double_t minYExo   = FindSmallestEntryIn1D(fHistoExoticsAboveM02MinCut);
             if (maxYExo < fHistoExoticsBelowM02MinBaseCut->GetMaximum())
@@ -1214,101 +1211,101 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             if (minYExo > FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut))
                 minYExo = FindSmallestEntryIn1D(fHistoExoticsBelowM02MinCut);
             minYExo = 0.1*minYExo;
-                
-            DrawAutoGammaMesonHistos(   fHistoExoticsBelowM02MinBaseCut, 
-                                        "", "E (GeV)", "counts/event", 
+
+            DrawAutoGammaMesonHistos(   fHistoExoticsBelowM02MinBaseCut,
+                                        "", "E (GeV)", "counts/event",
                                         kFALSE, 2.,1e-6, kFALSE,
-                                        kTRUE, minYExo, maxYExo, 
+                                        kTRUE, minYExo, maxYExo,
                                         kFALSE, 0, 50);
             fHistoExoticsBelowM02MinBaseCut->GetYaxis()->SetTitleOffset(1);
-            DrawGammaSetMarker(fHistoExoticsBelowM02MinBaseCut, 21, 1.5, kGreen+2, kGreen+2); 
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinBaseCut, 21, 1.5, kGreen+2, kGreen+2);
             fHistoExoticsBelowM02MinBaseCut->Draw("e,p");
-            DrawGammaSetMarker(fHistoExoticsAboveM02MinCut, 25, 1.5, kBlue+1, kBlue+1); 
+            DrawGammaSetMarker(fHistoExoticsAboveM02MinCut, 25, 1.5, kBlue+1, kBlue+1);
             fHistoExoticsAboveM02MinCut->Draw("same,e,p");
-            DrawGammaSetMarker(fHistoExoticsBelowM02MinCut, 24, 1.5, kRed+1, kRed+1); 
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinCut, 24, 1.5, kRed+1, kRed+1);
             fHistoExoticsBelowM02MinCut->Draw("same,e,p");
-            
+
             TLegend* legendExotics = GetAndSetLegend2(0.65,0.8-0.035*3*1.05,0.95,0.8,0.035,1,"",42,0.1);
             legendExotics->AddEntry(fHistoExoticsBelowM02MinBaseCut,"0 < #sigma_{long}^{2} < 0.1","p");
             legendExotics->AddEntry(fHistoExoticsBelowM02MinCut,"0.1 < #sigma_{long}^{2} < 0.27","p");
             legendExotics->AddEntry(fHistoExoticsAboveM02MinCut,"0.27 < #sigma_{long}^{2} < #infty","p");
             legendExotics->Draw();
-            
-            
+
+
             PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.035, fCollisionSystem.Data(), fDetectionProcess.Data(), "rejected exotics", 42, 0.03, "", 1, 1.1);
 
             canvasYieldExo->Update();
             canvasYieldExo->SaveAs(Form("%s/%s_%s_ExoticsRej_YieldPerEvent%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
 
-            
+
             maxYExo = maxYExo/100;
             if (clusterEdummy){
                 if (maxYExo < clusterEdummy->GetMaximum())
                     maxYExo = clusterEdummy->GetMaximum();
-            }    
+            }
             if (clusterEmdummy){
                 if (maxYExo < clusterEmdummy->GetMaximum())
                     maxYExo = clusterEmdummy->GetMaximum();
-            }    
+            }
             maxYExo = maxYExo*100;
             minYExo = minYExo/0.1;
             if (clusterEdummy){
                 if (minYExo > FindSmallestEntryIn1D(clusterEdummy))
                     minYExo = FindSmallestEntryIn1D(clusterEdummy);
-            }    
+            }
             if (clusterEmdummy){
                 if (minYExo > FindSmallestEntryIn1D(clusterEmdummy))
                     minYExo = FindSmallestEntryIn1D(clusterEmdummy);
-            }    
+            }
             minYExo = 0.1*minYExo;
-                
-            DrawAutoGammaMesonHistos(   fHistoExoticsBelowM02MinBaseCut, 
-                                        "", "E (GeV)", "counts/event", 
+
+            DrawAutoGammaMesonHistos(   fHistoExoticsBelowM02MinBaseCut,
+                                        "", "E (GeV)", "counts/event",
                                         kFALSE, 2.,1e-6, kFALSE,
-                                        kTRUE, minYExo, maxYExo, 
+                                        kTRUE, minYExo, maxYExo,
                                         kFALSE, 0, 50);
             fHistoExoticsBelowM02MinBaseCut->GetYaxis()->SetTitleOffset(1);
-            DrawGammaSetMarker(fHistoExoticsBelowM02MinBaseCut, 21, 1.5, kGreen+2, kGreen+2); 
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinBaseCut, 21, 1.5, kGreen+2, kGreen+2);
             fHistoExoticsBelowM02MinBaseCut->Draw("e,p");
-            DrawGammaSetMarker(fHistoExoticsAboveM02MinCut, 25, 1.5, kBlue+1, kBlue+1); 
+            DrawGammaSetMarker(fHistoExoticsAboveM02MinCut, 25, 1.5, kBlue+1, kBlue+1);
             fHistoExoticsAboveM02MinCut->Draw("same,e,p");
-            DrawGammaSetMarker(fHistoExoticsBelowM02MinCut, 24, 1.5, kRed+1, kRed+1); 
+            DrawGammaSetMarker(fHistoExoticsBelowM02MinCut, 24, 1.5, kRed+1, kRed+1);
             fHistoExoticsBelowM02MinCut->Draw("same,e,p");
             if (clusterEdummy){
-                DrawGammaSetMarker(clusterEdummy, 20, 2, kBlack, kBlack); 
+                DrawGammaSetMarker(clusterEdummy, 20, 2, kBlack, kBlack);
                 clusterEdummy->Draw("same,e,p");
-            }    
+            }
             if (clusterEmdummy){
-                DrawGammaSetMarker(clusterEmdummy, 30, 3.5, kBlack, kBlack); 
+                DrawGammaSetMarker(clusterEmdummy, 30, 3.5, kBlack, kBlack);
                 clusterEmdummy->Draw("same,e,p");
-            }    
-            
+            }
+
             legendExotics->Draw();
-            
+
             TLegend* legendExotics2 = GetAndSetLegend2(0.13,0.94-0.035*3*1.05,0.43,0.94,0.035,1,"Good clusters",42,0.1);
             if (clusterEdummy)legendExotics2->AddEntry(clusterEdummy,"#sigma_{long}^{2} > 0.1","p");
             if (clusterEmdummy)legendExotics2->AddEntry(clusterEmdummy,"merged cl. #sigma_{long}^{2} > 0.27","p");
             legendExotics2->Draw();
-            
+
             PutProcessLabelAndEnergyOnPlot(0.65, 0.95, 0.035, fCollisionSystem.Data(), fDetectionProcess.Data(), "rejected exotics", 42, 0.03, "", 1, 1.1);
 
             canvasYieldExo->Update();
             canvasYieldExo->SaveAs(Form("%s/%s_%s_ExoticsRejWithGood_YieldPerEvent%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
-           
+
         }
         delete canvasYieldExo;
 
-        
-        
+
+
         TCanvas* canvasNCellsVsPt = new TCanvas("canvasNCellsVsPt","",1900,1500);
         DrawGammaCanvasSettings(canvasNCellsVsPt, 0.09, 0.13, 0.02, 0.1);
-        canvasNCellsVsPt->SetLogx(1); 
-        canvasNCellsVsPt->SetLogy(0); 
-        canvasNCellsVsPt->SetLogz(1);         
+        canvasNCellsVsPt->SetLogx(1);
+        canvasNCellsVsPt->SetLogy(0);
+        canvasNCellsVsPt->SetLogz(1);
         canvasNCellsVsPt->cd();
         Double_t minZNcells     = 0;
         Double_t maxZNcells     = 0;
-        
+
         if(fHistoExoticsEvsNCells){
             fHistoExoticsEvsNCells->Sumw2();
             fHistoExoticsEvsNCells->Scale(1./fNEvents);
@@ -1339,13 +1336,13 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
         TCanvas* canvasEvsEstar = new TCanvas("canvasEvsEstar","",1900,1500);
         DrawGammaCanvasSettings(canvasEvsEstar, 0.09, 0.13, 0.02, 0.1);
-        canvasEvsEstar->SetLogx(1); 
-        canvasEvsEstar->SetLogy(1); 
-        canvasEvsEstar->SetLogz(1);         
+        canvasEvsEstar->SetLogx(1);
+        canvasEvsEstar->SetLogy(1);
+        canvasEvsEstar->SetLogz(1);
         canvasEvsEstar->cd();
         Double_t minZEstar     = 0;
         Double_t maxZEstar     = 0;
-        
+
         if(fHistoExoticsEvsEstar){
             fHistoExoticsEvsEstar->Sumw2();
             fHistoExoticsEvsEstar->Scale(1./fNEvents);
@@ -1376,13 +1373,13 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
         TCanvas* canvasExoticsEtaPhi = new TCanvas("canvasExoticsEtaPhi","",1900,1500);
         DrawGammaCanvasSettings(canvasExoticsEtaPhi, 0.09, 0.13, 0.02, 0.1);
-        canvasExoticsEtaPhi->SetLogx(0); 
-        canvasExoticsEtaPhi->SetLogy(0); 
-        canvasExoticsEtaPhi->SetLogz(1);         
+        canvasExoticsEtaPhi->SetLogx(0);
+        canvasExoticsEtaPhi->SetLogy(0);
+        canvasExoticsEtaPhi->SetLogz(1);
         canvasExoticsEtaPhi->cd();
         Double_t minZExoEtaPhi     = 0;
         Double_t maxZExoEtaPhi     = 0;
-        
+
         if(fHistoExoticsEtaPhi){
             fHistoExoticsEtaPhi->Sumw2();
             fHistoExoticsEtaPhi->Scale(1./fNEvents);
@@ -1411,17 +1408,17 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         }
         delete canvasExoticsEtaPhi;
     }
-    
+
     if (fAdvancedClusterQA){
         TCanvas* canvasNCellsVsPt = new TCanvas("canvasNCellsVsPt","",1900,1500);
         DrawGammaCanvasSettings(canvasNCellsVsPt, 0.09, 0.13, 0.02, 0.1);
-        canvasNCellsVsPt->SetLogx(0); 
-        canvasNCellsVsPt->SetLogy(1); 
-        canvasNCellsVsPt->SetLogz(1);         
+        canvasNCellsVsPt->SetLogx(0);
+        canvasNCellsVsPt->SetLogy(1);
+        canvasNCellsVsPt->SetLogz(1);
         canvasNCellsVsPt->cd();
         Double_t minZNcells     = 0;
         Double_t maxZNcells     = 0;
-        
+
         if(fHistoClusterNCellsPt){
             fHistoClusterNCellsPt->Sumw2();
             fHistoClusterNCellsPt->Scale(1./fNEvents);
@@ -1452,8 +1449,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         Double_t startPtMergedCl    = 2.95;
         if (fNLMmin == 1){
             startPtMergedCl         = 8;
-        }    
-            
+        }
+
         if(fHistoClusterMergedNCellsPt){
             fHistoClusterMergedNCellsPt->Sumw2();
             fHistoClusterMergedNCellsPt->Scale(1./fNEvents);
@@ -1561,7 +1558,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             canvasNCellsVsPt->Update();
             canvasNCellsVsPt->SaveAs(Form("%s/%s_%s_EAroundClE_MergedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
         }
-        
+
         if(fHistoClusterMergedNPartPt){
             fHistoClusterMergedNPartPt->Sumw2();
             fHistoClusterMergedNPartPt->Scale(1./fNEvents);
@@ -1588,58 +1585,58 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             canvasNCellsVsPt->Update();
             canvasNCellsVsPt->SaveAs(Form("%s/%s_%s_NParticlePointingToClPt_MergedClusters%s.%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data(), fAdditionalName.Data(), suffix.Data()));
         }
-    }    
-    
+    }
+
     fFileErrLog.close();
     fFileDataLog.close();
-    
-    
+
+
     //******************************************************************************************
     //************************ Plotting transverse momentum bins separately ********************
-    //******************************************************************************************                
+    //******************************************************************************************
     TString plotPrefix  = Form("%s/%s_%s", outputDir.Data(), fPrefix.Data(), fPrefix2.Data());
     TString plotSuffix  = Form("%s%s_%s.%s", fPeriodFlag.Data(), fAdditionalName.Data(), fCutSelection.Data(), suffix.Data());
-    
+
     TString nameMeson   = Form("%s_MesonInvMass%s", plotPrefix.Data(), plotSuffix.Data());
     TString nameCanvas  = "MesonCanvas";
     TString namePad     = "MesonPad";
     cout << nameMeson.Data() << endl;
-    PlotInvMassMergedInPtBins(  fHistoInvMassPtBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
+    PlotInvMassMergedInPtBins(  fHistoInvMassPtBin, nameMeson, nameCanvas, namePad, fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
                                 fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
 
-    
+
     nameMeson   = Form("%s_MesonM02%s", plotPrefix.Data(), plotSuffix.Data());
     cout << nameMeson.Data() << endl;
-    PlotM02MergedInPtBins(  fHistoM02PtBin, nameMeson, nameCanvas, namePad, fMesonM02PlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
+    PlotM02MergedInPtBins(  fHistoM02PtBin, nameMeson, nameCanvas, namePad, fMesonM02PlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
                             fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
 
     if (fEnableExoticsQA){
         nameMeson   = Form("%s_RejectedExoticsM02%s", plotPrefix.Data(), plotSuffix.Data());
         cout << nameMeson.Data() << endl;
-        PlotM02ExoticsInEBins(  fHistoExoticsM02EBin, nameMeson, nameCanvas, namePad, fMesonM02PlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, 
+        PlotM02ExoticsInEBins(  fHistoExoticsM02EBin, nameMeson, nameCanvas, namePad, fMesonM02PlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt,
                                 fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
     }
-        
+
     if (fIsMC){
         nameMeson       = Form("%s_MesonM02Split%s", plotPrefix.Data(), plotSuffix.Data());
         cout << nameMeson.Data() << endl;
-        PlotM02MergedMCInPtBins(    fHistoM02PtBin, fHistoTrueClusMergedM02PtBin, fHistoTrueClusPartConvMergedM02PtBin, 
+        PlotM02MergedMCInPtBins(    fHistoM02PtBin, fHistoTrueClusMergedM02PtBin, fHistoTrueClusPartConvMergedM02PtBin,
                                         fHistoTrueClusBGM02PtBin, fHistoTrueClusGammaM02PtBin, fHistoTrueClusElectronM02PtBin,
-                                        nameMeson, nameCanvas, namePad, fMesonM02PlotRange, 
+                                        nameMeson, nameCanvas, namePad, fMesonM02PlotRange,
                                         fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
 
         nameMeson       = Form("%s_MesonM02ValidatedDisentangled%s", plotPrefix.Data(), plotSuffix.Data());
-        
-        PlotM02MergedTrueInPtBins(  fHistoTrueClusMergedM02PtBin, NULL, fHistoTrueClusPi0M02PtBin, 
+
+        PlotM02MergedTrueInPtBins(  fHistoTrueClusMergedM02PtBin, NULL, fHistoTrueClusPi0M02PtBin,
                                         NULL, fHistoTrueClusEtaM02PtBin, NULL,
-                                        nameMeson, nameCanvas, namePad, fMesonM02PlotRange, 
+                                        nameMeson, nameCanvas, namePad, fMesonM02PlotRange,
                                         fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
         if (meson.Contains("Pi0")){
             nameMeson       = Form("%s_MesonPi0ValidatedDisentangled%s", plotPrefix.Data(), plotSuffix.Data());
-            cout << nameMeson.Data() << endl;            
-            PlotM02MergedTruePrimSecInPtBins(   fHistoTrueClusPi0M02PtBin, fHistoTrueClusPrimPi0M02PtBin, fHistoTrueClusSecPi0M02PtBin[3], 
+            cout << nameMeson.Data() << endl;
+            PlotM02MergedTruePrimSecInPtBins(   fHistoTrueClusPi0M02PtBin, fHistoTrueClusPrimPi0M02PtBin, fHistoTrueClusSecPi0M02PtBin[3],
                                                 fHistoTrueClusSecPi0M02PtBin[0], fHistoTrueClusSecPi0M02PtBin[1],
-                                                nameMeson, nameCanvas, namePad, fMesonM02PlotRange, 
+                                                nameMeson, nameCanvas, namePad, fMesonM02PlotRange,
                                                 fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC ,fDecayChannel, fDetectionProcessPtBins, fCollisionSystem);
 
         }
@@ -1647,12 +1644,12 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
 
     //******************************************************************************************
     //************************ Saving histograms for further processing ************************
-    //******************************************************************************************                    
+    //******************************************************************************************
     SaveHistos(fIsMC, fCutSelection, fPrefix2);
 
     if (fIsMC){
         CalculateMesonAcceptance();
-        
+
         TString fNameHistoEffi      = "TrueMesonEffiMergedPt";
         cout << fNameHistoEffi.Data() << endl;
         fHistoTrueEffiMerged        = CalculateMesonEfficiency(fHistoTrueYieldMergedM02, NULL, fNameHistoEffi);
@@ -1663,8 +1660,8 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             fHistoTrueEffiPrimMeson = CalculateMesonEfficiency(fHistoTrueYieldPrimPi0M02, NULL, fNameHistoEffi);
         } else {
             fHistoTrueEffiPrimMeson = CalculateMesonEfficiency(fHistoTrueYieldEtaM02, NULL, fNameHistoEffi);
-        }    
-        
+        }
+
         TString fNameHistoPur       = "TrueMesonPurityMergedPt";
         cout << fNameHistoPur.Data() << endl;
         fHistoTruePurityMerged      = CalculatePurity(fHistoYieldMesonM02, fHistoTrueYieldMergedM02, fNameHistoPur);
@@ -1676,7 +1673,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         fNameHistoPur               = "TrueEtaPurityMergedPt";
         cout << fNameHistoPur.Data() << endl;
         fHistoTrueEtaPurityMerged   = CalculatePurity(fHistoYieldMesonM02, fHistoTrueYieldEtaM02, fNameHistoPur);
-        
+
         // Calculation of secondary fractions
         if (meson.Contains("Pi0")){
             for (Int_t j = 0; j < 4; j++){
@@ -1686,20 +1683,20 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
             if (fNewMCOutput){
                 for (Int_t j = 0; j < 4; j++){
                     fNameHistoEffi              = Form("TrueMesonEffiSecFrom%sPt",nameSecondaries[j].Data());
-                    fHistoTrueEffiSecPi0[j]     = CalculateMesonEfficiencySec(fHistoTrueYieldSecPi0M02[j], fHistoMCSecPi0PtWAccReb[j], fNameHistoEffi);                
-                }                
-            }    
+                    fHistoTrueEffiSecPi0[j]     = CalculateMesonEfficiencySec(fHistoTrueYieldSecPi0M02[j], fHistoMCSecPi0PtWAccReb[j], fNameHistoEffi);
+                }
+            }
         }
-        
+
         CreateRatioHistos();
-        
-        SaveCorrectionHistos(fCutSelection, fPrefix2);   
+
+        SaveCorrectionHistos(fCutSelection, fPrefix2);
     }
     //******************************************************************************************
     //************************ Deleting histograms for further processing **********************
-    //******************************************************************************************                    
+    //******************************************************************************************
     Delete();
-    
+
     return;
 }
 
@@ -1796,15 +1793,15 @@ Double_t FindSmallestEntryIn1D(TH1* histo){
 //****** depending on mesonType, number of bins, mode, energy, centrality ****
 //****************************************************************************
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
-    
+
     InitializeBinning(setPi0, numberOfBins, fEnergyFlag, "", fMode, fEventCutSelection, fClusterMergedCutSelection, triggerSet);
     if (setPi0.CompareTo("Pi0") == 0 || setPi0.CompareTo("Pi0EtaBinning") == 0){
         fMesonId                        = 111;
-        fMesonMassPlotRange             = new Double_t[2]; 
-        fMesonMassPlotRange[0]          = 0.; 
+        fMesonMassPlotRange             = new Double_t[2];
+        fMesonMassPlotRange[0]          = 0.;
         fMesonMassPlotRange[1]          = 0.5;
-        fMesonMassIntRange              = new Double_t[2]; 
-        fMesonMassIntRange[0]           = 0.; 
+        fMesonMassIntRange              = new Double_t[2];
+        fMesonMassIntRange[0]           = 0.;
         fMesonMassIntRange[1]           = 0.5;
 
         fMesonM02PlotRange              = new Double_t[2];
@@ -1819,11 +1816,11 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         }
     } else if (setPi0.CompareTo("Eta") == 0){
         fMesonId                        = 221;
-        fMesonMassPlotRange             = new Double_t[2]; 
-        fMesonMassPlotRange[0]          = 0.35; 
+        fMesonMassPlotRange             = new Double_t[2];
+        fMesonMassPlotRange[0]          = 0.35;
         fMesonMassPlotRange[1]          = 0.79;
-        fMesonMassIntRange              = new Double_t[2]; 
-        fMesonMassIntRange[0]           = 0.35; 
+        fMesonMassIntRange              = new Double_t[2];
+        fMesonMassIntRange[0]           = 0.35;
         fMesonMassIntRange[1]           = 0.79;
         fMesonM02PlotRange              = new Double_t[2];
         fMesonM02PlotRange[0]           = 0;
@@ -1832,13 +1829,13 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonM02IntRange[0]            = 0;
         fMesonM02IntRange[1]            = 4.5;
     }
- 
+
     fHistoInvMassPtBin                  = new TH1D*[fNBinsPt];
     fHistoM02PtBin                      = new TH1D*[fNBinsPt];
     fHistoExoticsM02EBin                = new TH1D*[fNBinsPt];
     fMesonM02Yields                     = new Double_t[fNBinsPt];
     fMesonM02YieldsError                = new Double_t[fNBinsPt];
-    
+
     if (fIsMC){
         fHistoTrueClusMergedM02PtBin                = new TH1D*[fNBinsPt];
         fHistoTrueClusPi0M02PtBin                   = new TH1D*[fNBinsPt];
@@ -1868,7 +1865,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         for (Int_t j = 0; j < 4; j++){
             fHistoTrueClusSecPi0M02PtBin[j]         = new TH1D*[fNBinsPt];
         }
-        
+
         fMesonM02TrueMergedYields                   = new Double_t[fNBinsPt];
         fMesonM02TruePi0Yields                      = new Double_t[fNBinsPt];
         fMesonM02TruePi0DCYields                    = new Double_t[fNBinsPt];
@@ -1917,16 +1914,16 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
         fMesonM02TrueMergedOneElectronFromPi0YieldsError    = new Double_t[fNBinsPt];
         fMesonM02TrueMergedOneElectronFromEtaYields         = new Double_t[fNBinsPt];
         fMesonM02TrueMergedOneElectronFromEtaYieldsError    = new Double_t[fNBinsPt];
-        
+
         fMesonM02TruePrimPi0Yields                  = new Double_t[fNBinsPt];
         fMesonM02TruePrimPi0YieldsError             = new Double_t[fNBinsPt];
         for (Int_t j = 0; j< 4; j++){
             fMesonM02TrueSecPi0Yields[j]            = new Double_t[fNBinsPt];
             fMesonM02TrueSecPi0YieldsError[j]       = new Double_t[fNBinsPt];
-        }    
-        
+        }
+
     }
-    
+
     for(Int_t i = 0;i<fNBinsPt; i++){
         fHistoInvMassPtBin[i]               = NULL;
         fHistoM02PtBin[i]                   = NULL;
@@ -1962,7 +1959,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             for (Int_t j = 0; j < 4; j++){
                 fHistoTrueClusSecPi0M02PtBin[j][i]      = NULL;
             }
-            
+
             fMesonM02TrueMergedYields[i]                = 0.;
             fMesonM02TruePi0Yields[i]                   = 0.;
             fMesonM02TruePi0DCYields[i]                 = 0.;
@@ -2016,7 +2013,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             for (Int_t j = 0; j<4; j++){
                 fMesonM02TrueSecPi0Yields[j][i]         = 0.;
                 fMesonM02TrueSecPi0YieldsError[j][i]    = 0.;
-            }    
+            }
         }
     }
 }
@@ -2074,33 +2071,33 @@ void SetCorrectMCHistogrammNames(TString mesonType){
         fObjectNameMCMesonDalitzAcc                 = "MC_EtaDalitzInAcc_Pt";
         fObjectNameMCMesonDalitz                    = "MC_EtaDalitz_Pt";
         fObjectNameMCMesonDalitzWOWeights           = "MC_EtaDalitz_WOWeights_Pt";
-        
+
     }
     return;
 }
 
 //****************************************************************************
 //Load secondary neutral pions from toy MC file as generated from data spectra
-// - put them in proper scaling 
+// - put them in proper scaling
 // - rebin them according to current pi0 binning
 //****************************************************************************
 Bool_t LoadSecondaryPionsFromExternalFile(){
     ifstream in("ToyMCOutputs.txt");
-    
+
     // number of ToyMC inputs
     Int_t nrOfToyMCInput        = 0;
     // number of triggers which are really used for the respective analysis
     TString nameToyMCInputs[10];
-    Bool_t usedInput[10]        = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, 
-                                    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE };    
+    Bool_t usedInput[10]        = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
+                                    kFALSE, kFALSE, kFALSE, kFALSE, kFALSE };
     while(!in.eof() && nrOfToyMCInput<10 ){
         in >> nameToyMCInputs[nrOfToyMCInput];
         cout<< nameToyMCInputs[nrOfToyMCInput] << endl;
         nrOfToyMCInput++;
     }
-    if (nrOfToyMCInput==0 || (nrOfToyMCInput==1 && nameToyMCInputs[nrOfToyMCInput].CompareTo("") == 0) ) 
+    if (nrOfToyMCInput==0 || (nrOfToyMCInput==1 && nameToyMCInputs[nrOfToyMCInput].CompareTo("") == 0) )
         return kFALSE;
-    
+
     Int_t nSecInputHistsFound       = 0;
     for (Int_t j = 0; j < 3; j++){
         cout << "searching for input for " << nameSecondaries[j].Data() << endl;
@@ -2113,7 +2110,7 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
                     foundSourceFile = kTRUE;
                     nameSourceFile  = nameToyMCInputs[f];
                 }
-            }    
+            }
         }
         if (foundSourceFile){
             cout << "found correct input: " << nameSourceFile.Data() << endl;
@@ -2124,25 +2121,25 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
                 nSecInputHistsFound++;
                 fHistoYieldToyMCSecInput[j]->Sumw2();
                 fHistoYieldToyMCSecInput[j]->SetName(Form("histoSecPi0YieldFrom%s_FromToy_orgBinning",nameSecondaries[j].Data()));
-                
+
                 cout << "found it, rebinning" << endl;
                 fHistoYieldToyMCSecInputReb[j]  =  (TH1D*)fHistoYieldToyMCSecInput[j]->Rebin(fNBinsPt,Form("histoSecPi0YieldFrom%s_FromToy",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
                 if (fHistoYieldToyMCSecInputReb[j]){
                     fHistoYieldToyMCSecInputReb[j]->Divide(fDeltaPt);
                     fHistoYieldToyMCSecInput[j]->Scale(1./fHistoYieldToyMCSecInput[j]->GetBinWidth(1));
                     cout << "that worked" << endl;
-                }    
+                }
             } else {
                 cout << "file didn't contain proper histo" << endl;
-            }    
+            }
         } else {
            cout << "could not find correct input file" << endl;
         }
-    }    
+    }
 //     cout << nSecInputHistsFound << endl;
     if (nSecInputHistsFound == 0)
         return kFALSE;
-    
+
     return kTRUE;
 }
 
@@ -2158,15 +2155,15 @@ void CreatePtHistos(){
 
     fHistoYieldMesonM02                 = new TH1D("histoYieldMesonM02", "", fNBinsPt, fBinsPt);
     fHistoYieldMesonM02->Sumw2();
-    
+
     fHistoExoticsBelowM02MinBaseCut     = new TH1D("histoYieldExoticsBelowMinBaseCut", "", fNBinsPt, fBinsPt);
     fHistoExoticsBelowM02MinBaseCut->Sumw2();
-    
+
     fHistoExoticsBelowM02MinCut         = new TH1D("histoYieldExoticsBelowMinCut", "", fNBinsPt, fBinsPt);
     fHistoExoticsBelowM02MinCut->Sumw2();
     fHistoExoticsAboveM02MinCut         = new TH1D("histoYieldExoticsAboveMinCut", "", fNBinsPt, fBinsPt);
     fHistoExoticsAboveM02MinCut->Sumw2();
-    
+
     if (fIsMC){
         fHistoTrueYieldMergedM02                  = new TH1D("histoTrueYieldMergedM02", "", fNBinsPt, fBinsPt);
         fHistoTrueYieldMergedM02->Sumw2();
@@ -2235,16 +2232,16 @@ void FillPtHistos(){
     for(Int_t iPt=fStartPtBin+1;iPt<fNBinsPt+1;iPt++){
         fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
         fDeltaPt->SetBinError(iPt,0);
-        
+
         fHistoYieldMesonM02->SetBinContent(iPt, fMesonM02Yields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
         fHistoYieldMesonM02->SetBinError(iPt, fMesonM02YieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-    
-        
+
+
         if (fEnableExoticsQA){
             if (fHistoExoticsM02EBin[iPt-1]){
                 Double_t integErr   = 0;
                 Double_t integ      = fHistoExoticsM02EBin[iPt-1]->IntegralAndError(fHistoExoticsM02EBin[iPt-1]->FindBin(0), fHistoExoticsM02EBin[iPt-1]->FindBin(0.1),integErr);
-                
+
                 fHistoExoticsBelowM02MinBaseCut->SetBinContent(iPt, integ);
                 fHistoExoticsBelowM02MinBaseCut->SetBinError(iPt, integErr);
 
@@ -2253,7 +2250,7 @@ void FillPtHistos(){
 
                 fHistoExoticsBelowM02MinCut->SetBinContent(iPt, integ);
                 fHistoExoticsBelowM02MinCut->SetBinError(iPt, integErr);
-                
+
                 integErr            = 0;
                 integ               = fHistoExoticsM02EBin[iPt-1]->IntegralAndError(fHistoExoticsM02EBin[iPt-1]->FindBin(0.27+0.0001), fHistoExoticsM02EBin[iPt-1]->GetNbinsX(),integErr);
                 fHistoExoticsAboveM02MinCut->SetBinContent(iPt, integ);
@@ -2296,31 +2293,31 @@ void FillPtHistos(){
 
             fHistoTrueYieldMergedOneElectronFromEtaM02->SetBinContent(iPt, fMesonM02TrueMergedOneElectronFromEtaYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldMergedOneElectronFromEtaM02->SetBinError(iPt, fMesonM02TrueMergedOneElectronFromEtaYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            
+
             fHistoTrueYieldPi0M02->SetBinContent(iPt, fMesonM02TruePi0Yields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldPi0M02->SetBinError(iPt, fMesonM02TruePi0YieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
             fHistoTrueYieldPi0DCM02->SetBinContent(iPt, fMesonM02TruePi0DCYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldPi0DCM02->SetBinError(iPt, fMesonM02TruePi0DCYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            
+
             fHistoTrueYieldPi0GGM02->SetBinContent(iPt, fMesonM02TruePi0GGYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldPi0GGM02->SetBinError(iPt, fMesonM02TruePi0GGYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
             fHistoTrueYieldPi0DalitzM02->SetBinContent(iPt, fMesonM02TruePi0DalitzYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldPi0DalitzM02->SetBinError(iPt, fMesonM02TruePi0DalitzYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-                        
+
             fHistoTrueYieldEtaM02->SetBinContent(iPt, fMesonM02TrueEtaYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldEtaM02->SetBinError(iPt, fMesonM02TrueEtaYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
             fHistoTrueYieldEtaDCM02->SetBinContent(iPt, fMesonM02TrueEtaDCYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldEtaDCM02->SetBinError(iPt, fMesonM02TrueEtaDCYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            
+
             fHistoTrueYieldEtaGGM02->SetBinContent(iPt, fMesonM02TrueEtaGGYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldEtaGGM02->SetBinError(iPt, fMesonM02TrueEtaGGYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
             fHistoTrueYieldEtaDalitzM02->SetBinContent(iPt, fMesonM02TrueEtaDalitzYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldEtaDalitzM02->SetBinError(iPt, fMesonM02TrueEtaDalitzYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            
+
             fHistoTrueYieldGammaM02->SetBinContent(iPt, fMesonM02TrueGammaYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldGammaM02->SetBinError(iPt, fMesonM02TrueGammaYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
 
@@ -2329,7 +2326,7 @@ void FillPtHistos(){
 
             fHistoTrueYieldBGM02->SetBinContent(iPt, fMesonM02TrueBGYields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
             fHistoTrueYieldBGM02->SetBinError(iPt, fMesonM02TrueBGYieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
-            
+
             if (fPrefix.Contains("Pi0")){
                 fHistoTrueYieldPrimPi0M02->SetBinContent(iPt, fMesonM02TruePrimPi0Yields[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                 fHistoTrueYieldPrimPi0M02->SetBinError(iPt, fMesonM02TruePrimPi0YieldsError[iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
@@ -2338,7 +2335,7 @@ void FillPtHistos(){
                     fHistoTrueYieldSecPi0M02[j]->SetBinContent(iPt, fMesonM02TrueSecPi0Yields[j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                     fHistoTrueYieldSecPi0M02[j]->SetBinError(iPt, fMesonM02TrueSecPi0YieldsError[j][iPt-1]/(fBinsPt[iPt]-fBinsPt[iPt-1]));
                 }
-            }    
+            }
         }
     }
 }
@@ -2356,7 +2353,7 @@ TH1D* FillProjectionX (TH2F* fDummy2D, TString name, Double_t minY, Double_t max
     if(rebin>1){
         dummy1D->Rebin(rebin);
     }
-    return dummy1D; 
+    return dummy1D;
 }
 
 //****************************************************************************
@@ -2372,12 +2369,12 @@ TH1D* FillProjectionY (TH2F* fDummy2D, TString name, Double_t minX, Double_t max
     if (array != NULL){
         TH1D* dummy2        = (TH1D*)dummy1D->Rebin(rebin,name.Data(),array);
         return dummy2;
-    } else {    
+    } else {
         if(rebin>1){
             dummy1D->Rebin(rebin);
         }
-    }    
-    return dummy1D; 
+    }
+    return dummy1D;
 }
 
 //****************************************************************************
@@ -2396,7 +2393,7 @@ TH1D* AddPossiblyNotExistingHists(TH1D* fDummy1, TH1D* fDummy2, TString name){
         fDummy3       = (TH1D*)fDummy2->Clone(name.Data());
         fDummy3->Sumw2();
     }
-    return fDummy3; 
+    return fDummy3;
 }
 
 //****************************************************************************
@@ -2433,8 +2430,8 @@ void FillDataHistosArray(TH2F* fInvMassVSPtDummy, TH2F* fM02VsPtDummy) {
 //****************************************************************************
 //*************** Fill array of M02 histograms in pT slices for MC ***********
 //****************************************************************************
-void FillMCM02HistosArray(  TH2F* fTrueMergedPtVsM02Dummy, 
-                            TH2F* fTruePi0PtVsM02, 
+void FillMCM02HistosArray(  TH2F* fTrueMergedPtVsM02Dummy,
+                            TH2F* fTruePi0PtVsM02,
                             TH2F* fTrueEtaPtVsM02,
                             TH2F* fTrueGammaPtVsM02,
                             TH2F* fTrueElectronPtVsM02,
@@ -2449,18 +2446,18 @@ void FillMCM02HistosArray(  TH2F* fTrueMergedPtVsM02Dummy,
         TString fNameElectronHistoM02                   = Form("TrueClusElectron_M02_in_Pt_Bin%02d", iPt);
         TString fNameBGHistoM02                         = Form("TrueClusBG_M02_in_Pt_Bin%02d", iPt);
 
-        // true merged clusters        
+        // true merged clusters
         CheckForNULLForPointer(fHistoTrueClusMergedM02PtBin[iPt]);
         if (fTrueMergedPtVsM02Dummy){
             fHistoTrueClusMergedM02PtBin[iPt]                   = FillProjectionY(fTrueMergedPtVsM02Dummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
-        // true merged pi0        
+        // true merged pi0
         CheckForNULLForPointer(fHistoTrueClusPi0M02PtBin[iPt]);
         if (fTruePi0PtVsM02){
             fHistoTrueClusPi0M02PtBin[iPt]                      = FillProjectionY(fTruePi0PtVsM02, fNamePi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
 
-        // true merged eta        
+        // true merged eta
         CheckForNULLForPointer(fHistoTrueClusEtaM02PtBin[iPt]);
         if (fTrueEtaPtVsM02){
             fHistoTrueClusEtaM02PtBin[iPt]                      = FillProjectionY(fTrueEtaPtVsM02, fNameEtaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
@@ -2489,7 +2486,7 @@ void FillMCM02HistosArray(  TH2F* fTrueMergedPtVsM02Dummy,
 //****************************************************************************
 //*************** Fill array of M02 histograms in pT slices for MC ***********
 //****************************************************************************
-void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy, 
+void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
                                         TH2F* fTruePartConvMergedVsM02Dummy,
                                         TH2F* fTrueOneGammaDummy,
                                         TH2F* fTrueOneGammaFromPi0Dummy,
@@ -2507,7 +2504,7 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
                                         TH2F* fTrueMergedPureEtaDummy,
                                         TH2F* fTruePartConvMergedPi0VsM02Dummy,
                                         TH2F* fTruePartConvMergedEtaVsM02Dummy
-                                        
+
                                   ) {
     cout << __LINE__ << endl;
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
@@ -2529,8 +2526,8 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         TString fNamePartConvHistoM02FromPi0            = Form("TrueClusPartConvMergedFromPi0_M02_in_Pt_Bin%02d", iPt);
         TString fNameHistoM02FromEta                    = Form("TrueClusMergedPureFromEta_M02_in_Pt_Bin%02d", iPt);
         TString fNamePartConvHistoM02FromEta            = Form("TrueClusPartConvMergedFromEta_M02_in_Pt_Bin%02d", iPt);
-        
-        // true merged clusters        
+
+        // true merged clusters
         CheckForNULLForPointer(fHistoTrueClusPureMergedM02PtBin[iPt]);
         if (fTrueMergedPureDummy){
             fHistoTrueClusPureMergedM02PtBin[iPt]               = FillProjectionY(fTrueMergedPureDummy, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
@@ -2543,7 +2540,7 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         if (fTrueMergedPureEtaDummy){
             fHistoTrueClusPureMergedFromEtaM02PtBin[iPt]        = FillProjectionY(fTrueMergedPureEtaDummy, fNameHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
-        // true merged clusters part conv       
+        // true merged clusters part conv
         CheckForNULLForPointer(fHistoTrueClusPartConvMergedM02PtBin[iPt]);
         if (fTruePartConvMergedVsM02Dummy){
             fHistoTrueClusPartConvMergedM02PtBin[iPt]           = FillProjectionY(fTruePartConvMergedVsM02Dummy, fNamePartConvHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
@@ -2556,7 +2553,7 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         if (fTruePartConvMergedEtaVsM02Dummy){
             fHistoTrueClusPartConvMergedFromEtaM02PtBin[iPt]    = FillProjectionY(fTruePartConvMergedEtaVsM02Dummy, fNamePartConvHistoM02FromEta, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
-        // true cluster with 1 gamma from mesons        
+        // true cluster with 1 gamma from mesons
         CheckForNULLForPointer(fHistoTrueClusOneGammaM02PtBin[iPt]);
         if (fTrueOneGammaDummy){
             fHistoTrueClusOneGammaM02PtBin[iPt]                 = FillProjectionY(fTrueOneGammaDummy, fNameOneGammaHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
@@ -2585,7 +2582,7 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         if (fTrueOneElectronFromPi0Dummy){
             fHistoTrueClusOneElectronFromPi0M02PtBin[iPt]       = FillProjectionY(fTrueOneElectronFromPi0Dummy, fNameOneElectronFromPi0HistoM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
-        
+
         // true cluster with 1 electron from eta
         CheckForNULLForPointer(fHistoTrueClusOneElectronFromEtaM02PtBin[iPt]);
         if (fTrueOneElectronFromEtaDummy){
@@ -2615,7 +2612,7 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         if (fTrueEtaDalitzDummy){
             fHistoTrueClusEtaDalitzM02PtBin[iPt]                = FillProjectionY(fTrueEtaDalitzDummy, fNameTrueEtaDalitzM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
-        
+
         // true cluster from pi0 double counted
         CheckForNULLForPointer(fHistoTrueClusPi0DCM02PtBin[iPt]);
         if (fTruePi0DCDummy){
@@ -2627,7 +2624,7 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
         if (fTrueEtaDCDummy){
             fHistoTrueClusEtaDCM02PtBin[iPt]                    = FillProjectionY(fTrueEtaDCDummy, fNameTrueEtaDCM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
-        
+
     }
 }
 
@@ -2635,19 +2632,19 @@ void FillMCM02AdditionHistosArray(      TH2F* fTrueMergedPureDummy,
 //****************************************************************************
 //******** Fill array of M02 histograms in pT slices for Pi0 Prim/Sec ********
 //****************************************************************************
-void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt, 
+void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
                                     TH2F** fTruePi0SecM02VsPt
                                 ) {
 
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         TString fNamePi0PrimM02                 = Form("TrueClusPrimPi0_M02_in_Pt_Bin%02d", iPt);
-        
+
         // true prim pi0 clusters
         CheckForNULLForPointer(fHistoTrueClusPrimPi0M02PtBin[iPt]);
         if (fTruePi0PrimM02VsPt){
             fHistoTrueClusPrimPi0M02PtBin[iPt]                  = FillProjectionY(fTruePi0PrimM02VsPt, fNamePi0PrimM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
         }
- 
+
         // fill secondary pt differential histo for pi0 from: K0s, Lambda, K0l, Rest
         if (fTruePi0SecM02VsPt){
             for (Int_t j = 0; j< 4; j++){
@@ -2656,7 +2653,7 @@ void FillMCPrimSecM02HistosArray(   TH2F* fTruePi0PrimM02VsPt,
                 if (fTruePi0SecM02VsPt[j]){
                     fHistoTrueClusSecPi0M02PtBin[j][iPt]            = FillProjectionY(fTruePi0SecM02VsPt[j], fNamePi0SecM02, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt], NULL);
                 }
-            }    
+            }
         }
     }
 }
@@ -2668,7 +2665,7 @@ void FillExoticsM02HistosArray(  TH2F* fExoticsM02 ) {
     cout << __LINE__ << endl;
     for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
         TString fNameHistoM02                           = Form("ExoticClusters_M02_in_E_Bin%02d", iPt);
-        // true merged clusters        
+        // true merged clusters
         CheckForNULLForPointer(fHistoExoticsM02EBin[iPt]);
         if (fExoticsM02){
             fHistoExoticsM02EBin[iPt]                   = FillProjectionY(fExoticsM02, fNameHistoM02, fBinsPt[iPt], fBinsPt[iPt+1], 1, NULL);
@@ -2686,10 +2683,10 @@ void FillMCBGSeparated (TH2F* dummy2D){
             TH1D* dummy1D               = (TH1D*)dummy2D->ProjectionX(Form("TrueClusBG_%s_Pt",labelsBG[i].Data()),i+1,i+1,"e");
             fHistoTrueClustersBGPt[i]   = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusBG_%s_Pt",labelsBG[i].Data()),fBinsPt);
             if (i == 0) fHistoTrueClustersBGPt[9]    = (TH1D*)fHistoTrueClustersBGPt[i]->Clone(Form("TrueClusBG_%s_Pt",labelsBG[9].Data()));
-                else fHistoTrueClustersBGPt[9]->Add(fHistoTrueClustersBGPt[i]); 
+                else fHistoTrueClustersBGPt[9]->Add(fHistoTrueClustersBGPt[i]);
         }
     }
-}    
+}
 
 //****************************************************************************
 //***************** Filling MC Electron separated **********************************
@@ -2701,7 +2698,7 @@ void FillMCElectronSeparated (TH2F* dummy2D){
             fHistoTrueClustersElectronPt[i] = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusElectron_%s_Pt",labelsElectron[i].Data()),fBinsPt);
         }
     }
-}    
+}
 
 //****************************************************************************
 //***************** Filling MC Gamma separated **********************************
@@ -2713,7 +2710,7 @@ void FillMCGammaSeparated (TH2F* dummy2D){
             fHistoTrueClustersGammaPt[i]    = (TH1D*)dummy1D->Rebin(fNBinsPt,Form("TrueClusGamma_%s_Pt",labelsGamma[i].Data()),fBinsPt);
         }
     }
-}    
+}
 
 //****************************************************************************
 //***************** Filling of MC histograms in proper binning ***************
@@ -2731,31 +2728,31 @@ void FillHistosArrayMC(TH1D* fHistoMCMesonWithinAccepPtFill, TH1D * fHistoMCMeso
 //***************** Filling of MC histograms in proper binning ***************
 //****************************************************************************
 void FillHistosArrayMCSecAndCalcAcceptance( TH2D* mcSecInputInAccSourcePt, TH2D * mcSecInputSourcePt ) {
-    
+
     // MC histo pt vs sourcs
     // 1-> K0s
     // 2-> Lambda
     // 3-> K0L
-    // 5-> p 
-    // 6-> n 
-    // 7-> pi 
-    // 8-> K 
-    // 9-> rho 
-    // 10-> Delta 
+    // 5-> p
+    // 6-> n
+    // 7-> pi
+    // 8-> K
+    // 9-> rho
+    // 10-> Delta
     // 11-> K*
-    // 15-> Rest 
+    // 15-> Rest
     Int_t startBin[4]   = {1,2,3,4};
     Int_t endBin[4]     = {1,2,3,15};
-    
+
     // Filling of secondary histos with different sources
     for (Int_t j = 0; j < 4; j++){
         // project correct bin
-        fHistoMCSecPi0Pt[j]             = (TH1D*)mcSecInputSourcePt->ProjectionX(Form("MCSecPi0From%s",nameSecondaries[j].Data()), mcSecInputSourcePt->GetYaxis()->FindBin(startBin[j]), 
-                                                                                 mcSecInputSourcePt->GetYaxis()->FindBin(endBin[j]),"e");     
+        fHistoMCSecPi0Pt[j]             = (TH1D*)mcSecInputSourcePt->ProjectionX(Form("MCSecPi0From%s",nameSecondaries[j].Data()), mcSecInputSourcePt->GetYaxis()->FindBin(startBin[j]),
+                                                                                 mcSecInputSourcePt->GetYaxis()->FindBin(endBin[j]),"e");
         fHistoMCSecPi0Pt[j]->SetTitle(Form("MCSecPi0From%s",nameSecondaries[j].Data()));
         fHistoMCSecPi0Pt[j]->Sumw2();
-        fHistoMCSecPi0PtWAcc[j]         = (TH1D*)mcSecInputInAccSourcePt->ProjectionX(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()), mcSecInputInAccSourcePt->GetYaxis()->FindBin(startBin[j]), 
-                                                                                      mcSecInputInAccSourcePt->GetYaxis()->FindBin(endBin[j]),"e");     
+        fHistoMCSecPi0PtWAcc[j]         = (TH1D*)mcSecInputInAccSourcePt->ProjectionX(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()), mcSecInputInAccSourcePt->GetYaxis()->FindBin(startBin[j]),
+                                                                                      mcSecInputInAccSourcePt->GetYaxis()->FindBin(endBin[j]),"e");
         fHistoMCSecPi0PtWAcc[j]->SetTitle(Form("MCSecPi0From%s_InAcc",nameSecondaries[j].Data()));
         fHistoMCSecPi0PtWAcc[j]->Sumw2();
 
@@ -2766,7 +2763,7 @@ void FillHistosArrayMCSecAndCalcAcceptance( TH2D* mcSecInputInAccSourcePt, TH2D 
         fHistoMCSecPi0PtWAccReb[j]      = (TH1D*)fHistoMCSecPi0PtWAcc[j]->Rebin(fNBinsPt,Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()),fBinsPt); // Proper bins in Pt
         fHistoMCSecPi0PtWAccReb[j]->SetTitle(Form("MCSecPi0From%s_InAcc_Rebinned",nameSecondaries[j].Data()));
         fHistoMCSecPi0PtWAccReb[j] ->Divide(fDeltaPt);
-        
+
         // calculate acceptance
         fHistoMCSecPi0AcceptPt[j]       = (TH1D*)fHistoMCSecPi0PtWAccReb[j]->Clone(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
         fHistoMCSecPi0AcceptPt[j]->SetTitle(Form("fMCSecPi0From%sAccepPt",nameSecondaries[j].Data()));
@@ -2783,17 +2780,17 @@ void CreateRatioHistos(){
         fHistoRatioTrueClustersBGPt[i]           = (TH1D*)fHistoTrueClustersBGPt[i]->Clone(Form("RatioTrueClusBG_%s_Pt",labelsBG[i].Data()));
         fHistoRatioTrueClustersBGPt[i]->Divide(fHistoRatioTrueClustersBGPt[i],fHistoYieldMesonM02,1.,1.,"e");
     }
-    
+
     fHistoRatioTrueYieldEtaM02                   = (TH1D*)fHistoTrueYieldEtaM02->Clone("RatioTrueYieldEtaM02");
     fHistoRatioTrueYieldEtaM02->Divide(fHistoRatioTrueYieldEtaM02,fHistoYieldMesonM02,1.,1.,"");
-    
+
     fHistoRatioTrueYieldPi0M02                   = (TH1D*)fHistoTrueYieldPi0M02->Clone("RatioTrueYieldPi0M02");
     fHistoRatioTrueYieldPi0M02->Divide(fHistoRatioTrueYieldPi0M02,fHistoYieldMesonM02,1.,1.,"");
     fHistoRatioTrueYieldGammaM02                 = (TH1D*)fHistoTrueYieldGammaM02->Clone("RatioTrueYieldGammaM02");
-    fHistoRatioTrueYieldGammaM02->Divide(fHistoRatioTrueYieldGammaM02,fHistoYieldMesonM02,1.,1.,"");    
+    fHistoRatioTrueYieldGammaM02->Divide(fHistoRatioTrueYieldGammaM02,fHistoYieldMesonM02,1.,1.,"");
     fHistoRatioTrueYieldElectronM02              = (TH1D*)fHistoTrueYieldElectronM02->Clone("RatioTrueYieldElectronM02");
     fHistoRatioTrueYieldElectronM02->Divide(fHistoRatioTrueYieldElectronM02,fHistoYieldMesonM02,1.,1.,"");
-    
+
     fHistoRatioPi0DCFrac                         = (TH1D*)fHistoTrueYieldPi0DCM02->Clone("RatioPi0DCFrac");
     fHistoRatioPi0DCFrac->Divide(fHistoRatioPi0DCFrac,fHistoTrueYieldPi0M02,1.,1.,"");
 
@@ -2810,7 +2807,7 @@ void CreateRatioHistos(){
 
     fHistoRatioEtaDalitzFrac                     = (TH1D*)fHistoTrueYieldEtaDalitzM02->Clone("RatioEtaDalitzFrac");
     fHistoRatioEtaDalitzFrac->Divide(fHistoRatioEtaDalitzFrac,fHistoTrueYieldEtaM02,1.,1.,"B");
-        
+
     fHistoRatioMergedPureFracPi0                    = (TH1D*)fHistoTrueYieldMergedPureFromPi0M02->Clone("RatioPi0MergedPure");
     fHistoRatioMergedPureFracPi0->Divide(fHistoRatioMergedPureFracPi0,fHistoTrueYieldPi0M02,1.,1.,"B");
     fHistoRatioMergedPureFracPi0->Scale(100.);
@@ -2822,7 +2819,7 @@ void CreateRatioHistos(){
     fHistoRatioMergedOneGammaFracPi0->Scale(100.);
     fHistoRatioMergedOneElectronFracPi0             = (TH1D*)fHistoTrueYieldMergedOneElectronFromPi0M02->Clone("RatioPi0MergedOneElectron");
     fHistoRatioMergedOneElectronFracPi0->Divide(fHistoRatioMergedOneElectronFracPi0,fHistoTrueYieldPi0M02,1.,1.,"B");
-    fHistoRatioMergedOneElectronFracPi0->Scale(100.);    
+    fHistoRatioMergedOneElectronFracPi0->Scale(100.);
 
     fHistoRatioMergedPureFracEta                    = (TH1D*)fHistoTrueYieldMergedPureFromEtaM02->Clone("RatioEtaMergedPure");
     fHistoRatioMergedPureFracEta->Divide(fHistoRatioMergedPureFracEta,fHistoTrueYieldEtaM02,1.,1.,"B");
@@ -2835,8 +2832,8 @@ void CreateRatioHistos(){
     fHistoRatioMergedOneGammaFracEta->Scale(100.);
     fHistoRatioMergedOneElectronFracEta             = (TH1D*)fHistoTrueYieldMergedOneElectronFromEtaM02->Clone("RatioEtaMergedOneElectron");
     fHistoRatioMergedOneElectronFracEta->Divide(fHistoRatioMergedOneElectronFracEta,fHistoTrueYieldEtaM02,1.,1.,"B");
-    fHistoRatioMergedOneElectronFracEta->Scale(100.);    
-    
+    fHistoRatioMergedOneElectronFracEta->Scale(100.);
+
 }
 
 //****************************************************************************
@@ -2864,7 +2861,7 @@ void IntegrateHistoM02(TH1D * fHistoDummy, Double_t * fMesonIntRangeInt){
     } else {
         fYieldsError            = 0.;
         fYields                 = 0.;
-    }    
+    }
 }
 
 //****************************************************************************
@@ -2993,28 +2990,28 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
         fDeltaPtCluster->SetBinContent(iPt,fBinsClusterPt[iPt]-fBinsClusterPt[iPt-1]);
         fDeltaPtCluster->SetBinError(iPt,0);
     }
-    
+
     TH1D*   fHistoClustersPtPerEvent   = NULL;
     if (fHistoClustersPt){
         fHistoClustersPtPerEvent    = (TH1D*)fHistoClustersPt->Rebin(fNBinsClusterPt,"ClusterPtPerEvent",fBinsClusterPt);
         fHistoClustersPtPerEvent->Divide(fDeltaPtCluster);
         fHistoClustersPtPerEvent->Scale(1./fNEvents);
     }
-    
+
     TH1D*   fHistoClustersEPerEvent   = NULL;
     if (fHistoClustersE){
         fHistoClustersEPerEvent    = (TH1D*)fHistoClustersE->Rebin(fNBinsClusterPt,"ClusterEPerEvent",fBinsClusterPt);
         fHistoClustersEPerEvent->Divide(fDeltaPtCluster);
         fHistoClustersEPerEvent->Scale(1./fNEvents);
     }
-    
+
     TH1D*   fHistoClustersOverlapHeadersPtPerEvent   = NULL;
     if (fHistoClustersOverlapHeadersPt){
         fHistoClustersOverlapHeadersPtPerEvent   = (TH1D*)fHistoClustersOverlapHeadersPt->Rebin(fNBinsClusterPt,"ClusterOverlapHeadersPtPerEvent",fBinsClusterPt);
         fHistoClustersOverlapHeadersPtPerEvent->Divide(fDeltaPtCluster);
         fHistoClustersOverlapHeadersPtPerEvent->Scale(1./fNEvents);
     }
-    const char* nameOutput          = Form("%s/%s/%s_%s_GammaMergedWithoutCorrection%s%s_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix3.Data(), 
+    const char* nameOutput          = Form("%s/%s/%s_%s_GammaMergedWithoutCorrection%s%s_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix3.Data(),
                                            fPeriodFlag.Data(), fAdditionalName.Data(), fCutID.Data());
     fOutput1                        = new TFile(nameOutput, "RECREATE");
 
@@ -3026,10 +3023,10 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
         if (fHistoClustersE)                            fHistoClustersE->Write("ClusterE");
         if (fHistoClustersEPerEvent)                    fHistoClustersEPerEvent->Write("ClusterEPerEvent");
         if (fDeltaPtCluster)                            fDeltaPtCluster->Write();
-        
+
         if (fHistoClustersOverlapHeadersPt)             fHistoClustersOverlapHeadersPt->Write("ClusterOverlapHeadersPt");
         if (fHistoClustersOverlapHeadersPtPerEvent)     fHistoClustersOverlapHeadersPtPerEvent->Write("ClusterOverlapHeadersPtPerEvent");
-        
+
         if(fHistoClustersMergedPtM02)                   fHistoClustersMergedPtM02->Write("ClusterMergedPtM02");
         if(fHistoClustersMergedPtM02AccMeson)           fHistoClustersMergedPtM02AccMeson->Write("ClusterMergedPtM02AccMeson");
         if(fHistoClustersMergedEM02AccMeson)            fHistoClustersMergedEM02AccMeson->Write("ClusterMergedEM02AccMeson");
@@ -3037,11 +3034,11 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
 
         if (fAdvancedClusterQA){
             if (fHistoClusterNCellsPt)                  fHistoClusterNCellsPt->Write("ClusterNCellsPt");
-            if (fHistoClusterMergedNCellsPt)            fHistoClusterMergedNCellsPt->Write("ClusterMergedNCellsPt");        
-            if (fHistoClusterMergedNCellsArClPt)        fHistoClusterMergedNCellsArClPt->Write("ClusterMergedNCellsAroundClusterPt");        
-            if (fHistoClusterMergedNCellsArAInclPt)     fHistoClusterMergedNCellsArAInclPt->Write("ClusterMergedNCellsAroundAndInClusterPt");        
-            if (fHistoClusterMergedEAroundClE)          fHistoClusterMergedEAroundClE->Write("ClusterMergedEAroundClusterE");        
-            if (fHistoClusterMergedNPartPt)             fHistoClusterMergedNPartPt->Write("ClusterMergedNPartPointingToClusPt");        
+            if (fHistoClusterMergedNCellsPt)            fHistoClusterMergedNCellsPt->Write("ClusterMergedNCellsPt");
+            if (fHistoClusterMergedNCellsArClPt)        fHistoClusterMergedNCellsArClPt->Write("ClusterMergedNCellsAroundClusterPt");
+            if (fHistoClusterMergedNCellsArAInclPt)     fHistoClusterMergedNCellsArAInclPt->Write("ClusterMergedNCellsAroundAndInClusterPt");
+            if (fHistoClusterMergedEAroundClE)          fHistoClusterMergedEAroundClE->Write("ClusterMergedEAroundClusterE");
+            if (fHistoClusterMergedNPartPt)             fHistoClusterMergedNPartPt->Write("ClusterMergedNPartPointingToClusPt");
             if (fHistoClustersMergedNLMPt)              fHistoClustersMergedNLMPt->Write("ClusterMergedNLMPt");
             for (Int_t i = 0; i< 11; i++ ){
                 if (fHistoClustersMergedPtNLMBins[i]){
@@ -3051,7 +3048,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
                 }
             }
         }
-        
+
         for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
             if (fHistoInvMassPtBin[ii])                     fHistoInvMassPtBin[ii]->Write(Form("InvMass_PtBin%i",ii));
             if (fHistoM02PtBin[ii])                         fHistoM02PtBin[ii]->Write(Form("M02_PtBin%i",ii));
@@ -3061,7 +3058,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
             }
         }
         cout << "End writing Uncorrected File" << endl;
-    
+
         if (fDeltaPt)                                   fDeltaPt->Write();
         if (fHistoYieldMesonM02)                        fHistoYieldMesonM02->Write();
 
@@ -3071,8 +3068,8 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3) {
                 if (fHistoYieldToyMCSecInput[j])        fHistoYieldToyMCSecInput[j]->Write();
                 if (fHistoYieldToyMCSecInputReb[j])     fHistoYieldToyMCSecInputReb[j]->Write();
             }
-        }           
-        
+        }
+
     fOutput1->Write();
     fOutput1->Close();
 }
@@ -3120,7 +3117,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoTrueClustersBGPtSource)           fHistoTrueClustersBGPtSource->Write();
         if (fHistoTrueClustersGammaPtSource)        fHistoTrueClustersGammaPtSource->Write();
         if (fHistoTrueClustersElectronPtSource)     fHistoTrueClustersElectronPtSource->Write();
-        
+
         if (fHistoMCMesonPt)                        fHistoMCMesonPt->Write("MC_Meson");
         if (fHistoMCMesonPtRebin)                   fHistoMCMesonPtRebin->Write("MC_Meson_Rebin");
         if (fHistoMCMesonWithinAccepPt)             fHistoMCMesonWithinAccepPt->Write("MC_Meson_WithinAccept");
@@ -3133,7 +3130,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         if (fHistoTruePurityMerged)                 fHistoTruePurityMerged->Write("TruePurityMergedPt");
         if (fHistoTruePi0PurityMerged)              fHistoTruePi0PurityMerged->Write("TruePurityPi0Pt");
         if (fHistoTrueEtaPurityMerged)              fHistoTrueEtaPurityMerged->Write("TruePurityEtaPt");
-        
+
         if (fHistoRatioTrueYieldEtaM02)             fHistoRatioTrueYieldEtaM02->Write();
         if (fHistoRatioTrueYieldPi0M02)             fHistoRatioTrueYieldPi0M02->Write();
         if (fHistoRatioTrueYieldGammaM02)           fHistoRatioTrueYieldGammaM02->Write();
@@ -3161,11 +3158,11 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
             }
         }
 
-        
+
         for (Int_t i = 0; i< 10; i++){
             if (fHistoTrueClustersBGPt[i])          fHistoTrueClustersBGPt[i]->Write();
             if (fHistoRatioTrueClustersBGPt[i])     fHistoRatioTrueClustersBGPt[i]->Write();
-        }    
+        }
         for (Int_t i = 0; i< 8; i++){
             if (fHistoTrueClustersGammaPt[i])       fHistoTrueClustersGammaPt[i]->Write();
         }
@@ -3177,8 +3174,8 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
             if (fHistoTrueYieldSecPi0M02[j])        fHistoTrueYieldSecPi0M02[j]->Write();
             if (fHistoTruePi0SecFrac[j])            fHistoTruePi0SecFrac[j]->Write();
             if (fHistoTrueEffiSecPi0[j])            fHistoTrueEffiSecPi0[j]->Write();
-        }    
-        
+        }
+
         if (fNewMCOutput){
             if (fHistoMCSecPi0PtSource)                 fHistoMCSecPi0PtSource->Write("MC_SecPi0_Source");
             if (fHistoMCSecPi0WithinAccepPtSource)      fHistoMCSecPi0WithinAccepPtSource->Write("MC_SecPi0_WithinAccept_Source");
@@ -3188,8 +3185,8 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
                 if(fHistoMCSecPi0PtReb[j])      fHistoMCSecPi0PtReb[j]->Write();
                 if(fHistoMCSecPi0PtWAccReb[j])  fHistoMCSecPi0PtWAccReb[j]->Write();
                 if(fHistoMCSecPi0AcceptPt[j])   fHistoMCSecPi0AcceptPt[j]->Write();
-            }    
-        }    
+            }
+        }
 
         TString titleHistoSignal    = Form("%3.1f GeV/#it{c} < #it{p}_{T} < %3.1f GeV/#it{c}",fBinsPt[fExampleBin],fBinsPt[fExampleBin+1]);
         if (fHistoM02PtBin[fExampleBin]){
@@ -3224,9 +3221,9 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
         for (Int_t j = 0; j<4; j++){
             if (fHistoTrueClusSecPi0M02PtBin[j][fExampleBin])           fHistoTrueClusSecPi0M02PtBin[j][fExampleBin]->Write();
         }
-        
+
     }
-    
+
     fOutput2->Write();
     fOutput2->Close();
 }
@@ -3238,7 +3235,7 @@ void SaveCorrectionHistos(TString fCutID, TString fPrefix3){
 void Delete(){
     if (fMesonMassPlotRange)                                    delete fMesonMassPlotRange;
     if (fMesonM02PlotRange)                                     delete fMesonM02PlotRange;
-    
+
     if (fHistoClustersPt)                                       delete fHistoClustersPt;
     if (fHistoClustersE)                                        delete fHistoClustersE;
     if (fHistoClustersOverlapHeadersPt)                         delete fHistoClustersOverlapHeadersPt;
@@ -3323,7 +3320,7 @@ void Delete(){
             if (fMesonM02TrueSecPi0YieldsError[j])              delete fMesonM02TrueSecPi0YieldsError[j];
         }
     }
-    
+
     for(Int_t ii =fStartPtBin;ii<fNBinsPt;ii++){
         if (fHistoInvMassPtBin[ii])                             delete fHistoInvMassPtBin[ii];
         if (fHistoM02PtBin[ii])                                 delete fHistoM02PtBin[ii];
@@ -3359,7 +3356,7 @@ void Delete(){
             }
         }
     }
-    
+
     if (fDeltaPt)                                               delete fDeltaPt;
     if (fHistoYieldMesonM02)                                    delete fHistoYieldMesonM02;
     if (fIsMC){
@@ -3388,23 +3385,23 @@ void Delete(){
         if (fHistoTrueYieldElectronM02)                         delete fHistoTrueYieldElectronM02;
         if (fHistoTrueYieldBGM02)                               delete fHistoTrueYieldBGM02;
         if (fHistoTrueYieldPrimPi0M02)                          delete fHistoTrueYieldPrimPi0M02;
-        
+
         if (fHistoMCAcceptancePt)                               delete fHistoMCAcceptancePt;
         if (fHistoTruePurityMerged)                             delete fHistoTruePurityMerged;
         if (fHistoTruePi0PurityMerged)                          delete fHistoTruePi0PurityMerged;
         if (fHistoTrueEtaPurityMerged)                          delete fHistoTrueEtaPurityMerged;
-        if (fHistoTrueEffiPrimMeson)                            delete fHistoTrueEffiPrimMeson;        
+        if (fHistoTrueEffiPrimMeson)                            delete fHistoTrueEffiPrimMeson;
         for (Int_t j = 0; j<4; j++){
             if (fHistoTrueYieldSecPi0M02[j])                    delete fHistoTrueYieldSecPi0M02[j];
-            if (fHistoTrueEffiSecPi0[j])                        delete fHistoTrueEffiSecPi0[j];        
+            if (fHistoTrueEffiSecPi0[j])                        delete fHistoTrueEffiSecPi0[j];
             if (fHistoTruePi0SecFrac[j])                        delete fHistoTruePi0SecFrac[j];
         }
-        
+
     }
-    
+
     // Delete Toy MC files
     for (Int_t j = 0; j < 3; j++){
         if (fFileToyMCInput[j] )                                   delete fFileToyMCInput[j];
     }
-    
+
 }

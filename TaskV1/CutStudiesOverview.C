@@ -1374,6 +1374,18 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             canvasRatioRawClusterPt->Update();
             canvasRatioRawClusterPt->SaveAs(Form("%s/%s_TriggerYieldClusterRatio%s.%s",outputDir.Data(),prefix2.Data(),centralityStringOutput.Data(),suffix.Data()));
             delete canvasRatioRawClusterPt;
+
+            TString OutputnameClus = Form("%s/%s_ClusterRatios.root",outputDirRootFile.Data(),prefix2.Data());
+            TFile* ClusterFile = new TFile(OutputnameClus.Data(),"UPDATE");
+            for(Int_t i = 0; i< NumberOfCuts; i++){
+                histoRawClusterPtCut[i]->Write(Form("ClusterSpec%s", cutStringsName[i].Data()), TObject::kOverwrite);
+                if ( i > 0){
+                    histoRatioRawClusterPtCut[i]->Write(Form("ClusterRatio%s_to_%s", cutStringsName[0].Data(), cutStringsName[i].Data()), TObject::kOverwrite);
+                }
+            }
+            ClusterFile->Write();
+            ClusterFile->Close();
+            delete ClusterFile;
         }
     }
 
@@ -1521,6 +1533,8 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                         histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.4);
                     else if (optionEnergy.Contains("PbPb_5") && meson.Contains("Pi0") )
                       histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(-0.05,0.25);
+                    else if (optionEnergy.Contains("pPb") && meson.Contains("Pi0") )
+                        histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.3);
                     else if (optionEnergy.Contains("PbPb_2.76TeV") )
                         histoTrueEffiCut[i]->GetYaxis()->SetRangeUser(0,0.6);
                     else

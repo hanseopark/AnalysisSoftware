@@ -174,6 +174,8 @@ public:
         Int_t startBinFitting       = 10;
         if (collisionSystem.Contains("Pb-Pb") && mode == 4)
             startBinFitting         = 30;
+        if (collisionSystem.Contains("p-Pb") && mode == 4)
+            startBinFitting         = 20;
         fGammaGamma = (TH1D*)fInvMassMesonPt->ProjectionX("ESD_Mother_InvMass",startBinFitting,fInvMassMesonPt->GetNbinsY());
         fBck = (TH1D*)fInvMassBGPt->ProjectionX("ESD_BG_InvMass",startBinFitting,fInvMassBGPt->GetNbinsY());
 
@@ -281,7 +283,7 @@ public:
         Double_t integralErr = 0;
         Double_t integralBG = 0;
 
-        cout << __LINE__ << endl;
+        cout << "QA.h:" << __LINE__ << endl;
 
         if(doPrint) cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         if(doLog) fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -297,28 +299,30 @@ public:
                 widthPiErr = fFWHMFuncError;
                 massPi = fFitRecoPi->GetParameter(1);
                 massPiErr = fFitRecoPi->GetParError(1);
-                integral = fFitRecoPi->Integral(0.1, 0.15, result->GetParams()) / fSignalPi->GetBinWidth(10);
+                for(UInt_t ipar = 0; ipar < result->NPar(); ipar++) fFitRecoPi->SetParameter(ipar, result->GetParams()[ipar]);
+                integral = fFitRecoPi->Integral(0.1, 0.15) / fSignalPi->GetBinWidth(10);
                 integralErr = fFitRecoPi->IntegralError(0.1, 0.15, result->GetParams(), result->GetCovarianceMatrix().GetMatrixArray() ) / fSignalPi->GetBinWidth(10);
                 integralBG = fFitRecoPi->GetParameter(4)*0.15 + fFitRecoPi->GetParameter(5)/2 *0.15*0.15- (fFitRecoPi->GetParameter(4)*0.1 + fFitRecoPi->GetParameter(5)/2 *0.1*0.1);
                 if(doPrint) cout << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
                 if(doPrint) cout << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
                 if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
                 if(doLog) fLog << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
-                cout << __LINE__ << endl;
+                cout << "QA.h:" << __LINE__ << endl;
 
             } else {
                 if(doPrint) cout << "here" << endl;
             }
         } else {
-            cout << __LINE__ << endl;
+            cout << "QA.h:" << __LINE__ << endl;
 
-            cout << __LINE__ << endl;
+            cout << "QA.h:" << __LINE__ << endl;
             CalculateFWHM(fFitRecoPi,0.1,0.17);
             widthPi = fFWHMFunc;
             widthPiErr = fFWHMFuncError;
             massPi = fFitRecoPi->GetParameter(1);
             massPiErr = fFitRecoPi->GetParError(1);
-            integral = fFitRecoPi->Integral(0.1, 0.15, result->GetParams()) / fSignalPi->GetBinWidth(10);
+            for(UInt_t ipar = 0; ipar < result->NPar(); ipar++) fFitRecoPi->SetParameter(ipar, result->GetParams()[ipar]);
+            integral = fFitRecoPi->Integral(0.1, 0.15) / fSignalPi->GetBinWidth(10);
             integralErr = fFitRecoPi->IntegralError(0.1, 0.15, result->GetParams(), result->GetCovarianceMatrix().GetMatrixArray() ) / fSignalPi->GetBinWidth(10);
             integralBG = fFitRecoPi->GetParameter(4)*0.15 + fFitRecoPi->GetParameter(5)/2 *0.15*0.15- (fFitRecoPi->GetParameter(4)*0.1 + fFitRecoPi->GetParameter(5)/2 *0.1*0.1);
             if(doPrint) cout << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
@@ -326,7 +330,7 @@ public:
             if(doLog) fLog << "Pi0 full width: "  << widthPi << "\t +-" << widthPiErr << "\t Mass: "<< massPi << "\t+-" << massPiErr  << endl;
             if(doLog) fLog << "integral Pi: " << integral << "\t +-" << integralErr << "\t integral BG : "<< integralBG<< endl;
         }
-        cout << __LINE__ << endl;
+        cout << "QA.h:" <<  __LINE__ << endl;
 
         fSignalEta = (TH1D*)fGammaGamma->Clone("fSignalEta");
         fSignalEta->SetTitle("");
@@ -354,20 +358,20 @@ public:
             fFitRecoEta->SetParLimits(1,0.45,0.60);
 
             if(mode==2){
-            fFitRecoEta->SetParameter(2,0.020);
-            fFitRecoEta->SetParameter(3,0.020);
-            fFitRecoEta->SetParLimits(2,0.010,0.040);
-            fFitRecoEta->SetParLimits(3,0.010,0.030);
+                fFitRecoEta->SetParameter(2,0.020);
+                fFitRecoEta->SetParameter(3,0.020);
+                fFitRecoEta->SetParLimits(2,0.010,0.040);
+                fFitRecoEta->SetParLimits(3,0.010,0.030);
             }else if(mode==4){
-            fFitRecoEta->SetParameter(2,0.030);
-            fFitRecoEta->SetParameter(3,0.025);
-            fFitRecoEta->SetParLimits(2,0.015,0.050);
-            fFitRecoEta->SetParLimits(3,0.010,0.040);
+                fFitRecoEta->SetParameter(2,0.030);
+                fFitRecoEta->SetParameter(3,0.025);
+                fFitRecoEta->SetParLimits(2,0.015,0.050);
+                fFitRecoEta->SetParLimits(3,0.010,0.040);
             }else{
-            fFitRecoEta->SetParameter(2,0.010);
-            fFitRecoEta->SetParameter(3,0.007);
-            fFitRecoEta->SetParLimits(2,0.002,0.050);
-            fFitRecoEta->SetParLimits(3,0.005,0.026);
+                fFitRecoEta->SetParameter(2,0.010);
+                fFitRecoEta->SetParameter(3,0.007);
+                fFitRecoEta->SetParLimits(2,0.002,0.050);
+                fFitRecoEta->SetParLimits(3,0.005,0.026);
             }
 
             fSignalEta->Draw("");
@@ -398,7 +402,8 @@ public:
                 if(doPrint) cout << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
                 if(doLog) fLog << "Eta full width: "  << widthEta << "\t +-" << widthEtaErr << "\t Mass: "<< massEta << "\t+-" << massEtaErr  << endl;
 
-                integralEta = fFitRecoEta->Integral(0.5,0.57, resultEta->GetParams()) / fSignalEta->GetBinWidth(10);
+                for(UInt_t ipar = 0; ipar < result->NPar(); ipar++) fFitRecoEta->SetParameter(ipar, resultEta->GetParams()[ipar]);
+                integralEta = fFitRecoEta->Integral(0.5,0.57) / fSignalEta->GetBinWidth(10);
                 integralEtaErr = fFitRecoEta->IntegralError(0.5,0.57, resultEta->GetParams(), resultEta->GetCovarianceMatrix().GetMatrixArray() ) / fSignalEta->GetBinWidth(10);
                 integralEtaBG = fFitRecoEta->GetParameter(4)*0.57 + fFitRecoEta->GetParameter(5)/2 *0.57*0.57- (fFitRecoEta->GetParameter(4)*0.5 + fFitRecoEta->GetParameter(5)/2 *0.5*0.5);
                 if(doPrint) cout << "integral Eta: " << integralEta << "\t +-" << integralEtaErr << "\t integral BG : "<< integralEtaBG<< endl;
@@ -1049,7 +1054,7 @@ void EditRunwiseHists(TH1D* hist, Int_t nHist, TString title, Double_t Ymin, Dou
     hist->SetMarkerStyle(markerStyles[nMarker]);
     hist->SetMarkerColor(nColor);
     hist->SetLineColor(nColor);
-    hist->SetLineWidth(0.8);
+    hist->SetLineWidth(1);
 
     if(Ymin!=-1 && Ymax!=-1) hist->GetYaxis()->SetRangeUser(Ymin,Ymax);
     hist->SetTitle(title.Data());
@@ -3039,25 +3044,32 @@ void PlotBadCellComparisonVecBoth(  std::vector<TH2D*> DataMCHists,
         padL->cd();
         padL->SetLogy(1);
 
-        // adjusting the pt range in the histo
-        AdjustHistRange(fVecDataMC,100,100,kTRUE);
         Int_t iStart = (Int_t) fVecDataMC.size()-1;
         Int_t minB=100; Int_t maxB=0;
         Int_t minBC=100; Int_t maxBC=0;
+        Double_t minY=100; Double_t maxY=0;
         for(Int_t i=iStart; i>=0; i--){
             TH1D* fHistDataMC = fVecDataMC.at(i);
+            if (fHistDataMC->GetEntries() > 0) allEmpty = kFALSE;
+            fHistDataMC->Scale(1./nEvents[i]);
             GetMinMaxBin(fHistDataMC,minBC,maxBC,1e-11);
             if (calo.Contains("EMC"))
                 minBC = fHistDataMC->FindBin(0.101);
             if (minBC < minB )
                 minB    = minBC;
+            if ( 0.1/nEvents[i] < minY )
+                minY    = 0.1/nEvents[i];
+
             if (maxBC > maxB)
                 maxB    = maxBC;
+            if (fHistDataMC->GetBinContent(minBC) > maxY )
+                maxY    = fHistDataMC->GetBinContent(minBC);
         }
+
         for(Int_t i=iStart; i>=0; i--){
             TH1D* fHistDataMC = fVecDataMC.at(i);
-            fHistDataMC->Scale(1./nEvents[i]);
             SetXRange(fHistDataMC,minB,maxB+3);
+            fHistDataMC->GetYaxis()->SetRangeUser(minY/2,maxY*2);
             SetStyleHistoTH1ForGraphs(fHistDataMC, "Cell Energy (GeV)",Form("normalized counts for Cell ID %i",allCells.at(iCell)),0.035,0.04, 0.035,0.04, 1.0,0.9);
             if(i==0){
                 DrawGammaSetMarker(fHistDataMC, 24, 0.5, color[i], color[i]);
