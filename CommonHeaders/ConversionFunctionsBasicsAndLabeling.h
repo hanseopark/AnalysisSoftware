@@ -1235,7 +1235,7 @@
         } else if (rapitdityCutNumberDummy.CompareTo("4") == 0){
             cout << "using rapidity of 0.5" << endl;
             rapidityRangeDummy              = "0.5";
-            return 1.;
+            return 1.0;
         } else if (rapitdityCutNumberDummy.CompareTo("5") == 0){
             cout << "using rapidity of 0.85" << endl;
             rapidityRangeDummy              = "0.85";
@@ -1281,8 +1281,8 @@
             cout << "using eta for gammas of 0.65" << endl;
             return 0.65*2;
         } else if (etaCutNumber.CompareTo("4")==0){
-            cout << "using eta for gammas of 0.75" << endl;
-            return  1.5;
+            cout << "using eta for gammas of 0.13" << endl;
+            return  0.26;
         } else if (etaCutNumber.CompareTo("5")==0){
             cout << "using eta for gammas of 0.5" << endl;
             return  1.0;
@@ -1380,6 +1380,8 @@
                 return 4.54;
             case 5:
                 return 4.5572;
+            case 6:
+                return 4.36;
             default:
                 return 0;
         }
@@ -1402,6 +1404,8 @@
                 return 5.59;
             case 5:
                 return 5.5658;
+            case 6:
+                return 5.59;
             default:
                 return 0;
         }
