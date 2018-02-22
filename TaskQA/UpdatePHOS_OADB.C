@@ -83,7 +83,7 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     updateFile(fileNameOADBtemp,"additional bad channels LHC16qt - Andrea","badChannelListsPHOS/BadChannelsFinal16t_267163-267166.log",267163,267166,1);
 
     // LHC17n pass1 Friederike Xe-Xe 5TeV
-    updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull.log",280234,280235,1);
+    updateFile(fileNameOADBtemp,"additional bad channels LHC17n - Friederike","badChannelListsPHOS/LHC17n_pass1_280234_280235_updatefull2.log",280234,280235,1);
 
     // add completely new bad channels, replacing existing map in range (last argument == 0)
     //     updateFile(fileNameOADBtemp,"BadChannelsLHC10c_20171213Update","LHC10c/LHC10c_addCells.log",138125,139517,0);

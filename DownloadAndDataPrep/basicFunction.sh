@@ -12,6 +12,21 @@ MERGEONSINGLEMC=0
 CLEANUP=0
 CLEANUPMAYOR=0
 number=""
+minFileSize=1000
+
+function GetFileNumberListSpecial()
+{
+    ls $1/$2_*.root > filesTemp.txt
+    fileNumbers=`cat filesTemp.txt`
+    rm fileNumbers.txt
+    for fileName in $fileNumbers; do
+        number=`echo $fileName  | cut -d "/" -f $3 | cut -d "_" -f $4 | cut -d "." -f1`
+        echo $number >> fileNumbers.txt
+    done
+    sort -u fileNumbers.txt > $5
+    cat $3
+}
+
 
 function GetFileNumberListPCM()
 {
@@ -29,7 +44,7 @@ function GetFileNumberListPCM()
 
 function GetFileNumberListPCMCalo()
 {
-    ls $1/GammaConvCalo_*.root > filesTemp.txt
+    ls $1/GammaConvCalo*.root > filesTemp.txt
     fileNumbers=`cat filesTemp.txt`
     rm fileNumbers.txt
     for fileName in $fileNumbers; do
@@ -317,7 +332,7 @@ function MergeAccordingToSpecificRunlist()
         else
             TOMERGE="";
             runs=`cat $6`
-            if [ $7 == "" ]; then
+            if [ "$7" == "no" ]; then
                 for run in $runs; do
                     nameCurrFile=`echo $2/$run/$4\_$number.root`
                     if [ -f $nameCurrFile ]; then
@@ -332,35 +347,41 @@ function MergeAccordingToSpecificRunlist()
                 TOMERGEJJ="";
                 for bin in $bins; do
                     TOMERGE="";
-                    for run in $runs; do
-                        nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
-                        if [ -f $nameCurrFile ]; then
-                            TOMERGE="$TOMERGE $nameCurrFile"
-                        else
-                            echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
-                        fi
-                    done
                     nameCurrJJFile=`echo "$2/$bin/$4-$5""_$number.root"`
-                    hadd -n 10 -f $nameCurrJJFile $TOMERGE
-                    if [ -f $nameCurrJJFile ]; then
+                    if [ -f $nameCurrJJFile ] && [ $(stat -c %s $nameCurrJJFile) -gt $minFileSize ]; then
+                        echo "file $nameCurrJJFile has been created already nothing to be done, will be added to list merge"
                         TOMERGEJJ="$TOMERGEJJ $nameCurrJJFile"
+                    else
+                        for run in $runs; do
+                            nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
+                            if [ -f $nameCurrFile ]; then
+                                TOMERGE="$TOMERGE $nameCurrFile"
+                            else
+                                echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
+                            fi
+                        done
+                        hadd -n 10 -f $nameCurrJJFile $TOMERGE
                     fi
                 done
                 hadd -n 10 -f "$2/$4-$5""_$number.root" $TOMERGEJJ
 
                 for run in $runs; do
-                    TOMERGERun="";
-                    for bin in $bins; do
-                        nameCurrFile=`echo $2/$bin/$run/$4\_$number.root`
-                        if [ -f $nameCurrFile ]; then
-                            TOMERGERun="$TOMERGERun $nameCurrFile"
-                        else
-                            echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
-                        fi
-                    done
-                    mkdir -p $2/$run/
-                    nameCurrJJFileRun=`echo "$2/$run/$4-$5""_$number.root"`
-                    hadd -n 10 -f $nameCurrJJFileRun $TOMERGERun
+                    nameCurrJJFileRun=`echo "$2/$run/$4""_$number.root"`
+                    if [ -f $nameCurrJJFileRun ] && [ $(stat -c %s $nameCurrJJFileRun) -gt $minFileSize ]; then
+                        echo "file $nameCurrJJFileRun has been created already nothing to be done"
+                    else
+                        TOMERGERun="";
+                        for bin in $bins; do
+                            nameCurrFile=`  echo $2/$bin/$run/$4\_$number.root`
+                            if [ -f $nameCurrFile ]; then
+                                TOMERGERun="$TOMERGERun $nameCurrFile"
+                            else
+                                echo "I couldn't find the file for bin $bin run $run, $nameCurrFile";
+                            fi
+                        done
+                        mkdir -p $2/$run/
+                        hadd -n 10 -f $nameCurrJJFileRun $TOMERGERun
+                    fi
                 done
 
             fi

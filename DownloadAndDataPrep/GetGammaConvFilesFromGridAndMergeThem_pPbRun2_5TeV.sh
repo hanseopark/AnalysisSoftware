@@ -155,9 +155,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC16q_$3_all.txt`
                 ls $OUTPUTDIR_LHC16q/$firstrunNumber/GammaConvV1_*.root > fileLHC16q.txt
 
-                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvV1 All runlists/runNumbersLHC16q_$3_all.txt
-                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC16q_$3_dpgTracks.txt
-                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC16q_$3_dpgTracksAndCalo.txt
+                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvV1 All runlists/runNumbersLHC16q_$3_all.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC16q_$3_dpgTracks.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC16q.txt $OUTPUTDIR_LHC16q $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC16q_$3_dpgTracksAndCalo.txt "no"
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC16q "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16qData/merge_runlist_1" $NSlashes "" kTRUE
@@ -176,9 +176,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC16t_$3_all.txt`
                 ls $OUTPUTDIR_LHC16t/$firstrunNumber/GammaConvV1_*.root > fileLHC16t.txt
                 fileNumbers=`cat fileLHC16t.txt`
-                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvV1 All runlists/runNumbersLHC16t_$3_all.txt
-                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC16t_$3_dpgTracks.txt
-                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC16t_$3_dpgTracksAndCalo.txt
+                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvV1 All runlists/runNumbersLHC16t_$3_all.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC16t_$3_dpgTracks.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC16t.txt $OUTPUTDIR_LHC16t $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC16t_$3_dpgTracksAndCalo.txt "no"
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC16t "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16tData/merge_runlist_1" $NSlashes "" kTRUE
@@ -201,9 +201,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC17f2b_$3_all.txt`
                 echo $firstrunNumber
                 ls $OUTPUTDIR_LHC17f2b/$firstrunNumber/GammaConvV1_*.root > fileLHC17f2b.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17f2b_$3_all.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC17f2b_$3_dpgTracks.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC17f2b_$3_dpgTracks.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17f2b_$3_all.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC17f2b_$3_dpgTracks.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC17f2b.txt $OUTPUTDIR_LHC17f2b $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC17f2b_$3_dpgTracks.txt "no"
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMC/merge" $NSlashes "" kTRUE
@@ -223,9 +223,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC17f2a_fix_$3_all.txt`
                 ls $OUTPUTDIR_LHC17f2a_fix/$firstrunNumber/GammaConvV1_*.root > fileLHC17f2a_fix.txt
                 fileNumbers=`cat fileLHC17f2a_fix.txt`
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17f2a_fix_$3_all.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt
-                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17f2a_fix_$3_all.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvV1 DPGTrack runlists/runNumbersLHC17f2a_fix_$3_dpgTracks.txt "no"
+                MergeAccordingToSpecificRunlist fileLHC17f2a_fix.txt $OUTPUTDIR_LHC17f2a_fix $NSlashes3 GammaConvV1 DPGTrackAndCalo runlists/runNumbersLHC17f2a_fix_$3_dpgTracksAndCalo.txt "no"
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC/merge" $NSlashes "" kTRUE

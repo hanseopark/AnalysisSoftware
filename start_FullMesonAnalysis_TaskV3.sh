@@ -3032,6 +3032,9 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                         root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
                     fi
                 fi
+                if [ "$Suffix" == "pdf" ]; then
+                    pdfunite $cutSelection/$energy/$Suffix/ExtractSignal/*.pdf $cutSelection/$energy/$Suffix/ExtractSignal/*/*.pdf $cutSelection/$energy/$Suffix/ExtractSignal/ExtractSignal_all.pdf
+                fi
             fi
 
             Pi0dataRAWFILE=`ls $cutSelection/$energy/Pi0_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
@@ -3123,6 +3126,10 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                 fi
 
             fi
+            if [ "$Suffix" == "pdf" ]; then
+                pdfunite $cutSelection/$energy/$Suffix/CorrectSignal/*.pdf $cutSelection/$energy/$Suffix/CorrectSignal/CorrectSignal_all.pdf
+            fi
+
         fi
         NORMALCUTS=`expr $NORMALCUTS + 1`
     done

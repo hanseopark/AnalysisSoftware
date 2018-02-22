@@ -66,9 +66,14 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17j7MC="688";
 # LHC17j7MC="689";
 
+# TRAINDIR=Legotrain-vAN20180207-XeXeQA
+# LHC17nData="387"; #pass 1
+# LHC17j7MC="816";
+
 TRAINDIR=Legotrain-vAN20180207-XeXeQA
 LHC17nData="387"; #pass 1
-LHC17j7MC="816";
+# LHC17j7MC="821";
+LHC17j7MC="822";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
@@ -119,7 +124,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 rm $OUTPUTDIR_LHC17n/GammaConvV1*.root*
                 firstrunNumber=`head -n1 runlists/runNumbersLHC17n_all.txt`
                 ls $OUTPUTDIR_LHC17n/$firstrunNumber/GammaConvV1_*.root > fileLHC17n.txt
-                MergeAccordingToSpecificRunlist fileLHC17n.txt $OUTPUTDIR_LHC17n $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17n_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17n.txt $OUTPUTDIR_LHC17n $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17n_all.txt "no"
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17n "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb/$LHC17nData/merge_runlist_1" $NSlashes "" kTRUE
@@ -142,7 +147,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 firstrunNumber=`head -n1 runlists/runNumbersLHC17j7_all.txt`
                 echo $firstrunNumber
                 ls $OUTPUTDIR_LHC17j7/$firstrunNumber/GammaConvV1_*.root > fileLHC17j7.txt
-                MergeAccordingToSpecificRunlist fileLHC17j7.txt $OUTPUTDIR_LHC17j7 $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17j7_all.txt
+                MergeAccordingToSpecificRunlist fileLHC17j7.txt $OUTPUTDIR_LHC17j7 $NSlashes3 GammaConvV1 All runlists/runNumbersLHC17j7_all.txt "no"
             fi
         else
             CopyFileIfNonExisitent $OUTPUTDIR_LHC17j7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_PbPb_MC/$LHC17j7MC/merge" $NSlashes "" kTRUE
