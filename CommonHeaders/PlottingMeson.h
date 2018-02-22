@@ -149,7 +149,7 @@
     void DrawSingleHisto( TH1* histo1, TString Title, TString XTitle, TString YTitle, Bool_t is2D) {
 
         histo1->SetTitle("");
-        if (Title.CompareTo("")!= 0) cout << Title.Data() << endl;
+        if (Title.CompareTo("")!= 0) std::cout << Title.Data() << std::endl;
 
         if(XTitle.Length() > 0){
             histo1->SetXTitle(XTitle.Data());
