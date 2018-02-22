@@ -1088,9 +1088,22 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         }
 
         // Initialize default BG fit range right & left
-        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
-            fBGFitRange[0]                       = 0.56;
-            fBGFitRange[1]                       = 0.59;
+        if(mode == 40 || mode == 41 || mode == 42 || mode == 45){
+            fBGFitRange[0]                       = 0.57;
+            fBGFitRange[1]                       = 0.64;
+            fBGFitRange_SubPiZero[0]             = fBGFitRange[0]-0.134;
+            fBGFitRange_SubPiZero[1]             = fBGFitRange[1]-0.134;
+            fBGFitRange_FixedPzPiZero[0]         = fBGFitRange[0];
+            fBGFitRange_FixedPzPiZero[1]         = fBGFitRange[1];
+            fBGFitRangeLeft[0]                   = 0.48;
+            fBGFitRangeLeft[1]                   = 0.52;
+            fBGFitRangeLeft_SubPiZero[0]                       = fBGFitRangeLeft[0]-0.134;
+            fBGFitRangeLeft_SubPiZero[1]                       = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_FixedPzPiZero[0]                   = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_FixedPzPiZero[1]                   = fBGFitRangeLeft[1];
+        } else if(mode == 44){
+            fBGFitRange[0]                       = 0.57;
+            fBGFitRange[1]                       = 0.64;
             fBGFitRange_SubPiZero[0]             = fBGFitRange[0]-0.134;
             fBGFitRange_SubPiZero[1]             = fBGFitRange[1]-0.134;
             fBGFitRange_FixedPzPiZero[0]         = fBGFitRange[0];
@@ -1110,13 +1123,20 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         }
 
         // Initialize default Plot default integration ranges
-        if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
+        if(mode == 40 || mode == 42 || mode == 44 || mode == 45){
             fMesonIntDeltaRange[0]      = -0.040;
             fMesonIntDeltaRange[1]      =  0.040;
             fMesonIntDeltaRangeWide[0]  = -0.060;
             fMesonIntDeltaRangeWide[1]  =  0.060;
-            fMesonIntDeltaRangeNarrow[0]= -0.022;
-            fMesonIntDeltaRangeNarrow[1]=  0.022;
+            fMesonIntDeltaRangeNarrow[0]= -0.017;
+            fMesonIntDeltaRangeNarrow[1]=  0.017;
+        } else if (mode == 41){
+            fMesonIntDeltaRange[0]      = -0.030;
+            fMesonIntDeltaRange[1]      =  0.030;
+            fMesonIntDeltaRangeWide[0]  = -0.055;
+            fMesonIntDeltaRangeWide[1]  =  0.055;
+            fMesonIntDeltaRangeNarrow[0]= -0.018;
+            fMesonIntDeltaRangeNarrow[1]=  0.018;
         }
 
         // Set meson mass ranges (here same for fitting and plotting)
@@ -1197,9 +1217,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonWidthRangeMC[1] = fMesonWidthRange[1];
 
          } else if (mode == 44){
-             fMesonWidthExpect           = 0.05;
-             fMesonWidthRange[0]         = 0.004;
-             fMesonWidthRange[1]         = 0.070;
+             fMesonWidthExpect           = 0.006;
+             fMesonWidthRange[0]         = 0.001;
+             fMesonWidthRange[1]         = 0.1;
              fMesonLambdaTail            = 0.001;
              fMesonLambdaTailRange[0]    = 0.001;
              fMesonLambdaTailRange[1]    = 0.001;

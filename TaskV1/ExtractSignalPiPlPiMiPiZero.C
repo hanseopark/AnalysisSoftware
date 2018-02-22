@@ -110,6 +110,7 @@ void ExtractSignalPiPlPiMiPiZero(   TString meson                  = "",
 
     fEnergyFlag             = optionEnergy;
     fPrefix                 = meson;
+    fThesis                 = "wip";
 
     fPeriodFlag             = optionPeriod;
 

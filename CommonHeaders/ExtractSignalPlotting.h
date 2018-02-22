@@ -739,7 +739,13 @@
             nLegendLines++;
         }
 
-        TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        TLatex *labelALICE;
+        if(fPlottingType.CompareTo("wip")==0){
+            // Work in progress selected
+            labelALICE      = new TLatex(0.135,0.9,"ALICE work in progress");
+        } else{
+            labelALICE      = new TLatex(0.135,0.9,"ALICE");
+        }
         SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
         labelALICE->SetTextFont(43);
         labelALICE->Draw();
