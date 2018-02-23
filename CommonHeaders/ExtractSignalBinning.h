@@ -621,34 +621,100 @@
                                                         1, 1, 2, 2, 2, 4, 4, 8,
                                                         8, 8, 8};
     //****************************************************************************************************
-    //******************** Pt binning for pp, 13 TeV *****************************************************
+    //******************** Pt binning for pp, 13TeV *****************************************************
     //****************************************************************************************************
 
-    Double_t fBinsPi013TeVPt[44]                    =    { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
-                                                            1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1,
-                                                            2.2, 2.3, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8,
-                                                            4.0, 4.3, 4.6, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0,
-                                                            10.0,12.0,16.0,20.0,25.0};             // Pi0  binning LHC16X
+   Double_t fBinsPi013TeVPt[65]                     =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+                                                          1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
+                                                          2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.2,
+                                                          3.4,  3.6,  3.8,  4.0,  4.2,      4.4,  4.6,  4.8,  5.0,  5.4,
+                                                          5.8,  6.2,  6.6,  7.0,  7.5,      8.0,  8.5,  9.0, 10.0, 12.0,
+                                                         16.0, 20.0, 25.0, 30.0, 35.0,     40.0, 45.0, 50.0, 55.0, 60.0,
+                                                         65.0, 70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X
 
 
-    Int_t fBinsPi013TeVPtRebin[43]                  = { 3, 2, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                            1, 2, 2, 3, 3, 4, 4, 4, 4,
-                                                            4, 4, 4, 5};
+  Int_t fBinsPi013TeVPtRebin[64]                    =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 4,    4, 4, 4, 4, 4,
+                                                          8, 5, 5, 5, 5,    5, 5, 5, 5, 5,
+                                                          5, 5, 5, 5};
 
-    Double_t fBinsPi013TeVPtDCA[28]                  = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
-                                                            1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
-                                                            4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 20.0, 25.0};
+  //EMC7
+  Double_t fBinsPi013TeVEMCTriggerEMC7Pt[65]        =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+                                                          1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
+                                                          2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.2,
+                                                          3.4,  3.6,  3.8,  4.0,  4.2,      4.4,  4.6,  4.8,  5.0,  5.4,
+                                                          5.8,  6.2,  6.6,  7.0,  7.5,      8.0,  8.5,  9.0, 10.0, 12.0,
+                                                         16.0, 20.0, 25.0, 30.0, 35.0,     40.0, 45.0, 50.0, 55.0, 60.0,
+                                                         65.0, 70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EMC7
+
+
+ Int_t fBinsPi013TeVEMCTriggerEMC7PtRebin[64]       =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 4,    4, 4, 4, 4, 4,
+                                                          8, 5, 5, 5, 5,    5, 5, 5, 5, 5,
+                                                          5, 5, 5, 5};
+
+ //EG1 8GeV
+ Double_t fBinsPi013TeVEMCTriggerEG1Pt[104]         =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+                                                          1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
+                                                          2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.1,
+                                                          3.2,  3.3,  3.4,  3.5,  3.6,      3.7,  3.8,  3.9,  4.0,  4.2,
+                                                          4.4,  4.6,  4.8,  5.0,  5.2,      5.4,  5.6,  5.8,  6.0,  6.2,
+                                                          6.4,  6.6,  6.8,  7.0,  7.2,      7.4,  7.6,  7.8,  8.0,  8.2,
+                                                          8.4,  8.6,  8.8,  9.0,  9.4,      9.8, 10.2, 10.6, 11.0, 11.4,
+                                                         11.8, 12.2, 12.6, 13.0, 13.4,     13.8, 14.2, 14.6, 15.0, 15.4,
+                                                         15.8, 16.2, 16.6, 17.0, 17.5,     18.0, 18.5, 19.0, 20.0, 21.0,
+                                                         23.0, 25.0, 30.0, 35.0, 40.0,     45.0, 50.0, 55.0, 60.0, 65.0,
+                                                         70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EG1 8GeV
+
+
+Int_t fBinsPi013TeVEMCTriggerEG1PtRebin[103]        =   { 4, 8, 4, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 2,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 2,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 2,    2, 2, 2, 2, 2,
+                                                          2, 2, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          8, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4};
+
+  //EG2 4GeV
+ Double_t fBinsPi013TeVEMCTriggerEG2Pt[65]          =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+                                                          1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
+                                                          2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.2,
+                                                          3.4,  3.6,  3.8,  4.0,  4.2,      4.4,  4.6,  4.8,  5.0,  5.4,
+                                                          5.8,  6.2,  6.6,  7.0,  7.5,      8.0,  8.5,  9.0, 10.0, 12.0,
+                                                         16.0, 20.0, 25.0, 30.0, 35.0,     40.0, 45.0, 50.0, 55.0, 60.0,
+                                                         65.0, 70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EG2 4GeV
+
+
+Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 4,    4, 4, 4, 4, 4,
+                                                          8, 5, 5, 5, 5,    5, 5, 5, 5, 5,
+                                                          5, 5, 5, 5};
+
+  Double_t fBinsPi013TeVPtDCA[28]                   =   { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                          1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
+                                                          4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 20.0, 25.0};
 
 
 
-    Double_t fBinsPi013TeVDalitzPt[23]               =  {0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-                                                            2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.5, 5.0, 6.0,
-                                                            8.0, 10.0, 15.};
-    Int_t fBinsPi013TeVDalitzPtRebin[22]             =  {5, 5, 5, 5, 4, 4, 4, 4, 4, 4,
-                                                            4, 5, 5, 5, 5,  5, 5, 5, 8, 8,
-                                                            8, 10};
+  Double_t fBinsPi013TeVDalitzPt[23]                =   { 0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                          2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.5, 5.0, 6.0,
+                                                          8.0, 10.0, 15.};
+  Int_t fBinsPi013TeVDalitzPtRebin[22]              =   { 5, 5, 5, 5, 4, 4, 4, 4, 4, 4,
+                                                          4, 5, 5, 5, 5,  5, 5, 5, 8, 8,
+                                                          8, 10};
 
 
 
@@ -710,7 +776,7 @@
     Int_t fBinsOmegaPiPlPiMiPiZero13TevPtRebinPCM[19]        = {8,8,6,6,6,6,4,4,4,4,4,4,4,4,4,4,6,8,8};
 
     //****************************************************************************************************
-    //******************** Pt binning for pp, 13 TeV low B ( 0.2T ) **************************************
+    //******************** Pt binning for pp, 13TeV low B ( 0.2T ) **************************************
     //****************************************************************************************************
     Double_t fBinsPi013TeVLowBPt[18]                = { 0.0, 0.1, 0.4, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.5, 2.9, 3.5, 5.0, 10.0};
@@ -1230,21 +1296,36 @@
         } else if ( (totBins+1-startBin) < 41){
             columns     = 8;
             rows        = 5;
-        } else if ( (totBins+1-startBin) < 45){
+        } else if ( (totBins+1-startBin) < 46){
             columns     = 9;
             rows        = 5;
-        } else if ( (totBins+1-startBin) < 60){
+        } else if ( (totBins+1-startBin) < 61){
             columns     = 10;
             rows        = 6;
-        } else if ( (totBins+1-startBin) < 66){
+        } else if ( (totBins+1-startBin) < 67){
             columns     = 11;
             rows        = 6;
-        } else if ( (totBins+1-startBin) < 72){
+        } else if ( (totBins+1-startBin) < 73){
             columns     = 12;
             rows        = 6;
-        } else {
+        } else if ( (totBins+1-startBin) < 78){
             columns     = 11;
             rows        = 7;
+        } else if ( (totBins+1-startBin) < 84){
+            columns     = 12;
+            rows        = 7;
+        } else if ( (totBins+1-startBin) < 92){
+            columns     = 13;
+            rows        = 7;
+        } else if ( (totBins+1-startBin) < 97){
+            columns     = 12;
+            rows        = 8;
+        } else if ( (totBins+1-startBin) < 108){
+            columns     = 12;
+            rows        = 9;
+        } else {
+            columns     = 12;
+            rows        = 10;
         }
         cout << "nColumns: " << columns << "\t nRows: "  << rows << "\t nTotbins: " << (totBins+1-startBin) << endl;
     }
@@ -2396,6 +2477,7 @@
     }
 
 
+
     //*************************************************************************************************
     //******************** GetBinning for general combination *****************************************
     //*************************************************************************************************
@@ -2404,7 +2486,6 @@
                         TString   energy  = "2.76TeV",
                         Int_t     mode    = 2
     ){
-
         Int_t maxNBins      = 0;
         Int_t binningMax    = 0;
         if (meson.CompareTo("Pi0")==0){
@@ -2521,6 +2602,41 @@
                         binning[i] = fBinsPi08TeVPtmEMCComb[i];
                     }
                 }
+            } else if (energy.CompareTo("13TeV") == 0){
+                if (mode == 0 ){ // PCM
+                    cout<<"Debug Line: "<<__LINE__<<"; Binning for "<<energy.Data()<<" TeV and mode "<<mode<<endl;
+                    maxNBins = 91;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                    }
+                } else if (mode == 1){ // Dalitz
+                    maxNBins = 22;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                    }
+                } else if ( mode == 2 || mode == 13 ) {
+                    maxNBins = 32;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                    }
+                } else if ( mode == 4 || mode == 12  ) {
+                    maxNBins = 32;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                    }
+                } else if ( mode == 3 || mode == 5 ) {
+                    maxNBins = 32;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                    }
+                } else if (mode == 20){ //combined
+                    maxNBins = 32;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                    }
+                }
+
+
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if (mode == 0 ){ // PCM
                     maxNBins = 31;
@@ -2733,6 +2849,43 @@
                     maxNBins = 11;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
+                    }
+                }
+            } else if (energy.CompareTo("13TeV") == 0){
+                if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
+                    }
+                } else if ( mode == 0 ){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
+                    }
+                } else if(mode == 40){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
+                    }
+                } else if(mode == 41){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
+                    }
+                } else if(mode == 42){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
+                    }
+                } else if(mode == 44){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
+                    }
+                } else if(mode == 45){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVPt[i];
                     }
                 }
             } else if (energy.CompareTo("8TeV") == 0){
@@ -2979,6 +3132,11 @@
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
             }
+        } else if( energy.CompareTo("13TeV") == 0){
+            fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
+            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
+            }
         } else {
             fNBinsClusterPt       = 0;
             fBinsClusterPt        = NULL;
@@ -3013,8 +3171,8 @@
         //*************************************************************************************************
         if (setPi0.CompareTo("Pi0") == 0){
             fNBinsPt                = numberOfBins;
-            fBinsPt                 = new Double_t[100];
-            fNRebin                 = new Int_t[99];
+            fBinsPt                 = new Double_t[120];
+            fNRebin                 = new Int_t[119];
             //*********************************************************************************************
             //********************************** Pi0 for pp 0.9TeV*****************************************
             //*********************************************************************************************
@@ -3604,6 +3762,19 @@
             //********************************** Pi0 for pp 13TeV******************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeV") == 0) {
+                if (triggerSet == -1){
+                    if (trigger.CompareTo("10") == 0){
+                        specialTrigg = 0; // MinBias
+                    } else if (trigger.CompareTo("52")==0){
+                        specialTrigg = 1; // L0 EMC7
+                    } else if (trigger.CompareTo("83") == 0 ){
+                        specialTrigg = 2; //EG1 8GeV
+                    } else if (trigger.CompareTo("85") == 0 ){
+                        specialTrigg = 3; //EG2 4GeV
+                    }
+                } else {
+                    specialTrigg        = triggerSet;
+                }
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     if (fNBinsPt > 24) {
@@ -3620,31 +3791,143 @@
                     for (Int_t i = 0; i < fNBinsPtDCAzDist+1; i++) {
                         fBinsPtDCAzDist[i] = fBinsDirGamma13TeVPtDCAzDist[i];
                     }
-                } else {
-                    fStartPtBin         = 1;
-                    if (fNBinsPt > 27 && isDCA) {
-                        cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
-                        fNBinsPt    = 27;
-                    } else if (fNBinsPt > 45) {
-                        cout << "You have chosen to have more than 45 bins, this is not possible, it will be reduced to 45" << endl;
-                        fNBinsPt    = 45;
+                }  else {
+                    Int_t iSizeOfRebinArray13TeVPt;
+                    Int_t iSizeOfRebinArray13TeVPtPCMEMC;
+                    Int_t iSizeOfRebinArray13TeVPtDCA;
+                    if (specialTrigg==0) {
+                        iSizeOfRebinArray13TeVPt= ((Int_t) (sizeof(fBinsPi013TeVPt)/sizeof(fBinsPi013TeVPt[0])))-1;
+                        iSizeOfRebinArray13TeVPtPCMEMC= ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
+                        iSizeOfRebinArray13TeVPtDCA=  ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
+                        fStartPtBin         = 1;
+                        if (fNBinsPt > iSizeOfRebinArray13TeVPtDCA && isDCA) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtDCA<<" bins, this is not possible, it will be reduced to "<<iSizeOfRebinArray13TeVPtDCA<<"" << endl;
+                            fNBinsPt    = iSizeOfRebinArray13TeVPtDCA;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPt)&&(modi == 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPt<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPt << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPt;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPtPCMEMC)&&(modi != 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtPCMEMC<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPtPCMEMC << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPtPCMEMC;
+                        }
+                        GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
-                    }
-                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-
-                    for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        if (isDCA) {
-                            fBinsPt[i]      = fBinsPi013TeVPtDCA[i];
-                        } else {
-                            if (modi == 0 ){
-                                fBinsPt[i]      = fBinsPi013TeVPt[i];
-                                if (i < fNBinsPt+1)
-                                    fNRebin[i]  = fBinsPi013TeVPtRebin[i];
+                        for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                            if (isDCA) {
+                                fBinsPt[i]      = fBinsPi013TeVPtDCA[i];
                             } else {
-                                fBinsPt[i]      = fBinsPi013TeVPCMEMCPt[i];
-                                if (i < fNBinsPt+1)
-                                    fNRebin[i]  = fBinsPi013TeVPCMEMCPtRebin[i];
+                                if (modi == 0 ){
+                                    fBinsPt[i]      = fBinsPi013TeVPt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVPtRebin[i];
+                                } else {
+                                    fBinsPt[i]      = fBinsPi013TeVPCMEMCPt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVPCMEMCPtRebin[i];
 
+                                }
+                            }
+                        }
+                    }
+                    if (specialTrigg==1) {
+                        iSizeOfRebinArray13TeVPt= ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEMC7Pt)/sizeof(fBinsPi013TeVEMCTriggerEMC7Pt[0])))-1;
+                        iSizeOfRebinArray13TeVPtPCMEMC= ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
+                        iSizeOfRebinArray13TeVPtDCA=  ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
+                        fStartPtBin         = 1;
+                        if (fNBinsPt > iSizeOfRebinArray13TeVPtDCA && isDCA) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtDCA<<" bins, this is not possible, it will be reduced to "<<iSizeOfRebinArray13TeVPtDCA<<"" << endl;
+                            fNBinsPt    = iSizeOfRebinArray13TeVPtDCA;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPt)&&(modi == 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPt<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPt << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPt;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPtPCMEMC)&&(modi != 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtPCMEMC<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPtPCMEMC << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPtPCMEMC;
+                        }
+                        GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+
+                        for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                            if (isDCA) {
+                                fBinsPt[i]      = fBinsPi013TeVPtDCA[i];
+                            } else {
+                                if (modi == 0 ){
+                                    fBinsPt[i]      = fBinsPi013TeVEMCTriggerEMC7Pt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVEMCTriggerEMC7PtRebin[i];
+                                } else {
+                                    fBinsPt[i]      = fBinsPi013TeVPCMEMCPt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVPCMEMCPtRebin[i];
+
+                                }
+                            }
+                        }
+                    }
+                    if (specialTrigg==2) {
+                        iSizeOfRebinArray13TeVPt= ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG1Pt)/sizeof(fBinsPi013TeVEMCTriggerEG1Pt[0])))-1;
+                        iSizeOfRebinArray13TeVPtPCMEMC= ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
+                        iSizeOfRebinArray13TeVPtDCA=  ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
+                        fStartPtBin         = 1;
+                        if (fNBinsPt > iSizeOfRebinArray13TeVPtDCA && isDCA) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtDCA<<" bins, this is not possible, it will be reduced to "<<iSizeOfRebinArray13TeVPtDCA<<"" << endl;
+                            fNBinsPt    = iSizeOfRebinArray13TeVPtDCA;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPt)&&(modi == 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPt<<" bins, this is not possible for mode "<<modi<<", it will be reduced to "<< iSizeOfRebinArray13TeVPt << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPt;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPtPCMEMC)&&(modi != 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtPCMEMC<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPtPCMEMC << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPtPCMEMC;
+                        }
+                        GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+
+                        for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                            if (isDCA) {
+                                fBinsPt[i]      = fBinsPi013TeVPtDCA[i];
+                            } else {
+                                if (modi == 0 ){
+                                    fBinsPt[i]      = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVEMCTriggerEG1PtRebin[i];
+                                } else {
+                                    fBinsPt[i]      = fBinsPi013TeVPCMEMCPt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVPCMEMCPtRebin[i];
+
+                                }
+                            }
+                        }
+                    }
+                    if (specialTrigg==3) {
+                        iSizeOfRebinArray13TeVPt= ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG2Pt)/sizeof(fBinsPi013TeVEMCTriggerEG2Pt[0])))-1;
+                        iSizeOfRebinArray13TeVPtPCMEMC= ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
+                        iSizeOfRebinArray13TeVPtDCA=  ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
+                        fStartPtBin         = 1;
+                        if (fNBinsPt > iSizeOfRebinArray13TeVPtDCA && isDCA) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtDCA<<" bins, this is not possible, it will be reduced to "<<iSizeOfRebinArray13TeVPtDCA<<"" << endl;
+                            fNBinsPt    = iSizeOfRebinArray13TeVPtDCA;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPt)&&(modi == 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPt<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPt << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPt;
+                        } else if ((fNBinsPt > iSizeOfRebinArray13TeVPtPCMEMC)&&(modi != 0 )) {
+                            cout <<"Line: "<<__LINE__<<"; You have chosen to have more than "<<iSizeOfRebinArray13TeVPtPCMEMC<<" bins for mode "<<modi<<" and Triggermode "<<specialTrigg<<", this is not possible, it will be reduced to "<< iSizeOfRebinArray13TeVPtPCMEMC << endl;
+                            fNBinsPt    = (Int_t)iSizeOfRebinArray13TeVPtPCMEMC;
+                        }
+                        GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+
+                        for (Int_t i = 0; i < fNBinsPt+1; i++) {
+                            if (isDCA) {
+                                fBinsPt[i]      = fBinsPi013TeVPtDCA[i];
+                            } else {
+                                if (modi == 0 ){
+                                    fBinsPt[i]      = fBinsPi013TeVEMCTriggerEG2Pt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVEMCTriggerEG2Pt[i];
+                                } else {
+                                    fBinsPt[i]      = fBinsPi013TeVPCMEMCPt[i];
+                                    if (i < fNBinsPt+1)
+                                        fNRebin[i]  = fBinsPi013TeVPCMEMCPtRebin[i];
+
+                                }
                             }
                         }
                     }

@@ -183,6 +183,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       } else if (mode == 10){
         maxPtGlobalCluster          = 70;
       }
+    } else if (optionEnergy.CompareTo("13TeV")==0){
+        if(mode==2 || mode==4 || mode==0){
+            maxPtGlobalCluster          = 50;
+        } else if (mode == 10){
+            maxPtGlobalCluster          = 70;
+        }
     }
 
     Size_t textSizeSpectra          = 0.04;

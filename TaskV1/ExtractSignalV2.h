@@ -1013,6 +1013,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonWidthRange[1]         = 0.015;
             fMesonLambdaTailRange[0]    = 0.001;
             fMesonLambdaTailRange[1]    = 0.02;
+        } else if ((mode == 0) && (fEnergyFlag.CompareTo("13TeV") == 0)){
+            fMesonWidthExpect           = 0.003;
+            fMesonLambdaTail            = 0.012;
+            fMesonWidthRange[0]         = 0.001;
+            fMesonWidthRange[1]         = 0.009;
+            fMesonLambdaTailRange[0]    = 0.001;
+            fMesonLambdaTailRange[1]    = 0.02;
         } else {                                                    // default
             fMesonWidthExpect           = 0.003;
             fMesonLambdaTail            = 0.012;

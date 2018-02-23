@@ -91,7 +91,6 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
         return;
     }
-
     TList *TopDir                   = (TList*)f->Get(autoDetectedMainDir.Data());
     if(TopDir == NULL){
         cout<<"ERROR: TopDir not Found"<<endl;
@@ -4399,6 +4398,8 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
         if (fEnergyFlag.CompareTo("PbPb_2.76TeV") == 0 && fPrefix.CompareTo("Pi0") ==0 && ptBin >=17){
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
         } else if (fEnergyFlag.Contains("pPb") && (ptBin >= 20) ){//
+            cout << "Skipping the vary option for this case" << endl;
+        }else if (fEnergyFlag.Contains("13TeV")){
             cout << "Skipping the vary option for this case" << endl;
         } else {// ...do what you are supposed to....
             if (!(fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1]) ){
