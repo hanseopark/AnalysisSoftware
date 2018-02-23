@@ -1365,7 +1365,7 @@ void ClusterQA_Runwise(
 
             if(i < nData && doExtQA==2){
                 for(Int_t iMC=nData; iMC<nSets; iMC++){
-                    if(vecClusterFiredCellIDs[i].size() == vecClusterFiredCellIDs[iMC].size() && vecClusterMissingCellIDs[i].size() == vecClusterFiredCellIDs[iMC].size()){
+                    if(vecClusterFiredCellIDs[i].size() == vecClusterFiredCellIDs[iMC].size()){
                         DrawVectorOverviewMissingCells(canvas, vecClusterFiredCellIDs[i], vecClusterFiredCellIDs[iMC], vecClusterMissingCellIDs[i],
                                                             Form("ExtQA/MissingCells/hCellsMissingData_%s",DataSets[iMC].Data()), outputDirDataSet, suffix, DataSets[iMC]);
                     }
