@@ -6311,7 +6311,7 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     legendXsectionPaperEtaToPi05->SetNColumns(1);
     legendXsectionPaperEtaToPi05->SetMargin(0.2);
     legendXsectionPaperEtaToPi05->AddEntry(graphCombPi0InvXSectionSysA,"Data","pf");
-    legendXsectionPaperEtaToPi05->AddEntry(eta2pi0MtScaled,"ALICE pp, #sqrt{#it{s}} = 8 TeV from m_{T} scaling","l");
+    legendXsectionPaperEtaToPi05->AddEntry(eta2pi0MtScaled,"m_{T}-scaling","l");
     legendXsectionPaperEtaToPi05->AddEntry(histoPythia8EtaToPi0,"PYTHIA 8.2, Monash 2013","l");
     legendXsectionPaperEtaToPi05->AddEntry(histoPythia8T4CEtaToPi0,"PYTHIA 8.2, Tune 4C","l");
     legendXsectionPaperEtaToPi05->AddEntry(graphNLOEtaToPi0,"NLO, PDF:CTEQ6M5","f");
