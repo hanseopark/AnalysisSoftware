@@ -108,7 +108,7 @@ void  BackgroundPhotonFlowCalculation(
     Float_t BinCenter = histov2Bkg1->GetBinCenter(i);
     Float_t v2TotalValue = histov2Bkg1->GetBinContent(i);
     Float_t Purity = GraphPurityBkg1NA->Eval(BinCenter);
-    Float_t v2BkgValue = histov2C->Interpolate(BinCenter);
+    Float_t v2BkgValue = 0.8*histov2C->Interpolate(BinCenter)+0.2*v2TotalValue;
     Float_t v2CorrectedValue = ( v2TotalValue - (1-Purity) * v2BkgValue ) / Purity;
     
     histov2A->SetBinContent(i,v2CorrectedValue);

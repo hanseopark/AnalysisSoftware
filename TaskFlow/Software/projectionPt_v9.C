@@ -72,8 +72,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     
 //     TFile* fileData = new TFile("PhotonQA_0705415160_redefinedkappalarge_MC.root");
 //     TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
-//     TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
-    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/180202_PbPb_TPC_variations/mc/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/mc/GammaConvFlow_%i.root",Trainconfig));
+//     TFile* fileMC = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/180202_PbPb_TPC_variations/mc/GammaConvFlow_%i.root",Trainconfig));
     TList* listMC_1   = new TList();
     listMC_1     = (TList*)fileMC->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     cout << listMC_1 << endl;
@@ -84,8 +84,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     listMC_3     = (TList*)listMC_2->FindObject(Form("%s ESD histograms",Cutnumber.Data()));
     cout << listMC_3 << endl;
     
-//     TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/data/GammaConvFlow_%i.root",Trainconfig));
-    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/180202_PbPb_TPC_variations/data/GammaConvFlow_%i.root",Trainconfig));
+    TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/170215_PbPb_v2_full_systematics/data/GammaConvFlow_%i.root",Trainconfig));
+//     TFile* fileData  = new TFile(Form("/home/mike/3_PbPb_dirg/1_data/180202_PbPb_TPC_variations/data/GammaConvFlow_%i.root",Trainconfig));
     TList* listData_1   = new TList();
     listData_1     = (TList*)fileData->Get(Form("GammaConvV1_%i_v2",Trainconfig));
     
@@ -416,7 +416,155 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //     
 //   }
   //Double_t newBinsComb[19] = {0.0, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5, 2.7, 3.0, 3.3, 3.7, 4.1, 4.6, 5.4, 6.2, 7.0};
-//   if(CentralityLow.CompareTo("20")==0){
+  if(CentralityLow.CompareTo("20")==0){
+    Int_t nbins = h1d00->GetNbinsX();
+    if(newBinsComb[i]==0.0){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+    }
+    if(newBinsComb[i]==0.9){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
+      }
+    }
+    if(newBinsComb[i]==1.1){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
+      }
+    }
+    if(newBinsComb[i]==1.3){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+1));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      }
+    }
+    if(newBinsComb[i]==1.5){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+      }
+    }
+    if(newBinsComb[i]==1.7){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==1.9){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+      }
+    }
+    if(newBinsComb[i]==2.1){
+      for(Int_t p=5;p<nbins-5;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-5;p>5;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==2.3){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+1));
+      }
+      for(Int_t p=nbins-7;p>7;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      }
+    }
+    if(newBinsComb[i]==2.5){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+      }
+      for(Int_t p=nbins-7;p>7;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-6));
+      }
+    }
+    if(newBinsComb[i]==2.7){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+1));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
+      }
+      for(Int_t p=nbins-7;p>7;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-6));
+      }
+    }
+    if(newBinsComb[i]==3.0){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==3.3){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==3.7){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      }
+    }
+    if(newBinsComb[i]==4.1){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
+      }
+    }
+    if(newBinsComb[i]==4.6){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
+      }
+    }
+    if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
+      for(Int_t p=12;p<nbins-12;p++){
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+      }
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
+      }
+    }
+  }
+//    if(CentralityLow.CompareTo("20")==0){
 //     Int_t nbins = h1d00->GetNbinsX();
 //     if(newBinsComb[i]==0.0){
 //       for(Int_t p=5;p<nbins-5;p++){
@@ -456,7 +604,7 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //     }
 //     if(newBinsComb[i]==1.7){
 //       for(Int_t p=5;p<nbins-5;p++){
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+// //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
 //       }
 //       for(Int_t p=nbins-5;p>5;p--){
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
@@ -524,8 +672,8 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //     }
 //     if(newBinsComb[i]==3.7){
 //       for(Int_t p=12;p<nbins-12;p++){
-//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+// //         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
+// //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
 //       }
 //       for(Int_t p=nbins-12;p>12;p--){
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
@@ -559,7 +707,11 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //       }
 //     }
 //   }
-   if(CentralityLow.CompareTo("20")==0){
+  if(CentralityLow.CompareTo("0")==0){
+//     mc->Add(h1d00);	//primary + secondary
+// 	mc->Add(h1d01);	//remaining
+// 	mc->Add(h1d11); //pion+pion
+// 	mc->Add(h1d13); //pion+electron
     Int_t nbins = h1d00->GetNbinsX();
     if(newBinsComb[i]==0.0){
       for(Int_t p=5;p<nbins-5;p++){
@@ -569,12 +721,16 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     }
     if(newBinsComb[i]==0.9){
       for(Int_t p=5;p<nbins-5;p++){
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+3));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+2));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+1));
       }
     }
     if(newBinsComb[i]==1.1){
       for(Int_t p=5;p<nbins-5;p++){
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+3));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
       }
       for(Int_t p=nbins-5;p>5;p--){
         h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
@@ -582,127 +738,140 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
     }
     if(newBinsComb[i]==1.3){
       for(Int_t p=5;p<nbins-5;p++){
-//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
-      }
-      for(Int_t p=nbins-5;p>5;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+3));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
       }
     }
     if(newBinsComb[i]==1.5){
       for(Int_t p=5;p<nbins-5;p++){
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
       }
-      for(Int_t p=nbins-5;p>5;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
       }
     }
     if(newBinsComb[i]==1.7){
       for(Int_t p=5;p<nbins-5;p++){
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
       }
-      for(Int_t p=nbins-5;p>5;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
       }
     }
     if(newBinsComb[i]==1.9){
       for(Int_t p=5;p<nbins-5;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
       }
-      for(Int_t p=nbins-5;p>5;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
       }
     }
     if(newBinsComb[i]==2.1){
       for(Int_t p=5;p<nbins-5;p++){
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
       }
-      for(Int_t p=nbins-5;p>5;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
       }
     }
     if(newBinsComb[i]==2.3){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
       }
-      for(Int_t p=nbins-7;p>7;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-5));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
       }
     }
     if(newBinsComb[i]==2.5){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
       }
-      for(Int_t p=nbins-7;p>7;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
       }
     }
     if(newBinsComb[i]==2.7){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
       }
-      for(Int_t p=nbins-7;p>7;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+      for(Int_t p=nbins-12;p>12;p--){
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
       }
     }
     if(newBinsComb[i]==3.0){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+3));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+4));
         h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
       }
       for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
       }
     }
     if(newBinsComb[i]==3.3){
       for(Int_t p=12;p<nbins-12;p++){
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+8));
       }
       for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-7));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
       }
     }
     if(newBinsComb[i]==3.7){
       for(Int_t p=12;p<nbins-12;p++){
-//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+        h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
       }
       for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-8));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
       }
     }
     if(newBinsComb[i]==4.1){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+8));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
       }
       for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p-3));
       }
     }
     if(newBinsComb[i]==4.6){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+8));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
       }
       for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
       }
     }
     if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
       for(Int_t p=12;p<nbins-12;p++){
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
+        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
+        h1d13->SetBinContent(p,h1d13->GetBinContent(p+12));
       }
       for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-9));
+        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
       }
     }
   }
-//   if(CentralityLow.CompareTo("0")==0){
+// if(CentralityLow.CompareTo("0")==0){
 //     Int_t nbins = h1d00->GetNbinsX();
 //     if(newBinsComb[i]==0.0){
 //       for(Int_t p=5;p<nbins-5;p++){
@@ -712,15 +881,17 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //     }
 //     if(newBinsComb[i]==0.9){
 //       for(Int_t p=5;p<nbins-5;p++){
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+// //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
 //       }
 //     }
 //     if(newBinsComb[i]==1.1){
 //       for(Int_t p=5;p<nbins-5;p++){
 //         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+// //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+2));
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
 //       }
 //       for(Int_t p=nbins-5;p>5;p--){
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
@@ -728,22 +899,25 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //     }
 //     if(newBinsComb[i]==1.3){
 //       for(Int_t p=5;p<nbins-5;p++){
-//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+// //         h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
+// //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+2));
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+6));
 //       }
 //     }
 //     if(newBinsComb[i]==1.5){
 //       for(Int_t p=5;p<nbins-5;p++){
 // //         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
+// //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
 // //         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
+//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
 //       }
 //     }
 //     if(newBinsComb[i]==1.7){
 //       for(Int_t p=5;p<nbins-5;p++){
 // //         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
 //         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
+//         h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
 //         h1d00->SetBinContent(p,h1d00->GetBinContent(p));
 //       }
 //     }
@@ -848,157 +1022,6 @@ void  projectionPt_v9(  Int_t Trainconfig = 60,
 //       }
 //     }
 //   }
-if(CentralityLow.CompareTo("0")==0){
-    Int_t nbins = h1d00->GetNbinsX();
-    if(newBinsComb[i]==0.0){
-      for(Int_t p=5;p<nbins-5;p++){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p+5));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
-      }
-    }
-    if(newBinsComb[i]==0.9){
-      for(Int_t p=5;p<nbins-5;p++){
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
-      }
-    }
-    if(newBinsComb[i]==1.1){
-      for(Int_t p=5;p<nbins-5;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+2));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p+3));
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
-      }
-      for(Int_t p=nbins-5;p>5;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-2));
-      }
-    }
-    if(newBinsComb[i]==1.3){
-      for(Int_t p=5;p<nbins-5;p++){
-//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+2));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+2));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+6));
-      }
-    }
-    if(newBinsComb[i]==1.5){
-      for(Int_t p=5;p<nbins-5;p++){
-//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-//         h1d13->SetBinContent(p,h1d13->GetBinContent(p+4));
-//         h1d00->SetBinContent(p,h1d00->GetBinContent(p+1));
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+3));
-      }
-    }
-    if(newBinsComb[i]==1.7){
-      for(Int_t p=5;p<nbins-5;p++){
-//         h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
-      }
-    }
-    if(newBinsComb[i]==1.9){
-      for(Int_t p=5;p<nbins-5;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
-      }
-    }
-    if(newBinsComb[i]==2.1){
-      for(Int_t p=5;p<nbins-5;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
-      }
-    }
-    if(newBinsComb[i]==2.3){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+5));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
-      }
-    }
-    if(newBinsComb[i]==2.5){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+2));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p));
-      }
-    }
-    if(newBinsComb[i]==2.7){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+4));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+6));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
-      }
-    }
-    if(newBinsComb[i]==3.0){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+5));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+7));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-1));
-      }
-    }
-    if(newBinsComb[i]==3.3){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+6));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+9));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
-      }
-    }
-    if(newBinsComb[i]==3.7){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
-      }
-    }
-    if(newBinsComb[i]==4.1){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-4));
-      }
-    }
-    if(newBinsComb[i]==4.6){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
-      }
-    }
-    if(newBinsComb[i]==5.4 || newBinsComb[i]==6.2){
-      for(Int_t p=12;p<nbins-12;p++){
-        h1d01->SetBinContent(p,h1d01->GetBinContent(p+4));
-        h1d11->SetBinContent(p,h1d11->GetBinContent(p+7));
-        h1d13->SetBinContent(p,h1d13->GetBinContent(p+11));
-      }
-      for(Int_t p=nbins-12;p>12;p--){
-        h1d00->SetBinContent(p,h1d00->GetBinContent(p-3));
-      }
-    }
-  }
   
   TH1D *h1sum_2=(TH1D*)h1d00->Clone();
 	h1sum_2->GetXaxis()->SetTitleOffset(0.8);
@@ -1053,23 +1076,32 @@ if(CentralityLow.CompareTo("0")==0){
 	  fit->Constrain(2,frac01[i]*constraint_low,frac01[i]*constraint_high*2.);
 	  fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*20.);
 	  fit->Constrain(4,frac13[i]*constraint_low,frac13[i]*constraint_high*10.);
-    if(newBinsComb[i]>=3.3 && CentralityLow.CompareTo("20")==0){
-      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*25.);
+    if(newBinsComb[i]>=3.0 && CentralityLow.CompareTo("20")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*15.);
+    }
+        if(newBinsComb[i]>=3.3 && CentralityLow.CompareTo("20")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*24.);
+    }
+    if(newBinsComb[i]>=3.7 && CentralityLow.CompareTo("20")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*22.);
+    }
+    if(newBinsComb[i]>=4.1 && CentralityLow.CompareTo("20")==0){
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*24.);
     }
 //     if(newBinsComb[i]>=1.3 && CentralityLow.CompareTo("0")==0){
 //       fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*30.);
 //     }
-    if(newBinsComb[i]>=1.3 && CentralityLow.CompareTo("0")==0){
-      fit->Constrain(3,frac11[i]*constraint_low*0.4,frac11[i]*constraint_high*30.);
-    }
+//     if(newBinsComb[i]>=1.3 && CentralityLow.CompareTo("0")==0){
+//       fit->Constrain(3,frac11[i]*constraint_low*0.4,frac11[i]*constraint_high*30.);
+//     }
     if(newBinsComb[i]>=4.1 && CentralityLow.CompareTo("0")==0){
-      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*12.);
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*11.9);
     }
-    if(newBinsComb[i]==1.5 && CentralityLow.CompareTo("0")==0){
-      fit->Constrain(4,frac13[i]*constraint_low,frac13[i]*constraint_high*20.);
-    }
+//     if(newBinsComb[i]==1.5 && CentralityLow.CompareTo("0")==0){
+//       fit->Constrain(4,frac13[i]*constraint_low,frac13[i]*constraint_high*20.);
+//     }
     if(newBinsComb[i]>=4.6 && CentralityLow.CompareTo("0")==0){
-      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*13.);
+      fit->Constrain(3,frac11[i]*constraint_low,frac11[i]*constraint_high*14.);
     }
 	}
 	
