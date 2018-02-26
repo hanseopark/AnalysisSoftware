@@ -2607,6 +2607,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
             } else if (energy.CompareTo("13TeV") == 0){
                 Int_t iSizeOfBinningArray=0;
                 fStartPtBin=1;
+
                 //Get Actual maximal Sizes of Binning Arrays
                 if (DCAcase==kTRUE){
                     iSizeOfBinningArray= 27;// ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
@@ -2625,6 +2626,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         iSizeOfBinningArray= 37;// ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
                 }
                 CheckBinSize(fNBinsPt,iSizeOfBinningArray);
+                binningMax=fNBinsPt;//if you want to implement different Max Binning for different functions: Change here! fNBinsPt is returned at end of function; binningMax defines the fill of the binning array; binningMax has to be bigger or equal than than fNBinsPt
                 for (Int_t i = 0; i < binningMax+1; i++) {
                     if (DCAcase==kTRUE) {
                         binning[i]      = fBinsPi013TeVPtDCA[i];
