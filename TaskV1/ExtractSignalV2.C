@@ -4399,7 +4399,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
             cout << "Skipping the vary option for this case, pt: " << ptBin << endl;
         } else if (fEnergyFlag.Contains("pPb") && (ptBin >= 20) ){//
             cout << "Skipping the vary option for this case" << endl;
-        }else if (fEnergyFlag.Contains("13TeV")){
+        }else if ((fEnergyFlag.Contains("13TeV"))&&(fMode == 0)){
             cout << "Skipping the vary option for this case" << endl;
         } else {// ...do what you are supposed to....
             if (!(fMesonLambdaTail == fMesonLambdaTailRange[0] && fMesonLambdaTail == fMesonLambdaTailRange[1]) ){
