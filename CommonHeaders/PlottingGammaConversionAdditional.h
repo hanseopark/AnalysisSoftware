@@ -3277,25 +3277,29 @@
 	    }
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
-            if (!generator.CompareTo("LHC17n")){
+            if (!generator.CompareTo("LHC17n") || !generator.CompareTo("") ){
                 if (!centrality.CompareTo("0-20%")){
                     return kRed+1;
                 } else if (!centrality.CompareTo("20-40%")){
-                    return kOrange+7;
-                } else if (!centrality.CompareTo("0-40%")){
                     return kGreen+2;
-                } else if (!centrality.CompareTo("40-90%")){
+                } else if (!centrality.CompareTo("0-40%")){
+                    return kOrange+7;
+                } else if (!centrality.CompareTo("40-80%")){
                     return kBlue+2;
+                } else if (!centrality.CompareTo("0-80%")){
+                    return kBlack;
                 } else return kGray+1;
             } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING") || !generator.CompareTo("Hijing")){
                 if (!centrality.CompareTo("0-20%")){
                     return kRed-6;
                 } else if (!centrality.CompareTo("20-40%")){
-                    return kOrange-3;
-                } else if (!centrality.CompareTo("0-40%")){
                     return kGreen-6;
-                } else if (!centrality.CompareTo("40-90%")){
+                } else if (!centrality.CompareTo("0-40%")){
+                    return kOrange-3;
+                } else if (!centrality.CompareTo("40-80%")){
                     return kBlue-6;
+                } else if (!centrality.CompareTo("0-80%")){
+                    return kGray+2;
                 } else return kGray+2;
             }
         }
@@ -3303,9 +3307,9 @@
         return kBlack;
     }
 
-    Style_t GetDefaultMarkerStyle( TString energy,
-                                TString generator,
-                                TString centrality){
+    Style_t GetDefaultMarkerStyle(  TString energy,
+                                    TString generator,
+                                    TString centrality){
         if (!energy.CompareTo("900GeV")){
             if (!generator.CompareTo("")){
                 return 21;
@@ -3562,26 +3566,30 @@
             }
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
-            if (!generator.CompareTo("LHC17n")){
-                if (!centrality.CompareTo("0-90%")){
-                    return 24;
+            if (!generator.CompareTo("LHC17n") || !generator.CompareTo("")){
+                if (!centrality.CompareTo("0-80%")){
+                    return kFullSquare;
                 } else if (!centrality.CompareTo("0-20%")){
-                    return 30;
+                    return kFullCircle;
                 } else if (!centrality.CompareTo("20-40%")){
-                    return 27;
+                    return kFullDiamond;
                 } else if (!centrality.CompareTo("0-40%")){
-                    return 28;
-                } else return 25;
-            } else if (!generator.CompareTo("LHC17j7")){
-                if (!centrality.CompareTo("0-90%")){
-                    return 25;
+                    return kFullCross;
+                } else if (!centrality.CompareTo("40-80%")){
+                    return kFullStar;
+                } else return kFullSquare;
+            } else if (!generator.CompareTo("LHC17j7") || !generator.CompareTo("HIJING")){
+                if (!centrality.CompareTo("0-80%")){
+                    return kOpenSquare;
                 } else if (!centrality.CompareTo("0-20%")){
-                    return 24;
+                    return kOpenCircle;
                 } else if (!centrality.CompareTo("20-40%")){
-                    return 30;
+                    return kOpenDiamond;
                 } else if (!centrality.CompareTo("0-40%")){
-                    return 27;
-                } else return 28;
+                    return kOpenCross;
+                } else if (!centrality.CompareTo("40-80%")){
+                    return kOpenStar;
+                } else return kOpenSquare;
             }
         }
         cout << "GetDefaultMarkerStyle(): no valid input parameters given..." << endl;
@@ -3689,7 +3697,7 @@
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
             if (!generator.CompareTo("")){
-                if (!centrality.CompareTo("0-90%")){
+                if (!centrality.CompareTo("0-80%")){
                     return 2;
                 } else if (!centrality.CompareTo("0-20%")){
                     return 2;

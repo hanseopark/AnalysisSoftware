@@ -3980,7 +3980,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         fBinsPtDCAzDist[i] = fBinsDirGamma13TeVPtDCAzDist[i];
                     }
                 }  else {//13TeV, not directPhoton
-                    GetBinning( fBinsPt, "Pi0", energy, modi, specialTrigg, isDCA);
+                    GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA);
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     //Rebinning, because not implemented in getBinning
                     if (!isDCA) {
@@ -5420,7 +5420,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
             //*********************************************************************************************
             } else if( energy.CompareTo("XeXe_5.44TeV") == 0) {
                 fStartPtBin     = GetStartBin("Eta", energy, modi);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, mod, ispecialTrigg, isDCA );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA );
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
@@ -5485,7 +5485,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
 
             if (energy.CompareTo("7TeV") == 0) {
                 fStartPtBin                 = GetStartBin("Omega","7TeV",modi);
-                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Omega", energy, modi );
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Omega", energy, modi);
                 if (fNBinsPt > maxPtBinAvail) {
                     cout << "**************************************************************************************************************************************" << endl;
                     cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
