@@ -189,6 +189,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 10){
             maxPtGlobalCluster          = 70;
         }
+    } else if (optionEnergy.CompareTo("pPb_8TeV")==0){
+      if(mode==2 || mode==4){
+        maxPtGlobalCluster          = 50;
+      } else if (mode == 10){
+        maxPtGlobalCluster          = 70;
+      }
     }
 
     Size_t textSizeSpectra          = 0.04;
@@ -396,7 +402,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     fNLMmin                             = 0;
                 }
             }
-            if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
+            if ((optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe") )&& i==0){
                 fCent                                   = GetCentralityString(fEventCutSelection);
                 fCentOutput                             = GetCentralityStringOutput(fEventCutSelection);
                 if (i == 0) collisionSystem                         = fCent+ " "+collisionSystem;
@@ -860,6 +866,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggReject = 8200;
         else if (mode == 4 && optionEnergy.CompareTo("pPb_5.023TeV") == 0)
             maxTriggReject = 200;
+        else if (mode == 10 && !optionEnergy.CompareTo("8TeV"))
+            maxTriggReject = 49000;
+        // else if (mode == 10 && !optionEnergy.CompareTo("pPb_8TeV"))
+            // maxTriggReject = 390;
         else if (mode == 10)
             maxTriggReject = 5200;
 
