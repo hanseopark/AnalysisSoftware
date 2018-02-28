@@ -198,7 +198,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     if (isThesis)   textALICE                       = "ALICE this thesis";
     cout << "Setting Gamma binning" << endl;
     Double_t xPtLimitsGamma[100]                    = {0};
-    Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, "Gamma", "2.76TeV", 20 );
+    Int_t maxNBinsGammaAbs                          = 0;
+    Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, maxNBinsGammaAbs, "Gamma", "2.76TeV", 20 );
     for (Int_t i = 0; i< maxNBinsGamma; i++){
         cout << i << ": "<< xPtLimitsGamma[i] <<" - " << xPtLimitsGamma[i+1]<< ", " <<endl;
     }

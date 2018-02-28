@@ -147,7 +147,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     if (isMC.CompareTo("MC") == 0) collisionSystem = "MC, "+collisionSystem;
 
     Double_t binningOmega[100];
-    Int_t maxNBinsOmega               = GetBinning( binningOmega, "Omega", optionEnergy, mode );
+    Int_t maxNBinsOmegaAbs          = 0;
+    Int_t maxNBinsOmega             = GetBinning( binningOmega, maxNBinsOmegaAbs, "Omega", optionEnergy, mode );
     Int_t nRealTriggers             = 0;
     while (binningOmega[maxNBinsOmega] < maxPtGlobalOmega ) maxNBinsOmega++;
     for (Int_t i= 0; i< maxNBinsOmega+1; i++){
@@ -156,7 +157,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     cout << endl;
 
     Double_t binningEta[100];
-    Int_t maxNBinsEta               = GetBinning( binningEta, "Eta", optionEnergy, mode );
+    Int_t maxNBinsEtaAbs            = 0;
+    Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode );
     Int_t maxNAllowedEta            = maxNBinsEta;
     while (binningEta[maxNAllowedEta] < maxPtGlobalEta ) maxNAllowedEta++;
     for (Int_t i= 0; i< maxNAllowedEta+1; i++){

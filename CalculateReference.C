@@ -176,8 +176,9 @@ void CalculateReference (   TString configFile                  = "",
     Double_t finalBinningPt[100];
     Int_t maxNBins                  = 0;
     Int_t startBin                  = 0;
+    Int_t maxNBinsAbs               = 0;
     if (doSpecialBinning){
-        maxNBins                    = GetBinning( finalBinningPt, meson.Data(), binningEnergy.Data(), mode );
+        maxNBins                    = GetBinning( finalBinningPt, maxNBinsAbs, meson.Data(), binningEnergy.Data(), mode );
         startBin                    = GetStartBin( meson.Data(), binningEnergy.Data(), mode );
 //         exampleBin                  = ReturnSingleInvariantMassBinPlotting (meson.Data(), binningEnergy.Data(), mode, 0, dummyScaleFac);
         if (maxNBins == 0){

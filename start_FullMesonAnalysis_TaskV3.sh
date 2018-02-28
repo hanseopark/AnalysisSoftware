@@ -2929,6 +2929,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                     fi
                 fi
                 if [ "$Suffix" == "pdf" ]; then
+                    rm -f $cutSelection/$energy/$Suffix/ExtractSignal/ExtractSignal_all.pdf
                     pdfunite $cutSelection/$energy/$Suffix/ExtractSignal/*.pdf $cutSelection/$energy/$Suffix/ExtractSignal/*/*.pdf $cutSelection/$energy/$Suffix/ExtractSignal/ExtractSignal_all.pdf
                 fi
             fi
@@ -3023,7 +3024,8 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
 
             fi
             if [ "$Suffix" == "pdf" ]; then
-                pdfunite $cutSelection/$energy/$Suffix/CorrectSignal/*.pdf $cutSelection/$energy/$Suffix/CorrectSignal/CorrectSignal_all.pdf
+                rm -f $cutSelection/$energy/$Suffix/CorrectSignalV2/CorrectSignal_all.pdf
+                pdfunite $cutSelection/$energy/$Suffix/CorrectSignalV2/*.pdf $cutSelection/$energy/$Suffix/CorrectSignalV2/CorrectSignal_all.pdf
             fi
 
         fi

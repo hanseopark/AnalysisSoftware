@@ -711,12 +711,12 @@ void CombineMesonMeasurements8TeV_2(    TString fileNamePCM         = "",
     // Definition of final pt binning (has to be set manually)
     Double_t xPtLimitsPi0[100];
     Int_t maxNBinsPi0               = 0;
-
-    maxNBinsPi0                  = GetBinning( xPtLimitsPi0, "Pi0", "8TeV", 11 );
+    Int_t maxNBinsPi0Abs            = 0;
+    maxNBinsPi0                  = GetBinning( xPtLimitsPi0, maxNBinsPi0Abs, "Pi0", "8TeV", 11 );
 //    maxNBinsPi0--;
 
     Double_t xPtLimitsPi0WOMerged[70];
-    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, "Pi0", "8TeV", 11 );
+    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, maxNBinsPi0Abs, "Pi0", "8TeV", 11 );
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};

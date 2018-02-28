@@ -146,28 +146,6 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
     if (isMC.CompareTo("MC") == 0) collisionSystem = "MC, "+collisionSystem;
 
-    Double_t binningPi0[100];
-    Int_t maxNBinsPi0               = GetBinning( binningPi0, "Pi0", optionEnergy, mode );
-    Int_t maxNAllowedPi0            = 0;
-    Int_t nRealTriggers             = 0;
-    cout << "binning pi0" << endl;
-    while (binningPi0[maxNAllowedPi0] < maxPtGlobalPi0 ) maxNAllowedPi0++;
-    for (Int_t i= 0; i< maxNAllowedPi0+1; i++){
-        cout << binningPi0[i] << ", ";
-    }
-    cout << endl;
-
-    Double_t binningEta[100];
-    Int_t maxNBinsEta               = GetBinning( binningEta, "Eta", optionEnergy, mode );
-    Int_t maxNAllowedEta            = 0;
-    if (enableEta){
-        cout << "binning eta" << endl;
-        while (binningEta[maxNAllowedEta] < maxPtGlobalEta ) maxNAllowedEta++;
-        for (Int_t i= 0; i< maxNAllowedEta+1; i++){
-            cout << binningEta[i] << ", ";
-        }
-        cout << endl;
-    }
     Double_t maxPtGlobalCluster     = 25;
     if (optionEnergy.CompareTo("2.76TeV")==0){
         if (mode==2){
@@ -402,24 +380,53 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     fNLMmin                             = 0;
                 }
             }
-            if ((optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe") )&& i==0){
+            if ((optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")) && i == 0 ){
                 fCent                                   = GetCentralityString(fEventCutSelection);
                 fCentOutput                             = GetCentralityStringOutput(fEventCutSelection);
-                if (i == 0) collisionSystem                         = fCent+ " "+collisionSystem;
+                collisionSystem                         = fCent+ " "+collisionSystem;
             }
         } else {
-            if (optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")){
+            if ((optionEnergy.Contains("Pb") || optionEnergy.Contains("Xe")) && i == 0 ){
                 fCent                                   = GetCentralityString(cutNumber[i]);
                 fCentOutput                             = GetCentralityStringOutput(cutNumber[i]);
-                if (i == 0) collisionSystem                         = fCent+ " "+collisionSystem;
+                collisionSystem                         = fCent+ " "+collisionSystem;
             }
         }
     }
 
+    //***************************************************************************************************************
+    //*************************** set common binning ****************************************************************
+    //***************************************************************************************************************
+    Double_t binningPi0[100];
+    Int_t maxNBinsPi0Abs            = 0;
+    Int_t maxNBinsPi0               = GetBinning( binningPi0, maxNBinsPi0Abs, "Pi0", optionEnergy, mode, -1, kFALSE, fCent );
+    Int_t maxNAllowedPi0            = 0;
+    Int_t nRealTriggers             = 0;
+    cout << "binning pi0" << endl;
+    while (binningPi0[maxNAllowedPi0] < maxPtGlobalPi0 ) maxNAllowedPi0++;
+    for (Int_t i= 0; i< maxNAllowedPi0+1; i++){
+        cout << binningPi0[i] << ", ";
+    }
+    cout << endl;
 
+    Double_t binningEta[100];
+    Int_t maxNBinsEtaAbs            = 0;
+    Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode, -1, kFALSE, fCent );
+    Int_t maxNAllowedEta            = 0;
+    if (enableEta){
+        cout << "binning eta" << endl;
+        while (binningEta[maxNAllowedEta] < maxPtGlobalEta ) maxNAllowedEta++;
+        for (Int_t i= 0; i< maxNAllowedEta+1; i++){
+            cout << binningEta[i] << ", ";
+        }
+        cout << endl;
+    }
 
+    //***************************************************************************************************************
     // defining output directory
+    //***************************************************************************************************************
     TString outputDir =    Form("%s/%s/%s/FinalResultsTriggersPatched%s%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data(),system.Data());
+    TString outputDirDay =    Form("%s/%s/%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data());
     if(optionEnergy.CompareTo("900GeV") == 0 || optionEnergy.CompareTo("7TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0){
       if(mode == 4) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_EMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
       if(mode == 2) outputDir = Form("%s/%s/%s/FinalResultsTriggersPatched_PCMEMCAL%s", suffix.Data(),optionEnergy.Data(),dateForOutput.Data(),fNLMStringOutput.Data());
@@ -7314,9 +7321,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     cout << "Writing output file" << endl;
     TString fileNameOutputComp  = Form("%s/%s_%sResultsFullCorrection_PP.root",outputDir.Data(),isMC.Data(),system.Data());
     if (optionEnergy.Contains("pPb"))
-        fileNameOutputComp      = Form("%s/%s_%sResultsFullCorrection_pPb.root",outputDir.Data(),isMC.Data(),system.Data());
+        fileNameOutputComp      = Form("%s/%s_%sResultsFullCorrection_pPb.root",outputDirDay.Data(),isMC.Data(),system.Data());
     else if (optionEnergy.Contains("PbPb"))
-        fileNameOutputComp      = Form("%s/%s_%sResultsFullCorrection_PbPb.root",outputDir.Data(),isMC.Data(),system.Data());
+        fileNameOutputComp      = Form("%s/%s_%sResultsFullCorrection_PbPb.root",outputDirDay.Data(),isMC.Data(),system.Data());
+    else if (optionEnergy.Contains("XeXe"))
+        fileNameOutputComp      = Form("%s/%s_%sResultsFullCorrection_XeXe.root",outputDirDay.Data(),isMC.Data(),system.Data());
 
     TFile* fileOutputForComparisonFullyCorrected = new TFile(fileNameOutputComp,"UPDATE");
         for (Int_t i=0; i< nrOfTrigToBeComb; i++){

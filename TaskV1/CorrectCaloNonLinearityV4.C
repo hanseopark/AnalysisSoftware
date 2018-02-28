@@ -589,8 +589,11 @@ void CorrectCaloNonLinearityV4(
 
             //*******************************************************************************
             // Background subtraction ranges
-            Double_t integralSigAndBG   = sliceHist->Integral(sliceHist->FindBin(0.17), sliceHist->FindBin(0.3));
-            Double_t integralBG         = sliceBGHist->Integral(sliceBGHist->FindBin(0.17), sliceBGHist->FindBin(0.3));
+            Double_t minMGGBG           = 0.17;
+            if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe"))
+                minMGGBG                = 0.22;
+            Double_t integralSigAndBG   = sliceHist->Integral(sliceHist->FindBin(minMGGBG), sliceHist->FindBin(0.3));
+            Double_t integralBG         = sliceBGHist->Integral(sliceBGHist->FindBin(minMGGBG), sliceBGHist->FindBin(0.3));
             cout << integralSigAndBG << "\t" << integralBG << "\t" << integralSigAndBG/ integralBG << endl;
 
             if (integralBG != 0){
@@ -638,17 +641,21 @@ void CorrectCaloNonLinearityV4(
             Double_t minMax[2]={0.04,0.3};
             // special setting for PCM-EMC
             if( mode == 2 ){
-                if (fBinsPt[iClusterPt] < 1)
-                    minMax[1]       = 0.2;
-                if (fBinsPt[iClusterPt] < 2)
-                    minMax[1]       = 0.22;
-                if (fBinsPt[iClusterPt] < 3)
-                    minMax[1]       = 0.25;
+                if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
+                    minMax[1]   = 0.3;
+                } else {
+                    if (fBinsPt[iClusterPt] < 1)
+                        minMax[1]       = 0.2;
+                    if (fBinsPt[iClusterPt] < 2)
+                        minMax[1]       = 0.22;
+                    if (fBinsPt[iClusterPt] < 3)
+                        minMax[1]       = 0.25;
+                }
                 minMax[0]       = 0.02;
                 Double_t min    = 0.002*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
-            // special setting for PCM-PHOS
+                // special setting for PCM-PHOS
             } else if( mode == 3 ){
                 if (fBinsPt[iClusterPt] < 1)
                     minMax[1]       = 0.20;
@@ -661,6 +668,8 @@ void CorrectCaloNonLinearityV4(
                 Double_t min    = 0.02*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
+                if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe"))
+                    minMax[1]   = 0.3;
             // special setting for PHOS
             } else if( mode == 5){
                 minMax[1]       = 0.25;
@@ -781,8 +790,10 @@ void CorrectCaloNonLinearityV4(
 
     TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassDataVsPDG2->SetParameter(0, fitMassDataVsPDGConst->GetParameter(0));
-    if (mode == 2 || mode == 4 || mode == 12)
-      fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
+    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
+        fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.1*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.1*fitMassDataVsPDGConst->GetParError(0));
+    else if (mode == 2 || mode == 4 || mode == 12)
+        fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
     else
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
 
@@ -802,10 +813,12 @@ void CorrectCaloNonLinearityV4(
 
     TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
-    if (mode == 2 || mode == 4 || mode == 12)
-      fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
+    if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
+        fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
+    else if (mode == 2 || mode == 4 || mode == 12)
+        fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
     else
-      fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
+        fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
 
     histMCResultsVsPDG->Fit(fitMassMCVsPDG2,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDG2) << endl;

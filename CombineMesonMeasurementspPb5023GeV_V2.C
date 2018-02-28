@@ -110,6 +110,7 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
 
     TString fileNameTheory                      = "ExternalInputpPb/Theory/TheoryCompilationPPb.root";
     TString fileNameChargedPion                 = "ExternalInputpPb/IdentifiedCharged/ChargedIdentifiedSpectrapPb_2017_01_22.root";
+    TString fileNameNeutralPionPP               = "ExternalInputpPb/IdentifiedCharged/ChargedIdentifiedSpectrapPb_2017_01_22.root";
     TString fileNameEtaToPi0WorldDataPP         = "ExternalInput/WorldDataPi0Eta.root";
     TString fileNameEtaToPi0WorldDataPPb        = "ExternalInputpPb/WorldDataPi0EtapPb.root";
 
@@ -235,13 +236,15 @@ void CombineMesonMeasurementspPb5023GeV_V2(     TString fileNamePCM             
     //***********************************************************************************************
     cout << "Setting Pi0 binning" << endl;
     Double_t xPtLimitsPi0[100];
-    Int_t maxNBinsPi0               = GetBinning( xPtLimitsPi0, "Pi0", "pPb_5.023TeV", 20 );
+    Int_t maxNBinsPi0Abs            = 0;
+    Int_t maxNBinsPi0               = GetBinning( xPtLimitsPi0, maxNBinsPi0Abs, "Pi0", "pPb_5.023TeV", 20 );
     for (Int_t i = 0; i< maxNBinsPi0; i++){
         cout << i << ": "<< xPtLimitsPi0[i] <<" - " << xPtLimitsPi0[i+1]<< ", " <<endl;
     }
     cout << "Setting Eta binning" << endl;
     Double_t xPtLimitsEta[50];
-    Int_t maxNBinsEta       = GetBinning( xPtLimitsEta, "Eta", "pPb_5.023TeV", 20 );
+    Int_t maxNBinsEtaAbs            = 0;
+    Int_t maxNBinsEta               = GetBinning( xPtLimitsEta, maxNBinsEtaAbs, "Eta", "pPb_5.023TeV", 20 );
 //     xPtLimitsEta[maxNBinsEta+1] = 30;   //extend binning by 1 large bin
     for (Int_t i = 0; i< maxNBinsEta; i++){
         cout << i << ": "<< xPtLimitsEta[i] <<" - " << xPtLimitsEta[i+1]<< ", " <<endl;

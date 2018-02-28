@@ -902,6 +902,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
                 fMesonFitRange[0]           = 0.03;
                 fMesonFitRange[1]           = 0.25;
+            } else if (fEnergyFlag.CompareTo("XeXe_5.44TeV") == 0 ){
+                fMesonFitRange[0]           = 0.03;
+                fMesonFitRange[1]           = 0.25;
             }
         } else if (mode == 4 || mode == 12 ) {                      // EMC
           fMesonFitRange[0]               = 0.06;
@@ -929,8 +932,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fMesonFitRange[1]       = 0.30;
           }
         } else if (mode == 5){                                      // PHOS
-            fMesonFitRange[0]       = 0.08;
-            fMesonFitRange[1]       = 0.25;
+            if (fEnergyFlag.CompareTo("XeXe_5.44TeV") == 0 ){
+                fMesonFitRange[0]       = 0.03;
+                fMesonFitRange[1]       = 0.25;
+            } else {
+                fMesonFitRange[0]       = 0.08;
+                fMesonFitRange[1]       = 0.25;
+            }
         } else {                                                    // default
             fMesonFitRange[0]       = 0.05;
             fMesonFitRange[1]       = 0.25;

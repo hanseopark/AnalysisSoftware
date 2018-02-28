@@ -71,8 +71,7 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
                                         TString bWCorrection            = "X",
                                         TString fileNameCorrFactors     = "",
                                         TString fileNameInterpolation   = "",
-                                        TString fileConfigRXeXeErr      = "",
-                                        TString centrality              = ""
+                                        TString fileConfigRXeXeErr      = ""
                                     ){
 
     TString date = ReturnDateString();
@@ -90,9 +89,9 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 
     TString textALICE                           = "ALICE";
     //___________________________________ Declaration of files _____________________________________________
-    TString collisionSystemXeXe                 = Form("%s Xe-Xe, #sqrt{#it{s}_{_{NN}}} = 5.44 TeV",centrality.Data());
+    TString collisionSystemXeXe                 = "Xe-Xe, #sqrt{#it{s}_{_{NN}}} = 5.44 TeV";
     TString collisionSystempp                   = "pp, #sqrt{#it{s}} = 5.02 TeV";
-    TString outputDir                           = Form("%s/%s/CombineMesonMeasurementsXeXe5TeV%s",suffix.Data(),dateForOutput.Data(),bWCorrection.Data());
+    TString outputDir                           = Form("%s/%s/CombineMesonMeasurements%sXeXe5TeV",suffix.Data(),dateForOutput.Data(),centralityForOutput.Data(),bWCorrection.Data());
 
     TString nameFinalResDat                     = Form("%s/CombinedResults%s_FitResults.dat",outputDir.Data(),bWCorrection.Data());
     fstream  fileFitsOutput;
@@ -130,14 +129,8 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     Style_t  markerStyleCombLowPt               = 20;
     Style_t  markerStyleCombHighPt              = 20;
     Size_t   markerSizeComparison               = 2;
-
-    Color_t colorTrigg      [10]                = {kBlack, kGray+1, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2};
-    Color_t colorTriggShade [10]                = {kGray+1, kGray, kRed-6, kBlue-6, kGreen-8, kCyan-6, kViolet-8, kMagenta-8,  kRed-8, kBlue-8};
-    Marker_t markerTrigg    [10]                = {20, 20, 21, 34, 29, 33, 21, 27, 28, 30 };
-    Marker_t markerTriggMC  [10]                = {24, 24, 25, 28, 30, 27, 25, 27, 28, 30 };
-
-    Size_t sizeTrigg        [10]                = {1.5, 1.5, 1.5, 2, 2.2, 2., 1.5, 2., 2.5, 1.5 };
-
+    TString  centArray                          = {"0-20%", "20-40%, 40-80%, 0-40%, 0-80%"};
+    TString  centArrayOutput                    = {"0020", "2040, 4080, 0-40%, 0-80%"};
 
     TString  nameMeasGlobal[11]                 = { "PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal",
                                                     "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "EMCal high pT", "EMCal merged",
@@ -146,7 +139,6 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     TString  nameMeasGlobalLabel[11]            = { "PCM", "PHOS", "EMC", "PCM-PHOS", "PCM-EMC",
                                                     "PCM-Dal", "PHOS-Dal", "EMC-Dal", "EMChigh", "mEMC",
                                                     "PCMOtherDataset"};
-    TString  nameTrigger[6]                     = {"INT1", "INT7", "EMC1", "EMC7", "EG2", "EG1"};
     TString  nameSecPi0SourceRead[4]            = {"K0S", "K0L", "Lambda", "Rest"};
     TString  nameSecPi0SourceLabel[4]           = {"K^{0}_{s}", "K^{0}_{l}", "#Lambda", "had. int."};
     Double_t maxSecCorr[4]                      = { 0.05, 0.007, 0.0003, 0.03};
@@ -157,6 +149,29 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     Style_t  markerStyleDetMC[11];
     Size_t   markerSizeDet[11];
     Size_t   markerSizeDetMC[11];
+    for (Int_t meth = 0; meth< 11; meth++){
+        colorDet[meth]                          = GetDefaultColorDiffDetectors(nameMeasGlobal[meth].Data(), kFALSE, kFALSE, kTRUE);
+        colorDetMC[meth]                        = GetDefaultColorDiffDetectors(nameMeasGlobal[meth].Data(), kTRUE, kFALSE, kTRUE);
+        markerStyleDet[meth]                    = GetDefaultMarkerStyleDiffDetectors(nameMeasGlobal[meth].Data(), kFALSE);
+        markerStyleDetMC[meth]                  = GetDefaultMarkerStyleDiffDetectors(nameMeasGlobal[meth].Data(), kTRUE);
+        markerSizeDet[meth]                     = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[meth].Data(), kFALSE)*2;
+        markerSizeDetMC[meth]                   = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[meth].Data(), kTRUE)*2;
+    }
+
+    Color_t  colorCent[5];
+    Color_t  colorCentMC[5];
+    Style_t  markerStyleCent[5];
+    Style_t  markerStyleCentMC[5];
+    Size_t   markerSizeCent[5];
+    Size_t   markerSizeCentMC[5];
+    for (Int_t cent = 0; cent< 5; cent++){
+        colorCent[cent]                         = GetColorDefaultColor("XeXe_5.44TeV", "", centArray[cent]);
+        colorCentMC[cent]                       = GetColorDefaultColor("XeXe_5.44TeV", "HIJING", centArray[cent]);
+        markerStyleCent[cent]                   = GetDefaultMarkerStyle("XeXe_5.44TeV", "", centArray[cent]);
+        markerStyleCentMC[cent]                 = GetDefaultMarkerStyle("XeXe_5.44TeV", "HIJING", centArray[cent]);
+        markerSizeCent[cent]                    = GetDefaultMarkerSize("XeXe_5.44TeV", "", centArray[cent])*2;
+        markerSizeCentMC[cent]                  = GetDefaultMarkerSize("XeXe_5.44TeV", "HIJING", centArray[cent])*2;
+    }
 
     Double_t nCollXeXe                          = GetNCollFromName(centrality, "XeXe_5.44TeV");
     Double_t nCollErrXeXe                       = GetNCollErrFromName(centrality, "XeXe_5.44TeV");
@@ -202,39 +217,72 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
                                                     0.0,    0.0,    0.0,    10.,    0.0,
                                                     0.0 };
 
-    for (Int_t i = 0; i < 11; i++){
-        colorDet[i]                             = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kFALSE, kFALSE, kTRUE);
-        colorDetMC[i]                           = GetDefaultColorDiffDetectors(nameMeasGlobal[i].Data(), kTRUE, kFALSE, kTRUE);
-        markerStyleDet[i]                       = GetDefaultMarkerStyleDiffDetectors(nameMeasGlobal[i].Data(), kFALSE);
-        markerStyleDetMC[i]                     = GetDefaultMarkerStyleDiffDetectors(nameMeasGlobal[i].Data(), kTRUE);
-        markerSizeDet[i]                        = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kFALSE)*2;
-        markerSizeDetMC[i]                      = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE)*2;
-    }
 
     //***********************************************************************************************
     //************************** Definition of final pt binning (has to be set manually) ************
     //***********************************************************************************************
     cout << "Setting Pi0 binning" << endl;
-    Double_t xPtLimitsPi0[100];
-    Int_t maxNBinsPi0               = GetBinning( xPtLimitsPi0, "Pi0", "XeXe_5.44TeV", 20 );
+    Double_t xPtLimitsPi0[5][100];
+    Int_t maxNBinsPi0Abs                        = 0;
+    Int_t maxNBinsPi0[5]                        = {0};
     for (Int_t i = 0; i< maxNBinsPi0; i++){
         cout << i << ": "<< xPtLimitsPi0[i] <<" - " << xPtLimitsPi0[i+1]<< ", " <<endl;
     }
 
+    Int_t nTotMeas[5]                               = {0};
+    TString fileNamesMethod[11]                     = {"", "", "", "", "", "", "", "", "", "", ""};
     TString fileNamesXeXePi0DetailedSys[11]         = {"", "", "", "", "", "", "", "", "", "", ""};
     TString fileNamesppPi0DetailedSys[11]           = {"", "", "", "", "", "", "", "", "", "", ""};
     TString fileNamesRXeXePi0DetailedSys[11]        = {"", "", "", "", "", "", "", "", "", "", ""};
     Bool_t havePi0SysDetailedXeXe[11]               = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
     Bool_t havePi0SysDetailedpp[11]                 = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
-    Bool_t haveEffSecCorr[4][11]                    = { {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
-                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
-                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE},
-                                                        {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE} };
+    Bool_t haveEffSecCorr[5][4][11];
     vector<TString>* ptSysRemNames                  = new vector<TString>[11];
-    TGraphAsymmErrors* graphPi0EffSecCorrFromX[4][11]   = { { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-                                                            { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL} };
+    TFile* fileMethod[11];
+    TDirectory* directoryPi0[5][11];
+    TGraphAsymmErrors* graphPi0EffSecCorrFromX[5][4][11];
+    TGraphAsymmErrors* graphPi0Eff[5][11];
+    TGraphAsymmErrors* graphPi0Acc[5][11]:
+    TGraphAsymmErrors* graphPi0EffTimesAcc[5][11];
+    TGraphAsymmErrors* graphPi0Mass[5][11];
+    TGraphAsymmErrors* graphPi0MassMC[5][11];
+    TGraphAsymmErrors* graphPi0Width[5][11];
+    TGraphAsymmErrors* graphPi0WidthMC[5][11];
+    TH1D* histoPi0InvYieldStat[5][11];
+    TGraphAsymmErrors* graphPi0InvYieldStat[5][11];
+    TGraphAsymmErrors* graphPi0InvYieldSys[5][11];
+
+    for (Int_t cent = 0; cent < 5; cent++){
+        maxNBinsPi0[cent]                           = GetBinning( xPtLimitsPi0[cent], maxNBinsPi0Abs, "Pi0", "XeXe_5.44TeV", 20,  );
+        for (Int_t meth = 0; meth < 5; meth++){
+            if (cent == 0) fileMethod[meth]             = NULL;
+            directoryPi0[cent][meth]                    = NULL;
+            graphPi0Eff[cent][meth]                     = NULL;
+            graphPi0Acc[cent][meth]                     = NULL;
+            graphPi0EffTimesAcc[cent][meth]             = NULL;
+            graphPi0Mass[cent][meth]                    = NULL;
+            graphPi0MassMC[cent][meth]                  = NULL;
+            graphPi0Width[cent][meth]                   = NULL;
+            graphPi0WidthMC[cent][meth]                 = NULL;
+            histoPi0InvYieldStat[cent][meth]            = NULL;
+            graphPi0InvYieldStat[cent][meth]            = NULL;
+            graphPi0InvYieldSys[cent][meth]             = NULL;
+            for (Int_t k = 0; k < 4; k++){
+                graphPi0EffSecCorrFromX[cent][k][meth]  = NULL;
+                haveEffSecCorr[cent][k][meth]           = kFALSE;
+            }
+        }
+    }
+
+    // *******************************************************************************************************
+    // ********************* Set file names for inputs *******************************************************
+    // *******************************************************************************************************
+    if (fileNamePCM.CompareTo("")!=0)       fileNamesMethod[0]    = fileNamePCM;
+    if (fileNamePHOS.CompareTo("")!=0)      fileNamesMethod[1]    = fileNamePHOS;
+    if (fileNameEMCAL.CompareTo("")!=0)     fileNamesMethod[2]    = fileNameEMCAL;
+    if (fileNamePCMPHOS.CompareTo("")!=0)   fileNamesMethod[3]    = fileNamePCMPHOS;
+    if (fileNamePCMEMCAL.CompareTo("")!=0)  fileNamesMethod[4]    = fileNamePCMEMCAL;
+
     if (fileConfigRXeXeErr.CompareTo("") != 0){
         ifstream inPbConfig(fileConfigRXeXeErr.Data());
         Int_t nReadSys  = 0;
@@ -281,151 +329,69 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         }
     }
 
-    //************************** Read data for PCM **************************************************
-    TFile* filePCM                                  = new TFile(fileNamePCM.Data());
-    TDirectory* directoryPCMPi0                      = (TDirectory*)filePCM->Get(Form("Pi0%sXeXe_5.44TeV",centrality.Data()));
-        TGraphAsymmErrors* graphPCMPi0Mass          = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_data");
-        graphPCMPi0Mass                             = ScaleGraph(graphPCMPi0Mass, 1000.);
-        TGraphAsymmErrors* graphPCMPi0FWHM          = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_data");
-        graphPCMPi0FWHM                             = ScaleGraph(graphPCMPi0FWHM, 1000.);
-        TGraphAsymmErrors* graphPCMPi0MassMC        = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Mass_MC");
-        graphPCMPi0MassMC                           = ScaleGraph(graphPCMPi0MassMC, 1000.);
-        TGraphAsymmErrors* graphPCMPi0FWHMMC        = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0_Width_MC");
-        graphPCMPi0FWHMMC                           = ScaleGraph(graphPCMPi0FWHMMC, 1000.);
-        TGraphAsymmErrors* graphPCMPi0cc            = (TGraphAsymmErrors*)directoryPCMPi0->Get("AcceptancePi0");
-        TGraphAsymmErrors* graphPCMPi0EffPt         = (TGraphAsymmErrors*)directoryPCMPi0->Get("EfficiencyPi0");
-        TGraphAsymmErrors* graphPCMPi0InvYieldStat  = (TGraphAsymmErrors*)directoryPCMPi0->Get("graphCorrectedYieldPi0");
-        TH1D* histoPCMPi0InvYieldStat               = (TH1D*)directoryPCMPi0->Get("CorrectedYieldPi0");
-        cout << "Pi0 stat PCM" << endl;
-        graphPCMPi0InvYieldStat->Print();
-        TGraphAsymmErrors* graphPCMPi0InvYieldSys   = (TGraphAsymmErrors*)directoryPCMPi0->Get("Pi0SystError");
-        cout << "Pi0 sys PCM" << endl;
-        graphPCMPi0InvYieldSys->Print();
-        TGraphAsymmErrors* graphPCMPi0AccTimesEff   = (TGraphAsymmErrors*)directoryPCMPi0->Get("EffTimesAccPi0");
-        for (Int_t k = 0; k < 4; k++){
-            graphPi0EffSecCorrFromX[k][0]           = (TGraphAsymmErrors*)directoryPCMPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
-            if (graphPi0EffSecCorrFromX[k][0]){
-                cout << nameSecPi0SourceRead[k].Data() << endl;
-                graphPi0EffSecCorrFromX[k][0]->Print();
-                Int_t nAboveZero                    = 0;
-                for (Int_t i = 0; i< graphPi0EffSecCorrFromX[k][0]->GetN(); i++){
-                    if(graphPi0EffSecCorrFromX[k][0]->GetY()[i] > 0) nAboveZero++;
+
+    // *******************************************************************************************************
+    // ***************************** Read in data for different methods **************************************
+    // *******************************************************************************************************
+    for (Int_t cent = 0; cent < 5; cent ++){
+        cout << "Reading in cent " << centArray[cent].Data() << endl;
+        for (Int_t meth = 0; meth < 11; meth++){
+            if (fileNamesMethod[meth].CompareTo("") != 0){
+                cout << "Reading in " << nameMeasGlobalLabel[meth].Data() << " from " << fileNamesMethod[meth].Data() << endl;
+                if (!fileMethod[meth])
+                    fileMethod[meth]                               = new TFile(fileNamesMethod[meth].Data());
+                if (!fileMethod[meth]) {
+                    cout << "file " << fileNamesMethod[meth].Data() << " not found! Skipping " << nameMeasGlobalLabel[meth].Data()  << endl;
+                    continue;
                 }
-                if (nAboveZero>0){
-                    haveEffSecCorr[k][0]            = kTRUE;
-                } else {
-                    graphPi0EffSecCorrFromX[k][0]   = NULL;
+                directoryPi0[cent][meth]                             = (TDirectory*)fileMethod[meth]->Get(Form("Pi0%sXeXe_5.44TeV",centrality.Data()));
+                if (!directoryPi0[cent][meth]) {
+                    cout << "File doesn't contain directory " << Form("Pi0%sXeXe_5.44TeV",centrality.Data()) << "! Skipping " << nameMeasGlobalLabel[meth].Data()  << endl;
+                    continue;
                 }
-            }
-        }
+                nTotMeas[cent]++;
+                // reading supporting figures
+                    graphPi0Mass[cent][meth]                             = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Mass_data");
+                    graphPi0Mass[cent][meth]                             = ScaleGraph(graphPi0Mass[cent][meth], 1000.);
+                    graphPi0Width[cent][meth]                            = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Width_data");
+                    graphPi0Width[cent][meth]                            = ScaleGraph(graphPi0Width[cent][meth], 1000.);
+                    graphPi0MassMC[cent][meth]                           = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Mass_MC");
+                    graphPi0MassMC[cent][meth]                           = ScaleGraph(graphPi0MassMC[cent][meth], 1000.);
+                    graphPi0WidthMC[cent][meth]                          = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0_Width_MC");
+                    graphPi0WidthMC[cent][meth]                          = ScaleGraph(graphPi0WidthMC[cent][meth], 1000.);
+                    graphPi0Acc[cent][meth]                              = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("AcceptancePi0");
+                    graphPi0Eff[cent][meth]                              = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("EfficiencyPi0");
+                    graphPi0EffTimesAcc[cent][meth]                      = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("EffTimesAccPi0");
+                    for (Int_t k = 0; k < 4; k++){
+                        graphPi0EffSecCorrFromX[k][cent][meth]           = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
+                        if (graphPi0EffSecCorrFromX[k][cent][meth]){
+                            cout << nameSecPi0SourceRead[k].Data() << endl;
+                            graphPi0EffSecCorrFromX[k][cent][meth]->Print();
+                            Int_t nAboveZero                    = 0;
+                            cout << "k " << k << ", i " << i << endl;
+                            for (Int_t j = 0; j< graphPi0EffSecCorrFromX[k][cent][meth]->GetN(); j++){
+                                if(graphPi0EffSecCorrFromX[k][cent][meth]->GetY()[j] > 0) nAboveZero++;
+                            }
+                            cout << nAboveZero << endl;
+                            if (nAboveZero>0){
+                                haveEffSecCorr[k][cent][meth]            = kTRUE;
+                            } else {
+                                graphPi0EffSecCorrFromX[k][cent][meth]   = NULL;
+                            }
+                        }
+                    }
+                    // reading yields
+                    graphPi0InvYieldStat[cent][meth]                     = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("graphCorrectedYieldPi0");
+                    histoPi0InvYieldStat[cent][meth]                     = (TH1D*)directoryPi0[cent][meth]->Get("CorrectedYieldPi0");
+                    cout << "Pi0 stat error" << endl;
+                    graphPi0InvYieldStat[cent][meth]->Print();
+                    graphPi0InvYieldSys[cent][meth]                      = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("Pi0SystError");
+                    cout << "Pi0 sys error" << endl;
+                    graphPi0InvYieldSys[cent][meth]->Print();
 
-    //************************** Read data for PCMEMCAL **************************************************
-    TFile* filePCMEMCAL                                     = new TFile(fileNamePCMEMCAL.Data());
-    TDirectory* directoryPCMEMCALPi0                        = (TDirectory*)filePCMEMCAL->Get(Form("Pi0%sXeXe_5.44TeV",centrality.Data()));
-        TGraphAsymmErrors* graphPCMEMCALPi0Mass             = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0_Mass_data");
-        graphPCMEMCALPi0Mass                                = ScaleGraph(graphPCMEMCALPi0Mass, 1000.);
-        TGraphAsymmErrors* graphPCMEMCALPi0FWHM             = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0_Width_data");
-        graphPCMEMCALPi0FWHM                                = ScaleGraph(graphPCMEMCALPi0FWHM, 1000.);
-        TGraphAsymmErrors* graphPCMEMCALPi0MassMC           = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0_Mass_MC");
-        graphPCMEMCALPi0MassMC                              = ScaleGraph(graphPCMEMCALPi0MassMC, 1000.);
-        TGraphAsymmErrors* graphPCMEMCALPi0FWHMMC           = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0_Width_MC");
-        graphPCMEMCALPi0FWHMMC                              = ScaleGraph(graphPCMEMCALPi0FWHMMC, 1000.);
-        TGraphAsymmErrors* graphPCMEMCALPi0cc               = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("AcceptancePi0");
-        TGraphAsymmErrors* graphPCMEMCALPi0EffPt            = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("EfficiencyPi0");
-        TGraphAsymmErrors* graphPCMEMCALPi0InvYieldStat     = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("graphCorrectedYieldPi0");
-        TH1D* histoPCMEMCALPi0InvYieldStat                  = (TH1D*)directoryPCMEMCALPi0->Get("CorrectedYieldPi0");
-        cout << "Pi0 stat PCM-EMC" << endl;
-        graphPCMEMCALPi0InvYieldStat->Print();
-        TGraphAsymmErrors* graphPCMEMCALPi0InvYieldSys      = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("Pi0SystError");
-        cout << "Pi0 sys PCM-EMC" << endl;
-        graphPCMEMCALPi0InvYieldSys->Print();
-        TGraphAsymmErrors* graphPCMEMCALPi0AccTimesEff      = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get("EffTimesAccPi0");
-        for (Int_t k = 0; k < 4; k++){
-            graphPi0EffSecCorrFromX[k][4]                   = (TGraphAsymmErrors*)directoryPCMEMCALPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
-            if (graphPi0EffSecCorrFromX[k][4]){
-                haveEffSecCorr[k][4]                        = kTRUE;
             }
         }
-
-    //************************** Read data for EMCAL ****************************************************
-    TFile* fileEMCAL                                    = new TFile(fileNameEMCAL.Data());
-    TDirectory* directoryEMCALPi0                       = (TDirectory*)fileEMCAL->Get(Form("Pi0%sXeXe_5.44TeV",centrality.Data()));
-        TGraphAsymmErrors* graphEMCALPi0Mass            = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Mass_data");
-        graphEMCALPi0Mass                               = ScaleGraph(graphEMCALPi0Mass, 1000.);
-        TGraphAsymmErrors* graphEMCALPi0FWHM            = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Width_data");
-        graphEMCALPi0FWHM                               = ScaleGraph(graphEMCALPi0FWHM, 1000.);
-        TGraphAsymmErrors* graphEMCALPi0MassMC          = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Mass_MC");
-        graphEMCALPi0MassMC                             = ScaleGraph(graphEMCALPi0MassMC, 1000.);
-        TGraphAsymmErrors* graphEMCALPi0FWHMMC          = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0_Width_MC");
-        graphEMCALPi0FWHMMC                             = ScaleGraph(graphEMCALPi0FWHMMC, 1000.);
-        TGraphAsymmErrors* graphEMCALPi0cc              = (TGraphAsymmErrors*)directoryEMCALPi0->Get("AcceptancePi0");
-        TGraphAsymmErrors* graphEMCALPi0EffPt           = (TGraphAsymmErrors*)directoryEMCALPi0->Get("EfficiencyPi0");
-        TGraphAsymmErrors* graphEMCALPi0AccTimesEff     = (TGraphAsymmErrors*)directoryEMCALPi0->Get("EffTimesAccPi0");
-        TH1D* histoEMCALPi0InvYieldStat                 = (TH1D*)directoryEMCALPi0->Get("CorrectedYieldPi0");
-        TGraphAsymmErrors* graphEMCALPi0InvYieldStat    = (TGraphAsymmErrors*)directoryEMCALPi0->Get("graphCorrectedYieldPi0");
-        TGraphAsymmErrors* graphEMCALPi0InvYieldSys     = (TGraphAsymmErrors*)directoryEMCALPi0->Get("Pi0SystError");
-        for (Int_t k = 0; k < 4; k++){
-            graphPi0EffSecCorrFromX[k][2]               = (TGraphAsymmErrors*)directoryEMCALPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
-            if (graphPi0EffSecCorrFromX[k][2]){
-                haveEffSecCorr[k][2]                    = kTRUE;
-            }
-        }
-    //************************** Read data for PHOS *****************************************************
-    TFile* filePHOS                                     = new TFile(fileNamePHOS.Data());
-    TDirectory* directoryPHOSPi0                        = (TDirectory*)filePHOS->Get(Form("Pi0%sXeXe_5.44TeV",centrality.Data()));
-        TGraphAsymmErrors* graphPHOSPi0Mass             = (TGraphAsymmErrors*)directoryPHOSPi0->Get("Pi0_Mass_data");
-        graphPHOSPi0Mass                                = ScaleGraph(graphPHOSPi0Mass, 1000.);
-        TGraphAsymmErrors* graphPHOSPi0FWHM             = (TGraphAsymmErrors*)directoryPHOSPi0->Get("Pi0_Width_data");
-        graphPHOSPi0FWHM                                = ScaleGraph(graphPHOSPi0FWHM, 1000.);
-        TGraphAsymmErrors* graphPHOSPi0MassMC           = (TGraphAsymmErrors*)directoryPHOSPi0->Get("Pi0_Mass_MC");
-        graphPHOSPi0MassMC                              = ScaleGraph(graphPHOSPi0MassMC, 1000.);
-        TGraphAsymmErrors* graphPHOSPi0FWHMMC           = (TGraphAsymmErrors*)directoryPHOSPi0->Get("Pi0_Width_MC");
-        graphPHOSPi0FWHMMC                              = ScaleGraph(graphPHOSPi0FWHMMC, 1000.);
-        TGraphAsymmErrors* graphPHOSPi0cc               = (TGraphAsymmErrors*)directoryPHOSPi0->Get("AcceptancePi0");
-        TGraphAsymmErrors* graphPHOSPi0EffPt            = (TGraphAsymmErrors*)directoryPHOSPi0->Get("EfficiencyPi0");
-        TGraphAsymmErrors* graphPHOSPi0InvYieldStat     = (TGraphAsymmErrors*)directoryPHOSPi0->Get("graphCorrectedYieldPi0");
-        TH1D* histoPHOSPi0InvYieldStat                  = (TH1D*)directoryPHOSPi0->Get("CorrectedYieldPi0");
-        cout << "Pi0 stat PCM-EMC" << endl;
-        graphPHOSPi0InvYieldStat->Print();
-        TGraphAsymmErrors* graphPHOSPi0InvYieldSys      = (TGraphAsymmErrors*)directoryPHOSPi0->Get("Pi0SystError");
-        cout << "Pi0 sys PCM-EMC" << endl;
-        graphPHOSPi0InvYieldSys->Print();
-        TGraphAsymmErrors* graphPHOSPi0AccTimesEff      = (TGraphAsymmErrors*)directoryPHOSPi0->Get("EffTimesAccPi0");
-        for (Int_t k = 0; k < 4; k++){
-            graphPi0EffSecCorrFromX[k][3]                   = (TGraphAsymmErrors*)directoryPHOSPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
-            if (graphPi0EffSecCorrFromX[k][3]){
-                haveEffSecCorr[k][3]                        = kTRUE;
-            }
-        }
-
-
-    //************************** Read data for PCMPHOS **************************************************
-    TFile* filePCMPHOS                                     = new TFile(fileNamePCMPHOS.Data());
-    TDirectory* directoryPCMPHOSPi0                        = (TDirectory*)filePCMPHOS->Get(Form("Pi0%sXeXe_5.44TeV",centrality.Data()));
-        TGraphAsymmErrors* graphPCMPHOSPi0Mass             = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("Pi0_Mass_data");
-        graphPCMPHOSPi0Mass                                = ScaleGraph(graphPCMPHOSPi0Mass, 1000.);
-        TGraphAsymmErrors* graphPCMPHOSPi0FWHM             = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("Pi0_Width_data");
-        graphPCMPHOSPi0FWHM                                = ScaleGraph(graphPCMPHOSPi0FWHM, 1000.);
-        TGraphAsymmErrors* graphPCMPHOSPi0MassMC           = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("Pi0_Mass_MC");
-        graphPCMPHOSPi0MassMC                              = ScaleGraph(graphPCMPHOSPi0MassMC, 1000.);
-        TGraphAsymmErrors* graphPCMPHOSPi0FWHMMC           = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("Pi0_Width_MC");
-        graphPCMPHOSPi0FWHMMC                              = ScaleGraph(graphPCMPHOSPi0FWHMMC, 1000.);
-        TGraphAsymmErrors* graphPCMPHOSPi0cc               = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("AcceptancePi0");
-        TGraphAsymmErrors* graphPCMPHOSPi0EffPt            = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("EfficiencyPi0");
-        TGraphAsymmErrors* graphPCMPHOSPi0InvYieldStat     = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("graphCorrectedYieldPi0");
-        TH1D* histoPCMPHOSPi0InvYieldStat                  = (TH1D*)directoryPCMPHOSPi0->Get("CorrectedYieldPi0");
-        cout << "Pi0 stat PCM-PHOS" << endl;
-        graphPCMPHOSPi0InvYieldStat->Print();
-        TGraphAsymmErrors* graphPCMPHOSPi0InvYieldSys      = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("Pi0SystError");
-        cout << "Pi0 sys PCM-PHOS" << endl;
-        graphPCMPHOSPi0InvYieldSys->Print();
-        TGraphAsymmErrors* graphPCMPHOSPi0AccTimesEff      = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get("EffTimesAccPi0");
-        for (Int_t k = 0; k < 4; k++){
-            graphPi0EffSecCorrFromX[k][3]                   = (TGraphAsymmErrors*)directoryPCMPHOSPi0->Get(Form("EffectiveSecondaryPi0CorrFrom%s",nameSecPi0SourceRead[k].Data()));
-            if (graphPi0EffSecCorrFromX[k][3]){
-                haveEffSecCorr[k][3]                        = kTRUE;
-            }
-        }
+    }
 
 
     // *******************************************************************************************************
@@ -438,23 +404,23 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     Bool_t haveRefPPPi0[11]                                 = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
                                                                 kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
                                                                 kFALSE };
-    for (Int_t i = 0; i< 11; i++){
-        statErrorCollectionPi0PP[i]         = NULL;
-        systErrorCollectionPi0PP[i]         = NULL;
-        systErrorUnCorrCollectionPi0PP[i]   = NULL;
-        systErrorInterCollectionPi0PP[i]    = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        statErrorCollectionPi0PP[meth]         = NULL;
+        systErrorCollectionPi0PP[meth]         = NULL;
+        systErrorUnCorrCollectionPi0PP[meth]   = NULL;
+        systErrorInterCollectionPi0PP[meth]    = NULL;
     }
 
     TFile* fileInterpolation                        = new TFile(fileNameInterpolation.Data());
-        for (Int_t i = 0; i< 11; i++){
-            statErrorCollectionPi0PP[i]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionStatErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[i].Data()));
-            systErrorCollectionPi0PP[i]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionSystErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[i].Data()));
-            systErrorUnCorrCollectionPi0PP[i]           = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionUnCorrSystErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[i].Data()));
-            systErrorInterCollectionPi0PP[i]            = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionInterpolSystErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[i].Data()));
-            if (statErrorCollectionPi0PP[i] && systErrorCollectionPi0PP[i] && systErrorUnCorrCollectionPi0PP[i] && systErrorInterCollectionPi0PP[i])
-                haveRefPPPi0[i]                         = kTRUE;
-            if (haveRefPPPi0[i])
-                cout << "found pi0 pp reference for " << nameMeasGlobalLabel[i].Data() << endl;
+        for (Int_t meth = 0; meth< 11; meth++){
+            statErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionStatErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[meth].Data()));
+            systErrorCollectionPi0PP[meth]                 = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionSystErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[meth].Data()));
+            systErrorUnCorrCollectionPi0PP[meth]           = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionUnCorrSystErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[meth].Data()));
+            systErrorInterCollectionPi0PP[meth]            = (TGraphAsymmErrors*)fileInterpolation->Get(Form("graphInvXSectionInterpolSystErr%s_Pi0_5.023TeV",nameMeasGlobalLabel[meth].Data()));
+            if (statErrorCollectionPi0PP[meth] && systErrorCollectionPi0PP[meth] && systErrorUnCorrCollectionPi0PP[meth] && systErrorInterCollectionPi0PP[meth])
+                haveRefPPPi0[meth]                         = kTRUE;
+            if (haveRefPPPi0[meth])
+                cout << "found pi0 pp reference for " << nameMeasGlobalLabel[meth].Data() << endl;
         }
 
         TGraphAsymmErrors* graphPPCombPi0Stat           = (TGraphAsymmErrors*)fileInterpolation->Get("graphInvXSectionStatErrComb_Pi0_5.023TeV");
@@ -529,14 +495,14 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     TGraphAsymmErrors* graphRatioPi0CombToFitSysPP          = (TGraphAsymmErrors*)graphPPCombPi0FullSys->Clone();
     graphRatioPi0CombToFitSysPP                             = CalculateGraphErrRatioToFit(graphRatioPi0CombToFitSysPP, fitTCMInvXSetionPi0PP);
 
-    for (Int_t i= 0; i< 11; i++){
-        if (statErrorCollectionPi0PP[i]){
-            graphRatioPi0IndCombFitStatPP[i]                = (TGraphAsymmErrors*)statErrorCollectionPi0PP[i]->Clone(Form("RatioPi0%sToCombFitStatPP", nameMeasGlobalLabel[i].Data()));
-            graphRatioPi0IndCombFitStatPP[i]                = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStatPP[i], fitTCMInvXSetionPi0PP);
+    for (Int_t meth = 0; meth< 11; meth++){
+        if (statErrorCollectionPi0PP[meth]){
+            graphRatioPi0IndCombFitStatPP[meth]                = (TGraphAsymmErrors*)statErrorCollectionPi0PP[meth]->Clone(Form("RatioPi0%sToCombFitStatPP", nameMeasGlobalLabel[meth].Data()));
+            graphRatioPi0IndCombFitStatPP[meth]                = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStatPP[meth], fitTCMInvXSetionPi0PP);
         }
-        if (systErrorCollectionPi0PP[i]){
-            graphRatioPi0IndCombFitSysPP[i]                 = (TGraphAsymmErrors*)systErrorCollectionPi0PP[i]->Clone(Form("RatioPi0%sToCombFitSystPP", nameMeasGlobalLabel[i].Data()));
-            graphRatioPi0IndCombFitSysPP[i]                 = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSysPP[i], fitTCMInvXSetionPi0PP);
+        if (systErrorCollectionPi0PP[meth]){
+            graphRatioPi0IndCombFitSysPP[meth]                 = (TGraphAsymmErrors*)systErrorCollectionPi0PP[meth]->Clone(Form("RatioPi0%sToCombFitSystPP", nameMeasGlobalLabel[meth].Data()));
+            graphRatioPi0IndCombFitSysPP[meth]                 = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSysPP[meth], fitTCMInvXSetionPi0PP);
         }
     }
 
@@ -596,15 +562,15 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     canvasRatioToCombFitPP->cd();
     histo2DPi0RatioToCombFitPP->Draw("copy");
 
-    for (Int_t i = 10; i > -1 ; i--){
-        if (graphRatioPi0IndCombFitSysPP[i]){
-            DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSysPP[i], markerStyleDetMC[i] ,markerSizeDetMC[i]*0.5, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
-            graphRatioPi0IndCombFitSysPP[i]->Draw("E2same");
+    for (Int_t meth = 10; meth > -1 ; meth--){
+        if (graphRatioPi0IndCombFitSysPP[meth]){
+            DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSysPP[meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
+            graphRatioPi0IndCombFitSysPP[meth]->Draw("E2same");
         }
-        if (graphRatioPi0IndCombFitStatPP[i]){
-            ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStatPP[i]);
-            DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStatPP[i], markerStyleDetMC[i] ,markerSizeDetMC[i]*0.5, colorDet[i], colorDet[i]);
-            graphRatioPi0IndCombFitStatPP[i]->Draw("p,same,z");
+        if (graphRatioPi0IndCombFitStatPP[meth]){
+            ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStatPP[meth]);
+            DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStatPP[meth], markerStyleDetMC[meth] ,markerSizeDetMC[meth]*0.5, colorDet[meth], colorDet[meth]);
+            graphRatioPi0IndCombFitStatPP[meth]->Draw("p,same,z");
         }
     }
     if (graphRatioPi0IndCombFitStatPP[4])graphRatioPi0IndCombFitStatPP[4]->Draw("p,same,z");
@@ -697,7 +663,6 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     // REMARKS:
     //     - order of measurements defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
     //     - correlations are defined in CombinePtPointsSpectraFullCorrMat from CombinationFunctions.h
-    //     - currently only PCM-EMCAL vs others fully implemeted energy independent
     //     - extendable to other energies
     //     - offsets have to be determined manually, see cout's in shell from combination function, more can be uncommented
 
@@ -705,38 +670,24 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     // definition of array of histograms (NULL - means we have no measurement at this energy for this rec-method)
     // for statistical error and final value from respective method
     TH1D* statErrorCollectionPi0[11];
-    for (Int_t i = 0; i< 11; i++){
-        statErrorCollectionPi0[i]   = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        statErrorCollectionPi0[meth]   = NULL;
+        if (histoPi0InvYieldStat[meth]) statErrorCollectionPi0[meth]      = (TH1D*)histoPi0InvYieldStat[meth]->Clone(Form("statErr%sPi0",nameMeasGlobalLabel[meth].Data()));
     }
-    statErrorCollectionPi0[0]       = (TH1D*)histoPCMPi0InvYieldStat->Clone("statErrPCMPi0");
-    statErrorCollectionPi0[1]       = (TH1D*)histoPHOSPi0InvYieldStat->Clone("statErrPHOSPi0");
-    statErrorCollectionPi0[2]       = (TH1D*)histoEMCALPi0InvYieldStat->Clone("statErrEMCALPi0");
-    statErrorCollectionPi0[3]       = (TH1D*)histoPCMPHOSPi0InvYieldStat->Clone("statErrPCMPHOSPi0");
-    statErrorCollectionPi0[4]       = (TH1D*)histoPCMEMCALPi0InvYieldStat->Clone("statErrPCMEMCALPi0");
-
-
 
     TGraphAsymmErrors* statErrorGraphCollectionPi0[11];
-    for (Int_t i = 0; i< 11; i++){
-        statErrorGraphCollectionPi0[i]   = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        statErrorGraphCollectionPi0[meth]   = NULL;
+        if (graphPi0InvYieldStat[meth]) statErrorGraphCollectionPi0[meth] = (TGraphAsymmErrors*)graphPi0InvYieldStat[meth]->Clone(Form("statErrGraph%sPi0",nameMeasGlobalLabel[meth].Data()));
     }
-    statErrorGraphCollectionPi0[0]  = (TGraphAsymmErrors*)graphPCMPi0InvYieldStat->Clone("statErrGraphPCMPi0");
-    statErrorGraphCollectionPi0[1]  = (TGraphAsymmErrors*)graphPHOSPi0InvYieldStat->Clone("statErrGraphPHOSPi0");
-    statErrorGraphCollectionPi0[2]  = (TGraphAsymmErrors*)graphEMCALPi0InvYieldStat->Clone("statErrGraphEMCALPi0");
-    statErrorGraphCollectionPi0[3]  = (TGraphAsymmErrors*)graphPCMPHOSPi0InvYieldStat->Clone("statErrGraphPCMPHOSPi0");
-    statErrorGraphCollectionPi0[4]  = (TGraphAsymmErrors*)graphPCMEMCALPi0InvYieldStat->Clone("statErrGraphPCMEMCALPi0");
 
     // definition of array of TGraphAsymmErrors (NULL - means we have no measurement at this energy for this rec-method)
     // for systematic error from respective method
     TGraphAsymmErrors* sysErrorCollectionPi0[11];
-    for (Int_t i = 0; i< 11; i++){
-        sysErrorCollectionPi0[i]    = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        sysErrorCollectionPi0[meth]    = NULL;
+        if (graphPi0InvYieldSys[meth]) sysErrorCollectionPi0[meth]        = (TGraphAsymmErrors*)graphPi0InvYieldSys[meth]->Clone(Form("sysErr%sPi0",nameMeasGlobalLabel[meth].Data()));
     }
-    sysErrorCollectionPi0[0]        = (TGraphAsymmErrors*)graphPCMPi0InvYieldSys->Clone("sysErrPCMPi0");
-    sysErrorCollectionPi0[1]        = (TGraphAsymmErrors*)graphPHOSPi0InvYieldSys->Clone("sysErrPHOSPi0");
-    sysErrorCollectionPi0[2]        = (TGraphAsymmErrors*)graphEMCALPi0InvYieldSys->Clone("sysErrEMCALPi0");
-    sysErrorCollectionPi0[3]        = (TGraphAsymmErrors*)graphPCMPHOSPi0InvYieldSys->Clone("sysErrPCMPHOSPi0");
-    sysErrorCollectionPi0[4]        = (TGraphAsymmErrors*)graphPCMEMCALPi0InvYieldSys->Clone("sysErrPCMEMCALPi0");
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
@@ -755,23 +706,23 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 
 
     TGraphAsymmErrors* statErrorRelCollectionPi0[11];
-    for (Int_t i = 0; i< 11; i++){
-        statErrorRelCollectionPi0[i]        = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        statErrorRelCollectionPi0[meth]        = NULL;
     }
-    for (Int_t i = 0; i < 11; i++){
-        if (statErrorCollectionPi0[i]){
-            statErrorRelCollectionPi0[i]    = new TGraphAsymmErrors(statErrorCollectionPi0[i]);
-            statErrorRelCollectionPi0[i]    = CalculateRelErrUpAsymmGraph( statErrorRelCollectionPi0[i], Form("relativeStatErrorPi0_%s", nameMeasGlobal[i].Data()));
+    for (Int_t meth = 0; meth< 11; meth++){
+        if (statErrorCollectionPi0[meth]){
+            statErrorRelCollectionPi0[meth]    = new TGraphAsymmErrors(statErrorCollectionPi0[meth]);
+            statErrorRelCollectionPi0[meth]    = CalculateRelErrUpAsymmGraph( statErrorRelCollectionPi0[meth], Form("relativeStatErrorPi0_%s", nameMeasGlobal[meth].Data()));
         }
     }
 
     TGraphAsymmErrors* sysErrorRelCollectionPi0[11];
-    for (Int_t i = 0; i< 11; i++){
-        sysErrorRelCollectionPi0[i]         = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        sysErrorRelCollectionPi0[meth]         = NULL;
     }
-    for (Int_t i = 0; i < 11; i++){
-        if (sysErrorCollectionPi0[i])
-            sysErrorRelCollectionPi0[i]     = CalculateRelErrUpAsymmGraph( sysErrorCollectionPi0[i], Form("relativeSysErrorPi0_%s", nameMeasGlobal[i].Data()));
+    for (Int_t meth = 0; meth< 11; meth++){
+        if (sysErrorCollectionPi0[meth])
+            sysErrorRelCollectionPi0[meth]     = CalculateRelErrUpAsymmGraph( sysErrorCollectionPi0[meth], Form("relativeSysErrorPi0_%s", nameMeasGlobal[meth].Data()));
     }
 
     // **********************************************************************************************************************
@@ -779,8 +730,8 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     // **********************************************************************************************************************
 
     TGraph* graphWeightsPi0[11];
-    for (Int_t i = 0; i< 11; i++){
-        graphWeightsPi0[i]         = NULL;
+    for (Int_t meth = 0; meth< 11; meth++){
+        graphWeightsPi0[meth]         = NULL;
     }
 
 //     // Declaration & calculation of combined spectrum
@@ -830,7 +781,7 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //                 fileWeightsPi0Read >> availablePi0Meas[i] ;
 //             }
 //             cout << "read following measurements: ";
-//             for (Int_t i = 0; i < 11; i++){
+//             for (Int_t meth = 0; meth < 11; meth++){
 //                 cout << availablePi0Meas[i] << "\t" ;
 //             }
 //             cout << endl;
@@ -1039,16 +990,16 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     TGraphAsymmErrors* graphIndPi0InvYieldStat_yShifted[11] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphIndPi0InvYieldSys_yShifted[11]  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
-    for (Int_t i = 0; i< 11; i++){
-        if (statErrorGraphCollectionPi0[i]){
-            graphIndPi0InvYieldStatUnshi[i]                 = (TGraphAsymmErrors*)statErrorGraphCollectionPi0[i]->Clone(Form("Pi0UnshiftedStat%s",nameMeasGlobalLabel[i].Data()));
-            graphIndPi0InvYieldStat[i]                      = (TGraphAsymmErrors*)statErrorGraphCollectionPi0[i]->Clone(Form("Pi0Stat%s",nameMeasGlobalLabel[i].Data()));
-            graphIndPi0InvYieldStat_yShifted[i]             = (TGraphAsymmErrors*)statErrorGraphCollectionPi0[i]->Clone(Form("Pi0YShiftedStat%s",nameMeasGlobalLabel[i].Data()));
+    for (Int_t meth = 0; meth< 11; meth++){
+        if (statErrorGraphCollectionPi0[meth]){
+            graphIndPi0InvYieldStatUnshi[meth]                 = (TGraphAsymmErrors*)statErrorGraphCollectionPi0[meth]->Clone(Form("Pi0UnshiftedStat%s",nameMeasGlobalLabel[meth].Data()));
+            graphIndPi0InvYieldStat[meth]                      = (TGraphAsymmErrors*)statErrorGraphCollectionPi0[meth]->Clone(Form("Pi0Stat%s",nameMeasGlobalLabel[meth].Data()));
+            graphIndPi0InvYieldStat_yShifted[meth]             = (TGraphAsymmErrors*)statErrorGraphCollectionPi0[meth]->Clone(Form("Pi0YShiftedStat%s",nameMeasGlobalLabel[meth].Data()));
         }
-        if (sysErrorCollectionPi0[i]){
-            graphIndPi0InvYieldSysUnshi[i]                  = (TGraphAsymmErrors*)sysErrorCollectionPi0[i]->Clone(Form("Pi0UnshiftedSys%s",nameMeasGlobalLabel[i].Data()));
-            graphIndPi0InvYieldSys[i]                       = (TGraphAsymmErrors*)sysErrorCollectionPi0[i]->Clone(Form("Pi0Sys%s",nameMeasGlobalLabel[i].Data()));
-            graphIndPi0InvYieldSys_yShifted[i]              = (TGraphAsymmErrors*)sysErrorCollectionPi0[i]->Clone(Form("Pi0YShiftedSys%s",nameMeasGlobalLabel[i].Data()));
+        if (sysErrorCollectionPi0[meth]){
+            graphIndPi0InvYieldSysUnshi[meth]                  = (TGraphAsymmErrors*)sysErrorCollectionPi0[meth]->Clone(Form("Pi0UnshiftedSys%s",nameMeasGlobalLabel[meth].Data()));
+            graphIndPi0InvYieldSys[meth]                       = (TGraphAsymmErrors*)sysErrorCollectionPi0[meth]->Clone(Form("Pi0Sys%s",nameMeasGlobalLabel[meth].Data()));
+            graphIndPi0InvYieldSys_yShifted[meth]              = (TGraphAsymmErrors*)sysErrorCollectionPi0[meth]->Clone(Form("Pi0YShiftedSys%s",nameMeasGlobalLabel[meth].Data()));
         }
     }
 //
@@ -1080,7 +1031,7 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //
 //     // Tsallis fit
 //     Double_t paramGraphPi0[3]           = {1.0e12, 8., 0.13};
-//     TF1* fitInvYieldPi0                 = FitObject("l","fitInvYieldPi0","Pi0",histoEMCALPi0InvYieldStat,0.3,20.,paramGraphPi0,"QNRMEX0+");
+//     TF1* fitInvYieldPi0                 = FitObject("l","fitInvYieldPi0","Pi0",histoPi0InvYieldStat[2],0.3,20.,paramGraphPi0,"QNRMEX0+");
 //     TF1* fitInvYieldPi0Graph            = (TF1*)fitInvYieldPi0->Clone("fitInvYieldPi0Graph");
 //
 //     // *************************************************************************************************************
@@ -1105,21 +1056,21 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //                                                                             graphCombPi0InvYieldSys,
 //                                                                             fitShiftingPi0,
 //                                                                             0, graphCombPi0InvYieldSys->GetN());
-//         for (Int_t i = 0; i< 11; i++){
-//             if (graphIndPi0InvYieldStat[i]){
-//                 cout << "shiting stat err of " << nameMeasGlobalLabel[i].Data();
-//                 graphIndPi0InvYieldStat[i]  = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot,
-//                                                                             graphIndPi0InvYieldStat[i],
+//         for (Int_t meth = 0; meth< 11; meth++){
+//             if (graphIndPi0InvYieldStat[meth]){
+//                 cout << "shiting stat err of " << nameMeasGlobalLabel[meth].Data();
+//                 graphIndPi0InvYieldStat[meth]  = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot,
+//                                                                             graphIndPi0InvYieldStat[meth],
 //                                                                             fitShiftingPi0,
-//                                                                             offSetPi0Shifting[i], nComBinsPi0Shifting[i]);
+//                                                                             offSetPi0Shifting[meth], nComBinsPi0Shifting[meth]);
 //
 //             }
-//             if (graphIndPi0InvYieldSys[i]){
-//                 cout << "shiting sys err of " << nameMeasGlobalLabel[i].Data();
-//                 graphIndPi0InvYieldSys[i]   = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot,
-//                                                                             graphIndPi0InvYieldSys[i],
+//             if (graphIndPi0InvYieldSys[meth]){
+//                 cout << "shiting sys err of " << nameMeasGlobalLabel[meth].Data();
+//                 graphIndPi0InvYieldSys[meth]   = ApplyXshiftIndividualSpectra( graphCombPi0InvYieldTot,
+//                                                                             graphIndPi0InvYieldSys[meth],
 //                                                                             fitShiftingPi0,
-//                                                                             offSetPi0Shifting[i], nComBinsPi0Shifting[i]);
+//                                                                             offSetPi0Shifting[meth], nComBinsPi0Shifting[meth]);
 //             }
 //         }
 //
@@ -1175,10 +1126,10 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //         SetStyleHistoTH2ForGraphs(histo2DDummy2, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}", 0.032,0.04, 0.04,0.04, 1,1.55);
 //         histo2DDummy2->DrawCopy();
 //
-//             for (Int_t i = 0; i < 11; i++){
-//                 if (graphIndPi0InvYieldSys[i]){
-//                     DrawGammaSetMarkerTGraphAsym(graphIndPi0InvYieldSys[i], markerStyleDet[i] ,markerSizeDet[i]/2, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
-//                     graphIndPi0InvYieldSys[i]->Draw("pEsame");
+//             for (Int_t meth = 0; meth< 11; meth++){
+//                 if (graphIndPi0InvYieldSys[meth]){
+//                     DrawGammaSetMarkerTGraphAsym(graphIndPi0InvYieldSys[meth], markerStyleDet[meth] ,markerSizeDet[meth]/2, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
+//                     graphIndPi0InvYieldSys[meth]->Draw("pEsame");
 //                 }
 //             }
 //
@@ -1224,12 +1175,12 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //         graphCombPi0InvYieldSys_yShifted        = (TGraphAsymmErrors*)graphCombPi0InvYieldSysUnshi->Clone("Pi0YShiftedCombSys");
 //         graphCombPi0InvYieldSys_yShifted        =  ApplyYshiftIndividualSpectra( graphCombPi0InvYieldSys_yShifted, fitInvYieldPi0);
 //
-//         for (Int_t i = 0; i< 11; i++){
-//             if (graphIndPi0InvYieldStat_yShifted[i]){
-//                 graphIndPi0InvYieldStat_yShifted[i] = ApplyYshiftIndividualSpectra( graphIndPi0InvYieldStat_yShifted[i], fitInvYieldPi0);
+//         for (Int_t meth = 0; meth< 11; meth++){
+//             if (graphIndPi0InvYieldStat_yShifted[meth]){
+//                 graphIndPi0InvYieldStat_yShifted[meth] = ApplyYshiftIndividualSpectra( graphIndPi0InvYieldStat_yShifted[meth], fitInvYieldPi0);
 //             }
-//             if (graphIndPi0InvYieldSys_yShifted[i]){
-//                 graphIndPi0InvYieldSys_yShifted[i]  = ApplyYshiftIndividualSpectra( graphIndPi0InvYieldSys_yShifted[i], fitInvYieldPi0);
+//             if (graphIndPi0InvYieldSys_yShifted[meth]){
+//                 graphIndPi0InvYieldSys_yShifted[meth]  = ApplyYshiftIndividualSpectra( graphIndPi0InvYieldSys_yShifted[meth], fitInvYieldPi0);
 //             }
 //         }
 //     }
@@ -1283,14 +1234,14 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //     TGraphAsymmErrors* graphRatioPi0CombCombFitSys      = (TGraphAsymmErrors*)graphCombPi0InvYieldSys->Clone();
 //     graphRatioPi0CombCombFitSys                         = CalculateGraphErrRatioToFit(graphRatioPi0CombCombFitSys, fitTCMInvYieldPi0);
 //
-//     for (Int_t i= 0; i< 11; i++){
-//         if (graphIndPi0InvYieldStat[i]){
-//             graphRatioPi0IndCombFitStat[i]              = (TGraphAsymmErrors*)graphIndPi0InvYieldStat[i]->Clone(Form("RatioPi0%sToCombFitStat", nameMeasGlobalLabel[i].Data()));
-//             graphRatioPi0IndCombFitStat[i]              = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStat[i], fitTCMInvYieldPi0);
+//     for (Int_t meth = 0; meth< 11; meth++){
+//         if (graphIndPi0InvYieldStat[meth]){
+//             graphRatioPi0IndCombFitStat[meth]              = (TGraphAsymmErrors*)graphIndPi0InvYieldStat[meth]->Clone(Form("RatioPi0%sToCombFitStat", nameMeasGlobalLabel[meth].Data()));
+//             graphRatioPi0IndCombFitStat[meth]              = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitStat[meth], fitTCMInvYieldPi0);
 //         }
-//         if (graphIndPi0InvYieldSys[i]){
-//             graphRatioPi0IndCombFitSys[i]              = (TGraphAsymmErrors*)graphIndPi0InvYieldSys[i]->Clone(Form("RatioPi0%sToCombFitSyst", nameMeasGlobalLabel[i].Data()));
-//             graphRatioPi0IndCombFitSys[i]              = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSys[i], fitTCMInvYieldPi0);
+//         if (graphIndPi0InvYieldSys[meth]){
+//             graphRatioPi0IndCombFitSys[meth]              = (TGraphAsymmErrors*)graphIndPi0InvYieldSys[meth]->Clone(Form("RatioPi0%sToCombFitSyst", nameMeasGlobalLabel[meth].Data()));
+//             graphRatioPi0IndCombFitSys[meth]              = CalculateGraphErrRatioToFit(graphRatioPi0IndCombFitSys[meth], fitTCMInvYieldPi0);
 //         }
 //     }
 //
@@ -1350,15 +1301,15 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //     canvasRatioToCombFit->cd();
 //     histo2DPi0RatioToCombFit->Draw("copy");
 //
-//         for (Int_t i = 10; i > -1 ; i--){
-//             if (graphRatioPi0IndCombFitSys[i]){
-//                 DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSys[i], markerStyleDet[i] ,markerSizeDet[i]*0.5, colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
-//                 graphRatioPi0IndCombFitSys[i]->Draw("E2same");
+//         for (Int_t meth = 10; meth > -1 ; meth--){
+//             if (graphRatioPi0IndCombFitSys[meth]){
+//                 DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitSys[meth], markerStyleDet[meth] ,markerSizeDet[meth]*0.5, colorDet[meth], colorDet[meth], widthLinesBoxes, kTRUE);
+//                 graphRatioPi0IndCombFitSys[meth]->Draw("E2same");
 //             }
-//             if (graphRatioPi0IndCombFitStat[i]){
-//                 ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStat[i]);
-//                 DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStat[i], markerStyleDet[i] ,markerSizeDet[i]*0.5, colorDet[i], colorDet[i]);
-//                 graphRatioPi0IndCombFitStat[i]->Draw("p,same,z");
+//             if (graphRatioPi0IndCombFitStat[meth]){
+//                 ProduceGraphAsymmWithoutXErrors(graphRatioPi0IndCombFitStat[meth]);
+//                 DrawGammaSetMarkerTGraphAsym(graphRatioPi0IndCombFitStat[meth], markerStyleDet[meth] ,markerSizeDet[meth]*0.5, colorDet[meth], colorDet[meth]);
+//                 graphRatioPi0IndCombFitStat[meth]->Draw("p,same,z");
 //             }
 //         }
 //         graphRatioPi0IndCombFitStat[4]->Draw("p,same,z");
@@ -1496,30 +1447,16 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         histo2DAllPi0FWHM->GetYaxis()->SetTickLength(0.026);
         histo2DAllPi0FWHM->DrawCopy();
 
-        DrawGammaSetMarkerTGraphAsym(graphPHOSPi0FWHM, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
-        graphPHOSPi0FWHM->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPHOSPi0FWHMMC, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
-        graphPHOSPi0FWHMMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMPHOSPi0FWHM, markerStyleDet[3], markerSizeDet[3]*0.55, colorDet[3] , colorDet[3]);
-        graphPCMPHOSPi0FWHM->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPCMPHOSPi0FWHMMC, markerStyleDetMC[3], markerSizeDetMC[3]*0.55, colorDetMC[3] , colorDetMC[3]);
-        graphPCMPHOSPi0FWHMMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphEMCALPi0FWHM, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
-        graphEMCALPi0FWHM->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphEMCALPi0FWHMMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-        graphEMCALPi0FWHMMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0FWHM, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
-        graphPCMEMCALPi0FWHM->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0FWHMMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
-        graphPCMEMCALPi0FWHMMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMPi0FWHM, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        graphPCMPi0FWHM->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPCMPi0FWHMMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        graphPCMPi0FWHMMC->Draw("p,same,z");
+        for (Int_t meth = 10; meth > -1; meth--){
+            if (graphPi0Width[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphPi0Width[meth], markerStyleDet[meth], markerSizeDet[meth]*0.55, colorDet[meth] , colorDet[meth]);
+                graphPi0Width[meth]->Draw("p,same,z");
+            }
+            if (graphPi0WidthMC[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphPi0WidthMC[meth], markerStyleDetMC[meth], markerSizeDetMC[meth]*0.55, colorDetMC[meth] , colorDetMC[meth]);
+                graphPi0WidthMC[meth]->Draw("p,same,z");
+            }
+        }
 
         TLatex *labelLegendAMass        = new TLatex(0.13,0.06,"a)");
         SetStyleTLatex( labelLegendAMass, textSizeLabelsPixel,4, 1, 43);
@@ -1558,33 +1495,16 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         histo2DAllPi0Mass->GetXaxis()->SetLabelOffset(-0.015);
         histo2DAllPi0Mass->DrawCopy();
 
-        DrawGammaSetMarkerTGraphAsym(graphPHOSPi0Mass, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
-        graphPHOSPi0Mass->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPHOSPi0MassMC, markerStyleDetMC[1], markerSizeDetMC[1]*0.55, colorDetMC[1] , colorDetMC[1]);
-        graphPHOSPi0MassMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMPHOSPi0Mass, markerStyleDet[3], markerSizeDet[3]*0.55, colorDet[3] , colorDet[3]);
-        graphPCMPHOSPi0Mass->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPCMPHOSPi0MassMC, markerStyleDetMC[3], markerSizeDetMC[3]*0.55, colorDetMC[3] , colorDetMC[3]);
-        graphPCMPHOSPi0MassMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphEMCALPi0Mass, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
-        graphEMCALPi0Mass->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphEMCALPi0MassMC, markerStyleDetMC[2], markerSizeDetMC[2]*0.55, colorDetMC[2] , colorDetMC[2]);
-        graphEMCALPi0MassMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0Mass, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
-        graphPCMEMCALPi0Mass->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0MassMC, markerStyleDetMC[4], markerSizeDetMC[4]*0.55, colorDetMC[4] , colorDetMC[4]);
-        graphPCMEMCALPi0MassMC->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMPi0Mass, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        graphPCMPi0Mass->Draw("p,same,z");
-        DrawGammaSetMarkerTGraphAsym(graphPCMPi0MassMC, markerStyleDetMC[0], markerSizeDetMC[0]*0.55, colorDetMC[0] , colorDetMC[0]);
-        graphPCMPi0MassMC->Draw("p,same,z");
-
-
-
+        for (Int_t meth = 10; meth > -1; meth--){
+            if (graphPi0Mass[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphPi0Mass[meth], markerStyleDet[meth], markerSizeDet[meth]*0.55, colorDet[meth] , colorDet[meth]);
+                graphPi0Mass[meth]->Draw("p,same,z");
+            }
+            if (graphPi0MassMC[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphPi0MassMC[meth], markerStyleDetMC[meth], markerSizeDetMC[meth]*0.55, colorDetMC[meth] , colorDetMC[meth]);
+                graphPi0MassMC[meth]->Draw("p,same,z");
+            }
+        }
 
         DrawGammaLines(0.23, 25. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 
@@ -1604,57 +1524,53 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         //****************** first Column **************************************************
         TLatex *textMassPCM2            = new TLatex(columnsLegendMass[0],rowsLegendMass[1],nameMeasGlobalLabel[0]);
         SetStyleTLatex( textMassPCM2, textSizeLabelsPixel,4, 1, 43);
-        textMassPCM2->Draw();
+        if (graphPi0Mass[0]) textMassPCM2->Draw();
         TLatex *textMassPCMEMCAL       = new TLatex(columnsLegendMass[0],rowsLegendMass[2],nameMeasGlobalLabel[4]);
         SetStyleTLatex( textMassPCMEMCAL, textSizeLabelsPixel,4, 1, 43);
-        textMassPCMEMCAL->Draw();
+        if (graphPi0Mass[4]) textMassPCMEMCAL->Draw();
         TLatex *textMassEMCAL          = new TLatex(columnsLegendMass[0],rowsLegendMass[3],nameMeasGlobalLabel[2]);
         SetStyleTLatex( textMassEMCAL, textSizeLabelsPixel,4, 1, 43);
-        textMassEMCAL->Draw();
+        if (graphPi0Mass[2]) textMassEMCAL->Draw();
         TLatex *textMassPHOS           = new TLatex(columnsLegendMass[3],rowsLegendMass[1],nameMeasGlobalLabel[1]);
         SetStyleTLatex( textMassPHOS, textSizeLabelsPixel,4, 1, 43);
-        textMassPHOS->Draw();
+        if (graphPi0Mass[1]) textMassPHOS->Draw();
         TLatex *textMassPCMPHOS             = new TLatex(columnsLegendMass[3],rowsLegendMass[2],nameMeasGlobalLabel[3]);
         SetStyleTLatex( textMassPCMPHOS, textSizeLabelsPixel,4, 1, 43);
-        textMassPCMPHOS->Draw();
+        if (graphPi0Mass[3]) textMassPCMPHOS->Draw();
 
         //****************** second Column *************************************************
         TLatex *textMassData1           = new TLatex(columnsLegendMass[1],rowsLegendMass[0] ,"Data");
         SetStyleTLatex( textMassData1, textSizeLabelsPixel,4, 1, 43);
-        textMassData1->Draw();
+        if (graphPi0Mass[2] || graphPi0Mass[4] || graphPi0Mass[0]) textMassData1->Draw();
         TLatex *textMassMC1             = new TLatex(columnsLegendMass[2] ,rowsLegendMass[0],"MC");
         SetStyleTLatex( textMassMC1, textSizeLabelsPixel,4, 1, 43);
-        textMassMC1->Draw();
+        if (graphPi0Mass[2] || graphPi0Mass[4] || graphPi0Mass[0]) textMassMC1->Draw();
 
         TLatex *textMassData2           = new TLatex(columnsLegendMass[4],rowsLegendMass[0] ,"Data");
         SetStyleTLatex( textMassData2, textSizeLabelsPixel,4, 1, 43);
-        textMassData2->Draw();
+        if (graphPi0Mass[1] || graphPi0Mass[3] ) textMassData2->Draw();
         TLatex *textMassMC2             = new TLatex(columnsLegendMass[5] ,rowsLegendMass[0],"MC");
         SetStyleTLatex( textMassMC2, textSizeLabelsPixel,4, 1, 43);
-        textMassMC2->Draw();
+        if (graphPi0Mass[1] || graphPi0Mass[3] ) textMassMC2->Draw();
 
-        TMarker* markerPCMPi0Mass       = CreateMarkerFromGraph(graphPCMPi0Mass,columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPCMPi0Mass->DrawMarker(columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass);
-        TMarker* markerPCMEMCALPi0Mass  = CreateMarkerFromGraph(graphPCMEMCALPi0Mass,columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPCMEMCALPi0Mass->DrawMarker(columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass);
-        TMarker* markerEMCALPi0Mass     = CreateMarkerFromGraph(graphEMCALPi0Mass,columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[3]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerEMCALPi0Mass->DrawMarker(columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[3]+ offsetMarkerYMass);
-        TMarker* markerPHOSPi0Mass      = CreateMarkerFromGraph(graphPHOSPi0Mass,columnsLegendMass[4]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPHOSPi0Mass->DrawMarker(columnsLegendMass[4]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass);
-        TMarker* markerPCMPHOSPi0Mass   = CreateMarkerFromGraph(graphPCMPHOSPi0Mass,columnsLegendMass[4]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPCMPHOSPi0Mass->DrawMarker(columnsLegendMass[4]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass);
+        TMarker* markerPi0Mass[11]      = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+        TMarker* markerPi0MassMC[11]    = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
+        for (Int_t meth = 0; meth< 11; meth++){
+            if (graphPi0Mass[meth]) markerPi0Mass[meth]            = CreateMarkerFromGraph(graphPi0Mass[meth], 0.1, 0.1, scaleMarkerMass);
+            if (graphPi0MassMC[meth]) markerPi0MassMC[meth]        = CreateMarkerFromGraph(graphPi0MassMC[meth], 0.1, 0.1, scaleMarkerMass);
+        }
+        if (markerPi0Mass[0]) markerPi0Mass[0]->DrawMarker(columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass);
+        if (markerPi0Mass[4]) markerPi0Mass[4]->DrawMarker(columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass);
+        if (markerPi0Mass[2]) markerPi0Mass[2]->DrawMarker(columnsLegendMass[1]+ offsetMarkerXMass ,rowsLegendMass[3]+ offsetMarkerYMass);
+        if (markerPi0Mass[1]) markerPi0Mass[1]->DrawMarker(columnsLegendMass[4]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass);
+        if (markerPi0Mass[3]) markerPi0Mass[3]->DrawMarker(columnsLegendMass[4]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass);
 
-        TMarker* markerPCMPi0MassMC     = CreateMarkerFromGraph(graphPCMPi0MassMC,columnsLegendMass[2]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPCMPi0MassMC->DrawMarker(columnsLegendMass[2]+ offsetMarkerXMass-0.01 ,rowsLegendMass[1]+ offsetMarkerYMass);
-        TMarker* markerPCMEMCALPi0MassMC= CreateMarkerFromGraph(graphPCMEMCALPi0MassMC,columnsLegendMass[2]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPCMEMCALPi0MassMC->DrawMarker(columnsLegendMass[2]+ offsetMarkerXMass-0.01 ,rowsLegendMass[2]+ offsetMarkerYMass);
-        TMarker* markerEMCALPi0MassMC   = CreateMarkerFromGraph(graphEMCALPi0MassMC,columnsLegendMass[2]+ offsetMarkerXMass ,rowsLegendMass[3]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerEMCALPi0MassMC->DrawMarker(columnsLegendMass[2]+ offsetMarkerXMass-0.01 ,rowsLegendMass[3]+ offsetMarkerYMass);
-        TMarker* markerPHOSPi0MassMC    = CreateMarkerFromGraph(graphPHOSPi0MassMC,columnsLegendMass[5]+ offsetMarkerXMass ,rowsLegendMass[1]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPHOSPi0MassMC->DrawMarker(columnsLegendMass[5]+ offsetMarkerXMass-0.01 ,rowsLegendMass[1]+ offsetMarkerYMass);
-        TMarker* markerPCMPHOSPi0MassMC     = CreateMarkerFromGraph(graphPCMPHOSPi0MassMC,columnsLegendMass[5]+ offsetMarkerXMass ,rowsLegendMass[2]+ offsetMarkerYMass ,scaleMarkerMass);
-        markerPCMPHOSPi0MassMC->DrawMarker(columnsLegendMass[5]+ offsetMarkerXMass-0.01 ,rowsLegendMass[2]+ offsetMarkerYMass);
+        if (markerPi0MassMC[0]) markerPi0MassMC[0]->DrawMarker(columnsLegendMass[2]+ offsetMarkerXMass-0.01 ,rowsLegendMass[1]+ offsetMarkerYMass);
+        if (markerPi0MassMC[4]) markerPi0MassMC[4]->DrawMarker(columnsLegendMass[2]+ offsetMarkerXMass-0.01 ,rowsLegendMass[2]+ offsetMarkerYMass);
+        if (markerPi0MassMC[2]) markerPi0MassMC[2]->DrawMarker(columnsLegendMass[2]+ offsetMarkerXMass-0.01 ,rowsLegendMass[3]+ offsetMarkerYMass);
+        if (markerPi0MassMC[1]) markerPi0MassMC[1]->DrawMarker(columnsLegendMass[5]+ offsetMarkerXMass-0.01 ,rowsLegendMass[1]+ offsetMarkerYMass);
+        if (markerPi0MassMC[3]) markerPi0MassMC[3]->DrawMarker(columnsLegendMass[5]+ offsetMarkerXMass-0.01 ,rowsLegendMass[2]+ offsetMarkerYMass);
 
     canvasMassWidthPi0->Update();
     canvasMassWidthPi0->Print(Form("%s/Pi0_MassAndWidth.%s",outputDir.Data(),suffix.Data()));
@@ -1675,16 +1591,16 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     histo2DYieldPi0->GetXaxis()->SetLabelOffset(-0.01);
     histo2DYieldPi0->Draw("copy");
 
-        for (Int_t i = 10; i> -1; i--){
-            if (graphIndPi0InvYieldSys[i]){
-                DrawGammaSetMarkerTGraphAsym(graphIndPi0InvYieldSys[i], markerStyleDet[i], markerSizeDet[i]*0.75, colorDet[i] , colorDet[i], widthLinesBoxes, kTRUE);
-                graphIndPi0InvYieldSys[i]->Draw("E2same");
+        for (Int_t meth = 10; meth> -1; meth--){
+            if (graphIndPi0InvYieldSys[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphIndPi0InvYieldSys[meth], markerStyleDet[meth], markerSizeDet[meth]*0.75, colorDet[meth] , colorDet[meth], widthLinesBoxes, kTRUE);
+                graphIndPi0InvYieldSys[meth]->Draw("E2same");
             }
         }
-        for (Int_t i = 10; i> -1; i--){
-            if (graphIndPi0InvYieldStat[i]){
-                DrawGammaSetMarkerTGraphAsym(graphIndPi0InvYieldStat[i], markerStyleDet[i], markerSizeDet[i]*0.75, colorDet[i] , colorDet[i]);
-                graphIndPi0InvYieldStat[i]->Draw("p,same,z");
+        for (Int_t meth = 10; meth> -1; meth--){
+            if (graphIndPi0InvYieldStat[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphIndPi0InvYieldStat[meth], markerStyleDet[meth], markerSizeDet[meth]*0.75, colorDet[meth] , colorDet[meth]);
+                graphIndPi0InvYieldStat[meth]->Draw("p,same,z");
             }
         }
         TLatex *labelEnergyXSectionPi0  = new TLatex(0.94,0.92,collisionSystemXeXe.Data());
@@ -1695,9 +1611,9 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         labelDetSysXSectionPi0->Draw();
 
 
-        TLegend* legendXSectionPi0      = GetAndSetLegend2(0.20, 0.13,0.40,0.13+(0.035*5), 0.035, 1, "", 42, 0);
-        for (Int_t i = 0; i < 11; i++){
-            if (graphIndPi0InvYieldSys[i]) legendXSectionPi0->AddEntry(graphIndPi0InvYieldSys[i],nameMeasGlobalLabel[i],"fp");
+        TLegend* legendXSectionPi0      = GetAndSetLegend2(0.20, 0.13,0.40,0.13+(0.035*nTotMeas), 0.035, 1, "", 42, 0);
+        for (Int_t meth = 0; meth < 11; meth++){
+            if (graphIndPi0InvYieldSys[meth]) legendXSectionPi0->AddEntry(graphIndPi0InvYieldSys[meth],nameMeasGlobalLabel[meth],"fp");
         }
         legendXSectionPi0->Draw();
 
@@ -1705,16 +1621,16 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 
 //     canvasInvYieldPi0->cd();
 //     histo2DYieldPi0->Draw("copy");
-//         for (Int_t i = 10; i> -1; i--){
-//             if (graphIndPi0InvYieldSys[i]){
-//                 graphIndPi0InvYieldSys[i]->Draw("E2same");
+//         for (Int_t meth = 10; meth> -1; meth--){
+//             if (graphIndPi0InvYieldSys[meth]){
+//                 graphIndPi0InvYieldSys[meth]->Draw("E2same");
 //             }
 //         }
 //         DrawGammaSetMarkerTGraphAsym(graphCombPi0InvYieldSys, markerStyleComb, markerSizeComb, colorComb , colorComb, widthLinesBoxes, kTRUE);
 //         graphCombPi0InvYieldSys->Draw("E2same");
-//         for (Int_t i = 10; i> -1; i--){
-//             if (graphIndPi0InvYieldSys[i]){
-//                 graphIndPi0InvYieldStat[i]->Draw("p,same,z");
+//         for (Int_t meth = 10; meth> -1; meth--){
+//             if (graphIndPi0InvYieldSys[meth]){
+//                 graphIndPi0InvYieldStat[meth]->Draw("p,same,z");
 //             }
 //         }
 //         DrawGammaSetMarkerTGraphAsym(graphCombPi0InvYieldStat, markerStyleComb, markerSizeComb, colorComb , colorComb);
@@ -1749,27 +1665,19 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         histo1DAccEff->GetXaxis()->SetMoreLogLabels(kTRUE);
         histo1DAccEff->DrawCopy();
 
-        DrawGammaSetMarkerTGraphAsym(graphPCMPi0AccTimesEff, markerStyleDet[0], markerSizeDet[0]*0.55, colorDet[0] , colorDet[0]);
-        graphPCMPi0AccTimesEff->Draw("p,same,z");
+        for (Int_t meth = 0; meth < 11; meth++){
+            if (graphPi0EffTimesAcc[meth]){
+                DrawGammaSetMarkerTGraphAsym(graphPi0EffTimesAcc[meth], markerStyleDet[meth], markerSizeDet[meth]*0.55, colorDet[meth] , colorDet[meth]);
+                graphPi0EffTimesAcc[meth]->Draw("p,same,z");
+            }
+        }
 
-        DrawGammaSetMarkerTGraphAsym(graphPCMEMCALPi0AccTimesEff, markerStyleDet[4], markerSizeDet[4]*0.55, colorDet[4] , colorDet[4]);
-        graphPCMEMCALPi0AccTimesEff->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphEMCALPi0AccTimesEff, markerStyleDet[2], markerSizeDet[2]*0.55, colorDet[2] , colorDet[2]);
-        graphEMCALPi0AccTimesEff->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPHOSPi0AccTimesEff, markerStyleDet[1], markerSizeDet[1]*0.55, colorDet[1] , colorDet[1]);
-        graphPHOSPi0AccTimesEff->Draw("p,same,z");
-
-        DrawGammaSetMarkerTGraphAsym(graphPCMPHOSPi0AccTimesEff, markerStyleDet[3], markerSizeDet[3]*0.55, colorDet[3] , colorDet[3]);
-        graphPCMPHOSPi0AccTimesEff->Draw("p,same,z");
-
-        TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.65, 0.13, 0.93, 0.13+(5*textSizeLabelsRel),textSizeLabelsPixel);
-        legendEffiAccPi0->AddEntry(graphPCMPi0AccTimesEff,nameMeasGlobalLabel[0],"p");
-        legendEffiAccPi0->AddEntry(graphPCMEMCALPi0AccTimesEff,nameMeasGlobalLabel[4],"p");
-        legendEffiAccPi0->AddEntry(graphEMCALPi0AccTimesEff,nameMeasGlobalLabel[2],"p");
-        legendEffiAccPi0->AddEntry(graphPHOSPi0AccTimesEff,nameMeasGlobalLabel[1],"p");
-        legendEffiAccPi0->AddEntry(graphPCMPHOSPi0AccTimesEff,nameMeasGlobalLabel[3],"p");
+        TLegend* legendEffiAccPi0           = GetAndSetLegend2(0.65, 0.13, 0.93, 0.13+(nTotMeas*textSizeLabelsRel),textSizeLabelsPixel);
+        if (graphPi0EffTimesAcc[0]) legendEffiAccPi0->AddEntry(graphPi0EffTimesAcc[0],nameMeasGlobalLabel[0],"p");
+        if (graphPi0EffTimesAcc[4]) legendEffiAccPi0->AddEntry(graphPi0EffTimesAcc[4],nameMeasGlobalLabel[4],"p");
+        if (graphPi0EffTimesAcc[2]) legendEffiAccPi0->AddEntry(graphPi0EffTimesAcc[2],nameMeasGlobalLabel[2],"p");
+        if (graphPi0EffTimesAcc[1]) legendEffiAccPi0->AddEntry(graphPi0EffTimesAcc[1],nameMeasGlobalLabel[1],"p");
+        if (graphPi0EffTimesAcc[3]) legendEffiAccPi0->AddEntry(graphPi0EffTimesAcc[3],nameMeasGlobalLabel[3],"p");
         legendEffiAccPi0->Draw();
 
         TLatex *labelPerfEffi           = new TLatex(0.15,0.92,"ALICE performance");
@@ -1804,8 +1712,8 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         for (Int_t k = 0; k < 4; k++){
             Bool_t plotCorr             = kFALSE;
             Int_t nCorrAvail            = 0;
-            for (Int_t i = 0; i < 11; i++){
-                if (haveEffSecCorr[k][i]){
+            for (Int_t meth = 0; meth < 11; meth++){
+                if (haveEffSecCorr[k][meth]){
                     nCorrAvail++;
                     plotCorr            = kTRUE;
                 }
@@ -1815,11 +1723,11 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
                 histo1DEffSecCorr->GetYaxis()->SetTitle(Form("R_{%s}",nameSecPi0SourceLabel[k].Data()));
                 histo1DEffSecCorr->GetYaxis()->SetRangeUser(0, maxSecCorr[k]);
                 histo1DEffSecCorr->DrawCopy();
-                for (Int_t i = 0; i < 11; i++){
-                    if (haveEffSecCorr[k][i]){
-                        DrawGammaSetMarkerTGraphAsym(graphPi0EffSecCorrFromX[k][i], markerStyleDet[i], markerSizeDet[i]*0.55, colorDet[i] , colorDet[i]);
-                        graphPi0EffSecCorrFromX[k][i]->Draw("p,same,z");
-                        legendEffSecCorrPi0->AddEntry(graphPi0EffSecCorrFromX[k][i],nameMeasGlobalLabel[i],"p");
+                for (Int_t meth = 0; meth < 11; meth++){
+                    if (haveEffSecCorr[k][meth]){
+                        DrawGammaSetMarkerTGraphAsym(graphPi0EffSecCorrFromX[k][meth], markerStyleDet[meth], markerSizeDet[meth]*0.55, colorDet[meth] , colorDet[meth]);
+                        graphPi0EffSecCorrFromX[k][meth]->Draw("p,same,z");
+                        legendEffSecCorrPi0->AddEntry(graphPi0EffSecCorrFromX[k][meth],nameMeasGlobalLabel[meth],"p");
                     }
                 }
                 legendEffSecCorrPi0->Draw();
@@ -2395,10 +2303,10 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 
     TString nameOutputCommonFile    = Form("CombinedResultsPaperXeXe5TeV_%s.root", dateForOutput.Data());
 
-    TFile fCombResults(nameOutputCommonFile.Data(), "RECREATE");
+    TFile fCombResults(nameOutputCommonFile.Data(), "UPDATE");
 
     fCombResults.mkdir(Form("Pi0XeXe5TeV_%s", centrality.Data()));
-    TDirectoryFile* directoryPi0 = (TDirectoryFile*)fCombResults.Get(Form("Pi0XeXe5TeV_%s", centrality.Data()));
+    TDirectoryFile* directoryPi0Output = (TDirectoryFile*)fCombResults.Get(Form("Pi0XeXe5TeV_%s", centrality.Data()));
     fCombResults.cd(Form("Pi0XeXe5TeV_%s", centrality.Data()));
 
 //         // Final spectrum
@@ -2417,47 +2325,26 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //             if(graphCombPi0InvYieldSys_yShifted)graphCombPi0InvYieldSys_yShifted->Write("graphInvYieldPi0CombXeXe5TeVSysErr_yShifted");
 //         }
         // writing individual measurements
-        for (Int_t i = 0; i< 11; i++){
-            if (graphIndPi0InvYieldStat[i]) graphIndPi0InvYieldStat[i]->Write(Form("graphInvYieldPi0%sStatErr",nameMeasGlobalLabel[i].Data()));
-            if (graphIndPi0InvYieldSys[i]) graphIndPi0InvYieldSys[i]->Write(Form("graphInvYieldPi0%sSysErr",nameMeasGlobalLabel[i].Data()));
+        for (Int_t meth = 0; meth< 11; meth++){
+            if (graphIndPi0InvYieldStat[meth]) graphIndPi0InvYieldStat[meth]->Write(Form("graphInvYieldPi0%sStatErr",nameMeasGlobalLabel[meth].Data()));
+            if (graphIndPi0InvYieldSys[meth]) graphIndPi0InvYieldSys[meth]->Write(Form("graphInvYieldPi0%sSysErr",nameMeasGlobalLabel[meth].Data()));
             if (bWCorrection.Contains("Y")){
-                if (graphIndPi0InvYieldStat_yShifted[i]) graphIndPi0InvYieldStat_yShifted[i]->Write(Form("graphInvYieldPi0%sStatErr_yShifted",nameMeasGlobalLabel[i].Data()));
-                if (graphIndPi0InvYieldSys_yShifted[i]) graphIndPi0InvYieldSys_yShifted[i]->Write(Form("graphInvYieldPi0%sSysErr_yShifted",nameMeasGlobalLabel[i].Data()));
+                if (graphIndPi0InvYieldStat_yShifted[meth]) graphIndPi0InvYieldStat_yShifted[meth]->Write(Form("graphInvYieldPi0%sStatErr_yShifted",nameMeasGlobalLabel[meth].Data()));
+                if (graphIndPi0InvYieldSys_yShifted[meth]) graphIndPi0InvYieldSys_yShifted[meth]->Write(Form("graphInvYieldPi0%sSysErr_yShifted",nameMeasGlobalLabel[meth].Data()));
             }
         }
 
 
-        directoryPi0->mkdir("Supporting");
-        directoryPi0->cd("Supporting");
+        directoryPi0Output->mkdir("Supporting");
+        directoryPi0Output->cd("Supporting");
             // Writing full correction factors
-            graphPCMPi0AccTimesEff->Write("Pi0CorrectionFactorPCM");
-            if(graphPHOSPi0AccTimesEff)graphPHOSPi0AccTimesEff->Write("Pi0CorrectionFactorPHOS");
-            graphEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorEMCAL");
-            graphPCMEMCALPi0AccTimesEff->Write("Pi0CorrectionFactorPCMEMCAL");
-            graphPCMPHOSPi0AccTimesEff->Write("Pi0CorrectionFactorPCMPHOS");
-
-            graphPCMPi0Mass->Write("Pi0MassDataPCM");
-            graphPCMPi0MassMC->Write("Pi0MassMCPCM");
-            graphPHOSPi0Mass->Write("Pi0MassDataPHOS");
-            graphPHOSPi0MassMC->Write("Pi0MassMCPHOS");
-            graphEMCALPi0Mass->Write("Pi0MassDataEMCAL");
-            graphEMCALPi0MassMC->Write("Pi0MassMCEMCAL");
-            graphPCMEMCALPi0Mass->Write("Pi0MassDataPCMEMCAL");
-            graphPCMEMCALPi0MassMC->Write("Pi0MassMCPCMEMCAL");
-            graphPCMPHOSPi0Mass->Write("Pi0MassDataPCMPHOS");
-            graphPCMPHOSPi0MassMC->Write("Pi0MassMCPCMPHOS");
-
-            graphPCMPi0FWHM->Write("Pi0WidthDataPCM");
-            graphPCMPi0FWHMMC->Write("Pi0WidthMCPCM");
-            graphPHOSPi0FWHM->Write("Pi0WidthDataPHOS");
-            graphPHOSPi0FWHMMC->Write("Pi0WidthMCPHOS");
-            graphEMCALPi0FWHM->Write("Pi0WidthDataEMCAL");
-            graphEMCALPi0FWHMMC->Write("Pi0WidthMCEMCAL");
-            graphPCMEMCALPi0FWHM->Write("Pi0WidthDataPCMEMCAL");
-            graphPCMEMCALPi0FWHMMC->Write("Pi0WidthMCPCMEMCAL");
-            graphPCMPHOSPi0FWHM->Write("Pi0WidthDataPCMPHOS");
-            graphPCMPHOSPi0FWHMMC->Write("Pi0WidthMCPCMPHOS");
-
+            for (Int_t meth = 0; meth< 11; meth++){
+                if (graphPi0EffTimesAcc[meth]) graphPi0EffTimesAcc[meth]->Write(Form("Pi0CorrectionFactor%s", nameMeasGlobalLabel[meth].Data()));
+                if (graphPi0Mass[meth]) graphPi0Mass[meth]->Write(Form("Pi0MassData%s", nameMeasGlobalLabel[meth].Data()));
+                if (graphPi0MassMC[meth]) graphPi0MassMC[meth]->Write(Form("Pi0MassMC%s", nameMeasGlobalLabel[meth].Data()));
+                if (graphPi0Width[meth]) graphPi0Width[meth]->Write(Form("Pi0WidthData%s", nameMeasGlobalLabel[meth].Data()));
+                if (graphPi0WidthMC[meth]) graphPi0WidthMC[meth]->Write(Form("Pi0WidthMC%s", nameMeasGlobalLabel[meth].Data()));
+            }
 
     fCombResults.Close();
 
@@ -2484,9 +2371,9 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
 //
 //         graphRatioPi0CombCombFitStat->Write("Pi0_RatioCombToCombFit_Stat");
 //         graphRatioPi0CombCombFitSys->Write("Pi0_RatioCombToCombFit_Syst");
-//         for (Int_t i = 0; i < 11; i++){
-//             if (graphRatioPi0IndCombFitStat[i]) graphRatioPi0IndCombFitStat[i]->Write();
-//             if (graphRatioPi0IndCombFitSys[i]) graphRatioPi0IndCombFitSys[i]->Write();
+//         for (Int_t meth = 0; meth < 11; meth++){
+//             if (graphRatioPi0IndCombFitStat[meth]) graphRatioPi0IndCombFitStat[meth]->Write();
+//             if (graphRatioPi0IndCombFitSys[meth]) graphRatioPi0IndCombFitSys[meth]->Write();
 //         }
 //     fCompResults.Close();
 }

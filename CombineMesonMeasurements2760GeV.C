@@ -974,16 +974,16 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
     // Definition of final pt binning (has to be set manually)
     Double_t xPtLimitsPi0[100];
     Int_t maxNBinsPi0               = 33;
-
+    Int_t maxNBinsAbsPi0            = 0;
     if (flagMerged == 0) {
-        maxNBinsPi0                  = GetBinning( xPtLimitsPi0, "Pi0", "2.76TeV", 20 );
+        maxNBinsPi0                  = GetBinning( xPtLimitsPi0, maxNBinsAbsPi0, "Pi0", "2.76TeV", 20 );
     } else {
-        maxNBinsPi0                  = GetBinning( xPtLimitsPi0, "Pi0", "2.76TeV", 10 );
+        maxNBinsPi0                  = GetBinning( xPtLimitsPi0, maxNBinsAbsPi0, "Pi0", "2.76TeV", 10 );
 //         if (flagMerged == 1)
             maxNBinsPi0--;
     }
     Double_t xPtLimitsPi0WOMerged[50];
-    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, "Pi0", "2.76TeV", 4 );
+    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, maxNBinsAbsPi0, "Pi0", "2.76TeV", 4 );
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMC", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
@@ -2136,7 +2136,8 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
     // Definition of binning for eta meson, take care that it is the correct one
     Double_t xPtLimitsEtaWOMerged[50];
-    Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, "Eta", "2.76TeV", 4 );
+    Int_t maxNBinsAbsEta            = 0;
+    Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, maxNBinsAbsEta, "Eta", "2.76TeV", 4 );
     for (Int_t i = 0; i< maxNBinsEtaW0Merged; i++){
         cout << i << ": "<< xPtLimitsEtaWOMerged[i] <<" - " << xPtLimitsEtaWOMerged[i+1]<< ", " <<endl;
     }
@@ -3720,6 +3721,10 @@ void CombineMesonMeasurements2760GeV(   TString fileNamePCM         = "",
 
         TLatex *labelPerfEffi               = new TLatex(0.15,0.92,"ALICE performance");
         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
+        Font_t textFont = 42,
+        Bool_t kNDC = kTRUE,
+        Short_t align = 11
+
         labelPerfEffi->Draw();
         TLatex *labelEnergyEffi             = new TLatex(0.15,0.87,collisionSystem2760GeV.Data());
         SetStyleTLatex( labelEnergyEffi, textSizeLabelsRel,4);

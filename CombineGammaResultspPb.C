@@ -166,7 +166,8 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
 
     cout << "Setting Gamma binning" << endl;
     Double_t xPtLimitsGamma[100]                    = {0};
-    Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, "Gamma", "pPb_5.023TeV", 20 );
+    Int_t maxNBinsGammaAbs                          = 0;
+    Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, maxNBinsGammaAbs, "Gamma", "pPb_5.023TeV", 20 );
     for (Int_t i = 0; i< maxNBinsGamma; i++){
         cout << i << ": "<< xPtLimitsGamma[i] <<" - " << xPtLimitsGamma[i+1]<< ", " <<endl;
     }

@@ -1296,12 +1296,12 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
     // Definition of final pt binning (has to be set manually)
     Double_t xPtLimitsPi0[100];
     Int_t maxNBinsPi0               = 0;
-
-    maxNBinsPi0                  = GetBinning( xPtLimitsPi0, "Pi0", "8TeV", 2 );
+    Int_t maxNBinsPi0Abs            = 0;
+    maxNBinsPi0                     = GetBinning( xPtLimitsPi0, maxNBinsPi0Abs, "Pi0", "8TeV", 2 );
     maxNBinsPi0--;
 
     Double_t xPtLimitsPi0WOMerged[70];
-    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, "Pi0", "8TeV", 2 );
+    Int_t maxNBinsPi0W0Merged       = GetBinning( xPtLimitsPi0WOMerged, maxNBinsPi0Abs, "Pi0", "8TeV", 2 );
 
     // Definition of offsets for stat & sys see output of function in shell, make sure pt bins match for Pi0
     // {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged","PCMOtherDataset"};
@@ -2663,7 +2663,8 @@ void CombineMesonMeasurements8TeV(      TString fileNamePCM         = "",
 
     // Definition of binning for eta meson, take care that it is the correct one
     Double_t xPtLimitsEtaWOMerged[70];
-    Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, "Eta", "8TeV", 2 );
+    Int_t maxNBinsEtaAbs            = 0;
+    Int_t maxNBinsEtaW0Merged       = GetBinning( xPtLimitsEtaWOMerged, maxNBinsEtaAbs, "Eta", "8TeV", 2 );
     maxNBinsEtaW0Merged--;
     for (Int_t i = 0; i< maxNBinsEtaW0Merged; i++){
         cout << i << ": "<< xPtLimitsEtaWOMerged[i] <<" - " << xPtLimitsEtaWOMerged[i+1]<< ", " <<endl;

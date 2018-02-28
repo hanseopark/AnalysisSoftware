@@ -142,7 +142,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     TString fElectronCutSelection           = "";
     TString fMesonCutSelection              = "";
     ReturnSeparatedCutNumberAdvanced(fCutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
-    InitializeBinning(mesonType, numberOfBins, energyFlag, directPhoton, mode, fEventCutSelection, fClusterCutSelection);
+    InitializeBinning(mesonType, numberOfBins, energyFlag, directPhoton, mode, fEventCutSelection, fClusterCutSelection, -1, kFALSE, "", "");
 
     Double_t peakRange[2]   = {0.10,0.15};
     if (mesonType.CompareTo("Pi0") == 0 || mesonType.CompareTo("Pi0EtaBinning") == 0){
