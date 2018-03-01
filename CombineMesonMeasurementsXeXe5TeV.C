@@ -1441,7 +1441,7 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     TH2F * histo2DAllPi0FWHM        = new TH2F("histo2DAllPi0FWHM","histo2DAllPi0FWHM", 20, 0.23, 25. ,1000., -30, 40);
     SetStyleHistoTH2ForGraphs(histo2DAllPi0FWHM, "#it{p}_{T} (GeV/#it{c})", "Peak width (MeV/#it{c}^{2})", 0.85*textsizeLabelsWidth, textsizeLabelsWidth,
                               0.85*textsizeLabelsWidth, textsizeLabelsWidth, 0.8,0.28/(textsizeFacWidth*margin), 512, 505);
-    histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,20.5);
+    histo2DAllPi0FWHM->GetYaxis()->SetRangeUser(-1.,30.5);
     histo2DAllPi0FWHM->GetYaxis()->SetMoreLogLabels(kTRUE);
     histo2DAllPi0FWHM->GetYaxis()->SetNdivisions(505);
     histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
