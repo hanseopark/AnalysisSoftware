@@ -4513,9 +4513,10 @@
 
         return kTRUE;
     }
-    void CheckBinSize(Int_t &iActualBinSize, Int_t iMaximalBinSize){
+    void CheckBinSize(Int_t &iActualBinSize, Int_t iMaximalBinSize, Bool_t giveCout=kTRUE){
         if (iActualBinSize > iMaximalBinSize) {
-            cout <<"You have chosen to have more than "<<iMaximalBinSize<<" bins, this is not possible, it will be reduced to "<<iMaximalBinSize<<"" << endl;
+            if (giveCout){
+                cout <<"You have chosen to have more than "<<iMaximalBinSize<<" bins, this is not possible, it will be reduced to "<<iMaximalBinSize<<"" << endl;}
             iActualBinSize    = iMaximalBinSize;}
     }
 

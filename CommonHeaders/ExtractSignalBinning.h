@@ -2934,28 +2934,31 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     }
                 }
             } else if (energy.CompareTo("13TeV") == 0){
-                Int_t iSizeOfBinningArray=0;
-                fStartPtBin=1;
-                binningMax=fNBinsPt;
+                binningMax=103;
                 //Get Actual maximal Sizes of Binning Arrays
                 if (DCAcase==kTRUE){
-                    iSizeOfBinningArray= 27;// ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
-                }
-                if (mode==0){
+                    maxNBins= 27;
+                    binningMax=maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
+                }else if (mode==0){
                     if (SpecialTrigger==0) {
-                        iSizeOfBinningArray= 64;// ((Int_t) (sizeof(fBinsPi013TeVPt)/sizeof(fBinsPi013TeVPt[0])))-1;
+                        maxNBins= 64;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVPt)/sizeof(fBinsPi013TeVPt[0])))-1;
                     } else if (SpecialTrigger==1) {
-                        iSizeOfBinningArray= 64;// ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEMC7Pt)/sizeof(fBinsPi013TeVEMCTriggerEMC7Pt[0])))-1;
+                        maxNBins= 64;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEMC7Pt)/sizeof(fBinsPi013TeVEMCTriggerEMC7Pt[0])))-1;
                     } else if (SpecialTrigger==2) {
-                        iSizeOfBinningArray= 103;// ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG1Pt)/sizeof(fBinsPi013TeVEMCTriggerEG1Pt[0])))-1;
+                        maxNBins= 103;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG1Pt)/sizeof(fBinsPi013TeVEMCTriggerEG1Pt[0])))-1;
                     } else if (SpecialTrigger==3) {
-                        iSizeOfBinningArray= 64;// ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG2Pt)/sizeof(fBinsPi013TeVEMCTriggerEG2Pt[0])))-1;
+                        maxNBins= 64;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG2Pt)/sizeof(fBinsPi013TeVEMCTriggerEG2Pt[0])))-1;
                     }
                 } else {
-                        iSizeOfBinningArray= 37;// ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
+                        maxNBins= 37;
+                        binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
                 }
-                CheckBinSize(binningMax,iSizeOfBinningArray);
-                fNBinsPt=binningMax;//if you want to implement different Max Binning for different functions: Change here! fNBinsPt is returned at end of function; binningMax defines the fill of the binning array; fNBinsPt has to be smaller or equal than than fNBinsPt
+                CheckBinSize(maxNBins,binningMax,kFALSE);
+                cout<<"Get Binning(), 13TeV, binningMax: "<<binningMax<<endl;
                 for (Int_t i = 0; i < binningMax+1; i++) {
                     if (DCAcase==kTRUE) {
                         binning[i]      = fBinsPi013TeVPtDCA[i];
@@ -4463,7 +4466,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         fBinsPtDCAzDist[i] = fBinsDirGamma13TeVPtDCAzDist[i];
                     }
                 }  else {//13TeV, not directPhoton
+                    fStartPtBin=1;
                     GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA);
+                    CheckBinSize(fNBinsPt,maxPtBinAvail,kTRUE);
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
                     //Rebinning, because not implemented in getBinning
                     if (!isDCA) {
