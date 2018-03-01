@@ -650,7 +650,7 @@
                                                          65.0, 70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X
 
 
-  Int_t fBinsPi013TeVPtRebin[64]                    =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
+   Int_t fBinsPi013TeVPtRebin[64]                   =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    2, 2, 2, 2, 2,
@@ -658,8 +658,8 @@
                                                           8, 5, 5, 5, 5,    5, 5, 5, 5, 5,
                                                           5, 5, 5, 5};
 
-  //EMC7
-  Double_t fBinsPi013TeVEMCTriggerEMC7Pt[65]        =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+   //EMC7
+   Double_t fBinsPi013TeVPCMTriggerEMC7Pt[65]       =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
                                                           1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
                                                           2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.2,
                                                           3.4,  3.6,  3.8,  4.0,  4.2,      4.4,  4.6,  4.8,  5.0,  5.4,
@@ -668,7 +668,7 @@
                                                          65.0, 70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EMC7
 
 
- Int_t fBinsPi013TeVEMCTriggerEMC7PtRebin[64]       =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
+   Int_t fBinsPi013TeVPCMTriggerEMC7PtRebin[64]     =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    2, 2, 2, 2, 2,
@@ -677,7 +677,7 @@
                                                           5, 5, 5, 5};
 
  //EG1 8GeV
- Double_t fBinsPi013TeVEMCTriggerEG1Pt[104]         =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+   Double_t fBinsPi013TeVPCMTriggerEG1Pt[104]       =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
                                                           1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
                                                           2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.1,
                                                           3.2,  3.3,  3.4,  3.5,  3.6,      3.7,  3.8,  3.9,  4.0,  4.2,
@@ -690,7 +690,7 @@
                                                          70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EG1 8GeV
 
 
-Int_t fBinsPi013TeVEMCTriggerEG1PtRebin[103]        =   { 4, 8, 4, 1, 1,    1, 1, 1, 1, 1,
+  Int_t fBinsPi013TeVPCMTriggerEG1PtRebin[103]      =   { 4, 8, 4, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
@@ -702,8 +702,8 @@ Int_t fBinsPi013TeVEMCTriggerEG1PtRebin[103]        =   { 4, 8, 4, 1, 1,    1, 1
                                                           8, 4, 4, 4, 4,    4, 4, 4, 4, 4,
                                                           4, 4, 4};
 
-  //EG2 4GeV
- Double_t fBinsPi013TeVEMCTriggerEG2Pt[65]          =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+   //EG2 4GeV
+   Double_t fBinsPi013TeVPCMTriggerEG2Pt[65]        =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
                                                           1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
                                                           2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.2,
                                                           3.4,  3.6,  3.8,  4.0,  4.2,      4.4,  4.6,  4.8,  5.0,  5.4,
@@ -712,7 +712,7 @@ Int_t fBinsPi013TeVEMCTriggerEG1PtRebin[103]        =   { 4, 8, 4, 1, 1,    1, 1
                                                          65.0, 70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EG2 4GeV
 
 
-Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
+   Int_t fBinsPi013TeVPCMTriggerEG2PtRebin[64]      =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    2, 2, 2, 2, 2,
@@ -720,7 +720,33 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                                                           8, 5, 5, 5, 5,    5, 5, 5, 5, 5,
                                                           5, 5, 5, 5};
 
-  Double_t fBinsPi013TeVPtDCA[28]                   =   { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+   Double_t fBinsPi013TeVPCMTriggerCombinedPt[104]  =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
+                                                          1.2,  1.3,  1.4,  1.5,  1.6,      1.7,  1.8,  1.9,  2.0,  2.1,
+                                                          2.2,  2.3,  2.4,  2.5,  2.6,      2.7,  2.8,  2.9,  3.0,  3.1,
+                                                          3.2,  3.3,  3.4,  3.5,  3.6,      3.7,  3.8,  3.9,  4.0,  4.2,
+                                                          4.4,  4.6,  4.8,  5.0,  5.2,      5.4,  5.6,  5.8,  6.0,  6.2,
+                                                          6.4,  6.6,  6.8,  7.0,  7.2,      7.4,  7.6,  7.8,  8.0,  8.2,
+                                                          8.4,  8.6,  8.8,  9.0,  9.4,      9.8, 10.2, 10.6, 11.0, 11.4,
+                                                         11.8, 12.2, 12.6, 13.0, 13.4,     13.8, 14.2, 14.6, 15.0, 15.4,
+                                                         15.8, 16.2, 16.6, 17.0, 17.5,     18.0, 18.5, 19.0, 20.0, 21.0,
+                                                         23.0, 25.0, 30.0, 35.0, 40.0,     45.0, 50.0, 55.0, 60.0, 65.0,
+                                                         70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X EG1 8GeV
+
+
+   Int_t fBinsPi013TeVPCMTriggerCombinedPtRebin[103]=   { 4, 8, 4, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 2,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 2,    2, 2, 2, 2, 2,
+                                                          2, 2, 2, 2, 2,    2, 2, 2, 2, 2,
+                                                          2, 2, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          8, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4};
+
+
+   Double_t fBinsPi013TeVPtDCA[28]                   =   { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
                                                           1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                           4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 20.0, 25.0};
 
@@ -2813,7 +2839,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         TString     meson           = "Pi0",
                         TString     energy          = "2.76TeV",
                         Int_t       mode            = 2,
-                        Int_t       SpecialTrigger  = 0,
+                        Int_t       SpecialTrigger  = -1,
                         Bool_t      DCAcase         = kFALSE,
                         TString     centrality      = ""
     ){
@@ -2940,37 +2966,42 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     maxNBins= 27;
                     binningMax=maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPtDCA)/sizeof(fBinsPi013TeVPtDCA[0])))-1;
                 }else if (mode==0){
-                    if (SpecialTrigger==0) {
+                    if (SpecialTrigger==-1){
+                        maxNBins= 103;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVPCMTriggerCombinedPt)/sizeof(fBinsPi013TeVPCMTriggerCombinedPt[0])))-1;
+                    } else if (SpecialTrigger==0) {
                         maxNBins= 64;
                         binningMax = ((Int_t) (sizeof(fBinsPi013TeVPt)/sizeof(fBinsPi013TeVPt[0])))-1;
                     } else if (SpecialTrigger==1) {
                         maxNBins= 64;
-                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEMC7Pt)/sizeof(fBinsPi013TeVEMCTriggerEMC7Pt[0])))-1;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVPCMTriggerEMC7Pt)/sizeof(fBinsPi013TeVPCMTriggerEMC7Pt[0])))-1;
                     } else if (SpecialTrigger==2) {
                         maxNBins= 103;
-                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG1Pt)/sizeof(fBinsPi013TeVEMCTriggerEG1Pt[0])))-1;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVPCMTriggerEG1Pt)/sizeof(fBinsPi013TeVPCMTriggerEG1Pt[0])))-1;
                     } else if (SpecialTrigger==3) {
                         maxNBins= 64;
-                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVEMCTriggerEG2Pt)/sizeof(fBinsPi013TeVEMCTriggerEG2Pt[0])))-1;
+                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVPCMTriggerEG2Pt)/sizeof(fBinsPi013TeVPCMTriggerEG2Pt[0])))-1;
                     }
                 } else {
                         maxNBins= 37;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
                 }
                 CheckBinSize(maxNBins,binningMax,kFALSE);
-                cout<<"Get Binning(), 13TeV, binningMax: "<<binningMax<<endl;
+                cout<<"Get Binning(), 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<endl;
                 for (Int_t i = 0; i < binningMax+1; i++) {
                     if (DCAcase==kTRUE) {
                         binning[i]      = fBinsPi013TeVPtDCA[i];
                     } else if (mode==0){
-                        if (SpecialTrigger == 0 ){
+                        if (SpecialTrigger == -1) {
+                            binning[i]      = fBinsPi013TeVPCMTriggerCombinedPt[i];
+                        } else if (SpecialTrigger == 0){
                             binning[i]      = fBinsPi013TeVPt[i];
                         } else if (SpecialTrigger==1){
-                            binning[i]      = fBinsPi013TeVEMCTriggerEMC7Pt[i];
+                            binning[i]      = fBinsPi013TeVPCMTriggerEMC7Pt[i];
                         } else if (SpecialTrigger==2){
-                            binning[i]      = fBinsPi013TeVEMCTriggerEG1Pt[i];
+                            binning[i]      = fBinsPi013TeVPCMTriggerEG1Pt[i];
                         } else if (SpecialTrigger==3){
-                            binning[i]      = fBinsPi013TeVEMCTriggerEG2Pt[i];
+                            binning[i]      = fBinsPi013TeVPCMTriggerEG2Pt[i];
                         }
                     } else {
                         binning[i]      = fBinsPi013TeVPCMEMCPt[i];
@@ -4477,11 +4508,11 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                                 if (specialTrigg == 0 ){
                                     fNRebin[i]      = fBinsPi013TeVPtRebin[i];
                                 } else if (specialTrigg==1){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTriggerEMC7PtRebin[i];
+                                    fNRebin[i]      = fBinsPi013TeVPCMTriggerEMC7PtRebin[i];
                                 } else if (specialTrigg==2){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTriggerEG1PtRebin[i];
+                                    fNRebin[i]      = fBinsPi013TeVPCMTriggerEG1PtRebin[i];
                                 } else if (specialTrigg==3){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTriggerEG2PtRebin[i];
+                                    fNRebin[i]      = fBinsPi013TeVPCMTriggerEG2PtRebin[i];
                                 }
                             } else {
                                 fNRebin[i]      = fBinsPi013TeVPCMEMCPtRebin[i];
