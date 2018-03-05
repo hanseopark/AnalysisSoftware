@@ -417,7 +417,7 @@ void PlotExampleInvMassEMCal(  TH1D* histoInvMassSignalWithBG,
     histoFit->Scale(scaleFacSignal);
 
     canvasInvMassSamplePlot->cd();
-    histo1DInvMassDummy->GetYaxis()->SetRangeUser(1.45*histoPi0InvMassSigRemBGSub->GetMinimum(),1.1*histoPi0InvMassSigPlusBG->GetMaximum());
+    histo1DInvMassDummy->GetYaxis()->SetRangeUser(1.15*histoPi0InvMassSigRemBGSub->GetMinimum(),0.8*histoPi0InvMassSigPlusBG->GetMaximum());
     histo1DInvMassDummy->GetXaxis()->SetRangeUser(fPlottingRangeMeson[0],fPlottingRangeMeson[1]);
     histo1DInvMassDummy->Draw("AXIS");
 

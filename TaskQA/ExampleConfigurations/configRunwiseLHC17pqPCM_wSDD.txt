@@ -5,9 +5,9 @@ cutNr   0
 nSets   4
 nData   2
 energy  5TeV
-filePath    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180129-1_firstpp
-filePathPhoton  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180129-1_firstpp
-fileName    GammaConvV1_51.root
+filePath    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180219-1_pileupOff
+filePathPhoton  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180219-1_pileupOff
+fileName    GammaConvV1_400.root
 fileNamePhoton    AnalysisResults.root
 DataSets    LHC17p_wSDD LHC17q_wSDD LHC17l3b_wSDD   LHC17l4b_wSDD   STOP
 plotDataSets    LHC17p_wSDD LHC17q_wSDD GEANT3  GEANT4  STOP

@@ -36,7 +36,7 @@
 #include "PrepareInputFilePbPb2760GeVCombination.h"
 
 
-void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResults_PbPb_2.76TeV_16Oct2016.root",
+void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResults_PbPb_2.76TeV_18082017.root",
                                             TString suffix = "pdf")
 {
 
@@ -53,7 +53,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TString fileNamePCMPublished            = "ExternalInputPbPb/data_PCMResults_PbPb_2.76TeV_LHC10h.root";
 //     "FinalResults/CombinedResultsPbPb_ShiftedX_PaperRAA_13_Aug_2014.root";
     TString fileNamePHOS                    = "ExternalInputPbPb/PHOS/LHC10h_PHOS_pi0_PbPb_06022014.root";
-    TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_10092015.root";
+    TString fileNameEMCal                   = "ExternalInputPbPb/EMCAL/LHC11h_EMCal_pi0eta_PbPb_01032018.root"; //LHC11h_EMCal_pi0eta_PbPb_10092015.root";
     TString fileNameChargedSpectra          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/PbPb276.fullpT.INEL.20140329.root";
     TString fileNameChargedRatios           = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/PbPb276.fullpT.RATIOS.20140329.root";
     TString fileNameChargedPionRAA          = "ExternalInputPbPb/IdentifiedCharged/JIRA_PWGLF-258/RAA_Pion_08052014.root";
@@ -919,12 +919,12 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TDirectory* directoryEMCalPi0PbPb2760GeV                = (TDirectory*)fileEMCal->Get("Pi02.76TeV_PbPb");
     TH1D* histoEMCalPi0InvYieldStatPbPb2760GeV_0010         = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbStatErrPi_0010");
     TGraphAsymmErrors* graphEMCalPi0InvYieldStatPbPb2760GeV_0010        = new TGraphAsymmErrors(histoEMCalPi0InvYieldStatPbPb2760GeV_0010);
-    graphEMCalPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
-    graphEMCalPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
+//     graphEMCalPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
+//     graphEMCalPi0InvYieldStatPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldStatPbPb2760GeV_0010->GetN()-1);
     TH1D* histoEMCalPi0InvYieldSysPbPb2760GeV_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("LuciaBinningInvYieldPbPbSysErrPi_0010");
     TGraphAsymmErrors* graphEMCalPi0InvYieldSysPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalPi0InvYieldSysPbPb2760GeV_0010);
-    graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
-    graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
+//     graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
+//     graphEMCalPi0InvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN()-1);
     // added 5% for opening angle and 5% for jet environment above 15GeV
     Int_t pi0PbPbEMCalbins = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetN();
     Double_t *xpi0_0010 = graphEMCalPi0InvYieldSysPbPb2760GeV_0010->GetX();
@@ -1026,16 +1026,17 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     graphEMCalEtaInvYieldSysPbPb2760GeV_0010->RemovePoint(graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN()-1);
     TH1D* histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010  = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("EMCalSysEta010forRAA");
     TGraphAsymmErrors* graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010     = new TGraphAsymmErrors(histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010);
+
     TH1D*   histoEMCalEtatoPi0StatPbPb2760GeV_0010  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("StatErrEtatoPi0Ratio_0010");
     TGraphAsymmErrors* graphEMCalEtatoPi0Stat2760GeV_0010   = new TGraphAsymmErrors(histoEMCalEtatoPi0StatPbPb2760GeV_0010);
-    graphEMCalEtatoPi0Stat2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_0010->GetN()-1);
-    graphEMCalEtatoPi0Stat2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_0010->GetN()-1);
+//     graphEMCalEtatoPi0Stat2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_0010->GetN()-1);
+//     graphEMCalEtatoPi0Stat2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_0010->GetN()-1);
     TH1D*   histoEMCalEtatoPi0SysPbPb2760GeV_0010   = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("SysErrEtatoPi0Ratio_0010");
     TGraphAsymmErrors* graphEMCalEtatoPi0Sys2760GeV_0010    = new TGraphAsymmErrors(histoEMCalEtatoPi0SysPbPb2760GeV_0010);
-    graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
-    graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
+//     graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
+//     graphEMCalEtatoPi0Sys2760GeV_0010->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_0010->GetN()-1);
 
-    // added 5% for opening angle and 5% for jet environment above 15GeV
+    // added 5% for jet environment above 15GeV
     Int_t etaPbPbEMCalbins = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetN();
     Double_t *xeta_0010 = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetX();
     Double_t *yeta_0010 = graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetY();
@@ -1053,7 +1054,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         yetarelErrorAdded_0010[i] = (yeta_0010[i]*yetaErrorAdded_0010[i])/100.;
         graphEMCalEtaInvYieldSysPbPb2760GeV_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_0010->GetErrorXhigh(i),yetarelErrorAdded_0010[i],yetarelErrorAdded_0010[i]);
     }
-    // added 5% for opening angle and 5% for jet environment above 15GeV
+    // added 5% for jet environment above 15GeV
     Double_t *xetaRAA_0010 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetX();
     Double_t *yetaRAA_0010 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetY();
     Double_t yetaRAAErr_0010[etaPbPbEMCalbins];
@@ -1070,6 +1071,22 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         yetaRAArelErrorAdded_0010[i] = (yetaRAA_0010[i]*yetaRAAErrorAdded_0010[i])/100.;
         graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->GetErrorXhigh(i),yetaRAArelErrorAdded_0010[i],yetaRAArelErrorAdded_0010[i]);
     }
+    // added 5% for jet environment above 15GeV
+    Double_t *xetatopi0_0010 = graphEMCalEtatoPi0Sys2760GeV_0010->GetX();
+    Double_t *yetatopi0_0010 = graphEMCalEtatoPi0Sys2760GeV_0010->GetY();
+    Double_t yetatopi0Err_0010[etaPbPbEMCalbins];
+    Double_t yetatopi0relErr_0010[etaPbPbEMCalbins];
+    Double_t yetatopi0ErrorAdded_0010[etaPbPbEMCalbins];
+    Double_t yetatopi0relErrorAdded_0010[etaPbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalEtatoPi0Sys2760GeV_0010->GetN();i++){
+        if(xetatopi0_0010[i]>=15){
+            yetatopi0relErr_0010[i] = graphEMCalEtatoPi0Sys2760GeV_0010->GetErrorYlow(i);
+            yetatopi0Err_0010[i] = (yetatopi0relErr_0010[i] * 100.)/yetatopi0_0010[i];
+            yetatopi0ErrorAdded_0010[i] = TMath::Sqrt( (yetatopi0Err_0010[i]*yetatopi0Err_0010[i]) + (5.*5.));
+            yetatopi0relErrorAdded_0010[i] = (yetatopi0_0010[i]*yetatopi0ErrorAdded_0010[i])/100.;
+            graphEMCalEtatoPi0Sys2760GeV_0010->SetPointError(i,graphEMCalEtatoPi0Sys2760GeV_0010->GetErrorXlow(i),graphEMCalEtatoPi0Sys2760GeV_0010->GetErrorXhigh(i),yetatopi0relErrorAdded_0010[i],yetatopi0relErrorAdded_0010[i]);
+        }
+    }
 
     TH1D* histoEMCalEtaInvYieldStatPbPb2760GeV_2050         = (TH1D*)directoryEMCalEtaPbPb2760GeV->Get("InvYieldPbPbStatErrEta_2050");
     TGraphAsymmErrors* graphEMCalEtaInvYieldStatPbPb2760GeV_2050        = new TGraphAsymmErrors(histoEMCalEtaInvYieldStatPbPb2760GeV_2050);
@@ -1083,14 +1100,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050     = new TGraphAsymmErrors(histoEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050);
     TH1D*   histoEMCalEtatoPi0StatPbPb2760GeV_2050  = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("StatErrEtatoPi0Ratio_2050");
     TGraphAsymmErrors* graphEMCalEtatoPi0Stat2760GeV_2050   = new TGraphAsymmErrors(histoEMCalEtatoPi0StatPbPb2760GeV_2050);
-    graphEMCalEtatoPi0Stat2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_2050->GetN()-1);
-    graphEMCalEtatoPi0Stat2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_2050->GetN()-1);
+//     graphEMCalEtatoPi0Stat2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_2050->GetN()-1);
+//     graphEMCalEtatoPi0Stat2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Stat2760GeV_2050->GetN()-1);
     TH1D*   histoEMCalEtatoPi0SysPbPb2760GeV_2050   = (TH1D*)directoryEMCalPi0PbPb2760GeV->Get("SysErrEtatoPi0Ratio_2050");
     TGraphAsymmErrors* graphEMCalEtatoPi0Sys2760GeV_2050    = new TGraphAsymmErrors(histoEMCalEtatoPi0SysPbPb2760GeV_2050);
     graphEMCalEtatoPi0Sys2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_2050->GetN()-1);
     graphEMCalEtatoPi0Sys2760GeV_2050->RemovePoint(graphEMCalEtatoPi0Sys2760GeV_2050->GetN()-1);
 
-    // added 5% for opening angle and 5% for jet environment above 15GeV
+    // added 5% for jet environment above 15GeV
     Double_t *xeta_2050 = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetX();
     Double_t *yeta_2050 = graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetY();
     Double_t yetaErr_2050[etaPbPbEMCalbins];
@@ -1107,7 +1124,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         yetarelErrorAdded_2050[i] = (yeta_2050[i]*yetaErrorAdded_2050[i])/100.;
         graphEMCalEtaInvYieldSysPbPb2760GeV_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeV_2050->GetErrorXhigh(i),yetarelErrorAdded_2050[i],yetarelErrorAdded_2050[i]);
     }
-    // added 5% for opening angle and 5% for jet environment above 15GeV
+    // added 5% for opening angle and 5% for jet environment above 15GeV, signal extraction, hijing
     Double_t *xetaRAA_2050 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetX();
     Double_t *yetaRAA_2050 = graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetY();
     Double_t yetaRAAErr_2050[etaPbPbEMCalbins];
@@ -1124,6 +1141,22 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         yetaRAArelErrorAdded_2050[i] = (yetaRAA_2050[i]*yetaRAAErrorAdded_2050[i])/100.;
         graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->SetPointError(i,graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXlow(i),graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->GetErrorXhigh(i),yetaRAArelErrorAdded_2050[i],yetaRAArelErrorAdded_2050[i]);
     }
+    // added 5% for jet environment above 15GeV
+    Double_t *xetatopi0_2050 = graphEMCalEtatoPi0Sys2760GeV_2050->GetX();
+    Double_t *yetatopi0_2050 = graphEMCalEtatoPi0Sys2760GeV_2050->GetY();
+    Double_t yetatopi0Err_2050[etaPbPbEMCalbins];
+    Double_t yetatopi0relErr_2050[etaPbPbEMCalbins];
+    Double_t yetatopi0ErrorAdded_2050[etaPbPbEMCalbins];
+    Double_t yetatopi0relErrorAdded_2050[etaPbPbEMCalbins];
+    for(Int_t i = 0;i<graphEMCalEtatoPi0Sys2760GeV_2050->GetN();i++){
+        if(xetatopi0_2050[i]>=15){
+            yetatopi0relErr_2050[i] = graphEMCalEtatoPi0Sys2760GeV_2050->GetErrorYlow(i);
+            yetatopi0Err_2050[i] = (yetatopi0relErr_2050[i] * 100.)/yetatopi0_2050[i];
+            yetatopi0ErrorAdded_2050[i] = TMath::Sqrt( (yetatopi0Err_2050[i]*yetatopi0Err_2050[i]) + (5.*5.));
+            yetatopi0relErrorAdded_2050[i] = (yetatopi0_2050[i]*yetatopi0ErrorAdded_2050[i])/100.;
+            graphEMCalEtatoPi0Sys2760GeV_2050->SetPointError(i,graphEMCalEtatoPi0Sys2760GeV_2050->GetErrorXlow(i),graphEMCalEtatoPi0Sys2760GeV_2050->GetErrorXhigh(i),yetatopi0relErrorAdded_2050[i],yetatopi0relErrorAdded_2050[i]);
+        }
+    }
 
     TDirectory* directoryEMCalRAAPbPb2760GeV                = (TDirectory*)fileEMCal->Get("RAA2.76TeV_PbPb");
     TH1D*   histoEMCalPi0RAAStatPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrPion_0010");
@@ -1132,8 +1165,8 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphEMCalPi0RAASysPbPb2760GeV_0010  = new TGraphAsymmErrors(histoEMCalPi0RAASysPbPb2760GeV_0010);
     TH1D*   histoEMCalPi0RAAStatPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrPion_2050");
     TGraphAsymmErrors* graphEMCalPi0RAAStatPbPb2760GeV_2050     = new TGraphAsymmErrors(histoEMCalPi0RAAStatPbPb2760GeV_2050);
-    TH1D*   histoEMCalPi0RAASysPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAASystErrPion_2050");
-    TGraphAsymmErrors* graphEMCalPi0RAASysPbPb2760GeV_2050  = new TGraphAsymmErrors(histoEMCalPi0RAASysPbPb2760GeV_2050);
+//     TH1D*   histoEMCalPi0RAASysPbPb2760GeV_2050    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAASystErrPion_2050");
+//     TGraphAsymmErrors* graphEMCalPi0RAASysPbPb2760GeV_2050  = new TGraphAsymmErrors(histoEMCalPi0RAASysPbPb2760GeV_2050);
 
     TH1D*   histoEMCalEtaRAAStatPbPb2760GeV_0010    = (TH1D*)directoryEMCalRAAPbPb2760GeV->Get("RAAStatErrEta_0010");
     TGraphAsymmErrors* graphEMCalEtaRAAStatPbPb2760GeV_0010     = new TGraphAsymmErrors(histoEMCalEtaRAAStatPbPb2760GeV_0010);
@@ -1200,12 +1233,22 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
 
         histoPCMPi0InvYieldPbPb2760GeV_0010->Write("histoInvYieldPi0PCMPbPb2760GeVStatErr_0010");
         graphPCMPi0InvYieldStatPbPb2760GeV_0010->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_0010");
+//             cout << "graphPCMPi0InvYieldStatPbPb2760GeV_0010" << endl;
+//             graphPCMPi0InvYieldStatPbPb2760GeV_0010->Print();
         graphPCMPi0InvYieldSysPbPb2760GeV_0010->Write("graphInvYieldPi0PCMPbPb2760GeVSysErr_0010");
+//             cout << "graphPCMPi0InvYieldSysPbPb2760GeV_0010" << endl;
+//             graphPCMPi0InvYieldSysPbPb2760GeV_0010->Print();
         graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_yShifted_0010");
+//             cout << "graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010" << endl;
+//             graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_0010->Print();
         graphPCMPi0InvYieldSysWOMat2760GeV_0010->Write("graphInvYieldPi0PCMPbPb2760GeVSysErr_forRAA_0010");
         histoPCMPi0RAAStatPbPb2760GeV_0010->Write("histoRAAPi0PCMPbPb2760GeVStatErr_0010");
         graphPCMPi0RAAStatPbPb2760GeV_0010->Write("graphRAAPi0PCMPbPb2760GeVStatErr_0010");
+//             cout << "graphPCMPi0RAAStatPbPb2760GeV_0010" << endl;
+//             graphPCMPi0RAAStatPbPb2760GeV_0010->Print();
         graphPCMPi0RAASysPbPb2760GeV_0010->Write("graphRAAPi0PCMPbPb2760GeVSysErr_0010");
+//             cout << "graphPCMPi0RAASysPbPb2760GeV_0010" << endl;
+//             graphPCMPi0RAASysPbPb2760GeV_0010->Print();
 
         histoPCMPi0InvYieldPbPb2760GeV_2040->Write("histoInvYieldPi0PCMPbPb2760GeVStatErr_2040");
         graphPCMPi0InvYieldStatPbPb2760GeV_2040->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_2040");
@@ -1218,12 +1261,22 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
 
         histoPCMPi0InvYieldPbPb2760GeV_2050->Write("histoInvYieldPi0PCMPbPb2760GeVStatErr_2050");
         graphPCMPi0InvYieldStatPbPb2760GeV_2050->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_2050");
+//             cout << "graphPCMPi0InvYieldStatPbPb2760GeV_2050" << endl;
+//             graphPCMPi0InvYieldStatPbPb2760GeV_2050->Print();
         graphPCMPi0InvYieldSysPbPb2760GeV_2050->Write("graphInvYieldPi0PCMPbPb2760GeVSysErr_2050");
+//             cout << "graphPCMPi0InvYieldSysPbPb2760GeV_2050" << endl;
+//             graphPCMPi0InvYieldSysPbPb2760GeV_2050->Print();
         graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050->Write("graphInvYieldPi0PCMPbPb2760GeVStatErr_yShifted_2050");
+//             cout << "graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050" << endl;
+//             graphPCMPi0InvYieldStatPbPb2760GeVwithYshift_2050->Print();
         graphPCMPi0InvYieldSysWOMat2760GeV_2050->Write("graphInvYieldPi0PCMPbPb2760GeVSysErr_forRAA_2050");
         histoPCMPi0RAAStatPbPb2760GeV_2050->Write("histoRAAPi0PCMPbPb2760GeVStatErr_2050");
         graphPCMPi0RAAStatPbPb2760GeV_2050->Write("graphRAAPi0PCMPbPb2760GeVStatErr_2050");
+//             cout << "graphPCMPi0RAAStatPbPb2760GeV_2050" << endl;
+//             graphPCMPi0RAAStatPbPb2760GeV_2050->Print();
         graphPCMPi0RAASysPbPb2760GeV_2050->Write("graphRAAPi0PCMPbPb2760GeVSysErr_2050");
+//             cout << "graphPCMPi0RAASysPbPb2760GeV_2050" << endl;
+//             graphPCMPi0RAASysPbPb2760GeV_2050->Print();
 
         histoPCMEtaInvYieldPbPb2760GeV_0005->Write("histoInvYieldEtaPCMPbPb2760GeVStatErr_0005");
         graphPCMEtaInvYieldStatPbPb2760GeV_0005->Write("graphInvYieldEtaPCMPbPb2760GeVStatErr_0005");
@@ -1251,15 +1304,27 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
 
         histoPCMEtaInvYieldPbPb2760GeV_0010->Write("histoInvYieldEtaPCMPbPb2760GeVStatErr_0010");
         graphPCMEtaInvYieldStatPbPb2760GeV_0010->Write("graphInvYieldEtaPCMPbPb2760GeVStatErr_0010");
+//             cout << graphPCMEtaInvYieldStatPbPb2760GeV_0010 << endl;
+//             graphPCMEtaInvYieldStatPbPb2760GeV_0010->Print();
         graphPCMEtaInvYieldSysPbPb2760GeV_0010->Write("graphInvYieldEtaPCMPbPb2760GeVSysErr_0010");
+//             cout << "graphPCMEtaInvYieldSysPbPb2760GeV_0010" << endl;
+//             graphPCMEtaInvYieldSysPbPb2760GeV_0010->Print();
         graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_0010->Write("graphInvYieldEtaPCMPbPb2760GeVStatErr_yShifted_0010");
         graphPCMEtaInvYieldSysWOMat2760GeV_0010->Write("graphInvYieldEtaPCMPbPb2760GeVSysErr_forRAA_0010");
         histoPCMEtaRAAStatPbPb2760GeV_0010->Write("histoRAAEtaPCMPbPb2760GeVStatErr_0010");
         graphPCMEtaRAAStatPbPb2760GeV_0010->Write("graphRAAEtaPCMPbPb2760GeVStatErr_0010");
+//             cout << "graphPCMEtaRAAStatPbPb2760GeV_0010" << endl;
+//             graphPCMEtaRAAStatPbPb2760GeV_0010->Print();
         graphPCMEtaRAASysPbPb2760GeV_0010->Write("graphRAAEtaPCMPbPb2760GeVSysErr_0010");
+//             cout << "graphPCMEtaRAASysPbPb2760GeV_0010" << endl;
+//             graphPCMEtaRAASysPbPb2760GeV_0010->Print();
         histoPCMEtatoPi0Stat2760GeV_0010->Write("histoEtaToPi0RatioPCMPbPb2760GeVStatErr_0010");
         graphPCMEtatoPi0Stat2760GeV_0010->Write("graphEtaToPi0RatioPCMPbPb2760GeVStatErr_0010");
+//             cout << "graphPCMEtatoPi0Stat2760GeV_0010" << endl;
+//             graphPCMEtatoPi0Stat2760GeV_0010->Print();
         graphPCMEtatoPi0Sys2760GeV_0010->Write("graphEtaToPi0RatioPCMPbPb2760GeVSysErr_0010");
+//             cout << "graphPCMEtatoPi0Sys2760GeV_0010" << endl;
+//             graphPCMEtatoPi0Sys2760GeV_0010->Print();
 
         histoPCMEtaInvYieldPbPb2760GeV_2040->Write("histoInvYieldEtaPCMPbPb2760GeVStatErr_2040");
         graphPCMEtaInvYieldStatPbPb2760GeV_2040->Write("graphInvYieldEtaPCMPbPb2760GeVStatErr_2040");
@@ -1275,53 +1340,107 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
 
         histoPCMEtaInvYieldPbPb2760GeV_2050->Write("histoInvYieldEtaPCMPbPb2760GeVStatErr_2050");
         graphPCMEtaInvYieldStatPbPb2760GeV_2050->Write("graphInvYieldEtaPCMPbPb2760GeVStatErr_2050");
+//             cout << "graphPCMEtaInvYieldStatPbPb2760GeV_2050" << endl;
+//             graphPCMEtaInvYieldStatPbPb2760GeV_2050->Print();
         graphPCMEtaInvYieldSysPbPb2760GeV_2050->Write("graphInvYieldEtaPCMPbPb2760GeVSysErr_2050");
+//             cout << "graphPCMEtaInvYieldSysPbPb2760GeV_2050" << endl;
+//             graphPCMEtaInvYieldSysPbPb2760GeV_2050->Print();
         graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050->Write("graphInvYieldEtaPCMPbPb2760GeVStatErr_yShifted_2050");
+//             cout << "graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050" << endl;
+//             graphPCMEtaInvYieldStatPbPb2760GeVwithYshift_2050->Print();
         graphPCMEtaInvYieldSysWOMat2760GeV_2050->Write("graphInvYieldEtaPCMPbPb2760GeVSysErr_forRAA_2050");
         histoPCMEtaRAAStatPbPb2760GeV_2050->Write("histoRAAEtaPCMPbPb2760GeVStatErr_2050");
         graphPCMEtaRAAStatPbPb2760GeV_2050->Write("graphRAAEtaPCMPbPb2760GeVStatErr_2050");
+//             cout << "graphPCMEtaRAAStatPbPb2760GeV_2050" << endl;
+//             graphPCMEtaRAAStatPbPb2760GeV_2050->Print();
         graphPCMEtaRAASysPbPb2760GeV_2050->Write("graphRAAEtaPCMPbPb2760GeVSysErr_2050");
+//             cout << "graphPCMEtaRAASysPbPb2760GeV_2050" << endl;
+//             graphPCMEtaRAASysPbPb2760GeV_2050->Print();
         histoPCMEtatoPi0Stat2760GeV_2050->Write("histoEtaToPi0RatioPCMPbPb2760GeVStatErr_2050");
         graphPCMEtatoPi0Stat2760GeV_2050->Write("graphEtaToPi0RatioPCMPbPb2760GeVStatErr_2050");
+//             cout << "graphPCMEtatoPi0Stat2760GeV_2050" << endl;
+//             graphPCMEtatoPi0Stat2760GeV_2050->Print();
         graphPCMEtatoPi0Sys2760GeV_2050->Write("graphEtaToPi0RatioPCMPbPb2760GeVSysErr_2050");
+//             cout << "graphPCMEtatoPi0Sys2760GeV_2050" << endl;
+//             graphPCMEtatoPi0Sys2760GeV_2050->Print();
 
         histoEMCalPi0InvYieldStatPbPb2760GeV_0010->Write("histoInvYieldPi0EMCalPbPb2760GeVStatErr_0010");
         graphEMCalPi0InvYieldStatPbPb2760GeV_0010->Write("graphInvYieldPi0EMCalPbPb2760GeVStatErr_0010");
+//             cout << "graphEMCalPi0InvYieldStatPbPb2760GeV_0010" << endl;
+//             graphEMCalPi0InvYieldStatPbPb2760GeV_0010->Print();
         graphEMCalPi0InvYieldSysPbPb2760GeV_0010->Write("graphInvYieldPi0EMCalPbPb2760GeVSysErr_0010");
+            cout << "graphEMCalPi0InvYieldSysPbPb2760GeV_0010" << endl;
+            graphEMCalPi0InvYieldSysPbPb2760GeV_0010->Print();
         graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_0010->Write("graphInvYieldPi0EMCalPbPb2760GeVSysErr_forRAA_0010");
         histoEMCalPi0RAAStatPbPb2760GeV_0010->Write("histoRAAPi0EMCalPbPb2760GeVStatErr_0010");
         graphEMCalPi0RAAStatPbPb2760GeV_0010->Write("graphRAAPi0EMCalPbPb2760GeVStatErr_0010");
+//             cout << "graphEMCalPi0RAAStatPbPb2760GeV_0010" << endl;
+//             graphEMCalPi0RAAStatPbPb2760GeV_0010->Print();
         graphEMCalPi0RAASysPbPb2760GeV_0010->Write("graphRAAPi0EMCalPbPb2760GeVSysErr_0010");
+            cout << "graphEMCalPi0RAASysPbPb2760GeV_0010" << endl;
+            graphEMCalPi0RAASysPbPb2760GeV_0010->Print();
 
         histoEMCalPi0InvYieldStatPbPb2760GeV_2050->Write("histoInvYieldPi0EMCalPbPb2760GeVStatErr_2050");
         graphEMCalPi0InvYieldStatPbPb2760GeV_2050->Write("graphInvYieldPi0EMCalPbPb2760GeVStatErr_2050");
+//             cout << "graphEMCalPi0InvYieldStatPbPb2760GeV_2050" << endl;
+//             graphEMCalPi0InvYieldStatPbPb2760GeV_2050->Print();
         graphEMCalPi0InvYieldSysPbPb2760GeV_2050->Write("graphInvYieldPi0EMCalPbPb2760GeVSysErr_2050");
+//             cout << "graphEMCalPi0InvYieldSysPbPb2760GeV_2050" << endl;
+//             graphEMCalPi0InvYieldSysPbPb2760GeV_2050->Print();
         graphEMCalPi0InvYieldSysPbPb2760GeVforRAA_2050->Write("graphInvYieldPi0EMCalPbPb2760GeVSysErr_forRAA_2050");
         histoEMCalPi0RAAStatPbPb2760GeV_2050->Write("histoRAAPi0EMCalPbPb2760GeVStatErr_2050");
         graphEMCalPi0RAAStatPbPb2760GeV_2050->Write("graphRAAPi0EMCalPbPb2760GeVStatErr_2050");
-        graphEMCalPi0RAASysPbPb2760GeV_2050->Write("graphRAAPi0EMCalPbPb2760GeVSysErr_2050");
+//             cout << "graphEMCalPi0RAAStatPbPb2760GeV_2050" << endl;
+//             graphEMCalPi0RAAStatPbPb2760GeV_2050->Print();
+//         graphEMCalPi0RAASysPbPb2760GeV_2050->Write("graphRAAPi0EMCalPbPb2760GeVSysErr_2050");
+//             cout << "graphEMCalPi0RAASysPbPb2760GeV_2050" << endl;
+//             graphEMCalPi0RAASysPbPb2760GeV_2050->Print();
 
         histoEMCalEtaInvYieldStatPbPb2760GeV_0010->Write("histoInvYieldEtaEMCalPbPb2760GeVStatErr_0010");
         graphEMCalEtaInvYieldStatPbPb2760GeV_0010->Write("graphInvYieldEtaEMCalPbPb2760GeVStatErr_0010");
+//             cout << "graphEMCalEtaInvYieldStatPbPb2760GeV_0010" << endl;
+//             graphEMCalEtaInvYieldStatPbPb2760GeV_0010->Print();
         graphEMCalEtaInvYieldSysPbPb2760GeV_0010->Write("graphInvYieldEtaEMCalPbPb2760GeVSysErr_0010");
+//             cout << "graphEMCalEtaInvYieldSysPbPb2760GeV_0010" << endl;
+//             graphEMCalEtaInvYieldSysPbPb2760GeV_0010->Print();
         graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->Write("graphInvYieldEtaEMCalPbPb2760GeVSysErr_forRAA_0010");
         histoEMCalEtaRAAStatPbPb2760GeV_0010->Write("histoRAAEtaEMCalPbPb2760GeVStatErr_0010");
         graphEMCalEtaRAAStatPbPb2760GeV_0010->Write("graphRAAEtaEMCalPbPb2760GeVStatErr_0010");
+//             cout << "graphEMCalEtaRAAStatPbPb2760GeV_0010" << endl;
+//             graphEMCalEtaRAAStatPbPb2760GeV_0010->Print();
         graphEMCalEtaRAASysPbPb2760GeV_0010->Write("graphRAAEtaEMCalPbPb2760GeVSysErr_0010");
+//             cout << "graphEMCalEtaRAASysPbPb2760GeV_0010" << endl;
+//             graphEMCalEtaRAASysPbPb2760GeV_0010->Print();
         histoEMCalEtatoPi0StatPbPb2760GeV_0010->Write("histoEtaToPi0RatioEMCalPbPb2760GeVStatErr_0010");
         graphEMCalEtatoPi0Stat2760GeV_0010->Write("graphEtaToPi0RatioEMCalPbPb2760GeVStatErr_0010");
+//             cout << "graphEMCalEtatoPi0Stat2760GeV_0010" << endl;
+//             graphEMCalEtatoPi0Stat2760GeV_0010->Print();
         graphEMCalEtatoPi0Sys2760GeV_0010->Write("graphEtaToPi0RatioEMCalPbPb2760GeVSysErr_0010");
+//             cout << "graphEMCalEtatoPi0Sys2760GeV_0010" << endl;
+//             graphEMCalEtatoPi0Sys2760GeV_0010->Print();
 
         histoEMCalEtaInvYieldStatPbPb2760GeV_2050->Write("histoInvYieldEtaEMCalPbPb2760GeVStatErr_2050");
         graphEMCalEtaInvYieldStatPbPb2760GeV_2050->Write("graphInvYieldEtaEMCalPbPb2760GeVStatErr_2050");
+//             cout << "graphEMCalEtaInvYieldStatPbPb2760GeV_2050" << endl;
+//             graphEMCalEtaInvYieldStatPbPb2760GeV_2050->Print();
         graphEMCalEtaInvYieldSysPbPb2760GeV_2050->Write("graphInvYieldEtaEMCalPbPb2760GeVSysErr_2050");
+//             cout << "graphEMCalEtaInvYieldSysPbPb2760GeV_2050" << endl;
+//             graphEMCalEtaInvYieldSysPbPb2760GeV_2050->Print();
         graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->Write("graphInvYieldEtaEMCalPbPb2760GeVSysErr_forRAA_2050");
         histoEMCalEtaRAAStatPbPb2760GeV_2050->Write("histoRAAEtaEMCalPbPb2760GeVStatErr_2050");
         graphEMCalEtaRAAStatPbPb2760GeV_2050->Write("graphRAAEtaEMCalPbPb2760GeVStatErr_2050");
+//             cout << "graphEMCalEtaRAAStatPbPb2760GeV_2050" << endl;
+//             graphEMCalEtaRAAStatPbPb2760GeV_2050->Print();
         graphEMCalEtaRAASysPbPb2760GeV_2050->Write("graphRAAEtaEMCalPbPb2760GeVSysErr_2050");
+//             cout << "graphEMCalEtaRAASysPbPb2760GeV_2050" << endl;
+//             graphEMCalEtaRAASysPbPb2760GeV_2050->Print();
         histoEMCalEtatoPi0StatPbPb2760GeV_2050->Write("histoEtaToPi0RatioEMCalPbPb2760GeVStatErr_2050");
         graphEMCalEtatoPi0Stat2760GeV_2050->Write("graphEtaToPi0RatioEMCalPbPb2760GeVStatErr_2050");
+//             cout << "graphEMCalEtatoPi0Stat2760GeV_2050" << endl;
+//             graphEMCalEtatoPi0Stat2760GeV_2050->Print();
         graphEMCalEtatoPi0Sys2760GeV_2050->Write("graphEtaToPi0RatioEMCalPbPb2760GeVSysErr_2050");
+//             cout << "graphEMCalEtatoPi0Sys2760GeV_2050" << endl;
+//             graphEMCalEtatoPi0Sys2760GeV_2050->Print();
 
       TDirectoryFile* directoryNeutralMesonPP7TeV = (TDirectoryFile*)fInputFilePbPb2760GeV->Get("NeutralMesons_PP_7TeV");
       fInputFilePbPb2760GeV->cd("NeutralMesons_PP_7TeV");

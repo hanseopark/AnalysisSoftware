@@ -66,7 +66,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     TString outputDir                                           = Form("%s/%s/CombineGammaMeasurementsPbPb",suffix.Data(),dateForOutput.Data());
     TString fileNameTheoryPbPb                                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
     TString fileNameExperimentPbPb                              = "ExternalInputPbPb/OtherExperiments/phenix_200.root";
-    TString fileNameMesonPbPb = Form("../FinalMeson25July2017/pdf/%s/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_%s.root",dateForOutput.Data(),dateForOutput.Data());
+    TString fileNameMesonPbPb = Form("../FinalMeson25July2017/pdf/2018_02_23/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_2018_02_23.root",dateForOutput.Data(),dateForOutput.Data());
     TString fileNameMesonpPb = "ResultsRpPbpPb_2016_06_16_Preliminary.root";
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputPCMGammaPbPb.root", inputFileNamePCM.Data(), outputDir.Data()));
@@ -2738,9 +2738,9 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendDirGammaPCMOnlywithTheory->SetMargin(0.2);
         legendDirGammaPCMOnlywithTheory->SetTextFont(42);
         legendDirGammaPCMOnlywithTheory->SetHeader(collisionSystem.Data());
-        legendDirGammaPCMOnlywithTheory->AddEntry(graphPCMDirGammaSpectrumSystErr0010Plot,"  0-10%","pf");
-        legendDirGammaPCMOnlywithTheory->AddEntry(graphPCMDirGammaSpectrumSystErr2040Plot,"20-40%","pf");
-        legendDirGammaPCMOnlywithTheory->AddEntry(graphPCMDirGammaSpectrumSystErr2050Plot,"20-50%","pf");
+        legendDirGammaPCMOnlywithTheory->AddEntry(graphPCMDirGammaSpectrumSystErr0010Plot,cent0010,"pf");
+        legendDirGammaPCMOnlywithTheory->AddEntry(graphPCMDirGammaSpectrumSystErr2040Plot,cent2040,"pf");
+        legendDirGammaPCMOnlywithTheory->AddEntry(graphPCMDirGammaSpectrumSystErr2050Plot,cent2050,"pf");
         legendDirGammaPCMOnlywithTheory->Draw();
 
 //         TLegend* legendDirGammaPCMOnlyTheory = new TLegend(0.56,0.96-0.95*0.85*textsizeLabelsDirGamma*9,0.92,0.96);
@@ -2769,9 +2769,9 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendDirGammaPCMOnlyTheory->SetMargin(0.15);
         legendDirGammaPCMOnlyTheory->SetTextFont(42);
         legendDirGammaPCMOnlyTheory->AddEntry(graphTheoryMcGill0010Plot,"McGill group","l");
-        legendDirGammaPCMOnlyTheory->AddEntry((TObject*)0,"(0-10% and 20-50%)","");
+        legendDirGammaPCMOnlyTheory->AddEntry((TObject*)0,"(0#font[122]{-}10% and 20#font[122]{-}50%)","");
         legendDirGammaPCMOnlyTheory->AddEntry((TObject*)0,"in preparation","");
-        legendDirGammaPCMOnlyTheory->AddEntry(graphTheoryMcGill2040Plot,"Paquet et al. (20-40%)","l");
+        legendDirGammaPCMOnlyTheory->AddEntry(graphTheoryMcGill2040Plot,"Paquet et al. (20#font[122]{-}40%)","l");
         legendDirGammaPCMOnlyTheory->AddEntry((TObject*)0,"PRC 93 (2016) 044906","");
         legendDirGammaPCMOnlyTheory->AddEntry(graphTheoryPHSDplusPrompt0010Plot,"Linnyk et al.","l");
         legendDirGammaPCMOnlyTheory->AddEntry((TObject*)0,"PRC 92 (2015) 054914 ","");
@@ -2931,14 +2931,14 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     dummDirGammaIndMeasRedX->GetXaxis()->SetTickLength(0.025);
     dummDirGammaIndMeasRedX->GetYaxis()->SetTickLength(0.025);
     dummDirGammaIndMeasRedX->GetXaxis()->SetRangeUser(0.7,incSpectraX[1]);
-    dummDirGammaIndMeasRedX->GetYaxis()->SetRangeUser(1e-5,1.3e4);
+    dummDirGammaIndMeasRedX->GetYaxis()->SetRangeUser(1e-5,2e3);
     dummDirGammaIndMeasRedX->DrawCopy();
 
-        TLatex *labelScalingDirGamma0010_3 = new TLatex(5.5,1.6E-1,"5 x 10^{2}");
+        TLatex *labelScalingDirGamma0010_3 = new TLatex(5.5,5E-2,"5 x 10^{2}");
         SetStyleTLatex( labelScalingDirGamma0010_3, 0.85*textsizeLabelsDirGamma,4,colorComb0010,42,kFALSE);
         labelScalingDirGamma0010_3->Draw();
 
-        TLatex *labelScalingDirGamma2040_3 = new TLatex(5.5,4.2E-3,"5 x 10^{1}");
+        TLatex *labelScalingDirGamma2040_3 = new TLatex(5.5,1E-3,"5 x 10^{1}");
         SetStyleTLatex( labelScalingDirGamma2040_3, 0.85*textsizeLabelsDirGamma,4,colorComb2040,42,kFALSE);
         labelScalingDirGamma2040_3->Draw();
 
@@ -2991,15 +2991,16 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     canvasDirGammaIndMeas->Print(Form("%s/DirGammaSpectrumPCMOnly_ReducedX.%s",outputDir.Data(),suffix.Data()));
 
     canvasDirGammaIndMeas->cd();
-//     dummDirGammaIndMeasRedX->GetYaxis()->SetRangeUser(1e-5,1e4);
+    canvasDirGammaIndMeas->SetLogx(0);
+    dummDirGammaIndMeasRedX->GetXaxis()->SetRangeUser(0,6.5);
     dummDirGammaIndMeasRedX->DrawCopy();
 
         labelScalingDirGamma0010_3->Draw();
         labelScalingDirGamma2040_3->Draw();
 
-        TLatex *labelDirGammaThesisWithFit = new TLatex(0.625,0.95,"This thesis");
+        TLatex *labelDirGammaThesisWithFit = new TLatex(0.20,0.93,"ALICE work in progress");
         SetStyleTLatex( labelDirGammaThesisWithFit, 0.85*textsizeLabelsDirGamma,4);
-//         labelDirGammaThesisWithFit->Draw();
+        labelDirGammaThesisWithFit->Draw();
         TLegend* legendDirGammaPCMOnlyRedXWithFit = new TLegend(0.62,0.97-1*0.85*textsizeLabelsDirGamma*4,0.62+0.3,0.97);//0.62,0.94-1*0.85*textsizeLabelsDirGamma*4,0.62+0.3,0.94);
         legendDirGammaPCMOnlyRedXWithFit->SetFillStyle(0);
         legendDirGammaPCMOnlyRedXWithFit->SetFillColor(0);
@@ -3008,9 +3009,9 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendDirGammaPCMOnlyRedXWithFit->SetMargin(0.2);
         legendDirGammaPCMOnlyRedXWithFit->SetTextFont(42);
         legendDirGammaPCMOnlyRedXWithFit->SetHeader(collisionSystem.Data());
-        legendDirGammaPCMOnlyRedXWithFit->AddEntry(graphPCMDirGammaSpectrumSystErr0010Plot,"  0-10%","pf");
-        legendDirGammaPCMOnlyRedXWithFit->AddEntry(graphPCMDirGammaSpectrumSystErr2040Plot,"20-40%","pf");
-        legendDirGammaPCMOnlyRedXWithFit->AddEntry(graphPCMDirGammaSpectrumSystErr2050Plot,"20-50%","pf");
+        legendDirGammaPCMOnlyRedXWithFit->AddEntry(graphPCMDirGammaSpectrumSystErr0010Plot,cent0010.Data(),"pf");
+        legendDirGammaPCMOnlyRedXWithFit->AddEntry(graphPCMDirGammaSpectrumSystErr2040Plot,cent2040.Data(),"pf");
+        legendDirGammaPCMOnlyRedXWithFit->AddEntry(graphPCMDirGammaSpectrumSystErr2050Plot,cent2050.Data(),"pf");
         legendDirGammaPCMOnlyRedXWithFit->Draw();
 
         if (graphPCMDirGammaSpectrumSystErr0010Plot2){
@@ -3062,6 +3063,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     canvasDirGammaIndMeas->Print(Form("%s/DirGammaSpectrumPCMOnlyPlusFit_ReducedX.%s",outputDir.Data(),suffix.Data()));
 
     canvasDirGammaIndMeas->cd();
+    canvasDirGammaIndMeas->SetLogx(0);
     TH2D *dummDirGammaIndMeasRedX_withTheory = new TH2D("dummDirGammaIndMeasRedX_withTheory", "dummDirGammaIndMeasRedX_withTheory", 100000, 0., 8., 1000., 2e-6,6e5);
     SetStyleHistoTH2ForGraphs( dummDirGammaIndMeasRedX_withTheory, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}_{#gamma_{dir}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})", 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.75, 1.65);
     dummDirGammaIndMeasRedX_withTheory->GetXaxis()->SetLabelOffset(-0.002);
@@ -3069,6 +3071,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     dummDirGammaIndMeasRedX_withTheory->GetYaxis()->SetTickLength(0.025);
     dummDirGammaIndMeasRedX_withTheory->GetXaxis()->SetRangeUser(0.7,incSpectraX[1]);
     //dummDirGammaIndMeasRedX_withTheory->GetYaxis()->SetRangeUser(1e-5,1.3e4);
+    dummDirGammaIndMeasRedX_withTheory->GetXaxis()->SetRangeUser(0,6.5);
     dummDirGammaIndMeasRedX_withTheory->DrawCopy();
 
         TLegend* legendDirGammaTheoryPlusMcGillRedX = new TLegend(0.19,0.295-1.*0.85*textsizeLabelsDirGamma*6,0.94,0.295);
@@ -3145,11 +3148,10 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
             PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphPCMDirGammaSpectrumSumErr2050ArPlot2);
         }
 
-//         labelThesisDGwithTheory->Draw();
+        labelDirGammaThesisWithFit->Draw();
         legendDirGammaPCMOnlywithTheory->Draw();
 
     canvasDirGammaIndMeas->Print(Form("%s/DirGammaSpectrumPCMOnly_withModels_ReducedX.%s",outputDir.Data(),suffix.Data()));
-
 
    canvasDirGammaIndMeas->cd();
     canvasDirGammaIndMeas->SetLogx(0);
@@ -3396,7 +3398,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     histo2DRAADummy->GetYaxis()->SetLabelOffset(0.005);
     histo2DRAADummy->GetXaxis()->SetLabelOffset(-0.005);
     histo2DRAADummy->GetXaxis()->SetRangeUser(doubleRatioX[0],doubleRatioX[1]);
-    histo2DRAADummy->GetXaxis()->SetMoreLogLabels();
+//     histo2DRAADummy->GetXaxis()->SetMoreLogLabels();
     histo2DRAADummy->DrawCopy("");
 
         TLatex *labelRAAEnergy0010 = new TLatex(0.48,0.92,collisionSystemCent0010.Data());
@@ -3868,7 +3870,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     histo2DRAADummy2->GetXaxis()->SetLabelOffset(-0.005);
     histo2DRAADummy2->GetXaxis()->SetRangeUser(0.8,25.);
     histo2DRAADummy2->GetYaxis()->SetRangeUser(0.,4.);
-    histo2DRAADummy2->GetXaxis()->SetMoreLogLabels();
+//     histo2DRAADummy2->GetXaxis()->SetMoreLogLabels();
     histo2DRAADummy2->DrawCopy("");
 
         DrawGammaLines(0.8, 25. , 1, 1 ,1.5,kGray+1,7);
@@ -3940,6 +3942,9 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         histo2DRAADummy2->Draw("axis,same");
     canvasRAADirGammaPi0_0010->Update();
     canvasRAADirGammaPi0_0010->Print(Form("%s/DirGammaPi0PbPbandpPbRAA_0010.%s",outputDir.Data(),suffix.Data()));
+
+        return;
+
 
     canvasRAADirGammaPi0_0010->cd();
     histo2DRAADummy2->DrawCopy("");

@@ -2741,7 +2741,7 @@
                     TGraphAsymmErrors** graphRAASys,
                     Double_t fNcoll,
                     Double_t fNcollError,
-                    TString meson                                   = "Pi0",
+                    TString meson                                   = "",
                     Double_t maxPtPP                                = 0.,
                     Int_t nSubEnd                                   = 0,
                     TString functionInterpolation                   = "powPure",
@@ -2826,11 +2826,13 @@
         TFitResultPtr resultPPPowerlaw;
         TFitResultPtr resultPPPowerlaw2;
 
+        Double_t startFit = 1.;
+
         if(functionInterpolation.Contains("h")){
             if(meson.Contains("Eta")){
+
                 fitPPPowerlaw               = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.8, 20.);
                 fitPPPowerlaw2              = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.8, 20.);
-
                 //fit fixed as Pi0:
                 //     fitRAARef
                 // C_{H}  2360.8849828565      1320.2816544575
@@ -2842,12 +2844,17 @@
                 // fitPP->FixParameter(0,2360.8849828565);
                 // fitPP->FixParameter(1,6.3976643035);
                 // fitPP->FixParameter(2,0.2725372973);
-                resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 1., maxPtPPForSpec);
-                resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
+                if(nameSystem.Contains("EMCal")) startFit = 4.;
+                if(nameSystem.Contains("PCM")) maxPtPPForSpec = 15.;
+                resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", startFit, maxPtPPForSpec);
+                resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", startFit, maxPtPPForSpec);
                 resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 0.5, maxPtPPForSpec);
             } else {
                 fitPPPowerlaw               = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 40.);
                 fitPPPowerlaw2              = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 40.);
+
+                if(nameSystem.Contains("PCM")) maxPtPPForSpec = 20.;
+                if(nameSystem.Contains("EMCal")) maxPtPPForSpec = 20.;
                 resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", 2., maxPtPPForSpec);
                 resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", 1., maxPtPPForSpec);
                 resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 2.5, maxPtPPForSpec);
@@ -2860,10 +2867,11 @@
             resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 4., maxPtPPForSpec);
         }
 
-        cout << WriteParameterToFile(fitPP)<< endl;
-        cout << WriteParameterToFile(fitPPPowerlaw)<< endl;
-        cout << WriteParameterToFile(fitPPPowerlaw2)<< endl;
-
+        if(!quiet){
+            cout << WriteParameterToFile(fitPP)<< endl;
+            cout << WriteParameterToFile(fitPPPowerlaw)<< endl;
+            cout << WriteParameterToFile(fitPPPowerlaw2)<< endl;
+        }
         TGraphAsymmErrors* graphPPSpectrumExtended      = (TGraphAsymmErrors*) graphPbPbSpectrum->Clone("graphPPSpectrumExtended");
         TGraphAsymmErrors* graphPPSpectrumExtendedSys   = (TGraphAsymmErrors*) graphPbPbSpectrumSysNoMat->Clone("graphPPSpectrumExtendedSys");
         TGraphAsymmErrors *relSysErrorFuncPP            = new TGraphAsymmErrors(graphPbPbSpectrum->GetN()-nSubEnd);
@@ -2874,11 +2882,13 @@
         (*graphRAASys)                      = new TGraphAsymmErrors(graphPbPbSpectrum->GetN()-nSubEnd);
 
         Double_t lastSystematicRel          = 0;
+        Double_t lastSystematicRel1          = 0;
+        Double_t lastSystematicRel2          = 0;
         for (Int_t i=0;i<graphPbPbSpectrum->GetN()-nSubEnd ;i++){
     //         Double_t xCenter = 0.5*(xPtLimits[i+1]+xPtLimits[i]);
     //         cout <<  xBinsPP[i+firstBinPbPb] << "\t" << xBinsPbPb[i] << "\t" << xBinsErrPP[i+firstBinPbPb] << "\t" << xBinsErrPbPb[i] << endl;
             if (TMath::Abs(xBinsPP[i+firstBinPbPb] - xBinsPbPb[i]) < decisionBoundary && TMath::Abs(xBinsErrPP[i+firstBinPbPb] - xBinsErrPbPb[i]) < decisionBoundary && xBinsPP[i] < maxPtPPForSpec ){
-                cout << "loop with pp points" << endl;
+                cout << "loop with pp points for " << labelSystem.Data() << endl;
     //          cout<< "xPP: "<< xBinsPP[i+firstBinPbPb]<< " xPPErr: " << xBinsErrPP[i+firstBinPbPb] << " yPP: " << yPP[i+firstBinPbPb]<< endl;
     //          cout << "xPbPb: "<<xBinsPbPb[i]<< " xPbPbErr: " <<xBinsErrPbPb[i] <<"  yPbPb/Ncoll: " << yPbPb[i]/fNcoll<< " Raa: " << yPbPb[i] /(fNcoll*yPP[i+firstBinPbPb])<< endl;
                 graphPPSpectrumExtended->SetPoint(i,xBinsPbPb[i],yPP[i+firstBinPbPb]);
@@ -2889,11 +2899,11 @@
                     lastSystematicRel       = yErrLowPPSys[i+firstBinPbPb]/yPP[i+firstBinPbPb]*100;
                     if(!quiet) cout << "rel.syst.err. PPext : (" << yErrLowPPSys[i+firstBinPbPb] << " / " << yPP[i+firstBinPbPb] << ")*100 = " << lastSystematicRel << "\n" << endl;
                 }
-
                 relSysErrorFuncPP->SetPoint(i,xBinsPbPb[i],lastSystematicRel);
 
             } else {
-                cout << "loop with pp interpolation" << endl;
+
+                cout << "loop with pp interpolation for " << labelSystem.Data() << endl;
                 Double_t ptStart                = xBinsPbPb[i] - xBinsErrPbPb[i];
                 Double_t ptEnd                  = xBinsPbPb[i] + xBinsErrPbPb[i];
                 Double_t binWidth               = ptEnd-ptStart;
@@ -2927,35 +2937,57 @@
                 relSysErrorPowerLaw2->SetPoint(i,xBinsPbPb[i],relErrPow2);
 
                 Double_t syst                   = 0;
-                if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
-                if (abs(relErrPow1) > abs(relErrPow2)){
-                    syst                    = TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
-                    if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
+                if(nameSystem.Contains("EMCal")){
+                    // absolute error of pp ref
+                        lastSystematicRel1       = yErrLowPPSys[i+firstBinPbPb]/yPP[i+firstBinPbPb]*100;
+                        lastSystematicRel2       = yErrLowPPSys[i+firstBinPbPb-1]/yPP[i+firstBinPbPb-1]*100;
+                        cout << "pp ref1 x: " << xBinsPP[i+firstBinPbPb] << " y: " << yPP[i+firstBinPbPb] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb] << " err %: " << lastSystematicRel1 << endl;
+                        cout << "pp ref2 x: " << xBinsPP[i+firstBinPbPb-1] << " y: " << yPP[i+firstBinPbPb-1] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb-1] << " err %: " << lastSystematicRel2 << endl;
+
+                    if(lastSystematicRel1>0){
+                        syst = ((lastSystematicRel1+lastSystematicRel2)/2)*yieldPP/100;
+                        cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                    } else {
+                        syst = lastSystematicRel2*yieldPP/100;
+                        cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                    }
                 } else {
-                    syst                    = TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
-                    if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel) << endl;
+                    if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
+                    if (abs(relErrPow1) > abs(relErrPow2)){
+                        syst                    = TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
+                        if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow1*relErrPow1 + lastSystematicRel*lastSystematicRel) << endl;
+                    } else {
+                        syst                    = TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel)*yieldPP/100;
+                        if(!quiet) cout << "total syst for PP: " << TMath::Sqrt(relErrPow2*relErrPow2 + lastSystematicRel*lastSystematicRel) << endl;
+                    }
                 }
                 graphPPSpectrumExtendedSys->SetPointError(i, xBinsErrPbPb[i], xBinsErrPbPb[i],syst, syst); //-syst, +syst);
 
+
             }
         }
+
+        cout << "pp  reference " << endl;
+        graphPPSpectrumSystNoMat->Print();
+        cout << "pp  interpolated " << endl;
+        graphPPSpectrumExtendedSys->Print();
 
         TCanvas* canvasDummy6 = new TCanvas("canvasDummy2","",200,10,1200,1100);  // gives the page size
         DrawGammaCanvasSettings( canvasDummy6,  0.1, 0.01, 0.015, 0.08);
         canvasDummy6->SetLogy();
         canvasDummy6->SetLogx();
-        TH2F * histo2DDummy6 = new TH2F("histo2DDummy6","histo2DDummy5",1000,0.3,40.,1000,1e-10,10);
+        TH2F * histo2DDummy6 = new TH2F("histo2DDummy6","histo2DDummy5",1000,0.3,40.,1000,1e-11,10);
         SetStyleHistoTH2ForGraphs(histo2DDummy6, "#it{p}_{T} (GeV/#it{c})","", 0.032,0.04, 0.04,0.04, 1,1.55);
         histo2DDummy6->DrawCopy();
 
-        DrawGammaSetMarkerTGraphAsym(graphPPSpectrum, 24,2.5, kBlue, kBlue);
-        graphPPSpectrum->Draw("pEsame");
+        DrawGammaSetMarkerTGraphAsym(graphPPSpectrum, 21,2.5, kBlue, kBlue);
+        graphPPSpectrum->Draw("p,same");
         DrawGammaSetMarkerTGraphAsym(graphPPCombinedSpectrum, 24,2.5, kRed, kRed);
-        graphPPCombinedSpectrum->Draw("pEsame");
-        DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtendedSys, 20,2, kGray+1, kGray+1,1,kTRUE,kGray+1);
-        graphPPSpectrumExtendedSys->Draw("2same");
+        graphPPCombinedSpectrum->Draw("p,same");
+        DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtendedSys, 20,2, kBlack, kBlack,0,kTRUE, kGray);
+        graphPPSpectrumExtendedSys->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtended, 20,2, kBlack, kBlack);
-        graphPPSpectrumExtended->Draw("pEsame");
+        graphPPSpectrumExtended->Draw("p,same");
 
         fitPPPowerlaw->SetLineColor(kOrange+2);
         fitPPPowerlaw2->SetLineColor(kGreen+2);
@@ -2974,11 +3006,11 @@
         legend->Draw();
 
         canvasDummy6->Update();
-        canvasDummy6->Print(Form("debugWithInterpolation_%s%s.eps",labelSystem.Data(), meson.Data()));
+        canvasDummy6->Print(Form("debugWithExtrapolation_%s%s.eps",labelSystem.Data(), meson.Data()));
 
         if(!quiet) {
-        graphPPSpectrumExtendedSys->Print();
-        graphPPSpectrumExtended->Print();
+            graphPPSpectrumExtendedSys->Print();
+            graphPPSpectrumExtended->Print();
         }
 
         Double_t* yPPExtended                   =  graphPPSpectrumExtended->GetY();
