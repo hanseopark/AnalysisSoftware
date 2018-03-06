@@ -71,7 +71,7 @@ NSlashes=9
 NSlashes2=10
 
 # fileName=AnalysisResults.root;
-fileName=GammaConvV1_401.root;
+fileName=GammaConvV1_400.root;
 
 if [ $1 = "no" ]; then
    echo "Not dowloading data";
@@ -607,11 +607,11 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17p_fast/$run
-#                 if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileName file:$OUTPUTDIR_LHC17p_fast/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -658,11 +658,11 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17p_wSDD/$run
-#                 if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHData/$LHC17p_wSDD/$fileName file:$OUTPUTDIR_LHC17p_wSDD/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -709,11 +709,11 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run
-#                 if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileName file:$OUTPUTDIR_LHC17p_woSDD/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -760,11 +760,11 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17q_fast/$run
-#                 if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17q_fast/$fileName file:$OUTPUTDIR_LHC17q_fast/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17q_fast/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -811,11 +811,11 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17q_wSDD/$run
-#                 if [ -f $OUTPUTDIR_LHC17q_wSDD/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17q_wSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_wSDD/PWGGA/$TRAINPATHData/$LHC17q_wSDD/$fileName file:$OUTPUTDIR_LHC17q_wSDD/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17q_wSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -862,11 +862,11 @@ elif [ $1 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17q_woSDD/$run
-#                 if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/data/2017/LHC17q/000$run/pass1_CENT_woSDD/PWGGA/$TRAINPATHData/$LHC17q_woSDD/$fileName file:$OUTPUTDIR_LHC17q_woSDD/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17q_woSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -1592,11 +1592,11 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_fast/$run
-#                 if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileName file:$OUTPUTDIR_LHC17l3b_fast/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -1644,11 +1644,11 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_cent/$run
-#                 if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/sim/2017/LHC17l3b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/$fileName file:$OUTPUTDIR_LHC17l3b_cent/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17l3b_cent/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -1696,11 +1696,11 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l3b_woSDD/$run
-#                 if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/sim/2017/LHC17l3b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileName file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -1748,11 +1748,11 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l4b_fast/$run
-#                 if [ -f $OUTPUTDIR_LHC17l4b_fast/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17l4b_fast/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/sim/2017/LHC17l4b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/$fileName file:$OUTPUTDIR_LHC17l4b_fast/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17l4b_fast/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -1800,11 +1800,11 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l4b_cent/$run
-#                 if [ -f $OUTPUTDIR_LHC17l4b_cent/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17l4b_cent/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/sim/2017/LHC17l4b_cent/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/$fileName file:$OUTPUTDIR_LHC17l4b_cent/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17l4b_cent/$run/$fileName ]; then
                     echo "file has already been copied"
                 else
@@ -1852,11 +1852,11 @@ elif [ $2 = "yes" ]; then
             for run in $runs; do
                 echo $run
                 mkdir -p $OUTPUTDIR_LHC17l4b_woSDD/$run
-#                 if [ -f $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName ]; then
-#                     echo "file has already been copied"
-#                 else
+                if [ -f $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
                     alien_cp alien:/alice/sim/2017/LHC17l4b_cent_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/$fileName file:$OUTPUTDIR_LHC17l4b_woSDD/$run/
-#                 fi
+                fi
                 if [ -f $OUTPUTDIR_LHC17l4b_woSDD/$run/$fileName ]; then
                     echo "file has already been copied"
                 else

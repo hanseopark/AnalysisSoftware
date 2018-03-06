@@ -51,9 +51,11 @@ extern TBenchmark*	gBenchmark;
 extern TSystem*	gSystem;
 extern TMinuit*  	gMinuit;
 
-void ProduceHEPDataFileForPi0EtaPbPbPaper2017( TString nameFilePbPb = "/home/admin1/leardini/Results/FinalMeson25July2017/pdf/2018_03_05/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_2018_03_05.root"
+void ProduceHEPDataFileForPi0EtaPbPbPaper2017( TString nameFilePbPb = "/home/admin1/leardini/Results/FinalMeson25July2017/pdf/2018_03_06/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_2018_03_06.root"
     //"/home/admin1/leardini/Results/FinalMeson25July2017/pdf/2018_02_12/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_2018_02_12.root"
 ){
+
+    TString dateForOutput = ReturnDateStringForOutput();
 
 
     TString headerPaper = "*author: ACHARYA \n*reference: XXXX \n*reference: ARXIV: XXXXX : \n*reference: CERN-EP-2018-XXX : 2018 \n*status: Encoded 21 Feb 2018 by L. Leardini \n*experiment: CERN-LHC-ALICE \n*detector: ALICE \n*inspireId: \n*cdsId: 000 \n*title: Neutral pion and ETA meson production at central rapidity in Pb-Pb collisions at $\sqrt{s_{\mbox{NN}}}$~=~2.76~TeV \n*comment: CERN-LHC.  Neutral pion and ETA meson production in the transverse momentum range 1~$< p_{\mbox{T}} <$~20~GeV/$c$ have been measured at midrapidity by the ALICE experiment at the Large Hadron Collider (LHC) in central and semi-central Pb-Pb collisions at $\sqrt{s_{\mbox{NN}}}$~=~2.76~TeV. These results extend the $p_{\mbox{T}}$ reach of the previous ALICE PI0 measurements from 12~GeV/$c$ to 20~GeV/$c$ and present the first measurement of the ETA meson in heavy-ion collisions at the LHC. The ETA to PI0 ratio is similar for the two centralities and reaches a plateau value of 0.457~$\pm$~0.013$^{stat}$~$\pm$~0.018$^{syst}$. A suppression of the same magnitude for PI0 and ETA meson production is observed in Pb-Pb collisions with respect to their production in pp collisions scaled by the number of binary nucleon-nucleon collisions. For both mesons, the nuclear modification factor $R_{\mbox{AA}}$ reaches a minimum at $p_{\mbox{T}} \approx $~7~GeV/$c$ and then increases with transverse momentum. The measurements show a stronger suppression with respect to what was observed at lower center-of-mass energies in the $p_{\mbox{T}}$ range 6~$<$~$p_{\mbox{T}}$$<$~10~GeV/$c$. The results are compared with statistical hadronization models at low-$p_{\mbox{T}}$ and with NLO pQCD jet quenching predictions at high-$p_{\mbox{T}}$.\n\n";

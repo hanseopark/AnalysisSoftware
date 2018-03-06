@@ -2939,17 +2939,48 @@
                 Double_t syst                   = 0;
                 if(nameSystem.Contains("EMCal")){
                     // absolute error of pp ref
-                        lastSystematicRel1       = yErrLowPPSys[i+firstBinPbPb]/yPP[i+firstBinPbPb]*100;
-                        lastSystematicRel2       = yErrLowPPSys[i+firstBinPbPb-1]/yPP[i+firstBinPbPb-1]*100;
-                        cout << "pp ref1 x: " << xBinsPP[i+firstBinPbPb] << " y: " << yPP[i+firstBinPbPb] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb] << " err %: " << lastSystematicRel1 << endl;
-                        cout << "pp ref2 x: " << xBinsPP[i+firstBinPbPb-1] << " y: " << yPP[i+firstBinPbPb-1] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb-1] << " err %: " << lastSystematicRel2 << endl;
+                    Int_t shift = 0;
+                    if(meson.Contains("Pi0")){
+                        if(TMath::Abs(xBinsPP[i+firstBinPbPb] - xBinsPbPb[i]) > 0.5 && xBinsPP[i+firstBinPbPb+1] != xBinsPbPb[i]) shift = 1;
+                        cout << "===> PbPb bin : " << xBinsPbPb[i] << " pp bins :" << xBinsPP[i+firstBinPbPb+shift] <<  " and " << xBinsPP[i+firstBinPbPb+1+shift] << endl;
+                        if(xBinsPP[i+firstBinPbPb+1+shift] == xBinsPbPb[i] || xBinsPP[i+firstBinPbPb+1+shift]+0.5 == xBinsPbPb[i]){
+                            lastSystematicRel2       = yErrLowPPSys[i+firstBinPbPb+1+shift]/yPP[i+firstBinPbPb+1+shift]*100;
+                            cout << "pp ref2 x: " << xBinsPP[i+firstBinPbPb+1+shift] << " y: " << yPP[i+firstBinPbPb+1+shift] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb+1+shift] << " err %: " << lastSystematicRel2 << endl;
 
-                    if(lastSystematicRel1>0){
-                        syst = ((lastSystematicRel1+lastSystematicRel2)/2)*yieldPP/100;
-                        cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                            syst = lastSystematicRel2*yieldPP/100;
+                            cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                        } else if(xBinsPP[i+firstBinPbPb+shift] == xBinsPbPb[i]){
+                            lastSystematicRel1       = yErrLowPPSys[i+firstBinPbPb+shift]/yPP[i+firstBinPbPb+shift]*100;
+                            cout << "pp ref1 x: " << xBinsPP[i+firstBinPbPb+shift] << " y: " << yPP[i+firstBinPbPb+shift] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb+shift] << " err %: " << lastSystematicRel1 << endl;
+
+                            syst = lastSystematicRel1*yieldPP/100;
+                            cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                        } else {
+                            lastSystematicRel1       = yErrLowPPSys[i+firstBinPbPb+shift]/yPP[i+firstBinPbPb+shift]*100;
+                            lastSystematicRel2       = yErrLowPPSys[i+firstBinPbPb+1+shift]/yPP[i+firstBinPbPb+1+shift]*100;
+                            cout << "pp ref1 x: " << xBinsPP[i+firstBinPbPb+shift] << " y: " << yPP[i+firstBinPbPb+shift] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb+shift] << " err %: " << lastSystematicRel1 << endl;
+                            cout << "pp ref2 x: " << xBinsPP[i+firstBinPbPb+1+shift] << " y: " << yPP[i+firstBinPbPb+1+shift] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb+1+shift] << " err %: " << lastSystematicRel2 << endl;
+
+                            syst = ((lastSystematicRel1+lastSystematicRel2)/2)*yieldPP/100;
+                            cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                        }
                     } else {
-                        syst = lastSystematicRel2*yieldPP/100;
-                        cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                        cout << "===> PbPb bin : " << xBinsPbPb[i] << " pp bins :" << xBinsPP[i+firstBinPbPb-1] <<  " and " << xBinsPP[i+firstBinPbPb] << endl;
+                        if(xBinsPP[i+firstBinPbPb-1]<18.){
+                            lastSystematicRel1       = yErrLowPPSys[i+firstBinPbPb]/yPP[i+firstBinPbPb]*100;
+                            cout << "pp ref1 x: " << xBinsPP[i+firstBinPbPb] << " y: " << yPP[i+firstBinPbPb] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb] << " err %: " << lastSystematicRel1 << endl;
+                            lastSystematicRel2       = yErrLowPPSys[i+firstBinPbPb-1]/yPP[i+firstBinPbPb-1]*100;
+                            cout << "pp ref2 x: " << xBinsPP[i+firstBinPbPb-1] << " y: " << yPP[i+firstBinPbPb-1] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb-1] << " err %: " << lastSystematicRel2 << endl;
+
+                            syst = ((lastSystematicRel1+lastSystematicRel2)/2)*yieldPP/100;
+                            cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                        } else {
+                            lastSystematicRel2       = yErrLowPPSys[i+firstBinPbPb-1]/yPP[i+firstBinPbPb-1]*100;
+                            cout << "pp ref2 x: " << xBinsPP[i+firstBinPbPb-1] << " y: " << yPP[i+firstBinPbPb-1] <<  " rel err: " << yErrLowPPSys[i+firstBinPbPb-1] << " err %: " << lastSystematicRel2 << endl;
+
+                            syst = lastSystematicRel2*yieldPP/100;
+                            cout << "pp interpol x: " << xBinsPbPb[i] << " y: " << yieldPP <<  " rel err: " << syst << " err %: " << syst/yieldPP*100 << endl;
+                        }
                     }
                 } else {
                     if(!quiet) cout << "lastSystematicRel: " << lastSystematicRel << endl;
@@ -3009,8 +3040,8 @@
         canvasDummy6->Print(Form("debugWithExtrapolation_%s%s.eps",labelSystem.Data(), meson.Data()));
 
         if(!quiet) {
-            graphPPSpectrumExtendedSys->Print();
             graphPPSpectrumExtended->Print();
+            graphPPSpectrumExtendedSys->Print();
         }
 
         Double_t* yPPExtended                   =  graphPPSpectrumExtended->GetY();
