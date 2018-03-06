@@ -3026,11 +3026,11 @@
 
             (*graphRAASys)->SetPoint(i,xBinsPbPb[i],yPbPb[i] /(fNcoll* yPPExtended[i]));
             if (TMath::Abs(xBinsPP[i+firstBinPbPb]-xBinsPbPb[i]) < decisionBoundary && TMath::Abs(xBinsErrPP[i+firstBinPbPb]-xBinsErrPbPb[i]) < decisionBoundary && xBinsPP[i]<maxPtPPForSpec ){
-            if(!quiet) {
-                cout << "loop raa with pp points" << endl;
-                cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
-                cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
-            }
+                if(!quiet) {
+                    cout << "loop raa with pp points" << endl;
+                    cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
+                    cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
+                }
                 errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
                                                         pow(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.)
                                                         , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account
@@ -3041,11 +3041,11 @@
                 if(!quiet) cout << "---------------" << endl;
 
             } else {
-            if(!quiet) {
-                cout << "loop raa with extr points" << endl;
-                cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
-                cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
-            }
+                if(!quiet) {
+                    cout << "loop raa with extr points" << endl;
+                    cout << "rel syst err PbPb: " << graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i] << endl;
+                    cout << "rel syst err pp: "   << graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i] << endl;
+                }
                 errYlow                         = pow(  pow(graphPbPbSpectrumSysNoMat->GetErrorYlow(i)/yPbPb[i],2.) +
                                                         pow(graphPPSpectrumExtendedSys->GetErrorYlow(i)/yPPExtended[i],2.)
                                                         , 0.5)*yPbPb[i] /(fNcoll* yPPExtended[i]); //+ pow(fNcollError/fNcoll,2.) fNcollError not taking into account

@@ -1895,9 +1895,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
         graphEMCalInvYieldStatPbPb2760GeVUnshifted_2050     = (TGraphAsymmErrors*)graphEMCalEtaInvYieldStatPbPb2760GeV_2050->Clone("UnshiftedStatEMCalEta_2050");
         graphEMCalInvYieldSysPbPb2760GeVUnshifted_2050      = (TGraphAsymmErrors*)graphEMCalEtaInvYieldSysPbPb2760GeV_2050->Clone("UnshiftedSysEMCalEta_2050");
-        graphEMCalInvYieldSysPbPb2760GeVforRAAUnshifted_2050 = (TGraphAsymmErrors*)graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_0010->Clone("UnshiftedSysforRAAEMCalPi0_2050");
+        graphEMCalInvYieldSysPbPb2760GeVforRAAUnshifted_2050 = (TGraphAsymmErrors*)graphEMCalEtaInvYieldSysPbPb2760GeVforRAA_2050->Clone("UnshiftedSysforRAAEMCalPi0_2050");
 
     }
+
 
     if(meson.CompareTo("Pi0")==0 && (thesisPlotting || PaperPi0)){
 
@@ -2567,7 +2568,6 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphEMCalInvYieldSysPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldSysPbPb2760GeVYShifted_2050, fitFunctionShiftingY_2050);
             graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = (TGraphAsymmErrors*)graphEMCalInvYieldStatPbPb2760GeVUnshifted_2050->Clone("YShiftedEMCalStat2050");
             graphEMCalInvYieldStatPbPb2760GeVYShifted_2050 = ApplyYshiftIndividualSpectra( graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, fitFunctionShiftingY_2050);
-
 
             TCanvas* canvasDummy3 = new TCanvas("canvasDummy3","",200,10,1350,1350*1.15);  // gives the page size
             DrawGammaCanvasSettings( canvasDummy3, 0.16, 0.02, 0.02, 0.09);
@@ -5639,24 +5639,24 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //       graphPCMInvYieldSysPbPb2760GeVYShifted_2050->RemovePoint(0);
       ////////////////
           CalcRaa(    graphInvSectionPCMStatEta2760GeVforRAA, graphInvSectionPCMSysEta2760GeVforRAA,graphInvSectionCombStatEta2760GeVforRAA, fitInvCrossSectionTsallisEtaComb2760GeV,
+                          graphPCMInvYieldStatPbPb2760GeVYShifted_0010, graphPCMInvYieldSysPbPb2760GeVYShifted_0010,
+                          &graphRAAPCM0010, &graphRAASysPCM0010,
+                          nColl0010, nCollErr0010,"Eta",6.,0,"h",quiet);
+
+          CalcRaa(    graphInvSectionPCMStatEta2760GeVforRAA, graphInvSectionPCMSysEta2760GeVforRAA,graphInvSectionCombStatEta2760GeVforRAA, fitInvCrossSectionTsallisEtaComb2760GeV,
                           graphPCMInvYieldStatPbPb2760GeVYShifted_2050, graphPCMInvYieldSysPbPb2760GeVYShifted_2050,
                           &graphRAAPCM2050, &graphRAASysPCM2050,
                           nColl2050, nCollErr2050,"Eta",6.,0.,"h",quiet);
 
           CalcRaa(    graphInvSectionEMCalStatEta2760GeVforRAA, graphInvSectionEMCalSysEta2760GeVforRAA,graphInvSectionCombStatEta2760GeVforRAA, fitInvCrossSectionTsallisEtaComb2760GeV,
-                          graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, graphEMCalInvYieldSysPbPb2760GeVYShifted_2050,
-                          &graphRAAEMCal2050, &graphRAASysEMCal2050,
-                          nColl2050, nCollErr2050,"Eta",20.,0.,"h",quiet);
-
-          CalcRaa(    graphInvSectionPCMStatEta2760GeVforRAA, graphInvSectionPCMSysEta2760GeVforRAA,graphInvSectionCombStatEta2760GeVforRAA, fitInvCrossSectionTsallisEtaComb2760GeV,
-                          graphPCMInvYieldStatPbPb2760GeVYShifted_0010, graphPCMInvYieldSysPbPb2760GeVYShifted_0010,
-                          &graphRAAPCM0010, &graphRAASysPCM0010,
-                          nColl0010, nCollErr0010,"Eta",6.,0,"h",quiet);
-
-          CalcRaa(    graphInvSectionEMCalStatEta2760GeVforRAA, graphInvSectionEMCalSysEta2760GeVforRAA,graphInvSectionCombStatEta2760GeVforRAA, fitInvCrossSectionTsallisEtaComb2760GeV,
                           graphEMCalInvYieldStatPbPb2760GeVYShifted_0010, graphEMCalInvYieldSysPbPb2760GeVYShifted_0010,
                           &graphRAAEMCal0010, &graphRAASysEMCal0010,
                           nColl0010, nCollErr0010,"Eta",20.,0,"h",quiet);
+
+          CalcRaa(    graphInvSectionEMCalStatEta2760GeVforRAA, graphInvSectionEMCalSysEta2760GeVforRAA,graphInvSectionCombStatEta2760GeVforRAA, fitInvCrossSectionTsallisEtaComb2760GeV,
+                          graphEMCalInvYieldStatPbPb2760GeVYShifted_2050, graphEMCalInvYieldSysPbPb2760GeVYShifted_2050,
+                          &graphRAAEMCal2050, &graphRAASysEMCal2050,
+                          nColl2050, nCollErr2050,"Eta",20.,0.,"h",quiet);
 
           histoRAAStatPCM0010       = GraphAsymErrorsToHist_withErrors(graphRAAPCM0010,"histoRAAStatPCM0010");
           histoRAAStatEMCal0010       = GraphAsymErrorsToHist_withErrors(graphRAAEMCal0010,"histoRAAStatEMCal0010");
@@ -5677,7 +5677,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //     graphRAAEMCal0010->Print();
 //     graphRAASysPCM0010->Print();
 //     graphRAASysPHOS0010->Print();
-//     graphRAASysEMCal0010->Print();
+//     graphRAASysEMCal2050->Print();
 //     return;
 
     TCanvas* canvasRAAMeasurements = new TCanvas("canvasRAAMeasurements","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size
@@ -5967,10 +5967,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //     graphCombRAATotPbPb2760GeV_2050->Print();
 //     graphCombRAAStatPbPb2760GeV_2050->Print();
 //     graphCombRAASysPbPb2760GeV_2050->Print();
-//     for(Int_t i=0; i<graphCombRAASysPbPb2760GeV_0010->GetN()-1;i++){
+//     for(Int_t i=0; i<graphCombRAASysPbPb2760GeV_0010->GetN()+1;i++){
 //         cout << "x: " << graphCombRAASysPbPb2760GeV_0010->GetX()[i] << " y: " << graphCombRAASysPbPb2760GeV_0010->GetY()[i] << " err: " << graphCombRAASysPbPb2760GeV_0010->GetEYlow()[i] << " % err: " << graphCombRAASysPbPb2760GeV_0010->GetEYlow()[i]/graphCombRAASysPbPb2760GeV_0010->GetY()[i]*100 << endl;
 //     }
-//     for(Int_t i=0; i<graphCombRAASysPbPb2760GeV_2050->GetN()-1;i++){
+//     for(Int_t i=0; i<graphCombRAASysPbPb2760GeV_2050->GetN()+1;i++){
 //         cout << "x: " << graphCombRAASysPbPb2760GeV_2050->GetX()[i] << " y: " << graphCombRAASysPbPb2760GeV_2050->GetY()[i] << " err: " << graphCombRAASysPbPb2760GeV_2050->GetEYlow()[i] << " % err: " << graphCombRAASysPbPb2760GeV_2050->GetEYlow()[i]/graphCombRAASysPbPb2760GeV_2050->GetY()[i]*100 << endl;
 //     }
 //     return;
