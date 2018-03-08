@@ -187,6 +187,123 @@ function CopyFileIfNonExisitent()
 }
 
 
+function CopyFileIfNonExisitentDiffList()
+{
+    echo "file path: "$1
+    echo "alien path: " $2
+    echo "list: " $3
+    echo "number of subdirectories: " $4
+    echo "detailed path subdirs: " $5
+    echo "separate also the tree: " $6
+    if [ $DOWNLOADON == 1 ]; then
+        if [ -f $1/$3/root_archive.zip ] && [ -s $1/$3/root_archive.zip ]; then
+            echo "$1/$3/root_archive.zip exists";
+        else
+            echo "couldn't find $1/$3/root_archive.zip copying"
+            mkdir -p $1/$3
+            alien_ls $2/root_archive.zip > templog.txt
+            if  grep -q "no such file" templog.txt ;
+            then
+                echo "no root_archive.zip has been found, copying single files"
+                alien_cp alien:$2/Gamma* file:$1/$3/
+                cd $1/$3
+                zip root_archive.zip *.root
+                cd -
+            else
+                alien_cp alien:$2/root_archive.zip file:$1/$3/
+            fi
+            if [ -f $1/$3/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
+                echo "copied correctly"
+            else
+                rm locallog.txt
+                if [ $5 != "none" ]; then
+                    if [ $5 == "*Stage*" ]; then
+                        alien_ls -F $5/ | grep "/" > locallog.txt
+                    else
+                        alien_ls -F $5/ | grep "/" | grep -v "Stage" > locallog.txt
+                    fi
+                    echo "********** log output ***********"
+                    cat locallog.txt
+                    dirNumbers=`cat locallog.txt`
+                    firstDir=`head -n1 locallog.txt`
+                    for dirName in $dirNumbers; do
+                        mkdir -p $1/$3/Stage1/$dirName
+                        if [ -f $1/$3/Stage1/$dirName/root_archive.zip ] && [ -s $1/$3/Stage1/$dirName/root_archive.zip ]; then
+                            echo "$1/$3/Stage1/$dirName/root_archive.zip exists";
+                        else
+                            alien_cp alien:$5/$dirName/root_archive.zip file:$1/$3/Stage1/$dirName/
+                            unzip -u $1/$3/Stage1/$dirName/root_archive.zip -d $1/$3/Stage1/$dirName/
+                        fi
+                    done
+                    rm locallog.txt
+                    BASEDIR=$PWD
+                    cd $1/$3/Stage1/$firstDir/
+                    ls G*.root > $BASEDIR/locallog.txt
+                    cd -
+                    echo "********** log output 2 for merging***********"
+                    cat $BASEDIR/locallog.txt
+                    fileNumbers=`cat $BASEDIR/locallog.txt`
+                    for fileName in $fileNumbers; do
+                        hadd -n 10 -f $1/$3/$fileName $1/$3/Stage1/*/$fileName
+                    done
+                    cd $1/$3/
+                    zip root_archive.zip *.root
+                    cd -
+                fi
+            fi
+      fi
+      unzip -u $1/$3/root_archive.zip -d $1/$3/
+    fi
+
+    if [ $SEPARATEON == 1 ]; then
+        rm fileNumbers2.txt
+        GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt
+        fileNumbers=`cat fileNumbers2.txt`
+        for fileNumber in $fileNumbers; do
+            echo $fileNumber
+            SeparateCutsIfNeeded $1/$3/GammaConvV1_$fileNumber 0 $6
+        done;
+        rm fileNumbers2.txt
+        GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt
+        fileNumbers=`cat fileNumbers2.txt`
+        for fileNumber in $fileNumbers; do
+            echo $fileNumber
+            SeparateCutsIfNeeded $1/$3/GammaConvCalo_$fileNumber 2 $6
+        done;
+        rm fileNumbers2.txt
+        GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt
+        fileNumbers=`cat fileNumbers2.txt`
+        for fileNumber in $fileNumbers; do
+            echo $fileNumber
+            SeparateCutsIfNeeded $1/$3/GammaCalo_$fileNumber 4 $6
+        done;
+        rm fileNumbers2.txt
+    fi
+
+    rm fileNumbers2.txt
+    GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt
+    fileNumbers=`cat fileNumbers2.txt`
+    for fileNumber in $fileNumbers; do
+        echo $fileNumber
+        cp $1/$3/GammaConvV1_$fileNumber.root $1/GammaConvV1-$3\_$fileNumber.root
+    done;
+    rm fileNumbers2.txt
+    GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt
+    fileNumbers=`cat fileNumbers2.txt`
+    for fileNumber in $fileNumbers; do
+        echo $fileNumber
+        cp $1/$3/GammaConvCalo_$fileNumber.root $1/GammaConvCalo-$3\_$fileNumber.root
+    done;
+    rm fileNumbers2.txt
+    GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt
+    fileNumbers=`cat fileNumbers2.txt`
+    for fileNumber in $fileNumbers; do
+        echo $fileNumber
+        cp $1/$3/GammaCalo_$fileNumber.root $1/GammaCalo-$3\_$fileNumber.root
+    done;
+    rm fileNumbers2.txt
+}
+
 
 function ChangeStructureIfNeededPCM()
 {

@@ -1282,7 +1282,8 @@ void ExtractSignalV2(   TString meson                   = "",
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
             fMesonYieldsCorResidualBckFunc[k][iPt]          = fMesonYields[k][iPt]- fMesonYieldsResidualBckFunc[k][iPt];
-            fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt] + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
+            fMesonYieldsCorResidualBckFuncError[k][iPt]     = pow(( fMesonYieldsError[k][iPt]*fMesonYieldsError[k][iPt]
+                                                                    + fMesonYieldsResidualBckFuncError[k][iPt]*fMesonYieldsResidualBckFuncError[k][iPt]),0.5);
             fMesonYieldsPerEvent[k][iPt]                    = fMesonYieldsCorResidualBckFunc[k][iPt]/fNEvents;
             fMesonYieldsPerEventError[k][iPt]               = fMesonYieldsCorResidualBckFuncError[k][iPt]/fNEvents;
 
@@ -1442,7 +1443,8 @@ void ExtractSignalV2(   TString meson                   = "",
 
 
             fMesonYieldsCorResidualBckFunc[k+3][iPt]        = fMesonYields[k+3][iPt]- fMesonYieldsResidualBckFunc[k+3][iPt];
-            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt] + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
+            fMesonYieldsCorResidualBckFuncError[k+3][iPt]   = pow(( fMesonYieldsError[k+3][iPt]*fMesonYieldsError[k+3][iPt]
+                                                                    + fMesonYieldsResidualBckFuncError[k+3][iPt]*fMesonYieldsResidualBckFuncError[k+3][iPt]),0.5);
             fMesonYieldsPerEvent[k+3][iPt]                  = fMesonYieldsCorResidualBckFunc[k+3][iPt]/fNEvents;
             fMesonYieldsPerEventError[k+3][iPt]             = fMesonYieldsCorResidualBckFuncError[k+3][iPt]/fNEvents;
 
@@ -5878,6 +5880,10 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }
 
     if (fHistoClustersPt){
+        TGraphAsymmErrors* dummy        = new TGraphAsymmErrors(fHistoClustersPt);
+        dummy->Print();
+        delete dummy;
+        cout << "writing ClusterPt" << endl;
         fHistoClustersPt->Write("ClusterPt");
         TH1D*   fHistoClustersPtPerEvent   = (TH1D*)fHistoClustersPt->Rebin(fNBinsClusterPt,"fHistoClustersPtPerEvent",fBinsClusterPt);
         fHistoClustersPtPerEvent->Divide(fDeltaPtCluster);
@@ -5885,6 +5891,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         fHistoClustersPtPerEvent->Write("ClusterPtPerEvent");
     }
     if (fHistoClustersE){
+        cout << "writing ClusterE" << endl;
         fHistoClustersE->Write("ClusterE");
         TH1D*   fHistoClustersEPerEvent   = (TH1D*)fHistoClustersE->Rebin(fNBinsClusterPt,"fHistoClustersEPerEvent",fBinsClusterPt);
         fHistoClustersEPerEvent->Divide(fDeltaPtCluster);
@@ -5892,6 +5899,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
         fHistoClustersEPerEvent->Write("ClusterEPerEvent");
     }
     if (fEnableDCCluster){
+        cout << "writing ClusterPtReb" << endl;
         TH1D*   fHistoTrueGammaClusPtRebinned   = NULL;
         TH1D*   fHistoTrueGammaDCClusPtRebinned   = NULL;
         if (fHistoTrueGammaClusPt){
@@ -5920,6 +5928,7 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }
 
     if (fHistoClustersOverlapHeadersPt){
+        cout << "writing ClusterOverlapHeadersPt" << endl;
         fHistoClustersOverlapHeadersPt->Write("ClusterOverlapHeadersPt");
         TH1D*   fHistoClustersOverlapHeadersPtPerEvent   = (TH1D*)fHistoClustersOverlapHeadersPt->Rebin(fNBinsClusterPt,"fHistoClustersOverlapHeadersPtPerEvent",fBinsClusterPt);
         fHistoClustersOverlapHeadersPtPerEvent->Divide(fDeltaPtCluster);
@@ -5929,53 +5938,70 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
 
     // write histograms for all integration windows: normal, wide, narrow, left, left wide, left narrow
     for (Int_t k = 0; k < 6; k++){
+        cout << k << " writing yield" << endl;
         if (fHistoYieldMeson[k])            fHistoYieldMeson[k]->Write();
         if (fHistoYieldMesonPerEvent[k])    fHistoYieldMesonPerEvent[k]->Write();
     }
 
     // write histograms for assumption of different backgrounds
     for (Int_t k = 0; k < 6; k++){
+        cout << k << " writing yield diff BG" << endl;
         if (fHistoYieldDiffBck[k]) fHistoYieldDiffBck[k]->Write();
         if (fHistoYieldDiffBckRatios[k]) fHistoYieldDiffBckRatios[k]->Write();
     }
     for (Int_t k = 0; k < 3; k++){
+        cout << k << " writing yield diff BGresult" << endl;
         if (fHistoYieldDiffBckResult[k]) fHistoYieldDiffBckResult[k]->Write();
     }
 
 
     // write histograms for integration windows: normal, wide, narrow
     for (Int_t k = 0; k < 3; k++){
+        cout << k << " control hists" << endl;
         if (fHistoMassWindowHigh[k])        fHistoMassWindowHigh[k]->Write();
         if (fHistoMassWindowLow[k])         fHistoMassWindowLow[k]->Write();
         if (fHistoSigndefaultMeson[k])      fHistoSigndefaultMeson[k]->Write();
         if (fHistoSBdefaultMeson[k])        fHistoSBdefaultMeson[k]->Write();
     }
 
+    cout << " writing lambda tail" << endl;
     fHistoLambdaTail->Write();
+    cout << " writing amplitude" << endl;
     fHistoAmplitude->Write();
+    cout << " writing sigma" << endl;
     fHistoSigma->Write();
+    cout << " writing res BG const" << endl;
     fHistoResidualBGcon->Write();
+    cout << " writing res BG lin"  << endl;
     fHistoResidualBGlin->Write();
+    cout << " writing res BG yields" << endl;
     fHistoRatioResBGYield->Write();
+    cout << " writing res BG yield to Sig" << endl;
     fHistoRatioResBGYieldToSPlusResBG->Write();
     for (Int_t m = 0; m < 4; m++){
+        cout << m <<  " writing fit quality" << endl;
         fHistoChi2[m]->Write();
         fHistoResBGYield[m]->Write();
     }
+
+    cout <<  "meson quantities" << endl;
     fHistoMassMeson->Write();
     fHistoMassGaussianMeson->Write();
     fHistoWidthGaussianMeson->Write();
     fHistoFWHMMeson->Write();
+    cout <<  "delta pt" << endl;
     fDeltaPt->Write();
 
 
-
+    cout <<  "meson quantities left" << endl;
     fHistoMassMesonLeft->Write();
     fHistoFWHMMesonLeft->Write();
+    cout << "inv mass full pt" << endl;
     fMesonFullPtSignal->Write();
     fMesonFullPtBackground->Write();
     fMesonFullPtBackNorm->SetName("Mapping_BackNorm_InvMass_FullPt");
     fMesonFullPtBackNorm->Write();
+    cout << "event Quality" << endl;
     fNumberOfGoodESDTracks->Write();
     fEventQuality->Write();
 

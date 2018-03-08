@@ -2144,7 +2144,7 @@
             } else {
                 return Form("CL1 %i-%i%s", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10,"%");
             }
-        } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0 ){
+        } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0 || ppCutNumber.CompareTo("a") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-100%";
             } else {
@@ -2174,7 +2174,7 @@
             } else {
                 return Form("CL1_%i-%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
             }
-        } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0){
+        } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0 || ppCutNumber.CompareTo("a") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "0-100";
             } else {
@@ -2208,7 +2208,7 @@
             } else {
                 return Form("CL1_%i%i", CutNumberToInteger(centralityCutNumberStart)*10,CutNumberToInteger(centralityCutNumberEnd)*10);
             }
-        } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0){
+        } else if (ppCutNumber.CompareTo("3") ==0 || ppCutNumber.CompareTo("6") ==0 || ppCutNumber.CompareTo("7") ==0 || ppCutNumber.CompareTo("a") ==0){
             if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
                 return "00100";
             } else {

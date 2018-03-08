@@ -10,10 +10,10 @@ source basicFunction.sh
 
 DOWNLOADON=1
 MERGEON=1
-SINGLERUN=1
+SINGLERUN=0
 SEPARATEON=0
-MERGEONSINGLEData=1
-MERGEONSINGLEMC=1
+MERGEONSINGLEData=0
+MERGEONSINGLEMC=0
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
@@ -66,13 +66,13 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17j7MC="821";
 # LHC17j7MC="822";
 
-TRAINDIR=Legotrain-vAN20180226-MCmorestat
+# TRAINDIR=Legotrain-vAN20180226-MCmorestat
 # LHC17nData="392"; #pass 1
 # LHC17j7MC="835";
 # LHC17j7MC="836";
-LHC17j7MCa="child_1";
-LHC17j7MCb="child_2";
-LHC17j7MCc="child_3";
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
 # ISAOD=1
 # LHC17nData="448"; #pass 1
 # LHC17j7MC="874";
@@ -80,6 +80,38 @@ LHC17j7MCc="child_3";
 # LHC17j7MCa="child_1";
 # LHC17j7MCb="child_2";
 # LHC17j7MCc="child_3";
+
+# TRAINDIR=Legotrain-vAN20180228-nonlinV1
+# ISAOD=0
+# LHC17nData="392"; #pass 1
+# LHC17j7MC="836";
+# LHC17j7MC="837";
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
+# ISAOD=1
+# LHC17nData="449"; #pass 1
+# LHC17j7MC="875";
+# LHC17j7MC="877";
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
+
+
+TRAINDIR=Legotrain-vAN20180228-EMClowth
+# ISAOD=0
+# LHC17nData="392"; #pass 1
+# LHC17j7MC="836";
+# LHC17j7MC="837";
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
+ISAOD=1
+LHC17nData="450"; #pass 1
+LHC17j7MC="876";
+LHC17j7MCa="child_1";
+LHC17j7MCb="child_2";
+LHC17j7MCc="child_3";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -185,7 +217,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC17n.txt $OUTPUTDIR_LHC17n $NSlashes3 GammaCalo All$addName runlists/runNumbersLHC17n_all.txt "no"
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17n "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainData/$LHC17nData/merge_runlist_1" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17n "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainData/$LHC17nData/merge" All$addName $NSlashes3 "" kTRUE
         fi
     fi
 
@@ -208,7 +240,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC17j7.txt $OUTPUTDIR_LHC17j7a $NSlashes3 GammaCalo All$addName runlists/runNumbersLHC17j7_all.txt "no"
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17j7a "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/$LHC17j7MCa/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17j7a "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/$LHC17j7MCa/merge" All$addName $NSlashes3 "" kTRUE
         fi
     fi
     if [ $HAVELHC17j7b == 1 ]; then
@@ -229,7 +261,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC17j7.txt $OUTPUTDIR_LHC17j7b $NSlashes3 GammaCalo All$addName runlists/runNumbersLHC17j7_all.txt "no"
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17j7b "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/$LHC17j7MCb/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17j7b "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/$LHC17j7MCb/merge" All$addName $NSlashes3 "" kTRUE
         fi
     fi
     if [ $HAVELHC17j7c == 1 ]; then
@@ -250,7 +282,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 MergeAccordingToSpecificRunlist fileLHC17j7.txt $OUTPUTDIR_LHC17j7c $NSlashes3 GammaCalo All$addName runlists/runNumbersLHC17j7_all.txt "no"
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17j7c "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/$LHC17j7MCc/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17j7c "/alice/cern.ch/user/a/alitrain/PWGGA/$pathTrainMC/$LHC17j7MCc/merge" All$addName $NSlashes3 "" kTRUE
         fi
     fi
 

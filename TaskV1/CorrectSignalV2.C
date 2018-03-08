@@ -1022,7 +1022,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if (histoYieldTrueSecFracMeson[k][j]){
                     histoYieldTrueSecFracMeson_orig[k][j]   = (TH1D*)histoYieldTrueSecFracMeson[k][j]->Clone(Form("TrueSecFrom%sFrac%s_orig",nameSecMeson[j].Data(), nameIntRange[k].Data()));
                     // set fractions to 0 if none of the pt bins is above 1e-3 => 0.1%
-                    if (FindLargestBin1DHist(histoYieldTrueSecFracMeson[k][j]) < 1e-3 ){
+                    if (FindLargestBin1DHist(histoYieldTrueSecFracMeson[k][j]) < 1e-3 || (optionEnergy.Contains("XeXe") && j == 1)){
+                        if (optionEnergy.Contains("XeXe") && j == 1) cout << "switching of " <<  nameSecMeson[j].Data() << " sec correction explicitly for XeXe"<< endl;
                         cout << "No fraction above 0.1% for " << nameSecMeson[j].Data() << " in range " << nameIntRange[k].Data() << ", setting them to 0" << endl;
                         haveSecUsed[j]                      = kFALSE;
                         for (Int_t i = 1; i < histoYieldTrueSecFracMeson[k][j]->GetNbinsX()+1; i++){

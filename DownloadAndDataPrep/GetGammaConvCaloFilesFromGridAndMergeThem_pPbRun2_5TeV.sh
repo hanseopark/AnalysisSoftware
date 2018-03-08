@@ -176,17 +176,17 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC16tData="child_4"; #pass 2
 
 TRAINDIR=Legotrain-vAN20180220-EMCNonLin
-LHC16qtData="720"; #pass 2
-LHC16qDataFast="child_1"; #pass 3
-LHC16tDataFast="child_2"; #pass 2
-LHC16qData="child_3"; #pass 3
-LHC16tData="child_4"; #pass 2
-LHC17f2a_fixMCMoth="1189";
-LHC17f2a_fixMC="child_2";
-LHC17f2a_fixMCFast="child_1";
+# LHC16qtData="720"; #pass 2
+# LHC16qDataFast="child_1"; #pass 3
+# LHC16tDataFast="child_2"; #pass 2
+# LHC16qData="child_3"; #pass 3
+# LHC16tData="child_4"; #pass 2
+# LHC17f2a_fixMCMoth="1189";
+# LHC17f2a_fixMC="child_2";
+# LHC17f2a_fixMCFast="child_1";
 LHC17f2bMCMoth="1190";
 LHC17f2bMC="child_2";
-LHC17f2bMCFast="child_1";
+# LHC17f2bMCFast="child_1";
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -406,7 +406,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
 
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC16q "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16qData/merge_runlist_1" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16q "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16qData/merge_runlist_1" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC16qF == 1 ]; then
@@ -436,7 +436,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 done;
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC16qF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16qDataFast/merge_runlist_1" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16qF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16qDataFast/merge_runlist_1" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC16t == 1 ]; then
@@ -466,7 +466,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 done;
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC16t "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16tData/merge_runlist_1" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16t "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16tData/merge_runlist_1" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC16tF == 1 ]; then
@@ -497,7 +497,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
 
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC16tF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16tDataFast/merge_runlist_1" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC16tF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC16tDataFast/merge_runlist_1" All $NSlashes "" kTRUE
         fi
     fi
 
@@ -536,7 +536,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 done;
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMC/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f2b "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMC/merge" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC17f2bF == 1 ]; then
@@ -573,7 +573,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 done;
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2bF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMCFast/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f2bF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2bMCFast/merge" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC17f2afix == 1 ]; then
@@ -609,7 +609,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 done;
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fix "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMC/merge" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC17f2afixF == 1 ]; then
@@ -646,7 +646,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
 
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17f2a_fixF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMCFast/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17f2a_fixF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17f2a_fixMCFast/merge" All $NSlashes "" kTRUE
         fi
     fi
 
@@ -679,7 +679,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
 #                 MergeAccordingToSpecificRunlist fileLHC17g8a.txt $OUTPUTDIR_LHC17g8a $NSlashes4 GammaConvCalo DPGTrackAndCalo-LHC16t runlists/runNumbersLHC16t_dpgTracksAndCalo.txt runlists/binsJetJetLHC17g8a_cent_woSDD.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17g8a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17g8aMC/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17g8a "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17g8aMC/merge" All $NSlashes "" kTRUE
         fi
     fi
     if [ $HAVELHC17g8aF == 1 ]; then
@@ -711,7 +711,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
 #                 MergeAccordingToSpecificRunlist fileLHC17g8a.txt $OUTPUTDIR_LHC17g8aF $NSlashes4 GammaConvCalo DPGTrackAndCalo-LHC16t runlists/runNumbersLHC16t_dpgTracksAndCalo.txt runlists/binsJetJetLHC17g8a_fast.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC17g8aF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17g8aMCFast/merge" $NSlashes "" kTRUE
+            CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17g8aF "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC17g8aMCFast/merge" All $NSlashes "" kTRUE
         fi
     fi
 

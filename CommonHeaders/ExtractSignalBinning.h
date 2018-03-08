@@ -1310,8 +1310,8 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                                                         4, 4, 4, 4, 4, 4, 5, 5, 8, 8,
                                                         8, 12, 12, 12, 12};
 
-    Double_t fBinsEtaXeXe5440GeVPt[10]              = { 0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 6.0, 8.0, 10.0};
-    Int_t fBinsEtaXeXe5440GeVPtRebin[9]             = { 10, 10, 8, 8, 8, 8, 8, 8, 10};
+    Double_t fBinsEtaXeXe5440GeVPt[8]               = { 0.0, 1.0, 2.0, 3.0, 4.0,    6.0, 8.0, 10.0};
+    Int_t fBinsEtaXeXe5440GeVPtRebin[7]             = { 10, 10, 10, 10, 10,   10, 10};
 
     Int_t fBinsPi0EtaBinningXeXe5440GeVPtRebin[9]   = { 10, 4, 2, 2, 2, 2, 4, 4, 8};
 
@@ -2558,10 +2558,10 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0){
                 if ( mode == 0 ){
-                    if (centrality.CompareTo("0-90%") == 0)
-                        startPtBin     = 2;
+                    if (centrality.CompareTo("0-80%") == 0)
+                        startPtBin     = 1;
                     else
-                        startPtBin     = 3;
+                        startPtBin     = 1;
                 } else if ( mode == 1 ){
                     startPtBin     = 2;
                 } else if ( mode == 2 || mode == 13 ){
@@ -3179,8 +3179,8 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     }
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0 ){
-                binningMax  = 9;
-                maxNBins    = 9;
+                binningMax  = 7;
+                maxNBins    = 7;
                 for(Int_t i = 0; i < binningMax+1; i++){
                     binning[i] = fBinsEtaXeXe5440GeVPt[i];
                 }
