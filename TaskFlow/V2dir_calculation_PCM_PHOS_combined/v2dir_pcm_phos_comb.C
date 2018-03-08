@@ -281,12 +281,15 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
     // for debugging purposes
     if (verbose) {
+        cout << "Rgamma significance in units of the standard deviation:" << endl;
         for (Int_t i = 0; i < nPtBins; i++) {
-            Double_t v2_inc_staterr = TMath::Sqrt(cov_v2_inc_staterr_comb(i, i));
-            Double_t v2_inc_toterr = TMath::Sqrt(cov_v2_inc_toterr_comb_uncorr(i, i));
-            cout << "v2_inc_staterr: " << v2_inc_staterr;
-            cout << ", v2_inc_toterr: " << v2_inc_toterr;
-            cout << ", v2_inc_staterr/v2_inc_toterr: " << v2_inc_staterr / v2_inc_toterr << endl;
+            // Double_t v2_inc_staterr = TMath::Sqrt(cov_v2_inc_staterr_comb(i, i));
+            // Double_t v2_inc_toterr = TMath::Sqrt(cov_v2_inc_toterr_comb_uncorr(i, i));
+            // cout << "v2_inc_staterr: " << v2_inc_staterr;
+            // cout << ", v2_inc_toterr: " << v2_inc_toterr;
+            // cout << ", v2_inc_staterr/v2_inc_toterr: " << v2_inc_staterr / v2_inc_toterr << endl;
+            cout << "pt = " << pt(i)
+                 << "GeV/c: " << (Rgamma_meas_vec_comb(i) - 1.) / TMath::Sqrt(cov_Rgamma_comb_toterr(i, i)) << endl;
         }
     };
 
@@ -516,6 +519,10 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
             Form("v2dir, PHOS, Rgamma from PHOS, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
         h_v2_dir_phos_Rphos_toterr[i]->SetName(Form("h_v2_dir_phos_Rphos_toterr_ptbin_%d", i));
 
+        h_v2_dir_comb_toterr_uncorr[i]->SetTitle(
+            Form("v2dir, combined, uncorrelated errors, pT bin %d, pT = %4.1f GeV/c", i, pt(i)));
+        h_v2_dir_comb_toterr_uncorr[i]->SetName(Form("h_v2_dir_comb_toterr_uncorr_ptbin_%d", i));
+
         h_v2_dir_comb_toterr[i]->SetLineColor(kBlack);
         h_v2_dir_comb_toterr[i]->DrawCopy("HL");
         h_v2_dir_pcm_Rpcm_toterr[i]->SetLineColor(kRed);
@@ -616,6 +623,15 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     g_v2_dir_comb_staterr.SetTitle("PCM/PHOS combined v2dir, stat. uncertainties");
     g_v2_dir_comb_staterr.Write();
 
+    // write Rgamma covariance matrix
+    cov_Rgamma_comb_toterr.Write("cov_Rgamma_comb_toterr");
+
+    // write v2,inc covariance matrices
+    cov_v2_inc_toterr_comb.Write("cov_v2_inc_toterr_comb");
+
+    // write v2,dec covariance matrix
+    cov_v2_dec_toterr.Write("cov_v2_dec_toterr");
+
     // write v2,dir covariance matrices
     cov_v2_dir_pcm_Rpcm_toterr.Write("cov_v2_dir_pcm_Rpcm_toterr");
     cov_v2_dir_pcm_toterr.Write("cov_v2_dir_pcm_Rcomb_toterr");
@@ -685,13 +701,14 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
         h_v2_dir_pcm_Rpcm_toterr[i]->Write();
         h_v2_dir_phos_Rphos_toterr[i]->Write();
         h_v2_dir_comb_toterr[i]->Write();
+        h_v2_dir_comb_toterr_uncorr[i]->Write();
     }
 
     // write also Rgamma
     TGraphErrors g_Rgamma_toterr(nPtBins);
-    for (Int_t i=0; i<nPtBins; ++i) {
+    for (Int_t i = 0; i < nPtBins; ++i) {
         g_Rgamma_toterr.SetPoint(i, pt(i), Rgamma_meas_vec_comb(i));
-        g_Rgamma_toterr.SetPointError(i, 0, TMath::Sqrt(cov_Rgamma_comb_toterr(i,i)));
+        g_Rgamma_toterr.SetPointError(i, 0, TMath::Sqrt(cov_Rgamma_comb_toterr(i, i)));
     }
 
     g_Rgamma_toterr.SetName("g_Rgamma_toterr");
@@ -1291,81 +1308,6 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
 
     TString filename_c5b = "v2inc_ratio_daniel_" + centr + ".pdf";
     c5b->SaveAs(output_dir + filename_c5b);
-
-
-    //
-    // p-values w.r.t. to null hypotheses
-    //
-
-    // Null hyposthis H0: v2dir = 0
-    TVectorD H0_v2dir_zero(nPtBins); // null hypothesis, contains only zeros
-    TVectorD v2_dir_comb_toterr(nPtBins);
-    for (Int_t i = 0; i < nPtBins; ++i)
-        v2_dir_comb_toterr(i) = g_v2_dir_comb_toterr.GetY()[i];
-    Double_t chi2val = chi2(v2_dir_comb_toterr, H0_v2dir_zero, cov_v2_dir_comb_toterr);
-    Double_t pvalue = TMath::Prob(chi2val, nPtBins);
-    cout << endl << "p-values:" << endl;
-    cout << centr << "%: ";
-    cout << "chi2(v2dir=0) = " << chi2val;
-    cout << ", p-value = " << TMath::Prob(chi2val, nPtBins);
-    cout << ", n_sigma = " << p_value_to_n_sigma(pvalue) << endl;
-
-    // Null hypothesis H0; v2dir = v2decay
-    TVectorD H0_v2dir_equal_to_v2dec(nPtBins); // null hypothesis, v2dir = v2dec
-    for (Int_t i = 0; i < nPtBins; ++i)
-        H0_v2dir_equal_to_v2dec(i) = v2_dec_meas_values(i);
-    Double_t chi2val_2 = chi2(v2_dir_comb_toterr, H0_v2dir_equal_to_v2dec, cov_v2_dir_comb_toterr);
-    Double_t pvalue_2 = TMath::Prob(chi2val_2, nPtBins);
-    cout << centr << "%: ";
-    cout << "chi2(v2dir=v2dec) = " << chi2val_2;
-    cout << ", p-value = " << TMath::Prob(chi2val_2, nPtBins);
-    cout << ", n_sigma = " << p_value_to_n_sigma(pvalue_2) << endl << endl;
-
-    //
-    // Finally calculate likelihoods for certain v2dir hypothesis:
-    //
-    // hypothesis for vndir,true (all values zero in this case)
-    //
-    // CAUTION: this part is still under development
-    //
-
-    TVectorD vnDirTrueHyp(nPtBins);
-    for (Int_t i = 0; i < nPtBins; i++)
-        vnDirTrueHyp(i) = 0.0;
-
-    // likelihood 1: hypothesis v2,dir = v2,decay
-    Double_t L1 = 0;
-    // Double_t nlh = 1000000;
-    Double_t nlh = 100000;
-
-    likelihood(nPtBins, nlh, v2_dec_meas_values, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb,
-               cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L1);
-
-    // likelihood 2: v2,dir = 0
-    Double_t L2 = 0;
-    likelihood(nPtBins, nlh, vnDirTrueHyp, Rgamma_meas_vec_comb, cov_Rgamma_comb_toterr, v2_inc_meas_values_comb,
-               cov_v2_inc_toterr_comb, v2_dec_meas_values, cov_v2_dec_toterr, L2);
-
-    cout << "likelihood 1 (v2,dir = v2,decay) = " << L1 << endl;
-    cout << "likelihood 2 (v2,dir = 0) = " << L2 << endl;
-    cout << "Bayes factor L1 / L2 = " << L1 / L2 << endl;
-
-    //
-    // Question: How consistent is v2,dir from PCM with the hypothesis that v2,dir,true = v2,cocktail
-    //
-    // TVectorD vnDirTrueHypPCM(nPtBins);
-    // for (Int_t i=0; i < nPtBins; i++) vnDirTrueHypPCM(i) = g_v2_dir_pcm_Rpcm_toterr.GetY()[i];
-    // Double_t nlh_PCM = 10000;
-    // Double_t L_PCM_1 = 0;
-    // likelihood(nPtBins, nlh_PCM, vnDirTrueHypPCM, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
-    // v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_1);
-    // likelihood 2
-    // Double_t L_PCM_2 = 0;
-    // likelihood(nPtBins, nlh_PCM, v2_dec_meas_values, Rgamma_meas_vec_pcm, cov_Rgamma_toterr_pcm,
-    //   v2_inc_meas_values_pcm, cov_v2_inc_toterr_pcm, v2_dec_meas_values, cov_v2_dec_toterr, L_PCM_2);
-    // cout << "L_PCM_1 = " << L_PCM_1 << endl;
-    // cout << "L_PCM_2 = " << L_PCM_2 << endl;
-    // cout << "Bayes factor L_PCM_1 / L_PCM_2 = " << L_PCM_1 / L_PCM_2 << endl;
 }
 
 //
@@ -1465,145 +1407,6 @@ void weighted_average(const TVectorD &mu1, const TVectorD &mu2, const TMatrixDSy
     cov[1] = &cov2;
 
     weighted_average(2, mu, cov, &muAve, &covAve);
-}
-
-void likelihood(const Int_t nPtBins, const Int_t nSamples, const TVectorD &vnDirTrueVec, const TVectorD &RgamMeasVec,
-                const TMatrixDSym &covRgam, const TVectorD &vnIncMeasVec, const TMatrixDSym &covVnInc,
-                const TVectorD &vnDecMeasVec, const TMatrixDSym &covVnDec, Double_t &Lfinal) {
-
-    // determine the likelihood of a hypothesis about v2,dir
-    //
-    // Approach:
-    // Repeat these steps many times:
-    // - get RgamTrueVec from MC sampling
-    // - get vnDecTrueVec from MC sampling
-    // - calculate vnIncTrueVec from vnDirTrueVec, vnDecTrueVec, and RgamTrueVec
-    // - calculate likelihood L(measured Rgam, vnInc, VnDec | true Rgam, vnInc, VnDec)
-    //
-    // We then take the average of the so determined likelihoods
-
-    //
-    // RooFit variables for vnInc
-    //
-    RooArgList vnInc;
-    RooArgList vnIncMeas;
-    RooRealVar *vnIncVar[nPtBins];
-    RooRealVar *vnIncMeasVar;
-
-    // RooFit variables for inclusive photon vn
-    for (Int_t i = 0; i < nPtBins; i++) {
-        char *nameMeas = Form("vnIncMeas%d", i);
-        vnIncMeasVar = new RooRealVar(nameMeas, nameMeas, vnIncMeasVec[i], -0.5, 0.5);
-        vnIncMeas.add(*vnIncMeasVar);
-
-        char *nameTrue = Form("vnInc%d", i);
-        vnIncVar[i] = new RooRealVar(nameTrue, nameTrue, 0., -0.5, 0.5);
-        vnInc.add(*vnIncVar[i]);
-    }
-
-    // now make the multivariate Gaussian
-    RooMultiVarGaussian mvgVnInc("mvgVnInc", "mvgVnInc", vnInc, vnIncMeas, covVnInc);
-
-    //
-    // Rgamma
-    //
-    RooArgList Rgam;
-    RooArgList RgamMeas;
-    RooRealVar *RgamVar;
-    RooRealVar *RgamMeasVar;
-
-    // RooFit variables Rgamma
-    for (Int_t i = 0; i < nPtBins; i++) {
-        char *nameMeas = Form("RgamMeas%d", i);
-        RgamMeasVar = new RooRealVar(nameMeas, nameMeas, RgamMeasVec[i], 0., 10.);
-        RgamMeas.add(*RgamMeasVar);
-
-        char *nameTrue = Form("Rgam%d", i);
-        RgamVar = new RooRealVar(nameTrue, nameTrue, 1., 1., 10.); // here the prior knowledge Rgamma >= 1 enters !
-        Rgam.add(*RgamVar);
-    }
-
-    // now make the multivariate Gaussian
-    RooMultiVarGaussian mvgRgam("mvgRgam", "mvgRgam", Rgam, RgamMeas, covRgam);
-
-    //
-    // decay photon vn
-    //
-    RooArgList vnDec;
-    RooArgList vnDecMeas;
-    RooRealVar *vnDecVar;
-    RooRealVar *vnDecMeasVar;
-
-    // RooFit variables for decay photon vn
-    for (Int_t i = 0; i < nPtBins; i++) {
-        char *nameMeas = Form("vnDecMeas%d", i);
-        vnDecMeasVar = new RooRealVar(nameMeas, nameMeas, vnDecMeasVec[i], -0.5, 0.5);
-        vnDecMeas.add(*vnDecMeasVar);
-
-        char *nameTrue = Form("vnDec%d", i);
-        vnDecVar = new RooRealVar(nameTrue, nameTrue, 0., -0.5, 0.5);
-        vnDec.add(*vnDecVar);
-    }
-
-    // now make the multivariate Gaussian
-    RooMultiVarGaussian mvgVnDec("mvgVnDec", "mvgVnDec", vnDec, vnDecMeas, covVnDec);
-
-    //
-    // sample the distributions
-    //
-    RooDataSet *dataVnDec = mvgVnDec.generate(vnDec, nSamples);
-    RooDataSet *dataRgam = mvgRgam.generate(Rgam, nSamples);
-
-    //
-    // create Likelihood variable
-    //
-    RooArgList L;
-    RooRealVar *LVar = new RooRealVar("L", "L", 0., 1.);
-    L.add(*LVar);
-
-    RooDataSet dataL("dataL", "dataL", L);
-
-    // mvgRgam.Print();
-    for (Int_t k = 0; k < dataVnDec->numEntries(); k++) {
-
-        const RooArgSet *rowVnDec = dataVnDec->get(k);
-        const RooArgSet *rowRgam = dataRgam->get(k);
-
-        vnDec = *rowVnDec;
-        Rgam = *rowRgam;
-
-        // cout << mvgRgam.getVal() << endl;
-        for (Int_t i = 0; i < nPtBins; i++) {
-
-            RooRealVar *vnDecRow = (RooRealVar *)rowVnDec->find(vnDec.at(i)->GetName());
-            RooRealVar *RgamRow = (RooRealVar *)rowRgam->find(Rgam.at(i)->GetName());
-
-            Double_t RgamVal = RgamRow->getVal();
-            Double_t vnDecVal = vnDecRow->getVal();
-            Double_t vnIncVal = (vnDirTrueVec(i) * (RgamVal - 1.) + vnDecVal) / RgamVal;
-
-            // cout << "vnIncVal = " << vnIncVal << ", RgamVal = " << RgamVal << ", vnDecVal = " << vnDecVal << endl;
-
-            // ((RooRealVar*) vnInc.at(i))->setVal(vnIncVal);
-            *vnIncVar[i] = vnIncVal;
-        }
-
-        Double_t LRgam = mvgRgam.getVal();
-        Double_t LvnDec = mvgVnDec.getVal();
-        Double_t LvnInc = mvgVnInc.getVal();
-
-        // cout << "LRgam = " << LRgam << ", LvnDec = " << LvnDec << ", LvnInc = " << LvnInc << endl;
-
-        *LVar = LRgam * LvnDec * LvnInc;
-
-        dataL.add(*LVar);
-    }
-
-    // At the meoment this number is proportional to the likelihood,
-    // because the it seems RooFit doesn't return the normalized values.
-    // This doesn't matter however, as we are only interested in likelihood ratios
-    Lfinal = dataL.mean(*LVar);
-    cout << "likelihood: " << Lfinal << endl;
 }
 
 void v2dir(const Int_t nPtBins, const Int_t nSamples, const TVectorD &RgamMeasVec, const TMatrixDSym &covRgam,
@@ -1722,21 +1525,23 @@ void v2dir(const Int_t nPtBins, const Int_t nSamples, const TVectorD &RgamMeasVe
             Double_t vnDecVal = vnDecRow->getVal();
             Double_t RgamVal = RgamRow->getVal();
 
-            // cout << vnIncVal << " " << vnDecVal << " " << RgamVal << endl;
-
             Double_t vnDirVal = (RgamVal * vnIncVal - vnDecVal) / (RgamVal - 1.);
+
+            // cout << vnIncVal << " " << vnDecVal << " " << RgamVal << endl;
+            // cout << vnDirVal << endl;
+
+            vnDirTmp(i) = vnDirVal;
 
             if (fabs(vnDirVal) > 0.5) {
                 b_all_v2dir_vals_in_allowed_range = false;
                 break;
             }
 
-            vnDirTmp(i) = vnDirVal;
-
             // ((RooRealVar*) vnDir.at(i))->setVal(vnDirVal);
             // dataVnDir.add(vnDir);
         }
 
+        // if(true) {
         if (b_all_v2dir_vals_in_allowed_range) {
             for (Int_t i = 0; i < nPtBins; i++) {
                 Double_t vnDirVal = vnDirTmp(i);
