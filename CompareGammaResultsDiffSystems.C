@@ -46,7 +46,6 @@
 
 
 void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = "",
-                                        TString inputFileNamePP7TeV         = "",
                                         TString inputFileNamePP8TeV         = "",
                                         TString inputFileNamePPb5TeV        = "",
                                         TString inputFileNamePbPb2760GeV    = "",
@@ -69,7 +68,6 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputGammapp2760GeV.root", inputFileNamePP2760GeV.Data(), outputDir.Data()));
-    gSystem->Exec(Form("cp %s %s/InputGammapp7TeV.root", inputFileNamePP7TeV.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputGammapp8TeV.root", inputFileNamePP8TeV.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputGammapPb5TeV.root", inputFileNamePPb5TeV.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputGammaPbPb2760GeV.root", inputFileNamePbPb2760GeV.Data(), outputDir.Data()));
@@ -126,7 +124,6 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Size_t markerSizeComb4080                       = GetDefaultMarkerSize("PbPb_2.76TeV", "", "40-80%");
 
     TString collisionSystempp2760GeV                = "pp, #sqrt{#it{s}} = 2.76 TeV";
-    TString collisionSystempp7TeV                   = "pp, #sqrt{#it{s}} = 7 TeV";
     TString collisionSystempp8TeV                   = "pp, #sqrt{#it{s}} = 8 TeV";
     TString collisionSystemPbPb760GeV               = "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
     TString collisionSystempPb5TeV                  = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
@@ -153,11 +150,6 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Style_t markerStyleEpp8TeV                      = GetDefaultMarkerStyle("8TeV", "", "");
     Size_t markerSizeEpp8TeV                        = GetDefaultMarkerSize("8TeV", "", "");
 
-    Color_t colorEpp7TeV                            = GetColorDefaultColor("7TeV", "", "");
-    Style_t markerStyleEpp7TeV                      = GetDefaultMarkerStyle("7TeV", "", "");
-    Size_t markerSizeEpp7TeV                        = GetDefaultMarkerSize("7TeV", "", "");
-
-
 
     //*************************************************************************************************************************************************
     //*************************************** Read in data ********************************************************************************************
@@ -171,12 +163,6 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TGraphAsymmErrors* graphInvYieldDirGammaTotArpp2760GeV  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitSumErrAr");
     TGraphAsymmErrors* graphInvYieldIncGammaStatpp2760GeV   = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldIncGammaStatErr");
     TGraphAsymmErrors* graphInvYieldIncGammaSyspp2760GeV    = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldIncGammaSysErr");
-
-    //--------------------------------------- pp 7TeV --------------------------------------------
-    TFile* fileCombPP7TeV                                   = new TFile( inputFileNamePP7TeV.Data());
-    TH1D* histoDRStatpp7TeV                                 = (TH1D*) fileCombPP7TeV->Get("Gamma_7TeV_pp/DoubleRatioStatError");
-    TGraphAsymmErrors* graphDRStatpp7TeV                    = new TGraphAsymmErrors(histoDRStatpp7TeV);
-    TGraphAsymmErrors* graphDRSyspp7TeV                     = (TGraphAsymmErrors*) fileCombPP7TeV->Get("Gamma_7TeV_pp/DoubleRatioSystError");
 
     //--------------------------------------- pp 8TeV --------------------------------------------
     TFile* fileCombPP8TeV                                   = new TFile( inputFileNamePP8TeV.Data());
@@ -821,8 +807,6 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     
     TGraphAsymmErrors* graphDRStatpp8TeVPlot = (TGraphAsymmErrors*)graphDRStatpp8TeV->Clone("graphDRStatpp8TeVPlot");
     ProduceGraphAsymmWithoutXErrors(graphDRStatpp8TeVPlot);
-    TGraphAsymmErrors* graphDRStatpp7TeVPlot = (TGraphAsymmErrors*)graphDRStatpp7TeV->Clone("graphDRStatpp7TeVPlot");
-    ProduceGraphAsymmWithoutXErrors(graphDRStatpp7TeVPlot);
     // double ratio combined
     TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);
     DrawGammaCanvasSettings( canvasDoubleRatio, 0.086, 0.01, 0.01, 0.105);
@@ -858,31 +842,4 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     canvasDoubleRatio->Print(Form("%s/DR_PP.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_PP.pdf", outputDir.Data()));
-    
-    
-    hist2DDRDummySingle->DrawCopy();
-
-      TLegend* legendDRSinglePrelim = GetAndSetLegend2(0.6,0.14,0.91,0.14+textSizeSinglePad*2.2, textSizeSinglePad, 1, "ALICE Preliminary", 42, 0.3);
-      DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
-
-      graphDRSyspp2760GeV->Draw("E2same");
-  
-      DrawGammaSetMarkerTGraphAsym(graphDRSyspp7TeV, markerStyleEpp7TeV, markerSizeEpp7TeV, colorEpp7TeV , colorEpp7TeV,widthLinesBoxes, kTRUE);
-      graphDRSyspp7TeV->Draw("E2same");
-      graphDRSyspp8TeV->Draw("E2same");
-      
-      legendDRSinglePrelim->AddEntry(graphDRSyspp7TeV,collisionSystempp7TeV.Data(),"pf");
-
-      graphDRStatpp2760GeVPlot->Draw("p,E1Z,same");
-      DrawGammaSetMarkerTGraphAsym(graphDRStatpp7TeVPlot,  markerStyleEpp7TeV, markerSizeEpp7TeV, colorEpp7TeV , colorEpp7TeV);
-      graphDRStatpp7TeVPlot->Draw("pp,E1Z,same");
-      graphDRStatpp8TeVPlot->Draw("pp,E1Z,same");
-
-      legendDRSingle->Draw();
-      legendDRSinglePrelim->Draw();
-
-      hist2DDRDummySingle->Draw("same,axis");
-
-    canvasDoubleRatio->Print(Form("%s/DR_PP_extra.%s", outputDir.Data(), suffix.Data()));
-    canvasDoubleRatio->Print(Form("%s/DR_PP_extra.pdf", outputDir.Data()));
 }
