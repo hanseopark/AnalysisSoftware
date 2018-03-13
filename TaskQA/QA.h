@@ -540,7 +540,7 @@ TH2D** PlotCellMeanVsSigmaForRunwise(Int_t nCaloCells, TH2* histEnergy, TH2* his
                                      TString xLabelT, TString yLabelT, Bool_t kMC, Double_t titleOffsetX = 1, Double_t titleOffsetY = 1);
 void PlotHotCells(CellQAObj* obj, Int_t iSw, Int_t nCaloCells, TH2* hist, TString xLabel, TString yLabel, Bool_t XRange, Float_t XMin, Float_t XMax,
                   Bool_t YRange, Float_t YMin, Float_t YMax, Bool_t kMC,
-                  Double_t titleOffsetX = 1, Double_t titleOffsetY = 1, Bool_t reScaledToCutRange = kFALSE);
+                  Double_t titleOffsetX = 1, Double_t titleOffsetY = 1, Bool_t reScaledToCutRange = kFALSE, Double_t NEvents = 1.);
 void CheckCellsDataMC(CellQAObj* obj, TH2* fHistDataCell, TH2* fHistMCCell, TString xLabel, TString yLabel, Int_t nCaloCells, TString plotData, TString plotMC);
 Double_t GetHistogramIntegral(TH1D* hist, Float_t lowX, Float_t highX);
 Double_t GetHistogramIntegralError(TH1D* hist, Float_t lowX, Float_t highX);
@@ -2371,7 +2371,8 @@ void PlotHotCells(  CellQAObj* obj,
                     Bool_t YRange, Float_t YMin, Float_t YMax,
                     Bool_t kMC,
                     Double_t titleOffsetX, Double_t titleOffsetY,
-                    Bool_t reScaledToCutRange
+                    Bool_t reScaledToCutRange,
+                    Double_t NEvents
                  ){
     // 1D - cell frequency based on 1D energy distribution
     if(iSw==0){
@@ -2383,6 +2384,7 @@ void PlotHotCells(  CellQAObj* obj,
         {
           TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntries",iY,iY);
           if(temp->Integral(1,temp->GetNbinsX())>0) {
+            temp->Scale(1./NEvents);
             Double_t nFired = temp->Integral(1,temp->GetXaxis()->GetNbins());
             if (max < nFired) max = nFired;
           }
@@ -2392,19 +2394,20 @@ void PlotHotCells(  CellQAObj* obj,
 
         if (reScaledToCutRange){
             if (obj){
-                max = obj->HotCells1D[1];
+                max = obj->HotCells1D[1]*1.1;
             }
         }
         TH1D* outHist;
 
         Int_t maxNBins = 2000;
-        if (max < maxNBins && !reScaledToCutRange) maxNBins = (Int_t)max +1;
-        else if (max < maxNBins && reScaledToCutRange) maxNBins = (Int_t)(max*1.2)+1;
+        // multiply with NEvents to get old scaling behaviour back
+        if ((max*NEvents) < maxNBins && !reScaledToCutRange) maxNBins = (Int_t)(max*NEvents) +1;
+        else if ((max*NEvents) < maxNBins && reScaledToCutRange) maxNBins = (Int_t)(max*NEvents*1.2)+1;
 
         if (reScaledToCutRange){
             outHist = new TH1D("CellHotCells","", maxNBins,min,max*1.2);
         } else {
-            outHist = new TH1D("CellHotCells","", maxNBins,min,max+1);
+            outHist = new TH1D("CellHotCells","", maxNBins,min,max);
         }
         if (max > 1000) TGaxis::SetMaxDigits(4);
         if (max > 10000) TGaxis::SetMaxDigits(5);
@@ -2430,14 +2433,19 @@ void PlotHotCells(  CellQAObj* obj,
         outHist->GetXaxis()->SetTitleSize(0.04);
         outHist->GetXaxis()->SetTitleOffset(titleOffsetX);
 
+        Double_t meanNFired = 0.;
+        Int_t fillCount = 0;
         for(Int_t iY=1; iY<nCaloCells+1; iY++){
             // determine entry for frequency histogram
             TH1D* temp = (TH1D*) hist->ProjectionX("numberOfEntries",iY,iY);
             if(temp->Integral(1,temp->GetNbinsX())>0) {
+                temp->Scale(1./NEvents);
                 Double_t nFired = temp->Integral(1,temp->GetXaxis()->GetNbins());
+                meanNFired += nFired;
                 if(!kMC && obj && nFired>=max+(max/10)) nFired = outHist->GetBinCenter(outHist->GetNbinsX()-1);
-                else if(nFired>=(max+(max/10)-1)) nFired = outHist->GetBinCenter(outHist->GetNbinsX()-1);
+                else if(nFired>=max+(max/10)) nFired = outHist->GetBinCenter(outHist->GetNbinsX()-1);
                 outHist->Fill(nFired);
+                fillCount+=1;
                 if (!reScaledToCutRange){
                     // determine whether frequency is out of bound of accepted range - add to bad cell candidates
                     if(obj && ( nFired <= obj->HotCells1D[0] || nFired >= obj->HotCells1D[1] )){
@@ -2448,6 +2456,8 @@ void PlotHotCells(  CellQAObj* obj,
             delete temp;
             //if(temp->GetMean()>0.4) cout << iY << endl;
         }
+        meanNFired = meanNFired / fillCount;
+        cout << "Mean of N_Fired/N_Events = " << meanNFired << endl;
 
         outHist->DrawCopy();
         delete outHist;

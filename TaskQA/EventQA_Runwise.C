@@ -1506,6 +1506,7 @@ void EventQA_Runwise(
 
             for(Int_t h=0; h<(Int_t) vecHistos[0].size(); h++) {
                 for(Int_t i=0; i<nData; i++) {
+                    printf("Drawing histogram %s of period %s \n",vecHistos[i].at(h)->GetName(),plotDataSets[i].Data());
                     for(Int_t j=0; j<nSets-nData; j++){
                         ratioSets[j] = new TString(Form("%s / %s", plotDataSets[i].Data(), plotDataSets[j+nData].Data()));
                         ratio[j] = new TH1D(Form("%s%i%i",((TH1D*) vecHistos[i].at(h))->GetName(),i,j),
