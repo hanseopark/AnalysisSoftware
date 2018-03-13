@@ -3981,7 +3981,8 @@
                                         TGraphAsymmErrors* upperLimits    = NULL,
                                         Double_t* pTBinning                = NULL,
                                         Int_t nPointsTot                    = 0,
-                                        TString header                    = ""
+                                        TString header                    = "",
+                                        TString clearanceLevel = "(95% CL)"
                                         ){
         cout << "*dataset: "<< endl;
         cout << header.Data() << endl;
@@ -4006,7 +4007,6 @@
             currentXUpperLimits             = upperLimits->GetX();
             currentYUpperLimits             = upperLimits->GetY();
         }
-        TString clearanceLevel = "(95% CL)";
         Int_t binStat                       = 0;
         Int_t binSyst                       = 0;
         Int_t binUpper                      = 0;
@@ -4031,12 +4031,12 @@
                     else
                         orderY              = ((Int_t)TMath::Log10(currentY[binStat]))-1;
                     precision               = orderY - orderStat;
-    //                 cout << currentY[binStat] <<"\t" << (Int_t)TMath::Log10(currentY[binStat]) << "\t "<< currentYErrStatDown[binStat] << "\t"<< (Int_t)TMath::Log10(currentYErrStatDown[binStat])
-    //                      << "\t"<< orderY-orderStat<< endl;
+                    // cout << currentY[binStat] <<"\t" << (Int_t)TMath::Log10(currentY[binStat]) << "\t "<< currentYErrStatDown[binStat] << "\t"<< (Int_t)TMath::Log10(currentYErrStatDown[binStat])
+                         // << "\t"<< orderY-orderStat<< endl;
                     statPresent             = kTRUE;
                 }
             }
-    //         cout << "stat finished" << endl;
+            // cout << "stat finished" << endl;
 
             if (sysErrors != NULL){
                 if ( currentXSysErrors[binSyst] > pTBinning[i] && currentXSysErrors[binSyst] < pTBinning[i+1] ) {
@@ -4058,7 +4058,14 @@
     //         cout << "here" << endl;
 
             line                            = Form("%s (BIN= %1.1f TO %1.1f); \t",line.Data(), pTBinning[i], pTBinning[i+1] );
-            if (statPresent){
+            if (upperPresent) {
+                line                        = Form("%s %2.2e %s;", line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
+                binUpper++;
+                if (statPresent)
+                  binStat++;
+                if (sysPresent)
+                  binSyst++;
+            }else if (statPresent){
                 if (precision == 0){
                     line                    = Form("%s %2.2e +- %2.2e \t", line.Data(), currentY[binStat], currentYErrStatDown[binStat] );
                 } else if (precision == 1 ){
@@ -4084,13 +4091,11 @@
                         line                = Form("%s(DSYS= %2.2e);", line.Data(), currentYErrSystDown[binSyst] );
                     }
                     binSyst++;
-                } else if (upperPresent){
-                    line                    = Form("%s(SYS = %2.2e %s);",line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
-                    binUpper++;
                 }
-            } else if (upperPresent) {
-                line                        = Form("%s %2.2e %s;", line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
-                binUpper++;
+                // if (upperPresent){
+                    // line                    = Form("%s(SYS = %2.2e %s);",line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
+                    // binUpper++;
+                // }
             }
 
             cout << line.Data() << endl;
