@@ -1,4 +1,4 @@
-void ChangeStructureToStandard(TString nameInputFile, TString namefileOutput, TString nameInputList, Int_t mode == 0){
+void ChangeStructureToStandard(TString nameInputFile, TString namefileOutput, TString nameInputList, Int_t mode = 0){
 
    TFile *fileInput = NULL;
    fileInput = new TFile(nameInputFile.Data());

@@ -11,6 +11,8 @@
     #include "Math/WrappedTF1.h"
     #include "Math/BrentRootFinder.h"
     #include "TFitResult.h"
+    #include "FittingGammaConversion.h"
+    #include "PlottingGammaConversionHistos.h"
 
     // ****************************************************************************************************************
     // *********************** declaration of functions defined in this header ****************************************
