@@ -646,7 +646,21 @@ void EventQA(
 	    }
 	    vecGammaCandidatesPerTrack.push_back(fHistCandidatesPerTrack);  // save histos in vector for comparison plot
         } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
-
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // VZERO multiplicity vs TPC out Tracks
+        TH2D* fHistV0MultVsTracks = (TH2D*)ESDContainer->FindObject("V0Mult vs TPCout Tracks");
+        if(fHistV0MultVsTracks){
+            GetMinMaxBin(fHistV0MultVsTracks,minB,maxB);
+            SetXRange(fHistV0MultVsTracks,1,maxB+1);
+            GetMinMaxBinY(fHistV0MultVsTracks,minYB,maxYB);
+            SetYRange(fHistV0MultVsTracks,1,maxYB+1);
+            SetZMinMaxTH2(fHistV0MultVsTracks,1,maxB+1,1,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+                                fHistV0MultVsTracks,"",
+                                "TPC out tracks","V0 Multiplicity",1,1.4,
+                                processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0MultVsTracks, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+        } else cout << "INFO: Object |V0Mult vs TPCout Tracks| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // centrality
         if(fIsPbPb){
