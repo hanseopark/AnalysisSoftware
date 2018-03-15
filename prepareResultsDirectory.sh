@@ -24,6 +24,8 @@ elif [ $1 = "nschmidt" ]; then
    PHOTONCONVDIR=/home/nschmidt/AnalysisSoftware
 elif [ $1 = "fjonas" ]; then
    PHOTONCONVDIR=/home/florianjonas/tools/alice/AnalysisSoftware
+elif [ $1 = "amarin" ]; then     
+   PHOTONCONVDIR=/Users/marin/analysis/GIT/AnalysisSoftware
 fi
 
 echo $PHOTONCONVDIR
