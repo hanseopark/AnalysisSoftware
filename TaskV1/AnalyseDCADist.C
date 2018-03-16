@@ -133,34 +133,52 @@ void AnalyseDCADist(    TString meson           ="",
     TString outputDir                       = Form("%s/%s/%s/%s/AnalyseDCADist", cutSelection.Data(), optionEnergy.Data(), optionPeriod.Data(), suffix.Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
-
     // read out files
+    Bool_t allInOne = kFALSE;
+    if(fileData2.CompareTo("")==0) allInOne=kTRUE;  // if only one filename is given, dca tree and ESD histograms have to be in this one file
+
+    // first file
     TFile* f                                = new TFile(fileData);
     TString autoDetectedMainDir             = AutoDetectMainTList(mode , f);
     if (autoDetectedMainDir.CompareTo("") == 0){
-        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
-        return;
+      cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
+      return;
     }
-    TFile* f2                                = new TFile(fileData2);
-    TString autoDetectedMainDir2             = AutoDetectMainTList(mode , f2);
-    if (autoDetectedMainDir2.CompareTo("") == 0){
-        cout << "ERROR: trying to read file, which is incompatible with mode selected" << endl;;
-        return;
-    }
-
     TList *TopDir                           = (TList*)f->Get(autoDetectedMainDir.Data());
-    TList *TopDir2                          = (TList*)f2->Get(autoDetectedMainDir2.Data());
     if(TopDir == NULL){
-        cout<<"ERROR: TopDir not Found"<<endl;
-        return;
+      cout<<"ERROR: TopDir not Found"<<endl;
+      return;
     }
     TList *HistosGammaConversion            = (TList*)TopDir->FindObject(Form("Cut Number %s", fCutSelection.Data()));
-    TList *HistosGammaConversion2           = (TList*)TopDir2->FindObject(Form("Cut Number %s", fCutSelection.Data()));
     if(HistosGammaConversion == NULL){
         cout<<"ERROR: " << Form("Cut Number %s",fCutSelection.Data()) << " not Found in File"<<endl;
         return;
     }
-    TList *ESDContainer                     = (TList*) HistosGammaConversion2->FindObject(Form("%s ESD histograms", fCutSelection.Data()));
+
+    TList *ESDContainer;
+    if(allInOne) {
+      ESDContainer                          = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms", fCutSelection.Data()));
+    }
+    else {  // second file
+      TFile* f2                                = new TFile(fileData2);
+      TString autoDetectedMainDir2             = AutoDetectMainTList(mode , f2);
+      if (autoDetectedMainDir2.CompareTo("") == 0){
+	cout << "ERROR: trying to read file 2, which is incompatible with mode selected" << endl;;
+	return;
+      }
+      TList *TopDir2                          = (TList*)f2->Get(autoDetectedMainDir2.Data());
+      if(TopDir2 == NULL){
+	cout<<"ERROR: TopDir 2 not Found"<<endl;
+	return;
+      }
+      TList *HistosGammaConversion2           = (TList*)TopDir2->FindObject(Form("Cut Number %s", fCutSelection.Data()));
+      if(HistosGammaConversion2 == NULL){
+        cout<<"ERROR: " << Form("Cut Number %s",fCutSelection.Data()) << " not Found in File 2"<<endl;
+        return;
+      }
+      ESDContainer                          = (TList*) HistosGammaConversion2->FindObject(Form("%s ESD histograms", fCutSelection.Data()));
+    }
+
     TList *DCAContainer                     = (TList*) HistosGammaConversion->FindObject(Form("%s Meson DCA tree", fCutSelection.Data()));
     if (!DCAContainer){
         cout<<"ERROR: " << Form("%s Meson DCA tree",fCutSelection.Data()) << " not Found in File"<<endl;
