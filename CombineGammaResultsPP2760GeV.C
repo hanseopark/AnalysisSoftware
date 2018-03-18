@@ -3627,6 +3627,12 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
                     if (histoEffSecCorr[k][i]) histoEffSecCorr[k][i]->Write(Form("histoEffectiveSecCorrFrom%s_%s",nameOutputSec[i].Data(), nameMeasGlobal[i].Data()));
                 }
             }
+        directoryGamma->mkdir("Fits");
+        directoryGamma->cd("Fits");
+        // Writing inclusive gamma fit
+          if (fitTCMGammaComb) fitTCMGammaComb->Write("TwoComponentModelFitGamma");
+          if (fitHagGammaComb) fitHagGammaComb->Write("ModHagedornFitGamma");
+          if (fitTsallisGammaComb) fitTsallisGammaComb->Write("TsallisFitGamma");
 
     fCombResults.Close();
 

@@ -163,6 +163,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TGraphAsymmErrors* graphInvYieldDirGammaTotArpp2760GeV  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitSumErrAr");
     TGraphAsymmErrors* graphInvYieldIncGammaStatpp2760GeV   = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldIncGammaStatErr");
     TGraphAsymmErrors* graphInvYieldIncGammaSyspp2760GeV    = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldIncGammaSysErr");
+    TF1* fitInvYieldIncGammapp2760GeV                       = (TF1*) fileCombPP2760GeV->Get("Gamma2.76TeV/Fits/TwoComponentModelFitGamma");
 
     //--------------------------------------- pp 8TeV --------------------------------------------
     TFile* fileCombPP8TeV                                   = new TFile( inputFileNamePP8TeV.Data());
@@ -173,6 +174,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TGraphAsymmErrors* graphInvYieldDirGammaTotArpp8TeV     = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldDirGammaNonFitSumErrAr");
     TGraphAsymmErrors* graphInvYieldIncGammaStatpp8TeV      = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldIncGammaStatErr");
     TGraphAsymmErrors* graphInvYieldIncGammaSyspp8TeV       = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldIncGammaSysErr");
+    TF1* fitInvYieldIncGammapp8TeV                          = (TF1*) fileCombPP8TeV->Get("Gamma8TeV/Fits/TwoComponentModelFitGamma");
     //--------------------------------------- pPb 5TeV --------------------------------------------
     TFile* fileCombPPb5TeV                                  = new TFile( inputFileNamePPb5TeV.Data());
     TGraphAsymmErrors* graphDRStatpPb5TeV                   = (TGraphAsymmErrors*) fileCombPPb5TeV->Get("Gamma_pPb5TeV/graphRGammaCombStatErr");
@@ -490,6 +492,48 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         
     canvasDirGamma->Print(Form("%s/IncGammaSpectraPP.%s",outputDir.Data(),suffix.Data()));
     canvasDirGamma->Print(Form("%s/IncGammaSpectraPP.pdf",outputDir.Data()));
+    
+    dummyIncGamma->DrawCopy();
+    
+        if (graphInvYieldIncGammaSyspp2760GeV){
+            graphInvYieldIncGammaSyspp2760GeV->Draw("E2same");
+        }
+        if (graphInvYieldIncGammaStatpp2760GeV){
+            graphInvYieldIncGammaStatpp2760GeV->Draw("p,E1Z,same");
+        }
+
+        if (graphInvYieldIncGammaSyspp8TeV){
+            graphInvYieldIncGammaSyspp8TeV->Draw("E2same");
+        }
+        if (graphInvYieldIncGammaStatpp8TeV){
+            graphInvYieldIncGammaStatpp8TeV->Draw("p,E1Z,same");
+        }
+        if(fitInvYieldIncGammapp2760GeV){
+          DrawGammaSetMarkerTF1( fitInvYieldIncGammapp2760GeV, 3, 2, colorEpp2760GeV);
+          fitInvYieldIncGammapp2760GeV->SetRange(0.45,9.7);
+          fitInvYieldIncGammapp2760GeV->Draw("same");
+        }
+        if(fitInvYieldIncGammapp8TeV){
+          DrawGammaSetMarkerTF1( fitInvYieldIncGammapp8TeV, 3, 2, colorEpp8TeV);
+          fitInvYieldIncGammapp8TeV->SetRange(0.3,18.);
+          fitInvYieldIncGammapp8TeV->Draw("same");
+        }
+        TF1* fitInvYieldIncGammaDummy = (TF1*)fitInvYieldIncGammapp2760GeV->Clone("fitInvYieldIncGammaDummy");
+        DrawGammaSetMarkerTF1( fitInvYieldIncGammaDummy, 3, 2, kGray+2);
+        TLatex *labelEnergyIncInvYieldPaperAllwFit = new TLatex(0.23, 0.11+0.04*5, "#gamma_{inc} ALICE");
+        SetStyleTLatex( labelEnergyIncInvYieldPaperAllwFit, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        labelEnergyIncInvYieldPaperAllwFit->Draw();
+        TLegend* legendDirGammaPPonlywFits = GetAndSetLegend2(0.22, 0.11+(0*textsizeLabelsDirGamma*0.85), 0.21+0.25, 0.11+(5*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        legendDirGammaPPonlywFits->AddEntry(graphInvYieldDirGammaSyspp2760GeV,collisionSystempp2760GeV.Data(),"pf");
+        legendDirGammaPPonlywFits->AddEntry((TObject*)0,"norm. unc. 2.5%","");
+        legendDirGammaPPonlywFits->AddEntry(graphInvYieldDirGammaSyspp8TeV,collisionSystempp8TeV.Data(),"pf");
+        legendDirGammaPPonlywFits->AddEntry((TObject*)0,"norm. unc. 2.6%","");
+        legendDirGammaPPonlywFits->AddEntry(fitInvYieldIncGammaDummy,"TCM fit","l");
+        legendDirGammaPPonlywFits->Draw();
+        
+        
+    canvasDirGamma->Print(Form("%s/IncGammaSpectraPP_wFit.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGamma->Print(Form("%s/IncGammaSpectraPP_wFit.pdf",outputDir.Data()));
 
     dummyDirGamma->GetYaxis()->SetRangeUser( 1.2e-10,8.5e4);
     dummyDirGamma->DrawCopy();
