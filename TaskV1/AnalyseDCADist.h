@@ -49,9 +49,28 @@ TH1F* fHistDCAZTrueSecondaryMesonFromSomething_MesonPt_AllCat[30];
 TH1F* fHistDCAZTrueBackground_MesonPt_AllCat[30];
 TH1F* fHistDCAZGarbage_MesonPt_AllCat[30];
 
-
 TH1F* fHistDCAZUnderMesonBGEstimate_MesonPt[5][6][30];
 TH1F* fHistDCAZUnderMesonBGEstimate_MesonPt_AllCat[30];
+
+TH1F* fHistDCAZUnderMeson_AllPt                     [6];
+TH1F* fHistDCAZTrueBackground_AllPt                 [6];
+TH1F* fHistDCAZGarbage_AllPt                        [6];
+TH1F* fHistDCAZTruePrimaryMesonDalitz_AllPt         [6];
+TH1F* fHistDCAZTruePrimaryMesonGammaGamma_AllPt     [6];
+TH1F* fHistDCAZTrueSecondaryMesonFromEta_AllPt      [6];
+TH1F* fHistDCAZTrueSecondaryMesonFromK0s_AllPt      [6];
+TH1F* fHistDCAZTrueSecondaryMesonFromSomething_AllPt[6];
+
+TH1F* fHistDCAZUnderMesonAllCat_AllPt;
+TH1F* fHistDCAZTruePrimaryMesonGammaGammaAllCat_AllPt;
+TH1F* fHistDCAZTruePrimaryMesonDalitzAllCat_AllPt;
+TH1F* fHistDCAZTrueSecondaryMesonFromK0sAllCat_AllPt;
+TH1F* fHistDCAZTrueSecondaryMesonFromEtaAllCat_AllPt;
+TH1F* fHistDCAZTrueSecondaryMesonFromSomethingAllCat_AllPt;
+TH1F* fHistDCAZTrueBackgroundAllCat_AllPt;
+TH1F* fHistDCAZGarbageAllCat_AllPt;
+
+TH1D* fEventQuality;
 
 TF1* fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[30];
 
