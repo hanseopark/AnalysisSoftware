@@ -162,10 +162,12 @@
     Double_t fBinsPi05TeVPt[27]                     = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0};
-    Double_t fBinsPi05TeV2017Pt[44]                 = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
-                                                        4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4,
-                                                        6.6, 6.8, 7.2, 7.6, 8.0, 8.6, 9.2, 10., 12., 16., 18.};
+    Double_t fBinsPi05TeV2017Pt[59]                 = { 0.0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,
+                                                        1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2,
+                                                        2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.4,
+                                                        3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6,
+                                                        5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.2, 7.6, 8.0, 8.6, 9.2,
+                                                        10., 12., 16., 18.};
 
 
     Double_t fBinsPi05TeVPtDCal[16]                 = { 0.0, 1.0, 1.4, 1.8, 2.2,
@@ -201,17 +203,20 @@
                                                         17., 18., 19., 20., 21., 22., 23., 24., 25., 30., 40.};
     Double_t fBinsPi05TeVPtDCA[16]                  = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
                                                         2.0, 2.4, 3.0, 5.0, 10., 12.0};
-    Double_t fBinsPi05TeV2017PtDCA[44]              = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+    Double_t fBinsPi05TeV2017PtDCA[38]              = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
                                                         4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4,
-                                                        6.6, 6.8, 7.2, 7.6, 8.0, 8.6, 9.2, 10., 12., 16., 18.};
+                                                        6.6, 6.8, 7.2, 7.6, 8.0};
     Int_t fBinsPi05TeVPtRebin[26]                   = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         4, 4, 4, 4 ,4, 4};
-    Int_t fBinsPi05TeV2017PtRebin[43]               = { 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    Int_t fBinsPi05TeV2017PtRebin[58]               = { 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        4, 4, 4, 4 ,4, 4, 4, 4, 4, 4};
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        4, 4, 4, 4 ,4, 4, 4, 4, 4, 4, 5,
+                                                        5, 5, 5};
+
     Double_t fBinsPi05TeVPtRebinDCal[24]              = { 1, 1, 8, 4, 4,
                                                         4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4,
@@ -244,10 +249,14 @@
                                                         5, 5, 5};
     Double_t fBinsEta5TeVPt[14]                     = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0,
                                                         13.0, 14.0, 20.0, 30.0};
-    Double_t fBinsEta5TeV2017Pt[14]                 = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.2, 3.0, 3.5, 4.0, 5.0,
-                                                        6.0, 8.0, 12.0, 18.0};
     Int_t fBinsEta5TeVPtRebin[13]                   = { 8, 8, 5, 5, 5, 8, 8, 8, 8, 8,
                                                         10, 10, 10};
+    Double_t fBinsEta5TeV2017Pt[22]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0,
+                                                        12.0, 18.0};
+    Int_t fBinsEta5TeV2017PtRebin[21]               = { 4, 8, 5, 5, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+                                                        5};
     Double_t fBinsEta5TeVPCMEMCPt[23]               = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,
                                                         3.0, 3.5, 4.,  5.,  6., 8.,  10,  14., 16., 20.,
                                                         25., 30., 35.};
@@ -265,8 +274,8 @@
                                                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                                                         8, 8, 8, 8, 8, 8, 8, 8, 8};
     Double_t fBinsEta5TeVPtDCA[9]                   = { 0.0, 0.4, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 12.0};
-    Double_t fBinsEta5TeV2017PtDCA[13]              = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.2, 3.0, 3.5, 4.0, 5.0,
-                                                        6.0, 8.0, 12.0};
+    Double_t fBinsEta5TeV2017PtDCA[18]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 12.0};
     Double_t fBinsEtaPrim5TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
     Int_t fBinsEtaPrim5TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
     Int_t fBinsPi0EtaBinning5TeVPtRebin[13]         = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
@@ -2675,7 +2684,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     }
                 } else if ( mode == 0 ){
                     if(energy.Contains("2017")){
-                        maxNBins = 43;
+                        maxNBins = 58;
                         for(Int_t i = 0; i < maxNBins+1; i++){
                             binning[i] = fBinsPi05TeV2017Pt[i];
                         }
@@ -3013,7 +3022,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     }
                 } else if ( mode == 0 ){
                     if(energy.Contains("2017")){
-                        maxNBins = 12;
+                        maxNBins = 20;
                         for(Int_t i = 0; i < maxNBins+1; i++){
                             binning[i] = fBinsEta5TeV2017Pt[i];
                         }
@@ -3584,6 +3593,8 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
 
                     fStartPtBin     = 1;
 
+                    if( modi == 0 && energy.Contains("2017"))
+                      fStartPtBin = 2;
                     if( modi == 2 )
                       fStartPtBin = 6;
                     if( modi == 4 )
@@ -3598,12 +3609,12 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     if (modi == 4 && specialTrigg == 2) { fStartPtBin = 20; fNBinsPt = 49; } // EG2
                     if (modi == 4 && specialTrigg == 3) { fStartPtBin = 20; fNBinsPt = 49; } // EG1
 
-                    if (fNBinsPt > 15 && isDCA) {
-                        cout << "You have chosen to have more than 15 bins, this is not possible, it will be reduced to 15" << endl;
-                        fNBinsPt    = 15;
-                    }   else if ( fNBinsPt > 50 && !isDCA) {
+                    if (fNBinsPt > 30 && isDCA) {
+                        cout << "You have chosen to have more than 30 bins, this is not possible, it will be reduced to 30" << endl;
+                        fNBinsPt    = 30;
+                    }   else if ( fNBinsPt > 60 && !isDCA) {
                         cout << "You have chosen t o have more than 50 bins, this is not possible, it will be reduced to 50" << endl;
-                        fNBinsPt    = 50;
+                        fNBinsPt    = 60;
                     }
 
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3651,9 +3662,11 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         }
 
                     }
-                    if (isDCA) {
-                        nIterBGFit                  = 10;
-                    }
+                    nIterBGFit                  = 10;
+                    fMaxYFracBGOverIntHist      = 60;
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
                 }
             //*********************************************************************************************
             //********************************** Pi0 for pp 7TeV*******************************************
@@ -4695,9 +4708,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 if (modi == 4 && specialTrigg == 2) { fStartPtBin = 11; fNBinsPt = 29; } // EG2
                 if (modi == 4 && specialTrigg == 3) { fStartPtBin = 11; fNBinsPt = 29; } // EG1
 
-                if (fNBinsPt > 8 && isDCA) {
-                    cout << "You have chosen to have more than 8 DCA bins for Eta, this is not possible, it will be reduced to 8" << endl;
-                    fNBinsPt        = 8;
+                if (fNBinsPt > 20 && isDCA) {
+                    cout << "You have chosen to have more than 20 DCA bins for Eta, this is not possible, it will be reduced to 20" << endl;
+                    fNBinsPt        = 20;
                 } else if (fNBinsPt > 23) {
                     cout << "You have chosen to have more than 23 bins for Eta, this is not possible, it will be reduced to 23" << endl;
                     fNBinsPt        = 23;
@@ -4711,7 +4724,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         else
                             fBinsPt[i]  = fBinsEta5TeVPtDCA[i];
                     } else {
-                            if        ( modi == 0 ) {
+                            if ( modi == 0 ) {
                                 if(energy.Contains("2017")){
                                     fBinsPt[i]  = fBinsEta5TeV2017Pt[i];
                                 } else {
@@ -4731,7 +4744,13 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     }
                     if (setPi0.CompareTo("Eta") == 0){
                         if (i < fNBinsPt+1){
-                            if( modi == 2 ){
+                            if ( modi == 0 ) {
+                                if(energy.Contains("2017")){
+                                    fNRebin[i]  = fBinsEta5TeV2017PtRebin[i];
+                                } else {
+                                    fNRebin[i]  = fBinsEta5TeVPtRebin[i];
+                                }
+                            } else if( modi == 2 ){
                               fNRebin[i] = fBinsEta5TeVPCMEMCPtRebin[i];
                             } else if ( modi == 4 ){
                               if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
@@ -4739,8 +4758,6 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                               }else{
                                 fNRebin[i] = fBinsEta5TeVEMCPtRebin[i];
                               }
-                            } else {
-                                fNRebin[i]  = fBinsEta5TeVPtRebin[i];
                             }
                         }
                     } else {
@@ -4755,6 +4772,12 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         }
                     }
                 }
+                nIterBGFit                  = 10;
+                fMaxYFracBGOverIntHist      = 60;
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing6";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
+
             //*********************************************************************************************
             //********************************** Eta for pp 7TeV*******************************************
             //*********************************************************************************************

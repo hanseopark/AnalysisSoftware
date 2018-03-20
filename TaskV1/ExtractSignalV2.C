@@ -4278,6 +4278,9 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                     if(ptBin > 2)  mesonAmplitudeMin = mesonAmplitude*85./100.;
                     mesonAmplitudeMax = mesonAmplitude*115./100.;
                     if(ptBin < 3) mesonAmplitudeMax = mesonAmplitude*100/100.;
+                } else if ( !fEnergyFlag.CompareTo("5TeV2017") ){
+                    mesonAmplitudeMin = mesonAmplitude*80./100.;
+                    mesonAmplitudeMax = mesonAmplitude*120./100.;
                 } else {
                     mesonAmplitudeMin = mesonAmplitude*50./100.;
                     mesonAmplitudeMax = mesonAmplitude*115./100.;

@@ -124,13 +124,9 @@ void ProduceHEPDataFileForPi0EtaPbPbPaper2017( TString nameFilePbPb = "/home/adm
     TGraphAsymmErrors* graphEtaToPi0CombPbPb2760GeVStatErr_2050      = (TGraphAsymmErrors*)fileNeutralMesonsCombDataPbPbLHC11h->Get("graphEtaToPi0RatioCombPbPb2760GeVStatErr_2050");
     TGraphAsymmErrors* graphEtaToPi0CombPbPb2760GeVSysErr_2050       = (TGraphAsymmErrors*)fileNeutralMesonsCombDataPbPbLHC11h->Get("graphEtaToPi0RatioCombPbPb2760GeVSysErr_2050");
 
-    graphEtaToPi0CombPbPb2760GeVStatErr_0010->RemovePoint(0);
-    graphEtaToPi0CombPbPb2760GeVSysErr_0010->RemovePoint(0);
     TString headerEtaToPi0_0010 ="*location: Fig.3, 7 \n*dscomment: Ratio of the ETA to PI0 invariant yields in the centrality class 0-10%.\n*reackey: PB PB --> PI0 X\n*reackey: PB PB --> ETA X\n*obskey: SIG/SIG\n*qual: RE(Q=ETA) : PB PB --> ETA X\n*qual: RE(Q=PI0) : PB PB --> PI0 X\n*qual: SQRT(S)/NUCLEON [GEV] : 2760.0\n*qual: YRAP : 0.0\n*qual: CENTRALITY [PCT] : 0.0 TO 10.0\n*yheader: SIG(Q=ETA)/SIG(Q=PI0)\n*xheader: PT [GEV/c]\n*data: x : y";
     ProduceHEPDataFile(graphEtaToPi0CombPbPb2760GeVStatErr_0010, graphEtaToPi0CombPbPb2760GeVSysErr_0010, headerEtaToPi0_0010);
     cout << endl;
-    graphEtaToPi0CombPbPb2760GeVStatErr_2050->RemovePoint(0);
-    graphEtaToPi0CombPbPb2760GeVSysErr_2050->RemovePoint(0);
     TString headerEtaToPi0_2050 ="*location: Fig.3, 7 \n*dscomment: Ratio of the ETA to PI0 invariant yields in the centrality class 20-50%.\n*reackey: PB PB --> PI0 X\n*reackey: PB PB --> ETA X\n*obskey: SIG/SIG\n*qual: RE(Q=ETA) : PB PB --> ETA X\n*qual: RE(Q=PI0) : PB PB --> PI0 X\n*qual: SQRT(S)/NUCLEON [GEV] : 2760.0\n*qual: YRAP : 0.0\n*qual: CENTRALITY [PCT] : 20.0 TO 50.0\n*yheader: SIG(Q=ETA)/SIG(Q=PI0)\n*xheader: PT [GEV/c]\n*data: x : y";
     ProduceHEPDataFile(graphEtaToPi0CombPbPb2760GeVStatErr_2050, graphEtaToPi0CombPbPb2760GeVSysErr_2050, headerEtaToPi0_2050);
     cout << endl;
