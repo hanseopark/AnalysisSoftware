@@ -38,7 +38,7 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 using namespace std;
 
-void MakeCutLog(const char *inputRootFile = "GammaConvV1.root", const char *InputName, Int_t mode = 0){
+void MakeCutLog(const char *inputRootFile = "GammaConvV1.root", const char *InputName ="CutSelection.log", Int_t mode = 0){
 
     TString filename = inputRootFile; 
     TFile *file = new TFile(filename.Data());  

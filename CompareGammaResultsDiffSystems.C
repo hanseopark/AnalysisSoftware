@@ -46,6 +46,7 @@
 
 
 void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = "",
+                                        TString inputFileNamePP8TeV         = "",
                                         TString inputFileNamePPb5TeV        = "",
                                         TString inputFileNamePbPb2760GeV    = "",
                                         TString suffix                      = "eps"
@@ -67,6 +68,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputGammapp2760GeV.root", inputFileNamePP2760GeV.Data(), outputDir.Data()));
+    gSystem->Exec(Form("cp %s %s/InputGammapp8TeV.root", inputFileNamePP8TeV.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputGammapPb5TeV.root", inputFileNamePPb5TeV.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/InputGammaPbPb2760GeV.root", inputFileNamePbPb2760GeV.Data(), outputDir.Data()));
 
@@ -121,20 +123,32 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     Size_t markerSizeComb2040                       = GetDefaultMarkerSize("PbPb_2.76TeV", "", "20-40%");
     Size_t markerSizeComb4080                       = GetDefaultMarkerSize("PbPb_2.76TeV", "", "40-80%");
 
-    TString collisionSystempp2760GeV                = "pp #sqrt{#it{s}} = 2.76 TeV";
-    TString collisionSystemPbPb760GeV               = "Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-    TString collisionSystempPb5TeV                  = "p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
+    TString collisionSystempp2760GeV                = "pp, #sqrt{#it{s}} = 2.76 TeV";
+    TString collisionSystempp8TeV                   = "pp, #sqrt{#it{s}} = 8 TeV";
+    TString collisionSystemPbPb760GeV               = "Pb-Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystempPb5TeV                  = "p-Pb, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     TString textALICE                               = "ALICE";
 
     Color_t colorCombpp2760GeV                      = kBlack;
     Style_t markerStyleCombpp2760GeV                = 20;
     Size_t markerSizeCombpp2760GeV                  = 1.8;
+    Color_t colorCombpp8TeV                         = kGray;
+    Style_t markerStyleCombpp8TeV                   = 24;
+    Size_t markerSizeCombpp8TeV                     = 1.8;
     Width_t widthLinesBoxes                         = 1.4;
     Width_t widthCommonFit                          = 2.4;
 
     Double_t nColl0020                              = GetNCollFromName("0020");
     Double_t nColl2040                              = GetNCollFromName("2040");
     Double_t nColl4080                              = GetNCollFromName("4080");
+    
+    Color_t colorEpp2760GeV                         = GetColorDefaultColor("2.76TeV", "", "");
+    Style_t markerStyleEpp2760GeV                   = GetDefaultMarkerStyle("2.76TeV", "", "");
+    Size_t markerSizeEpp2760GeV                     = GetDefaultMarkerSize("2.76TeV", "", "");
+    
+    Color_t colorEpp8TeV                            = GetColorDefaultColor("8TeV", "", "");
+    Style_t markerStyleEpp8TeV                      = GetDefaultMarkerStyle("8TeV", "", "");
+    Size_t markerSizeEpp8TeV                        = GetDefaultMarkerSize("8TeV", "", "");
 
 
     //*************************************************************************************************************************************************
@@ -147,6 +161,20 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     TGraphAsymmErrors* graphInvYieldDirGammaStatpp2760GeV   = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitStatErr");
     TGraphAsymmErrors* graphInvYieldDirGammaSyspp2760GeV    = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitSysErr");
     TGraphAsymmErrors* graphInvYieldDirGammaTotArpp2760GeV  = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldDirGammaNonFitSumErrAr");
+    TGraphAsymmErrors* graphInvYieldIncGammaStatpp2760GeV   = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldIncGammaStatErr");
+    TGraphAsymmErrors* graphInvYieldIncGammaSyspp2760GeV    = (TGraphAsymmErrors*) fileCombPP2760GeV->Get("Gamma2.76TeV/graphInvYieldIncGammaSysErr");
+    TF1* fitInvYieldIncGammapp2760GeV                       = (TF1*) fileCombPP2760GeV->Get("Gamma2.76TeV/Fits/TwoComponentModelFitGamma");
+
+    //--------------------------------------- pp 8TeV --------------------------------------------
+    TFile* fileCombPP8TeV                                   = new TFile( inputFileNamePP8TeV.Data());
+    TGraphAsymmErrors* graphDRStatpp8TeV                    = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphRGammaCombNonFitStatErr");
+    TGraphAsymmErrors* graphDRSyspp8TeV                     = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphRGammaCombNonFitSysErr");
+    TGraphAsymmErrors* graphInvYieldDirGammaStatpp8TeV      = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldDirGammaNonFitStatErr");
+    TGraphAsymmErrors* graphInvYieldDirGammaSyspp8TeV       = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldDirGammaNonFitSysErr");
+    TGraphAsymmErrors* graphInvYieldDirGammaTotArpp8TeV     = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldDirGammaNonFitSumErrAr");
+    TGraphAsymmErrors* graphInvYieldIncGammaStatpp8TeV      = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldIncGammaStatErr");
+    TGraphAsymmErrors* graphInvYieldIncGammaSyspp8TeV       = (TGraphAsymmErrors*) fileCombPP8TeV->Get("Gamma8TeV/graphInvYieldIncGammaSysErr");
+    TF1* fitInvYieldIncGammapp8TeV                          = (TF1*) fileCombPP8TeV->Get("Gamma8TeV/Fits/TwoComponentModelFitGamma");
     //--------------------------------------- pPb 5TeV --------------------------------------------
     TFile* fileCombPPb5TeV                                  = new TFile( inputFileNamePPb5TeV.Data());
     TGraphAsymmErrors* graphDRStatpPb5TeV                   = (TGraphAsymmErrors*) fileCombPPb5TeV->Get("Gamma_pPb5TeV/graphRGammaCombStatErr");
@@ -357,6 +385,155 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_Unscaled.%s",outputDir.Data(),suffix.Data()));
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_Unscaled.pdf",outputDir.Data()));
+    
+    dummyDirGamma->GetYaxis()->SetRangeUser( 1.2e-10,8.5);
+    dummyDirGamma->DrawCopy();
+
+        if (graphInvYieldDirGammaSyspp2760GeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspp2760GeV , markerStyleEpp2760GeV, markerSizeEpp2760GeV, colorEpp2760GeV, colorEpp2760GeV, widthLinesBoxes, kTRUE);
+            graphInvYieldDirGammaSyspp2760GeV->Draw("E2same");
+        }
+        if (graphInvYieldDirGammaStatpp2760GeV){
+            ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaStatpp2760GeV);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpp2760GeV, markerStyleEpp2760GeV, markerSizeEpp2760GeV, colorEpp2760GeV, colorEpp2760GeV);
+            graphInvYieldDirGammaStatpp2760GeV->Draw("p,E1Z,same");
+        }
+
+        if (graphInvYieldDirGammaTotArpp2760GeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpp2760GeV , 1, 3, colorEpp2760GeV, colorEpp2760GeV, 1.8, kTRUE);
+            graphInvYieldDirGammaTotArpp2760GeV->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp2760GeV);
+        }
+        if (graphInvYieldDirGammaSyspp8TeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaSyspp8TeV , markerStyleEpp8TeV, markerSizeEpp8TeV, colorEpp8TeV, colorEpp8TeV, widthLinesBoxes, kTRUE);
+            graphInvYieldDirGammaSyspp8TeV->Draw("E2same");
+        }
+        if (graphInvYieldDirGammaStatpp8TeV){
+            ProduceGraphAsymmWithoutXErrors(graphInvYieldDirGammaStatpp8TeV);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaStatpp8TeV, markerStyleEpp8TeV, markerSizeEpp8TeV, colorEpp8TeV, colorEpp8TeV);
+            graphInvYieldDirGammaStatpp8TeV->Draw("p,E1Z,same");
+        }
+
+        if (graphInvYieldDirGammaTotArpp8TeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldDirGammaTotArpp8TeV , 1, 3, colorEpp8TeV, colorEpp8TeV, 1.8, kTRUE);
+            graphInvYieldDirGammaTotArpp8TeV->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp8TeV);
+        }
+      
+        // TLatex *labelEnergyInvYieldPaperAll = new TLatex(0.22, 0.13+0.04*2, collisionSystempp2760GeV.Data());
+        // SetStyleTLatex( labelEnergyInvYieldPaperAll, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        // labelEnergyInvYieldPaperAll->Draw();
+        // TLatex *labelALICENormUnPaperAll    = new TLatex(0.22,0.135+0.07*0,"norm. unc. 2.5%");
+        // SetStyleTLatex( labelALICENormUnPaperAll, textSizeLabelsPixelDirGam*0.85,4, 1, 43, kTRUE, 11);
+        // labelALICENormUnPaperAll->Draw();
+        // 
+        // TLegend* legendDirGammaPPonly = GetAndSetLegend2(0.21, 0.13+(1*textsizeLabelsDirGamma*0.85), 0.21+0.21, 0.13+(2*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        // legendDirGammaPPonly->AddEntry(graphInvYieldDirGammaSyspp2760GeV,"#gamma_{dir} ALICE","pf");
+        // legendDirGammaPPonly->Draw();
+        // 
+        // TLatex *labelEnergyInvYieldPaperAll2 = new TLatex(0.94, 0.83+0.04*2, collisionSystempp8TeV.Data());
+        // SetStyleTLatex( labelEnergyInvYieldPaperAll2, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 31);
+        // labelEnergyInvYieldPaperAll2->Draw();
+        // TLatex *labelALICENormUnPaperAll2    = new TLatex(0.94,0.835+0.07*0,"norm. unc. 2.6%");
+        // SetStyleTLatex( labelALICENormUnPaperAll2, textSizeLabelsPixelDirGam*0.85,4, 1, 43, kTRUE, 31);
+        // labelALICENormUnPaperAll2->Draw();
+        // 
+        // TLegend* legendDirGammaPPonly2 = GetAndSetLegend2(0.71, 0.83+(1*textsizeLabelsDirGamma*0.85), 0.75+0.21, 0.83+(2*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        // legendDirGammaPPonly2->AddEntry(graphInvYieldDirGammaSyspp8TeV,"#gamma_{dir} ALICE","pf");
+        // legendDirGammaPPonly2->Draw();
+        
+        TLatex *labelEnergyInvYieldPaperAll = new TLatex(0.23, 0.11+0.04*4, "#gamma_{dir} ALICE");
+        SetStyleTLatex( labelEnergyInvYieldPaperAll, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        labelEnergyInvYieldPaperAll->Draw();
+        TLegend* legendDirGammaPPonly2 = GetAndSetLegend2(0.22, 0.11+(0*textsizeLabelsDirGamma*0.85), 0.21+0.25, 0.11+(4*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        legendDirGammaPPonly2->AddEntry(graphInvYieldDirGammaSyspp2760GeV,collisionSystempp2760GeV.Data(),"pf");
+        legendDirGammaPPonly2->AddEntry((TObject*)0,"norm. unc. 2.5%","");
+        legendDirGammaPPonly2->AddEntry(graphInvYieldDirGammaSyspp8TeV,collisionSystempp8TeV.Data(),"pf");
+        legendDirGammaPPonly2->AddEntry((TObject*)0,"norm. unc. 2.6%","");
+        legendDirGammaPPonly2->Draw();
+
+    canvasDirGamma->Print(Form("%s/DirGammaSpectraPP.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGamma->Print(Form("%s/DirGammaSpectraPP.pdf",outputDir.Data()));
+    
+    TH1D* dummyIncGamma = new TH1D("dummyIncGamma", "dummyIncGamma", 1000, 0., 22.);
+    SetStyleHistoTH1ForGraphs( dummyIncGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}_{#gamma_{inc}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
+                               0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.75, 1.8);
+    dummyIncGamma->GetYaxis()->SetRangeUser( 1.2e-9,1.5e1);
+    dummyIncGamma->GetXaxis()->SetLabelOffset(-0.015);
+    dummyIncGamma->GetXaxis()->SetTickLength(0.025);
+    dummyIncGamma->GetYaxis()->SetTickLength(0.025);
+    dummyIncGamma->GetXaxis()->SetRangeUser(doubleRatioX[0],doubleRatioX[1]);
+    dummyIncGamma->DrawCopy();
+        if (graphInvYieldIncGammaSyspp2760GeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldIncGammaSyspp2760GeV , markerStyleEpp2760GeV, markerSizeEpp2760GeV, colorEpp2760GeV, colorEpp2760GeV, widthLinesBoxes, kTRUE);
+            graphInvYieldIncGammaSyspp2760GeV->Draw("E2same");
+        }
+        if (graphInvYieldIncGammaStatpp2760GeV){
+            ProduceGraphAsymmWithoutXErrors(graphInvYieldIncGammaStatpp2760GeV);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldIncGammaStatpp2760GeV, markerStyleEpp2760GeV, markerSizeEpp2760GeV, colorEpp2760GeV, colorEpp2760GeV);
+            graphInvYieldIncGammaStatpp2760GeV->Draw("p,E1Z,same");
+        }
+
+        if (graphInvYieldIncGammaSyspp8TeV){
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldIncGammaSyspp8TeV , markerStyleEpp8TeV, markerSizeEpp8TeV, colorEpp8TeV, colorEpp8TeV, widthLinesBoxes, kTRUE);
+            graphInvYieldIncGammaSyspp8TeV->Draw("E2same");
+        }
+        if (graphInvYieldIncGammaStatpp8TeV){
+            ProduceGraphAsymmWithoutXErrors(graphInvYieldIncGammaStatpp8TeV);
+            DrawGammaSetMarkerTGraphAsym(graphInvYieldIncGammaStatpp8TeV, markerStyleEpp8TeV, markerSizeEpp8TeV, colorEpp8TeV, colorEpp8TeV);
+            graphInvYieldIncGammaStatpp8TeV->Draw("p,E1Z,same");
+        }
+
+        TLatex *labelEnergyIncInvYieldPaperAll = new TLatex(0.23, 0.11+0.04*4, "#gamma_{inc} ALICE");
+        SetStyleTLatex( labelEnergyIncInvYieldPaperAll, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        labelEnergyIncInvYieldPaperAll->Draw();
+        legendDirGammaPPonly2->Draw();
+        
+        
+    canvasDirGamma->Print(Form("%s/IncGammaSpectraPP.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGamma->Print(Form("%s/IncGammaSpectraPP.pdf",outputDir.Data()));
+    
+    dummyIncGamma->DrawCopy();
+    
+        if (graphInvYieldIncGammaSyspp2760GeV){
+            graphInvYieldIncGammaSyspp2760GeV->Draw("E2same");
+        }
+        if (graphInvYieldIncGammaStatpp2760GeV){
+            graphInvYieldIncGammaStatpp2760GeV->Draw("p,E1Z,same");
+        }
+
+        if (graphInvYieldIncGammaSyspp8TeV){
+            graphInvYieldIncGammaSyspp8TeV->Draw("E2same");
+        }
+        if (graphInvYieldIncGammaStatpp8TeV){
+            graphInvYieldIncGammaStatpp8TeV->Draw("p,E1Z,same");
+        }
+        if(fitInvYieldIncGammapp2760GeV){
+          DrawGammaSetMarkerTF1( fitInvYieldIncGammapp2760GeV, 3, 2, colorEpp2760GeV);
+          fitInvYieldIncGammapp2760GeV->SetRange(0.45,9.7);
+          fitInvYieldIncGammapp2760GeV->Draw("same");
+        }
+        if(fitInvYieldIncGammapp8TeV){
+          DrawGammaSetMarkerTF1( fitInvYieldIncGammapp8TeV, 3, 2, colorEpp8TeV);
+          fitInvYieldIncGammapp8TeV->SetRange(0.3,18.);
+          fitInvYieldIncGammapp8TeV->Draw("same");
+        }
+        TF1* fitInvYieldIncGammaDummy = (TF1*)fitInvYieldIncGammapp2760GeV->Clone("fitInvYieldIncGammaDummy");
+        DrawGammaSetMarkerTF1( fitInvYieldIncGammaDummy, 3, 2, kGray+2);
+        TLatex *labelEnergyIncInvYieldPaperAllwFit = new TLatex(0.23, 0.11+0.04*5, "#gamma_{inc} ALICE");
+        SetStyleTLatex( labelEnergyIncInvYieldPaperAllwFit, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        labelEnergyIncInvYieldPaperAllwFit->Draw();
+        TLegend* legendDirGammaPPonlywFits = GetAndSetLegend2(0.22, 0.11+(0*textsizeLabelsDirGamma*0.85), 0.21+0.25, 0.11+(5*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        legendDirGammaPPonlywFits->AddEntry(graphInvYieldDirGammaSyspp2760GeV,collisionSystempp2760GeV.Data(),"pf");
+        legendDirGammaPPonlywFits->AddEntry((TObject*)0,"norm. unc. 2.5%","");
+        legendDirGammaPPonlywFits->AddEntry(graphInvYieldDirGammaSyspp8TeV,collisionSystempp8TeV.Data(),"pf");
+        legendDirGammaPPonlywFits->AddEntry((TObject*)0,"norm. unc. 2.6%","");
+        legendDirGammaPPonlywFits->AddEntry(fitInvYieldIncGammaDummy,"TCM fit","l");
+        legendDirGammaPPonlywFits->Draw();
+        
+        
+    canvasDirGamma->Print(Form("%s/IncGammaSpectraPP_wFit.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGamma->Print(Form("%s/IncGammaSpectraPP_wFit.pdf",outputDir.Data()));
 
     dummyDirGamma->GetYaxis()->SetRangeUser( 1.2e-10,8.5e4);
     dummyDirGamma->DrawCopy();
@@ -669,5 +846,44 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     canvasRatioIndDR->SaveAs(Form("%s/DR_PbPbWithRefPP.%s", outputDir.Data(), suffix.Data()));
     canvasRatioIndDR->SaveAs(Form("%s/DR_PbPbWithRefPP.pdf", outputDir.Data()));
+    
+    
+    
+    TGraphAsymmErrors* graphDRStatpp8TeVPlot = (TGraphAsymmErrors*)graphDRStatpp8TeV->Clone("graphDRStatpp8TeVPlot");
+    ProduceGraphAsymmWithoutXErrors(graphDRStatpp8TeVPlot);
+    // double ratio combined
+    TCanvas *canvasDoubleRatio = new TCanvas("canvasDoubleRatio","",0.095,0.09,1000,815);
+    DrawGammaCanvasSettings( canvasDoubleRatio, 0.086, 0.01, 0.01, 0.105);
+    canvasDoubleRatio->cd();
+    canvasDoubleRatio->SetLogx();
+    
+    widthLinesBoxes                         = 1.4;
+    Double_t textSizeSinglePad               = 0.05;
+    TH2F * hist2DDRDummySingle       = new TH2F("hist2DDRDummySingle","hist2DDRDummySingle",1000,doubleRatioX[0], doubleRatioX[1],1000,0.72, 1.55);
+    SetStyleHistoTH2ForGraphs(hist2DDRDummySingle, "#it{p}_{T} (GeV/#it{c})","#it{R}_{#gamma}", 0.85*textSizeSinglePad,textSizeSinglePad, 0.85*textSizeSinglePad,textSizeSinglePad, 0.9,0.81);
+    hist2DDRDummySingle->GetXaxis()->SetNoExponent();
+    hist2DDRDummySingle->GetXaxis()->SetMoreLogLabels(kTRUE);
+    hist2DDRDummySingle->DrawCopy();
 
+      TLegend* legendDRSingle = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*3.3,0.43,0.953, textSizeSinglePad, 1, "ALICE", 42, 0.3);
+      DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+      DrawGammaSetMarkerTGraphAsym(graphDRSyspp2760GeV, markerStyleEpp2760GeV, markerSizeEpp2760GeV, colorEpp2760GeV , colorEpp2760GeV,widthLinesBoxes, kTRUE);
+      graphDRSyspp2760GeV->Draw("E2same");
+      legendDRSingle->AddEntry(graphDRSyspp2760GeV,collisionSystempp2760GeV.Data(),"pf");
+  
+      DrawGammaSetMarkerTGraphAsym(graphDRSyspp8TeV, markerStyleEpp8TeV, markerSizeEpp8TeV, colorEpp8TeV , colorEpp8TeV,widthLinesBoxes, kTRUE);
+      graphDRSyspp8TeV->Draw("E2same");
+      legendDRSingle->AddEntry(graphDRSyspp8TeV,collisionSystempp8TeV.Data(),"pf");
+
+      DrawGammaSetMarkerTGraphAsym(graphDRStatpp2760GeVPlot,  markerStyleEpp2760GeV, markerSizeEpp2760GeV, colorEpp2760GeV , colorEpp2760GeV);
+      graphDRStatpp2760GeVPlot->Draw("p,E1Z,same");
+      DrawGammaSetMarkerTGraphAsym(graphDRStatpp8TeVPlot,  markerStyleEpp8TeV, markerSizeEpp8TeV, colorEpp8TeV , colorEpp8TeV);
+      graphDRStatpp8TeVPlot->Draw("pp,E1Z,same");
+
+      legendDRSingle->Draw();
+      hist2DDRDummySingle->Draw("same,axis");
+
+    canvasDoubleRatio->Print(Form("%s/DR_PP.%s", outputDir.Data(), suffix.Data()));
+    canvasDoubleRatio->Print(Form("%s/DR_PP.pdf", outputDir.Data()));
 }

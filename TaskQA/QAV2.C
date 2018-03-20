@@ -312,7 +312,6 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     // **************************************************************************************************************
     if ( doDeadCellCompare ) ClusterQA_DeadCellCompareV2(configFileName,suffix);
     if ( doHotCellCompare ) ClusterQA_HotCellCompareV2(configFileName,suffix);
-    if ( doCellCompare) ClusterQA_CellCompareV2(configFileName, suffix);
     if ( doCellCleaning ) ClusterQA_CleanCellLogs(configFileName,suffix);
     if ( doCellCompare) ClusterQA_CellCompareV2(configFileName, suffix);
     return;

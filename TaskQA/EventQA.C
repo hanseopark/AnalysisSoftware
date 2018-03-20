@@ -265,6 +265,7 @@ void EventQA(
     std::vector<TH1D*> vecVertexY; //only if available
     std::vector<TH1D*> vecNGoodTracks;
     std::vector<TH1D*> vecGammaCandidates;
+    std::vector<TH1D*> vecGammaCandidatesPerTrack;
     std::vector<TH1D*> vecMergedCandidates;
     std::vector<TH1D*> vecV0Mult;
     std::vector<TH1D*> vecCentrality;
@@ -630,8 +631,36 @@ void EventQA(
                                 "N_{Good Tracks}","N_{GammaCandidates}",1,1.4,
                                 processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTracksVsCandidates, Form("%s/GoodESDTracksVsGammaCandidates_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
-        } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
 
+	    // Number of gamma candidates per track
+	    TH1D* fHistCandidatesPerTrack = new TH1D("fHistCandidatesPerTrack","fHistCandidatesPerTrack",200,0,1); // is deleted later via DeleteVecTH1D
+	    Double_t nGammaCandPerTrack = 0;
+	    Int_t n = 0;
+	    cout << "Gamma candidates per track for " << DataSets[i].Data() << endl;
+	    for(Int_t x=1; x<=fHistTracksVsCandidates->GetNbinsX(); x++){
+	      for(Int_t y=1; y<=fHistTracksVsCandidates->GetNbinsY(); y++){
+		nGammaCandPerTrack = fHistTracksVsCandidates->GetYaxis()->GetBinCenter(y) / fHistTracksVsCandidates->GetXaxis()->GetBinCenter(x);   
+		n = fHistTracksVsCandidates->GetBinContent(x,y);       // number of events with this ratio
+		fHistCandidatesPerTrack->Fill(nGammaCandPerTrack, n);  // increment bin with abscissa nGammaCandPerTrack, with weight n
+	      }
+	    }
+	    vecGammaCandidatesPerTrack.push_back(fHistCandidatesPerTrack);  // save histos in vector for comparison plot
+        } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // VZERO multiplicity vs TPC out Tracks
+        TH2D* fHistV0MultVsTracks = (TH2D*)ESDContainer->FindObject("V0Mult vs TPCout Tracks");
+        if(fHistV0MultVsTracks){
+            GetMinMaxBin(fHistV0MultVsTracks,minB,maxB);
+            SetXRange(fHistV0MultVsTracks,1,maxB+1);
+            GetMinMaxBinY(fHistV0MultVsTracks,minYB,maxYB);
+            SetYRange(fHistV0MultVsTracks,1,maxYB+1);
+            SetZMinMaxTH2(fHistV0MultVsTracks,1,maxB+1,1,maxYB+1);
+            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+                                fHistV0MultVsTracks,"",
+                                "TPC out tracks","V0 Multiplicity",1,1.4,
+                                processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0MultVsTracks, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+        } else cout << "INFO: Object |V0Mult vs TPCout Tracks| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // centrality
         if(fIsPbPb){
@@ -1331,7 +1360,7 @@ void EventQA(
                                 0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_V0Mult.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
-    // Gamma candidates
+    // Gamma candidates per event
     GetMinMaxBin(vecGammaCandidates,minB,maxB);
     for(Int_t iVec=0; iVec<(Int_t)vecGammaCandidates.size(); iVec++){
         TH1D* temp = vecGammaCandidates.at(iVec);
@@ -1351,6 +1380,28 @@ void EventQA(
                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_GammaCandidates.%s", outputDir.Data(), suffix.Data()));
+
+    //-------------------------------------------------------------------------------------------------------------------------------
+    // Gamma candidates per track
+    GetMinMaxBin(vecGammaCandidatesPerTrack,minB,maxB);
+    for(Int_t iVec=0; iVec<(Int_t)vecGammaCandidatesPerTrack.size(); iVec++){
+      TH1D* temp = vecGammaCandidatesPerTrack.at(iVec);
+      temp->Sumw2();
+      temp->Scale(1./temp->Integral());
+      SetXRange(temp,minB,maxB);
+    }
+    DrawPeriodQACompareHistoTH1(canvas, 0.11, 0.02, 0.05, 0.11,kTRUE,kFALSE,kFALSE,
+                                vecGammaCandidatesPerTrack,"","Number of #gamma Candidates per track","",1,1.1,
+                                labelData, colorCompare, kTRUE, 5, 1.5, kFALSE,
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+
+    SaveCanvas(canvas, Form("%s/Comparison/GammaCandidatesPerTrack.%s", outputDir.Data(), suffix.Data()),kTRUE,kFALSE);
+
+    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kFALSE,kFALSE,
+                                    vecGammaCandidatesPerTrack,"","Number of #gamma Candidates per track","",1,1.1,
+                                    labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_GammaCandidatesPerTrack.%s", outputDir.Data(), suffix.Data()),kTRUE,kFALSE);
 
     if(isMergedCalo){
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1707,6 +1758,7 @@ void EventQA(
     DeleteVecTH1D(vecVertexZ);
     DeleteVecTH1D(vecNGoodTracks);
     DeleteVecTH1D(vecGammaCandidates);
+    DeleteVecTH1D(vecGammaCandidatesPerTrack);
     DeleteVecTH1D(vecMergedCandidates);
     DeleteVecTH1D(vecV0Mult);
 
