@@ -1402,7 +1402,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t maxFracBG  = 8;
     if (optionEnergy.CompareTo("2.76TeV") == 0)
         maxFracBG       = 20;
-    if (optionEnergy.CompareTo("8TeV") == 0)
+    if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0)
         maxFracBG       = 40;
     if (optionEnergy.Contains("pPb") )
         maxFracBG       = 16;

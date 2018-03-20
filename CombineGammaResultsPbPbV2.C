@@ -66,7 +66,7 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     TString outputDir                                           = Form("%s/%s/CombineGammaMeasurementsPbPb",suffix.Data(),dateForOutput.Data());
     TString fileNameTheoryPbPb                                  = "ExternalInputPbPb/Theory/TheoryCompilationPbPb.root";
     TString fileNameExperimentPbPb                              = "ExternalInputPbPb/OtherExperiments/phenix_200.root";
-    TString fileNameMesonPbPb = Form("../FinalMeson25July2017/pdf/2018_03_06/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_2018_03_06.root",dateForOutput.Data(),dateForOutput.Data());
+    TString fileNameMesonPbPb = Form("../FinalMeson25July2017/pdf/2018_03_16/CombineMesonMeasurementsPbPb2760GeVX/CombinedResultsPaperPbPb2760GeV_2018_03_16.root",dateForOutput.Data(),dateForOutput.Data());
     TString fileNameMesonpPb = "ExternalInputpPb/CombNeutralMesons/CombinedResultsPaper_pPb_5023GeV_2017_12_18.root";//"ResultsRpPbpPb_2016_06_16_Preliminary.root";
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec(Form("cp %s %s/InputPCMGammaPbPb.root", inputFileNamePCM.Data(), outputDir.Data()));
@@ -188,10 +188,10 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
     Width_t widthCommonFit                                      = 2.4;
 
     TString collisionSystem                                     = "Pb#font[122]{-}Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-    TString collisionSystemCent0010                             = "0#font[122]{-}10% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-    TString collisionSystemCent2040                             = "20#font[122]{-}40% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-    TString collisionSystemCent2050                             = "20#font[122]{-}50% Pb-Pb #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
-    TString collisionSystempPb                                  = "0#font[122]{-}100% p-Pb #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
+    TString collisionSystemCent0010                             = "0#font[122]{-}10% Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystemCent2040                             = "20#font[122]{-}40% Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystemCent2050                             = "20#font[122]{-}50% Pb#font[122]{-}Pb, #sqrt{#it{s}_{_{NN}}} = 2.76 TeV";
+    TString collisionSystempPb                                  = "p#font[122]{-}Pb, NSD, #sqrt{#it{s}_{_{NN}}} = 5.02 TeV";
     TString collisionSystempp7TeV                               = "pp, #sqrt{#it{s}} = 7 TeV";
     TString collisionSystempp2760GeV                            = "pp, #sqrt{#it{s}} = 2.76 TeV";
     TString collisionSystemRHIC0010                             = "0#font[122]{-}10% Au-Au #sqrt{#it{s}_{_{NN}}} = 0.2 TeV";
@@ -3801,29 +3801,33 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         textsizeLabelsRAA = (Double_t)textSizeLabelsPixelRAA/canvasRAADirGammaPi0_0010->YtoPixel(canvasRAADirGammaPi0_0010->GetY1());
     }
 
-    TH2F * histo2DRAADummyFullRange2 = new TH2F("histo2DRAADummyFullRange2","histo2DRAADummyFullRange2",1000,0.,40.,1000,0.0,11.5);
+    TH2F * histo2DRAADummyFullRange2 = new TH2F("histo2DRAADummyFullRange2","histo2DRAADummyFullRange2",1000,0.,40.,1000,0.0,50.);
     SetStyleHistoTH2ForGraphs(histo2DRAADummyFullRange2, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}", 0.85*textsizeLabelsRAA,textsizeLabelsRAA,0.85*textsizeLabelsRAA,textsizeLabelsRAA, 0.95,1., 510, 510);
     histo2DRAADummyFullRange2->GetYaxis()->SetLabelOffset(0.005);
     histo2DRAADummyFullRange2->GetXaxis()->SetLabelOffset(-0.005);
-    histo2DRAADummyFullRange2->GetXaxis()->SetRangeUser(0.6,25.);
-    histo2DRAADummyFullRange2->GetYaxis()->SetRangeUser(0.,8.5);
     histo2DRAADummyFullRange2->GetXaxis()->SetMoreLogLabels();
+    histo2DRAADummyFullRange2->GetXaxis()->SetRangeUser(0.25,29.);
+    histo2DRAADummyFullRange2->GetYaxis()->SetRangeUser(0.,11);
     histo2DRAADummyFullRange2->DrawCopy("");
 
-        DrawGammaLines(0.6, 25. , 1, 1 ,1.5,kGray+1,7);
+        DrawGammaLines(0.25, 29. , 1, 1 ,1.5,kGray+1,7);
 
         TLatex *labelThesisRAARight = new TLatex(0.52,0.91,"This thesis");
         SetStyleTLatex( labelThesisRAARight, 0.85*textsizeLabelsRAA,4);
 //         labelThesisRAARight->Draw();
 
-        TBox* boxErrorNorm0010_Single2 = CreateBoxConv(colorNLOMcGill, 0.6, 1.-normErr0010 , 0.65, 1.+normErr0010);
+        TBox* boxErrorNorm0010_Single2 = CreateBoxConv(colorNLOMcGill, 23., 1.-normErr0010 , 25., 1.+normErr0010);
+        TBox* boxErrorNorm0010_Single3 = CreateBoxConv(colorComb0010Box, 25., 1.-normErr0010 , 27., 1.+normErr0010);
+        TBox* boxErrorNormpPb_Single = CreateBoxConv(colorPHSD, 27., 1.-normErrpPb , 29., 1.+normErrpPb);
         boxErrorNorm0010_Single2->Draw();
-        TBox* boxErrorNorm0010_Single3 = CreateBoxConv(colorComb0010Box, 0.65, 1.-normErr0010 , 0.7, 1.+normErr0010);
         boxErrorNorm0010_Single3->Draw();
-        TBox* boxErrorNormpPb_Single = CreateBoxConv(colorPHSD, 0.7, 1.-normErrpPb , 0.75, 1.+normErrpPb);
         boxErrorNormpPb_Single->Draw();
 
-        TLegend* legendRAADirGammaPi00010V2 = new TLegend(0.52,0.95-1.25*0.85*textsizeLabelsRAA*7.5,0.52+0.23,0.95);//0.52,0.9-1.25*0.85*textsizeLabelsRAA*6.5,0.52+0.21,0.9);
+        TLatex *labelALICE = new TLatex(0.15,0.92,"ALICE");
+        SetStyleTLatex( labelALICE, 0.85*textsizeLabelsRAA,4);
+        labelALICE->Draw();
+
+        TLegend* legendRAADirGammaPi00010V2 = new TLegend(0.55,0.95-1.25*0.85*textsizeLabelsRAA*7,0.9,0.95);//0.52,0.9-1.25*0.85*textsizeLabelsRAA*6.5,0.52+0.21,0.9);
         legendRAADirGammaPi00010V2->SetFillStyle(0);
         legendRAADirGammaPi00010V2->SetFillColor(0);
         legendRAADirGammaPi00010V2->SetLineColor(0);
@@ -3837,11 +3841,14 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
         if (graphPubCombRAASyst_0020Plot)legendRAADirGammaPi00010V2->AddEntry(graphPubCombRAASyst_0020Plot,"#it{#gamma}_{dir} ","fp");
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
-        legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"pp reference: ","");
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
-        legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"(n)PDF: CTEQ6.1M/EPS09","");
+//         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"pp reference: ","");
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
-        legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"       FF: BFG2","");
+        legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
+//         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"(n)PDF: CTEQ6.1M/EPS09","");
+        legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
+        legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
+//         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"       FF: BFG2","");
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"0#font[122]{-}10%","");
         legendRAADirGammaPi00010V2->AddEntry((TObject*)0,"","");
@@ -3849,15 +3856,27 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         legendRAADirGammaPi00010V2->AddEntry(graphRAAEtaCombPbPb2760GeVSysErr_0010,"#eta","fp");
         legendRAADirGammaPi00010V2->Draw();
 
-        TLegend* legendRAADirGammaPi0pPb0100V2 = new TLegend(0.52,0.59-1.25*0.85*textsizeLabelsRAA*2,0.52+0.3,0.59);//0.52,0.57-1.25*0.85*textsizeLabelsRAA*2,0.52+0.21,0.57);
+        TLatex *labelppRef1 = new TLatex(0.58,0.79,"pp reference: ");
+        SetStyleTLatex( labelppRef1, 0.85*textsizeLabelsRAA,4);
+        TLatex *labelppRef2 = new TLatex(0.58,0.75,"(n)PDF: CTEQ6.1M/EPS09");
+        SetStyleTLatex( labelppRef2, 0.85*textsizeLabelsRAA,4);
+        TLatex *labelppRef3 = new TLatex(0.58,0.71,"FF: BFG2");
+        SetStyleTLatex( labelppRef3, 0.85*textsizeLabelsRAA,4);
+        labelppRef1->Draw();
+        labelppRef2->Draw();
+        labelppRef3->Draw();
+
+        TLegend* legendRAADirGammaPi0pPb0100V2 = new TLegend(0.55,0.59-1.25*0.85*textsizeLabelsRAA*2.7,0.9,0.59);//0.52,0.57-1.25*0.85*textsizeLabelsRAA*2,0.52+0.21,0.57);
         legendRAADirGammaPi0pPb0100V2->SetFillStyle(0);
         legendRAADirGammaPi0pPb0100V2->SetFillColor(0);
         legendRAADirGammaPi0pPb0100V2->SetLineColor(0);
         legendRAADirGammaPi0pPb0100V2->SetTextSize(0.85*textsizeLabelsRAA);
-        legendRAADirGammaPi0pPb0100V2->SetMargin(0.3);
+        legendRAADirGammaPi0pPb0100V2->SetMargin(0.4);
         legendRAADirGammaPi0pPb0100V2->SetTextFont(42);
         legendRAADirGammaPi0pPb0100V2->SetNColumns(2);
         legendRAADirGammaPi0pPb0100V2->SetHeader(collisionSystempPb.Data());
+        legendRAADirGammaPi0pPb0100V2->AddEntry((TObject*)0,"0#font[122]{-}100%","");
+        legendRAADirGammaPi0pPb0100V2->AddEntry((TObject*)0,"","");
         legendRAADirGammaPi0pPb0100V2->AddEntry(CombinedPi0RpPbSystErr,"#pi^{0}","fp");
         legendRAADirGammaPi0pPb0100V2->AddEntry(CombinedEtaRpPbSystErr,"#eta","fp");
         legendRAADirGammaPi0pPb0100V2->Draw();
@@ -3870,6 +3889,117 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
 //             DrawGammaSetMarkerTGraphAsym(graphPCMRAADirGammaStat0010Plot2, markerStyleComb0010,markerSizeComb0010, colorNLOMcGill , colorNLOMcGill);
 //             graphPCMRAADirGammaStat0010Plot2->Draw("p,same,e1Z");
 //         }
+
+
+        if (graphPubCombRAASyst_0020Plot){
+            DrawGammaSetMarkerTGraphAsym(graphPubCombRAASyst_0020Plot, markerStyleComb0010,markerSizeComb0010, colorNLOMcGill , colorNLOMcGill, widthLinesBoxes, kTRUE);
+            graphPubCombRAASyst_0020Plot->Draw("E2same");
+        }
+        if (graphPubCombRAAStat_0020Plot){
+            ProduceGraphAsymmWithoutXErrors(graphPubCombRAAStat_0020Plot);
+            DrawGammaSetMarkerTGraphAsym(graphPubCombRAAStat_0020Plot, markerStyleComb0010,markerSizeComb0010, colorNLOMcGill , colorNLOMcGill);
+            graphPubCombRAAStat_0020Plot->Draw("p,same,e1Z");
+        }
+
+        DrawGammaSetMarkerTGraphAsym(graphRAAPi0CombPbPb2760GeVSysErr_0010, markerStyleComb0010+13,markerSizeComb0010+1, colorComb0010-7 , colorComb0010-7, widthLinesBoxes, kTRUE);
+        graphRAAPi0CombPbPb2760GeVSysErr_0010->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRAAPi0CombPbPb2760GeVStatErr_0010, markerStyleComb0010+13,markerSizeComb0010+1, colorComb0010-7, colorComb0010-7);
+        graphRAAPi0CombPbPb2760GeVStatErr_0010->Draw("p,same,e1Z");
+
+        DrawGammaSetMarkerTGraphAsym(graphRAAEtaCombPbPb2760GeVSysErr_0010, markerStyleComb0010,markerSizeComb0010, colorComb0010 , colorComb0010, widthLinesBoxes, kTRUE);
+        graphRAAEtaCombPbPb2760GeVSysErr_0010->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(graphRAAEtaCombPbPb2760GeVStatErr_0010, markerStyleComb0010,markerSizeComb0010, colorComb0010 , colorComb0010);
+        graphRAAEtaCombPbPb2760GeVStatErr_0010->Draw("p,same,e1Z");
+
+//         while(CombinedPi0RpPbSystErr->GetX()[0]<0.8) CombinedPi0RpPbSystErr->RemovePoint(0);
+        DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr, markerStyleComb0010+13,markerSizeComb0010+1, colorPHSD-1, colorPHSD-1, widthLinesBoxes, kTRUE);
+        CombinedPi0RpPbSystErr->Draw("E2same");
+//         while(CombinedPi0RpPbStatErr->GetX()[0]<0.8) CombinedPi0RpPbStatErr->RemovePoint(0);
+        DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr, markerStyleComb0010+13,markerSizeComb0010+1, colorPHSD-1 , colorPHSD-1);
+        ProduceGraphAsymmWithoutXErrors(CombinedPi0RpPbStatErr);
+        CombinedPi0RpPbStatErr->Draw("p,same,e1Z");
+
+//         while(CombinedEtaRpPbSystErr->GetX()[0]<0.8) CombinedEtaRpPbSystErr->RemovePoint(0);
+        DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbSystErr, markerStyleComb0010,markerSizeComb0010, colorPHSD , colorPHSD, widthLinesBoxes, kTRUE);
+        CombinedEtaRpPbSystErr->Draw("E2same");
+//         while(CombinedEtaRpPbStatErr->GetX()[0]<0.8) CombinedEtaRpPbStatErr->RemovePoint(0);
+        DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbStatErr, markerStyleComb0010,markerSizeComb0010, colorPHSD , colorPHSD);
+        ProduceGraphAsymmWithoutXErrors(CombinedEtaRpPbStatErr);
+        CombinedEtaRpPbStatErr->Draw("p,same,e1Z");
+
+
+        histo2DRAADummyFullRange2->Draw("axis,same");
+    canvasRAADirGammaPi0_0010->Update();
+    canvasRAADirGammaPi0_0010->Print(Form("%s/DirGammaPi0PbPbandpPbRAAfullrange_0010.%s",outputDir.Data(),suffix.Data()));
+
+    canvasRAADirGammaPi0_0010->SetLogy(1);
+    histo2DRAADummyFullRange2->GetXaxis()->SetRangeUser(0.25,29.);
+    histo2DRAADummyFullRange2->GetYaxis()->SetRangeUser(0.08,40);
+    histo2DRAADummyFullRange2->DrawCopy("");
+
+        DrawGammaLines(0.25, 29. , 1, 1 ,1.5,kGray+1,7);
+
+        boxErrorNorm0010_Single2->Draw();
+        boxErrorNorm0010_Single3->Draw();
+        boxErrorNormpPb_Single->Draw();
+
+        TLegend* legendRAADirGammaPi00010V2log = new TLegend(0.62,0.92-1.25*0.85*textsizeLabelsRAA*7.5,0.87,0.92);//0.52,0.9-1.25*0.85*textsizeLabelsRAA*6.5,0.52+0.21,0.9);
+        legendRAADirGammaPi00010V2log->SetFillStyle(0);
+        legendRAADirGammaPi00010V2log->SetFillColor(0);
+        legendRAADirGammaPi00010V2log->SetLineColor(0);
+        legendRAADirGammaPi00010V2log->SetTextSize(0.85*textsizeLabelsRAA);
+//         legendRAADirGammaPi00010V2log->SetMargin(0.5);
+        legendRAADirGammaPi00010V2log->SetTextFont(42);
+        legendRAADirGammaPi00010V2log->SetNColumns(1);
+        legendRAADirGammaPi00010V2log->SetHeader(collisionSystem.Data());
+        legendRAADirGammaPi00010V2log->AddEntry((TObject*)0,"0#font[122]{-}20%","");
+        if (graphPubCombRAASyst_0020Plot)legendRAADirGammaPi00010V2log->AddEntry(graphPubCombRAASyst_0020Plot,"#it{#gamma}_{dir} ","fp");
+        legendRAADirGammaPi00010V2log->AddEntry((TObject*)0,"0#font[122]{-}10%","");
+        legendRAADirGammaPi00010V2log->AddEntry(graphRAAPi0CombPbPb2760GeVSysErr_0010,"#pi^{0}","fp");
+        legendRAADirGammaPi00010V2log->AddEntry(graphRAAEtaCombPbPb2760GeVSysErr_0010,"#eta","fp");
+        legendRAADirGammaPi00010V2log->AddEntry((TObject*)0,"","");
+        legendRAADirGammaPi00010V2log->AddEntry((TObject*)0,"","");
+        legendRAADirGammaPi00010V2log->Draw();
+
+        TLatex *labelppRef1log = new TLatex(0.12,0.92,"#it{#gamma}_{dir} pp reference: ");
+        SetStyleTLatex( labelppRef1log, 0.85*textsizeLabelsRAA,4);
+        TLatex *labelppRef2log = new TLatex(0.12,0.865,"(n)PDF: CTEQ6.1M/EPS09");
+        SetStyleTLatex( labelppRef2log, 0.85*textsizeLabelsRAA,4);
+        TLatex *labelppRef3log = new TLatex(0.12,0.825,"FF: BFG2");
+        SetStyleTLatex( labelppRef3log, 0.85*textsizeLabelsRAA,4);
+        labelppRef1log->Draw();
+        labelppRef2log->Draw();
+        labelppRef3log->Draw();
+
+        TLatex *labelALICElog = new TLatex(0.625,0.93,"ALICE");
+        SetStyleTLatex( labelALICElog, 0.85*textsizeLabelsRAA,4);
+        labelALICElog->Draw();
+        TLatex *labelALICElog2 = new TLatex(0.135,0.26,"ALICE");
+        SetStyleTLatex( labelALICElog2, 0.85*textsizeLabelsRAA,4);
+        labelALICElog2->Draw();
+
+        TLatex *labelcent0010 = new TLatex(0.76,0.87,"0#font[122]{-}10%");
+        SetStyleTLatex( labelcent0010, 0.85*textsizeLabelsRAA,4);
+//         labelcent0010->Draw();
+
+        TLatex *labelcent0020 = new TLatex(0.58,0.87,"0#font[122]{-}20%");
+        SetStyleTLatex( labelcent0020, 0.85*textsizeLabelsRAA,4);
+//         labelcent0020->Draw();
+
+        TLegend* legendRAADirGammaPi0pPb0100V2log = new TLegend(0.13,0.13,0.13+0.3,0.13+1.25*0.85*textsizeLabelsRAA*2.6);//0.52,0.57-1.25*0.85*textsizeLabelsRAA*2,0.52+0.21,0.57);
+        legendRAADirGammaPi0pPb0100V2log->SetFillStyle(0);
+        legendRAADirGammaPi0pPb0100V2log->SetFillColor(0);
+        legendRAADirGammaPi0pPb0100V2log->SetLineColor(0);
+        legendRAADirGammaPi0pPb0100V2log->SetTextSize(0.85*textsizeLabelsRAA);
+        legendRAADirGammaPi0pPb0100V2log->SetMargin(0.4);
+        legendRAADirGammaPi0pPb0100V2log->SetTextFont(42);
+        legendRAADirGammaPi0pPb0100V2log->SetNColumns(2);
+        legendRAADirGammaPi0pPb0100V2log->SetHeader(collisionSystempPb.Data());
+        legendRAADirGammaPi0pPb0100V2log->AddEntry((TObject*)0,"   0#font[122]{-}100%","");
+        legendRAADirGammaPi0pPb0100V2log->AddEntry((TObject*)0,"","");
+        legendRAADirGammaPi0pPb0100V2log->AddEntry(CombinedPi0RpPbSystErr,"#pi^{0}","fp");
+        legendRAADirGammaPi0pPb0100V2log->AddEntry(CombinedEtaRpPbSystErr,"#eta","fp");
+        legendRAADirGammaPi0pPb0100V2log->Draw();
 
 
         if (graphPubCombRAASyst_0020Plot){
@@ -3891,25 +4021,20 @@ void CombineGammaResultsPbPbV2( TString inputFileNamePCM    = "",
         DrawGammaSetMarkerTGraphAsym(graphRAAEtaCombPbPb2760GeVStatErr_0010, markerStyleComb0010,markerSizeComb0010, colorComb0010 , colorComb0010);
         graphRAAEtaCombPbPb2760GeVStatErr_0010->Draw("p,same,e1Z");
 
-        while(CombinedEtaRpPbSystErr->GetX()[0]<0.8) CombinedEtaRpPbSystErr->RemovePoint(0);
-        DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbSystErr, markerStyleComb0010,markerSizeComb0010, colorPHSD , colorPHSD, widthLinesBoxes, kTRUE);
-        CombinedEtaRpPbSystErr->Draw("E2same");
-        while(CombinedEtaRpPbStatErr->GetX()[0]<0.8) CombinedEtaRpPbStatErr->RemovePoint(0);
-        DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbStatErr, markerStyleComb0010,markerSizeComb0010, colorPHSD , colorPHSD);
-        CombinedEtaRpPbStatErr->Draw("p,same,e1Z");
-
-        while(CombinedPi0RpPbSystErr->GetX()[0]<0.8) CombinedPi0RpPbSystErr->RemovePoint(0);
         DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbSystErr, markerStyleComb0010+13,markerSizeComb0010+1, colorPHSD-1, colorPHSD-1, widthLinesBoxes, kTRUE);
         CombinedPi0RpPbSystErr->Draw("E2same");
-        while(CombinedPi0RpPbStatErr->GetX()[0]<0.8) CombinedPi0RpPbStatErr->RemovePoint(0);
         DrawGammaSetMarkerTGraphAsym(CombinedPi0RpPbStatErr, markerStyleComb0010+13,markerSizeComb0010+1, colorPHSD-1 , colorPHSD-1);
         CombinedPi0RpPbStatErr->Draw("p,same,e1Z");
+
+        DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbSystErr, markerStyleComb0010,markerSizeComb0010, colorPHSD , colorPHSD, widthLinesBoxes, kTRUE);
+        CombinedEtaRpPbSystErr->Draw("E2same");
+        DrawGammaSetMarkerTGraphAsym(CombinedEtaRpPbStatErr, markerStyleComb0010,markerSizeComb0010, colorPHSD , colorPHSD);
+        CombinedEtaRpPbStatErr->Draw("p,same,e1Z");
 
 
         histo2DRAADummyFullRange2->Draw("axis,same");
     canvasRAADirGammaPi0_0010->Update();
-    canvasRAADirGammaPi0_0010->Print(Form("%s/DirGammaPi0PbPbandpPbRAAfullrange_0010.%s",outputDir.Data(),suffix.Data()));
-
+    canvasRAADirGammaPi0_0010->Print(Form("%s/DirGammaPi0PbPbandpPbRAALogy_0010.%s",outputDir.Data(),suffix.Data()));
 
 
     TH2F * histo2DRAADummy2 = new TH2F("histo2DRAADummy2","histo2DRAADummy2",1000,0.,40.,1000,0.0,11.5);

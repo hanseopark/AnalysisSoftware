@@ -754,6 +754,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TH1D* histoPCMPi0RAAStatPbPb2760GeV_0010 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_0010,14,"histoPCMPi0RAAStatPbPb2760GeV_0010");
     TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_0010    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_0010->Get("Pi0RAASys");
 
+	TH1D* histoPCMPi0MassData0010 =        (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("MassPi0");
+	TH1D* histoPCMPi0MassMC0010 =          (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("TrueMassPi0");
+	TH1D* histoPCMPi0WidthData0010 =       (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("FWHMPi0MeV");
+	TH1D* histoPCMPi0WidthMC0010 =         (TH1D*)directoryPCMPi0PbPb2760GeV_0010->Get("TrueFWHMPi0MeV");
+	histoPCMPi0MassData0010->Scale(1000.);
+	histoPCMPi0MassMC0010->Scale(1000.);
+
+
 //     TDirectoryFile* directoryPCMPi0PbPb2760GeV_2040                 = (TDirectoryFile*)filePCM->Get("Pi0_PbPb_2.76TeV_20-40%");
 //     TH1D* histoPCMPi0InvYieldPbPb2760GeV_2040                   = (TH1D*)directoryPCMPi0PbPb2760GeV_2040->Get("CorrectedYieldPi0");
 //     TGraphAsymmErrors* graphPCMPi0InvYieldStatPbPb2760GeV_2040  = new TGraphAsymmErrors(histoPCMPi0InvYieldPbPb2760GeV_2040);
@@ -795,6 +803,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     TGraphAsymmErrors* graphPCMPi0RAAStatPbPb2760GeV_2050   = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2050->Get("Pi0RAA");
     TH1D* histoPCMPi0RAAStatPbPb2760GeV_2050 = (TH1D*)GraphAsymErrorsToHist(graphPCMPi0RAAStatPbPb2760GeV_2050,14,"histoPCMPi0RAAStatPbPb2760GeV_2050");
     TGraphAsymmErrors* graphPCMPi0RAASysPbPb2760GeV_2050    = (TGraphAsymmErrors*)directoryPCMPi0PbPb2760GeV_2050->Get("Pi0RAASys");
+
+	TH1D* histoPCMPi0MassData2050 =        (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("MassPi0");
+	TH1D* histoPCMPi0MassMC2050 =          (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("TrueMassPi0");
+	TH1D* histoPCMPi0WidthData2050 =       (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("FWHMPi0MeV");
+	TH1D* histoPCMPi0WidthMC2050 =         (TH1D*)directoryPCMPi0PbPb2760GeV_2050->Get("TrueFWHMPi0MeV");
+	histoPCMPi0MassData2050->Scale(1000.);
+	histoPCMPi0MassMC2050->Scale(1000.);
+
 
 
     //***************************************   Eta PCM   ******************************************//
@@ -864,6 +880,13 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     graphPCMEtatoPi0Stat2760GeV_0010->RemovePoint(0);
     TGraphAsymmErrors* graphPCMEtatoPi0Sys2760GeV_0010  = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_0010->Get("EtatoPi0RatioSys");
 
+	TH1D* histoPCMEtaMassData0010 =        (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("MassEta");
+	TH1D* histoPCMEtaMassMC0010 =          (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("TrueMassEta");
+	TH1D* histoPCMEtaWidthData0010 =       (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("FWHMEtaMeV");
+	TH1D* histoPCMEtaWidthMC0010 =         (TH1D*)directoryPCMEtaPbPb2760GeV_0010->Get("TrueFWHMEtaMeV");
+	histoPCMEtaMassData0010->Scale(1000.);
+	histoPCMEtaMassMC0010->Scale(1000.);
+
 //     TDirectoryFile* directoryPCMEtaPbPb2760GeV_2040                 = (TDirectoryFile*)filePCM->Get("Eta_PbPb_2.76TeV_20-40%");
 //     TH1D* histoPCMEtaInvYieldPbPb2760GeV_2040                   = (TH1D*)directoryPCMEtaPbPb2760GeV_2040->Get("CorrectedYieldEta");
 //     TGraphAsymmErrors* graphPCMEtaInvYieldStatPbPb2760GeV_2040  = new TGraphAsymmErrors(histoPCMEtaInvYieldPbPb2760GeV_2040);
@@ -913,6 +936,14 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
     graphPCMEtatoPi0Stat2760GeV_2050->RemovePoint(0);
     graphPCMEtatoPi0Stat2760GeV_2050->RemovePoint(0);
     TGraphAsymmErrors* graphPCMEtatoPi0Sys2760GeV_2050  = (TGraphAsymmErrors*)directoryPCMEtaPbPb2760GeV_2050->Get("EtatoPi0RatioSys");
+
+	TH1D* histoPCMEtaMassData2050 =        (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("MassEta");
+	TH1D* histoPCMEtaMassMC2050 =          (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("TrueMassEta");
+	TH1D* histoPCMEtaWidthData2050 =       (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("FWHMEtaMeV");
+	TH1D* histoPCMEtaWidthMC2050 =         (TH1D*)directoryPCMEtaPbPb2760GeV_2050->Get("TrueFWHMEtaMeV");
+	histoPCMEtaMassData2050->Scale(1000.);
+	histoPCMEtaMassMC2050->Scale(1000.);
+
 
     //***************************************   Pi0 EMCal   ******************************************//
     TFile* fileEMCal                                = new TFile(fileNameEMCal.Data());
@@ -1184,6 +1215,7 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
       fInputFilePbPb2760GeV->mkdir("NeutralMesons_PP_2.76TeV");
       fInputFilePbPb2760GeV->mkdir("NeutralMesons_PP_7TeV");
       fInputFilePbPb2760GeV->mkdir("ChargedParticles_PbPb_2.76TeV");
+      fInputFilePbPb2760GeV->mkdir("Performance_PbPb_2.76TeV");
 
       TDirectoryFile* directoryNeutralMesonPbPb = (TDirectoryFile*)fInputFilePbPb2760GeV->Get("NeutralMesons_PbPb_2.76TeV");
       fInputFilePbPb2760GeV->cd("NeutralMesons_PbPb_2.76TeV");
@@ -1544,6 +1576,29 @@ void PrepareInputFilePbPb2760GeVCombination(TString fileNamePCM = "data_PCMResul
         graphChargedKaonRAASys0010->Write("graphChargedKaonRAASys0010");
         graphChargedKaonRAA2040->Write("graphChargedKaonRAA2040");
         graphChargedKaonRAASys2040->Write("graphChargedKaonRAASys2040");
+
+      TDirectoryFile* directoryPerformancePbPb = (TDirectoryFile*)fInputFilePbPb2760GeV->Get("Performance_PbPb_2.76TeV");
+      fInputFilePbPb2760GeV->cd("Performance_PbPb_2.76TeV");
+
+        histoPCMPi0MassData0010->Write("histoPCMPi0MassData0010");
+        histoPCMPi0MassMC0010->Write("histoPCMPi0MassMC0010");
+        histoPCMPi0WidthData0010->Write("histoPCMPi0WidthData0010");
+        histoPCMPi0WidthMC0010->Write("histoPCMPi0WidthMC0010");
+
+        histoPCMPi0MassData2050->Write("histoPCMPi0MassData2050");
+        histoPCMPi0MassMC2050->Write("histoPCMPi0MassMC2050");
+        histoPCMPi0WidthData2050->Write("histoPCMPi0WidthData2050");
+        histoPCMPi0WidthMC2050->Write("histoPCMPi0WidthMC2050");
+
+        histoPCMEtaMassData0010->Write("histoPCMEtaMassData0010");
+        histoPCMEtaMassMC0010->Write("histoPCMEtaMassMC0010");
+        histoPCMEtaWidthData0010->Write("histoPCMEtaWidthData0010");
+        histoPCMEtaWidthMC0010->Write("histoPCMEtaWidthMC0010");
+
+        histoPCMEtaMassData2050->Write("histoPCMEtaMassData2050");
+        histoPCMEtaMassMC2050->Write("histoPCMEtaMassMC2050");
+        histoPCMEtaWidthData2050->Write("histoPCMEtaWidthData2050");
+        histoPCMEtaWidthMC2050->Write("histoPCMEtaWidthMC2050");
 
   fInputFilePbPb2760GeV->Close();
 

@@ -2850,7 +2850,7 @@
                 if(nameSystem.Contains("PCM")) maxPtPPForSpec = 15.;
                 resultPP                    = dummyPPSpectrum->Fit(fitPP,fittingOptions.Data() , "", startFit, maxPtPPForSpec);
                 resultPPPowerlaw            = dummyPPSpectrum->Fit(fitPPPowerlaw,fittingOptions.Data() , "", startFit, maxPtPPForSpec);
-                resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 0.5, maxPtPPForSpec);
+                resultPPPowerlaw2           = dummyPPSpectrum->Fit(fitPPPowerlaw2,fittingOptions.Data() , "", 1.5, maxPtPPForSpec);
             } else {
                 fitPPPowerlaw               = FitObject("h","fitRAARefLevy",meson.Data(),dummyPPSpectrum,0.4, 40.);
                 fitPPPowerlaw2              = FitObject("h","fitRAARefLevy2",meson.Data(),dummyPPSpectrum, 0.4, 40.);
@@ -3010,7 +3010,7 @@
         canvasDummy6->SetLogy();
         canvasDummy6->SetLogx();
         TH2F * histo2DDummy6 = new TH2F("histo2DDummy6","histo2DDummy5",1000,0.3,40.,1000,1e-11,10);
-        SetStyleHistoTH2ForGraphs(histo2DDummy6, "#it{p}_{T} (GeV/#it{c})","", 0.032,0.04, 0.04,0.04, 1,1.55);
+        SetStyleHistoTH2ForGraphs(histo2DDummy6, "#it{p}_{T} (GeV/#it{c})","", 0.032,0.04, 0.04,0.04, 1,1.5);
         histo2DDummy6->DrawCopy();
 
         DrawGammaSetMarkerTGraphAsym(graphPPSpectrum, 21,2.5, kBlue, kBlue);
@@ -3018,24 +3018,29 @@
         DrawGammaSetMarkerTGraphAsym(graphPPCombinedSpectrum, 24,2.5, kRed, kRed);
         graphPPCombinedSpectrum->Draw("p,same");
         DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtendedSys, 20,2, kBlack, kBlack,0,kTRUE, kGray);
-        graphPPSpectrumExtendedSys->Draw("E2same");
+//         graphPPSpectrumExtendedSys->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtended, 20,2, kBlack, kBlack);
         graphPPSpectrumExtended->Draw("p,same");
 
         fitPPPowerlaw->SetLineColor(kOrange+2);
         fitPPPowerlaw2->SetLineColor(kGreen+2);
         fitPP->SetLineColor(kBlue+2);
-        fitPPPowerlaw->Draw("same");
-        fitPPPowerlaw2->Draw("same");
+        if(nameSystem.Contains("PCM")) fitPPPowerlaw->Draw("same");
+        if(nameSystem.Contains("PCM")) fitPPPowerlaw2->Draw("same");
         fitPP->Draw("same");
 
-        TLegend* legend = new TLegend(0.15,0.15,0.5,0.25);
+        Int_t lines = 4;
+        if(nameSystem.Contains("PCM")) lines = 6;
+        TLegend* legend = new TLegend(0.15,0.15,0.5,0.15+(0.032*lines));
         legend->SetFillColor(0);
         legend->SetLineColor(0);
         legend->SetTextSize(0.03);
         legend->AddEntry(graphPPSpectrum,labelSystem.Data(),"p");
         legend->AddEntry(graphPPCombinedSpectrum,"comb","p");
         legend->AddEntry(graphPPSpectrumExtended,"extrapolated","p");
+        legend->AddEntry(fitPP,"std (comb. fit func.)","l");
+        if(nameSystem.Contains("PCM"))legend->AddEntry(fitPPPowerlaw,"variation 1","l");
+        if(nameSystem.Contains("PCM"))legend->AddEntry(fitPPPowerlaw2,"variation 2","l");
         legend->Draw();
 
         canvasDummy6->Update();

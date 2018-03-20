@@ -253,7 +253,7 @@ void PlotExampleInvMass(  TH1D* histoInvMassSignalWithBG,
         histoPi0InvMassSigRemBGSub->Draw("same");
     }
 
-    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
     SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
     labelALICE->SetTextFont(43);
     labelALICE->Draw();
@@ -444,7 +444,7 @@ void PlotExampleInvMassEMCal(  TH1D* histoInvMassSignalWithBG,
         nLegendLines++;
     }
 
-    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE performance");
+    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
     SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
     labelALICE->SetTextFont(43);
     labelALICE->Draw();
