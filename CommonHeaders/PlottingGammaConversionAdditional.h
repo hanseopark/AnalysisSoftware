@@ -4491,4 +4491,42 @@
 
     }
 
+    void    PlotLabelsInvMassInPtPlots          (   Double_t startTextX,
+                                                    Double_t startTextY,
+                                                    Double_t textHeight,
+                                                    Double_t differenceText,
+                                                    TString textAlice,
+                                                    TString dateDummy,
+                                                    TString fEnergy,
+                                                    TString fDecayChannel,
+                                                    TString fDetectionChannel,
+                                                    TString textEvents          = "",
+                                                    Double_t fNEvents           = 0,
+                                                    Int_t textAlign             = 11
+    ){
+
+        TLatex *alice           = new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
+        SetStyleTLatex( alice, textHeight*1.3, 1, 1, 42, kTRUE, textAlign);
+        alice->Draw();
+        TLatex *latexDate       = new TLatex(startTextX, (startTextY-1.25*differenceText), dateDummy.Data());
+        SetStyleTLatex( latexDate, textHeight, 1, 1, 42, kTRUE, textAlign);
+        latexDate->Draw();
+        TLatex *energy          = new TLatex(startTextX, (startTextY-2.25*differenceText), fEnergy);
+        SetStyleTLatex( energy, textHeight*1, 1, 1, 42, kTRUE, textAlign);
+        energy->Draw();
+        TLatex *process         = new TLatex(startTextX, (startTextY-3.25*differenceText), fDecayChannel);
+        SetStyleTLatex( process, textHeight*1, 1, 1, 42, kTRUE, textAlign);
+        process->Draw();
+        TLatex *detprocess      = new TLatex(startTextX, (startTextY-4.25*differenceText), fDetectionChannel);
+        SetStyleTLatex( detprocess, textHeight*1, 1, 1, 42, kTRUE, textAlign);
+        detprocess->Draw();
+        TLatex *events          = NULL;
+        if (textEvents.CompareTo("") != 0 && fNEvents > 0){
+            events              = new TLatex(startTextX, (startTextY-5.25*differenceText), Form("%s: %2.1e events",textEvents.Data(), fNEvents));
+            SetStyleTLatex( events, textHeight*1, 1, 1, 42, kTRUE, textAlign);
+            events->Draw();
+        }
+    }
+
+
 #endif

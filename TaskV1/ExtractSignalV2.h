@@ -899,7 +899,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                         fMesonFitRange[1]   = 0.29;
                     }
                 }
-            } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
+            } else if (fEnergyFlag.Contains("pPb_5.023TeV") ){
                 fMesonFitRange[0]           = 0.03;
                 fMesonFitRange[1]           = 0.25;
             } else if (fEnergyFlag.CompareTo("XeXe_5.44TeV") == 0 ){
@@ -962,8 +962,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonWidthExpect               = 0.010;
                     fMesonWidthRange[1]             = 0.040;
                 }
-            } else if( fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
-                fMesonLambdaTailRange[1]    = 0.025;
+            } else if( fEnergyFlag.Contains("pPb_5.023TeV") ){
+                fMesonLambdaTailRange[1]        = 0.025;
+                fMesonWidthRange[1]             = 0.032;
             } else if( fEnergyFlag.CompareTo("900GeV") == 0 ){
                 fMesonLambdaTail                = 0.01;
                 fMesonLambdaTailRange[0]        = 0.01;
@@ -1008,6 +1009,12 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fMesonLambdaTail            = 0.011;
                 fMesonLambdaTailRange[0]    = 0.005;
                 fMesonLambdaTailRange[1]    = 0.03;
+                fMesonWidthRange[0]         = 0.003;
+                fMesonWidthRange[1]         = 0.056;
+            } else if (fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0){
+                fMesonLambdaTail            = 0.011;
+                fMesonLambdaTailRange[0]    = 0.005;
+                fMesonLambdaTailRange[1]    = 0.04;
                 fMesonWidthRange[0]         = 0.003;
                 fMesonWidthRange[1]         = 0.056;
             }else if( fEnergyFlag.CompareTo("900GeV") == 0 ){
@@ -1120,7 +1127,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fBGFitRangeLeft[1]          = 0.44;
                 fBGFitRange[0]              = 0.67;
                 fBGFitRange[1]              = 0.795;
-            } else if( fEnergyFlag.CompareTo("pPb_5.023TeV") == 0 ){
+            } else if( fEnergyFlag.Contains("pPb_5.023TeV")){
                 fBGFitRangeLeft[0]          = 0.35;
                 fBGFitRangeLeft[1]          = 0.42;
                 fBGFitRange[0]              = 0.67;
@@ -1297,7 +1304,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonLambdaTailRange[1]    = 0.02;
                     fMesonWidthExpect           = 0.025;
                 }
-            } else if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+            } else if (fEnergyFlag.Contains("pPb_5.023TeV") ){
                 fMesonWidthExpect               = 0.020;
                 fMesonWidthRange[0]             = 0.010;
                 fMesonWidthRange[1]             = 0.060;

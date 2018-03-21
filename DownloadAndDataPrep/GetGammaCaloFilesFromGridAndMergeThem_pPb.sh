@@ -11,10 +11,10 @@
 # switches to enable/disable certain procedures
 DOWNLOADON=1
 MERGEON=1
-SINGLERUN=1
+SINGLERUN=0
 SEPARATEON=0
-MERGEONSINGLEData=1
-MERGEONSINGLEMC=1
+MERGEONSINGLEData=0
+MERGEONSINGLEMC=0
 CLEANUP=1
 CLEANUPMAYOR=$2
 
@@ -174,11 +174,21 @@ elif [ $1 = "dmuhlhei" ]; then
     NSlashes=9;
 fi
 
-TRAINDIR=Legotrain-vAN20170905-dirGamma
-LHC13bcData="672"; #pass 2
+# TRAINDIR=Legotrain-vAN20170905-dirGamma
+# LHC13bcData="672"; #pass 2
+# LHC13bData="child_1"; #pass 3
+# LHC13cData="child_2"; #pass 2
+# LHC13b2_efix_MC="1071"
+# LHC13b2_efix_p1MC="child_1";
+# LHC13b2_efix_p2MC="child_2";
+# LHC13b2_efix_p3MC="child_3";
+# LHC13b2_efix_p4MC="child_4";
+
+TRAINDIR=Legotrain-vAN20180301-dirGammaUp
+LHC13bcData="723"; #pass 2
 LHC13bData="child_1"; #pass 3
 LHC13cData="child_2"; #pass 2
-LHC13b2_efix_MC="1071"
+LHC13b2_efix_MC="1214"
 LHC13b2_efix_p1MC="child_1";
 LHC13b2_efix_p2MC="child_2";
 LHC13b2_efix_p3MC="child_3";
@@ -455,7 +465,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p1/mergedAllCalo.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p1 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC/merge" $NSlashes
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p1 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p1MC/merge_runlist_1" $NSlashes
         fi
 
     fi
@@ -491,7 +501,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p2/mergedAllCalo.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC/merge" $NSlashes
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p2 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p2MC/merge_runlist_1" $NSlashes
         fi
     fi
     if [ $HAVELHC13b2efixp3 == 1 ]; then
@@ -525,7 +535,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p3/mergedAllCalo.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge" $NSlashes
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p3 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p3MC/merge_runlist_1" $NSlashes
         fi
     fi
     if [ $HAVELHC13b2efixp4 == 1 ]; then
@@ -559,7 +569,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13b2_efix_p4/mergedAllCalo.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p4 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC/merge" $NSlashes
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13b2_efix_p4 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13b2_efix_p4MC/merge_runlist_1" $NSlashes
         fi
     fi
     if [ $HAVELHC13e7 == 1 ]; then
@@ -593,7 +603,7 @@ if [ $CLEANUPMAYOR == 0 ]; then
                 echo "done" > $OUTPUTDIR_LHC13e7/mergedAllCalo.txt
             fi
         else
-            CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge" $NSlashes
+            CopyFileIfNonExisitent $OUTPUTDIR_LHC13e7 "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/$LHC13e7MC/merge_runlist_1" $NSlashes
         fi
     fi
 

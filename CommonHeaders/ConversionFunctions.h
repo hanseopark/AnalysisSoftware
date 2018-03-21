@@ -4676,18 +4676,21 @@
             return "";
     }
 
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
     TString AutoDetectTreeList(TList* fList){
         TString listName = "";
         TString nominalListName = "TreeList";
-	TList *readList = (TList*)fList->Last();
-	listName = readList->GetName();
-	if (listName.Contains(nominalListName)) {
-	  cout << Form("-> found : %s",listName.Data()) << endl;
-	  return listName;
-	} else {
-	  cout << "Could not find list named *TreeList* as last object of main list" << endl;
-	  return "";
-	}
+        TList *readList = (TList*)fList->Last();
+        listName = readList->GetName();
+        if (listName.Contains(nominalListName)) {
+            cout << Form("-> found : %s",listName.Data()) << endl;
+            return listName;
+        } else {
+            cout << "Could not find list named *TreeList* as last object of main list" << endl;
+            return "";
+        }
     }
 
     // ****************************************************************************************************************

@@ -1608,9 +1608,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         if ( !kIsEta ){
             histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.140);
-            if (mode == 4 || mode == 12 ) histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.170);
-            if ((mode == 4 || mode == 12) && optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
-            if (mode == 2 || mode == 13 ) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
+            if ((mode == 4 || mode == 12) ){
+                histoMassMeson->GetYaxis()->SetRangeUser(0.122,0.170);
+                if (optionEnergy.CompareTo("8TeV")==0 && trigger.CompareTo("81")==0) histoMassMeson->GetYaxis()->SetRangeUser(0.13,0.180);
+            } else if (mode == 2 || mode == 13 ){
+                histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.140);
+                if (histoMassMeson->GetXaxis()->GetBinUpEdge(histoMassMeson->GetNbinsX()) > 20) histoMassMeson->GetYaxis()->SetRangeUser(0.128,0.150);
+            }
+            // Pb-Pb or Xe-Xe
             if (kCollisionSystem == 1 && mode > 1) histoMassMeson->GetYaxis()->SetRangeUser(0.130,0.155);
             if ((mode == 2 || mode == 13 ||mode == 4 || mode == 12) && kCollisionSystem ==1 ) histoMassMeson->GetYaxis()->SetRangeUser(0.120,0.170);
         } else {
@@ -1937,8 +1942,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaCanvasSettings( canvasFWHM, 0.07, 0.01, 0.031, 0.082);
 
         Double_t maxFWHM        = 0.030;
-        if (mode == 2 || mode == 13)
+        if (mode == 2 || mode == 13){
           maxFWHM               = 0.015;
+          if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 10 )
+              maxFWHM           = 0.020;
+          if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 20 )
+              maxFWHM           = 0.030;
+        }
         if (kIsEta)
           maxFWHM               = 0.022;
         if (kIsEta && (mode == 4 || mode == 12))
@@ -1996,8 +2006,13 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 
         if (histoWidthGaussianMeson){
             Double_t maxFWHMGaus    = 0.030;
-            if (mode == 2 || mode == 13)
+            if (mode == 2 || mode == 13){
                 maxFWHMGaus         = 0.015;
+                if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 10 )
+                    maxFWHMGaus     = 0.020;
+                if (histoFWHMMeson->GetXaxis()->GetBinUpEdge(histoFWHMMeson->GetNbinsX()) > 20 )
+                    maxFWHMGaus     = 0.030;
+            }
             if (kIsEta)
                 maxFWHMGaus         = 0.022;
             if (kIsEta && (mode == 4 || mode == 12))

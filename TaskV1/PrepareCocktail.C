@@ -2107,7 +2107,7 @@ void SaveHistos() {
         outputFile2->mkdir(Form("%s_%s",fEnergyFlag.Data(),fSpecialFoldername.Data()));
         TDirectoryFile* directoryGamma = (TDirectoryFile*)outputFile2->Get(Form("%s_%s",fEnergyFlag.Data(),fSpecialFoldername.Data()));
         outputFile2->cd(Form("%s_%s",fEnergyFlag.Data(),fSpecialFoldername.Data()));
-        
+
         TH1D* dummyClone;
         // write projections
         histoGammaSumPtOrBin->Write(                            histoGammaSumPtOrBin->GetName(),    TObject::kOverwrite);
@@ -2422,12 +2422,12 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     // get yRange
     Double_t yMin                           = GetYRangeExtremaFromList(list, kTRUE, kFALSE, collSys) * 0.5;
     Double_t yMax                           = GetYRangeExtremaFromList(list, kTRUE, kTRUE, collSys) * 2;
-    
+
     TCanvas* canvas                         = GetAndSetCanvas("canvas", 0, 0, 1700, 2000);
     DrawCanvasSettings(canvas, 0.152, 0.015, 0.015, 0.068);
     canvas->SetLogy();
     canvas->SetLogx();
-    
+
     // count number of stat histograms in list
     Int_t histCounter                       = 0;
     TString tempName                        = "";
@@ -2454,6 +2454,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     Int_t nRows                             = 0;
     if (histCounter%2 == 0) nRows           = histCounter/2;
     else nRows                              = (histCounter+1)/2;
+    if (!fEnergyFlag.CompareTo("2.76TeV")) nRows = nRows-3;
 
     // create legend
     Int_t textSizeLabelsPixel                 = 2000*0.038;
@@ -2461,9 +2462,12 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     TLatex *labelEnergy                     = new TLatex(0.94, 0.925, Form("ALICE, %s", collSys.Data()));
     SetStyleTLatex( labelEnergy, 0.043,4, 1, 42, kTRUE, 31);
 
-    if (hasHeavyParticle && xMax < 5){
+    if (hasHeavyParticle && xMax < 5 && fEnergyFlag.CompareTo("2.76TeV")){
         cout << "resetting yMin" << endl;
         yMin                                = yMin*0.1;
+    } else if (!fEnergyFlag.CompareTo("2.76TeV")){
+        yMin                                = yMin*2;
+        xMax                                = xMax*1.8;
     }
     // dummy histogram
     TH1D* dummyHisto                          = new TH1D("dummyHisto", "", 100000, xMin*0.4, xMax*1.9);
@@ -2483,7 +2487,9 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
     TString tempClass                       = "";
     TF1* tempFit                            = NULL;
     TString methodMeson                     = "";
-    for (Int_t i=0; i<nParticles; i++) {
+    Int_t nParticlesPlot                    = nParticles;
+    if (!fEnergyFlag.CompareTo("2.76TeV") ) nParticlesPlot=12;
+    for (Int_t i=0; i<nParticlesPlot; i++) {
       if(i==0||i==1)
         methodMeson = fSpecialFoldername;
       else
@@ -2555,7 +2561,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
               tempFit->Draw("l,same");
           }
       }
-      
+
     }
     dummyHisto->Draw("same,axis");
     // draw legend
@@ -2747,12 +2753,12 @@ Double_t GetYRangeExtremaFromList(TList* list, Bool_t doParticleSpectra, Bool_t 
 
     // get number of histograms in list
     Int_t numberOfObjects                       = list->GetEntries();
-    
+
     const Int_t nParticles                  = 29;
     TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrime", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
                                                "NRho", "CRho", "NDelta", "CDelta", "NKaonSubS", "Lambda", "NSigma", "CSigma", "COmega", "CXi", "JPsi",
                                                "DZero", "DPlus", "DStarPlus", "DSPlus", "CSigmaStar", "NXiStar", "NKaonSubL"};
-    
+
     // search list for particle spectra and fill maxima in array
     TString tempClass                           = "";
     TString tempName                            = "";

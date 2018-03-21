@@ -1408,6 +1408,7 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     Double_t relativeMarginsX[3];
     Double_t relativeMarginsY[3];
     textSizeLabelsPixel                 = 50;
+    Double_t textSizeLabelsRel          = ((Double_t)textSizeLabelsPixel)/1250;
     ReturnCorrectValuesForCanvasScaling(1350,1250, 1, 2,0.09, 0.005, 0.005,0.085,arrayBoundariesX1_4,arrayBoundariesY1_4,relativeMarginsX,relativeMarginsY);
 
     TCanvas* canvasMassWidthPi0         = new TCanvas("canvasMassWidthPi0","",0,0,1350,1250);  // gives the page size
@@ -1484,7 +1485,6 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     Double_t offsetMarkerYMass     = 0.06;
     Double_t offsetMarkerXMass     = 0.05;
     Double_t scaleMarkerMass       = 1.2;
-
 
     for (Int_t cent = 0; cent < 5; cent++){
         padWidthPi0->cd();
@@ -1594,6 +1594,67 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
         delete textMassMC2;
     }
 
+    Float_t xRangeMass[2][11] = {   {0.23, 0.73, 0.99, 0.23, 0.63, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23},
+                                    {20., 20., 30., 35., 16., 20., 30., 30., 30., 30. ,30.} };
+    Float_t yRangeMass[2][11] = {   {129.5, 129.5, 125.5, 129.5, 125.5, 125.5, 125.5, 125.5, 125.5, 125.5, 125.5},
+                                    {144.5, 151.5, 162.8, 148.5, 162.8, 162.8, 162.8, 162.8, 162.8, 162.8 ,162.8} };
+
+    DrawGammaCanvasSettings( canvasMassWidthPi0,  0.09, 0.02, 0.01, 0.082);
+    TH2F * histo2DCentPi0Mass        = new TH2F("histo2DAllPi0Mass","histo2DAllPi0Mass",2000, 0.23, 35., 1000., 120., 170);
+    SetStyleHistoTH2ForGraphs(histo2DCentPi0Mass, "#it{p}_{T} (GeV/#it{c})", "Peak position (MeV/#it{c}^{2})", 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel,
+                              textSizeLabelsRel, 0.9, 1.1, 512, 505);
+    histo2DCentPi0Mass->GetXaxis()->SetMoreLogLabels(kTRUE);
+    histo2DCentPi0Mass->GetYaxis()->SetNdivisions(505);
+    histo2DCentPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
+    histo2DCentPi0Mass->GetXaxis()->SetTickLength(0.025);
+    histo2DCentPi0Mass->GetXaxis()->SetLabelOffset(-0.008);
+    TLatex *labelPerfMass2           = new TLatex(0.15,0.92,"ALICE performance");
+    SetStyleTLatex( labelPerfMass2, textSizeLabelsRel,4);
+    TLatex *labelEnergyMass2         = new TLatex(0.15,0.87,collisionSystemXeXe.Data());
+    SetStyleTLatex( labelEnergyMass2, textSizeLabelsRel,4);
+    TLatex *labelDetSysPi0Mass      = new TLatex(0.15,0.82,"#pi^{0} #rightarrow #gamma#gamma");
+    SetStyleTLatex( labelDetSysPi0Mass, textSizeLabelsRel,4);
+
+
+    for (Int_t meth = 0; meth < 11; meth++){
+        if (!fileNamesMethod[meth].CompareTo("")) continue;
+
+        canvasMassWidthPi0->cd();
+        canvasMassWidthPi0->SetLogx(1);
+        histo2DCentPi0Mass->GetXaxis()->SetRangeUser(xRangeMass[0][meth],xRangeMass[1][meth]);
+        histo2DCentPi0Mass->GetYaxis()->SetRangeUser(yRangeMass[0][meth],yRangeMass[1][meth]);
+        histo2DCentPi0Mass->DrawCopy();
+
+        TLegend* legendMass           = GetAndSetLegend2(0.65, 0.95-(5*textSizeLabelsRel), 0.93, 0.95,textSizeLabelsPixel);
+        for (Int_t cent = 0; cent < 5; cent++){
+            if (graphPi0Mass[cent][meth]){
+            DrawGammaSetMarkerTGraphAsym(graphPi0Mass[cent][meth], markerStyleCent[cent], markerSizeCent[cent]*0.55, colorCent[cent] , colorCent[cent]);
+            graphPi0Mass[cent][meth]->Draw("p,same,z");
+            legendMass->AddEntry(graphPi0Mass[cent][meth],centArray[cent],"p");
+            }
+        }
+        legendMass->Draw();
+        labelPerfMass2->Draw();
+        labelEnergyMass2->SetText(0.15,0.87,Form("%s", collisionSystemXeXe.Data()));
+        labelEnergyMass2->Draw();
+        labelDetSysPi0Mass->SetText(0.15,0.82,Form("#pi^{0} #rightarrow #gamma#gamma, %s", nameMeasGlobalLabel[meth].Data()));
+        labelDetSysPi0Mass->Draw();
+
+        canvasMassWidthPi0->Update();
+        canvasMassWidthPi0->Print(Form("%s/Pi0_MassPositionData_%s.%s",outputDir.Data(), nameMeasGlobalLabel[meth].Data(), suffix.Data()));
+
+        for (Int_t cent = 0; cent < 5; cent++){
+            if (graphPi0MassMC[cent][meth]){
+                DrawGammaSetMarkerTGraphAsym(graphPi0MassMC[cent][meth], markerStyleCentMC[cent], markerSizeCent[cent]*0.55, colorCentMC[cent] , colorCentMC[cent]);
+                graphPi0MassMC[cent][meth]->Draw("p,same,z");
+            }
+        }
+
+        canvasMassWidthPi0->Update();
+        canvasMassWidthPi0->Print(Form("%s/Pi0_MassPositionDataAndMC_%s.%s",outputDir.Data(), nameMeasGlobalLabel[meth].Data(), suffix.Data()));
+    }
+
+
 
     // **********************************************************************************************************************
     // ******************************** Cross section for pi0 single measurement 2.76TeV ************************************
@@ -1672,7 +1733,7 @@ void CombineMesonMeasurementsXeXe5TeV(  TString fileNamePCM             = "",
     // ******************************** Acceptance * Efficiency for pi0 single measurement **********************************
     // **********************************************************************************************************************
     textSizeLabelsPixel                 = 55;
-    Double_t textSizeLabelsRel          = 55./1200;
+    textSizeLabelsRel                   = ((Double_t)textSizeLabelsPixel)/1200;
     cout << textSizeLabelsRel << endl;
 
     TCanvas* canvasAcceptanceTimesEff   = new TCanvas("canvasAcceptanceTimesEff", "", 200, 10, 1200, 1100);  // gives the page size

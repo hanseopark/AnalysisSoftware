@@ -397,9 +397,9 @@ void CorrectCaloNonLinearityV4(
     //*******************************************************************************
     for (Int_t i = 0; i < nSets; i++){
         if (firstPtBinSet[i+1] != -1)
-            fPlotLabelsRatio[i] = Form("%0.1f < #it{E}_{Cluster} < %0.1f GeV : %s",fBinsPt[firstPtBinSet[i]],fBinsPt[firstPtBinSet[i+1]],fPlotLabelsRatio[i].Data());
+            fPlotLabelsRatio[i] = Form("%0.2f < #it{E}_{Cluster} < %0.2f GeV : %s",fBinsPt[firstPtBinSet[i]],fBinsPt[firstPtBinSet[i+1]],fPlotLabelsRatio[i].Data());
         else
-            fPlotLabelsRatio[i] = Form("#it{E}_{Cluster} #geq %0.1f GeV : %s",fBinsPt[firstPtBinSet[i]],fPlotLabelsRatio[i].Data());
+            fPlotLabelsRatio[i] = Form("#it{E}_{Cluster} #geq %0.2f GeV : %s",fBinsPt[firstPtBinSet[i]],fPlotLabelsRatio[i].Data());
     }
 
     TString recGamma            = ReturnFullTextReconstructionProcess(mode);
@@ -566,12 +566,12 @@ void CorrectCaloNonLinearityV4(
             }
             TH1D* sliceHist         = (TH1D*) Hist2D->ProjectionX(Form("slice%sAlpha_%f-%f",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]),projectMin,projectMax);
             sliceHist->SetDirectory(0);
-            sliceHist->SetTitle(Form("%s - %.01f < #it{E}_{Cluster} < %.01f (GeV)",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]));
+            sliceHist->SetTitle(Form("%s - %.02f < #it{E}_{Cluster} < %.02f (GeV)",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]));
             sliceHist->GetYaxis()->SetTitle("#frac{d#it{M}_{inv}}{dN}");
             sliceHist->Sumw2();
             TH1D* sliceBGHist       = (TH1D*) HistBG2D->ProjectionX(Form("sliceBG%sAlpha_%f-%f",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]),projectMin,projectMax);
             sliceBGHist->SetDirectory(0);
-            sliceBGHist->SetTitle(Form("%s - %.01f < #it{E}_{Cluster} < %.01f (GeV)",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]));
+            sliceBGHist->SetTitle(Form("%s - %.02f < #it{E}_{Cluster} < %.02f (GeV)",dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1]));
             sliceBGHist->GetYaxis()->SetTitle("#frac{d#it{M}_{inv}}{dN}");
             sliceBGHist->Sumw2();
 
@@ -628,7 +628,7 @@ void CorrectCaloNonLinearityV4(
 
             for (Int_t i = 0; i < nExampleBins; i++ ){
                 if(iClusterPt==exampleBin[i] ){
-                    canvas->SaveAs(Form("%s/ExampleBin_%sAlpha_%.01f-%.01f-withBckgAndFit.%s",outputDirSample.Data(),dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1],suffix.Data()));
+                    canvas->SaveAs(Form("%s/ExampleBin_%sAlpha_%.02f-%.02f-withBckgAndFit.%s",outputDirSample.Data(),dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1],suffix.Data()));
                 }
             }
             canvas->Clear();
@@ -643,33 +643,63 @@ void CorrectCaloNonLinearityV4(
             if( mode == 2 ){
                 if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
                     minMax[1]   = 0.3;
+                } else if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
+                    if (fBinsPt[iClusterPt] < 1.5)
+                        minMax[1]       = 0.18;
+                    else if (fBinsPt[iClusterPt] < 2)
+                        minMax[1]       = 0.20;
+                    else if (fBinsPt[iClusterPt] < 3)
+                        minMax[1]       = 0.25;
                 } else {
                     if (fBinsPt[iClusterPt] < 1)
                         minMax[1]       = 0.2;
-                    if (fBinsPt[iClusterPt] < 2)
+                    else if (fBinsPt[iClusterPt] < 2)
                         minMax[1]       = 0.22;
-                    if (fBinsPt[iClusterPt] < 3)
+                    else if (fBinsPt[iClusterPt] < 3)
                         minMax[1]       = 0.25;
                 }
                 minMax[0]       = 0.02;
                 Double_t min    = 0.002*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
-                // special setting for PCM-PHOS
+
+            // special setting for PCM-PHOS
             } else if( mode == 3 ){
-                if (fBinsPt[iClusterPt] < 1)
-                    minMax[1]       = 0.20;
-                else
-                    minMax[1]       = 0.25;
+                if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
+                    if (fBinsPt[iClusterPt] < 1.5)
+                        minMax[1]       = 0.18;
+                    else if (fBinsPt[iClusterPt] < 2)
+                        minMax[1]       = 0.20;
+                    else if (fBinsPt[iClusterPt] < 3)
+                        minMax[1]       = 0.25;
+                } else {
+                    if (fBinsPt[iClusterPt] < 1)
+                        minMax[1]       = 0.20;
+                    else
+                        minMax[1]       = 0.25;
+                }
                 minMax[0]       = 0.03;
+
             // special setting for EMC
             } else if( mode == 4 || mode == 12 ){
                 minMax[1]       = 0.25;
                 Double_t min    = 0.02*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
-                if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe"))
+
+                if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
                     minMax[1]   = 0.3;
+                } else if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
+                    if (fBinsPt[iClusterPt] < 1.5)
+                        minMax[1]       = 0.18;
+                    else if (fBinsPt[iClusterPt] < 2)
+                        minMax[1]       = 0.20;
+                    else if (fBinsPt[iClusterPt] < 3)
+                        minMax[1]       = 0.25;
+                    else
+                        minMax[1]       = 0.3;
+                }
+
             // special setting for PHOS
             } else if( mode == 5){
                 minMax[1]       = 0.25;
@@ -701,7 +731,7 @@ void CorrectCaloNonLinearityV4(
             canvas->SetLogx(0); canvas->SetLogy(0); canvas->SetLogz(0); canvas->Update();
             for (Int_t i = 0; i < nExampleBins; i++ ){
                 if(iClusterPt==exampleBin[i] ){
-                    canvas->SaveAs(Form("%s/ExampleBin_%sAlpha_%.01f-%.01f.%s",outputDirSample.Data(),dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1],suffix.Data()));
+                    canvas->SaveAs(Form("%s/ExampleBin_%sAlpha_%.02f-%.02f.%s",outputDirSample.Data(),dataMC[iDataMC].Data(),fBinsPt[iClusterPt],fBinsPt[iClusterPt+1],suffix.Data()));
                 }
             }
             canvas->Clear();
@@ -1191,7 +1221,7 @@ TF1* FitExpPlusGaussian(TH1D* histo, Double_t fitRangeMin, Double_t fitRangeMax,
 
     fFitReco->SetParLimits(0, mesonAmplitudeMin, mesonAmplitudeMax);
     if (mode == 4 || mode == 5 || mode == 12){
-        fFitReco->SetParLimits(1, fMesonMassExpect*0.7, fMesonMassExpect*1.3);
+        fFitReco->SetParLimits(1, fMesonMassExpect*0.65, fMesonMassExpect*1.45);
     } else {
         fFitReco->SetParLimits(1, fMesonMassExpect*0.9, fMesonMassExpect*1.1);
     }

@@ -111,6 +111,36 @@ void ExtractSignalV2(   TString meson                   = "",
     } else {
         ReturnSeparatedCutNumberAdvanced(cutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     }
+
+    //****************************** Specification of collision system ************************************************
+    fEnergyFlag         = optionEnergy;
+    fPrefix             = meson;
+
+    fPeriodFlag         = optionPeriod;
+    fdirectphoton       = directphotonPlots;
+
+    TString textProcess = ReturnMesonString (fPrefix);
+    if(textProcess.CompareTo("") == 0 ){
+        cout << "Meson unknown" << endl;
+        return ;
+    }
+
+    fTextMeasurement    = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
+    fCollisionSystem    = ReturnFullCollisionsSystem(fEnergyFlag);
+    if (fCollisionSystem.CompareTo("") == 0){
+        cout << "No correct collision system specification, has been given" << endl;
+        return;
+    }
+    fDetectionProcess   = ReturnFullTextReconstructionProcess(fMode);
+    //**************************** Determine Centrality *************************************************************
+    centralityString        = GetCentralityString(fEventCutSelection);
+    cout << "Centrality: " << centralityString.Data() << endl;
+    if (centralityString.CompareTo("pp")!=0 && centralityString.CompareTo("0-100%") != 0){
+        fCollisionSystem    = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
+    }
+    cout << "Collisions system: " << fCollisionSystem.Data() << endl;
+
+    // ******************************* Adjust cutstrings if needed **************************************************
     TString fEventCutSelectionRead  = fEventCutSelection.Data();
     TString fGammaCutSelectionRead  = fGammaCutSelection.Data();
     TString fMesonCutSelectionRead  = fMesonCutSelection.Data();
@@ -148,7 +178,10 @@ void ExtractSignalV2(   TString meson                   = "",
     if(optionUseMinBiasEff.CompareTo("MinBiasEffOnly")==0 && optionMC.CompareTo("kTRUE") == 0){
         cout << "calculating MinBias Eff" << endl;
         cout << fEventCutSelection.Data() << endl;
+        // take out the cent numbers
         fEventCutSelection.Replace(GetEventCentralityMinCutPosition(),2,"00");
+        // set to full MB cut in pPb
+        if (fEventCutSelection.BeginsWith("a")) fEventCutSelection.Replace(0,1,"8");
         fEventCutSelectionRead      = fEventCutSelection;
         cout << fGammaCutSelection.Data() << endl;
         if (mode==0)
@@ -223,12 +256,6 @@ void ExtractSignalV2(   TString meson                   = "",
     StyleSettingsThesis(Suffix);
     SetPlotStyle();
 
-    fEnergyFlag         = optionEnergy;
-    fPrefix             = meson;
-
-    fPeriodFlag         = optionPeriod;
-    fdirectphoton       = directphotonPlots;
-
     TString outputDir   = Form("%s/%s/%s/ExtractSignal",cutSelection.Data(),optionEnergy.Data(),Suffix.Data());
     TString outputDirMon= Form("%s/%s/%s/ExtractSignal/Monitoring/",cutSelection.Data(),optionEnergy.Data(),Suffix.Data());
     gSystem->Exec("mkdir -p "+outputDir);
@@ -237,20 +264,6 @@ void ExtractSignalV2(   TString meson                   = "",
     cout<<"Pictures are saved as "<< Suffix.Data()<< endl;
     fdate = ReturnDateString();
 
-    //****************************** Specification of collision system ************************************************
-    TString textProcess = ReturnMesonString (fPrefix);
-    if(textProcess.CompareTo("") == 0 ){
-        cout << "Meson unknown" << endl;
-        return ;
-    }
-
-    fTextMeasurement    = Form("%s #rightarrow #gamma#gamma", textProcess.Data());
-    fCollisionSystem    = ReturnFullCollisionsSystem(fEnergyFlag);
-    if (fCollisionSystem.CompareTo("") == 0){
-        cout << "No correct collision system specification, has been given" << endl;
-        return;
-    }
-    fDetectionProcess   = ReturnFullTextReconstructionProcess(fMode);
 
     //****************************** Choice of Fitting procedure ******************************************************
     if(optionCrystalBall.CompareTo("CrystalBall") == 0){// means we want to plot values for the pi0
@@ -274,18 +287,6 @@ void ExtractSignalV2(   TString meson                   = "",
         fIsMC               = 0;
         fPrefix2            = "data";
     }
-
-    //**************************** Determine Centrality *************************************************************
-    centralityString        = GetCentralityString(fEventCutSelection);
-    if (centralityString.CompareTo("pp")==0){
-        fTextCent           = "MinBias";
-    } else {
-        fTextCent           = Form("%s central", centralityString.Data());
-    }
-    if (centralityString.CompareTo("pp")!=0 && !centralityString.Contains("0-100%") ){
-        fCollisionSystem    = Form("%s %s", centralityString.Data(), fCollisionSystem.Data());
-    }
-
     cout << "line " << __LINE__ << endl;
 
     //***************************** Initialization of variables according to meson type ******************************
@@ -4165,6 +4166,10 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                         fMesonLambdaTailRange[0]    = 0.0095;
                         fMesonLambdaTailRange[1]    = 0.0095;
                     }
+                } else if(fBinsPt[ptBin] >= 20.0 ) {
+                    fMesonLambdaTail                = 0.0;
+                    fMesonLambdaTailRange[0]        = 0.0;
+                    fMesonLambdaTailRange[1]        = 0.0;
                 }
             } else if (fMode == 3) {  // PCM-PHOS
                 mesonAmplitudeMin = mesonAmplitude*90./100.;
@@ -4553,6 +4558,9 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
                     fMesonFitRange[0] = 0.08;
                     fMesonFitRange[1] = 0.29;
                   }
+                } else if (fEnergyFlag.Contains("pPb_5.023TeVRun2") ){
+                    if (ptBin < 8)  mesonAmplitudeMin = mesonAmplitude*1./100.;
+                    else            mesonAmplitudeMin = mesonAmplitude*10./100.;
                 }
             }
 
@@ -5880,9 +5888,6 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
     }
 
     if (fHistoClustersPt){
-        TGraphAsymmErrors* dummy        = new TGraphAsymmErrors(fHistoClustersPt);
-        dummy->Print();
-        delete dummy;
         cout << "writing ClusterPt" << endl;
         fHistoClustersPt->Write("ClusterPt");
         TH1D*   fHistoClustersPtPerEvent   = (TH1D*)fHistoClustersPt->Rebin(fNBinsClusterPt,"fHistoClustersPtPerEvent",fBinsClusterPt);
@@ -5907,28 +5912,21 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
             fHistoTrueGammaClusPtRebinned   = (TH1D*)fHistoTrueGammaClusPt->Rebin(fNBinsClusterPt,"fHistoTrueGammaClusPtRebinned",fBinsClusterPt);
         }
         if (fHistoTrueGammaDCClusPt){
-            cout << "line" << __LINE__ << endl;
             fHistoTrueGammaDCClusPt->Write();
-            cout << "line" << __LINE__ << endl;
             fHistoTrueGammaDCClusPtRebinned   = (TH1D*)fHistoTrueGammaDCClusPt->Rebin(fNBinsClusterPt,"fHistoTrueGammaDCClusPtRebinned",fBinsClusterPt);
         }
-        cout << "line" << __LINE__ << endl;
         if (fHistoTrueGammaClusMultipleCount)fHistoTrueGammaClusMultipleCount->Write();
         if (fHistoTrueGammaClusPt && fHistoTrueGammaDCClusPt){
-            cout << "line" << __LINE__ << endl;
             TH1F* fHistoRatioDCTrueGammaClus = (TH1F*)fHistoTrueGammaDCClusPt->Clone("fHistoRatioDCTrueGammaClus");
             fHistoRatioDCTrueGammaClus->Divide(fHistoRatioDCTrueGammaClus,fHistoTrueGammaClusPt,1,1,"B");
             fHistoRatioDCTrueGammaClus->Write("FractionDoubleCountedClusters");
-            cout << "line" << __LINE__ << endl;
             TH1F* fHistoRatioDCTrueGammaClusRebinned = (TH1F*)fHistoTrueGammaDCClusPtRebinned->Clone("fHistoRatioDCTrueGammaClusRebinned");
             fHistoRatioDCTrueGammaClusRebinned->Divide(fHistoRatioDCTrueGammaClusRebinned,fHistoTrueGammaClusPtRebinned,1,1,"B");
             fHistoRatioDCTrueGammaClusRebinned->Write("FractionDoubleCountedClustersRebinned");
-            cout << "line" << __LINE__ << endl;
         }
     }
 
     if (fHistoClustersOverlapHeadersPt){
-        cout << "writing ClusterOverlapHeadersPt" << endl;
         fHistoClustersOverlapHeadersPt->Write("ClusterOverlapHeadersPt");
         TH1D*   fHistoClustersOverlapHeadersPtPerEvent   = (TH1D*)fHistoClustersOverlapHeadersPt->Rebin(fNBinsClusterPt,"fHistoClustersOverlapHeadersPtPerEvent",fBinsClusterPt);
         fHistoClustersOverlapHeadersPtPerEvent->Divide(fDeltaPtCluster);
@@ -5938,70 +5936,52 @@ void SaveHistos(Int_t optionMC, TString fCutID, TString fPrefix3, Bool_t UseTHnS
 
     // write histograms for all integration windows: normal, wide, narrow, left, left wide, left narrow
     for (Int_t k = 0; k < 6; k++){
-        cout << k << " writing yield" << endl;
         if (fHistoYieldMeson[k])            fHistoYieldMeson[k]->Write();
         if (fHistoYieldMesonPerEvent[k])    fHistoYieldMesonPerEvent[k]->Write();
     }
 
     // write histograms for assumption of different backgrounds
     for (Int_t k = 0; k < 6; k++){
-        cout << k << " writing yield diff BG" << endl;
         if (fHistoYieldDiffBck[k]) fHistoYieldDiffBck[k]->Write();
         if (fHistoYieldDiffBckRatios[k]) fHistoYieldDiffBckRatios[k]->Write();
     }
     for (Int_t k = 0; k < 3; k++){
-        cout << k << " writing yield diff BGresult" << endl;
         if (fHistoYieldDiffBckResult[k]) fHistoYieldDiffBckResult[k]->Write();
     }
 
 
     // write histograms for integration windows: normal, wide, narrow
     for (Int_t k = 0; k < 3; k++){
-        cout << k << " control hists" << endl;
         if (fHistoMassWindowHigh[k])        fHistoMassWindowHigh[k]->Write();
         if (fHistoMassWindowLow[k])         fHistoMassWindowLow[k]->Write();
         if (fHistoSigndefaultMeson[k])      fHistoSigndefaultMeson[k]->Write();
         if (fHistoSBdefaultMeson[k])        fHistoSBdefaultMeson[k]->Write();
     }
-
-    cout << " writing lambda tail" << endl;
     fHistoLambdaTail->Write();
-    cout << " writing amplitude" << endl;
     fHistoAmplitude->Write();
-    cout << " writing sigma" << endl;
     fHistoSigma->Write();
-    cout << " writing res BG const" << endl;
     fHistoResidualBGcon->Write();
-    cout << " writing res BG lin"  << endl;
     fHistoResidualBGlin->Write();
-    cout << " writing res BG yields" << endl;
     fHistoRatioResBGYield->Write();
-    cout << " writing res BG yield to Sig" << endl;
     fHistoRatioResBGYieldToSPlusResBG->Write();
     for (Int_t m = 0; m < 4; m++){
-        cout << m <<  " writing fit quality" << endl;
         fHistoChi2[m]->Write();
         fHistoResBGYield[m]->Write();
     }
 
-    cout <<  "meson quantities" << endl;
     fHistoMassMeson->Write();
     fHistoMassGaussianMeson->Write();
     fHistoWidthGaussianMeson->Write();
     fHistoFWHMMeson->Write();
-    cout <<  "delta pt" << endl;
     fDeltaPt->Write();
 
 
-    cout <<  "meson quantities left" << endl;
     fHistoMassMesonLeft->Write();
     fHistoFWHMMesonLeft->Write();
-    cout << "inv mass full pt" << endl;
     fMesonFullPtSignal->Write();
     fMesonFullPtBackground->Write();
     fMesonFullPtBackNorm->SetName("Mapping_BackNorm_InvMass_FullPt");
     fMesonFullPtBackNorm->Write();
-    cout << "event Quality" << endl;
     fNumberOfGoodESDTracks->Write();
     fEventQuality->Write();
 

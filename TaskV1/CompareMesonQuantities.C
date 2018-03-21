@@ -304,37 +304,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 Double_t startTextY = 0.8;
                 Double_t differenceText = textHeight*1.25;
 
-                TLatex *alice = 		new TLatex(startTextX, startTextY, Form("%s",textAlice.Data()));
-                TLatex *latexDate = 	new TLatex(startTextX, (startTextY-1.25*differenceText), date.Data());
-                TLatex *energy = 		new TLatex(startTextX, (startTextY-2.25*differenceText), energyText.Data());
-                TLatex *process = 		new TLatex(startTextX, (startTextY-3.25*differenceText), decayChannel.Data());
-                TLatex *detprocess = 	new TLatex(startTextX, (startTextY-4.25*differenceText), DetectionChannel.Data());
-
-                alice->SetNDC();
-                alice->SetTextColor(1);
-                alice->SetTextSize(textHeight*1.3);
-                alice->Draw();
-
-                latexDate->SetNDC();
-                latexDate->SetTextColor(1);
-                latexDate->SetTextSize(textHeight);
-                latexDate->Draw();
-
-                energy->SetNDC();
-                energy->SetTextColor(1);
-                energy->SetTextSize(textHeight);
-                energy->Draw();
-
-                process->SetNDC();
-                process->SetTextColor(1);
-                process->SetTextSize(textHeight);
-                process->Draw();
-
-                detprocess->SetNDC();
-                detprocess->SetTextColor(1);
-                detprocess->SetTextSize(textHeight);
-                detprocess->Draw();
-
+                PlotLabelsInvMassInPtPlots ( startTextX, startTextY, textHeight, differenceText, textAlice, date, energyText, decayChannel, DetectionChannel);
 
                 TLegend* legendLineShape = new TLegend(startTextX,startTextY-4.75*differenceText,1,startTextY-(4.75+2.)*differenceText);
                 legendLineShape->SetTextSize(textHeight);

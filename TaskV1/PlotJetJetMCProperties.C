@@ -39,7 +39,7 @@
 #include "TFitResult.h"
 #include "TMatrixDSym.h"
 #include "TArrow.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TGaxis.h"
 #include "TMarker.h"
 #include "TProfile.h"
@@ -130,14 +130,14 @@ Double_t FindLargestEntryIn1D(TH1F* histo){
 //******************* Standardized plotting of 2D plots ****************************
 //**********************************************************************************
 void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xTitle, TString yTitle, Bool_t kRangeY, Double_t startY, Double_t endY, Bool_t kRangeX, Double_t startX, Double_t endX, Int_t logX, Int_t logY, Int_t logZ, Float_t* floatLogo, Int_t canvasSizeX = 500, Int_t canvasSizeY = 500, TString generator ="" , TString period =""){
-    TCanvas * canvasStandard = new TCanvas("canvasStandard","",10,10,canvasSizeX,canvasSizeY);  // gives the page size      
+    TCanvas * canvasStandard = new TCanvas("canvasStandard","",10,10,canvasSizeX,canvasSizeY);  // gives the page size
     canvasStandard->SetLogx(logX);
     canvasStandard->SetLogy(logY);
     canvasStandard->SetLogz(logZ);
-    canvasStandard->SetRightMargin(0.12);     
-    canvasStandard->SetLeftMargin(0.12);      
-    canvasStandard->SetBottomMargin(0.1);     
-    canvasStandard->SetTopMargin(0.04);       
+    canvasStandard->SetRightMargin(0.12);
+    canvasStandard->SetLeftMargin(0.12);
+    canvasStandard->SetBottomMargin(0.1);
+    canvasStandard->SetTopMargin(0.04);
     canvasStandard->cd();
     histo2D->SetTitle("");
     DrawAutoGammaHisto2D(   histo2D,
@@ -148,17 +148,17 @@ void PlotStandard2D( TH2* histo2D, TString nameOutput, TString title, TString xT
     if (logX==1){
     //       cout << histo2D->GetXaxis()->GetLabelOffset() << endl;
         histo2D->GetXaxis()->SetLabelOffset(0.);
-    }   
-        
+    }
+
     histo2D->Draw("colz");
     DrawLabelsEvents(floatLogo[0],floatLogo[1],floatLogo[2], 0.00, collisionSystem, generator, period);
     TLatex *detprocess = 	new TLatex(floatLogo[0], floatLogo[1] - 3.2*floatLogo[2], fDetectionProcess);
-    detprocess->SetNDC(); 
+    detprocess->SetNDC();
     detprocess->SetTextColor(1);
     detprocess->SetTextSize(floatLogo[2]);
     detprocess->Draw();
     TLatex *ptHardBin = 	new TLatex(floatLogo[0], floatLogo[1] - 4.25*floatLogo[2], ptHardRange);
-    ptHardBin->SetNDC(); 
+    ptHardBin->SetNDC();
     ptHardBin->SetTextColor(1);
     ptHardBin->SetTextSize(floatLogo[2]);
     ptHardBin->Draw();
@@ -194,40 +194,39 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
                                 TString cutSelection    = "",
                                 Int_t mode              = 2,
                                 Int_t numberOfBins      = 4,
-                                TString suffix          = "eps", 
-                                TString optionEnergy    = "", 
+                                TString suffix          = "eps",
+                                TString optionEnergy    = "",
                                 TString period          = "",
                                 Bool_t additionalQA     = kFALSE
-                            ){	
+                            ){
 
     //***************************************************************************************************************
     //************************************ Layouting preparations & general setup ***********************************
     //***************************************************************************************************************
-    gROOT->Reset();	
+    gROOT->Reset();
     gROOT->SetStyle("Plain");
     TH1::AddDirectory(kFALSE);
-    StyleSettingsThesis();	
-    SetPlotStyle();	
-    
+    StyleSettingsThesis();
+    SetPlotStyle();
+
     const Int_t MaxNumberOfFiles = 21;
-    
+
     Color_t colorBins[21]       = { kBlack, kRed+2, kBlue+2, kGreen+2, kCyan+2,
                                     kViolet, kMagenta+2, kGray+1, kRed-2, kBlue-2,
-                                    kViolet+2, kCyan-2, kTeal+2, kOrange+2, kSpring+2, 
+                                    kViolet+2, kCyan-2, kTeal+2, kOrange+2, kSpring+2,
                                     kMagenta-2, kPink+2, kRed, kBlue, kTeal, kGreen};
     Color_t colorBinsShade[21]  = { kGray+1, kRed-6, kBlue-6, kGreen-8, kCyan-6,
-                                    kViolet-8, kMagenta-8, kGray, kRed-8, kBlue-8, 
+                                    kViolet-8, kMagenta-8, kGray, kRed-8, kBlue-8,
                                     kViolet-6, kCyan-8, kTeal-6, 807, kSpring-6,
                                     kMagenta-9, kPink-8, kRed-9, kBlue-9, kTeal-7, kGreen-4 };
     Marker_t markerBins[21]     = { 20, 21, 33, 34, 29,
                                     24, 25, 27, 28, 30,
-                                    20, 21, 33, 34, 29,
                                     24, 25, 27, 28, 30,
                                     20};
-    
+
     TString outputDir =	Form("%s/%s/%s/JetJetMCProperties_%s", cutSelection.Data(), optionEnergy.Data(), suffix.Data(), period.Data());
     gSystem->Exec("mkdir -p "+outputDir);
-    
+
     TString fileNameInput                   [MaxNumberOfFiles];
     Float_t minPtHard                       [MaxNumberOfFiles];
     Float_t maxPtHard                       [MaxNumberOfFiles];
@@ -237,20 +236,24 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     collisionSystem             = ReturnFullCollisionsSystem(optionEnergy);
     TString centralityString    = GetCentralityString(cutSelection.Data());
     fDetectionProcess           = ReturnFullTextReconstructionProcess(mode);
-    
+
     Float_t floatLocationRightUp2D[4] = {0.45,0.95,0.035, 0.02};
     Float_t floatLocationLeftDown2D[4] = {0.15,0.25,0.035, 0.02};
     Float_t floatLocationRightDown2D[4] = {0.45,0.25,0.035, 0.02};
 
     Double_t maxPt      = 35;
-    if (mode == 2) 
+    if (mode == 4 && period.Contains("LHC17g8")){
+        maxPt           = 60;
+    } else if (mode == 2){
         maxPt           = 30;
-    if (mode == 10) 
+    } else if (mode == 10){
         maxPt           = 50;
-    
+    }
+    cout << "going to maxPt: " << maxPt << endl;
+
     Double_t scaling                            = 1./(2.*TMath::Pi());
     Double_t recalcBarn                         = 1e-9;
-    
+
     //***************************************************************************************************************
     //*************************** read setting from configuration file **********************************************
     //***************************************************************************************************************
@@ -261,9 +264,9 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         in >> fileNameInput[nrOfPtHardBins] >> minPtHard[nrOfPtHardBins] >> maxPtHard[nrOfPtHardBins];
         cout<< fileNameInput[nrOfPtHardBins]<< endl;
         nrOfPtHardBins++;
-    }	
+    }
 // 	nrOfPtHardBins--;
-    
+
     //***************************************************************************************************************
     //******************************** Load Pi0 histograms **********************************************************
     //***************************************************************************************************************
@@ -286,22 +289,24 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     Double_t xSection               [MaxNumberOfFiles];
     Double_t weight                 [MaxNumberOfFiles];
     Double_t weightApplied          [MaxNumberOfFiles];
-    Double_t deltaRapid             [MaxNumberOfFiles];            
-    
+    Double_t deltaRapid             [MaxNumberOfFiles];
+
     TString anchoredTo                  = "LHC11a";
-    if (period.Contains("LHC13b4_fix")) 
+    if (period.Contains("LHC13b4_fix"))
         anchoredTo                      = "LHC13[b-c]";
-    if (period.Contains("LHC13b4_plus")) 
+    if (period.Contains("LHC13b4_plus"))
         anchoredTo                      = "LHC13[d-e]";
-    if (period.Contains("LHC15a3")) 
+    if (period.Contains("LHC15a3"))
         anchoredTo                      = "LHC13g";
-    if (period.Contains("LHC16c2")) 
+    if (period.Contains("LHC16c2"))
         anchoredTo                      = "LHC12[c-i]";
-    if (period.Contains("LHC16h3")) 
+    if (period.Contains("LHC16h3"))
         anchoredTo                      = "LHC15n";
-    if (period.Contains("LHC17g8b")) 
+    if (period.Contains("LHC17g8a"))
+        anchoredTo                      = "LHC16qt";
+    if (period.Contains("LHC17g8b"))
         anchoredTo                      = "LHC16r";
-    if (period.Contains("LHC17g8c")) 
+    if (period.Contains("LHC17g8c"))
         anchoredTo                      = "LHC16s";
 
     TString acceptanceOf = "";
@@ -312,7 +317,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     if (mode == 5) acceptanceOf     = "#gamma's in PHOS acc.";
     if (mode == 10) acceptanceOf    = "#gamma in EMCal acc.";
     if (mode == 11) acceptanceOf    = "#gamma in PHOS acc.";
-    
+
     cout << __LINE__ << endl;
     for (Int_t i=0; i< nrOfPtHardBins; i++){
         // Define CutSelections
@@ -323,8 +328,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         TString fMesonCutSelection                      = "";
         // disentangle cut selection
         ReturnSeparatedCutNumberAdvanced(cutSelection.Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
-    
-        fileInput[i]                                = new TFile(fileNameInput[i]);	
+
+        fileInput[i]                                = new TFile(fileNameInput[i]);
         if (fileInput[i]->IsZombie()) return;
 
         TString autoDetectedMainDir                 = AutoDetectMainTList(mode , fileInput[i]);
@@ -340,11 +345,11 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
             return;
         }
         TopDir->SetOwner();
-        
+
         TString rapidityRange                       = "";
         deltaRapid[i]                               = ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
 
-        
+
         TList *HistosGammaConversion                = (TList*)TopDir->FindObject(Form("Cut Number %s",cutSelection.Data()));
         if(HistosGammaConversion == NULL){
             cout<<"ERROR: " << Form("Cut Number %s",cutSelection.Data()) << " not Found in File"<<endl;
@@ -366,16 +371,16 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         nGeneratedEvents[i]                         = histoNEvents[i]->GetEntries();
         if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb"))
             nWeightedEvents[i]                      = histoNEventsWWeight[i]->GetBinContent(1);
-        else     
+        else
             nWeightedEvents[i]                      = GetNEvents(histoNEventsWWeight[i]);
-        
+
         profXSection[i]                             = (TProfile*)ESDContainer->FindObject("XSection");
         profXSection[i]->SetName(Form("XSection%d",i));
         xSection[i]                                 = profXSection[i]->GetBinContent(1);
-        
+
         weight[i]                                   = xSection[i]/(nTrials[i]/nGeneratedEvents[i]);
         weightApplied[i]                            = histoNEventsWWeight[i]->GetBinContent(1)/histoNEvents[i]->GetBinContent(1);
-        
+
         TList *MCContainer                          = (TList*)HistosGammaConversion->FindObject(Form("%s MC histograms",cutSelection.Data()));
         if(MCContainer == NULL){
             cout<<"ERROR: " << Form("MC histograms %s",cutSelection.Data()) << " not Found in File"<<endl;
@@ -390,7 +395,11 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         temp = (TH1F*)MCContainer->FindObject("MC_Pi0_WOEventWeights_Pt");
         histoMCPi0InputW0EvtWeigth[i]               = new TH1F(*temp);
         histoMCPi0InputW0EvtWeigth[i]->SetName(Form("MC_Pi0_WOEventWeights_Pt%d",i));
-        
+        if (optionEnergy.CompareTo("pPb_5.023TeVRun2") == 0 || optionEnergy.CompareTo("13TeV") == 0){
+            histoMCPi0Input[i]->Rebin(8);
+            histoMCPi0InputAcc[i]->Rebin(8);
+            histoMCPi0InputW0EvtWeigth[i]->Rebin(8);
+        }
         if ( !(mode == 10 || mode == 11) ){
             temp = (TH1F*)MCContainer->FindObject("MC_Eta_Pt");
             histoMCEtaInput[i]                      = new TH1F(*temp);
@@ -398,11 +407,17 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
             temp = (TH1F*)MCContainer->FindObject("MC_EtaInAcc_Pt");
             histoMCEtaInputAcc[i]                   = new TH1F(*temp);
             histoMCEtaInputAcc[i]->SetName(Form("MC_EtaInAcc_Pt%d",i));
-
             temp = (TH1F*)MCContainer->FindObject("MC_Eta_WOEventWeights_Pt");
             histoMCEtaInputW0EvtWeigth[i]           = new TH1F(*temp);
             histoMCEtaInputW0EvtWeigth[i]->SetName(Form("MC_Eta_WOEventWeights_Pt%d",i));
-        }   
+            if (optionEnergy.CompareTo("pPb_5.023TeVRun2") == 0 || optionEnergy.CompareTo("13TeV") == 0){
+                histoMCEtaInput[i]->Rebin(4);
+                histoMCEtaInputAcc[i]->Rebin(4);
+                histoMCEtaInputW0EvtWeigth[i]->Rebin(4);
+            }
+
+
+        }
         if (additionalQA){
             histoMCPi0vsJetPt[i] 							= (TH2F*)MCContainer->FindObject("MC_Pi0_Pt_JetPt");
             histoMCPi0vsJetPt[i]->SetName(Form("MC_Pi0_Pt_JetPt%d",i));
@@ -410,7 +425,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
                 histoMCEtavsJetPt[i] 				= (TH2F*)MCContainer->FindObject("MC_Eta_Pt_JetPt");
                 histoMCEtavsJetPt[i]->SetName(Form("MC_Eta_Pt_JetPt%d",i));
             }
-            
+
             ptHardRange = Form("%1.0f GeV/#it{c} < #it{p}^{hard}_{T} < %1.0f GeV/#it{c}", minPtHard[i], maxPtHard[i]);
             if (i==0) ptHardRange = "summed";
 
@@ -435,7 +450,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         }
         cout << ">>>>>>>> pT hard bin #: " << i << endl;
         cout << "ntrials: " <<  nTrials[i] << "\t xSection: " << xSection[i] << "\t number of generated events: " << nGeneratedEvents[i] << "\t weight: "
-            << weight[i] << "\t weight applied: "<< weightApplied[i]<< endl; 
+            << weight[i] << "\t weight applied: "<< weightApplied[i]<< endl;
 
         delete TopDir;
 
@@ -443,20 +458,20 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         delete fileInput[i];
 
     }
-    
+
     //***************************************************************************************************************
     //************************************Plotting unscaled inputs **************************************************
     //***************************************************************************************************************
     TCanvas* canvasInputUnscaled = new TCanvas("canvasInputUnscaled","",0,0,1000,1350);  // gives the page size
     DrawGammaCanvasSettings( canvasInputUnscaled, 0.1, 0.015, 0.015, 0.07);
-    canvasInputUnscaled->SetLogy();	
-    
+    canvasInputUnscaled->SetLogy();
+
     Float_t maximumPi0Unscaled = FindLargestEntryIn1D(histoMCPi0InputW0EvtWeigth[0])*10;
     if(period.Contains("LHC16c2")) maximumPi0Unscaled*=10;
     Float_t minimumPi0Unscaled = FindSmallestEntryIn1D(histoMCPi0InputW0EvtWeigth[nrOfPtHardBins-1]);
-    
+
     TH2F * histo2DInputUnscaledPi0;
-    histo2DInputUnscaledPi0 = new TH2F("histo2DInputUnscaledPi0","histo2DInputUnscaledPi0",1000,0., 35,10000,minimumPi0Unscaled,maximumPi0Unscaled);
+    histo2DInputUnscaledPi0 = new TH2F("histo2DInputUnscaledPi0","histo2DInputUnscaledPi0",1000,0., maxPt,10000,minimumPi0Unscaled,maximumPi0Unscaled);
     SetStyleHistoTH2ForGraphs(histo2DInputUnscaledPi0, "#it{p}_{T} (GeV/#it{c})","N_{#pi^{0}}",
                             0.032,0.04, 0.032,0.04, 0.8,1.1);
     histo2DInputUnscaledPi0->GetXaxis()->SetRangeUser(0,maxPt);
@@ -480,18 +495,18 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     labelMCName->SetTextFont(43);
     labelMCName->Draw();
 
-    
+
     canvasInputUnscaled->Update();
     canvasInputUnscaled->SaveAs(Form("%s/Pi0_MC_InputUnscaled.%s",outputDir.Data(),suffix.Data()));
 
-    
+
     if ( !(mode == 10 || mode == 11) ){
         Float_t maximumEtaUnscaled = FindLargestEntryIn1D(histoMCEtaInputW0EvtWeigth[0])*10;
         if(optionEnergy.CompareTo("8TeV")==0) maximumEtaUnscaled*=5;
         Float_t minimumEtaUnscaled = FindSmallestEntryIn1D(histoMCEtaInputW0EvtWeigth[nrOfPtHardBins-1]);
-        
+
         TH2F * histo2DInputUnscaledEta;
-        histo2DInputUnscaledEta = new TH2F("histo2DInputUnscaledEta","histo2DInputUnscaledEta",1000,0., 35,10000,minimumEtaUnscaled,maximumEtaUnscaled);
+        histo2DInputUnscaledEta = new TH2F("histo2DInputUnscaledEta","histo2DInputUnscaledEta",1000,0., maxPt,10000,minimumEtaUnscaled,maximumEtaUnscaled);
         SetStyleHistoTH2ForGraphs(histo2DInputUnscaledEta, "#it{p}_{T} (GeV/#it{c})","N_{#eta}",
                                 0.032,0.04, 0.032,0.04, 0.8,1.1);
         histo2DInputUnscaledEta->GetXaxis()->SetRangeUser(0,maxPt);
@@ -502,7 +517,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
             DrawGammaSetMarker(histoMCEtaInputW0EvtWeigth[i], markerBins[i], 1., colorBins[i], colorBins[i]);
             histoMCEtaInputW0EvtWeigth[i]->DrawCopy("e1,same");
         }
-        
+
         labelMCName->Draw();
 
         canvasInputUnscaled->Update();
@@ -515,95 +530,95 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     //***************************************************************************************************************
     TCanvas* canvasInputScaled = new TCanvas("canvasInputScaled","",0,0,1000,1350);  // gives the page size
     DrawGammaCanvasSettings( canvasInputScaled, 0.1, 0.015, 0.015, 0.07);
-    canvasInputScaled->SetLogy();	
+    canvasInputScaled->SetLogy();
     Float_t maximumPi0Scaled = FindLargestEntryIn1D(histoMCPi0Input[0])*10;
     Float_t minimumPi0Scaled = FindSmallestEntryIn1D(histoMCPi0Input[nrOfPtHardBins-1]);
-    
+
     TH2F * histo2DInputScaledPi0;
-    histo2DInputScaledPi0 = new TH2F("histo2DInputScaledPi0","histo2DInputScaledPi0",1000,0., 35,10000,minimumPi0Scaled,maximumPi0Scaled);
-    SetStyleHistoTH2ForGraphs(histo2DInputScaledPi0, "#it{p}_{T} (GeV/#it{c})","N_{#pi^{0}} reweighted", 
+    histo2DInputScaledPi0 = new TH2F("histo2DInputScaledPi0","histo2DInputScaledPi0",1000,0., maxPt,10000,minimumPi0Scaled,maximumPi0Scaled);
+    SetStyleHistoTH2ForGraphs(histo2DInputScaledPi0, "#it{p}_{T} (GeV/#it{c})","N_{#pi^{0}} reweighted",
                             0.032,0.04, 0.032,0.04, 0.8,1.2);
     histo2DInputScaledPi0->GetXaxis()->SetRangeUser(0,maxPt);
-    histo2DInputScaledPi0->DrawCopy(); 
+    histo2DInputScaledPi0->DrawCopy();
 
     TLegend* legendScaled = GetAndSetLegend2(0.2, 0.96-(1.*nrOfPtHardBins/2*0.028), 0.95, 0.96,22);
     legendScaled->SetMargin(0.12);
     legendScaled->SetNColumns(2);
     for (Int_t i = 0; i< nrOfPtHardBins; i++){
         DrawGammaSetMarker(histoMCPi0Input[i], markerBins[i], 1., colorBins[i], colorBins[i]);
-        histoMCPi0Input[i]->DrawCopy("e1,same"); 	
+        histoMCPi0Input[i]->DrawCopy("e1,same");
         if (i == 0) legendScaled->AddEntry(histoMCPi0Input[i],"summed","p");
         else legendScaled->AddEntry(histoMCPi0Input[i],Form("%1.0f GeV/#it{c} < #it{p}^{hard}_{T} < %1.0f GeV/#it{c}", minPtHard[i], maxPtHard[i]),"p");
-    }	
+    }
     legendScaled->Draw();
     for (Int_t i = 0; i< nrOfPtHardBins; i++){
-    histoMCPi0Input[i]->DrawCopy("e1,same");  
-    }  
+    histoMCPi0Input[i]->DrawCopy("e1,same");
+    }
     labelMCName->Draw();
 
-    
-    canvasInputScaled->Update();	
-    canvasInputScaled->SaveAs(Form("%s/Pi0_MC_InputScaled.%s",outputDir.Data(),suffix.Data()));	
 
-    histo2DInputScaledPi0->DrawCopy(); 
+    canvasInputScaled->Update();
+    canvasInputScaled->SaveAs(Form("%s/Pi0_MC_InputScaled.%s",outputDir.Data(),suffix.Data()));
+
+    histo2DInputScaledPi0->DrawCopy();
     legendScaled->Draw();
     for (Int_t i = 0; i< nrOfPtHardBins; i++){
         DrawGammaSetMarker(histoMCPi0InputAcc[i], markerBins[i], 1., colorBins[i], colorBins[i]);
-        histoMCPi0InputAcc[i]->DrawCopy("e1,same"); 	
-    }	
+        histoMCPi0InputAcc[i]->DrawCopy("e1,same");
+    }
     labelMCName->Draw();
     TLatex *labelAcceptance = new TLatex(0.45,0.99-(1.15*(nrOfPtHardBins/2+2)*0.032),Form("%s",acceptanceOf.Data()));
     SetStyleTLatex( labelAcceptance, 32,4);
     labelAcceptance->SetTextFont(43);
     labelAcceptance->Draw();
 
-    
-    canvasInputScaled->Update();	
-    canvasInputScaled->SaveAs(Form("%s/Pi0_MC_InputScaledInAcceptance.%s",outputDir.Data(),suffix.Data()));	
-    
-    
+
+    canvasInputScaled->Update();
+    canvasInputScaled->SaveAs(Form("%s/Pi0_MC_InputScaledInAcceptance.%s",outputDir.Data(),suffix.Data()));
+
+
     if ( !(mode == 10 || mode == 11) ){
         Float_t maximumEtaScaled = FindLargestEntryIn1D(histoMCEtaInput[0])*10;
         if(optionEnergy.CompareTo("8TeV")==0) maximumEtaScaled*=2;
         Float_t minimumEtaScaled = FindSmallestEntryIn1D(histoMCEtaInput[nrOfPtHardBins-1]);
-        
+
         TH2F * histo2DInputScaledEta;
-        histo2DInputScaledEta = new TH2F("histo2DInputScaledEta","histo2DInputScaledEta",1000,0., 35,10000,minimumEtaScaled,maximumEtaScaled);
-        SetStyleHistoTH2ForGraphs(histo2DInputScaledEta, "#it{p}_{T} (GeV/#it{c})","N_{#eta} reweighted", 
+        histo2DInputScaledEta = new TH2F("histo2DInputScaledEta","histo2DInputScaledEta",1000,0., maxPt,10000,minimumEtaScaled,maximumEtaScaled);
+        SetStyleHistoTH2ForGraphs(histo2DInputScaledEta, "#it{p}_{T} (GeV/#it{c})","N_{#eta} reweighted",
                                 0.032,0.04, 0.032,0.04, 0.8,1.1);
         histo2DInputScaledEta->GetXaxis()->SetRangeUser(0,maxPt);
-        histo2DInputScaledEta->DrawCopy(); 
+        histo2DInputScaledEta->DrawCopy();
 
-        legendScaled->Draw();   
+        legendScaled->Draw();
         for (Int_t i = 0; i< nrOfPtHardBins; i++){
             DrawGammaSetMarker(histoMCEtaInput[i], markerBins[i], 1., colorBins[i], colorBins[i]);
-            histoMCEtaInput[i]->DrawCopy("e1,same"); 	
-        }	
-        
+            histoMCEtaInput[i]->DrawCopy("e1,same");
+        }
+
         labelMCName->Draw();
 
-        canvasInputScaled->Update();	
-        canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaled.%s",outputDir.Data(),suffix.Data()));	
+        canvasInputScaled->Update();
+        canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaled.%s",outputDir.Data(),suffix.Data()));
 
-        histo2DInputScaledEta->DrawCopy(); 
-        legendScaled->Draw();   
+        histo2DInputScaledEta->DrawCopy();
+        legendScaled->Draw();
         for (Int_t i = 0; i< nrOfPtHardBins; i++){
             DrawGammaSetMarker(histoMCEtaInputAcc[i], markerBins[i], 1., colorBins[i], colorBins[i]);
-            histoMCEtaInputAcc[i]->DrawCopy("e1,same"); 	
-        }	
-        
+            histoMCEtaInputAcc[i]->DrawCopy("e1,same");
+        }
+
         labelMCName->Draw();
         labelAcceptance->Draw();
 
-        canvasInputScaled->Update();	
-        canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaledInAcceptance.%s",outputDir.Data(),suffix.Data()));	
+        canvasInputScaled->Update();
+        canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaledInAcceptance.%s",outputDir.Data(),suffix.Data()));
     }
-    
+
     delete canvasInputScaled;
-    
+
     //**************************************************************************************************************
     //*************************** Cross sections for pi0 and eta **************************************************
-    //**************************************************************************************************************    
+    //**************************************************************************************************************
     TH1D* histoPi0InvYield  [MaxNumberOfFiles];
     TH1D* histoEtaInvYield  [MaxNumberOfFiles];
     for (Int_t i=0; i< nrOfPtHardBins; i++){
@@ -611,27 +626,27 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         ScaleMCYield( histoPi0InvYield[i], deltaRapid[i], scaling, nWeightedEvents[i], "Pi0");
         if ( !(mode == 10 || mode == 11) ){
             histoEtaInvYield[i]     = (TH1D*)histoMCEtaInput[i]->Clone(Form("MC_Eta_InvYield_%i", i));
-            ScaleMCYield( histoEtaInvYield[i], deltaRapid[i], scaling, nWeightedEvents[i], "Eta");    
-        }    
+            ScaleMCYield( histoEtaInvYield[i], deltaRapid[i], scaling, nWeightedEvents[i], "Eta");
+        }
     }
-    
+
     //**************************************************************************************************************
     //*************************** Write all pt hard bins in 1 file *************************************************
-    //**************************************************************************************************************    
+    //**************************************************************************************************************
     TString nameOutput  = Form("%s/CompilationJJMCBins.root",outputDir.Data());
-    TFile* output       = new TFile(nameOutput.Data(),"RECREATE");  
+    TFile* output       = new TFile(nameOutput.Data(),"RECREATE");
         for (Int_t i=0; i< nrOfPtHardBins; i++){
-            histoMCPi0InputW0EvtWeigth[i]->Write();    
-            histoMCPi0Input[i]->Write();    
-            histoPi0InvYield[i]->Write();    
+            histoMCPi0InputW0EvtWeigth[i]->Write();
+            histoMCPi0Input[i]->Write();
+            histoPi0InvYield[i]->Write();
             if ( !(mode == 10 || mode == 11) ){
-                histoMCEtaInputW0EvtWeigth[i]->Write();    
-                histoMCEtaInput[i]->Write();    
-                histoEtaInvYield[i]->Write();    
+                histoMCEtaInputW0EvtWeigth[i]->Write();
+                histoMCEtaInput[i]->Write();
+                histoEtaInvYield[i]->Write();
             }
         }
     output->Write();
     output->Close();
 
-    
+
 }

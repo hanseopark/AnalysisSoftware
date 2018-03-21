@@ -99,19 +99,18 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17j7MCc="child_3";
 
 TRAINDIR=Legotrain-vAN20180228-EMClowth
-# ISAOD=0
-# LHC17nData="392"; #pass 1
-# LHC17j7MC="836";
-# LHC17j7MC="837";
-# LHC17j7MCa="child_1";
-# LHC17j7MCb="child_2";
-# LHC17j7MCc="child_3";
-ISAOD=1
-LHC17nData="450"; #pass 1
-LHC17j7MC="876";
+ISAOD=0
+LHC17nData="395"; #pass 1
+LHC17j7MC="906";
 LHC17j7MCa="child_1";
 LHC17j7MCb="child_2";
 LHC17j7MCc="child_3";
+# ISAOD=1
+# LHC17nData="450"; #pass 1
+# LHC17j7MC="876";
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
