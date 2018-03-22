@@ -33,6 +33,7 @@
     #ifndef __CLING__
         #include <Riostream.h>
         #include <TH3.h>
+        #include <TLatex.h>
     #endif
     /*********************************************************************************************************
     DrawAliceLogoPi0Performance

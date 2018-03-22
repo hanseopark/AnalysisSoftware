@@ -1058,12 +1058,14 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                     Double_t ptStart        = histoYieldTrueSecFracMeson[k][3]->GetXaxis()->GetBinLowEdge(i);
                     Double_t ptEnd          = histoYieldTrueSecFracMeson[k][3]->GetXaxis()->GetBinUpEdge(i);
                     Double_t binWidth       = ptEnd-ptStart;
-                    Double_t secFrac        = fitDefaultSecFrac[k][3]->Integral(ptStart, ptEnd, resultSecFrac[k][1]->GetParams()) / binWidth;
+                    for(UInt_t ipar = 0; ipar < resultSecFrac[k][1]->NPar(); ipar++) fitDefaultSecFrac[k][3]->SetParameter(ipar, resultSecFrac[k][1]->GetParams()[ipar]);
+                    Double_t secFrac        = fitDefaultSecFrac[k][3]->Integral(ptStart, ptEnd) / binWidth;
                     Double_t errorSecFrac   = fitDefaultSecFrac[k][3]->IntegralError(ptStart, ptEnd, resultSecFrac[k][1]->GetParams(), resultSecFrac[k][1]->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
                     histoYieldTrueSecFracMeson[k][3]->SetBinContent(i, secFrac);
                     histoYieldTrueSecFracMeson[k][3]->SetBinError(i, errorSecFrac);
 
-                    secFrac                 = fitDefaultSecFrac[k][0]->Integral(ptStart, ptEnd, resultSecFrac[k][0]->GetParams()) / binWidth;
+                    for(UInt_t ipar = 0; ipar < resultSecFrac[k][0]->NPar(); ipar++) fitDefaultSecFrac[k][0]->SetParameter(ipar, resultSecFrac[k][0]->GetParams()[ipar]);
+                    secFrac                 = fitDefaultSecFrac[k][0]->Integral(ptStart, ptEnd ) / binWidth;
                     errorSecFrac            = fitDefaultSecFrac[k][0]->IntegralError(ptStart, ptEnd, resultSecFrac[k][0]->GetParams(), resultSecFrac[k][0]->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
                     histoYieldTrueSecFracMeson[k][0]->SetBinContent(i, secFrac);
                     histoYieldTrueSecFracMeson[k][0]->SetBinError(i, errorSecFrac);
@@ -1085,7 +1087,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                             Double_t ptStart        = histoYieldTrueSecFracMeson[k][j]->GetXaxis()->GetBinLowEdge(i);
                             Double_t ptEnd          = histoYieldTrueSecFracMeson[k][j]->GetXaxis()->GetBinUpEdge(i);
                             Double_t binWidth       = ptEnd-ptStart;
-                            Double_t secFrac        = fitSecFracPurePowerlaw[k][j]->Integral(ptStart, ptEnd, resultCurr->GetParams()) / binWidth;
+                            for(UInt_t ipar = 0; ipar < resultCurr->NPar(); ipar++) fitSecFracPurePowerlaw[k][j]->SetParameter(ipar, resultCurr->GetParams()[ipar]);
+                            Double_t secFrac        = fitSecFracPurePowerlaw[k][j]->Integral(ptStart, ptEnd) / binWidth;
                             Double_t errorSecFrac   = fitSecFracPurePowerlaw[k][j]->IntegralError(ptStart, ptEnd, resultCurr->GetParams(), resultCurr->GetCovarianceMatrix().GetMatrixArray() ) / binWidth;
                             histoYieldTrueSecFracMeson[k][j]->SetBinContent(i, secFrac);
                             histoYieldTrueSecFracMeson[k][j]->SetBinError(i, errorSecFrac);
@@ -1488,20 +1491,23 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             Double_t ptStart            = histoBGEstimateA->GetXaxis()->GetBinLowEdge(i);
             Double_t ptEnd              = histoBGEstimateA->GetXaxis()->GetBinUpEdge(i);
             Double_t binWidth           = ptEnd-ptStart;
-            Double_t bgEstimate         = (100-fitCorrectionFactorsHistvsPt->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams()) / binWidth )/100.;
+            for(UInt_t ipar = 0; ipar < resultCorrectionFactorsHistvsPt->NPar(); ipar++) fitCorrectionFactorsHistvsPt->SetParameter(ipar, resultCorrectionFactorsHistvsPt->GetParams()[ipar]);
+            Double_t bgEstimate         = (100-fitCorrectionFactorsHistvsPt->Integral(ptStart, ptEnd) / binWidth )/100.;
             Double_t errorBGEstimate    = (fitCorrectionFactorsHistvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPt->GetParams(),
                                                                                     resultCorrectionFactorsHistvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
             histoBGEstimateA->SetBinContent(i, bgEstimate);
             histoBGEstimateA->SetBinError(i, errorBGEstimate);
             if (fitCorrectionFactorsFitvsPt){
-                bgEstimate      = (100-fitCorrectionFactorsFitvsPt->Integral(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams()) / binWidth )/100.;
+                for(UInt_t ipar = 0; ipar < resultCorrectionFactorsFitvsPt->NPar(); ipar++) fitCorrectionFactorsFitvsPt->SetParameter(ipar, resultCorrectionFactorsFitvsPt->GetParams()[ipar]);
+                bgEstimate      = (100-fitCorrectionFactorsFitvsPt->Integral(ptStart, ptEnd) / binWidth )/100.;
                 errorBGEstimate = (fitCorrectionFactorsFitvsPt->IntegralError(ptStart, ptEnd, resultCorrectionFactorsFitvsPt->GetParams(),
                                                                               resultCorrectionFactorsFitvsPt->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
                 histoBGEstimateB->SetBinContent(i, bgEstimate);
                 histoBGEstimateB->SetBinError(i, errorBGEstimate);
             }
             for (Int_t k = 0; k< 5; k++){
-                bgEstimate      = (100-fitCorrectionFactorsHistvsPtCat[k]->Integral(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCat[k]->GetParams()) / binWidth )/100.;
+                for(UInt_t ipar = 0; ipar < resultCorrectionFactorsHistvsPtCat[k]->NPar(); ipar++) fitCorrectionFactorsHistvsPtCat[k]->SetParameter(ipar, resultCorrectionFactorsHistvsPtCat[k]->GetParams()[ipar]);
+                bgEstimate      = (100-fitCorrectionFactorsHistvsPtCat[k]->Integral(ptStart, ptEnd) / binWidth )/100.;
                 errorBGEstimate = (fitCorrectionFactorsHistvsPtCat[k]->IntegralError(ptStart, ptEnd, resultCorrectionFactorsHistvsPtCat[k]->GetParams(),
                                                                                 resultCorrectionFactorsHistvsPtCat[0]->GetCovarianceMatrix().GetMatrixArray() ) / binWidth )/100.;
                 histoBGEstimateCat[k]->SetBinContent(i, bgEstimate);
@@ -1635,7 +1641,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoTrueMassMeson, 24, 0.8, kRed+2, kRed+2);
         histoTrueMassMeson->DrawCopy("same,e1,p");
 
-        DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
+        DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,1);
 
         TLegend* legendMass = GetAndSetLegend2(0.65, 0.13, 0.95, 0.13+(0.035*3), 0.035, 1, "", 42, 0.15);
         legendMass->AddEntry(histoMassMeson,"reconstructed Data");
@@ -1684,7 +1690,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawGammaSetMarker(histoRatioValRecMass, 24, 0.8, kRed+2, kRed+2);
             histoRatioValRecMass->DrawCopy("same,e1,p");
 
-            DrawGammaLines(0., maxPtMeson,1, 1,0.1);
+            DrawGammaLines(0., maxPtMeson,1, 1,1);
 
             TLegend* legendMassRatio = GetAndSetLegend2(0.15, 0.12, 0.6, 0.12+(0.035*4), 0.035, 2, "", 42, 0.15);
             legendMassRatio->AddEntry(histoRatioRecMass,"rec MC/ data");
@@ -1782,7 +1788,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendMass4->AddEntry(histoTrueMassGaussianMeson,"True reconstructed #eta, pure Gauss");
             }
 
-            DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
+            DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,1);
             PutProcessLabelAndEnergyOnPlot(0.15, 0.96, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             legendMass4->Draw();
             canvasMass->Update();
@@ -1850,7 +1856,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendMass2->AddEntry(histoTrueMassCaloMergedClusterMeson,"True reconstructed #eta, merged cluster #gamma");
             }
 
-            DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
+            DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,1);
             PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.035, "", 1, 1.25, 11);
             legendMass2->Draw();
 
@@ -1917,7 +1923,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 if(kIsEta ) legendMass3->AddEntry(histoTrueMassMixedCaloConvPhotonMeson,"True reconstructed #eta, #gamma#gamma_{conv}");
             }
 
-            DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,0.1);
+            DrawGammaLines(0., maxPtMeson,mesonMassExpect, mesonMassExpect,1);
 
             PutProcessLabelAndEnergyOnPlot(0.15, 0.95, 0.035, collisionSystem.Data(), fTextMeasurement.Data(), fDetectionProcess.Data(), 42, 0.03, "", 1, 1.25, 11);
             legendMass3->Draw();
@@ -2096,7 +2102,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawGammaSetMarker(histoRatioValRecFWHM, 24, 0.8, kRed+2, kRed+2);
             histoRatioValRecFWHM->DrawCopy("same,e1,p");
 
-            DrawGammaLines(0., maxPtMeson,1, 1,0.1);
+            DrawGammaLines(0., maxPtMeson,1, 1,1);
 
             TLegend* legendFWHMRatio = GetAndSetLegend2(0.45, 0.95-(0.035*4), 0.9, 0.95, 0.035, 2, "", 42, 0.15);
             legendFWHMRatio->AddEntry(histoRatioRecFWHM,"rec MC/ data");
@@ -2935,7 +2941,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                                     kTRUE, 3., 4e-10, kTRUE,
                                     kFALSE, 0., 0.7,
                                     kFALSE, 0., 10.);
-        histoUnCorrectedYieldDrawing->SetLineWidth(0.5);
+        histoUnCorrectedYieldDrawing->SetLineWidth(1);
         DrawGammaSetMarker(histoUnCorrectedYieldDrawing, 20, 0.5, kBlack, kBlack);
         histoUnCorrectedYieldDrawing->DrawCopy("e1");
 
@@ -2996,7 +3002,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             RatioRaw[k]->DrawCopy("e1,same");
 
         }
-        DrawGammaLines(0., histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),1., 1.,0.1);
+        DrawGammaLines(0., histoUnCorrectedYield[0]->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield[0]->GetNbinsX()),1., 1.,1);
 
     canvasRawYield->Update();
     canvasRawYield->SaveAs(Form("%s/%s_%s_RawYieldDiffIntRanges_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
@@ -3142,7 +3148,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawGammaSetMarker(RatioTrue[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
             RatioTrue[k]->DrawCopy("e1,same");
         }
-        DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,0.1);
+        DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,1);
 
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldTrueEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
@@ -3166,7 +3172,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             DrawGammaSetMarker(RatioNormal[k], markerStyleIntRanges[k], markerSizeIntRanges[k], colorIntRanges[k], colorIntRanges[k]);
             RatioNormal[k]->DrawCopy("e1,same");
         }
-        DrawGammaLines(0., histoCorrectedYieldNorm[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldNorm[0]->GetNbinsX()),1., 1.,0.1);
+        DrawGammaLines(0., histoCorrectedYieldNorm[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldNorm[0]->GetNbinsX()),1., 1.,1);
 
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
@@ -3285,7 +3291,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             RatioTrueMCInput->DrawCopy("e1,same");
             DrawGammaSetMarker(RatioNormalToTrue, 25, 1., kGreen+2, kGreen+2);
             RatioNormalToTrue->DrawCopy("e1,same");
-            DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,0.1);
+            DrawGammaLines(0., histoCorrectedYieldTrue[0]->GetXaxis()->GetBinUpEdge(histoCorrectedYieldTrue[0]->GetNbinsX()),1., 1.,1);
 
         canvasCorrectedYield->Update();
         canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYield_SanityCheck_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));

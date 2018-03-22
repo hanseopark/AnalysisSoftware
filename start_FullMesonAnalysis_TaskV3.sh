@@ -46,6 +46,7 @@ ExtInputFile=""
 BinsPtGamma=0
 energy=""
 FileWeightingGamma=""
+IsROOT6=0
 
 function GiveBinning5TeV()
 {
@@ -1027,40 +1028,67 @@ function ExtractSignal()
 
 function ExtractSignalGamma()
 {
-    root -x -l -b -q TaskV1/ExtractGammaSignal.C\+\($1\,$addedSig\,$mode\)
+    if [ $IsROOT6 -eq 0 ]; then
+        root -x -l -b -q TaskV1/ExtractGammaSignal.C\+\($1\,$addedSig\,$mode\)
+    else
+        root -x -q -l -b TaskV1/ExtractGammaSignal.C\($1\,$addedSig\,$mode\)
+    fi
 }
 
 function ExtractSignalGammaV2()
 {
-    root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\)
+    if [ $IsROOT6 -eq 0 ]; then
+        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\)
+    else
+        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\($1\,0\)
+    fi
 }
 
 
 function CorrectSignal()
 {
     root -x -l -b -q TaskV1/CorrectSignalV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,kFALSE\,$mode\)
+
 }
 
 function CorrectSignalGamma()
 {
-    root -x -b -q -l CompileCorrectGamma.C\+\+
-    root -x -l -b -q TaskV1/CorrectGamma.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\)
+    if [ $IsROOT6 -eq 0 ]; then
+        root -x -b -q -l CompileCorrectGamma.C\+\+
+        root -x -l -b -q TaskV1/CorrectGamma.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\)
+    else
+        root -x -b -q -l CompileCorrectGamma.C
+        root -x -l -b -q TaskV1/CorrectGamma.C\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\)
+    fi
 }
 
 function CorrectSignalGammaV2()
 {
-    root -x -b -q -l CompileCorrectGammaV2.C\+\+
-    root -x -l -b -q TaskV1/CorrectGammaV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\,\"$7\"\)
+    if [ $IsROOT6 -eq 0 ]; then
+        root -x -b -q -l CompileCorrectGammaV2.C\+\+
+        root -x -l -b -q TaskV1/CorrectGammaV2.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\,\"$7\"\)
+    else
+        root -x -b -q -l CompileCorrectGammaV2.C
+        root -x -l -b -q TaskV1/CorrectGammaV2.C\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$energy\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$mode\,\"$7\"\)
+    fi
 }
 
 function CreateGammaFinalResultsV3()
 {
-    root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
+    if [ $IsROOT6 -eq 0 ]; then
+        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
+    else
+        root -x -l -b -q TaskV1/CalculateGammaToPi0V4.C\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\,\"$FileWeightingGamma\"\)
+    fi
 }
 
 function RunPi0Tagging()
 {
-    root -x -l -b -q TaskV1/Pi0Tagging.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    if [ $IsROOT6 -eq 0 ]; then
+        root -x -l -b -q TaskV1/Pi0Tagging.C\+\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    else
+        root -x -l -b -q TaskV1/Pi0Tagging.C\(\"$1\"\,\"$2\"\,\"$3\"\,\"$4\"\,\"$5\"\,\"$6\"\,\"$7\"\,\"$energy\"\,$mode\)
+    fi
 }
 
 function Usage()
@@ -1127,6 +1155,12 @@ echo $1
 echo $2
 echo $3
 echo $4
+
+Rootversion=`echo $ROOT_RELEASE`
+if [[ "$Rootversion" == *v6* ]]; then
+    IsROOT6=1
+    echo "root 6 version detected"
+fi
 
 if [[ "$1" == *-*gammaOff* ]]; then
     DoGamma=0
@@ -2791,9 +2825,15 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
 
             if [ $disableToyMC -eq 0 ] && [ $useCocktail -eq 0 ] && [ $ONLYCORRECTION -eq 0 ]; then
                 rm ToyMCOutputs.txt
-                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
-                root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                if [ $IsROOT6 -eq 0 ]; then
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                else
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\($NEvtsToy,0,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\($NEvtsToy,1,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                    root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
+                fi
             fi
             if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
                 root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
@@ -2819,14 +2859,21 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                                 ExtractSignal $optionsPi0MC2
                                 Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
                                 Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosAddSig_*.root`
-                                root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\)
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\)
+                                fi
                             elif [ $addedSig -eq 2 ]; then
                                 optionsPi0MC2=\"Pi0\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                                 ExtractSignal $optionsPi0MC2
                                 Pi0MCcorrection=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistos_*.root`
                                 Pi0MCcorrectionAddSig=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\,$minPtMergePi0\)
-
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\,$minPtMergePi0\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\(\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0MCcorrection\"\,\"$cutSelection/$energy/Pi0_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0MCcorrectionAddSig\"\,$minPtMergePi0\)
+                                fi
                             else
                                 optionsPi0MCBC=\"Pi0\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtPi0\,kFALSE
                                 echo $optionsPi0MCBC
@@ -2840,7 +2887,11 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                             fi
                         fi
 
-                        root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtPi0\,$mode\)
+                        if [ $IsROOT6 -eq 0 ]; then
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtPi0\,$mode\)
+                        else
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$Pi0dataRAWFILE\"\,\"$Pi0MCRAWFILE\"\,\"$cutSelection\"\,\"Pi0\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtPi0\,$mode\)
+                        fi
                     fi
                 fi
                 if [ $DoGamma -eq 1 ]; then
@@ -2864,28 +2915,44 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
 
                 if [ $DoPi0InEtaBinning -eq 1 ]; then
                     if [ -f $DataRootFile ]; then
-                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        optionsPi0EtaData=\"Pi0EtaBinning\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                        ExtractSignal $optionsPi0EtaData
                     fi
                     Pi0EtadataRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_data_GammaConvV1WithoutCorrection_$cutSelection.root`
                     if [ $MCFILE -eq 1 ]; then
-                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        optionsPi0EtaMC=\"Pi0EtaBinning\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                        ExtractSignal $optionsPi0EtaMC
                         Pi0EtaMCRAWFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
                         Pi0EtaMCcorrectionFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
                         if [ $MERGINGMC -eq 1 ]; then
                             if [ $addedSig -eq 1 ]; then
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
+                                optionsPi0EtaMC2=\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE
+                                ExtractSignal $optionsPi0EtaMC2
                                 Pi0EtaMCcorrection=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*.root`
                                 Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosAddSig_*.root`
-                                root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\)
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\)
+                                fi
                             elif [ $addedSig -eq 2 ]; then
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                optionsPi0EtaMC2=\"Pi0EtaBinning\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                ExtractSignal $optionsPi0EtaMC2
                                 Pi0EtaMCcorrection=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistos_*.root`
                                 Pi0EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\,$minPtMergePi0\)
-
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\,$minPtMergePi0\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\(\"$cutSelection\"\,\"Pi0EtaBinning\"\,\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrection\"\,\"$cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$Pi0EtaMCcorrectionAddSig\"\,$minPtMergePi0\)
+                                fi
                             else
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Pi0EtaBinning\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                optionsPi0EtaMCBC=\"Pi0EtaBinning\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                echo $optionsPi0EtaMCBC
+                                ExtractSignal $optionsPi0EtaMCBC
+                                optionsPi0EtaMCDE=\"Pi0EtaBinning\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                echo $optionsPi0EtaMCDE
+                                ExtractSignal $optionsPi0EtaMCDE
+
                                 Pi0EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosBC_*.root`
                                 Pi0EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Pi0EtaBinning_MC_GammaConvV1CorrectionHistosD_*.root`
                                 root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Pi0EtaBinning\",\"$Suffix\"\,\"$energy\"\,\"$Pi0EtaMCcorrectionFILE\"\,\"$Pi0EtaMCcorrectionBCFILE\",\"$Pi0EtaMCcorrectionDFILE\"\)
@@ -2897,35 +2964,53 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                 fi
                 if [ $DoEta -eq 1 ]; then
                     if [ -f $DataRootFile ]; then
-                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        optionsEtaData=\"Eta\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                        ExtractSignal $optionsEtaData
                     fi
                     EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection.root`
                     if [ $MCFILE -eq 1 ]; then
-                        root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                        optionsEtaMC=\"Eta\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                        ExtractSignal $optionsEtaMC
                         EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
                         EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
 
                         if [ $MERGINGMC -eq 1 ]; then
                             if [ $addedSig -eq 1 ]; then
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE\,$mode\,$useTHnSparse\)
+                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE
+                                ExtractSignal $optionsEtaMC2
                                 EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
                                 EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosAddSig_*.root`
-                                root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
+                                fi
                             elif [ $addedSig -eq 2 ]; then
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                ExtractSignal $optionsEtaMC2
                                 EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
                                 EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
-                                root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\,$minPtMergeEta\)
+                                fi
                             else
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
-                                root -x -q -l -b  TaskV1/ExtractSignalV2.C\+\(\"Eta\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE\,$mode\,$useTHnSparse\)
+                                optionsEtaMCBC=\"Eta\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                ExtractSignal $optionsEtaMCBC
+                                optionsEtaMCDE=\"Eta\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                ExtractSignal $optionsEtaMCDE
                                 EtaMCcorrectionBCFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosBC_*.root`
                                 EtaMCcorrectionDFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosD_*.root`
 
                                 root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"Eta\",\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrectionFILE\"\,\"$EtaMCcorrectionBCFILE\",\"$EtaMCcorrectionDFILE\"\)
                             fi
                         fi
-                        root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
+                        if [ $IsROOT6 -eq 0 ]; then
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
+                        else
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEta\,$mode\)
+                        fi
                     fi
                 fi
                 if [ "$Suffix" == "pdf" ]; then
@@ -3038,6 +3123,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
         fi
         DoGamma=0;
     fi
+
     if [ $DoPi0 -eq 1 ]; then
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,$DoGamma\,\"\"\,\"$PERIODNAME\"\,$mode\)
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Pi0\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,$DoGamma\,\"\"\,\"$PERIODNAME\"\,$mode\)

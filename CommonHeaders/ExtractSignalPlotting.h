@@ -3,6 +3,10 @@
 #ifndef GAMMACONV_ExtractSignalPlotting
 #define GAMMACONV_ExtractSignalPlotting
 
+    #ifndef __CLING__
+        #include <TLatex.h>
+    #endif
+
     // photon categories for plotting DCA
     TString     categoryName[4]                                         = {"all", "cat1", "cat2", "cat3"};
     TString     backgroundExtractionMethod[5]                           = {"std", "var1", "var2", "var3", "var4"};
@@ -71,9 +75,9 @@
 
 
     /*
-    //************************************************************************************
-    //************ Return correct trigger name based on trigger cutnumber ****************
-    //************************************************************************************
+    // ************************************************************************************
+    // ************ Return correct trigger name based on trigger cutnumber ****************
+    // ************************************************************************************
     TString ReturnTriggerName(Int_t trigger){
         cout << trigger << endl;
         if (trigger == 1 || trigger == 3 || trigger == 0){  // INT1
@@ -1907,7 +1911,7 @@
                 fHistoMappingGGInvMassPtBinPlot[iPt]->SetMarkerSize(3*markersize);
                 legendData->AddEntry(fHistoMappingGGInvMassPtBinPlot[iPt],"same evt. #it{M}_{#gamma#gamma} (BG+Signal)","ep");
                 Size_t linesize         = fHistoMappingBackNormInvMassPtBinPlot[0][iPt]->GetLineWidth();
-                fHistoMappingBackNormInvMassPtBinPlot[0][iPt]->SetLineWidth(0.8*linesize);
+                fHistoMappingBackNormInvMassPtBinPlot[0][iPt]->SetLineWidth(linesize);
                 for(Int_t k=0;k<5;k++){
                     if(fHistoMappingBackNormInvMassPtBinPlot[k][iPt]==NULL) continue;
                     legendData->AddEntry(fHistoMappingBackNormInvMassPtBinPlot[k][iPt],Form("mixed evt. Group %i #it{M}_{%s}",k,decayChannel.Data()),"l");
@@ -2147,6 +2151,7 @@
         legendData->Draw();
 
         canvasDataSpectra->Print(namePlot.Data());
+        delete padLegend;
         delete padDataSpectra;
         delete canvasDataSpectra;
     }
@@ -2821,7 +2826,7 @@
                 int remaining = (place-1)%fColumnPlot;
                 if (remaining > 0) padDataFit->cd(place)->SetLeftMargin(0.15);
                 else padDataFit->cd(place)->SetLeftMargin(0.25);
-
+                cout << place << "\t";
                 TString xlabel;
                 TString ylabel;
 
@@ -2951,6 +2956,7 @@
                 }
             }
         }
+        cout << "done" << endl;
         canvasDataFit->cd();
         Double_t nPixels        = 13;
         Double_t textHeight     = 0.08;
@@ -3102,7 +3108,7 @@
 
                 if (fFitSignalInvMassPtBinPlot[iPt]!=0x00){
                     fFitSignalInvMassPtBinPlot[iPt]->SetLineColor(kCyan+3);
-                    fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(1.5);
+                    fFitSignalInvMassPtBinPlot[iPt]->SetLineWidth(2);
                     fFitSignalInvMassPtBinPlot[iPt]->DrawCopy("same");
                 }
                 Color_t colorFit[3]     = {kRed+1, kAzure+2, 807};
@@ -3114,7 +3120,7 @@
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetNpx(10000);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineColor(colorFit[m]);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineStyle(styleFit[m]);
-                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(1.5);
+                        fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->SetLineWidth(2);
                         fFitSigWithOtherBGInvMassPtBinPlot[m][iPt]->DrawCopy("same");
                     }
                 }
@@ -3265,7 +3271,7 @@
             if (place > legendPlace[0]-1 && place < legendPlace[1]+1){
                 iPt--;
             } else {
-
+                cout << place << "\t" ;
                 padDataFit->cd(place);
                 padDataFit->cd(place)->SetTopMargin(0.12);
                 padDataFit->cd(place)->SetBottomMargin(0.15);
@@ -3478,7 +3484,9 @@
             legendData->Draw();
         }
 
+        cout << "done" << endl;
         canvasDataFit->Print(namePlot.Data());
+        delete padLegend;
         delete padDataFit;
         delete canvasDataFit;
     }
@@ -4850,7 +4858,7 @@
                         DrawGammaHisto( fHistoM02PtBinPlot[iPt],
                                         Form("%3.2f GeV/#it{c} < #it{E} < %3.2f GeV", startPt, endPt),
                                         "#it{#sigma}_{long}^{2}", Form("dN_{%s}/d#it{#sigma}_{long}^{2}", decayChannel.Data()),
-                                        0, 0.5, 0.0001, 0.7);
+                                        0, 0.5, 0, 0.7);
                 } else {
                     continue;
                 }
@@ -5666,9 +5674,9 @@
         delete canvasDataSpectra;
     }
 
-    //****************************************************************************
-    //******* Function to draw DCAz histograms in pT-bins ************************
-    //****************************************************************************
+    // ****************************************************************************
+    // ******* Function to draw DCAz histograms in pT-bins ************************
+    // ****************************************************************************
     void DrawDCAzHisto( TH1* histo1,
                         TString Title,
                         TString XTitle,
@@ -5695,7 +5703,7 @@
         histo1->SetMarkerStyle(20);
         histo1->SetMarkerColor(1);
         histo1->SetLineColor(1);
-        histo1->SetLineWidth(0.5);
+        histo1->SetLineWidth(1);
         histo1->SetMarkerSize(0.5);
         histo1->SetTitleOffset(1.2,"xy");
         histo1->SetTitleSize(0.05,"xy");
@@ -5707,7 +5715,7 @@
             histo1->SetLineColor(color);
             histo1->SetMarkerColor(color);
             histo1->SetMarkerStyle(24);
-            histo1->SetLineWidth(0.9);
+            histo1->SetLineWidth(1);
             histo1->DrawCopy("hist,same");
         } else {
             if( bck == 2 ){
@@ -5728,9 +5736,9 @@
         }
     }
 
-    //**************************************************************************************************
-    //************* Routine to produce fraction per category vs pt plots  ******************************
-    //**************************************************************************************************
+    // **************************************************************************************************
+    // ************* Routine to produce fraction per category vs pt plots  ******************************
+    // **************************************************************************************************
     void DrawFractionPerCat(TH1D** frac, TString fOutputDir, TString fPrefix, TString fCutSelection, TString fSuffix, TString fEnergy) {
 
         TCanvas* canvas 	= new TCanvas("canvasCorrFrac","",200,10,1350,900);  // gives the page size
@@ -5762,9 +5770,9 @@
         delete canvas;
     }
 
-    //**************************************************************************************************
-    //************* Routine to produce DCAz plots in pt bins *******************************************
-    //**************************************************************************************************
+    // **************************************************************************************************
+    // ************* Routine to produce DCAz plots in pt bins *******************************************
+    // **************************************************************************************************
     void PlotDCAzInPtBinsWithBack(  TH1D** ESDGammaPtDCAzBins,
                                     TH1D** ESDGammaPtDCAzBinsBack,
                                     TH1D** ESDGammaPtDCAzBinsBackB,
@@ -6037,9 +6045,9 @@
         PlotDCAzInPtBinsWithBack(ESDGammaPtDCAzBins, ESDGammaPtDCAzBinsBack,ESDGammaPtDCAzBinsBackB, namePlot, nameCanvas, namePad, dateDummy, fMesonType, nRows, nColumns, fStartBinPtRange, fNumberPtBins, fRangeBinsPt, fDecayChannel, fMonteCarloInfo, textCent);
     }
 
-    //**************************************************************************************************
-    //******* Function to calculate number of rows for given number of bins and columns ****************
-    //**************************************************************************************************
+    // **************************************************************************************************
+    // ******* Function to calculate number of rows for given number of bins and columns ****************
+    // **************************************************************************************************
     Int_t CalculateNumberOfRowsForDCAzPlots(Int_t numberOfPads, Int_t numberOfColumns) {
         // this function returns the number of rows
         // for a given number of pads and columns,

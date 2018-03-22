@@ -4390,7 +4390,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2SCentPtRebin[i];
                         else if (modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0)
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2PtRebin[i];
-                        else if (modi == 2 && specialTrigg == 1 || specialTrigg == 2 )
+                        else if (modi == 2 && (specialTrigg == 1 || specialTrigg == 2) )
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigPtRebin[i];
                         else if (modi == 2 && specialTrigg == 3 )
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigEG1PtRebin[i];

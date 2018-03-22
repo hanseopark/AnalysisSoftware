@@ -138,8 +138,8 @@ void PrepareSecondaries(    TString     meson                       = "",
 
     //***************************** Cocktail file *******************************************************************
     if(nameFileCocktail.Contains("2050")) nameFileCocktail.ReplaceAll("2050","2040");
-    TFile fileCocktail(nameFileCocktail.Data());
-    TDirectoryFile* topDirCocktail                              = (TDirectoryFile*)fileCocktail.Get("HadronicCocktailMC");
+    TFile* fileCocktail     = new TFile(nameFileCocktail.Data());
+    TDirectoryFile* topDirCocktail                              = (TDirectoryFile*)fileCocktail->Get("HadronicCocktailMC");
     if (!topDirCocktail) {
         cout << "ERROR: TopDirCocktail not found!" << endl;
         return;
@@ -171,8 +171,6 @@ void PrepareSecondaries(    TString     meson                       = "",
         return;
     }
 
-
-
     //***************************** read cocktail settings **********************************************************
     histMtScalingFactors                                        = (TH1F*)cocktailSettingsList->FindObject("histoMtScaleFactor");
     // initialize mt scaling factors
@@ -186,7 +184,6 @@ void PrepareSecondaries(    TString     meson                       = "",
                 mtScaleFactor[j]                                = histMtScalingFactors->GetBinContent(i);
         }
     }
-
     TObject* tempObject                                         = NULL;
     TString tempObjectName                                      = "";
     TObjArray* arr                                              = NULL;
@@ -260,7 +257,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 decayChannelsBR[i][j]                           = histoDecayChannelsBR[i]->GetBinContent(j+2);
         }
     }
-
+    cout << __LINE__ << endl;
     //***************************** ranges and scaling factors ******************************************************
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaRap                                           = 2*rapidity;
@@ -324,12 +321,12 @@ void PrepareSecondaries(    TString     meson                       = "",
     Int_t nRows                                                 = 0;
     if (nSpectra%6 == 0) nRows                                  = nSpectra/6 + 1;
     else nRows                                                  = (nSpectra+1)/6 + 1;
-
+    cout << __LINE__ << endl;
     //***************************** Get number of events (cocktail) *************************************************
     histoNEvents                                                = (TH1F*)histoListCocktail->FindObject("NEvents");
     nEvents                                                     = histoNEvents->GetEntries();
     cout << nEvents << " events" << endl;
-
+    cout << __LINE__ << endl;
     //***************************** Read histograms from cocktail file **********************************************
     // mesons
     histoDecayChannels                                          = new TH1F*[nMotherParticles];
@@ -368,7 +365,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtPhi[i]                            = NULL;
         }
     }
-
+    cout << __LINE__ << endl;
     // gammas
     histoGammaFromXFromMotherPtY                                = new TH2F*[nMotherParticles];
     histoGammaFromXFromMotherPtPhi                              = new TH2F*[nMotherParticles];
@@ -418,7 +415,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             }
         }
     }
-
+    cout << __LINE__ << endl;
     //***************************** Correct for non-flat y distributions ********************************************
     histoMesonDaughterPtYCorr                                   = new TH2F*[nMotherParticles];
     histoGammaFromXFromMotherPtYCorr                            = new TH2F*[nMotherParticles];
@@ -458,7 +455,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             listYSlicesGammaFromXFromMother[i]                  = NULL;
         }
     }
-
+    cout << __LINE__ << endl;
     //***************************** Project from 2D histograms ******************************************************
     // mesons
     histoMesonDaughterPtOrBin                                   = new TH1F*[nMotherParticles];
@@ -551,7 +548,7 @@ void PrepareSecondaries(    TString     meson                       = "",
         cout << "ERROR: Didn't get K0s pt spectrum, returning!" << endl;
         return;
     }
-
+    cout << __LINE__ << endl;
     // gammas
     histoGammaFromXFromMotherPtOrBin                            = new TH1F*[nMotherParticles];
     histoGammaFromXFromMotherYOrBin                             = new TH1F*[nMotherParticles];
@@ -641,7 +638,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
     cout << "========================================"  << endl;
     delete corrFactorFromDecayLength;
-
+    cout << __LINE__ << endl;
     //***************************** Read histograms from cocktail input file ****************************************
     TList* cocktailInputList                                    = GetCocktailInputList(fEnergyFlag, centrality);
     if(centrality.CompareTo("20-50%")==0) cocktailInputList     = GetCocktailInputList(fEnergyFlag, "20-40%");
@@ -680,7 +677,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtMeasBin[i]                        = NULL;
         }
     }
-
+    cout << __LINE__ << endl;
     //***************************** calculate (pi0 from X)/pi0_param ************************************************
     histoRatioPi0FromXToPi0Param                                = new TH1F*[nMotherParticles];
     if (fAnalyzedMeson.CompareTo("Pi0") == 0) {
@@ -723,6 +720,7 @@ void PrepareSecondaries(    TString     meson                       = "",
 
     TH1D* dummyHist                                             = NULL;
     //***************************** Plot cocktail mothers (pt) ******************************************************
+    cout << __LINE__ << endl;
     TCanvas *canvasMothers                                      = new TCanvas("canvasMothers","",1100,1200);
     DrawGammaCanvasSettings(canvasMothers, 0.15, 0.01, 0.01, 0.075);
     canvasMothers->SetLogy();

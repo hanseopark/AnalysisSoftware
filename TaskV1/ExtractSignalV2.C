@@ -12,7 +12,8 @@
 #include <TFrame.h>
 #include <TStyle.h>
 #include <TString.h>
-#include "TGaxis.h"
+#include <TLatex.h>
+// #include "TGaxis.h"
 #include "TFile.h"
 #include "TH1F.h"
 #include "TH1D.h"
@@ -27,7 +28,6 @@
 #include "TDatabasePDG.h"
 #include "TMinuit.h"
 #include "../CommonHeaders/PlottingMeson.h"
-#include "TLatex.h"
 #include "TASImage.h"
 #include "TMath.h"
 #include "TPostScript.h"
@@ -620,7 +620,8 @@ void ExtractSignalV2(   TString meson                   = "",
     }
 
     // calculate meson mass from pdg code
-    fMesonMassExpect                            = TDatabasePDG::Instance()->GetParticle(fMesonId)->Mass();
+    cout << (TDatabasePDG::Instance())->GetParticle(fMesonId) << endl;
+    fMesonMassExpect                            = (TDatabasePDG::Instance())->GetParticle(fMesonId)->Mass();
     // calculate number of events for normalization
     if (fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("pPb")){
         fNEvents        = fEventQuality->GetBinContent(1);
@@ -732,7 +733,6 @@ void ExtractSignalV2(   TString meson                   = "",
                   fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->SetBinContent(j,intLinearBack+fHistoMappingBackNormAndRemainingBGInvMassPtBin[iPt]->GetBinContent(j));
               }
             }
-
             FitSubtractedPol2InvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE);
             fFitSignalWithOtherBGInvMassPtBin[0][iPt]   = fFitReco;
             fFitBckOtherInvMassPtBin[0][iPt]            = fFitLinearBck;
@@ -760,7 +760,6 @@ void ExtractSignalV2(   TString meson                   = "",
                 fMesonChi2[3][iPt]                      = fFitReco->GetChisquare()/fFitReco->GetNDF();
             else
                 fMesonChi2[3][iPt]                      = -1;
-
         } else {
             fFileErrLog << "Using Crystal Ball function"<<endl;
             FitCBSubtractedInvMassInPtBins(fHistoMappingSignalInvMassPtBin[iPt], fMesonIntDeltaRange,iPt,kFALSE,Form("CBFitFuncNormalBin%02d",iPt),kFALSE);
@@ -3449,7 +3448,7 @@ void FillMassMCTrueMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFill) {
         fNameHistoTrue  = Form("Mapping_TrueMeson_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonInvMassPtBins[iPt]);
         fHistoMappingTrueMesonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueMesonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonInvMassPtBins[iPt]->SetLineColor(2);
     }
@@ -3465,7 +3464,7 @@ void FillMassMCTrueFullMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFill) {
         fNameHistoTrue  = Form("Mapping_TrueFullMeson_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueFullMesonInvMassPtBins[iPt]);
         fHistoMappingTrueFullMesonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueMesonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueFullMesonInvMassPtBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueFullMesonInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueFullMesonInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueFullMesonInvMassPtBins[iPt]->SetLineColor(2);
     }
@@ -3480,7 +3479,7 @@ void FillMassMCTrueMesonDCHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFill) {
         fNameHistoTrue  = Form("Mapping_TrueMesonDC_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonDCInvMassPtBins[iPt]);
         fHistoMappingTrueMesonDCInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueMesonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonDCInvMassPtBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonDCInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonDCInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonDCInvMassPtBins[iPt]->SetLineColor(4);
     }
@@ -3496,7 +3495,7 @@ void FillMassMCTrueMesonCaloPhotonHistosArray(TH2D* fHistoTrueMesonCaloPhotonInv
         fNameHistoTrue  = Form("Mapping_TrueMesonCaloPhoton_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]);
         fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueMesonCaloPhotonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonCaloPhotonInvMassPtBins[iPt]->SetLineColor(2);
     }
@@ -3512,7 +3511,7 @@ void FillMassMCTrueMesonCaloConvPhotonHistosArray(TH2D* fHistoTrueMesonCaloConvP
         fNameHistoTrue  = Form("Mapping_TrueMesonCaloConvPhoton_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt]);
         fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueMesonCaloConvPhotonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonCaloConvPhotonInvMassPtBins[iPt]->SetLineColor(2);
     }
@@ -3528,7 +3527,7 @@ void FillMassMCTrueMesonCaloElectronHistosArray(TH2D* fHistoTrueMesonCaloElectro
         fNameHistoTrue  = Form("Mapping_TrueMesonCaloElectron_InvMass_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonCaloElectronInvMassPtBins[iPt]);
         fHistoMappingTrueMesonCaloElectronInvMassPtBins[iPt]=  FillProjectionX(fHistoTrueMesonCaloElectronInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonCaloElectronInvMassPtBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonCaloElectronInvMassPtBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonCaloElectronInvMassPtBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonCaloElectronInvMassPtBins[iPt]->SetLineColor(2);
     }
@@ -3590,7 +3589,7 @@ void FillMassMCTrueReweightedMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFi
         fNameHistoTrue  = Form("Mapping_TrueMeson_InvMassReweighted_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]);
         fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]=  FillProjectionX(fHistoTrueMesonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonInvMassPtReweightedBins[iPt]->SetLineColor(2);
     }
@@ -3606,7 +3605,7 @@ void FillMassMCTrueUnweightedMesonHistosArray(TH2D* fHistoTrueMesonInvMassVSPtFi
         fNameHistoTrue  = Form("Mapping_TrueMeson_InvMassUnweighted_in_Pt_Bin%02d", iPt);
         CheckForNULLForPointer(fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]);
         fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]=  FillProjectionX(fHistoTrueMesonInvMassVSPtFill, fNameHistoTrue, fBinsPt[iPt], fBinsPt[iPt+1], fNRebin[iPt]);
-        cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]->GetEntries() << endl;
+//         cout << "bin: " << iPt << "\t Entries in projection: " << fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]->GetEntries() << endl;
         fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]->SetLineWidth(1);
         fHistoMappingTrueMesonInvMassPtUnweightedBins[iPt]->SetLineColor(2);
     }
@@ -4593,8 +4592,7 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck   = NULL;
-    fFitLinearBck   = new TF1("BGfit","[0]+[1]*x+[2]*x*x",fMesonFitRange[0],fMesonFitRange[1]);
-
+    fFitLinearBck   = new TF1("BGfitPol2","[0]+[1]*x+[2]*x*x",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitReco->SetParameter(0,mesonAmplitude);
     fFitReco->SetParameter(1,fMesonMassExpect);
@@ -4609,10 +4607,8 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
-
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
-
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
@@ -4622,20 +4618,16 @@ void FitSubtractedPol2InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
     fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
     fFitGausExp->SetParameter(3,fFitReco->GetParameter(3));
-
     fFitGausExp->SetParError(0,fFitReco->GetParError(0));
     fFitGausExp->SetParError(1,fFitReco->GetParError(1));
     fFitGausExp->SetParError(2,fFitReco->GetParError(2));
     fFitGausExp->SetParError(3,fFitReco->GetParError(3));
-
     fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
     fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
     fFitLinearBck->SetParameter(2,fFitReco->GetParameter(6));
-
     fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
     fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
     fFitLinearBck->SetParError(2,fFitReco->GetParError(6));
-
     Int_t binCenterStart;
     Double_t startBinEdge;
     Int_t binCenterEnd;
@@ -4776,7 +4768,7 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitGausExp     = new TF1("fGaussExp","(x<[1])*([0]*(exp(-0.5*((x-[1])/[2])^2)+exp((x-[1])/[3])*(1.-exp(-0.5*((x-[1])/[2])^2))))+(x>=[1])*([0]*exp(-0.5*((x-[1])/[2])^2))",fMesonFitRange[0],fMesonFitRange[1]);
 
     fFitLinearBck   = NULL;
-    fFitLinearBck   = new TF1("BGfit","[0]*exp([1]*x)",fMesonFitRange[0],fMesonFitRange[1]);
+    fFitLinearBck   = new TF1("BGfitExp1","[0]*exp([1]*x)",fMesonFitRange[0],fMesonFitRange[1]);
 
 
     fFitReco->SetParameter(0,mesonAmplitude);
@@ -4792,29 +4784,25 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
     fFitReco->SetParLimits(2,fMesonWidthRange[0],fMesonWidthRange[1]);
 
-
+    TVirtualFitter * fitter2= NULL;
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
     fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"QRME0");
+    fitter2 = TVirtualFitter::GetFitter();
 
     fFitReco->SetLineColor(3);
     fFitReco->SetLineWidth(1);
     fFitReco->SetLineStyle(1);
     fFitReco->SetNpx(10000);
-
     fFitGausExp->SetParameter(0,fFitReco->GetParameter(0));
     fFitGausExp->SetParameter(1,fFitReco->GetParameter(1));
     fFitGausExp->SetParameter(2,fFitReco->GetParameter(2));
     fFitGausExp->SetParameter(3,fFitReco->GetParameter(3));
-
     fFitGausExp->SetParError(0,fFitReco->GetParError(0));
     fFitGausExp->SetParError(1,fFitReco->GetParError(1));
     fFitGausExp->SetParError(2,fFitReco->GetParError(2));
     fFitGausExp->SetParError(3,fFitReco->GetParError(3));
-
     fFitLinearBck->SetParameter(0,fFitReco->GetParameter(4));
     fFitLinearBck->SetParameter(1,fFitReco->GetParameter(5));
-    fFitLinearBck->SetParameter(2,fFitReco->GetParameter(6));
-
     fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
     fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
 
@@ -4822,8 +4810,6 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
     Double_t startBinEdge;
     Int_t binCenterEnd;
     Double_t endBinEdge;
-
-    TVirtualFitter * fitter = TVirtualFitter::GetFitter();
 
     fIntLinearBck = 0;
     fIntLinearBckError = 0;
@@ -4835,14 +4821,13 @@ void FitSubtractedExp1InvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingl
         endBinEdge      = fHistoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
 
         Int_t nFreePar      = fFitReco->GetNumberFreeParameters();
-        double * covMatrix  = fitter->GetCovarianceMatrix();
+        double * covMatrix  = fitter2->GetCovarianceMatrix();
 
         Float_t intBack     = fFitLinearBck->Integral(startBinEdge, endBinEdge);
         Float_t errorBck    = fFitLinearBck->IntegralError(startBinEdge, endBinEdge);
 
         fFileDataLog << "Parameter for bin " << ptBin << endl;
-        fFileDataLog << "Exp1: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<< "\t "
-                     << fFitReco->GetParameter(6) <<"+-" << fFitReco->GetParError(6)<<endl;
+        fFileDataLog << "Exp1: \t"<<fFitReco->GetParameter(4)<<"+-" << fFitReco->GetParError(4) << "\t "<<fFitReco->GetParameter(5) <<"+-" << fFitReco->GetParError(5)<<endl;
 
         fIntLinearBck       = intBack/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         fIntLinearBckError  = errorBck/fHistoMappingSignalInvMassPtBinSingle->GetBinWidth(10);

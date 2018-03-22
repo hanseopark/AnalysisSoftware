@@ -33,6 +33,7 @@
 
     #ifndef __CLING__
         #include <Riostream.h>
+        #include <TLatex.h>
     #endif
     #include <TProfile.h>
     // extern TRandom *kgRandom;
