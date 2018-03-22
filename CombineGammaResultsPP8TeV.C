@@ -2235,6 +2235,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
             legendDRTheoryComb3->Draw();
             labelDRSingle->Draw();
+            TLatex *labelDRSingleALICE = new TLatex(0.95,0.87,Form("%s",textALICE.Data()));
+            SetStyleTLatex( labelDRSingleALICE, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+            labelDRSingleALICE->Draw();
             hist2DDRDummySingle->Draw("same,axis");
 
         canvasDoubleRatio->Print(Form("%s/DR_Theory_pp8TeV.%s", outputDir.Data(), suffix.Data()));
@@ -2267,6 +2270,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
             legendDRTheoryComb3->Draw();
             labelDRSingle->Draw();
+            labelDRSingleALICE->Draw();
             hist2DDRDummySingle->Draw("same,axis");
 
         canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_pp8TeV.%s", outputDir.Data(), suffix.Data()));
@@ -2313,7 +2317,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         }
         legendEffiGamma->Draw();
 
-        TLatex *labelPerfEffi           = new TLatex(0.13,0.92,"ALICE performance");
+        TLatex *labelPerfEffi           = new TLatex(0.13,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
         labelPerfEffi->Draw();
         TLatex *labelEnergyEffi         = new TLatex(0.13,0.87,collisionSystempp8TeV.Data());
@@ -2422,7 +2426,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         }
         legendPurityGamma->Draw();
 
-        TLatex *labelPerfPurity           = new TLatex(0.15,0.92,"ALICE performance");
+        TLatex *labelPerfPurity           = new TLatex(0.15,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfPurity, textSizeLabelsRel,4);
         labelPerfPurity->Draw();
         TLatex *labelEnergyPurity         = new TLatex(0.15,0.87,collisionSystempp8TeV.Data());
@@ -2566,7 +2570,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         }
         legendTotalCorrGamma->Draw();
 
-        TLatex *labelPerfTotalCorr           = new TLatex(0.15,0.92,"ALICE performance");
+        TLatex *labelPerfTotalCorr           = new TLatex(0.15,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfTotalCorr, textSizeLabelsRel,4);
         labelPerfTotalCorr->Draw();
         TLatex *labelEnergyTotalCorr         = new TLatex(0.15,0.87,collisionSystempp8TeV.Data());
@@ -2614,7 +2618,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         }
         legendEffectiveSecCorrGamma->Draw();
 
-        TLatex *labelPerfEffectiveSecCorr           = new TLatex(0.15,0.89,"ALICE performance");
+        TLatex *labelPerfEffectiveSecCorr           = new TLatex(0.15,0.89,"ALICE simulation");
         SetStyleTLatex( labelPerfEffectiveSecCorr, textSizeLabelsRel,4);
         labelPerfEffectiveSecCorr->Draw();
         TLatex *labelEnergyEffectiveSecCorr         = new TLatex(0.15,0.84,collisionSystempp8TeV.Data());
@@ -2636,7 +2640,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
 
     TH1F * histo2DYieldGamma              = new TH1F("histo2DYieldGamma","histo2DYieldGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
-    SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
+    SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
     histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,7e0);
     histo2DYieldGamma->GetXaxis()->SetMoreLogLabels();
     histo2DYieldGamma->GetXaxis()->SetNoExponent();

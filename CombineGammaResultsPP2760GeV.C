@@ -2158,6 +2158,9 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         legendDRTheoryComb3->Draw();
         labelDRSingle->Draw();
+        TLatex *labelDRSingleALICE = new TLatex(0.95,0.87,Form("%s",textALICE.Data()));
+        SetStyleTLatex( labelDRSingleALICE, textSizeSinglePad,4, 1, 42, kTRUE, 31);
+        labelDRSingleALICE->Draw();
         hist2DDRDummySingle->Draw("same,axis");
 
     canvasDoubleRatio->Print(Form("%s/DR_Theory_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
@@ -2194,7 +2197,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
         legendDRTheoryComb3->Draw();
         labelDRSingle->Draw();
-        hist2DDRDummySingle->Draw("same,axis");
+        labelDRSingleALICE->Draw();
+      hist2DDRDummySingle->Draw("same,axis");
 
     canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_Theory_zoom_pp2760GeV.pdf", outputDir.Data()));
@@ -2240,7 +2244,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendEffiGamma->Draw();
 
-        TLatex *labelPerfEffi           = new TLatex(0.13,0.92,"ALICE performance");
+        TLatex *labelPerfEffi           = new TLatex(0.13,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfEffi, textSizeLabelsRel,4);
         labelPerfEffi->Draw();
         TLatex *labelEnergyEffi         = new TLatex(0.13,0.87,collisionSystempp2760GeV.Data());
@@ -2348,7 +2352,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendPurityGamma->Draw();
 
-        TLatex *labelPerfPurity           = new TLatex(0.15,0.92,"ALICE performance");
+        TLatex *labelPerfPurity           = new TLatex(0.15,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfPurity, textSizeLabelsRel,4);
         labelPerfPurity->Draw();
         TLatex *labelEnergyPurity         = new TLatex(0.15,0.87,collisionSystempp2760GeV.Data());
@@ -2491,7 +2495,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendTotalCorrGamma->Draw();
 
-        TLatex *labelPerfTotalCorr           = new TLatex(0.15,0.92,"ALICE performance");
+        TLatex *labelPerfTotalCorr           = new TLatex(0.15,0.92,"ALICE simulation");
         SetStyleTLatex( labelPerfTotalCorr, textSizeLabelsRel,4);
         labelPerfTotalCorr->Draw();
         TLatex *labelEnergyTotalCorr         = new TLatex(0.15,0.87,collisionSystempp2760GeV.Data());
@@ -2539,7 +2543,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         }
         legendEffectiveSecCorrGamma->Draw();
 
-        TLatex *labelPerfEffectiveSecCorr           = new TLatex(0.15,0.89,"ALICE performance");
+        TLatex *labelPerfEffectiveSecCorr           = new TLatex(0.15,0.89,"ALICE simulation");
         SetStyleTLatex( labelPerfEffectiveSecCorr, textSizeLabelsRel,4);
         labelPerfEffectiveSecCorr->Draw();
         TLatex *labelEnergyEffectiveSecCorr         = new TLatex(0.15,0.84,collisionSystempp2760GeV.Data());
@@ -2561,7 +2565,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
 
     TH1F * histo2DYieldGamma              = new TH1F("histo2DYieldGamma","histo2DYieldGamma",11000,doubleRatioXpp[0], doubleRatioXpp[1]);
-    SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
+    SetStyleHistoTH1ForGraphs(histo2DYieldGamma, "#it{p}_{T} (GeV/#it{c})","#frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",0.035,0.04, 0.035,0.04, 0.9,1.7);
     histo2DYieldGamma->GetYaxis()->SetRangeUser(7e-9,3.5e0);
     histo2DYieldGamma->GetXaxis()->SetMoreLogLabels();
     histo2DYieldGamma->GetXaxis()->SetNoExponent();
@@ -3527,7 +3531,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     TLegend* legendGammaSpectra                     = GetAndSetLegend2(0.3, 0.96-(40*1.15*(2+1)/1200), 1.03, 0.96, 46, 6);
     legendGammaSpectra->SetHeader("#gamma from");
     TH1D* dummyHistSpectra                          = new TH1D("dummyHistSpectra", "", 1000,  0.25, 20);
-    SetHistogramm(dummyHistSpectra, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
+    SetHistogramm(dummyHistSpectra, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}",
                   1e-12, 3e2, 1.0, 1.6);
     dummyHistSpectra->SetLabelOffset(-0.013, "X");
     dummyHistSpectra->SetTitleOffset(0.8, "X");

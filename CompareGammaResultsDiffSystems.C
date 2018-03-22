@@ -257,7 +257,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     }
 
     TH1D* dummyDirGamma = new TH1D("dummyDirGamma", "dummyDirGamma", 1000, 0., 22.);
-    SetStyleHistoTH1ForGraphs( dummyDirGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}_{#gamma_{dir}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
+    SetStyleHistoTH1ForGraphs( dummyDirGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}_{#gamma_{dir}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.75, 1.8);
     dummyDirGamma->GetYaxis()->SetRangeUser( 1.2e-9,1.5e1);
     dummyDirGamma->GetXaxis()->SetLabelOffset(-0.015);
@@ -456,7 +456,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     canvasDirGamma->Print(Form("%s/DirGammaSpectraPP.pdf",outputDir.Data()));
     
     TH1D* dummyIncGamma = new TH1D("dummyIncGamma", "dummyIncGamma", 1000, 0., 22.);
-    SetStyleHistoTH1ForGraphs( dummyIncGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}_{#gamma_{inc}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
+    SetStyleHistoTH1ForGraphs( dummyIncGamma, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{inel}} #frac{d^{2}#it{N}_{#gamma_{inc}}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c}^{2})",
                                0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.85*textsizeLabelsDirGamma, textsizeLabelsDirGamma, 0.75, 1.8);
     dummyIncGamma->GetYaxis()->SetRangeUser( 1.2e-9,1.5e1);
     dummyIncGamma->GetXaxis()->SetLabelOffset(-0.015);
@@ -685,6 +685,105 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP.%s",outputDir.Data(),suffix.Data()));
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP.pdf",outputDir.Data()));
+
+    dummyDirGamma->DrawCopy();
+
+        labelScalingDirGamma0020->Draw();
+        labelScalingDirGamma2040->Draw();
+        labelScalingDirGamma4080->Draw();
+
+        if (graphInvYieldDirGammaSysPbPb0020Plot){
+            graphInvYieldDirGammaSysPbPb0020Plot->Draw("E2same");
+        }
+        if (graphInvYieldDirGammaStatPbPb0020Plot){
+            graphInvYieldDirGammaStatPbPb0020Plot->Draw("p,E1Z,same");
+        }
+
+        if (graphInvYieldDirGammaSysPbPb2040Plot){
+            graphInvYieldDirGammaSysPbPb2040Plot->Draw("E2same");
+        }
+        if (graphInvYieldDirGammaStatPbPb2040Plot){
+            graphInvYieldDirGammaStatPbPb2040Plot->Draw("p,E1Z,same");
+        }
+        if (graphInvYieldDirGammaTotArPbPb2040Plot){
+            graphInvYieldDirGammaTotArPbPb2040Plot->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArPbPb2040Plot);
+        }
+        if (graphInvYieldDirGammaSysPbPb4080Plot){
+            graphInvYieldDirGammaSysPbPb4080Plot->Draw("E2same");
+        }
+        if (graphInvYieldDirGammaStatPbPb4080Plot){
+            graphInvYieldDirGammaStatPbPb4080Plot->Draw("p,E1Z,same");
+        }
+        if (graphInvYieldDirGammaTotArPbPb4080Plot){
+            graphInvYieldDirGammaTotArPbPb4080Plot->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArPbPb4080Plot);
+        }
+        if (graphInvYieldDirGammaTotArpp2760GeVScaled0020){
+            graphInvYieldDirGammaTotArpp2760GeVScaled0020->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp2760GeVScaled0020);
+        }
+        if (graphInvYieldDirGammaTotArpp2760GeVScaled2040){
+            graphInvYieldDirGammaTotArpp2760GeVScaled2040->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp2760GeVScaled2040);
+        }
+        if (graphInvYieldDirGammaTotArpp2760GeVScaled4080){
+            graphInvYieldDirGammaTotArpp2760GeVScaled4080->Draw(">,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaTotArpp2760GeVScaled4080);
+        }
+        if (graphInvYieldDirGammaSyspp2760GeVScaled0020){
+            graphInvYieldDirGammaSyspp2760GeVScaled0020->Draw("E2,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaSyspp2760GeVScaled0020);
+        }
+        if (graphInvYieldDirGammaSyspp2760GeVScaled2040){
+            graphInvYieldDirGammaSyspp2760GeVScaled2040->Draw("E2,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaSyspp2760GeVScaled2040);
+        }
+        if (graphInvYieldDirGammaSyspp2760GeVScaled4080){
+            graphInvYieldDirGammaSyspp2760GeVScaled4080->Draw("E2,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaSyspp2760GeVScaled4080);
+        }
+        if (graphInvYieldDirGammaStatpp2760GeVScaled0020){
+            graphInvYieldDirGammaStatpp2760GeVScaled0020->Draw("p,E1Z,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaStatpp2760GeVScaled0020);
+        }
+        if (graphInvYieldDirGammaStatpp2760GeVScaled2040){
+            graphInvYieldDirGammaStatpp2760GeVScaled2040->Draw("p,E1Z,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaStatpp2760GeVScaled2040);
+        }
+        if (graphInvYieldDirGammaStatpp2760GeVScaled4080){
+            graphInvYieldDirGammaStatpp2760GeVScaled4080->Draw("p,E1Z,same");
+            PlotErrorBarAtUpperEdgeOfTGraphAsymErr(graphInvYieldDirGammaStatpp2760GeVScaled4080);
+        }
+
+        // TLegend* legendDirGammaPP2Split = GetAndSetLegend2(0.21, 0.10+(4*textsizeLabelsDirGamma*0.85), 0.21+0.21, 0.10+(8*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, collisionSystempp2760GeV.Data(), 42, 0.25);
+        TLatex *labelEnergyScaledPP = new TLatex(0.22, 0.10+0.04*4, "ALICE");
+        SetStyleTLatex( labelEnergyScaledPP, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        labelEnergyScaledPP->Draw();
+        TLatex *labelEnergyScaledPP2 = new TLatex(0.22, 0.10+0.04*3, "<#it{N}_{coll}> #times pp, #sqrt{#it{s}} = 2.76 TeV");
+        SetStyleTLatex( labelEnergyScaledPP2, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
+        labelEnergyScaledPP2->Draw();
+        TLegend* legendDirGammaPP2Split = GetAndSetLegend2(0.21, 0.10, 0.21+0.22, 0.10+(3*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        legendDirGammaPP2Split->AddEntry(graphInvYieldDirGammaSyspp2760GeVScaled0020,Form("#gamma_{dir} #times %1.1f",nColl0020),"pf");
+        legendDirGammaPP2Split->AddEntry(graphInvYieldDirGammaSyspp2760GeVScaled2040,Form("#gamma_{dir} #times %1.1f",nColl2040),"pf");
+        legendDirGammaPP2Split->AddEntry(graphInvYieldDirGammaSyspp2760GeVScaled4080,Form("#gamma_{dir} #times %1.1f",nColl4080),"pf");
+//         legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl0020),"");
+//         legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl2040),"");
+//         legendDirGammaPP2->AddEntry((TObject*)0,Form("ALICE x %1.1f",nColl4080),"");
+        legendDirGammaPP2Split->Draw();
+        
+        // TLegend* legendDirGammaSplit = GetAndSetLegend2(0.21, 0.10, 0.21+0.21, 0.10+(4*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, collisionSystemPbPb760GeV.Data(), 42, 0.25);
+        TLatex *labelEnergyScaledPBPB2 = new TLatex(0.95, 0.095+0.04*21, Form("ALICE, %s",collisionSystemPbPb760GeV.Data()));
+        SetStyleTLatex( labelEnergyScaledPBPB2, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 31);
+        labelEnergyScaledPBPB2->Draw();
+        TLegend* legendDirGammaSplit = GetAndSetLegend2(0.71, 0.10+(21*textsizeLabelsDirGamma*0.85), 0.71+0.21, 0.10+(24*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
+        legendDirGammaSplit->AddEntry(graphInvYieldDirGammaSysPbPb0020,"  0-20% #gamma_{dir}","pf");
+        legendDirGammaSplit->AddEntry(graphInvYieldDirGammaSysPbPb2040,"20-40% #gamma_{dir}","pf");
+        legendDirGammaSplit->AddEntry(graphInvYieldDirGammaSysPbPb4080,"40-80% #gamma_{dir}","pf");
+        legendDirGammaSplit->Draw();
+
+    canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP_Split.%s",outputDir.Data(),suffix.Data()));
+    canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP_Split.pdf",outputDir.Data()));
 
 
     //*******************************************************************************************************************************************

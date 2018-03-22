@@ -4064,7 +4064,7 @@
             }
     //         cout << "here" << endl;
 
-            line                            = Form("%s (BIN= %1.1f TO %1.1f); \t",line.Data(), pTBinning[i], pTBinning[i+1] );
+            line                            = Form("%s %1.1f - %1.1f; \t",line.Data(), pTBinning[i], pTBinning[i+1] );
             if (upperPresent) {
                 line                        = Form("%s %2.2e %s;", line.Data(), currentYUpperLimits[binUpper], clearanceLevel.Data());
                 binUpper++;
