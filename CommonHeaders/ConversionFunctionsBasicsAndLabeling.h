@@ -787,8 +787,10 @@
             return  "pp, #sqrt{#it{s}} = 8 TeV";
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 13TeV";
-        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("5.02TeV") == 0 || fEnergyFlagOpt.CompareTo("5TeV2017") == 0 ) {
+        } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("5.02TeV") == 0 ) {
             return  "pp, #sqrt{#it{s}} = 5.02TeV";
+        } else if( fEnergyFlagOpt.CompareTo("5TeV2017") == 0) {
+            return  "pp, #sqrt{#it{s}} = 5.02TeV (2017)";
         } else if( fEnergyFlagOpt.CompareTo("900GeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 900 GeV";
         } else if( fEnergyFlagOpt.CompareTo("2.76TeV") == 0) {

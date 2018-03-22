@@ -40,7 +40,7 @@
 #include "TFitResult.h"
 #include "TMatrixDSym.h"
 #include "TArrow.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TGaxis.h"
 #include "TMarker.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
@@ -62,25 +62,25 @@ struct SysErrorConversion {
 };
 
 void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
-                           const char *fileNameEta = "", 
-                           TString cutSelection = "", 
-                           const char *suffix = "gif", 
-                           TString isMC= "", 
-                           TString makeBinShiftWithFunction = "", 
-                           TString useSameBinningPi0Eta ="", 
+                           const char *fileNameEta = "",
+                           TString cutSelection = "",
+                           const char *suffix = "gif",
+                           TString isMC= "",
+                           TString makeBinShiftWithFunction = "",
+                           TString useSameBinningPi0Eta ="",
                            TString optionEnergy = "",
-                           TString conferencePlots ="", 
+                           TString conferencePlots ="",
                            TString multFlag= "",
-                           TString thesisPlots="", 
-                           TString optDalitz = "", 
-                           TString optNoBinShift="kFALSE", 
-                           Bool_t pileUpApplied=kTRUE, 
+                           TString thesisPlots="",
+                           TString optDalitz = "",
+                           TString optNoBinShift="kFALSE",
+                           Bool_t pileUpApplied=kTRUE,
                            Int_t mode = 9,
                            Int_t kColorScheme = 2){    //0:standard, 1:energy, 2:method
-    
+
     gROOT->Reset();
     gROOT->SetStyle("Plain");
-    
+
     StyleSettingsThesis();
     SetPlotStyle();
     colorScheme=kColorScheme;
@@ -88,13 +88,13 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     if (optDalitz.CompareTo("Dalitz")==0){
         kDalitz = kTRUE;
     }
-    
+
     detSystem = "PCM";
     if (mode == 2) detSystem     = "PCM-EMCAL";
     if (mode == 3) detSystem     = "PCM-PHOS";
     if (mode == 4) detSystem     = "EMCAL-EMCAL";
     if (mode == 5) detSystem     = "PHOS-PHOS";
-    
+
     date = ReturnDateString();
     TString fileNameSysErrPi0 ="SystematicErrorsNew/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; // default
     collisionSystem= ReturnFullCollisionsSystem(optionEnergy);
@@ -103,69 +103,69 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     if(optionEnergy.CompareTo("7TeV") == 0){
         minPtForFits=0.3;
         minPtForFitsEta=0.4;
-        if (useSameBinningPi0Eta.CompareTo("")==0){         
+        if (useSameBinningPi0Eta.CompareTo("")==0){
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_7TeV_24_Apr_2012.dat"; //SystematicError_Pi0_7TeV_12_Mar_2012.dat
         } else {
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_7TeV_24_Apr_2012.dat"; // SystematicError_Pi0EtaBinning_7TeV_12_Mar_2012.dat
             minPtForFits=0.4;
-        }    
+        }
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_7TeV_24_Apr_2012.dat";//SystematicError_Eta_7TeV_12_Mar_2012.dat
         cout << "You have choosen 7TeV" << endl;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.4;
 
-        if (useSameBinningPi0Eta.CompareTo("")==0){         
+        if (useSameBinningPi0Eta.CompareTo("")==0){
             fileNameSysErrPi0 = "SystematicErrorsCalculated/SystematicErrorAveraged_Pi0_8TeV_2016_03_10.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsCalculated/SystematicErrorAveraged_Pi0EtaBinning_8TeV_2016_03_10.dat"; 
+            fileNameSysErrPi0 = "SystematicErrorsCalculated/SystematicErrorAveraged_Pi0EtaBinning_8TeV_2016_03_10.dat";
             minPtForFits=0.4;
-        }    
-        fileNameSysErrEta = "SystematicErrorsCalculated/SystematicErrorAveraged_Eta_8TeV_2016_03_10.dat"; 
+        }
+        fileNameSysErrEta = "SystematicErrorsCalculated/SystematicErrorAveraged_Eta_8TeV_2016_03_10.dat";
         cout << "You have choosen 8TeV" << endl;
     } else if( optionEnergy.CompareTo("13TeV") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.4;
 
-        if (useSameBinningPi0Eta.CompareTo("")==0){         
+        if (useSameBinningPi0Eta.CompareTo("")==0){
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_Dummy_pp13TeV.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_Dummy_pp13TeV.dat"; 
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_Dummy_pp13TeV.dat";
             minPtForFits=0.4;
-        }    
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat"; 
+        }
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat";
         cout << "You have choosen 13TeV. Note that you will use Dummy systematic errors." << endl;
-        
-    } else if( optionEnergy.CompareTo("5TeV") == 0) {
+
+    } else if( optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.4;
 
-        if (useSameBinningPi0Eta.CompareTo("")==0){         
+        if (useSameBinningPi0Eta.CompareTo("")==0){
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeV_5_Aug_2013.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_5_Aug_2013.dat"; 
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_5_Aug_2013.dat";
             minPtForFits=0.4;
-        }    
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
+        }
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat";
         cout << "You have choosen 5TeV. Note that you will use 2.76TeV systematic errors." << endl;
-        
+
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.6;
-        if (useSameBinningPi0Eta.CompareTo("")==0){         
+        if (useSameBinningPi0Eta.CompareTo("")==0){
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_2.76TeV_5_Aug_2013.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_5_Aug_2013.dat"; 
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_2.76TeV_5_Aug_2013.dat";
             minPtForFits=0.6;
         }
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat"; 
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat";
         if (mode == 2 || mode == 4){
             cout << "wrong macro, please look at ProduceFinalResultsPatchedTriggers.C" << endl;
         }
     } else if( optionEnergy.CompareTo("900GeV") == 0) {
         minPtForFits=0.4;
         minPtForFitsEta=0.9;
-        if (useSameBinningPi0Eta.CompareTo("")==0){         
+        if (useSameBinningPi0Eta.CompareTo("")==0){
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_900GeV_24_Apr_2012.dat"; //SystematicError_Pi0_900GeV_12_Mar_2012.dat
         } else {
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_900GeV_24_Apr_2012.dat"; //SystematicError_Pi0EtaBinning_900GeV_12_Mar_2012.dat
@@ -179,27 +179,27 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         cout << "No correct collision system specification, has been given" << endl;
         return;
     }
-    
+
     // select the example invariant mass bin for the output
     SelectExampleBin(optionEnergy,useSameBinningPi0Eta);
-    
+
     TString outputDir = Form("%s/%s/%s/ProduceFinalResults%s",cutSelection.Data(),optionEnergy.Data(),suffix, optDalitz.Data());
     gSystem->Exec("mkdir -p "+outputDir);
-    
+
     if(conferencePlots.CompareTo("conference") == 0){// means we want to plot values for the pi0
         conference = kTRUE;
-    }    
+    }
 
     if(thesisPlots.CompareTo("thesis") == 0){// means we want to plot values for the pi0
         thesis = kTRUE;
-    }    
-    
+    }
+
     TString fEventCutSelection="";
     TString fGammaCutSelection="";
     TString fClusterCutSelection="";
     TString fElectronCutSelection="";
     TString fMesonCutSelection="";
-    
+
     if (mode == 9){
         if (kDalitz){
             ReturnSeparatedCutNumber(cutSelection, fGammaCutSelection, fElectronCutSelection,fMesonCutSelection,kTRUE);
@@ -212,20 +212,20 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     } else {
         ReturnSeparatedCutNumberAdvanced(cutSelection,fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
     }
-   
+
     deltaEta =  ReturnRapidityStringAndDouble(fMesonCutSelection, rapidityRange);
-    
-    //declaration for printing logo 
-    if (!isMC.CompareTo("kTRUE")){ 
+
+    //declaration for printing logo
+    if (!isMC.CompareTo("kTRUE")){
         prefix2 = "MC";
-    } else {    
+    } else {
         prefix2 = "data";
     }
-    
-    if (makeBinShiftWithFunction.CompareTo("Hagedorn")==0){ 
+
+    if (makeBinShiftWithFunction.CompareTo("Hagedorn")==0){
         kHag = kTRUE;
         kLevy = kFALSE;
-    }else { 
+    }else {
         if(makeBinShiftWithFunction.CompareTo("Levy")==0){
             kHag = kFALSE;
             kLevy = kTRUE;
@@ -235,10 +235,10 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
             kLevy = kTRUE;
         }
     }
-    
+
     mesonMassExpectPi0 = TDatabasePDG::Instance()->GetParticle(111)->Mass();
     mesonMassExpectEta = TDatabasePDG::Instance()->GetParticle(221)->Mass();
-    
+
     TString nameCorrectedYield;
     TString nameCorrectedYieldEta;
     TString nameEfficiency;
@@ -258,8 +258,8 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         nameEfficiency = "MesonEffiPt";
         nameCorrectedYieldEta = "CorrectedYieldNormEff";
         nameEfficiencyEta = "MesonEffiPt";
-    }    
-    
+    }
+
     cout << "reading pi0 file" << endl;
     // File definitions
     fileNamePi0ch                           = fileNamePi0;
@@ -269,7 +269,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     histoFWHMMesonPi0                       = (TH1D*)filePi0->Get("histoFWHMMeson");
     histoMassMesonPi0                       = (TH1D*)filePi0->Get("histoMassMeson");
     histoAccPi0                             = (TH1D*)filePi0->Get("fMCMesonAccepPt");
-    histoTrueEffPtPi0                       = (TH1D*)filePi0->Get(nameEfficiency.Data()); 
+    histoTrueEffPtPi0                       = (TH1D*)filePi0->Get(nameEfficiency.Data());
     histoTrueFWHMMesonPi0                   = (TH1D*)filePi0->Get("histoTrueFWHMMeson");
     histoTrueMassMesonPi0                   = (TH1D*)filePi0->Get("histoTrueMassMeson");
     histoEventQualtityPi0                   = (TH1F*)filePi0->Get("NEvents");
@@ -283,36 +283,36 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     TH1D* histoBGPi0                        = (TH1D*)filePi0->Get(Form("InvMassBG_PtBin%02d",fExampleBinPi0));
     TH1D* histoSignalPi0                    = (TH1D*)filePi0->Get(Form("InvMassSig_PtBin%02d",fExampleBinPi0));
     TF1* fitSignalPi0                       = (TF1*)filePi0->Get(Form("FitInvMassSig_PtBin%02d",fExampleBinPi0));
-    
-    
+
+
     histoMassMesonPi0MinusExp= CalculateMassMinusExpectedMass(histoMassMesonPi0,mesonMassExpectPi0);
     histoTrueMassMesonPi0MinusExp = CalculateMassMinusExpectedMass(histoTrueMassMesonPi0,mesonMassExpectPi0);
     histoFWHMMesonPi0MeV = (TH1D*) histoFWHMMesonPi0->Clone();
     histoFWHMMesonPi0MeV->Scale(1000.);
     histoTrueFWHMMesonPi0MeV = (TH1D*) histoTrueFWHMMesonPi0->Clone();
     histoTrueFWHMMesonPi0MeV->Scale(1000.);
-    
+
     if (pileUpApplied && optionEnergy.CompareTo("7TeV") == 0){
         cout << "correcting pi0 for PileUp with factor: " << fPileUpCorrectionConv7TeV << endl;
         histoCorrectedYieldPi0->Scale(fPileUpCorrectionConv7TeV);
         histoUncorrectedYieldPi0->Scale(fPileUpCorrectionConv7TeV);
     }
-    
+
     if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("pPb") )
         nEvt =  histoEventQualtityPi0->GetBinContent(1);
-    else     
+    else
         nEvt =  GetNEvents(histoEventQualtityPi0);
-    
+
     cout << "reading eta file" << endl;
     fileEta                                 = new TFile(fileNameEta);
-    histoCorrectedYieldEta                     = (TH1D*)fileEta->Get(nameCorrectedYieldEta.Data()); 
+    histoCorrectedYieldEta                     = (TH1D*)fileEta->Get(nameCorrectedYieldEta.Data());
     histoUnCorrectedYieldEta                 = (TH1D*)fileEta->Get("histoYieldMeson");
     histoFWHMMesonEta                        = (TH1D*)fileEta->Get("histoFWHMMeson");
     histoMassMesonEta                        = (TH1D*)fileEta->Get("histoMassMeson");
     histoAccEta                                = (TH1D*)fileEta->Get("fMCMesonAccepPt");
     histoTrueEffPtEta                         = (TH1D*)fileEta->Get(nameEfficiencyEta.Data()); //not yet correct MesonEffiPt
     histoTrueFWHMMesonEta                     = (TH1D*)fileEta->Get("histoTrueFWHMMeson");
-    histoTrueMassMesonEta                     = (TH1D*)fileEta->Get("histoTrueMassMeson"); 
+    histoTrueMassMesonEta                     = (TH1D*)fileEta->Get("histoTrueMassMeson");
     histoMCInputEta                         = (TH1D*)fileEta->Get("MCYield_Meson_oldBin");
     TH1D* histoMCInputEtaWOWeight             = (TH1D*)fileEta->Get("MCYield_Meson_oldBinWOWeights");
     TH1D* histoMCInputEtaWeights             = (TH1D*)fileEta->Get("WeightsMeson");
@@ -330,16 +330,16 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     histoFWHMMesonEtaMeV->Scale(1000.);
     histoTrueFWHMMesonEtaMeV = (TH1D*) histoTrueFWHMMesonEta->Clone();
     histoTrueFWHMMesonEtaMeV->Scale(1000.);
-    
+
     if (pileUpApplied && optionEnergy.CompareTo("7TeV") == 0){
         cout << "correcting eta for PileUp with factor: " << fPileUpCorrectionConv7TeV << endl;
         histoCorrectedYieldEta->Scale(fPileUpCorrectionConv7TeV);
         histoUnCorrectedYieldEta->Scale(fPileUpCorrectionConv7TeV);
     }
-    
+
     fileSysErrEta.open(fileNameSysErrEta,ios_base::in);
     cout << fileNameSysErrEta << endl;
-    
+
     while(!fileSysErrEta.eof() && nPointsEta < 100){
         fileSysErrEta >> relSystErrorEtaDown[nPointsEta] >> relSystErrorEtaUp[nPointsEta] >> relSystErrorWOMaterialEtaDown[nPointsEta] >> relSystErrorWOMaterialEtaUp[nPointsEta];
         cout << nPointsEta << "\t"  << relSystErrorEtaDown[nPointsEta] << "\t"  <<relSystErrorEtaUp[nPointsEta] <<  "\t"  << relSystErrorWOMaterialEtaDown[nPointsEta] << "\t"  <<relSystErrorWOMaterialEtaUp[nPointsEta] << endl;
@@ -347,7 +347,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     }
     fileSysErrEta.close();
     nPointsEta = nPointsEta-1;
-    
+
     fileSysErrPi0.open(fileNameSysErrPi0,ios_base::in);
     cout << fileNameSysErrPi0 << endl;
 
@@ -358,21 +358,21 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     }
     fileSysErrPi0.close();
     nPointsPi0 = nPointsPi0-1;
-    
-    
+
+
     TFile* fileMCGenerated =     new TFile("ExternalInput/PCM/MCGeneratedSpectra.root");
     if(!optionEnergy.CompareTo("8TeV")||!optionEnergy.CompareTo("13TeV")||!optionEnergy.CompareTo("5TeV")){
 		cout << "Caution!!! using 7TeV MC generated EtaToPi0 spectra" << endl;
 		use7TeVPytPho = kTRUE;
         histoEtaToPi0Phojet = (TH1D*)fileMCGenerated->Get(Form("EtaToPi0_generatedSpectrum_%s_Phojet","7TeV"));
         histoEtaToPi0Pythia = (TH1D*)fileMCGenerated->Get(Form("EtaToPi0_generatedSpectrum_%s_Pythia","7TeV"));
-    
+
         histoPi0ToChargedPhojet = (TH1D*)fileMCGenerated->Get(Form("Pi0ToCharged_generatedSpectrum_%s_Phojet","7TeV"));
         histoPi0ToChargedPythia = (TH1D*)fileMCGenerated->Get(Form("Pi0ToCharged_generatedSpectrum_%s_Pythia","7TeV"));
     } else {
         histoEtaToPi0Phojet = (TH1D*)fileMCGenerated->Get(Form("EtaToPi0_generatedSpectrum_%s_Phojet",optionEnergy.Data()));
         histoEtaToPi0Pythia = (TH1D*)fileMCGenerated->Get(Form("EtaToPi0_generatedSpectrum_%s_Pythia",optionEnergy.Data()));
-    
+
         histoPi0ToChargedPhojet = (TH1D*)fileMCGenerated->Get(Form("Pi0ToCharged_generatedSpectrum_%s_Phojet",optionEnergy.Data()));
         histoPi0ToChargedPythia = (TH1D*)fileMCGenerated->Get(Form("Pi0ToCharged_generatedSpectrum_%s_Pythia",optionEnergy.Data()));
     }
@@ -380,24 +380,24 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     histoNumberOfEvents =  new TH1D("histoNumberOfEvents","histoNumberOfEvents",2,0.,2.);
     histoNumberOfEvents->SetBinContent(1,nEvt);
 
-    Int_t isV0AND           = 0; 
+    Int_t isV0AND           = 0;
     if (histoEventQualtityPi0->GetNbinsX() > 7){
         if (histoEventQualtityPi0->GetBinContent(9) > 0){
-            isV0AND         = 1; 
+            isV0AND         = 1;
             histoNumberOfEvents->SetBinContent(2,2);
         }
     }
     if (optionEnergy.CompareTo("8TeV") == 0){
         isV0AND             = 1;
-    }    
+    }
     if (optionEnergy.CompareTo("13TeV") == 0){
         isV0AND             = 1;
-    }    
+    }
 
     xSection                = ReturnCorrectXSection( optionEnergy, isV0AND);
-    
-    
-   
+
+
+
    if (!isMC.CompareTo("kFALSE")&&!useSameBinningPi0Eta.CompareTo("")){
 		//**********************************************************************************
 		//******************** FWHM Plot ***************************************************
@@ -406,19 +406,19 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		PlotFinalOutput("FWHMpi0",histoFWHMMesonPi0,histoTrueFWHMMesonPi0,NULL,NULL,0.00,maxYFWHM,"#sigma_{#pi^{0}} (Gev/#it{c}^{2})","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		maxYFWHM=2.0*histoFWHMMesonEta->GetBinContent(histoFWHMMesonEta->GetMaximumBin());
 		PlotFinalOutput("FWHMeta",histoFWHMMesonEta,histoTrueFWHMMesonEta,NULL,NULL,0.00,maxYFWHM,"#sigma_{#eta} (Gev/#it{c}^{2})","#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
-		PlotFinalOutput("FWHMComb",histoFWHMMesonPi0,histoTrueFWHMMesonPi0,histoFWHMMesonEta,histoTrueFWHMMesonEta,0.00,maxYFWHM,"#sigma_{#pi^{0}/#eta} (Gev/#it{c}^{2})","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kTRUE);   
-   
+		PlotFinalOutput("FWHMComb",histoFWHMMesonPi0,histoTrueFWHMMesonPi0,histoFWHMMesonEta,histoTrueFWHMMesonEta,0.00,maxYFWHM,"#sigma_{#pi^{0}/#eta} (Gev/#it{c}^{2})","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kTRUE);
+
 	   //**********************************************************************************
 	   //******************** Mass Plot ***************************************************
 	   //**********************************************************************************
 	   Double_t minYMass=0.97*histoMassMesonPi0->GetBinContent(histoMassMesonPi0->GetMaximumBin());
 	   Double_t maxYMass=1.03*histoMassMesonPi0->GetBinContent(histoMassMesonPi0->GetMaximumBin());
 	   PlotFinalOutput("Masspi0",histoMassMesonPi0,histoTrueMassMesonPi0,NULL,NULL,minYMass,maxYMass,"#it{M}_{#pi^{0}} (GeV/c^{2})","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
-	   
+
 	   minYMass=0.97*histoMassMesonEta->GetBinContent(histoMassMesonEta->GetMaximumBin());
 	   maxYMass=1.03*histoMassMesonEta->GetBinContent(histoMassMesonEta->GetMaximumBin());
 	   PlotFinalOutput("Masseta",histoMassMesonEta,histoTrueMassMesonEta,NULL,NULL,minYMass,maxYMass,"#it{M}_{#eta} (GeV/c^{2})","#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
-	   
+
 	   //**********************************************************************************
 	   //******************** Combined Mass and FWHM Plot *********************************
 	   //**********************************************************************************
@@ -426,7 +426,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 	   PlotFWHMMass("MassFWHMEta",histoFWHMMesonEta,histoTrueFWHMMesonEta,histoMassMesonEta,histoTrueMassMesonEta,minYMass,maxYMass,"#it{M}_{#eta} (GeV/c^{2})","#eta",optionEnergy,mode,outputDir,prefix2,cutSelection,suffix,"");
 	}
 
-    if (!isMC.CompareTo("kTRUE")&&!useSameBinningPi0Eta.CompareTo("")){                    
+    if (!isMC.CompareTo("kTRUE")&&!useSameBinningPi0Eta.CompareTo("")){
         //**********************************************************************************
         //******************** Acceptance Plot *********************************************
         //**********************************************************************************
@@ -436,8 +436,8 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		PlotFinalOutput("AccPi0",histoAccPi0,NULL,NULL,NULL,minYacc,maxYacc,Form("A_{#pi^{0}} (|y|< %s)",rapidityRange.Data()),"#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("AccEta",histoAccEta,NULL,NULL,NULL,minYacc,maxYacc,Form("A_{#eta} (|y|< %s)",rapidityRange.Data()),"#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("AccComb",histoAccPi0,NULL,histoAccEta,NULL,minYacc,maxYacc,Form("A (|y|< %s)",rapidityRange.Data()),"#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
-        
-        
+
+
         //**********************************************************************************
         //********************* Efficiency Plot ********************************************
         //**********************************************************************************
@@ -447,7 +447,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		PlotFinalOutput("EffPi0",histoTrueEffPtPi0,NULL,NULL,NULL,minYeff,maxYeff,"#epsilon_{#pi^{0}}","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("EffEta",histoTrueEffPtEta,NULL,NULL,NULL,minYeff,maxYeff,"#epsilon_{#eta}","#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("EffComb",histoTrueEffPtPi0,NULL,histoTrueEffPtEta,NULL,minYeff,maxYeff,"#epsilon_{eff}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
-        
+
         //**********************************************************************************
         //********************* Acc x Eff Plot *********************************************
         //**********************************************************************************
@@ -456,7 +456,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     //**********************************************************************************
     //******************** RAW Yield spectrum ******************************************
     //**********************************************************************************
-    
+
 	histoUncorrectedYieldPi0->Scale(1./nEvt);
     histoUnCorrectedYieldEta->Scale(1./nEvt);
 	Double_t minYieldRawPi0    = 0.2*histoUncorrectedYieldPi0->GetBinContent(histoUncorrectedYieldPi0->GetNbinsX());
@@ -468,7 +468,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		PlotFinalOutput("RawEta",histoUnCorrectedYieldEta,NULL,NULL,NULL,minYieldRawEta,maxYieldRawEta,"#frac{d#it{N}_{#eta, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}","#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 		PlotFinalOutput("RawComb",histoUncorrectedYieldPi0,NULL,histoUnCorrectedYieldEta,NULL,minYieldRawPi0,maxYieldRawPi0,"#frac{d#it{N}_{#pi_{0}/#eta, raw}}{#it{N}_{evt}d#it{p}_{T}} (#it{c}/GeV)^{2}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"");
 	}
-    
+
     Double_t minCorrYieldPi0 = 0.2*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetNbinsX());
     Double_t maxCorrYieldPi0 = 5.0*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetMaximumBin());
     Double_t minCorrYieldEta = 0.2*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX());
@@ -498,7 +498,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		histoInvCrossSectionPi0->Scale(xSection*recalcBarn);
 		graphInvCrossSectionSysPi0 = CalculateSysErrFromRelSysHisto( histoInvCrossSectionPi0 , "Pi0InvCrossSectionSys",relSystErrorPi0Down , relSystErrorPi0Up, 2, nPointsPi0);
 		graphInvCrossSectionSysAPi0 = CalculateSysErrFromRelSysHisto( histoInvCrossSectionPi0 , "Pi0InvCrossSectionSysA",relSystErrorWOMaterialPi0Down , relSystErrorWOMaterialPi0Up, 2, nPointsPi0);
-        
+
 		//***************************************************************************************************
 		//*************************** Fitting  Pi0 Spectrum *************************************************
 		//***************************************************************************************************
@@ -507,7 +507,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 			PlotFinalOutput("CorrPi0SysErrFitted",histoCorrectedYieldPi0,NULL,NULL,NULL,minCorrYieldPi0,maxCorrYieldPi0,"#frac{1}{2#pi #it{N}_{ev}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (#it{c}/GeV)^{2}","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kFALSE,graphCorrectedYieldPi0SysErr);
 			PlotFinalOutput("CorrPi0SysErrFittedRatio",histoCorrectedYieldPi0,NULL,NULL,NULL,0.55,1.85,"Data/Fit","#pi^{0}",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kFALSE,graphCorrectedYieldPi0SysErr);
 		}
-		
+
 		//*************************************** Systematic Error of the Eta *************************************************
         graphCorrectedYieldEtaSysErr = CalculateSysErrFromRelSysHisto( histoCorrectedYieldEta, "EtaSystError",relSystErrorEtaDown , relSystErrorEtaUp, 2, nPointsEta);
         graphCorrectedYieldEtaSysErrA = CalculateSysErrFromRelSysHisto( histoCorrectedYieldEta, "EtaSystErrorA",relSystErrorWOMaterialEtaDown , relSystErrorWOMaterialEtaUp, 2, nPointsEta);
@@ -515,7 +515,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         histoInvCrossSectionEta->Scale(xSection*recalcBarn);
         graphInvCrossSectionSysEta = CalculateSysErrFromRelSysHisto( histoInvCrossSectionEta , "Pi0InvCrossSectionSys",relSystErrorEtaDown , relSystErrorEtaUp, 2, nPointsEta);
         graphInvCrossSectionSysAEta = CalculateSysErrFromRelSysHisto( histoInvCrossSectionEta , "Pi0InvCrossSectionSysA",relSystErrorWOMaterialEtaDown , relSystErrorWOMaterialEtaUp, 2, nPointsEta);
-		
+
 		//***************************************************************************************************
 		//*************************** Fitting  Eta Spectrum *************************************************
 		//***************************************************************************************************
@@ -546,11 +546,11 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 
             ratioSysUpError[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialEtaUp[i]/100* histoCorrectedYieldEta->GetBinContent(i+2)/histoCorrectedYieldPi0->GetBinContent(i+2),2) + TMath::Power(histoCorrectedYieldEta->GetBinContent(i+2)*relSystErrorWOMaterialPi0Up[i]/100/histoCorrectedYieldPi0->GetBinContent(i+2),2));
             ratioSysDownError[i]= TMath::Sqrt(TMath::Power(relSystErrorWOMaterialEtaDown[i]/100* histoCorrectedYieldEta->GetBinContent(i+2)/histoCorrectedYieldPi0->GetBinContent(i+2),2) + TMath::Power(histoCorrectedYieldEta->GetBinContent(i+2)*relSystErrorWOMaterialPi0Down[i]/100/histoCorrectedYieldPi0->GetBinContent(i+2),2));
-            
+
             cout << ratioXValue[i] << "\t" << ratioYValue[i] << "\t" << ratioSysUpError[i] << "\t" << ratioSysDownError[i] << endl;
         }
         graphSystErrRatio = new TGraphAsymmErrors(nPointsEta,ratioXValue,ratioYValue,ratioXError,ratioXError,ratioSysDownError,ratioSysUpError);
-        
+
 		if (!isMC.CompareTo("kFALSE")){
 			PlotFinalOutput("EtaToPi0Ratio",histoCorrectedYieldPi0,NULL,histoCorrectedYieldEta,NULL,0.01,1.05,"#eta/#pi^{0}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kFALSE,graphSystErrRatio);
 			//******************************* Ratio + Pythia ********************************************
@@ -559,7 +559,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		}
 	}
 
-    
+
     //*********************************************************************************************************
     //********************** ComparisonFile Output ************************************************************
     //*********************************************************************************************************
@@ -575,9 +575,9 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
             histoNumberOfEvents->Write(Form("histoNumberOfEvents%s",optionEnergy.Data()),TObject::kOverwrite);
         }
         fileOutputForComparisonFullyCorrected->mkdir(Form("Pi0%s%s",optDalitz.Data(),optionEnergy.Data()));
-        TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s",optDalitz.Data(),optionEnergy.Data())); 
+        TDirectoryFile* directoryPi0 = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Pi0%s%s",optDalitz.Data(),optionEnergy.Data()));
         fileOutputForComparisonFullyCorrected->cd(Form("Pi0%s%s",optDalitz.Data(),optionEnergy.Data()));
-        
+
         if (useSameBinningPi0Eta.CompareTo("")==0){
             histoCorrectedYieldPi0->Write("CorrectedYieldPi0",TObject::kOverwrite);
             histoUncorrectedYieldPi0->Write("RAWYieldPerEventsPi0",TObject::kOverwrite);
@@ -609,7 +609,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         }
 
         fileOutputForComparisonFullyCorrected->mkdir(Form("Eta%s%s",optDalitz.Data(),optionEnergy.Data()));
-        TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s%s",optDalitz.Data(),optionEnergy.Data())); 
+        TDirectoryFile* directoryEta = (TDirectoryFile*)fileOutputForComparisonFullyCorrected->Get(Form("Eta%s%s",optDalitz.Data(),optionEnergy.Data()));
         fileOutputForComparisonFullyCorrected->cd(Form("Eta%s%s",optDalitz.Data(),optionEnergy.Data()));
         if (useSameBinningPi0Eta.CompareTo("")==0){
             histoCorrectedYieldEta->Write("CorrectedYieldEta",TObject::kOverwrite);
@@ -644,9 +644,9 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
             histoRatioEtaPi0->Write("EtatoPi0RatioConversion",TObject::kOverwrite);
             graphSystErrRatio->Write("EtatoPi0RatioConversionSys",TObject::kOverwrite);
         }
-        
+
     fileOutputForComparisonFullyCorrected->Write();
     fileOutputForComparisonFullyCorrected->Close();
-    
+
    if (multFlag){}
 }
