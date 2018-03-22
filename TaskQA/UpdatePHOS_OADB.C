@@ -70,6 +70,13 @@ void UpdatePHOS_OADB(const char *fileNameOADB="$ALICE_PHYSICS/OADB/PHOS/PHOSBadM
     // add additional bad channels to an existing map for the given range (last argument == 1)
     //     updateFile(fileNameOADBtemp,"BadChannels15o_V1","LHC15o/LHC15o_badCellList.log",252666,260000,1);
 
+    // LHC10x pass4 Florian update pp 7TeV
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC10b - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10b_pass4.log",114737,117223,0);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC10c - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10c_pass4.log",118503,121040,0);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC10d - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10d_pass4.log",121694,126437,0);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC10e - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10e_pass4.log",127102,130850,0);
+    updateFile(fileNameOADBtemp,"detailed bad channels LHC10f - Florian","badChannelListsPHOS/pp7TeV/BadCellsCleaned_LHC10f_pass4.log",133004,135031,0);
+    
     // LHC15n pass3 Nico update pp 5TeV
     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_4.log",244340,244410,1);
     updateFile(fileNameOADBtemp,"detailed bad channels LHC15n - Nico","badChannelListsPHOS/LHC15n_pass3_3.log",244411,244452,1);
@@ -188,6 +195,8 @@ void updateFile(const char *fileNameOADB,TString arrName, TString fileName,Int_t
             replacedContainerHighLimit          = con->UpperLimit(i);
         } else if (highRun >= con->LowerLimit(i) && highRun <= con->UpperLimit(i)){
             printf("\n!!! Not adding index %d for runrange %d--%d as high run limit %d is contained\n", con->GetObjectByIndex(i), con->LowerLimit(i),con->UpperLimit(i),highRun);
+        } else if (lowRun <= con->LowerLimit(i) && highRun >= con->UpperLimit(i)){
+              printf("\n!!! Found object #%d for runrange %d--%d as full run range %d--%d is contained\n", con->GetObjectByIndex(i), con->LowerLimit(i),con->UpperLimit(i),lowRun,highRun);
         }else{
             con2->AddDefaultObject(con->GetObjectByIndex(i));
             con2->AppendObject(con->GetObjectByIndex(i),con->LowerLimit(i),con->UpperLimit(i));

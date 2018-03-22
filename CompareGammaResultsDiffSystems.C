@@ -686,6 +686,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP.%s",outputDir.Data(),suffix.Data()));
     canvasDirGamma->Print(Form("%s/DirGammaSpectra_WithScaledPP.pdf",outputDir.Data()));
 
+    dummyDirGamma->GetYaxis()->SetRangeUser( 1.2e-10,8.5e5);
     dummyDirGamma->DrawCopy();
 
         labelScalingDirGamma0020->Draw();
@@ -757,10 +758,10 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         }
 
         // TLegend* legendDirGammaPP2Split = GetAndSetLegend2(0.21, 0.10+(4*textsizeLabelsDirGamma*0.85), 0.21+0.21, 0.10+(8*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, collisionSystempp2760GeV.Data(), 42, 0.25);
-        TLatex *labelEnergyScaledPP = new TLatex(0.22, 0.10+0.04*4, "ALICE");
+        TLatex *labelEnergyScaledPP = new TLatex(0.22, 0.095+0.04*21, "ALICE");
         SetStyleTLatex( labelEnergyScaledPP, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
         labelEnergyScaledPP->Draw();
-        TLatex *labelEnergyScaledPP2 = new TLatex(0.22, 0.10+0.04*3, "<#it{N}_{coll}> #times pp, #sqrt{#it{s}} = 2.76 TeV");
+        TLatex *labelEnergyScaledPP2 = new TLatex(0.22, 0.10+0.04*3, "pp #times <#it{N}_{coll}> , #sqrt{#it{s}} = 2.76 TeV");
         SetStyleTLatex( labelEnergyScaledPP2, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 11);
         labelEnergyScaledPP2->Draw();
         TLegend* legendDirGammaPP2Split = GetAndSetLegend2(0.21, 0.10, 0.21+0.22, 0.10+(3*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
@@ -773,7 +774,7 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
         legendDirGammaPP2Split->Draw();
         
         // TLegend* legendDirGammaSplit = GetAndSetLegend2(0.21, 0.10, 0.21+0.21, 0.10+(4*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, collisionSystemPbPb760GeV.Data(), 42, 0.25);
-        TLatex *labelEnergyScaledPBPB2 = new TLatex(0.95, 0.095+0.04*21, Form("ALICE, %s",collisionSystemPbPb760GeV.Data()));
+        TLatex *labelEnergyScaledPBPB2 = new TLatex(0.95, 0.095+0.04*21, Form("%s",collisionSystemPbPb760GeV.Data()));
         SetStyleTLatex( labelEnergyScaledPBPB2, textSizeLabelsPixelDirGam,4, 1, 43, kTRUE, 31);
         labelEnergyScaledPBPB2->Draw();
         TLegend* legendDirGammaSplit = GetAndSetLegend2(0.71, 0.10+(21*textsizeLabelsDirGamma*0.85), 0.71+0.21, 0.10+(24*textsizeLabelsDirGamma*0.85) ,0.85*textsizeLabelsDirGamma, 1, "", 42, 0.25);
