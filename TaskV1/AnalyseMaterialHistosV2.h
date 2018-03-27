@@ -100,6 +100,24 @@ TH1F*   histoRFullPtDataScaledToGasRebin;
 TH1F*   histoRFullPtMCScaledToGasRebin;
 TH1F*   histoDataMCRatioRFullPtScaledToGas;
 
+TH1F*   histoRinPtBinDataScaledToGas01;
+TH1F*   histoRinPtBinMCScaledToGas01;
+TH1F*   histoRinPtBinDataScaledToGasRebin01;
+TH1F*   histoRinPtBinMCScaledToGasRebin01;
+TH1F*   histoDataMCRatioRinPtBinScaledToGas01; 
+
+TH1F*   histoRinPtBinDataScaledToGas02;
+TH1F*   histoRinPtBinMCScaledToGas02;
+TH1F*   histoRinPtBinDataScaledToGasRebin02;
+TH1F*   histoRinPtBinMCScaledToGasRebin02;
+TH1F*   histoDataMCRatioRinPtBinScaledToGas02; 
+
+TH1F*   histoRinPtBinDataScaledToGas03;
+TH1F*   histoRinPtBinMCScaledToGas03;
+TH1F*   histoRinPtBinDataScaledToGasRebin03;
+TH1F*   histoRinPtBinMCScaledToGasRebin03;
+TH1F*   histoDataMCRatioRinPtBinScaledToGas03; 
+
 TH1F*	histoDataMCRatioR;
 TH1F*	histoMidPtDataMCRatioR;
 TH1F*	histoPurityR;
