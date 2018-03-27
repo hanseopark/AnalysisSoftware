@@ -273,6 +273,9 @@ TGraph* graphWeightsALHC11h_2050[11];
 TGraph* graphWeightsLHC11h_0010[11];
 TGraph* graphWeightsLHC11h_2050[11];
 
+TGraph* graphWeightsRAALHC11h_0010[11];
+TGraph* graphWeightsRAALHC11h_2050[11];
+
 
 // yields error histos
 TH1D* statErrorCollectionLHC11h_0010[11];

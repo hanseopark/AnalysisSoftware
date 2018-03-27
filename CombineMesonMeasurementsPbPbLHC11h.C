@@ -5934,6 +5934,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     }
 
     cout << " \n\nCombining RAA for " << meson.Data() << endl;
+    // Declaration & calculation of combined spectrum
+    TString fileNameOutputWeightingRAALHC11h_0010                  = Form("%s/0010LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data());
+    TString fileNameOutputWeightingRAALHC11h_2050                  = Form("%s/2050LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data());
 
     cout << __LINE__ << endl;
     Int_t npoitRAA = 23;
@@ -5951,11 +5954,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         graphCombRAATotPbPb2760GeV_0010 = CombinePtPointsSpectraFullCorrMat( statErrorCollectionforRAALHC11h_0010,  sysErrorCollectionforRAALHC11h_0010,
                                                                                                   xPtLimitsPi0, npoitRAA, offSetsPi0RAA, offSetsPi0RAASys,
                                                                                                   graphCombRAAStatPbPb2760GeV_0010, graphCombRAASysPbPb2760GeV_0010,
-                                                                                                    Form("%s/0010LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()));
+                                                                                                   fileNameOutputWeightingRAALHC11h_0010 );
         graphCombRAATotPbPb2760GeV_2050 = CombinePtPointsSpectraFullCorrMat( statErrorCollectionforRAALHC11h_2050,  sysErrorCollectionforRAALHC11h_2050,
                                                                                                   xPtLimitsPi0, npoitRAA, offSetsPi0RAA, offSetsPi0RAASys,
                                                                                                   graphCombRAAStatPbPb2760GeV_2050, graphCombRAASysPbPb2760GeV_2050,
-                                                                                                    Form("%s/2050LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()));
+                                                                                                   fileNameOutputWeightingRAALHC11h_2050 );
         while(graphCombRAATotPbPb2760GeV_0010->GetY()[0] < 1e-14){
           graphCombRAATotPbPb2760GeV_0010->RemovePoint(0);
           graphCombRAAStatPbPb2760GeV_0010->RemovePoint(0);
@@ -5968,12 +5971,12 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         graphCombRAATotPbPb2760GeV_0010 = CombinePtPointsSpectraFullCorrMat( statErrorCollectionforRAALHC11h_0010,  sysErrorCollectionforRAALHC11h_0010,
                                                                                                   xPtLimitsEta, 13, offSetsEtaRAA, offSetsEtaRAASys,
                                                                                                   graphCombRAAStatPbPb2760GeV_0010, graphCombRAASysPbPb2760GeV_0010,
-                                                                                                    Form("%s/0010LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()));
+                                                                                                    fileNameOutputWeightingRAALHC11h_0010);
 
         graphCombRAATotPbPb2760GeV_2050 = CombinePtPointsSpectraFullCorrMat( statErrorCollectionforRAALHC11h_2050,  sysErrorCollectionforRAALHC11h_2050,
                                                                                                   xPtLimitsEta, 13, offSetsEtaRAA, offSetsEtaRAASys,
                                                                                                   graphCombRAAStatPbPb2760GeV_2050, graphCombRAASysPbPb2760GeV_2050,
-                                                                                                    Form("%s/2050LHC11h_WeightingRAA%s.dat",outputDir.Data(),meson.Data()));
+                                                                                                   fileNameOutputWeightingRAALHC11h_2050);
 
         while(graphCombRAATotPbPb2760GeV_0010->GetY()[0] < 1e-14){
           graphCombRAATotPbPb2760GeV_0010->RemovePoint(0);
@@ -5998,6 +6001,146 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //         cout << "x: " << graphCombRAASysPbPb2760GeV_2050->GetX()[i] << " y: " << graphCombRAASysPbPb2760GeV_2050->GetY()[i] << " err: " << graphCombRAASysPbPb2760GeV_2050->GetEYlow()[i] << " % err: " << graphCombRAASysPbPb2760GeV_2050->GetEYlow()[i]/graphCombRAASysPbPb2760GeV_2050->GetY()[i]*100 << endl;
 //     }
 //     return;
+
+
+
+
+    // Reading weights from output file for plotting
+    ifstream fileWeightsReadRAALHC11h_0010;
+    fileWeightsReadRAALHC11h_0010.open(fileNameOutputWeightingRAALHC11h_0010,ios_base::in);
+    ifstream fileWeightsReadRAAALHC11h_2050;
+    fileWeightsReadRAAALHC11h_2050.open(fileNameOutputWeightingRAALHC11h_2050,ios_base::in);
+    cout << "reading " << fileNameOutputWeightingRAALHC11h_0010 << " and " << fileNameOutputWeightingRAALHC11h_2050 << endl;
+    Double_t xValuesReadRAALHC11h_0010[50];
+    Double_t weightsReadRAALHC11h_0010[11][50];
+    Int_t availableMeasRAALHC11h_0010[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+    Double_t xValuesReadRAALHC11h_2050[50];
+    Double_t weightsReadRAALHC11h_2050[11][50];
+    Int_t availableMeasRAALHC11h_2050[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+    nPtBinsReadALHC11h              = 0;
+    while(!fileWeightsReadRAALHC11h_0010.eof() && nPtBinsReadALHC11h < 50){
+            TString garbage = "";
+            if (nPtBinsReadALHC11h == 0){
+                    fileWeightsReadRAALHC11h_0010 >> garbage ;//>> availableMeas[0] >> availableMeas[1] >> availableMeas[2] >> availableMeas[3];
+                    fileWeightsReadRAAALHC11h_2050 >> garbage ;//>> availableMeas[0] >> availableMeas[1] >> availableMeas[2] >> availableMeas[3];
+                    for (Int_t i = 0; i < nMeasSetALHC11h0010; i++){
+                      fileWeightsReadRAALHC11h_0010 >> availableMeasRAALHC11h_0010[i] ;
+                    }
+                    for (Int_t i = 0; i < nMeasSetALHC11h2050; i++){
+                      fileWeightsReadRAAALHC11h_2050 >> availableMeasRAALHC11h_2050[i] ;
+                    }
+                    cout << "read following measurements: ";
+                    for (Int_t i = 0; i < 11; i++){
+                            cout << availableMeasRAALHC11h_0010[i] << "\t" ;
+                            cout << availableMeasRAALHC11h_2050[i] << "\t" ;
+                    }
+                    cout << endl;
+            } else {
+                    fileWeightsReadRAALHC11h_0010 >> xValuesReadRAALHC11h_0010[nPtBinsReadALHC11h-1];
+                    fileWeightsReadRAAALHC11h_2050 >> xValuesReadRAALHC11h_2050[nPtBinsReadALHC11h-1];
+                    for (Int_t i = 0; i < nMeasSetALHC11h0010; i++){
+                      fileWeightsReadRAALHC11h_0010 >> weightsReadRAALHC11h_0010[availableMeasRAALHC11h_0010[i]][nPtBinsReadALHC11h-1] ;
+                    }
+                    for (Int_t i = 0; i < nMeasSetALHC11h2050; i++){
+                      fileWeightsReadRAAALHC11h_2050 >> weightsReadRAALHC11h_2050[availableMeasRAALHC11h_2050[i]][nPtBinsReadALHC11h-1] ;
+                    }
+                    cout << "read: "<<  nPtBinsReadALHC11h << " xValuesReadRAALHC11h_0010 "<< xValuesReadRAALHC11h_0010[nPtBinsReadALHC11h-1] << "\t" ;
+                    cout << "read: "<<  nPtBinsReadALHC11h << " xValuesReadRAALHC11h_2050 "<< xValuesReadRAALHC11h_2050[nPtBinsReadALHC11h-1] << "\t" ;
+                    for (Int_t i = 0; i < nMeasSetALHC11h0010; i++){
+                      cout << weightsReadRAALHC11h_0010[availableMeasRAALHC11h_0010[i]][nPtBinsReadALHC11h-1] << "\t";
+                    }
+                    for (Int_t i = 0; i < nMeasSetALHC11h0010; i++){
+                      cout << weightsReadRAALHC11h_2050[availableMeasRAALHC11h_2050[i]][nPtBinsReadALHC11h-1] << "\t";
+                    }
+                    cout << endl;
+            }
+            nPtBinsReadALHC11h++;
+    }
+    nPtBinsReadALHC11h = nPtBinsReadALHC11h-2 ;
+
+    fileWeightsReadRAALHC11h_0010.close();
+    fileWeightsReadRAAALHC11h_2050.close();
+
+    for (Int_t i = 0; i< 11; i++){
+            graphWeightsRAALHC11h_0010[i] = NULL;
+            graphWeightsRAALHC11h_2050[i] = NULL;
+    }
+
+    for (Int_t i = 0; i < nMeasSetALHC11h0010; i++){
+            graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]] = new TGraph(nPtBinsReadALHC11h,xValuesReadRAALHC11h_0010,weightsReadRAALHC11h_0010[availableMeasRAALHC11h_0010[i]]);
+            Int_t bin = 0;
+            for (Int_t n = 0; n< nPtBinsReadALHC11h; n++){
+                    if (graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]]->GetY()[bin] == 0){
+                            graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]]->RemovePoint(bin);
+                    } else bin++;
+            }
+    }
+    for (Int_t i = 0; i < nMeasSetALHC11h2050; i++){
+            graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]] = new TGraph(nPtBinsReadALHC11h,xValuesReadRAALHC11h_2050,weightsReadRAALHC11h_2050[availableMeasRAALHC11h_2050[i]]);
+            Int_t bin = 0;
+            for (Int_t n = 0; n< nPtBinsReadALHC11h; n++){
+                    if (graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]]->GetY()[bin] == 0){
+                            graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]]->RemovePoint(bin);
+                    } else bin++;
+            }
+    }
+
+    canvasWeights->cd();
+    histo2DWeights->Draw("copy");
+
+
+    for (Int_t i = 0; i < nMeasSetLHC11h0010; i++){
+        DrawGammaSetMarkerTGraph(graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]],
+                                markerStyleDet[availableMeasRAALHC11h_0010[i]],
+                                markerSizeDet[availableMeasRAALHC11h_0010[i]]*0.5,
+                                colorDet[availableMeasRAALHC11h_0010[i]] ,
+                                colorDet[availableMeasRAALHC11h_0010[i]]);
+
+        while(graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]]->GetX()[0] < 1.){
+            graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]]->RemovePoint(0);
+        }
+        graphWeightsRAALHC11h_0010[availableMeasRAALHC11h_0010[i]]->Draw("p,same");
+    }
+    legendAccWeightsLHC11h->Draw();
+    labelWeightsEnergy->Draw();
+    labelWeightsPi0->Draw();
+
+    DrawGammaLines(0.23, 70. , 0.5, 0.5,0.1, kGray, 7);
+    DrawGammaLines(0.23, 70. , 0.4, 0.4,0.1, kGray, 1);
+    DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
+    DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
+
+    canvasWeights->SaveAs(Form("%s/%s_WeightsRAA_0010.%s",outputDir.Data(),meson.Data(),suffix.Data()));
+
+    canvasWeights->cd();
+    histo2DWeights->Draw("copy");
+
+
+
+    for (Int_t i = 0; i < nMeasSetLHC11h2050; i++){
+        DrawGammaSetMarkerTGraph(graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]],
+                                markerStyleDet[availableMeasRAALHC11h_2050[i]],
+                                markerSizeDet[availableMeasRAALHC11h_2050[i]]*0.5,
+                                colorDet[availableMeasRAALHC11h_2050[i]],
+                                colorDet[availableMeasRAALHC11h_2050[i]]);
+        graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]]->Draw("p,same");
+
+        while(graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]]->GetX()[0] < 1.){
+            graphWeightsRAALHC11h_2050[availableMeasRAALHC11h_2050[i]]->RemovePoint(0);
+        }
+
+    }
+    legendAccWeightsLHC11h->Draw();
+    labelWeightsEnergy->Draw();
+    labelWeightsPi0->Draw();
+
+    DrawGammaLines(0.23, 70. , 0.5, 0.5,0.1, kGray, 7);
+    DrawGammaLines(0.23, 70. , 0.4, 0.4,0.1, kGray, 1);
+    DrawGammaLines(0.23, 70. , 0.3, 0.3,0.1, kGray, 7);
+    DrawGammaLines(0.23, 70. , 0.2, 0.2,0.1, kGray, 3);
+
+    canvasWeights->SaveAs(Form("%s/%s_WeightsRAA_2050.%s",outputDir.Data(),meson.Data(),suffix.Data()));
 
 
     TCanvas* canvasRAAcombo = new TCanvas("canvasRAAcombo","",200,10,1200,1100);  //200,10,1350,900);  // gives the page size

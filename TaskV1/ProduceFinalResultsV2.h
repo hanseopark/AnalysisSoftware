@@ -10,7 +10,7 @@ TString 		rapitdityCutNumber;
 Double_t 		deltaEta;
 TString 		rapidityRange;
 Bool_t 			plotPythiaPhojetInRatio = kFALSE;
-Double_t    	xSection                = 0; 
+Double_t    	xSection                = 0;
 TString 		prefix2;
 Bool_t	 		kLevy;
 Bool_t 			kHag;
@@ -107,38 +107,38 @@ TGraphAsymmErrors* 	graphRatioFitModPowSysErr;
 
 ifstream 		fileSysErrPi0;
 Int_t 		nPointsPi0 = 			0;
-Double_t 		relSystErrorPi0Up[50];
-Double_t 		relSystErrorPi0Down[50];
-Double_t 		relSystErrorWOMaterialPi0Up[50];
-Double_t 		relSystErrorWOMaterialPi0Down[50];
-Double_t 		systErrorPi0Up[50];
-Double_t 		systErrorPi0Down[50];
-Double_t 		xValueCorrYieldPi0[50];
-Double_t 		yValueCorrYieldPi0[50];
-Double_t 		yErrorCorrYieldPi0[50];
-Double_t 		xErrorCorrYieldPi0[50];
-Double_t 		yErrorCombinedPi0Up[50];
-Double_t 		yErrorCombinedPi0Down[50];
-Double_t 		sysErrPi0RatioFitConvUp[50];
-Double_t 		sysErrPi0RatioFitConvDown[50];
-Double_t 		yValuePi0RatioFitConv[50];
+Double_t 		relSystErrorPi0Up[60];
+Double_t 		relSystErrorPi0Down[60];
+Double_t 		relSystErrorWOMaterialPi0Up[60];
+Double_t 		relSystErrorWOMaterialPi0Down[60];
+Double_t 		systErrorPi0Up[60];
+Double_t 		systErrorPi0Down[60];
+Double_t 		xValueCorrYieldPi0[60];
+Double_t 		yValueCorrYieldPi0[60];
+Double_t 		yErrorCorrYieldPi0[60];
+Double_t 		xErrorCorrYieldPi0[60];
+Double_t 		yErrorCombinedPi0Up[60];
+Double_t 		yErrorCombinedPi0Down[60];
+Double_t 		sysErrPi0RatioFitConvUp[60];
+Double_t 		sysErrPi0RatioFitConvDown[60];
+Double_t 		yValuePi0RatioFitConv[60];
 ifstream 		fileSysErrEta;
 Int_t 			nPointsEta = 0;
-Double_t 		relSystErrorEtaUp[50];
-Double_t 		relSystErrorEtaDown[50];
-Double_t 		relSystErrorWOMaterialEtaUp[50];
-Double_t 		relSystErrorWOMaterialEtaDown[50];
-Double_t 		systErrorEtaUp[50];
-Double_t 		systErrorEtaDown[50];
-Double_t 		xValueCorrYieldEta[50];
-Double_t 		yValueCorrYieldEta[50];
-Double_t 		yErrorCorrYieldEta[50];
-Double_t 		xErrorCorrYieldEta[50];
-Double_t 		yErrorCombinedEtaUp[50];
-Double_t 		yErrorCombinedEtaDown[50];
-Double_t 		sysErrEtaRatioFitConvUp[50];
-Double_t 		sysErrEtaRatioFitConvDown[50];
-Double_t 		yValueEtaRatioFitConv[50];
+Double_t 		relSystErrorEtaUp[60];
+Double_t 		relSystErrorEtaDown[60];
+Double_t 		relSystErrorWOMaterialEtaUp[60];
+Double_t 		relSystErrorWOMaterialEtaDown[60];
+Double_t 		systErrorEtaUp[60];
+Double_t 		systErrorEtaDown[60];
+Double_t 		xValueCorrYieldEta[60];
+Double_t 		yValueCorrYieldEta[60];
+Double_t 		yErrorCorrYieldEta[60];
+Double_t 		xErrorCorrYieldEta[60];
+Double_t 		yErrorCombinedEtaUp[60];
+Double_t 		yErrorCombinedEtaDown[60];
+Double_t 		sysErrEtaRatioFitConvUp[60];
+Double_t 		sysErrEtaRatioFitConvDown[60];
+Double_t 		yValueEtaRatioFitConv[60];
 
 TF1 *		fitPtLevySysErr;
 TF1 *		fitPtHagedornSysErr;
@@ -162,12 +162,16 @@ Int_t fExampleBinPi0     = 7;
 Int_t fExampleBinEta     = 6;
 
 void SelectExampleBin(TString optionEnergy, TString useSameBinningPi0Eta){
-	
+
     if(optionEnergy.CompareTo("7TeV") == 0){
         fExampleBinPi0     = 4;
         fExampleBinEta     = 6;
         if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
     } else if( optionEnergy.CompareTo("8TeV") == 0) {
+        fExampleBinPi0     = 7;
+        fExampleBinEta     = 3;
+        if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
+    } else if( optionEnergy.CompareTo("5TeV") == 0) {
         fExampleBinPi0     = 7;
         fExampleBinEta     = 3;
         if (!useSameBinningPi0Eta.CompareTo("")==0)fExampleBinPi0 = fExampleBinEta;
@@ -194,17 +198,17 @@ void SelectExampleBin(TString optionEnergy, TString useSameBinningPi0Eta){
 }
 // ****** FUNCTION TO PLOT MASS AND FWHM TOGETHER ********
 void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData2,TH1D* histoMC2,Double_t yMin,Double_t yMax,TString yAxisLabel,TString meson,TString optionEnergy,Int_t mode,TString outputDir,TString prefix2,TString cutSelection,TString suffix,TString period = "",Bool_t plotBoth = kFALSE,TGraphAsymmErrors* graphSystErr=NULL,TGraphAsymmErrors* graphSystErr2=NULL){
-	
+
 	TString mesonString		="#pi^{0}";
 	if(plotName.Contains("Eta"))mesonString		="#eta";
-	
+
 	Double_t maxpT      = 1.2*histoData->GetXaxis()->GetBinCenter(histoData->GetNbinsX())+(histoData->GetXaxis()->GetBinWidth(histoData->GetNbinsX()))/2;
-	
+
 	histoData->Scale(1000);
 	histoData2->Scale(1000);
 	histoMC->Scale(1000);
 	histoMC2->Scale(1000);
-	
+
 	Double_t minYMass;
 	Double_t maxYMass;
 	if(plotName.Contains("Pi0")){
@@ -215,7 +219,7 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 		maxYMass=579.9;
 	}
 	Double_t maxYFWHM=2.8*histoData->GetBinContent(histoData->GetMaximumBin());
-	
+
 	Double_t arrayBoundariesX1_4[2];
 	Double_t arrayBoundariesY1_4[3];
 	Double_t relativeMarginsX[3];
@@ -240,8 +244,8 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 	padMassLegend1->Draw();
 
 	padWidthPi0->cd();
-	padWidthPi0->SetLogx(); 
-	
+	padWidthPi0->SetLogx();
+
 	Double_t margin                 = relativeMarginsX[0]*2.7*1350;
 	Double_t textsizeLabelsWidth    = 0;
 	Double_t textsizeFacWidth       = 0;
@@ -262,10 +266,10 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 	histo2DAllPi0FWHM->GetYaxis()->SetNoExponent(kTRUE);
 	histo2DAllPi0FWHM->GetXaxis()->SetTickLength(0.05);
 	histo2DAllPi0FWHM->GetYaxis()->SetTickLength(0.026);
-	histo2DAllPi0FWHM->DrawCopy(); 
-	
+	histo2DAllPi0FWHM->DrawCopy();
+
 	Color_t colorData   = kBlack;//, kGray+1, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2};
-    Color_t colorMC    	= kRed+2;//, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2}; 
+    Color_t colorMC    	= kRed+2;//, kRed+2, kBlue+2, kGreen+3, kCyan+2, kViolet, kMagenta+2,  kRed-2, kBlue-2};
     if(colorScheme==1){
 		colorData   = GetColorDefaultColor(optionEnergy,"","");
 	}
@@ -275,7 +279,7 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
     Marker_t marker    	= 20;//, 20, 21, 34, 29, 33, 21, 27, 28, 30 };21
     Marker_t markerMC  	= 24;//, 24, 25, 28, 30, 27, 25, 27, 28, 30 };25
 	Size_t markerSize 	= 2.5;
-	
+
 	DrawGammaSetMarker(histoData, marker, markerSize, colorData , colorData);
 	histoData->Draw("p,same,z");
 	DrawGammaSetMarker(histoMC, markerMC, markerSize, colorMC , colorMC);
@@ -290,7 +294,7 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 	TLatex *labelMassPerf       = new TLatex(0.13,0.87,"ALICE work-in-progress");
 	SetStyleTLatex( labelMassPerf, textSizeLabelsPixel,4);
 	labelMassPerf->SetTextFont(43);
-	labelMassPerf->Draw();        
+	labelMassPerf->Draw();
 	TLatex *labelMassEnergy     = new TLatex(0.13,0.78,collisionSystem.Data());
 	SetStyleTLatex( labelMassEnergy, textSizeLabelsPixel,4);
 	labelMassEnergy->SetTextFont(43);
@@ -298,8 +302,8 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 	TLatex *labelMassPi0        = new TLatex(0.13,0.69,Form("%s #rightarrow #gamma#gamma",mesonString.Data()));
 	SetStyleTLatex( labelMassPi0, textSizeLabelsPixel,4);
 	labelMassPi0->SetTextFont(43);
-	labelMassPi0->Draw();  
-	      
+	labelMassPi0->Draw();
+
 	padMassPi0->cd();
 	padMassPi0->SetLogx();
 
@@ -320,24 +324,24 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 	histo2DAllPi0Mass->GetYaxis()->SetNoExponent(kTRUE);
 	histo2DAllPi0Mass->GetXaxis()->SetTickLength(0.05);
 	histo2DAllPi0Mass->GetXaxis()->SetLabelOffset(-0.015);
-	histo2DAllPi0Mass->DrawCopy(); 
-	
+	histo2DAllPi0Mass->DrawCopy();
+
 	if(plotName.Contains("Pi0")){
 		DrawGammaLines(0.23, 25. , mesonMassExpectPi0*1000., mesonMassExpectPi0*1000.,0.1, kGray);
 	}else{
 		DrawGammaLines(0.23, 25. , mesonMassExpectEta*1000., mesonMassExpectEta*1000.,0.1, kGray);
 	}
-	
+
 	DrawGammaSetMarker(histoData2, marker, markerSize, colorData , colorData);
 	histoData2->Draw("p,same,z");
 	DrawGammaSetMarker(histoMC2, markerMC, markerSize, colorMC , colorMC);
 	histoMC2->Draw("p,same,z");
-	
+
 	TLatex *labelLegendBMass            = new TLatex(0.13,0.22,"b)");
 	SetStyleTLatex( labelLegendBMass, textSizeLabelsPixel,4);
 	labelLegendBMass->SetTextFont(43);
 	labelLegendBMass->Draw();
-	//********************************** Defintion of the Legend **************************************************    
+	//********************************** Defintion of the Legend **************************************************
 	Double_t columnsLegendMass2[3]      = {0.,0.57,0.84};
 	Double_t rowsLegendMass2[4]         = {0.75,0.5,0.25,0.01};
 	//******************* Offsets ***********************
@@ -373,12 +377,12 @@ void PlotFWHMMass(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoData
 
 // ****** FUNCTION TO PLOT THE ETA/PI0 RATIO *************
 void calculateEtaPi0Ratio(TH1D* histoCorrectedYieldPi0,TH1D* histoCorrectedYieldEta, Double_t maxPt,TString optionEnergy,TGraphAsymmErrors* graphSystErrRatio){
-	Size_t textSizeEtaToPi0 = 0.04;            
+	Size_t textSizeEtaToPi0 = 0.04;
 	DrawGammaLines(0., maxPt , 0.45, 0.45, 0.3, kGray+2);
 	DrawGammaLines(0., maxPt , 0.4, 0.4, 0.3, kGray, 7);
 	DrawGammaLines(0., maxPt , 0.5, 0.5, 0.3, kGray, 7);
 	// create legend: case1->with pythia and phojet spectra, case2->without
-	TLegend* legendEtaToPi0; 
+	TLegend* legendEtaToPi0;
 	if(plotPythiaPhojetInRatio){
 		legendEtaToPi0 	= GetAndSetLegend2(0.14, 0.83-4*0.85*0.04, 0.47,0.83,28);
 	}else{
@@ -408,8 +412,8 @@ void calculateEtaPi0Ratio(TH1D* histoCorrectedYieldPi0,TH1D* histoCorrectedYield
     DrawGammaSetMarkerTGraphAsym(graphSystErrRatio,26,0,colorSysEPR,colorSysEPR,2,kTRUE);
 	graphSystErrRatio->Draw("p,2,same");
 	DrawGammaSetMarker(histoRatioEtaPi0, 24, 1.5, colorDataEPR, colorDataEPR);
-	histoRatioEtaPi0->DrawCopy("same,x0,e1"); 
-	
+	histoRatioEtaPi0->DrawCopy("same,x0,e1");
+
 	// fill legend with entries
 	legendEtaToPi0->AddEntry(histoRatioEtaPi0,"data","p");
 	legendEtaToPi0->AddEntry(graphSystErrRatio,"systematic uncertainty","f");
@@ -427,44 +431,44 @@ void calculateEtaPi0Ratio(TH1D* histoCorrectedYieldPi0,TH1D* histoCorrectedYield
 // ****** FUNCTION TO FIT THE FINAL SPECTRA **************
 void makeFinalFits(TH1D* histoCorrYield,Double_t maxPt,TString useSameBinningPi0Eta,TString strMeson,Bool_t plotRatios=kFALSE,TGraphAsymmErrors* graphSystErrRatio=NULL){
 	TH1D* histoFitting = (TH1D*) histoCorrYield->Clone();
-	
+
 	// Fit histCorr with Levy
     fitPtLevy = FitObject("l","fitPtLevy",strMeson,histoFitting,minPtForFits,maxPt,NULL,"QNRME+");
     DrawGammaSetMarkerTF1(fitPtLevy, 1, 1.5, kBlue);
-    
+
     // Fit histCorr with TCM
     Double_t paramTCM[5] = {histoCorrYield->GetBinContent(0),0.3,histoCorrYield->GetBinContent(0)/1000,0.8,3};
     fitPtTCM = FitObject("tcm","fitPtTCM",strMeson,histoFitting,minPtForFits,maxPt,paramTCM,"QNRMEX0+");
     DrawGammaSetMarkerTF1( fitPtTCM, 1, 1.5, kGreen+2);
     fitPtTCM->SetLineStyle(7);
-    
+
     // Fit histCorr with Powerlaw
     fitPtPowerlaw = FitObject("p","fitPtPowerlaw",strMeson,histoFitting,1.5,maxPt,NULL,"QNRME+");
     DrawGammaSetMarkerTF1( fitPtPowerlaw, 1, 1.5, kTeal);
-    
+
     // Fit histCorr with ModPowerlaw
     fitPtModPowerlaw = FitObject("m","fitPtModPowerlaw",strMeson,histoFitting,0.3,maxPt,NULL,"QNRME+");
     DrawGammaSetMarkerTF1( fitPtModPowerlaw, 1, 1.5, kMagenta+2);
 
     if(plotRatios){
-		// Prepare histograms for ratios 
+		// Prepare histograms for ratios
 		histoRatioFitLevy 	= (TH1D*) histoCorrYield->Clone();
 		histoRatioFitTCM 	= (TH1D*) histoCorrYield->Clone();
 		histoRatioFitPow 	= (TH1D*) histoCorrYield->Clone();
 		histoRatioFitModPow = (TH1D*) histoCorrYield->Clone();
-		// Calculating ratios 
-		histoRatioFitLevy 	= CalculateHistoRatioToFit (histoRatioFitLevy, fitPtLevy); 
+		// Calculating ratios
+		histoRatioFitLevy 	= CalculateHistoRatioToFit (histoRatioFitLevy, fitPtLevy);
 		histoRatioFitTCM 	= CalculateHistoRatioToFit (histoRatioFitTCM, fitPtTCM);
 		histoRatioFitPow 	= CalculateHistoRatioToFit (histoRatioFitPow, fitPtPowerlaw);
 		histoRatioFitModPow = CalculateHistoRatioToFit (histoRatioFitModPow, fitPtModPowerlaw);
-		// Prepare histograms for ratios 
+		// Prepare histograms for ratios
 		graphRatioFitLevySysErr 	= (TGraphAsymmErrors*) graphSystErrRatio->Clone();
 		graphRatioFitTCMSysErr 		= (TGraphAsymmErrors*) graphSystErrRatio->Clone();
 		graphRatioFitPowSysErr 		= (TGraphAsymmErrors*) graphSystErrRatio->Clone();
 		graphRatioFitModPowSysErr 	= (TGraphAsymmErrors*) graphSystErrRatio->Clone();
 		cout << __LINE__ << endl;
-		// Calculating ratios 
-		graphRatioFitLevySysErr 	= CalculateGraphErrRatioToFit (graphRatioFitLevySysErr, fitPtLevy); 
+		// Calculating ratios
+		graphRatioFitLevySysErr 	= CalculateGraphErrRatioToFit (graphRatioFitLevySysErr, fitPtLevy);
 		graphRatioFitTCMSysErr 		= CalculateGraphErrRatioToFit (graphRatioFitTCMSysErr, fitPtTCM);
 		graphRatioFitPowSysErr 		= CalculateGraphErrRatioToFit (graphRatioFitPowSysErr, fitPtPowerlaw);
 		graphRatioFitModPowSysErr 	= CalculateGraphErrRatioToFit (graphRatioFitModPowSysErr, fitPtModPowerlaw);
@@ -479,7 +483,7 @@ void makeFinalFits(TH1D* histoCorrYield,Double_t maxPt,TString useSameBinningPi0
 		DrawGammaSetMarkerTGraphAsym(graphRatioFitModPowSysErr,26,0,kMagenta-8,kMagenta-8,2,kTRUE);
 		graphRatioFitModPowSysErr->Draw("p,2,same");
 		cout << __LINE__ << endl;
-		
+
 		DrawGammaSetMarker(histoRatioFitLevy, 20, 1.5, kBlue, kBlue);
 		histoRatioFitLevy->Draw("e1,x0,same");
 		DrawGammaSetMarker(histoRatioFitTCM, 24, 1.5, kGreen+2, kGreen+2);
@@ -533,13 +537,13 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 	Size_t textSizeSpectra	= 0.04;
 	TString collisionSystem = ReturnFullCollisionsSystem(optionEnergy);
     TString detectionProcess= ReturnFullTextReconstructionProcess(mode);
-    
+
     // Create Canvas with three possible sizes depending on plot
     Int_t canvasSize		=900;
-    if(plotName.Contains("Raw")||plotName.Contains("Corr")&&!plotName.Contains("Ratio"))canvasSize=1350;  
-    if(plotName.Contains("EtaToPi0"))canvasSize=915;  
+    if(plotName.Contains("Raw")||plotName.Contains("Corr")&&!plotName.Contains("Ratio"))canvasSize=1350;
+    if(plotName.Contains("EtaToPi0"))canvasSize=915;
 	TCanvas* canvasPlotFinal     = new TCanvas("canvasPlotFinal","",0,0,1000,canvasSize);
-	
+
 	// Set margins and title offsets for the canvas
 	Double_t yTitleOffset = 1.1;
 	Double_t xTitleOffset = 0.85;
@@ -602,9 +606,9 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 	}
 
     canvasPlotFinal->cd();
-    histoDummy->DrawCopy(); 
+    histoDummy->DrawCopy();
     legendPlot->SetNColumns(2);
-    
+
     // set colors defaul and depending on the colorscheme set in ProduceFinalResultsV2.C
     Color_t colorData= kBlack;
     Color_t colorData2= kAzure+2;
@@ -612,7 +616,7 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
     Color_t colorMC2= kRed+2;
     Color_t colorSys= kGray+1;
     Color_t colorSys2= kAzure-8;
-    
+
     if(colorScheme==1&&!plotName.Contains("Comb")){
 		colorData   = GetColorDefaultColor(optionEnergy,"","");
 		colorData2  = kAzure+2;
@@ -634,7 +638,7 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
     Marker_t markerMC2  = 25;
 
     Size_t pointSize    = 1.5;
-    
+
     if(plotName.Contains("SysErr")){
 		if(graphSystErr){
 			DrawGammaSetMarkerTGraphAsym(graphSystErr,26,0,colorSys,colorSys,2,kTRUE);
@@ -650,28 +654,28 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 	if(!plotName.Contains("Ratio")){
 		if(histoData){
 			if(histoMC && plotName.Contains("AccEff")){histoData->Multiply(histoMC);histoMC=NULL;}
-			histoData->DrawCopy("e1,same"); 
+			histoData->DrawCopy("e1,same");
 			if(!plotName.Contains("Acc")&&!plotName.Contains("Eff")||plotName.Contains("Comb"))legendPlot->AddEntry(histoData, Form("%s %s %s",period.Data(),strPi0Both.Data(),dataStr.Data()), "p");
 		}
 		if(histoData2){
 			if(histoMC2 && plotName.Contains("AccEff")){histoData2->Multiply(histoMC2);histoMC2=NULL;}
 			DrawGammaSetMarker(histoData2, marker2, pointSize, colorData2, colorData2);
-			histoData2->DrawCopy("e1,same"); 
-			legendPlot->AddEntry(histoData2, Form("%s %s %s",period.Data(),strEtaBoth.Data(),dataStr2.Data()), "p"); 
+			histoData2->DrawCopy("e1,same");
+			legendPlot->AddEntry(histoData2, Form("%s %s %s",period.Data(),strEtaBoth.Data(),dataStr2.Data()), "p");
 		}
 		if(histoMC){
 			DrawGammaSetMarker(histoMC, markerMC, pointSize, colorMC, colorMC);
-			histoMC->DrawCopy("e1,same"); 
-			legendPlot->AddEntry(histoMC, Form("%s %s %s", period.Data(),strPi0Both.Data(),MCStr.Data()), "p"); 
+			histoMC->DrawCopy("e1,same");
+			legendPlot->AddEntry(histoMC, Form("%s %s %s", period.Data(),strPi0Both.Data(),MCStr.Data()), "p");
 		}
 		if(histoMC2){
 			DrawGammaSetMarker(histoMC2, markerMC2, pointSize, colorMC2, colorMC2);
-			histoMC2->DrawCopy("e1,same"); 
-			legendPlot->AddEntry(histoMC2, Form("%s %s %s", period.Data(),strEtaBoth.Data(),MCStr2.Data()), "p"); 
+			histoMC2->DrawCopy("e1,same");
+			legendPlot->AddEntry(histoMC2, Form("%s %s %s", period.Data(),strEtaBoth.Data(),MCStr2.Data()), "p");
 		}
-		
+
 	}
-	if(graphSystErr&&plotName.Contains("SysErr"))legendPlot->AddEntry(graphSystErr, "systematic uncertainty", "f"); 
+	if(graphSystErr&&plotName.Contains("SysErr"))legendPlot->AddEntry(graphSystErr, "systematic uncertainty", "f");
 	if(plotName.Contains("Fitted")){
 		if(plotName.Contains("Ratio")){
 			makeFinalFits(histoData,maxpT,useSameBinningPi0Eta,mesonString,kTRUE,graphSystErr);
@@ -680,14 +684,14 @@ void PlotFinalOutput(TString plotName,TH1D* histoData,TH1D* histoMC,TH1D* histoD
 		}
 	}
 	if(plotName.Contains("EtaToPi0"))calculateEtaPi0Ratio(histoData,histoData2,maxpT,optionEnergy,graphSystErr);
-	
+
     legendPlot->Draw();
     SetStyleTLatex( labelEnergyPlot, 0.85*textSizeSpectra,4);
     labelEnergyPlot->Draw();
 
     SetStyleTLatex( labelPi0Plot, 0.85*textSizeSpectra,4);
     labelPi0Plot->Draw();
-    
+
     SetStyleTLatex( labelDetProcPlot, 0.85*textSizeSpectra,4);
     labelDetProcPlot->Draw();
 

@@ -515,8 +515,10 @@ void PlotInvMassEMCalAndPCMTogether(Int_t binPbPb = 4){
     Double_t fMesonMassPlotRangeEta[2]     = {0.4,0.745};
     Float_t  pictDrawingCoordinatesFWHM[9]  = {0.6, 0.8, 0.30, 0.04, 0.15,0.7, 0.1, 0.035,0};
 
-    Double_t scaleFactorPi0PCM = 10;
-    Double_t scaleFactorEtaPCM = 40;
+    Double_t scaleFactorPi0PCM0010 = 10;
+    Double_t scaleFactorEtaPCM0010 = 40;
+    Double_t scaleFactorPi0PCM2050 = 2;
+    Double_t scaleFactorEtaPCM2050 = 20;
     Double_t noScaling = 1;
     Double_t ptMinEMCal = 12;
     Double_t ptMaxEMCal = 14;
@@ -538,7 +540,7 @@ void PlotInvMassEMCalAndPCMTogether(Int_t binPbPb = 4){
 
     PlotExampleInvMass(histoPi0PCMSignalPlusBG0010, histoPi0PCMSignal0010, histoPi0PCMBG0010, fitPi0PCMSignal0010,
                        binPbPb,fBinsPi0HIPtLHC11h,outputDir.Data(),"pdf", "0-10%", fMesonMassPlotRangePi0, pictDrawingCoordinatesFWHM, dateForOutput.Data(), "Pi0", "Data","0010",
-                       fCollisionSystem, fDecayChannelPi0, fDetectionProcessPCM, scaleFactorPi0PCM, 0);
+                       fCollisionSystem, fDecayChannelPi0, fDetectionProcessPCM, scaleFactorPi0PCM0010, 0);
 
 
 	TFile * fileEtaPCMPbPb0010          = new TFile(Form("%s/PbPb_2.76TeV/Eta_data_GammaConvV1WithoutCorrection_%s.root",cutselection0010.Data(),cutselection0010.Data()));
@@ -549,7 +551,7 @@ void PlotInvMassEMCalAndPCMTogether(Int_t binPbPb = 4){
 
     PlotExampleInvMass(histoEtaPCMSignalPlusBG0010, histoEtaPCMSignal0010, histoEtaPCMBG0010, fitEtaPCMSignal0010,
                        binPbPb, fBinsEtaHIPtLHC11hLessBins, outputDir.Data(),"pdf", "0-10%",fMesonMassPlotRangeEta, pictDrawingCoordinatesFWHM, dateForOutput.Data(), "Eta", "Data", "0010",
-                       fCollisionSystem, fDecayChannelEta, fDetectionProcessPCM, scaleFactorEtaPCM, 0);
+                       fCollisionSystem, fDecayChannelEta, fDetectionProcessPCM, scaleFactorEtaPCM0010, 0);
 
 
     TString cutselection2050 = "52500013_00200009247602008850404000_0652501500000000";
@@ -561,7 +563,7 @@ void PlotInvMassEMCalAndPCMTogether(Int_t binPbPb = 4){
 
     PlotExampleInvMass(histoPi0PCMSignalPlusBG2050, histoPi0PCMSignal2050, histoPi0PCMBG2050, fitPi0PCMSignal2050,
                        binPbPb,fBinsPi0HIPtLHC11h,outputDir.Data(),"pdf", "20-50%",fMesonMassPlotRangePi0, pictDrawingCoordinatesFWHM, dateForOutput.Data(), "Pi0", "Data","2050",
-                       fCollisionSystem, fDecayChannelPi0, fDetectionProcessPCM, noScaling, 0);
+                       fCollisionSystem, fDecayChannelPi0, fDetectionProcessPCM, scaleFactorPi0PCM2050, 0);
 
 
     TFile * fileEtaPCMPbPb2050          = new TFile(Form("%s/PbPb_2.76TeV/Eta_data_GammaConvV1WithoutCorrection_%s.root",cutselection2050.Data(),cutselection2050.Data()));
@@ -572,7 +574,7 @@ void PlotInvMassEMCalAndPCMTogether(Int_t binPbPb = 4){
 
     PlotExampleInvMass(histoEtaPCMSignalPlusBG2050, histoEtaPCMSignal2050, histoEtaPCMBG2050, fitEtaPCMSignal2050,
                        binPbPb, fBinsEtaHIPtLHC11hLessBins, outputDir.Data(),"pdf","20-50%", fMesonMassPlotRangeEta, pictDrawingCoordinatesFWHM, dateForOutput.Data(), "Eta", "Data", "2050",
-                       fCollisionSystem, fDecayChannelEta, fDetectionProcessPCM, noScaling, 0);
+                       fCollisionSystem, fDecayChannelEta, fDetectionProcessPCM, scaleFactorEtaPCM2050, 0);
 
 //===============================================================================================
 

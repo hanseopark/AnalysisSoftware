@@ -136,7 +136,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat";
         cout << "You have choosen 13TeV. Note that you will use Dummy systematic errors." << endl;
 
-    } else if( optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0) {
+    } else if( optionEnergy.CompareTo("5TeV") == 0 ) {
         minPtForFits=0.4;
         minPtForFitsEta=0.4;
 
@@ -148,6 +148,19 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         }
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_2.76TeV_5_Aug_2013.dat";
         cout << "You have choosen 5TeV. Note that you will use 2.76TeV systematic errors." << endl;
+
+    } else if( optionEnergy.CompareTo("5TeV2017") == 0) {
+        minPtForFits=0.4;
+        minPtForFitsEta=0.4;
+
+        if (useSameBinningPi0Eta.CompareTo("")==0){
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_5TeV2017_fake.dat";
+        } else {
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_5TeV2017_fake.dat";
+            minPtForFits=0.4;
+        }
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_5TeV2017_fake.dat";
+        cout << "You have chosen 5TeV2017. The systematic errors loaded are fake." << endl;
 
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         minPtForFits=0.4;
@@ -352,8 +365,8 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     cout << fileNameSysErrPi0 << endl;
 
     while(!fileSysErrPi0.eof() && nPointsPi0 < 100){
-        fileSysErrPi0 >> relSystErrorPi0Down[nPointsPi0] >> relSystErrorPi0Up[nPointsPi0]>>    relSystErrorWOMaterialPi0Down[nPointsPi0] >> relSystErrorWOMaterialPi0Up[nPointsPi0];
-        cout << nPointsPi0 << "\t"  << relSystErrorPi0Down[nPointsPi0] << "\t"  <<relSystErrorPi0Up[nPointsPi0] << "\t" << relSystErrorWOMaterialPi0Down[nPointsPi0] << "\t"  <<relSystErrorWOMaterialPi0Up[nPointsPi0] << endl;;
+        fileSysErrPi0 >> relSystErrorPi0Down[nPointsPi0] >> relSystErrorPi0Up[nPointsPi0]>>  relSystErrorWOMaterialPi0Down[nPointsPi0] >> relSystErrorWOMaterialPi0Up[nPointsPi0];
+        cout << nPointsPi0 << "\t"  << relSystErrorPi0Down[nPointsPi0] << "\t"  <<relSystErrorPi0Up[nPointsPi0] << "\t" << relSystErrorWOMaterialPi0Down[nPointsPi0] << "\t"  <<relSystErrorWOMaterialPi0Up[nPointsPi0] << endl;
         nPointsPi0++;
     }
     fileSysErrPi0.close();
@@ -393,9 +406,11 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     if (optionEnergy.CompareTo("13TeV") == 0){
         isV0AND             = 1;
     }
+    if (optionEnergy.CompareTo("5TeV2017") == 0){
+        isV0AND             = 1;
+    }
 
     xSection                = ReturnCorrectXSection( optionEnergy, isV0AND);
-
 
 
    if (!isMC.CompareTo("kFALSE")&&!useSameBinningPi0Eta.CompareTo("")){
