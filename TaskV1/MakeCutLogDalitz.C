@@ -1,10 +1,10 @@
 // provided by Gamma Conversion Group, PWG4, Kathrin Koch, kkoch@physi.uni-heidelberg.de
 
-#include <Riostream>
+#include <iostream>
 #include <fstream>
 using namespace std;
 
-void MakeCutLogDalitz(const char *inputRootFile = "AnalysisResults.root", const char *InputName,Int_t mode = 1){
+void MakeCutLogDalitz(const char *inputRootFile = "AnalysisResults.root", const char *InputName="CutSelection.log",Int_t mode = 1){
 
   fstream outputFile(InputName,ios::out);
   if(!outputFile.is_open()){

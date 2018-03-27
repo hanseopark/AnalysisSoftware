@@ -1,9 +1,8 @@
 #ifndef GAMMACONV_PlottingMeson
 #define GAMMACONV_PlottingMeson
 
-    #ifndef __CLING__
-        #include "TLatex.h"
-    #endif
+#include "TLatex.h"
+
     //void StyleSettingsThesis();
     void StyleSettings();
 
