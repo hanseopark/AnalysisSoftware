@@ -2810,9 +2810,9 @@
 
         if (!energy.CompareTo("900GeV")){
             if (!kBox){
-                if (!generator.CompareTo("")){
+                if (!generator.CompareTo("")||!generator.CompareTo("LHC10c_900GeV_pass4")){
                     return kRed+2;
-                } else if (!generator.CompareTo("Pythia")){
+                } else if (!generator.CompareTo("Pythia")||!generator.CompareTo("LHC14j4c_900GeV")){
                     return kRed+4;
                 } else if (!generator.CompareTo("Pythia2")){
                     return kRed+3;
@@ -3312,7 +3312,7 @@
                                     TString generator,
                                     TString centrality){
         if (!energy.CompareTo("900GeV")){
-            if (!generator.CompareTo("")){
+            if (!generator.CompareTo("")||!generator.CompareTo("LHC10c_900GeV_pass4")){
                 return 21;
             } else {
                 return 25;

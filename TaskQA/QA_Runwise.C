@@ -273,7 +273,7 @@ void QA_Runwise(
         addSubFolder        = kTRUE;
         doEquidistantXaxis  = kTRUE;
         fEnergyFlag         = "7TeV";
-        filePath            = "DataQA/20160206";
+        filePath            = "DataQA/20170324";
         fileName            = "GammaConvCalo_201.root";
         nSets               = 2;
         nData               = 1;
@@ -286,12 +286,29 @@ void QA_Runwise(
         DataSets[1]         =Form("LHC14j4%s",temp.Data());
     }
     //**************************************************************************************************************
+    else if(select.BeginsWith("LHC10c_900GeV") ){
+        //LHC10x
+        cutNr               = 0;
+        addSubFolder        = kTRUE;
+        doEquidistantXaxis  = kTRUE;
+        fEnergyFlag         = "900GeV";
+        filePath            = "DataQA/20160206";
+        fileName            = "GammaConvCalo_201.root";
+        nSets               = 2;
+        nData               = 1;
+        plotDataSets[0]     = select;
+        plotDataSets[1]     = "Pythia6";
+        select              += "_pass4";
+        DataSets[0]         =select;
+        DataSets[1]         ="LHC14j4c_900GeV";
+    }
+    //**************************************************************************************************************
     else if(select.CompareTo("LHC10")==0){
         //LHC10
         cutNr                   = 0;
         doHistsForEverySet      = kFALSE;
         fEnergyFlag             = "7TeV";
-        filePath                = "DataQA/20160206";
+        filePath                = "DataQA/20170324";
         fileName                = "GammaConvCalo_201.root";
         nSets                   = 6;
         nData                   = 5;
@@ -927,6 +944,5 @@ void QA_Runwise(
                                         doExtQA, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists);
     if(doMergedQA) ClusterQA_Runwise(  nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
                                        1, doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, kTRUE);
-    if ( doPrimaryTrackQA ) PrimaryTrackQA_Runwise (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     return;
 }

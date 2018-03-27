@@ -323,10 +323,10 @@ void QA(    TString select          = "LHC11a",         // set selected
         cutNr = 0;
         nSets = 2;
         fEnergyFlag = "7TeV";
-        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_LHC10bcdef-pass4_201.root";
-        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_MC_LHC14j4b_LHC14j4c_LHC14j4d_LHC14j4e_LHC14j4f_201.root";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20171111-7TeV-dirGamma/LHC10_GammaConvCalo_201.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20171111-7TeV-dirGamma/LHC14j4_GammaConvCalo_201.root";
         DataSets[0]="LHC10_pass4"; DataSets[1]="LHC14j4";
-        plotDataSets[0]="LHC10bcdef"; plotDataSets[1]="Pythia8";
+        plotDataSets[0]="LHC10b-f"; plotDataSets[1]="Pythia6";
         pathPhotonQA[0] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[0].Data(),DataSets[0].Data());
         pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
     }
@@ -392,10 +392,24 @@ void QA(    TString select          = "LHC11a",         // set selected
         fEnergyFlag = "7TeV";
         TString tmpPeriod = select;
         tmpPeriod.Remove(0,tmpPeriod.Length()-1);
-        pathDataSets[0] = Form("/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_LHC10%s-pass4_201.root",tmpPeriod.Data());
-        pathDataSets[1] = Form("/home/daniel/data/work/Grid/Legotrain-vAN-20150922-LHC10_p4-QA/GammaConvCalo_MC_LHC14j4%s_201.root",tmpPeriod.Data());
+        pathDataSets[0] = Form("/home/daniel/data/work/Grid/Legotrain-vAN-20171111-7TeV-dirGamma/LHC10%s_GammaConvCalo_201.root",tmpPeriod.Data());
+        pathDataSets[1] = Form("/home/daniel/data/work/Grid/Legotrain-vAN-20171111-7TeV-dirGamma/LHC14j4%s_GammaConvCalo_201.root",tmpPeriod.Data());
         DataSets[0]=Form("%s_pass4",select.Data()); DataSets[1]=Form("LHC14j4%s",tmpPeriod.Data());
-        plotDataSets[0]=select; plotDataSets[1]="Pythia8";
+        plotDataSets[0]=select; plotDataSets[1]="Pythia6";
+        pathPhotonQA[0] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[0].Data(),DataSets[0].Data());
+        pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
+    }
+    //**************************************************************************************************************
+    else if(select.BeginsWith("LHC10c_900GeV") ){
+    //LHC10c
+        addSubfolder=kTRUE;
+        cutNr = 0;
+        nSets = 2;
+        fEnergyFlag = "900GeV";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20171111-7TeV-dirGamma/LHC10c_900GeV_GammaConvCalo_201.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20171111-7TeV-dirGamma/LHC14j4c_900GeV_GammaConvCalo_201.root";
+        DataSets[0]=Form("%s_pass4",select.Data()); DataSets[1]="LHC14j4c";
+        plotDataSets[0]=select; plotDataSets[1]="Pythia6";
         pathPhotonQA[0] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[0].Data(),DataSets[0].Data());
         pathPhotonQA[1] = Form("/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20150922/%s/PhotonQA_%s.root",DataSets[1].Data(),DataSets[1].Data());
     }
@@ -437,7 +451,7 @@ void QA(    TString select          = "LHC11a",         // set selected
         pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161110-8TeV-std_new/LHC12_GammaConvCalo_101.root";
         pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20170329-8TeV-bugfixForMC/LHC15h1_GammaConvCalo_130.root";
         pathDataSets[2] = "/home/daniel/data/work/Grid/Legotrain-vAN-20170329-8TeV-bugfixForMC/LHC15h2_GammaConvCalo_130.root";
-        pathDataSets[3] = "/home/daniel/data/work/Grid/Legotrain-vAN-20161111-8TeV-std_new/LHC16c2_GammaConvCalo_101.root";
+        pathDataSets[3] = "/home/daniel/data/work/Grid/Legotrain-vAN-20180123-8TeV-dirGamma-JetJet/LHC16c2_merge_GammaConvCalo_130.root";
         DataSets[0]="LHC12"; DataSets[1]="LHC15h1"; DataSets[2]="LHC15h2"; DataSets[3]="LHC16c2";
         plotDataSets[0]="LHC12a-i"; plotDataSets[1]="PYTHIA8"; plotDataSets[2]="PHOJET"; plotDataSets[3]="JetJet";
         pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
@@ -452,7 +466,7 @@ void QA(    TString select          = "LHC11a",         // set selected
         nSets = 2;
         fEnergyFlag = "8TeV";
         pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMCEGA_GammaConvCalo_101.root";
-        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20180123-8TeV-dirGamma-JetJet/LHC16c2_merge_GammaConvCalo_101.root";
         DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
         plotDataSets[0]="LHC12c-i"; plotDataSets[1]="JetJet";
         pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
@@ -461,11 +475,11 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC12-kEMC7+")==0){
     //LHC12
-        cutNr = 1;
+        cutNr = 0;
         nSets = 2;
         fEnergyFlag = "8TeV";
-        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMC7_GammaConvCalo_101.root";
-        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20180123-8TeV-dirGamma-JetJet/LHC12-kEMCEGA_GammaConvCalo_159.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20180123-8TeV-dirGamma-JetJet/LHC16c2_merge_GammaConvCalo_159.root";
         DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
         plotDataSets[0]="LHC12a-i"; plotDataSets[1]="JetJet";
         pathPhotonQA[0] = "";
@@ -474,11 +488,11 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     else if(select.CompareTo("LHC12-kEMCEGA+")==0){
     //LHC12
-        cutNr = 2;
+        cutNr = 0;
         nSets = 2;
         fEnergyFlag = "8TeV";
-        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160518-8TeV-QA-Trigger/LHC12-kEMCEGA_GammaConvCalo_101.root";
-        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20160628-8TeV-JetJet-QA/LHC16c2_GammaConvCalo_101.root";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20180123-8TeV-dirGamma-JetJet/LHC12-kEMCEGA_GammaConvCalo_181.root";
+        pathDataSets[1] = "/home/daniel/data/work/Grid/Legotrain-vAN-20180123-8TeV-dirGamma-JetJet/LHC16c2_merge_GammaConvCalo_181.root";
         DataSets[0]="LHC12"; DataSets[1]="LHC16c2";
         plotDataSets[0]="LHC12a-i"; plotDataSets[1]="JetJet";
         pathPhotonQA[0] = "";
@@ -1046,8 +1060,8 @@ void QA(    TString select          = "LHC11a",         // set selected
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
-    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
-    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
+    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, suffix, labelData, addSubfolder);
+    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder);
     if ( doClusterQA )  ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);
     return;
