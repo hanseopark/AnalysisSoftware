@@ -921,7 +921,7 @@ void EventQA(
                     histodEdx->Sumw2();
                     histodEdx->Scale(1./histodEdx->GetEntries());
                     GetMinMaxBin(histodEdx,minB,maxB);
-                    SetXRange(histodEdx,minB,maxB);
+                    SetXRange(histodEdx,minB,histodEdx->GetNbinsX());
                     SetZMinMaxTH2(histodEdx,1,histodEdx->GetNbinsX(),1,histodEdx->GetNbinsY(),kTRUE);
                     DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kTRUE,kFALSE,kTRUE,
                                         histodEdx,"",
@@ -935,9 +935,9 @@ void EventQA(
                     histonSigmadEdx->Sumw2();
                     histonSigmadEdx->Scale(1./histonSigmadEdx->GetEntries());
                     GetMinMaxBin(histonSigmadEdx,minB,maxB);
-                    SetXRange(histonSigmadEdx,minB,maxB);
-                    if(iBefore==0) GetMinMaxBinY(histonSigmadEdx,sigmadEdxMinMax[0],sigmadEdxMinMax[1]);
-                    SetYRange(histonSigmadEdx,sigmadEdxMinMax[0]-1,sigmadEdxMinMax[1]+1);
+                    SetXRange(histonSigmadEdx,minB,histonSigmadEdx->GetNbinsX());
+                    //if(iBefore==0) GetMinMaxBinY(histonSigmadEdx,sigmadEdxMinMax[0],sigmadEdxMinMax[1]);
+                    //SetYRange(histonSigmadEdx,sigmadEdxMinMax[0]-1,sigmadEdxMinMax[1]+1);
                     SetZMinMaxTH2(histonSigmadEdx,1,histonSigmadEdx->GetNbinsX(),1,histonSigmadEdx->GetNbinsY(),kTRUE);
                     DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kTRUE,kFALSE,kTRUE,
                                         histonSigmadEdx,"",

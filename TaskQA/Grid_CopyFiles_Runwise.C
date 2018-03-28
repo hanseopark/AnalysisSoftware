@@ -16,7 +16,7 @@
 Bool_t readin(TString fileTxt, std::vector<TString> &vec);
 Bool_t copyAlien2Local(TString loc, TString rem);
 
-void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170807_GammaCalo_runwise", Bool_t isJetJet=kFALSE)
+void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/Desktop/AnalysisSoftware", Bool_t isJetJet=kFALSE)
 {
     cout<<"Connecting to Alien..."<<endl;
     TGrid::Connect("alien://");
@@ -61,15 +61,15 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170
 //     TString SuffixDataSets[nSets]={"/PWGGA/GA_PbPb_MC/595_20170724-1907/"};
     
     
-    const Int_t nFiles = 4;
-    TString Tag = "20170912";
-    TString DataSetsFile[nFiles] = {"GammaCalo_161.root", "GammaCalo_170.root", "GammaConvCalo_159.root", "GammaConvCalo_130.root"};
+//    const Int_t nFiles = 4;
+//    TString Tag = "20170912";
+//    TString DataSetsFile[nFiles] = {"GammaCalo_161.root", "GammaCalo_170.root", "GammaConvCalo_159.root", "GammaConvCalo_130.root"};
     
-    const Int_t nSets = 1;
-    TString DataSets[nSets]={"LHC15h2h"};
-    TString DataSetsFolder[nSets]={"LHC15h2h"};
-    TString PrefixDataSets[nSets]={"/alice/sim/2015/LHC15h2h/"};
-    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/3136_20170912-1932_child_6/"};
+//    const Int_t nSets = 1;
+//    TString DataSets[nSets]={"LHC15h2h"};
+//    TString DataSetsFolder[nSets]={"LHC15h2h"};
+//    TString PrefixDataSets[nSets]={"/alice/sim/2015/LHC15h2h/"};
+//    TString SuffixDataSets[nSets]={"/PWGGA/GA_pp_MC/3136_20170912-1932_child_6/"};
 
 //     const Int_t nSets = 10;
 //     TString DataSets[nSets]={"LHC10b_pass4",
@@ -155,30 +155,29 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170
 
 
 //pp LHC12
-//        const Int_t nFiles = 2;
-//        TString Tag = "20160518";
-//        //TString DataSetsFile[nFiles] = {"GammaConvCalo_101.root","GammaCalo_101.root"};
-//        TString DataSetsFile[nFiles] = {"AnalysisResults.root","GammaConvV1_70.root"};
+        const Int_t nFiles = 1;
+        TString Tag = "20180326";
+        TString DataSetsFile[nFiles] = {"AnalysisResults.root"};
 
-//        const Int_t nSets = 21;
-//        TString DataSets[nSets]={
-//          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i",
+        const Int_t nSets = 7;
+        TString DataSets[nSets]={
+          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"
 //          "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
 //          "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
-//        };
-//        TString DataSetsFolder[nSets]={
-//          "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12",
+        };
+        TString DataSetsFolder[nSets]={
+          "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12"
 //          "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1",
 //          "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2"
-//        };
-//        TString PrefixDataSets[nSets]={
-//              "/alice/data/2012/LHC12a/000",
-//              "/alice/data/2012/LHC12b/000",
-//              "/alice/data/2012/LHC12c/000",
-//              "/alice/data/2012/LHC12d/000",
-//              "/alice/data/2012/LHC12f/000",
-//              "/alice/data/2012/LHC12h/000",
-//              "/alice/data/2012/LHC12i/000",
+        };
+        TString PrefixDataSets[nSets]={
+              "/alice/data/2012/LHC12a/000",
+              "/alice/data/2012/LHC12b/000",
+              "/alice/data/2012/LHC12c/000",
+              "/alice/data/2012/LHC12d/000",
+              "/alice/data/2012/LHC12f/000",
+              "/alice/data/2012/LHC12h/000",
+              "/alice/data/2012/LHC12i/000"
 //              "/alice/sim/2015/LHC15h1a1/",
 //              "/alice/sim/2015/LHC15h1b/",
 //              "/alice/sim/2015/LHC15h1c/",
@@ -192,39 +191,17 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170
 //              "/alice/sim/2015/LHC15h2d/",
 //              "/alice/sim/2015/LHC15h2f/",
 //              "/alice/sim/2015/LHC15h2h/",
-//              "/alice/sim/2015/LHC15h2i/"};
+//              "/alice/sim/2015/LHC15h2i/"
+        };
 
-////        TString SuffixDataSets[nSets]={
-////          "/pass2/PWGGA/GA_pp/1578_20160519-0111/",
-////          "/pass2/PWGGA/GA_pp/1579_20160519-0111/",
-////          "/pass2/PWGGA/GA_pp/1580_20160519-0110/",
-////          "/pass2/PWGGA/GA_pp/1581_20160519-0110/",
-////          "/pass2/PWGGA/GA_pp/1582_20160519-0110/",
-////          "/pass2/PWGGA/GA_pp/1583_20160519-0110/",
-////          "/pass2/PWGGA/GA_pp/1584_20160519-0110/",
-////                "/PWGGA/GA_pp_MC/2079_20160519-0918/",
-////                "/PWGGA/GA_pp_MC/2080_20160519-0918/",
-////                "/PWGGA/GA_pp_MC/2081_20160519-0918/",
-////                "/PWGGA/GA_pp_MC/2082_20160519-0918/",
-////                "/PWGGA/GA_pp_MC/2083_20160519-0918/",
-////                "/PWGGA/GA_pp_MC/2084_20160519-0918/",
-////                "/PWGGA/GA_pp_MC/2085_20160519-0918/",
-////          "/PWGGA/GA_pp_MC/2086_20160519-0917/",
-////          "/PWGGA/GA_pp_MC/2087_20160519-0917/",
-////          "/PWGGA/GA_pp_MC/2088_20160519-0917/",
-////          "/PWGGA/GA_pp_MC/2089_20160519-0917/",
-////          "/PWGGA/GA_pp_MC/2090_20160519-0917/",
-////          "/PWGGA/GA_pp_MC/2091_20160519-0917/",
-////          "/PWGGA/GA_pp_MC/2092_20160519-0917/"
-////          };
-//        TString SuffixDataSets[nSets]={
-//          "/pass2/PWGGA/GA_pp/1586_20160519-2141/",
-//          "/pass2/PWGGA/GA_pp/1587_20160519-2144/",
-//          "/pass2/PWGGA/GA_pp/1588_20160519-2144/",
-//          "/pass2/PWGGA/GA_pp/1589_20160519-2143/",
-//          "/pass2/PWGGA/GA_pp/1590_20160519-2143/",
-//          "/pass2/PWGGA/GA_pp/1591_20160519-2143/",
-//          "/pass2/PWGGA/GA_pp/1592_20160519-2143/",
+        TString SuffixDataSets[nSets]={
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_1/",
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_2/",
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_3/",
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_4/",
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_5/",
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_6/",
+          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_7/"
 //                "/PWGGA/GA_pp_MC/2093_20160520-0947/",
 //                "/PWGGA/GA_pp_MC/2094_20160519-2336/",
 //                "/PWGGA/GA_pp_MC/2095_20160519-2336/",
@@ -239,7 +216,7 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/mike/2_EMCal_PbPb/1_data/170
 //          "/PWGGA/GA_pp_MC/2104_20160519-2335/",
 //          "/PWGGA/GA_pp_MC/2105_20160519-2334/",
 //          "/PWGGA/GA_pp_MC/2106_20160519-2334/"
-//          };
+          };
 
 //                    const Int_t nFiles = 2;
 //                    TString Tag = "20160518";

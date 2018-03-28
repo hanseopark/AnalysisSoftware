@@ -1210,7 +1210,7 @@ void DrawPeriodQAHistoTH2(  TCanvas* canvas,Double_t leftMargin,Double_t rightMa
     canvas->SetTopMargin(topMargin);
     canvas->SetBottomMargin(bottomMargin);
     if (logX){
-        fHist->GetXaxis()->SetLabelOffset(-0.01);
+        fHist->GetXaxis()->SetLabelOffset(-0.005);
     }
     canvas->SetLogx(logX); canvas->SetLogy(logY); canvas->SetLogz(logZ);
     //x-axis

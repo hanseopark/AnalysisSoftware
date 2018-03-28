@@ -375,14 +375,14 @@ void QA_Runwise(
         //LHC12
         doHistsForEverySet  = kFALSE;
         fEnergyFlag         = "8TeV";
-        filePath            = "DataQA/20160125";
-        filePathPhoton      = "DataQA/20160104";
-        fileName            = "GammaConvCalo_120.root";
+        filePath            = "DataQA/20180326";
+        //filePathPhoton      = "DataQA/20160104";
+        fileName            = "AnalysisResults.root";
         cutNr               = 0;
-        nSets               = 9;
+        nSets               = 7;
         nData               = 7;
-        TString dummyData1[9]= {"LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i", "LHC15h1", "LHC15h2"};
-        TString dummyData2[9]= {"LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i", "Pythia8", "Phojet"};
+        TString dummyData1[9]= {"LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"};
+        TString dummyData2[9]= {"LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"};
         for (Int_t j = 0; j< nSets; j++){
             DataSets[j]     = dummyData1[j];
             plotDataSets[j] = dummyData2[j];

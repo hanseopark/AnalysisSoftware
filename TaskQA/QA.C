@@ -29,6 +29,7 @@ void QA(    TString select          = "LHC11a",         // set selected
     TString fEnergyFlag             = "";
     TString labelData               = "Data";
     Bool_t addSubfolder             = kFALSE;
+    TString addPhotonCutNumber      = "";
 
     TString DataSets        [maxSets];
     TString plotDataSets    [maxSets];
@@ -431,16 +432,13 @@ void QA(    TString select          = "LHC11a",         // set selected
     else if(select.CompareTo("LHC12")==0){
     //LHC12
         cutNr = 0;
-        nSets = 3;
+        nSets = 1;
         fEnergyFlag = "8TeV";
-        pathDataSets[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC12_GammaConvCalo_120.root";
-        pathDataSets[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h1_GammaConvCalo_120.root";
-        pathDataSets[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160125/LHC15h2_GammaConvCalo_120.root";
-        DataSets[0]="LHC12"; DataSets[1]="LHC15h1"; DataSets[2]="LHC15h2";
-        plotDataSets[0]="LHC12a-i"; plotDataSets[1]="Pythia8"; plotDataSets[2]="Phojet";
-        pathPhotonQA[0] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC12/PhotonQA_LHC12.root";
-        pathPhotonQA[1] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h1/PhotonQA_LHC15h1.root";
-        pathPhotonQA[2] = "/home/daniel/data/work/photonconv/AnalysisSoftware/DataQA/20160104/LHC15h2/PhotonQA_LHC15h2.root";
+        addPhotonCutNumber = "0005314140";
+        pathDataSets[0] = "/home/daniel/data/work/Grid/Legotrain-vAN-20170501-8TeV-DirGamma/LHC12_GammaConvCalo_101.root";
+        DataSets[0]="LHC12";
+        plotDataSets[0]="LHC12a-i";
+        pathPhotonQA[0] = "/home/daniel/Desktop/AnalysisSoftware/DataQA/20180326/LHC12/PhotonQA_LHC12.root";
     }
     //**************************************************************************************************************
     else if(select.CompareTo("LHC12+")==0){
@@ -1061,7 +1059,7 @@ void QA(    TString select          = "LHC11a",         // set selected
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
     if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, suffix, labelData, addSubfolder);
-    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder);
+    if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder, addPhotonCutNumber);
     if ( doClusterQA )  ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder);
     if ( doMergedQA )   ClusterQA   (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, doExtQA, suffix, labelData, addSubfolder, kTRUE);
     return;

@@ -287,7 +287,7 @@ void PhotonQA(
             fHistGammaAlphaQt->Sumw2();
             fHistGammaAlphaQt->Scale(1./nGammas);
             SetZMinMaxTH2(fHistGammaAlphaQt,1,fHistGammaAlphaQt->GetNbinsX(),1,fHistGammaAlphaQt->GetNbinsY(),kTRUE);
-            DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.117,0.117,0.014,0.092,kFALSE,kFALSE,kTRUE,
                                 fHistGammaAlphaQt,"",
                                 "#alpha = (#it{p}^{+}_{L}-#it{p}^{-}_{L})/(#it{p}^{+}_{L}+#it{p}^{-}_{L})","#it{q}_{T} (GeV/#it{c})",1,1.4,
                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
@@ -1306,6 +1306,8 @@ void PhotonQA(
     //-- Leptons
     //-----------------------------------
     //-----------------------------------
+    TH2D* histodEdx_bothLeptons = 0x0;
+    TH2D* NSigmadEdxEta_bothLeptons = 0x0;
 
     for(Int_t iL=0; iL<2; iL++){
         TH3D* dEdxEtaP = (TH3D*)TopDir->Get(Form("histo%sdEdxEtaP",lepton[iL].Data()));
@@ -1315,13 +1317,15 @@ void PhotonQA(
             nLeptons = dEdxEtaP->Integral();
             TH2D* histodEdxP = (TH2D*)dEdxEtaP->Project3D("xz");
             histodEdxP->Sumw2();
+            if(iL==0) histodEdx_bothLeptons = (TH2D*) histodEdxP->Clone("histodEdx_bothLeptons");
+            else if(histodEdx_bothLeptons) histodEdx_bothLeptons->Add(histodEdxP,1.);
             histodEdxP->Scale(1./nLeptons);
             GetMinMaxBin(histodEdxP,minB,maxB);
-            SetXRange(histodEdxP,minB,maxB);
+            //SetXRange(histodEdxP,minB,maxB);
             SetZMinMaxTH2(histodEdxP,minB,maxB,1,histodEdxP->GetNbinsY(),kTRUE);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                 histodEdxP,"",
-                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("d#it{E}_{e^{%s}-cand} /d#it{x} TPC",charge[iL].Data()),1,1.4,
+                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("d#it{E}_{e^{%s}-cand} /d#it{x}",charge[iL].Data()),1,1.4,
                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histodEdxP, Form("%s/dEdxTPC_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
             delete histodEdxP;
@@ -1348,13 +1352,15 @@ void PhotonQA(
         if(NSigmadEdxEtaP){
             TH2D* histoSigmadEdxP = (TH2D*)NSigmadEdxEtaP->Project3D("xz");
             histoSigmadEdxP->Sumw2();
+            if(iL==0) NSigmadEdxEta_bothLeptons = (TH2D*) histoSigmadEdxP->Clone("NSigmadEdxEta_bothLeptons");
+            else if(NSigmadEdxEta_bothLeptons) NSigmadEdxEta_bothLeptons->Add(histoSigmadEdxP,1.);
             histoSigmadEdxP->Scale(1./nLeptons);
             GetMinMaxBin(histoSigmadEdxP,minB,maxB);
-            SetXRange(histoSigmadEdxP,minB,maxB);
+            //SetXRange(histoSigmadEdxP,minB,maxB);
             SetZMinMaxTH2(histoSigmadEdxP,minB,maxB,1,histoSigmadEdxP->GetNbinsY(),kTRUE);
             DrawPeriodQAHistoTH2(cvsQuadratic,0.12,0.12,topMargin,bottomMargin,kTRUE,kFALSE,kTRUE,
                                 histoSigmadEdxP,"",
-                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} d#it{E}/d#it{x} TPC",charge[iL].Data()),1,1.4,
+                                Form("#it{p}_{e^{%s}} (GeV/#it{c})",charge[iL].Data()),Form("#it{n} #sigma_{e^{%s}} d#it{E}/d#it{x}",charge[iL].Data()),1,1.4,
                                 xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, histoSigmadEdxP, Form("%s/nSigma_dEdxTPC_%s_%s.%s", outputDir.Data(), lepton[iL].Data(), DataSets[i].Data(), suffix.Data()));
             delete histoSigmadEdxP;
@@ -1608,6 +1614,34 @@ void PhotonQA(
 //-----------------------------------
 
     }
+
+        //-----------------------------------
+        if(histodEdx_bothLeptons){
+            histodEdx_bothLeptons->Sumw2();
+            histodEdx_bothLeptons->Scale(1./histodEdx_bothLeptons->GetEntries());
+            SetZMinMaxTH2(histodEdx_bothLeptons,1,histodEdx_bothLeptons->GetNbinsX(),1,histodEdx_bothLeptons->GetNbinsY(),kTRUE);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.117,0.117,0.014,0.092,kTRUE,kFALSE,kTRUE,
+                                histodEdx_bothLeptons,"",
+                                "#it{p} (GeV/#it{c})","d#it{E}_{e^{#pm}-cand} /d#it{x}",1,1.4,
+                                xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, histodEdx_bothLeptons, Form("%s/dEdxTPC_bothLeptons_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            delete histodEdx_bothLeptons;
+        }else cout << "INFO: Object |histodEdx_bothLeptons| could not be found! Skipping Draw..." << endl;
+
+        //-----------------------------------
+        if(NSigmadEdxEta_bothLeptons){
+            NSigmadEdxEta_bothLeptons->Sumw2();
+            NSigmadEdxEta_bothLeptons->Scale(1./NSigmadEdxEta_bothLeptons->GetEntries());
+            SetZMinMaxTH2(NSigmadEdxEta_bothLeptons,1,NSigmadEdxEta_bothLeptons->GetNbinsX(),1,NSigmadEdxEta_bothLeptons->GetNbinsY(),kTRUE);
+            DrawPeriodQAHistoTH2(cvsQuadratic,0.117,0.117,0.014,0.092,kTRUE,kFALSE,kTRUE,
+                                NSigmadEdxEta_bothLeptons,"",
+                                "#it{p} (GeV/#it{c})","#it{n} #sigma_{e^{#pm}} d#it{E}/d#it{x}",1,1.4,
+                                xPosLabel2D,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i],31);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, NSigmadEdxEta_bothLeptons, Form("%s/nSigma_dEdxTPC_bothLeptons_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            delete NSigmadEdxEta_bothLeptons;
+        }else cout << "INFO: Object |NSigmadEdxEta_bothLeptons| could not be found! Skipping Draw..." << endl;
+
+
         delete TopDir;
         fOutput->Delete();
         delete fOutput;
