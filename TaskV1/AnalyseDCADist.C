@@ -906,7 +906,7 @@ void AnalyseDCADist(    TString meson           ="",
                     Double_t ptStart                    = fHistFracIntHistBGFittedvsPt[k][i]->GetXaxis()->GetBinLowEdge(pt);
                     Double_t ptEnd                      = fHistFracIntHistBGFittedvsPt[k][i]->GetXaxis()->GetBinUpEdge(pt);
                     Double_t binWidth                   = ptEnd-ptStart;
-                    Double_t bgEstimate                 = (fitFracIntHistBGvsPt[k][i]->Integral(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams()) / binWidth );
+                    Double_t bgEstimate                 = (fitFracIntHistBGvsPt[k][i]->Integral(ptStart, ptEnd) / binWidth );
                     Double_t errorBGEstimate            = (fitFracIntHistBGvsPt[k][i]->IntegralError(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams(),
                                                                                                 resultFracIntHistBGvsPt1->GetCovarianceMatrix().GetMatrixArray() ) / binWidth );
                     fHistFracIntHistBGFittedvsPt[k][i]->SetBinContent(pt, bgEstimate);
