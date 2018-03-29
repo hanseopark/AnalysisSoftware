@@ -906,7 +906,17 @@ void AnalyseDCADist(    TString meson           ="",
                     Double_t ptStart                    = fHistFracIntHistBGFittedvsPt[k][i]->GetXaxis()->GetBinLowEdge(pt);
                     Double_t ptEnd                      = fHistFracIntHistBGFittedvsPt[k][i]->GetXaxis()->GetBinUpEdge(pt);
                     Double_t binWidth                   = ptEnd-ptStart;
-                    Double_t bgEstimate                 = (fitFracIntHistBGvsPt[k][i]->Integral(ptStart, ptEnd) / binWidth );
+		    // cout<<endl;
+		    // cout<<endl;
+		    // cout<< "From results::"<<resultFracIntHistBGvsPt1->GetParams()[0]<< "  "<< resultFracIntHistBGvsPt1->GetParams()[1]<< endl;
+		    // cout<< " from fit function before::"<< fitFracIntHistBGvsPt[k][i]->GetParameter(0)<< " " <<  fitFracIntHistBGvsPt[k][i]->GetParameter(1)<< endl;
+
+		    for(UInt_t ipar = 0; ipar < resultFracIntHistBGvsPt1->NPar(); ipar++) fitFracIntHistBGvsPt[k][i]->SetParameter(ipar, resultFracIntHistBGvsPt1->GetParams()[ipar]);
+		    // cout<< " from fit function after::"<< fitFracIntHistBGvsPt[k][i]->GetParameter(0)<< " " <<  fitFracIntHistBGvsPt[k][i]->GetParameter(1)<< endl;
+ 		    // cout<<endl;
+		    // cout<<endl;
+
+		    Double_t bgEstimate                 = (fitFracIntHistBGvsPt[k][i]->Integral(ptStart, ptEnd) / binWidth );
                     Double_t errorBGEstimate            = (fitFracIntHistBGvsPt[k][i]->IntegralError(ptStart, ptEnd, resultFracIntHistBGvsPt1->GetParams(),
                                                                                                 resultFracIntHistBGvsPt1->GetCovarianceMatrix().GetMatrixArray() ) / binWidth );
                     fHistFracIntHistBGFittedvsPt[k][i]->SetBinContent(pt, bgEstimate);
@@ -2033,7 +2043,7 @@ void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TS
             if (fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]){
                 fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]->SetRange(-fMaxDcaZPhoton, fMaxDcaZPhoton);
                 fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]->SetLineColor(kCyan+3);
-                fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]->SetLineWidth(0.99);
+                fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]->SetLineWidth(1.);
                 fFitDCAZUnderMesonBGEstimate_MesonPt_AllCat[iPt]->DrawCopy("same");
             }
         }
@@ -2422,7 +2432,7 @@ void DrawGammaDCAHisto( TH1* histo1,
                         Float_t xMin, Float_t xMax,Int_t bck, Double_t numberOfOrders ) {
 
     histo1->GetXaxis()->SetRangeUser(xMin, xMax);
-    if (bck != 1 || bck != 2 || bck != 3 || bck != 4){
+    if (bck != 1 && bck !=2 && bck != 3 && bck != 4){
         Double_t yMin = 0;
         Double_t yMax = 0;
         for (Int_t i = histo1->GetXaxis()->FindBin(xMin); i < histo1->GetXaxis()->FindBin(xMax); i++){
@@ -2451,7 +2461,7 @@ void DrawGammaDCAHisto( TH1* histo1,
     histo1->SetMarkerStyle(20);
     histo1->SetMarkerColor(1);
     histo1->SetLineColor(1);
-    histo1->SetLineWidth(0.5);
+    histo1->SetLineWidth(1);
     histo1->SetMarkerSize(0.2);
     histo1->SetTitleOffset(1.2,"xy");
     histo1->SetTitleSize(0.05,"xy");
@@ -2463,35 +2473,35 @@ void DrawGammaDCAHisto( TH1* histo1,
         histo1->SetLineColor(4);
         histo1->SetMarkerColor(4);
         histo1->SetMarkerStyle(24);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==2){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kRed+2);
         histo1->SetMarkerColor(kRed+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==3){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kGreen+2);
         histo1->SetMarkerColor(kGreen+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==4){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(807);
         histo1->SetMarkerColor(807);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==5){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kViolet+2);
         histo1->SetMarkerColor(kViolet+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
 
@@ -2499,14 +2509,14 @@ void DrawGammaDCAHisto( TH1* histo1,
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kPink+2);
         histo1->SetMarkerColor(kPink+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==7){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kCyan+2);
         histo1->SetMarkerColor(kCyan+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
 
@@ -2529,7 +2539,7 @@ void DrawGammaInvMassHisto( TH1* histo1,
                             Float_t xMin, Float_t xMax,Int_t bck, Double_t yMin ) {
 
     histo1->GetXaxis()->SetRangeUser(xMin, xMax);
-    if (bck != 1 || bck != 2){
+    if (bck != 1 && bck != 2){
         Double_t yMax = 0;
         for (Int_t i = histo1->GetXaxis()->FindBin(xMin); i < histo1->GetXaxis()->FindBin(xMax); i++){
             if (histo1->GetBinContent(i) > yMax){
@@ -2554,7 +2564,7 @@ void DrawGammaInvMassHisto( TH1* histo1,
     histo1->SetMarkerStyle(20);
     histo1->SetMarkerColor(1);
     histo1->SetLineColor(1);
-    histo1->SetLineWidth(0.5);
+    histo1->SetLineWidth(1.);
     histo1->SetMarkerSize(0.2);
     histo1->SetTitleOffset(1.2,"xy");
     histo1->SetTitleSize(0.05,"xy");
@@ -2566,35 +2576,35 @@ void DrawGammaInvMassHisto( TH1* histo1,
         histo1->SetLineColor(4);
         histo1->SetMarkerColor(4);
         histo1->SetMarkerStyle(24);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.0);
         histo1->DrawCopy("hist,same");
     }
     if(bck==2){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kRed+2);
         histo1->SetMarkerColor(kRed+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==3){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kGreen+2);
         histo1->SetMarkerColor(kGreen+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==4){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(807);
         histo1->SetMarkerColor(807);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==5){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kViolet+2);
         histo1->SetMarkerColor(kViolet+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
 
@@ -2602,14 +2612,14 @@ void DrawGammaInvMassHisto( TH1* histo1,
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kPink+2);
         histo1->SetMarkerColor(kPink+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
     if(bck==7){
         histo1->SetLineStyle(1);
         histo1->SetLineColor(kCyan+2);
         histo1->SetMarkerColor(kCyan+2);
-        histo1->SetLineWidth(0.9);
+        histo1->SetLineWidth(1.);
         histo1->DrawCopy("hist,same");
     }
 
