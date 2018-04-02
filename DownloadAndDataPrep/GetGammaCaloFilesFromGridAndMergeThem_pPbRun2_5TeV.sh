@@ -8,17 +8,18 @@
 #! /bin/bash
 source basicFunction.sh
 
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 MERGEONFASTAndWOSDD=1
 SINGLERUN=0
 SEPARATEON=0
-MERGEONSINGLEData=0
-MERGEONSINGLEMC=0
+MERGEONSINGLEData=1
+MERGEONSINGLEMC=1
 CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
 FAST="_FAST"
+
 # check if train configuration has actually been given
 HAVELHC16q=1
 HAVELHC16t=1
@@ -181,16 +182,41 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17f2a_fixMC="child_2";
 # LHC17f2a_fixMCFast="child_1";
 
-TRAINDIR=Legotrain-vAN20180220-EMCNonLin2
+# TRAINDIR=Legotrain-vAN20180220-EMCNonLin2
 # LHC17f2bMCMoth="1211";
 # LHC17f2bMC="child_2";
 # LHC17f2bMCFast="child_1";
 # LHC17f2a_fixMCMoth="1210";
 # LHC17f2a_fixMC="child_2";
 # LHC17f2a_fixMCFast="child_1";
-LHC17g8aMCMoth="1216"
-LHC17g8aMC="child_2"
-LHC17g8aMCFast="child_1"
+# LHC17g8aMCMoth="1216"
+# LHC17g8aMC="child_2"
+# LHC17g8aMCFast="child_1"
+
+TRAINDIR=Legotrain-vAN20180322-RerunAll
+# LHC16qtData="724"; #pass 2
+# LHC16qtData="725"; #pass 2
+# LHC16qDataFast="child_1"; #pass 3
+# LHC16tDataFast="child_2"; #pass 2
+# LHC16qData="child_3"; #pass 3
+# LHC16tData="child_4"; #pass 2
+# LHC17f2bMCMoth="1218";
+# LHC17f2bMC="child_2";
+# LHC17f2bMCFast="child_1";
+# LHC17f2a_fixMCMoth="1217";
+# LHC17f2a_fixMC="child_2";
+# LHC17f2a_fixMCFast="child_1";
+# LHC17g8aMCMoth="1216"
+# LHC17g8aMC="child_2"
+# LHC17g8aMCFast="child_1"
+
+LHC17f2a_fixMCMoth="1230";
+# LHC17f2bMCMoth="1218";
+LHC17f2a_fixMC="child_2";
+LHC17f2a_fixMCFast="child_1";
+# LHC17f2bMC="child_2";
+# LHC17f2bMCFast="child_1";
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 
@@ -329,10 +355,11 @@ if [ $HAVELHC17f2bF == 1 ]; then
 fi
 if [ $HAVELHC17f2afix == 1 ]; then
     if [ $HAVETOBUILDLHC17f2afix == 1 ]; then
-        LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMCMoth\_ | grep $LHC17f2a_fixMC`
+        LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMCMoth\_2 | grep $LHC17f2a_fixMC`
+#         LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMCMoth\- | grep $LHC17f2a_fixMC`
     else
-        LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\_`
-#     LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`
+#         LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\_`
+        LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`
     fi
     if [ "$LHC17f2a_fixMC" == "" ]; then
         HAVELHC17f2afix=0;
@@ -342,7 +369,7 @@ if [ $HAVELHC17f2afix == 1 ]; then
 fi
 if [ $HAVELHC17f2afixF == 1 ]; then
     if [ $HAVETOBUILDLHC17f2afix == 1 ]; then
-        LHC17f2a_fixMCFast=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMCMoth\_ | grep $LHC17f2a_fixMCFast`
+        LHC17f2a_fixMCFast=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMCMoth\_2 | grep $LHC17f2a_fixMCFast`
     else
         LHC17f2a_fixMCFast=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMCFast\_`
 #     LHC17f2a_fixMC=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb_MC/ | grep $LHC17f2a_fixMC\-`

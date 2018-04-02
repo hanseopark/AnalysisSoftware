@@ -2020,6 +2020,7 @@
         Int_t legendPlace[2]            = {fColumnPlot, fColumnPlot};
         if (fColumnPlot > 7)
             legendPlace[0]              = fColumnPlot-1;
+        cout << fColumnPlot << endl;
         for(Int_t iPt=fStartBinPtRange;iPt<fNumberPtBins;iPt++){
             //         cout<<"Pt: "<<iPt<<" of "<<fNumberPtBins<<endl;
             Double_t startPt            = fRangeBinsPt[iPt];
@@ -2033,7 +2034,8 @@
                 padDataSpectra->cd(place)->SetTopMargin(0.12);
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
                 padDataSpectra->cd(place)->SetRightMargin(0.02);
-                int remaining           = (place-1)%fColumnPlot;
+                int remaining           = (int)((place-1)%fColumnPlot);
+                cout << remaining << endl;
                 if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
                 else padDataSpectra->cd(place)->SetLeftMargin(0.25);
     //             cout << "here" << endl;

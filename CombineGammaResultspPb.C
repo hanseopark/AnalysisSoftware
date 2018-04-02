@@ -283,11 +283,11 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     //*********************************************** Load PHOS histograms from PHOS file *******************************************************
     //*******************************************************************************************************************************************
     TFile* filePHOSGamma                            = new TFile( inputFileNamePHOS.Data());
-        histoDRPi0FitStatErr[1]                         = (TH1D*) filePHOSGamma->Get("hGamma_PbPb_cen6_Stat");
-        TH1D* histoPHOSDRPi0FitSysErrpPb                = (TH1D*) filePHOSGamma->Get("hGamma_PbPb_cen6_SystRatio");
+        histoDRPi0FitStatErr[1]                         = (TH1D*) filePHOSGamma->Get("PHOS_DoubleRatio_pPb_cent0-100_FitPi0_Stat");
+        TH1D* histoPHOSDRPi0FitSysErrpPb                = (TH1D*) filePHOSGamma->Get("PHOS_DoubleRatio_pPb_cent0-100_FitPi0_Syst");
         graphDRPi0FitSysErr[1]                          = new TGraphAsymmErrors(histoPHOSDRPi0FitSysErrpPb);
-        histoDRNonFitStatErr[1]                         = (TH1D*) filePHOSGamma->Get("hGamma_PbPb_cen6_Stat");
-        TH1D* histoPHOSDRNonFitSysErrpPb                = (TH1D*) filePHOSGamma->Get("hGamma_PbPb_cen6_SystRatio");
+        histoDRNonFitStatErr[1]                         = (TH1D*) filePHOSGamma->Get("PHOS_DoubleRatio_pPb_cent0-100_Stat");
+        TH1D* histoPHOSDRNonFitSysErrpPb                = (TH1D*) filePHOSGamma->Get("PHOS_DoubleRatio_pPb_cent0-100_Syst");
         graphDRNonFitSysErr[1]                          = new TGraphAsymmErrors(histoPHOSDRNonFitSysErrpPb);
 
     //*******************************************************************************************************************************************

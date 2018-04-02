@@ -185,10 +185,10 @@ fi
 # LHC13b2_efix_p4MC="child_4";
 
 TRAINDIR=Legotrain-vAN20180301-dirGammaUp
-LHC13bcData="723"; #pass 2
-LHC13bData="child_1"; #pass 3
-LHC13cData="child_2"; #pass 2
-LHC13b2_efix_MC="1214"
+# LHC13bcData="723"; #pass 2
+# LHC13bData="child_1"; #pass 3
+# LHC13cData="child_2"; #pass 2
+LHC13b2_efix_MC="1228";
 LHC13b2_efix_p1MC="child_1";
 LHC13b2_efix_p2MC="child_2";
 LHC13b2_efix_p3MC="child_3";

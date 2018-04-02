@@ -13,6 +13,7 @@ CLEANUP=0
 CLEANUPMAYOR=0
 number=""
 minFileSize=1000
+SEPARATEONLYConv=1
 
 function GetFileNumberListSpecial()
 {
@@ -168,21 +169,23 @@ function CopyFileIfNonExisitent()
             echo $fileNumber
             SeparateCutsIfNeeded $1/GammaConvV1_$fileNumber 0 $5
         done;
-        rm fileNumbers2.txt
-        GetFileNumberListPCMCalo $1 $3 fileNumbers2.txt
-        fileNumbers=`cat fileNumbers2.txt`
-        for fileNumber in $fileNumbers; do
-            echo $fileNumber
-            SeparateCutsIfNeeded $1/GammaConvCalo_$fileNumber 2 $5
-        done;
-        rm fileNumbers2.txt
-        GetFileNumberListCalo $1 $3 fileNumbers2.txt
-        fileNumbers=`cat fileNumbers2.txt`
-        for fileNumber in $fileNumbers; do
-            echo $fileNumber
-            SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
-        done;
-        rm fileNumbers2.txt
+        if [ $SEPARATEONLYConv == 0 ]; then
+            rm fileNumbers2.txt
+            GetFileNumberListPCMCalo $1 $3 fileNumbers2.txt
+            fileNumbers=`cat fileNumbers2.txt`
+            for fileNumber in $fileNumbers; do
+                echo $fileNumber
+                SeparateCutsIfNeeded $1/GammaConvCalo_$fileNumber 2 $5
+            done;
+            rm fileNumbers2.txt
+            GetFileNumberListCalo $1 $3 fileNumbers2.txt
+            fileNumbers=`cat fileNumbers2.txt`
+            for fileNumber in $fileNumbers; do
+                echo $fileNumber
+                SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
+            done;
+            rm fileNumbers2.txt
+        fi
     fi
 }
 

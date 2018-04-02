@@ -19,6 +19,7 @@ CLEANUP=1
 CLEANUPMAYOR=$2
 number=""
 FAST="_FAST"
+SEPARATEONLYConv=1
 # check if train configuration has actually been given
 HAVELHC16q=1
 HAVELHC16t=1
@@ -67,19 +68,37 @@ NSlashes3=`expr $NSlashes + 1`
 NSlashes4=`expr $NSlashes + 2`
 echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 
-TRAINDIR=Legotrain-vAN20180206-EMC
+# TRAINDIR=Legotrain-vAN20180206-EMC
 # woSDD (CENT) PHOS
 # LHC16qtData="718"; #pass 2
 # LHC16qDataFast="child_1"; #pass 3
 # LHC16tDataFast="child_2"; #pass 2
 # LHC16qData="child_3"; #pass 3
 # LHC16tData="child_4"; #pass 2
-LHC17f2bMCMoth="1179";
-LHC17f2bMC="child_2";
-LHC17f2bMCFast="child_1";
-LHC17f2a_fixMCMoth="1178";
+# LHC17f2bMCMoth="1179";
+# LHC17f2bMC="child_2";
+# LHC17f2bMCFast="child_1";
+# LHC17f2a_fixMCMoth="1178";
+# LHC17f2a_fixMC="child_2";
+# LHC17f2a_fixMCFast="child_1";
+
+TRAINDIR=Legotrain-vAN20180322-RerunAll
+# LHC16qtData="724"; #pass 2
+# LHC16qtData="725"; #pass 2
+# LHC16qDataFast="child_1"; #pass 3
+# LHC16tDataFast="child_2"; #pass 2
+# LHC16qData="child_3"; #pass 3
+# LHC16tData="child_4"; #pass 2
+# LHC17f2bMCMoth="1218";
+# LHC17f2bMC="child_2";
+# LHC17f2bMCFast="child_1";
+LHC17f2a_fixMCMoth="1217";
 LHC17f2a_fixMC="child_2";
-LHC17f2a_fixMCFast="child_1";
+# LHC17f2a_fixMCFast="child_1";
+# LHC17g8aMCMoth="1216"
+# LHC17g8aMC="child_2"
+# LHC17g8aMCFast="child_1"
+
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 

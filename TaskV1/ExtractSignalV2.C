@@ -350,6 +350,22 @@ void ExtractSignalV2(   TString meson                   = "",
                 HistosGammaConversion   = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
                 i++;
             }
+            i = 0;
+            while (HistosGammaConversion == NULL && i < 10){
+                // replace time cut
+                fEventCutSelection.Replace(GetEventSystemCutPosition(),1,"1");
+                cout << fEventCutSelection.Data() << endl;
+                fEventCutSelectionRead    = fEventCutSelection;
+                fClusterCutSelection.Replace(GetClusterTimingCutPosition(fClusterCutSelectionRead),1,mostProbableTimeCuts[i].Data());
+                fClusterCutSelectionRead= fClusterCutSelection;
+                if (mode==2 || mode==13)
+                    fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+                else
+                    fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+                cout << "testing cutnumber:" << fCutSelectionRead.Data() << endl;
+                HistosGammaConversion   = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
+                i++;
+            }
             if (HistosGammaConversion == NULL){
                 cout<<"ERROR: " << Form("Cut Number %s",fCutSelectionRead.Data()) << " not Found in File"<<endl;
                 return;

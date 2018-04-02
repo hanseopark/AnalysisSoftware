@@ -98,19 +98,38 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17j7MCb="child_2";
 # LHC17j7MCc="child_3";
 
-TRAINDIR=Legotrain-vAN20180228-EMClowth
-ISAOD=0
-LHC17nData="395"; #pass 1
-LHC17j7MC="906";
-LHC17j7MCa="child_1";
-LHC17j7MCb="child_2";
-LHC17j7MCc="child_3";
-# ISAOD=1
-# LHC17nData="450"; #pass 1
-# LHC17j7MC="876";
+# TRAINDIR=Legotrain-vAN20180228-EMClowth
+# ISAOD=0
+# LHC17nData="395"; #pass 1
+# LHC17j7MC="906";
 # LHC17j7MCa="child_1";
 # LHC17j7MCb="child_2";
 # LHC17j7MCc="child_3";
+# # ISAOD=1
+# # LHC17nData="450"; #pass 1
+# # LHC17j7MC="876";
+# # LHC17j7MCa="child_1";
+# # LHC17j7MCb="child_2";
+# # LHC17j7MCc="child_3";
+
+# TRAINDIR=Legotrain-vAN20180317-EMClowthAndPHOS
+# ISAOD=0
+# # LHC17nData="399"; #pass 1
+# LHC17j7MC="906"; # EMC low th
+# # LHC17j7MC="907";    # PHOS+PCM-PHOS
+# LHC17j7MCa="child_1";
+# LHC17j7MCb="child_2";
+# LHC17j7MCc="child_3";
+
+TRAINDIR=Legotrain-vAN20180317-EMCAndPHOSAndPCM
+ISAOD=0
+LHC17nData="400"; #pass 1
+# LHC17nData="401"; #pass 1
+LHC17j7MC="908"; # PCM-EMC nl
+# LHC17j7MC="909"; # EMC nl
+LHC17j7MCa="child_1";
+LHC17j7MCb="child_2";
+LHC17j7MCc="child_3";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
