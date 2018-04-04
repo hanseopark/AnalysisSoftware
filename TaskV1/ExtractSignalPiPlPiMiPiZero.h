@@ -756,8 +756,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fPeakRange[0]               = 0.75;
              fPeakRange[1]               = 0.81;
 
-             fPeakRange_SubPiZero[0]     = fPeakRange[0]-0.134;
-             fPeakRange_SubPiZero[1]     = fPeakRange[1]-0.134;
+             fPeakRange_SubPiZero[0]     = fPeakRange[0];
+             fPeakRange_SubPiZero[1]     = fPeakRange[1];
 
              fPeakRange_FixedPzPiZero[0] = fPeakRange[0];
              fPeakRange_FixedPzPiZero[1] = fPeakRange[1];
@@ -767,8 +767,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
             fFitRange[0]             = 0.615;
             fFitRange[1]             = 0.89;
-            fFitRange_SubPiZero[0]   = fFitRange[0]-0.134;
-            fFitRange_SubPiZero[1]   = fFitRange[1]-0.134;
+            fFitRange_SubPiZero[0]   = fFitRange[0];
+            fFitRange_SubPiZero[1]   = fFitRange[1];
             fFitRange_FixedPzPiZero[0]             = fFitRange[0];
             fFitRange_FixedPzPiZero[1]             = fFitRange[1];
             fIntFixedRange[0]        = 0.615; // not yet implemented
@@ -779,66 +779,66 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         if(mode == 40){
             fBGFitRange[0]                = 0.82;
             fBGFitRange[1]                = 0.87;
-            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
-            fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]; //
+            fBGFitRange_SubPiZero[1]      = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]  = fBGFitRange[1];
             fBGFitRangeLeft[0]         = 0.695;
             fBGFitRangeLeft[1]         = 0.73;
-            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         } else if (mode == 41){
             fBGFitRange[0]                = 0.815;
             fBGFitRange[1]                = 0.865;
-            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
-            fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]; //
+            fBGFitRange_SubPiZero[1]      = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]  = fBGFitRange[1];
             fBGFitRangeLeft[0]         = 0.66;
             fBGFitRangeLeft[1]         = 0.71;
-            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         } else if (mode == 42){
             fBGFitRange[0]                = 0.825;
             fBGFitRange[1]                = 0.88;
-            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
-            fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]; //
+            fBGFitRange_SubPiZero[1]      = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]  = fBGFitRange[1];
             fBGFitRangeLeft[0]         = 0.66;
             fBGFitRangeLeft[1]         = 0.71;
-            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         } else if (mode == 44){
             fBGFitRange[0]                = 0.83;
             fBGFitRange[1]                = 0.89;
-            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
-            fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]; //
+            fBGFitRange_SubPiZero[1]      = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]  = fBGFitRange[1];
             fBGFitRangeLeft[0]         = 0.66;
             fBGFitRangeLeft[1]         = 0.71;
-            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         } else if (mode == 45){
             fBGFitRange[0]                = 0.80;
             fBGFitRange[1]                = 0.89;
-            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]-0.134; //
-            fBGFitRange_SubPiZero[1]      = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]      = fBGFitRange[0]; //
+            fBGFitRange_SubPiZero[1]      = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]  = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]  = fBGFitRange[1];
             fBGFitRangeLeft[0]         = 0.66;
             fBGFitRangeLeft[1]         = 0.71;
-            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]             = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]             = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]         = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]         = fBGFitRangeLeft[1];
         }
@@ -870,29 +870,29 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
          if(mode == 40 || mode == 41 || mode == 42 ||  mode == 45){
              fMesonMassPlotRange[0]                = 0.65;
              fMesonMassPlotRange[1]                = 0.89;
-             fMesonMassPlotRange_SubPiZero[0]      = fMesonMassPlotRange[0]-0.134;
-             fMesonMassPlotRange_SubPiZero[1]      = fMesonMassPlotRange[1]-0.134;
+             fMesonMassPlotRange_SubPiZero[0]      = fMesonMassPlotRange[0];
+             fMesonMassPlotRange_SubPiZero[1]      = fMesonMassPlotRange[1];
              fMesonMassPlotRange_FixedPzPiZero[0]  = fMesonMassPlotRange[0];
              fMesonMassPlotRange_FixedPzPiZero[1]  = fMesonMassPlotRange[1];
 
              fMesonMassRange[0]          = 0.65;
              fMesonMassRange[1]          = 0.89;
-             fMesonMassRange_SubPiZero[0]          = fMesonMassRange[0] -0.134;
-             fMesonMassRange_SubPiZero[1]          = fMesonMassRange[1] -0.134;
+             fMesonMassRange_SubPiZero[0]          = fMesonMassRange[0];
+             fMesonMassRange_SubPiZero[1]          = fMesonMassRange[1];
              fMesonMassRange_FixedPzPiZero[0]      = fMesonMassRange[0];
              fMesonMassRange_FixedPzPiZero[1]      = fMesonMassRange[1];
          } else if(mode == 44){
              fMesonMassPlotRange[0]                = 0.60;
              fMesonMassPlotRange[1]                = 0.95;
-             fMesonMassPlotRange_SubPiZero[0]      = fMesonMassPlotRange[0]-0.134;
-             fMesonMassPlotRange_SubPiZero[1]      = fMesonMassPlotRange[1]-0.134;
+             fMesonMassPlotRange_SubPiZero[0]      = fMesonMassPlotRange[0];
+             fMesonMassPlotRange_SubPiZero[1]      = fMesonMassPlotRange[1];
              fMesonMassPlotRange_FixedPzPiZero[0]  = fMesonMassPlotRange[0];
              fMesonMassPlotRange_FixedPzPiZero[1]  = fMesonMassPlotRange[1];
 
              fMesonMassRange[0]          = 0.60;
              fMesonMassRange[1]          = 0.91;
-             fMesonMassRange_SubPiZero[0]          = fMesonMassRange[0]-0.134;
-             fMesonMassRange_SubPiZero[1]          = fMesonMassRange[1]-0.134;
+             fMesonMassRange_SubPiZero[0]          = fMesonMassRange[0];
+             fMesonMassRange_SubPiZero[1]          = fMesonMassRange[1];
              fMesonMassRange_FixedPzPiZero[0]      = fMesonMassRange[0];
              fMesonMassRange_FixedPzPiZero[1]      = fMesonMassRange[1];
          }
@@ -902,8 +902,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonFitRange[0]                 = 0.65;
              fMesonFitRange[1]                 = 0.87;
 
-             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0]-0.134;
-             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1]-0.134;
+             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0];
+             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1];
 
              fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0];
              fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1];
@@ -911,26 +911,26 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonFitRange[0]                 = 0.65;
              fMesonFitRange[1]                 = 0.87;
 
-             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0] -0.134;
-             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1] -0.134;
+             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0];
+             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1];
 
-             fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0] ;
-             fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1] ;
+             fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0];
+             fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1];
          } else if (mode == 42){
              fMesonFitRange[0]                 = 0.68;
              fMesonFitRange[1]                 = 0.85;
 
-             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0] -0.134;
-             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1] -0.134;
+             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0];
+             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1];
 
-             fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0] ;
-             fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1] ;
+             fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0];
+             fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1];
          } else if (mode == 44){
              fMesonFitRange[0]                 = 0.62;
              fMesonFitRange[1]                 = 0.87;
 
-             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0] -0.134;
-             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1] -0.134;
+             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0];
+             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1];
 
              fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0] ;
              fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1] ;
@@ -939,8 +939,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
              fMesonFitRange[0]                 = 0.65;
              fMesonFitRange[1]                 = 0.87;
 
-             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0] -0.134;
-             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1] -0.134;
+             fMesonFitRange_SubPiZero[0]       = fMesonFitRange[0];
+             fMesonFitRange_SubPiZero[1]       = fMesonFitRange[1];
 
              fMesonFitRange_FixedPzPiZero[0]   = fMesonFitRange[0] ;
              fMesonFitRange_FixedPzPiZero[1]   = fMesonFitRange[1] ;
@@ -1069,8 +1069,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
              fPeakRange[0]                           = 0.48;
              fPeakRange[1]                           = 0.58;
-             fPeakRange_SubPiZero[0]                 = fPeakRange[0]-0.134;
-             fPeakRange_SubPiZero[1]                 = fPeakRange[1]-0.134;
+             fPeakRange_SubPiZero[0]                 = fPeakRange[0];
+             fPeakRange_SubPiZero[1]                 = fPeakRange[1];
              fPeakRange_FixedPzPiZero[0]             = fPeakRange[0];
              fPeakRange_FixedPzPiZero[1]             = fPeakRange[1];
          }
@@ -1079,8 +1079,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
             fFitRange[0]                = 0.40;
             fFitRange[1]                = 0.65;
-            fFitRange_SubPiZero[0]      = fFitRange[0] -0.134;
-            fFitRange_SubPiZero[1]      = fFitRange[1] -0.134;
+            fFitRange_SubPiZero[0]      = fFitRange[0] ;
+            fFitRange_SubPiZero[1]      = fFitRange[1] ;
             fFitRange_FixedPzPiZero[0]  = fFitRange[0] ;
             fFitRange_FixedPzPiZero[1]  = fFitRange[1] ;
             fIntFixedRange[0]           = 0.48; // not yet implemented
@@ -1091,27 +1091,27 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         if(mode == 40 || mode == 41 || mode == 42 || mode == 45){
             fBGFitRange[0]                       = 0.57;
             fBGFitRange[1]                       = 0.64;
-            fBGFitRange_SubPiZero[0]             = fBGFitRange[0]-0.134;
-            fBGFitRange_SubPiZero[1]             = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]             = fBGFitRange[0];
+            fBGFitRange_SubPiZero[1]             = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]         = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]         = fBGFitRange[1];
             fBGFitRangeLeft[0]                   = 0.48;
             fBGFitRangeLeft[1]                   = 0.52;
-            fBGFitRangeLeft_SubPiZero[0]                       = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]                       = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]                       = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]                       = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]                   = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]                   = fBGFitRangeLeft[1];
         } else if(mode == 44){
             fBGFitRange[0]                       = 0.57;
             fBGFitRange[1]                       = 0.64;
-            fBGFitRange_SubPiZero[0]             = fBGFitRange[0]-0.134;
-            fBGFitRange_SubPiZero[1]             = fBGFitRange[1]-0.134;
+            fBGFitRange_SubPiZero[0]             = fBGFitRange[0];
+            fBGFitRange_SubPiZero[1]             = fBGFitRange[1];
             fBGFitRange_FixedPzPiZero[0]         = fBGFitRange[0];
             fBGFitRange_FixedPzPiZero[1]         = fBGFitRange[1];
             fBGFitRangeLeft[0]                   = 0.48;
             fBGFitRangeLeft[1]                   = 0.52;
-            fBGFitRangeLeft_SubPiZero[0]                       = fBGFitRangeLeft[0]-0.134;
-            fBGFitRangeLeft_SubPiZero[1]                       = fBGFitRangeLeft[1]-0.134;
+            fBGFitRangeLeft_SubPiZero[0]                       = fBGFitRangeLeft[0];
+            fBGFitRangeLeft_SubPiZero[1]                       = fBGFitRangeLeft[1];
             fBGFitRangeLeft_FixedPzPiZero[0]                   = fBGFitRangeLeft[0];
             fBGFitRangeLeft_FixedPzPiZero[1]                   = fBGFitRangeLeft[1];
         }
@@ -1143,14 +1143,14 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
          if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
              fMesonMassPlotRange[0]                = 0.47;
              fMesonMassPlotRange[1]                = 0.61;
-             fMesonMassPlotRange_SubPiZero[0]      = fMesonMassPlotRange[0]-0.134;
-             fMesonMassPlotRange_SubPiZero[1]      = fMesonMassPlotRange[1]-0.134;
+             fMesonMassPlotRange_SubPiZero[0]      = fMesonMassPlotRange[0];
+             fMesonMassPlotRange_SubPiZero[1]      = fMesonMassPlotRange[1];
              fMesonMassPlotRange_FixedPzPiZero[0]  = fMesonMassPlotRange[0];
              fMesonMassPlotRange_FixedPzPiZero[1]  = fMesonMassPlotRange[1];
              fMesonMassRange[0]                    = 0.47;
              fMesonMassRange[1]                    = 0.65;
-             fMesonMassRange_SubPiZero[0]          = fMesonMassRange[0]-0.134;
-             fMesonMassRange_SubPiZero[1]          = fMesonMassRange[1]-0.134;
+             fMesonMassRange_SubPiZero[0]          = fMesonMassRange[0];
+             fMesonMassRange_SubPiZero[1]          = fMesonMassRange[1];
              fMesonMassRange_FixedPzPiZero[0]      = fMesonMassRange[0];
              fMesonMassRange_FixedPzPiZero[1]      = fMesonMassRange[1];
          }
@@ -1159,8 +1159,8 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
          if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode == 45){
              fMesonFitRange[0]                     = 0.5;
              fMesonFitRange[1]                     = 0.6;
-             fMesonFitRange_SubPiZero[0]           = fMesonFitRange[0]-0.134;
-             fMesonFitRange_SubPiZero[1]           = fMesonFitRange[1]-0.134;
+             fMesonFitRange_SubPiZero[0]           = fMesonFitRange[0];
+             fMesonFitRange_SubPiZero[1]           = fMesonFitRange[1];
              fMesonFitRange_FixedPzPiZero[0]       = fMesonFitRange[0];
              fMesonFitRange_FixedPzPiZero[1]       = fMesonFitRange[1];
          }

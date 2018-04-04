@@ -396,8 +396,8 @@
     Double_t fBinsEtaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
     Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {4,4,4,4,4,4,4,4,4,4,4};
 
-    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,10.,14.};
-    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[11]       = {4,4,4,4,4,4,4,4,4,4,4};
+    Double_t fBinsEtaPiPlPiMiPiZero7TevPtPHOS[11]         = {0,1,1.5,2.,4.,6.,8.,10.,12.,14.,17.};
+    Int_t fBinsEtaPiPlPiMiPiZero7TevPtRebinPHOS[10]       = {4,4,4,4,4,4,4,4,4,4};
 
     // omega->pi+pi-pi0
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCM[14]         = {0,1,1.4,1.6,1.8,2,2.5,3,3.5,4,5,6.,8.,10.};
@@ -412,8 +412,8 @@
     Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPCMPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,8.,10.};
     Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPCMPHOS[11]       = {5,5,5,8,8,8, 8,8,10,16,16};
 
-    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[12]         = {0,1,1.5,2,2.5,3,3.5,4,5,6.,10.,14.};
-    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[11]       = {10,10,10,10,8,8,8,8,8,8,8};
+    Double_t fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[11]         = {0,1,1.5,2,4.,6.,8.,10.,12.,14.,17.};
+    Int_t fBinsOmegaPiPlPiMiPiZero7TevPtRebinPHOS[10]       = {12,12,12,12,12,12,12,12,12,12};
 
 
     //****************************************************************************************************
@@ -2050,7 +2050,6 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     return 4;
                 if (mode == 3 ){
                     return 2;
-
                 } else if(mode == 40){
                     scaleFac        = 1.;
                     return 8;
@@ -2065,7 +2064,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     return 11;
                 } else if(mode == 45){
                     scaleFac        = 1.;
-                    return 10;
+                    return 3;
                 } else
                     return 6;
             } else if (energy.CompareTo("8TeV") == 0) {
@@ -2280,7 +2279,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     return 11;
                 } else if(mode == 45){
                     scaleFac        = 1.;
-                    return 10;
+                    return 3;
                 } else{
                     scaleFac        = 2.;
                     return 2;
@@ -2537,7 +2536,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 } else if (mode == 44){
                     startPtBin     = 8;
                 } else if (mode == 45){
-                    startPtBin     = 5;
+                    startPtBin     = 3;
                 }
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 0 ){
@@ -2655,7 +2654,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 } else if (mode == 44){
                     startPtBin     = 8;
                 } else if (mode == 45){
-                    startPtBin     = 5;
+                    startPtBin     = 3;
                 }
             } else if(energy.CompareTo("13TeV") == 0){
                 if (mode == 40){
@@ -3231,7 +3230,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtEMC[i];
                     }
                 } else if(mode == 45){
-                    maxNBins = 11;
+                    maxNBins = 10;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero7TevPtPHOS[i];
                     }
@@ -3464,8 +3463,8 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtEMC[i];
                     }
                 } else if(mode == 45){
-                    maxNBins    = 11;
-                    binningMax  = 11;
+                    maxNBins    = 10;
+                    binningMax  = 10;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsOmegaPiPlPiMiPiZero7TevPtPHOS[i];
                     }

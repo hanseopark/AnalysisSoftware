@@ -1368,6 +1368,8 @@ void ClusterQA_Runwise(
                     if(vecClusterFiredCellIDs[i].size() == vecClusterFiredCellIDs[iMC].size()){
                         DrawVectorOverviewMissingCells(canvas, vecClusterFiredCellIDs[i], vecClusterFiredCellIDs[iMC], vecClusterMissingCellIDs[i],
                                                             Form("ExtQA/MissingCells/hCellsMissingData_%s",DataSets[iMC].Data()), outputDirDataSet, suffix, DataSets[iMC]);
+                    } else {
+                        cout << "ERROR! MissingCell overviews will not be drawn, because vecClusterFiredCellIDs[i].size() != vecClusterFiredCellIDs[iMC].size() " << endl;
                     }
                 }
             }

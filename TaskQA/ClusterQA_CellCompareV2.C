@@ -255,7 +255,7 @@ void ClusterQA_CellCompareV2(TString configFileName  = "configFile.txt", TString
 
         fstream fLogInput_RunwiseCold;
         TString logFileNameCold                 = Form("%s/%s-Runwise-Cleaned.log", DataPath_cold.Data(), DataSets[i].Data());
-        fLogInput_RunwiseCold.open(logFileName.Data(), ios::in);
+        fLogInput_RunwiseCold.open(logFileNameCold.Data(), ios::in);
 
         //If the user has not cleaned the log file
         if (!fLogInput_Runwise.good()){
