@@ -211,12 +211,15 @@ TRAINDIR=Legotrain-vAN20180322-RerunAll
 # LHC16tData="child_4"; #pass 2
 # LHC17f2bMCMoth="1218";
 # LHC17f2a_fixMCMoth="1217";
+
+# LHC17f2a_fixMCMoth="1231";
+# LHC17f2bMCMoth="1232";
 LHC17f2a_fixMCMoth="1230";
-# LHC17f2bMCMoth="1218";
+LHC17f2bMCMoth="1222";
 LHC17f2a_fixMC="child_2";
 LHC17f2a_fixMCFast="child_1";
-# LHC17f2bMC="child_2";
-# LHC17f2bMCFast="child_1";
+LHC17f2bMC="child_2";
+LHC17f2bMCFast="child_1";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR

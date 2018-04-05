@@ -358,8 +358,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
     textSizeSpectra=0.04;
     Double_t minPt                              = 0.2;
     if(mode==2) minPt                           = 0.5;
-    if(mode==4) minPt                           = 1.0;
-    Double_t maxPt                              = 20;
+    if(mode==4) minPt                           = 0.8;
+    Double_t maxPt                              = 50;
     Int_t nEntriesGammaSpec                     = 1;
 
     TH2F * histoDummy2                          = new TH2F("histoDummy2","histoDummy2",10000,minPt,maxPt,10000,5e-9, 90);
@@ -479,7 +479,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
 
         // Upper part of plot with histograms
         Double_t        ptMin                   = 0.3;
-        if (mode==4)    ptMin                   = 1.5;
+        if (mode==4)    ptMin                   = 0.8;
         Double_t        ptMax                   = 40.;
         histoDummy2->Draw();
             DrawGammaSetMarker(histoGammaSpecCorrPurity, 24, 2.0, kBlack, kBlack);
@@ -509,7 +509,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
 
             Double_t dummyMinX = 0.2;
             if(mode==2) dummyMinX = 0.5;
-            if(mode==4) dummyMinX = 1.0;
+            if(mode==4) dummyMinX = 0.8;
             TH1D* dummy                             = new TH1D("dummy", "dummy",1000, dummyMinX, 20);
             SetStyleHistoTH1ForGraphs(dummy, "#it{p}_{T} (GeV/#it{c})", "data/fit", textSizeSpectra,textSizeSpectra, textSizeSpectra,textSizeSpectra, 0.95,0.6);
             dummy->GetYaxis()->SetRangeUser(0.5, 1.55);
@@ -630,7 +630,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         textSizeSpectra                         = 0.035;
         Double_t        ptMin                   = 0.2;
         if (mode==2)    ptMin                   = 0.5;
-        if (mode==4)    ptMin                   = 1.0;
+        if (mode==4)    ptMin                   = 0.8;
         Double_t        ptMax                   = 40.;
         TH2F * histoDummy3                      = new TH2F("histoDummy3","histoDummy3",1000,ptMin,1.5*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()),1000,2e-9,999);
         SetStyleHistoTH2ForGraphs(histoDummy3, "#it{p}_{T} (GeV/#it{c})", "#frac{1}{2#pi #it{N}_{ev.}} #frac{d^{2}#it{N}}{#it{p}_{T}d#it{p}_{T}d#it{y}} (GeV^{-2}#it{c})",
@@ -777,7 +777,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
 
         Double_t        minPt                   = 0.2;
         if (mode==2)    minPt                   = 0.5;
-        if (mode==4)    minPt                   = 1.0;
+        if (mode==4)    minPt                   = 0.8;
         textSizeSpectra                         = 0.04;
 
         TH1F * histoDummy4                      = new TH1F("histoDummy4","histoDummy4",1000,minPt,1.2*histoGammaSpecCorrPurity->GetXaxis()->GetBinUpEdge(histoGammaSpecCorrPurity->GetNbinsX()));
@@ -861,7 +861,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         canvasDoubleRatio->SetLogx();
 
         Double_t minPt                           = 0.3;
-        Double_t maxPtLog                        = 40.;
+        Double_t maxPtLog                        = 50.;
         Double_t minY                            = 0.85;
         Double_t maxY                            = 1.65;
         if (mode==2){
@@ -869,7 +869,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
             minY                                 = 0.75;
         }
         if (mode==4) {
-            minPt                                = 1.5;
+            minPt                                = 0.8;
             minY                                 = 0.5;
             if(fEnergy.CompareTo("8TeV")==0 || fEnergy.CompareTo("7TeV")==0 || fEnergy.CompareTo("900GeV")==0){
               minPt = 1.0;
@@ -1023,7 +1023,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
 
     histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.2, 20);
     if(mode==2) histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.5, 20);
-    if(mode==4) histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(1.0, 20);
+    if(mode==4) histoIncRatioPurityTrueEff[0]->GetXaxis()->SetRangeUser(0.8, 20);
     histoIncRatioPurityTrueEff[0]->Draw();
     cocktailAllGammaPi0->Draw("same");
 
@@ -1043,7 +1043,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
 
       histoIncRatioPurityTrueEffBinShift->GetXaxis()->SetRangeUser(0.2, 20);
       if(mode==2) histoIncRatioPurityTrueEffBinShift->GetXaxis()->SetRangeUser(0.5, 20);
-      if(mode==4) histoIncRatioPurityTrueEffBinShift->GetXaxis()->SetRangeUser(1.0, 20);
+      if(mode==4) histoIncRatioPurityTrueEffBinShift->GetXaxis()->SetRangeUser(0.8, 20);
       histoIncRatioPurityTrueEffBinShift->Draw();
       cocktailAllGammaPi0->Draw("same");
 

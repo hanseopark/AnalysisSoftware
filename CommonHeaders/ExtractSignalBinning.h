@@ -1036,14 +1036,24 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
     Double_t fBinsEtapPb5TeVPt3Body[15]             = { 0., 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.0, 2.5,    3.0, 4.0, 6.0, 8.0, 10};
     Int_t fBinsEtapPb5TeVPt3BodyRebin[14]           = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,           5, 5, 5, 5};
 
-    Double_t fBinsDirGammapPb5TeVPt[26]             = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.8,
-                                                        5.6, 6.4, 7.2, 8.0, 10.0, 14.0};
-    Double_t fBinsDirGammapPb5TeVPCMEMCPt[29]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,   1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.2,
-                                                        3.6, 4.0, 4.8, 5.6, 6.4, 7.2, 8.0, 10.0, 14.0};
-    Int_t fBinsDirGammapPb5TeVPtRebin[25]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
-                                                        2, 2, 4, 4, 4};
-    Int_t fBinsDirGammapPb5TeVPCMEMCPtRebin[28]     = { 10, 4, 4, 2, 1, 1, 1, 1, 1, 1,          1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
-                                                        2, 4, 4, 4, 4, 5, 5, 5 };
+    // DirGamma binning Run 1
+    Double_t fBinsDirGammapPb5TeVPCMPt[31]          = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
+                                                        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,  14.0};
+    Double_t fBinsDirGammapPb5TeVEMCPt[34]          = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,   1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
+                                                        3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,  12.0, 14.0, 16.0, 20.};
+    Double_t fBinsDirGammapPb5TeVPCMEMCPt[33]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,   1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
+                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,   8.0, 10.0, 14.0};
+    Double_t fBinsDirGammapPb5TeVPt[42]             = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,   1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
+                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,   8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 26.0, 30.0,
+                                                        35.0, 40.0  };
+    Int_t fBinsDirGammapPb5TeVPtRebin[30]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
+                                                        2, 4, 4, 4, 4, 4, 4, 4, 8, 8};
+    Int_t fBinsDirGammapPb5TeVPCMPtRebin[30]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
+                                                        2, 4, 4, 4, 4, 4, 4, 4, 8, 8};
+    Int_t fBinsDirGammapPb5TeVEMCPtRebin[33]        = { 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,           1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
+                                                        2, 4, 4, 4, 4, 4, 4, 4, 8, 8,           8, 10, 12};
+    Int_t fBinsDirGammapPb5TeVPCMEMCPtRebin[32]     = { 10, 4, 4, 2, 2, 2, 2, 2, 2, 1,          1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
+                                                        2, 4, 4, 4, 4, 4, 4, 4, 5, 5,           8, 8 };
     //****************************************************************************************************
     //****************** Pt binning for pPb, 8 TeV *******************************************************
     //****************************************************************************************************
@@ -1798,6 +1808,8 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     return 5;
                 } else if (mode == 2 || mode == 13){
                     if (directPhotonRunningOption.CompareTo("directPhotonTagging") == 0){
+                        return 10;
+                    } else if (directPhotonRunningOption.CompareTo("directPhotonA") == 0){
                         return 10;
                     } else {
                         switch (trigger){
@@ -2688,10 +2700,10 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
             if (energy.CompareTo("pPb_5.023TeV")==0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0)
                     startPtBin      = 1;
-                else if (mode == 2 && meson.CompareTo("directPhoton") == 0 )
-                    startPtBin      = 1;
-                else if (mode == 2 && meson.CompareTo("directPhotonTagging") == 0 )
+                else if (mode == 2 && meson.CompareTo("directPhotonA") == 0 )
                     startPtBin      = 8;
+                else if (mode == 2 && meson.CompareTo("directPhotonTagging") == 0 )
+                    startPtBin      = 1;
                 else if (mode == 4)
                     startPtBin      = 8;
                 else
@@ -3539,28 +3551,34 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0){
-                    maxNBins    = 25;
-                    binningMax  = 25;
+                    maxNBins    = 30;
+                    binningMax  = 30;
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i]  = fBinsDirGammapPb5TeVPt[i];
+                        binning[i]  = fBinsDirGammapPb5TeVPCMPt[i];
                     }
                 } else if (mode == 2){
-                    maxNBins    = 28;
-                    binningMax  = 28;
+                    maxNBins    = 32;
+                    binningMax  = 32;
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i] = fBinsDirGammapPb5TeVPCMEMCPt[i];
+                        binning[i]  = fBinsDirGammapPb5TeVPCMEMCPt[i];
                     }
                 } else if (mode == 4){
-                    maxNBins    = 25;
-                    binningMax  = 25;
+                    maxNBins    = 33;
+                    binningMax  = 33;
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i] = fBinsDirGammapPb5TeVPt[i];
+                        binning[i]  = fBinsDirGammapPb5TeVEMCPt[i];
                     }
                 } else if (mode == 20) {
-                    maxNBins    = 28;
-                    binningMax  = 28;
+                    maxNBins    = 32;
+                    binningMax  = 32;
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i] = fBinsDirGammapPb5TeVPCMEMCPt[i];
+                        binning[i]  = fBinsDirGammapPb5TeVPCMEMCPt[i];
+                    }
+                } else if (mode == 21) {
+                    maxNBins    = 41;
+                    binningMax  = 41;
+                    for(Int_t i = 0; i < binningMax+1; i++){
+                        binning[i]  = fBinsDirGammapPb5TeVPt[i];
                     }
                 }
             } else if (energy.CompareTo("pPb_8TeV") == 0  ){
@@ -4380,11 +4398,11 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
                         if (modi == 0){
-                            fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
+                            fNRebin[i]  = fBinsDirGammapPb5TeVPCMPtRebin[i];
                         } else if (modi == 2){
                             fNRebin[i]  = fBinsDirGammapPb5TeVPCMEMCPtRebin[i];
                         } else if (modi == 4){
-                            fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
+                            fNRebin[i]  = fBinsDirGammapPb5TeVEMCPtRebin[i];
                         } else {
                             fNRebin[i]  = fBinsDirGammapPb5TeVPtRebin[i];
                         }

@@ -167,7 +167,7 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
     // ***************************************************************************************************
     Bool_t bsmooth[15]                          = { 0, 0, 0, 0, 0,  0, 0, 0, 0, 0,
                                                     0, 0, 0, 0, 0 };
-    Bool_t bsmoothIncGammapPb5TeV[15]           = { 1, 0, 1, 1, 1,  0, 1, 1, 0, 0,
+    Bool_t bsmoothIncGammapPb5TeV[15]           = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 0,
                                                     0, 0, 1, 0, 0};
     Bool_t bsmoothIncRatiopPb5TeV[15]           = { 1, 1, 1, 1, 1,  0, 1, 1, 0, 0,
                                                     0, 0, 1, 1, 1 };
@@ -354,8 +354,10 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
                 if (spectrumName.Contains("Ratio")){
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] > 2.8)
-                        errorFixed              =  1.45+(0.06)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k];
+//                         if (ptBins[k] > 2.8)
+//                         errorFixed              =  1.45+(0.06)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k];
+//                         errorFixed              =  3.45+(0.06)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k];
+                        errorFixed              = 4.7;
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;
@@ -366,8 +368,9 @@ void FinaliseSystematicErrorsCalo_Gammas_pPb(   TString nameDataFileErrors      
                 } else {
                     adjustPtDependent           = kTRUE;
                     for (Int_t k = 0; k < nPtBins; k++){
-                        if (ptBins[k] > 5.5)
-                            errorFixed              =  10.5;
+//                         if (ptBins[k] > 5.5)
+//                             errorFixed              =  10.5;
+                        errorFixed              =  4.3+(0.3)*ptBins[k]+(0.02)*ptBins[k]*ptBins[k];
                         if (errorFixed != -1){
                             errorsMean[i][k]            = errorFixed;
                             errorsMeanErr[i][k]         = errorFixed*0.01;

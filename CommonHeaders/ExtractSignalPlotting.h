@@ -2035,7 +2035,6 @@
                 padDataSpectra->cd(place)->SetBottomMargin(0.15);
                 padDataSpectra->cd(place)->SetRightMargin(0.02);
                 int remaining           = (int)((place-1)%fColumnPlot);
-                cout << remaining << endl;
                 if (remaining > 0) padDataSpectra->cd(place)->SetLeftMargin(0.15);
                 else padDataSpectra->cd(place)->SetLeftMargin(0.25);
     //             cout << "here" << endl;
@@ -5832,7 +5831,7 @@
                     textEvents                      = "Data";
                 }
 
-                Double_t nPixels                    = 13;
+                Double_t nPixels                    = 26;
                 Double_t textHeight                 = 0.08;
                 if (padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) < padDataSpectra->cd(place)->YtoPixel(padDataSpectra->cd(place)->GetY1())){
                     textHeight                      = (Double_t)nPixels/padDataSpectra->cd(place)->XtoPixel(padDataSpectra->cd(place)->GetX2()) ;
