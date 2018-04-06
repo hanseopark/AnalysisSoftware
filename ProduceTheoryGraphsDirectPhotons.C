@@ -508,7 +508,17 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 7TeV **********************************************
         // **********************************************************************************************************************
-
+        // **********************************************************************************************************************
+        // Load cocktail for pp 7TeV comb
+        // **********************************************************************************************************************
+        TString nameCocktailFilePP7TeVComb   = "CocktailInput/GammaCocktail_pp7TeV_MB_comb.root";
+        TFile* fileCockailPP7TeVComb         = new TFile(nameCocktailFilePP7TeVComb.Data());
+        TH1D* histoGammaDecayCombPP7TeV      = (TH1D*)fileCockailPP7TeVComb->Get("Gamma_Pt_OrBin");
+        for (Int_t i = 1; i < histoGammaDecayCombPP7TeV->GetNbinsX()+1; i++){
+            histoGammaDecayCombPP7TeV->SetBinContent(i, histoGammaDecayCombPP7TeV->GetBinContent(i)/(histoGammaDecayCombPP7TeV->GetBinCenter(i) *2* TMath::Pi()) );
+            histoGammaDecayCombPP7TeV->SetBinError(i, histoGammaDecayCombPP7TeV->GetBinError(i)/(histoGammaDecayCombPP7TeV->GetBinCenter(i)*2* TMath::Pi()));
+        }
+        histoGammaDecayCombPP7TeV->GetXaxis()->SetRangeUser(0,30);
         TString fileNameNLOPhotonHalf7TeV    = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmuhalf.dat";
         TString fileNameNLOPhotonOne7TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVmu.dat";
         TString fileNameNLOPhotonTwo7TeV     = "ExternalInput/Theory/ALICENLOcalcDirectPhoton7TeVtwomu.dat";
@@ -1289,6 +1299,17 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         }
 
 
+        TGraph* graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV = (TGraph*)graphThermalAndPromptInvYieldINT1DirGam7TeV->Clone("graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV");
+        TGraph* graphNLOCalcRGammaALICECocktailPromtThermalPP7TeVCenter      = new TGraph(graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetN());
+        for (Int_t i = 0; i < graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetN(); i++){
+            Double_t decayGamma                                     = histoGammaDecayCombPP7TeV->Interpolate(graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetX()[i]);
+            Double_t theoGamma                                      = graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetY()[i];
+            Double_t drtheoGamma                                    = (theoGamma+decayGamma)/decayGamma;
+            Double_t errGamma                                     = (theoGamma+graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetEY()[i]+decayGamma)/decayGamma - drtheoGamma;
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->SetPoint(i, graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetX()[i], drtheoGamma);
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeVCenter->SetPoint(i, graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetX()[i], drtheoGamma);
+
+        }
         TGraphAsymmErrors* graphNLOCalcRGammaALICECocktailPP8TeV = (TGraphAsymmErrors*)graphNLOCalcInvYieldINT7DirGam8TeV->Clone("graphNLOCalcRGammaALICECocktailPP8TeV");
         TGraph* graphNLOCalcRGammaALICECocktailPP8TeVCenter      = new TGraph(graphNLOCalcRGammaALICECocktailPP8TeV->GetN());
         for (Int_t i = 0; i < graphNLOCalcRGammaALICECocktailPP8TeV->GetN(); i++){
@@ -1553,7 +1574,15 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphThermalAndPromptInvYieldINT7DirGam7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             graphThermalAndPromptInvYieldINT7DirGam7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
             graphThermalAndPromptInvYieldINT7DirGam7TeV->Write("graphThermalAndPromptDirectPhotonLiuWernerInvYieldINT7_7TeV",TObject::kOverwrite);
-
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetYaxis()->SetTitle("R_{#gamma}");
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeV->Write("graphRGammaThermalAndPromptDirectPhotonLiuWerner_pp7TeV_ALICECocktail",TObject::kOverwrite);
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeVCenter->GetYaxis()->SetTitle("R_{#gamma}");
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeVCenter->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphNLOCalcRGammaALICECocktailPromtThermalPP7TeVCenter->Write("graphRGammaThermalAndPromptDirectPhotonLiuWerner_pp7TeV_ALICECocktail_Center",TObject::kOverwrite);
+            histoGammaDecayCombPP7TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            histoGammaDecayCombPP7TeV->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
+            histoGammaDecayCombPP7TeV->Write("histoALICECombCocktailGammasPP7TeV",TObject::kOverwrite);
             // writing 8TeV Gammas
             pp8TeVJetPhox_invyield->GetYaxis()->SetTitle("#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{#it{p}_{T}d#it{p}_{T}dy} (GeV^{-2}#it{c})");
             pp8TeVJetPhox_invyield->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
