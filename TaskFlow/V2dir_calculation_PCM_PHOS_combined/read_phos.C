@@ -14,6 +14,10 @@ void read_phos() {
     TString fn_out = "data_phos/data_phos.root";
     TFile f_out(fn_out, "recreate");
 
+    // define correlation coefficient for systematic uncertainties (0 = no correlation, 1 = fully positively correlated)
+    const Double_t corr_coeff_v2inc = 0.;
+    const Double_t corr_coeff_Rgam = 0.;
+    
     const Int_t n_pt_bins = 16;
 
     // loop over centralities
@@ -120,14 +124,14 @@ void read_phos() {
                         // Rgamma
                         Double_t sig_i_Rgamma_syserr = TMath::Sqrt(cov_Rgamma_syserr(i_pt_bin, i_pt_bin));
                         Double_t sig_j_Rgamma_syserr = TMath::Sqrt(cov_Rgamma_syserr(j_pt_bin, j_pt_bin));
-                        cov_Rgamma_syserr(i_pt_bin, j_pt_bin) = sig_i_Rgamma_syserr * sig_j_Rgamma_syserr;
-                        cov_Rgamma_toterr(i_pt_bin, j_pt_bin) = sig_i_Rgamma_syserr * sig_j_Rgamma_syserr;
+                        cov_Rgamma_syserr(i_pt_bin, j_pt_bin) = corr_coeff_Rgam * sig_i_Rgamma_syserr * sig_j_Rgamma_syserr;
+                        cov_Rgamma_toterr(i_pt_bin, j_pt_bin) = corr_coeff_Rgam * sig_i_Rgamma_syserr * sig_j_Rgamma_syserr;
 
                         // v2inc (assumption: systematic uncertainties is fully correlated among pT bins)
                         Double_t sig_i_v2_inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(i_pt_bin, i_pt_bin));
                         Double_t sig_j_v2_inc_syserr = TMath::Sqrt(cov_v2_inc_syserr(j_pt_bin, j_pt_bin));
-                        cov_v2_inc_syserr(i_pt_bin, j_pt_bin) = sig_i_v2_inc_syserr * sig_j_v2_inc_syserr;
-                        cov_v2_inc_toterr(i_pt_bin, j_pt_bin) = sig_i_v2_inc_syserr * sig_j_v2_inc_syserr;
+                        cov_v2_inc_syserr(i_pt_bin, j_pt_bin) = corr_coeff_v2inc * sig_i_v2_inc_syserr * sig_j_v2_inc_syserr;
+                        cov_v2_inc_toterr(i_pt_bin, j_pt_bin) = corr_coeff_v2inc * sig_i_v2_inc_syserr * sig_j_v2_inc_syserr;
                     }
                 }
             }
@@ -149,6 +153,12 @@ void read_phos() {
         cov_v2_inc_staterr.Write("cov_v2_inc_staterr");
         cov_v2_inc_syserr.Write("cov_v2_inc_syserr");
         cov_v2_inc_toterr.Write("cov_v2_inc_toterr");
+
+	TObjString correlation_coeff_v2inc(Form("correlation coefficient for v2inc: %4.2f", corr_coeff_v2inc));
+	correlation_coeff_v2inc.Write("correlation_coeff_v2inc");
+
+	TObjString correlation_coeff_Rgam(Form("correlation coefficient for Rgam: %4.2f", corr_coeff_Rgam));
+	correlation_coeff_Rgam.Write("correlation_coeff_Rgam");
 
     } // end loop over centrality
 

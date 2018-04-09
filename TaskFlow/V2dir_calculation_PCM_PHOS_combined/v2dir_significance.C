@@ -16,6 +16,9 @@ void update_sums(RooDataSet *pd, Int_t &n_evt, TVectorD &v2inc_mean_sum, TMatrix
 
 Double_t p_value_to_n_sigma(const Double_t &pvalue);
 
+// for visualization of the correlation of the v2inc pseudo-data for the first two pt bins
+TH2F hv2inc_1_2("hv2inc_1_2", "v2inc_pt_bins_2 vs. v2inc_pt_bins_1 (pseudo data)", 100, 0.05, 0.09, 100, 0.05, 0.11);
+
 //
 // the main function - for single pt bin choose pt_bin_low = pt_bin_up
 //
@@ -26,31 +29,67 @@ void v2dir_significance(Int_t hypothesis_id = 0, TString centr = "20-40", const 
         cout << "ERROR: bin numbers incorrect" << endl;
         exit(-1);
     }
-
+    
     const Int_t n_pt_bins = pt_bin_up - pt_bin_low + 1;
 
-    output_dir += "/";
-
-    TString fn = Form("output/v2dir_pcm_phos_comb_%s.root", centr.Data());
+    TString fn = Form("%s/v2dir_pcm_phos_comb_%s.root", output_dir.Data(), centr.Data());
     TFile f(fn.Data());
 
     // v2inc
     TGraphAsymmErrors g_v2_inc_comb_toterr = *(TGraphAsymmErrors *)f.Get("g_v2_inc_comb_toterr");
     TMatrixDSym cov_v2inc_all_bins = *(TMatrixDSym *)f.Get("cov_v2_inc_toterr_comb");
+
+    //
+    // just a test (playing with different correlations coefficients of the systematic uncertainties)
+    //
+    // for (Int_t i=0; i<16; i++) {
+    //  	for (Int_t j=i+1; j<16; j++) {
+    // 	    cov_v2inc_all_bins(i,j) = 0.99 * TMath::Sqrt(cov_v2inc_all_bins(i,i)) * TMath::Sqrt(cov_v2inc_all_bins(j,j)); 
+    // 	    cov_v2inc_all_bins(i,j) = 0.;
+    //  	    cov_v2inc_all_bins(j,i) = cov_v2inc_all_bins(i,j);
+    // 	}
+    // }
+
     TMatrixDSym cov_v2inc(n_pt_bins);
     cov_v2inc_all_bins.GetSub(pt_bin_low, pt_bin_up, pt_bin_low, pt_bin_up, cov_v2inc);
     TMatrixDSym cov_v2inc_inv = cov_v2inc;
     cov_v2inc_inv.Invert();
-
+    // cov_v2inc.Print();
+    
     // v2dec
     TGraphAsymmErrors g_v2_dec_comb = *(TGraphAsymmErrors *)f.Get("g_v2_dec_comb");
     TMatrixDSym cov_v2dec_all_bins = *(TMatrixDSym *)f.Get("cov_v2_dec_toterr");
+
+    //
+    // just a test (playing with different correlations coefficients of the systematic uncertainties)
+    //
+    // for (Int_t i=0; i<16; i++) {
+    // 	for (Int_t j=i+1; j<16; j++) {
+    //    	    // cov_v2dec_all_bins(i,j) = 0.99 * TMath::Sqrt(cov_v2dec_all_bins(i,i)) * TMath::Sqrt(cov_v2dec_all_bins(j,j));
+    // 	    // cov_v2dec_all_bins(i,j) = 0.;
+    //  	    // cov_v2dec_all_bins(j,i) = cov_v2dec_all_bins(i,j);
+	    
+    //  	}
+    //  }
+
     TMatrixDSym cov_v2dec(n_pt_bins);
     cov_v2dec_all_bins.GetSub(pt_bin_low, pt_bin_up, pt_bin_low, pt_bin_up, cov_v2dec);
 
     // Rgamma
     TGraphErrors g_Rgamma_toterr = *(TGraphErrors *)f.Get("g_Rgamma_toterr");
     TMatrixDSym cov_Rgam_all_bins = *(TMatrixDSym *)f.Get("cov_Rgamma_comb_toterr");
+
+    //
+    // just a test (playing with different correlations coefficients of the systematic uncertainties)
+    //
+    // for (Int_t i=0; i<16; i++) {
+    // 	for (Int_t j=i+1; j<16; j++) {
+    // 	    cov_Rgam_all_bins(i,j) = 0.99 * TMath::Sqrt(cov_Rgam_all_bins(i,i)) * TMath::Sqrt(cov_Rgam_all_bins(j,j)); 
+    // 	    cov_Rgam_all_bins(i,j) = 0.;
+    // 	    cov_Rgam_all_bins(j,i) = cov_Rgam_all_bins(i,j);
+    // 	}
+    // }
+
     TMatrixDSym cov_Rgam(n_pt_bins);
     cov_Rgam_all_bins.GetSub(pt_bin_low, pt_bin_up, pt_bin_low, pt_bin_up, cov_Rgam);
 
@@ -68,6 +107,31 @@ void v2dir_significance(Int_t hypothesis_id = 0, TString centr = "20-40", const 
             Rgam_meas(i) = 1.;
     }
 
+    // Paquet hydro prediction
+    TVectorD v2dir_Paquet_00_20(16);
+    v2dir_Paquet_00_20(0) = 0.048;
+    v2dir_Paquet_00_20(1) = 0.052;
+    v2dir_Paquet_00_20(2) = 0.056;
+    v2dir_Paquet_00_20(3) = 0.057;
+    v2dir_Paquet_00_20(4) = 0.056;
+    v2dir_Paquet_00_20(5) = 0.055;
+    v2dir_Paquet_00_20(6) = 0.051;
+    v2dir_Paquet_00_20(7) = 0.047;
+    v2dir_Paquet_00_20(8) = 0.042;
+    v2dir_Paquet_00_20(9) = 0.035;
+
+    TVectorD v2dir_Paquet_20_40(16);
+    v2dir_Paquet_20_40(0) = 0.083;
+    v2dir_Paquet_20_40(1) = 0.092;
+    v2dir_Paquet_20_40(2) = 0.098;
+    v2dir_Paquet_20_40(3) = 0.101;
+    v2dir_Paquet_20_40(4) = 0.099;
+    v2dir_Paquet_20_40(5) = 0.094;
+    v2dir_Paquet_20_40(6) = 0.087;
+    v2dir_Paquet_20_40(7) = 0.079;
+    v2dir_Paquet_20_40(8) = 0.070;
+    v2dir_Paquet_20_40(9) = 0.057;
+    
     // print centrality class and selected pt range
     cout << "Centrality class " << centr.Data() << "%, selected pt range: " << pt(0) << " - " << pt(n_pt_bins - 1)
          << " GeV/c" << endl;
@@ -75,24 +139,43 @@ void v2dir_significance(Int_t hypothesis_id = 0, TString centr = "20-40", const 
     // vector for v2dir hypothesis
     TVectorD v2dir_hyp(n_pt_bins);
     TString v2dir_hyp_name = "";
+    TString v2dir_hyp_name_latex = "";
 
     // select hypothesis
     switch (hypothesis_id) {
     case 0:
+	// hypothesis: v2dir = 0 for all pt bins
         v2dir_hyp_name = "v2dir_equals_0";
+	v2dir_hyp_name_latex = "v_{2,dir} = 0";
         for (Int_t i = 0; i < n_pt_bins; i++)
             v2dir_hyp(i) = 0;
         break;
     case 1:
+	// hypothesis: v2dir = v2dec
         v2dir_hyp_name = "v2dir_equals_v2dec";
         for (Int_t i = 0; i < n_pt_bins; i++)
             v2dir_hyp(i) = v2dec_calc(i);
         break;
+    case 2:
+	// hypothesis: v2dir from (Paquet et al)
+	v2dir_hyp_name = "v2dir_equals_paquet";
+	if (centr == "00-20") {
+	    for (Int_t i = 0; i < n_pt_bins; i++) {
+		v2dir_hyp(i) = v2dir_Paquet_00_20(i + pt_bin_low);
+	    }
+	}
+	else if (centr == "20-40") {
+	    for (Int_t i = 0; i < n_pt_bins; i++) {
+		v2dir_hyp(i) = v2dir_Paquet_20_40(i + pt_bin_low);
+	    }
+	}
+	else {
+	    cout << "ERROR: undefined centrality class" << endl;
+	    exit(-1);
+	}
+	break;
+	
     }
-
-    bool ignore_Rgamma_uncertainty = false; // should be false, only true for tests
-    if (ignore_Rgamma_uncertainty)
-        cout << "TEST: ignore Rgamma uncertainty (NOT for final result)" << endl;
 
     // histogram for test statistic
     TH1F h_test_statistic("h_test_statistic", "h_test_statistic", 1000, 0., 500.);
@@ -101,20 +184,11 @@ void v2dir_significance(Int_t hypothesis_id = 0, TString centr = "20-40", const 
     TVectorD v2inc_mean_sum(n_pt_bins);
     TMatrixDSym v2inc_cov_sum(n_pt_bins);
 
-    // calculate central value of the v2inc prediction
-    TVectorD v2inc_pred_central_value(n_pt_bins);
-    for (Int_t i = 0; i < n_pt_bins; i++) {
-        v2inc_pred_central_value(i) = ((Rgam_meas(i) - 1.) * v2dir_hyp(i) + v2dec_calc(i)) / Rgam_meas(i);
-    }
-
     // v2inc pseudo data
     RooDataSet *v2inc_pseudo_data_all = 0;
 
     // sample Rgam posterior distribution
     RooDataSet *Rgam_data_set = generate_multivariate_pseudo_data(Rgam_meas, cov_Rgam, 1., 5., n_samples);
-
-    // cout << "TEST: Rgamma allowd to fluctuate below unity!!!" << endl;
-    // RooDataSet* Rgam_data_set = generate_multivariate_pseudo_data(Rgam_meas, cov_Rgam, 0., 2., n_samples);
 
     // sample v2dec posterior distribution
     RooDataSet *v2dec_data_set = generate_multivariate_pseudo_data(v2dec_calc, cov_v2dec, -0.5, 0.5, n_samples);
@@ -139,26 +213,15 @@ void v2dir_significance(Int_t hypothesis_id = 0, TString centr = "20-40", const 
             RooRealVar *Rgam_var = (RooRealVar *)Rgam_row->find(((RooArgList *)Rgam_row)->at(i)->GetName());
             Rgam_sampled(i) = Rgam_var->getVal();
 
-            if (!ignore_Rgamma_uncertainty) {
-                // default
-                v2inc_sampled(i) = ((Rgam_sampled(i) - 1.) * v2dir_hyp(i) + v2dec_sampled(i)) / Rgam_sampled(i);
-            } else {
-                // just a test
-                // v2inc_sampled(i) = ((Rgam_meas(i) - 1.) * v2dir_hyp(i) + v2dec_sampled(i)) / Rgam_meas(i);
-            }
+	    v2inc_sampled(i) = ((Rgam_sampled(i) - 1.) * v2dir_hyp(i) + v2dec_sampled(i)) / Rgam_sampled(i);
+	    
         }
 
         // generate v2inc pseudo data for the sampled v2inc prediction
         RooDataSet *v2inc_pseudo_data = generate_multivariate_pseudo_data(v2inc_sampled, cov_v2inc, -0.5, 0.5, 1000);
 
-        // fill_test_statistic(v2inc_pseudo_data, v2inc_pred_central_value, cov_v2inc_inv, h_test_statistic);
-	// if (k==0) {
-        //     v2inc_pseudo_data_all = (RooDataSet*) v2inc_pseudo_data->Clone();
-        // }
-        // else {
-        //     v2inc_pseudo_data_all->append(*v2inc_pseudo_data);
-        // }
-
+	// update sums needed for the calculation of the covariance matrix if the v2inc pseudo-data geenrated
+	// under the selected hypothesis
         update_sums(v2inc_pseudo_data, n_events, v2inc_mean_sum, v2inc_cov_sum);
 
         delete v2inc_pseudo_data;
@@ -187,17 +250,111 @@ void v2dir_significance(Int_t hypothesis_id = 0, TString centr = "20-40", const 
     TMatrixDSym v2inc_pseudo_data_cov_inv = v2inc_pseudo_data_cov;
     v2inc_pseudo_data_cov_inv.Invert();
 
+    // calculate significance
     TVectorD d = v2inc_meas - v2inc_mean_norm;
     Double_t chi2 = dot_product(d, v2inc_pseudo_data_cov_inv * d);
     Double_t p_value = TMath::Prob(chi2, n_pt_bins);
     Double_t n_sigma = p_value_to_n_sigma(p_value);
+
+    // print results
+    cout << "hypothesis: " << v2dir_hyp_name << endl;
     cout << "chi2 = " << chi2 << endl;
     cout << "p-value: " << p_value << endl;
     cout << "n_sigma = " << n_sigma << endl;
 
+
+    // plot first two bins
+       
+    // style settings
+    TStyle *myStyle = new TStyle("myStyle", "My root style");
+    myStyle->SetOptStat(kFALSE);
+    myStyle->SetLabelOffset(0.005, "x"); // 0.005 = root default
+    myStyle->SetLabelOffset(0.005, "y"); // 0.005 = root default
+    myStyle->SetTitleXSize(0.04);        // 0.04  = root default
+    myStyle->SetTitleYSize(0.04);        // 0.04  = root default
+    myStyle->SetTitleXOffset(1.2);
+    myStyle->SetTitleYOffset(1.3);
+    myStyle->SetPadLeftMargin(0.15);
+    myStyle->SetPadRightMargin(0.12); // 0.1 = root default
+    myStyle->SetPadTopMargin(0.1);
+    myStyle->SetPadBottomMargin(0.12);
+    myStyle->SetCanvasColor(0);
+    myStyle->SetPadColor(0);
+    myStyle->SetCanvasBorderMode(0);
+    myStyle->SetPadBorderMode(0);
+    myStyle->SetOptTitle(0);
+    gROOT->SetStyle("myStyle");
+
+    hv2inc_1_2.SetXTitle("v_{2,inc,m}(p_{T} bin 0)");
+    hv2inc_1_2.SetYTitle("v_{2,inc,m}(p_{T} bin 1)");
+    TCanvas* c1 = new TCanvas("c1");
+    if (n_pt_bins > 1) {
+	hv2inc_1_2.DrawCopy("colz");
+	TMarker m(v2inc_meas(0), v2inc_meas(1), 20);
+	m.SetMarkerColor(kRed);
+	m.DrawClone();
+    }
+
+    c1->SaveAs("v2inc_pseudo_data_correlation_plot_pt_bin_1_2.png");
+    
     // TVectorD v2inc_mean_roofit = *(v2inc_pseudo_data_all->mean());
     // TMatrixDSym v2inc_pseuo_data_cov_roofit = *(v2inc_pseudo_data_all->covarianceMatrix());
     // v2inc_pseuo_data_cov_roofit.Print();
+
+    //
+    // draw mean and sigma of the v2inc pseudo data along with the measured v2inc points
+    //
+    
+    TGraphErrors g_v2inc_pseudo_data(n_pt_bins);
+    TGraphErrors g_v2inc_meas(n_pt_bins);
+    for (Int_t i=0; i<n_pt_bins; i++) {
+	g_v2inc_meas.SetPoint(i, pt(i), v2inc_meas(i));
+	g_v2inc_meas.SetPointError(i, 0, 0);
+	
+	g_v2inc_pseudo_data.SetPoint(i, pt(i), v2inc_mean_norm(i));
+	g_v2inc_pseudo_data.SetPointError(i, 0, TMath::Sqrt(v2inc_pseudo_data_cov(i,i)));	
+    }
+    
+    TCanvas* c2 = new TCanvas("c2");
+    // c2->cd();
+    
+    TH2F fr2("fr2", "fr2", 1, pt(0)-0.25, pt(n_pt_bins-1)+0.25, 1, 0., 0.25);
+    fr2.SetXTitle("#it{p}_{T} (GeV/#it{c})");
+    fr2.SetYTitle("#it{v}_{2,inc}");
+    
+    fr2.DrawCopy();
+    g_v2inc_pseudo_data.SetMarkerColor(kRed);
+    g_v2inc_pseudo_data.SetMarkerStyle(kOpenCircle);
+
+    g_v2inc_meas.SetMarkerColor(kBlue);
+    g_v2inc_meas.SetMarkerStyle(kFullCircle);
+    
+    g_v2inc_pseudo_data.DrawClone("p");
+    g_v2inc_meas.DrawClone("p");
+
+    TLegend leg2(0.3, 0.15, 0.82, 0.25, NULL, "brNDC");
+    TString legend_text_pseudo_data = Form("pseudo data for hypothesis %s", v2dir_hyp_name_latex.Data());
+    leg2.AddEntry(&g_v2inc_meas, "real data", "p");
+    leg2.AddEntry(&g_v2inc_pseudo_data, legend_text_pseudo_data.Data(), "p");
+    leg2.SetBorderSize(0);
+    leg2.DrawClone();
+
+    Double_t rho = -99;
+    if (output_dir == "output_corr_coeff_0") rho = 0;
+    else if (output_dir == "output_corr_coeff_05") rho = 0.5;
+    else if (output_dir == "output_corr_coeff_1") rho = 1;
+    else cout << "WARNING: could not identify correlation coefficient" << endl;
+    
+    TLatex la2a;
+    la2a.SetTextSize(0.042);
+    la2a.DrawLatexNDC(0.2, 0.8, Form("%s%%, #rho = %3.1f", centr.Data(), rho));
+
+    TLatex la2b;
+    la2b.SetTextSize(0.042);
+    la2b.DrawLatexNDC(0.2, 0.75, Form("#it{p}-value = %5.3f (%3.1f#sigma)", p_value, n_sigma));
+
+    TString fn2 = "v2inc_pseudo_and_measured_data_" + centr + "_" + output_dir + ".pdf";
+    c2->SaveAs(fn2.Data());
 }
 
 void update_sums(RooDataSet *pd, Int_t &n_evt, TVectorD &v2inc_mean_sum, TMatrixDSym &v2inc_cov_sum) {
@@ -219,6 +376,10 @@ void update_sums(RooDataSet *pd, Int_t &n_evt, TVectorD &v2inc_mean_sum, TMatrix
             v2inc_pseudo_data(i) = v2inc_var->getVal();
         }
 
+	// fill 2d histogram for the first two pt bins for visulization 
+	if (n_pt_bins > 1) hv2inc_1_2.Fill(v2inc_pseudo_data(0), v2inc_pseudo_data(1));
+
+	// update sum needed for the calculation of the covariance matrix
         for (Int_t i = 0; i < n_pt_bins; ++i) {
             v2inc_mean_sum(i) += v2inc_pseudo_data(i);
             for (Int_t j = i; j < n_pt_bins; ++j) {

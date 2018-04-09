@@ -117,6 +117,10 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     TMatrixDSym cov_Rgamma_staterr_pcm = *(TMatrixDSym *)dir_pcm->Get("cov_Rgamma_staterr");
     TMatrixDSym cov_Rgamma_toterr_pcm = *(TMatrixDSym *)dir_pcm->Get("cov_Rgamma_toterr");
 
+    // read strings with correlation coefficients
+    TObjString correlation_coeff_v2inc_pcm = *(TObjString *)dir_pcm->Get("correlation_coeff_v2inc");
+    TObjString correlation_coeff_Rgam_pcm = *(TObjString *)dir_pcm->Get("correlation_coeff_Rgam");
+    
     //
     // PHOS specific input
     //
@@ -135,6 +139,10 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     TMatrixDSym cov_Rgamma_syserr_phos = *(TMatrixDSym *)dir_phos->Get("cov_Rgamma_syserr");
     TMatrixDSym cov_Rgamma_toterr_phos = *(TMatrixDSym *)dir_phos->Get("cov_Rgamma_toterr");
 
+    // read strings with correlation coefficients
+    TObjString correlation_coeff_v2inc_phos = *(TObjString *)dir_phos->Get("correlation_coeff_v2inc");
+    TObjString correlation_coeff_Rgam_phos = *(TObjString *)dir_phos->Get("correlation_coeff_Rgam");
+    
     //
     // PCM/PHOS combined
     //
@@ -715,6 +723,11 @@ void v2dir_pcm_phos_comb(TString centr, Int_t nSamples = 100000, TString output_
     g_Rgamma_toterr.SetTitle("g_Rgamma_toterr");
     g_Rgamma_toterr.Write();
 
+    correlation_coeff_v2inc_pcm.Write("correlation_coeff_v2inc_pcm");
+    correlation_coeff_v2inc_phos.Write("correlation_coeff_v2inc_phos");
+    correlation_coeff_Rgam_pcm.Write("correlation_coeff_Rgam_pcm");
+    correlation_coeff_Rgam_phos.Write("correlation_coeff_Rgam_phos");
+    
     f_out.Close();
 
     //

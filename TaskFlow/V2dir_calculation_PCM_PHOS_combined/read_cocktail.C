@@ -1,22 +1,22 @@
 void read_cocktail() {
 
   //16 pT bins: bin i. central pT value
-  // 0 |1
-  // 1 |1.2
-  // 2 |1.4
-  // 3 |1.6
-  // 4 |1.8
-  // 5 |2
-  // 6 |2.2
-  // 7 |2.4
-  // 8 |2.6
-  // 9 |2.85
+  // 0  |1
+  // 1  |1.2
+  // 2  |1.4
+  // 3  |1.6
+  // 4  |1.8
+  // 5  |2
+  // 6  |2.2
+  // 7  |2.4
+  // 8  |2.6
+  // 9  |2.85
   // 10 |3.15
   // 11 |3.5
   // 12 |3.9
   // 13 |4.35
   // 14 |5
-  // 15 |5.8
+  // 15 |5.8 
 
   // open cocktail file
   // TString filename_v2dec = "cocktail/CocktailV2_FullSys_19092017.root";
@@ -24,6 +24,8 @@ void read_cocktail() {
   TString filename_v2dec = "cocktail/CocktailV2_16102017.root";
   TFile file_v2dec(filename_v2dec);
 
+  const Double_t corr_coeff_v2dec = 0.;
+  
   // loop over centralities
   // centrality, 0-20% = cen6, 20-40% = cen3, 40-80% = cen8
   const Int_t n_centr = 2;
@@ -74,8 +76,8 @@ void read_cocktail() {
         // off diagonal elements: correlated errors
         for (Int_t j_pt_bin=0; j_pt_bin<n_pt_bins; ++j_pt_bin) {
           if (i_pt_bin != j_pt_bin) {
-            cov_v2_dec_toterr(i_pt_bin, j_pt_bin) = cov_v2_dec_syserr(i_pt_bin, i_pt_bin) * cov_v2_dec_syserr(j_pt_bin, j_pt_bin);
-            cov_v2_dec_syserr(i_pt_bin, j_pt_bin) = 0.95 * cov_v2_dec_toterr(i_pt_bin, j_pt_bin);
+	      cov_v2_dec_syserr(i_pt_bin, j_pt_bin) = corr_coeff_v2dec * cov_v2_dec_syserr(i_pt_bin, i_pt_bin) * cov_v2_dec_syserr(j_pt_bin, j_pt_bin);
+	      cov_v2_dec_toterr(i_pt_bin, j_pt_bin) = 0.95 * cov_v2_dec_toterr(i_pt_bin, j_pt_bin);
           }
         }
 

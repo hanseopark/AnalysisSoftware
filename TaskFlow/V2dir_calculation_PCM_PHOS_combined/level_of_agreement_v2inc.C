@@ -147,5 +147,5 @@ Double_t chi2(const TVectorD &x, const TVectorD &mu, const TMatrixDSym &V) {
     TVectorD d = x - mu;
     TMatrixDSym V_copy = V;
     TMatrixDSym Vinv = V_copy.Invert();
-    eturn Product(d, Vinv * d);
+    return DotProduct(d, Vinv * d);
 }
