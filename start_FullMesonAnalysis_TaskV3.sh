@@ -1206,8 +1206,6 @@ if [[ "$1" == *-*pi0Only* ]]; then
     DoPi0=1
     DoEta=0
     DoPi0InEtaBinning=0
-    DoGamma=0
-    disableToyMC=1;
     echo "pi0 calculation only"
 fi
 

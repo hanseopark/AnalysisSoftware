@@ -665,7 +665,6 @@ void CorrectCaloNonLinearityV4(
 
             // special setting for PCM-PHOS
             } else if( mode == 3 ){
-<<<<<<< d2607906b14572474336e10f35b752209532526a
                 if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
                     if (fBinsPt[iClusterPt] < 1.5)
                         minMax[1]       = 0.18;
@@ -679,12 +678,6 @@ void CorrectCaloNonLinearityV4(
                     else
                         minMax[1]       = 0.25;
                 }
-=======
-                if (fBinsPt[iClusterPt] < 1)
-                    minMax[1]       = 0.20;
-                else
-                    minMax[1]       = 0.25;
->>>>>>> merging to master
                 minMax[0]       = 0.03;
 
             // special setting for EMC
@@ -693,7 +686,6 @@ void CorrectCaloNonLinearityV4(
                 Double_t min    = 0.02*fBinsPt[iClusterPt] - 0.001;
                 if (min > minMax[0])
                     minMax[0]   = min;
-<<<<<<< d2607906b14572474336e10f35b752209532526a
 
                 if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
                     minMax[1]   = 0.3;
@@ -708,8 +700,6 @@ void CorrectCaloNonLinearityV4(
                         minMax[1]       = 0.3;
                 }
 
-=======
->>>>>>> merging to master
             // special setting for PHOS
             } else if( mode == 5){
                 minMax[1]       = 0.25;
@@ -830,15 +820,10 @@ void CorrectCaloNonLinearityV4(
 
     TF1* fitMassDataVsPDG2      = new TF1("fitMassDataVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassDataVsPDG2->SetParameter(0, fitMassDataVsPDGConst->GetParameter(0));
-<<<<<<< d2607906b14572474336e10f35b752209532526a
     if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.1*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.1*fitMassDataVsPDGConst->GetParError(0));
     else if (mode == 2 || mode == 4 || mode == 12)
         fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
-=======
-    if (mode == 2 || mode == 4 || mode == 12)
-      fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-3*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+3*fitMassDataVsPDGConst->GetParError(0));
->>>>>>> merging to master
     else
       fitMassDataVsPDG2->SetParLimits(0, fitMassDataVsPDGConst->GetParameter(0)-0.5*fitMassDataVsPDGConst->GetParError(0), fitMassDataVsPDGConst->GetParameter(0)+0.5*fitMassDataVsPDGConst->GetParError(0));
 
@@ -858,19 +843,12 @@ void CorrectCaloNonLinearityV4(
 
     TF1* fitMassMCVsPDG2 = new TF1("fitMassMCVsPDG2", "[0]-TMath::Exp(-[1]*x+[2])" ,fBinsPt[ptBinRange[0]],fBinsPt[ptBinRange[1]]);
     fitMassMCVsPDG2->SetParameter(0, fitMassMCVsPDGConst->GetParameter(0));
-<<<<<<< d2607906b14572474336e10f35b752209532526a
     if ( (mode == 2 || mode == 4 || mode == 12) && (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")  ) )
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.1*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.1*fitMassMCVsPDGConst->GetParError(0));
     else if (mode == 2 || mode == 4 || mode == 12)
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
     else
         fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
-=======
-    if (mode == 2 || mode == 4 || mode == 12)
-      fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-2*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+2*fitMassMCVsPDGConst->GetParError(0));
-    else
-      fitMassMCVsPDG2->SetParLimits(0, fitMassMCVsPDGConst->GetParameter(0)-0.5*fitMassMCVsPDGConst->GetParError(0), fitMassMCVsPDGConst->GetParameter(0)+0.5*fitMassMCVsPDGConst->GetParError(0));
->>>>>>> merging to master
 
     histMCResultsVsPDG->Fit(fitMassMCVsPDG2,"QRME0");
     cout << WriteParameterToFile(fitMassMCVsPDG2) << endl;

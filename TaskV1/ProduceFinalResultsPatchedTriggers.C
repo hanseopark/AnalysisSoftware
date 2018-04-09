@@ -112,14 +112,14 @@ Int_t GetOrderedTrigger(TString triggerNameDummy){
 //***************************** Main function *******************************************************************
 //***************************************************************************************************************
 void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "triggerFileListPi0.txt",
-                                            Int_t   mode                = 12,
-                                            Int_t   numberOfTrigg       = 1,
-                                            TString suffix              = "pdf",
+                                            Int_t   mode                = 4,
+                                            Int_t   numberOfTrigg       = 6,
+                                            TString suffix              = "eps",
                                             TString isMC                = "",
                                             TString optionEnergy        = "",
                                             TString period              = "",
                                             Bool_t  pileUpApplied       = kTRUE,
-                                            Float_t maxPtGlobalPi0      = 12.,
+                                            Float_t maxPtGlobalPi0      = 16.,
                                             Bool_t  averagedPi0         = kFALSE,
                                             Bool_t  enableEta           = kTRUE,
                                             Float_t maxPtGlobalEta      = 14.,
@@ -279,24 +279,24 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     //*************************** read setting from configuration file **********************************************
     //***************************************************************************************************************
-    // ifstream in(fileListNamePi0.Data());
-    // cout<<"Available Triggers:"<<endl;
-    // // general number of triggers set
-    // Int_t nrOfTrigToBeComb      = 0;
-    // // number of triggers which are really used for the respective analysis
-    // Int_t nrOfTrigToBeCombPi0Red        = 0;
-    // Int_t nrOfTrigToBeCombEtaRed        = 0;
-    // Int_t nrOfTrigToBeCombEtaToPi0Red   = 0;
-    // while(!in.eof() && nrOfTrigToBeComb<numberOfTrigg ){
-    //     in >> cutNumber[nrOfTrigToBeComb] >> minPt[nrOfTrigToBeComb] >> maxPt[nrOfTrigToBeComb] >> triggerName[nrOfTrigToBeComb]
-    //     >> trigSteps[nrOfTrigToBeComb][0]  >> trigSteps[nrOfTrigToBeComb][1]  >> trigSteps[nrOfTrigToBeComb][2] >> ptFromSpecPi0[nrOfTrigToBeComb][0] >> ptFromSpecPi0[nrOfTrigToBeComb][1]
-    //     >> ptFromSpecEta[nrOfTrigToBeComb][0] >> ptFromSpecEta[nrOfTrigToBeComb][1] >> sysFilePi0[nrOfTrigToBeComb] >> sysFileEta[nrOfTrigToBeComb] >> sysFileEtaToPi0[nrOfTrigToBeComb] >>
-    //     cutNumberBaseEff[nrOfTrigToBeComb];
-    //     cout<< cutNumber[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
-    //     cout << trigSteps[nrOfTrigToBeComb][0] << "\t" << trigSteps[nrOfTrigToBeComb][1] << "\t"<< trigSteps[nrOfTrigToBeComb][2] << endl;
-    //     nrOfTrigToBeComb++;
-    //     cout << cutNumberBaseEff[nrOfTrigToBeComb] << endl;
-    // }
+    ifstream in(fileListNamePi0.Data());
+    cout<<"Available Triggers:"<<endl;
+    // general number of triggers set
+    Int_t nrOfTrigToBeComb      = 0;
+    // number of triggers which are really used for the respective analysis
+    Int_t nrOfTrigToBeCombPi0Red        = 0;
+    Int_t nrOfTrigToBeCombEtaRed        = 0;
+    Int_t nrOfTrigToBeCombEtaToPi0Red   = 0;
+    while(!in.eof() && nrOfTrigToBeComb<numberOfTrigg ){
+        in >> cutNumber[nrOfTrigToBeComb] >> minPt[nrOfTrigToBeComb] >> maxPt[nrOfTrigToBeComb] >> triggerName[nrOfTrigToBeComb]
+        >> trigSteps[nrOfTrigToBeComb][0]  >> trigSteps[nrOfTrigToBeComb][1]  >> trigSteps[nrOfTrigToBeComb][2] >> ptFromSpecPi0[nrOfTrigToBeComb][0] >> ptFromSpecPi0[nrOfTrigToBeComb][1]
+        >> ptFromSpecEta[nrOfTrigToBeComb][0] >> ptFromSpecEta[nrOfTrigToBeComb][1] >> sysFilePi0[nrOfTrigToBeComb] >> sysFileEta[nrOfTrigToBeComb] >> sysFileEtaToPi0[nrOfTrigToBeComb] >>
+        cutNumberBaseEff[nrOfTrigToBeComb];
+        cout<< cutNumber[nrOfTrigToBeComb]<< "\t"<< triggerName[nrOfTrigToBeComb] << "\t transverse momentum range: " << minPt[nrOfTrigToBeComb]<< "\t to "<< maxPt[nrOfTrigToBeComb] <<endl;
+        cout << trigSteps[nrOfTrigToBeComb][0] << "\t" << trigSteps[nrOfTrigToBeComb][1] << "\t"<< trigSteps[nrOfTrigToBeComb][2] << endl;
+        nrOfTrigToBeComb++;
+        cout << cutNumberBaseEff[nrOfTrigToBeComb] << endl;
+    }
 
     for (Int_t i = 0; i < nrOfTrigToBeComb; i++){
         // figure out which triggers are fully masked for the pi0
