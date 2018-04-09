@@ -908,7 +908,7 @@ void CorrectCaloNonLinearityV4(
         highPtConst = fFitConst->GetParameter(0);
     }
 
-    TF1* fFitConstFullInv   = new TF1("ConstFullPtRange", "[0]" ,fBinsPt[ptBinRange[0]], fBinsPt[ptBinRange[1]]);
+    TF1* fFitConstFullInv   = new TF1("ConstFullPtRangeInverted", "[0]" ,fBinsPt[ptBinRange[0]], fBinsPt[ptBinRange[1]]);
     fFitConstFullInv->SetParameter(0, 1./fFitConstFull->GetParameter(0));
 
     // creating real fit functions
@@ -979,6 +979,7 @@ void CorrectCaloNonLinearityV4(
 
     fLog << WriteParameterToFile(fFitConst) << endl;
     fLog << WriteParameterToFile(fFitConstFull) << endl;
+    fLog << WriteParameterToFile(fFitConstFullInv) << endl;
     fLog << WriteParameterToFile(fFitComposit) << endl;
     fLog << WriteParameterToFile(fFitCompositFitted) << endl;
     fLog << WriteParameterToFile(fFitCompositInverted) << endl;
