@@ -406,13 +406,20 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     if (optionEnergy.CompareTo("13TeV") == 0){
         isV0AND             = 1;
     }
+<<<<<<< Updated upstream
     if (optionEnergy.CompareTo("5TeV2017") == 0){
         isV0AND             = 1;
     }
+=======
+>>>>>>> Stashed changes
 
     xSection                = ReturnCorrectXSection( optionEnergy, isV0AND);
 
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
    if (!isMC.CompareTo("kFALSE")&&!useSameBinningPi0Eta.CompareTo("")){
 		//**********************************************************************************
 		//******************** FWHM Plot ***************************************************

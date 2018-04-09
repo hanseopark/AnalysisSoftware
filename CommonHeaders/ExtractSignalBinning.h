@@ -170,10 +170,9 @@
                                                         10., 12., 16., 18.};
 
 
-    Double_t fBinsPi05TeVPtDCal[16]                 = { 0.0, 1.0, 1.4, 1.8, 2.2,
-                                                        2.6, 3.0, 3.4, 3.8, 4.4,
-                                                        5.0, 6.0, 8.0, 12.0, 20.0,
-                                                        30.0};
+    Double_t fBinsPi05TeVPtDCal[15]                 = { 0.0, 1.0, 1.4, 1.8, 2.2,
+                                                        2.6, 3.0, 3.4, 3.8, 4.5,
+                                                        6.0, 8., 12., 20.0, 30.0};
 
     // Double_t fBinsPi05TeVPtDCal[25]                 = { 0.0, 1., 1.2, 1.4, 1.6,
     //                                                     1.7, 1.8, 1.9, 2.0, 2.1,
@@ -219,8 +218,8 @@
 
     Double_t fBinsPi05TeVPtRebinDCal[24]              = { 1, 1, 8, 4, 4,
                                                         4, 4, 4, 4, 4,
-                                                        4, 4, 4, 4, 4,
-                                                        4, 4, 4, 4, 4,
+                                                        8, 8, 8, 8, 8,
+                                                        8, 4, 4, 4, 4,
                                                         4, 4, 8, 16};
     Double_t fBinsPi05TeVPtRebinPCMDCal[24]              = { 1, 1, 8, 4, 4,
                                                         4, 4, 4, 4, 4,
@@ -1659,7 +1658,7 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 if ( mode == 4 )
                     return 24;
                 if ( mode == 12 )
-                    return 12;
+                    return 5;
                 if ( mode == 13 )
                     return 12;
                 else

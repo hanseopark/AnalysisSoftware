@@ -50,17 +50,29 @@ IsROOT6=0
 
 function GiveBinning5TeV()
 {
-     echo "how many p_t bins do you want to use for the pi0? 14 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
+     echo "how many p_t bins do you want to use for the pi0? 12+13+14 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
 
      read answer
      if [ $answer -gt 19 ] && [ $answer -lt 40 ]; then
        echo "$answer bins --> max p_t = XX GeV/c ...";
        correctPi0=1
        BinsPtPi0=$answer
+     elif [ $answer = 11 ]; then
+         echo "11 bins --> max p_t = 8 GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=11
+     elif [ $answer = 12 ]; then
+         echo "12 bins --> max p_t = 10 GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=12
      elif [ $answer = 13 ]; then
-         echo "13 bins --> max p_t = 12??? GeV/c ...";
+         echo "13 bins --> max p_t = 12 GeV/c ...";
          correctPi0=1
          BinsPtPi0=13
+     elif [ $answer = 14 ]; then
+         echo "14 bins --> max p_t = 1X GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=14
      elif [ $answer = 19 ]; then
          echo "19 bins --> max p_t = XX GeV/c ...";
          correctPi0=1
@@ -1194,6 +1206,8 @@ if [[ "$1" == *-*pi0Only* ]]; then
     DoPi0=1
     DoEta=0
     DoPi0InEtaBinning=0
+    DoGamma=0
+    disableToyMC=1;
     echo "pi0 calculation only"
 fi
 
@@ -1832,7 +1846,7 @@ else
     if [ -f $MCRootFile ]; then
         echo "The MC file specified is $MCRootFile"
     else
-        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results...."
         PARTLY=1
         MCFILE=0
     fi
