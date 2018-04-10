@@ -58,6 +58,51 @@ function GiveBinningDalitz7TeV()
 
 }
 
+function GiveBinningDalitz5TeV2017()
+{
+	echo "How many p_T bins do you want to use for the Pi0? 19(5GeV), 20(6GeV), 21(8GeV), 22(10GeV)";
+	read answer
+		if [ $answer = 19 ]; then
+		    echo "19 Bins --> Max p_T = 5 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=19
+		elif [ $answer = 20 ]; then
+		    echo "20 Bins --> Max p_T = 6 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=20
+		elif [ $answer = 21 ]; then
+		    echo "21 Bins --> Max p_T = 8 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=21
+		elif [ $answer = 22 ]; then
+		    echo "22 Bins --> Max p_T = 10 GeV ...";
+		    correctPi0=1
+		    BinsPtPi0=22
+		else
+		    echo "Pi0 Binning was not set correctly. Please try again.";
+		    correctPi0=0
+		fi
+ 	echo "How many p_t bins do you want to use for the eta meson? 7 (4.4GeV), 8 (6. GeV), 9 (10 GeV)"
+ 	read answer
+		if [ $answer = 7 ]; then
+		    echo "7 Bins --> Max p_T = 4.4 GeV ...";
+		    correctEta=1
+		    BinsPtEta=7
+		elif [ $answer = 8 ]; then
+		    echo "8 Bins --> Max p_T = 6 GeV ...";
+		    correctEta=1
+		    BinsPtEta=8
+		elif [ $answer = 9 ]; then
+		    echo "9 Bins --> Max p_T = 10 GeV ...";
+		    correctEta=1
+		    BinsPtEta=9
+		else
+		    echo "Eta Binning was not set correctly. Please try again.";
+		    correctEta=0
+		fi
+
+}
+
 function GiveBinningDirectPhotonHI()
 {
     echo "How many p_T bins do you want to use for the Pi0? 17(8GeV), 18(11GeV) 19 (14GeV)";
@@ -919,7 +964,7 @@ done
 correct=0
 while [ $correct -eq 0 ]
 do
-    echo "Which collision system do you want to process? 7TeV (pp@7TeV), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (PbPb@2.76TeV)"
+    echo "Which collision system do you want to process? 7TeV (pp@7TeV), 5TeV2017 (pp@5TeV2017), 900GeV (pp@900GeV), 2.76TeV (pp@2.76TeV), PbPb_2.76TeV (PbPb@2.76TeV), pPb_5.023TeV (PbPb@2.76TeV)"
     read energy
     if [ $energy = "7TeV" ]; then
       
@@ -927,6 +972,25 @@ do
          Con=0
          if [ $ONLYCORRECTION -eq 0 ]; then
 	 GiveBinningDalitz7TeV 
+         correctPi0=1
+         correctEta=1
+         fi
+         #if [ $correctPi0 -eq 0 ]; then
+         #correct=0
+         #elif [ $correctEta -eq 0 ]; then
+         #correct=0
+         #else 
+         correct=1
+         #fi
+      #else
+      #   echo "Command not found. Please try again.";
+      #fi
+    elif [ $energy = "5TeV2017" ]; then
+      
+         Conference="No"
+         Con=0
+         if [ $ONLYCORRECTION -eq 0 ]; then
+         GiveBinningDalitz5TeV2017
          correctPi0=1
          correctEta=1
          fi
