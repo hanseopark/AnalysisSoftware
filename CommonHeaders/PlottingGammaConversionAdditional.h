@@ -3046,7 +3046,27 @@
         if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!kBox){
                 if (!generator.CompareTo("")){
-                    return kViolet+2;
+                    if (!centrality.CompareTo("0-10%")){
+                        return kRed+1;
+                    } else if (!centrality.CompareTo("0-20%")){
+                        return kRed+1;
+                    } else if (!centrality.CompareTo("0-5%")){
+                        return kRed+1;
+                    } else if (!centrality.CompareTo("5-10%")){
+                        return 807;
+                    } else if (!centrality.CompareTo("10-20%")){
+                        return 800;
+                    } else if (!centrality.CompareTo("20-40%")){
+                        return kGreen+2;
+                    } else if (!centrality.CompareTo("40-60%")){
+                        return kCyan+2;
+                    } else if (!centrality.CompareTo("60-80%")){
+                        return kBlue+1;
+                    } else if (!centrality.CompareTo("60-100%")){
+                        return kViolet+4;
+                    } else {
+                        return kViolet+2;
+                    }
                 } else if (!generator.CompareTo("Hijing")){
                     return kViolet+1;
                 } else if (!generator.CompareTo("DPMJET")){
@@ -3079,6 +3099,28 @@
                     return kViolet+1;
                 } else if (generator.Contains("LHC17f2b") || generator.Contains("DPMJET")){
                     return kGreen+2;
+                } else {
+                    if (!centrality.CompareTo("0-10%")){
+                        return kRed+3;
+                    } else if (!centrality.CompareTo("0-20%")){
+                        return kRed+3;
+                    } else if (!centrality.CompareTo("0-5%")){
+                        return kRed+2;
+                    } else if (!centrality.CompareTo("5-10%")){
+                        return 809;
+                    } else if (!centrality.CompareTo("10-20%")){
+                        return 802;
+                    } else if (!centrality.CompareTo("20-40%")){
+                        return kGreen+4;
+                    } else if (!centrality.CompareTo("40-60%")){
+                        return kCyan+3;
+                    } else if (!centrality.CompareTo("60-80%")){
+                        return kBlue+3;
+                    } else if (!centrality.CompareTo("60-100%")){
+                        return kViolet+3;
+                    } else {
+                        return kViolet+1;
+                    }
                 }
             } else {
                 return kViolet+6;
@@ -3257,25 +3299,25 @@
                     return kGreen+1;
                 } else return kRed+2;
             } else if (!generator.CompareTo("")){
-	      if (!centrality.CompareTo("0-5%"))        return 46;
-	      else if (!centrality.CompareTo("5-10%"))  return 45;
-	      else if (!centrality.CompareTo("10-15%")) return 44;
-	      else if (!centrality.CompareTo("15-20%")) return 43;
-	      else if (!centrality.CompareTo("20-25%")) return 42;
-	      else if (!centrality.CompareTo("25-30%")) return 41;
-	      else if (!centrality.CompareTo("30-35%")) return 40;
-	      else if (!centrality.CompareTo("35-40%")) return 39;
-	      else if (!centrality.CompareTo("40-45%")) return 38;
-	      else if (!centrality.CompareTo("45-50%")) return 37;
-	      else if (!centrality.CompareTo("50-55%")) return 36;
-	      else if (!centrality.CompareTo("55-60%")) return 35;
-	      else if (!centrality.CompareTo("60-65%")) return 34;
-	      else if (!centrality.CompareTo("65-70%")) return 33;
-	      else if (!centrality.CompareTo("70-75%")) return 32;
-	      else if (!centrality.CompareTo("75-80%")) return 31;
-	      else if (!centrality.CompareTo("80-85%")) return 30;
-	      else if (!centrality.CompareTo("85-90%")) return 29;
-	    }
+                if (!centrality.CompareTo("0-5%"))        return 46;
+                else if (!centrality.CompareTo("5-10%"))  return 45;
+                else if (!centrality.CompareTo("10-15%")) return 44;
+                else if (!centrality.CompareTo("15-20%")) return 43;
+                else if (!centrality.CompareTo("20-25%")) return 42;
+                else if (!centrality.CompareTo("25-30%")) return 41;
+                else if (!centrality.CompareTo("30-35%")) return 40;
+                else if (!centrality.CompareTo("35-40%")) return 39;
+                else if (!centrality.CompareTo("40-45%")) return 38;
+                else if (!centrality.CompareTo("45-50%")) return 37;
+                else if (!centrality.CompareTo("50-55%")) return 36;
+                else if (!centrality.CompareTo("55-60%")) return 35;
+                else if (!centrality.CompareTo("60-65%")) return 34;
+                else if (!centrality.CompareTo("65-70%")) return 33;
+                else if (!centrality.CompareTo("70-75%")) return 32;
+                else if (!centrality.CompareTo("75-80%")) return 31;
+                else if (!centrality.CompareTo("80-85%")) return 30;
+                else if (!centrality.CompareTo("85-90%")) return 29;
+            }
         }
         if (!energy.CompareTo("XeXe_5.44TeV")){
             if (!generator.CompareTo("LHC17n") || !generator.CompareTo("") ){
@@ -3415,7 +3457,31 @@
 
         if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
-                return 33;
+                if (!centrality.CompareTo("0-10%")){
+                  return 20;
+                } else if (!centrality.CompareTo("0-20%")){
+                  return 20;
+                } else if (!centrality.CompareTo("0-40%")){
+                  return 20;
+                } else if (!centrality.CompareTo("0-5%")){
+                  return 20;
+                } else if (!centrality.CompareTo("5-10%")){
+                  return 21;
+                } else if (!centrality.CompareTo("10-20%")){
+                  return 29;
+                } else if (!centrality.CompareTo("20-40%")){
+                  return 33;
+                } else if (!centrality.CompareTo("20-50%")){
+                  return 34;
+                } else if (!centrality.CompareTo("40-60%")){
+                  return 20;
+                } else if (!centrality.CompareTo("60-80%")){
+                  return 21;
+                } else if (!centrality.CompareTo("60-100%")){
+                  return 34;
+                } else {
+                  return 33;
+                }
             } else if (!generator.CompareTo("LHC13b")){
                 return 20;
             } else if (!generator.CompareTo("LHC13c")){
@@ -3439,7 +3505,31 @@
             } else if (generator.Contains("LHC17f2b")){
                 return 25;
             } else {
+              if (!centrality.CompareTo("0-10%")){
+                return 24;
+              } else if (!centrality.CompareTo("0-20%")){
+                return 24;
+              } else if (!centrality.CompareTo("0-40%")){
+                return 24;
+              } else if (!centrality.CompareTo("0-5%")){
+                return 24;
+              } else if (!centrality.CompareTo("5-10%")){
+                return 25;
+              } else if (!centrality.CompareTo("10-20%")){
+                return 30;
+              } else if (!centrality.CompareTo("20-40%")){
                 return 27;
+              } else if (!centrality.CompareTo("20-50%")){
+                return 28;
+              } else if (!centrality.CompareTo("40-60%")){
+                return 24;
+              } else if (!centrality.CompareTo("60-80%")){
+                return 25;
+              } else if (!centrality.CompareTo("60-100%")){
+                return 28;
+              } else {
+                return 27;
+              }
             }
         }
         if (!energy.CompareTo("pPb_8TeV") ){
@@ -3647,7 +3737,31 @@
 
         if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
+              if (!centrality.CompareTo("0-10%")){
+                return 2;
+              } else if (!centrality.CompareTo("0-20%")){
+                return 2;
+              } else if (!centrality.CompareTo("0-40%")){
+                return 2;
+              } else if (!centrality.CompareTo("0-5%")){
+                return 2;
+              } else if (!centrality.CompareTo("5-10%")){
+                return 2;
+              } else if (!centrality.CompareTo("10-20%")){
+                return 2.5;
+              } else if (!centrality.CompareTo("20-40%")){
+                return 2.5;
+              } else if (!centrality.CompareTo("20-50%")){
+                return 2.;
+              } else if (!centrality.CompareTo("40-60%")){
+                return 2;
+              } else if (!centrality.CompareTo("60-80%")){
+                return 2;
+              } else if (!centrality.CompareTo("60-100%")){
+                return 2;
+              } else {
                 return 2.2;
+              }
             } else if (generator.CompareTo("LHC13")==0 || (generator.BeginsWith("LHC13")&&generator.Length()==6)){
                 return 2.2;
             } else {

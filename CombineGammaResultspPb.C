@@ -169,7 +169,7 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     cout << "Setting Gamma binning" << endl;
     Double_t xPtLimitsGamma[100]                    = {0};
     Int_t maxNBinsGammaAbs                          = 0;
-    Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, maxNBinsGammaAbs, "Gamma", "pPb_5.023TeV", 21 );
+    Int_t maxNBinsGamma                             = GetBinning( xPtLimitsGamma, maxNBinsGammaAbs, "Gamma", "pPb_5.023TeV", 22 );
     for (Int_t i = 0; i< maxNBinsGamma; i++){
         cout << i << ": "<< xPtLimitsGamma[i] <<" - " << xPtLimitsGamma[i+1]<< ", " <<endl;
     }
@@ -281,6 +281,26 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
         histoEffSecCorr[2][2]                           = (TH1D*) directoryEMCGammapPb->Get("GammaEffectiveSecondaryCorr_Lambda");
         histoEffSecCorr[3][2]                           = (TH1D*) directoryEMCGammapPb->Get("GammaEffectiveSecondaryCorr_Rest");
 
+        Int_t j = 1;
+        while (histoEffi[2]->GetBinCenter(j) < 2.05){
+          histoEffi[2]->SetBinContent(j,1e-10);
+          histoEffiMCPt[2]->SetBinContent(j,1e-10);
+          histoResolCorr[2]->SetBinContent(j,1e10);
+          histoPurity[2]->SetBinContent(j,1e10);
+          histoIncGammaStatErr[2]->SetBinContent(j,0);
+          histoDRPi0FitStatErr[2]->SetBinContent(j,0);
+          histoDRNonFitStatErr[2]->SetBinContent(j,0);
+          histoIncGammaRatioStatErr[2]->SetBinContent(j,0);
+          histoEffSecCorr[0][2]->SetBinContent(j,1e10);
+          histoEffSecCorr[1][2]->SetBinContent(j,1e10);
+          histoEffSecCorr[2][2]->SetBinContent(j,1e10);
+          histoEffSecCorr[3][2]->SetBinContent(j,1e10);
+          j++;
+        }
+        while (graphDRPi0FitSysErr[2]->GetX()[0] < 2.05) graphDRPi0FitSysErr[2]->RemovePoint(0);
+        while (graphDRNonFitSysErr[2]->GetX()[0] < 2.05) graphDRNonFitSysErr[2]->RemovePoint(0);
+        while (graphIncGammaRatioSysErr[2]->GetX()[0] < 2.05) graphIncGammaRatioSysErr[2]->RemovePoint(0);
+        while (graphIncGammaSysErr[2]->GetX()[0] < 2.05) graphIncGammaSysErr[2]->RemovePoint(0);
     //*******************************************************************************************************************************************
     //*********************************************** Load PHOS histograms from PHOS file *******************************************************
     //*******************************************************************************************************************************************
@@ -339,7 +359,10 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     Int_t offSetsGamma[11]          = { 2,  8,  2,  0,  0,
                                         0,  0,  0,  0,  0,
                                         0};
-    Int_t offSetsGammaSys[11]       = { 3,  8,  10,  0,  8,
+//     Int_t offSetsGammaSys[11]       = { 3,  8,  10,  0,  8,
+//                                         0,  0,  0,  0,  0,
+//                                         0};
+    Int_t offSetsGammaSys[11]       = { 3,  8,  14,  0,  8,
                                         0,  0,  0,  0,  0,
                                         0};
 
@@ -820,7 +843,10 @@ void CombineGammaResultspPb(    TString inputFileNamePCM        = "",
     Int_t offSetsIncGamma[11]       = { 2,  8,  2,  0,  0,
                                         0,  0,  0,  0,  0,
                                         0};
-    Int_t offSetsIncGammaSys[11]    = { 3,  8,  10,  0,  8,
+//     Int_t offSetsIncGammaSys[11]    = { 3,  8,  10,  0,  8,
+//                                         0,  0,  0,  0,  0,
+//                                         0};
+    Int_t offSetsIncGammaSys[11]    = { 3,  8,  14,  0,  8,
                                         0,  0,  0,  0,  0,
                                         0};
 
