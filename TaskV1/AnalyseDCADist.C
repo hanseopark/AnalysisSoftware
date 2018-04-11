@@ -1258,7 +1258,116 @@ void AnalyseDCADist(    TString meson           ="",
         canvasDCACatCompare->SaveAs(Form("%s/%s_%s_DCAzCategoryComp_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), j,suffix.Data()));
         delete canvasDCACatCompare;
     }
+    if (kMC){
+      TFile* fDataInputComp                       = new TFile(Form("%s/%s/%s_Data_GammaConvV1DCATestAnalysed.root",cutSelection.Data(),optionEnergy.Data(),meson.Data()));
+      if(fDataInputComp){
+        gSystem->Exec("mkdir -p "+outputDir+"/Monitoring");
+        for (Int_t cat = 0; cat < 6; cat++){
+          for (Int_t j = fStartPtBin; j < fNBinsPt; j++){
+            Double_t textSizeLabelsPixel            = 55;
+            Double_t textSizeLabelsRel              = 55./1200;
 
+            TCanvas* canvasDCACatCompare            = new TCanvas("canvasDCACatCompare", "", 200, 10, 1200, 1100);
+            DrawGammaCanvasSettings( canvasDCACatCompare,  0.1, 0.01, 0.015, 0.095);
+            canvasDCACatCompare->SetLogy(1);
+
+            TH2F * histoDCADataMCCompareDummy;
+                histoDCADataMCCompareDummy             = new TH2F("histoDCADataMCCompareDummy", "histoDCADataMCCompareDummy",1000, -4.99,  4.99, 1000, 5e-5, 2 );
+            SetStyleHistoTH2ForGraphs( histoDCADataMCCompareDummy, "dca_{#it{z}} (cm)", "normalized counts",
+                                    0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.06);
+            histoDCADataMCCompareDummy->GetYaxis()->SetLabelOffset(0.001);
+            histoDCADataMCCompareDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+            histoDCADataMCCompareDummy->DrawCopy();
+
+            Style_t markerstylesPlot[5]                         ={20,24,29,27};
+            Size_t markersizePlot[5]                        ={1.5,2,2.,2.8};
+            Color_t colorDataPlot[5]                        ={kBlack,kRed+2,kCyan-3,kBlue-3};
+            TLegend* legendDCACatCompare            = GetAndSetLegend2(0.14, 0.935, 0.35, 0.91-(4*textSizeLabelsRel),0.8*textSizeLabelsPixel);
+            
+            TH1D* fHistDCAZUnderMeson_Visual_CatIter_MC = NULL;
+            if(fHistDCAZUnderMeson_MesonPt[cat][j]){
+              fHistDCAZUnderMeson_Visual_CatIter_MC =  (TH1D*)fHistDCAZUnderMeson_MesonPt[cat][j]->Clone(Form("fHistDCAZUnderMeson_Visual_CatIter_MC_%d",j));
+              fHistDCAZUnderMeson_Visual_CatIter_MC->Sumw2();
+              fHistDCAZUnderMeson_Visual_CatIter_MC->Scale(1./fHistDCAZUnderMeson_MesonPt[cat][j]->GetMaximum());
+              DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_CatIter_MC, markerstylesPlot[1], markersizePlot[1], colorDataPlot[1], colorDataPlot[1]);
+              fHistDCAZUnderMeson_Visual_CatIter_MC->Draw("p,same,e");
+              legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_CatIter_MC,Form("MC DCAz cat. %d",cat+1),"p");
+            }
+            
+            TH1D* fHistDCAZUnderMeson_Visual_CatIter_Data =  (TH1D*)fDataInputComp->Get(Form("HistDCAZUnderMesonCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
+            Double_t maximumData                  = -1;
+            if(fHistDCAZUnderMeson_Visual_CatIter_Data){
+              fHistDCAZUnderMeson_Visual_CatIter_Data->Sumw2();
+              // fHistDCAZUnderMeson_Visual_CatIter_Data->Scale(1./fHistDCAZUnderMeson_Visual_CatIter_Data->GetEntries());
+              maximumData                         = fHistDCAZUnderMeson_Visual_CatIter_Data->GetMaximum();
+              fHistDCAZUnderMeson_Visual_CatIter_Data->Scale(1./fHistDCAZUnderMeson_Visual_CatIter_Data->GetMaximum());
+              DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_CatIter_Data, markerstylesPlot[0], markersizePlot[0], colorDataPlot[0], colorDataPlot[0]);
+              fHistDCAZUnderMeson_Visual_CatIter_Data->Draw("p,same,e");
+              legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_CatIter_Data,Form("data DCAz cat. %d",cat+1),"p");
+            }
+            
+            TH1D* fHistDCAZBG_Visual_CatIter_Data =  (TH1D*)fDataInputComp->Get(Form("fHistDCAZUnderMesonBGEstimateCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
+            if(fHistDCAZBG_Visual_CatIter_Data && fHistDCAZUnderMeson_Visual_CatIter_Data){
+              fHistDCAZBG_Visual_CatIter_Data->Sumw2();
+              // fHistDCAZBG_Visual_CatIter_Data->Scale(1./fHistDCAZUnderMeson_Visual_CatIter_Data->GetMaxium());
+              fHistDCAZBG_Visual_CatIter_Data->Scale(1./maximumData);
+              DrawGammaSetMarker(fHistDCAZBG_Visual_CatIter_Data, markerstylesPlot[3], markersizePlot[3], colorDataPlot[3], colorDataPlot[3]);
+              fHistDCAZBG_Visual_CatIter_Data->SetLineWidth(2.);
+              fHistDCAZBG_Visual_CatIter_Data->Draw("hist,same");
+              legendDCACatCompare->AddEntry(fHistDCAZBG_Visual_CatIter_Data,"Estimated Pileup","l");
+            }
+            
+            TH1D* fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data =  NULL;
+            if(fHistDCAZUnderMeson_Visual_CatIter_Data && fHistDCAZBG_Visual_CatIter_Data){
+              fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data =  (TH1D*)fHistDCAZUnderMeson_Visual_CatIter_Data->Clone("fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data");
+              fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Add(fHistDCAZBG_Visual_CatIter_Data,-1);
+              DrawGammaSetMarker(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data, markerstylesPlot[2], markersizePlot[2], colorDataPlot[2], colorDataPlot[2]);
+              fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Draw("p,same,e");
+              legendDCACatCompare->AddEntry(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data,"Pileup Subtracted","p");
+            }
+
+                TLatex *labelPtBin                  = new TLatex(0.95,0.9,Form("%1.2f < #it{p}_{T} < %1.2f (GeV/#it{c})", fBinsPt[j], fBinsPt[j+1]));
+                SetStyleTLatex( labelPtBin, 0.04,4);
+                labelPtBin->SetTextAlign(31);
+                labelPtBin->Draw();
+                TLatex *labelEnergy                 = new TLatex(0.95,0.84,fEnergyText.Data());
+                SetStyleTLatex( labelEnergy, 0.04,4);
+                labelEnergy->SetTextAlign(31);
+                labelEnergy->Draw();            legendDCACatCompare->Draw();
+            canvasDCACatCompare->Update();
+            canvasDCACatCompare->SaveAs(Form("%s/Monitoring/%s_%s_DCAzDataComp_Cat%d_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(),cat+1, j,suffix.Data()));
+            
+            
+            TH2F * histoDCADataMCCompareRatioDummy;
+                histoDCADataMCCompareRatioDummy             = new TH2F("histoDCADataMCCompareRatioDummy", "histoDCADataMCCompareRatioDummy",1000, -4.99,  4.99, 1000, 0.0, 3 );
+            SetStyleHistoTH2ForGraphs( histoDCADataMCCompareRatioDummy, "dca_{#it{z}} (cm)", "Data Subtracted/MC",
+                                    0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.06);
+            canvasDCACatCompare->SetLogy(0);
+            histoDCADataMCCompareRatioDummy->GetYaxis()->SetLabelOffset(0.001);
+            histoDCADataMCCompareRatioDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+            histoDCADataMCCompareRatioDummy->DrawCopy();
+            
+            DrawGammaLines(-4.99,  4.99 , 1., 1.,0.1, kGray+2);
+            DrawGammaLines(-4.99,  4.99 , 1.1, 1.1,0.1, kGray, 7);
+            DrawGammaLines(-4.99,  4.99 , 0.9, 0.9,0.1, kGray, 7);
+            
+            if(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data && fHistDCAZUnderMeson_Visual_CatIter_MC){
+              TH1D* fHistDCARatio_CatIter_DataToMC =  (TH1D*)fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Clone("fHistDCARatio_CatIter_DataToMC");
+              fHistDCARatio_CatIter_DataToMC->Divide(fHistDCAZUnderMeson_Visual_CatIter_MC);
+              DrawGammaSetMarker(fHistDCARatio_CatIter_DataToMC, markerstylesPlot[0], markersizePlot[0], colorDataPlot[0], colorDataPlot[0]);
+              fHistDCARatio_CatIter_DataToMC->SetLineWidth(2.);
+              fHistDCARatio_CatIter_DataToMC->Draw("hist,same");
+            }
+            
+            labelPtBin->Draw();
+            labelEnergy->Draw();
+            canvasDCACatCompare->Update();
+            canvasDCACatCompare->SaveAs(Form("%s/Monitoring/%s_%s_DCAzDataComp_Cat%d_%i_Ratio.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(),cat+1, j,suffix.Data()));
+            delete canvasDCACatCompare;
+          }
+        }
+      }
+    }
 
     if (kMC){
         TCanvas* canvasDCAMCComponents = new TCanvas("canvasDCAMCComponents","",200,10,1350,900);  // gives the page size
