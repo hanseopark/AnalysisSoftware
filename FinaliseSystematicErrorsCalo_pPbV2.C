@@ -49,7 +49,8 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                                             TString additionalName          = "pp",
                                             TString additionalNameOutput    = "",
                                             TString suffix                  = "eps",
-                                            Int_t mode                      = 4
+                                            Int_t mode                      = 4,
+                                            Bool_t useMBSyst                = kTRUE
                                         ){
 
  // ***************************************************************************************************
@@ -62,6 +63,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
     // ****************************** Create output directory ********************************************
     // ***************************************************************************************************
     gSystem->Exec("mkdir -p SystematicErrorsCalculatedCalo");
+    gSystem->Exec(Form("mkdir -p SystematicErrorsCalculatedCalo/%s",additionalName.Data()));
 
     // ***************************************************************************************************
     // ***************************** labeling and color settings *****************************************
@@ -112,10 +114,10 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                                                 0, 0 };
     Bool_t bsmoothMBPi0[12]                 = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
-                                                1, 0 };
+                                                1, 1 };
     Bool_t bsmoothMBEta[12]                 = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
-                                                1, 0 };
+                                                1, 1 };
     Bool_t bsmoothMBEtaToPi0[12]            = { 0, 1, 1, 1, 1,
                                                 1, 1, 1, 1, 1,
                                                 1, 0 };
@@ -203,7 +205,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // read data
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
-        if (i == 0 || i == 9 || i==10){// || i == 8 || i == 9 || i == 10special treatment for Yield extraction error and calculated erros
+        if (i == 0 || i == 9 || i==10 || (i!=11 && useMBSyst)){// || i == 8 || i == 9 || i == 10special treatment for Yield extraction error and calculated erros
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
@@ -224,8 +226,8 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
 
         } else {// read graphs from input file
-            TString nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
-            TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalNameOutput.Data()  );
+            TString nameGraphPos    = Form("%s_SystErrorRelPos_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
+            TString nameGraphNeg    = Form("%s_SystErrorRelNeg_%s%s",meson.Data(),nameCutVariationSC[i].Data(),additionalName.Data()  );
             cout << "Cutstudies " << i<< "\t" <<nameGraphPos.Data() << "\t" << nameGraphNeg.Data()<<  endl;
             graphPosErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphPos.Data());
             graphNegErrors          = (TGraphAsymmErrors*)fileErrorInput->Get(nameGraphNeg.Data());
@@ -301,12 +303,10 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                 if (meson.CompareTo("Eta") == 0 )       error = error*3.;
                 if (meson.CompareTo("EtaToPi0") == 0 )  error = 2.;
                 for (Int_t k = 0;k < nPtBins;k++){
-                    if ((ptBins[k] > 1.8 && meson.CompareTo("Pi0") == 0) || (ptBins[k] > 2.4 && meson.Contains("Eta"))){
                         errorsMean[i][k]        = error;
                         errorsMeanErr[i][k]     = 0.01*error;
                         errorsMeanCorr[i][k]    = error;
                         errorsMeanErrCorr[i][k] = 0.01*error;
-                    }
                 }
             }
             // manual smoothing for minimum number of cells in cluster errors - variation 3
@@ -417,6 +417,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
                     Double_t error              = 2.0;
                     if (meson.CompareTo("Eta") == 0)        error   = 4.0;
                     if (meson.CompareTo("EtaToPi0")== 0)    error   = TMath::Sqrt(2*2+4*4);
+                    if(!additionalName.CompareTo("0-100%")==0) error += 2;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]          = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -570,16 +571,16 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // plot labeling
         TLatex *labelMeson  = NULL;
         if (meson.CompareTo("EtaToPi0") == 0){
-            labelMeson= new TLatex(0.94,0.89,Form("#eta/#pi^{0} %"),detectionSystem.Data());
+            labelMeson= new TLatex(0.94,0.89,Form("#eta/#pi^{0} %s",detectionSystem.Data()));
         } else if (meson.Contains("Pi0")){
-            labelMeson= new TLatex(0.94,0.89,Form("#pi^{0} %"),detectionSystem.Data());
+            labelMeson= new TLatex(0.94,0.89,Form("#pi^{0} %s",detectionSystem.Data()));
         } else {
-            labelMeson= new TLatex(0.94,0.89,Form("#eta  %"),detectionSystem.Data());
+            labelMeson= new TLatex(0.94,0.89,Form("#eta  %s",detectionSystem.Data()));
         }
         SetStyleTLatex( labelMeson, 0.038, 4, 1, 42, kTRUE, 31);
         labelMeson->Draw();
 
-        TLatex *labelCentrality = new TLatex(0.94,0.93,Form("%s",collisionSystem.Data() ));
+        TLatex *labelCentrality = new TLatex(0.94,0.93,Form("%s %s",additionalName.Data(),collisionSystem.Data() ));
         SetStyleTLatex( labelCentrality, 0.038, 4, 1, 42, kTRUE, 31);
         labelCentrality->Draw();
 
@@ -591,7 +592,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasSysErrMean->Update();
-    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
+    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
 
     delete canvasSysErrMean;
 
@@ -605,9 +606,9 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,18.5);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,24.5);
         } else {
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.5);
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,34.5);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -649,7 +650,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMeanNewWithMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
 
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
@@ -695,14 +696,18 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
             leg->AddEntry("pol4","pol4","l");
             leg->Draw();
 
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), cut, suffix.Data()));
+            TLatex *varationLabel= new TLatex(0.40,0.8,Form("%s",nameCutVariationSCCurrent[cut].Data()));
+            SetStyleTLatex( varationLabel, 0.038, 4, 1, 42, kTRUE, 31);
+            varationLabel->Draw();
+
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), cut, nameCutVariationSCCurrent[cut].Data(), suffix.Data()));
         histo2DNewSysErrMean->GetYaxis()->UnZoom();
     }
 
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat", meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedCalo/%s/SystematicErrorAveragedEMCEMC_%s_%s%s_%s.dat",additionalName.Data(), meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -712,7 +717,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
 
     SysErrDatAver.close();
 
-    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat", meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
+    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedCalo/%s/SystematicErrorAveragedSingleEMCEMC_%s_%s%s_%s.dat",additionalName.Data(), meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
@@ -841,7 +846,7 @@ void FinaliseSystematicErrorsCalo_pPbV2(    const char* nameDataFileErrors  = ""
         labelTrig->Draw();
 
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedCalo/%s/SysErrorSummedVisu_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(), additionalNameOutput.Data(), dateForOutput.Data(), suffix.Data()));
 
     delete canvasSummedErrMean;
 

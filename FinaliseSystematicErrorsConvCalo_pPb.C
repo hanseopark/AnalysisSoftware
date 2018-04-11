@@ -49,7 +49,8 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                             TString additionalName        = "pp",
                                             TString additionalNameOutput  = "",
                                             TString suffix                = "eps",
-                                            Int_t mode                    = 2
+                                            Int_t mode                    = 2,
+                                            Bool_t useMBSyst                = kTRUE
                                         ){
 
     // ***************************************************************************************************
@@ -62,6 +63,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
     // ****************************** Create output directory ********************************************
     // ***************************************************************************************************
     gSystem->Exec("mkdir -p SystematicErrorsCalculatedConvCalo");
+    gSystem->Exec(Form("mkdir -p SystematicErrorsCalculatedConvCalo/%s",additionalName.Data()));
 
     // ***************************************************************************************************
     // ***************************** labeling and color settings *****************************************
@@ -135,20 +137,20 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                         0, 0, 0, 0, 0,
                                         0, 0, 0, 0 };
     // minimum bias trigger PCM-EMC
-    Bool_t bsmoothMBPi0[19]         = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0[19]         = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothMBEta[19]         = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBEta[19]         = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
-    Bool_t bsmoothMBEtaToPi0[19]    = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBEtaToPi0[19]    = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
-                                        1, 1, 1, 1 };
+                                        1, 1, 1, 0 };
     // minimum bias trigger PCM-PHOS
-    Bool_t bsmoothMBPi0PCMPHOS[19]  = { 1, 1, 1, 1, 1,
+    Bool_t bsmoothMBPi0PCMPHOS[19]  = { 0, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1,
                                         1, 1, 1, 0 };
@@ -249,7 +251,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         TGraphAsymmErrors* graphPosErrors;
         TGraphAsymmErrors* graphNegErrors;
         // YieldExtraction - 0, CellTiming - 14, Trigger - 16, Efficiency - 17
-        if ( i == 0 || i == 14 || i == 16 || i == 17 || (i==8 && mode==3) || (i==15 && mode==3)){
+        if ( i == 0 || i == 14 || i == 16 || i == 17 || (i==8 && mode==3) || (i==15 && mode==3) || (i!=18 && useMBSyst)){
             TString nameGraphPos    = "";
             TString nameGraphNeg    = "";
             if ( meson.CompareTo("EtaToPi0") != 0 ){
@@ -547,7 +549,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             // manual smoothing for chi2/psi pair photon errors - variation 5
             if (nameCutVariationSC[i].CompareTo("Chi2")==0 ){
                 if (meson.CompareTo("Pi0") == 0){
-                    for (Int_t k = 2; k < nPtBins; k++){
+                    for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0;
                         if (mode == 2){
                             if (additionalNameOutput.CompareTo("")==0 ){
@@ -758,8 +760,8 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             error                   = 0.23;
                     } else{
                         if(meson.CompareTo("Pi0")==0){
-                            if (ptBins[k] < 3.) continue;
                             error          = 0.818182*ptBins[k] - 1.45454545;
+                            if (ptBins[k] < 3.) error          = 0.01;
                         } else if(meson.CompareTo("Eta")==0){
                             if (ptBins[k] < 3.){
                                 error = 84.0117 -157.56*ptBins[k] + 118.093*ptBins[k]*ptBins[k] - 39.2048*ptBins[k]*ptBins[k]*ptBins[k] + 4.76426*ptBins[k]*ptBins[k]*ptBins[k]*ptBins[k];
@@ -817,7 +819,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                                 //                           error   = 0.5+(0.275)*ptBins[k]+(0.0045)*ptBins[k]*ptBins[k]; // parametrisation
                             }
                         } else{
-                            if (ptBins[k] < 0.75) continue;
+//                             if (ptBins[k] < 0.75) continue;
                             error = 0.490577038 + 0.679245*ptBins[k];
                         }
                         errorsMean[i][k]        = error;
@@ -829,7 +831,6 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                     for (Int_t k = 0; k < nPtBins; k++){
                         Double_t error          = 0;
                         if (mode == 2){
-                            if ( ptBins[k] < 2.2 ) continue;
                             if (additionalNameOutput.CompareTo("")==0 ){
                                 error   = 1.5-(0.001)*ptBins[k]+(0.024)*ptBins[k]*ptBins[k]   ; // parametrisation
                                 //                              error   = 4+(-0.2)*ptBins[k]+(0.04)*ptBins[k]*ptBins[k]+12/pow(2,ptBins[k]); // parametrisation 2.76TeV
@@ -963,6 +964,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             cout << error << endl;
                         }
                     }
+                    if(!additionalName.CompareTo("0-100%")==0) error *= 2;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;
@@ -1143,7 +1145,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         SetStyleTLatex( labelMeson, 0.038,4,1, 42, kTRUE, 31);
         labelMeson->Draw();
 
-        TLatex *labelCentrality = new TLatex(0.96,0.93,Form("%s",collisionSystem.Data() ));
+        TLatex *labelCentrality = new TLatex(0.96,0.93,Form("%s %s",additionalName.Data(),collisionSystem.Data() ));
         SetStyleTLatex( labelCentrality, 0.038,4,1, 42, kTRUE, 31);
         labelCentrality->Draw();
 
@@ -1161,7 +1163,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         labelTrig->Draw();
 
     canvasSysErrMean->Update();
-    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     delete canvasSysErrMean;
 
@@ -1175,9 +1177,9 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         // create dummy histo
         TH2D *histo2DNewSysErrMean ;
         if ( meson.CompareTo("Pi0") == 0 ){
-            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,30.);
-        } else {
             histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,50.);
+        } else {
+            histo2DNewSysErrMean = new TH2D("histo2DNewSysErrMean", "", 20,0.,ptBins[nPtBins-1]+ptBinsErr[nPtBins-1],1000.,-0.5,70.);
         }
         SetStyleHistoTH2ForGraphs( histo2DNewSysErrMean, "#it{p}_{T} (GeV/#it{c})", "mean smoothed systematic Err %", 0.03, 0.04, 0.03, 0.04,
                                 1,0.9, 510, 510);
@@ -1231,8 +1233,10 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         labelCentrality->Draw();
         labelTrig->Draw();
 
+        meanErrorsCorr[0]->Draw("pX0,csame");
+
     canvasNewSysErrMean->Update();
-    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMeanNewWithMean_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMean_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     // ***************************************************************************************************
     // ********************* Plot unsmoothed errors with fits ********************************************
@@ -1274,13 +1278,13 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
             pol1->Draw("same");
             pol0->Draw("same");
 
-        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
+        canvasNewSysErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysMeanNewWithMeanSingle_%s_%s%s_%s_Variation%d.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),cut,suffix.Data()));
     }
 
     // ***************************************************************************************************
     // ********************* Create output files with errors *********************************************
     // ***************************************************************************************************
-    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveraged%s_%s_%s%s_%s.dat",recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMean = Form("SystematicErrorsCalculatedConvCalo/%s/SystematicErrorAveraged%s_%s_%s%s_%s.dat",additionalName.Data(),recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAver;
     cout << SysErrDatnameMean << endl;
     SysErrDatAver.open(SysErrDatnameMean, ios::out);
@@ -1290,7 +1294,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
 
     SysErrDatAver.close();
 
-    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/SystematicErrorAveragedSingle%s_%s_%s%s_%s.dat",recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
+    const char *SysErrDatnameMeanSingleErr = Form("SystematicErrorsCalculatedConvCalo/%s/SystematicErrorAveragedSingle%s_%s_%s%s_%s.dat",additionalName.Data(),recoMethod.Data(),meson.Data(),energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data());
     fstream SysErrDatAverSingle;
     cout << SysErrDatnameMeanSingleErr << endl;
     SysErrDatAverSingle.open(SysErrDatnameMeanSingleErr, ios::out);
@@ -1464,7 +1468,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
         labelTrig->Draw();
 
     canvasSummedErrMean->Update();
-    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/SysErrorSummedVisu_%s_%s%s_%s.%s",meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
+    canvasSummedErrMean->SaveAs(Form("SystematicErrorsCalculatedConvCalo/%s/SysErrorSummedVisu_%s_%s%s_%s.%s",additionalName.Data(),meson.Data(), energyForOutput.Data(),additionalNameOutput.Data(),dateForOutput.Data(),suffix.Data()));
 
     delete canvasSummedErrMean;
 //
