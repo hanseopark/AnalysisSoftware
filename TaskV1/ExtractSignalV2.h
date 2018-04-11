@@ -856,6 +856,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonIntDeltaRangeNarrow[1]= fMesonIntDeltaRange[1]*0.8;
                 }
             }
+        } else if (mode == 5) {                                                 // PHOS
+            fMesonIntDeltaRange[0]      = -0.035;
+            fMesonIntDeltaRange[1]      = 0.023;
+            fMesonIntDeltaRangeWide[0]  = -0.055;
+            fMesonIntDeltaRangeWide[1]  = 0.028;
+            fMesonIntDeltaRangeNarrow[0]= -0.018;
+            fMesonIntDeltaRangeNarrow[1]= 0.015;
         } else {                                                                // defaults
             fMesonIntDeltaRange[0]      = -0.035;
             fMesonIntDeltaRange[1]      = 0.010;
@@ -1079,6 +1086,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         } else if ( mode == 4 || mode == 12) {
             fPeakRange[0]           = 0.51;
             fPeakRange[1]           = 0.59;
+        } else if ( mode == 5 ) {
+            fPeakRange[0]           = 0.51;
+            fPeakRange[1]           = 0.59;
         } else {
             fPeakRange[0]           = 0.48;
             fPeakRange[1]           = 0.58;
@@ -1108,6 +1118,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fFitRange[0]                = 0.38;
                 fFitRange[1]                = 0.73;
             }
+        } else if (mode == 5) {
+            fFitRange[0]                = 0.38;
+            fFitRange[1]                = 0.73;
         } else {
             fFitRange[0]            = 0.4;
             fFitRange[1]            = 0.65;
@@ -1139,7 +1152,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fBGFitRange[1]              = 0.79;
             }
         } else if ( mode == 5) {
-            fBGFitRange[0]                  = 0.58;
+            fBGFitRange[0]                  = 0.62;
             fBGFitRange[1]                  = 0.79;
             fBGFitRangeLeft[0]              = 0.35;
             fBGFitRangeLeft[1]              = 0.48;
@@ -1224,6 +1237,13 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                     fMesonIntDeltaRangeNarrow[1]    *= 0.8;
                 }
             }
+        } else if (mode == 5){
+            fMesonIntDeltaRange[0]          = -0.05;
+            fMesonIntDeltaRange[1]          = 0.035;
+            fMesonIntDeltaRangeWide[0]      = -0.068;
+            fMesonIntDeltaRangeWide[1]      = 0.040;
+            fMesonIntDeltaRangeNarrow[0]    = -0.04;
+            fMesonIntDeltaRangeNarrow[1]    = 0.02;
         } else {
             fMesonIntDeltaRange[0]          = -0.048;
             fMesonIntDeltaRange[1]          = 0.022;
