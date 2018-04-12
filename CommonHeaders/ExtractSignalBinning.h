@@ -850,10 +850,16 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
     Int_t fBinsPi0pPb5TeVPHOSPtRebin[36]            = { 5, 4 , 3 , 3 , 3, 3, 3, 3, 3, 3,    3, 3 , 3 , 3 , 3, 3, 3, 3, 3, 3,
                                                         3, 3 , 3 , 3 , 3, 3, 3, 3, 3, 3,    7, 11, 11, 11, 10, 10};
 
-    Int_t fBinsPi0pPb5TeVCentPCMPtRebin[24]         = { 10, 4, 4, 4, 4, 4, 4, 4, 4, 4,      4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+    Int_t fBinsPi0pPb5TeVCentPCMPtRebin[24]         = { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,      2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
                                                         4, 5, 10, 10};
-    Int_t fBinsPi0pPb5TeVCentEMCPtRebin[24]         = { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+    Int_t fBinsPi0pPb5TeVCentEMCPtRebin[24]         = { 5, 4, 4, 4, 4, 4, 4, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
+                                                        8, 8, 10, 10};
+    Int_t fBinsPi0pPb5TeVCentPCMEMCPtRebin[24]      = { 8, 8, 8, 4, 4, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
+                                                        8, 8, 10, 10};
+    Int_t fBinsPi0pPb5TeVCentPHOSPtRebin[24]        = { 8, 4, 4, 4, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 4, 4, 4,
                                                         10, 10, 10, 10};
+    Int_t fBinsPi0pPb5TeVCentPCMPHOSPtRebin[24]     = { 8, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4, 4, 4, 8, 8,
+                                                        10, 20, 20, 20};
 
     Double_t fBinsPi0pPb5TeVDalitzPt[23]            = { 0, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,       2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.6, 4.0, 5.0, 6.0,
                                                         8.0, 10., 15.};
@@ -967,9 +973,13 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
     Int_t fBinsEtapPb5TeVEMCPtRebin[21]             = { 10, 8, 8, 8, 8, 8, 8, 8, 8, 5,          5, 5, 5, 5, 8, 16, 16, 20, 20, 20,
                                                         20};
     Int_t fBinsEtapPb5TeVPHOSPtRebin[19]            = { 19, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 20, 25, 25, 25, 24, 19, 19};
-    Int_t fBinsEtapPb5TeVPCMCentPtRebin[14]         = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
-    Int_t fBinsEtapPb5TeVEMCCentPtRebin[14]         = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
     Int_t fBinsEtapPb5TeVDalitzPtRebin[9]           = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
+    Int_t fBinsEtapPb5TeVPCMCentPtRebin[14]         = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
+    Int_t fBinsEtapPb5TeVPCMEMCCentPtRebin[14]      = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
+    Int_t fBinsEtapPb5TeVEMCCentPtRebin[14]         = { 10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8, 10,  20, 20};
+    Int_t fBinsEtapPb5TeVPCMPHOSCentPtRebin[14]     = { 20, 20, 15, 12, 12, 12, 12, 12, 12, 15, 15, 20, 20, 20};
+    Int_t fBinsEtapPb5TeVPHOSCentPtRebin[14]        = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+
 
     // Eta Run 2
     Double_t fBinsEtapPb5TeVPCMR2Pt[36]             = { 0., 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,    1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
@@ -1024,6 +1034,11 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
     Int_t fBinsPi0EtapPb5TeVPHOSPtRebin[22]         = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 2, 2, 2, 4, 4,
                                                         4, 4};
     Int_t fBinsPi0EtapPb5TeVDalitzPtRebin[9]        = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
+    Int_t fBinsPi0EtapPb5TeVPCMCentPtRebin[14]      = { 10, 8, 4, 4, 2, 2, 2, 2, 2, 2,          4, 5, 8, 10};
+    Int_t fBinsPi0EtapPb5TeVPCMEMCCentPtRebin[14]   = { 10, 10, 4, 4, 4, 4, 2, 2, 2, 2,         4, 5, 8, 10};
+    Int_t fBinsPi0EtapPb5TeVEMCCentPtRebin[14]      = { 10, 8, 8, 2, 2, 2, 2, 2, 2, 2,          2, 2, 4, 8};
+    Int_t fBinsPi0EtapPb5TeVPCMPHOSCentPtRebin[14]  = { 10, 4, 4, 2, 2, 2, 2, 2, 2, 2,          4, 4, 8, 10};
+    Int_t fBinsPi0EtapPb5TeVPHOSCentPtRebin[14]     = { 10, 8, 8, 4, 2, 2, 2, 2, 2, 2,          4, 4, 8, 10};
 
 
     // Pi0 Eta binning rebin factors Run 2
@@ -1854,8 +1869,11 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 } else if (mode == 4 || mode == 12 ){
                     if (directPhotonRunningOption.CompareTo("directPhoton") == 0)
                         return 13;
-                    else
+                    if (centrality.CompareTo("0-100%") == 0){
                         return 25;
+                    } else {
+                        return 15;
+                    }
                 } else if (mode == 5){
                     return 25;
                 } else if (mode == 6){
@@ -2229,7 +2247,11 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                             break;
                     }
                 } else if (mode == 3){
-                    return 11;
+                    if (centrality.CompareTo("0-100%") == 0){
+                        return 11;
+                    } else {
+                        return 7;
+                    }
                 } else if (mode == 4 || mode == 12 ){
                     return 10;
                 } else if (mode == 5){
@@ -2355,6 +2377,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
     ){
 
         Int_t startPtBin = 0;
+        //*************************************************************************************************
+        //******************** Determine startbin for Pi0  ************************************************
+        //*************************************************************************************************
         if (meson.CompareTo("Pi0")==0){
             if (energy.CompareTo("2.76TeV") == 0){
                 if ( mode == 0 ){
@@ -2398,18 +2423,28 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
-                    if (specialTrigg == 1)
+                    if (specialTrigg == 1){
                         startPtBin     = 14;
-                    else if (specialTrigg == 2)
+                    }else if (specialTrigg == 2){
                         startPtBin     = 24;
-                    else if (specialTrigg == 3)
+                    }else if (specialTrigg == 3){
                         startPtBin     = 29;
-                    else
-                        startPtBin     = 6;
+                    }else{
+                        if (!centrality.CompareTo("0-100%") )
+                            startPtBin     = 6;
+                        else
+                            startPtBin     = 4;
+                    }
                 } else if ( mode == 3 ){
-                    startPtBin     = 3;
+                    if (!centrality.CompareTo("0-100%") )
+                        startPtBin     = 3;
+                    else
+                        startPtBin     = 1;
                 } else if ( mode == 4 || mode == 12 ){
-                    startPtBin     = 9;
+                    if (!centrality.CompareTo("0-100%") )
+                        startPtBin     = 9;
+                    else
+                        startPtBin     = 7;
                 } else if ( mode == 5){
                     startPtBin     = 7;
                 } else if ( mode == 10){
@@ -2554,6 +2589,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     startPtBin     = 2;
                 }
             }
+        //*************************************************************************************************
+        //******************** Determine startbin for Eta  ************************************************
+        //*************************************************************************************************
         } else if (meson.Contains("Eta")){
             if (energy.CompareTo("2.76TeV") == 0){
                 if ( mode == 0 ){
@@ -2621,18 +2659,28 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                 } else if ( mode == 1 ){
                     startPtBin      = 3;
                 } else if ( mode == 2 || mode == 13 ){
-                    if (specialTrigg == 1)
+                    if (specialTrigg == 1){
                         startPtBin  = 11;
-                    else if (specialTrigg == 2)
+                    }else if (specialTrigg == 2){
                         startPtBin  = 16;
-                    else if (specialTrigg == 3)
+                    }else if (specialTrigg == 3){
                         startPtBin  = 19;
-                    else
-                        startPtBin  = 5;
+                    }else{
+                        if (!centrality.CompareTo("0-100%") )
+                            startPtBin      = 5;
+                        else
+                            startPtBin      = 5;
+                    }
                 } else if ( mode == 3 ){
-                    startPtBin      = 4;
+                    if (!centrality.CompareTo("0-100%") )
+                        startPtBin     = 4;
+                    else
+                        startPtBin     = 4;
                 } else if ( mode == 4 || mode == 12 ){
-                    startPtBin      = 7;
+                    if (!centrality.CompareTo("0-100%") )
+                        startPtBin     = 7;
+                    else
+                        startPtBin     = 6;
                 } else if ( mode == 5){
                     startPtBin      = 11;
                 } else if ( mode == 10){
@@ -2692,6 +2740,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     startPtBin     = 1;
                 }
             }
+        //*************************************************************************************************
+        //******************** Determine startbin for Omega  **********************************************
+        //*************************************************************************************************
         } else if (meson.CompareTo("Omega") == 0){
             if (energy.CompareTo("7TeV") == 0){
                 if (mode == 40){
@@ -2710,6 +2761,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     startPtBin     = 2;
                 }
             }
+        //*************************************************************************************************
+        //******************** Determine startbin for direct Photon ***************************************
+        //*************************************************************************************************
         } else if (meson.Contains("directPhoton") ) {
             if (energy.CompareTo("pPb_5.023TeV")==0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0)
@@ -2951,8 +3005,8 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     maxNBins    = 32;
                     binningMax  = 36;
                     if ( centrality.CompareTo("0-100%")){
-                        binningMax  = 23;
-                        maxNBins    = 23;
+                        binningMax  = 24;
+                        maxNBins    = 24;
                     }
                     for(Int_t i = 0; i < binningMax+1; i++){
                         if ( !centrality.CompareTo("0-100%"))
@@ -4510,43 +4564,52 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
-                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 )                                            // MB pi0 for PCM run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVPtRebin[i];
-                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // MB pi0 for PCM run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMR2PtRebin[i];
-                        else if (modi == 1 )
+                        else if (modi == 1 )                                                                                // MB pi0 for Dalitz run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVDalitzPtRebin[i];
-                        else if (modi == 2 && energy.CompareTo("pPb_5.023TeV") == 0 && specialTrigg == 0)
+                        else if (   modi == 2 && energy.CompareTo("pPb_5.023TeV") == 0 && specialTrigg == 0 &&               // MB pi0 for PCM-EMC run 1
+                                    centrality.Contains("0-100%"))
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCPtRebin[i];
-                        else if (   modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0 &&
+                        else if (modi == 2 && energy.CompareTo("pPb_5.023TeV") == 0 && specialTrigg == 0)                   // cent dependent pi0 for PCM-EMC run 1
+                            fNRebin[i]          = fBinsPi0pPb5TeVCentPCMEMCPtRebin[i];
+                        else if (   modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0 &&          // cent dependent pi0 for PCM-EMC run 2: 0020, 0010
                                     (centrality.Contains("0-20%") || centrality.Contains("0-10%") ) )
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2CentPtRebin[i];
-                        else if (   modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0 &&
+                        else if (   modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0 &&          // cent dependent pi0 for PCM-EMC run 2: 0005, 0510, 60100
                             ( centrality.Contains("0-5%") || centrality.Contains("5-10%") || centrality.Contains("60-100%") ) )
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2SCentPtRebin[i];
-                        else if (modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0)
+                        else if (modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0)               // MB pi0 for PCM-EMC run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2PtRebin[i];
-                        else if (modi == 2 && (specialTrigg == 1 || specialTrigg == 2) )
+                        else if (modi == 2 && (specialTrigg == 1 || specialTrigg == 2) )                                    // MB pi0 for PCM-EMC run 1 - triggered EMC7, EG2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 3 )
+                        else if (modi == 2 && specialTrigg == 3 )                                                           // MB pi0 for PCM-EMC run 1 - triggered EMC7, EG2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigEG1PtRebin[i];
-                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 && centrality.Contains("0-100%"))       // MB pi0 for PCM-PHOS run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSPtRebin[i];
-                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 )                                       // cent dependent pi0 for PCM-PHOS run 1
+                            fNRebin[i]          = fBinsPi0pPb5TeVCentPCMPHOSPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // MB pi0 for PCM-PHOS run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSR2PtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 && centrality.CompareTo("0-100%") == 0) // MB pi0 for EMC run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVEMCPtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 )                                       // cent dependent pi0 for EMC run 1
+                            fNRebin[i]          = fBinsPi0pPb5TeVCentEMCPtRebin[i];
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // MB pi0 for EMC run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVEMCR2PtRebin[i];
-                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0 && centrality.CompareTo("0-100%") == 0) // MB pi0 for PHOS run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVPHOSPtRebin[i];
-                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0 )                                       // cent dependent pi0  for PHOS run 1
+                            fNRebin[i]          = fBinsPi0pPb5TeVCentPHOSPtRebin[i];
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // MB pi0 for PHOS run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVPHOSR2PtRebin[i];
-                        else if (modi == 6 )
+                        else if (modi == 6 )                                                                                // MB pi0 for Dalitz-PHOS
                             fNRebin[i]          = fBinsPi0pPb5TeVEMCDalitzPtRebin[i];
-                        else if (modi == 7 )
+                        else if (modi == 7 )                                                                                // MB pi0 for Dalitz-PHOS
                             fNRebin[i]          = fBinsPi0pPb5TeVEMCDalitzPtRebin[i];
-                        else if (modi == 10 )
+                        else if (modi == 10 )                                                                               // MB pi0 for mEMC
                             fNRebin[i]          = fBinsPi0pPb5TeVmEMCPtRebin[i];
                     }
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
@@ -5444,85 +5507,105 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
 
                 for (Int_t i = 0; i < fNBinsPt; i++) {
                     if (!setPi0.CompareTo("Eta")){
-                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0)
+                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                       // MB eta for PCM run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPtRebin[i];
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                     // cent dependent eta for PCM run 1
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMCentPtRebin[i];
                         else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&
                             (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%")  || !centrality.CompareTo("5-10%") ||  !centrality.CompareTo("60-100%")) )
                             fNRebin[i]  = fBinsEtapPb5TeVPCMR2CentPtRebin[i];
-                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0)
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB eta for PCM run 2
                             fNRebin[i]  = fBinsEtapPb5TeVPCMR2PtRebin[i];
-                        else if (modi == 1)
+                        else if (modi == 1)                                                                                                             // MB eta for Dalitz run 1
                             fNRebin[i]  = fBinsEtapPb5TeVDalitzPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeV") == 0)
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))           // MB eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeV") == 0)                                              // cent dependent eta for PCM-EMC run 1
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMEMCCentPtRebin[i];
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )     // MB eta for PCM-EMC run 2
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCR2PtRebin[i];
-                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&
+                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&                                     // cent dependent eta for PCM-EMC run 2: 0020, 0010
                                     (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") ) )
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCR2CentPtRebin[i];
-                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&
+                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&                                     // cent dependent eta for PCM-EMC run 2: 0510, 0005, 60100
                                     (!centrality.CompareTo("5-10%") || !centrality.CompareTo("0-5%") ||  !centrality.CompareTo("60-100%"))  )
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCR2SCentPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0 )
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                         // cent dependent eta for PCM-EMC run 2: all but previously discussed
                             fNRebin[i]  = fBinsEtapPb5TeVCentPCMEMCR2PtRebin[i];
-                        else if (modi == 2 && specialTrigg == 1)
+                        else if (modi == 2 && specialTrigg == 1)                                                                                        // EMC7 triggered MB eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin[i];
-                        else if (modi == 2 && specialTrigg == 2)
+                        else if (modi == 2 && specialTrigg == 2)                                                                                        // EG2 triggered MB eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigEG2PtRebin[i];
-                        else if (modi == 2 && specialTrigg == 3)
+                        else if (modi == 2 && specialTrigg == 3)                                                                                        // EG1 triggered MB eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigPtRebin[i];
-                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0)
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                 // MB eta for PCM-PHOS run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSPtRebin[i];
-                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0)
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 )                                                                   // cent dependent eta for PCM-PHOS run 1
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSCentPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB eta for PCM-PHOS run 2
                             fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSR2PtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0)
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                 // MB eta for EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVEMCPtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                    // cent dependent eta for EMC run 1
+                            fNRebin[i]  = fBinsEtapPb5TeVEMCCentPtRebin[i];
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )                           // MB eta for EMC run 2
                             fNRebin[i]  = fBinsEtapPb5TeVEMCR2PtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0  && centrality.CompareTo("0-100%"))
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0  && centrality.CompareTo("0-100%"))                             // cent dependent eta for EMC run 2
                             fNRebin[i]  = fBinsEtapPb5TeVCentEMCR2PtRebin[i];
-                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0)
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%") )                                // MB eta for EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPHOSPtRebin[i];
-                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeVRun2") == 0)
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                    // cent dependent eta for EMC run 1
+                            fNRebin[i]  = fBinsEtapPb5TeVPHOSCentPtRebin[i];
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB eta for EMC run 2
                             fNRebin[i]  = fBinsEtapPb5TeVPHOSR2PtRebin[i];
 
                     } else if (!setPi0.CompareTo("Pi0EtaBinning")){
-                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                      // MB pi0-eta for PCM run 1
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPtRebin[i];
-                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 )                                                                   // MB pi0-eta for PCM run 1
+                            fNRebin[i]  = fBinsPi0EtapPb5TeVPCMCentPtRebin[i];
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&                                                              // cent dependent pi0-eta for PCM run 2: 0020, 0010, 0005, 0510, 60100
                             (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") || !centrality.CompareTo("0-5%")  || !centrality.CompareTo("5-10%") ||  !centrality.CompareTo("60-100%") ) )
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMR2CentPtRebin[i];
-                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0)
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB pi0-eta for PCM run 2 + cent dependent
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMR2PtRebin[i];
-                        else if (modi == 1)
+                        else if (modi == 1)                                                                                                             // MB pi0-eta for PCM-Dalitz run 1
                             fNRebin[i]  = fBinsPi0EtapPb5TeVDalitzPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))           // MB pi0-eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("  pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeV") == 0 )                                             // cent dependent pi0-eta for PCM-EMC run 1
+                            fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCCentPtRebin[i];
+                        else if (modi == 2 && specialTrigg == 0  && energy.CompareTo("  pPb_5.023TeVRun2") == 0  && !centrality.CompareTo("0-100%") )   // MB pi0-eta for PCM-EMC run 2
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCR2PtRebin[i];
-                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0  &&
+                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0  &&                                    // cent dependent pi0-eta for PCM-EMC run 2: 0020, 0010
                                     (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-10%") ))
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCR2CentPtRebin[i];
-                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0  &&
+                        else if (   modi == 2 && specialTrigg == 0  && energy.CompareTo("pPb_5.023TeVRun2") == 0  &&                                    // cent dependent pi0-eta for PCM-EMC run 2: 0000, 0510, 60100
                                     (!centrality.CompareTo("5-10%") || !centrality.CompareTo("0-5%") ||  !centrality.CompareTo("60-100%")) )
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCR2SCentPtRebin[i];
-                        else if (modi == 2 && specialTrigg == 1)
+                        else if (modi == 2 && specialTrigg == 1)                                                                                        // EMC7 triggered MB pi0-eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin[i];
-                        else if (modi == 2 && specialTrigg == 2)
+                        else if (modi == 2 && specialTrigg == 2)                                                                                        // EG2 triggered MB pi0-eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigEG2PtRebin[i];
-                        else if (modi == 2 && specialTrigg == 3)
+                        else if (modi == 2 && specialTrigg == 3)                                                                                        // EG1 triggered MB pi0-eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigPtRebin[i];
-                        else if (modi == 3  && energy.CompareTo("pPb_5.023TeV") == 0 )
+                        else if (modi == 3  && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%") )                               // MB pi0-eta for PCM-PHOS run 1
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMPHOSPtRebin[i];
-                        else if (modi == 3  && energy.CompareTo("pPb_5.023TeVRun2") == 0 )
+                        else if (modi == 3  && energy.CompareTo("pPb_5.023TeV") == 0  )                                                                 // cent dependent pi0-eta for PCM-PHOS run 1
+                            fNRebin[i]  = fBinsPi0EtapPb5TeVPCMPHOSCentPtRebin[i];
+                        else if (modi == 3  && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                                              // MB pi0-eta for PCM-PHOS run 2
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMPHOSR2PtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0)
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                 // MB pi0-eta for EMC run 1
                             fNRebin[i]  = fBinsPi0EtapPb5TeVEMCPtRebin[i];
-                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0)
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                    // cent dependent for EMC run 1
+                            fNRebin[i]  = fBinsPi0EtapPb5TeVEMCCentPtRebin[i];
+                        else if (modi == 4 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB pi0-eta for EMC run 2
                             fNRebin[i]  = fBinsPi0EtapPb5TeVEMCR2PtRebin[i];
-                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0)
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                 // MB pi0-eta for PHOS run 1
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPHOSPtRebin[i];
-                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeVRun2") == 0)
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                    // cent dependent PHOS run 1
+                            fNRebin[i]  = fBinsPi0EtapPb5TeVPHOSCentPtRebin[i];
+                        else if (modi == 5 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB pi0-eta for PHOS run 2
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPHOSR2PtRebin[i];
                     }
                 }

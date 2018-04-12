@@ -148,48 +148,44 @@ void ExtractSignalV2(   TString meson                   = "",
     if (addSig) {
         if(directphotonPlots.CompareTo("directPhoton")==0){
             cout << "running added Signal for photons, be careful" << endl;
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelectionRead      = fEventCutSelection;
+            cout << fEventCutSelectionRead.Data() << endl;
+            fEventCutSelectionRead.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
+            cout << fEventCutSelectionRead.Data() << endl;
             if (mode==9)
-                fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s%s_%s", fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
             else if (mode==0)
-                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
             if (mode==2 || mode==3)
-                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
             cout << fCutSelectionRead.Data() << endl;
         } else {
             cout << "running added Signal" << endl;
             cout << fEventCutSelection.Data() << endl;
-            fEventCutSelection.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
-            cout << fEventCutSelection.Data() << endl;
-            fEventCutSelectionRead      = fEventCutSelection;
+            fEventCutSelectionRead.Replace(GetEventRejectExtraSignalsCutPosition(),1,"2");
+            cout << fEventCutSelectionRead.Data() << endl;
             if (mode==9)
-                fCutSelectionRead       = Form("%s%s_%s", fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s%s_%s", fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
             else if (mode==0)
-                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
             if (mode==2 || mode==3)
-                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
             cout << fCutSelectionRead.Data() << endl;
         }
     }
 
     if(optionUseMinBiasEff.CompareTo("MinBiasEffOnly")==0 && optionMC.CompareTo("kTRUE") == 0){
         cout << "calculating MinBias Eff" << endl;
-        cout << fEventCutSelection.Data() << endl;
         // take out the cent numbers
-        fEventCutSelection.Replace(GetEventCentralityMinCutPosition(),2,"00");
+        fEventCutSelectionRead.Replace(GetEventCentralityMinCutPosition(),2,"00");
         // set to full MB cut in pPb
-        if (fEventCutSelection.BeginsWith("a")) fEventCutSelection.Replace(0,1,"8");
-        fEventCutSelectionRead      = fEventCutSelection;
-        cout << fGammaCutSelection.Data() << endl;
+        if (fEventCutSelectionRead.BeginsWith("a")) fEventCutSelectionRead.Replace(0,1,"8");
+        cout << fEventCutSelectionRead.Data() << endl;
         if (mode==0)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
         if (mode==2 || mode==3)
-          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
         if (mode==4 || mode==5)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
         cout << fCutSelectionRead.Data() << endl;
     }
 
@@ -203,53 +199,50 @@ void ExtractSignalV2(   TString meson                   = "",
         cout << "cutnumber for PileUpRejection is: " << fEventCutSelectionPileUpRejection << endl;
         if( CutNumberToInteger(fEventCutSelectionPileUpRejection) > 1  && optionMC.CompareTo("kTRUE") == 0){
         cout << "changing PileUpCut for MC" << endl;
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelection.Replace(GetEventRemovePileUpCutPosition(),1,"1");
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelectionRead    = fEventCutSelection;
+        cout << fEventCutSelectionRead.Data() << endl;
+        fEventCutSelectionRead.Replace(GetEventRemovePileUpCutPosition(),1,"1");
+        cout << fEventCutSelectionRead.Data() << endl;
         fClusterCutSelectionRead  = fClusterCutSelection;
         if (mode==0)
-            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
         if (mode==2 || mode==3)
-            fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
         if (mode==4 || mode==5)
-            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
         cout << fCutSelectionRead.Data() << endl;
         }
     }
     HistosGammaConversion       = (TList*)TopDir->FindObject(Form("Cut Number %s",fCutSelectionRead.Data()));
     if (HistosGammaConversion == NULL){
-      TString fEventCutSelectionBaseEvent     = fEventCutSelection(GetEventSystemCutPosition(),1);
-      cout << "cutnumber for basic event selection is: " << fEventCutSelectionBaseEvent << endl;
-      if ( CutNumberToInteger(fEventCutSelectionBaseEvent) == 1 && optionMC.CompareTo("kTRUE") == 0){
-        cout << "changing basic event cut for MC" << endl;
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelection.Replace(GetEventSystemCutPosition(),1,"5");
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelectionRead    = fEventCutSelection;
-        fClusterCutSelectionRead  = fClusterCutSelection;
-        if (mode==0)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-        if (mode==2 || mode==3)
-          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-        if (mode==4 || mode==5)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-        cout << fCutSelectionRead.Data() << endl;
-      } else if ( CutNumberToInteger(fEventCutSelectionBaseEvent) == 5 && optionMC.CompareTo("kTRUE") == 0){
-        cout << "changing basic event cut for MC" << endl;
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelection.Replace(GetEventSystemCutPosition(),1,"1");
-        cout << fEventCutSelection.Data() << endl;
-        fEventCutSelectionRead    = fEventCutSelection;
-        fClusterCutSelectionRead  = fClusterCutSelection;
-        if (mode==0)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
-        if (mode==2 || mode==3)
-          fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelection.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-        if (mode==4 || mode==5)
-          fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
-        cout << fCutSelectionRead.Data() << endl;
-      }
+        TString fEventCutSelectionBaseEvent     = fEventCutSelectionRead(GetEventSystemCutPosition(),1);
+        cout << "cutnumber for basic event selection is: " << fEventCutSelectionBaseEvent << endl;
+        if ( CutNumberToInteger(fEventCutSelectionBaseEvent) == 1 && optionMC.CompareTo("kTRUE") == 0){
+            cout << "changing basic event cut for MC" << endl;
+            cout << fEventCutSelectionRead.Data() << endl;
+            fEventCutSelectionRead.Replace(GetEventSystemCutPosition(),1,"5");
+            cout << fEventCutSelectionRead.Data() << endl;
+            fClusterCutSelectionRead  = fClusterCutSelection;
+            if (mode==0)
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            if (mode==2 || mode==3)
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            if (mode==4 || mode==5)
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            cout << fCutSelectionRead.Data() << endl;
+        } else if ( CutNumberToInteger(fEventCutSelectionBaseEvent) == 5 && optionMC.CompareTo("kTRUE") == 0){
+            cout << "changing basic event cut for MC" << endl;
+            cout << fEventCutSelectionRead.Data() << endl;
+            fEventCutSelectionRead.Replace(GetEventSystemCutPosition(),1,"1");
+            cout << fEventCutSelectionRead.Data() << endl;
+            fClusterCutSelectionRead  = fClusterCutSelection;
+            if (mode==0)
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+            if (mode==2 || mode==3)
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            if (mode==4 || mode==5)
+                fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+            cout << fCutSelectionRead.Data() << endl;
+        }
     }
 
 
@@ -5439,6 +5432,8 @@ void FitTrueInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, Double_
     cout << "width range params: " << fMesonWidthExpect  << "\t" << fMesonWidthRangeMC[0] << "\t" << fMesonWidthRangeMC[1] << endl;
     if ( (fMode == 2 || fMode == 4 || fMode == 12 || fMode == 13) && fEnergyFlag.Contains("pPb_5.023TeV")  )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
+    else if ( (fMode == 5 || fMode == 3) && fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0  )
+        fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
     else if ( fMode == 2  && fEnergyFlag.CompareTo("2.76TeV") == 0 )
         fHistoMappingSignalInvMassPtBinSingle->Fit(fFitReco,"WLRME0");
     else if ( (fMode == 2 || fMode == 4 || fMode == 3 || fMode == 5 || fMode == 12 || fMode == 13) && fEnergyFlag.Contains("XeXe")  )
@@ -5487,7 +5482,6 @@ void FitTrueInvMassPureGaussianInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSin
               mesonAmplitudeMax = mesonAmplitude*400./100.;
             }
         }
-
     } else {
         mesonAmplitudeMin = mesonAmplitude*50./100.;
         mesonAmplitudeMax = mesonAmplitude*120./100.;
