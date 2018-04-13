@@ -186,7 +186,9 @@
                                                         2.2, 2.4, 2.6, 2.8, 3.0,
                                                         3.4, 3.8, 4.1, 4.4, 5.0,
                                                         6.0, 8.0, 12.0, 20.0, 30.0};
-
+    Double_t fBinsPi05TeV2017DalitzPt[24]           =  {0, 0.4, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.4, 5.0, 6.0,
+                                                        8.0, 10.0, 15.};
     Double_t fBinsPi05TeVPtPCMEMC[35]               = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4,
                                                         1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4,
                                                         3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0,
@@ -226,7 +228,9 @@
                                                         4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4,
                                                         4, 4, 8, 16};
-
+    Int_t fBinsPi05TeV2017DalitzPtRebin[23]         =  {5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4,
+                                                        4, 5, 5, 5, 5,  5, 5, 5, 8, 8,
+                                                        8, 10};
     Int_t fBinsPi05TeVPCMEMCPtRebin[34]             = { 2, 2, 2, 2, 2, 2, 5, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 4, 8, 16, 16,
@@ -261,6 +265,8 @@
                                                         25., 30., 35.};
     Int_t fBinsEta5TeVPCMEMCPtRebin[22]             = { 5, 8, 10, 10, 8, 8, 8, 8, 8, 8,
                                                         8, 8, 8, 8, 10, 10, 16, 5, 5, 5, 5, 5};
+    Double_t fBinsEta5TeV2017DalitzPt[10]           = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4., 6., 10.};
+    Int_t fBinsEta5TeV2017DalitzPtRebin[9]          = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
     Double_t fBinsEta5TeVEMCPt[23]                  = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,
                                                         3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 16., 20.,
                                                         25., 30., 35.};
@@ -284,6 +290,7 @@
                                                             5, 5, 5, 5, 5, 5, 5, 5, 5};
     Int_t fBinsPi0EtaBinning5TeVPCMEMCPtRebin[13]   = { 8, 2, 2, 2, 2, 2, 2, 4, 4, 4,
                                                         4, 4, 4 };
+    Int_t fBinsPi0EtaBinning5TeV2017DalitzPtRebin[9]    = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
 
 
     //****************************************************************************************************
@@ -4091,6 +4098,10 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                                 if (i < fNBinsPt)
                                 fNRebin[i]  = fBinsPi05TeVPtRebin[i];
                             }
+                        } else if ( modi == 1 ) {
+                                fBinsPt[i]          = fBinsPi05TeV2017DalitzPt[i];
+                                if (i < fNBinsPt)
+                                fNRebin[i]  = fBinsPi05TeV2017DalitzPtRebin[i];
                         } else if ( modi == 2 ) {
                             fBinsPt[i]     = fBinsPi05TeVPtPCMEMC[i];
                             if ( i < fNBinsPt )
@@ -5153,6 +5164,10 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                                 } else {
                                     fBinsPt[i]  = fBinsEta5TeVPt[i];
                                 }
+                            } else if ( modi == 1 ) {
+                                fBinsPt[i]          = fBinsEta5TeV2017DalitzPt[i];
+                                if (i < fNBinsPt)
+                                fNRebin[i]  = fBinsEta5TeV2017DalitzPtRebin[i];
                             } else if ( modi == 2 ) {
                               fBinsPt[i]  = fBinsEta5TeVPCMEMCPt[i];
                             } else if ( modi == 4 ) {
