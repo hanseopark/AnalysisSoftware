@@ -197,7 +197,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
                                 TString suffix          = "eps",
                                 TString optionEnergy    = "",
                                 TString period          = "",
-                                Bool_t additionalQA     = kFALSE
+                                Bool_t additionalQA     = kFALSE,
+                                Bool_t doubleLogplots   = kFALSE
                             ){
 
     //***************************************************************************************************************
@@ -221,6 +222,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
                                     kMagenta-9, kPink-8, kRed-9, kBlue-9, kTeal-7, kGreen-4 };
     Marker_t markerBins[21]     = { 20, 21, 33, 34, 29,
                                     24, 25, 27, 28, 30,
+                                    20, 21, 33, 34, 29,
                                     24, 25, 27, 28, 30,
                                     20};
 
@@ -308,6 +310,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         anchoredTo                      = "LHC16r";
     if (period.Contains("LHC17g8c"))
         anchoredTo                      = "LHC16s";
+    if (period.Contains("LHC18b8"))
+        anchoredTo                      = "LHC17pq";
 
     TString acceptanceOf = "";
     if (mode == 0) acceptanceOf     = "|#eta_{#gamma}| < 0.9 (PCM acc.)";
@@ -451,7 +455,6 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         cout << ">>>>>>>> pT hard bin #: " << i << endl;
         cout << "ntrials: " <<  nTrials[i] << "\t xSection: " << xSection[i] << "\t number of generated events: " << nGeneratedEvents[i] << "\t weight: "
             << weight[i] << "\t weight applied: "<< weightApplied[i]<< endl;
-
         delete TopDir;
 
         fileInput[i]->Close();
@@ -462,7 +465,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     //***************************************************************************************************************
     //************************************Plotting unscaled inputs **************************************************
     //***************************************************************************************************************
-    TCanvas* canvasInputUnscaled = new TCanvas("canvasInputUnscaled","",0,0,1000,1350);  // gives the page size
+    TCanvas* canvasInputUnscaled = new TCanvas("canvasInputUnscaled","",0,0,1350,1000);  // gives the page size
     DrawGammaCanvasSettings( canvasInputUnscaled, 0.1, 0.015, 0.015, 0.07);
     canvasInputUnscaled->SetLogy();
 
@@ -488,7 +491,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     }
     legendUnscaled->Draw();
     for (Int_t i = 0; i< nrOfPtHardBins; i++){
-    histoMCPi0InputW0EvtWeigth[i]->DrawCopy("e1,same");
+        histoMCPi0InputW0EvtWeigth[i]->DrawCopy("e1,same");
     }
     TLatex *labelMCName = new TLatex(0.45,0.99-(1.15*(nrOfPtHardBins/2+1)*0.032),Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
     SetStyleTLatex( labelMCName, 32,4);
@@ -523,12 +526,65 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         canvasInputUnscaled->Update();
         canvasInputUnscaled->SaveAs(Form("%s/Eta_MC_InputUnscaled.%s",outputDir.Data(),suffix.Data()));
     }
+
+    if(doubleLogplots){
+        canvasInputUnscaled->cd();
+        canvasInputUnscaled->SetLogy();
+        canvasInputUnscaled->SetLogx();
+        histo2DInputUnscaledPi0->GetYaxis()->SetRangeUser(1,2e6);
+        histo2DInputUnscaledPi0->DrawCopy();
+
+        TLegend* legendUnscaledDLog = GetAndSetLegend2(0.12, 0.1, 0.96, 0.1+(1.*nrOfPtHardBins*0.028),22);
+        legendUnscaledDLog->SetMargin(0.12);
+    //     legendUnscaledDLog->SetNColumns(2);
+        for (Int_t i = 1; i< nrOfPtHardBins; i++){
+            histoMCPi0InputW0EvtWeigth[i]->DrawCopy("e1,same");
+            legendUnscaledDLog->AddEntry(histoMCPi0InputW0EvtWeigth[i],Form("%1.0f GeV/#it{c} < #it{p}^{hard}_{T} < %1.0f GeV/#it{c}", minPtHard[i], maxPtHard[i]),"p");
+        }
+        legendUnscaledDLog->Draw();
+
+        TLatex *labelMCNameDLog = new TLatex(0.5,0.93,Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
+        SetStyleTLatex( labelMCNameDLog, 32,4);
+        labelMCNameDLog->SetTextFont(43);
+        labelMCNameDLog->Draw();
+
+        canvasInputUnscaled->Update();
+        canvasInputUnscaled->SaveAs(Form("%s/Pi0_MC_InputUnscaledDLog.%s",outputDir.Data(),suffix.Data()));
+
+
+        if ( !(mode == 10 || mode == 11) ){
+
+            canvasInputUnscaled->cd();
+            canvasInputUnscaled->SetLogy();
+            canvasInputUnscaled->SetLogx();
+
+            Float_t maximumEtaUnscaled = FindLargestEntryIn1D(histoMCEtaInputW0EvtWeigth[0])*10;
+            if(optionEnergy.CompareTo("8TeV")==0) maximumEtaUnscaled*=5;
+            Float_t minimumEtaUnscaled = FindSmallestEntryIn1D(histoMCEtaInputW0EvtWeigth[nrOfPtHardBins-1]);
+            TH2F * histo2DInputUnscaledEta;
+            histo2DInputUnscaledEta = new TH2F("histo2DInputUnscaledEta","histo2DInputUnscaledEta",1000,0., maxPt,10000,minimumEtaUnscaled,maximumEtaUnscaled);
+            SetStyleHistoTH2ForGraphs(histo2DInputUnscaledEta, "#it{p}_{T} (GeV/#it{c})","N_{#eta}",
+                                    0.032,0.04, 0.032,0.04, 0.8,1.1);
+            histo2DInputUnscaledEta->GetXaxis()->SetRangeUser(0,maxPt);
+            histo2DInputUnscaledEta->GetYaxis()->SetRangeUser(1,3e4);
+            histo2DInputUnscaledEta->DrawCopy();
+
+            for (Int_t i = 1; i< nrOfPtHardBins; i++){
+                histoMCEtaInputW0EvtWeigth[i]->DrawCopy("e1,same");
+            }
+            legendUnscaledDLog->Draw();
+            labelMCNameDLog->Draw();
+
+            canvasInputUnscaled->Update();
+            canvasInputUnscaled->SaveAs(Form("%s/Eta_MC_InputUnscaledDLog.%s",outputDir.Data(),suffix.Data()));
+        }
+    }
     delete canvasInputUnscaled;
 
     //***************************************************************************************************************
     //************************************Plotting scaled inputs **************************************************
     //***************************************************************************************************************
-    TCanvas* canvasInputScaled = new TCanvas("canvasInputScaled","",0,0,1000,1350);  // gives the page size
+    TCanvas* canvasInputScaled = new TCanvas("canvasInputScaled","",0,0,1350,1000);  // gives the page size
     DrawGammaCanvasSettings( canvasInputScaled, 0.1, 0.015, 0.015, 0.07);
     canvasInputScaled->SetLogy();
     Float_t maximumPi0Scaled = FindLargestEntryIn1D(histoMCPi0Input[0])*10;
@@ -614,6 +670,82 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaledInAcceptance.%s",outputDir.Data(),suffix.Data()));
     }
 
+    if(doubleLogplots){
+
+        canvasInputScaled->cd();
+        canvasInputScaled->SetLogy();
+        canvasInputScaled->SetLogx();
+//         histo2DInputScaledPi0->GetYaxis()->SetRangeUser(1e-3,1e8);
+        histo2DInputScaledPi0->DrawCopy();
+
+            TLegend* legendScaledDLog = GetAndSetLegend2(0.2, 0.96-(1.*nrOfPtHardBins/2*0.028), 0.95, 0.96,22);
+            legendScaledDLog->SetNColumns(2);
+            legendScaledDLog->SetMargin(0.12);
+            for (Int_t i = 1; i< nrOfPtHardBins; i++){
+                histoMCPi0Input[i]->DrawCopy("e1,same");
+                legendScaledDLog->AddEntry(histoMCPi0Input[i],Form("%1.0f GeV/#it{c} < #it{p}^{hard}_{T} < %1.0f GeV/#it{c}", minPtHard[i], maxPtHard[i]),"p");
+            }
+//             legendScaledDLog->Draw();
+            TLatex *labelMCNameDLog = new TLatex(0.5,0.93,Form("%s anchored to %s",period.Data(), anchoredTo.Data()));
+            SetStyleTLatex( labelMCNameDLog, 32,4);
+            labelMCNameDLog->SetTextFont(43);
+            labelMCNameDLog->Draw();
+
+        canvasInputScaled->Update();
+        canvasInputScaled->SaveAs(Form("%s/Pi0_MC_InputScaledDLog.%s",outputDir.Data(),suffix.Data()));
+
+        canvasInputScaled->cd();
+        histo2DInputScaledPi0->DrawCopy();
+//             legendScaledDLog->Draw();
+            for (Int_t i = 1; i< nrOfPtHardBins; i++){
+                histoMCPi0InputAcc[i]->DrawCopy("e1,same");
+            }
+            labelMCNameDLog->Draw();
+    //         TLatex *labelAcceptance = new TLatex(0.45,0.99-(1.15*(nrOfPtHardBins/2+2)*0.032),Form("%s",acceptanceOf.Data()));
+    //         SetStyleTLatex( labelAcceptance, 32,4);
+    //         labelAcceptance->SetTextFont(43);
+            labelAcceptance->Draw();
+
+        canvasInputScaled->Update();
+        canvasInputScaled->SaveAs(Form("%s/Pi0_MC_InputScaledInAcceptanceDLog.%s",outputDir.Data(),suffix.Data()));
+
+        if ( !(mode == 10 || mode == 11) ){
+
+            canvasInputScaled->cd();
+            Float_t maximumEtaScaled = FindLargestEntryIn1D(histoMCEtaInput[0])*10;
+            if(optionEnergy.CompareTo("8TeV")==0) maximumEtaScaled*=2;
+            Float_t minimumEtaScaled = FindSmallestEntryIn1D(histoMCEtaInput[nrOfPtHardBins-1]);
+
+            TH2F * histo2DInputScaledEta;
+            histo2DInputScaledEta = new TH2F("histo2DInputScaledEta","histo2DInputScaledEta",1000,0., maxPt,10000,minimumEtaScaled,maximumEtaScaled);
+            SetStyleHistoTH2ForGraphs(histo2DInputScaledEta, "#it{p}_{T} (GeV/#it{c})","N_{#eta} reweighted",
+                                    0.032,0.04, 0.032,0.04, 0.8,1.1);
+            histo2DInputScaledEta->GetXaxis()->SetRangeUser(0,maxPt);
+//             histo2DInputScaledEta->GetYaxis()->SetRangeUser(1e-2,1e7);
+            histo2DInputScaledEta->DrawCopy();
+
+//                 legendScaledDLog->Draw();
+                for (Int_t i = 1; i< nrOfPtHardBins; i++){
+                    histoMCEtaInput[i]->DrawCopy("e1,same");
+                }
+                labelMCNameDLog->Draw();
+
+                canvasInputScaled->Update();
+                canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaledDlog.%s",outputDir.Data(),suffix.Data()));
+
+                histo2DInputScaledEta->DrawCopy();
+//                 legendScaledDLog->Draw();
+                for (Int_t i = 1; i< nrOfPtHardBins; i++){
+                    histoMCEtaInputAcc[i]->DrawCopy("e1,same");
+                }
+
+                labelMCNameDLog->Draw();
+                labelAcceptance->Draw();
+
+            canvasInputScaled->Update();
+            canvasInputScaled->SaveAs(Form("%s/Eta_MC_InputScaledInAcceptanceDlog.%s",outputDir.Data(),suffix.Data()));
+        }
+    }
     delete canvasInputScaled;
 
     //**************************************************************************************************************

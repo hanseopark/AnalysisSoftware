@@ -28,7 +28,7 @@ TString     motherParticlesLatex[nMotherParticles]      = { "#eta","K^{0}_{S}","
                                                             "#Delta^{0}","#Delta^{+}","#Delta^{++}","#Sigma^{0}","K^{+}","K^{-}","#Omega^{+}","#Omega^{-}","K^{*}(892)^{0}"};
 
 const Int_t nCocktailInputParticles                     = 3;
-TString cocktailInputParticles[nCocktailInputParticles] = {"NKaonSubS", "NKaonSubS", "Lambda"};
+TString cocktailInputParticles[nCocktailInputParticles] = {"NKaonSubS", "NKaonSubL", "Lambda"};
 
 //ctau given in (cm) below! - zero means: ctau < 0.01cm
 Double_t    motherParticles_ctau[nMotherParticles]      = {0,2.68,1533.74,7.89,0,0,0,0,0,0,0,0,0,0,0,0,371.2,371.2,2.461,2.461,0};

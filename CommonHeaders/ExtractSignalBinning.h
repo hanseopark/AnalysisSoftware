@@ -2106,7 +2106,9 @@ Int_t fBinsPi013TeVEMCTriggerEG2PtRebin[64]         =   { 4, 4, 1, 1, 1,    1, 1
                     return 4;
                 }
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
-                if (mode == 2 )
+                if (mode == 0 )
+                    return 5;
+                else if (mode == 2 )
                     return 8;
                 else if (mode == 4 || mode == 12 )
                     return 9;
