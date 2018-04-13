@@ -41,7 +41,7 @@
 #include "TGraphErrors.h"
 #include "TArrow.h"
 #include "TMarker.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "../CommonHeaders/PlottingGammaConversionHistos.h"
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
@@ -148,33 +148,33 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 	    TObjString* objstrCluster  = 0x0;
             TObjString* objstrMeson    = 0x0;
 	    TObjString* objstrName     = 0x0;
-	    
+
 	    TObjString* temp = (TObjString*)arr->At(0);
-	    
-	    
+
+
 	    cout<<"Length: "<<temp->GetString().Length()<<endl;
-	    
+
 	    //if(  temp->GetString().Length() == 7 && ( temp->GetString().Contains("8000011") || temp->GetString().Contains("0000011") ) ){
-	      
-	    if( mode == 1 ) {  
-	    
-	    
+
+	    if( mode == 1 ) {
+
+
 		objstrEvent    = (TObjString*)arr->At(0);
 		objstrGamma    = (TObjString*)arr->At(1);
 		objstrElectron = (TObjString*)arr->At(2);
 		objstrMeson    = (TObjString*)arr->At(3);
 		objstrName     = (TObjString*)arr->At(4);
 		cutNumber[Number] = objstrEvent->GetString()+"_"+objstrGamma->GetString()+"_"+ objstrElectron->GetString()+"_"+objstrMeson->GetString();
-		
+
 		if( objstrName ) {
-		  
+
 		  cutName[Number] = objstrName->GetString();
 		} else {
 		  cutName[Number] = "none";
 		}
-	    
+
 	    } else if( mode == 6 || mode == 7 ){
-	      
+
 	        objstrEvent    	= (TObjString*)arr->At(0);
 		objstrGamma    	= (TObjString*)arr->At(1);
 		objstrCluster  	= (TObjString*)arr->At(2);
@@ -182,35 +182,35 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 		objstrMeson    	= (TObjString*)arr->At(4);
 		objstrName      = (TObjString*)arr->At(5);
 		cutNumber[Number] = objstrEvent->GetString()+"_"+objstrGamma->GetString()+"_"+objstrCluster->GetString()+"_"+objstrElectron->GetString()+"_"+objstrMeson->GetString();
-		
+
 		if( objstrName ) {
-		  
+
 		  cutName[Number] = objstrName->GetString();
 		} else {
 		  cutName[Number] = "none";
 		}
-		
-	    
-	      
+
+
+
 	    } else {
-	      
+
 		objstrGamma    = (TObjString*)arr->At(0);
 		objstrElectron = (TObjString*)arr->At(1);
 		objstrMeson    = (TObjString*)arr->At(2);
 		objstrName     = (TObjString*)arr->At(3);
 		cutNumber[Number] = objstrGamma->GetString()+"_"+ objstrElectron->GetString()+"_"+objstrMeson->GetString();
 		if( objstrName ) {
-		  
+
 		  cutName[Number] = objstrName->GetString();
 		} else {
 		  cutName[Number] = "none";
 		}
-		
-		
-		
+
+
+
 	    }
-	    
-        
+
+
         cout<< cutNumber[Number]<<endl;
         Number++;
    }
@@ -244,8 +244,8 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
   TH1D *histoSignificanceMesonCut[ConstNumberOfCuts];
   TH1D *histoSBMesonCut[ConstNumberOfCuts];
   TH1D *histoGGFracCont[ConstNumberOfCuts];
-  
-    
+
+
   TH1D *histoRatioCorrectedYieldCut[ConstNumberOfCuts];
   TH1D *histoRatioTrueEffiCut[ConstNumberOfCuts];
   TH1D *histoRatioRawYieldCut[ConstNumberOfCuts];
@@ -253,7 +253,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
   TH1D *histoRatioSignificanceCut[ConstNumberOfCuts];
   TH1D *histoRatioSBCut[ConstNumberOfCuts];
   TH1D *histoRatioGGFracCont[ConstNumberOfCuts];
-  
+
   TH1D *histoNumberOfGoodESDTracksVtxCut[ConstNumberOfCuts];
   TString cutStringsName[ConstNumberOfCuts];
 
@@ -277,37 +277,37 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
       TString fGammaCutSelection;
       TString fElectronCutSelection;
-      TString fMesonCutSelection;    
+      TString fMesonCutSelection;
       TString fEventCutSelection;
       TString fClusterCutSelection;
-      
-         
+
+
       if ( mode == 9 ){
-		
+
 		cout<<"Entro aqui antiguo"<<endl;
-	      
+
 		ReturnSeparatedCutNumber(cutNumberAdv[i].Data(), fGammaCutSelection, fElectronCutSelection,fMesonCutSelection,kTRUE);
 		fEventCutSelection = fGammaCutSelection(0,7);
 		fGammaCutSelection = fGammaCutSelection(7,fGammaCutSelection.Length()-7);
 		cout << fEventCutSelection.Data() << "\t" << fGammaCutSelection.Data() << endl;
 	} else {
-	  
-		  
-	  
+
+
+
 		ReturnSeparatedCutNumberAdvanced(cutNumberAdv[i].Data(),fEventCutSelection, fGammaCutSelection, fClusterCutSelection, fElectronCutSelection, fMesonCutSelection, mode);
 	}
-      
+
       if(cutVariationName.Contains("Comparison")){
-	
+
 	cutStringsName[i] = cutName[i];
-	
+
 	   if( cutName[i].Contains("LHC13b2EMCAL") ){
 	     cutStringsName[i] = "Dalitz-EMCAL";
 	   } else if ( cutName[i].Contains("LHC13b2") ) {
 	     cutStringsName[i] = "Dalitz-PHOS";
-	     
+
 	   }
-	
+
       }
 
       else if (cutVariationName.Contains("V0Reader")){
@@ -326,12 +326,12 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          TString fClusterCut = fGammaCutSelection(4,1);
          cutStringsName[i] = AnalyseTPCClusterCut(CutNumberToInteger(fClusterCut));
          cout << i << "\t" << fClusterCut.Data() << "\t" << cutStringsName[i].Data()<< endl;
-      } else if (cutVariationName.Contains("dEdxE")){	 
+      } else if (cutVariationName.Contains("dEdxE")){
          TString fdEdxCut = fGammaCutSelection(5,1);
          cutStringsName[i] = AnalyseTPCdEdxCutElectronLine(CutNumberToInteger(fdEdxCut));
-      } else if (cutVariationName.Contains("dEdxPi")){    
+      } else if (cutVariationName.Contains("dEdxPi")){
          TString fdEdxCut = fGammaCutSelection(6,3);
-         cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());      
+         cutStringsName[i] = AnalyseTPCdEdxCutPionLine(fdEdxCut.Data());
       } else if (cutVariationName.Contains("Qt")){
          TString fQtCut = fGammaCutSelection(11,1);
          cutStringsName[i] = AnalyseQtMaxCut(CutNumberToInteger(fQtCut));
@@ -344,24 +344,24 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       } else if (cutVariationName.Contains("Alpha")){
          TString fAlphaCut = fMesonCutSelection(6,1);
          cutStringsName[i] = AnalyseAlphaMesonCut(CutNumberToInteger(fAlphaCut));
-	 
+
       } else if (cutVariationName.Contains("PsiPairDelthaPhi") ){
-	
+
 	 TString fPsiPairDelthaPhi = fElectronCutSelection(11,1);
-	 
+
 	 cout<<"String: "<< fElectronCutSelection.Data() <<" Code: "<<fPsiPairDelthaPhi.Data()<<endl;
-	 
+
      cutStringsName[i] = AnalysePsiPairDelthaPhiCut( CutNumberToInteger(fPsiPairDelthaPhi) );
-	 
+
       } else {
          cutStringsName[i] = cutNumberAdv[i].Data();
       }
-      
+
       if(i == 0){
          histoEventQuality = (TH1F*)Cutcorrfile[i]->Get("NEvents");
          if ( optionEnergy.Contains("pPb") || optionEnergy.Contains("PbPb") )
             nEvt = histoEventQuality->GetBinContent(1);
-         else 
+         else
             nEvt = GetNEvents(histoEventQuality);
          pictDrawingCoordinates[8] = nEvt;
          centralityString = GetCentralityString(cutNumberAdv[i].Data());
@@ -378,7 +378,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       TString nameEfficiency;
 
 
-     
+
 
       nameCorrectedYield = "CorrectedYieldTrueEff";
       nameEfficiency     = "TrueMesonEffiPt";
@@ -399,42 +399,42 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
       histoSBMesonCut[i] = (TH1D*)Cutuncorrfile[i]->Get("histoSBMeson");
       histoSBMesonCut[i]->SetName(Form("histoSBMesonCut_%s",cutNumber[i].Data()));
-      
+
       histoGGFracCont[i] = (TH1D*)Cutcorrfile[i]->Get("TrueGGFracForData");
       histoGGFracCont[i]->SetName(Form("TrueGGFrac_%s",cutNumber[i].Data()));
 
 
       histoRawYieldCut[i]->Scale(1./nColls[i]);
-      
-      
-      
+
+
+
       if (i > 0){
          Double_t maxPt= histoCorrectedYieldCut[i]->GetBinCenter(histoCorrectedYieldCut[i]->GetNbinsX()) + 0.5* histoCorrectedYieldCut[i]->GetBinWidth(histoCorrectedYieldCut[i]->GetNbinsX());
 
       }
-      
-      
+
+
       histoRatioCorrectedYieldCut[i] = (TH1D*) histoCorrectedYieldCut[i]->Clone(Form("histoRatioCorrectedYieldCut_%s",cutNumber[i].Data()));
       histoRatioCorrectedYieldCut[i]->Divide(histoRatioCorrectedYieldCut[i],histoCorrectedYieldCut[0],1.,1.,"B");
 
       histoRatioTrueEffiCut[i] = (TH1D*) histoTrueEffiCut[i]->Clone(Form("histoRatioTrueEffiCut_%s",cutNumber[i].Data()));
       histoRatioTrueEffiCut[i]->Divide(histoRatioTrueEffiCut[i],histoTrueEffiCut[0],1.,1.,"E");
-		
+
       histoRatioRawYieldCut[i] = (TH1D*) histoRawYieldCut[i]->Clone(Form("histoRatioRawYieldCut_%s",cutNumber[i].Data()));
       histoRatioRawYieldCut[i]->Divide(histoRatioRawYieldCut[i],histoRawYieldCut[0],1.,1.,"E");
-      
+
       histoRatioAcceptanceCut[i] = (TH1D*) histoAcceptanceMesonCut[i]->Clone(Form("histoRatioAcceptanceCut_%s",cutNumber[i].Data()));
       histoRatioAcceptanceCut[i]->Divide(  histoRatioAcceptanceCut[i], histoAcceptanceMesonCut[0],1.,1.,"E");
-      
+
       histoRatioSignificanceCut[i] = (TH1D*) histoSignificanceMesonCut[i]->Clone(Form("histoRatioSignificanceCut_%s",cutNumber[i].Data()));
       histoRatioSignificanceCut[i]->Divide(  histoRatioSignificanceCut[i], histoSignificanceMesonCut[0],1.,1.,"E");
-      
+
       histoRatioSBCut[i] = (TH1D*) histoSBMesonCut[i]->Clone(Form("histoSBMesonCut_%s",cutNumber[i].Data()));
       histoRatioSBCut[i]->Divide(  histoRatioSBCut[i], histoSBMesonCut[0],1.,1.,"E");
-      
+
       histoRatioGGFracCont[i] = (TH1D*) histoGGFracCont[i]->Clone(Form("histoRatioTrueGGFrac_%s",cutNumber[i].Data()));
       histoRatioGGFracCont[i]->Divide(  histoRatioGGFracCont[i], histoGGFracCont[0],1.,1.,"E");
-      
+
 
       histoNumberOfGoodESDTracksVtxCut[i] = (TH1D*)Cutcorrfile[i]->Get("GoodESDTracks");
       histoNumberOfGoodESDTracksVtxCut[i]->SetName(Form("ESD_NumberOfGoodESDTracksVtx_%s",cutNumber[i].Data()));
@@ -451,13 +451,13 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    //**************************************************************************************
    //********************* Plotting RAW-Yield *********************************************
    //**************************************************************************************
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
 
    TCanvas* canvasRawYieldMeson = new TCanvas("canvasRawYieldMeson","",1350,1500);  // gives the page size
    canvasRawYieldMeson->SetTickx();
@@ -501,25 +501,25 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    legendRawMeson->SetTextSize(0.02);
    legendRawMeson->SetFillColor(0);
    legendRawMeson->SetLineColor(0);
-   
-   
-   
+
+
+
    TLegend* legendRAWYieldMesonFits = new TLegend(0.60,0.6,0.70,0.8);
    legendRAWYieldMesonFits->SetTextSize(0.03);
    legendRAWYieldMesonFits->SetFillColor(0);
    legendRAWYieldMesonFits->SetLineColor(0);
-   
+
    TF1* fitRatioRAWYieldComparison[NumberOfCuts];
-   
-   
-  
-       
-   
+
+
+
+
+
    Double_t minPtRatioRAWYield   = 1.40;
    Double_t maxPtRatioRAWYield   = 10.0;
    Double_t fitParameterRAWYield = 1.05;
-   
-   
+
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
       if(i == 0){
          DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
@@ -531,13 +531,13 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          legendRawMeson->AddEntry(histoRawYieldCut[i],Form("standard: %s",cutStringsName[i].Data()));
       }
       else {
-	
+
 	 fitRatioRAWYieldComparison[i] = new TF1(Form("fitRatioRAWYieldComparison%03d",i),"pol0");
 	 fitRatioRAWYieldComparison[i]->SetParameter(0,fitParameterRAWYield);
 	 fitRatioRAWYieldComparison[i]->SetRange(minPtRatioRAWYield,maxPtRatioRAWYield);
 	 histoRatioRawYieldCut[i]->Fit(fitRatioRAWYieldComparison[i],"SINRME+","",minPtRatioRAWYield,maxPtRatioRAWYield);
 	 legendRAWYieldMesonFits->AddEntry(fitRatioRAWYieldComparison[i], Form("P_{0}: %f #pm %f",fitRatioRAWYieldComparison[i]->GetParameter(0),fitRatioRAWYieldComparison[i]->GetParError(0)));
-   	
+
          if(i<20){
             DrawGammaSetMarker(histoRawYieldCut[i], 20+i, 1.,color[i],color[i]);
 	    fitRatioRAWYieldComparison[i]->SetLineColor(color[i]);
@@ -551,32 +551,32 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 	 if( NumberOfCuts < 3 ) {
 
                 fitRatioRAWYieldComparison[i]->SetLineColor(kRed);
-                fitRatioRAWYieldComparison[i]->SetLineWidth(3);       
+                fitRatioRAWYieldComparison[i]->SetLineWidth(3);
 
         }
-	
+
 
       }
-      
+
    }
-   
+
    legendRawMeson->Draw();
-   
+
     if ( NumberOfCuts > 1 )legendRAWYieldMesonFits->Draw("sames");
-   
-   
+
+
    if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
       TLatex *labelCentrality = new TLatex(0.65,0.93,"p-Pb #sqrt{s_{NN}} = 5.023 TeV");
       SetStyleTLatex( labelCentrality, 0.038,4);
       labelCentrality->Draw();
-   } 
+   }
 
-   
+
    padRawYieldRatios->cd();
    padRawYieldRatios->SetTickx();
    padRawYieldRatios->SetTicky();
 
- 
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
 
       if(i==0){
@@ -584,7 +584,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          histoRatioRawYieldCut[i]->SetYTitle("#frac{modified}{standard}");
 
          if( optionEnergy.Contains("Pb") ) histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(0.9,1.1);
-         else histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(0.5,1.5);
+         else histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(0.001,1.5);
          if (cutVariationName.Contains("Cent")) histoRatioRawYieldCut[i]->GetYaxis()->SetRangeUser(-0.2,3.2);
 
          histoRatioRawYieldCut[i]->GetYaxis()->SetLabelSize(0.07);
@@ -604,11 +604,11 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
 
       } else{
-	
+
 	 if(i<20){
-            DrawGammaSetMarker(histoRatioRawYieldCut[i], 20+i, 1.,color[i],color[i]);	    
+            DrawGammaSetMarker(histoRatioRawYieldCut[i], 20+i, 1.,color[i],color[i]);
          } else {
-            DrawGammaSetMarker(histoRatioRawYieldCut[i], 20+i, 1.,color[i-20],color[i]);	    
+            DrawGammaSetMarker(histoRatioRawYieldCut[i], 20+i, 1.,color[i-20],color[i]);
          }
 
          histoRatioRawYieldCut[i]->DrawCopy("same,e1,p");
@@ -667,36 +667,36 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    padCorrectedYield->SetTicky();
    padCorrectedYield->SetLogy(1);
 
-	
-	
+
+
    TLegend* legendCorrectedYieldMeson = new TLegend(0.15,0.02,0.3,0.2);
    legendCorrectedYieldMeson->SetTextSize(0.02);
    legendCorrectedYieldMeson->SetFillColor(0);
    legendCorrectedYieldMeson->SetLineColor(0);
-   
+
    TLegend* legendCorrectedYieldMesonFits = new TLegend(0.60,0.6,0.70,0.8);
    legendCorrectedYieldMesonFits->SetTextSize(0.03);
    legendCorrectedYieldMesonFits->SetFillColor(0);
    legendCorrectedYieldMesonFits->SetLineColor(0);
-   
-   
-   
-   
+
+
+
+
    TF1* fitRatioComparison[NumberOfCuts];
-   
+
    TPaveText* fitParamRatioComparison[NumberOfCuts];
-   
-  
-       
-   
+
+
+
+
    Double_t minPtRatioCorrectYield   = 0.60;
    Double_t maxPtRatioCorrectYield   = 10.0;
    Double_t fitParameterCorrectYield = 1.00;
-   
+
 
 
    for(Int_t i = 0; i< NumberOfCuts; i++){
-     
+
       if(i == 0){
          DrawAutoGammaMesonHistos( histoCorrectedYieldCut[i],
                                    "", "p_{t} (GeV/c)", "#frac{1}{2#pi N_{ev.}} #frac{d^{2}N}{p_{t}dp_{t}dy} (c/GeV)",
@@ -709,15 +709,15 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       }
 
       else{
-	
+
 	 fitRatioComparison[i] = new TF1(Form("fitRatioComparison%03d",i),"pol0");
 	 fitRatioComparison[i]->SetParameter(0,fitParameterCorrectYield);
 	 fitRatioComparison[i]->SetRange(minPtRatioCorrectYield,maxPtRatioCorrectYield);
 	 histoRatioCorrectedYieldCut[i]->Fit(fitRatioComparison[i],"SINRME+","",minPtRatioCorrectYield,maxPtRatioCorrectYield);
 	 legendCorrectedYieldMesonFits->AddEntry(fitRatioComparison[i], Form("P_{0}: %f #pm %f",fitRatioComparison[i]->GetParameter(0),fitRatioComparison[i]->GetParError(0)));
-   
-  
-	
+
+
+
          if(i<20){
             DrawGammaSetMarker(histoCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
 	    fitRatioComparison[i]->SetLineColor(color[i]);
@@ -729,7 +729,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 	 if( NumberOfCuts < 3 ) {
 
                 fitRatioComparison[i]->SetLineColor(kRed);
-                fitRatioComparison[i]->SetLineWidth(3);       
+                fitRatioComparison[i]->SetLineWidth(3);
 
          }
 
@@ -738,21 +738,21 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          histoCorrectedYieldCut[i]->DrawCopy("same,e1,p");
          legendCorrectedYieldMeson->AddEntry(histoCorrectedYieldCut[i], cutStringsName[i].Data());
       }
-      
-      
+
+
    }
-   
+
    legendCorrectedYieldMeson->Draw();
-   
+
    if ( NumberOfCuts > 1 )legendCorrectedYieldMesonFits->Draw("sames");
-   
+
 
    if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
       TLatex *labelCentrality = new TLatex(0.65,0.93,"p-Pb #sqrt{s_{NN}} = 5.023 TeV");
       SetStyleTLatex( labelCentrality, 0.038,4);
       labelCentrality->Draw();
    }
-   
+
    padCorrectedYieldRatios->cd();
    padCorrectedYieldRatios->SetTickx();
    padCorrectedYieldRatios->SetTicky();
@@ -769,10 +769,10 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          } else {
             if( optionEnergy.Contains("PbPb")) histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(0.45,1.55);
                else if ( optionEnergy.Contains("pPb")) histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(0.94,1.06);
-               else histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(0.75,1.15);
+               else histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(0.5,1.5);
          }
          if (cutVariationName.Contains("Cent")) histoRatioCorrectedYieldCut[i]->GetYaxis()->SetRangeUser(0.005,3.2);
-         
+
          histoRatioCorrectedYieldCut[i]->GetYaxis()->SetLabelSize(0.07);
          histoRatioCorrectedYieldCut[i]->GetYaxis()->SetNdivisions(505);
          histoRatioCorrectedYieldCut[i]->GetYaxis()->SetTitleSize(0.1);
@@ -788,43 +788,43 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20, 1., 1, 1);
          histoRatioCorrectedYieldCut[i]->Reset("ICES");
          histoRatioCorrectedYieldCut[i]->DrawCopy("HIST");
-		
+
       }
       else{
          if(i<20){
             DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i],color[i]);
-// 				fitRatioCorrectedYieldCut[i]->SetLineColor(color[i]);	
-// 				fitRatioConstCorrectedYieldCut[i]->SetLineColor(color[i]);	
-// 				fitRatioConstCorrectedYieldCut[i]->SetLineStyle(2);	
+// 				fitRatioCorrectedYieldCut[i]->SetLineColor(color[i]);
+// 				fitRatioConstCorrectedYieldCut[i]->SetLineColor(color[i]);
+// 				fitRatioConstCorrectedYieldCut[i]->SetLineStyle(2);
          } else {
             DrawGammaSetMarker(histoRatioCorrectedYieldCut[i], 20+i, 1.,color[i-20],color[i]);
-// 				fitRatioCorrectedYieldCut[i]->SetLineColor(color[i-20]);	
-// 				fitRatioConstCorrectedYieldCut[i]->SetLineColor(color[i-20]);	
-// 				fitRatioConstCorrectedYieldCut[i]->SetLineStyle(2);	
+// 				fitRatioCorrectedYieldCut[i]->SetLineColor(color[i-20]);
+// 				fitRatioConstCorrectedYieldCut[i]->SetLineColor(color[i-20]);
+// 				fitRatioConstCorrectedYieldCut[i]->SetLineStyle(2);
          }
          histoRatioCorrectedYieldCut[i]->DrawCopy("same,e1,p");
 	 fitRatioComparison[i]->Draw("same");
-				
+
 // 			fitRatioCorrectedYieldCut[i]->Draw("same");
 // 			fitRatioConstCorrectedYieldCut[i]->Draw("same");
       }
    }
    DrawGammaLines(0., maxPt,1., 1.,0.1);
 
-   
+
 
    canvasCorrectedYieldMeson->Update();
    cout<<"save"<<endl;
    canvasCorrectedYieldMeson->SaveAs(Form("%s/%s_%s_CorrectedYield.%s",outputDir.Data(), meson.Data(),prefix2.Data(),suffix));
    delete canvasCorrectedYieldMeson;
-   
-   
+
+
    //********************************************Compare Acceptances**********************************************************//
-   //															      //		
+   //															      //
    //*************************************************************************************************************************//
-   
-   
-   
+
+
+
    TCanvas* canvasAcceptanceMeson = new TCanvas("canvasAcceptanceMeson","",1350,1500);  // gives the page size
    canvasAcceptanceMeson->SetTickx();
    canvasAcceptanceMeson->SetTicky();
@@ -866,11 +866,11 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    legendAcceptanceMeson->SetTextSize(0.02);
    legendAcceptanceMeson->SetFillColor(0);
    legendAcceptanceMeson->SetLineColor(0);
-   
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
-     
+
      cout<<"Number Of Cuts : "<<NumberOfCuts<<" ///////////////////////////////////////////////////////////////////////////"<<endl;
-      
+
       if(i == 0){
          DrawGammaSetMarker(histoAcceptanceMesonCut[i], 20, 1., color[0], color[0]);
          DrawAutoGammaMesonHistos( histoAcceptanceMesonCut[i],
@@ -880,7 +880,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
                                    kFALSE, 0., 10.);
 	  histoAcceptanceMesonCut[i]->DrawCopy("e1,p");
           legendAcceptanceMeson->AddEntry(histoAcceptanceMesonCut[i],Form("standard: %s",cutStringsName[i].Data()));
-	 
+
       }
       else {
          if(i<20){
@@ -891,20 +891,20 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          histoAcceptanceMesonCut[i]->DrawCopy("same,e1,p");
          legendAcceptanceMeson->AddEntry(histoAcceptanceMesonCut[i],cutStringsName[i].Data());
       }
-      
+
    }
    legendAcceptanceMeson->Draw();
    if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
       TLatex *labelCentrality = new TLatex(0.65,0.93,"p-Pb #sqrt{s_{NN}} = 5.023 TeV");
       SetStyleTLatex( labelCentrality, 0.038,4);
       labelCentrality->Draw();
-   } 
+   }
 
-   
+
    padAcceptanceRatios->cd();
    padAcceptanceRatios->SetTickx();
    padAcceptanceRatios->SetTicky();
- 
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
       if(i==0){
          histoRatioAcceptanceCut[i]->SetYTitle("#frac{modified}{standard}");
@@ -945,12 +945,12 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
    canvasAcceptanceMeson->SaveAs(Form("%s/%s_%s_AcceptanceMeson.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix));
    delete canvasAcceptanceMeson;
-   
-  
+
+
    //**********************************Significance*******************************************************
    //
    //*****************************************************************************************************
-   
+
    TCanvas* canvasSignificanceMeson = new TCanvas("canvasSignificanceMeson","",1350,1500);  // gives the page size
    canvasSignificanceMeson->SetTickx();
    canvasSignificanceMeson->SetTicky();
@@ -1018,7 +1018,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          histoSignificanceMesonCut[i]->DrawCopy("same,e1,p");
          legendSignificanceMeson->AddEntry(histoSignificanceMesonCut[i],cutStringsName[i].Data());
       }
-      
+
    }
    legendSignificanceMeson->Draw();
 
@@ -1026,9 +1026,9 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       TLatex *labelCentrality = new TLatex(0.65,0.93,"p-Pb #sqrt{s_{NN}} = 5.023 TeV");
       SetStyleTLatex( labelCentrality, 0.038,4);
       labelCentrality->Draw();
-   } 
+   }
 
-   
+
    padSignificanceRatios->cd();
    padSignificanceRatios->SetTickx();
    padSignificanceRatios->SetTicky();
@@ -1070,8 +1070,8 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
    canvasSignificanceMeson->SaveAs(Form("%s/%s_%s_SignificanceMeson.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix));
    delete canvasSignificanceMeson;
-   
-   
+
+
    //*************************************S/B*********************************************************
    //
    //*************************************************************************************************
@@ -1116,11 +1116,11 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    legendSBMeson->SetTextSize(0.02);
    legendSBMeson->SetFillColor(0);
    legendSBMeson->SetLineColor(0);
-   
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
-     
+
      cout<<"Number Of Cuts : "<<NumberOfCuts<<" ///////////////////////////////////////////////////////////////////////////"<<endl;
-      
+
       if(i == 0){
          DrawGammaSetMarker(histoSBMesonCut[i], 20, 1., color[0], color[0]);
          DrawAutoGammaMesonHistos( histoSBMesonCut[i],
@@ -1130,7 +1130,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
                                    kFALSE, 0., 10.);
 	  histoSBMesonCut[i]->DrawCopy("e1,p");
           legendSBMeson->AddEntry(histoSBMesonCut[i],Form("standard: %s",cutStringsName[i].Data()));
-	 
+
       }
       else {
          if(i<20){
@@ -1141,16 +1141,16 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          histoSBMesonCut[i]->DrawCopy("same,e1,p");
          legendSBMeson->AddEntry(histoSBMesonCut[i],cutStringsName[i].Data());
       }
-      
+
    }
    legendSBMeson->Draw();
    if (optionEnergy.CompareTo("pPb_5.023TeV")==0){
       TLatex *labelCentrality = new TLatex(0.65,0.93,"p-Pb #sqrt{s_{NN}} = 5.023 TeV");
       SetStyleTLatex( labelCentrality, 0.038,4);
       labelCentrality->Draw();
-   } 
+   }
 
-   
+
    padSBRatios->cd();
    padSBRatios->SetTickx();
    padSBRatios->SetTicky();
@@ -1192,14 +1192,14 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
    canvasSBMeson->SaveAs(Form("%s/%s_%s_SB.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix));
    delete canvasSBMeson;
-   
-   
+
+
    //*************************************************************************************************
    //******************** Output of the systematic Error due to Signal extraction for Pi0 ************
    //*************************************************************************************************
    Int_t NBinsPt = histoCorrectedYieldCut[0]->GetNbinsX();
    const Int_t NBinstPtConst = NBinsPt+1;
-	
+
    Double_t  BinsXCenter[NBinstPtConst];
    Double_t  BinsXWidth[NBinstPtConst];
    Double_t BinValue[NBinstPtConst];
@@ -1240,7 +1240,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    Double_t RelDifferenceCut[ConstNumberOfCuts][NBinstPtConst];
    Double_t RelDifferenceErrorCut[ConstNumberOfCuts][NBinstPtConst];
 	Double_t RelDifferenceRawCut[ConstNumberOfCuts][NBinstPtConst];
-	
+
    for (Int_t j = 1; j < NumberOfCuts; j++){
       for ( Int_t i = 1; i < NBinstPtConst; i++) {
          DifferenceCut[j][i]=0.;
@@ -1272,7 +1272,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 	} else {
 		RelDifferenceRawCut[j][i] = -10000.;
 	}
-			
+
 	if(DifferenceCut[j][i] < 0){
 	  if (TMath::Abs(LargestDiffNeg[i]) < TMath::Abs(DifferenceCut[j][i]) && RelDifferenceRawCut[j][i] > -75.){
 	      LargestDiffNeg[i] = DifferenceCut[j][i];
@@ -1298,7 +1298,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       if (l == 0) {
          SysErrDat << endl <<"Bin" << "\t" << cutNumber[l] << "\t" <<endl;
          for(Int_t i = 1; i < (NBinsPt +1); i++){
-	    SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;	
+	    SysErrDat << BinsXCenter[i] << "\t" << SysErrCut[l][i].value << "\t" << SysErrCut[l][i].error << endl;
          }
       } else{
          SysErrDat << endl <<"Bin" << "\t" << cutNumber[l] << "\t" << "Error " << "\t Dif to Cut1" << endl;
@@ -1354,7 +1354,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
     systErrGraphPosYieldExt->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",meson.Data(),centralityString.Data()),TObject::kOverwrite);
     SystematicErrorFile->Write();
     SystematicErrorFile->Close();
-	
+
     if (cutVariationName.Contains("V0")){
       const char* Outputname2 = Form("%s/%s_RatioRawYields.root",outputDir.Data(),meson.Data());
       TFile* RatioRawYieldsFile = new TFile(Outputname2,"UPDATE");
@@ -1367,11 +1367,11 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       RatioRawYieldsFile->Close();
     }
 
-	
+
    //**************************************************************************************
    //********************* Plotting RAW-Yield *********************************************
    //**************************************************************************************
-	
+
    TCanvas* canvasTrueEffiMeson = new TCanvas("canvasTrueEffiMeson","",1350,1500);  // gives the page size
    canvasTrueEffiMeson->SetTickx();
    canvasTrueEffiMeson->SetTicky();
@@ -1411,26 +1411,26 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
    TF1*       fitRatioComparisonTrueEffi[NumberOfCuts];
    TPaveText* fitParamRatioComparisonTrueEffi[NumberOfCuts];
-   
+
    Double_t minPtRatioEfficiency   = 1.40;
    Double_t maxPtRatioEfficiency   = 4.0;
    Double_t fitParameterEfficiency = 1.05;
-   
+
    TLegend* legendEffiMeson = new TLegend(0.15,0.65,0.3,0.85);
    legendEffiMeson->SetTextSize(0.02);
    legendEffiMeson->SetFillColor(0);
    legendEffiMeson->SetLineColor(0);
-   
+
    TLegend* legendEffiMesonFits = new TLegend(0.15,0.40,0.3,0.60);
    legendEffiMesonFits->SetTextSize(0.03);
    legendEffiMesonFits->SetFillColor(0);
    legendEffiMesonFits->SetLineColor(0);
-   
-   
+
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
 
       if(i == 0){
-			
+
          DrawGammaSetMarker(histoTrueEffiCut[i], 20, 1., color[0], color[0]);
          DrawAutoGammaMesonHistos( histoTrueEffiCut[i],
                                    "", "p_{t} (GeV/c)", Form("%s Efficiency",textMeson.Data()),
@@ -1443,18 +1443,18 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
       }
       else {
-	
+
 	fitRatioComparisonTrueEffi[i] = new TF1(Form("fitRatioComparisonTrueEffi%03d",i),"pol0");
 	fitRatioComparisonTrueEffi[i]->SetParameter(0,fitParameterEfficiency);
 	fitRatioComparisonTrueEffi[i]->SetRange(minPtRatioEfficiency,maxPtRatioEfficiency);
 	histoRatioTrueEffiCut[i]->Fit(fitRatioComparisonTrueEffi[i],"SINRME+","",minPtRatioEfficiency,maxPtRatioEfficiency);
 	legendEffiMesonFits->AddEntry(fitRatioComparisonTrueEffi[i], Form("P_{0}: %f #pm %f",fitRatioComparisonTrueEffi[i]->GetParameter(0),fitRatioComparisonTrueEffi[i]->GetParError(0)));
-  	
-	
+
+
          if(i<20){
             DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
 	    fitRatioComparisonTrueEffi[i]->SetLineColor(color[i]);
-           
+
          } else {
             DrawGammaSetMarker(histoTrueEffiCut[i], 20+i, 1.,color[i-20],color[i]);
 	    fitRatioComparisonTrueEffi[i]->SetLineColor(color[i-20]);
@@ -1463,10 +1463,10 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
            if( NumberOfCuts < 3 ) {
 
 		fitRatioComparisonTrueEffi[i]->SetLineColor(kRed);
-		fitRatioComparisonTrueEffi[i]->SetLineWidth(3);		
-	
+		fitRatioComparisonTrueEffi[i]->SetLineWidth(3);
+
 	   }
-	
+
          histoTrueEffiCut[i]->DrawCopy("same,e1,p");
          legendEffiMeson->AddEntry(histoTrueEffiCut[i],cutStringsName[i].Data());
       }
@@ -1499,7 +1499,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
           } else {
                histoRatioTrueEffiCut[i]->SetYTitle("#frac{modified}{standard}");
-               histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.5,1.5);
+               histoRatioTrueEffiCut[i]->GetYaxis()->SetRangeUser(0.001,1.5);
           }
                histoRatioTrueEffiCut[i]->GetYaxis()->SetLabelSize(0.07);
                histoRatioTrueEffiCut[i]->GetYaxis()->SetNdivisions(505);
@@ -1516,9 +1516,9 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
   	       histoRatioTrueEffiCut[i]->Reset("ICES");
                histoRatioTrueEffiCut[i]->DrawCopy("HIST");
       } else{
-	
-	
-	
+
+
+
 
          if(i<20){
             DrawGammaSetMarker(histoRatioTrueEffiCut[i], 20+i, 1.,color[i],color[i]);
@@ -1532,12 +1532,12 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
       DrawGammaLines(0., maxPt,1., 1.,0.1);
    }
 
-   
+
    canvasTrueEffiMeson->Update();
 
    canvasTrueEffiMeson->SaveAs(Form("%s/%s_%s_Efficiencies.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix));
    delete canvasTrueEffiMeson;
-   
+
 
 
    TCanvas* canvasGGFracCont = new TCanvas("canvasGGFracCont","",1350,1500);  // gives the page size
@@ -1560,8 +1560,8 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    padGGFracCont->SetRightMargin(0.02);
    padGGFracCont->SetTopMargin(0.04);
    padGGFracCont->Draw();
-   
-       
+
+
    TPad* padGGFracContRatios = new TPad("padGGFracContRatios", "", 0., 0., 1., 0.18,-1, -1, -2);
    padGGFracContRatios->SetFillColor(0);
    padGGFracContRatios->GetFrame()->SetFillColor(0);
@@ -1582,33 +1582,33 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    legendGGFracCont->SetTextSize(0.02);
    legendGGFracCont->SetFillColor(0);
    legendGGFracCont->SetLineColor(0);
-   
-   
+
+
    TLegend* legendGGFracContFits = new TLegend(0.15,0.50,0.3,0.70);
    legendGGFracContFits->SetTextSize(0.03);
    legendGGFracContFits->SetFillColor(0);
    legendGGFracContFits->SetLineColor(0);
-   
-   
+
+
    TF1*       fitRatioComparisonGGFracCont[NumberOfCuts];
    TPaveText* fitParamRatioComparisonGGFracCont[NumberOfCuts];
 
    Float_t minPtRatioGGFrac = 0.6;
-   Float_t maxPtRatioGGFrac = 5.0;  
-   Float_t fitParameterGGFrac=1.0; 
-   
-   
-  
-   
-   
+   Float_t maxPtRatioGGFrac = 5.0;
+   Float_t fitParameterGGFrac=1.0;
+
+
+
+
+
    for(Int_t i = 0; i< NumberOfCuts; i++){
 
       if(i == 0){
-			
+
          DrawGammaSetMarker(histoGGFracCont[i], 20, 1., color[0], color[0]);
          DrawAutoGammaMesonHistos( histoGGFracCont[i],
                                    "", "p_{t} (GeV/c)","Contamination fraction",
-				   
+
                                    kTRUE, 1., 1e-1,kFALSE,
                                    kTRUE, -0.1, 1.0,
                                    kFALSE, 0., 10.);
@@ -1618,13 +1618,13 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
       }
       else {
-	
+
 	fitRatioComparisonGGFracCont[i] = new TF1(Form("fitRatioComparisonGGFracCont%03d",i),"pol0");
 	fitRatioComparisonGGFracCont[i]->SetParameter(0,fitParameterGGFrac);
 	fitRatioComparisonGGFracCont[i]->SetRange(minPtRatioGGFrac,maxPtRatioGGFrac);
 	histoRatioGGFracCont[i]->Fit(fitRatioComparisonGGFracCont[i],"SINRME+","",minPtRatioGGFrac,maxPtRatioGGFrac);
 	legendGGFracContFits->AddEntry(fitRatioComparisonGGFracCont[i], Form("P_{0}: %f #pm %f",fitRatioComparisonGGFracCont[i]->GetParameter(0),fitRatioComparisonGGFracCont[i]->GetParError(0)));
-  	
+
          if(i<20){
             DrawGammaSetMarker(histoGGFracCont[i], 20+i, 1.,color[i],color[i]);
 	    fitRatioComparisonGGFracCont[i]->SetLineColor(color[i]);
@@ -1632,10 +1632,10 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          } else {
             DrawGammaSetMarker(histoGGFracCont[i], 20+i, 1.,color[i-20],color[i]);
 	    fitRatioComparisonGGFracCont[i]->SetLineColor(color[i-20]);
-	    //fitRatioComparisonGGFracCont[i]->SetLineWidth(2);	
+	    //fitRatioComparisonGGFracCont[i]->SetLineWidth(2);
          }
 
-	   if( NumberOfCuts < 3 )fitRatioComparisonGGFracCont[i]->SetLineColor(kRed);		
+	   if( NumberOfCuts < 3 )fitRatioComparisonGGFracCont[i]->SetLineColor(kRed);
 
           histoGGFracCont[i]->DrawCopy("same,e1,p");
          legendGGFracCont->AddEntry(histoGGFracCont[i],cutStringsName[i].Data());
@@ -1643,8 +1643,8 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
    }
      legendGGFracCont->Draw();
    //legendGGFracContFits->Draw("same");
-   
-  
+
+
 
   if (optionEnergy.CompareTo("pPb_5.02TeV") == 0){
       TLatex *labelCentrality = new TLatex(0.65,0.91,"p-Pb #sqrt{s_{NN}} = 5.02 TeV");
@@ -1695,7 +1695,7 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
          }
            histoRatioGGFracCont[i]->DrawCopy("same,e1,p");
 	 //fitRatioComparisonGGFracCont[i]->Draw("same");
-	 
+
       }
 
       DrawGammaLines(0., maxPt,1., 1.,0.1);
@@ -1703,8 +1703,8 @@ void CutStudiesDalitzOverview(const char* CombineCutsName = "CombineCuts.dat", c
 
     canvasGGFracCont->Update();
    canvasGGFracCont->SaveAs(Form("%s/%s_%s_GGFracCont.%s",outputDir.Data(),meson.Data(),prefix2.Data(),suffix));
-   
-   
+
+
    delete canvasGGFracCont;
 
 }
