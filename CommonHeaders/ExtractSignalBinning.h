@@ -993,6 +993,11 @@
                                                         2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9,    3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9,
                                                         4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,       6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5, 8.0, 8.5, 9.0,
                                                         10.0, 11.0, 12.0, 14.0, 16.0, 20.0, 25.0};
+    Double_t fBinsPi0pPb5TeVPCMR2CentPt[81]         = { 0.0, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,   0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2,
+                                                        1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7,  1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2,
+                                                        2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9,    3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9,
+                                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,       6.0, 6.2, 6.6, 7.0, 7.5, 8.0, 9.0,
+                                                        12.0, 16.0, 20.0, 25.0};
     Double_t fBinsPi0pPb5TeVPCMEMCR2Pt[85]          = { 0.0, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1,   1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6,
                                                         1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1,  2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7,
                                                         2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7,       3.8, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4,
@@ -1026,6 +1031,11 @@
                                                         1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
                                                         5, 5, 10, 15, 20, 20 };
+    Int_t fBinsPi0pPb5TeVPCMR2CentPtRebin[80]       = { 5, 4, 4, 4, 4, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 5,
+                                                        5, 10, 15, 20 };
 
     Int_t fBinsPi0pPb5TeVEMCR2PtRebin[74]           = { 5, 4, 4, 4, 4, 4, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -1108,16 +1118,16 @@
     Double_t fBinsEtapPb5TeVPCMPHOSR2Pt[29]         = { 0., 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 16.0};
 
-    Double_t fBinsEtapPb5TeVPCMR2CentPt[30]         = { 0., 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
-                                                        4.5, 5.0, 5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 16.0, 20.0 };
+    Double_t fBinsEtapPb5TeVPCMR2CentPt[29]         = { 0., 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
+                                                        4.5, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0 };
     Double_t fBinsEtapPb5TeVPCMEMCR2CentPt[30]      = { 0., 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,    2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
                                                         5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 16.0, 20.0, 25.0};
     Double_t fBinsEtapPb5TeVPCMEMCR2SCentPt[29]     = { 0., 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,    2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
                                                         5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0};
     Int_t fBinsEtapPb5TeVPCMR2PtRebin[35]           = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 4, 4, 4, 5, 5, 5, 5,           10, 10, 20, 20, 20};
-    Int_t fBinsEtapPb5TeVPCMR2CentPtRebin[29]       = { 10, 10, 8, 8, 8, 8, 5, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-                                                        4, 4, 4, 8, 8, 8, 10, 10, 20};
+    Int_t fBinsEtapPb5TeVPCMR2CentPtRebin[28]       = { 10, 10, 8, 8, 8, 8, 5, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 8, 8, 10, 10, 20};
     Int_t fBinsEtapPb5TeVEMCR2PtRebin[29]           = { 10, 10, 10, 8, 8, 5, 4, 4, 4, 4,        4, 4, 4, 4, 4, 4, 4, 8, 8, 8,
                                                         8, 8, 8, 10, 16, 16, 16, 20, 20};
     Int_t fBinsEtapPb5TeVPCMEMCR2PtRebin[32]        = { 10, 10, 8, 8, 5, 4, 4, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -2573,6 +2583,9 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if ( mode == 0 ){
+                  if(centrality.Contains("0-5%"))
+                    startPtBin     = 2;
+                  else
                     startPtBin     = 1;
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
@@ -2807,6 +2820,11 @@
                 }
             } else if (energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if ( mode == 0 ){
+                  if (!centrality.CompareTo("60-100%"))
+                    startPtBin     = 1;
+                  else if (!centrality.CompareTo("0-5%")||!centrality.CompareTo("5-10%"))
+                    startPtBin     = 3;
+                  else
                     startPtBin     = 2;
                 } else if ( mode == 1 ){
                     startPtBin     = 3;
@@ -3189,12 +3207,19 @@
 
             } else if ( energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if (mode == 0 ){ // PCM
-                    maxNBins    = 88;
-                    binningMax  = 88;
+                    if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%")){
+                        maxNBins    = 88;
+                        binningMax  = 88;
+                    } else {
+                        maxNBins    = 88;
+                        binningMax  = 88;
+                    }
                     if (DCAcase) binningMax  = 16;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         if (DCAcase)
                             binning[i] = fBinsPi0pPb5TeVPtDCA[i];
+                        else if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%") )
+                            binning[i]  = fBinsPi0pPb5TeVPCMR2CentPt[i];
                         else
                             binning[i] = fBinsPi0pPb5TeVPCMR2Pt[i];
                     }
@@ -4761,11 +4786,16 @@
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
-                        if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 )                                            // MB pi0 for PCM run 1
+                        if (modi == 0 ){
+                          if (!energy.CompareTo("pPb_5.023TeV"))                                                            // MB pi0 for PCM run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVPtRebin[i];
-                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // MB pi0 for PCM run 2
-                            fNRebin[i]          = fBinsPi0pPb5TeVPCMR2PtRebin[i];
-                        else if (modi == 1 )                                                                                // MB pi0 for Dalitz run 1
+                          else if (!energy.CompareTo("pPb_5.023TeVRun2")){
+                            if(centrality.Contains("0-5%") || centrality.Contains("5-10%") || centrality.Contains("60-100%"))
+                              fNRebin[i]          = fBinsPi0pPb5TeVPCMR2CentPtRebin[i];
+                            else
+                              fNRebin[i]          = fBinsPi0pPb5TeVPCMR2PtRebin[i];                                          // MB pi0 for PCM run 2
+                          }
+                        } else if (modi == 1 )
                             fNRebin[i]          = fBinsPi0pPb5TeVDalitzPtRebin[i];
                         else if (   modi == 2 && energy.CompareTo("pPb_5.023TeV") == 0 && specialTrigg == 0 &&               // MB pi0 for PCM-EMC run 1
                                     centrality.Contains("0-100%"))
@@ -4812,7 +4842,9 @@
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
-                    nIterBGFit                  = 8;
+                    nIterBGFit                  = 11;
+                    if (modi == 0 && !energy.CompareTo("pPb_5.023TeVRun2") )
+                      nIterBGFit                  = 8;
                     fMaxYFracBGOverIntHist      = 20;
                 }
             //*********************************************************************************************
@@ -5846,11 +5878,15 @@
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
+                    if (modi == 0 && !energy.CompareTo("pPb_5.023TeVRun2") )
+                      nIterBGFit                  = 8;
                 } else {
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
+                    if (modi == 0 && !energy.CompareTo("pPb_5.023TeVRun2") )
+                      nIterBGFit                  = 8;
                 }
                 fMaxYFracBGOverIntHist          = 20;
             //*********************************************************************************************
