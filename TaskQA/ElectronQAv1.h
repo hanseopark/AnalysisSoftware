@@ -7,18 +7,18 @@ Double_t xbins[kNbins]={0.0,  0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.
 				5.0,  6.0,  7.0,  8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0,
 				22.0, 25.0};
 const Int_t kNRbins = 109;
-Double_t xRbins[kNRbins] = {  0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-			      10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-			      20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-			      30, 31, 32, 33, 34, 35, 37, 39, 41, 43,
-			      45, 47, 49, 51, 53, 55, 57, 59, 61, 63,
-			      65, 67, 69, 71, 73, 75, 77, 79, 81, 83,
-			      85, 87, 89, 91, 93, 95, 97, 99, 101, 103,
-			      105, 107, 109, 111, 113, 115, 117, 119, 121, 123,
-			      125, 127, 129, 131, 133, 135, 137, 139, 141, 143,
-			      145, 147, 149, 151, 153, 155, 157, 159, 161, 163,
+Double_t xRbins[kNRbins] = {  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+			      10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 
+			      20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 
+			      30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 
+			      45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 
+			      65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 
+			      85, 87, 89, 91, 93, 95, 97, 99, 101, 103, 
+			      105, 107, 109, 111, 113, 115, 117, 119, 121, 123, 
+			      125, 127, 129, 131, 133, 135, 137, 139, 141, 143, 
+			      145, 147, 149, 151, 153, 155, 157, 159, 161, 163, 
 			      165, 167, 169, 171, 173, 175, 177, 179, 180};
-
+			      
 Double_t nEventsData 	= 0.0;
 Double_t nEventsMC   	= 0.0;
 Double_t mean_Data   	= 0.0;
@@ -38,7 +38,7 @@ TString fElectronCutSelectionMC = "";
 TString fMesonCutSelectionMC    = "";
 
 TH1F* fEventQualityData = 0;
-
+      
 TH1F* fESD_NumberOfGoodESDTracksData = 0;
 
 //TString collisionSystem = "";
@@ -72,7 +72,7 @@ TString pLabel = "p (GeV/#it{c})";
 
 
 
-//TString
+//TString 
 
 TH1F* hESDConvGammaEta_data               		= 0;
 TH1F* hESDDalitzElectronAfterPt_data      		= 0;
@@ -82,7 +82,7 @@ TH1F* hESDDalitzPositronAfterEta_data     		= 0;
 TH1F* hESDDalitzElectronAfterEtaPCut_data 		= 0;
 TH1F* hESDDalitzPositronAfterEtaPCut_data 		= 0;
 TH1F* hESDDalitzElectronAfterPhi_data 	  		= 0;
-TH1F* hESDDalitzPositronAfterPhi_data     		= 0;
+TH1F* hESDDalitzPositronAfterPhi_data     		= 0; 
 TH1F* hESDDalitzElectronAfterNClsITS_data 		= 0;
 TH1F* hESDDalitzPositronAfterNClsITS_data 		= 0;
 TH2F* hESDDalitzElectronAfterNFindClsTPC_data		= 0;
@@ -180,21 +180,21 @@ TH2F* hESDEposEnegInvMassPt				= 0;
 TH2F* hESDEposEnegTrueInvMassPt				= 0;
 
 TH1F* hESDEposEnegTruePi0DalitzPt 			= 0;
-TH1F* hESDEposEnegTrueEtaDalitzPt 			= 0;
-TH1F* hESDEposEnegTruePhotonPt    			= 0;
+TH1F* hESDEposEnegTrueEtaDalitzPt 			= 0; 
+TH1F* hESDEposEnegTruePhotonPt    			= 0; 
 TH1F* hESDEposEnegPt              			= 0;
 TH1F* hESDTrueEposEnegPt				= 0;
 
 TH1F* hESDEposEnegTruePi0DalitzInvMass 			= 0;
-TH1F* hESDEposEnegTrueEtaDalitzInvMass 			= 0;
-TH1F* hESDEposEnegTruePhotonInvMass    			= 0;
+TH1F* hESDEposEnegTrueEtaDalitzInvMass 			= 0; 
+TH1F* hESDEposEnegTruePhotonInvMass    			= 0; 
 TH1F* hESDEposEnegTrueInvMass				= 0;
 TH1F* hESDEposEnegInvMass 				= 0;
 TH1F* hESDTrueEposEnegInvMass              		= 0;
 TH2F* hTPCdEdxSigbefore_mc      	                = 0;
 TH2F* hTPCdEdxbefore_mc					= 0;
 
-
+	
 
 
 
@@ -211,40 +211,40 @@ TH1F* hESDDalitzElectronPositronAfterClsITS_mc          = 0;
 TH1F* hESDDalitzElectronPositronAfterClsITS_data        = 0;
 TH2F* hTPCEledEdxSigafter_mc				= 0;
 TH2F* hTPCEledEdxafter_mc 				= 0;
-
+    
 
 const Int_t nBins = 7;
 TH1F*  hMCConvGammaEffiVsPtProb[nBins];
 TString gammaCutEffiLegend = "|#eta|<0.9, p_{T,min}=0.05 GeV/c, R_{#gamma conv,min}=5.0cm}";
 TString electronCutEffiLegend = "|#eta|<0.9";
-
+		
 TH1F* hESDTruePositronPt				= 0;
 TH1F* hESDTrueElectronPt				= 0;
-
+       
 TH1F* hESDTruePositronPtvsEffi  	= 0;
 TH1F* hESDTrueElectronPtvsEffi  	= 0;
 TH1F* hMCAllPositronsPtScaled   	= 0;
 TH1F* hMCAllElectronsPtScaled   	= 0;
 TH1F* hESDTruePositronPtScaled  	= 0;
 TH1F* hESDTrueElectronPtScaled  	= 0;
-
+       
 TH1F* hMCAllPositronsPtScaledBR   	= 0;
 TH1F* hMCAllElectronsPtScaledBR   	= 0;
 TH1F* hESDTruePositronPtScaledBR  	= 0;
 TH1F* hESDTrueElectronPtScaledBR  	= 0;
-
-TH1D* fHistoMCMesonPt	       		= 0;
+     
+TH1D* fHistoMCMesonPt	       		= 0;   
 TH1D* fHistoMCMesonDalitzPt     	= 0;
 TH1D* fHistoMCMesonGGPt         	= 0;
-
+      
 TH2F* hESDEposEnegTruePi0DalitzPsiPairDPhi	= 0;
-TH2F* hESDEposEnegTrueEtaDalitzPsiPairDPhi	= 0;
-TH2F* hESDEposEnegTruePhotonPsiPairDPhi		= 0;
-
+TH2F* hESDEposEnegTrueEtaDalitzPsiPairDPhi	= 0; 
+TH2F* hESDEposEnegTruePhotonPsiPairDPhi		= 0; 
+       
 TH1F*	hESDTruePi0DalitzElectronPt		= 0;
 TH1F*	hESDTruePi0DalitzPositronPt		= 0;
 TH1F* 	hESDTruePi0DalitzPositronPtvsEffi 	= 0;
-TH1F* 	hESDTruePi0DalitzElectronPtvsEffi 	= 0;
+TH1F* 	hESDTruePi0DalitzElectronPtvsEffi 	= 0;  
 TH1F*   hESDTruePi0DalitzConvGammaPt            = 0;
 TH1F*   hHistoTruePi0DalitzClusGammaPt          = 0;
 TH1F*   hESDTruePi0DalitzConvGammaPtvsEffi      = 0;
@@ -262,47 +262,49 @@ THnSparseF* sESDTruePi0DalitzDalitzPlot_mc      = 0;
 THnSparseF* sMCPi0DalitzDalitzPlot_mc           = 0;
 
 
-TString 	arrayNamesRBins[13]=	{"Beam Pipe",
-									"SPD 1",
+
+TString 	arrayNamesRBins[13]=	{"Beam Pipe", 
+									"SPD 1", 
 									"SPD 2",
-									"Thermal shield/Support between SPD/SDD",
-									"SDD 1",
-									"SDD 2",
-									"Thermal shield/Support between SDD/SSD",
-									"SSD 1",
-									"SSD 2",
-									"Air + TPC in. cont. vessel + CO_{2}",
-									"CO_{2} + TPC in. field cage vessel",
-									"TPC rods + Ne: CO_{2}: N_{2}",
+									"Thermal shield/Support between SPD/SDD", 
+									"SDD 1", 
+									"SDD 2", 
+									"Thermal shield/Support between SDD/SSD", 
+									"SSD 1", 
+									"SSD 2", 
+									"Air + TPC in. cont. vessel + CO_{2}", 
+									"CO_{2} + TPC in. field cage vessel", 
+									"TPC rods + Ne: CO_{2}: N_{2}", 
 									"Ne: CO_{2}: N_{2}"};
 
 
-
+		
 
 void DrawAliceLogoPerformancePlot(Float_t startX, Float_t startY, Float_t widthLogo, Float_t textHeight, Float_t decrease, TString date, TString collisionSystem, TString textGenerator, TString textPeriod, Double_t xLengthCanvas, Double_t yLengthCanvas);
 //TGraph2D* ConvertTH2FtoTGraph(TH2F* h2);
 
 /*TGraph2D* ConvertTH2FtoTGraph(TH2F* h2){
-
+  
    const Int_t xNBin = h2->GetNbinsX();
    const Int_t yNBin = h2->GetNbinsY();
-
+   
    Double_t xBinVal[xNBin];
    Double_t yBinVal[yNBin];
-
+  
   for(Int_t iBin=0; iBin < xNBin; iBin++){
-
+     
 		 xBinVal[iBin] = h2->GetXaxis()->GetBinCenter(iBin+1);
 		 yBinVal[iBin] = h2->GetBinContent(iBin+1);
-
-
+		 
+     
   }
-
+   
    //TGraph* graph  = new TGraph(xNBin,xBinVal,yBinVal);
    TGraph2D* graph = new TGraph2D(h2);
-
+   
    return graph;
-
+  
 }*/
 
 
+       
