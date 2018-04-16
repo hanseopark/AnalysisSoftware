@@ -284,7 +284,6 @@ function GiveBinningNormal()
     fi
 
 }
-
 function GiveBinning900GeV()
 {
     echo "How many p_T bins do you want to use? 10(3GeV), 11(4GeV)";
@@ -1004,6 +1003,7 @@ do
       #else
       #   echo "Command not found. Please try again.";
       #fi
+
     elif [ $energy = "900GeV" ]; then
       
          directphoton="No"
