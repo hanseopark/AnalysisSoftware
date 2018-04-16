@@ -85,7 +85,9 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     if (havePCMEMC) gSystem->Exec(Form("cp %s %s/InputPCMEMCGammapp8TeV.root", inputFileNamePCMEMC.Data(), outputDir.Data()));
     if (haveEMC) gSystem->Exec(Form("cp %s %s/InputEMCGammapp8TeV.root", inputFileNameEMC.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/Theorypp8TeV.root", fileNameTheorypp8TeV.Data(), outputDir.Data()));
-
+    if(fileNameCorrelations.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/Correlations.root", fileNameCorrelations.Data(), outputDir.Data()));
+    
     TString nameFinalResDat                                     = Form("%s/CombinedResultsGamma_FitResults_%s.dat",outputDir.Data(),dateForOutput.Data());
     fstream fileFinalResults;
     fileFinalResults.open(nameFinalResDat.Data(), ios::out);

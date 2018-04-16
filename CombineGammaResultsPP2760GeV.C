@@ -87,6 +87,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     if (havePCMEMC) gSystem->Exec(Form("cp %s %s/InputPCMEMCGammapp2760GeV.root", inputFileNamePCMEMC.Data(), outputDir.Data()));
     if (haveEMC) gSystem->Exec(Form("cp %s %s/InputEMCGammapp2760GeV.root", inputFileNameEMC.Data(), outputDir.Data()));
     gSystem->Exec(Form("cp %s %s/Theorypp2760GeV.root", fileNameTheorypp2760GeV.Data(), outputDir.Data()));
+    if(fileNameCorrelations.CompareTo(""))
+      gSystem->Exec(Form("cp %s %s/Correlations.root", fileNameCorrelations.Data(), outputDir.Data()));
 
     TString nameFinalResDat                                     = Form("%s/CombinedResultsGamma_FitResults_%s.dat",outputDir.Data(),dateForOutput.Data());
     fstream fileFinalResults;
