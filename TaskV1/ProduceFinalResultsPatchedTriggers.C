@@ -455,8 +455,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
 
     vector<TString>** ptSysDetail     = new vector<TString>*[MaxNumberOfFiles];
-    for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++) ptSysDetail[iR] = new vector<TString>[50];
-
+    for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++) ptSysDetail[iR] = new vector<TString>[100];
     //***************************************************************************************************************
     //******************************** Load Pi0 histograms **********************************************************
     //***************************************************************************************************************
