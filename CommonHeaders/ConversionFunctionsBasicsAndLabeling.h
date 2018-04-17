@@ -1281,8 +1281,8 @@
             cout << "using eta for gammas of 0.65" << endl;
             return 0.65*2;
         } else if (etaCutNumber.CompareTo("4")==0){
-            cout << "using eta for gammas of 0.13" << endl;
-            return  0.26;
+            cout << "using eta for gammas of 0.75" << endl;
+            return  1.5;
         } else if (etaCutNumber.CompareTo("5")==0){
             cout << "using eta for gammas of 0.5" << endl;
             return  1.0;
