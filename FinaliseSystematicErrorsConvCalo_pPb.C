@@ -964,7 +964,7 @@ void FinaliseSystematicErrorsConvCalo_pPb(  TString nameDataFileErrors    = "",
                             cout << error << endl;
                         }
                     }
-                    if(!additionalName.CompareTo("0-100%")==0) error *= 2;
+                    if(!additionalName.CompareTo("0-100%")==0) error += 2;
                     errorsMean[i][k]            = error;
                     errorsMeanErr[i][k]         = error*0.01;
                     errorsMeanCorr[i][k]        = error;

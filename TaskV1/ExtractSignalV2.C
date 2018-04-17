@@ -4109,6 +4109,12 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     //--------------------------------------------------------------------------------------
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
     Double_t mesonAmplitude     = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
+    if(fMode == 4){
+      mesonAmplitude = 0;
+      for(Int_t i=fHistoMappingSignalInvMassPtBinSingle->FindBin(fMesonFitRange[0]); i<fHistoMappingSignalInvMassPtBinSingle->FindBin(fMesonFitRange[1]) ; i++){
+        if(fHistoMappingSignalInvMassPtBinSingle->GetBinContent(i)>mesonAmplitude) mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetBinContent(i);
+      }
+    }
     Double_t mesonAmplitudeMin  = mesonAmplitude*10./100.;
     Double_t mesonAmplitudeMax  = mesonAmplitude*400./100.;
 
