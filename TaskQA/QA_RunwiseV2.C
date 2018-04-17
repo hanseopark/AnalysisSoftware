@@ -100,7 +100,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
         if (tempValue.BeginsWith("select",TString::kIgnoreCase)){
             select              = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("folderRunlists",TString::kIgnoreCase)){
-            folderRunlists      = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
+            folderRunlists      = ((TString)((TObjString*)tempArr->At(1))->GetString());
         } else if (tempValue.BeginsWith("nSets",TString::kIgnoreCase)){
             nSets               = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atoi();
         } else if (tempValue.BeginsWith("nData",TString::kIgnoreCase)){
