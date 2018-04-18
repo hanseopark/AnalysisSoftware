@@ -5,6 +5,6 @@ nSets	4
 cutNr	0
 labelData	Data
 energy	5TeV
-pathDataSets	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180219-1_pileupOn/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180219-1_pileupOn/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180219-1_pileupOn/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180219-1_pileupOn/GammaConvV1_400.root	STOP
+pathDataSets	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	STOP
 DataSets	LHC17p_woSDD    LHC17q_woSDD LHC17l3_woSDD LHC17l4_woSDD STOP
 plotDataSets	LHC17p_woSDD    LHC17q_woSDD	GEANT3	GEANT4	STOP

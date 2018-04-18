@@ -101,22 +101,30 @@ function GiveBinning5TeV()
 
 function GiveBinning5TeV2017()
 {
-     echo "How many p_T bins do you want to use for the Pi0? 57 (16 GeV/c)";
+     echo "How many p_T bins do you want to use for the Pi0? 26 (as Hikari, 14 GeV/c), 57 (14 GeV/c), 80 (finer, 14 GeV/c)";
 
      read answer
-     if [ $answer -lt 60 ]; then
-         echo "57 bins --> Max p_T = 16 GeV/c ...";
+     if [ $answer -gt 4 ] && [ $answer -lt 28 ]; then
+         echo $answer "bins --> Max p_T = 16 GeV/c ...";
          correctPi0=1
-         BinsPtPi0=57
+         BinsPtPi0=$answer
+     elif [ $answer -gt 30 ] && [ $answer -lt 60 ]; then
+         echo $answer "bins --> Max p_T = 16 GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=$answer
+     elif [ $answer -gt 62 ] && [ $answer -lt 90 ]; then
+         echo $answer "bins --> Max p_T = 16 GeV/c ...";
+         correctPi0=1
+         BinsPtPi0=$answer
      else
          echo "Pi0 binning was not set correctly. Please try again.";
          correctPi0=0
      fi
 
-     echo "How many p_T bins do you want to use for the eta? 20 (12 GeV/c)";
+     echo "How many p_T bins do you want to use for the eta? 8 (as Hikari 12 GeV/c), 20 (12 GeV/c)";
      read answer
      if [ $answer -gt 4 ] && [ $answer -lt 30 ]; then
-        echo "$answer bins --> Max p_t = XX GeV/c ...";
+        echo $answer "bins --> Max p_t = XX GeV/c ...";
         correctEta=1
         BinsPtEta=$answer
      else

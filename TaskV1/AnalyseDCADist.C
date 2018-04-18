@@ -901,6 +901,19 @@ void AnalyseDCADist(    TString meson           ="",
                                     "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 6);
         PlotDCADistPtBinWithMCSplit(Form("%s/%s_%s_DCAProjectionsWithMC_AllCat.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), suffix.Data()),
                                     "canvas_cat6", "pad_cat6",   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate );
+
+      TFile* fDataInputComp = new TFile(Form("%s/%s/%s_Data_GammaConvV1DCATestAnalysed.root",cutSelection.Data(),optionEnergy.Data(),meson.Data()));
+      if(fDataInputComp){
+        for (Int_t cat = 0; cat < 6; cat++){
+            for (Int_t j = fStartPtBin; j < fNBinsPt; j++){
+                fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[cat][j] = (TH1D*)fDataInputComp->Get(Form("HistDCAZUnderMesonCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
+                fHistDCAZBG_Visual_CatIter_Data_PtWise[cat][j] = (TH1D*)fDataInputComp->Get(Form("fHistDCAZUnderMesonBGEstimateCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
+            }
+            PlotDCADistPtBinSubtractedSplitCat(Form("%s/Monitoring/%s_%s_DCAProjSubtracted_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), cat+1, suffix.Data()),
+                                        Form("canvas_cat%d",cat+1), Form("pad_cat%d",cat+1),   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
+            PlotDCADistPtBinSubtractedRatioSplitCat(Form("%s/Monitoring/%s_%s_DCAProjSubtractedRatioDataToMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), cat+1, suffix.Data()), Form("canvas_cat%d",cat+1), Form("pad_cat%d",cat+1),   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
+        }
+      }
     }
 
     //############################
@@ -1283,7 +1296,7 @@ void AnalyseDCADist(    TString meson           ="",
             Size_t markersizePlot[5]                        ={1.5,2,2.,2.8};
             Color_t colorDataPlot[5]                        ={kBlack,kRed+2,kCyan-3,kBlue-3};
             TLegend* legendDCACatCompare            = GetAndSetLegend2(0.14, 0.935, 0.35, 0.91-(4*textSizeLabelsRel),0.8*textSizeLabelsPixel);
-            
+
             TH1D* fHistDCAZUnderMeson_Visual_CatIter_MC = NULL;
             if(fHistDCAZUnderMeson_MesonPt[cat][j]){
               fHistDCAZUnderMeson_Visual_CatIter_MC =  (TH1D*)fHistDCAZUnderMeson_MesonPt[cat][j]->Clone(Form("fHistDCAZUnderMeson_Visual_CatIter_MC_%d",j));
@@ -1293,7 +1306,7 @@ void AnalyseDCADist(    TString meson           ="",
               fHistDCAZUnderMeson_Visual_CatIter_MC->Draw("p,same,e");
               legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_CatIter_MC,Form("MC DCAz cat. %d",cat+1),"p");
             }
-            
+
             TH1D* fHistDCAZUnderMeson_Visual_CatIter_Data =  (TH1D*)fDataInputComp->Get(Form("HistDCAZUnderMesonCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
             Double_t maximumData                  = -1;
             if(fHistDCAZUnderMeson_Visual_CatIter_Data){
@@ -1305,7 +1318,7 @@ void AnalyseDCADist(    TString meson           ="",
               fHistDCAZUnderMeson_Visual_CatIter_Data->Draw("p,same,e");
               legendDCACatCompare->AddEntry(fHistDCAZUnderMeson_Visual_CatIter_Data,Form("data DCAz cat. %d",cat+1),"p");
             }
-            
+
             TH1D* fHistDCAZBG_Visual_CatIter_Data =  (TH1D*)fDataInputComp->Get(Form("fHistDCAZUnderMesonBGEstimateCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
             if(fHistDCAZBG_Visual_CatIter_Data && fHistDCAZUnderMeson_Visual_CatIter_Data){
               fHistDCAZBG_Visual_CatIter_Data->Sumw2();
@@ -1316,7 +1329,7 @@ void AnalyseDCADist(    TString meson           ="",
               fHistDCAZBG_Visual_CatIter_Data->Draw("hist,same");
               legendDCACatCompare->AddEntry(fHistDCAZBG_Visual_CatIter_Data,"Estimated Pileup","l");
             }
-            
+
             TH1D* fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data =  NULL;
             if(fHistDCAZUnderMeson_Visual_CatIter_Data && fHistDCAZBG_Visual_CatIter_Data){
               fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data =  (TH1D*)fHistDCAZUnderMeson_Visual_CatIter_Data->Clone("fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data");
@@ -1336,8 +1349,7 @@ void AnalyseDCADist(    TString meson           ="",
                 labelEnergy->Draw();            legendDCACatCompare->Draw();
             canvasDCACatCompare->Update();
             canvasDCACatCompare->SaveAs(Form("%s/Monitoring/%s_%s_DCAzDataComp_Cat%d_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(),cat+1, j,suffix.Data()));
-            
-            
+
             TH2F * histoDCADataMCCompareRatioDummy;
                 histoDCADataMCCompareRatioDummy             = new TH2F("histoDCADataMCCompareRatioDummy", "histoDCADataMCCompareRatioDummy",1000, -4.99,  4.99, 1000, 0.0, 3 );
             SetStyleHistoTH2ForGraphs( histoDCADataMCCompareRatioDummy, "dca_{#it{z}} (cm)", "Data Subtracted/MC",
@@ -1346,11 +1358,11 @@ void AnalyseDCADist(    TString meson           ="",
             histoDCADataMCCompareRatioDummy->GetYaxis()->SetLabelOffset(0.001);
             histoDCADataMCCompareRatioDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
             histoDCADataMCCompareRatioDummy->DrawCopy();
-            
+
             DrawGammaLines(-4.99,  4.99 , 1., 1.,0.1, kGray+2);
             DrawGammaLines(-4.99,  4.99 , 1.1, 1.1,0.1, kGray, 7);
             DrawGammaLines(-4.99,  4.99 , 0.9, 0.9,0.1, kGray, 7);
-            
+
             if(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data && fHistDCAZUnderMeson_Visual_CatIter_MC){
               TH1D* fHistDCARatio_CatIter_DataToMC =  (TH1D*)fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data->Clone("fHistDCARatio_CatIter_DataToMC");
               fHistDCARatio_CatIter_DataToMC->Divide(fHistDCAZUnderMeson_Visual_CatIter_MC);
@@ -1358,7 +1370,7 @@ void AnalyseDCADist(    TString meson           ="",
               fHistDCARatio_CatIter_DataToMC->SetLineWidth(2.);
               fHistDCARatio_CatIter_DataToMC->Draw("hist,same");
             }
-            
+
             labelPtBin->Draw();
             labelEnergy->Draw();
             canvasDCACatCompare->Update();
@@ -2132,6 +2144,7 @@ void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TStrin
     delete canvasDataFit;
 }
 
+
 //______________________________ DCAz photon under Meson Peak together with Fit and Histo estimate of BG __________________________________
 void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,
                                         Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
@@ -2639,6 +2652,276 @@ void PlotDCADistPtBinWithMCSplit(TString namePlot, TString nameCanvas, TString n
 }
 
 
+//______________________________ DCAz photon under Meson Peak with subtracted estimate of BG __________________________________
+void PlotDCADistPtBinSubtractedSplitCat(TString namePlot, TString nameCanvas, TString namePad,
+                                    Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
+                                    Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy, Int_t category){
+    TCanvas *canvasDataSubtracted 			= new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
+    canvasDataSubtracted->SetTopMargin(0.0);
+    canvasDataSubtracted->SetBottomMargin(0.0);
+    canvasDataSubtracted->SetRightMargin(0.0);
+    canvasDataSubtracted->SetLeftMargin(0.0);
+
+    TPad * padDataSubtracted                 = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataSubtracted->SetFillColor(0);
+    padDataSubtracted->GetFrame()->SetFillColor(0);
+    padDataSubtracted->SetBorderMode(0);
+    padDataSubtracted->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+// 	padDataSubtracted->SetLeftMargin(0.2);
+    padDataSubtracted->Draw();
+
+    Int_t place = 0;
+    for(Int_t iPt = fStartBinPtRange; iPt < fNumberPtBins; iPt++){
+        Double_t startPt 			= fRangeBinsPt[iPt];
+        Double_t endPt                 = fRangeBinsPt[iPt+1];
+
+        place = place + 1;                  //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataSubtracted->cd(place);
+            padDataSubtracted->cd(place)->SetTopMargin(0.12);
+            padDataSubtracted->cd(place)->SetBottomMargin(0.15);
+            padDataSubtracted->cd(place)->SetRightMargin(0.001);
+
+
+            string textAlice 		= "ALICE performance";
+            string textEvents		= "";
+            if(fMonteCarloInfo){
+                textEvents = "MC";
+            } else {
+                textEvents = "Data";
+            }
+            Double_t textHeight 	= 0.055;
+            Double_t startTextX 	= 0.05;
+            Double_t startTextY 	= 0.75;
+            Double_t differenceText = textHeight*1.25;
+
+            TLatex *alice 			= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s", textAlice.c_str()));
+            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s", fEnergyText.Data()));
+            TLatex *latexDate 		= new TLatex(startTextX, startTextY, dateDummy.Data());
+            TLatex *latexCategory 	= new TLatex(startTextX, startTextY+differenceText, Form("Meson Category %i", category));
+
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight);
+            alice->Draw();
+
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+
+            latexCategory->SetNDC();
+            latexCategory->SetTextColor(1);
+            latexCategory->SetTextSize(textHeight*1.5);
+            latexCategory->Draw();
+
+            TLegend* legendDataSub 	= new TLegend(0.05,0.1,1.,0.5);
+            legendDataSub->SetTextSize(textHeight);
+            legendDataSub->SetFillColor(0);
+            legendDataSub->SetLineColor(0);
+            legendDataSub->SetMargin(0.1);
+            if (fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][fStartBinPtRange])
+                legendDataSub->AddEntry(fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt],Form("MC DCAz cat. %d",category-1),"p");
+            if (fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][fStartBinPtRange])
+              legendDataSub->AddEntry(fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt],Form("data DCAz cat. %d",category-1),"p");
+            if (fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][fStartBinPtRange])
+              legendDataSub->AddEntry(fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt],"Estimated Pileup","l");
+            if (fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][fStartBinPtRange])
+              legendDataSub->AddEntry(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt],"Pileup Subtracted","p");
+            legendDataSub->Draw();
+
+        } else {
+            padDataSubtracted->cd(place);
+            padDataSubtracted->cd(place)->SetTopMargin(0.12);
+            padDataSubtracted->cd(place)->SetBottomMargin(0.15);
+            padDataSubtracted->cd(place)->SetRightMargin(0.001);
+
+            padDataSubtracted->cd(place)->SetLogy();
+            int remaining = (place-1)%fColumnPlot;
+            if (remaining > 0) padDataSubtracted->cd(place)->SetLeftMargin(0.15);
+            else padDataSubtracted->cd(place)->SetLeftMargin(0.25);
+
+            Style_t markerstylesPlot[5]                         ={20,24,29,27};
+            Size_t markersizePlot[5]                        ={1.5,2,2.,2.8};
+            Color_t colorDataPlot[5]                        ={kBlack,kRed+2,kCyan-3,kBlue-3};
+
+            Double_t textSizeLabelsPixel            = 55;
+            Double_t textSizeLabelsRel              = 55./1200;
+            TH2F * histoDCADataMCCompareDummy;
+                histoDCADataMCCompareDummy             = new TH2F("histoDCADataMCCompareDummy", "histoDCADataMCCompareDummy",1000, -4.99,  4.99, 1000, 5e-5, 2 );
+            SetStyleHistoTH2ForGraphs( histoDCADataMCCompareDummy, "dca_{#it{z}} (cm)", "normalized counts",
+                                    0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.06);
+            histoDCADataMCCompareDummy->GetYaxis()->SetLabelOffset(0.001);
+            histoDCADataMCCompareDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+            histoDCADataMCCompareDummy->DrawCopy();
+
+            if(fHistDCAZUnderMeson_MesonPt[category-1][iPt]){
+                fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt] =  (TH1D*)fHistDCAZUnderMeson_MesonPt[category-1][iPt]->Clone(Form("fHistDCAZUnderMeson_Visual_CatIter_MC_%d",iPt));
+                fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt]->Sumw2();
+                fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt]->Scale(1./fHistDCAZUnderMeson_MesonPt[category-1][iPt]->GetMaximum());
+                DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt], markerstylesPlot[1], markersizePlot[1], colorDataPlot[1], colorDataPlot[1]);
+                TLatex *pTLabel = new TLatex(0.1,0.95,Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt)); // Bo: this was
+                pTLabel->SetNDC();
+                pTLabel->SetTextColor(1);
+                pTLabel->SetTextSize(0.062);
+                pTLabel->Draw();
+                fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt]->Draw("p,same,e");
+            }
+
+            Double_t maximumData                  = -1;
+            if(fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]){
+                fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Sumw2();
+                maximumData                         = fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->GetMaximum();
+                fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Scale(1./fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->GetMaximum());
+                DrawGammaSetMarker(fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt], markerstylesPlot[0], markersizePlot[0], colorDataPlot[0], colorDataPlot[0]);
+                fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Draw("p,same,e");
+            }
+
+            if(fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt] && fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]){
+                fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt]->Sumw2();
+                // fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt]->Scale(1./fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->GetMaxium());
+                fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt]->Scale(1./maximumData);
+                DrawGammaSetMarker(fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt], markerstylesPlot[3], markersizePlot[3], colorDataPlot[3], colorDataPlot[3]);
+                fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt]->SetLineWidth(2.);
+                fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt]->Draw("hist,same");
+            }
+
+            if(fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt] && fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt]){
+                fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt] =  (TH1D*)fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Clone("fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data");
+                fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Add(fHistDCAZBG_Visual_CatIter_Data_PtWise[category-1][iPt],-1);
+                DrawGammaSetMarker(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt], markerstylesPlot[2], markersizePlot[2], colorDataPlot[2], colorDataPlot[2]);
+                fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Draw("p,same,e");
+            }
+        }
+    }
+    canvasDataSubtracted->Print(namePlot.Data());
+    delete padDataSubtracted;
+    delete canvasDataSubtracted;
+}
+
+
+//______________________________ DCAz photon under Meson Peak with subtracted estimate of BG __________________________________
+void PlotDCADistPtBinSubtractedRatioSplitCat(TString namePlot, TString nameCanvas, TString namePad,
+                                    Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins,
+                                    Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo, TString dateDummy, Int_t category){
+    TCanvas *canvasDataSubtractedRatio 			= new TCanvas(nameCanvas.Data(),"",2800,1800);  // gives the page size
+    canvasDataSubtractedRatio->SetTopMargin(0.0);
+    canvasDataSubtractedRatio->SetBottomMargin(0.0);
+    canvasDataSubtractedRatio->SetRightMargin(0.0);
+    canvasDataSubtractedRatio->SetLeftMargin(0.0);
+
+    TPad * padDataSubtracted                 = new TPad(namePad.Data(),"",0.0,0.0,1.,1.,0);   // gives the size of the histo areas
+    padDataSubtracted->SetFillColor(0);
+    padDataSubtracted->GetFrame()->SetFillColor(0);
+    padDataSubtracted->SetBorderMode(0);
+    padDataSubtracted->Divide(fColumnPlot,fRowPlot,0.0,0.0);
+// 	padDataSubtracted->SetLeftMargin(0.2);
+    padDataSubtracted->Draw();
+
+    Int_t place = 0;
+    for(Int_t iPt = fStartBinPtRange; iPt < fNumberPtBins; iPt++){
+        Double_t startPt 			= fRangeBinsPt[iPt];
+        Double_t endPt                 = fRangeBinsPt[iPt+1];
+
+        place = place + 1;                  //give the right place in the page
+        if (place == fColumnPlot){
+            iPt--;
+            padDataSubtracted->cd(place);
+            padDataSubtracted->cd(place)->SetTopMargin(0.12);
+            padDataSubtracted->cd(place)->SetBottomMargin(0.15);
+            padDataSubtracted->cd(place)->SetRightMargin(0.001);
+
+
+            string textAlice 		= "ALICE performance";
+            string textEvents		= "";
+            if(fMonteCarloInfo){
+                textEvents = "MC";
+            } else {
+                textEvents = "Data";
+            }
+            Double_t textHeight 	= 0.055;
+            Double_t startTextX 	= 0.05;
+            Double_t startTextY 	= 0.75;
+            Double_t differenceText = textHeight*1.25;
+
+            TLatex *alice 			= new TLatex(startTextX, (startTextY+(2*differenceText)), Form("%s", textAlice.c_str()));
+            TLatex *energy 			= new TLatex(startTextX, (startTextY-differenceText), Form("%s", fEnergyText.Data()));
+            TLatex *latexDate 		= new TLatex(startTextX, startTextY, dateDummy.Data());
+            TLatex *latexCategory 	= new TLatex(startTextX, startTextY+differenceText, Form("Meson Category %i", category));
+
+            alice->SetNDC();
+            alice->SetTextColor(1);
+            alice->SetTextSize(textHeight);
+            alice->Draw();
+
+            energy->SetNDC();
+            energy->SetTextColor(1);
+            energy->SetTextSize(textHeight);
+            energy->Draw();
+
+            latexDate->SetNDC();
+            latexDate->SetTextColor(1);
+            latexDate->SetTextSize(textHeight);
+            latexDate->Draw();
+
+            latexCategory->SetNDC();
+            latexCategory->SetTextColor(1);
+            latexCategory->SetTextSize(textHeight*1.5);
+            latexCategory->Draw();
+
+        } else {
+            padDataSubtracted->cd(place);
+            padDataSubtracted->cd(place)->SetTopMargin(0.12);
+            padDataSubtracted->cd(place)->SetBottomMargin(0.15);
+            padDataSubtracted->cd(place)->SetRightMargin(0.001);
+
+            int remaining = (place-1)%fColumnPlot;
+            if (remaining > 0) padDataSubtracted->cd(place)->SetLeftMargin(0.15);
+            else padDataSubtracted->cd(place)->SetLeftMargin(0.25);
+
+            Style_t markerstylesPlot[5]                         ={20,24,29,27};
+            Size_t markersizePlot[5]                        ={1.5,2,2.,2.8};
+            Color_t colorDataPlot[5]                        ={kBlack,kRed+2,kCyan-3,kBlue-3};
+
+            Double_t textSizeLabelsPixel            = 55;
+            Double_t textSizeLabelsRel              = 55./1200;
+            TH2F * histoDCADataMCCompareRatioDummy;
+                histoDCADataMCCompareRatioDummy             = new TH2F("histoDCADataMCCompareRatioDummy", "histoDCADataMCCompareRatioDummy",1000, -4.99,  4.99, 1000, 0.0, 3 );
+            SetStyleHistoTH2ForGraphs( histoDCADataMCCompareRatioDummy, "dca_{#it{z}} (cm)", "Data Subtracted/MC",
+                                    0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.06);
+            histoDCADataMCCompareRatioDummy->GetYaxis()->SetLabelOffset(0.001);
+            histoDCADataMCCompareRatioDummy->GetXaxis()->SetMoreLogLabels(kTRUE);
+            histoDCADataMCCompareRatioDummy->DrawCopy();
+
+            DrawGammaLines(-4.99,  4.99 , 1., 1.,0.1, kGray+2);
+            DrawGammaLines(-4.99,  4.99 , 1.1, 1.1,0.1, kGray, 7);
+            DrawGammaLines(-4.99,  4.99 , 0.9, 0.9,0.1, kGray, 7);
+
+            if(fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt] && fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt] ){
+                TH1D* fHistDCARatio_CatIter_DataToMC =  (TH1D*)fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[category-1][iPt]->Clone("fHistDCARatio_CatIter_DataToMC");
+                fHistDCARatio_CatIter_DataToMC->Divide(fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[category-1][iPt]);
+                DrawGammaSetMarker(fHistDCARatio_CatIter_DataToMC, markerstylesPlot[0], markersizePlot[0], colorDataPlot[0], colorDataPlot[0]);
+                fHistDCARatio_CatIter_DataToMC->SetLineWidth(2.);
+                fHistDCARatio_CatIter_DataToMC->Draw("hist,same");
+
+                TLatex *pTLabel = new TLatex(0.1,0.95,Form("%3.2f GeV/c < #it{p}_{T,%s} < %3.2f GeV/c", startPt, fMesonType.Data(), endPt)); // Bo: this was
+                pTLabel->SetNDC();
+                pTLabel->SetTextColor(1);
+                pTLabel->SetTextSize(0.062);
+                pTLabel->Draw();
+            }
+        }
+    }
+    canvasDataSubtractedRatio->Print(namePlot.Data());
+    delete padDataSubtracted;
+    delete canvasDataSubtractedRatio;
+}
 
 
 void DrawGammaDCAHisto( TH1* histo1,

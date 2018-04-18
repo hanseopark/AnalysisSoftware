@@ -1,11 +1,13 @@
 Double_t fHoleRadius = 2.;
-                 
+
 
 Double_t AsymmGaus(Double_t *x, Double_t *par);
 Double_t GausWithHole(Double_t *x, Double_t *par);
 void InitializeIntRange(TString setPi0);
 void PlotDCADistPtBinWithFitAndEstimateCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
 void PlotDCADistPtBinWithMCSplitCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
+void PlotDCADistPtBinSubtractedSplitCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
+void PlotDCADistPtBinSubtractedRatioSplitCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy, Int_t category);
 void PlotDCADistPtBinWithFitAndEstimate(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy);
 void PlotDCADistPtBinWithFitAndEstimateGoodCat(TString namePlot, TString nameCanvas, TString namePad,  Int_t fRowPlot, Int_t fColumnPlot, Int_t fStartBinPtRange, Int_t fNumberPtBins, Double_t* fRangeBinsPt,  Bool_t fMonteCarloInfo,  TString dateDummy);
 
@@ -26,6 +28,13 @@ TH1F* fHistDCAZUnderMeson_MesonPt[6][30];
 TH1F* fHistDCAZUnderMesonBG1_MesonPt[6][30];
 TH1F* fHistDCAZUnderMesonBG2_MesonPt[6][30];
 TH1F* fHistInvMass_MesonPt[6][30];
+
+TH1D* fHistDCAZUnderMeson_Visual_CatIter_MC_PtWise[6][30];
+TH1D* fHistDCAZUnderMeson_Visual_CatIter_Data_PtWise[6][30];
+TH1D* fHistDCAZBG_Visual_CatIter_Data_PtWise[6][30];
+TH1D* fHistDCAZSubtractedUnderMeson_Visual_CatIter_Data_PtWise[6][30];
+
+//
 // TF1*  fFitInvMass_MesonPt[6][30];
 TH1F* fHistDCAZTruePrimaryMesonGammaGamma_MesonPt[6][30];
 TH1F* fHistDCAZTruePrimaryMesonDalitz_MesonPt[6][30];

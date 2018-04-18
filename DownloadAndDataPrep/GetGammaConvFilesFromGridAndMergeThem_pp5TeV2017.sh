@@ -4,18 +4,18 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180411-1_MCvalidWW
+TRAINDIR=Legotrain-vAN-20180416-1_ESD
 
 ### Data
-LHC17pqMETA=2329_20180406-1646
+LHC17pqMETA=2332_20180414-0207 #ESD #383_20180417-1041  #->AOD
 #QA pile On 337_20180220-1343
 #QA pile Off 336_20180220-1253
 LHC17p_fast=$LHC17pqMETA\_child_1
-LHC17p_wSDD=;
+LHC17p_wSDD=2333_20180414-0207
 LHC17p_woSDD=$LHC17pqMETA\_child_2
-LHC17q_fast=;
-LHC17q_wSDD=;
-LHC17q_woSDD=;
+LHC17q_fast=$LHC17pqMETA\_child_3;
+LHC17q_wSDD=2335_20180417-1043
+LHC17q_woSDD=$LHC17pqMETA\_child_4;
 
 # LHC17p_fast=$LHC17pqMETA\_child_1
 # LHC17p_wSDD=$LHC17pqMETA\_child_2
@@ -24,25 +24,18 @@ LHC17q_woSDD=;
 # LHC17q_wSDD=$LHC17pqMETA\_child_5
 # LHC17q_woSDD=$LHC17pqMETA\_child_6
 
-# LHC17p_fast=2284_20180129-1856
-# LHC17p_wSDD=2288_20180129-1806
-# LHC17p_woSDD=2286_20180129-1807
-# LHC17q_fast=2285_20180129-1836
-# LHC17q_wSDD=2289_20180129-1808
-# LHC17q_woSDD=2287_20180129-1836
-
 ### MC
-LHC17lMETA=3260_20180406-1223
+LHC17lMETA=3263_20180414-0206 #ESD #791_20180417-1040 #->AOD
 #3253_20180331-2110 #wo MB weights
 #3254_20180331-2111  #with MB weights
 #QA pile On 644_20180220-1349
 #QA pile Off 643_20180220-1232
 LHC17l3b_fast=$LHC17lMETA\_child_1
-LHC17l3b_cent=;
+LHC17l3b_cent=3265_20180414-0206;
 LHC17l3b_woSDD=$LHC17lMETA\_child_2
-LHC17l4b_fast=;
-LHC17l4b_cent=;
-LHC17l4b_woSDD=;
+LHC17l4b_fast=3264_20180414-0206_child_1;
+LHC17l4b_cent=3266_20180414-0206;
+LHC17l4b_woSDD=3264_20180414-0206_child_2;
 
 # LHC17l3b_fast=$LHC17lMETA\_child_1
 # LHC17l3b_cent=$LHC17lMETA\_child_2
@@ -51,23 +44,15 @@ LHC17l4b_woSDD=;
 # LHC17l4b_cent=$LHC17lMETA\_child_5
 # LHC17l4b_woSDD=$LHC17lMETA\_child_6
 
-# LHC17l3b_fast=3213_20180130-1637
-# LHC17l3b_cent=3217_20180131-1033
-# LHC17l3b_woSDD=3215_20180131-1032
-# LHC17l4b_fast=3214_20180131-1032
-# LHC17l4b_cent=3218_20180131-1033
-# LHC17l4b_woSDD=3216_20180131-1032
-
 ### MC Jet Jet
-LHC18b8META=781_20180412-1103
+LHC18b8META=782_20180414-2110
 LHC18b8_fast=$LHC18b8META\_child_1
 LHC18b8_cent=$LHC18b8META\_child_2
 LHC18b8_woSDD=$LHC18b8META\_child_3
 
-
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 TRAINPATHData=GA_pp #_AOD
-TRAINPATHMC=GA_pp_MC_AOD
+TRAINPATHMC=GA_pp_MC #_AOD
 
 NSlashes=9
 NSlashes2=10
@@ -546,88 +531,10 @@ elif [ $1 = "yes" ]; then
 
     else
 
-        if [ $LHC17p_fast != "" ]; then
-            echo "Downloading " $LHC17p_fast
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_fast/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17p_fast/
-            ls $OUTPUTDIR_LHC17p_fast/GammaConvV1_*.root > fileLHC17p_fast.txt
-            fileNumbers=`cat fileLHC17p_fast.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_fast_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17p_wSDD != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_wSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17p_wSDD/
-            ls $OUTPUTDIR_LHC17p_wSDD/GammaConvV1_*.root > fileLHC17p_wSDD.txt
-            fileNumbers=`cat fileLHC17p_wSDD.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_wSDD_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17p_woSDD != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_woSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17p_woSDD/
-            ls $OUTPUTDIR_LHC17p_woSDD/GammaConvV1_*.root > fileLHC17p_woSDD.txt
-            fileNumbers=`cat fileLHC17p_woSDD.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_woSDD_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17q_fast != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_fast/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17q_fast/
-            ls $OUTPUTDIR_LHC17q_fast/GammaConvV1_*.root > fileLHC17q_fast.txt
-            fileNumbers=`cat fileLHC17q_fast.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_fast_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17q_wSDD != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_wSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17q_wSDD/
-            ls $OUTPUTDIR_LHC17q_wSDD/GammaConvV1_*.root > fileLHC17q_wSDD.txt
-            fileNumbers=`cat fileLHC17q_wSDD.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_wSDD_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17q_woSDD != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_woSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17q_woSDD/
-            ls $OUTPUTDIR_LHC17q_woSDD/GammaConvV1_*.root > fileLHC17q_woSDD.txt
-            fileNumbers=`cat fileLHC17q_woSDD.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_woSDD_$number.log\"\)
-            done;
-        fi
-
-
+        #downloading the META datasets
         if [ $3 = "runwise" ]; then
 
+            echo "Download runwise data"
             ################################ LHC17p_fast
             rm runNumbersLHC17pfastNotMerged.txt
             echo $OUTPUTDIR_LHC17p_fast
@@ -1002,6 +909,87 @@ elif [ $1 = "yes" ]; then
                 done;
             fi
         fi
+
+        if [ $LHC17p_fast != "" ]; then
+            echo "Downloading " $LHC17p_fast
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_fast/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17p_fast/
+            ls $OUTPUTDIR_LHC17p_fast/GammaConvV1_*.root > fileLHC17p_fast.txt
+            fileNumbers=`cat fileLHC17p_fast.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_fast_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17p_wSDD != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_wSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17p_wSDD/
+            ls $OUTPUTDIR_LHC17p_wSDD/GammaConvV1_*.root > fileLHC17p_wSDD.txt
+            fileNumbers=`cat fileLHC17p_wSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_wSDD_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17p_woSDD != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_woSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17p_woSDD/
+            ls $OUTPUTDIR_LHC17p_woSDD/GammaConvV1_*.root > fileLHC17p_woSDD.txt
+            fileNumbers=`cat fileLHC17p_woSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17p_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17p_woSDD_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17q_fast != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_fast/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17q_fast/
+            ls $OUTPUTDIR_LHC17q_fast/GammaConvV1_*.root > fileLHC17q_fast.txt
+            fileNumbers=`cat fileLHC17q_fast.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_fast-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_fast_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17q_wSDD != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_wSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17q_wSDD/
+            ls $OUTPUTDIR_LHC17q_wSDD/GammaConvV1_*.root > fileLHC17q_wSDD.txt
+            fileNumbers=`cat fileLHC17q_wSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_wSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_wSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_wSDD_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17q_woSDD != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17q_woSDD/merge_runlist_1/GammaConvV1* file:$OUTPUTDIR_LHC17q_woSDD/
+            ls $OUTPUTDIR_LHC17q_woSDD/GammaConvV1_*.root > fileLHC17q_woSDD.txt
+            fileNumbers=`cat fileLHC17q_woSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17q_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_LHC17q_woSDD-pass1_$number.root\"\,\"$OUTPUTDIR/CutSelection_LHC17q_woSDD_$number.log\"\)
+            done;
+        fi
+
+
     fi
 
 elif [ $1 = "mergeTriggers" ]; then
@@ -1122,7 +1110,6 @@ elif [ $2 = "jetjet" ]; then
 #             ls $OUTPUTDIR_LHC18b8_fast/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
 #             fileNumbers=`cat fileJJmergeLHC18b8.txt`
 #             MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_fast $NSlashes3 GammaConvV1 fast runlists/runNumbersLHC18b8_test.txt runlists/binsJetJetLHC18b8.txt
-
 
             ################################ LHC18b8_cent
             rm runNumbersLHC18b8wSDDNotMerged.txt
@@ -1698,85 +1685,7 @@ elif [ $2 = "yes" ]; then
         fi
 
     else
-
-        if [ $LHC17l3b_fast != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l3b_fast/
-            ls $OUTPUTDIR_LHC17l3b_fast/GammaConvV1_*.root > fileLHC17l3b_fast.txt
-            fileNumbers=`cat fileLHC17l3b_fast.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_fast_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17l3b_cent != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l3b_cent/
-            ls $OUTPUTDIR_LHC17l3b_cent/GammaConvV1_*.root > fileLHC17l3b_cent.txt
-            fileNumbers=`cat fileLHC17l3b_cent.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_cent_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_cent_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_cent_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17l3b_woSDD != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l3b_woSDD/
-            ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConvV1_*.root > fileLHC17l3b_woSDD.txt
-            fileNumbers=`cat fileLHC17l3b_woSDD.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_woSDD_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_woSDD_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_woSDD_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17l4b_fast != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l4b_fast/
-            ls $OUTPUTDIR_LHC17l4b_fast/GammaConvV1_*.root > fileLHC17l4b_fast.txt
-            fileNumbers=`cat fileLHC17l4b_fast.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_fast_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17l4b_cent != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l4b_cent/
-            ls $OUTPUTDIR_LHC17l4b_cent/GammaConvV1_*.root > fileLHC17l4b_cent.txt
-            fileNumbers=`cat fileLHC17l4b_cent.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_cent_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_cent_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_cent_$number.log\"\)
-            done;
-        fi
-
-        if [ $LHC17l4b_woSDD != "" ]; then
-            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l4b_woSDD/
-            ls $OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_*.root > fileLHC17l4b_woSDD.txt
-            fileNumbers=`cat fileLHC17l4b_woSDD.txt`
-            for fileName in $fileNumbers; do
-                echo $fileName
-                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
-                echo $number
-                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD_$number.root\"\,\"GammaConvV1_$number\"\)
-                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_woSDD_$number.log\"\)
-            done;
-        fi
-
+        #downloading form META datasets
         if [ $3 = "runwise" ]; then
 
             ################################ LHC17l3b_fast
@@ -2171,6 +2080,84 @@ elif [ $2 = "yes" ]; then
                     done;
                 done;
             fi
+        fi
+
+        if [ $LHC17l3b_fast != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l3b_fast/
+            ls $OUTPUTDIR_LHC17l3b_fast/GammaConvV1_*.root > fileLHC17l3b_fast.txt
+            fileNumbers=`cat fileLHC17l3b_fast.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_fast_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_fast_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17l3b_cent != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_cent/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l3b_cent/
+            ls $OUTPUTDIR_LHC17l3b_cent/GammaConvV1_*.root > fileLHC17l3b_cent.txt
+            fileNumbers=`cat fileLHC17l3b_cent.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_cent_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_cent_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_cent_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17l3b_woSDD != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l3b_woSDD/
+            ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConvV1_*.root > fileLHC17l3b_woSDD.txt
+            fileNumbers=`cat fileLHC17l3b_woSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l3b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_woSDD_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l3b_woSDD_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l3b_woSDD_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17l4b_fast != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_fast/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l4b_fast/
+            ls $OUTPUTDIR_LHC17l4b_fast/GammaConvV1_*.root > fileLHC17l4b_fast.txt
+            fileNumbers=`cat fileLHC17l4b_fast.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_fast_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_fast_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17l4b_cent != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_cent/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l4b_cent/
+            ls $OUTPUTDIR_LHC17l4b_cent/GammaConvV1_*.root > fileLHC17l4b_cent.txt
+            fileNumbers=`cat fileLHC17l4b_cent.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_cent/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_cent_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_cent_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_cent_$number.log\"\)
+            done;
+        fi
+
+        if [ $LHC17l4b_woSDD != "" ]; then
+            alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l4b_woSDD/merge/GammaConvV1* file:$OUTPUTDIR_LHC17l4b_woSDD/
+            ls $OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_*.root > fileLHC17l4b_woSDD.txt
+            fileNumbers=`cat fileLHC17l4b_woSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 2 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC17l4b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD_$number.root\"\,\"GammaConvV1_$number\"\)
+                root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC17l4b_woSDD_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC17l4b_woSDD_$number.log\"\)
+            done;
         fi
 
     fi
