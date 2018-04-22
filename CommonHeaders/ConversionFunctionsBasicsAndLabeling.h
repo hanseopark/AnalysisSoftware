@@ -2154,6 +2154,12 @@
             } else {
                 return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5,"%");
             }
+        } else if (ppCutNumber.CompareTo("c") ==0){
+            if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
+                return "0-100%";
+            } else {
+                return Form("%i-%i%s", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd),"%");
+            }
         } else return "";
     }
 
@@ -2189,6 +2195,12 @@
                 return "0-100";
             } else {
                 return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
+            }
+        } else if (ppCutNumber.CompareTo("c") ==0 ){
+            if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
+                return "0-100";
+            } else {
+                return Form("%i-%i", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd));
             }
         } else return "";
     }
@@ -2228,6 +2240,16 @@
                     return Form("00%i", CutNumberToInteger(centralityCutNumberEnd)*5);
                 } else {
                     return Form("%i%i", CutNumberToInteger(centralityCutNumberStart)*5,CutNumberToInteger(centralityCutNumberEnd)*5);
+                }
+            }
+        } else if (ppCutNumber.CompareTo("c") ==0 ){
+            if (centralityCutNumberStart.CompareTo("0") == 0 && centralityCutNumberEnd.CompareTo("0") == 0  ){
+                return "00100";
+            } else {
+                if (centralityCutNumberStart.CompareTo("0") == 0){
+                    return Form("00%i", CutNumberToInteger(centralityCutNumberEnd));
+                } else {
+                    return Form("%i%i", CutNumberToInteger(centralityCutNumberStart),CutNumberToInteger(centralityCutNumberEnd));
                 }
             }
         } else return "";
