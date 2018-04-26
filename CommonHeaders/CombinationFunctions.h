@@ -3,6 +3,21 @@
 //**************************************************************************************************************************
 //***************** this header contains the functions needed to compare and combine different analysis ********************
 //**************************************************************************************************************************
+// list of implemented functions:
+// - GetCorrFactorFromFile
+// - CombinePtPointsSpectra
+// - CombinePtPointsRAA
+// - GetBinning
+// - CompareBinning
+// - FindFirstCommonBin
+// - RebinObjects
+// - CalculateRatioBetweenSpectraWithDifferentBinning
+// - CombinePtPointsSpectraAdv
+// - CombinePtPointsSpectraFullCorrMat
+// - CombinePtPointsSpectraTriggerCorrMat
+// - CalculateWeightedQuantity
+//**************************************************************************************************************************
+
 #ifndef GAMMACONV_CombinationFunctions
 #define GAMMACONV_CombinationFunctions
 
@@ -27,28 +42,30 @@
         Double_t errorYTotHigh;
     };
 
+    //___________________________________________________________________________________________________________________________
     Double_t GetCorrFactorFromFile(TFile* fileCorrFactors, Double_t pT,TString mode, TString meson, TString lookup){
-    if(!fileCorrFactors){
-        cout << "missing corr file" << endl;
-        return 0;
-    }
-    if(fileCorrFactors->IsZombie()){
-        cout << "\n\n\n\n\n**************************************************************************************************" << endl;
-        cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
-        cout << "**************************************************************************************************\n\n\n\n\n" << endl;
-        return -10;
-    }
-    TH1D* histo = (TH1D*)fileCorrFactors->Get(Form("%s_%s_%s",mode.Data(),meson.Data(),lookup.Data()));
-    if(histo == NULL){
-        cout << "\n\n\n\n\n**************************************************************************************************" << endl;
-        cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s_%s_%s",mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
-        cout << "**************************************************************************************************\n\n\n\n\n" << endl;
-        return -10;
-    }
-    cout << "pT: " << pT  << ", correlation factor for " << meson.Data() << " " << lookup.Data() << ": " << histo->GetBinContent(histo->FindBin(pT)) << " (from GetCorrFactorFromFile)" << endl;
-    return histo->GetBinContent(histo->FindBin(pT));
+        if(!fileCorrFactors){
+            cout << "missing corr file" << endl;
+            return 0;
+        }
+        if(fileCorrFactors->IsZombie()){
+            cout << "\n\n\n\n\n**************************************************************************************************" << endl;
+            cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - File is a ZOMBIE, check filepath - all factors set to zero!!!" << endl;
+            cout << "**************************************************************************************************\n\n\n\n\n" << endl;
+            return -10;
+        }
+        TH1D* histo = (TH1D*)fileCorrFactors->Get(Form("%s_%s_%s",mode.Data(),meson.Data(),lookup.Data()));
+        if(histo == NULL){
+            cout << "\n\n\n\n\n**************************************************************************************************" << endl;
+            cout << "ERROR: CombinePtPointsSpectra, GetCorrFactorFromFile - histo " << Form("%s_%s_%s",mode.Data(),meson.Data(),lookup.Data()) << " could not be found within file - all factors set to zero!!!" << endl;
+            cout << "**************************************************************************************************\n\n\n\n\n" << endl;
+            return -10;
+        }
+        cout << "pT: " << pT  << ", correlation factor for " << meson.Data() << " " << lookup.Data() << ": " << histo->GetBinContent(histo->FindBin(pT)) << " (from GetCorrFactorFromFile)" << endl;
+        return histo->GetBinContent(histo->FindBin(pT));
     }
 
+    //___________________________________________________________________________________________________________________________
     TGraphAsymmErrors* CombinePtPointsSpectra(  TH1D* histoPCM,        TGraphAsymmErrors* graphSystPCM,
                                                 TH1D* histoPHOS,        TGraphAsymmErrors* graphSystPHOS,
                                                 TGraphAsymmErrors* &graphStatComb,     TGraphAsymmErrors* &graphSystComb,
@@ -60,14 +77,14 @@
         TGraphAsymmErrors* graphSystPCMClone        = (TGraphAsymmErrors*)graphSystPCM->Clone("DummyPCM");
         TGraphAsymmErrors* graphSystPHOSClone       = (TGraphAsymmErrors*)graphSystPHOS->Clone("DummyPHOS");
 
-        Double_t xComb[70];
-        Double_t xEComb[70];
-        Double_t xSectionComb[70];
-        Double_t xSectionCombErr[70];
-        Double_t xSectionCombErrL[70];
-        Double_t xSectionCombErrH[70];
-        Double_t xSectionCombStatErr[70];
-        Double_t xSectionCombSysErr[70];
+        Double_t xComb[120];
+        Double_t xEComb[120];
+        Double_t xSectionComb[120];
+        Double_t xSectionCombErr[120];
+        Double_t xSectionCombErrL[120];
+        Double_t xSectionCombErrH[120];
+        Double_t xSectionCombStatErr[120];
+        Double_t xSectionCombSysErr[120];
 
         if (kRemoveFirstPHOSPoint){
         graphStatErrPHOS->RemovePoint(0);
@@ -233,6 +250,7 @@
         return returnGraph;
     }
 
+    //___________________________________________________________________________________________________________________________
     TGraphAsymmErrors* CombinePtPointsRAA(  TGraphAsymmErrors* graphStatErrPCM,        TGraphAsymmErrors* graphSystPCM,
                                             TGraphAsymmErrors* graphStatErrPHOS,        TGraphAsymmErrors* graphSystPHOS,
                                             TGraphAsymmErrors* &graphStatComb,     TGraphAsymmErrors* &graphSystComb,
@@ -246,14 +264,14 @@
         graphStatErrPHOS->Print();
         cout << "PCM histogram" << endl;
         graphStatErrPCM->Print();
-        Double_t xComb[70];
-        Double_t xEComb[70];
-        Double_t xSectionComb[70];
-        Double_t xSectionCombErr[70];
-        Double_t xSectionCombErrL[70];
-        Double_t xSectionCombErrH[70];
-        Double_t xSectionCombStatErr[70];
-        Double_t xSectionCombSysErr[70];
+        Double_t xComb[120];
+        Double_t xEComb[120];
+        Double_t xSectionComb[120];
+        Double_t xSectionCombErr[120];
+        Double_t xSectionCombErrL[120];
+        Double_t xSectionCombErrH[120];
+        Double_t xSectionCombStatErr[120];
+        Double_t xSectionCombSysErr[120];
 
         Int_t nPHOS                                 = graphSystPHOS->GetN();
         Double_t* xPHOS                             = graphSystPHOS->GetX();
@@ -435,6 +453,7 @@
         return returnGraph;
     }
 
+    //___________________________________________________________________________________________________________________________
     Int_t GetBinning(TObject *Obj_Dummy, Double_t* doubleBinningX){
         TString ClassName                           = Obj_Dummy->ClassName();
         if(ClassName.BeginsWith("TH1")){
@@ -486,16 +505,17 @@
 
     }
 
-        Int_t CompareBinning(   Int_t nBinsA,
-                            Double_t* binningA,
-                            Int_t nBinsB,
-                            Double_t* binningB,
-                            Double_t* newBinning,
-                            Int_t* nBinsToBeCombinedA,
-                            Int_t* nBinsToBeCombinedB,
-                            TString returnStr           = "",
-                            Double_t decisionBoundary   = 0.0000001
-                        ){
+    //___________________________________________________________________________________________________________________________
+    Int_t CompareBinning(   Int_t nBinsA,
+                        Double_t* binningA,
+                        Int_t nBinsB,
+                        Double_t* binningB,
+                        Double_t* newBinning,
+                        Int_t* nBinsToBeCombinedA,
+                        Int_t* nBinsToBeCombinedB,
+                        TString returnStr           = "",
+                        Double_t decisionBoundary   = 0.0000001
+                    ){
         Int_t startingBin = 0;
         //Finding startBin
         cout << "Binning A" << endl;
@@ -683,6 +703,7 @@
         if(returnStr){}
     }
 
+    //___________________________________________________________________________________________________________________________
     Int_t FindFirstCommonBin(Double_t* vectorNewBinning, Double_t* oldBinning, Int_t commonBin = 0, Double_t decisionBoundary = 0.0000001){
         Int_t startingBin   = 0;
         //Finding startBin
@@ -702,16 +723,17 @@
         return startingBin;
     }
 
-        void RebinObjects(  TObject* Obj_DummyStat,
-                        TObject* Obj_DummySyst,
-                        Double_t* vectorNewBinning,
-                        Int_t* vectorRebinFactors,
-                        Int_t nCommonBins,
-                        AliConvDataObject* outputObject,
-                        TString ClassNameStat,
-                        TString ClassNameSyst,
-                        Bool_t scaleByBinCenter             = kFALSE
-                    ) { //
+    //___________________________________________________________________________________________________________________________
+    void RebinObjects(  TObject* Obj_DummyStat,
+                    TObject* Obj_DummySyst,
+                    Double_t* vectorNewBinning,
+                    Int_t* vectorRebinFactors,
+                    Int_t nCommonBins,
+                    AliConvDataObject* outputObject,
+                    TString ClassNameStat,
+                    TString ClassNameSyst,
+                    Bool_t scaleByBinCenter             = kFALSE
+                ) { //
         Double_t binningOldStat[200] ;
         Double_t binningOldSyst[200] ;
         Int_t validBinsOldStat          = GetBinning(Obj_DummyStat, binningOldStat);
@@ -948,6 +970,7 @@
     if (validBinsOldStat || validBinsOldSys){}
     }
 
+    //___________________________________________________________________________________________________________________________
     //*******************************************************************************************
     //** Function which compares 2 Spectra with each other and returns the ratio               **
     //**  statistical and systematic errors have to be handed over                             **
@@ -1066,8 +1089,9 @@
         TGraphErrors* returnGraph                   =  new TGraphErrors(nBinsNew-1,ratioX,ratioY,errorX,errorY);
         return returnGraph;
 
-}
+    }
 
+    //___________________________________________________________________________________________________________________________
     //*******************************************************************************************
     //*******************************************************************************************
     //*******************************************************************************************
@@ -1092,17 +1116,17 @@
         TGraphAsymmErrors* graphSystBPHOSClone      = (TGraphAsymmErrors*)graphSystBPHOS->Clone("DummyPHOSSystB");
         TGraphAsymmErrors* graphSystCPHOSClone      = (TGraphAsymmErrors*)graphSystCPHOS->Clone("DummyPHOSSystC");
 
-        Double_t xComb[70];
-        Double_t xEComb[70];
-        Double_t xSectionComb[70];
-        Double_t xSectionCombErr[70];
-        Double_t xSectionCombErrL[70];
-        Double_t xSectionCombErrH[70];
-        Double_t xSectionCombStatErr[70];
-        Double_t xSectionCombSysErr[70];
-        Double_t xSectionCombSysAErr[70];
-        Double_t xSectionCombSysBErr[70];
-        Double_t xSectionCombSysCErr[70];
+        Double_t xComb[120];
+        Double_t xEComb[120];
+        Double_t xSectionComb[120];
+        Double_t xSectionCombErr[120];
+        Double_t xSectionCombErrL[120];
+        Double_t xSectionCombErrH[120];
+        Double_t xSectionCombStatErr[120];
+        Double_t xSectionCombSysErr[120];
+        Double_t xSectionCombSysAErr[120];
+        Double_t xSectionCombSysBErr[120];
+        Double_t xSectionCombSysCErr[120];
 
         cout << "********************************************************************************" << endl;
         cout << "************************** PHOS ************************************************" << endl;
@@ -1267,6 +1291,7 @@
         return returnGraph;
     }
 
+    //___________________________________________________________________________________________________________________________
     //*******************************************************************************************
     //*******************************************************************************************
     //*******************************************************************************************
@@ -1289,59 +1314,25 @@
         TString nameMeas[11]                        = {"PCM", "PHOS", "EMCal", "PCM-PHOS", "PCM-EMCal", "PCM-Dalitz", "PHOS-Dalitz", "EMCal-Dalitz", "spare", "EMCAL merged", "PCMOtherDataset"};
         Bool_t isPresentGeneral[11]                 = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
         Bool_t isPresentForPt[11]                   = {kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
-        Double_t yValueFinal[70]                    = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrStatFinal[70]                  = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrTotFinal[70]                   = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrSysFinal[70]                   = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t xValue[70]                         = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t xErr[70]                           = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t finalWeights[11][70]               = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        Double_t yValueFinal[120];
+        Double_t yErrStatFinal[120];
+        Double_t yErrTotFinal[120];
+        Double_t yErrSysFinal[120];
+        Double_t xValue[120];
+        Double_t xErr[120];
+        Double_t finalWeights[11][120];
+
+        for (Int_t i = 0; i < 120; i++){
+            yValueFinal[i]              = 0;
+            yErrStatFinal[i]            = 0;
+            yErrTotFinal[i]             = 0;
+            yErrSysFinal[i]             = 0;
+            xValue[i]                   = 0;
+            xErr[i]                     = 0;
+            for (Int_t j = 0; j < 11; j++){
+                finalWeights[j][i]      = 0;
+            }
+        }
 
         Int_t binCounters[11]                       = { -1,-1,-1,-1,-1,
                                                         -1,-1,-1,-1,-1,
@@ -1982,6 +1973,7 @@
 
     }
 
+    //___________________________________________________________________________________________________________________________
     //*******************************************************************************************
     //******** Combination of quantities with given statistical and sytematic errors for ********
     //******** different triggers according to the correlation matrix given below and ***********
@@ -2011,61 +2003,25 @@
                                                     kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
         Bool_t isPresentForPt[12]               = { kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE,
                                                     kFALSE, kFALSE, kFALSE, kFALSE, kFALSE, kFALSE};
-        Double_t yValueFinal[70]                = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrStatFinal[70]              = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrTotFinal[70]               = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t yErrSysFinal[70]               = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t xValue[70]                     = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t xErr[70]                       = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        Double_t finalWeights[12][70]           = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-                                                };
+        Double_t yValueFinal[120];
+        Double_t yErrStatFinal[120];
+        Double_t yErrTotFinal[120];
+        Double_t yErrSysFinal[120];
+        Double_t xValue[120];
+        Double_t xErr[120];
+        Double_t finalWeights[12][120];
+
+        for (Int_t i = 0; i < 120; i++){
+            yValueFinal[i]              = 0;
+            yErrStatFinal[i]            = 0;
+            yErrTotFinal[i]             = 0;
+            yErrSysFinal[i]             = 0;
+            xValue[i]                   = 0;
+            xErr[i]                     = 0;
+            for (Int_t j = 0; j < 12; j++){
+                finalWeights[j][i]      = 0;
+            }
+        }
 
         Int_t binCounters[12]                   = { -1, -1, -1, -1, -1, -1,
                                                     -1, -1, -1, -1, -1, -1};
@@ -2969,6 +2925,7 @@
         return returnGraph;
     }
 
+    //___________________________________________________________________________________________________________________________
     //*******************************************************************************************
     //******* Combination of quantities from i.e. different triggers with given weights *********
     //******* Binning has to be the same for weights and graphs, attention they have to *********

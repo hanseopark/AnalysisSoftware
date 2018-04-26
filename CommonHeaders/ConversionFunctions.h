@@ -1231,6 +1231,24 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
+    TGraphErrors* CalculateRelErrGraph( TGraphErrors* graph,
+                                             TString nameNewGraph            = "relativeError"
+    ){
+        TGraphErrors* returnGraph  = (TGraphErrors*)graph->Clone(nameNewGraph.Data());
+        Double_t* yValue                = returnGraph->GetY();
+        Double_t* yErrorHigh            = returnGraph->GetEY();
+        Int_t nPoints                   = returnGraph->GetN();
+
+        for (Int_t i = 0; i < nPoints; i++){
+            yValue[i]                   = yErrorHigh[i]/yValue[i]*100;
+            yErrorHigh[i]               = 0.;
+        }
+        return returnGraph;
+    }
+
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
+    // ****************************************************************************************************************
     TGraphAsymmErrors* CalculateRelErrAsymmGraphAround1(    TGraphAsymmErrors* graph,
                                                             TString nameNewGraph        = "relativeError"
                                                     ){

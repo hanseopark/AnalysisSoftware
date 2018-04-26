@@ -1215,16 +1215,10 @@
                                                         2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7,       3.8, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4,
                                                         5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5, 8.0,       8.5, 9.0, 9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0,
                                                         18.0, 20.0, 25.0, 30.0, 40.0};
-    Double_t fBinsPi0pPb5TeVPCMEMCR2CentPt[82]      = { 0.0, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1,   1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6,
-                                                        1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1,  2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7,
-                                                        2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7,       3.8, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4,
-                                                        5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5, 8.0,       8.5, 9.0, 9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 16.0, 20.0,
-                                                        25.0, 30.0};
     Double_t fBinsPi0pPb5TeVEMCR2Pt[75]             = { 0.0, 1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45, 1.5,   1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0,
                                                         2.05, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5,  2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5,
                                                         3.6, 3.7, 3.8, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0,       5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.0,
                                                         7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 11.0, 12.0, 13.0, 14.0,  15.0, 16.0, 18.0, 20.0, 25.0 };
-
     Double_t fBinsPi0pPb5TeVPHOSR2Pt[91]            = { 0.0, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8,   0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3,
                                                         1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8,  1.85, 1.9, 1.95, 2.0, 2.05, 2.1,  2.15, 2.2, 2.25, 2.3,
                                                         2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1,     3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.2,
@@ -1250,15 +1244,32 @@
                                                         2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9,    3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9,
                                                         4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,       6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5, 8.0, 8.5, 9.0,
                                                         9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 16.0, 20.0, 25.0};
-    Double_t fBinsPi0pPb5TeVR2Pt[90]                = { 0.0, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,   0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2,
+    Double_t fBinsPi0pPb5TeVmEMCR2Pt[32]            = { 0.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0,      19.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0, 34.0, 36.0,
+                                                        38.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 80.0, 100.0,    125.0, 150.0};
+
+    Double_t fBinsPi0pPb5TeVR2Pt[93]                = { 0.0, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,   0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2,
                                                         1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7,  1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2,
                                                         2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9,    3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9,
                                                         4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,       6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5, 8.0, 8.5, 9.0,
-                                                        10.0, 11.0, 12.0, 13.0, 14.0, 16.0, 18.0, 20.0, 25.0, 30};
+                                                        9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 18.0, 20.0,  25.0, 30.0, 40.0};
+    // Pi0 cent pt bins run2
+    Double_t fBinsPi0pPb5TeVPCMEMCR2CentPt[82]      = { 0.0, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1,   1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6,
+                                                        1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1,  2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7,
+                                                        2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7,       3.8, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4,
+                                                        5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5, 8.0,       8.5, 9.0, 9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 16.0, 20.0,
+                                                        25.0, 30.0};
+    Double_t fBinsPi0pPb5TeVPCMPHOSR2CentPt[81]     = { 0.0, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,   0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2,
+                                                        1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7,  1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2,
+                                                        2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9,    3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9,
+                                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,       6.0, 6.2, 6.4, 6.6, 7.0, 7.5, 8.0, 9.0, 10.0, 12.0,
+                                                        16.0};
+    // Pi0 peri pt bins run2
+    Double_t fBinsPi0pPb5TeVPCMPHOSR2PerPt[80]      = { 0.0, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,   0.75, 0.8, 0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2,
+                                                        1.25, 1.3, 1.35, 1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7,  1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2,
+                                                        2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6, 2.7, 2.8, 2.9,    3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9,
+                                                        4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8,       6.0, 6.2, 6.4, 6.6, 7.0, 8.0, 9.0, 10.0, 12.0, 14.0};
 
-
-    Double_t fBinsPi0pPb5TeVmEMCR2Pt[32]            = { 0.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0,      19.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0, 34.0, 36.0,
-                                                        38.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0, 80.0, 100.0,    125.0, 150.0};
+    // pi0 rebins run2
     Int_t fBinsPi0pPb5TeVPCMR2PtRebin[86]           = { 5, 4, 4, 4, 4, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
@@ -1277,16 +1288,6 @@
                                                         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 5, 5, 5, 5, 5, 10, 10, 10,    10, 10, 10, 20 };
-    Int_t fBinsPi0pPb5TeVPCMEMCR2SCentPtRebin[81]   = { 10, 10, 8, 8, 8, 8, 4, 4, 2, 2,     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
-                                                        4, 4, 4, 4, 4, 4, 5, 5, 5, 5,       8, 8, 8, 10, 10, 15, 15, 15, 15, 20,
-                                                        20 };
-    Int_t fBinsPi0pPb5TeVPCMEMCR2CentPtRebin[84]    = { 10, 10, 8, 8, 8, 8, 4, 4, 2, 2,     2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                        1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
-                                                        4, 4, 4, 4, 4, 4, 5, 5, 5, 5,       8, 8, 8, 8, 10, 10, 10, 10, 10, 10,
-                                                        15, 15, 20, 20 };
     Int_t fBinsPi0pPb5TeVPCMEMCR2PtRebin[84]        = { 10, 10, 8, 5, 4, 4, 2, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                         1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
@@ -1319,6 +1320,32 @@
                                                         10, 10, 10, 15, 15, 20, 20, 20 };
     Int_t fBinsPi0pPb5TeVmEMCR2PtRebin[31]          = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       2, 2, 2, 2, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 5, 5, 5, 5, 5, 5, 5,       10 };
+    // pi0 cent rebins run2
+    Int_t fBinsPi0pPb5TeVPCMEMCR2CentPtRebin[84]    = { 10, 10, 8, 8, 8, 8, 4, 4, 2, 2,     2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 5, 5, 5, 5,       8, 8, 8, 8, 10, 10, 10, 10, 10, 10,
+                                                        15, 15, 20, 20 };
+    Int_t fBinsPi0pPb5TeVPCMPHOSR2CentPtRebin[88]   = { 10, 10, 10, 10, 10, 10, 8, 8, 5, 5, 4, 4, 4, 2, 2, 2, 2, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                        1, 1, 1, 1, 1, 1, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 4, 4, 4,       4, 4, 4, 4, 4, 5, 5, 5, 5, 10,
+                                                        15, 15, 15, 20, 20, 20, 20, 20 };
+    // pi0 cent (small) rebins run2
+    Int_t fBinsPi0pPb5TeVPCMEMCR2SCentPtRebin[81]   = { 10, 10, 8, 8, 8, 8, 4, 4, 2, 2,     2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 5, 5, 5, 5,       8, 8, 8, 10, 10, 15, 15, 15, 15, 20,
+                                                        20 };
+    Int_t fBinsPi0pPb5TeVPCMPHOSR2SCentPtRebin[80]  = { 10, 10, 10, 10, 10, 10, 8, 8, 5, 5, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 5, 5, 5,       5, 10, 15, 15, 15, 20, 20, 20, 20, 20 };
+    // pi0 peri rebins run2
+    Int_t fBinsPi0pPb5TeVPCMPHOSR2PerPtRebin[79]   = { 10, 10, 10, 10, 10, 10, 8, 8, 5, 5, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,       4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 4, 4, 4, 4, 5, 5, 5,       10, 15, 15, 15, 20, 20, 20, 20, 20 };
 
     // Eta Run 1
     Double_t fBinsEtapPb5TeVPt[23]                  = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,    3.0, 3.5, 4.,  5.,  6., 8.,  10,  12., 14., 16.,
@@ -1351,7 +1378,7 @@
     Int_t fBinsEtapPb5TeVPHOSPtRebin[19]            = { 19, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 20, 25, 25, 25, 24, 19, 19};
     Int_t fBinsEtapPb5TeVDalitzPtRebin[9]           = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
     Int_t fBinsEtapPb5TeVPCMCentPtRebin[14]         = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
-    Int_t fBinsEtapPb5TeVPCMEMCCentPtRebin[14]      = { 10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8,  8,  8,  10};
+    Int_t fBinsEtapPb5TeVPCMEMCCentPtRebin[14]      = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
     Int_t fBinsEtapPb5TeVEMCCentPtRebin[14]         = { 10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8, 10,  20, 20};
     Int_t fBinsEtapPb5TeVPCMPHOSCentPtRebin[14]     = { 20, 20, 15, 12, 12, 12, 12, 12, 12, 15, 15, 20, 20, 20};
     Int_t fBinsEtapPb5TeVPHOSCentPtRebin[14]        = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
@@ -1374,35 +1401,59 @@
     Double_t fBinsEtapPb5TeVPCMR2CentPt[29]         = { 0., 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.5, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0 };
     Double_t fBinsEtapPb5TeVPCMR2Cent2Pt[17]        = { 0., 0.4, 0.6, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5,    4.0, 5.0, 7.0,10.0,12.0,16.0, 20.0 };
+
     Double_t fBinsEtapPb5TeVPCMEMCR2CentPt[30]      = { 0., 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,    2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
                                                         5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 16.0, 20.0, 25.0};
+    // Eta pt binning cent (small) run 2
     Double_t fBinsEtapPb5TeVPCMEMCR2SCentPt[29]     = { 0., 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,    2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
                                                         5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0};
+    Double_t fBinsEtapPb5TeVPCMPHOSR2SCentPt[25]    = { 0., 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
+                                                        4.5, 5.0, 6.0, 8.0, 12.0};
+
+    // Eta pt binning per run 2
+    Double_t fBinsEtapPb5TeVPCMPHOSR2PerPt[27]      = { 0., 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
+                                                        4.5, 5.0, 5.5, 6.0, 8.0, 10.0, 12.0};
+
     Int_t fBinsEtapPb5TeVPCMR2PtRebin[35]           = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 4, 4, 4, 5, 5, 5, 5,           10, 10, 20, 20, 20};
     Int_t fBinsEtapPb5TeVPCMR2CentPtRebin[28]       = { 10, 10, 8, 8, 8, 8, 5, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 8, 8, 10, 10, 20};
     Int_t fBinsEtapPb5TeVPCMR2Cent2PtRebin[16]      = { 10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8, 8, 8, 8, 8, 8};
+
     Int_t fBinsEtapPb5TeVEMCR2PtRebin[29]           = { 10, 10, 10, 8, 8, 5, 4, 4, 4, 4,        4, 4, 4, 4, 4, 4, 4, 8, 8, 8,
                                                         8, 8, 8, 10, 16, 16, 16, 20, 20};
     Int_t fBinsEtapPb5TeVPCMEMCR2PtRebin[32]        = { 10, 10, 8, 8, 5, 4, 4, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                                                         8, 8, 8, 8, 8, 10, 10, 16, 16, 20,      20, 20};
-    Int_t fBinsEtapPb5TeVPCMEMCR2CentPtRebin[29]    = { 10, 10, 8, 8, 5, 4, 4, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-                                                        8, 8, 8, 8, 8, 10, 16, 20, 20 };
-    Int_t fBinsEtapPb5TeVPCMEMCR2SCentPtRebin[28]   = { 20, 20, 15, 10, 8, 8, 8, 8, 8, 8,         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                                                        8, 8, 8, 8, 10, 16, 20, 20 };
     Int_t fBinsEtapPb5TeVPHOSR2PtRebin[30]          = { 10, 10, 8, 8, 8, 8, 5, 5, 5, 5,         5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                                         8, 8, 8, 8, 8, 10, 10, 16, 16, 20 };
     Int_t fBinsEtapPb5TeVPHOSR2CentPtRebin[21]      = { 10, 10, 8, 8, 5, 5, 5, 5, 5, 5,         5, 5, 5, 5, 5, 5, 5, 5, 8, 8,
                                                         8 };
     Int_t fBinsEtapPb5TeVPCMPHOSR2PtRebin[28]       = { 20, 10, 10, 10, 10, 8, 8, 8, 8, 8,      5, 5, 5, 5, 5, 5, 5, 5, 8, 8,
                                                         8, 10, 10, 10, 16, 20, 20, 20};
+
     Int_t fBinsEtapPb5TeVCentEMCR2PtRebin[29]       = { 20, 20, 16, 12, 12, 8, 8, 5, 5, 5,      5, 5, 5, 5, 8, 8, 8, 8, 8, 8,
                                                         8, 8, 8, 10, 16, 16, 16, 20, 20};
-    Int_t fBinsEtapPb5TeVCentPCMEMCR2PtRebin[32]    = { 20, 20, 16, 10, 8, 5, 5, 5, 5, 5,         5, 5, 5, 5, 5, 5, 5, 5, 5, 8,
-                                                        10, 10, 10, 10, 10, 16, 16, 20, 20, 20,        20, 20};
-    Int_t fBinsEtapPb5TeVCentPCMPHOSR2PtRebin[32]   = { 20, 10, 10, 10, 5, 5, 5, 5, 5, 5,         4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
-                                                        4, 5, 5, 8, 8, 10, 10, 16, 16, 20,        20, 20};
+    Int_t fBinsEtapPb5TeVCentPCMEMCR2PtRebin[32]    = { 20, 20, 16, 10, 8, 5, 5, 5, 5, 5,       5, 5, 5, 5, 5, 5, 5, 5, 5, 8,
+                                                        10, 10, 10, 10, 10, 16, 16, 20, 20, 20, 20, 20};
+    Int_t fBinsEtapPb5TeVCentPCMPHOSR2PtRebin[32]   = { 20, 10, 10, 10, 5, 5, 5, 5, 5, 5,       4, 4, 2, 2, 2, 2, 2, 2, 2, 4,
+                                                        4, 5, 5, 8, 8, 10, 10, 16, 16, 20,      20, 20};
+    // Eta cent rebin run 2
+    Int_t fBinsEtapPb5TeVPCMEMCR2CentPtRebin[29]    = { 10, 10, 8, 8, 5, 4, 4, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        8, 8, 8, 8, 8, 10, 16, 20, 20 };
+    Int_t fBinsEtapPb5TeVPCMR2CentPtRebin[29]       = { 10, 10, 8, 8, 8, 8, 5, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        4, 4, 4, 8, 8, 8, 10, 10, 20};
+    Int_t fBinsEtapPb5TeVPCMPHOSR2CentPtRebin[28]   = { 20, 10, 10, 10, 10, 10, 10, 10, 8, 8,   8, 8, 8, 8, 8, 8, 8, 8, 10, 10,
+                                                        10, 15, 15, 20, 20, 20, 20, 20};
+    // Eta cent (small) rebin run 2
+    Int_t fBinsEtapPb5TeVPCMEMCR2SCentPtRebin[28]   = { 20, 20, 15, 10, 8, 8, 8, 8, 8, 8,       8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 10, 16, 20, 20 };
+    Int_t fBinsEtapPb5TeVPCMPHOSR2SCentPtRebin[24]  = { 20, 10, 10, 10, 10, 10, 10, 10, 8, 8,   8, 8, 8, 8, 8, 8, 8, 8, 10, 10,
+                                                        15, 15, 20, 20};
+
+    // Eta peri rebin run 2
+    Int_t fBinsEtapPb5TeVPCMPHOSR2PerPtRebin[26]    = { 20, 10, 10, 10, 10, 10, 10, 10, 8, 8,      8, 8, 8, 8, 8, 8, 10, 10, 10, 15,
+                                                        15, 20, 20, 20, 20, 20};
+
 
     // Pi0 Eta binning rebin factors Run 1
     Int_t fBinsPi0EtapPb5TeVPtRebin[22]             = { 8, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 2, 2, 2, 4, 4, 4, 4, 4,
@@ -1457,6 +1508,8 @@
                                                         35.0, 40.0  };
     Double_t fBinsDirGammapPb5TeVAlterPt[37]        = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,   1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
                                                         3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,   8.0, 10.0, 14.0, 18.0, 24.0, 32.0, 40.0};
+    Double_t fBinsDirGammapPb5TeVAlter2Pt[38]       = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,   1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
+                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,   8.0, 10.0, 12.0, 14.0, 18.0, 24.0, 32.0, 40.0};
     Int_t fBinsDirGammapPb5TeVPtRebin[30]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
                                                         2, 4, 4, 4, 4, 4, 4, 4, 8, 8};
     Int_t fBinsDirGammapPb5TeVPCMPtRebin[30]           = { 4, 2, 1, 1, 1, 1, 1, 1, 1, 1,           1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
@@ -2494,9 +2547,7 @@
                     return 4;
                 }
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
-                if (mode == 0 )
-                    return 5;
-                else if (mode == 2 )
+                if (mode == 2 )
                     return 8;
                 else if (mode == 4 || mode == 12 )
                     return 9;
@@ -3147,7 +3198,12 @@
                 } else if ( mode == 2 || mode == 13 ){
                     startPtBin     = 3;
                 } else if ( mode == 3 ){
-                    startPtBin     = 3;
+                    if (!centrality.CompareTo("0-20%") )
+                        startPtBin     = 4;
+                    else if (!centrality.CompareTo("0-20%") || !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%"))
+                        startPtBin     = 5;
+                    else
+                        startPtBin     = 3;
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 2;
                 } else if ( mode == 5){
@@ -3656,8 +3712,22 @@
                 } else if ( mode == 3 ) {
                     maxNBins    = 88;
                     binningMax  = 88;
+                    if (!centrality.CompareTo("0-20%")){
+                        maxNBins    = 87;
+                    } else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") ){
+                        binningMax  = 80;
+                        maxNBins    = 80;
+                    } else if (!centrality.CompareTo("60-100%")){
+                        binningMax  = 79;
+                        maxNBins    = 79;
+                    }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i] = fBinsPi0pPb5TeVPCMPHOSR2Pt[i];
+                        if (!centrality.CompareTo("60-100%"))
+                            binning[i] = fBinsPi0pPb5TeVPCMPHOSR2PerPt[i];
+                        else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") )
+                            binning[i] = fBinsPi0pPb5TeVPCMPHOSR2CentPt[i];
+                        else
+                            binning[i] = fBinsPi0pPb5TeVPCMPHOSR2Pt[i];
                     }
                 } else if ( mode == 4 || mode == 12  ) {
                     maxNBins    = 73;
@@ -3703,7 +3773,7 @@
                     binning[i] = fBinsPi0pPb5TeVmEMCPt[i];
                   }
                 } else if (mode == 20){ //combined
-                    maxNBins = 89;
+                    maxNBins = 92;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi0pPb5TeVR2Pt[i];
                     }
@@ -4277,8 +4347,22 @@
                 } else if (mode == 3 ){ // PCM-PHOS
                     maxNBins    = 28;
                     binningMax  = 28;
+                    if (!centrality.CompareTo("0-20%")){
+                        maxNBins = 26;
+                    } else if (!centrality.CompareTo("60-100%")){
+                        maxNBins    = 26;
+                        binningMax  = 26;
+                    } else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%")) {
+                        maxNBins    = 24;
+                        binningMax  = 24;
+                    }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        binning[i] = fBinsEtapPb5TeVPCMPHOSR2Pt[i];
+                        if (!centrality.CompareTo("60-100%"))
+                            binning[i] = fBinsEtapPb5TeVPCMPHOSR2PerPt[i];
+                        else if (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%"))
+                            binning[i] = fBinsEtapPb5TeVPCMPHOSR2SCentPt[i];
+                        else
+                            binning[i] = fBinsEtapPb5TeVPCMPHOSR2Pt[i];
                     }
                 } else if (mode == 4 || mode == 12 ){ // EMC, DMC
                     maxNBins    = 28;
@@ -4437,6 +4521,12 @@
                   for(Int_t i = 0; i < binningMax+1; i++){
                     binning[i]  = fBinsDirGammapPb5TeVAlterPt[i];
                   }
+                } else if (mode == 23) {
+                    maxNBins    = 36;
+                    binningMax  = 37;
+                    for(Int_t i = 0; i < binningMax+1; i++){
+                        binning[i]  = fBinsDirGammapPb5TeVAlter2Pt[i];
+                    }
                 }
             } else if (energy.CompareTo("pPb_8TeV") == 0  ){
                 if (mode == 0){
@@ -4474,6 +4564,7 @@
                 binning[i]  = fBinsInterAndExtrapolation[i];
             }
         }
+        cout << "maximum " << maxNBins << " pt bins for " << meson.Data() << endl;
         return maxNBins;
     }
 
@@ -5318,7 +5409,16 @@
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSPtRebin[i];
                         else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 )                                       // cent dependent pi0 for PCM-PHOS run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVCentPCMPHOSPtRebin[i];
-                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // MB pi0 for PCM-PHOS run 2
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && centrality.Contains("0-100%"))   // MB pi0 for PCM-PHOS run 2
+                            fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSR2PtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && centrality.Contains("0-20%"))    // cent dep pi0 for PCM-PHOS run 2: 0020
+                            fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSR2CentPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&                                  // cent dep pi0 for PCM-PHOS run 2: 0005, 0510
+                            ( centrality.Contains("0-5%") || centrality.Contains("5-10%")) )
+                            fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSR2SCentPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && centrality.Contains("60-100%"))  // cent dep pi0 for PCM-PHOS run 2: 60100
+                            fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSR2PerPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 )                                   // cent dep pi0 for PCM-PHOS run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMPHOSR2PtRebin[i];
                         else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 && centrality.CompareTo("0-100%") == 0) // MB pi0 for EMC run 1
                             fNRebin[i]          = fBinsPi0pPb5TeVEMCPtRebin[i];
@@ -6316,7 +6416,16 @@
                             fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSPtRebin[i];
                         else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 )                                                                   // cent dependent eta for PCM-PHOS run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSCentPtRebin[i];
-                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // MB eta for PCM-PHOS run 2
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && !centrality.CompareTo("0-100%"))                             // MB eta for PCM-PHOS run 2
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSR2PtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && !centrality.CompareTo("0-20%"))                         // cent dependent eta for PCM-PHOS run 2: 0020
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSR2CentPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 &&                                                         // cent dependent eta for PCM-PHOS run 2: 0005, 0510
+                                (!centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%")) )
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSR2SCentPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && !centrality.CompareTo("60-100%"))                            // cent dependent eta for PCM-PHOS run 2: 60100
+                            fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSR2PerPtRebin[i];
+                        else if (modi == 3 && energy.CompareTo("pPb_5.023TeVRun2") == 0)                                                                // cent dependent eta for PCM-PHOS run 2
                             fNRebin[i]  = fBinsEtapPb5TeVPCMPHOSR2PtRebin[i];
                         else if (modi == 4 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                 // MB eta for EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVEMCPtRebin[i];

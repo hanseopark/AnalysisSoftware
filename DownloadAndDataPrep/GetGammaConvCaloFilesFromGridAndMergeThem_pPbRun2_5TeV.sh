@@ -202,20 +202,28 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC17g8aMC="child_2"
 # LHC17g8aMCFast="child_1"
 
-TRAINDIR=Legotrain-vAN20180322-RerunAll
-# LHC16qtData="724"; #pass 2
-# LHC16qtData="725"; #pass 2
-# LHC16qDataFast="child_1"; #pass 3
-# LHC16tDataFast="child_2"; #pass 2
-# LHC16qData="child_3"; #pass 3
-# LHC16tData="child_4"; #pass 2
-# LHC17f2bMCMoth="1218";
-# LHC17f2a_fixMCMoth="1217";
+# TRAINDIR=Legotrain-vAN20180322-RerunAll
+# # LHC16qtData="724"; #pass 2
+# # LHC16qtData="725"; #pass 2
+# # LHC16qDataFast="child_1"; #pass 3
+# # LHC16tDataFast="child_2"; #pass 2
+# # LHC16qData="child_3"; #pass 3
+# # LHC16tData="child_4"; #pass 2
+# # LHC17f2bMCMoth="1218";
+# # LHC17f2a_fixMCMoth="1217";
+#
+# # LHC17f2a_fixMCMoth="1231";
+# # LHC17f2bMCMoth="1232";
+# LHC17f2a_fixMCMoth="1230";
+# LHC17f2bMCMoth="1222";
+# LHC17f2a_fixMC="child_2";
+# LHC17f2a_fixMCFast="child_1";
+# LHC17f2bMC="child_2";
+# LHC17f2bMCFast="child_1";
 
-# LHC17f2a_fixMCMoth="1231";
-# LHC17f2bMCMoth="1232";
-LHC17f2a_fixMCMoth="1230";
-LHC17f2bMCMoth="1222";
+TRAINDIR=Legotrain-vAN20180410-RerunAll2
+LHC17f2a_fixMCMoth="1239";
+LHC17f2bMCMoth="1240";
 LHC17f2a_fixMC="child_2";
 LHC17f2a_fixMCFast="child_1";
 LHC17f2bMC="child_2";
