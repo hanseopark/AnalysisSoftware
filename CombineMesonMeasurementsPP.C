@@ -64,7 +64,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
                     fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaperPP900GeV_2017_11_17.root";
     else            fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaper7TeVand900GeV_IncludingPP2760YShiftedPrelim_Pub2012.root";
     /*  2.76TeV */  fileName[1]                 = "CombinationInputPP/2.76TeV/CombinedResultsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer.root";
-    /*  5TeV    */  fileName[2]                 = "CombinationInputPP/5TeV/";
+    /*  5TeV    */  fileName[2]                 = "CombinationInputPP/5TeV/CombinedResultsPaperPP5TeV_2018_04_27.root";
     /*  7TeV    */
     if(useNewMeasurements)
                     fileName[3]                 = "CombinationInputPP/7TeV/CombinedResultsPaperPP7TeV_2017_11_17.root";
