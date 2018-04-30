@@ -557,10 +557,13 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
     histoDataMCRatioRinPtBinScaledToGas02->Draw("same");
     histoDataMCRatioRinPtBinScaledToGas03->Draw("same");
     
-    TLegend* legenLowPanel = GetAndSetLegend2(0.5, 0.85-(2*0.9*textsizeLabelsDown), 0.7, 0.85, textSizeLabels);
+    TLegend* legenLowPanel = GetAndSetLegend2(0.5, 0.85-(4*0.9*textsizeLabelsDown), 0.7, 0.85, textSizeLabels);
     TString legendWithPeriod = Form("From proj, Period %s",optionPeriod.Data());
     
     legenLowPanel->AddEntry(histoDataMCRatioRScaledToGas,legendWithPeriod.Data(),"lp");
+    legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGas01,"pT>0.15 GeV","lp");
+    legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGas02,"pT>0.3 GeV","lp");
+    legenLowPanel->AddEntry(histoDataMCRatioRinPtBinScaledToGas03,"pT>0.4 GeV","lp");
     legenLowPanel->Draw();
 
  
@@ -849,7 +852,7 @@ void AnalyseMaterialHistosV2( TString fileName         = "",
         TH2F *histoDummyPurityPt =  new TH2F("histoDummyPurityPt","histoDummyPurityPt",1000,0.,8.,1000,0.,1.2);
         SetStyleHistoTH2ForGraphs(histoDummyPurityPt, "p_{T} (GeV/c)","Purity", 0.9*textsizeLabelsDownpurity, textsizeLabelsDownpurity,0.9*textsizeLabelsDownpurity,textsizeLabelsDownpurity, 0.9,0.1/(textsizeFacDownpurity*marginXRatio));
 //         histoDummyPurityPt->GetYaxis()->SetLabelOffset(+0.01);
-//         histoDummyPurityPt->GetYaxis()->SetRangeUser(0.3,1.55);
+        histoDummyPurityPt->GetYaxis()->SetRangeUser(0.5,1.2);
 
     padUpperPurity->cd();
     histoDummyPurityR->DrawCopy();
