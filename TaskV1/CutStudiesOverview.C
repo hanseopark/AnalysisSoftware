@@ -620,7 +620,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             if(i==0){
                 // Set ratio min and max
                 Double_t minYRatio = 0.5;
-                Double_t maxYRatio = 1.5; //qui
+                Double_t maxYRatio = 1.55; //qui
 //                 if (cutVariationName.Contains("PhotonQuality")){
 //                     minYRatio = 0.001;
 //                     maxYRatio = 2;
@@ -1445,8 +1445,8 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
                 // Set ratio min and max
-                Double_t minYRatio = 0.5;
-                Double_t maxYRatio = 1.5;
+                Double_t minYRatio = 0.8;
+                Double_t maxYRatio = 1.2;
 //                 if(optionMult.CompareTo("Mult")==0) {
 //                     if( optionEnergy.Contains("Pb")){
 //                         minYRatio = 0.005;        maxYRatio = 2.1;
@@ -1564,8 +1564,8 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         else padTrueEffiRatios->SetLogy(0);
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i==0){
-                Double_t minYRatio = 0.01;
-                Double_t maxYRatio = 1.15;
+                Double_t minYRatio = 0.8;
+                Double_t maxYRatio = 1.2;
                 if (cutVariationName.Contains("MultiplicityPP")){
                     minYRatio = 0.5;
                     maxYRatio = 2.7;
