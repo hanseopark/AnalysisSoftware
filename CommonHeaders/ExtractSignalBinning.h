@@ -4867,13 +4867,7 @@
                       if( !energy.CompareTo("pPb_5.023TeVRun2") )
                         nIterBGFit                  = 8;
                       else if( !energy.CompareTo("pPb_5.023TeV") ){
-                        if(centrality.Contains("0-20%"))
-                          nIterBGFit                = 8;
-                        else if(centrality.Contains("20-40%"))
-                          nIterBGFit                = 8;
-                        else if(centrality.Contains("40-60%"))
-                          nIterBGFit                = 8;
-                        else if(centrality.Contains("60-100%"))
+                        if(centrality.CompareTo(""))
                           nIterBGFit                = 8;
                       }
                     }
