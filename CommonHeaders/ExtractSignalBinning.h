@@ -3495,7 +3495,7 @@
                 }
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0){
                 if ( mode == 2 || mode == 13 || mode == 12  ){
-                    maxNBins = 22;
+                    maxNBins = 18;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta5TeVPCMEMCPt[i];
                     }
@@ -3517,7 +3517,7 @@
                         }
                     }
                 } else if ( mode == 20 ){
-                    maxNBins = 22;
+                    maxNBins = 18;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta5TeVPCMEMCPt[i];
                     }
@@ -4863,8 +4863,20 @@
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
-                    if (modi == 0 && !energy.CompareTo("pPb_5.023TeVRun2") )
-                      nIterBGFit                  = 8;
+                    if (modi == 0){
+                      if( !energy.CompareTo("pPb_5.023TeVRun2") )
+                        nIterBGFit                  = 8;
+                      else if( !energy.CompareTo("pPb_5.023TeV") ){
+                        if(centrality.Contains("0-20%"))
+                          nIterBGFit                = 8;
+                        else if(centrality.Contains("20-40%"))
+                          nIterBGFit                = 8;
+                        else if(centrality.Contains("40-60%"))
+                          nIterBGFit                = 8;
+                        else if(centrality.Contains("60-100%"))
+                          nIterBGFit                = 8;
+                      }
+                    }
                     fMaxYFracBGOverIntHist      = 20;
                 }
             //*********************************************************************************************
@@ -5901,15 +5913,33 @@
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
-                    if (modi == 0 && !energy.CompareTo("pPb_5.023TeVRun2") )
-                      nIterBGFit                  = 8;
+                    if (modi == 0){
+                      if( !energy.CompareTo("pPb_5.023TeVRun2") )
+                        nIterBGFit                  = 8;
+                      else if( !energy.CompareTo("pPb_5.023TeV") ){
+                        if(centrality.Contains("0-20%"))
+                          nIterBGFit                = 8;
+                        else if(centrality.Contains("20-40%"))
+                          nIterBGFit                = 8;
+                        else if(centrality.Contains("40-60%"))
+                          nIterBGFit                = 8;
+                        else if(centrality.Contains("60-100%"))
+                          nIterBGFit                = 8;
+                      }
+                    }
                 } else {
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
-                    if (modi == 0 && !energy.CompareTo("pPb_5.023TeVRun2") )
-                      nIterBGFit                  = 8;
+                    if (modi == 0){
+                      if( !energy.CompareTo("pPb_5.023TeVRun2") )
+                        nIterBGFit                  = 8;
+                      else if( !energy.CompareTo("pPb_5.023TeV") ){
+                        if(centrality.CompareTo(""))
+                          nIterBGFit                = 8;
+                      }
+                    }
                 }
                 fMaxYFracBGOverIntHist          = 20;
             //*********************************************************************************************

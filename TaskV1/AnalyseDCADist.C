@@ -910,8 +910,8 @@ void AnalyseDCADist(    TString meson           ="",
                 fHistDCAZBG_Visual_CatIter_Data_PtWise[cat][j] = (TH1D*)fDataInputComp->Get(Form("fHistDCAZUnderMesonBGEstimateCat_%d_MesonPt_%1.2f-%1.2f",cat+1,fBinsPt[j], fBinsPt[j+1]));
             }
             PlotDCADistPtBinSubtractedSplitCat(Form("%s/Monitoring/%s_%s_DCAProjSubtracted_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), cat+1, suffix.Data()),
-                                        Form("canvas_cat%d",cat+1), Form("pad_cat%d",cat+1),   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
-            PlotDCADistPtBinSubtractedRatioSplitCat(Form("%s/Monitoring/%s_%s_DCAProjSubtractedRatioDataToMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), cat+1, suffix.Data()), Form("canvas_cat%d",cat+1), Form("pad_cat%d",cat+1),   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , 1);
+                                        Form("canvas_cat%d",cat+1), Form("pad_cat%d",cat+1),   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , cat+1);
+            PlotDCADistPtBinSubtractedRatioSplitCat(Form("%s/Monitoring/%s_%s_DCAProjSubtractedRatioDataToMC_Cat_%i.%s", outputDir.Data(), meson.Data(), fMCFlag.Data(), cat+1, suffix.Data()), Form("canvas_cat%d",cat+1), Form("pad_cat%d",cat+1),   fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, kMC , fdate , cat+1);
         }
       }
     }

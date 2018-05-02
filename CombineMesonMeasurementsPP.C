@@ -63,7 +63,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     if(useNewMeasurements)
                     fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaperPP900GeV_2017_11_17.root";
     else            fileName[0]                 = "CombinationInputPP/900GeV/CombinedResultsPaper7TeVand900GeV_IncludingPP2760YShiftedPrelim_Pub2012.root";
-    /*  2.76TeV */  fileName[1]                 = "CombinationInputPP/2.76TeV/CombinedResultsPaperPP2760GeV_2017_07_10_FrediV2Clusterizer.root";
+    /*  2.76TeV */  fileName[1]                 = "CombinationInputPP/2.76TeV/CombinedResultsPaperPP2760GeV_2017_07_10_Pub2017.root";
     /*  5TeV    */  fileName[2]                 = "CombinationInputPP/5TeV/CombinedResultsPaperPP5TeV_2018_04_27.root";
     /*  7TeV    */
     if(useNewMeasurements)
@@ -74,8 +74,8 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     TString         fileNameTheory              = "ExternalInput/Theory/TheoryCompilationPP.root";
     TString         suffix                      = "eps";
 
-    Int_t includeEnergy[6]                      = {1,1,0,1,1,0};
-    Int_t numActiveMeas                         = 4;
+    Int_t includeEnergy[6]                      = {1,1,1,1,1,0};
+    Int_t numActiveMeas                         = 5;
 
     Double_t xSectionsINEL[6]                   = {   52.5*1e9,
                                                       62.8*1e9,
@@ -328,11 +328,11 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     //---------------------------- Loading pythia predictions from files --------------------------------------------
     //---------------------------------------------------------------------------------------------------------------
 
-    TString pythiaHistoNames[6]                 = { "histoInvSecPythia8Monash2013LegoPi0900GeV", "histoInvSecPythia8Monash2013LegoPi02760GeV", "", "histoInvSecPythia8Monash2013LegoPi07TeV", "histoInvSecPythia8Monash2013LegoPi08TeV", ""};
+    TString pythiaHistoNames[6]                 = { "histoInvSecPythia8Monash2013LegoPi0900GeV", "histoInvSecPythia8Monash2013LegoPi02760GeV", "histoInvSecPythia8Monash2013LegoPi05TeV", "histoInvSecPythia8Monash2013LegoPi07TeV", "histoInvSecPythia8Monash2013LegoPi08TeV", ""};
     TH1F* histoPythiaInvCrossSectionPi0[6];
     TGraphErrors* graphPythiaInvCrossSectionPi0[6];
 
-    TString pythiaHistoNamesEta[6]                 = { "histoInvSecPythia8Monash2013LegoEta900GeV", "histoInvSecPythia8Monash2013LegoEta2760GeV", "", "histoInvSecPythia8Monash2013LegoEta7TeV", "histoInvSecPythia8Monash2013LegoEta8TeV", ""};
+    TString pythiaHistoNamesEta[6]                 = { "histoInvSecPythia8Monash2013LegoEta900GeV", "histoInvSecPythia8Monash2013LegoEta2760GeV", "histoInvSecPythia8Monash2013LegoEta5TeV", "histoInvSecPythia8Monash2013LegoEta7TeV", "histoInvSecPythia8Monash2013LegoEta8TeV", ""};
     TH1F* histoPythiaInvCrossSectionEta[6];
     TGraphErrors* graphPythiaInvCrossSectionEta[6];
     Double_t scalingFactorPythia = 1;
@@ -392,12 +392,12 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     TGraph* graphNLODSS07InvCrossSectionPi0Half[6];
     TGraph* graphNLODSS07InvCrossSectionPi0One[6];
     TGraph* graphNLODSS07InvCrossSectionPi0Two[6];
-    TString NLO14HistoNames[6]                 = { "", "graphNLOCalcDSS14InvCrossSec2760GeV", "", "graphNLOCalcDSS14InvCrossSec7000GeV", "graphNLOCalcDSS14InvSecPi08000GeV", ""};
+    TString NLO14HistoNames[6]                 = { "", "graphNLOCalcDSS14InvCrossSec2760GeV", "graphNLOCalcDSS14InvSecPi05023GeV", "graphNLOCalcDSS14InvCrossSec7000GeV", "graphNLOCalcDSS14InvSecPi08000GeV", ""};
     TGraphAsymmErrors* graphNLODSS14InvCrossSectionPi0[6];
     TGraphAsymmErrors* graphNLODSS14InvCrossSectionPi0center[6];
-    TString NLOAESSSHistoNamesEtaHalf[6]      = { "graphNLOCalcInvSecEtaMuHalf900GeV", "graphNLOCalcInvSecEtaMuHalf2760GeV", "", "graphNLOCalcInvSecEtaMuHalf7000GeV", "graphNLOCalcInvSecEtaMuHalf8000GeV", ""};
-    TString NLOAESSSHistoNamesEtaOne[6]       = { "graphNLOCalcInvSecEtaMuOne900GeV", "graphNLOCalcInvSecEtaMuOne2760GeV", "", "graphNLOCalcInvSecEtaMuOne7000GeV", "graphNLOCalcInvSecEtaMuOne8000GeV", ""};
-    TString NLOAESSSHistoNamesEtaTwo[6]       = { "graphNLOCalcInvSecEtaMuTwo900GeV", "graphNLOCalcInvSecEtaMuTwo2760GeV", "", "graphNLOCalcInvSecEtaMuTwo7000GeV", "graphNLOCalcInvSecEtaMuTwo8000GeV", ""};
+    TString NLOAESSSHistoNamesEtaHalf[6]      = { "graphNLOCalcInvSecEtaMuHalf900GeV", "graphNLOCalcInvSecEtaMuHalf2760GeV", "graphNLOCalcAESSSInvSecEtaMuHalf5023GeV", "graphNLOCalcInvSecEtaMuHalf7000GeV", "graphNLOCalcInvSecEtaMuHalf8000GeV", ""};
+    TString NLOAESSSHistoNamesEtaOne[6]       = { "graphNLOCalcInvSecEtaMuOne900GeV", "graphNLOCalcInvSecEtaMuOne2760GeV", "graphNLOCalcAESSSInvSecEtaMuOne5023GeV", "graphNLOCalcInvSecEtaMuOne7000GeV", "graphNLOCalcInvSecEtaMuOne8000GeV", ""};
+    TString NLOAESSSHistoNamesEtaTwo[6]       = { "graphNLOCalcInvSecEtaMuTwo900GeV", "graphNLOCalcInvSecEtaMuTwo2760GeV", "graphNLOCalcAESSSInvSecEtaMuTwo5023GeV", "graphNLOCalcInvSecEtaMuTwo7000GeV", "graphNLOCalcInvSecEtaMuTwo8000GeV", ""};
     TGraph* graphNLOAESSSInvCrossSectionEtaHalf[6];
     TGraph* graphNLOAESSSInvCrossSectionEtaOne[6];
     TGraph* graphNLOAESSSInvCrossSectionEtaTwo[6];
@@ -798,6 +798,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
           if(graphPythiaInvCrossSectionPi0[i]){
+            cout << "calculating pythia ratio for meas " << nameEnergyGlobal2[i].Data() << endl;
             graphRatioPythiaToCombFitPi0[i]     = (TGraphErrors*)graphPythiaInvCrossSectionPi0[i]->Clone(Form("graphRatioPythiaToCombFitPi0%i",i));
             graphRatioPythiaToCombFitPi0[i]     = CalculateGraphErrRatioToFit(graphRatioPythiaToCombFitPi0[i], fitTCMInvCrossSectionPi0CombPlot[i]);
             DrawGammaSetMarkerTGraphErr(graphRatioPythiaToCombFitPi0[i], 0, 0, pythia8color , pythia8color, widthLinesBoxes, kTRUE, pythia8color);

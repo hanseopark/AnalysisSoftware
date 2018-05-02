@@ -2394,17 +2394,18 @@ cout << __LINE__ << endl;
   DrawGammaLines(minPtPi0, maxPtPi0 , 0.9, 0.9,0.1, kGray, 7);
 
   // TLatex *labelRatioToFitEnergy   = new TLatex(0.72, 0.91, Form("ALICE, %s",collisionSystem5TeV.Data()));
-  TLatex *labelRatioToFitEnergy   = new TLatex(0.955, 0.91, Form("ALICE, %s",collisionSystem5TeV.Data()));
+  TLatex *labelRatioToFitEnergy   = new TLatex(0.955, 0.847, Form("%s",collisionSystem5TeV.Data()));
   SetStyleTLatex( labelRatioToFitEnergy, textSizeLabelsPixel,4);
   labelRatioToFitEnergy->SetTextFont(43);
   labelRatioToFitEnergy->SetTextAlign(31);
   labelRatioToFitEnergy->Draw();
-  TLatex *labelRatioToFitALICE    = new TLatex(0.852, 0.86, "ALICE");
+  TLatex *labelRatioToFitALICE    = new TLatex(0.955, 0.905, "ALICE preliminary");
   SetStyleTLatex( labelRatioToFitALICE, textSizeLabelsPixel,4);
   labelRatioToFitALICE->SetTextFont(43);
+  labelRatioToFitALICE->SetTextAlign(31);
   labelRatioToFitALICE->Draw();
   // TLatex *labelRatioToFitPi0      = new TLatex(0.826, 0.807, "#pi^{0} #rightarrow #gamma#gamma");
-  TLatex *labelRatioToFitPi0      = new TLatex(0.955, 0.855, "#pi^{0} #rightarrow #gamma#gamma");
+  TLatex *labelRatioToFitPi0      = new TLatex(0.955, 0.795, "#pi^{0} #rightarrow #gamma#gamma");
   SetStyleTLatex( labelRatioToFitPi0, textSizeLabelsPixel,4);
   labelRatioToFitPi0->SetTextFont(43);
   labelRatioToFitPi0->SetTextAlign(31);
@@ -2448,7 +2449,7 @@ cout << __LINE__ << endl;
   DrawGammaLines(minPtPi0, maxPtPi0 , 0.9, 0.9,0.1, kGray, 7);
 
   labelRatioToFitEnergy->Draw();
-  // labelRatioToFitALICE->Draw();
+  labelRatioToFitALICE->Draw();
   labelRatioToFitPi0->Draw();
 
   TLegend* legendRatioPi0Fits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
@@ -2485,7 +2486,7 @@ cout << __LINE__ << endl;
   DrawGammaLines(minPtPi0,maxPtPi0 , 0.9, 0.9,0.5, kGray, 7);
 
   labelRatioToFitEnergy->Draw();
-  // labelRatioToFitALICE->Draw();
+  labelRatioToFitALICE->Draw();
   labelRatioToFitPi0->Draw();
 
   //****************************** Definition of the Legend ******************************************
@@ -2557,18 +2558,19 @@ cout << __LINE__ << endl;
   DrawGammaLines(minPtEta, maxPtEta , 1.1, 1.1,0.5, kGray, 7);
   DrawGammaLines(minPtEta, maxPtEta , 0.9, 0.9,0.5, kGray, 7);
 
-  TLatex *labelRatioToFitEnergy2   = new TLatex(0.955, 0.91, Form("ALICE, %s",collisionSystem5TeV.Data()));
+  TLatex *labelRatioToFitEnergy2   = new TLatex(0.955, 0.86, Form("%s",collisionSystem5TeV.Data()));
   SetStyleTLatex( labelRatioToFitEnergy2, textSizeLabelsPixel,4);
   labelRatioToFitEnergy2->SetTextFont(43);
   labelRatioToFitEnergy2->SetTextAlign(31);
   labelRatioToFitEnergy2->Draw();
-  TLatex *labelRatioToFitALICE2    = new TLatex(0.85, 0.86, "ALICE");
+  TLatex *labelRatioToFitALICE2    = new TLatex(0.955, 0.91, "ALICE preliminary");
   SetStyleTLatex( labelRatioToFitALICE2, textSizeLabelsPixel,4);
   labelRatioToFitALICE2->SetTextFont(43);
-  // labelRatioToFitALICE2->Draw();
+  labelRatioToFitALICE2->SetTextAlign(31);
+  labelRatioToFitALICE2->Draw();
 
   // TLatex *labelRatioToFitEta      = new TLatex(0.84,0.82,"#eta #rightarrow #gamma#gamma");
-  TLatex *labelRatioToFitEta      = new TLatex(0.95,0.86,"#eta #rightarrow #gamma#gamma");
+  TLatex *labelRatioToFitEta      = new TLatex(0.955,0.82,"#eta #rightarrow #gamma#gamma");
   SetStyleTLatex( labelRatioToFitEta, textSizeLabelsPixel,4);
   labelRatioToFitEta->SetTextFont(43);
   labelRatioToFitEta->SetTextAlign(31);
@@ -2612,7 +2614,7 @@ cout << __LINE__ << endl;
   DrawGammaLines(minPtEta, maxPtEta , 0.9, 0.9,0.1, kGray, 7);
 
   labelRatioToFitEnergy2->Draw();
-  // labelRatioToFitALICE2->Draw();
+  labelRatioToFitALICE2->Draw();
   labelRatioToFitEta->Draw();
 
   TLegend* legendRatioEtaFits= GetAndSetLegend2(0.12,0.95-4*1.05*textsizeLabelsPP,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
@@ -2647,7 +2649,7 @@ cout << __LINE__ << endl;
   DrawGammaLines(minPtEta,maxPtEta , 0.9, 0.9,0.5, kGray, 7);
 
   labelRatioToFitEnergy->Draw();
-  // labelRatioToFitALICE->Draw();
+  labelRatioToFitALICE->Draw();
   labelRatioToFitEta->Draw();
 
   //****************************** Definition of the Legend ******************************************
@@ -5735,6 +5737,9 @@ cout << "#######################################################################
       if(graphCombPi0InvXSectionTot)graphCombPi0InvXSectionTot->Write("graphInvCrossSectionPi0Comb5TeV");
       if(graphCombPi0InvXSectionStat)graphCombPi0InvXSectionStat->Write("graphInvCrossSectionPi0Comb5TeVStatErr");
       if(graphCombPi0InvXSectionSys)graphCombPi0InvXSectionSys->Write("graphInvCrossSectionPi0Comb5TeVSysErr");
+      if(graphCombPi0InvXSectionTot)graphCombPi0InvXSectionTot->Write("graphInvCrossSectionPi0Comb5TeVATotErr");
+      if(graphCombPi0InvXSectionStat)graphCombPi0InvXSectionStat->Write("graphInvCrossSectionPi0Comb5TeVAStatErr");
+      if(graphCombPi0InvXSectionSys)graphCombPi0InvXSectionSys->Write("graphInvCrossSectionPi0Comb5TeVASysErr");
 
       for (Int_t i = 0; i < 13; i++){
         if(directoryPi0[i]){
@@ -5780,6 +5785,9 @@ cout << "#######################################################################
       if(graphCombEtaInvXSectionTot)graphCombEtaInvXSectionTot->Write("graphInvCrossSectionEtaComb5TeV");
       if(graphCombEtaInvXSectionStat)graphCombEtaInvXSectionStat->Write("graphInvCrossSectionEtaComb5TeVStatErr");
       if(graphCombEtaInvXSectionSys)graphCombEtaInvXSectionSys->Write("graphInvCrossSectionEtaComb5TeVSysErr");
+      if(graphCombEtaInvXSectionTot)graphCombEtaInvXSectionTot->Write("graphInvCrossSectionEtaComb5TeVATotErr");
+      if(graphCombEtaInvXSectionStat)graphCombEtaInvXSectionStat->Write("graphInvCrossSectionEtaComb5TeVAStatErr");
+      if(graphCombEtaInvXSectionSys)graphCombEtaInvXSectionSys->Write("graphInvCrossSectionEtaComb5TeVASysErr");
 
       for (Int_t i = 0; i < 13; i++){
         if(directoryEta[i]){
@@ -5807,9 +5815,9 @@ cout << "#######################################################################
       }
 
 
-      if(graphCombEtaToPi0Tot)graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0Comb8TeVTotErr");
-      if(graphCombEtaToPi0Stat)graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0Comb8TeVStatErr");
-      if(graphCombEtaToPi0Sys)graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0Comb8TeVSysErr");
+      if(graphCombEtaToPi0Tot)graphCombEtaToPi0Tot->Write("graphRatioEtaToPi0Comb5TeVTotErr");
+      if(graphCombEtaToPi0Stat)graphCombEtaToPi0Stat->Write("graphRatioEtaToPi0Comb5TeVStatErr");
+      if(graphCombEtaToPi0Sys)graphCombEtaToPi0Sys->Write("graphRatioEtaToPi0Comb5TeVSysErr");
 
       for (Int_t i = 0; i < 13; i++){
         if(directoryEta[i]){
