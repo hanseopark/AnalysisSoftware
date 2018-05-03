@@ -713,6 +713,11 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* pp8TeVPOWHEG_invyield = (TGraphAsymmErrors*)file8TeVPOWHEG->Get("graph_powheg_direct_photons_binning1GeV");
         TGraphAsymmErrors* graphpp8TeVPOWHEG_invyield = (TGraphAsymmErrors*)file8TeVPOWHEG->Get("graph_powheg_direct_photons_binning1GeV");
 
+        TFile *file8TeVPythia8        = new TFile("ExternalInput/Theory/Pythia/pythia8_8TeV_compilation_poppenborg.root"); // uses MB, JJ, GJ processes
+        TFile *file8TeVPythia8_onlyJJ = new TFile("ExternalInput/Theory/Pythia/pythia8_8TeV_compilation_poppenborg_onlyJJ.root"); // uses only JJ processes
+        TGraphAsymmErrors* graphpp8TeVPythia8_prompt      = (TGraphAsymmErrors*)file8TeVPythia8->Get("gae_222_photons_etaEMCal");
+        TGraphAsymmErrors* graphpp8TeVPythia8_frag_onlyJJ = (TGraphAsymmErrors*)file8TeVPythia8_onlyJJ->Get("gae_shower_photons_etaEMCal");
+
         Int_t nlinesNLOTwo8TeV              = 0;
         Int_t nlinesNLOOne8TeV              = 0;
         Int_t nlinesNLOHalf8TeV             = 0;
@@ -885,6 +890,16 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         graphRatioNLOPromptGammaDivTot8TeV->Fit(fitPromptDivGammaDir8TeV,"QNRMEX0+");
         graphRatioNLOPromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV,"QNRMEX0+");
         fitPromptDivFragGamma8TeV->SetRange(2,100);
+
+        // fitting prompt/frag ratio from pythia8
+        graphpp8TeVPythia8_prompt->RemovePoint(0);
+        graphpp8TeVPythia8_frag_onlyJJ->RemovePoint(0);
+        TGraphAsymmErrors* graphRatioPythia8PromptGammaDivFrag8TeV   = CalculateAsymGraphRatioToGraph(graphpp8TeVPythia8_prompt, graphpp8TeVPythia8_frag_onlyJJ);
+        TF1* fitGammaPrompt8TeV_Pythia8                 = FitObject("powPure","fitPythiacalcPromptGamma8TeV","Gamma",graphpp8TeVPythia8_prompt,15.,100.,NULL,"QNRMEX0+");
+        TF1* fitGammaFrag8TeV_Pythia8                   = FitObject("powPure","fitPythiacalcFragGamma8TeV","Gamma",graphpp8TeVPythia8_frag_onlyJJ,15.,100.,NULL,"QNRMEX0+");
+        TF1* fitPromptDivFragGamma8TeV_Pythia8          = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV_Pythia8, fitGammaFrag8TeV_Pythia8, "ratioFitPythia8PromptDivFragGamma8TeV");
+        graphRatioPythia8PromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV_Pythia8,"QNRMEX0+");
+        fitPromptDivFragGamma8TeV_Pythia8->SetRange(15.,100.);
 
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
@@ -1104,6 +1119,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TGraphAsymmErrors* graphRatioNLOFragGammaDivTot13TeV      = CalculateAsymGraphRatioToGraph(graphNLOCalcFragGam13TeV, graphNLOCalcDirGam13TeV);
         TGraphAsymmErrors* graphRatioNLOPromptGammaDivTot13TeV    = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam13TeV, graphNLOCalcDirGam13TeV);
         TGraphAsymmErrors* graphRatioNLOPromptGammaDivFrag13TeV   = CalculateAsymGraphRatioToGraph(graphNLOCalcPromGam13TeV, graphNLOCalcFragGam13TeV);
+
 
         TF1* fitGammaDir13TeV                            = FitObject("powPure","fitNLOcalcDirGamma13TeV","Gamma",graphNLOCalcDirGam13TeV,3,6.,NULL,"QNRMEX0+");
         TF1* fitGammaFrag13TeV                           = FitObject("powPure","fitNLOcalcFragGamma13TeV","Gamma",graphNLOCalcFragGam13TeV,3,6.,NULL,"QNRMEX0+");
@@ -1634,6 +1650,18 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             graphRatioNLOPromptGammaDivTot8TeV->Write("graphPromptPhotonDivDirectNLOVogelsang_8TeV",TObject::kOverwrite);
             graphRatioNLOPromptGammaDivFrag8TeV->Write("graphPromptPhotonDivFragementationNLOVogelsang_8TeV",TObject::kOverwrite);
             fitPromptDivFragGamma8TeV->Write("ratioFitNLOPromptDivFragGamma8TeV", TObject::kOverwrite);
+
+            graphpp8TeVPythia8_prompt->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphpp8TeVPythia8_prompt->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#it{p}_{T}dy} (pb GeV^{-1})");
+            graphpp8TeVPythia8_prompt->Write("graphPromptPhotonPythia8_8TeV", TObject::kOverwrite);
+            fitGammaPrompt8TeV_Pythia8->Write("fitPromptPhotonPythia8_8TeV", TObject::kOverwrite);
+            graphpp8TeVPythia8_frag_onlyJJ->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphpp8TeVPythia8_frag_onlyJJ->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#it{p}_{T}dy} (pb GeV^{-1})");
+            graphpp8TeVPythia8_frag_onlyJJ->Write("graphFragPhotonPythia8_8TeV", TObject::kOverwrite);
+            fitGammaFrag8TeV_Pythia8->Write("fitFragPhotonPythia8_8TeV", TObject::kOverwrite);
+            graphRatioPythia8PromptGammaDivFrag8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
+            graphRatioPythia8PromptGammaDivFrag8TeV->Write("graphPromptPhotonDivFragPhotonPythia8_8TeV", TObject::kOverwrite);
+            fitPromptDivFragGamma8TeV_Pythia8->Write("ratioFitPromptPhotonDivFragPhotonPythia8_8TeV", TObject::kOverwrite);
 
             graphNLOCalcRGammaALICECocktailPP8TeV->GetYaxis()->SetTitle("R_{#gamma}");
             graphNLOCalcRGammaALICECocktailPP8TeV->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c})");
