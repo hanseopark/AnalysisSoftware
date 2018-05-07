@@ -99,7 +99,7 @@ function GiveBinning5TeV2017()
 
      echo "How many p_T bins do you want to use for the eta? 8 (as Hikari 12 GeV/c), 20 (12 GeV/c)";
      read answer
-     if [ $answer -gt 4 ] && [ $answer -lt 30 ]; then
+     if [ $answer -gt 4 ] && [ $answer -lt 34 ]; then
         echo $answer "bins --> Max p_t = XX GeV/c ...";
         correctEta=1
         BinsPtEta=$answer

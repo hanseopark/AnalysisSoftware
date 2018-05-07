@@ -289,6 +289,10 @@
                                                         25., 30., 35.};
     Int_t fBinsEta5TeVPCMEMCPtRebin[22]             = { 5, 8, 10, 10, 8, 8, 8, 8, 8, 8,
                                                         8, 8, 8, 8, 10, 10, 16, 5, 5, 5, 5, 5};
+    Double_t fBinsEta5TeV2017PCMEMCPt[33]          = { 0., 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,    2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
+                                                        5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 20.0,  25.0, 30.0, 40.0};
+    Int_t fBinsEta5TeV2017PCMEMCPtRebin[32]        = { 10, 10, 8, 8, 5, 4, 4, 4, 4, 4,         4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                                                        8, 8, 8, 8, 8, 10, 10, 16, 16, 20,      20, 20};
     Double_t fBinsEta5TeV2017DalitzPt[10]           = { 0., 0.6, 1.0, 1.4, 1.8, 2.2, 2.8, 4., 6., 10.};
     Int_t fBinsEta5TeV2017DalitzPtRebin[9]          = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
     Double_t fBinsEta5TeVEMCPt[23]                  = { 0., 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.8, 2.2, 2.6,
@@ -2816,7 +2820,7 @@
                   if ( mode == 0){
                       startPtBin = 1;
                   } else if ( mode == 2 ){
-                      startPtBin = 6;
+                      startPtBin = 1;
                   } else
                     startPtBin     = 7;
               }else{
@@ -3681,9 +3685,9 @@
                     }
                 } else if ( mode == 2 ){
                   if(energy.Contains("2017")){
-                    maxNBins = 18;
+                    maxNBins = 32;
                     for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEta5TeVPCMEMCPt[i];
+                        binning[i] = fBinsEta5TeV2017PCMEMCPt[i];
                     }
                   } else {
                     maxNBins = 18;
@@ -5561,7 +5565,10 @@
                                     fNRebin[i]  = fBinsEta5TeVPtRebin[i];
                                 }
                             } else if( modi == 2 ){
-                              fNRebin[i] = fBinsEta5TeVPCMEMCPtRebin[i];
+                              if(energy.Contains("2017"))
+                                fNRebin[i] = fBinsEta5TeV2017PCMEMCPtRebin[i];
+                              else
+                                fNRebin[i] = fBinsEta5TeVPCMEMCPtRebin[i];
                             } else if ( modi == 4 ){
                               if(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
                                 fNRebin[i] = fBinsEta5TeVEMCPtRebinTrigger1[i];
