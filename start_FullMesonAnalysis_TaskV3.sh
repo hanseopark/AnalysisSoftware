@@ -53,7 +53,7 @@ function GiveBinning5TeV()
      echo "how many p_t bins do you want to use for the pi0? 12+13+14 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
 
      read answer
-     if [ $answer -lt 50 ]; then
+     if [ $answer -lt 90 ]; then
        echo "$answer bins --> max p_t = XX GeV/c ...";
        correctPi0=1
        BinsPtPi0=$answer

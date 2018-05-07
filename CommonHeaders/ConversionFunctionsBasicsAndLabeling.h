@@ -781,7 +781,7 @@
     //***************** return proper labeling for collision system **********************
     //************************************************************************************
     TString ReturnFullCollisionsSystem( TString fEnergyFlagOpt){
-        if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
+      if(fEnergyFlagOpt.CompareTo("7TeV") == 0){
             return  "pp, #sqrt{#it{s}} = 7 TeV";
         } else if( fEnergyFlagOpt.CompareTo("8TeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 8 TeV";

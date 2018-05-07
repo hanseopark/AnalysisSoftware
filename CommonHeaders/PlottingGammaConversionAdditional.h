@@ -2875,6 +2875,10 @@
                 return kCyan+1;
             } else if (!generator.CompareTo("LHC17q_woSDD")){
                 return kYellow+2;
+            } else if (generator.Contains("LHC17p")){
+                return kBlue+1;
+            } else if (generator.Contains("LHC17q")){
+                return kGreen+2;
             } else if (!generator.CompareTo("LHC17l3b_fast")){
                 return kRed+1;
             } else if (!generator.CompareTo("LHC17l4b_fast")){
@@ -2887,6 +2891,8 @@
                 return kRed-6;
             } else if (!generator.CompareTo("LHC17l4b_woSDD")){
                 return kPink+6;
+            } else if (generator.Contains("LHC17l3b")){
+                return kOrange+7;
             } else {
                 return kOrange-9;
             }
@@ -3386,7 +3392,7 @@
         }
         if (!energy.CompareTo("5TeV") || !energy.CompareTo("5.023TeV") || !energy.CompareTo("5.02TeV") || !energy.CompareTo("5TeV2017")){
             if (!generator.CompareTo("")){
-                return 20;
+                return 34;
             } else if(generator.Contains("LHC16h8a")){
                 return 30;
             } else if(generator.Contains("LHC16h8b")){
@@ -3406,7 +3412,7 @@
             } else if(generator.Contains("LHC17l4b")){
                 return 29;
             } else {
-                return 24;
+                return 34;
             }
         }
         if (!energy.CompareTo("7TeV")){
