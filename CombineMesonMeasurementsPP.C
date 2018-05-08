@@ -72,7 +72,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     /*  8TeV    */  fileName[4]                 = "CombinationInputPP/8TeV/CombinedResultsPaperPP8TeV_2017_11_16.root";
     /*  13TeV   */  fileName[5]                 = "CombinationInputPP/13TeV/";
     TString         fileNameTheory              = "ExternalInput/Theory/TheoryCompilationPP.root";
-    TString         suffix                      = "eps";
+    TString         suffix                      = "pdf";
 
     Int_t includeEnergy[6]                      = {1,1,1,1,1,0};
     Int_t numActiveMeas                         = 5;
@@ -1412,7 +1412,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#pi^{0} #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
-    TLegend* legendInvYieldPi02    = GetAndSetLegend2(0.2, 0.12, 0.5, 0.12+textsizeLabelsXSec[0]*(numActiveMeas+1)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    TLegend* legendInvYieldPi02    = GetAndSetLegend2(0.2, 0.12, 0.5, 0.12+textsizeLabelsXSec[0]*(numActiveMeas), textSizeLabelsPixel);
     legendInvYieldPi02->SetNColumns(1);
     legendInvYieldPi02->SetMargin(0.2);
     legendRunningIndex = numActiveMeas-1;
