@@ -183,6 +183,15 @@
                                                         2.6, 3.0, 3.4, 3.8, 4.5,
                                                         6.0, 8., 12., 20.0, 30.0};
 
+    Double_t fBinsPi05TeV2017PtDCal[73]              = { 0.0, 1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.5, 1.55,
+                                                        1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05,
+                                                        2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.6,
+                                                        2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6,
+                                                        3.7, 3.8, 3.9, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2,
+                                                        5.4, 5.6, 5.8, 6.0, 6.2, 6.4, 6.6, 6.8, 7.0, 7.5,
+                                                        8.0, 8.5, 9.0, 9.5, 10.0, 11.0, 12.0, 13.0, 14.0, 16.0,
+                                                        20.0, 25.0, 30.0};
+
     Double_t fBinsPi05TeVPtPCMDCal[25]              = { 0.0, 1., 1.2, 1.4, 1.6,
                                                         1.7, 1.8, 1.9, 2.0, 2.1,
                                                         2.2, 2.4, 2.6, 2.8, 3.0,
@@ -249,6 +258,16 @@
                                                         8, 8, 8, 8, 8,
                                                         8, 4, 4, 4, 4,
                                                         4, 4, 8, 16};
+
+    Int_t fBinsPi05TeV2017PtRebinDCal[72]             = { 2, 2, 2, 2, 2, 2, 16, 16, 8, 8,
+                                                        4, 4, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                                                        4, 4, 4, 4, 4, 8, 8, 16, 16, 16,
+                                                        16, 16 };
+
     Double_t fBinsPi05TeVPtRebinPCMDCal[24]              = { 1, 1, 8, 4, 4,
                                                         4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4,
@@ -1898,7 +1917,7 @@
                 if ( mode == 4 )
                     return 24;
                 if ( mode == 12 )
-                    return 5;
+                    return 12;
                 if ( mode == 13 )
                     return 12;
                 else
@@ -2618,6 +2637,8 @@
                         startPtBin = 3;
                     } else if ( mode == 4){
                         startPtBin = 3;
+                    } else if ( mode == 12){
+                        startPtBin = 7;
                     } else
                       startPtBin     = 7;
                 }else {
@@ -3200,10 +3221,17 @@
                       }
                     }
                   } else if ( mode == 12 ){
+                    if(energy.Contains("2017")){
+                      maxNBins = 72;
+                      for(Int_t i = 0; i < maxNBins+1; i++){
+                          binning[i] = fBinsPi05TeV2017PtDCal[i];
+                      }
+                    } else {
                       maxNBins = 14;
                       for(Int_t i = 0; i < maxNBins+1; i++){
                           binning[i] = fBinsPi05TeVPtDCal[i];
                       }
+                    }
                   } else if ( mode == 13 ){
                     if(energy.Contains("2017")){
                         maxNBins = 80;
@@ -4575,7 +4603,10 @@
                               fNRebin[i] = fBinsPi05TeVEMCPtRebin[i];
                           }
                         } else if ( modi == 12 ) {
-                          fNRebin[i] = fBinsPi05TeVPtRebinDCal[i];
+                          if(energy.Contains("2017"))
+                            fNRebin[i] = fBinsPi05TeV2017PtRebinDCal[i];
+                          else
+                            fNRebin[i] = fBinsPi05TeVPtRebinDCal[i];
                         } else if ( modi == 13 ) {
                           if(energy.Contains("2017"))
                             fNRebin[i] = fBinsPi05TeV2017PtRebinPCMDCal[i];
@@ -5610,7 +5641,7 @@
             //********************************** Eta for pp 5TeV*******************************************
             //*********************************************************************************************
             } else if (energy.CompareTo("5TeV") == 0 || energy.CompareTo("5TeV2017") == 0) {
-                
+
               if (triggerSet == -1){
                   if (trigger.CompareTo("52") == 0){
                       specialTrigg = 1;    // L0
