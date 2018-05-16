@@ -1402,6 +1402,9 @@
                                                         4.5, 5.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0 };
     Double_t fBinsEtapPb5TeVPCMR2Cent2Pt[17]        = { 0., 0.4, 0.6, 0.8, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5,    4.0, 5.0, 7.0,10.0,12.0,16.0, 20.0 };
 
+    Double_t fBinsEtapPb5TeVR2Pt[40]                = { 0., 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,    1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,
+                                                        3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,   8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 20.0,  25.0, 30.0, 40.0};
+
     Double_t fBinsEtapPb5TeVPCMEMCR2CentPt[30]      = { 0., 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4,    2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0,
                                                         5.5, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 16.0, 20.0, 25.0};
     // Eta pt binning cent (small) run 2
@@ -1409,7 +1412,6 @@
                                                         5.5, 6.0, 7.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0};
     Double_t fBinsEtapPb5TeVPCMPHOSR2SCentPt[25]    = { 0., 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.5, 5.0, 6.0, 8.0, 12.0};
-
     // Eta pt binning per run 2
     Double_t fBinsEtapPb5TeVPCMPHOSR2PerPt[27]      = { 0., 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0,    2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,
                                                         4.5, 5.0, 5.5, 6.0, 8.0, 10.0, 12.0};
@@ -2950,7 +2952,7 @@
                 } else if ( mode == 4 || mode == 12 ){
                     startPtBin     = 3;
                 } else if ( mode == 5){
-                    startPtBin     = 13;
+                    startPtBin     = 10;
                 } else if ( mode == 10){
                     startPtBin     = 1;
                 } else if (mode == 20){
@@ -4386,9 +4388,9 @@
                         }
                     }
                 } else if (mode == 20 ){
-                    maxNBins = 19;
+                    maxNBins = 39;
                     for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEtapPb5TeVEMCPt[i];
+                        binning[i] = fBinsEtapPb5TeVR2Pt[i];
                     }
                 }
             } else if (energy.CompareTo("pPb_8TeV") == 0){

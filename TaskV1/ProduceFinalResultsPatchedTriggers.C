@@ -1464,6 +1464,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     } else if (mode == 0){
         maxEffiPi0      = 8e-3;
         minEffiPi0      = 5e-5;
+    } else if (mode == 5){
+      maxEffiPi0        = 8e-1;
+      minEffiPi0        = 5e-2;
     }
 
     TH2F * histo2DEffiPi0;
@@ -1514,6 +1517,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         maxEffiSecPi0                   = maxEffiPi0/2;
         minEffiSecPi0                   = minEffiPi0/100;
     } else if (mode == 4){
+        maxEffiSecPi0                   = 10*maxEffiPi0;
+        minEffiSecPi0                   = 5*minEffiPi0;
+    } else if (mode == 5){
         maxEffiSecPi0                   = 10*maxEffiPi0;
         minEffiSecPi0                   = 5*minEffiPi0;
     } else if (mode == 10){
@@ -4463,6 +4469,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         } else if (mode == 0) {
             maxEffiEta          = 8e-3;
             minEffiEta          = 1e-4;
+        } else if (mode == 5) {
+          maxEffiEta            = 8e-1;
+          minEffiEta            = 3e-3;
         }
 
         if(optionEnergy.CompareTo("8TeV")==0){
@@ -4580,8 +4589,13 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         if (mode == 0){
             maxAccEta       = 1.05;
             minAccEta       = 0.5;
+        } else if (mode == 3){
+            minAccEta       = 0.;
+            maxAccEta       = 0.1;
+        } else if (mode == 5){
+            minAccEta       = 0.;
+            maxAccEta       = 0.05;
         }
-
 
         if(optionEnergy.CompareTo("8TeV")==0){
             if(mode == 2){

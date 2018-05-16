@@ -4583,15 +4583,16 @@
     //*************************************************************************************************************
     // Fill chi2 histogram for null hypothesis
     //*************************************************************************************************************
-    void FillChi2HistForNullHypo    (  Int_t    n_pseudo_exp,
-                                    TH1F*    &histo,
-                                    TGraph*  &g_rel_stat_plus_type_a_error,
-                                    TGraph*  &g_rel_type_b_error,
-                                    Double_t &rel_type_c_error,
-                                    Bool_t   anti_corr_type_b) {
+    void FillChi2HistForNullHypo    (   Int_t    n_pseudo_exp,
+                                        TH1F*    &histo,
+                                        TGraph*  &g_rel_stat_plus_type_a_error,
+                                        TGraph*  &g_rel_type_b_error,
+                                        Double_t &rel_type_c_error,
+                                        Bool_t   anti_corr_type_b,
+                                        // null hypothesis: double ratio R  = 1
+                                        Double_t R_true                     = 1.0
+                                    ) {
 
-        // null hypothesis: double ratio R = 1
-        Double_t R_true                     = 1.0;
         // random numbers
         TRandom rndm;
 
@@ -4610,6 +4611,7 @@
                 } else {
                     R_mod                   = R_true * (1. + eps_b * rel_type_b_error) * (1. + eps_c * rel_type_c_error);
                 }
+//                 cout << R_true << "\t mod: \t"<< R_mod << "  " << ip << " " << endl;
 
                 Double_t rel_stat_plus_type_a_err           = g_rel_stat_plus_type_a_error->GetY()[ip];
                 Double_t abs_stat_plus_type_a_err_scaled    = R_mod * rel_stat_plus_type_a_err;
@@ -4896,11 +4898,11 @@
     // Fill chi2 histogram for null hypothesis
     //*************************************************************************************************************
     void FillChi2HistForNullHypoPValue    (  ULong64_t    n_pseudo_exp,
-                                    TGraphAsymmErrors*    graphTrue,
-                                    TH1D*    &histo,
-                                    TGraph*  &graphRelStatPlusSysError,
-                                    Bool_t useFixedValue,
-                                    TString energy
+                                            TGraphAsymmErrors*    graphTrue,
+                                            TH1D*    &histo,
+                                            TGraph*  &graphRelStatPlusSysError,
+                                            Bool_t useFixedValue,
+                                            TString energy
                                           ) {
 
         // null hypothesis:
@@ -4932,8 +4934,8 @@
         }
     }
 
-    Double_t Chi2ForNullHypoPValue(TGraphErrors* g, TGraphAsymmErrors*    graphTrue,  Bool_t useFixedValue, TString energy) {
-        Double_t R_true                             = 1.0;
+    Double_t Chi2ForNullHypoPValue(TGraphErrors* g, TGraphAsymmErrors*    graphTrue,  Bool_t useFixedValue, TString energy, Double_t R_true  = 1.0) {
+
         if(useFixedValue){
             cout << "expected value is " << R_true << endl;
         }

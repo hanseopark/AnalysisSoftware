@@ -885,12 +885,19 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             if( fEnergyFlag.Contains("PbPb")){                      // PCM
                 fMesonFitRange[0]       = 0.07; //0.07 -> 0.05
                 fMesonFitRange[1]       = 0.25; //0.22 -> 0.25
-            } else if( fEnergyFlag.Contains("pPb")){
+            } else if( fEnergyFlag.Contains("pPb_5.023TeV")){
                 fMesonFitRange[0]       = 0.03;
                 fMesonFitRange[1]       = 0.25;
             } else {
                 fMesonFitRange[0]       = 0.03;
                 fMesonFitRange[1]       = 0.25;
+            }
+        } else if (mode == 3){                        // PCM-EMC
+            fMesonFitRange[0]       = 0.01;
+            fMesonFitRange[1]       = 0.3;
+            if (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0){
+                fMesonFitRange[0]           = 0.05;
+                fMesonFitRange[1]           = 0.25;
             }
         } else if (mode == 2 || mode == 13){                        // PCM-EMC
             fMesonFitRange[0]       = 0.05;

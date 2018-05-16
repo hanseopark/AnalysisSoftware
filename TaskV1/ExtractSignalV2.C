@@ -4110,7 +4110,7 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
     //--------------------------------------------------------------------------------------
     fHistoMappingSignalInvMassPtBinSingle->GetXaxis()->SetRangeUser(fMesonMassPlotRange[0],fMesonMassPlotRange[1]);
     Double_t mesonAmplitude     = fHistoMappingSignalInvMassPtBinSingle->GetMaximum();
-    if(fMode == 4){
+    if( fMode == 4 || fMode == 5 ){
       mesonAmplitude = 0;
       for(Int_t i=fHistoMappingSignalInvMassPtBinSingle->FindBin(fMesonFitRange[0]); i<fHistoMappingSignalInvMassPtBinSingle->FindBin(fMesonFitRange[1]) ; i++){
         if(fHistoMappingSignalInvMassPtBinSingle->GetBinContent(i)>mesonAmplitude) mesonAmplitude = fHistoMappingSignalInvMassPtBinSingle->GetBinContent(i);
@@ -4217,7 +4217,6 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                     fMesonLambdaTailRange[0]    = 0.005;
                     fMesonLambdaTailRange[1]    = 0.005;
                 }
-                
             } else {                                                // defaults
                 mesonAmplitudeMin = mesonAmplitude*92./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;
@@ -4250,7 +4249,6 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                 fMesonLambdaTail            = 0.01;
                 fMesonLambdaTailRange[0]    = 0.01;
                 fMesonLambdaTailRange[1]    = 0.01;
-                
             } else {                                                // defaults
                 mesonAmplitudeMin = mesonAmplitude*50./100.;
                 mesonAmplitudeMax = mesonAmplitude*115./100.;

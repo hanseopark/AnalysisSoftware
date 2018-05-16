@@ -1702,7 +1702,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                                             { 0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0 },  // MB R1
                                             { 0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-5 R2
                                             { 0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 0-20 R2
-                                            { 0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // MB R2
+                                            { 0,  7,  10,  5,  7,  0,  0,  0,  0,  0,  0 },  // MB R2
                                             { 0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 60-100 R2
                                             { 0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 10-20
                                             { 0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0 },  // 80-100
@@ -1720,7 +1720,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                                             { 3,  0,  7,  5,  5,  0,  0,  0,  0,  0, 0 },  // MB R1
                                             { 3,  0,  6,  4,  5,  0,  0,  0,  0,  0, 0 },  // 0-5 R2
                                             { 3,  0,  6,  4,  5,  0,  0,  0,  0,  0, 0 },  // 0-20 R2
-                                            { 3,  0,  6,  4,  5,  0,  0,  0,  0,  0, 0 },  // MB R2
+                                            { 2,  11,  13,  8,  10,  0,  0,  0,  0,  0, 0 },  // MB R2
                                             { 3,  0,  6,  4,  5,  0,  0,  0,  0,  0, 0 },  // 60-100 R2
                                             { 3,  0,  6,  4,  5,  0,  0,  0,  0,  0, 0 },  // 10-20
                                             { 3,  0,  6,  4,  5,  0,  0,  0,  0,  0, 0 },  // 80-100
@@ -1753,10 +1753,10 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                                             { 9, 0, 10, 8,  7, 0,  0,  0,  0,  0, 0 },  // 20-40
                                             { 9, 0, 10, 8,  7, 0,  0,  0,  0,  0, 0 },  // 40-60
                                             { 9, 0, 10, 8,  7, 0,  0,  0,  0,  0, 0 },  // 60-100
-                                            { 13, 0,  17-6-4, 11-2-2, 15,  0,  0,  0,  0,  0, 0 },  // MB R1
+                                            { 13, 0,  17, 11, 15,  0,  0,  0,  0,  0, 0 },  // MB R1
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 0-5
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 0-20
-                                            { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // MB R2
+                                            { 0, 0, 0, 0,  0, 0,  0,  0,  0,  0, 0 },  // MB R2
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 60-100
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 10-20
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 80-100
@@ -2985,6 +2985,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
     SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4, 1, 42, kTRUE, 31);
 
     for (Int_t cent = 0; cent < maxCentRun1+maxCentRun2; cent++){
+        if (!enableCentComb[cent]) continue;
         canvasInvYieldPi0->cd();
         histo2DYieldPi0->Draw("copy");
 
@@ -3061,7 +3062,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
     SetStyleTLatex( labelDetSysXSectionEta, 0.035,4, 1, 42, kTRUE, 31);
 
     for (Int_t cent = 0; cent < maxCentRun1+maxCentRun2; cent++){
-        if (!enableCent[cent]) continue;
+        if (!enableCentComb[cent]) continue;
         canvasInvYieldEta->cd();
         histo2DYieldEta->Draw("copy");
 
@@ -3116,7 +3117,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
 
             legendXSectionEta->Draw();
 
-        canvasInvYieldEta->SaveAs(Form("%s/Eta_InvYieldCompAllSystems_Comb_%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), suffix.Data()));
+        canvasInvYieldEta->SaveAs(Form("%s/Eta_InvYieldCompAllSystems_Comb_%s%s.%s",outputDir.Data(), centArrayOutput[cent].Data(), runArray[cent].Data(), suffix.Data()));
 
     }
 

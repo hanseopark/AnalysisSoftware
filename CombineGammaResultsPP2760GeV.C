@@ -184,7 +184,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         markerSizeDet[i]                            = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kFALSE);
         markerSizeDetMC[i]                          = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE);
     }
- 
+
     Color_t colorComb                               = GetColorDefaultColor("2.76TeV", "", "");
     Style_t markerStyleComb                         = GetDefaultMarkerStyle("2.76TeV", "", "");
     Size_t markerSizeComb                           = GetDefaultMarkerSize("2.76TeV", "", "");
@@ -355,7 +355,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         while(graphTheoryJETPHOXpp2760GeVCenter->GetX()[graphTheoryJETPHOXpp2760GeVCenter->GetN()-1] > xmaxNLO) graphTheoryJETPHOXpp2760GeVCenter->RemovePoint(graphTheoryJETPHOXpp2760GeVCenter->GetN()-1);
         while(graphTheoryJETPHOXDRpp2760GeV->GetX()[graphTheoryJETPHOXDRpp2760GeV->GetN()-1] > xmaxNLO) graphTheoryJETPHOXDRpp2760GeV->RemovePoint(graphTheoryJETPHOXDRpp2760GeV->GetN()-1);
         while(graphTheoryJETPHOXDRpp2760GeVCenter->GetX()[graphTheoryJETPHOXDRpp2760GeVCenter->GetN()-1] > xmaxNLO) graphTheoryJETPHOXDRpp2760GeVCenter->RemovePoint(graphTheoryJETPHOXDRpp2760GeVCenter->GetN()-1);
-        
+
         TGraphAsymmErrors* graphTheoryPOWHEGDRpp2760GeV    = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonPOWHEGInvYieldINT1_pp2760GeV_ALICECocktail");
         TGraph* graphTheoryPOWHEGDRpp2760GeVCenter         = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaDirectPhotonPOWHEGInvYieldINT1_pp2760GeV_ALICECocktail_Center");
         TGraphAsymmErrors* graphTheoryPOWHEGpp2760GeV      = (TGraphAsymmErrors*) fileTheory->Get("DirectPhoton/graphDirectPhotonPOWHEGInvYield_2760GeV");
@@ -2167,7 +2167,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     canvasDoubleRatio->Print(Form("%s/DR_Theory_pp2760GeV.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_Theory_pp2760GeV.pdf", outputDir.Data()));
-    
+
       hist2DDRDummySingle->GetYaxis()->SetRangeUser(0.91,1.29);
       hist2DDRDummySingle->DrawCopy();
 
@@ -2332,7 +2332,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
     canvasPurity->SetLogx(1);
 
     TH1F * histo1DPurity            = new TH1F("histo1DPurity", "histo1DPurity",1000, doubleRatioXpp[0], doubleRatioXpp[1]);
-    SetStyleHistoTH1ForGraphs(  histo1DPurity, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{pur}",  
+    SetStyleHistoTH1ForGraphs(  histo1DPurity, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{pur}",
                                 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.85*textSizeLabelsRel, textSizeLabelsRel, 0.9, 1.04);//(#times #epsilon_{pur})
     histo1DPurity->GetYaxis()->SetRangeUser(0.8, 1.07 );
     histo1DPurity->GetYaxis()->SetLabelOffset(0.001);
@@ -2854,7 +2854,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
             graphCombDirGammaSpectrumSystErr->Draw("E2same");
         }
         legendYieldDirGamma->Draw();
-        
+
         legendYieldDirGammaTheo2->AddEntry((TObject*)0,"NLO pQCD","");
         if (graphTheoryNLOpp2760GeV) {
             // DrawGammaSetMarkerTGraphAsym(graphTheoryNLOpp2760GeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
