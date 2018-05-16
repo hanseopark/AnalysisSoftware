@@ -729,8 +729,8 @@
                                                           6.6,  6.8,  7.0,  7.5,  8.0,      8.5,  9.0, 10.0, 12.0, 16.0,
                                                          20.0, 25.0, 30.0, 35.0, 40.0,      45.0, 50.0,55.0, 60.0, 65.0,
                                                          70.0, 75.0, 80.0, 85.0};             // Pi0  binning LHC16X
-
-
+                                                         
+                                                         
    Int_t fBinsPi013TeVPtRebin[83]                   =   { 4, 4, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
                                                           1, 1, 1, 1, 1,    1, 1, 1, 1, 1,
@@ -740,6 +740,153 @@
                                                           2, 2, 2, 2, 4,    4, 4, 4, 4, 4,
                                                           8, 5, 5, 5, 5,    5, 5, 5, 5, 5,
                                                           5, 5, 5};
+                                                         
+                                                         
+//    Double_t fBinsPi013TeVEMCPt[124]                 =   { 0.0, 1.4, 1.45, 1.5, 1.55,    1.6, 1.65, 1.7, 1.75, 1.8, 
+//                                                           1.85, 1.9, 1.95, 2.0, 2.05,   2.1, 2.15, 2.2, 2.25, 2.3, 
+//                                                           2.35, 2.4, 2.45, 2.5, 2.55,   2.6, 2.65, 2.7, 2.75, 2.8, 
+//                                                           2.85, 2.9, 2.95, 3.0, 3.05,   3.1, 3.15, 3.2, 3.25, 3.3, 
+//                                                           3.35, 3.4, 3.45, 3.5, 3.55,   3.6, 3.65, 3.7, 3.75, 3.8, 
+//                                                           3.85, 3.9, 3.95, 4.0, 4.05,   4.1, 4.15, 4.2, 4.25, 4.3, 
+//                                                           4.35, 4.4, 4.45, 4.5, 4.55,   4.6, 4.65, 4.7, 4.75, 4.8, 
+//                                                           4.85, 4.9, 4.95, 5.0, 5.1,    5.2, 5.3, 5.4, 5.5, 5.6, 
+//                                                           5.7, 5.8, 5.9, 6.0, 6.1,      6.2, 6.3, 6.4, 6.5, 6.6, 
+//                                                           6.7, 6.8, 6.9, 7.0, 7.1,      7.2, 7.3, 7.4, 7.5, 7.6, 
+//                                                           7.7, 7.8, 7.9, 8.0, 8.2,      8.4, 8.6, 8.8, 9.0, 9.2, 
+//                                                           9.4, 9.6, 9.8, 10.0, 10.5,    11.0, 11.5, 12.0, 13.0, 14.0,
+//                                                           15.0, 16.0, 18.0, 20.0};
+                                                          
+    Double_t fBinsPi013TeVEMCPt[90]                  =   { 0.0,  1.4,  1.5,  1.6,  1.7,     1.8,  1.9,  2.0,  2.1,  2.2, 
+                                                           2.3,  2.4,  2.5,  2.6,  2.7,     2.8,  2.9,  3.0,  3.1,  3.2, 
+                                                           3.3,  3.4,  3.5,  3.6,  3.7,     3.8,  3.9,  4.0,  4.1,  4.2, 
+                                                           4.3,  4.4,  4.5,  4.6,  4.7,     4.8,  4.9,  5.0,  5.1,  5.2, 
+                                                           5.3,  5.4,  5.5,  5.6,  5.7,     5.8,  5.9,  6.0,  6.1,  6.2, 
+                                                           6.3,  6.4,  6.5,  6.6,  6.7,     6.8,  6.9,  7.0,  7.1,  7.2, 
+                                                           7.3,  7.4,  7.5,  7.6,  7.7,     7.8,  7.9,  8.0,  8.2,  8.4,
+                                                           8.6,  8.8,  9.0,  9.2,  9.4,     9.6,  9.8, 10.0, 10.5, 11.0,
+                                                           11.5,12.0, 12.5, 13.0, 13.5,    14.0, 15.0, 16.0, 18.0, 20.0};
+                                                          
+    Int_t fBinsPi013TeVEMCPtRebin[89]               =   { 4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          8, 8, 8, 8, 8,    10, 10, 10, 10};
+/*                                                          
+                                                          
+                                                          
+    Double_t fBinsPi013TeVEMCPt[72]                  =   { 0.0,  1.4,  1.5,  1.6,  1.7,     1.8,  1.9,  2.0,  2.1,  2.2, 
+                                                           2.3,  2.4,  2.5,  2.6,  2.7,     2.8,  2.9,  3.0,  3.1,  3.2, 
+                                                           3.3,  3.4,  3.5,  3.6,  3.7,     3.8,  3.9,  4.0,  4.1,  4.2, 
+                                                           4.3,  4.4,  4.5,  4.6,  4.7,     4.8,  4.9,  5.0,  5.1,  5.2, 
+                                                           5.3,  5.4,  5.5,  5.6,  5.7,     5.8,  5.9,  6.0,  6.2,  6.4,
+                                                           6.6,  6.8,  7.0,  7.2,  7.4,     7.6,  7.8,  8.0,  8.4,  8.8, 
+                                                           9.2,  9.6, 10.0, 10.5, 11.0,    12.0, 13.0, 14.0, 15.0, 16.0, 
+                                                           18.0, 20.0};
+                                                          
+    Int_t fBinsPi013TeVEMCPtRebin[71]               =   { 4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4, 4, 4, 4, 4,    4, 4, 4, 4, 4,
+                                                          4};*/
+                                                          
+    Double_t fBinsPi013TeVEMCEG1Pt[92]                   = { 0.0, 10.6, 10.7, 10.8, 10.9,     11.0, 11.1, 11.2, 11.3, 11.4, 
+                                                            11.5, 11.6, 11.7, 11.8, 11.9,     12.0, 12.1, 12.2, 12.3, 12.4, 
+                                                            12.5, 12.6, 12.7, 12.8, 12.9,     13.0, 13.1, 13.2, 13.3, 13.4, 
+                                                            13.5, 13.6, 13.7, 13.8, 13.9,     14.0, 14.1, 14.2, 14.3, 14.4, 
+                                                            14.5, 14.6, 14.7, 14.8, 14.9,     15.0, 15.1, 15.2, 15.3, 15.4, 
+                                                            15.5, 15.6, 15.7, 15.8, 15.9,     16.0, 16.1, 16.2, 16.3, 16.4, 
+                                                            16.5, 16.6, 16.7, 16.8, 16.9,     17.0, 17.1, 17.2, 17.3, 17.4, 
+                                                            17.5, 17.6, 17.7, 17.8, 17.9,     18.0, 18.2, 18.4, 18.6, 18.8, 
+                                                            19.0, 19.2, 19.4, 19.6, 19.8,     20.0, 20.5, 21.0, 22.5, 23.0,
+                                                            24.0, 25.0};
+
+    Int_t fBinsPi013TeVEMCEG1PtRebin[91]                   = { 8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                               8,  8,  8,  8,  8,     8,  8,  8,  8,  8,
+                                                              10, 10, 10, 10, 10,    10, 10, 10, 10, 10,
+                                                              12};
+    
+    Double_t fBinsPi013TeVEMCEG2Pt[108]                  = {  0.0,  5.0,  5.1,  5.2,  5.3,     5.4,  5.5,  5.6,  5.7,  5.8,  
+                                                              5.9,  6.0,  6.1,  6.2,  6.3,     6.4,  6.5,  6.6,  6.7,  6.8,  
+                                                              6.9,  7.0,  7.1,  7.2,  7.3,     7.4,  7.5,  7.6,  7.7,  7.8,  
+                                                              7.9,  8.0,  8.1,  8.2,  8.3,     8.4,  8.5,  8.6,  8.7,  8.8,  
+                                                              8.9,  9.0,  9.1,  9.2,  9.3,     9.4,  9.5,  9.6,  9.7,  9.8,
+                                                              9.9, 10.0, 10.1, 10.2, 10.3,    10.4, 10.5, 10.6, 10.7, 10.8, 
+                                                             10.9, 11.0, 11.1, 11.2, 11.3,    11.4, 11.5, 11.6, 11.7, 11.8, 
+                                                             11.9, 12.0, 12.1, 12.2, 12.3,    12.4, 12.5, 12.6, 12.7, 12.8, 
+                                                             12.9, 13.0, 13.1, 13.2, 13.3,    13.4, 13.5, 13.6, 13.7, 13.8, 
+                                                             13.9, 14.0, 14.2, 14.4, 14.6,    14.8, 15.0, 15.2, 15.4, 15.6,
+                                                             15.8, 16.0, 16.5, 17.0, 17.5,    18.0, 19.0, 20.0};
+
+    Int_t fBinsPi013TeVEMCEG2PtRebin[107]             = { 8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                             8, 8, 8, 8, 8,     8, 8};
+    
+    
+                                                          
+    Double_t fBinsEta13TeVEMCPt[19]                   = { 0.0,  2.0,  2.4,  2.8,  3.2,    3.6,  4.0,  4.5,  5.0,  5.5,
+                                                          6.0,  7.0,  8.0,  9.0, 10.0,   12.0, 16.0, 20.0, 25.0};
+
+    Int_t fBinsEta13TeVEMCPtRebin[18]                   = { 8,  8,  8,  8,  8,    12, 12, 12, 12, 12,
+                                                           16, 16, 16, 16, 16,    16, 16, 20};
+    
+    Double_t fBinsEta13TeVEMCEG1Pt[82]                   = { 10.6, 10.7, 10.8, 10.9, 11.0,     11.1, 11.2, 11.3, 11.4, 11.5, 
+                                                             11.6, 11.7, 11.8, 11.9, 12.0,     12.1, 12.2, 12.3, 12.4, 12.5, 
+                                                             12.6, 12.7, 12.8, 12.9, 13.0,     13.1, 13.2, 13.3, 13.4, 13.5, 
+                                                             13.6, 13.7, 13.8, 13.9, 14.0,     14.2, 14.4, 14.6, 14.8, 15.0, 
+                                                             15.2, 15.4, 15.6, 15.8, 16.0,     16.2, 16.4, 16.6, 16.8, 17.0, 
+                                                             17.2, 17.4, 17.6, 17.8, 18.0,     18.2, 18.4, 18.6, 18.8, 19.0, 
+                                                             19.2, 19.4, 19.6, 19.8, 20.0,     20.5, 21.0, 21.5, 22.0, 22.5,
+                                                             23.0, 23.5, 24.0, 25.0, 26.0,     28.0, 30.0, 35.0, 40.0, 50.0, 
+                                                             60.0, 80.0};
+
+    Int_t fBinsEta13TeVEMCEG1PtRebin[81]                      = { 6, 6, 6, 6, 6,     6, 6, 6, 6, 6,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 16, 16, 16,
+                                                                  16};
+    
+    Double_t fBinsEta13TeVEMCEG2Pt[75]                   = { 5.0,  5.1,  5.2,  5.3,  5.4,      5.5,  5.6,  5.7,  5.8,  5.9,  
+                                                             6.0,  6.1,  6.2,  6.3,  6.4,      6.5,  6.6,  6.7,  6.8,  6.9,  
+                                                             7.0,  7.1,  7.2,  7.3,  7.4,      7.5,  7.6,  7.7,  7.8,  7.9,  
+                                                             8.0,  8.1,  8.2,  8.3,  8.4,      8.5,  8.6,  8.7,  8.8,  8.9,  
+                                                             9.0,  9.1,  9.2,  9.3,  9.4,      9.5,  9.6,  9.7,  9.8,  9.9,  
+                                                            10.0, 10.2, 10.4, 10.6, 10.8,     11.0, 11.2, 11.4, 11.6, 11.8, 
+                                                            12.0, 12.5, 13.0, 13.5, 14.0,     14.5, 15.0, 16.0, 17.0, 18.0,
+                                                            20.0, 25.0, 30.0, 40.0, 50.0};
+
+    Int_t fBinsEta13TeVEMCEG2PtRebin[74]                      = { 6, 6, 6, 6, 6,     6, 6, 6, 6, 6,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 8, 8, 8, 8,     8, 8, 8, 8, 8,
+                                                                  8, 10};
 
    //EMC7
    Double_t fBinsPi013TeVPCMTriggerEMC7Pt[65]       =   { 0.0,  0.3,  0.4,  0.5,  0.6,      0.7,  0.8,  0.9,  1.0,  1.1,
@@ -1761,9 +1908,15 @@
         } else if ( (totBins+2-startBin) < 109){
             columns     = 12;
             rows        = 9;
-        } else {
+        } else if ( (totBins+2-startBin) < 121){
             columns     = 12;
             rows        = 10;
+        } else if ( (totBins+2-startBin) < 133){
+            columns     = 12;
+            rows        = 11;
+        } else {
+            columns     = 12;
+            rows        = 12;
         }
         cout << "nColumns: " << columns << "\t nRows: "  << rows << "\t nTotbins: " << (totBins+1-startBin) << endl;
     }
@@ -3089,7 +3242,6 @@
     //*************************************************************************************************
     //******************** GetBinning for general combination *****************************************
     //*************************************************************************************************
-<<<<<<< 69b3d42e3ef82f49e283a62a42e2cf2951aba6f0
     Int_t GetBinning(   Double_t*   binning,
                         Int_t       &binningMax,
                         TString     meson           = "Pi0",
@@ -3319,6 +3471,18 @@
                         maxNBins= 94;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTriggerEG2Pt)/sizeof(fBinsPi013TeVPCMTriggerEG2Pt[0])))-1;
                     }
+                } else if(mode==4){
+                    if (SpecialTrigger == 0){
+                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCPt)/sizeof(fBinsPi013TeVEMCPt[0])) - 1;
+                        binningMax = maxNBins;
+                    } else if (SpecialTrigger == 2){
+                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCEG1Pt)/sizeof(fBinsPi013TeVEMCEG1Pt[0])) - 1;
+                        binningMax = maxNBins;
+                    } else if (SpecialTrigger == 3){
+                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCEG2Pt)/sizeof(fBinsPi013TeVEMCEG2Pt[0])) - 1;
+                        binningMax = maxNBins;
+                    }
+                    
                 } else {
                         maxNBins= 37;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMEMCPt)/sizeof(fBinsPi013TeVPCMEMCPt[0])))-1;
@@ -3339,6 +3503,14 @@
                             binning[i]      = fBinsPi013TeVPCMTriggerEG1Pt[i];
                         } else if (SpecialTrigger==3){
                             binning[i]      = fBinsPi013TeVPCMTriggerEG2Pt[i];
+                        }
+                    } else if (mode==4){
+                        if (SpecialTrigger == 0) {
+                            binning[i]      = fBinsPi013TeVEMCPt[i];
+                        } else if (SpecialTrigger == 2) {
+                            binning[i]      = fBinsPi013TeVEMCEG1Pt[i];
+                        } else if (SpecialTrigger == 3) {
+                            binning[i]      = fBinsPi013TeVEMCEG2Pt[i];
                         }
                     } else {
                         binning[i]      = fBinsPi013TeVPCMEMCPt[i];
@@ -3859,7 +4031,7 @@
                     }
                 }
             } else if (energy.CompareTo("13TeV") == 0){
-                if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
+                if ( mode == 2 || mode == 13 || mode == 12  ){
                     maxNBins = 17;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta13TeVPt[i];
@@ -3899,6 +4071,26 @@
                             binning[i]      = fBinsEta13TeVPCMTriggerEG1Pt[i];
                         } else if (SpecialTrigger==3){
                             binning[i]      = fBinsEta13TeVPCMTriggerEG2Pt[i];
+                        }
+                    }
+                } else if(mode==4){
+                    if (SpecialTrigger == 0){
+                        maxNBins = (Int_t) (sizeof(fBinsEta13TeVEMCPt)/sizeof(fBinsEta13TeVEMCPt[0])) - 1;
+                        binningMax = maxNBins;
+                    } else if (SpecialTrigger == 2){
+                        maxNBins = (Int_t) (sizeof(fBinsEta13TeVEMCEG1Pt)/sizeof(fBinsEta13TeVEMCEG1Pt[0])) - 1;
+                        binningMax = maxNBins;
+                    } else if (SpecialTrigger == 3){
+                        maxNBins = (Int_t) (sizeof(fBinsEta13TeVEMCEG2Pt)/sizeof(fBinsEta13TeVEMCEG2Pt[0])) - 1;
+                        binningMax = maxNBins;
+                    }
+                    for (Int_t i = 0; i < maxNBins+1; i++) {
+                        if (SpecialTrigger == 0){
+                            binning[i]      = fBinsEta13TeVEMCPt[i];
+                        } else if (SpecialTrigger==2){
+                            binning[i]      = fBinsEta13TeVEMCEG1Pt[i];
+                        } else if (SpecialTrigger==3){
+                            binning[i]      = fBinsEta13TeVEMCEG2Pt[i];
                         }
                     }
                 } else if(mode == 40){
@@ -4342,8 +4534,8 @@
         //*************************************************************************************************
         if (setPi0.CompareTo("Pi0") == 0){
             fNBinsPt                = numberOfBins;
-            fBinsPt                 = new Double_t[120];
-            fNRebin                 = new Int_t[119];
+            fBinsPt                 = new Double_t[200];
+            fNRebin                 = new Int_t[199];
             //*********************************************************************************************
             //********************************** Pi0 for pp 0.9TeV*****************************************
             //*********************************************************************************************
@@ -4975,6 +5167,15 @@
                                 } else if (specialTrigg==3){
                                     fNRebin[i]      = fBinsPi013TeVPCMTriggerEG2PtRebin[i];
                                 }
+                            } else if(modi==4){
+                                if (specialTrigg == 0 ){
+                                    fNRebin[i]      = fBinsPi013TeVEMCPtRebin[i];
+                                } else if (specialTrigg==2){
+                                    fNRebin[i]      = fBinsPi013TeVEMCEG1PtRebin[i];
+                                } else if (specialTrigg==3){
+                                    fNRebin[i]      = fBinsPi013TeVEMCEG2PtRebin[i];
+                                }
+                                
                             } else {
                                 fNRebin[i]      = fBinsPi013TeVPCMEMCPtRebin[i];
                             }
@@ -5477,8 +5678,8 @@
         //*************************************************************************************************
         } else if (setPi0.CompareTo("Eta") == 0 || setPi0.CompareTo("Pi0EtaBinning") == 0){
             fNBinsPt                = numberOfBins;
-            fBinsPt                 = new Double_t[50];
-            fNRebin                 = new Int_t[49];
+            fBinsPt                 = new Double_t[150];
+            fNRebin                 = new Int_t[149];
             //*********************************************************************************************
             //********************************** Eta for pp 0.9 TeV****************************************
             //*********************************************************************************************
@@ -5967,6 +6168,9 @@
                     fStartPtBin=1;
                     GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA);
                     CheckBinSize(fNBinsPt,maxPtBinAvail,kTRUE);
+                } else if (modi == 4){
+                    fStartPtBin=1;
+                    GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA);
                 } else if (fNBinsPt > 24 ) {
                     cout << "You have chosen to have more than 24 bins for Eta, this is not possible, it will be reduced to 34" << endl;
                     fNBinsPt        = 24;
@@ -5989,7 +6193,21 @@
                                 fNRebin[i]  = fBinsPi0EtaBinning13TeVPtRebin[i];
                             }
                         }
-                    }else if(modi == 40){
+                    } else if(modi==4){
+                        if (i < fNBinsPt+1){
+                            if (setPi0.CompareTo("Eta") == 0){
+                                if (specialTrigg == 0 ){
+                                    fNRebin[i]      = fBinsEta13TeVEMCPtRebin[i];
+                                } else if (specialTrigg==2){
+                                    fNRebin[i]      = fBinsEta13TeVEMCEG1PtRebin[i];
+                                } else if (specialTrigg==3){
+                                    fNRebin[i]      = fBinsEta13TeVEMCEG2PtRebin[i];
+                                }
+                            } else {
+                                fNRebin[i]  = fBinsPi0EtaBinning13TeVPtRebin[i];
+                            }
+                        }
+                    } else if(modi == 40){
                       for (Int_t i = 0; i < fNBinsPt+2; i++) {
                         fBinsPt[i] = fBinsEtaPiPlPiMiPiZero13TevPtPCM[i];
                         if (i < fNBinsPt+1)
