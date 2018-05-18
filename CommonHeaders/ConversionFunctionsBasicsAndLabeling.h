@@ -3253,6 +3253,18 @@
                 return "EMC L0, INT7";
             case 53:
                 return "EMC L0, INT8";
+            case 71:
+                return "SPD HM, INT1";
+            case 72:
+                return "SPD HM, INT7";
+            case 73:
+                return "SPD HM, INT8";
+            case 74:
+                return "VZERO HM";
+            case 75:
+                return "VZERO & SPD HM";
+            case 76:
+                return "VZERO HM, SPD pile-up veto";
             case 81:
                 return "EMC L1-GA, INT7";
             case 83:
@@ -3265,9 +3277,9 @@
                 return "EMC L1-J1, INT7";
             case 95:
                 return "EMC L1-J2, INT7";
-
             default:
                 return "special Trigger cut not defined";
+
         }
     }
 
@@ -4487,6 +4499,18 @@
             return "EMC1";
         } else if (trigger == 52){                          // EMC7
             return "EMC7";
+        } else if (trigger == 71){                          // SHM1
+            return "SHM1";
+        } else if (trigger == 72){                          // SHM1
+            return "SHM7";
+        } else if (trigger == 73){                          // SHM1
+            return "SHM8";
+        } else if (trigger == 74){                          // SHM1
+            return "VHM";
+        } else if (trigger == 75){                          // SHM1
+            return "VHMSH2";
+        } else if (trigger == 76){                          // SHM1
+            return "VHM-SPD2";
         } else if (trigger == 80){                          // EGA
             return "EGA";
         } else if (trigger == 81){                          // EGA

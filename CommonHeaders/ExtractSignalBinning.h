@@ -3095,6 +3095,7 @@
                 } else if (mode == 2 || mode == 13){
                     startPtBin     = 1;
                     if (specialTrigg == 2 ) startPtBin = 11;
+                    else if (specialTrigg == 4 || specialTrigg == 5 ) startPtBin = 3;
                 } else if (mode == 4 || mode == 12){
                     startPtBin     = 1;
                 } else if (mode == 40){
@@ -3493,19 +3494,8 @@
                         maxNBins= 94;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEG2Pt)/sizeof(fBinsPi013TeVPCMTrigEG2Pt[0])))-1;
                     }
-                } else if(mode==4){
-                    if (SpecialTrigger == 0){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigINT7Pt)/sizeof(fBinsPi013TeVEMCTrigINT7Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    } else if (SpecialTrigger == 2){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG1Pt)/sizeof(fBinsPi013TeVEMCTrigEG1Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    } else if (SpecialTrigger == 3){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG2Pt)/sizeof(fBinsPi013TeVEMCTrigEG2Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    }
                 } else if(mode==2){
-                    if (SpecialTrigger == 0){
+                    if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                         maxNBins = 99;    //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
                         binningMax = maxNBins;
                     } else if (SpecialTrigger == 2){
@@ -3516,6 +3506,17 @@
                         binningMax = maxNBins;
                     } else {
                         maxNBins = 99;   //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
+                        binningMax = maxNBins;
+                    }
+                } else if(mode==4){
+                    if (SpecialTrigger == 0){
+                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigINT7Pt)/sizeof(fBinsPi013TeVEMCTrigINT7Pt[0])) - 1;
+                        binningMax = maxNBins;
+                    } else if (SpecialTrigger == 2){
+                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG1Pt)/sizeof(fBinsPi013TeVEMCTrigEG1Pt[0])) - 1;
+                        binningMax = maxNBins;
+                    } else if (SpecialTrigger == 3){
+                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG2Pt)/sizeof(fBinsPi013TeVEMCTrigEG2Pt[0])) - 1;
                         binningMax = maxNBins;
                     }
                 } else {
@@ -3532,7 +3533,7 @@
                     } else if (mode==0){
                         if (SpecialTrigger == -1) {
                             binning[i]      = fBinsPi013TeVPCMTrigCombPt[i];
-                        } else if (SpecialTrigger == 0){
+                        } else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                             binning[i]      = fBinsPi013TeVPCMTrigINT7Pt[i];
                         } else if (SpecialTrigger==1){
                             binning[i]      = fBinsPi013TeVPCMTrigEMC7Pt[i];
@@ -3541,21 +3542,21 @@
                         } else if (SpecialTrigger==3){
                             binning[i]      = fBinsPi013TeVPCMTrigEG2Pt[i];
                         }
-                    } else if (mode==4){
-                        if (SpecialTrigger == 0) {
-                            binning[i]      = fBinsPi013TeVEMCTrigINT7Pt[i];
-                        } else if (SpecialTrigger == 2) {
-                            binning[i]      = fBinsPi013TeVEMCTrigEG1Pt[i];
-                        } else if (SpecialTrigger == 3) {
-                            binning[i]      = fBinsPi013TeVEMCTrigEG2Pt[i];
-                        }
                     } else if (mode==2){
-                        if (SpecialTrigger == 0) {
+                        if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
                             binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
                         } else if (SpecialTrigger == 2) {
                             binning[i]      = fBinsPi013TeVPCMEMCTrigEG1Pt[i];
                         } else if (SpecialTrigger == 3) {
                             binning[i]      = fBinsPi013TeVPCMEMCTrigEG2Pt[i];
+                        }
+                    } else if (mode==4){
+                        if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
+                            binning[i]      = fBinsPi013TeVEMCTrigINT7Pt[i];
+                        } else if (SpecialTrigger == 2) {
+                            binning[i]      = fBinsPi013TeVEMCTrigEG1Pt[i];
+                        } else if (SpecialTrigger == 3) {
+                            binning[i]      = fBinsPi013TeVEMCTrigEG2Pt[i];
                         }
                     } else {
                         binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
@@ -4097,7 +4098,7 @@
                     } else if (SpecialTrigger==-1){
                         maxNBins= 22;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsEta13TeVPCMTriggerCombinedPt)/sizeof(fBinsEta13TeVPCMTriggerCombinedPt[0])))-1;
-                    } else if (SpecialTrigger==0) {
+                    } else if (SpecialTrigger==0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
                         maxNBins= 40;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsEta13TeVPCMTrigINT7Pt)/sizeof(fBinsEta13TeVPCMTrigINT7Pt[0])))-1;
                     } else if (SpecialTrigger==1) {
@@ -4117,7 +4118,7 @@
                             binning[i]=fBinsEta13TeVPCMTrigINT7PtDCA[i];
                         } else if (SpecialTrigger == -1) {
                             binning[i]      = fBinsEta13TeVPCMTriggerCombinedPt[i];
-                        } else if (SpecialTrigger == 0){
+                        } else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                             binning[i]      = fBinsEta13TeVPCMTrigINT7Pt[i];
                         } else if (SpecialTrigger==1){
                             binning[i]      = fBinsEta13TeVPCMTrigEMC7Pt[i];
@@ -4128,7 +4129,7 @@
                         }
                     }
                 } else if ( mode == 2 || mode == 13   ){
-                    if (SpecialTrigger == 0){
+                    if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                         maxNBins = 38; //(Int_t) (sizeof(fBinsEta13TeVPCMEMCTrigINT7Pt)/sizeof(fBinsEta13TeVPCMEMCTrigINT7Pt[0])) - 1;
                         binningMax = maxNBins;
                     } else if (SpecialTrigger == 2){
@@ -4139,7 +4140,7 @@
                         binningMax = maxNBins;
                     }
                     for (Int_t i = 0; i < maxNBins+1; i++) {
-                        if (SpecialTrigger == 0){
+                        if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                             binning[i]      = fBinsEta13TeVPCMEMCTrigINT7Pt[i];
                         } else if (SpecialTrigger==2){
                             binning[i]      = fBinsEta13TeVPCMEMCTrigEG1Pt[i];
@@ -4148,7 +4149,7 @@
                         }
                     }
                 } else if(mode==4 || mode == 12){
-                    if (SpecialTrigger == 0){
+                    if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                         maxNBins = (Int_t) (sizeof(fBinsEta13TeVEMCTrigINT7Pt)/sizeof(fBinsEta13TeVEMCTrigINT7Pt[0])) - 1;
                         binningMax = maxNBins;
                     } else if (SpecialTrigger == 2){
@@ -4159,7 +4160,7 @@
                         binningMax = maxNBins;
                     }
                     for (Int_t i = 0; i < maxNBins+1; i++) {
-                        if (SpecialTrigger == 0){
+                        if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
                             binning[i]      = fBinsEta13TeVEMCTrigINT7Pt[i];
                         } else if (SpecialTrigger==2){
                             binning[i]      = fBinsEta13TeVEMCTrigEG1Pt[i];
@@ -4625,6 +4626,10 @@
                 triggerSetTemp = 2; //EG1 8GeV
             } else if (trigger.CompareTo("85") == 0 ){
                 triggerSetTemp = 3; //EG2 4GeV
+            } else if (trigger.CompareTo("74") == 0 ){
+                triggerSetTemp = 4; //VHM
+            } else if (trigger.CompareTo("76") == 0 ){
+                triggerSetTemp = 5; //VHM+SPD2
             }
         } else if (energy.Contains("pPb_5.023TeV")) {
             if (trigger.CompareTo("52") == 0){
@@ -5259,7 +5264,7 @@
                     if (!isDCA) {
                         for (Int_t i = 0; i < fNBinsPt; i++) {
                             if (modi==0){
-                                if (specialTrigg == 0 ){
+                                if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                     fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
                                 } else if (specialTrigg==1){
                                     fNRebin[i]      = fBinsPi013TeVPCMTrigEMC7PtRebin[i];
@@ -5268,21 +5273,21 @@
                                 } else if (specialTrigg==3){
                                     fNRebin[i]      = fBinsPi013TeVPCMTrigEG2PtRebin[i];
                                 }
-                            } else if( modi == 4){
-                                if (specialTrigg == 0 ){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
-                                } else if (specialTrigg==2){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTrigEG1PtRebin[i];
-                                } else if (specialTrigg==3){
-                                    fNRebin[i]      = fBinsPi013TeVEMCTrigEG2PtRebin[i];
-                                }
                             } else if( modi == 2 ){
-                                if (specialTrigg == 0 ){
+                                if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                     fNRebin[i]      = fBinsPi013TeVPCMEMCTrigINT7PtRebin[i];
                                 } else if (specialTrigg==2){
                                     fNRebin[i]      = fBinsPi013TeVPCMEMCTrigEG1PtRebin[i];
                                 } else if (specialTrigg==3){
                                     fNRebin[i]      = fBinsPi013TeVPCMEMCTrigEG2PtRebin[i];
+                                }
+                            } else if( modi == 4){
+                                if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
+                                    fNRebin[i]      = fBinsPi013TeVEMCTrigINT7PtRebin[i];
+                                } else if (specialTrigg==2){
+                                    fNRebin[i]      = fBinsPi013TeVEMCTrigEG1PtRebin[i];
+                                } else if (specialTrigg==3){
+                                    fNRebin[i]      = fBinsPi013TeVEMCTrigEG2PtRebin[i];
                                 }
                             } else {
                                 fNRebin[i]      = fBinsPi013TeVPCMEMCTrigINT7PtRebin[i];
@@ -6204,7 +6209,7 @@
                 for (Int_t i = 0; i < fNBinsPt; i++) {
                     if (setPi0.CompareTo("Eta") == 0){
                         if (modi == 0){
-                            if (specialTrigg == 0 ){
+                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                 fNRebin[i]      = fBinsEta13TeVPCMTrigINT7PtRebin[i];
                             } else if (specialTrigg==1){
                                 fNRebin[i]      = fBinsEta13TeVPCMTrigEMC7PtRebin[i];
@@ -6214,7 +6219,7 @@
                                 fNRebin[i]      = fBinsEta13TeVPCMTrigEG2PtRebin[i];
                             }
                         } else if(modi==2){
-                            if (specialTrigg == 0 ){
+                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5 ){
                                 fNRebin[i]      = fBinsEta13TeVPCMEMCTrigINT7PtRebin[i];
                             } else if (specialTrigg==2){
                                 fNRebin[i]      = fBinsEta13TeVPCMEMCTrigEG1PtRebin[i];
@@ -6222,7 +6227,7 @@
                                 fNRebin[i]      = fBinsEta13TeVPCMEMCTrigEG2PtRebin[i];
                             }
                         } else if(modi==4){
-                            if (specialTrigg == 0 ){
+                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
                                 fNRebin[i]      = fBinsEta13TeVEMCTrigINT7PtRebin[i];
                             } else if (specialTrigg==2){
                                 fNRebin[i]      = fBinsEta13TeVEMCTrigEG1PtRebin[i];
