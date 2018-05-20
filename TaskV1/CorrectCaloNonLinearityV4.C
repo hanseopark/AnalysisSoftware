@@ -110,9 +110,9 @@ void CorrectCaloNonLinearityV4(
 
 
     // pT binning general initialization
-    Int_t fNBinsPt              = 50;
-    Double_t fBinsPt[51];
-    for (Int_t i = 0; i< 51; i++){
+    Int_t fNBinsPt              = 300;
+    Double_t fBinsPt[301];
+    for (Int_t i = 0; i< 301; i++){
         fBinsPt[i]              = -1.;
     }
     Double_t rangeHighPtFitMass[4]  = {5, 10, 5, 10};
@@ -185,7 +185,7 @@ void CorrectCaloNonLinearityV4(
         // reading ptBins
         } else if (tempValue.BeginsWith("fBinsPt",TString::kIgnoreCase)){
             if (enableAddCouts) cout << "setting ptBins" << endl;
-            for(Int_t i = 1; i<tempArr->GetEntries() && i < 52 ; i++){
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < 302 ; i++){
                 if (enableAddCouts) cout << i << "\t" <<((TString)((TObjString*)tempArr->At(i))->GetString()).Data() << endl;
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     fBinsPt[i-1]        = ((TString)((TObjString*)tempArr->At(i))->GetString()).Atof();
