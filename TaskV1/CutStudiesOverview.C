@@ -662,7 +662,23 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         DrawGammaCanvasSettings( canvasRawYieldsTrigg,  0.1, 0.02, 0.04, 0.08);
         canvasRawYieldsTrigg->SetLogy(1);
 
-        // Set legend
+        Double_t maxPt      = 0;
+        Double_t minYRaw    = 1e10;
+        Double_t maxYRaw    = 0;
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if (maxPt < histoRawYieldCut[i]->GetXaxis()->GetBinUpEdge(histoRawYieldCut[i]->GetNbinsX()))
+                maxPt = histoRawYieldCut[i]->GetXaxis()->GetBinUpEdge(histoRawYieldCut[i]->GetNbinsX());
+            if (histoRawYieldCut[i]->GetBinContent(histoRawYieldCut[i]->GetNbinsX()) < minYRaw && histoRawYieldCut[i]->GetBinContent(histoRawYieldCut[i]->GetNbinsX()) > 0)
+                minYRaw = histoRawYieldCut[i]->GetBinContent(histoRawYieldCut[i]->GetNbinsX());
+            if (histoRawYieldCut[i]->GetMaximum() > maxYRaw)
+                maxYRaw = histoRawYieldCut[i]->GetMaximum();
+        }
+        minYRaw= minYRaw/100;
+
+        TH1F* histo1DDummy              = new TH1F("histo1DDummy","histo1DDummy",1000, 0, maxPt);
+        SetStyleHistoTH1ForGraphs(histo1DDummy, "#it{p}_{T} (GeV/#it{c})", Form("%s RAW Yield/(#it{N}_{ev})",textMeson.Data()), 0.035 ,0.04, 0.035,0.04, 0.9,1.,510,505);
+        histo1DDummy->GetYaxis()->SetRangeUser(minYRaw,maxYRaw);
+        histo1DDummy->DrawCopy();
 
         TLegend* legendSpecRawTrigger = GetAndSetLegend2(0.15,0.11,0.3,0.11+1.15*0.032*NumberOfCuts, 1000*0.032);
         // Draw Raw yield for different triggers
@@ -675,11 +691,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     minRaw              = 5e-11;
                 }
                 DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
-                DrawAutoGammaMesonHistos( histoRawYieldCut[i],
-                                        "", "#it{p}_{T} (GeV/#it{c})", Form("%s RAW Yield/(#it{N}_{ev})",textMeson.Data()),
-                                        kTRUE, scaleFactorRaw, minRaw, kTRUE,
-                                        kFALSE, 0.0, 0.030,
-                                        kFALSE, 0., 10.);
+                histoRawYieldCut[i]->DrawCopy("same,e1,p");
                 legendSpecRawTrigger->AddEntry(histoRawYieldCut[i],Form("standard: %s",cutStringsName[i].Data()));
             } else {
                 if(i<20){
@@ -1211,6 +1223,16 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         //**************************************************************************************
         //********************* Plotting RAW-Cluster Yield *********************************************
         //**************************************************************************************
+            Double_t minYRawCluster    = 1e10;
+            Double_t maxYRawCluster    = 0;
+            for(Int_t i = 0; i< NumberOfCuts; i++){
+                if (histoRawYieldCut[i]->GetBinContent(histoRawYieldCut[i]->GetNbinsX()) < minYRawCluster && histoRawYieldCut[i]->GetBinContent(histoRawYieldCut[i]->GetNbinsX()) > 0)
+                    minYRawCluster = histoRawYieldCut[i]->GetBinContent(histoRawYieldCut[i]->GetNbinsX());
+                if (histoRawYieldCut[i]->GetMaximum() > maxYRawCluster)
+                    maxYRawCluster = histoRawYieldCut[i]->GetMaximum();
+            }
+            minYRawCluster= minYRawCluster/100;
+
 
             TCanvas* canvasRawClusterPt = new TCanvas("canvasRawClusterPt","",1350,1500);
             DrawGammaCanvasSettings( canvasRawClusterPt,  0.13, 0.02, 0.02, 0.09);
@@ -1242,7 +1264,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     DrawGammaSetMarker(histoRawClusterPtCut[i], 20, 1., color[0], color[0]);
                     DrawAutoGammaMesonHistos( histoRawClusterPtCut[i],
                                             "", "#it{p}_{T} (GeV/#it{c})", "cluster RAW Yield/(#it{N}_{ev} #it{N}_{coll})",
-                                            kTRUE, scaleFactorRaw, 10e-10, kTRUE,
+                                            kTRUE, scaleFactorRaw, minYRawCluster, kTRUE,
                                             kFALSE, 0.0, 0.030,
                                             kFALSE, 0., 10.);
                     legendRawCluster->AddEntry(histoRawClusterPtCut[i],Form("standard: %s",cutStringsName[i].Data()));
@@ -1310,7 +1332,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
                     DrawGammaSetMarker(histoRawClusterPtCut[i], 20, 1., color[0], color[0]);
                     DrawAutoGammaMesonHistos( histoRawClusterPtCut[i],
                                             "", "#it{p}_{T,cluster} (GeV/#it{c})", "cluster RAW Yield/(#it{N}_{ev})",
-                                            kTRUE, scaleFactorRaw, 10e-10, kTRUE,
+                                            kTRUE, scaleFactorRaw, minYRawCluster, kTRUE,
                                             kFALSE, 0.0, 0.030,
                                             kFALSE, 0., 10.);
                     legendSpecRawClusterTrigger->AddEntry(histoRawClusterPtCut[i],Form("standard: %s",cutStringsName[i].Data()));
