@@ -2,16 +2,19 @@
 select  LHC17pq
 mode    0
 cutNr   0
-nSets   4
-nData   2
+nSets   3
+nData   1
 energy  5TeV
 filePath    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD
 filePathPhoton  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD
 fileName    GammaConvV1_400.root
 fileNamePhoton    AnalysisResults.root
-DataSets    LHC17p_wSDD LHC17q_wSDD LHC17l3b_wSDD   LHC17l4b_wSDD   STOP
-plotDataSets    LHC17p_wSDD LHC17q_wSDD GEANT3  GEANT4  STOP
+DataSets    LHC17pq_wSDD    LHC17l3b_wSDD   LHC17l4b_wSDD   STOP
+plotDataSets    LHC17pq_wSDD    GEANT3  GEANT4  STOP
 doEquidistantXaxis  kTRUE
 addPhotonCutNr   0005314140
 addLabelRunlist
 doHistsForEverySet  kTRUE
+
+#DataSets    LHC17p_wSDD LHC17q_wSDD LHC17l3b_wSDD   LHC17l4b_wSDD   STOP
+#plotDataSets    LHC17p_wSDD LHC17q_wSDD GEANT3  GEANT4  STOP

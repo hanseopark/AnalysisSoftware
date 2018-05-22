@@ -5,6 +5,8 @@ nSets	4
 cutNr	0
 labelData	Data
 energy	5TeV
-pathDataSets	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	STOP
-DataSets	LHC17p_woSDD    LHC17q_woSDD LHC17l3_woSDD LHC17l4_woSDD STOP
-plotDataSets	LHC17p_woSDD    LHC17q_woSDD	GEANT3	GEANT4	STOP
+pathDataSets	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_woSDD/GammaConvV1_400.root /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_woSDD/GammaConvV1_400.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_woSDD/GammaConvV1_400.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_woSDD/GammaConvV1_400.root    STOP
+pathPhotonQA    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_woSDD/PhotonQA_LHC17p_woSDD.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_woSDD/PhotonQA_LHC17q_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_woSDD/PhotonQA_LHC17l3b_woSDD.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_woSDD/PhotonQA_LHC17l4b_woSDD.root  STOP
+DataSetNames    LHC17p_woSDD LHC17q_woSDD LHC17l3b_woSDD   LHC17l4b_woSDD   STOP
+DataSetNamesPlot    LHC17p_woSDD LHC17q_woSDD LHC17l3b_woSDD   LHC17l4b_woSDD   STOP
+addPhotonCutNr   0005314140

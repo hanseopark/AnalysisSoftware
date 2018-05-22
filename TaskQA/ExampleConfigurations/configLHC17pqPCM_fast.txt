@@ -5,6 +5,8 @@ nSets	4
 cutNr	0
 labelData	Data
 energy	5TeV
-pathDataSets	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	/home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/GammaConvV1_400.root	STOP
-DataSets    LHC17p_fast LHC17q_fast LHC17l3_fast    LHC17l4_fast    STOP
-plotDataSets	LHC17p_fast    LHC17q_fast GEANT3  GEANT4  STOP
+pathDataSets    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_fast/GammaConvV1_400.root   /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_fast/GammaConvV1_400.root   /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_fast/GammaConvV1_400.root /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_fast/GammaConvV1_400.root STOP
+pathPhotonQA    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17p_fast/PhotonQA_LHC17p_fast.root  /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17q_fast/PhotonQA_LHC17q_fast.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l3b_fast/PhotonQA_LHC17l3b_fast.root    /home/admin1/leardini/GridOutput/pp/Legotrain-vAN-20180416-1_ESD/LHC17l4b_fast/PhotonQA_LHC17l4b_fast.root  STOP
+DataSetNames    LHC17p_fast LHC17q_fast LHC17l3b_fast   LHC17l4b_fast   STOP
+DataSetNamesPlot    LHC17p_fast LHC17q_fast LHC17l3b_fast   LHC17l4b_fast   STOP
+addPhotonCutNr   0005314140

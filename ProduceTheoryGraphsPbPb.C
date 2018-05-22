@@ -38,7 +38,7 @@
 #include "TPostScript.h"
 #include "TGraphErrors.h"
 #include "TArrow.h"
-#include "TGraphAsymmErrors.h" 
+#include "TGraphAsymmErrors.h"
 #include "TGaxis.h"
 #include "TMarker.h"
 #include "Math/WrappedTF1.h"
@@ -74,7 +74,7 @@ TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
 TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
 	TGraphAsymmErrors* dummyGraph = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
 
-	Double_t * xValue = dummyGraph->GetX(); 
+	Double_t * xValue = dummyGraph->GetX();
 	Double_t * yValue = dummyGraph->GetY();
 	Double_t* xErrorLow = dummyGraph->GetEXlow();
 	Double_t* xErrorHigh = dummyGraph->GetEXhigh();
@@ -86,28 +86,28 @@ TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
 		yErrorLow[i] = yErrorLow[i]*scaleFac;
 		yErrorHigh[i] = yErrorHigh[i]*scaleFac;
 	}
-	TGraphAsymmErrors* returnGraph =  new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh); 
+	TGraphAsymmErrors* returnGraph =  new TGraphAsymmErrors(nPoints,xValue,yValue,xErrorLow,xErrorHigh,yErrorLow,yErrorHigh);
 	return returnGraph;
 }
 
-void ProduceTheoryGraphsPbPb(TString specifier = ""){    
-    
-	StyleSettingsThesis();    
+void ProduceTheoryGraphsPbPb(TString specifier = ""){
+
+	StyleSettingsThesis();
 	SetPlotStyle();
 
     //***************************************************************************************
-    // V. Begun - Equilibrium model 
+    // V. Begun - Equilibrium model
     //> http://inspirehep.net/record/1267669
     //> http://inspirehep.net/record/1298405
     //> http://inspirehep.net/record/779957
     //> http://inspirehep.net/record/1352138
 	Int_t totNPtBins = 31;
 
-	Double_t ptBegunEQ_0010[31]; 
-	Double_t yieldPi0BegunEQ_0010[31];    
-	Double_t yieldEtaBegunEQ_0010[31];    
-    Double_t yieldEtaToPi0BegunEQ_0010[31];    
-    
+	Double_t ptBegunEQ_0010[31];
+	Double_t yieldPi0BegunEQ_0010[31];
+	Double_t yieldEtaBegunEQ_0010[31];
+    Double_t yieldEtaToPi0BegunEQ_0010[31];
+
 	TString fileNameBegunEQ_0010 = "ExternalInputPbPb/Theory/CracowModel/Begun_EQModel_0-10.txt";
 	ifstream  fileBegunEQ_0010;
 	fileBegunEQ_0010.open(fileNameBegunEQ_0010,ios_base::in);
@@ -121,17 +121,17 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		nlin++;
 	}
 	fileBegunEQ_0010.close();
-    
+
     TGraph *TheoryBegunEQPi0_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldPi0BegunEQ_0010);
     TGraph *TheoryBegunEQEta_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldEtaBegunEQ_0010);
     TGraph *TheoryBegunEQEtaToPi0_0010 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_0010, yieldEtaToPi0BegunEQ_0010);
 
-    Double_t ptBegunEQ_2050[18]; 
-	Double_t yieldPi0BegunEQ_2050[18];    
-	Double_t yieldEtaBegunEQ_2050[18];    
-    Double_t yieldEtaToPi0BegunEQ_2050[18];    
-    totNPtBins = 18;    
-    
+    Double_t ptBegunEQ_2050[18];
+	Double_t yieldPi0BegunEQ_2050[18];
+	Double_t yieldEtaBegunEQ_2050[18];
+    Double_t yieldEtaToPi0BegunEQ_2050[18];
+    totNPtBins = 18;
+
 	TString fileNameBegunEQ_2050 = "ExternalInputPbPb/Theory/CracowModel/Begun_EQModel_20-50.txt";
 	ifstream  fileBegunEQ_2050;
 	fileBegunEQ_2050.open(fileNameBegunEQ_2050,ios_base::in);
@@ -145,16 +145,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		nlin++;
 	}
 	fileBegunEQ_2050.close();
-    
+
     TGraph *TheoryBegunEQPi0_2050 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_2050, yieldPi0BegunEQ_2050);
     TGraph *TheoryBegunEQEta_2050 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_2050, yieldEtaBegunEQ_2050);
     TGraph *TheoryBegunEQEtaToPi0_2050 = new TGraphAsymmErrors(totNPtBins, ptBegunEQ_2050, yieldEtaToPi0BegunEQ_2050);
 
-    //********************************************************************************************************************************************        
+    //********************************************************************************************************************************************
     //***************************************************** Cracow model for LHC11h yields *******************************************************
 	// PRC 90, 014906 (2014)
     // columns in the file represent:  nBin p_{T} [GeV/c]  p_{T} [GeV/c]_[MIN]   p_{T} [GeV/c]_[MAX]    dN/(2 #pi p_{T} dp_{T} dy)    dN/(2 #pi p_{T} dp_{T} dy)_[ERROR]
-	
+
 	const Int_t MaxNPtBins = 25; //the theory guys asked us to stop at 3 Gev/c
 	Int_t nbins;
 	Double_t BinLowerEdge, BinUpperEdge;
@@ -181,7 +181,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		nlinesLowPt++;
 	}
 	filePi0LowPtNonEq_0010.close();
-    
+
     Double_t ptEtaLowPtNonEq_0010[25];
     Double_t yieldEtaLowPtNonEq_0010[25];
     Double_t yieldErrEtaLowPtNonEq_0010[25];
@@ -194,25 +194,25 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     ifstream  fileEtaLowPtNonEq_0010;
     fileEtaLowPtNonEq_0010.open(fileNameEtaLowPtNonEq_0010,ios_base::in);
     cout << fileNameEtaLowPtNonEq_0010 << endl;
-    
+
     nlinesLowPt = 0;
     while(!fileEtaLowPtNonEq_0010.eof() && nlinesLowPt < MaxNPtBins){
 		fileEtaLowPtNonEq_0010 >> nbins >> ptEtaLowPtNonEq_0010[nlinesLowPt] >> BinLowerEdge >> BinUpperEdge >> yieldEtaLowPtNonEq_0010[nlinesLowPt] >> yieldErrEtaLowPtNonEq_0010[nlinesLowPt];
 		cout << nlinesLowPt << "\t "  << ptEtaLowPtNonEq_0010[nlinesLowPt] << "\t "  << yieldEtaLowPtNonEq_0010[nlinesLowPt] << " +- "  << yieldErrEtaLowPtNonEq_0010[nlinesLowPt] << endl;
-		
+
 		// error of the yields is not taken (is put to zero) because they have trouble with the centrality range and it is not a "real" error (just the cent. bin width)
 		EtaLowErr_0010[nlinesLowPt] = 0;
 		EtaHighErr_0010[nlinesLowPt] = 0;
-        
+
         ratioEtaPi0LowPtNonEq_0010[nlinesLowPt] = yieldEtaLowPtNonEq_0010[nlinesLowPt]/yieldPi0LowPtNonEq_0010[nlinesLowPt];
 		cout << "Eta/Pi0 ratio: " << endl;
         cout << nlinesLowPt << "\t "  << ptEtaLowPtNonEq_0010[nlinesLowPt] << "\t "  << ratioEtaPi0LowPtNonEq_0010[nlinesLowPt] << endl;
-		
+
 		nlinesLowPt++;
     }
     fileEtaLowPtNonEq_0010.close();
-    
-	
+
+
 	Double_t ptPi0LowPtNonEq_2050[25];
 	Double_t yieldPi0LowPtNonEq_2050[25];
 	Double_t yieldErrPi0LowPtNonEq_2050[25];
@@ -235,8 +235,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		nlinesLowPt++;
 	}
 	filePi0LowPtNonEq_2050.close();
-    
-	
+
+
     Double_t ptEtaLowPtNonEq_2050[25];
     Double_t yieldEtaLowPtNonEq_2050[25];
     Double_t yieldErrEtaLowPtNonEq_2050[25];
@@ -249,16 +249,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     ifstream  fileEtaLowPtNonEq_2050;
     fileEtaLowPtNonEq_2050.open(fileNameEtaLowPtNonEq_2050,ios_base::in);
     cout << fileNameEtaLowPtNonEq_2050 << endl;
-    
+
     nlinesLowPt = 0;
     while(!fileEtaLowPtNonEq_2050.eof() && nlinesLowPt < MaxNPtBins){
         fileEtaLowPtNonEq_2050 >> nbins >> ptEtaLowPtNonEq_2050[nlinesLowPt] >> BinLowerEdge >> BinUpperEdge >> yieldEtaLowPtNonEq_2050[nlinesLowPt] >> yieldErrEtaLowPtNonEq_2050[nlinesLowPt];
         cout << nlinesLowPt << "\t "  << ptEtaLowPtNonEq_2050[nlinesLowPt] << "\t "  << yieldEtaLowPtNonEq_2050[nlinesLowPt] << " +- "  << yieldErrEtaLowPtNonEq_2050[nlinesLowPt] << endl;
-		
+
 		// error of the yields is not taken (is put to zero) because they have trouble with the centrality range and it is not a "real" error (just the cent. bin width)
 		EtaLowErr_2050[nlinesLowPt] = 0;
 		EtaHighErr_2050[nlinesLowPt] = 0;
-        
+
         ratioEtaPi0LowPtNonEq_2050[nlinesLowPt] = yieldEtaLowPtNonEq_2050[nlinesLowPt]/yieldPi0LowPtNonEq_2050[nlinesLowPt];
 		cout << "Eta/Pi0 ratio: " << endl;
         cout << nlinesLowPt << "\t "  << ptEtaLowPtNonEq_2050[nlinesLowPt] << "\t "  << ratioEtaPi0LowPtNonEq_2050[nlinesLowPt] << endl;
@@ -266,36 +266,36 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     fileEtaLowPtNonEq_2050.close();
 
-	
-    Double_t ptChargedLowPtNonEq_0010[15];    
-    Double_t yieldChargedPionLowPtNonEq_0010[15];    
-    Double_t yieldChargedKaonLowPtNonEq_0010[15];    
-    Double_t ratioKaonsToPionsLowPtNonEq_0010[15];    
+
+    Double_t ptChargedLowPtNonEq_0010[15];
+    Double_t yieldChargedPionLowPtNonEq_0010[15];
+    Double_t yieldChargedKaonLowPtNonEq_0010[15];
+    Double_t ratioKaonsToPionsLowPtNonEq_0010[15];
     Double_t ChargedPionLowErr_0010[15];
     Double_t ChargedPionHighErr_0010[15];
 
-    Double_t yieldNeutralToChargedPionLowPtNonEq_0010[15];    
-    
+    Double_t yieldNeutralToChargedPionLowPtNonEq_0010[15];
+
     TString fileNameChargedPionsKaonsLowPtNonEq_0010 = "ExternalInputPbPb/Theory/CracowModel/lowPt-chem-non-equilibrium_15Oct2015/KaonsAndPions0-10.txt";
-//     #dN / ( 2 \pi p_T dp_T dy) for pions (\pi^+ + \pi^- ) / 2 and Kaons (K^+ + K^-) / 2, 
-//     and the K/pi ratio for 0-10% centrality as the function of p_T, which is (p_T^{MIN} + p_T^{MAX} ) / 2 
+//     #dN / ( 2 \pi p_T dp_T dy) for pions (\pi^+ + \pi^- ) / 2 and Kaons (K^+ + K^-) / 2,
+//     and the K/pi ratio for 0-10% centrality as the function of p_T, which is (p_T^{MIN} + p_T^{MAX} ) / 2
 //     for the parameters from http://arxiv.org/abs/1503.04040
     ifstream  fileChargedPionsKaonsLowPtNonEq_0010;
     fileChargedPionsKaonsLowPtNonEq_0010.open(fileNameChargedPionsKaonsLowPtNonEq_0010,ios_base::in);
     cout << fileNameChargedPionsKaonsLowPtNonEq_0010 << endl;
-    
+
     nlinesLowPt = 0;
     while(!fileChargedPionsKaonsLowPtNonEq_0010.eof() && nlinesLowPt < 15){
-        fileChargedPionsKaonsLowPtNonEq_0010 >> ptChargedLowPtNonEq_0010[nlinesLowPt] >> yieldChargedPionLowPtNonEq_0010[nlinesLowPt] >> yieldChargedKaonLowPtNonEq_0010[nlinesLowPt] >> ratioKaonsToPionsLowPtNonEq_0010[nlinesLowPt]; 
+        fileChargedPionsKaonsLowPtNonEq_0010 >> ptChargedLowPtNonEq_0010[nlinesLowPt] >> yieldChargedPionLowPtNonEq_0010[nlinesLowPt] >> yieldChargedKaonLowPtNonEq_0010[nlinesLowPt] >> ratioKaonsToPionsLowPtNonEq_0010[nlinesLowPt];
         cout << nlinesLowPt << "\t " << ptChargedLowPtNonEq_0010[nlinesLowPt] << "\t pions: "  << yieldChargedPionLowPtNonEq_0010[nlinesLowPt] << "\t kaons:"  << yieldChargedKaonLowPtNonEq_0010[nlinesLowPt] << "\t kaons/pions:"  << ratioKaonsToPionsLowPtNonEq_0010[nlinesLowPt] << endl;
-        
+
         yieldNeutralToChargedPionLowPtNonEq_0010[nlinesLowPt] = yieldPi0LowPtNonEq_0010[nlinesLowPt]/yieldChargedPionLowPtNonEq_0010[nlinesLowPt];
         ChargedPionLowErr_0010[nlinesLowPt] = 0.;
         ChargedPionHighErr_0010[nlinesLowPt] = 0.;
         nlinesLowPt++;
     }
     fileChargedPionsKaonsLowPtNonEq_0010.close();
-    
+
     TGraphAsymmErrors *TheoryCracowPi0LowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptPi0LowPtNonEq_0010, yieldPi0LowPtNonEq_0010, 0, 0, Pi0LowErr_0010, Pi0HighErr_0010);
     TGraphAsymmErrors *TheoryCracowEtaLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptEtaLowPtNonEq_0010, yieldEtaLowPtNonEq_0010, 0, 0, EtaLowErr_0010, EtaHighErr_0010);
     TGraphAsymmErrors *TheoryCracowEtaToPi0LowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptEtaLowPtNonEq_0010, ratioEtaPi0LowPtNonEq_0010, 0, 0, 0, 0);
@@ -310,29 +310,29 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	TGraphAsymmErrors *TheoryCracowKaonsToPionsLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptChargedLowPtNonEq_0010, ratioKaonsToPionsLowPtNonEq_0010, 0, 0, ChargedPionLowErr_0010, ChargedPionHighErr_0010);
     TGraphAsymmErrors *TheoryCracowNeutralToChargedPionLowPt_0010 = new TGraphAsymmErrors(MaxNPtBins, ptChargedLowPtNonEq_0010, yieldNeutralToChargedPionLowPtNonEq_0010, 0, 0, 0, 0);
 
-	    
-	//********************************************************************************************************************************************    
+
+	//********************************************************************************************************************************************
     //*************************************** Raa theory - Djordjevic pred for Pi0 2011  *********************************************************
     // citing M Djordjevic, M. Djordjevic and B. Blagojevic, Phys. Lett. B 737 (2014) 298-302
     // and M Djordjevic and M. Djordjevic, Phys. Lett. B 734 (2014) 286-289
     // prediction for 0-10% for LHC11h data
-    
+
     Double_t ptPi0Djordjevic[27];
-    
+
     Double_t pi0RaaDjordjevic_0010[27];
     Double_t pi0RaaLowEdge_0010[27];
     Double_t pi0RaaHighEdge_0010[27];
     Double_t pi0RaaLowEdgeError_0010[27];
     Double_t pi0RaaHighEdgeError_0010[27];
-	
+
     Double_t ptError[27];
     Int_t nlinesDjordjevic = 0;
-    
+
     TString fileNamePi0Djordjevic_0010 = "ExternalInputPbPb/Theory/DjordjevicPi02011/PiRaa_0-10.txt";
     ifstream  filePi0Djordjevic_0010;
     filePi0Djordjevic_0010.open(fileNamePi0Djordjevic_0010,ios_base::in);
     cout << fileNamePi0Djordjevic_0010 << endl;
-    
+
     while(!filePi0Djordjevic_0010.eof() && nlinesDjordjevic < 27){
         filePi0Djordjevic_0010 >> ptPi0Djordjevic[nlinesDjordjevic] >> pi0RaaLowEdge_0010[nlinesDjordjevic] >> pi0RaaHighEdge_0010[nlinesDjordjevic];
         cout << nlinesDjordjevic << "\t "  << ptPi0Djordjevic[nlinesDjordjevic] << "\t "  << pi0RaaLowEdge_0010[nlinesDjordjevic] << "\t "  << pi0RaaHighEdge_0010[nlinesDjordjevic] << endl;
@@ -344,16 +344,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 
     }
     filePi0Djordjevic_0010.close();
-    TGraphAsymmErrors *graphPi0Djordjevic_0010 = new TGraphAsymmErrors(nlinesDjordjevic-1, ptPi0Djordjevic, pi0RaaDjordjevic_0010, ptError, ptError, pi0RaaLowEdgeError_0010, pi0RaaHighEdgeError_0010);    
-    
+    TGraphAsymmErrors *graphPi0Djordjevic_0010 = new TGraphAsymmErrors(nlinesDjordjevic-1, ptPi0Djordjevic, pi0RaaDjordjevic_0010, ptError, ptError, pi0RaaLowEdgeError_0010, pi0RaaHighEdgeError_0010);
+
     TString fileNamePi0Djordjevic_2050 = "ExternalInputPbPb/Theory/DjordjevicPi02011/PiRaa_20-50.txt";
     ifstream  filePi0Djordjevic_2050;
     filePi0Djordjevic_2050.open(fileNamePi0Djordjevic_2050,ios_base::in);
     cout << fileNamePi0Djordjevic_2050 << endl;
-    
+
     Double_t pi0RaaDjordjevic_2050[27];
     Double_t pi0RaaLowEdge_2050[27];
-    Double_t pi0RaaHighEdge_2050[27];    
+    Double_t pi0RaaHighEdge_2050[27];
     Double_t pi0RaaLowEdgeError_2050[27];
     Double_t pi0RaaHighEdgeError_2050[27];
 
@@ -369,73 +369,73 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 
     }
     filePi0Djordjevic_2050.close();
-    TGraphAsymmErrors *graphPi0Djordjevic_2050 = new TGraphAsymmErrors(nlinesDjordjevic-1, ptPi0Djordjevic, pi0RaaDjordjevic_2050, ptError, ptError, pi0RaaLowEdgeError_2050, pi0RaaHighEdgeError_2050);    
+    TGraphAsymmErrors *graphPi0Djordjevic_2050 = new TGraphAsymmErrors(nlinesDjordjevic-1, ptPi0Djordjevic, pi0RaaDjordjevic_2050, ptError, ptError, pi0RaaLowEdgeError_2050, pi0RaaHighEdgeError_2050);
 
 
 	//*********************************************************************************************************************************
     //***************************************************** Jet quenching  ************************************************************
     // prediction for centrality 0-10% for LHC11h data from arXiv:1506.00838
-	
-	// Pi0 Raa 
+
+	// Pi0 Raa
     Double_t ptPi0JetQuenching18_0010[100];
     Double_t ptPi0JetQuenching22_0010[100];
     Double_t ptPi0JetQuenching26_0010[100];
-    
+
     Double_t pi0Raa18_0010[100];
     Double_t pi0Raa22_0010[100];
     Double_t pi0Raa26_0010[100];
-    
+
     Double_t pi0RaaLowErr_0010[100];
     Double_t pi0RaaHighErr_0010[100];
-    
+
     Double_t ptErr[100];
 
     Int_t nlinesJetQuenching = 0;
-    
+
     TString fileNamePi0JetQuenching18_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9piraa/0.9piraa1.8.dat";
     ifstream  filePi0JetQuenching18_0010;
     filePi0JetQuenching18_0010.open(fileNamePi0JetQuenching18_0010,ios_base::in);
     cout << fileNamePi0JetQuenching18_0010 << endl;
-    
+
     while(!filePi0JetQuenching18_0010.eof() && nlinesJetQuenching < 100){
-        filePi0JetQuenching18_0010 >> ptPi0JetQuenching18_0010[nlinesJetQuenching] >> pi0Raa18_0010[nlinesJetQuenching]; 
+        filePi0JetQuenching18_0010 >> ptPi0JetQuenching18_0010[nlinesJetQuenching] >> pi0Raa18_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "\t "  << ptPi0JetQuenching18_0010[nlinesJetQuenching] << "\t "  << pi0Raa18_0010[nlinesJetQuenching] << endl;
         nlinesJetQuenching++;
     }
     filePi0JetQuenching18_0010.close();
-    TGraph* graphPi0JetQuenching18_0010 = new TGraph(nlinesJetQuenching,ptPi0JetQuenching18_0010,pi0Raa18_0010); 
-    
-	
+    TGraph* graphPi0JetQuenching18_0010 = new TGraph(nlinesJetQuenching,ptPi0JetQuenching18_0010,pi0Raa18_0010);
+
+
     nlinesJetQuenching = 0;
     TString fileNamePi0JetQuenching22_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9piraa/0.9piraa2.2.dat";
     ifstream  filePi0JetQuenching22_0010;
     filePi0JetQuenching22_0010.open(fileNamePi0JetQuenching22_0010,ios_base::in);
     cout << fileNamePi0JetQuenching22_0010 << endl;
-    
+
     while(!filePi0JetQuenching22_0010.eof() && nlinesJetQuenching < 100){
-        filePi0JetQuenching22_0010 >> ptPi0JetQuenching22_0010[nlinesJetQuenching] >> pi0Raa22_0010[nlinesJetQuenching]; 
-        cout << nlinesJetQuenching << "\t "  << ptPi0JetQuenching22_0010[nlinesJetQuenching] << "\t "  << pi0Raa22_0010[nlinesJetQuenching] << endl;    
+        filePi0JetQuenching22_0010 >> ptPi0JetQuenching22_0010[nlinesJetQuenching] >> pi0Raa22_0010[nlinesJetQuenching];
+        cout << nlinesJetQuenching << "\t "  << ptPi0JetQuenching22_0010[nlinesJetQuenching] << "\t "  << pi0Raa22_0010[nlinesJetQuenching] << endl;
         nlinesJetQuenching++;
     }
     filePi0JetQuenching22_0010.close();
-    TGraph* graphPi0JetQuenching22_0010 = new TGraph(nlinesJetQuenching,ptPi0JetQuenching22_0010,pi0Raa22_0010); 
-    
-    
+    TGraph* graphPi0JetQuenching22_0010 = new TGraph(nlinesJetQuenching,ptPi0JetQuenching22_0010,pi0Raa22_0010);
+
+
     nlinesJetQuenching = 0;
     TString fileNamePi0JetQuenching26_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9piraa/0.9piraa2.6.dat";
     ifstream  filePi0JetQuenching26_0010;
     filePi0JetQuenching26_0010.open(fileNamePi0JetQuenching26_0010,ios_base::in);
     cout << fileNamePi0JetQuenching26_0010 << endl;
-    
+
     while(!filePi0JetQuenching26_0010.eof() && nlinesJetQuenching < 100){
-        filePi0JetQuenching26_0010 >> ptPi0JetQuenching26_0010[nlinesJetQuenching] >> pi0Raa26_0010[nlinesJetQuenching]; 
+        filePi0JetQuenching26_0010 >> ptPi0JetQuenching26_0010[nlinesJetQuenching] >> pi0Raa26_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "\t "  << ptPi0JetQuenching26_0010[nlinesJetQuenching] << "\t "  << pi0Raa26_0010[nlinesJetQuenching] << endl;
         nlinesJetQuenching++;
     }
-    filePi0JetQuenching26_0010.close();    
-    TGraph* graphPi0JetQuenching26_0010 = new TGraph(nlinesJetQuenching,ptPi0JetQuenching26_0010,pi0Raa26_0010); 
+    filePi0JetQuenching26_0010.close();
+    TGraph* graphPi0JetQuenching26_0010 = new TGraph(nlinesJetQuenching,ptPi0JetQuenching26_0010,pi0Raa26_0010);
 
-	
+
     //Putting the three together:
     for(Int_t k=0; k<nlinesJetQuenching; k++){
         ptErr[k] = 0.;
@@ -444,64 +444,64 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     TGraphAsymmErrors *graphPi0RAAJetQuenching_0010 = new TGraphAsymmErrors(nlinesJetQuenching, ptPi0JetQuenching22_0010, pi0Raa22_0010, ptErr, ptErr, pi0RaaLowErr_0010, pi0RaaHighErr_0010);
 
-    
+
 	// Eta Raa
     Double_t ptEtaJetQuenching18_0010[100];
     Double_t ptEtaJetQuenching22_0010[100];
     Double_t ptEtaJetQuenching26_0010[100];
-    
+
     Double_t etaRaa18_0010[100];
     Double_t etaRaa22_0010[100];
     Double_t etaRaa26_0010[100];
 
     Double_t etaRaaLowErr_0010[100];
     Double_t etaRaaHighErr_0010[100];
-    
+
     TString fileNameEtaJetQuenching18_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9etaraa/0.9etaraa1.8.dat";
     ifstream  fileEtaJetQuenching18_0010;
     fileEtaJetQuenching18_0010.open(fileNameEtaJetQuenching18_0010,ios_base::in);
     cout << fileNameEtaJetQuenching18_0010 << endl;
-    
+
     nlinesJetQuenching = 0;
     while(!fileEtaJetQuenching18_0010.eof() && nlinesJetQuenching < 100){
-        fileEtaJetQuenching18_0010 >> ptEtaJetQuenching18_0010[nlinesJetQuenching] >> etaRaa18_0010[nlinesJetQuenching]; 
+        fileEtaJetQuenching18_0010 >> ptEtaJetQuenching18_0010[nlinesJetQuenching] >> etaRaa18_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "\t " << ptEtaJetQuenching18_0010[nlinesJetQuenching] << "\t "  << etaRaa18_0010[nlinesJetQuenching] << endl;;
         nlinesJetQuenching++;
     }
     fileEtaJetQuenching18_0010.close();
-    TGraph* graphEtaJetQuenching18_0010 = new TGraph(nlinesJetQuenching,ptEtaJetQuenching18_0010,etaRaa18_0010); 
+    TGraph* graphEtaJetQuenching18_0010 = new TGraph(nlinesJetQuenching,ptEtaJetQuenching18_0010,etaRaa18_0010);
 
-    
+
     nlinesJetQuenching = 0;
     TString fileNameEtaJetQuenching22_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9etaraa/0.9etaraa2.2.dat";
     ifstream  fileEtaJetQuenching22_0010;
     fileEtaJetQuenching22_0010.open(fileNameEtaJetQuenching22_0010,ios_base::in);
     cout << fileNameEtaJetQuenching22_0010 << endl;
-    
+
     while(!fileEtaJetQuenching22_0010.eof() && nlinesJetQuenching < 100){
-        fileEtaJetQuenching22_0010 >> ptEtaJetQuenching22_0010[nlinesJetQuenching] >> etaRaa22_0010[nlinesJetQuenching]; 
+        fileEtaJetQuenching22_0010 >> ptEtaJetQuenching22_0010[nlinesJetQuenching] >> etaRaa22_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "\t "  << ptEtaJetQuenching22_0010[nlinesJetQuenching] << "\t "  << etaRaa22_0010[nlinesJetQuenching] << endl;;
         nlinesJetQuenching++;
     }
     fileEtaJetQuenching22_0010.close();
-    TGraph* graphEtaJetQuenching22_0010 = new TGraph(nlinesJetQuenching,ptEtaJetQuenching22_0010,etaRaa22_0010); 
-    
-    
+    TGraph* graphEtaJetQuenching22_0010 = new TGraph(nlinesJetQuenching,ptEtaJetQuenching22_0010,etaRaa22_0010);
+
+
     nlinesJetQuenching = 0;
     TString fileNameEtaJetQuenching26_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9etaraa/0.9etaraa2.6.dat";
     ifstream  fileEtaJetQuenching26_0010;
     fileEtaJetQuenching26_0010.open(fileNameEtaJetQuenching26_0010,ios_base::in);
     cout << fileNameEtaJetQuenching26_0010 << endl;
-    
+
     while(!fileEtaJetQuenching26_0010.eof() && nlinesJetQuenching < 100){
-        fileEtaJetQuenching26_0010 >> ptEtaJetQuenching26_0010[nlinesJetQuenching] >> etaRaa26_0010[nlinesJetQuenching]; 
+        fileEtaJetQuenching26_0010 >> ptEtaJetQuenching26_0010[nlinesJetQuenching] >> etaRaa26_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "\t "  << ptEtaJetQuenching26_0010[nlinesJetQuenching] << "\t "  << etaRaa26_0010[nlinesJetQuenching] << endl;;
         nlinesJetQuenching++;
     }
-    fileEtaJetQuenching26_0010.close();    
-    TGraph* graphEtaJetQuenching26_0010 = new TGraph(nlinesJetQuenching,ptEtaJetQuenching26_0010,etaRaa26_0010); 
-    
-    
+    fileEtaJetQuenching26_0010.close();
+    TGraph* graphEtaJetQuenching26_0010 = new TGraph(nlinesJetQuenching,ptEtaJetQuenching26_0010,etaRaa26_0010);
+
+
     //Putting the three together:
     for(Int_t k=0; k<nlinesJetQuenching; k++){
         etaRaaLowErr_0010[k] = etaRaa22_0010[k] - etaRaa26_0010[k];
@@ -509,7 +509,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     TGraphAsymmErrors *graphEtaRAAJetQuenching_0010 = new TGraphAsymmErrors(nlinesJetQuenching, ptEtaJetQuenching22_0010, etaRaa22_0010, ptErr, ptErr, etaRaaLowErr_0010, etaRaaHighErr_0010);
 
-    
+
 	// Eta to Pi0 ratio
     Double_t ptetaTopi0Ratio18_0010[100];
     Double_t ptetaTopi0Ratio22_0010[100];
@@ -518,7 +518,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     Double_t etaTopi0Ratio18_0010[100];
     Double_t etaTopi0Ratio22_0010[100];
     Double_t etaTopi0Ratio26_0010[100];
-    
+
     Double_t etaTopi0LowErr_0010[100];
     Double_t etaTopi0HighErr_0010[100];
 
@@ -526,47 +526,47 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     ifstream  fileEtatoPi0RatioJetQuenching18_0010;
     fileEtatoPi0RatioJetQuenching18_0010.open(fileNameEtatoPi0RatioJetQuenching18_0010,ios_base::in);
     cout << fileNameEtatoPi0RatioJetQuenching18_0010 << endl;
-    
+
     nlinesJetQuenching = 0;
     while(!fileEtatoPi0RatioJetQuenching18_0010.eof() && nlinesJetQuenching < 100){
-        fileEtatoPi0RatioJetQuenching18_0010 >> ptetaTopi0Ratio18_0010[nlinesJetQuenching] >> etaTopi0Ratio18_0010[nlinesJetQuenching]; 
+        fileEtatoPi0RatioJetQuenching18_0010 >> ptetaTopi0Ratio18_0010[nlinesJetQuenching] >> etaTopi0Ratio18_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "	 "  << ptetaTopi0Ratio18_0010[nlinesJetQuenching] << "	 "  << etaTopi0Ratio18_0010[nlinesJetQuenching] << endl;;
         nlinesJetQuenching++;
     }
     fileEtatoPi0RatioJetQuenching18_0010.close();
-    TGraph* graphEtatoPi0RatioJetQuenching18_0010 = new TGraph(nlinesJetQuenching,ptetaTopi0Ratio18_0010,etaTopi0Ratio18_0010); 
+    TGraph* graphEtatoPi0RatioJetQuenching18_0010 = new TGraph(nlinesJetQuenching,ptetaTopi0Ratio18_0010,etaTopi0Ratio18_0010);
 
-    
+
     nlinesJetQuenching = 0;
     TString fileNameEtatoPi0RatioJetQuenching22_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9ratio/0.9ratio2.2.dat";
     ifstream  fileEtatoPi0RatioJetQuenching22_0010;
     fileEtatoPi0RatioJetQuenching22_0010.open(fileNameEtatoPi0RatioJetQuenching22_0010,ios_base::in);
     cout << fileNameEtatoPi0RatioJetQuenching22_0010 << endl;
-    
+
     while(!fileEtatoPi0RatioJetQuenching22_0010.eof() && nlinesJetQuenching < 100){
-        fileEtatoPi0RatioJetQuenching22_0010 >> ptetaTopi0Ratio22_0010[nlinesJetQuenching] >> etaTopi0Ratio22_0010[nlinesJetQuenching]; 
+        fileEtatoPi0RatioJetQuenching22_0010 >> ptetaTopi0Ratio22_0010[nlinesJetQuenching] >> etaTopi0Ratio22_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "	 "  << ptetaTopi0Ratio22_0010[nlinesJetQuenching] << "	 "  << etaTopi0Ratio22_0010[nlinesJetQuenching] << endl;;
         nlinesJetQuenching++;
     }
     fileEtatoPi0RatioJetQuenching22_0010.close();
-    TGraph* graphEtatoPi0RatioJetQuenching22_0010 = new TGraph(nlinesJetQuenching,ptetaTopi0Ratio22_0010,etaTopi0Ratio22_0010); 
-    
-    
+    TGraph* graphEtatoPi0RatioJetQuenching22_0010 = new TGraph(nlinesJetQuenching,ptetaTopi0Ratio22_0010,etaTopi0Ratio22_0010);
+
+
     nlinesJetQuenching = 0;
     TString fileNameEtatoPi0RatioJetQuenching26_0010 = "ExternalInputPbPb/Theory/JetQuenching/0.9ratio/0.9ratio2.6.dat";
     ifstream  fileEtatoPi0RatioJetQuenching26_0010;
     fileEtatoPi0RatioJetQuenching26_0010.open(fileNameEtatoPi0RatioJetQuenching26_0010,ios_base::in);
     cout << fileNameEtatoPi0RatioJetQuenching26_0010 << endl;
-    
+
     while(!fileEtatoPi0RatioJetQuenching26_0010.eof() && nlinesJetQuenching < 100){
-        fileEtatoPi0RatioJetQuenching26_0010 >> ptetaTopi0Ratio22_0010[nlinesJetQuenching] >> etaTopi0Ratio26_0010[nlinesJetQuenching]; 
+        fileEtatoPi0RatioJetQuenching26_0010 >> ptetaTopi0Ratio22_0010[nlinesJetQuenching] >> etaTopi0Ratio26_0010[nlinesJetQuenching];
         cout << nlinesJetQuenching << "	 "  << ptetaTopi0Ratio22_0010[nlinesJetQuenching] << "	 "  << etaTopi0Ratio26_0010[nlinesJetQuenching] << endl;;
         nlinesJetQuenching++;
     }
-    fileEtatoPi0RatioJetQuenching26_0010.close();    
-    TGraph* graphEtatoPi0RatioJetQuenching26_0010 = new TGraph(nlinesJetQuenching,ptetaTopi0Ratio22_0010,etaTopi0Ratio26_0010); 
-    
-    
+    fileEtatoPi0RatioJetQuenching26_0010.close();
+    TGraph* graphEtatoPi0RatioJetQuenching26_0010 = new TGraph(nlinesJetQuenching,ptetaTopi0Ratio22_0010,etaTopi0Ratio26_0010);
+
+
     //Putting the three together:
     for(Int_t k=0; k<nlinesJetQuenching; k++){
         etaTopi0LowErr_0010[k] = etaTopi0Ratio22_0010[k] - etaTopi0Ratio18_0010[k];
@@ -574,9 +574,9 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     TGraphAsymmErrors *graphEtaToPi0JetQuenching_0010 = new TGraphAsymmErrors(nlinesJetQuenching, ptetaTopi0Ratio22_0010, etaTopi0Ratio22_0010, ptErr, ptErr, etaTopi0LowErr_0010, etaTopi0HighErr_0010);
 
-	
-    
-    //********************************************************************************************************************************************    
+
+
+    //********************************************************************************************************************************************
     //*************************************** Raa theory Xiao-Fang *******************************************************************************
     Int_t index = 0;
     TGraphErrors* Xiao_Raa_0020 = new TGraphErrors(16);
@@ -620,7 +620,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         file_0020_high.close();
         index = 0;
     }
-    
+
     if (file_2040_low.is_open()){
         while(!file_2040_low.eof()){
             file_2040_low >> pT_2040[index] >> low_2040[index];
@@ -637,7 +637,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         file_2040_high.close();
         index = 0;
     }
-    
+
     if (file_4060_low.is_open()){
         while(!file_4060_low.eof()){
             file_4060_low >> pT_4060[index] >> low_4060[index];
@@ -654,7 +654,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         file_4060_high.close();
         index = 0;
     }
-    
+
     if (file_6080_low.is_open()){
         while(!file_6080_low.eof()){
             file_6080_low >> pT_6080[index] >> low_6080[index];
@@ -671,7 +671,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         file_6080_high.close();
         index = 0;
     }
-    
+
     for(Int_t i=0; i<16; i++){
         Xiao_Raa_0020->SetPoint(i, pT_0020[i], (high_0020[i] + low_0020[i])/2.);
         Xiao_Raa_0020->SetPointError(i, 0.0000000001, (high_0020[i] - low_0020[i])/2.);
@@ -684,6 +684,69 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
 
     // *************************************************************************************
+    // new predictions from Vitev: new effective theory (SCET_G) + new technique of evaluating
+    // the production of hadrons in the presence of a QGP based on QCD evolution techniques
+    // Phys.Rev.Lett. 114 (2015) no.9, 092002
+    // Phys.Rev. D93 (2016) no.7, 074030
+
+    Int_t nPointsVitevNew = 251;
+    TGraphErrors* Vitev_newpred_Raa_0010 = new TGraphErrors(nPointsVitevNew);
+    Double_t pTVitev_newpred_0010[nPointsVitevNew];
+    Double_t highVitev_newpred_0010[nPointsVitevNew];
+    Double_t lowVitev_newpred_0010[nPointsVitevNew];
+    ifstream fileVitev_newpred_0010_low("ExternalInputPbPb/Theory/Vitev/R-N.aa_010_cron1.5_eloss0.2760GeVpi.g1.9");
+    ifstream fileVitev_newpred_0010_high("ExternalInputPbPb/Theory/Vitev/R-N.aa_010_cron1.5_eloss0.2760GeVpi.g2.1");
+    index = 0;
+    if (fileVitev_newpred_0010_low.is_open()){
+        while(!fileVitev_newpred_0010_low.eof() && index < nPointsVitevNew){
+            fileVitev_newpred_0010_low >> pTVitev_newpred_0010[index] >> lowVitev_newpred_0010[index];
+            index++;
+        }
+        fileVitev_newpred_0010_low.close();
+        index = 0;
+    }
+    if (fileVitev_newpred_0010_high.is_open()){
+        while(!fileVitev_newpred_0010_high.eof() && index < nPointsVitevNew){
+            fileVitev_newpred_0010_high >> pTVitev_newpred_0010[index] >> highVitev_newpred_0010[index];
+            index++;
+        }
+        fileVitev_newpred_0010_high.close();
+        index = 0;
+    }
+    for(Int_t i=0; i<nPointsVitevNew; i++){
+        Vitev_newpred_Raa_0010->SetPoint(i, pTVitev_newpred_0010[i], (highVitev_newpred_0010[i] + lowVitev_newpred_0010[i])/2.);
+        Vitev_newpred_Raa_0010->SetPointError(i, 0.0000000001, (highVitev_newpred_0010[i] - lowVitev_newpred_0010[i])/2.);
+    }
+
+    TGraphErrors* Vitev_newpred_Raa_2050 = new TGraphErrors(nPointsVitevNew);
+    Double_t pTVitev_newpred_2050[nPointsVitevNew];
+    Double_t highVitev_newpred_2050[nPointsVitevNew];
+    Double_t lowVitev_newpred_2050[nPointsVitevNew];
+    ifstream fileVitev_newpred_2050_low("ExternalInputPbPb/Theory/Vitev/R-N.aa_2050_cron1.5_eloss0.2760GeVpi.g1.9");
+    ifstream fileVitev_newpred_2050_high("ExternalInputPbPb/Theory/Vitev/R-N.aa_2050_cron1.5_eloss0.2760GeVpi.g2.1");
+    index = 0;
+    if (fileVitev_newpred_2050_low.is_open()){
+        while(!fileVitev_newpred_2050_low.eof() && index < nPointsVitevNew){
+            fileVitev_newpred_2050_low >> pTVitev_newpred_2050[index] >> lowVitev_newpred_2050[index];
+            index++;
+        }
+        fileVitev_newpred_2050_low.close();
+        index = 0;
+    }
+    if (fileVitev_newpred_2050_high.is_open()){
+        while(!fileVitev_newpred_2050_high.eof() && index < nPointsVitevNew){
+            fileVitev_newpred_2050_high >> pTVitev_newpred_2050[index] >> highVitev_newpred_2050[index];
+            index++;
+        }
+        fileVitev_newpred_2050_high.close();
+        index = 0;
+    }
+    for(Int_t i=0; i<nPointsVitevNew; i++){
+        Vitev_newpred_Raa_2050->SetPoint(i, pTVitev_newpred_2050[i], (highVitev_newpred_2050[i] + lowVitev_newpred_2050[i])/2.);
+        Vitev_newpred_Raa_2050->SetPointError(i, 0.0000000001, (highVitev_newpred_2050[i] - lowVitev_newpred_2050[i])/2.);
+    }
+
+
     // **************************** Vitev **************************************************
     TGraphErrors* Vitev_Bas_Raa_0020 = new TGraphErrors(35);
     Double_t pTVitev_Bas_0020[40];
@@ -697,7 +760,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     Double_t lowVitev_ShlSel_0020[40];
     ifstream fileVitev_ShlSel_0020_low ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.dnShISelPI0");
     ifstream fileVitev_ShlSel_0020_high ("ExternalInputPbPb/Theory/Vitev/R-PbPb2760pi0.upShISelPI0");
-    
+
    index = 0;
    if (fileVitev_Bas_0020_low.is_open()){
       while(!fileVitev_Bas_0020_low.eof()){
@@ -715,8 +778,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       fileVitev_Bas_0020_high.close();
       index = 0;
    }
-   
-   
+
+
    if (fileVitev_ShlSel_0020_low.is_open()){
       while(!fileVitev_ShlSel_0020_low.eof()){
          fileVitev_ShlSel_0020_low >> pTVitev_ShlSel_0020[index] >> lowVitev_ShlSel_0020[index];
@@ -743,7 +806,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       Vitev_ShlSel_Raa_0020->SetPoint(i, pTVitev_ShlSel_0020[i], (highVitev_ShlSel_0020[i] + lowVitev_ShlSel_0020[i])/2.);
       Vitev_ShlSel_Raa_0020->SetPointError(i, 0.0000000001, (highVitev_ShlSel_0020[i] - lowVitev_ShlSel_0020[i])/2.);
 //       cout << "Vitev ShlSel \t " << pTVitev_ShlSel_0020[i] << "\t" << (highVitev_ShlSel_0020[i] + lowVitev_ShlSel_0020[i])/2. << "\t" << (highVitev_ShlSel_0020[i] - lowVitev_ShlSel_0020[i])/2. << endl;
-      
+
    }
 
    Int_t nPointsVitev = 276;
@@ -804,7 +867,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       Vitev_Bas_Raa_0510->SetPointError(i, 0.0000000001, (highVitev_Bas_0510[i] - lowVitev_Bas_0510[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_0510[i] << "\t" << (highVitev_Bas_0510[i] + lowVitev_Bas_0510[i])/2. << "\t" << (highVitev_Bas_0510[i] - lowVitev_Bas_0510[i])/2. << endl;
    }
-   
+
    TGraphErrors* Vitev_Bas_Raa_1020 = new TGraphErrors(nPointsVitev);
    Double_t pTVitev_Bas_1020[nPointsVitev];
    Double_t highVitev_Bas_1020[nPointsVitev];
@@ -833,7 +896,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       Vitev_Bas_Raa_1020->SetPointError(i, 0.0000000001, (highVitev_Bas_1020[i] - lowVitev_Bas_1020[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_1020[i] << "\t" << (highVitev_Bas_1020[i] + lowVitev_Bas_1020[i])/2. << "\t" << (highVitev_Bas_1020[i] - lowVitev_Bas_1020[i])/2. << endl;
    }
-   
+
    TGraphErrors* Vitev_Bas_Raa_2040 = new TGraphErrors(nPointsVitev);
    Double_t pTVitev_Bas_2040[nPointsVitev];
    Double_t highVitev_Bas_2040[nPointsVitev];
@@ -862,7 +925,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       Vitev_Bas_Raa_2040->SetPointError(i, 0.0000000001, (highVitev_Bas_2040[i] - lowVitev_Bas_2040[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_2040[i] << "\t" << (highVitev_Bas_2040[i] + lowVitev_Bas_2040[i])/2. << "\t" << (highVitev_Bas_2040[i] - lowVitev_Bas_2040[i])/2. << endl;
    }
-   
+
    TGraphErrors* Vitev_Bas_Raa_4060 = new TGraphErrors(nPointsVitev);
    Double_t pTVitev_Bas_4060[nPointsVitev];
    Double_t highVitev_Bas_4060[nPointsVitev];
@@ -891,7 +954,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       Vitev_Bas_Raa_4060->SetPointError(i, 0.0000000001, (highVitev_Bas_4060[i] - lowVitev_Bas_4060[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_4060[i] << "\t" << (highVitev_Bas_4060[i] + lowVitev_Bas_4060[i])/2. << "\t" << (highVitev_Bas_4060[i] - lowVitev_Bas_4060[i])/2. << endl;
    }
-   
+
    TGraphErrors* Vitev_Bas_Raa_6080 = new TGraphErrors(nPointsVitev);
    Double_t pTVitev_Bas_6080[nPointsVitev];
    Double_t highVitev_Bas_6080[nPointsVitev];
@@ -921,8 +984,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
       Vitev_Bas_Raa_6080->SetPointError(i, 0.0000000001, (highVitev_Bas_6080[i] - lowVitev_Bas_6080[i])/2.);
 //       cout << "Vitev Bas \t " << pTVitev_Bas_6080[i] << "\t" << (highVitev_Bas_6080[i] + lowVitev_Bas_6080[i])/2. << "\t" << (highVitev_Bas_6080[i] - lowVitev_Bas_6080[i])/2. << endl;
    }
-              
-          
+
+
     //************************************************************************************************************************
     //*************************************** Raa theory WHDG ****************************************************************
     //from S. Wicks, W. Horowitz, M. Djordjevic and M. Gyulassy, ``Elastic, inelastic, and path length fluctuations in jet tomography,'' Nucl. Phys. A 784, 426 (2007) [nucl-th/0512076].
@@ -930,7 +993,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 
     //*****************************************************     Pi0     ************************************************************************
     // 0-5%, 5-10%, 0-10%, 10-20%, 0-20%, 20-40%, 20-50%, 40-60%, 60-80%
-    
+
     TGraphAsymmErrors* gWHDG_Raa_0005 = new TGraphAsymmErrors(4);
     Double_t WHDG_pT_0005[39];
     Double_t WHDG_Raa_0005[39];
@@ -963,7 +1026,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     ifstream WHDG_file_1020("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760Pi0RAA1020b.dat");
     ifstream WHDG_file_1020_low("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760Pi0RAA1020l.dat");
     ifstream WHDG_file_1020_high("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760Pi0RAA1020u.dat");
-    
+
     TGraphAsymmErrors* gWHDG_Raa_0020 = new TGraphAsymmErrors(4);
     Double_t WHDG_pT_0020[39];
     Double_t WHDG_Raa_0020[39];
@@ -1003,12 +1066,12 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     Double_t WHDG_low_6080[39];
     ifstream WHDG_file_6080("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760pi0RAA6080b.dat");
     ifstream WHDG_file_6080_low("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760pi0RAA6080l.dat");
-    ifstream WHDG_file_6080_high("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760pi0RAA6080u.dat");    
-    
+    ifstream WHDG_file_6080_high("ExternalInputPbPb/Theory/WHDG2760pi0RAA/WHDG2760pi0RAA6080u.dat");
+
     if (WHDG_file_0005.is_open()){
         while(!WHDG_file_0005.eof()){
             WHDG_file_0005 >> WHDG_pT_0005[index] >> WHDG_Raa_0005[index];
-         cout << WHDG_pT_0005[index] << "\t" << WHDG_Raa_0005[index] << endl; 
+         cout << WHDG_pT_0005[index] << "\t" << WHDG_Raa_0005[index] << endl;
             index++;
         }
         WHDG_file_0005.close();
@@ -1017,7 +1080,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     if (WHDG_file_0005_low.is_open()){
         while(!WHDG_file_0005_low.eof()){
             WHDG_file_0005_low >> WHDG_pT_0005[index] >> WHDG_low_0005[index];
-         cout << WHDG_pT_0005[index] << "\t" << WHDG_low_0005[index]<< endl; 
+         cout << WHDG_pT_0005[index] << "\t" << WHDG_low_0005[index]<< endl;
             index++;
         }
         WHDG_file_0005_low.close();
@@ -1031,7 +1094,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         WHDG_file_0005_high.close();
         index = 0;
     }
-    
+
     if (WHDG_file_0510.is_open()){
         while(!WHDG_file_0510.eof()){
             WHDG_file_0510 >> WHDG_pT_0510[index] >> WHDG_Raa_0510[index];
@@ -1104,8 +1167,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         WHDG_file_1020_high.close();
         index = 0;
     }
-    
-    
+
+
     if (WHDG_file_0020.is_open()){
         while(!WHDG_file_0020.eof()){
             WHDG_file_0020 >> WHDG_pT_0020[index] >> WHDG_Raa_0020[index];
@@ -1130,7 +1193,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         WHDG_file_0020_high.close();
         index = 0;
     }
-    
+
     if (WHDG_file_2040.is_open()){
         while(!WHDG_file_2040.eof()){
             WHDG_file_2040 >> WHDG_pT_2040[index] >> WHDG_Raa_2040[index];
@@ -1180,7 +1243,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         WHDG_file_2050_high.close();
         index = 0;
     }
-    
+
     if (WHDG_file_4060.is_open()){
         while(!WHDG_file_4060.eof()){
             WHDG_file_4060 >> WHDG_pT_4060[index] >> WHDG_Raa_4060[index];
@@ -1205,7 +1268,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         WHDG_file_4060_high.close();
         index = 0;
     }
-    
+
     if (WHDG_file_6080.is_open()){
         while(!WHDG_file_6080.eof()){
             WHDG_file_6080 >> WHDG_pT_6080[index] >> WHDG_Raa_6080[index];
@@ -1229,8 +1292,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         }
         WHDG_file_6080_high.close();
         index = 0;
-    }    
-    
+    }
+
     for(Int_t i=0; i<4; i++){
         gWHDG_Raa_0005->SetPoint(i, WHDG_pT_0005[i],  WHDG_Raa_0005[i]);
         gWHDG_Raa_0005->SetPointError(i, 0.000001, 0.000001, WHDG_Raa_0005[i] - WHDG_low_0005[i], WHDG_high_0005[i] - WHDG_Raa_0005[i]);
@@ -1251,8 +1314,8 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         gWHDG_Raa_6080->SetPoint(i, WHDG_pT_6080[i],  WHDG_Raa_6080[i]);
         gWHDG_Raa_6080->SetPointError(i, 0.000001, 0.000001, WHDG_Raa_6080[i] - WHDG_low_6080[i], WHDG_high_6080[i] - WHDG_Raa_6080[i]);
     }
-    
-    
+
+
     //*****************************************************     Eta     ************************************************************************
     // 0-10%, (available 10-20%), 20-50%, (available 50-80%)
     TGraphAsymmErrors* gWHDG_Eta_Raa_0010 = new TGraphAsymmErrors(4);
@@ -1322,7 +1385,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         WHDG_Eta_file_2050_high.close();
         index = 0;
     }
-    
+
     for(Int_t i=0; i<4; i++){
         gWHDG_Eta_Raa_0010->SetPoint(i, WHDG_Eta_pT_0010[i],  WHDG_Eta_Raa_0010[i]);
         gWHDG_Eta_Raa_0010->SetPointError(i, 0.000001, 0.000001, WHDG_Eta_Raa_0010[i] - WHDG_Eta_low_0010[i], WHDG_Eta_high_0010[i] - WHDG_Eta_Raa_0010[i]);
@@ -1330,19 +1393,19 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         gWHDG_Eta_Raa_2050->SetPoint(i, WHDG_Eta_pT_2050[i],  WHDG_Eta_Raa_2050[i]);
         gWHDG_Eta_Raa_2050->SetPointError(i, 0.000001, 0.000001, WHDG_Eta_Raa_2050[i] - WHDG_Eta_low_2050[i], WHDG_Eta_high_2050[i] - WHDG_Eta_Raa_2050[i]);
     }
-    
+
     //*********************************************************************************************************************************
     //*************************************************************** EPOS ************************************************************
 
     const Int_t nFilesEpos = 6;
-    TString label[nFilesEpos] = {"Epos_pi0_PbPb_2760GeV_00_to_05", "Epos_pi0_PbPb_2760GeV_05_to_10", "Epos_pi0_PbPb_2760GeV_10_to_20", 
+    TString label[nFilesEpos] = {"Epos_pi0_PbPb_2760GeV_00_to_05", "Epos_pi0_PbPb_2760GeV_05_to_10", "Epos_pi0_PbPb_2760GeV_10_to_20",
                     "Epos_pi0_PbPb_2760GeV_20_to_40", "Epos_pi0_PbPb_2760GeV_40_to_60", "Epos_pi0_PbPb_2760GeV_60_to_80"};
     TString labelOut[nFilesEpos] = {"graphEPOSSpec0005", "graphEPOSSpec0510", "graphEPOSSpec1020","graphEPOSSpec2040", "graphEPOSSpec4060", "graphEPOSSpec6080"};
     TString labelOutWOErr[nFilesEpos] = {"graphEPOSSpecWOErr0005", "graphEPOSSpecWOErr0510", "graphEPOSSpecWOErr1020","graphEPOSSpecWOErr2040", "graphEPOSSpecWOErr4060", "graphEPOSSpecWOErr6080"};
-    
+
     TGraphErrors* gEpos[nFilesEpos];
     TGraph* gEposWOErr[nFilesEpos];
-    
+
     for (int iFile=0; iFile<nFilesEpos; iFile++) {
 
         const Int_t nPoints = 70;
@@ -1352,10 +1415,10 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         cout << filename << endl;
 
         ifstream fEposTxt(filename);
-        
+
         Int_t iPoint = 0;
-        
-        while(!fEposTxt.eof() && iPoint < nPoints){ 
+
+        while(!fEposTxt.eof() && iPoint < nPoints){
         fEposTxt >> pt[iPoint] >> dndptpy[iPoint] >> dndptpy_staterr[iPoint];
         // cout << pt[iPoint] << "   " << dndptpy[iPoint] << "   " << dndptpy_staterr[iPoint] << endl;
         dndptpy[iPoint]= dndptpy[iPoint]/(pt[iPoint]*2*TMath::Pi());
@@ -1370,7 +1433,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         }
 
         fEposTxt.close();
-    
+
         gEpos[iFile] = new TGraphErrors(nPoints, pt, dndptpy, 0, dndptpy_staterr);
         gEposWOErr[iFile] = new TGraph(nPoints, pt, dndptpy);
         Int_t i = nPoints-1 ;
@@ -1382,7 +1445,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
             i--;
         }
 //         gEpos[iFile]->Print();
-    }    
+    }
 
     //EPOS(2?) (file from Anders Knospe)
     //necessary to do -> dndptpy[iPoint] = dndptpy[iPoint]/(pt[iPoint]*2*TMath::Pi())
@@ -1431,21 +1494,21 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 	//*********************************************************************************************************************************
 	//************************************************************** EPOS 3 ***********************************************************
     // Calculation for 0-10% (for LHC11h -> is worse than old EPOS...)
-	
+
     Double_t Pi0pt[70];
 	Double_t Etapt[70];
 	Double_t Pi0dndptpy[70];
 	Double_t Pi0dndptpy_staterr[70];
 	Double_t Etadndptpy[70];
 	Double_t Etadndptpy_staterr[70];
-	
+
     TString filenamePi0 = "ExternalInputPbPb/Theory/EPOS/pion0-10.txt";
     ifstream fEposPi0Txt;
 	fEposPi0Txt.open(filenamePi0,ios_base::in);
     cout << filenamePi0 << endl;
-	
+
     Int_t iPoint = 0;
-    while(!fEposPi0Txt.eof() && iPoint < 70){ 
+    while(!fEposPi0Txt.eof() && iPoint < 70){
         fEposPi0Txt >> Pi0pt[iPoint] >> Pi0dndptpy[iPoint] >> Pi0dndptpy_staterr[iPoint];
         Pi0dndptpy[iPoint]= Pi0dndptpy[iPoint]/(Pi0pt[iPoint]*2*TMath::Pi());
         Pi0dndptpy_staterr[iPoint] = Pi0dndptpy_staterr[iPoint]/(Pi0pt[iPoint]*2*TMath::Pi());
@@ -1455,14 +1518,14 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     fEposPi0Txt.close();
     TGraphErrors* graphEPOS3Pi0_0010 = new TGraphErrors(iPoint, Pi0pt, Pi0dndptpy, 0, Pi0dndptpy_staterr);
 
-	
+
     TString filenameEta = "ExternalInputPbPb/Theory/EPOS/eta0-10.txt";
     ifstream fEposEtaTxt;
 	fEposEtaTxt.open(filenameEta,ios_base::in);
     cout << filenameEta << endl;
 
     iPoint = 0;
-    while(!fEposEtaTxt.eof() && iPoint < 70){ 
+    while(!fEposEtaTxt.eof() && iPoint < 70){
         fEposEtaTxt >> Etapt[iPoint] >> Etadndptpy[iPoint] >> Etadndptpy_staterr[iPoint];
         Etadndptpy[iPoint]= Etadndptpy[iPoint]/(Etapt[iPoint]*2*TMath::Pi());
         Etadndptpy_staterr[iPoint] = Etadndptpy_staterr[iPoint]/(Etapt[iPoint]*2*TMath::Pi());
@@ -1471,11 +1534,11 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     fEposEtaTxt.close();
     TGraphErrors* graphEPOS3Eta_0010 = new TGraphErrors(iPoint, Etapt, Etadndptpy, 0, Etadndptpy_staterr);
-    
+
 
 	//*********************************************************************************************************************************
 	//********************************************************** Nemchick *************************************************************
-    
+
     Double_t pTAdditional[43] = {  6.00,  6.25,  6.50,  6.75,  7.00,
                                 7.25,  7.50,  7.75,  8.00,  8.25,
                                 8.50,  8.75,  9.00,  9.25,  9.50,
@@ -1485,7 +1548,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
                                 13.50, 13.75, 14.00, 14.25, 14.50,
                                 14.75, 15.00, 15.50, 16.00, 17.00,
                                 18.00, 19.00, 20.00};
-    
+
     Double_t ncoll0005 = 1684.4;
     Double_t ncoll0510 = 1316;
     Double_t ncoll0010 = 1500;
@@ -1505,7 +1568,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     spectrum2760GeV->SetParameter(0,1.6450861188);
     spectrum2760GeV->SetParameter(1,7.2981303064);
     spectrum2760GeV->SetParameter(2,0.1402413223);
-    
+
     TGraph* Kopeliovich_YieldHydro_0005 = new TGraph(97);
     TGraph* Kopeliovich_YieldHydroSmoothed_0005 = new TGraph(140);
     TGraph* Kopeliovich_YieldELoss_0005 = new TGraph(140);
@@ -1529,12 +1592,12 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     for (Int_t i= 0; i < 43; i++){
         pTKopeliovich_Yield_0005[i+97] = pTAdditional[i];
-    }   
-    
+    }
+
     TGraph* Kopeliovich_RAA_0005 = new TGraph(24);
     Double_t pTKopeliovich_RAA_0005[24];
     Double_t yKopeliovich_RAA_0005[24];
-    
+
     ifstream file_Kopeliovich_RAA_0005 ("ExternalInputPbPb/Theory/Nemchick/r_AA-pQCD-0-5L.dat");
     index = 0;
     if (file_Kopeliovich_RAA_0005.is_open()){
@@ -1557,16 +1620,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Double_t evaluatedPP = spectrum2760GeV->Eval(pTKopeliovich_Yield_0005[i]);
         Kopeliovich_RAA_0005_finerBinning->SetPoint(i, pTKopeliovich_Yield_0005[i], evaluatedRAA);
 
-            yELossKopeliovich_Yield_0005[i] = ncoll0005*evaluatedPP*evaluatedRAA; 
+            yELossKopeliovich_Yield_0005[i] = ncoll0005*evaluatedPP*evaluatedRAA;
             if (i < 97 ){
-                yTotalKopeliovich_Yield_0005[i] = yKopeliovich_YieldHydro_0005[i] + ncoll0005*evaluatedPP*evaluatedRAA;    
+                yTotalKopeliovich_Yield_0005[i] = yKopeliovich_YieldHydro_0005[i] + ncoll0005*evaluatedPP*evaluatedRAA;
             } else {
-                yTotalKopeliovich_Yield_0005[i] = ncoll0005*evaluatedPP*evaluatedRAA; 
-            }   
+                yTotalKopeliovich_Yield_0005[i] = ncoll0005*evaluatedPP*evaluatedRAA;
+            }
     //       Kopeliovich_YieldHydroSmoothed_0005->SetPoint(i, pTKopeliovich_Yield_0005[i], evaluatedHydro);
         Kopeliovich_YieldELoss_0005->SetPoint(i, pTKopeliovich_Yield_0005[i], yELossKopeliovich_Yield_0005[i]);
         Kopeliovich_YieldTotal_0005->SetPoint(i, pTKopeliovich_Yield_0005[i], yTotalKopeliovich_Yield_0005[i]);
-    }                          
+    }
 
     Int_t j = 0;
     while (pTKopeliovich_Yield_0005[j] < 3){
@@ -1574,7 +1637,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Kopeliovich_YieldELoss_0005->RemovePoint(0);
         Kopeliovich_YieldTotal_0005->RemovePoint(0);
     }
-    
+
 
     TGraph* Kopeliovich_YieldHydro_2040 = new TGraph(97);
     TGraph* Kopeliovich_YieldHydroSmoothed_2040 = new TGraph(140);
@@ -1599,12 +1662,12 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     for (Int_t i= 0; i < 43; i++){
         pTKopeliovich_Yield_2040[i+97] = pTAdditional[i];
-    }   
-    
+    }
+
     TGraph* Kopeliovich_RAA_2040 = new TGraph(24);
     Double_t pTKopeliovich_RAA_2040[24];
     Double_t yKopeliovich_RAA_2040[24];
-    
+
     ifstream file_Kopeliovich_RAA_2040 ("ExternalInputPbPb/Theory/Nemchick/r_AA-pQCD-20-40L.dat");
     index = 0;
     if (file_Kopeliovich_RAA_2040.is_open()){
@@ -1627,16 +1690,16 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Double_t evaluatedPP = spectrum2760GeV->Eval(pTKopeliovich_Yield_2040[i]);
         Kopeliovich_RAA_2040_finerBinning->SetPoint(i, pTKopeliovich_Yield_2040[i], evaluatedRAA);
 
-            yELossKopeliovich_Yield_2040[i] = ncoll2040*evaluatedPP*evaluatedRAA; 
+            yELossKopeliovich_Yield_2040[i] = ncoll2040*evaluatedPP*evaluatedRAA;
             if (i < 97 ){
-                yTotalKopeliovich_Yield_2040[i] = yKopeliovich_YieldHydro_2040[i] + ncoll2040*evaluatedPP*evaluatedRAA;    
+                yTotalKopeliovich_Yield_2040[i] = yKopeliovich_YieldHydro_2040[i] + ncoll2040*evaluatedPP*evaluatedRAA;
             } else {
-                yTotalKopeliovich_Yield_2040[i] = ncoll2040*evaluatedPP*evaluatedRAA; 
-            }   
+                yTotalKopeliovich_Yield_2040[i] = ncoll2040*evaluatedPP*evaluatedRAA;
+            }
     //       Kopeliovich_YieldHydroSmoothed_2040->SetPoint(i, pTKopeliovich_Yield_2040[i], evaluatedHydro);
         Kopeliovich_YieldELoss_2040->SetPoint(i, pTKopeliovich_Yield_2040[i], yELossKopeliovich_Yield_2040[i]);
         Kopeliovich_YieldTotal_2040->SetPoint(i, pTKopeliovich_Yield_2040[i], yTotalKopeliovich_Yield_2040[i]);
-    }                          
+    }
 
     j = 0;
     while (pTKopeliovich_Yield_2040[j] < 3){
@@ -1644,7 +1707,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Kopeliovich_YieldELoss_2040->RemovePoint(0);
         Kopeliovich_YieldTotal_2040->RemovePoint(0);
     }
-    
+
     TGraph* Kopeliovich_YieldHydro_6080 = new TGraph(79);
     TGraph* Kopeliovich_YieldHydroSmoothed_6080 = new TGraph(122);
     TGraph* Kopeliovich_YieldELoss_6080 = new TGraph(122);
@@ -1668,13 +1731,13 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     }
     for (Int_t i= 0; i < 43; i++){
         pTKopeliovich_Yield_6080[i+79] = pTAdditional[i];
-    }   
+    }
 //     Kopeliovich_YieldHydro_6080->Print();
-    
+
     TGraph* Kopeliovich_RAA_6080 = new TGraph(24);
     Double_t pTKopeliovich_RAA_6080[24];
     Double_t yKopeliovich_RAA_6080[24];
-    
+
     ifstream file_Kopeliovich_RAA_6080 ("ExternalInputPbPb/Theory/Nemchick/r_AA-pQCD-60-80L.dat");
     index = 0;
     if (file_Kopeliovich_RAA_6080.is_open()){
@@ -1696,18 +1759,18 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     //       Double_t evaluatedHydro = Kopeliovich_YieldHydro_6080->Eval(pTKopeliovich_Yield_6080[i], 0, "S");
         Double_t evaluatedPP = spectrum2760GeV->Eval(pTKopeliovich_Yield_6080[i]);
         Kopeliovich_RAA_6080_finerBinning->SetPoint(i, pTKopeliovich_Yield_6080[i], evaluatedRAA);
-        
-            yELossKopeliovich_Yield_6080[i] = ncoll6080*evaluatedPP*evaluatedRAA; 
+
+            yELossKopeliovich_Yield_6080[i] = ncoll6080*evaluatedPP*evaluatedRAA;
             if (i < 79 ){
-                yTotalKopeliovich_Yield_6080[i] = yKopeliovich_YieldHydro_6080[i] + ncoll6080*evaluatedPP*evaluatedRAA;    
+                yTotalKopeliovich_Yield_6080[i] = yKopeliovich_YieldHydro_6080[i] + ncoll6080*evaluatedPP*evaluatedRAA;
             } else {
-                yTotalKopeliovich_Yield_6080[i] = ncoll6080*evaluatedPP*evaluatedRAA; 
-            }   
+                yTotalKopeliovich_Yield_6080[i] = ncoll6080*evaluatedPP*evaluatedRAA;
+            }
     //       Kopeliovich_YieldHydroSmoothed_6080->SetPoint(i, pTKopeliovich_Yield_6080[i], evaluatedHydro);
         cout << pTKopeliovich_Yield_6080[i] << "\t" << evaluatedPP << "\t" << evaluatedRAA << "\t" << yELossKopeliovich_Yield_6080[i] << endl;
         Kopeliovich_YieldELoss_6080->SetPoint(i, pTKopeliovich_Yield_6080[i], yELossKopeliovich_Yield_6080[i]);
         Kopeliovich_YieldTotal_6080->SetPoint(i, pTKopeliovich_Yield_6080[i], yTotalKopeliovich_Yield_6080[i]);
-    }                          
+    }
 //     Kopeliovich_RAA_6080_finerBinning->Print();
     j = 0;
     while (pTKopeliovich_Yield_6080[j] < 3){
@@ -1715,12 +1778,12 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         Kopeliovich_YieldELoss_6080->RemovePoint(0);
         Kopeliovich_YieldTotal_6080->RemovePoint(0);
     }
-    
+
 
 
     //**************************************************************************************************************
     //************************************* pQCD, pp 2.76TeV Pi0 DSS14 *********************************************
-    
+
     Double_t xSection2760GeVppINEL = 62.8*1e9;
     Double_t       ptNLODSS14Pi02760GeV[39];
     Double_t       ptErrNLODSS14Pi02760GeV[39];
@@ -1733,31 +1796,31 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     Double_t       muTwoDSS14Pi02760GeVforGraph[39];
     Double_t       muTwoErrDSS14Pi02760GeV[39];
     Int_t          nlinesNLODSS14Pi02760GeV = 0;
-    
+
     TString fileNameNLODSS14Pi02760GeV = "ExternalInput/Theory/pi0dss14-2760gev-dsigmadpt-eta060-pt40.dat";
     ifstream  fileNLODSS14Pi02760GeV;
     fileNLODSS14Pi02760GeV.open(fileNameNLODSS14Pi02760GeV,ios_base::in);
     cout << fileNameNLODSS14Pi02760GeV << endl;
-    
+
     while(!fileNLODSS14Pi02760GeV.eof() && nlinesNLODSS14Pi02760GeV < 39){
         TString garbage;
-        fileNLODSS14Pi02760GeV >> ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] >> garbage >> muHalfDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]  >> muTwoDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]; 
-        
+        fileNLODSS14Pi02760GeV >> ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] >> garbage >> muHalfDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]  >> muTwoDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV];
+
 		muOneDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] = (muHalfDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] + muTwoDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV])/(2*2*TMath::Pi()*ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]);
         muOneErrDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] = (muHalfDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]-muTwoDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV])/(2*2*TMath::Pi()*ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]);
         ptErrNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] = 0.;
         cout << nlinesNLODSS14Pi02760GeV << "\t "  << ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] << "\t "  << muHalfDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] << "\t "  << muOneDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] << "         "  << muTwoDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] << endl;;
-        
+
         muHalfDSS14Pi02760GeVforGraph[nlinesNLODSS14Pi02760GeV] = muHalfDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]/(2*TMath::Pi()*ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]);
         muTwoDSS14Pi02760GeVforGraph[nlinesNLODSS14Pi02760GeV] = muTwoDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]/(2*TMath::Pi()*ptNLODSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV]);
-        
+
         muHalfErrDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] = 0.;
         muTwoErrDSS14Pi02760GeV[nlinesNLODSS14Pi02760GeV] = 0.;
         nlinesNLODSS14Pi02760GeV++;
-        
+
     }
     fileNLODSS14Pi02760GeV.close();
-	
+
     TGraphAsymmErrors* graphNLOCalcmuHalfDSS14InvSecPi02760GeV = new TGraphAsymmErrors(nlinesNLODSS14Pi02760GeV, ptNLODSS14Pi02760GeV, muHalfDSS14Pi02760GeVforGraph, ptErrNLODSS14Pi02760GeV,
 																					   ptErrNLODSS14Pi02760GeV, muHalfErrDSS14Pi02760GeV, muHalfErrDSS14Pi02760GeV);
     TGraphAsymmErrors* graphNLOCalcmuTwoDSS14InvSecPi02760GeV = new TGraphAsymmErrors(nlinesNLODSS14Pi02760GeV, ptNLODSS14Pi02760GeV, muTwoDSS14Pi02760GeVforGraph, ptErrNLODSS14Pi02760GeV,
@@ -1765,7 +1828,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     TGraphAsymmErrors* graphNLOCalcDSS14InvSecPi02760GeV = new TGraphAsymmErrors(nlinesNLODSS14Pi02760GeV, ptNLODSS14Pi02760GeV, muOneDSS14Pi02760GeV, ptErrNLODSS14Pi02760GeV, ptErrNLODSS14Pi02760GeV,
                                                                                 muOneErrDSS14Pi02760GeV, muOneErrDSS14Pi02760GeV);
     TGraphAsymmErrors* graphNLOCalcDSS14InvYieldPi02760GeV = ScaleGraphAsym(graphNLOCalcDSS14InvSecPi02760GeV,  1./xSection2760GeVppINEL);
-	
+
 
     // **************************************************************************************************************
     // ************************************* pQCD, pp 2.76TeV Eta DSS07 *********************************************
@@ -1786,25 +1849,25 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     ifstream  fileNLODSS07Eta2760GeV;
     fileNLODSS07Eta2760GeV.open(fileNameNLODSS07Eta2760GeV,ios_base::in);
     cout << fileNameNLODSS07Eta2760GeV << endl;
-    
+
     while(!fileNLODSS07Eta2760GeV.eof() && nlinesNLODSS07Eta2760GeV < 24){
         TString garbage;
         fileNLODSS07Eta2760GeV >> ptNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] >> garbage >> muHalfDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]  >> muTwoDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV];
-		
+
         muOneDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] = (muHalfDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]+muTwoDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV])/ (2*2*TMath::Pi()*ptNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]);
         muOneErrDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] = (muHalfDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]-muTwoDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV])/(2*2*TMath::Pi()*ptNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]);
         ptErrNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] = 0.;
         cout << nlinesNLODSS07Eta2760GeV << "\t "  << ptNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] << "\t "  << muHalfDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] << "\t "  << muOneDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] << "\t "  << muTwoDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] << endl;;
-        
+
         muHalfDSS07Eta2760GeVforGraph[nlinesNLODSS07Eta2760GeV] = muHalfDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]/(2*TMath::Pi()*ptNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]);
         muTwoDSS07Eta2760GeVforGraph[nlinesNLODSS07Eta2760GeV] = muTwoDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]/(2*TMath::Pi()*ptNLODSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV]);
         muHalfErrDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] = 0.;
         muTwoErrDSS07Eta2760GeV[nlinesNLODSS07Eta2760GeV] = 0.;
         nlinesNLODSS07Eta2760GeV++;
-        
+
     }
     fileNLODSS07Eta2760GeV.close();
-	
+
     TGraphAsymmErrors* graphNLOCalcmuHalfDSS07InvSecEta2760GeV = new TGraphAsymmErrors(nlinesNLODSS07Eta2760GeV, ptNLODSS07Eta2760GeV, muHalfDSS07Eta2760GeVforGraph, ptErrNLODSS07Eta2760GeV,
 																					   ptErrNLODSS07Eta2760GeV, muHalfErrDSS07Eta2760GeV, muHalfErrDSS07Eta2760GeV);
     TGraphAsymmErrors* graphNLOCalcmuTwoDSS07InvSecEta2760GeV = new TGraphAsymmErrors(nlinesNLODSS07Eta2760GeV, ptNLODSS07Eta2760GeV, muTwoDSS07Eta2760GeVforGraph, ptErrNLODSS07Eta2760GeV,
@@ -1814,9 +1877,11 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
     TGraphAsymmErrors* graphNLOCalcDSS07InvYieldEta2760GeV = ScaleGraphAsym(graphNLOCalcDSS07InvSecEta2760GeV, 1./xSection2760GeVppINEL);
 
 
-	
+
 	TFile *fileTheoryGraphsPbPb = new TFile(Form("ExternalInputPbPb/Theory/TheoryCompilationPbPb%s.root",specifier.Data()),"UPDATE");
-        
+
+        Vitev_newpred_Raa_0010->Write("graphVitevNewRAA0010");
+        Vitev_newpred_Raa_2050->Write("graphVitevNewRAA2050");
         Vitev_Bas_Raa_0020->Write("graphVitevBasRAA0020");
         Vitev_Bas_Raa_0005->Write("graphVitevBasRAA0005");
         Vitev_Bas_Raa_0510->Write("graphVitevBasRAA0510");
@@ -1878,7 +1943,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         TheoryBegunEQPi0_2050->Write("TheoryBegunEQPi0_2050");
         TheoryBegunEQEta_2050->Write("TheoryBegunEQEta_2050");
         TheoryBegunEQEtaToPi0_2050->Write("TheoryBegunEQEtaToPi0_2050");
-        
+
         TheoryCracowPi0LowPt_0010->Write("TheoryCracowPi0LowPt_0010");
         TheoryCracowEtaLowPt_0010->Write("TheoryCracowEtaLowPt_0010");
         TheoryCracowEtaToPi0LowPt_0010->Write("TheoryCracowEtaToPi0LowPt_0010");
@@ -1889,21 +1954,21 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
         TheoryCracowChargedKaonLowPt_0010->Write("TheoryCracowChargedKaonLowPt_0010");
         TheoryCracowKaonsToPionsLowPt_0010->Write("TheoryCracowKaonsToPionsLowPt_0010");
         TheoryCracowNeutralToChargedPionLowPt_0010->Write("TheoryCracowNeutralToChargedPionLowPt_0010");
-		
+
 		graphPi0Djordjevic_0010->Write("graphPi0Djordjevic_0010");
 		graphPi0Djordjevic_2050->Write("graphPi0Djordjevic_2050");
-		
+
         graphPi0JetQuenching18_0010->Write("graphPi0JetQuenching18_0010");
         graphPi0JetQuenching22_0010->Write("graphPi0JetQuenching22_0010");
         graphPi0JetQuenching26_0010->Write("graphPi0JetQuenching26_0010");
         graphEtaJetQuenching18_0010->Write("graphEtaJetQuenching18_0010");
         graphEtaJetQuenching22_0010->Write("graphEtaJetQuenching22_0010");
         graphEtaJetQuenching26_0010->Write("graphEtaJetQuenching26_0010");
-        
+
         graphEtatoPi0RatioJetQuenching18_0010->Write("graphEtatoPi0RatioJetQuenching18_0010");
         graphEtatoPi0RatioJetQuenching22_0010->Write("graphEtatoPi0RatioJetQuenching22_0010");
         graphEtatoPi0RatioJetQuenching26_0010->Write("graphEtatoPi0RatioJetQuenching26_0010");
-        
+
         graphPi0RAAJetQuenching_0010->Write("graphPi0RAAJetQuenching_0010");
         graphEtaRAAJetQuenching_0010->Write("graphEtaRAAJetQuenching_0010");
         graphEtaToPi0JetQuenching_0010->Write("graphEtaToPi0JetQuenching_0010");
@@ -1917,7 +1982,7 @@ void ProduceTheoryGraphsPbPb(TString specifier = ""){
 		graphNLOCalcmuTwoDSS07InvSecEta2760GeV->Write("graphNLOCalcmuTwoDSS07InvSecEta2760GeV");
 		graphNLOCalcDSS07InvSecEta2760GeV->Write("graphNLOCalcDSS07InvCrossSecEta2760GeV");
 		graphNLOCalcDSS07InvYieldEta2760GeV->Write("graphNLOCalcDSS07InvYieldEta2760GeV");
-        
+
     fileTheoryGraphsPbPb->Close();
 
 }
