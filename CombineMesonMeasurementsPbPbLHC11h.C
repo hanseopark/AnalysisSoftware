@@ -4122,6 +4122,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                     SetStyleTLatex( thesisLabelLowLeft,FontSize,4);
 //                     if(thesisPlotting) thesisLabelLowLeft->Draw();
 
+                    sublabelA = new TLatex(0.6,1.5E5,"(a)");
+                    SetStyleTLatex( sublabelA, FontSize,4,kBlack,42,kFALSE);
+                    sublabelA->Draw();
+
+
                 canvasInvariantYield->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesonswithBothModels.%s",outputDir.Data(),suffix.Data()));
                 canvasInvariantYield->SaveAs(Form("%s/YieldCombinedLHC11h_BothMesonswithBothModels.%s",paperPlots.Data(),suffix.Data()));
 
@@ -5250,7 +5255,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legen4RowsOnlyRatiosTheory->AddEntry(graphRatioEPOSToFitPbPb2760GeV_0010,"EPOS","l");
                 legen4RowsOnlyRatiosTheory->Draw();
 
-                sublabelA = new TLatex(0.55,0.35,"(a)");
+                sublabelA = new TLatex(0.55,0.35,"(b)");
                 SetStyleTLatex( sublabelA, 0.85*textsizeLabelscolYPi00010,4,kBlack,42,kFALSE);
                 sublabelA->Draw();
 
@@ -5281,7 +5286,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legen4RowOnlyRatios_pad2->AddEntry(graphRatioPi0InvYieldFitSystPbPb2760GeV_0010,"#pi^{0},  20#font[122]{-}50%","pf");
                 legen4RowOnlyRatios_pad2->Draw();
 
-                sublabelB = new TLatex(0.55,0.35,"(b)");
+                sublabelB = new TLatex(0.55,0.35,"(c)");
                 SetStyleTLatex( sublabelB, 0.85*textsizeLabelscolYPi02050,4,kBlack,42,kFALSE);
                 sublabelB->Draw();
 
@@ -5312,7 +5317,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legen4RowOnlyRatios_pad3->AddEntry(graphRatioEtaInvYieldFitSystPbPb2760GeV_0010,"#eta,  0#font[122]{-}10%","pf");
                 legen4RowOnlyRatios_pad3->Draw();
 
-                TLatex *sublabelC = new TLatex(0.55,0.35,"(c)");
+                TLatex *sublabelC = new TLatex(0.55,0.35,"(d)");
                 SetStyleTLatex( sublabelC, 0.85*textsizeLabelscolYEta0010,4,kBlack,42,kFALSE);
                 sublabelC->Draw();
 
@@ -5343,7 +5348,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legen4RowOnlyRatios_pad4->AddEntry(graphRatioEtaInvYieldFitSystPbPb2760GeV_0010,"#eta,  20#font[122]{-}50%","pf");
                 legen4RowOnlyRatios_pad4->Draw();
 
-                TLatex *sublabelD = new TLatex(.55,0.35,"(d)");
+                TLatex *sublabelD = new TLatex(.55,0.35,"(e)");
                 SetStyleTLatex( sublabelD, 0.85*textsizeLabelscolYEta2050,4,kBlack,42,kFALSE);
                 sublabelD->Draw();
 
@@ -6473,7 +6478,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
         histo2DRAAcomboPi0andEta->Draw("axis,same");
       canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEta_0010.%s",outputDir.Data(),suffix.Data()));
-      canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEta_0010.%s",paperPlots.Data(),suffix.Data()));
+//       canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEta_0010.%s",paperPlots.Data(),suffix.Data()));
 
 
     canvasRAAcombo->cd();
@@ -6641,7 +6646,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
         histo2DRAAcomboPi0andEta->Draw("axis,same");
         canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEta_2050.%s",outputDir.Data(),suffix.Data()));
-        canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEta_2050.%s",paperPlots.Data(),suffix.Data()));
+//         canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEta_2050.%s",paperPlots.Data(),suffix.Data()));
 
         if(graphPi0RCSCSysEMCal && graphPi0RCSCEMCal && graphEtaRCSCSysEMCal && graphEtaRCSCEMCal){
 
@@ -6790,6 +6795,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //           thesisLabel->Draw();
         }
 
+            sublabelA = new TLatex(0.5,1.12,"(a)");
+            SetStyleTLatex( sublabelA, FontSize,4,kBlack,42,kFALSE);
+            sublabelA->Draw();
+
           histo2DRAAcomboPi0andEta->Draw("same,axis");
       canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEtaandCharged_0010.%s",outputDir.Data(),suffix.Data()));
       canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEtaandCharged_0010.%s",paperPlots.Data(),suffix.Data()));
@@ -6862,6 +6871,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           SetStyleTLatex( labelEnergyRAAcomboPi0andEtaanfCharged, 0.037,4);
           labelEnergyRAAcomboPi0andEtaanfCharged->Draw();
           DrawGammaLines(0., 20.5 , 1, 1 ,1,kGray, 2);
+
+            sublabelB = new TLatex(0.5,1.12,"(b)");
+            SetStyleTLatex( sublabelB, FontSize,4,kBlack,42,kFALSE);
+            sublabelB->Draw();
 
           histo2DRAAcomboPi0andEta->Draw("same,axis");
       canvasRAAcomboPi0andEta->SaveAs(Form("%s/RAA_combinedPi0andEtaandCharged_2050.%s",outputDir.Data(),suffix.Data()));
@@ -7326,7 +7339,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         padRAAwithCharged_pad4->Update();
         canvasRAAwithCharged_4pads->Update();
         canvasRAAwithCharged_4pads->SaveAs(Form("%s/RAA_compToCharged.%s",outputDir.Data(),suffix.Data()));
-        canvasRAAwithCharged_4pads->SaveAs(Form("%s/RAA_compToCharged.%s",paperPlots.Data(),suffix.Data()));
+//         canvasRAAwithCharged_4pads->SaveAs(Form("%s/RAA_compToCharged.%s",paperPlots.Data(),suffix.Data()));
         delete padRAAwithCharged_pad1;
         delete padRAAwithCharged_pad3;
         delete padRAAwithCharged_pad2;
@@ -7579,7 +7592,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
         canvasRAAcombo->cd();
             TH2F * histo2DRAAcomboPHENIX = new TH2F("histo2DRAAcomboPHENIX","histo2DRAAcomboPHENIX",11000,0.,70.,1000,-0.5,2.);
             SetStyleHistoTH2ForGraphs(histo2DRAAcomboPHENIX, "#it{p}_{T} (GeV/#it{c})","#it{R}_{AA}",0.035,0.04, 0.035,0.04, 1.,.92);
-            histo2DRAAcomboPHENIX->GetYaxis()->SetRangeUser(0.,2.);
+            histo2DRAAcomboPHENIX->GetYaxis()->SetRangeUser(0.01,2.);
             histo2DRAAcomboPHENIX->GetXaxis()->SetRangeUser(0.,21.);
             histo2DRAAcomboPHENIX->Draw("copy");
 
@@ -7649,6 +7662,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             boxErrorNorm0010_Single->Draw();
             histo2DRAAcomboPHENIX->Draw("axis,same");
 
+            sublabelA = new TLatex(0.5,1.85,"(a)");
+            SetStyleTLatex( sublabelA, FontSize,4,kBlack,42,kFALSE);
+            sublabelA->Draw();
+
         canvasRAAcombo->SaveAs(Form("%s/%s_RAA_combinedwithPHENIX_asPaper_0010.%s",outputDir.Data(),meson.Data(),suffix.Data()));
         canvasRAAcombo->SaveAs(Form("%s/%s_RAA_combinedwithPHENIX_asPaper_0010.%s",paperPlots.Data(),meson.Data(),suffix.Data()));
         canvasRAAcombo->SaveAs(Form("%s/%s_RAA_combinedwithPHENIX_asPaper_0010.%s",PubNotePlots.Data(),meson.Data(),suffix.Data()));
@@ -7709,7 +7726,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     } else if(meson.CompareTo("Eta")==0){
 
         canvasRAAcombo->cd();
-        histo2DRAAcombo->GetYaxis()->SetRangeUser(0.,1.2);
+        histo2DRAAcombo->GetYaxis()->SetRangeUser(0.01,1.2);
         histo2DRAAcombo->DrawCopy();
 
             graphCombRAAStatPbPb2760GeV_0010->SetMarkerSize(2.7);
@@ -7741,6 +7758,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             boxErrorNorm0010_Single->Draw();
             DrawGammaLines(0., 21 , 1, 1 ,1,kGray,2);
             histo2DRAAcombo->Draw("axis,same");
+
+            sublabelB = new TLatex(0.5,1.12,"(b)");
+            SetStyleTLatex( sublabelB, FontSize,4,kBlack,42,kFALSE);
+            sublabelB->Draw();
 
         canvasRAAcombo->SaveAs(Form("%s/%s_RAA_combinedwithPHENIX_0010.%s",outputDir.Data(),meson.Data(),suffix.Data()));
         canvasRAAcombo->SaveAs(Form("%s/%s_RAA_combinedwithPHENIX_0010.%s",paperPlots.Data(),meson.Data(),suffix.Data()));
@@ -8028,6 +8049,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
         canvasEtatoPi0combo->cd();
             histo2DEtatoPi0combo->Draw("copy");
+            histo2DEtatoPi0combo->GetYaxis()->SetRangeUser(0.,1.15);
 
             DrawGammaSetMarkerTGraphAsym(graphCombEtatoPi0SysPbPb2760GeV_0010, markerStyle0010, markerSizeComb, colorCombo0010 , colorCombo0010, 2, kTRUE);
             graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
@@ -8047,7 +8069,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphCombEtatoPi0SysPbPb2760GeV_0010->Fit(linEtaToPi0,"NRMEX0+","",3,20.);
 //             linEtaToPi0->Draw("same");
 
-            TLegend* legendEtatoPi0combo_onlyPbPb = new TLegend(0.12,0.76,0.53,0.92);
+            TLegend* legendEtatoPi0combo_onlyPbPb = new TLegend(0.12,0.76,0.48,0.92);
             legendEtatoPi0combo_onlyPbPb->SetFillColor(0);
             legendEtatoPi0combo_onlyPbPb->SetLineColor(0);
             legendEtatoPi0combo_onlyPbPb->SetTextFont(42);
@@ -8058,6 +8080,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendEtatoPi0combo_onlyPbPb->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_2050,Form("%s",cent2050.Data()),"fp");
             legendEtatoPi0combo_onlyPbPb->Draw();
 
+            sublabelA = new TLatex(21,1.05,"(a)");
+            SetStyleTLatex( sublabelA, FontSize,4,kBlack,42,kFALSE);
+            sublabelA->Draw();
+
+            histo2DEtatoPi0combo->Draw("same,axis");
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_DataOnly.%s",outputDir.Data(),suffix.Data()));
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0RatioCombined_DataOnly.%s",paperPlots.Data(),suffix.Data()));
 
@@ -8694,6 +8721,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRatioSHM->Draw();
 
 //             if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+            histo2DEtatoPi0combo->Draw("same,axis");
 
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModels_0010.%s",outputDir.Data(),suffix.Data()));
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModels_0010.%s",paperPlots.Data(),suffix.Data()));
@@ -8815,6 +8843,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendEtaPi0RatioSHM->Draw();
 
             if(thesisPlotting)          thesisLabelHighLeft2->Draw();
+            histo2DEtatoPi0combo->Draw("same,axis");
 
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModels_2050.%s",outputDir.Data(),suffix.Data()));
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_WithModels_2050.%s",PubNotePlots.Data(),suffix.Data()));
@@ -8938,12 +8967,12 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendChargedRatio2->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
             legendChargedRatio2->Draw();
 
-            TLegend* legendEtatoPi0combo_withPP2760GeV = GetAndSetLegend(0.6,0.14,3.);// new TLegend(0.55,0.15,0.95,0.3/*26*/);
+            TLegend* legendEtatoPi0combo_withPP2760GeV = GetAndSetLegend(0.57,0.14,3.);// new TLegend(0.55,0.15,0.95,0.3/*26*/);
             legendEtatoPi0combo_withPP2760GeV->SetFillColor(0);
             legendEtatoPi0combo_withPP2760GeV->SetLineColor(0);
             legendEtatoPi0combo_withPP2760GeV->SetTextFont(42);
             legendEtatoPi0combo_withPP2760GeV->SetTextSize(0.037);
-            legendEtatoPi0combo_withPP2760GeV->SetMargin(0.17);
+//             legendEtatoPi0combo_withPP2760GeV->SetMargin(0.17);
             legendEtatoPi0combo_withPP2760GeV->SetHeader(collisionSystemPP2760GeV.Data());
             legendEtatoPi0combo_withPP2760GeV->AddEntry(graphRatioEtaToPi0Comb2760GeVSysErr,"#eta/#pi^{0}"/*"arXiv: 1702.00917"*/,"fp");
             legendEtatoPi0combo_withPP2760GeV->AddEntry((TObject*)0,"EPJC 77 (2017) 339","");
@@ -8955,6 +8984,11 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
             graphCombEtatoPi0StatPbPb2760GeV_0010->Draw("p,same");
 
+            sublabelB = new TLatex(21,1.05,"(b)");
+            SetStyleTLatex( sublabelB, FontSize,4,kBlack,42,kFALSE);
+            sublabelB->Draw();
+
+            histo2DEtatoPi0combo->Draw("same,axis");
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_withPP2760GeVandKaonsToPions.%s",outputDir.Data(),suffix.Data()));
         canvasEtatoPi0combo->SaveAs(Form("%s/EtatoPi0Ratio_withPP2760GeVandKaonsToPions.%s",paperPlots.Data(),suffix.Data()));
 

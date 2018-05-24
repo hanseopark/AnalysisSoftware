@@ -4,17 +4,17 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180429-1_fullJJ
+TRAINDIR=Legotrain-vAN-20180521-1_materialWW
 
 ### Data
-LHC17pqMETA=2340_20180420-1304
+LHC17pqMETA=2349_20180522-1021
 #QA pile On 337_20180220-1343
 #QA pile Off 336_20180220-1253
 LHC17p_fast=$LHC17pqMETA\_child_1
 LHC17p_woSDD=$LHC17pqMETA\_child_2
 LHC17q_fast=$LHC17pqMETA\_child_3
 LHC17q_woSDD=$LHC17pqMETA\_child_4
-LHC17p_wSDD=;
+LHC17p_wSDD=2350_20180522-1021;
 LHC17q_wSDD=;
 
 # LHC17p_fast=$LHC17pqMETA\_child_1
@@ -25,18 +25,19 @@ LHC17q_wSDD=;
 # LHC17q_woSDD=$LHC17pqMETA\_child_6
 
 ### MC
-LHC17lMETA=3273_20180420-1304 #with MBW 3276_20180426-0910
+LHC17lMETA=3288_20180522-1023
+#with MBW 3276_20180426-0910
 #3263_20180414-0206 #->ESD #791_20180417-1040 #->AOD #
 #3253_20180331-2110 #wo MB weights
 #3254_20180331-2111  #with MB weights
 #QA pile On 644_20180220-1349
 #QA pile Off 643_20180220-1232
 LHC17l3b_fast=$LHC17lMETA\_child_1
-LHC17l4b_fast=;
+LHC17l4b_fast=3290_20180522-1024_child_1;
 LHC17l3b_woSDD=$LHC17lMETA\_child_2
-LHC17l4b_woSDD=;
-LHC17l3b_cent=;
-LHC17l4b_cent=;
+LHC17l4b_woSDD=3290_20180522-1024_child_2;
+LHC17l3b_cent=3287_20180522-1023;
+LHC17l4b_cent=3289_20180522-1024;
 
 # LHC17l3b_fast=$LHC17lMETA\_child_1
 # LHC17l3b_cent=$LHC17lMETA\_child_2
@@ -53,15 +54,15 @@ LHC18b8_woSDD=$LHC18b8META\_child_3
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 TRAINPATHData=GA_pp #_AOD
-TRAINPATHMC=GA_pp_MC_AOD
+TRAINPATHMC=GA_pp_MC #_AOD
 
 NSlashes=9
 NSlashes2=10
 NSlashes3=11
 
 # fileName=AnalysisResults.root;
-fileName=GammaConvV1_400.root;
-# fileName=GammaConv_Material_121.root;
+# fileName=GammaConvV1_400.root;
+fileName=GammaConv_Material_21.root;
 
 if [ $1 = "no" ]; then
    echo "Not dowloading data";
@@ -696,60 +697,127 @@ if [ $1 = "material" ]; then
 
     OUTPUTDIR_LHC17p_fast=$BASEDIR/$TRAINDIR/Material_LHC17p_fast_LowInt
     mkdir -p $OUTPUTDIR_LHC17p_fast
-    if [ $LHC17p_fast != "" ]; then
-        echo "Downloading " $LHC17p_fast " in " $OUTPUTDIR_LHC17p_fast
-        runs=`cat runlists/runNumbersLHC17p_LowInt.txt`
-        for run in $runs; do
-            echo $run
-            mkdir -p $OUTPUTDIR_LHC17p_fast/$run
-            if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileName ]; then
-                echo "file has already been copied"
-            else
-                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileName file:$OUTPUTDIR_LHC17p_fast/$run/
-            fi
-        done;
-
-        hadd -f $OUTPUTDIR_LHC17p_fast/$fileName $OUTPUTDIR_LHC17p_fast/282008/$fileName $OUTPUTDIR_LHC17p_fast/282016/$fileName $OUTPUTDIR_LHC17p_fast/282021/$fileName $OUTPUTDIR_LHC17p_fast/282025/$fileName $OUTPUTDIR_LHC17p_fast/282030/$fileName $OUTPUTDIR_LHC17p_fast/282031/$fileName
-
-        ls $OUTPUTDIR_LHC17p_fast/GammaConv*Material*.root > fileLHC17p_fast.txt
-        fileNumbers=`cat fileLHC17p_fast.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
-        done;
-    fi
-
-
     OUTPUTDIR_LHC17p_woSDD=$BASEDIR/$TRAINDIR/Material_LHC17p_woSDD_LowInt
     mkdir -p $OUTPUTDIR_LHC17p_woSDD
-    if [ $LHC17p_woSDD != "" ]; then
-        echo "Downloading " $LHC17p_woSDD " in " $OUTPUTDIR_LHC17p_woSDD
-        runs=`cat runlists/runNumbersLHC17p_LowInt.txt`
-        for run in $runs; do
-            echo $run
-            mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run
-            if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
-                echo "file has already been copied"
-            else
-                alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileName file:$OUTPUTDIR_LHC17p_woSDD/$run/
-            fi
-        done;
+    OUTPUTDIR_LHC17p_wSDD=$BASEDIR/$TRAINDIR/Material_LHC17p_wSDD_LowInt
+    mkdir -p $OUTPUTDIR_LHC17p_wSDD
 
-        hadd -f $OUTPUTDIR_LHC17p_woSDD/$fileName $OUTPUTDIR_LHC17p_woSDD/282008/$fileName $OUTPUTDIR_LHC17p_woSDD/282016/$fileName $OUTPUTDIR_LHC17p_woSDD/282021/$fileName $OUTPUTDIR_LHC17p_woSDD/282025/$fileName $OUTPUTDIR_LHC17p_woSDD/282030/$fileName $OUTPUTDIR_LHC17p_woSDD/282031/$fileName
+#     if [ $LHC17p_fast != "" ]; then
+#         echo "Downloading " $LHC17p_fast
+#         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_fast/merge_runlist_3/GammaConv_Material_* file:$OUTPUTDIR_LHC17p_fast/
+#         ls $OUTPUTDIR_LHC17p_fast/GammaConv*Material*.root > fileLHC17p_fast.txt
+#         fileNumbers=`cat fileLHC17p_fast.txt`
+#         for fileName in $fileNumbers; do
+#             echo $fileName
+#             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+#             echo $number
+#             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+#         done;
+#     fi
+#
+#     if [ $LHC17p_woSDD != "" ]; then
+#         echo "Downloading " $LHC17p_woSDD
+#         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_woSDD/merge_runlist_3/GammaConv_Material_*  file:$OUTPUTDIR_LHC17p_woSDD/
+#         ls $OUTPUTDIR_LHC17p_woSDD/GammaConv*Material*.root > fileLHC17p_woSDD.txt
+#         fileNumbers=`cat fileLHC17p_woSDD.txt`
+#         for fileName in $fileNumbers; do
+#             echo $fileName
+#             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+#             echo $number
+#             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+#         done;
+#     fi
 
-        ls $OUTPUTDIR_LHC17p_woSDD/GammaConv*Material*.root > fileLHC17p_woSDD.txt
-        fileNumbers=`cat fileLHC17p_woSDD.txt`
+    if [ $LHC17p_wSDD != "" ]; then
+        echo "Downloading " $LHC17p_wSDD
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC17p_wSDD/merge_runlist_3/GammaConv_Material_* file:$OUTPUTDIR_LHC17p_wSDD/
+        ls $OUTPUTDIR_LHC17p_wSDD/GammaConv*Material*.root > fileLHC17p_wSDD.txt
+        fileNumbers=`cat fileLHC17p_wSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
     fi
 
+    if [ $3 = "runwise" ]; then
 
+        if [ $LHC17p_fast != "" ]; then
+            echo "Downloading " $LHC17p_fast " in " $OUTPUTDIR_LHC17p_fast
+            runs=`cat runlists/runNumbersLHC17p_LowInt.txt`
+            for run in $runs; do
+                echo $run
+                mkdir -p $OUTPUTDIR_LHC17p_fast/$run
+                if [ -f $OUTPUTDIR_LHC17p_fast/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_fast/$fileName file:$OUTPUTDIR_LHC17p_fast/$run/
+                fi
+            done;
+
+            hadd -f $OUTPUTDIR_LHC17p_fast/$fileName $OUTPUTDIR_LHC17p_fast/282008/$fileName $OUTPUTDIR_LHC17p_fast/282016/$fileName $OUTPUTDIR_LHC17p_fast/282021/$fileName $OUTPUTDIR_LHC17p_fast/282025/$fileName $OUTPUTDIR_LHC17p_fast/282030/$fileName $OUTPUTDIR_LHC17p_fast/282031/$fileName
+
+            ls $OUTPUTDIR_LHC17p_fast/GammaConv*Material*.root > fileLHC17p_fast.txt
+            fileNumbers=`cat fileLHC17p_fast.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            done;
+        fi
+
+        if [ $LHC17p_woSDD != "" ]; then
+            echo "Downloading " $LHC17p_woSDD " in " $OUTPUTDIR_LHC17p_woSDD
+            runs=`cat runlists/runNumbersLHC17p_LowInt.txt`
+            for run in $runs; do
+                echo $run
+                mkdir -p $OUTPUTDIR_LHC17p_woSDD/$run
+                if [ -f $OUTPUTDIR_LHC17p_woSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_woSDD/$fileName file:$OUTPUTDIR_LHC17p_woSDD/$run/
+                fi
+            done;
+
+            hadd -f $OUTPUTDIR_LHC17p_woSDD/$fileName $OUTPUTDIR_LHC17p_woSDD/282008/$fileName $OUTPUTDIR_LHC17p_woSDD/282016/$fileName $OUTPUTDIR_LHC17p_woSDD/282021/$fileName $OUTPUTDIR_LHC17p_woSDD/282025/$fileName $OUTPUTDIR_LHC17p_woSDD/282030/$fileName $OUTPUTDIR_LHC17p_woSDD/282031/$fileName
+
+            ls $OUTPUTDIR_LHC17p_woSDD/GammaConv*Material*.root > fileLHC17p_woSDD.txt
+            fileNumbers=`cat fileLHC17p_woSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            done;
+        fi
+
+        if [ $LHC17p_wSDD != "" ]; then
+            echo "Downloading " $LHC17p_wSDD " in " $OUTPUTDIR_LHC17p_wSDD
+            runs=`cat runlists/runNumbersLHC17p_LowInt.txt`
+            for run in $runs; do
+                echo $run
+                mkdir -p $OUTPUTDIR_LHC17p_wSDD/$run
+                if [ -f $OUTPUTDIR_LHC17p_wSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
+                    alien_cp alien:/alice/data/2017/LHC17p/000$run/pass1_FAST/PWGGA/$TRAINPATHData/$LHC17p_wSDD/$fileName file:$OUTPUTDIR_LHC17p_wSDD/$run/
+                fi
+            done;
+
+            hadd -f $OUTPUTDIR_LHC17p_wSDD/$fileName $OUTPUTDIR_LHC17p_wSDD/282008/$fileName $OUTPUTDIR_LHC17p_wSDD/282016/$fileName $OUTPUTDIR_LHC17p_wSDD/282021/$fileName $OUTPUTDIR_LHC17p_wSDD/282025/$fileName $OUTPUTDIR_LHC17p_wSDD/282030/$fileName $OUTPUTDIR_LHC17p_wSDD/282031/$fileName
+
+            ls $OUTPUTDIR_LHC17p_wSDD/GammaConv*Material*.root > fileLHC17p_wSDD.txt
+            fileNumbers=`cat fileLHC17p_wSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            done;
+        fi
+    fi
 fi
 
 if [ $1 = "mergeTriggers" ]; then
@@ -1643,59 +1711,124 @@ if [ $2 = "material" ]; then
 
     OUTPUTDIR_LHC17l3b_fast=$BASEDIR/$TRAINDIR/Material_LHC17l3b_fast_LowInt
     mkdir -p $OUTPUTDIR_LHC17l3b_fast
-    if [ $LHC17l3b_fast != "" ]; then
-        echo "Downloading " $LHC17l3b_fast " in " $OUTPUTDIR_LHC17l3b_fast
-        runs=`cat runlists/runNumbersLHC17l3b_LowInt.txt`
-        for run in $runs; do
-            echo $run
-            mkdir -p $OUTPUTDIR_LHC17l3b_fast/$run
-            if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
-                echo "file has already been copied"
-            else
-                alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileName file:$OUTPUTDIR_LHC17l3b_fast/$run/
-            fi
-        done;
-
-        hadd -f $OUTPUTDIR_LHC17l3b_fast/$fileName $OUTPUTDIR_LHC17l3b_fast/282008/$fileName $OUTPUTDIR_LHC17l3b_fast/282016/$fileName $OUTPUTDIR_LHC17l3b_fast/282021/$fileName $OUTPUTDIR_LHC17l3b_fast/282025/$fileName $OUTPUTDIR_LHC17l3b_fast/282031/$fileName
-
-        ls $OUTPUTDIR_LHC17l3b_fast/GammaConv*Material*.root > fileLHC17l3b_fast.txt
-        fileNumbers=`cat fileLHC17l3b_fast.txt`
-        for fileName in $fileNumbers; do
-            echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
-            echo $number
-            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
-        done;
-    fi
-
-
     OUTPUTDIR_LHC17l3b_woSDD=$BASEDIR/$TRAINDIR/Material_LHC17l3b_woSDD_LowInt
     mkdir -p $OUTPUTDIR_LHC17l3b_woSDD
-    if [ $LHC17l3b_woSDD != "" ]; then
-        echo "Downloading " $LHC17l3b_woSDD " in " $OUTPUTDIR_LHC17l3b_woSDD
-        runs=`cat runlists/runNumbersLHC17l3b_LowInt.txt`
-        for run in $runs; do
-            echo $run
-            mkdir -p $OUTPUTDIR_LHC17l3b_woSDD/$run
-            if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
-                echo "file has already been copied"
-            else
-                alien_cp alien:/alice/sim/2017/LHC17l3b_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileName file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
-            fi
-        done;
+    OUTPUTDIR_LHC17l3b_wSDD=$BASEDIR/$TRAINDIR/Material_LHC17l3b_wSDD_LowInt
+    mkdir -p $OUTPUTDIR_LHC17l3b_wSDD
 
-        hadd -f $OUTPUTDIR_LHC17l3b_woSDD/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282008/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282016/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282021/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282025/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282031/$fileName
+#     if [ $LHC17l3b_fast != "" ]; then
+#         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/merge_runlist_2/GammaConv_Material_* file:$OUTPUTDIR_LHC17l3b_fast/
+#         ls $OUTPUTDIR_LHC17l3b_fast/GammaConv*Material*.root > fileLHC17l3b_fast.txt
+#         fileNumbers=`cat fileLHC17l3b_fast.txt`
+#         for fileName in $fileNumbers; do
+#             echo $fileName
+#             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+#             echo $number
+#             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+#         done;
+#     fi
+#
+#     if [ $LHC17l3b_woSDD != "" ]; then
+#         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/merge_runlist_2/GammaConv_Material_* file:$OUTPUTDIR_LHC17l3b_woSDD/
+#         ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConv*Material*.root > fileLHC17l3b_woSDD.txt
+#         fileNumbers=`cat fileLHC17l3b_woSDD.txt`
+#         for fileName in $fileNumbers; do
+#             echo $fileName
+#             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+#             echo $number
+#             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+#         done;
+#     fi
 
-        ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConv*Material*.root > fileLHC17l3b_woSDD.txt
-        fileNumbers=`cat fileLHC17l3b_woSDD.txt`
+    if [ $LHC17l3b_wSDD != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC17l3b_wSDD/merge_runlist_2/GammaConv_Material_* file:$OUTPUTDIR_LHC17l3b_wSDD/
+        ls $OUTPUTDIR_LHC17l3b_wSDD/GammaConv*Material*.root > fileLHC17l3b_wSDD.txt
+        fileNumbers=`cat fileLHC17l3b_wSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
             number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
-            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
     fi
 
+    if [ $3 = "runwise" ]; then
+
+        if [ $LHC17l3b_fast != "" ]; then
+            echo "Downloading " $LHC17l3b_fast " in " $OUTPUTDIR_LHC17l3b_fast
+            runs=`cat runlists/runNumbersLHC17l3b_LowInt.txt`
+            for run in $runs; do
+                echo $run
+                mkdir -p $OUTPUTDIR_LHC17l3b_fast/$run
+                if [ -f $OUTPUTDIR_LHC17l3b_fast/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_fast/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_fast/$fileName file:$OUTPUTDIR_LHC17l3b_fast/$run/
+                fi
+            done;
+
+            hadd -f $OUTPUTDIR_LHC17l3b_fast/$fileName $OUTPUTDIR_LHC17l3b_fast/282008/$fileName $OUTPUTDIR_LHC17l3b_fast/282016/$fileName $OUTPUTDIR_LHC17l3b_fast/282021/$fileName $OUTPUTDIR_LHC17l3b_fast/282025/$fileName $OUTPUTDIR_LHC17l3b_fast/282031/$fileName
+
+            ls $OUTPUTDIR_LHC17l3b_fast/GammaConv*Material*.root > fileLHC17l3b_fast.txt
+            fileNumbers=`cat fileLHC17l3b_fast.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            done;
+        fi
+
+        if [ $LHC17l3b_woSDD != "" ]; then
+            echo "Downloading " $LHC17l3b_woSDD " in " $OUTPUTDIR_LHC17l3b_woSDD
+            runs=`cat runlists/runNumbersLHC17l3b_LowInt.txt`
+            for run in $runs; do
+                echo $run
+                mkdir -p $OUTPUTDIR_LHC17l3b_woSDD/$run
+                if [ -f $OUTPUTDIR_LHC17l3b_woSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_woSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_woSDD/$fileName file:$OUTPUTDIR_LHC17l3b_woSDD/$run/
+                fi
+            done;
+
+            hadd -f $OUTPUTDIR_LHC17l3b_woSDD/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282008/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282016/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282021/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282025/$fileName $OUTPUTDIR_LHC17l3b_woSDD/282031/$fileName
+
+            ls $OUTPUTDIR_LHC17l3b_woSDD/GammaConv*Material*.root > fileLHC17l3b_woSDD.txt
+            fileNumbers=`cat fileLHC17l3b_woSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            done;
+        fi
+
+        if [ $LHC17l3b_wSDD != "" ]; then
+            echo "Downloading " $LHC17l3b_wSDD " in " $OUTPUTDIR_LHC17l3b_wSDD
+            runs=`cat runlists/runNumbersLHC17l3b_LowInt.txt`
+            for run in $runs; do
+                echo $run
+                mkdir -p $OUTPUTDIR_LHC17l3b_wSDD/$run
+                if [ -f $OUTPUTDIR_LHC17l3b_wSDD/$run/$fileName ]; then
+                    echo "file has already been copied"
+                else
+                    alien_cp alien:/alice/sim/2017/LHC17l3b_wSDD/$run/PWGGA/$TRAINPATHMC/$LHC17l3b_wSDD/$fileName file:$OUTPUTDIR_LHC17l3b_wSDD/$run/
+                fi
+            done;
+
+            hadd -f $OUTPUTDIR_LHC17l3b_wSDD/$fileName $OUTPUTDIR_LHC17l3b_wSDD/282008/$fileName $OUTPUTDIR_LHC17l3b_wSDD/282016/$fileName $OUTPUTDIR_LHC17l3b_wSDD/282021/$fileName $OUTPUTDIR_LHC17l3b_wSDD/282025/$fileName $OUTPUTDIR_LHC17l3b_wSDD/282031/$fileName
+
+            ls $OUTPUTDIR_LHC17l3b_wSDD/GammaConv*Material*.root > fileLHC17l3b_wSDD.txt
+            fileNumbers=`cat fileLHC17l3b_wSDD.txt`
+            for fileName in $fileNumbers; do
+                echo $fileName
+                number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+                echo $number
+                root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
+            done;
+        fi
+    fi
 fi
 
 if [ $2 = "mergeTriggers" ]; then
@@ -1736,28 +1869,28 @@ if [ $2 = "jetjet" ]; then
     mkdir -p $OUTPUTDIR_LHC18b8_woSDD
 
             ################################ LHC18b8_fast
-            rm runNumbersLHC18b8fastNotMerged.txt
-            echo $OUTPUTDIR_LHC18b8_fast
-            runs=`cat runlists/runNumbersLHC18b8_fast.txt`
-            for run in $runs; do
-                echo $run
-                binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
-                for binNumber in $binNumbersJJ; do
-                    echo $binNumber
-                    mkdir -p $OUTPUTDIR_LHC18b8_fast/$binNumber/$run
-                    if [ -f $OUTPUTDIR_LHC18b8_fast/$binNumber/$run/$fileName ]; then
-                        echo "file has already been copied"
-                    else
-                        alien_cp alien:/alice/sim/2018/LHC18b8_fast/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_fast/$fileName file:$OUTPUTDIR_LHC18b8_fast/$binNumber/$run
-                    fi
-                    if [ -f $OUTPUTDIR_LHC18b8_fast/$binNumber/$run/$fileName ]; then
-                        echo "file has already been copied"
-                    else
-                        echo $run >> runNumbersLHC18b8fastNotMerged.txt
-                    fi
-#                 done;
-
-#                 mkdir -p $OUTPUTDIR_LHC18b8_fast/$run/$binNumber
+#             rm runNumbersLHC18b8fastNotMerged.txt
+#             echo $OUTPUTDIR_LHC18b8_fast
+#             runs=`cat runlists/runNumbersLHC18b8_fast.txt`
+#             for run in $runs; do
+#                 echo $run
+#                 binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
+#                 for binNumber in $binNumbersJJ; do
+#                     echo $binNumber
+#                     mkdir -p $OUTPUTDIR_LHC18b8_fast/$binNumber/$run
+#                     if [ -f $OUTPUTDIR_LHC18b8_fast/$binNumber/$run/$fileName ]; then
+#                         echo "file has already been copied"
+#                     else
+#                         alien_cp alien:/alice/sim/2018/LHC18b8_fast/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_fast/$fileName file:$OUTPUTDIR_LHC18b8_fast/$binNumber/$run
+#                     fi
+#                     if [ -f $OUTPUTDIR_LHC18b8_fast/$binNumber/$run/$fileName ]; then
+#                         echo "file has already been copied"
+#                     else
+#                         echo $run >> runNumbersLHC18b8fastNotMerged.txt
+#                     fi
+# #                 done;
+#
+#                     mkdir -p $OUTPUTDIR_LHC18b8_fast/$run/$binNumber
 #                     if [ -f $OUTPUTDIR_LHC18b8_fast/$run/$binNumber/$fileName ]; then
 #                         echo "file has already been copied"
 #                     else
@@ -1768,103 +1901,123 @@ if [ $2 = "jetjet" ]; then
 #                     else
 #                         echo $run >> runNumbersLHC18b8fastNotMerged.txt
 #                     fi
+#                 done;
+#             done;
+
+#             rm $OUTPUTDIR_LHC18b8_fast/GammaConv*.root
+#             firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_fast.txt`
+#             firstbinNumber=`head -n1 runlists/binsJetJetLHC18b8.txt`
+#             ls $OUTPUTDIR_LHC18b8_fast/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
+#             fileNumbers=`cat fileJJmergeLHC18b8.txt`
+#             MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_fast $NSlashes3 GammaConvV1 fast runlists/runNumbersLHC18b8_fast.txt runlists/binsJetJetLHC18b8.txt
+
+    runs=`cat runlists/runNumbersLHC18b8_fast.txt`
+    for run in $runs; do
+        echo $run
+        binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
+        counter=0;
+        for binNumber in $binNumbersJJ; do
+            echo $binNumber
+            if [ $counter = 0 ]; then
+                cp $OUTPUTDIR_LHC18b8_fast/$run/$binNumber\_$fileName $OUTPUTDIR_LHC18b8_fast/$run/intermediate.root
+                counter=$(($counter+1));
+                echo $counter;
+            else
+                hadd -f $OUTPUTDIR_LHC18b8_fast/$run/partialsum_$fileName $OUTPUTDIR_LHC18b8_fast/$run/intermediate.root $OUTPUTDIR_LHC18b8_fast/$run/$binNumber\_$fileName
+                mv $OUTPUTDIR_LHC18b8_fast/$run/partialsum_$fileName $OUTPUTDIR_LHC18b8_fast/$run/intermediate.root
+            fi
+        done;
+        mv $OUTPUTDIR_LHC18b8_fast/$run/intermediate.root  $OUTPUTDIR_LHC18b8_fast/$run/summed_$fileName
+    done;
+
+
+            ################################ LHC18b8_cent
+            rm runNumbersLHC18b8wSDDNotMerged.txt
+            echo $OUTPUTDIR_LHC18b8_cent
+            runs=`cat runlists/runNumbersLHC18b8_wSDD.txt`
+            for run in $runs; do
+                echo $run
+                binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
+                for binNumber in $binNumbersJJ; do
+                    echo $binNumber
+                    mkdir -p $OUTPUTDIR_LHC18b8_cent/$binNumber/$run
+                    if [ -f $OUTPUTDIR_LHC18b8_cent/$binNumber/$run/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                    alien_cp alien:/alice/sim/2018/LHC18b8_cent/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_cent/$fileName file:$OUTPUTDIR_LHC18b8_cent/$binNumber/$run
+                    fi
+                    if [ -f $OUTPUTDIR_LHC18b8_cent/$binNumber/$run/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                        echo $run >> runNumbersLHC18b8fastNotMerged.txt
+                    fi
+#                 done;
+#             done;
+                    mkdir -p $OUTPUTDIR_LHC18b8_cent/$run/$binNumber
+                    if [ -f $OUTPUTDIR_LHC18b8_cent/$run/$binNumber/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                    alien_cp alien:/alice/sim/2018/LHC18b8_cent/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_cent/$fileName file:$OUTPUTDIR_LHC18b8_cent/$run/$binNumber\_$fileName
+                    fi
+                    if [ -f $OUTPUTDIR_LHC18b8_cent/$run/$binNumber/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                        echo $run >> runNumbersLHC18b8fastNotMerged.txt
+                    fi
                 done;
             done;
 
-            rm $OUTPUTDIR_LHC18b8_fast/GammaConv*.root
-            firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_fast.txt`
+            rm $OUTPUTDIR_LHC18b8_cent/GammaConv*.root
+            firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_wSDD.txt`
             firstbinNumber=`head -n1 runlists/binsJetJetLHC18b8.txt`
-            ls $OUTPUTDIR_LHC18b8_fast/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
+            ls $OUTPUTDIR_LHC18b8_cent/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
             fileNumbers=`cat fileJJmergeLHC18b8.txt`
-            MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_fast $NSlashes3 GammaConvV1 fast runlists/runNumbersLHC18b8_fast.txt runlists/binsJetJetLHC18b8.txt
-#
-#             ################################ LHC18b8_cent
-#             rm runNumbersLHC18b8wSDDNotMerged.txt
-#             echo $OUTPUTDIR_LHC18b8_cent
-#             runs=`cat runlists/runNumbersLHC18b8_wSDD.txt`
-#             for run in $runs; do
-#                 echo $run
-#                 binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
-#                 for binNumber in $binNumbersJJ; do
-#                     echo $binNumber
-#                     mkdir -p $OUTPUTDIR_LHC18b8_cent/$binNumber/$run
-#                     if [ -f $OUTPUTDIR_LHC18b8_cent/$binNumber/$run/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                     alien_cp alien:/alice/sim/2018/LHC18b8_cent/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_cent/$fileName file:$OUTPUTDIR_LHC18b8_cent/$binNumber/$run
-#                     fi
-#                     if [ -f $OUTPUTDIR_LHC18b8_cent/$binNumber/$run/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                         echo $run >> runNumbersLHC18b8fastNotMerged.txt
-#                     fi
-# #                 done;
-# #             done;
-#                     mkdir -p $OUTPUTDIR_LHC18b8_cent/$run/$binNumber
-#                     if [ -f $OUTPUTDIR_LHC18b8_cent/$run/$binNumber/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                     alien_cp alien:/alice/sim/2018/LHC18b8_cent/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_cent/$fileName file:$OUTPUTDIR_LHC18b8_cent/$run/$binNumber\_$fileName
-#                     fi
-#                     if [ -f $OUTPUTDIR_LHC18b8_cent/$run/$binNumber/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                         echo $run >> runNumbersLHC18b8fastNotMerged.txt
-#                     fi
+            MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_cent $NSlashes3 GammaConvV1 wSDD runlists/runNumbersLHC18b8_wSDD.txt runlists/binsJetJetLHC18b8.txt
+
+
+            ################################ LHC18b8_woSDD
+            rm runNumbersLHC18b8woSDDNotMerged.txt
+            echo $OUTPUTDIR_LHC18b8_woSDD
+            runs=`cat runlists/runNumbersLHC18b8_woSDD.txt`
+            for run in $runs; do
+                echo $run
+                binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
+                for binNumber in $binNumbersJJ; do
+                    echo $binNumber
+                    mkdir -p $OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run
+                    if [ -f $OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                        alien_cp alien:/alice/sim/2018/LHC18b8_woSDD/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_woSDD/$fileName file:$OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run
+                    fi
+                    if [ -f $OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                        echo $run >> runNumbersLHC18b8fastNotMerged.txt
+                    fi
 #                 done;
 #             done;
-#
-#             rm $OUTPUTDIR_LHC18b8_cent/GammaConv*.root
-#             firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_wSDD.txt`
-#             firstbinNumber=`head -n1 runlists/binsJetJetLHC18b8.txt`
-#             ls $OUTPUTDIR_LHC18b8_cent/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
-#             fileNumbers=`cat fileJJmergeLHC18b8.txt`
-#             MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_cent $NSlashes3 GammaConvV1 wSDD runlists/runNumbersLHC18b8_wSDD.txt runlists/binsJetJetLHC18b8.txt
-#
-#
-#             ################################ LHC18b8_woSDD
-#             rm runNumbersLHC18b8woSDDNotMerged.txt
-#             echo $OUTPUTDIR_LHC18b8_woSDD
-#             runs=`cat runlists/runNumbersLHC18b8_woSDD.txt`
-#             for run in $runs; do
-#                 echo $run
-#                 binNumbersJJ=`cat runlists/binsJetJetLHC18b8.txt`
-#                 for binNumber in $binNumbersJJ; do
-#                     echo $binNumber
-#                     mkdir -p $OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run
-#                     if [ -f $OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                         alien_cp alien:/alice/sim/2018/LHC18b8_woSDD/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_woSDD/$fileName file:$OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run
-#                     fi
-#                     if [ -f $OUTPUTDIR_LHC18b8_woSDD/$binNumber/$run/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                         echo $run >> runNumbersLHC18b8fastNotMerged.txt
-#                     fi
-# #                 done;
-# #             done;
-#
-#                     mkdir -p $OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber
-#                     if [ -f $OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                         alien_cp alien:/alice/sim/2018/LHC18b8_cent_woSDD/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_woSDD/$fileName file:$OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber\_$fileName
-#                     fi
-#                     if [ -f $OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber/$fileName ]; then
-#                         echo "file has already been copied"
-#                     else
-#                         echo $run >> runNumbersLHC18b8fastNotMerged.txt
-#                     fi
-#                 done;
-#             done;
-#
-#             rm $OUTPUTDIR_LHC18b8_woSDD/GammaConv*.root
-#             firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_woSDD.txt`
-#             firstbinNumber=`head -n1 runlists/binsJetJetLHC18b8.txt`
-#             ls $OUTPUTDIR_LHC18b8_woSDD/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
-#             fileNumbers=`cat fileJJmergeLHC18b8.txt`
-#             MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_woSDD $NSlashes3 GammaConvV1 woSDD runlists/runNumbersLHC18b8_woSDD.txt runlists/binsJetJetLHC18b8.txt
+
+                    mkdir -p $OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber
+                    if [ -f $OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                        alien_cp alien:/alice/sim/2018/LHC18b8_cent_woSDD/$binNumber/$run/PWGGA/$TRAINPATHMC/$LHC18b8_woSDD/$fileName file:$OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber\_$fileName
+                    fi
+                    if [ -f $OUTPUTDIR_LHC18b8_woSDD/$run/$binNumber/$fileName ]; then
+                        echo "file has already been copied"
+                    else
+                        echo $run >> runNumbersLHC18b8fastNotMerged.txt
+                    fi
+                done;
+            done;
+
+            rm $OUTPUTDIR_LHC18b8_woSDD/GammaConv*.root
+            firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_woSDD.txt`
+            firstbinNumber=`head -n1 runlists/binsJetJetLHC18b8.txt`
+            ls $OUTPUTDIR_LHC18b8_woSDD/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
+            fileNumbers=`cat fileJJmergeLHC18b8.txt`
+            MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_woSDD $NSlashes3 GammaConvV1 woSDD runlists/runNumbersLHC18b8_woSDD.txt runlists/binsJetJetLHC18b8.txt
 
 fi
 
