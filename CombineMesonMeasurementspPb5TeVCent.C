@@ -283,6 +283,9 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
     TH1D* histoEtaInvYieldStat[16][11];
     TGraphAsymmErrors* graphEtaInvYieldStat[16][11];
     TGraphAsymmErrors* graphEtaInvYieldSys[16][11];
+    TH1D* histoEtaToPi0Stat[16][11];
+    TGraphAsymmErrors* graphEtaToPi0Stat[16][11];
+    TGraphAsymmErrors* graphEtaToPi0Sys[16][11];
 
     for (Int_t cent = 0; cent < maxCentRun1+maxCentRun2; cent++){
         maxNBinsPi0[cent]                           = GetBinning( xPtLimitsPi0[cent], maxNBinsPi0Abs, "Pi0", Form("pPb_5.023TeV%s",runArray[cent].Data()), 20, -1, kFALSE, centArray[cent]);
@@ -328,6 +331,9 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
             histoEtaInvYieldStat[cent][meth]            = NULL;
             graphEtaInvYieldStat[cent][meth]            = NULL;
             graphEtaInvYieldSys[cent][meth]             = NULL;
+            histoEtaToPi0Stat[cent][meth]               = NULL;
+            graphEtaToPi0Stat[cent][meth]               = NULL;
+            graphEtaToPi0Sys[cent][meth]                = NULL;
         }
     }
 
@@ -512,6 +518,9 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                     graphEtaInvYieldSys[cent][meth]                      = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("EtaSystError");
                     cout << "Eta sys error" << endl;
                     graphEtaInvYieldSys[cent][meth]->Print();
+                    histoEtaToPi0Stat[cent][meth]                        = (TH1D*)directoryEta[cent][meth]->Get("EtaToPi0StatError");
+                    graphEtaToPi0Sys[cent][meth]                         = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("graphEtaToPi0StatError");
+                    graphEtaToPi0Sys[cent][meth]                         = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("EtaToPi0SystError");
                 }
             }
         }
@@ -4155,6 +4164,8 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                     if (graphIndEtaInvYieldSys_yShifted[cent][meth]) graphIndEtaInvYieldSys_yShifted[cent][meth]->Write(Form("graphInvYieldEta%sSysErr_yShifted", nameMeasGlobalLabel[meth].Data()),
                         TObject::kOverwrite);
                 }
+                if (graphEtaToPi0Stat[cent][meth]) graphEtaToPi0Stat[cent][meth]->Write(Form("graphEtaToPi0%sStatErr", nameMeasGlobalLabel[meth].Data()), TObject::kOverwrite);
+                if (graphEtaToPi0Sys[cent][meth]) graphEtaToPi0Sys[cent][meth]->Write(Form("graphEtaToPi0%sSysErr", nameMeasGlobalLabel[meth].Data()), TObject::kOverwrite);
             }
 
             TDirectoryFile* supportingEta  = NULL;
