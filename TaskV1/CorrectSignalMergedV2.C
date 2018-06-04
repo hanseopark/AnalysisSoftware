@@ -363,13 +363,21 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     }
 
     // load theory prediction for direct to fragmentation photons
+    // -- 2.76 TeV merged analysis --
     TFile* fileTheory                           = new TFile(fileNameTheory.Data());
     TString nameTheoryGraph                     = Form("graphPromptPhotonDivFragementationNLOVogelsang_%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
     TString nameTheoryFit                       = Form("ratioFitNLOPromptDivFragGamma%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
     TDirectory* directoryTheoDirGamma           = (TDirectory*)fileTheory->Get("DirectPhoton");
     TGraphAsymmErrors* graphPromptDivFragTheo   = (TGraphAsymmErrors*)directoryTheoDirGamma->Get(nameTheoryGraph.Data());
     TF1* fitPromptdivFragTheo                   = (TF1*)directoryTheoDirGamma->Get(nameTheoryFit.Data());
-    
+    // -- 8 TeV merged analysis --
+    // input generated with Pythia8 JetJet and GammaJet processes
+    // contact hendrik.poppenborg@cern.ch
+    TFile* fileTheory_8TeV                           = new TFile(fileNameTheory.Data());
+    TString nameTheoryFit_8TeV                       = Form("ratioFitPromptPhotonDivFragPhotonPythia8_%s",((TString)ReturnCollisionEnergyStringForTheory(optionEnergy)).Data());
+    TDirectory* directoryTheoDirGamma_8TeV           = (TDirectory*)fileTheory_8TeV->Get("DirectPhoton");
+    TF1* fitPromptdivFragTheo_8TeV                   = (TF1*)directoryTheoDirGamma->Get(nameTheoryFit_8TeV.Data());
+
     // set min and max values for pT
     Double_t maxPtMeson     = histoUnCorrectedYield->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield->GetNbinsX());
     Double_t minPtMeson     = 0;
@@ -559,30 +567,46 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoRatioMergedOneElectronFrac         = (TH1D*)fileCorrections->Get(Form("Ratio%sMergedOneElectron",nameMeson.Data()));
         }    
     }
-    
-    // scale additional photon component according to theory calculations, as only FF photons are in our MC's
+
+    // apply purity corrections for photons and eta
     TH1D* histoRatioAdditionalGammaCorrM02          = NULL;
     TH1D* histoMesonPurityUnmodPt                   = NULL;
+    TH1D* histoMesonPurityPtOnlyGammaCorr           = NULL;
+    TH1D* histoMesonPurityPtOnlyEtaCorr             = NULL;
     if (!kIsMC){
+        histoMesonPurityUnmodPt                 = (TH1D*)histoMesonPurityPt->Clone("histoMesonPurityUnmodPt");
+        // scale additional photon component according to theory calculations, as only FF photons are in our MC's
         histoRatioAdditionalGammaCorrM02            = (TH1D*)fileCorrections->Get("RatioTrueYieldGammaM02");
-        if (fitPromptdivFragTheo){
+        if ((optionEnergy.CompareTo("2760GeV") == 0 || optionEnergy.CompareTo("2.76TeV") == 0) && fitPromptdivFragTheo){
             cout << "found theo scaling fac" <<  endl;
             cout << "adjusting gamma contribution according theory predictions" <<  endl;
             histoRatioAdditionalGammaCorrM02->Multiply(fitPromptdivFragTheo);
-            histoMesonPurityUnmodPt                 = (TH1D*)histoMesonPurityPt->Clone("histoMesonPurityUnmodPt");
+            histoMesonPurityPtOnlyGammaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyGammaCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalGammaCorrM02,-1);
+            histoMesonPurityPtOnlyGammaCorr->Add(histoRatioAdditionalGammaCorrM02,-1);
+
+        } else if (optionEnergy.CompareTo("8TeV") == 0 && fitPromptdivFragTheo_8TeV) {
+            cout << "found theo scaling fac" <<  endl;
+            cout << "adjusting gamma contribution according theory predictions" <<  endl;
+            histoRatioAdditionalGammaCorrM02->Multiply(fitPromptdivFragTheo_8TeV);
+            histoMesonPurityPtOnlyGammaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyGammaCorr");
+            histoMesonPurityPt->Add(histoRatioAdditionalGammaCorrM02,-1);
+            histoMesonPurityPtOnlyGammaCorr->Add(histoRatioAdditionalGammaCorrM02,-1);
         }
+        // apply purity correction for eta from cocktail output (= correct from measurement)
         if (optionEnergy.CompareTo("8TeV") == 0 && nameMeson.CompareTo("Pi0") == 0 ){
             cout << "adjusting eta contribution according data/MC comparison for eta/pi0" <<  endl;
             TH1D* histoRatioAdditionalEtaCorrM02    = (TH1D*)fileCorrections->Get("RatioTrueYieldEtaM02");
             for (Int_t i = histoRatioAdditionalEtaCorrM02->GetXaxis()->FindBin(11); i< histoRatioAdditionalEtaCorrM02->GetNbinsX(); i++){
                 cout << histoRatioAdditionalEtaCorrM02->GetBinCenter(i) << "\t" << histoRatioAdditionalEtaCorrM02->GetBinContent(i) << endl;
             }    
-            histoRatioAdditionalEtaCorrM02->Scale(0.43/0.407-1.); // this factor is first the measured eta/pi0 in data and the eta/pi0 from the Pythia8, JJ at high pt
+            histoRatioAdditionalEtaCorrM02->Scale(0.465/0.407-1.); // this factor is first the measured eta/pi0 in data and the eta/pi0 from the Pythia8, JJ at high pt
             for (Int_t i = histoRatioAdditionalEtaCorrM02->GetXaxis()->FindBin(11); i< histoRatioAdditionalEtaCorrM02->GetNbinsX(); i++){
                 cout << histoRatioAdditionalEtaCorrM02->GetBinCenter(i) << "\t" << histoRatioAdditionalEtaCorrM02->GetBinContent(i) << endl;
             }    
+            histoMesonPurityPtOnlyEtaCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyEtaCorr");
             histoMesonPurityPt->Add(histoRatioAdditionalEtaCorrM02,-1);
+            histoMesonPurityPtOnlyEtaCorr->Add(histoRatioAdditionalEtaCorrM02,-1);
         }
     }
     
@@ -995,12 +1019,25 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     if (histoMesonPurityUnmodPt){
         DrawGammaSetMarker(histoMesonPurityUnmodPt,  24 , 1.5, kRed-6, kRed-6);  
         histoMesonPurityUnmodPt->Draw("same,e1");
-    }    
-    TLegend* legendPurity = GetAndSetLegend2(0.2, 0.125, 0.65, 0.205, 28);
+    }
+    if (histoMesonPurityPtOnlyGammaCorr){
+        DrawGammaSetMarker(histoMesonPurityPtOnlyGammaCorr,  22 , 1.5, kGreen+1, kGreen+1);
+        histoMesonPurityPtOnlyGammaCorr->Draw("same,e1");
+    }
+    if (histoMesonPurityPtOnlyEtaCorr){
+        DrawGammaSetMarker(histoMesonPurityPtOnlyEtaCorr,  22 , 1.5, kBlue+2, kBlue+2);
+        histoMesonPurityPtOnlyEtaCorr->Draw("same,e1");
+    }
+    TLegend* legendPurity = GetAndSetLegend2(0.2, 0.125, 0.65, 0.285, 28);
     legendPurity->SetMargin(0.12);
     legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
     if (histoMesonPurityUnmodPt)
-        legendPurity->AddEntry(histoMesonPurityUnmodPt,Form("%s Purity, uncorr add. #gamma,#eta",textMeson.Data()));
+        legendPurity->AddEntry(histoMesonPurityUnmodPt,Form("%s Purity, uncorr add. #gamma,#eta,e^{#pm}",textMeson.Data()));
+    if (histoMesonPurityPtOnlyGammaCorr)
+        legendPurity->AddEntry(histoMesonPurityPtOnlyGammaCorr,Form("%s Purity, only corr. for #gamma",textMeson.Data()));
+    if (histoMesonPurityPtOnlyEtaCorr)
+        legendPurity->AddEntry(histoMesonPurityPtOnlyEtaCorr,Form("%s Purity, only corr. for #eta",textMeson.Data()));
+
     legendPurity->Draw();   
     
     PutProcessLabelAndEnergyOnPlot(0.95, 0.25, 28, collisionSystem.Data(), fNLMString.Data(), fDetectionProcess.Data(), 43, 0.03, "", 1, 1.25, 31);
