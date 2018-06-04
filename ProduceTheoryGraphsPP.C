@@ -42,6 +42,9 @@
 #include "Math/BrentRootFinder.h"
 #include "CommonHeaders/PlottingGammaConversionHistos.h"
 #include "CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "CommonHeaders/FittingGammaConversion.h"
+#include "CommonHeaders/ConversionFunctions.h"
+#include "TSpline.h"
 
 extern TRandom*    gRandom;
 extern TBenchmark*    gBenchmark;
@@ -60,35 +63,6 @@ Double_t recalcBarn             = 1e12; //NLO in pbarn!!!!
 Double_t xSection2760GeVINEL    = 62.8*1e-3;
 Double_t xSection7000GeVINEL    = 73.2*1e-3;
 
-TGraphErrors* ScaleGraph (TGraphErrors* graph, Double_t scaleFac){
-    TGraphErrors* dummyGraph    = (TGraphErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
-
-    Double_t * xValue           = dummyGraph->GetX();
-    Double_t * yValue           = dummyGraph->GetY();
-    Double_t* xError            = dummyGraph->GetEX();
-    Double_t* yError            = dummyGraph->GetEY();
-    Int_t nPoints               = dummyGraph->GetN();
-    for (Int_t i = 0; i < nPoints; i++){
-        yValue[i]               = yValue[i]*scaleFac;
-        yError[i]               = yError[i]*scaleFac;
-    }
-    TGraphErrors* returnGraph =  new TGraphErrors(nPoints,xValue,yValue,xError,yError);
-    return returnGraph;
-}
-
-
-TGraph* ScaleGraph (TGraph* graph, Double_t scaleFac){
-    TGraph* dummyGraph = (TGraph*)graph->Clone(Form("%s_Scaled",graph->GetName()));
-    Double_t * xValue = dummyGraph->GetX();
-    Double_t * yValue = dummyGraph->GetY();
-
-    Int_t nPoints = dummyGraph->GetN();
-    for (Int_t i = 0; i < nPoints; i++){
-        yValue[i] = yValue[i]*scaleFac;
-    }
-    TGraph* returnGraph = new TGraph(nPoints,xValue,yValue);
-    return returnGraph;
-}
 
 TGraphAsymmErrors* ScaleGraphAsym (TGraphAsymmErrors* graph, Double_t scaleFac){
     TGraphAsymmErrors* dummyGraph = (TGraphAsymmErrors*)graph->Clone(Form("%s_Scaled",graph->GetName()));
@@ -1280,6 +1254,24 @@ void ProduceTheoryGraphsPP(){
     canvasXSection->SaveAs("ExternalInput/Theory/ChPion_Pythia8_Monash_InvXSection_comp.eps");
 
     //**********************************************************************************************************************
+    //******************************** Electron cross section from weak Bosons *********************************************
+    //**********************************************************************************************************************
+    // using POWHEG processes for single boson production ("POWHEG-BOX/W", "POWHEG-BOX/Z")
+    // using NNPDF2.3NLO as PDF, the NLO version of the PDF used in Pythia8 Monash 2013 tune
+    TFile *file8TeVPowhegElecFromWeakBosons  = new TFile("ExternalInput/Theory/Powheg/powheg_electronsFromWeakBoson_8TeV_pdf244600_graphs.root");
+    TGraphAsymmErrors* graphElecFromWeakBosonPowhegXSec8TeVEMCal = (TGraphAsymmErrors*)file8TeVPowhegElecFromWeakBosons->Get("gae_XSec_Elec_all");
+    // using Pythia8 JJ
+    TFile *file8TeVPythiaElecFromJJ = new TFile("ExternalInput/Theory/Pythia/pythia8_8TeV_compilation_poppenborg_onlyJJ.root");
+    TGraphAsymmErrors* graphElecFromJJXSec8TeVEMCal = (TGraphAsymmErrors*)file8TeVPythiaElecFromJJ->Get("gae_electrons_etaEMCal");
+
+    // fitting ratio (electrons from weak bosons)/(electrons from JJ MC)
+    graphElecFromWeakBosonPowhegXSec8TeVEMCal->RemovePoint(0);
+    graphElecFromJJXSec8TeVEMCal->RemovePoint(0);
+    TGraphAsymmErrors* graphRatioElecFromWeakBoson   = CalculateAsymGraphRatioToGraph(graphElecFromWeakBosonPowhegXSec8TeVEMCal, graphElecFromJJXSec8TeVEMCal);
+    TSpline3* splineRatioElecFromWeakBoson = new TSpline3("splineRatioElecFromWeakBoson", graphRatioElecFromWeakBoson,"b2e2",0,0);
+
+
+    //**********************************************************************************************************************
     //********************************* Write graphs and histos to compilation file for pp *********************************
     //**********************************************************************************************************************
     TFile fileTheoryGraphsPP("ExternalInput/Theory/TheoryCompilationPP.root","UPDATE");
@@ -1524,7 +1516,11 @@ void ProduceTheoryGraphsPP(){
         histoPi08TeVPhojetReb->Write("histoPi0Phojet_8000TeV_Reb", TObject::kOverwrite);
         histoEta8TeVPhojetReb->Write("histoEtaPhojet_8000TeV_Reb", TObject::kOverwrite);
         histoEtaToPi08TeVPhojet->Write("histoEtaToPi0Phojet_8000TeV", TObject::kOverwrite);
-
+        // electrons from Powheg single weak boson production
+        graphElecFromWeakBosonPowhegXSec8TeVEMCal->Write("graphElecFromWeakBosonPowheg_8TeV", TObject::kOverwrite);
+        graphElecFromJJXSec8TeVEMCal->Write("graphElecFromJJ_8TeV", TObject::kOverwrite);
+        graphRatioElecFromWeakBoson->Write("graphRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
+        splineRatioElecFromWeakBoson->Write("splineRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
 
     fileTheoryGraphsPP.Close();
 

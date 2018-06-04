@@ -44,6 +44,7 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 // #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
+#include "TSpline.h"
 
 struct SysErrorConversion {
     Double_t value;
@@ -378,6 +379,9 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TDirectory* directoryTheoDirGamma_8TeV           = (TDirectory*)fileTheory_8TeV->Get("DirectPhoton");
     TF1* fitPromptdivFragTheo_8TeV                   = (TF1*)directoryTheoDirGamma->Get(nameTheoryFit_8TeV.Data());
 
+    // load ratio (POWHGEG electrons from weak bosons)/(electrons from JJ)
+    TSpline3 *splineRatioElecFromWeakBoson_8TeV = (TSpline3*)fileTheory_8TeV->Get("splineRatioElecFromWeakBoson_8TeV");
+
     // set min and max values for pT
     Double_t maxPtMeson     = histoUnCorrectedYield->GetXaxis()->GetBinUpEdge(histoUnCorrectedYield->GetNbinsX());
     Double_t minPtMeson     = 0;
@@ -573,6 +577,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoMesonPurityUnmodPt                   = NULL;
     TH1D* histoMesonPurityPtOnlyGammaCorr           = NULL;
     TH1D* histoMesonPurityPtOnlyEtaCorr             = NULL;
+    TH1D* histoMesonPurityPtOnlyElecCorr            = NULL;
     if (!kIsMC){
         histoMesonPurityUnmodPt                 = (TH1D*)histoMesonPurityPt->Clone("histoMesonPurityUnmodPt");
         // scale additional photon component according to theory calculations, as only FF photons are in our MC's
@@ -608,6 +613,19 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
             histoMesonPurityPt->Add(histoRatioAdditionalEtaCorrM02,-1);
             histoMesonPurityPtOnlyEtaCorr->Add(histoRatioAdditionalEtaCorrM02,-1);
         }
+        // apply purity correction for electrons
+        if(optionEnergy.CompareTo("8TeV") == 0 && splineRatioElecFromWeakBoson_8TeV){
+            cout << "adjusting electron contribution according data/MC comparison for eta/pi0" <<  endl;
+            TH1D* histoRatioAdditionalElecCorrM02  = (TH1D*)fileCorrections->Get("RatioTrueYieldElectronM02");
+            for(Int_t i = 1; i <= histoRatioAdditionalElecCorrM02->GetNbinsX(); i++){
+                histoRatioAdditionalElecCorrM02->SetBinContent(i,histoRatioAdditionalElecCorrM02->GetBinContent(i)*
+                                                               splineRatioElecFromWeakBoson_8TeV->Eval(histoRatioAdditionalElecCorrM02->GetBinCenter(i)));
+            }
+            histoMesonPurityPtOnlyElecCorr         = (TH1D*)histoMesonPurityUnmodPt->Clone("histoMesonPurityPtOnlyElecCorr");
+            histoMesonPurityPt->Add(histoRatioAdditionalElecCorrM02,-1);
+            histoMesonPurityPtOnlyElecCorr->Add(histoRatioAdditionalElecCorrM02,-1);
+        }
+
     }
     
     // loading efficiency
@@ -1011,7 +1029,7 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
     DrawAutoGammaMesonHistos( histoMesonPurityPt, 
                                 "", "#it{p}_{T} (GeV/#it{c})", "#it{P}_{#pi^{0}}", 
                                 kFALSE, 0.75, 3e-6, kFALSE,
-                                kTRUE, 0.6, 1.02, 
+                                kTRUE, 0.7, 1.01,
                                 kFALSE, 0., 10.);
     histoMesonPurityPt->GetYaxis()->SetTitleOffset(1.05);        
     DrawGammaSetMarker(histoMesonPurityPt,  20 , 1.5, kAzure+2, kAzure+2);
@@ -1028,6 +1046,11 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         DrawGammaSetMarker(histoMesonPurityPtOnlyEtaCorr,  22 , 1.5, kBlue+2, kBlue+2);
         histoMesonPurityPtOnlyEtaCorr->Draw("same,e1");
     }
+    if (histoMesonPurityPtOnlyElecCorr){
+        DrawGammaSetMarker(histoMesonPurityPtOnlyElecCorr,  22 , 1.5, kRed+2, kRed+2);
+        histoMesonPurityPtOnlyElecCorr->Draw("same,e1");
+    }
+
     TLegend* legendPurity = GetAndSetLegend2(0.2, 0.125, 0.65, 0.285, 28);
     legendPurity->SetMargin(0.12);
     legendPurity->AddEntry(histoMesonPurityPt,Form("%s Purity",textMeson.Data()));
@@ -1037,6 +1060,8 @@ void  CorrectSignalMergedV2(    TString fileNameUnCorrectedFile = "myOutput",
         legendPurity->AddEntry(histoMesonPurityPtOnlyGammaCorr,Form("%s Purity, only corr. for #gamma",textMeson.Data()));
     if (histoMesonPurityPtOnlyEtaCorr)
         legendPurity->AddEntry(histoMesonPurityPtOnlyEtaCorr,Form("%s Purity, only corr. for #eta",textMeson.Data()));
+    if (histoMesonPurityPtOnlyElecCorr)
+        legendPurity->AddEntry(histoMesonPurityPtOnlyElecCorr,Form("%s Purity, only corr. for e^{#pm}",textMeson.Data()));
 
     legendPurity->Draw();   
     
