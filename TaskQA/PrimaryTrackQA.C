@@ -338,13 +338,13 @@ void PrimaryTrackQA(
     std::vector<TH1D*> vecESD_PrimaryPions_DCAxy_ProjPt;                    //Pt was y
     std::vector<TH1D*> vecESD_PrimaryPions_DCAz_ProjPt;                     //Pt was y
     std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_ProjPt;                  //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;            //Pt was x
     std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_LowPt_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;            //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;           //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_ProjPt;            //Pt was x
     std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_LowPt_ProjPt;      //Pt was x
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_MidPt_ProjPt;            //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;      //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdx_HighPt_ProjPt;           //Pt was y
-    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt;     //Pt was y
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_MidPt_ProjPt;      //Pt was x
+    std::vector<TH1D*> vecESD_PrimaryPions_TPCdEdxSignal_HighPt_ProjPt;     //Pt was x
     //AfterQA
     std::vector<TH1D*> vecPion_ITS_after_AfterQA_ProjPt;                    //Pt was x
     std::vector<TH1D*> vecPion_ITS_after_AfterQA_LowPt_ProjPt;              //Pt was x
@@ -1122,7 +1122,7 @@ void PrimaryTrackQA(
                 GetMinMaxBin(fHistESD_TruePosPionFromNeutralMeson_Pt,minB,maxB);
                 SetXRange(fHistESD_TruePosPionFromNeutralMeson_Pt,minB,maxB);
                 DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kTRUE,kTRUE,kFALSE,
-                                     fHistESD_TruePosPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{-}}} (GeV/#it{c})","# Entries",1,1,
+                                     fHistESD_TruePosPionFromNeutralMeson_Pt,"","#it{p}_{T, #it{#pi^{+}}} (GeV/#it{c})","# Entries",1,1,
                                      processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 //WriteHistogram(fHistESD_TruePosPionFromNeutralMeson_Pt);
                 SaveCanvasAndWriteHistogram(canvas, fHistESD_TruePosPionFromNeutralMeson_Pt, Form("%s/%s_%s.%s", outputDir.Data(),StrNameOfHistogram.Data(), DataSets[i].Data(), suffix.Data()));
@@ -1151,7 +1151,7 @@ void PrimaryTrackQA(
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "Drawing Pion Cut Histograms AfterQA" << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
-        // AfterQA: IsPionSelected
+        // PionCutsContainer: IsPionSelected
         if (iParticleType==0){StrNameOfHistogram="IsPionSelected";}
         if (iParticleType==1){StrNameOfHistogram="";}
         TH1D* fHistIsPionSelected_AfterQA = (TH1D*)PionCutsContainer->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCutsContainerCutString.Data()));
@@ -1166,7 +1166,7 @@ void PrimaryTrackQA(
             vecIsPionSelected_AfterQA.push_back(new TH1D(*fHistIsPionSelected_AfterQA));
         } else cout << "INFO: Object |AfterQA: fHistIsPionSelected_AfterQA| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
-        // AfterQA: dEdxCuts
+        // PionCutsContainer: dEdxCuts
         if (iParticleType==0){StrNameOfHistogram="dEdxCuts";}
         if (iParticleType==1){StrNameOfHistogram="";}
         TH1D* fHistdEdxCuts_AfterQA = (TH1D*)PionCutsContainer->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCutsContainerCutString.Data()));
@@ -1761,7 +1761,7 @@ void PrimaryTrackQA(
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
         cout << "Drawing Pion Cut Histograms Pre Selection" << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
-        // Pre Selection: IsPionSelected
+        // PionCuts2Container: IsPionSelected
         if (iParticleType==0){StrNameOfHistogram="IsPionSelected";}
         if (iParticleType==1){StrNameOfHistogram="";}
         TH1D* fHistIsPionSelected_PreSel = (TH1D*)PionCuts2Container->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCuts2ContainerCutString.Data()));
@@ -1776,7 +1776,7 @@ void PrimaryTrackQA(
             vecIsPionSelected_PreSel.push_back(new TH1D(*fHistIsPionSelected_PreSel));
         } else cout << "INFO: Object |Pre Selection: fHistIsPionSelected_PreSel| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
-        // Pre Selection: dEdxCuts
+        // PionCuts2Container: dEdxCuts
         if (iParticleType==0){StrNameOfHistogram="dEdxCuts";}
         if (iParticleType==1){StrNameOfHistogram="";}
         TH1D* fHistdEdxCuts_PreSel = (TH1D*)PionCuts2Container->FindObject(Form("%s %s",StrNameOfHistogram.Data(),fPionCuts2ContainerCutString.Data()));
@@ -2396,7 +2396,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_ITS_after_PreSel_LowPt = new TH2D (*fHistPion_ITS_after_PreSel);
         if(fHistPion_ITS_after_PreSel_LowPt){
             GetMinMaxBin(fHistPion_ITS_after_PreSel_LowPt,minB,maxB);
-            SetXRange(fHistPion_ITS_after_PreSel_LowPt,minB-1,maxB+1);
+            SetXRange(fHistPion_ITS_after_PreSel_LowPt,0,fHistPion_ITS_after_PreSel_LowPt->GetXaxis()->FindBin(0.2));
             GetMinMaxBinY(fHistPion_ITS_after_PreSel_LowPt,minYB,maxYB);
             SetYRange(fHistPion_ITS_after_PreSel_LowPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_ITS_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
@@ -2425,7 +2425,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_ITS_after_PreSel_MidPt = new TH2D (*fHistPion_ITS_after_PreSel);
         if(fHistPion_ITS_after_PreSel_MidPt){
             GetMinMaxBin(fHistPion_ITS_after_PreSel_MidPt,minB,maxB);
-            SetXRange(fHistPion_ITS_after_PreSel_MidPt,minB-1,maxB+1);
+            SetXRange(fHistPion_ITS_after_PreSel_MidPt,fHistPion_ITS_after_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_ITS_after_PreSel_MidPt->GetXaxis()->FindBin(3));
             GetMinMaxBinY(fHistPion_ITS_after_PreSel_MidPt,minYB,maxYB);
             SetYRange(fHistPion_ITS_after_PreSel_MidPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_ITS_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
@@ -2454,7 +2454,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_ITS_after_PreSel_HighPt = new TH2D (*fHistPion_ITS_after_PreSel);
         if(fHistPion_ITS_after_PreSel_HighPt){
             GetMinMaxBin(fHistPion_ITS_after_PreSel_HighPt,minB,maxB);
-            SetXRange(fHistPion_ITS_after_PreSel_HighPt,minB-1,maxB+1);
+            SetXRange(fHistPion_ITS_after_PreSel_HighPt,fHistPion_ITS_after_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_ITS_after_PreSel_HighPt->GetNbinsX());
             GetMinMaxBinY(fHistPion_ITS_after_PreSel_HighPt,minYB,maxYB);
             SetYRange(fHistPion_ITS_after_PreSel_HighPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_ITS_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
@@ -2512,7 +2512,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_dEdx_after_PreSel_LowPt = new TH2D (*fHistPion_dEdx_after_PreSel);
         if(fHistPion_dEdx_after_PreSel_LowPt){
             GetMinMaxBin(fHistPion_dEdx_after_PreSel_LowPt,minB,maxB);
-            SetXRange(fHistPion_dEdx_after_PreSel_LowPt,minB-1,maxB+1);
+            SetXRange(fHistPion_dEdx_after_PreSel_LowPt,0,fHistPion_dEdx_after_PreSel_LowPt->FindBin(3));
             GetMinMaxBinY(fHistPion_dEdx_after_PreSel_LowPt,minYB,maxYB);
             SetYRange(fHistPion_dEdx_after_PreSel_LowPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_dEdx_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
@@ -2541,7 +2541,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_dEdx_after_PreSel_MidPt = new TH2D (*fHistPion_dEdx_after_PreSel);
         if(fHistPion_dEdx_after_PreSel_MidPt){
             GetMinMaxBin(fHistPion_dEdx_after_PreSel_MidPt,minB,maxB);
-            SetXRange(fHistPion_dEdx_after_PreSel_MidPt,minB-1,maxB+1);
+            SetXRange(fHistPion_dEdx_after_PreSel_MidPt,fHistPion_dEdx_after_PreSel_MidPt->GetXaxis()->FindBin(3),fHistPion_dEdx_after_PreSel_MidPt->GetNbinsX());
             GetMinMaxBinY(fHistPion_dEdx_after_PreSel_MidPt,minYB,maxYB);
             SetYRange(fHistPion_dEdx_after_PreSel_MidPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_dEdx_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
@@ -2570,7 +2570,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_dEdx_after_PreSel_HighPt = new TH2D (*fHistPion_dEdx_after_PreSel);
         if(fHistPion_dEdx_after_PreSel_HighPt){
             GetMinMaxBin(fHistPion_dEdx_after_PreSel_HighPt,minB,maxB);
-            SetXRange(fHistPion_dEdx_after_PreSel_HighPt,minB-1,maxB+1);
+            SetXRange(fHistPion_dEdx_after_PreSel_HighPt,fHistPion_dEdx_after_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_dEdx_after_PreSel_HighPt->GetNbinsX());
             GetMinMaxBinY(fHistPion_dEdx_after_PreSel_HighPt,minYB,maxYB);
             SetYRange(fHistPion_dEdx_after_PreSel_HighPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_dEdx_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
@@ -2628,7 +2628,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_dEdxSignal_after_PreSel_LowPt = new TH2D (*fHistPion_dEdxSignal_after_PreSel);
         if(fHistPion_dEdxSignal_after_PreSel_LowPt){
             GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_LowPt,minB,maxB);
-            SetXRange(fHistPion_dEdxSignal_after_PreSel_LowPt,minB-1,maxB+1);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_LowPt,0,fHistPion_dEdxSignal_after_PreSel_LowPt->FindBin(0.2));
             GetMinMaxBinY(fHistPion_dEdxSignal_after_PreSel_LowPt,minYB,maxYB);
             SetYRange(fHistPion_dEdxSignal_after_PreSel_LowPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
@@ -2657,7 +2657,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_dEdxSignal_after_PreSel_MidPt = new TH2D (*fHistPion_dEdxSignal_after_PreSel);
         if(fHistPion_dEdxSignal_after_PreSel_MidPt){
             GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_MidPt,minB,maxB);
-            SetXRange(fHistPion_dEdxSignal_after_PreSel_MidPt,minB-1,maxB+1);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_MidPt,fHistPion_dEdxSignal_after_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_dEdxSignal_after_PreSel_MidPt->FindBin(3));
             GetMinMaxBinY(fHistPion_dEdxSignal_after_PreSel_MidPt,minYB,maxYB);
             SetYRange(fHistPion_dEdxSignal_after_PreSel_MidPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
@@ -2686,7 +2686,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_dEdxSignal_after_PreSel_HighPt = new TH2D (*fHistPion_dEdxSignal_after_PreSel);
         if(fHistPion_dEdxSignal_after_PreSel_HighPt){
             GetMinMaxBin(fHistPion_dEdxSignal_after_PreSel_HighPt,minB,maxB);
-            SetXRange(fHistPion_dEdxSignal_after_PreSel_HighPt,minB-1,maxB+1);
+            SetXRange(fHistPion_dEdxSignal_after_PreSel_HighPt,fHistPion_dEdxSignal_after_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_dEdxSignal_after_PreSel_HighPt->GetNbinsX());
             GetMinMaxBinY(fHistPion_dEdxSignal_after_PreSel_HighPt,minYB,maxYB);
             SetYRange(fHistPion_dEdxSignal_after_PreSel_HighPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_dEdxSignal_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
@@ -2744,7 +2744,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_TOF_after_PreSel_LowPt = new TH2D (*fHistPion_TOF_after_PreSel);
         if(fHistPion_TOF_after_PreSel_LowPt){
             GetMinMaxBin(fHistPion_TOF_after_PreSel_LowPt,minB,maxB);
-            SetXRange(fHistPion_TOF_after_PreSel_LowPt,minB-1,maxB+1);
+            SetXRange(fHistPion_TOF_after_PreSel_LowPt,0,fHistPion_TOF_after_PreSel_LowPt->FindBin(0.2));
             GetMinMaxBinY(fHistPion_TOF_after_PreSel_LowPt,minYB,maxYB);
             SetYRange(fHistPion_TOF_after_PreSel_LowPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_TOF_after_PreSel_LowPt,1,maxB+1,minYB,maxYB+1);
@@ -2773,7 +2773,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_TOF_after_PreSel_MidPt = new TH2D (*fHistPion_TOF_after_PreSel);
         if(fHistPion_TOF_after_PreSel_MidPt){
             GetMinMaxBin(fHistPion_TOF_after_PreSel_MidPt,minB,maxB);
-            SetXRange(fHistPion_TOF_after_PreSel_MidPt,minB-1,maxB+1);
+            SetXRange(fHistPion_TOF_after_PreSel_MidPt,fHistPion_TOF_after_PreSel_MidPt->GetXaxis()->FindBin(2),fHistPion_TOF_after_PreSel_MidPt->FindBin(3));
             GetMinMaxBinY(fHistPion_TOF_after_PreSel_MidPt,minYB,maxYB);
             SetYRange(fHistPion_TOF_after_PreSel_MidPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_TOF_after_PreSel_MidPt,1,maxB+1,minYB,maxYB+1);
@@ -2802,7 +2802,7 @@ void PrimaryTrackQA(
         TH2D* fHistPion_TOF_after_PreSel_HighPt = new TH2D (*fHistPion_TOF_after_PreSel);
         if(fHistPion_TOF_after_PreSel_HighPt){
             GetMinMaxBin(fHistPion_TOF_after_PreSel_HighPt,minB,maxB);
-            SetXRange(fHistPion_TOF_after_PreSel_HighPt,minB-1,maxB+1);
+            SetXRange(fHistPion_TOF_after_PreSel_HighPt,fHistPion_TOF_after_PreSel_HighPt->GetXaxis()->FindBin(3),fHistPion_TOF_after_PreSel_HighPt->GetNbinsX());
             GetMinMaxBinY(fHistPion_TOF_after_PreSel_HighPt,minYB,maxYB);
             SetYRange(fHistPion_TOF_after_PreSel_HighPt,minYB,maxYB+1);
             SetZMinMaxTH2(fHistPion_TOF_after_PreSel_HighPt,1,maxB+1,minYB,maxYB+1);
