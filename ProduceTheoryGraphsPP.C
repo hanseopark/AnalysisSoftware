@@ -1129,7 +1129,20 @@ void ProduceTheoryGraphsPP(){
     histoChPionPythia8Tune4CInvSec8TeVLego->Add((TH1F*)filePythia8Tune4C_8TeVLego->Get("hPt_PiMi_MB_XSec"),1);
     histoChPionPythia8Tune4CInvSec8TeVLego->Scale(0.5);
 
+    //**********************************************************************************************************************
+    //***************************** Pythia calculations 13TeV ************************************************************
+    //**********************************************************************************************************************
 
+    TFile* filePythia8Monash2013_13TeVLego        = TFile::Open("ExternalInput/Theory/Pythia/Pythia8_Monash2013_13TeV_13060Mio.root");
+    TH1F* histoPi0Pythia8MonashInvSec13TeVLego    = (TH1F*)filePythia8Monash2013_13TeVLego->Get("hPt_Pi0_MB_XSec");
+    TH1F* histoEtaPythia8MonashInvSec13TeVLego    = (TH1F*)filePythia8Monash2013_13TeVLego->Get("hPt_Eta_MB_XSec");
+    TH1F* histoEtaToPi0RatioPythia8Monash13TeVLego= (TH1F*)histoEtaPythia8MonashInvSec13TeVLego->Clone("histoEtaToPi0RatioPythia8Monash13TeVLego");
+    histoEtaToPi0RatioPythia8Monash13TeVLego->Sumw2();
+    histoEtaToPi0RatioPythia8Monash13TeVLego->Divide(histoEtaToPi0RatioPythia8Monash13TeVLego,histoPi0Pythia8MonashInvSec13TeVLego);
+    //charged pions
+    TH1F* histoChPionPythia8MonashInvSec13TeVLego = (TH1F*)filePythia8Monash2013_13TeVLego->Get("hPt_PiPl_MB_XSec");
+    histoChPionPythia8MonashInvSec13TeVLego->Add((TH1F*)filePythia8Monash2013_13TeVLego->Get("hPt_PiMi_MB_XSec"),1);
+    histoChPionPythia8MonashInvSec13TeVLego->Scale(0.5);
     //**********************************************************************************************************************
     //******************************** Plot Pythia x-section at different energies *****************************************
     //**********************************************************************************************************************
@@ -1145,6 +1158,10 @@ void ProduceTheoryGraphsPP(){
     histo2DXSection->GetXaxis()->SetNoExponent(kTRUE);
 //    histo2DXSection->GetXaxis()->SetLabelOffset(-0.01);
     histo2DXSection->Draw("copy");
+
+        DrawGammaSetMarker(histoPi0Pythia8MonashInvSec13TeVLego, 1, 1.5, GetColorDefaultColor("13TeV","","") , GetColorDefaultColor("13TeV","",""));
+        histoPi0Pythia8MonashInvSec13TeVLego->SetLineWidth(3);
+        histoPi0Pythia8MonashInvSec13TeVLego->Draw("same,hist,l");
 
         DrawGammaSetMarker(histoPi0Pythia8MonashInvSec8TeVLego, 1, 1.5, GetColorDefaultColor("8TeV","","") , GetColorDefaultColor("8TeV","",""));
         histoPi0Pythia8MonashInvSec8TeVLego->SetLineWidth(3);
@@ -1174,7 +1191,8 @@ void ProduceTheoryGraphsPP(){
         SetStyleTLatex( labelDetSysXSectionPi0, 0.035,4, 1, 42, kTRUE, 31);
         labelDetSysXSectionPi0->Draw();
 
-        TLegend* legendXSectionPi0DiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*5, 32);
+        TLegend* legendXSectionPi0DiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*6, 32);
+        legendXSectionPi0DiffFits->AddEntry(histoPi0Pythia8MonashInvSec13TeVLego,"pp, #sqrt{s} = 13 TeV","l");
         legendXSectionPi0DiffFits->AddEntry(histoPi0Pythia8MonashInvSec8TeVLego,"pp, #sqrt{s} = 8 TeV","l");
         legendXSectionPi0DiffFits->AddEntry(histoPi0Pythia8MonashInvSec7TeVLego,"pp, #sqrt{s} = 7 TeV","l");
         legendXSectionPi0DiffFits->AddEntry(histoPi0Pythia8MonashInvSec5TeVLego,"pp, #sqrt{s} = 5 TeV","l");
@@ -1185,6 +1203,10 @@ void ProduceTheoryGraphsPP(){
     canvasXSection->SaveAs("ExternalInput/Theory/Pi0_Pythia8_Monash_InvXSection_comp.eps");
 
     histo2DXSection->Draw("copy");
+        DrawGammaSetMarker(histoEtaPythia8MonashInvSec13TeVLego, 1, 1.5, GetColorDefaultColor("13TeV","","") , GetColorDefaultColor("13TeV","",""));
+        histoEtaPythia8MonashInvSec13TeVLego->SetLineWidth(3);
+        histoEtaPythia8MonashInvSec13TeVLego->Draw("same,hist,l");
+
         DrawGammaSetMarker(histoEtaPythia8MonashInvSec8TeVLego, 1, 1.5, GetColorDefaultColor("8TeV","","") , GetColorDefaultColor("8TeV","",""));
         histoEtaPythia8MonashInvSec8TeVLego->SetLineWidth(3);
         histoEtaPythia8MonashInvSec8TeVLego->Draw("same,hist,l");
@@ -1217,6 +1239,10 @@ void ProduceTheoryGraphsPP(){
 
     histo2DXSection->Draw("copy");
 
+        DrawGammaSetMarker(histoChPionPythia8MonashInvSec13TeVLego, 1, 1.5, GetColorDefaultColor("13TeV","","") , GetColorDefaultColor("13TeV","",""));
+        histoChPionPythia8MonashInvSec13TeVLego->SetLineWidth(3);
+        histoChPionPythia8MonashInvSec13TeVLego->Draw("same,hist,l");
+
         DrawGammaSetMarker(histoChPionPythia8MonashInvSec8TeVLego, 1, 1.5, GetColorDefaultColor("8TeV","","") , GetColorDefaultColor("8TeV","",""));
         histoChPionPythia8MonashInvSec8TeVLego->SetLineWidth(3);
         histoChPionPythia8MonashInvSec8TeVLego->Draw("same,hist,l");
@@ -1243,7 +1269,8 @@ void ProduceTheoryGraphsPP(){
         SetStyleTLatex( labelDetSysXSectionChPion, 0.035,4, 1, 42, kTRUE, 31);
         labelDetSysXSectionChPion->Draw();
 
-        TLegend* legendXSectionChPionDiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*5, 32);
+        TLegend* legendXSectionChPionDiffFits          = GetAndSetLegend2(0.18, 0.13, 0.40 , 0.13+0.03*6, 32);
+        legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec13TeVLego,"pp, #sqrt{s} = 13 TeV","l");
         legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec8TeVLego,"pp, #sqrt{s} = 8 TeV","l");
         legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec7TeVLego,"pp, #sqrt{s} = 7 TeV","l");
 //        legendXSectionChPionDiffFits->AddEntry(histoChPionPythia8MonashInvSec5TeVLego,"pp, #sqrt{s} = 5 TeV","l");
@@ -1521,6 +1548,14 @@ void ProduceTheoryGraphsPP(){
         graphElecFromJJXSec8TeVEMCal->Write("graphElecFromJJ_8TeV", TObject::kOverwrite);
         graphRatioElecFromWeakBoson->Write("graphRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
         splineRatioElecFromWeakBoson->Write("splineRatioElecFromWeakBoson_8TeV", TObject::kOverwrite);
+        
+        //***********************************************************************
+        // write  calculations for 13TeV
+        //***********************************************************************
+        histoPi0Pythia8MonashInvSec13TeVLego->Write("histoInvSecPythia8Monash2013LegoPi013TeV", TObject::kOverwrite);
+        histoEtaPythia8MonashInvSec13TeVLego->Write("histoInvSecPythia8Monash2013LegoEta13TeV", TObject::kOverwrite);
+        histoEtaToPi0RatioPythia8Monash13TeVLego->Write("histoEtaToPi0RatioPythia8Monash2013Lego13TeV", TObject::kOverwrite);
+        histoChPionPythia8MonashInvSec13TeVLego->Write("histoInvSecPythia8Monash2013LegoChPion13TeV", TObject::kOverwrite);
 
     fileTheoryGraphsPP.Close();
 

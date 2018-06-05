@@ -62,18 +62,18 @@ struct SysErrorConversion {
 };
 
 void CombineMesonMeasurements7TeV_V3(   TString fileNamePCM          = "CombinationInput7TeV/data_PCMResultsFullCorrection_PP_7TeV_20170718.root",
-                                        TString fileNamePHOS         = "/home/nschmidt/AnalysisResults/pp/7TeV/PHOS/pp7TeV_pass4_ppareek_PHOSResultsFullCorrection_10092017.root",
+                                        TString fileNamePHOS         = "/media/nschmidt/local/ANALYSIS_RESULTS/pp/7TeV/PHOS/pp7TeV_pass4_ppareek_PHOSResultsFullCorrection_10092017.root",
                                         //TString fileNameEMCAL        = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP_20170714.root",
-                                        TString fileNameEMCAL        = "/home/nschmidt/AnalysisResults/pp/7TeV/EMCal/Evi/mesonSpecrta7TeV_2011EMCAL_14Oct2017.root",
+                                        TString fileNameEMCAL        = "/media/nschmidt/local/ANALYSIS_RESULTS/pp/7TeV/EMCal/Evi/mesonSpecrta7TeV_2011EMCAL_14Oct2017.root",
                                         TString fileNamePCMEMCAL     = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_PCM-EMCALResultsFullCorrection_PP_20170714.root",
                                         TString fileNamePCMPHOS      = "CombinationInput7TeV/data_PCM-PHOSResultsFullCorrection_PP_NoBinShifting_v2.root",
                                         TString fileNameEMCAL2       = "/home/nschmidt/AnalysisSoftware/CombinationInput7TeV/data_EMCAL-EMCALResultsFullCorrection_PP_20170714.root",
-                                        TString fileInputCorrFactors = "/home/nschmidt/AnalysisResults/pp/7TeV/Comb/correlationInput/ComputeCorrelationFactors_pp7TeV/pp7TeV.root",
+                                        TString fileInputCorrFactors = "/media/nschmidt/local/ANALYSIS_RESULTS/pp/7TeV/Comb/correlationInput/ComputeCorrelationFactors_pp7TeV/pp7TeV.root",
                                         TString suffix               = "pdf",
                                         TString isMC                 = "",
                                         TString thesisPlots          = "",
                                         TString bWCorrection         = "",
-                                        Int_t numbersofmeas          = 5,
+                                        Int_t numbersofmeas          = 4,
                                         Bool_t useDanielmeas         = kFALSE
                                     ){
 
@@ -696,7 +696,7 @@ fileNameEMCAL2="";
 
     //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
     Int_t offSetsEta[11]                        =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
-    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
+    Int_t offSetsSysEta[11]                     =  {1,    4,  7,     3,      5, 0,0,0,   9,0,0};
     if(!useDanielmeas){
       offSetsEta[2]    = 4;
       offSetsSysEta[2] = 9;
@@ -713,7 +713,7 @@ fileNameEMCAL2="";
 
     //                                            PCM,PHOS,EMC,PCMPHOS,PCMEMC,         EMC
     Int_t offSetsEtaToPi0[11]                   =  {0,    4,  1,     2,      1, 0,0,0,   4,0,0};
-    Int_t offSetsSysEtaToPi0[11]                =  {1,    4,  7,     3,      4, 0,0,0,   9,0,0};
+    Int_t offSetsSysEtaToPi0[11]                =  {1,    4,  7,     3,      5, 0,0,0,   9,0,0};
     if(!useDanielmeas){
       offSetsEtaToPi0[2]    = 4;
       offSetsSysEtaToPi0[2] = 9;
@@ -4652,11 +4652,11 @@ fileNameEMCAL2="";
            for (Int_t i = 0; i < 11; i++){
              if(directoryPi0[i]){
                // Writing full correction factors
-               histoPi0AccTimesEff[i]          ->Write(Form("Pi0CorrectionFactor%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoPi0Mass[i]                 ->Write(Form("Pi0MassData%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoPi0TrueMass[i]             ->Write(Form("Pi0MassMC%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoPi0FWHMMeV[i]              ->Write(Form("Pi0WidthData%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoPi0TrueFWHMMeV[i]          ->Write(Form("Pi0WidthMC%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoPi0AccTimesEff[i])histoPi0AccTimesEff[i]          ->Write(Form("Pi0CorrectionFactor%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoPi0Mass[i])histoPi0Mass[i]                 ->Write(Form("Pi0MassData%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoPi0TrueMass[i])histoPi0TrueMass[i]             ->Write(Form("Pi0MassMC%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoPi0FWHMMeV[i])histoPi0FWHMMeV[i]              ->Write(Form("Pi0WidthData%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoPi0TrueFWHMMeV[i])histoPi0TrueFWHMMeV[i]          ->Write(Form("Pi0WidthMC%s",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
 
@@ -4712,11 +4712,11 @@ fileNameEMCAL2="";
            for (Int_t i = 0; i < 11; i++){
              if(directoryEta[i]){
                // Writing full correction factors
-               histoEtaAccTimesEff[i]          ->Write(Form("EtaCorrectionFactor%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoEtaMass[i]                 ->Write(Form("EtaMassData%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoEtaTrueMass[i]             ->Write(Form("EtaMassMC%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoEtaFWHMMeV[i]              ->Write(Form("EtaWidthData%s",nameMeasGlobalWriteToFile[i].Data()));
-               histoEtaTrueFWHMMeV[i]          ->Write(Form("EtaWidthMC%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoEtaAccTimesEff[i])histoEtaAccTimesEff[i]          ->Write(Form("EtaCorrectionFactor%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoEtaMass[i])histoEtaMass[i]                 ->Write(Form("EtaMassData%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoEtaTrueMass[i])histoEtaTrueMass[i]             ->Write(Form("EtaMassMC%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoEtaFWHMMeV[i])histoEtaFWHMMeV[i]              ->Write(Form("EtaWidthData%s",nameMeasGlobalWriteToFile[i].Data()));
+               if(histoEtaTrueFWHMMeV[i])histoEtaTrueFWHMMeV[i]          ->Write(Form("EtaWidthMC%s",nameMeasGlobalWriteToFile[i].Data()));
              }
            }
        fCombResults.Close();
