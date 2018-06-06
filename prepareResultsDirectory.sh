@@ -84,6 +84,10 @@ if [ $1 = "fjonas" ]; then
     ln -sf $PHOTONCONVDIR/DataQA DataQA
 fi
 
+if [ $1 = "fjonas" ] || [ $1 = "nschmidt" ]; then
+    ln -sf $PHOTONCONVDIR/TaskV1/* TaskV1/
+    ln -sf $PHOTONCONVDIR/TaskQA/* TaskQA/
+fi
 ln -sf $PHOTONCONVDIR/*.eps .
 ln -sf $PHOTONCONVDIR/*.C .
 ln -sf $PHOTONCONVDIR/*.h .
