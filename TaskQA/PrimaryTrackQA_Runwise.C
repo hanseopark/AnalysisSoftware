@@ -994,7 +994,7 @@ void PrimaryTrackQA_Runwise(
         if (iParticleType==0){histoName="Pion_dEdxSignal_before_PreSel";}
         if (iParticleType==1){histoName="";}
         if (i==0) vecHistosName.push_back(histoName);
-        hPion_dEdxSignal_before_PreSel_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean #it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
+        hPion_dEdxSignal_before_PreSel_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hPion_dEdxSignal_before_PreSel_ProjPt[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hPion_dEdxSignal_before_PreSel_ProjPt[i]);
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1002,7 +1002,7 @@ void PrimaryTrackQA_Runwise(
         if (iParticleType==0){histoName="Pion_dEdxSignal_before_PreSel_LowPt";}
         if (iParticleType==1){histoName="";}
         if (i==0) vecHistosName.push_back(histoName);
-        hPion_dEdxSignal_before_PreSel_LowPt_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean #it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
+        hPion_dEdxSignal_before_PreSel_LowPt_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hPion_dEdxSignal_before_PreSel_LowPt_ProjPt[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hPion_dEdxSignal_before_PreSel_LowPt_ProjPt[i]);
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1010,7 +1010,7 @@ void PrimaryTrackQA_Runwise(
         if (iParticleType==0){histoName="Pion_dEdxSignal_before_PreSel_MidPt";}
         if (iParticleType==1){histoName="";}
         if (i==0) vecHistosName.push_back(histoName);
-        hPion_dEdxSignal_before_PreSel_MidPt_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean #it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
+        hPion_dEdxSignal_before_PreSel_MidPt_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hPion_dEdxSignal_before_PreSel_MidPt_ProjPt[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hPion_dEdxSignal_before_PreSel_MidPt_ProjPt[i]);
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1018,7 +1018,7 @@ void PrimaryTrackQA_Runwise(
         if (iParticleType==0){histoName="Pion_dEdxSignal_before_PreSel_HighPt_ProjPt";}
         if (iParticleType==1){histoName="";}
         if (i==0) vecHistosName.push_back(histoName);
-        hPion_dEdxSignal_before_PreSel_HighPt_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean #it{p}_{#pi} (GeV/#it{c})","d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
+        hPion_dEdxSignal_before_PreSel_HighPt_ProjPt[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),Form("h%s; Run Number; Mean d#it{E}/d#it{x} TPC",histoName.Data()),hNBin,hFBin,hLBin);
         EditTH1(globalRuns, doEquidistantXaxis, hPion_dEdxSignal_before_PreSel_HighPt_ProjPt[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hPion_dEdxSignal_before_PreSel_HighPt_ProjPt[i]);
         //-------------------------------------------------------------------------------------------------------------------------------
@@ -1818,7 +1818,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHistESD_PrimaryPions_TPCdEdxSignal = (TH2D*) ESDContainer->FindObject(Form("%s",histoName.Data()));
                 if ((fHistESD_PrimaryPions_TPCdEdxSignal)&&(fHistESD_PrimaryPions_TPCdEdxSignal->GetEntries()>0)){
-                    TH1D* fHistESD_PrimaryPions_TPCdEdxSignal__temp = (TH1D*) fHistESD_PrimaryPions_TPCdEdxSignal->ProjectionY(Form("%s",histoName.Data(),fHistESD_PrimaryPions_TPCdEdxSignal->GetXaxis()->GetFirst(),fHistESD_PrimaryPions_TPCdEdxSignal->GetXaxis()->GetLast()));
+                    TH1D* fHistESD_PrimaryPions_TPCdEdxSignal__temp = (TH1D*) fHistESD_PrimaryPions_TPCdEdxSignal->ProjectionY(Form("%s",histoName.Data()),fHistESD_PrimaryPions_TPCdEdxSignal->GetXaxis()->GetFirst(),fHistESD_PrimaryPions_TPCdEdxSignal->GetXaxis()->GetLast());
                     hESD_PrimaryPions_TPCdEdxSignal_ProjPt[i]->SetBinContent(bin, fHistESD_PrimaryPions_TPCdEdxSignal__temp->GetMean());
                     hESD_PrimaryPions_TPCdEdxSignal_ProjPt[i]->SetBinError(bin, fHistESD_PrimaryPions_TPCdEdxSignal__temp->GetMeanError());
                     fHistESD_PrimaryPions_TPCdEdxSignal__temp->GetXaxis()->SetTitle("d#it{E}/d#it{x} TPC");
@@ -1896,7 +1896,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHistPion_ITS_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHistPion_ITS_after_AfterQA)&&(fHistPion_ITS_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHistPion_ITS_after_AfterQA__temp = (TH1D*) fHistPion_ITS_after_AfterQA->ProjectionY(Form("%s",histoName.Data(),fHistPion_ITS_after_AfterQA->GetXaxis()->GetFirst(),fHistPion_ITS_after_AfterQA->GetXaxis()->GetLast()));
+                    TH1D* fHistPion_ITS_after_AfterQA__temp = (TH1D*) fHistPion_ITS_after_AfterQA->ProjectionY(Form("%s",histoName.Data()),fHistPion_ITS_after_AfterQA->GetXaxis()->GetFirst(),fHistPion_ITS_after_AfterQA->GetXaxis()->GetLast());
                     hPion_ITS_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHistPion_ITS_after_AfterQA__temp->GetMean());
                     hPion_ITS_after_AfterQA_ProjPt[i]->SetBinError(bin, fHistPion_ITS_after_AfterQA__temp->GetMeanError());
                     fHistPion_ITS_after_AfterQA__temp->GetXaxis()->SetTitle("#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS");
@@ -1970,7 +1970,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHistPion_dEdx_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHistPion_dEdx_after_AfterQA)&&(fHistPion_dEdx_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHistPion_dEdx_after_AfterQA__temp = (TH1D*) fHistPion_dEdx_after_AfterQA->ProjectionY(Form("%s",histoName.Data(),fHistPion_dEdx_after_AfterQA->GetXaxis()->GetFirst(),fHistPion_dEdx_after_AfterQA->GetXaxis()->GetLast()));
+                    TH1D* fHistPion_dEdx_after_AfterQA__temp = (TH1D*) fHistPion_dEdx_after_AfterQA->ProjectionY(Form("%s",histoName.Data()),fHistPion_dEdx_after_AfterQA->GetXaxis()->GetFirst(),fHistPion_dEdx_after_AfterQA->GetXaxis()->GetLast());
                     hPion_dEdx_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHistPion_dEdx_after_AfterQA__temp->GetMean());
                     hPion_dEdx_after_AfterQA_ProjPt[i]->SetBinError(bin, fHistPion_dEdx_after_AfterQA__temp->GetMeanError());
                     fHistPion_dEdx_after_AfterQA__temp->GetXaxis()->SetTitle("#it{n} #sigma_{#pi} d#it{E}/d#it{x} TPC");
@@ -2044,7 +2044,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHistPion_dEdxSignal_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHistPion_dEdxSignal_after_AfterQA)&&(fHistPion_dEdxSignal_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHistPion_dEdxSignal_after_AfterQA__temp = (TH1D*) fHistPion_dEdxSignal_after_AfterQA->ProjectionY(Form("%s",histoName.Data(),fHistPion_dEdxSignal_after_AfterQA->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_AfterQA->GetXaxis()->GetLast()));
+                    TH1D* fHistPion_dEdxSignal_after_AfterQA__temp = (TH1D*) fHistPion_dEdxSignal_after_AfterQA->ProjectionY(Form("%s",histoName.Data()),fHistPion_dEdxSignal_after_AfterQA->GetXaxis()->GetFirst(),fHistPion_dEdxSignal_after_AfterQA->GetXaxis()->GetLast());
                     hPion_dEdxSignal_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHistPion_dEdxSignal_after_AfterQA__temp->GetMean());
                     hPion_dEdxSignal_after_AfterQA_ProjPt[i]->SetBinError(bin, fHistPion_dEdxSignal_after_AfterQA__temp->GetMeanError());
                     fHistPion_dEdxSignal_after_AfterQA__temp->GetXaxis()->SetTitle("d#it{E}/d#it{x} TPC");
@@ -2118,7 +2118,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHistPion_TOF_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHistPion_TOF_after_AfterQA)&&(fHistPion_TOF_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHistPion_TOF_after_AfterQA__temp = (TH1D*) fHistPion_TOF_after_AfterQA->ProjectionY(Form("%s",histoName.Data(),fHistPion_TOF_after_AfterQA__temp->GetXaxis()->GetFirst(),fHistPion_TOF_after_AfterQA__temp->GetXaxis()->GetLast()));
+                    TH1D* fHistPion_TOF_after_AfterQA__temp = (TH1D*) fHistPion_TOF_after_AfterQA->ProjectionY(Form("%s",histoName.Data()),fHistPion_TOF_after_AfterQA__temp->GetXaxis()->GetFirst(),fHistPion_TOF_after_AfterQA__temp->GetXaxis()->GetLast());
                     hPion_TOF_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHistPion_TOF_after_AfterQA__temp->GetMean());
                     hPion_TOF_after_AfterQA_ProjPt[i]->SetBinError(bin, fHistPion_TOF_after_AfterQA__temp->GetMeanError());
                     fHistPion_TOF_after_AfterQA__temp->GetXaxis()->SetTitle("#it{n} #sigma_{#pi} d#it{E}/d#it{x} TOF");
@@ -2192,7 +2192,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_DCAxy_Pt_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHisthTrack_DCAxy_Pt_after_AfterQA)&&(fHisthTrack_DCAxy_Pt_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHisthTrack_DCAxy_Pt_after_AfterQA__temp = (TH1D*) fHisthTrack_DCAxy_Pt_after_AfterQA->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_DCAxy_Pt_after_AfterQA->GetYaxis()->GetFirst(),fHisthTrack_DCAxy_Pt_after_AfterQA->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_DCAxy_Pt_after_AfterQA__temp = (TH1D*) fHisthTrack_DCAxy_Pt_after_AfterQA->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_DCAxy_Pt_after_AfterQA->GetYaxis()->GetFirst(),fHisthTrack_DCAxy_Pt_after_AfterQA->GetYaxis()->GetLast());
                     hTrack_DCAxy_Pt_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHisthTrack_DCAxy_Pt_after_AfterQA__temp->GetMean());
                     hTrack_DCAxy_Pt_after_AfterQA_ProjPt[i]->SetBinError(bin, fHisthTrack_DCAxy_Pt_after_AfterQA__temp->GetMeanError());
                     fHisthTrack_DCAxy_Pt_after_AfterQA__temp->GetYaxis()->SetTitle("DCA_{#it{xy}} (cm)");
@@ -2205,7 +2205,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_DCAz_Pt_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHisthTrack_DCAz_Pt_after_AfterQA)&&(fHisthTrack_DCAz_Pt_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHisthTrack_DCAz_Pt_after_AfterQA__temp = (TH1D*) fHisthTrack_DCAz_Pt_after_AfterQA->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_DCAz_Pt_after_AfterQA->GetYaxis()->GetFirst(),fHisthTrack_DCAz_Pt_after_AfterQA->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_DCAz_Pt_after_AfterQA__temp = (TH1D*) fHisthTrack_DCAz_Pt_after_AfterQA->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_DCAz_Pt_after_AfterQA->GetYaxis()->GetFirst(),fHisthTrack_DCAz_Pt_after_AfterQA->GetYaxis()->GetLast());
                     hTrack_DCAz_Pt_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHisthTrack_DCAz_Pt_after_AfterQA__temp->GetMean());
                     hTrack_DCAz_Pt_after_AfterQA_ProjPt[i]->SetBinError(bin, fHisthTrack_DCAz_Pt_after_AfterQA__temp->GetMeanError());
                     fHisthTrack_DCAz_Pt_after_AfterQA__temp->GetYaxis()->SetTitle("DCA_{#it{z}} (cm)");
@@ -2218,7 +2218,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_NFindCls_Pt_TPC_after_AfterQA = (TH2D*) PionCutsContainer->FindObject(Form("%s %s",histoName.Data(),fPionCutsContainerCutString.Data()));
                 if ((fHisthTrack_NFindCls_Pt_TPC_after_AfterQA)&&(fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->GetEntries()>0)){
-                    TH1D* fHisthTrack_NFindCls_Pt_TPC_after_AfterQA__temp = (TH1D*) fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->GetYaxis()->GetFirst(),fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_NFindCls_Pt_TPC_after_AfterQA__temp = (TH1D*) fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->GetYaxis()->GetFirst(),fHisthTrack_NFindCls_Pt_TPC_after_AfterQA->GetYaxis()->GetLast());
                     hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt[i]->SetBinContent(bin, fHisthTrack_NFindCls_Pt_TPC_after_AfterQA__temp->GetMean());
                     hTrack_NFindCls_Pt_TPC_after_AfterQA_ProjPt[i]->SetBinError(bin, fHisthTrack_NFindCls_Pt_TPC_after_AfterQA__temp->GetMeanError());
                     fHisthTrack_NFindCls_Pt_TPC_after_AfterQA__temp->GetXaxis()->SetTitle("Findable Clusters after Cut");
@@ -2235,7 +2235,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHistPion_ITS_before_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHistPion_ITS_before_PreSel)&&(fHistPion_ITS_before_PreSel->GetEntries()>0)){
-                    TH1D* fHistPion_ITS_before_PreSel__temp = (TH1D*) fHistPion_ITS_before_PreSel->ProjectionY(Form("%s",histoName.Data(),fHistPion_ITS_before_PreSel->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel->GetXaxis()->GetLast()));
+                    TH1D* fHistPion_ITS_before_PreSel__temp = (TH1D*) fHistPion_ITS_before_PreSel->ProjectionY(Form("%s",histoName.Data()),fHistPion_ITS_before_PreSel->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel->GetXaxis()->GetLast());
                     hPion_ITS_before_PreSel_ProjPt[i]->SetBinContent(bin, fHistPion_ITS_before_PreSel__temp->GetMean());
                     hPion_ITS_before_PreSel_ProjPt[i]->SetBinError(bin, fHistPion_ITS_before_PreSel__temp->GetMeanError());
                     fHistPion_ITS_before_PreSel__temp->GetXaxis()->SetTitle("#it{p}_{#pi} (GeV/#it{c})");
@@ -2253,7 +2253,7 @@ void PrimaryTrackQA_Runwise(
                     SetXRange(fHistPion_ITS_before_PreSel,0,fHistPion_ITS_before_PreSel->GetXaxis()->FindBin(0.2));
                     GetMinMaxBinY(fHistPion_ITS_before_PreSel,minYB,maxYB);
                     SetYRange(fHistPion_ITS_before_PreSel,minYB-1,maxYB+1);
-                    TH1D* fHistPion_ITS_before_PreSel_LowPt__temp = (TH1D*) fHistPion_ITS_before_PreSel->ProjectionY(Form("%s",histoName.Data(),fHistPion_ITS_before_PreSel->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel->GetXaxis()->GetLast()));
+                    TH1D* fHistPion_ITS_before_PreSel_LowPt__temp = (TH1D*) fHistPion_ITS_before_PreSel->ProjectionY(Form("%s",histoName.Data()),fHistPion_ITS_before_PreSel->GetXaxis()->GetFirst(),fHistPion_ITS_before_PreSel->GetXaxis()->GetLast());
                     hPion_ITS_before_PreSel_LowPt_ProjPt[i]->SetBinError(bin, fHistPion_ITS_before_PreSel_LowPt__temp->GetMeanError());
                     fHistPion_ITS_before_PreSel_LowPt__temp->GetXaxis()->SetTitle("#it{n} #sigma_{#pi} d#it{E}/d#it{x} ITS");
                     fHistPion_ITS_before_PreSel_LowPt__temp->GetYaxis()->SetTitle("# Entries");
@@ -2528,7 +2528,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_DCAxy_Pt_before_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHisthTrack_DCAxy_Pt_before_PreSel)&&(fHisthTrack_DCAxy_Pt_before_PreSel->GetEntries()>0)){
-                    TH1D* fHisthTrack_DCAxy_Pt_before_PreSel__temp = (TH1D*) fHisthTrack_DCAxy_Pt_before_PreSel->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_DCAxy_Pt_before_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAxy_Pt_before_PreSel->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_DCAxy_Pt_before_PreSel__temp = (TH1D*) fHisthTrack_DCAxy_Pt_before_PreSel->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_DCAxy_Pt_before_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAxy_Pt_before_PreSel->GetYaxis()->GetLast());
                     hTrack_DCAxy_Pt_before_PreSel_ProjPt[i]->SetBinContent(bin, fHisthTrack_DCAxy_Pt_before_PreSel__temp->GetMean());
                     hTrack_DCAxy_Pt_before_PreSel_ProjPt[i]->SetBinError(bin, fHisthTrack_DCAxy_Pt_before_PreSel__temp->GetMeanError());
                     fHisthTrack_DCAxy_Pt_before_PreSel__temp->GetXaxis()->SetTitle("DCA_{#it{xy}} (cm)");
@@ -2547,7 +2547,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_DCAz_Pt_before_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHisthTrack_DCAz_Pt_before_PreSel)&&(fHisthTrack_DCAz_Pt_before_PreSel->GetEntries()>0)){
-                    TH1D* fHisthTrack_DCAz_Pt_before_PreSel__temp = (TH1D*) fHisthTrack_DCAz_Pt_before_PreSel->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_DCAz_Pt_before_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAz_Pt_before_PreSel->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_DCAz_Pt_before_PreSel__temp = (TH1D*) fHisthTrack_DCAz_Pt_before_PreSel->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_DCAz_Pt_before_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAz_Pt_before_PreSel->GetYaxis()->GetLast());
                     hTrack_DCAz_Pt_before_PreSel_ProjPt[i]->SetBinContent(bin, fHisthTrack_DCAz_Pt_before_PreSel__temp->GetMean());
                     hTrack_DCAz_Pt_before_PreSel_ProjPt[i]->SetBinError(bin, fHisthTrack_DCAz_Pt_before_PreSel__temp->GetMeanError());
                     fHisthTrack_DCAz_Pt_before_PreSel__temp->GetXaxis()->SetTitle("DCA_{#it{z}} (cm)");
@@ -2561,7 +2561,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_NFindCls_Pt_TPC_before_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHisthTrack_NFindCls_Pt_TPC_before_PreSel)&&(fHisthTrack_NFindCls_Pt_TPC_before_PreSel->GetEntries()>0)){
-                    TH1D* fHisthTrack_NFindCls_Pt_TPC_before_PreSel__temp = (TH1D*) fHisthTrack_NFindCls_Pt_TPC_before_PreSel->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_NFindCls_Pt_TPC_before_PreSel->GetYaxis()->GetFirst(),fHisthTrack_NFindCls_Pt_TPC_before_PreSel->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_NFindCls_Pt_TPC_before_PreSel__temp = (TH1D*) fHisthTrack_NFindCls_Pt_TPC_before_PreSel->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_NFindCls_Pt_TPC_before_PreSel->GetYaxis()->GetFirst(),fHisthTrack_NFindCls_Pt_TPC_before_PreSel->GetYaxis()->GetLast());
                     hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt[i]->SetBinContent(bin, fHisthTrack_NFindCls_Pt_TPC_before_PreSel__temp->GetMean());
                     hTrack_NFindCls_Pt_TPC_before_PreSel_ProjPt[i]->SetBinError(bin, fHisthTrack_NFindCls_Pt_TPC_before_PreSel__temp->GetMeanError());
                     fHisthTrack_NFindCls_Pt_TPC_before_PreSel__temp->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c}) TPC");
@@ -2872,7 +2872,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_DCAxy_Pt_after_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHisthTrack_DCAxy_Pt_after_PreSel)&&(fHisthTrack_DCAxy_Pt_after_PreSel->GetEntries()>0)){
-                    TH1D* fHisthTrack_DCAxy_Pt_after_PreSel__temp = (TH1D*) fHisthTrack_DCAxy_Pt_after_PreSel->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_DCAxy_Pt_after_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAxy_Pt_after_PreSel->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_DCAxy_Pt_after_PreSel__temp = (TH1D*) fHisthTrack_DCAxy_Pt_after_PreSel->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_DCAxy_Pt_after_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAxy_Pt_after_PreSel->GetYaxis()->GetLast());
                     hTrack_DCAxy_Pt_after_PreSel_ProjPt[i]->SetBinContent(bin, fHisthTrack_DCAxy_Pt_after_PreSel__temp->GetMean());
                     hTrack_DCAxy_Pt_after_PreSel_ProjPt[i]->SetBinError(bin, fHisthTrack_DCAxy_Pt_after_PreSel__temp->GetMeanError());
                     fHisthTrack_DCAxy_Pt_after_PreSel__temp->GetXaxis()->SetTitle("DCA_{#it{xy}} (cm)");
@@ -2886,7 +2886,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_DCAz_Pt_after_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHisthTrack_DCAz_Pt_after_PreSel)&&(fHisthTrack_DCAz_Pt_after_PreSel->GetEntries()>0)){
-                    TH1D* fHisthTrack_DCAz_Pt_after_PreSel__temp = (TH1D*) fHisthTrack_DCAz_Pt_after_PreSel->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_DCAz_Pt_after_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAz_Pt_after_PreSel->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_DCAz_Pt_after_PreSel__temp = (TH1D*) fHisthTrack_DCAz_Pt_after_PreSel->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_DCAz_Pt_after_PreSel->GetYaxis()->GetFirst(),fHisthTrack_DCAz_Pt_after_PreSel->GetYaxis()->GetLast());
                     hTrack_DCAz_Pt_after_PreSel_ProjPt[i]->SetBinContent(bin, fHisthTrack_DCAz_Pt_after_PreSel__temp->GetMean());
                     hTrack_DCAz_Pt_after_PreSel_ProjPt[i]->SetBinError(bin, fHisthTrack_DCAz_Pt_after_PreSel__temp->GetMeanError());
                     fHisthTrack_DCAz_Pt_after_PreSel__temp->GetXaxis()->SetTitle("DCA_{#it{z}} (cm)");
@@ -2900,7 +2900,7 @@ void PrimaryTrackQA_Runwise(
                 if (iParticleType==1){histoName="";}
                 TH2D* fHisthTrack_NFindCls_Pt_TPC_after_PreSel = (TH2D*) PionCuts2Container->FindObject(Form("%s %s",histoName.Data(),fPionCuts2ContainerCutString.Data()));
                 if ((fHisthTrack_NFindCls_Pt_TPC_after_PreSel)&&(fHisthTrack_NFindCls_Pt_TPC_after_PreSel->GetEntries()>0)){
-                    TH1D* fHisthTrack_NFindCls_Pt_TPC_after_PreSel__temp = (TH1D*) fHisthTrack_NFindCls_Pt_TPC_after_PreSel->ProjectionX(Form("%s",histoName.Data(),fHisthTrack_NFindCls_Pt_TPC_after_PreSel->GetYaxis()->GetFirst(),fHisthTrack_NFindCls_Pt_TPC_after_PreSel->GetYaxis()->GetLast()));
+                    TH1D* fHisthTrack_NFindCls_Pt_TPC_after_PreSel__temp = (TH1D*) fHisthTrack_NFindCls_Pt_TPC_after_PreSel->ProjectionX(Form("%s",histoName.Data()),fHisthTrack_NFindCls_Pt_TPC_after_PreSel->GetYaxis()->GetFirst(),fHisthTrack_NFindCls_Pt_TPC_after_PreSel->GetYaxis()->GetLast());
                     hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt[i]->SetBinContent(bin, fHisthTrack_NFindCls_Pt_TPC_after_PreSel__temp->GetMean());
                     hTrack_NFindCls_Pt_TPC_after_PreSel_ProjPt[i]->SetBinError(bin, fHisthTrack_NFindCls_Pt_TPC_after_PreSel__temp->GetMeanError());
                     fHisthTrack_NFindCls_Pt_TPC_after_PreSel__temp->GetXaxis()->SetTitle("#it{p}_{T} (GeV/#it{c}) TPC");
