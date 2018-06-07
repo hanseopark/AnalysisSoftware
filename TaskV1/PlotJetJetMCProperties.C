@@ -250,6 +250,8 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         maxPt           = 30;
     } else if (mode == 10){
         maxPt           = 50;
+    } else if (mode == 0 && period.Contains("LHC18b8") ){
+        maxPt           = 50;
     }
     cout << "going to maxPt: " << maxPt << endl;
 
@@ -335,6 +337,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
 
         fileInput[i]                                = new TFile(fileNameInput[i]);
         if (fileInput[i]->IsZombie()) return;
+        cout << fileNameInput[i] << endl;
 
         TString autoDetectedMainDir                 = AutoDetectMainTList(mode , fileInput[i]);
         if (autoDetectedMainDir.CompareTo("") == 0){
@@ -474,7 +477,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     Float_t minimumPi0Unscaled = FindSmallestEntryIn1D(histoMCPi0InputW0EvtWeigth[nrOfPtHardBins-1]);
 
     TH2F * histo2DInputUnscaledPi0;
-    histo2DInputUnscaledPi0 = new TH2F("histo2DInputUnscaledPi0","histo2DInputUnscaledPi0",1000,0., maxPt,10000,minimumPi0Unscaled,maximumPi0Unscaled);
+    histo2DInputUnscaledPi0 = new TH2F("histo2DInputUnscaledPi0","histo2DInputUnscaledPi0",1000,0., maxPt,10000,minimumPi0Unscaled*0.5,maximumPi0Unscaled);
     SetStyleHistoTH2ForGraphs(histo2DInputUnscaledPi0, "#it{p}_{T} (GeV/#it{c})","N_{#pi^{0}}",
                             0.032,0.04, 0.032,0.04, 0.8,1.1);
     histo2DInputUnscaledPi0->GetXaxis()->SetRangeUser(0,maxPt);
@@ -499,6 +502,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
     labelMCName->Draw();
 
 
+    histo2DInputUnscaledPi0->Draw("same,axis");
     canvasInputUnscaled->Update();
     canvasInputUnscaled->SaveAs(Form("%s/Pi0_MC_InputUnscaled.%s",outputDir.Data(),suffix.Data()));
 
@@ -523,6 +527,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
 
         labelMCName->Draw();
 
+        histo2DInputUnscaledEta->Draw("same,axis");
         canvasInputUnscaled->Update();
         canvasInputUnscaled->SaveAs(Form("%s/Eta_MC_InputUnscaled.%s",outputDir.Data(),suffix.Data()));
     }
@@ -548,6 +553,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
         labelMCNameDLog->SetTextFont(43);
         labelMCNameDLog->Draw();
 
+        histo2DInputUnscaledPi0->Draw("same,axis");
         canvasInputUnscaled->Update();
         canvasInputUnscaled->SaveAs(Form("%s/Pi0_MC_InputUnscaledDLog.%s",outputDir.Data(),suffix.Data()));
 
@@ -575,6 +581,7 @@ void  PlotJetJetMCProperties(   TString fileListInput   = "InputFile.txt",
             legendUnscaledDLog->Draw();
             labelMCNameDLog->Draw();
 
+            histo2DInputUnscaledEta->Draw("same,axis");
             canvasInputUnscaled->Update();
             canvasInputUnscaled->SaveAs(Form("%s/Eta_MC_InputUnscaledDLog.%s",outputDir.Data(),suffix.Data()));
         }

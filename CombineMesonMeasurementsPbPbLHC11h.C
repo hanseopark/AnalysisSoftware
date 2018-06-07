@@ -6714,11 +6714,13 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           graphChargedPionRAA0010->Draw("p,same");
 //           graphRAAPi0SysBothMeson_0010->SetFillStyle(3005);
 //           graphRAAPi0SysBothMeson_0010->SetFillColor(colorPCM0010);
+        DrawGammaSetMarkerTGraphAsym(graphRAAPi0SysBothMeson_0010, markerStyleComb+4,markerSizeComb, colorComb0010-7 , colorComb0010-7, widthLinesBoxes, kTRUE);
+        DrawGammaSetMarkerTGraphAsym(graphRAAPi0StatBothMeson_0010, markerStyleComb+4,markerSizeComb, colorComb0010-7, colorComb0010-7);
+          DrawGammaSetMarkerTGraphAsym(graphRAAEtaSysBothMeson_0010,20,2.3, colorPCM0010,colorPCM0010, 2, kTRUE);
           graphRAAPi0StatBothMeson_0010->Draw("p,same");
           graphRAAPi0SysBothMeson_0010->Draw("E2same");
           graphRAAEtaStatBothMeson_0010->Draw("p,same");
           graphRAAEtaSysBothMeson_0010->Draw("E2same");
-          DrawGammaSetMarkerTGraphAsym(graphRAAEtaSysBothMeson_0010,20,2.3, colorPCM0010,colorPCM0010, 2, kTRUE);
 
 //           graphChargedKaonRAATotErr0010->Draw("p,same");
 //             if(noXerrorBars) ProduceGraphAsymmWithoutXErrors(graphChargedKaonRAATotErr0010);

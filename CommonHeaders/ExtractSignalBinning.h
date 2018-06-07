@@ -233,10 +233,12 @@
                                                         55.0, 60.0, 65.0, 70.0, 80.0, 100.0, 125.0, 150.0, 175.0, 200.0};
     Double_t fBinsPi05TeVPtDCA[16]                  = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
                                                         2.0, 2.4, 3.0, 5.0, 10., 12.0};
-    Double_t fBinsPi05TeV2017PtDCA[38]              = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
-                                                        2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
-                                                        4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4,
-                                                        6.6, 6.8, 7.2, 7.6, 8.0};
+//     Double_t fBinsPi05TeV2017PtDCA[38]              = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+//                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2,
+//                                                         4.4, 4.6, 4.8, 5.0, 5.2, 5.4, 5.6, 5.8, 6.0, 6.2, 6.4,
+//                                                         6.6, 6.8, 7.2, 7.6, 8.0};
+    Double_t fBinsPi05TeV2017PtDCA[19]              = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                        2.2, 2.6, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.};
     Double_t fBinsPi05TeV2017DalitzPt[24]           =  {0, 0.4, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 2.8, 3.2, 3.6, 4.0, 4.4, 5.0, 6.0,
                                                         8.0, 10.0, 15.};
@@ -5026,9 +5028,9 @@
                     if(modi == 0 && energy.Contains("2017")){
                         nIterBGFit                  = 8;
                         fMaxYFracBGOverIntHist      = 70;
-                        optionBGSmoothingStandard   = "noSmoothing";
-                        optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing3";
-                        optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing5";
+                        optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                        optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                        optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
                     } else {
                         nIterBGFit                  = 10;
                         fMaxYFracBGOverIntHist      = 60;
@@ -6015,7 +6017,7 @@
                         if (i < fNBinsPt+1){
                             if ( modi == 0 ) {
                                 if(energy.Contains("2017")){
-                                    if(fNBinsPt<30) fNRebin[i]  = fBinsEta5TeVPtRebin[i];
+                                    if(fNBinsPt<15) fNRebin[i]  = fBinsEta5TeVPtRebin[i];
                                     else            fNRebin[i]  = fBinsEta5TeV2017PtRebin[i];
                                 } else {
                                     fNRebin[i]  = fBinsEta5TeVPtRebin[i];

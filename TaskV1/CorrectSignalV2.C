@@ -2312,7 +2312,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Bool_t scaleTrueEffiWithFit     = kTRUE;
     if (    optionEnergy.CompareTo("PbPb_5.02TeV") == 0                     ||
             (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
-            optionEnergy.CompareTo("2.76TeV") == 0
+            optionEnergy.CompareTo("2.76TeV") == 0     ||
+            optionEnergy.CompareTo("5TeV2017") == 0
         )
         scaleTrueEffiWithFit        = kFALSE;
 

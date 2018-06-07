@@ -7,16 +7,16 @@
 
 BASEDIR=/home/admin1/leardini/GridOutput/PbPb
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20171130-1;
+TRAINDIR=Legotrain-vAN-20180525-1_material;
 
 
-LHC11hData=350_20171201-1048; #351_20171201-1119;
-LHC14a1a=691_20171205-1721; #692_20171205-1721
-LHC14a1b=693_20171205-1721; #694_20171205-1721; #
+LHC11hData=408_20180525-1832; #351_20171201-1119;
+LHC14a1a=942_20180525-1825; #692_20171205-1721
+LHC14a1b=; #694_20171205-1721; #
 
-LHC11hDataWithPhi=350_20171201-1048; #351_20171201-1119;
-LHC14a1aWithPhi=691_20171205-1721; #692_20171205-1721
-LHC14a1bWithPhi=693_20171205-1721; #694_20171205-1721; #
+LHC11hDataWithPhi=408_20180525-1832; #351_20171201-1119;
+LHC14a1aWithPhi=942_20180525-1825; #692_20171205-1721
+LHC14a1bWithPhi=; #694_20171205-1721; #
 
 fileNameData=GammaConv_Material_103.root;
 fileName14a1a=GammaConv_Material_103.root;
@@ -98,6 +98,40 @@ elif [ $1 = "AODdata" ]; then
 #     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge/Gam* file:$OUTPUTDIR_LHC11hWithPhi/
 #
    fi
+
+elif [ $1 = "material" ]; then
+
+    OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/Material_LHC11h
+    mkdir -p $OUTPUTDIR_LHC11h
+    OUTPUTDIR_LHC11hWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hDataWithPhi/Material_LHC11h_withPhi
+    mkdir -p $OUTPUTDIR_LHC11hWithPhi
+
+    if [ $LHC11hData != "" ]; then
+        echo "Downloading " $LHC11hData
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hData/merge_runlist_7/GammaConv_Material_* file:$OUTPUTDIR_LHC11h/
+        ls $OUTPUTDIR_LHC11h/GammaConv*Material*.root > fileLHC11h_mat.txt
+        fileNumbers=`cat fileLHC11h_mat.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC11h/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC11h_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+    if [ $LHC11hDataWithPhi != "" ]; then
+        echo "Downloading " $LHC11hDataWithPhi
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_8/GammaConv_Material_* file:$OUTPUTDIR_LHC11hWithPhi/
+        ls $OUTPUTDIR_LHC11hWithPhi/GammaConv*Material*.root > fileLHC11h_mat.txt
+        fileNumbers=`cat fileLHC11h_mat.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC11hWithPhi/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC11h_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
 else
    TRAINPATHData=GA_PbPb;
    if [ $3 = "runwise" ]; then
@@ -151,6 +185,9 @@ else
         alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHData/$LHC11hDataWithPhi/merge_runlist_7/Gamm* file:$OUTPUTDIR_LHC11hWithPhi/
     fi
 fi
+
+
+
 
 # # for the standard analysis:
 # OUTPUTDIR_LHC11h=$BASEDIR/$TRAINDIR/$TRAINPATHData-$LHC11hData/merge_runlist_1
@@ -332,6 +369,69 @@ elif [ $2 = "AODmc" ]; then
     alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_6/Gam* file:$OUTPUTDIR_LHC14a1bWithPhi/
    fi
 
+
+elif [ $2 = "material" ]; then
+   TRAINPATHMC=GA_PbPb_MC
+
+        OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/Material_LHC14a1a
+        OUTPUTDIR_LHC14a1b=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1b/Material_LHC14a1b
+        OUTPUTDIR_LHC14a1aWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1aWithPhi/Material_LHC14a1a_withPhi
+        OUTPUTDIR_LHC14a1bWithPhi=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1bWithPhi/Material_LHC14a1b_withPhi
+
+        mkdir -p $OUTPUTDIR_LHC14a1a
+        mkdir -p $OUTPUTDIR_LHC14a1b
+        mkdir -p $OUTPUTDIR_LHC14a1aWithPhi
+        mkdir -p $OUTPUTDIR_LHC14a1bWithPhi
+
+    if [ $LHC14a1a != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_7/GammaConv_Material_* file:$OUTPUTDIR_LHC14a1a/
+        ls $OUTPUTDIR_LHC14a1a/GammaConv*Material*.root > fileLHC14a1a_mat.txt
+        fileNumbers=`cat fileLHC14a1a_mat.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC14a1a/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC14a1a_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+    if [ $LHC14a1b != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1b/merge_runlist_7/GammaConv_Material_* file:$OUTPUTDIR_LHC14a1b/
+        ls $OUTPUTDIR_LHC14a1b/GammaConv*Material*.root > fileLHC14a1b_mat.txt
+        fileNumbers=`cat fileLHC14a1b_mat.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC14a1b/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC14a1b_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+        if [ $LHC14a1aWithPhi != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1aWithPhi/merge_runlist_7/GammaConv_Material_* file:$OUTPUTDIR_LHC14a1aWithPhi/
+        ls $OUTPUTDIR_LHC14a1aWithPhi/GammaConv*Material*.root > fileLHC14a1aWithPhi_mat.txt
+        fileNumbers=`cat fileLHC14a1aWithPhi_mat.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC14a1aWithPhi/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC14a1aWithPhi_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+    if [ $LHC14a1bWithPhi != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1bWithPhi/merge_runlist_7/GammaConv_Material_* file:$OUTPUTDIR_LHC14a1bWithPhi/
+        ls $OUTPUTDIR_LHC14a1bWithPhi/GammaConv*Material*.root > fileLHC14a1bWithPhi_mat.txt
+        fileNumbers=`cat fileLHC14a1bWithPhi_mat.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 10 | cut -d "_" -f 3 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC14a1bWithPhi/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC14a1bWithPhi_$number.root\"\,\"GammaConvMaterial_$number\"\)
+        done;
+    fi
+
+
 else
    TRAINPATHMC=GA_PbPb_MC
    if [ $3 = "runwise" ]; then
@@ -419,6 +519,7 @@ else
     fi
 
 fi
+
 
 # # OUTPUTDIR_LHC14a1a=$BASEDIR/$TRAINDIR/$TRAINPATHMC-$LHC14a1a/merge_runlist_1
 # # alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC14a1a/merge_runlist_1/Gam* file:$OUTPUTDIR_LHC14a1a/
