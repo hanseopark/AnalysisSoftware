@@ -519,7 +519,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                     cout << "Eta sys error" << endl;
                     graphEtaInvYieldSys[cent][meth]->Print();
                     histoEtaToPi0Stat[cent][meth]                        = (TH1D*)directoryEta[cent][meth]->Get("EtaToPi0StatError");
-                    graphEtaToPi0Sys[cent][meth]                         = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("graphEtaToPi0StatError");
+                    graphEtaToPi0Stat[cent][meth]                        = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("graphEtaToPi0StatError");
                     graphEtaToPi0Sys[cent][meth]                         = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("EtaToPi0SystError");
                 }
             }

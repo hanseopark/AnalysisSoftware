@@ -886,7 +886,7 @@ void EventQA_Runwise(
             hFracWVtxOutside10cm[i]->SetBinError(bin,ratioWVtxOutside10cmEvtErr);
             hFracWOVtx[i]->SetBinContent(bin,ratioWOVtxEvt);
             hFracWOVtx[i]->SetBinError(bin,ratioWOVtxEvtErr);
-	    sFracWOVtx.mean += ratioWOVtxEvt;
+            sFracWOVtx.mean += ratioWOVtxEvt;
             hFracPileUp[i]->SetBinContent(bin,ratioPileUpEvt);
             hFracPileUp[i]->SetBinError(bin,ratioPileUpEvtErr);
             hFracSPDClusTrack[i]->SetBinContent(bin,ratioSPDClusTrackEvt);
@@ -899,7 +899,7 @@ void EventQA_Runwise(
             if(GOODESD){
                 hTracksMeanGood[i]->SetBinContent(bin, GOODESD->GetMean());
                 hTracksMeanGood[i]->SetBinError(bin, GOODESD->GetMeanError());
-		sTracksMeanGood.mean += GOODESD->GetMean();
+                sTracksMeanGood.mean += GOODESD->GetMean();
                 hTracksRMSGood[i]->SetBinContent(bin, GOODESD->GetRMS());
                 hTracksRMSGood[i]->SetBinError(bin, GOODESD->GetRMSError());
             }else cout << "INFO: Object |GoodESDTracks| could not be found! Skipping Fill..." << endl;
@@ -913,7 +913,7 @@ void EventQA_Runwise(
                 hVertexZMean[i]->SetBinError(bin, ZVertex->GetMeanError());
                 hVertexZRMS[i]->SetBinContent(bin, ZVertex->GetRMS());
                 hVertexZRMS[i]->SetBinError(bin, ZVertex->GetRMSError());
-		sVertexZMean.mean +=  ZVertex->GetMean();
+                sVertexZMean.mean +=  ZVertex->GetMean();
                 TH1D* tempVertexZ       = new TH1D(*ZVertex);
                 tempVertexZ->GetXaxis()->SetTitle("z-Vertex (cm)");
                 tempVertexZ->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dz}");
@@ -942,7 +942,7 @@ void EventQA_Runwise(
             if(Centrality){
                 hCentralityMean[i]->SetBinContent(bin, Centrality->GetMean());
                 hCentralityMean[i]->SetBinError(bin, Centrality->GetMeanError());
-		sCentralityMean.mean += Centrality->GetMean();
+                sCentralityMean.mean += Centrality->GetMean();
             }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
 
             //--------------------------------------------------------------------------------------------------------
@@ -1041,13 +1041,13 @@ void EventQA_Runwise(
 
                         hPi0Frac[i]->SetBinContent(bin,ratioPi0);
                         hPi0Frac[i]->SetBinError(bin,ratioPi0Err);
-			sPi0Frac.mean += ratioPi0;
+                        sPi0Frac.mean += ratioPi0;
                         hPi0Mass[i]->SetBinContent(bin,massPi);
                         hPi0Mass[i]->SetBinError(bin,massPiErr);
-			sPi0Mass.mean += massPi;
+                        sPi0Mass.mean += massPi;
                         hPi0Width[i]->SetBinContent(bin,widthPi/2.35);
                         hPi0Width[i]->SetBinError(bin,widthPiErr/2.35);
-			sPi0Width.mean += widthPi/2.35;
+                        sPi0Width.mean += widthPi/2.35;
                         hEtaFrac[i]->SetBinContent(bin,ratioEta);
                         hEtaFrac[i]->SetBinError(bin,ratioEtaErr);
                         hEtaMass[i]->SetBinContent(bin,massEta);

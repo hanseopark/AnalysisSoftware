@@ -223,14 +223,14 @@
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        }  else if (type == 4 || type == 12){ //EMCal-EMCal (DCal-DCal)
+        }  else if (type == 4 || type == 12 || type == 200){ //EMCal-EMCal (DCal-DCal), TriggerQA
             objstrEvent         = (TObjString*)arr->At(0);
             objstrCluster       = (TObjString*)arr->At(1);
             objstrMeson         = (TObjString*)arr->At(2);
 
             eventCutNumber      = objstrEvent->GetString();
             clusterCutNumber    = objstrCluster->GetString();
-            mesonCutNumber      = objstrMeson->GetString();
+            if (type != 200) mesonCutNumber      = objstrMeson->GetString();
 
             //temporary fix for train outputs from vAN20170525 to vAN20170601 for ConversionMesonCuts
             if(mesonCutNumber.Length()==17){
@@ -2617,6 +2617,8 @@
                 return "p_{T}_{e^{#pm}} > 0.040 GeV/c";
             case 7:  // 0.0 GeV
                 return "p_{T}_{e^{#pm}} > 0.0 GeV/c";
+            case 8:  // 0.02 GeV
+                return "p_{T}_{e^{#pm}} > 0.020 GeV/c";
             default:
                 return "p_{T}_{e^{#pm}} cut not defined";
         }
@@ -3247,12 +3249,32 @@
                     return "with SDD, V0AND";
                 else
                     return "V0AND";
+            case 310 :
+                return "INT7 & 0V0M";
+            case 311 :
+                return "INT7 & 0V0L";
+            case 312 :
+                return "INT7 & 0VHM";
+            case 313 :
+                return "INT7 & V0L7";
             case 51:
                 return "EMC L0, INT1";
             case 52:
                 return "EMC L0, INT7";
             case 53:
                 return "EMC L0, INT8";
+            case 54:
+                return "DMC L0, INT1";
+            case 55:
+                return "DMC L0, INT7";
+            case 56:
+                return "DMC L0, INT8";
+            case 61:
+                return "PHOS L0, INT1";
+            case 62:
+                return "PHOS L0, INT7";
+            case 63:
+                return "PHOS L0, INT8";
             case 71:
                 return "SPD HM, INT1";
             case 72:
@@ -3267,16 +3289,48 @@
                 return "VZERO HM, SPD pile-up veto";
             case 81:
                 return "EMC L1-GA, INT7";
+            case 82:
+                return "EMC L1-GA, INT8";
             case 83:
                 return "EMC L1-G1, INT7";
+            case 84:
+                return "EMC L1-G1, INT8";
             case 85:
                 return "EMC L1-G2, INT7";
+            case 86:
+                return "EMC L1-G2, INT8";
+            case 87:
+                return "DMC L1-GA, INT7";
+            case 88:
+                return "DMC L1-GA, INT8";
+            case 89:
+                return "DMC L1-G1, INT7";
+            case 810:
+                return "DMC L1-G1, INT8";
+            case 811:
+                return "DMC L1-G2, INT7";
+            case 812:
+                return "DMC L1-G2, INT8";
             case 91:
                 return "EMC L1-JE, INT7";
+            case 92:
+                return "EMC L1-JE, INT8";
             case 93:
                 return "EMC L1-J1, INT7";
+            case 94:
+                return "EMC L1-J1, INT8";
             case 95:
                 return "EMC L1-J2, INT7";
+            case 96:
+                return "EMC L1-J2, INT8";
+            case 97:
+                return "DMC L1-J1, INT7";
+            case 98:
+                return "DMC L1-J1, INT8";
+            case 99:
+                return "DMC L1-J2, INT7";
+            case 910:
+                return "DMC L1-J2, INT8";
             default:
                 return "special Trigger cut not defined";
 
@@ -3868,26 +3922,37 @@
             return "none";
         case 1:
             return "SDM (Jason)";
+        case 2:
+            return "test-beam";
         case 11:
-            return "ConvCalo, tight timing";
+            return "CCRF";
         case 12:
-            return "SDM w/o data corr (new), tight timing";
+            return "CRF";
         case 13:
-            return "TBv3 w/ ConvCalo-mass corr";
+            return "TBv3 w/ CCRF";
         case 14:
-            return "TBv3 w/ Calo-mass corr";
+            return "TBv3 w/ CRF";
         case 15:
             return "ConvCalo with data shifted";
         case 16:
             return "SDM w/ data corr (new)";
         case 21:
-            return "ConvCalo, mass param, open timing";
+            return "CCMF";
         case 22:
-            return "SDM w/o data corr (new), mass param, open timing";
+            return "CMF";
         case 31:
             return "ConvCalo, open timing";
         case 32:
             return "SDM w/o data corr (new), open timing";
+        case 41:
+            return "CCRF";
+        case 42:
+            return "CRF";
+        case 51:
+            return "CCMF";
+        case 52:
+            return "CMF";
+
         default:
             return Form("non linearity cut %d",nonlinearity);
     }
@@ -4564,6 +4629,17 @@
             if (giveCout){
                 cout <<"You have chosen to have more than "<<iMaximalBinSize<<" bins, this is not possible, it will be reduced to "<<iMaximalBinSize<<"" << endl;}
             iActualBinSize    = iMaximalBinSize;}
+    }
+
+    //************************************************************************************
+    // Compute single cut number as int
+    //************************************************************************************
+    Int_t ReturnSingleAlphaNumericCutAsInt (TString cut){
+        cut.ToLower();
+        const char *cutChar = cut.Data();
+
+        Int_t cutInt    = ((int)cutChar[0]>=(int)'a') ? cutChar[0]-'a'+10 : cutChar[0]-'0';
+        return cutInt;
     }
 
 #endif

@@ -56,7 +56,7 @@ void EventQA(
     //          11 // merged PHOS
     if (fMode == 0 || fMode == 1 || fMode == 2 || fMode == 3 || fMode == 9)
         isConv                          = kTRUE;
-    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12) || fMode == 5 || fMode == 10 || fMode == 11)
+    if (fMode == 2 || fMode == 3 || (fMode == 4 || fMode == 12) || fMode == 5 || fMode == 10 || fMode == 11 || fMode == 200)
         isCalo                          = kTRUE;
     if (fMode == 10 || fMode == 11)
         isMergedCalo                    = kTRUE;
@@ -119,8 +119,9 @@ void EventQA(
             if(nameMainDir[i].IsNull() || !nameMainDir[i].BeginsWith("Gamma")){cout << "ERROR, Unable to obtain valid name of MainDir:|" << nameMainDir[i].Data() << "|, running in mode: " << fMode << endl; return;}
 
             TList *listInput =(TList*)fFile->Get(nameMainDir[i].Data());
-                listInput->SetOwner(kTRUE);
             if(!listInput) {cout << "ERROR: Could not find main dir: " << nameMainDir[i].Data() << " in file! Returning..." << endl; return;}
+            listInput->SetOwner(kTRUE);
+
             for(Int_t j = 0; j<listInput->GetSize(); j++){
                 TList *listCuts = (TList*)listInput->At(j);
                 TString nameCuts = listCuts->GetName();
@@ -202,8 +203,14 @@ void EventQA(
         fTrigger[iT] = "";
     }
     TString fTriggerCut     = fEventCutSelection[0](3,2);
-    fTrigger[0]             = AnalyseSpecialTriggerCut(fTriggerCut.Atoi(), DataSets[0].Data());
-    cout  << "'" << fTrigger[0].Data() << "' - was found!" << endl;
+    TString fTriggerCutA    = fEventCutSelection[0](3,1);
+    TString fTriggerCutB    = fEventCutSelection[0](4,1);
+    Int_t fTriggerInt       = fTriggerCut.Atoi();
+    if (ReturnSingleAlphaNumericCutAsInt(fTriggerCutA) > 9 || ReturnSingleAlphaNumericCutAsInt(fTriggerCutB) > 9) {
+        fTriggerInt         = ReturnSingleAlphaNumericCutAsInt(fTriggerCutA)*100 + ReturnSingleAlphaNumericCutAsInt(fTriggerCutB);
+    }
+    fTrigger[0]             = AnalyseSpecialTriggerCut(fTriggerInt, DataSets[0].Data());
+    cout  << "'" << fTriggerInt << "\t"<< fTrigger[0].Data() << "' - was found!" << endl;
     if(fTrigger[0].Contains("not defined")){
         fTrigger[0]         = "";
         cout << "INFO: Trigger cut not defined!" << endl;
@@ -269,6 +276,8 @@ void EventQA(
     std::vector<TH1D*> vecMergedCandidates;
     std::vector<TH1D*> vecV0Mult;
     std::vector<TH1D*> vecCentrality;
+    std::vector<TH1D*> vecCentrality2;
+    Bool_t hasCentHist = kFALSE;
     std::vector<TH1D*> vecEventPlaneAngle;
 
     std::vector<TH1D*> vecInvMassBeforeAfter[2];
@@ -309,16 +318,19 @@ void EventQA(
 
     // canvas definition
     TCanvas* canvas             = new TCanvas("canvas","",10,10,750,500);  // gives the page size
+    TCanvas* canvas2            = new TCanvas("canvas2","",10,10,750,500);  // gives the page size
     TCanvas* cvsQuadratic       = new TCanvas("cvsQuadratic","",10,10,500,500);  // gives the page size
     Double_t leftMargin         = 0.075;
+    Double_t leftMargin2        = 0.09;
     Double_t rightMargin        = 0.02;
     Double_t topMargin          = 0.04;
-    Double_t bottomMargin       = 0.075;
+    Double_t bottomMargin       = 0.09;
     Double_t topMarginQuad      = 0.014;
     Double_t bottomMarginQuad   = 0.092;
     Double_t leftMarginQuad     = 0.117;
     Double_t rightMarginQuad    = 0.117;
     DrawGammaCanvasSettings(canvas,leftMargin,rightMargin,topMargin,bottomMargin);
+    DrawGammaCanvasSettings(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin);
     DrawGammaCanvasSettings(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad);
 
     for(Int_t i=0; i<nSets; i++) {
@@ -362,7 +374,7 @@ void EventQA(
             if(isCalo && CaloCutsContainer == NULL) {cout << "ERROR: " << Form("CaloCuts_%s",fClusterCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(CaloCutsContainer) CaloCutsContainer->SetOwner(kTRUE);
         TList* MesonCutsContainer       = (TList*) TopContainer->FindObject(Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()));
-            if(MesonCutsContainer == NULL) {cout << "ERROR: " << Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()) << " not found in File" << endl; return;}
+            if(MesonCutsContainer == NULL && fMode != 200) {cout << "ERROR: " << Form("ConvMesonCuts_%s",fMesonCutSelection[i].Data()) << " not found in File" << endl; return;}
             else if(MesonCutsContainer) MesonCutsContainer->SetOwner(kTRUE);
         TList* TrueContainer            = (TList*) TopContainer->FindObject(Form("%s True histograms",fCutSelection[i].Data()));
             if(TrueContainer == NULL) {cout << "INFO: " << Form("%s True histograms",fCutSelection[i].Data()) << " not found in File, processing data?" << endl;}
@@ -488,6 +500,19 @@ void EventQA(
             vecVertexX.push_back(new TH1D(*fHistVertexX));
         }
         //-------------------------------------------------------------------------------------------------------------------------------
+        // centrality distribution stored in main task
+        TH1D* fHistCentMain = (TH1D*)ESDContainer->FindObject("Centrality");
+        if(fHistCentMain){
+            GetMinMaxBin(fHistCentMain,minB,maxB);
+            SetXRange(fHistCentMain,0,100);
+            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                 fHistCentMain,"","Centrality (%)","#events",1,1,
+                                 0.95,0.24,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas, fHistCentMain, Form("%s/CentralityMain_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            WriteHistogram(fHistCentMain);
+            vecVertexX.push_back(new TH1D(*fHistCentMain));
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------
         // vertex Y distribution, if available
         TH1D* fHistVertexY = (TH1D*)ESDContainer->FindObject("VertexY");
         if(fHistVertexY){
@@ -505,7 +530,7 @@ void EventQA(
         if(fHistNGoodTracks){
             GetMinMaxBin(fHistNGoodTracks,minB,maxB);
             SetXRange(fHistNGoodTracks,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+            DrawPeriodQAHistoTH1(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistNGoodTracks,"","N_{Good Tracks}","#frac{dN}{dN_{Good Tracks}}",1,1,
                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistNGoodTracks);
@@ -518,9 +543,10 @@ void EventQA(
         if(fHistV0Mult){
             GetMinMaxBin(fHistV0Mult,minB,maxB);
             SetXRange(fHistV0Mult,minB,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+            DrawPeriodQAHistoTH1(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistV0Mult,"","V0 Multiplicity","#frac{dN}{dV0Mult}",1,1,
                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas2, fHistV0Mult, Form("%s/V0Mult_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             WriteHistogram(fHistV0Mult);
             vecV0Mult.push_back(new TH1D(*fHistV0Mult));
         } else cout << "INFO: Object |V0 Multiplicity| could not be found! Skipping Draw..." << endl;
@@ -531,7 +557,7 @@ void EventQA(
         if(fHistGammaCandidates){
             GetMinMaxBin(fHistGammaCandidates,minB,maxB);
             SetXRange(fHistGammaCandidates,1,maxB);
-            DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+            DrawPeriodQAHistoTH1(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                 fHistGammaCandidates,"","N_{#gamma candidates}","#frac{dN}{dN_{Cand}}",1,1,
                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistGammaCandidates);
@@ -545,7 +571,7 @@ void EventQA(
             if(fHistMergedCandidates){
                 GetMinMaxBin(fHistMergedCandidates,minB,maxB);
                 SetXRange(fHistMergedCandidates,1,maxB);
-                DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                DrawPeriodQAHistoTH1(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
                                     fHistMergedCandidates,"","N_{meson candidates}","#frac{dN}{dN_{Cand}}",1,1,
                                     processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                 WriteHistogram(fHistMergedCandidates);
@@ -632,19 +658,19 @@ void EventQA(
                                 processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistTracksVsCandidates, Form("%s/GoodESDTracksVsGammaCandidates_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
-	    // Number of gamma candidates per track
-	    TH1D* fHistCandidatesPerTrack = new TH1D("fHistCandidatesPerTrack","fHistCandidatesPerTrack",200,0,1); // is deleted later via DeleteVecTH1D
-	    Double_t nGammaCandPerTrack = 0;
-	    Int_t n = 0;
-	    cout << "Gamma candidates per track for " << DataSets[i].Data() << endl;
-	    for(Int_t x=1; x<=fHistTracksVsCandidates->GetNbinsX(); x++){
-	      for(Int_t y=1; y<=fHistTracksVsCandidates->GetNbinsY(); y++){
-		nGammaCandPerTrack = fHistTracksVsCandidates->GetYaxis()->GetBinCenter(y) / fHistTracksVsCandidates->GetXaxis()->GetBinCenter(x);
-		n = fHistTracksVsCandidates->GetBinContent(x,y);       // number of events with this ratio
-		fHistCandidatesPerTrack->Fill(nGammaCandPerTrack, n);  // increment bin with abscissa nGammaCandPerTrack, with weight n
-	      }
-	    }
-	    vecGammaCandidatesPerTrack.push_back(fHistCandidatesPerTrack);  // save histos in vector for comparison plot
+            // Number of gamma candidates per track
+            TH1D* fHistCandidatesPerTrack = new TH1D("fHistCandidatesPerTrack","fHistCandidatesPerTrack",200,0,1); // is deleted later via DeleteVecTH1D
+            Double_t nGammaCandPerTrack = 0;
+            Int_t n = 0;
+            cout << "Gamma candidates per track for " << DataSets[i].Data() << endl;
+            for(Int_t x=1; x<=fHistTracksVsCandidates->GetNbinsX(); x++){
+                for(Int_t y=1; y<=fHistTracksVsCandidates->GetNbinsY(); y++){
+                    nGammaCandPerTrack = fHistTracksVsCandidates->GetYaxis()->GetBinCenter(y) / fHistTracksVsCandidates->GetXaxis()->GetBinCenter(x);
+                    n = fHistTracksVsCandidates->GetBinContent(x,y);       // number of events with this ratio
+                    fHistCandidatesPerTrack->Fill(nGammaCandPerTrack, n);  // increment bin with abscissa nGammaCandPerTrack, with weight n
+                }
+            }
+            vecGammaCandidatesPerTrack.push_back(fHistCandidatesPerTrack);  // save histos in vector for comparison plot
         } else cout << "INFO: Object |GoodESDTracksVsGammaCandidates| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // VZERO multiplicity vs TPC out Tracks
@@ -655,38 +681,53 @@ void EventQA(
             GetMinMaxBinY(fHistV0MultVsTracks,minYB,maxYB);
             SetYRange(fHistV0MultVsTracks,1,maxYB+1);
             SetZMinMaxTH2(fHistV0MultVsTracks,1,maxB+1,1,maxYB+1);
-            DrawPeriodQAHistoTH2(cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
-                                fHistV0MultVsTracks,"",
-                                "TPC out tracks","V0 Multiplicity",1,1.4,
-                                processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            DrawPeriodQAHistoTH2(   cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+                                    fHistV0MultVsTracks,"",
+                                    "TPC out tracks","V0 Multiplicity",1,1.4,
+                                    processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0MultVsTracks, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |V0Mult vs TPCout Tracks| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // centrality
-        if(fIsPbPb){
+        if(fIsPbPb && fMode != 200){
             TH1D* fHistCentrality = (TH1D*)ESDContainer->FindObject("Centrality");
             if(fHistCentrality){
                 fHistCentrality->Rebin(4);
-                    GetMinMaxBin(fHistCentrality,minB,maxB);
-                    SetXRange(fHistCentrality,minB,maxB);
-                    DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
-                        fHistCentrality,"","centrality (%)","",1,1,
-                        processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-                    WriteHistogram(fHistCentrality);
-                    vecCentrality.push_back(new TH1D(*fHistCentrality));
+                GetMinMaxBin(fHistCentrality,minB,maxB);
+                SetXRange(fHistCentrality,minB,maxB);
+                DrawPeriodQAHistoTH1(   canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                        fHistCentrality,"","Centrality (%)","",1,1,
+                                        0.95,0.24,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                WriteHistogram(fHistCentrality);
+                SaveCanvasAndWriteHistogram(canvas, fHistCentMain, Form("%s/CentralityMain2_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                vecCentrality.push_back(new TH1D(*fHistCentrality));
             } else cout << "INFO: Object |fHistCentrality| could not be found! Skipping Draw..." << endl;
             // event plane angle
             TH1D* fHistEventPlaneAngle = (TH1D*)ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection[i].Data()));
             if(fHistEventPlaneAngle){
                 GetMinMaxBin(fHistEventPlaneAngle,minB,maxB);
                     SetXRange(fHistEventPlaneAngle,minB,maxB);
-                    DrawPeriodQAHistoTH1(canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
-                        fHistEventPlaneAngle,"","event plane angle (rad)","",1,1,
-                        processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+                    DrawPeriodQAHistoTH1(   canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                            fHistEventPlaneAngle,"","event plane angle (rad)","",1,1,
+                                            processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
                     WriteHistogram(fHistEventPlaneAngle);
                     vecEventPlaneAngle.push_back(new TH1D(*fHistEventPlaneAngle));
             } else cout << "INFO: Object |fHistEventPlaneAngle| could not be found! Skipping Draw..." << endl;
         }
+        TH1D* fHistCentrality2 = (TH1D*)ConvEventCutsContainer->FindObject(Form("Centrality %s",fEventCutSelection[i].Data()));
+        if(fHistCentrality2){
+            GetMinMaxBin(fHistCentrality2,minB,maxB);
+            fHistCentrality2->Rebin(4);
+            SetXRange(fHistCentrality2,0,100);
+            DrawPeriodQAHistoTH1(   canvas,leftMargin,rightMargin,topMargin,bottomMargin,kFALSE,kFALSE,kFALSE,
+                                    fHistCentrality2,"","Centrality (%)","",1,1,
+                                    0.95,0.24,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            WriteHistogram(fHistCentrality2);
+            SaveCanvasAndWriteHistogram(canvas, fHistCentMain, Form("%s/CentralityEventCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            vecCentrality2.push_back(new TH1D(*fHistCentrality2));
+            hasCentHist             = kTRUE;
+        } else cout << "INFO: Object |fHistCentrality2| could not be found! Skipping Draw..." << endl;
+
         //-------------------------------------------------------------------------------------------------------------------------------
 
         Float_t nEventsBin1 = fHistNEvents->GetBinContent(1);
@@ -792,9 +833,9 @@ void EventQA(
                                     "","Cluster Energy (GeV)",0.9,0.8);
                 SaveCanvasAndWriteHistogram(canvas, fHistClusterIdentificationCuts2D, Form("%s/ClusterQualityCuts_vs_E_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
-                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistClusterIdentificationCuts2D, "#it{E}_{Cluster}", "#frac{d#it{E}_{Cluster}}{dN}",
+                PlotCutHistoReasons(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin, fHistClusterIdentificationCuts2D, "#it{E}_{Cluster}", "#frac{d#it{E}_{Cluster}}{dN}",
                                     5,10,0,0);
-                SaveCanvas(canvas, Form("%s/ClusterQualityCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+                SaveCanvas(canvas2, Form("%s/ClusterQualityCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
             } else cout << "INFO: Object |fHistClusterIdentificationCuts (TH2 vs pT)| could not be found! Skipping Draw..." << endl;
 
             //-------------------------------------------------------------------------------------------------------------------------------
@@ -1008,41 +1049,42 @@ void EventQA(
         }
 
         cout << "looking at meson properties" << endl;
-        //-------------------------------------------------------------------------------------------------------------------------------
-        //----------------------------------------------- Meson properties --------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------
-        // meson cut tracking histo
-        TH2D* fHistMesonCuts = (TH2D*) MesonCutsContainer->FindObject(Form("MesonCuts %s", fMesonCutSelection[i].Data()));
-        if(fHistMesonCuts && fHistMesonCuts->IsA()==TH2F::Class()){
-            GetMinMaxBinY(fHistMesonCuts,minB,maxB);
-            SetYRange(fHistMesonCuts,1,maxB+1);
-            SetZMinMaxTH2(fHistMesonCuts,1,fHistMesonCuts->GetNbinsX(),1,maxB+1);
-            DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                fHistMesonCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
-                                "","#it{p}_{T}",0.9,0.8);
-            SaveCanvasAndWriteHistogram(canvas, fHistMesonCuts, Form("%s/Meson_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+        if (MesonCutsContainer){
+            //-------------------------------------------------------------------------------------------------------------------------------
+            //----------------------------------------------- Meson properties --------------------------------------------------------------
+            //-------------------------------------------------------------------------------------------------------------------------------
+            // meson cut tracking histo
+            TH2D* fHistMesonCuts = (TH2D*) MesonCutsContainer->FindObject(Form("MesonCuts %s", fMesonCutSelection[i].Data()));
+            if(fHistMesonCuts && fHistMesonCuts->IsA()==TH2F::Class()){
+                GetMinMaxBinY(fHistMesonCuts,minB,maxB);
+                SetYRange(fHistMesonCuts,1,maxB+1);
+                SetZMinMaxTH2(fHistMesonCuts,1,fHistMesonCuts->GetNbinsX(),1,maxB+1);
+                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                    fHistMesonCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                    "","#it{p}_{T}",0.9,0.8);
+                SaveCanvasAndWriteHistogram(canvas, fHistMesonCuts, Form("%s/Meson_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
-            PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistMesonCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
-                                5,10,0,0);
-            SaveCanvas(canvas, Form("%s/Meson_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
-        } else cout << Form("INFO: Object |MesonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
-        //-------------------------------------------------------------------------------------------------------------------------------
-        // meson BG cut tracking histo
-        TH2D* fHistMesonBGCuts = (TH2D*)MesonCutsContainer->FindObject(Form("MesonBGCuts %s", fMesonCutSelection[i].Data()));
-        if(fHistMesonBGCuts && fHistMesonBGCuts->IsA()==TH2F::Class()){
-            GetMinMaxBinY(fHistMesonBGCuts,minB,maxB);
-            SetYRange(fHistMesonBGCuts,1,maxB+1);
-            SetZMinMaxTH2(fHistMesonBGCuts,1,fHistMesonBGCuts->GetNbinsX(),1,maxB+1);
-            DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
-                                fHistMesonBGCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
-                                "","#it{p}_{T}",0.9,0.8);
-            SaveCanvasAndWriteHistogram(canvas, fHistMesonBGCuts, Form("%s/MesonBG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistMesonCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
+                                    5,10,0,0);
+                SaveCanvas(canvas, Form("%s/Meson_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+            } else cout << Form("INFO: Object |MesonCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
+            //-------------------------------------------------------------------------------------------------------------------------------
+            // meson BG cut tracking histo
+            TH2D* fHistMesonBGCuts = (TH2D*)MesonCutsContainer->FindObject(Form("MesonBGCuts %s", fMesonCutSelection[i].Data()));
+            if(fHistMesonBGCuts && fHistMesonBGCuts->IsA()==TH2F::Class()){
+                GetMinMaxBinY(fHistMesonBGCuts,minB,maxB);
+                SetYRange(fHistMesonBGCuts,1,maxB+1);
+                SetZMinMaxTH2(fHistMesonBGCuts,1,fHistMesonBGCuts->GetNbinsX(),1,maxB+1);
+                DrawPeriodQAHistoTH2(canvas,leftMargin,0.1,topMargin,bottomMargin,kFALSE,kFALSE,kTRUE,
+                                    fHistMesonBGCuts,Form("%s - %s - %s",fCollisionSystem.Data(), plotDataSets[i].Data(), fClusters.Data()),
+                                    "","#it{p}_{T}",0.9,0.8);
+                SaveCanvasAndWriteHistogram(canvas, fHistMesonBGCuts, Form("%s/MesonBG_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
 
-            PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistMesonBGCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
-                                5,10,0,0);
-            SaveCanvas(canvas, Form("%s/MesonBGCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
-        } else cout << Form("INFO: Object |MesonBGCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
-
+                PlotCutHistoReasons(canvas,leftMargin,rightMargin,topMargin,bottomMargin, fHistMesonBGCuts, "#it{p}_{T}", "#frac{d#it{p}_{T}}{dN}",
+                                    5,10,0,0);
+                SaveCanvas(canvas, Form("%s/MesonBGCuts_Projected_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kTRUE);
+            } else cout << Form("INFO: Object |MesonBGCuts %s (TH2 vs pT)| could not be found! Skipping Draw...", fMesonCutSelection[i].Data()) << endl;
+        }
         //-------------------------------------------------------------------------------------------------------------------------------
         // define name for meson property histograms
         TString namePi0MesonY       = "ESD_MotherPi0_Pt_Y";
@@ -1435,16 +1477,16 @@ void EventQA(
         temp->Scale(1./temp->Integral());
         SetXRange(temp,minB,maxB);
       }
-      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-				  vecCentrality,"","Centrality (%)","",1,1.1,
-				  labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-				  0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+      DrawPeriodQACompareHistoTH1(  canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                    vecCentrality,"","Centrality (%)","",1,1.1,
+                                    labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                    0.95,0.24,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
       SaveCanvas(canvas, Form("%s/Comparison/Centrality.%s", outputDir.Data(), suffix.Data()));
 
-      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-				       vecCentrality,"","Centrality (%)","",1,1.1,
-				       labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-				       0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+      DrawPeriodQACompareHistoRatioTH1( canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                        vecCentrality,"","Centrality (%)","",1,1.1,
+                                        labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                        0.95,0.24,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
       SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Centrality.%s", outputDir.Data(), suffix.Data()));
       //Event Plane Angle
       GetMinMaxBin(vecEventPlaneAngle,minB,maxB);
@@ -1454,19 +1496,38 @@ void EventQA(
         temp->Scale(1./temp->Integral());
         SetXRange(temp,minB,maxB);
       }
-      DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-				  vecEventPlaneAngle,"","Event Plane Angle (rad)","",1,1.1,
-				  labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-				  0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+      DrawPeriodQACompareHistoTH1(  canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                    vecEventPlaneAngle,"","Event Plane Angle (rad)","",1,1.1,
+                                    labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                    0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
       SaveCanvas(canvas, Form("%s/Comparison/EventPlaneAngle.%s", outputDir.Data(), suffix.Data()));
 
-      DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
-				       vecEventPlaneAngle,"","Event Plane Angle (rad)","",1,1.1,
-				       labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
-				       0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+      DrawPeriodQACompareHistoRatioTH1( canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                        vecEventPlaneAngle,"","Event Plane Angle (rad)","",1,1.1,
+                                        labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
       SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_EventPlaneAngle.%s", outputDir.Data(), suffix.Data()));
     }
 
+    if (hasCentHist){
+        for(Int_t iVec=0; iVec<(Int_t)vecCentrality2.size(); iVec++){
+            TH1D* temp = vecCentrality2.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            SetXRange(temp,0,100);
+        }
+        DrawPeriodQACompareHistoTH1(  canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                      vecCentrality2,"","Centrality (%)","",1,1.1,
+                                      labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                      0.95,0.24,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/CentralityEventCuts.%s", outputDir.Data(), suffix.Data()));
+
+        DrawPeriodQACompareHistoRatioTH1( canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                          vecCentrality2,"","Centrality (%)","",1,1.1,
+                                          labelData, colorCompare, kTRUE, 1.1, 1.1, kTRUE,
+                                          0.95,0.24,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_CentralityEventCuts.%s", outputDir.Data(), suffix.Data()));
+    }
     //-------------------------------------------------------------------------------------------------------------------------------
     //---------------------------------------- Meson histogram comparisons ----------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------

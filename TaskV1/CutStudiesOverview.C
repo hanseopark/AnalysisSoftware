@@ -683,25 +683,13 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         TLegend* legendSpecRawTrigger = GetAndSetLegend2(0.15,0.11,0.3,0.11+1.15*0.032*NumberOfCuts, 1000*0.032);
         // Draw Raw yield for different triggers
         for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i == 0){
-                Double_t scaleFactorRaw = 10.;
-                Double_t minRaw         = 10e-10;
-                if (cutVariationName.Contains("Cent") && optionEnergy.Contains("pPb")){
-                    scaleFactorRaw      = 1.;
-                    minRaw              = 5e-11;
-                }
-                DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
-                histoRawYieldCut[i]->DrawCopy("same,e1,p");
-                legendSpecRawTrigger->AddEntry(histoRawYieldCut[i],Form("standard: %s",cutStringsName[i].Data()));
+            if(i<20){
+                DrawGammaSetMarker(histoRawYieldCut[i], 20+i, 1.,color[i],color[i]);
             } else {
-                if(i<20){
-                    DrawGammaSetMarker(histoRawYieldCut[i], 20+i, 1.,color[i],color[i]);
-                } else {
-                    DrawGammaSetMarker(histoRawYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
-                }
-                histoRawYieldCut[i]->DrawCopy("same,e1,p");
-                legendSpecRawTrigger->AddEntry(histoRawYieldCut[i],cutStringsName[i].Data());
+                DrawGammaSetMarker(histoRawYieldCut[i], 20+i, 1.,color[i-20],color[i-20]);
             }
+            histoRawYieldCut[i]->DrawCopy("same,e1,p");
+            legendSpecRawTrigger->AddEntry(histoRawYieldCut[i],cutStringsName[i].Data());
         }
         legendSpecRawTrigger->Draw();
         // labeling of the plot
@@ -718,36 +706,38 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         TCanvas* canvasRelUncRawYieldsTrigg = new TCanvas("canvasRawYieldsTrigg","",1000,1000);  // gives the page size
         DrawGammaCanvasSettings( canvasRelUncRawYieldsTrigg,  0.1, 0.02, 0.04, 0.08);
 
+        Double_t maxYRel    = 0;
+        for(Int_t i = 0; i< NumberOfCuts; i++){
+            if (histoRawYieldCutRelUnc[i]->GetMaximum() > maxYRel)
+                maxYRel = histoRawYieldCutRelUnc[i]->GetMaximum();
+        }
+        if (maxYRel > 60) maxYRel = 60;
+
+        TH1F* histo1DDummy2              = new TH1F("histo1DDummy2","histo1DDummy2",1000, 0, maxPt);
+        SetStyleHistoTH1ForGraphs(histo1DDummy2, "#it{p}_{T} (GeV/#it{c})", Form("%s rel unc. (%s)",textMeson.Data(), "%"), 0.035 ,0.04, 0.035,0.04, 0.9,1.,510,505);
+        histo1DDummy2->GetYaxis()->SetRangeUser(0,maxYRel);
+        histo1DDummy2->DrawCopy();
+
         // Set legend
-        Int_t nRows         = ((NumberOfCuts+1)/2);
-        TLegend* legendSpecRawTriggerUnc = GetAndSetLegend2(0.11,0.93-(1.05*0.032*nRows),0.65,0.93, 1000*0.032, 2);
+        Int_t nRows         = NumberOfCuts;
+        Int_t nColumns      = 1;
+        Float_t marginleg   = 0.1;
+        if (nRows > 4){
+            nRows           = ((NumberOfCuts+1)/2);
+            nColumns        = 2;
+            marginleg       = 0.2;
+        }
+        TLegend* legendSpecRawTriggerUnc = GetAndSetLegend2(0.11,0.93-(1.05*0.032*nRows),0.65,0.93, 1000*0.032, nColumns, "", 43, marginleg);
 
         // Draw Raw yield for different triggers
         for(Int_t i = 0; i< NumberOfCuts; i++){
-            if(i == 0){
-                Double_t scaleFactorRaw = 2.;
-                Double_t minRaw         = 0;
-                if (cutVariationName.Contains("Cent") && optionEnergy.Contains("pPb")){
-                    scaleFactorRaw      = 2.;
-                    minRaw              = -1;
-                }
-                DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20, 1., color[0], color[0]);
-                DrawAutoGammaMesonHistos( histoRawYieldCutRelUnc[i],
-                                          "", "#it{p}_{T} (GeV/#it{c})", Form("%s rel unc.",textMeson.Data()),
-                                          kTRUE, scaleFactorRaw, minRaw, kFALSE,
-                                          kFALSE, 0.0, 0.030,
-                                          kFALSE, 0., 10.);
-                histoRawYieldCutRelUnc[i]->DrawCopy("same,c,p");
-                legendSpecRawTriggerUnc->AddEntry(histoRawYieldCutRelUnc[i],Form("standard: %s",cutStringsName[i].Data()));
+            if(i<20){
+                DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20+i, 1.,color[i],color[i]);
             } else {
-                if(i<20){
-                    DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20+i, 1.,color[i],color[i]);
-                } else {
-                    DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20+i, 1.,color[i-20],color[i-20]);
-                }
-                histoRawYieldCutRelUnc[i]->DrawCopy("same,c,p");
-                legendSpecRawTriggerUnc->AddEntry(histoRawYieldCutRelUnc[i],cutStringsName[i].Data());
+                DrawGammaSetMarker(histoRawYieldCutRelUnc[i], 20+i, 1.,color[i-20],color[i-20]);
             }
+            histoRawYieldCutRelUnc[i]->DrawCopy("same,c,p");
+            legendSpecRawTriggerUnc->AddEntry(histoRawYieldCutRelUnc[i],cutStringsName[i].Data());
         }
         legendSpecRawTriggerUnc->Draw();
         // labeling of the plot
