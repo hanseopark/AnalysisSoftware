@@ -429,16 +429,16 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             histoTrueEffiCut[i]                                 = (TH1D*)Cutcorrfile[i]->Get(nameEfficiency.Data());
             histoTrueEffiCut[i]->SetName(Form("%s_%s", nameEfficiency.Data(), cutNumber[i].Data()));
 
-	    histoTrueEffiCutRelUnc[i]                               = (TH1D*)histoTrueEffiCut[i]->Clone("histoTrueEffiCutRelUnc");
-	    for (Int_t k = 1; k < histoTrueEffiCutRelUnc[i]->GetNbinsX()+1; k++){
-	      if (histoTrueEffiCutRelUnc[i]->GetBinContent(k) != 0){
-                histoTrueEffiCutRelUnc[i]->SetBinContent(k, histoTrueEffiCutRelUnc[i]->GetBinError(k)/histoTrueEffiCutRelUnc[i]->GetBinContent(k)*100);
-                histoTrueEffiCutRelUnc[i]->SetBinError(k, 0);
-	      } else {
-                histoTrueEffiCutRelUnc[i]->SetBinContent(k, 0);
-                histoTrueEffiCutRelUnc[i]->SetBinError(k, 0);
-	      }
-	    }
+            histoTrueEffiCutRelUnc[i]                               = (TH1D*)histoTrueEffiCut[i]->Clone("histoTrueEffiCutRelUnc");
+            for (Int_t k = 1; k < histoTrueEffiCutRelUnc[i]->GetNbinsX()+1; k++){
+            if (histoTrueEffiCutRelUnc[i]->GetBinContent(k) != 0){
+                    histoTrueEffiCutRelUnc[i]->SetBinContent(k, histoTrueEffiCutRelUnc[i]->GetBinError(k)/histoTrueEffiCutRelUnc[i]->GetBinContent(k)*100);
+                    histoTrueEffiCutRelUnc[i]->SetBinError(k, 0);
+            } else {
+                    histoTrueEffiCutRelUnc[i]->SetBinContent(k, 0);
+                    histoTrueEffiCutRelUnc[i]->SetBinError(k, 0);
+            }
+            }
 
             histoAcceptanceCut[i]                               = (TH1D*)Cutcorrfile[i]->Get(nameAcceptance.Data());
             histoAcceptanceCut[i]->SetName(Form("%s_%s", nameAcceptance.Data(), cutNumber[i].Data()));
@@ -590,7 +590,8 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 Double_t scaleFactorRaw = 5.;
-                if (kSpecialTrigger) scaleFactorRaw = 100.;
+                if (kSpecialTrigger && optionEnergy.Contains("pPb")) scaleFactorRaw = 1000.;
+                else if (kSpecialTrigger ) scaleFactorRaw = 100.;
 
                 DrawGammaSetMarker(histoRawYieldCut[i], 20, 1., color[0], color[0]);
                 DrawAutoGammaMesonHistos( histoRawYieldCut[i],
@@ -673,10 +674,12 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
             if (histoRawYieldCut[i]->GetMaximum() > maxYRaw)
                 maxYRaw = histoRawYieldCut[i]->GetMaximum();
         }
-        minYRaw= minYRaw/100;
+        minYRaw = minYRaw/100;
+        if (optionEnergy.Contains("pPb")) maxYRaw = maxYRaw*100;
+        else maxYRaw = maxYRaw*10;
 
         TH1F* histo1DDummy              = new TH1F("histo1DDummy","histo1DDummy",1000, 0, maxPt);
-        SetStyleHistoTH1ForGraphs(histo1DDummy, "#it{p}_{T} (GeV/#it{c})", Form("%s RAW Yield/(#it{N}_{ev})",textMeson.Data()), 0.035 ,0.04, 0.035,0.04, 0.9,1.,510,505);
+        SetStyleHistoTH1ForGraphs(histo1DDummy, "#it{p}_{T} (GeV/#it{c})", Form("%s RAW Yield/(#it{N}_{ev})",textMeson.Data()), 0.035 ,0.04, 0.035,0.04, 0.9, 1.2, 510, 505);
         histo1DDummy->GetYaxis()->SetRangeUser(minYRaw,maxYRaw);
         histo1DDummy->DrawCopy();
 
@@ -714,7 +717,7 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         if (maxYRel > 60) maxYRel = 60;
 
         TH1F* histo1DDummy2              = new TH1F("histo1DDummy2","histo1DDummy2",1000, 0, maxPt);
-        SetStyleHistoTH1ForGraphs(histo1DDummy2, "#it{p}_{T} (GeV/#it{c})", Form("%s rel unc. (%s)",textMeson.Data(), "%"), 0.035 ,0.04, 0.035,0.04, 0.9,1.,510,505);
+        SetStyleHistoTH1ForGraphs(histo1DDummy2, "#it{p}_{T} (GeV/#it{c})", Form("%s rel unc. (%s)",textMeson.Data(), "%"), 0.035 ,0.04, 0.035,0.04, 0.9, 1.2, 510, 505);
         histo1DDummy2->GetYaxis()->SetRangeUser(0,maxYRel);
         histo1DDummy2->DrawCopy();
 
