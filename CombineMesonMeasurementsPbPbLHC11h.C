@@ -302,7 +302,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     DrawGammaSetMarkerTGraphErr(graphEPOSpred_2050, 0, 0, colorEPOS2050,colorEPOS2050, 2, kTRUE, colorEPOS2050);
     ProduceGraphErrWithoutXErrors(graphEPOSpred_2050);
     graphEPOSpred_2050->SetLineStyle(5);
-    DrawGammaSetMarkerTGraphErr(graphEPOSEtaToPi0_0010, 0, 0, colorEPOS0010,colorEPOS0010, 2, kTRUE, colorEPOS0010);
+    DrawGammaSetMarkerTGraphErr(graphEPOSEtaToPi0_0010, 0, 0, colorEPOSEtaToPi00010,colorEPOSEtaToPi00010, 2, kTRUE, colorEPOS0010);
     ProduceGraphErrWithoutXErrors(graphEPOSEtaToPi0_0010);
     graphEPOSEtaToPi0_0010->SetLineStyle(5);
     DrawGammaSetMarkerTGraphErr(graphEPOSEtaToPi0_2050, 0, 0, colorEPOS2050,colorEPOS2050, 2, kTRUE, colorEPOS2050);

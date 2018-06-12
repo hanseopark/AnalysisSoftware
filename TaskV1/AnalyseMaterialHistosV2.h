@@ -129,6 +129,33 @@ TH1D*   histoPhiInRMC[nBinsR];
 TH1D*   histoPhiInRTrueMC[nBinsR];
 TH1D*	histoDataMCRatioPhiInR[nBinsR];
 
+TH1D*   histoIntegralGasStatErrorData[nBinsR];
+TH1D*   histoIntegralGasStatErrorData01[nBinsR];
+TH1D*   histoIntegralGasStatErrorData02[nBinsR];
+TH1D*   histoIntegralGasStatErrorData03[nBinsR];
+TH1D*   histoIntegralGasStatErrorMC[nBinsR];
+TH1D*   histoIntegralGasStatErrorMC01[nBinsR];
+TH1D*   histoIntegralGasStatErrorMC02[nBinsR];
+TH1D*   histoIntegralGasStatErrorMC03[nBinsR];
+
+TH1D*   histoIntegralGasData;
+TH1D*   histoIntegralGasData01;
+TH1D*   histoIntegralGasData02;
+TH1D*   histoIntegralGasData03;
+TH1D*   histoIntegralGasMC;
+TH1D*   histoIntegralGasMC01;
+TH1D*   histoIntegralGasMC02;
+TH1D*   histoIntegralGasMC03;
+
+TH1F*   histoRDataRebin;
+TH1F*   histoRinPtBinDataRebin01;
+TH1F*   histoRinPtBinDataRebin02;
+TH1F*   histoRinPtBinDataRebin03;
+
+TH1F*   histoRinPtBinMCRebin01;
+TH1F*   histoRinPtBinMCRebin02;
+TH1F*   histoRinPtBinMCRebin03;
+
 TH1D*   histoZInRData[nBinsR];
 TH1D*   histoZInRMC[nBinsR];
 TH1D*   histoZInRTrueMC[nBinsR];
@@ -136,6 +163,7 @@ TH1D*	histoDataMCRatioZInR[nBinsR];
 
 Int_t rebinPhiPlots=3;
 
+Double_t markerSize =1.05;
 
 Color_t colorData = kBlack;
 Color_t colorMC = kRed;

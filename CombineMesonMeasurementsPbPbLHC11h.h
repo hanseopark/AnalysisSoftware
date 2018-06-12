@@ -350,6 +350,7 @@ Color_t colorBegun0010      = kRed-6;
 Color_t colorBegun2050      = kAzure-4;//kCyan-9;
 
 Color_t colorEPOS0010       = kPink+5;
+Color_t colorEPOSEtaToPi00010       = kViolet-6;
 Color_t colorEPOS2050       = kBlue;
 
 Color_t colorCracowRatio    = kSpring+9;

@@ -150,17 +150,17 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         cout << "You have choosen 5TeV. Note that you will use 2.76TeV systematic errors." << endl;
 
     } else if( optionEnergy.CompareTo("5TeV2017") == 0) {
-        minPtForFits=0.4;
+        minPtForFits=0.3;
         minPtForFitsEta=0.4;
 
         if (useSameBinningPi0Eta.CompareTo("")==0){
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_5TeV2017_fake.dat";
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveragedPCM_Pi0_5TeV2017_2018_06_08.dat";
         } else {
             fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_5TeV2017_fake.dat";
             minPtForFits=0.4;
         }
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_5TeV2017_fake.dat";
-        cout << "You have chosen 5TeV2017. The systematic errors loaded are fake." << endl;
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveragedPCM_Eta_5TeV2017_2018_06_08.dat";
+        cout << "You have chosen 5TeV2017. The systematic errors loaded are still sperimental." << endl;
 
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
         minPtForFits=0.4;
