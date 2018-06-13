@@ -15,7 +15,7 @@ Double_t fMinPt     = 0.;
 Double_t fMinPt1    = 0.8;
 Double_t fMaxPt     = 20.;
 
-Int_t rebinRPlots   = 2;
+Int_t rebinRPlots   = 1;
 Int_t rebinZPlots   = 4;
 Int_t rebinPtPlots  = 4;
 
@@ -24,7 +24,7 @@ Double_t rMaxGas    = 145.;
 
 const int nBinsR = 12;
 // Double_t arrayRBins[14] = {0., 1.5, 3.5, 5.7, 8.6, 13., 21.,  33.5, 41., 55., 72., 90.,  150., 180};
-Double_t arrayRBins[13] = {0., 1.5, 5., 8.6, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
+Double_t arrayRBins[13] = {0., 1.5, 5., 8.5, 13., 21., 33.5, 41., 55., 72., 95., 145., 180};
 //                      = {0., 1.5, 5., 8.6, 13., 21., 33.5, 41., 55., 72., 90., 150., 180};
 
 TString arrayRangesRBins[12] =
