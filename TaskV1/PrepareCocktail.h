@@ -12,11 +12,13 @@ TString     fGammaCutSelection                              = "";
 TString     fClusterCutSelection                            = "";
 TString     fElectronCutSelection                           = "";
 TString     fMesonCutSelection                              = "";
+TString     frapidityAndeta                                 = "";
 Double_t    ptMin                                           = 0;
 Double_t    ptMax                                           = 20;
 Double_t    ptPlotMin                                       = 0;
 Double_t    ptPlotMax                                       = 20;
 Double_t    fRapidity                                       = 0;
+Double_t    fPseudoRapidity                                 = 0;
 Int_t       fMode                                           = 0;
 Float_t     nEvents                                         = 0;
 

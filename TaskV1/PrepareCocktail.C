@@ -55,7 +55,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
                         TString     cutSelection                = "",
                         TString     option                      = "",
                         TString     directphotonPlots           = "",
-                        Double_t    rapidity                    = 0.85,
+                        TString     rapidityAndeta              = "0.85",
                         TString     period                      = "",
                         Int_t       numberOfBins                = 30,
                         Int_t       mode                        = 0,
@@ -82,11 +82,23 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     fdirectphoton                                               = directphotonPlots;
     fSuffix                                                     = suffix;
     fMode                                                       = mode;
-    fRapidity                                                   = rapidity;
     doWriteGammaRatioFile                                       = produceOutputForPaper;
     fSpecialFoldername                                          = specialNameForOutput;
+    frapidityAndeta                                             = rapidityAndeta;
     cout << "Pictures are saved as " << suffix.Data() << endl;
-    TString rapidityForOut                                      = Form("%.2f", rapidity);
+    TObjArray *tempArr  = rapidityAndeta.Tokenize("_");
+    if(tempArr->GetEntries()<1){
+        cout << "rapidity not set" << endl;
+        delete tempArr;
+    } else if(tempArr->GetEntries()==1){
+        fRapidity           = ((TString)((TObjString*)tempArr->At(0))->GetString()).Atof();
+    } else if(tempArr->GetEntries()==2){
+        fRapidity           = ((TString)((TObjString*)tempArr->At(0))->GetString()).Atof();
+        fPseudoRapidity     = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
+    }
+    Double_t rapidity = fRapidity;
+    Double_t pseudorapidity = tempArr->GetEntries()==2 ? fPseudoRapidity : fRapidity; // pseudorapidity is set to rapidity if not set externally
+    TString rapidityForOut                                      = Form("%s", rapidityAndeta.Data());
     rapidityForOut.ReplaceAll(".","_");
 
     //***************************** Separate cutstrings *************************************************************
@@ -125,10 +137,10 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         cout << "ERROR: TopDirCocktail not found!" << endl;
         return;
     }
-    TList* histoListCocktail                                    = (TList*)topDirCocktail->Get(Form("GammaCocktailMC_%.2f", rapidity));
-    cout << "searching for " << Form("GammaCocktailMC_%.2f", rapidity) << endl;
+    TList* histoListCocktail                                    = (TList*)topDirCocktail->Get(Form("GammaCocktailMC_%s", rapidityAndeta.Data()));
+    cout << "searching for " << Form("GammaCocktailMC_%s", rapidityAndeta.Data()) << endl;
     if (!histoListCocktail) {
-        cout << "ERROR: Folder with rapidity " << rapidity << " not contained in cocktail file!" << endl;
+        cout << "ERROR: Folder with rapidity " << rapidityAndeta.Data() << " not contained in cocktail file!" << endl;
         return;
     }
     TTree* cocktailSettingsTree                                 = (TTree*)histoListCocktail->FindObject("cocktailSettings");
@@ -232,6 +244,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     //***************************** ranges and scaling factors ******************************************************
     Double_t deltaPtGen                                         = ptGenMax-ptGenMin;
     Double_t deltaRap                                           = 2*rapidity;
+    Double_t deltaEtaGen                                        = 2*pseudorapidity;
     Double_t deltaRapGen                                        = 2.0;
     Double_t deltaEta                                           = ReturnDeltaEta(fGammaCutSelection);   // 2*0.9
     Double_t eta                                                = deltaEta*0.5;                         // 0.9
@@ -254,6 +267,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     cout << "========================================"  << endl;
     cout << "deltaRapGen      = "     << deltaRapGen    << endl;
     cout << "deltaRap         = "     << deltaRap       << endl;
+    cout << "deltaEtaGen      = "     << deltaEtaGen    << endl;
     cout << "deltaPtGen       = "     << deltaPtGen     << endl;
     cout << "deltaPt          = "     << ptMax - ptMin  << endl;
     cout << "deltaEta         = "     << deltaEta       << endl;
@@ -400,7 +414,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
     histoGammaSumPtOrBin->Scale(1/(histoGammaSumPtY->GetXaxis()->GetBinWidth(1)));
     histoGammaSumPtOrBin->Scale(1/deltaPtGen);
     histoGammaSumPtOrBin->Scale(1/deltaRapGen);
-    histoGammaSumPtOrBin->Scale(1/deltaRap);
+    histoGammaSumPtOrBin->Scale(1/deltaEtaGen);
 //     histoGammaSumPtOrBin->GetXaxis()->SetRangeUser(ptMin, ptMax);
     SetHistogramTitles(histoGammaSumPtOrBin,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
 
@@ -427,7 +441,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         histoGammaSumPtOrBin2->Scale(1/(histoGammaSumPtPhi->GetXaxis()->GetBinWidth(1)));
         histoGammaSumPtOrBin2->Scale(1/deltaPtGen);
         histoGammaSumPtOrBin2->Scale(1/deltaRapGen);
-        histoGammaSumPtOrBin2->Scale(1/deltaRap);
+        histoGammaSumPtOrBin2->Scale(1/deltaEtaGen);
 //         histoGammaSumPtOrBin2->GetXaxis()->SetRangeUser(ptMin, ptMax);
         SetHistogramTitles(histoGammaSumPtOrBin2,"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
     } else {
@@ -455,7 +469,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
             histoGammaPtOrBin[i]->Scale(1/(histoGammaPtY[i]->GetXaxis()->GetBinWidth(1)));
             histoGammaPtOrBin[i]->Scale(1/deltaPtGen);
             histoGammaPtOrBin[i]->Scale(1/deltaRapGen);
-            histoGammaPtOrBin[i]->Scale(1/deltaRap);
+            histoGammaPtOrBin[i]->Scale(1/deltaEtaGen);
 //             histoGammaPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
             SetHistogramTitles(histoGammaPtOrBin[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
 
@@ -490,7 +504,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
                 histoGammaPtOrBin2[i]->Scale(1/(histoGammaPtPhi[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaPtOrBin2[i]->Scale(1/deltaPtGen);
                 histoGammaPtOrBin2[i]->Scale(1/deltaRapGen);
-                histoGammaPtOrBin2[i]->Scale(1/deltaRap);
+                histoGammaPtOrBin2[i]->Scale(1/deltaEtaGen);
 //                 histoGammaPtOrBin2[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
                 SetHistogramTitles(histoGammaPtOrBin2[i],"","#it{p}_{T} (GeV/#it{c})","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
             } else {
@@ -1779,7 +1793,7 @@ void PrepareCocktail(   TString     nameFileCocktail            = "",
         SaveHistos();
         CreateBRTableLatex();
     } else {
-        TString nameOutput                                      = Form("%s/%s/GammaCocktail%s_%.2f_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+        TString nameOutput                                      = Form("%s/%s/GammaCocktail%s_%s_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), rapidityAndeta.Data(), fCutSelection.Data());
         cout << "ERROR: Possible problem with cocktail normalization, cocktail unequal to summed contributions. If " << nameOutput.Data() << " was already created it will be deleated!" << endl;
         gSystem->Exec("rm "+nameOutput);
     }
@@ -2046,7 +2060,7 @@ void DeleteObjects() {
 
 //************************** Routine for saving histograms **********************************************************
 void SaveHistos() {
-    TString nameOutput                  = Form("%s/%s/GammaCocktail%s_%.2f_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+    TString nameOutput                  = Form("%s/%s/GammaCocktail%s_%s_%s.root", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), frapidityAndeta.Data(), fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *outputFile                   = new TFile(nameOutput,"UPDATE");
 
@@ -2138,7 +2152,7 @@ void SaveHistos() {
 void CreateBRTableLatex() {
 
     // tex file
-    TString texFileName                  = Form("%s/%s/GammaCocktail%s_%.2f_%s_BranchingRatioTable.tex", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+    TString texFileName                  = Form("%s/%s/GammaCocktail%s_%s_%s_BranchingRatioTable.tex", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), frapidityAndeta.Data(), fCutSelection.Data());
     ofstream texFile;
     texFile.open(texFileName);
 

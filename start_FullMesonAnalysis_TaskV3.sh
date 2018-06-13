@@ -2857,7 +2857,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                 fi
             fi
             if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
-                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
+                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,\"$cocktailRapidity\"\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
             fi
 
             if [ $ONLYCORRECTION -eq 0 ]; then
@@ -3087,7 +3087,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                 Pi0MCCorrFILE=`ls $cutSelection/$energy/Pi0_MC_GammaConvV1Correction_*.root`
                 GammaPi0MCCorrFILE=`ls $cutSelection/$energy/Gamma_Pi0_MC_GammaConvV1Correction_*.root`
                 if [ $useCocktail -eq 1 ] && [ -f $Pi0dataCorrFILE ]; then
-                    root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorrFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode\)
+                    root -b -x -l -q TaskV1/PrepareCocktail.C\+\(\"$CocktailRootFile\"\,\"$Pi0dataCorrFILE\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,\"$cocktailRapidity\"\,\"\"\,$BinsPtPi0\,$mode\)
                 fi
                 GammaCocktailFile=`ls $cutSelection/$energy/GammaCocktail_$cocktailRapidity*.root`
                 if [ $useCocktail  ]; then
@@ -3201,7 +3201,7 @@ else
                 root -b -x -l -q ToyModels/ModelSecondaryDecaysToPi0.C\+\($NEvtsToy,2,\"$energy\"\,$MinPtToy\,$MaxPtToy\,\"$ExtInputFile\"\,\"$Suffix\"\,\"$cutSelection\"\,$mode\)
             fi
             if [ $useCocktail -eq 1 ] && [ $ONLYCORRECTION -eq 0 ]; then
-                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,$cocktailRapidity\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
+                root -b -x -l -q TaskV1/PrepareSecondaries.C\+\(\"Pi0\"\,\"$CocktailRootFile\"\,\"$Suffix\"\,\"$cutSelection\"\,\"$energy\"\,\"$directphoton\"\,\"$cocktailRapidity\"\,\"\"\,$BinsPtPi0\,$mode,kFALSE\)
             fi
 
             if [ $ONLYCORRECTION -eq 0 ]; then

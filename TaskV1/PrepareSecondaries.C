@@ -57,7 +57,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                             TString     cutSelection                = "",
                             TString     option                      = "",
                             TString     directphotonPlots           = "",
-                            Double_t    rapidity                    = 0.85,
+                            TString     rapidityAndeta              = "0.85",
                             TString     period                      = "",
                             Int_t       numberOfBins                = 30,
                             Int_t       mode                        = 0,
@@ -86,9 +86,20 @@ void PrepareSecondaries(    TString     meson                       = "",
     fdirectphoton                                               = directphotonPlots;
     fSuffix                                                     = suffix;
     fMode                                                       = mode;
-    fRapidity                                                   = rapidity;
+    frapidityAndeta                                             = rapidityAndeta;
     cout << "Pictures are saved as " << suffix.Data() << endl;
-
+    TObjArray *tempArr  = rapidityAndeta.Tokenize("_");
+    if(tempArr->GetEntries()<1){
+        cout << "rapidity not set" << endl;
+        delete tempArr;
+    } else if(tempArr->GetEntries()==1){
+        fRapidity           = ((TString)((TObjString*)tempArr->At(0))->GetString()).Atof();
+    } else if(tempArr->GetEntries()==2){
+        fRapidity           = ((TString)((TObjString*)tempArr->At(0))->GetString()).Atof();
+        fPseudoRapidity     = ((TString)((TObjString*)tempArr->At(1))->GetString()).Atof();
+    }
+    Double_t rapidity = fRapidity;
+    Double_t pseudorapidity = fPseudoRapidity;
     //************************** direct photon ana ******************************************************************
     Bool_t doSecondaryGamma                                     = kTRUE;
 
@@ -146,17 +157,17 @@ void PrepareSecondaries(    TString     meson                       = "",
     }
     TList* histoListCocktail                                    = NULL;
     if (fAnalyzedMeson.CompareTo("Pi0") == 0) {
-        cout << "searching for " << Form("HadronicCocktailMC_pi0_%.2f", rapidity) << endl;
-        histoListCocktail                                       = (TList*)topDirCocktail->Get(Form("HadronicCocktailMC_pi0_%.2f", rapidity));
+        cout << "searching for " << Form("HadronicCocktailMC_pi0_%s", rapidityAndeta.Data()) << endl;
+        histoListCocktail                                       = (TList*)topDirCocktail->Get(Form("HadronicCocktailMC_pi0_%s", rapidityAndeta.Data()));
         if (!histoListCocktail) {
-            cout << "ERROR: Folder with rapidity " << rapidity << " not contained in cocktail file!" << endl;
+            cout << "ERROR: Folder with rapidity " << rapidityAndeta.Data() << " not contained in cocktail file!" << endl;
             return;
         }
     } else if (fAnalyzedMeson.CompareTo("Eta") == 0) {
-        cout << "searching for " << Form("HadronicCocktailMC_eta_%.2f", rapidity) << endl;
-        histoListCocktail                                       = (TList*)topDirCocktail->Get(Form("HadronicCocktailMC_eta_%.2f", rapidity));
+        cout << "searching for " << Form("HadronicCocktailMC_eta_%s", rapidityAndeta.Data()) << endl;
+        histoListCocktail                                       = (TList*)topDirCocktail->Get(Form("HadronicCocktailMC_eta_%s", rapidityAndeta.Data()));
         if (!histoListCocktail) {
-            cout << "ERROR: Folder with rapidity " << rapidity << " not contained in cocktail file!" << endl;
+            cout << "ERROR: Folder with rapidity " << rapidityAndeta.Data() << " not contained in cocktail file!" << endl;
             return;
         }
     } else {
@@ -1125,7 +1136,7 @@ void SetHistogramTitles(TH1F* input, TString title, TString xTitle, TString yTit
 
 //************************** Routine for saving histograms **********************************************************
 void SaveMesonHistos() {
-    TString nameOutput                  = Form("%s/%s/Secondary%s%s_%.2f_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fAnalyzedMeson.Data(),fPeriodFlag.Data(),fRapidity,fCutSelection.Data());
+    TString nameOutput                  = Form("%s/%s/Secondary%s%s_%s_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fAnalyzedMeson.Data(),fPeriodFlag.Data(),frapidityAndeta.Data(),fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
 
@@ -1173,7 +1184,7 @@ void SaveMesonHistos() {
 
 //************************** Routine for saving histograms **********************************************************
 void SavePhotonHistos() {
-    TString nameOutput                  = Form("%s/%s/SecondaryGamma%s_%.2f_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fPeriodFlag.Data(),fRapidity,fCutSelection.Data());
+    TString nameOutput                  = Form("%s/%s/SecondaryGamma%s_%s_%s.root",fCutSelection.Data(),fEnergyFlag.Data(),fPeriodFlag.Data(),frapidityAndeta.Data(),fCutSelection.Data());
     cout << "INFO: writing into: " << nameOutput << endl;
     TFile *outputFile                   = new TFile(nameOutput,"RECREATE");
 
@@ -1208,7 +1219,7 @@ void SavePhotonHistos() {
 void CreateBRTableLatex() {
 
     // tex file
-    TString texFileName                  = Form("%s/%s/HadronicCocktail%s_%.2f_%s_BranchingRatioTable.tex", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), fRapidity, fCutSelection.Data());
+    TString texFileName                  = Form("%s/%s/HadronicCocktail%s_%s_%s_BranchingRatioTable.tex", fCutSelection.Data(), fEnergyFlag.Data(), fPeriodFlag.Data(), frapidityAndeta.Data(), fCutSelection.Data());
     ofstream texFile;
     texFile.open(texFileName);
 

@@ -2912,19 +2912,19 @@
                     return kBlue-1;
                 } else if (!generator.CompareTo("LHC10_pass4")){
                     return kCyan+3;
-                } else if (!generator.CompareTo("LHC10b_pass4")){
+                } else if (!generator.CompareTo("LHC10b_pass4") || !generator.CompareTo("LHC11a")){
                     return kBlack;
-                } else if (!generator.CompareTo("LHC10c_pass4")){
+                } else if (!generator.CompareTo("LHC10c_pass4") || !generator.CompareTo("LHC11b")){
                     return 633;
-                } else if (!generator.CompareTo("LHC10d_pass4")){
+                } else if (!generator.CompareTo("LHC10d_pass4") || !generator.CompareTo("LHC11c")){
                     return 807;
-                } else if (!generator.CompareTo("LHC10e_pass4")){
+                } else if (!generator.CompareTo("LHC10e_pass4") || !generator.CompareTo("LHC11d")){
                     return 800;
                 } else if (!generator.CompareTo("LHC10f_pass4")){
                     return 418;
                 } else if (!generator.CompareTo("LHC14j4")){
                     return 852;
-                } else if (!generator.CompareTo("LHC14j4b")){
+                } else if (!generator.CompareTo("LHC14j4b") || !generator.CompareTo("LHC14b7")){
                     return kGreen+4;
                 } else if (!generator.CompareTo("LHC14j4c")){
                     return 435;
@@ -3418,9 +3418,9 @@
         if (!energy.CompareTo("7TeV")){
             if (!generator.CompareTo("")){
                 return 20;
-            } else if(generator.Contains("LHC10") && generator.Contains("_pass4")){
+            } else if(generator.Contains("LHC10") && generator.Contains("_pass4") || generator.Contains("LHC11")){
                 return 29;
-            } else if(generator.Contains("LHC14j4")){
+            } else if(generator.Contains("LHC14j4") || !generator.CompareTo("LHC14b7")){
                 return 30;
             } else {
                 return 24;
