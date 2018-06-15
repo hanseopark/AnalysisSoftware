@@ -580,11 +580,11 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     //*********************************************************************************************************
     TString applyBinShift = "";
     if( optNoBinShift.CompareTo("kTRUE")==0){
-        applyBinShift = "NoBinShifting";
+        applyBinShift = "_NoBinShifting";
         cout << applyBinShift << endl;
     }
 
-    const char* fileNameOutputComp = Form("%s/%s_%sResultsFullCorrection_PP_%s.root",cutSelection.Data(),prefix2.Data(),detSystem.Data(), applyBinShift.Data());
+    const char* fileNameOutputComp = Form("%s/%s_%sResultsFullCorrection_PP%s.root",cutSelection.Data(),prefix2.Data(),detSystem.Data(), applyBinShift.Data());
     TFile* fileOutputForComparisonFullyCorrected = new TFile(fileNameOutputComp,"UPDATE");
         if (useSameBinningPi0Eta.CompareTo("")==0){
             histoNumberOfEvents->Write(Form("histoNumberOfEvents%s",optionEnergy.Data()),TObject::kOverwrite);
