@@ -3764,12 +3764,16 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     Double_t relBGEstimateError[100];
     for (Int_t i = 1; i < nBinsPt +1; i++){
         relBGEstimateError[i] = 0.;
-        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) &&
-             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
-            relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[1]->GetBinContent(i)) *100;
-        } else if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) &&
-                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
-            relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[1]->GetBinContent(i)) *100;
+        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) >
+             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) &&
+             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) >
+             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
+                    relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[1]->GetBinContent(i)) *100;
+        } else if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) >
+                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) &&
+                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) >
+                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
+                        relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[2]->GetBinContent(i)) *100;
         } else {
             relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
         }
