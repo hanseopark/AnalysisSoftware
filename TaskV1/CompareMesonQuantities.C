@@ -335,7 +335,9 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 padLineShape->cd(place)->SetRightMargin(0.05);
                 padLineShape->cd(place)->SetLeftMargin(0.15);
 
-                Double_t maxY   = histoTrueMCInvMassPtBin[iPt]->GetMaximum();
+                Double_t maxY   = 0;
+                if (histoTrueMCInvMassPtBin[iPt])
+                    maxY        = histoTrueMCInvMassPtBin[iPt]->GetMaximum();
                 if (maxY < histoSignalDataInvMassPtBin[iPt]->GetMaximum())
                     maxY        = histoSignalDataInvMassPtBin[iPt]->GetMaximum();
                 if (maxY < histoSignalMCInvMassPtBin[iPt]->GetMaximum())

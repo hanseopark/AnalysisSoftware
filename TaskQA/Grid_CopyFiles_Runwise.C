@@ -26,15 +26,15 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/Desktop/AnalysisSoftw
 
 //     //CALO + CONVCALO DATA + MC
 //
-    const Int_t nFiles = 2;
-    TString Tag = "20180604";
-    TString DataSetsFile[nFiles] = {"GammaTriggerQA.root","GammaCalo_240.root"};
+    const Int_t nFiles = 1;
+    TString Tag = "20180618";
+    TString DataSetsFile[nFiles] = {"GammaTriggerQA.root"};
 
-    const Int_t nSets = 1;
-    TString DataSets[nSets]={"LHC15o"};
-    TString DataSetsFolder[nSets]={"LHC15"};
-    TString PrefixDataSets[nSets]={"/alice/data/2015/LHC15o/000"};
-    TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_PbPb/409_20180604-1852_child_1/"};
+    const Int_t nSets = 3;
+    TString DataSets[nSets]={"LHC15o","LHC15o","LHC15o"};
+    TString DataSetsFolder[nSets]={"LHC15","LHC15","LHC15"};
+    TString PrefixDataSets[nSets]={"/alice/data/2015/LHC15o/000","/alice/data/2015/LHC15o/000","/alice/data/2015/LHC15o/000"};
+    TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_PbPb/420_20180618-1214_child_1/","/pass1_pidfix/PWGGA/GA_PbPb/420_20180618-1214_child_2/","/pass3_lowIR_pidfix/PWGGA/GA_PbPb/420_20180618-1214_child_3/"};
 
 //     //CONVCALO MC
 //
@@ -166,53 +166,53 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/Desktop/AnalysisSoftw
 
 
 //pp LHC12
-        const Int_t nFiles = 1;
-        TString Tag = "20180326";
-        TString DataSetsFile[nFiles] = {"AnalysisResults.root"};
-
-        const Int_t nSets = 7;
-        TString DataSets[nSets]={
-          "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"
-//          "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
-//          "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
-        };
-        TString DataSetsFolder[nSets]={
-          "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12"
-//          "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1",
-//          "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2"
-        };
-        TString PrefixDataSets[nSets]={
-              "/alice/data/2012/LHC12a/000",
-              "/alice/data/2012/LHC12b/000",
-              "/alice/data/2012/LHC12c/000",
-              "/alice/data/2012/LHC12d/000",
-              "/alice/data/2012/LHC12f/000",
-              "/alice/data/2012/LHC12h/000",
-              "/alice/data/2012/LHC12i/000"
-//              "/alice/sim/2015/LHC15h1a1/",
-//              "/alice/sim/2015/LHC15h1b/",
-//              "/alice/sim/2015/LHC15h1c/",
-//              "/alice/sim/2015/LHC15h1d/",
-//              "/alice/sim/2015/LHC15h1f/",
-//              "/alice/sim/2015/LHC15h1h/",
-//              "/alice/sim/2015/LHC15h1i/",
-//              "/alice/sim/2015/LHC15h2a/",
-//              "/alice/sim/2015/LHC15h2b/",
-//              "/alice/sim/2015/LHC15h2c/",
-//              "/alice/sim/2015/LHC15h2d/",
-//              "/alice/sim/2015/LHC15h2f/",
-//              "/alice/sim/2015/LHC15h2h/",
-//              "/alice/sim/2015/LHC15h2i/"
-        };
-
-        TString SuffixDataSets[nSets]={
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_1/",
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_2/",
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_3/",
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_4/",
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_5/",
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_6/",
-          "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_7/"
+//         const Int_t nFiles = 1;
+//         TString Tag = "20180326";
+//         TString DataSetsFile[nFiles] = {"AnalysisResults.root"};
+//
+//         const Int_t nSets = 7;
+//         TString DataSets[nSets]={
+//           "LHC12a", "LHC12b", "LHC12c", "LHC12d", "LHC12f", "LHC12h", "LHC12i"
+// //          "LHC15h1a1", "LHC15h1b", "LHC15h1c", "LHC15h1d", "LHC15h1f", "LHC15h1h", "LHC15h1i",
+// //          "LHC15h2a", "LHC15h2b", "LHC15h2c", "LHC15h2d", "LHC15h2f", "LHC15h2h", "LHC15h2i"
+//         };
+//         TString DataSetsFolder[nSets]={
+//           "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12", "LHC12"
+// //          "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1", "LHC15h1",
+// //          "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2", "LHC15h2"
+//         };
+//         TString PrefixDataSets[nSets]={
+//               "/alice/data/2012/LHC12a/000",
+//               "/alice/data/2012/LHC12b/000",
+//               "/alice/data/2012/LHC12c/000",
+//               "/alice/data/2012/LHC12d/000",
+//               "/alice/data/2012/LHC12f/000",
+//               "/alice/data/2012/LHC12h/000",
+//               "/alice/data/2012/LHC12i/000"
+// //              "/alice/sim/2015/LHC15h1a1/",
+// //              "/alice/sim/2015/LHC15h1b/",
+// //              "/alice/sim/2015/LHC15h1c/",
+// //              "/alice/sim/2015/LHC15h1d/",
+// //              "/alice/sim/2015/LHC15h1f/",
+// //              "/alice/sim/2015/LHC15h1h/",
+// //              "/alice/sim/2015/LHC15h1i/",
+// //              "/alice/sim/2015/LHC15h2a/",
+// //              "/alice/sim/2015/LHC15h2b/",
+// //              "/alice/sim/2015/LHC15h2c/",
+// //              "/alice/sim/2015/LHC15h2d/",
+// //              "/alice/sim/2015/LHC15h2f/",
+// //              "/alice/sim/2015/LHC15h2h/",
+// //              "/alice/sim/2015/LHC15h2i/"
+//         };
+//
+//         TString SuffixDataSets[nSets]={
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_1/",
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_2/",
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_3/",
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_4/",
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_5/",
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_6/",
+//           "/pass2/PWGGA/GA_pp/2320_20180327-1332_child_7/"
 //                "/PWGGA/GA_pp_MC/2093_20160520-0947/",
 //                "/PWGGA/GA_pp_MC/2094_20160519-2336/",
 //                "/PWGGA/GA_pp_MC/2095_20160519-2336/",
@@ -227,7 +227,7 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/Desktop/AnalysisSoftw
 //          "/PWGGA/GA_pp_MC/2104_20160519-2335/",
 //          "/PWGGA/GA_pp_MC/2105_20160519-2334/",
 //          "/PWGGA/GA_pp_MC/2106_20160519-2334/"
-          };
+//           };
 
 //                    const Int_t nFiles = 2;
 //                    TString Tag = "20160518";

@@ -163,7 +163,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       }
     } else if (optionEnergy.CompareTo("13TeV")==0){
         if(mode==2 || mode==4 || mode==0){
-            maxPtGlobalCluster          = 50;
+            maxPtGlobalCluster          = 100;
         } else if (mode == 10){
             maxPtGlobalCluster          = 70;
         }
@@ -397,7 +397,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     //***************************************************************************************************************
     //*************************** set common binning ****************************************************************
     //***************************************************************************************************************
-    Double_t binningPi0[100];
+    Double_t binningPi0[400];
     Int_t maxNBinsPi0Abs            = 0;
     Int_t maxNBinsPi0               = GetBinning( binningPi0, maxNBinsPi0Abs, "Pi0", optionEnergy, mode, -1, kFALSE, fCent );
     Int_t maxNAllowedPi0            = 0;
@@ -409,7 +409,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
     cout << endl;
 
-    Double_t binningEta[100];
+    Double_t binningEta[400];
     Int_t maxNBinsEtaAbs            = 0;
     Int_t maxNBinsEta               = GetBinning( binningEta, maxNBinsEtaAbs, "Eta", optionEnergy, mode, -1, kFALSE, fCent );
     Int_t maxNAllowedEta            = 0;
@@ -455,7 +455,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
 
     vector<TString>** ptSysDetail     = new vector<TString>*[MaxNumberOfFiles];
-    for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++) ptSysDetail[iR] = new vector<TString>[100];
+    for(Int_t iR=0; iR<nrOfTrigToBeComb; iR++) ptSysDetail[iR] = new vector<TString>[400];
     //***************************************************************************************************************
     //******************************** Load Pi0 histograms **********************************************************
     //***************************************************************************************************************
@@ -876,6 +876,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggReject = 49000;
         // else if (mode == 10 && !optionEnergy.CompareTo("pPb_8TeV"))
             // maxTriggReject = 390;
+        else if (optionEnergy.CompareTo("13TeV") == 0)
+            maxTriggReject = 4200;
         else if (mode == 10)
             maxTriggReject = 5200;
 
@@ -1063,10 +1065,12 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             maxTriggRejectLin = 3000;
 
         if( optionEnergy.CompareTo("8TeV")==0 ){
-        if (mode == 2 || mode == 4 || mode == 10 )
-            maxTriggRejectLin = 310;
+            if (mode == 2 || mode == 4 || mode == 10 )
+                maxTriggRejectLin = 310;
+        } else if( optionEnergy.CompareTo("13TeV")==0 ){
+            if (mode == 2 || mode == 4 || mode == 10 )
+                maxTriggRejectLin = 1005;
         }
-
         TH2F * histo2DTriggRejectLinear;
         histo2DTriggRejectLinear = new TH2F("histo2DTriggRejectLinear","histo2DTriggRejectLinear",1000,0., maxPtGlobalCluster,15000,minTriggRejectLin, maxTriggRejectLin);
         SetStyleHistoTH2ForGraphs(histo2DTriggRejectLinear, "#it{p}_{T} (GeV/#it{c})","#it{R}", //"#frac{N_{clus,trig A}/N_{Evt, trig A}}{N_{clus,trig B}/N_{Evt,trig B}}",
@@ -1122,11 +1126,17 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (triggerName[i].Contains("EG1"))
                     histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
                 if (optionEnergy.CompareTo("8TeV")==0){
-                if (triggerName[i].Contains("EMC7"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
-                if (triggerName[i].Contains("EGA"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+                    if (triggerName[i].Contains("EGA"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                } else if (optionEnergy.CompareTo("13TeV")==0){
+                    if (triggerName[i].Contains("EG2"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,1000);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                 }
+
 
                 histo2DTriggRejectLinear->DrawCopy();
 
@@ -1226,10 +1236,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 if (triggerName[i].Contains("EG1"))
                     histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,8);
                 if (optionEnergy.CompareTo("8TeV")==0){
-                if (triggerName[i].Contains("EMC7"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
-                if (triggerName[i].Contains("EGA"))
-                    histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                    if (triggerName[i].Contains("EMC7"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,150);
+                    if (triggerName[i].Contains("EGA"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,300);
+                } else if (optionEnergy.CompareTo("13TeV")==0){
+                    if (triggerName[i].Contains("EG2"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,1000);
+                    if (triggerName[i].Contains("EG1"))
+                        histo2DTriggRejectLinear->GetYaxis()->SetRangeUser(0,30);
                 }
 
                 histo2DTriggRejectLinear->DrawCopy();
@@ -2137,20 +2152,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     }
 
     // initialize all vectors for sytstematics and general creation of graphs, we can have a maximu of 100 data points at the moment
-    Double_t xValueFinalPi0                                 [100];
-    Double_t xErrorLowFinalPi0                              [100];
-    Double_t xErrorHighFinalPi0                             [100];
-    Double_t yValueFinalPi0                                 [100];
-    Double_t yErrorLowFinalPi0                              [100];
-    Double_t yErrorHighFinalPi0                             [100];
+    Double_t xValueFinalPi0                                 [400];
+    Double_t xErrorLowFinalPi0                              [400];
+    Double_t xErrorHighFinalPi0                             [400];
+    Double_t yValueFinalPi0                                 [400];
+    Double_t yErrorLowFinalPi0                              [400];
+    Double_t yErrorHighFinalPi0                             [400];
     Int_t nPointFinalPi0                                         = 0;
 
-    Double_t yErrorSysLowFinalPi0                           [100];
-    Double_t yErrorSysHighFinalPi0                          [100];
+    Double_t yErrorSysLowFinalPi0                           [400];
+    Double_t yErrorSysHighFinalPi0                          [400];
 
-    Double_t ptSysRelPi0                                    [MaxNumberOfFiles][100];
-    Double_t yErrorSysLowRelPi0                             [MaxNumberOfFiles][100];
-    Double_t yErrorSysHighRelPi0                            [MaxNumberOfFiles][100];
+    Double_t ptSysRelPi0                                    [MaxNumberOfFiles][400];
+    Double_t yErrorSysLowRelPi0                             [MaxNumberOfFiles][400];
+    Double_t yErrorSysHighRelPi0                            [MaxNumberOfFiles][400];
     Bool_t sysAvailPi0                                      [MaxNumberOfFiles];
 
     Bool_t sysAvailSinglePi0                                [MaxNumberOfFiles];
@@ -2250,7 +2265,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 
             Int_t iPtBin = 0;
             cout << "reading sys file summed" << endl;
-            while(!fileSysErrPi0.eof() && iPtBin < 100){
+            while(!fileSysErrPi0.eof() && iPtBin < 400){
                 Double_t garbage = 0;
                 fileSysErrPi0 >>ptSysRelPi0[i][iPtBin] >> yErrorSysLowRelPi0[i][iPtBin] >> yErrorSysHighRelPi0[i][iPtBin]>>    garbage >> garbage;
                 cout << iPtBin << "\t"<< ptSysRelPi0[i][iPtBin]<< "\t"  << yErrorSysLowRelPi0[i][iPtBin] << "\t"  <<yErrorSysHighRelPi0[i][iPtBin] << "\t"  << endl;;
@@ -2279,11 +2294,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     iPtBin = 0;
                     string line;
                     Int_t iPtBinColumn = 0;
-                    while (getline(fileSysErrDetailedPi0, line) && iPtBin < 100) {
+                    while (getline(fileSysErrDetailedPi0, line) && iPtBin < 400) {
                         istringstream ss(line);
                         TString temp="";
                         iPtBinColumn = 0;
-                        while(ss && iPtBinColumn < 100){
+                        while(ss && iPtBinColumn < 400){
                             ss >> temp;
                             if( !(iPtBin==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
                                 ptSysDetail[i][iPtBin].push_back(temp);
@@ -2470,15 +2485,15 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
 //         if (graphsCorrectedYieldShrunkPi0[i])graphsCorrectedYieldShrunkPi0[i]->Print();
         cout << "step 2" << endl;
         while (graphsCorrectedYieldShrunkPi0[i]->GetY()[0] == 0) graphsCorrectedYieldShrunkPi0[i]->RemovePoint(0);
-//         if (graphsCorrectedYieldShrunkPi0[i]) graphsCorrectedYieldShrunkPi0[i]->Print();
+        if (graphsCorrectedYieldShrunkPi0[i]) graphsCorrectedYieldShrunkPi0[i]->Print();
         while (graphsCorrectedYieldRemoved0Pi0[i]->GetY()[0] == 0) graphsCorrectedYieldRemoved0Pi0[i]->RemovePoint(0);
-//         if (graphsCorrectedYieldRemoved0Pi0[i]) graphsCorrectedYieldRemoved0Pi0[i]->Print();
+        if (graphsCorrectedYieldRemoved0Pi0[i]) graphsCorrectedYieldRemoved0Pi0[i]->Print();
         cout << "sys shrunk" << endl;
         while (graphsCorrectedYieldSysShrunkPi0[i]->GetY()[0] == 0) graphsCorrectedYieldSysShrunkPi0[i]->RemovePoint(0);
-//         if (graphsCorrectedYieldSysShrunkPi0[i])graphsCorrectedYieldSysShrunkPi0[i]->Print();
+        if (graphsCorrectedYieldSysShrunkPi0[i])graphsCorrectedYieldSysShrunkPi0[i]->Print();
         cout << "sys shrunk 2" << endl;
         while (graphsCorrectedYieldSysRemoved0Pi0[i]->GetY()[0] == 0) graphsCorrectedYieldSysRemoved0Pi0[i]->RemovePoint(0);
-//         if (graphsCorrectedYieldSysRemoved0Pi0[i])graphsCorrectedYieldSysRemoved0Pi0[i]->Print();
+        if (graphsCorrectedYieldSysRemoved0Pi0[i])graphsCorrectedYieldSysRemoved0Pi0[i]->Print();
 
         // put systematics on graphs
         if (graphsCorrectedYieldSysRemoved0Pi0[i]){
@@ -2492,8 +2507,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             for (Int_t j = 0; j< graphsCorrectedYieldSysRemoved0Pi0[i]->GetN(); j++){
                 if (sysAvailPi0[i]){
                     Int_t counter = 0;
-                    while(counter < 100 && TMath::Abs(graphsCorrectedYieldSysRemoved0Pi0[i]->GetX()[j] - ptSysRelPi0[i][counter])> 0.001) counter++;
-                    if (counter < 100){
+                    while(counter < 400 && TMath::Abs(graphsCorrectedYieldSysRemoved0Pi0[i]->GetX()[j] - ptSysRelPi0[i][counter])> 0.001) counter++;
+                    if (counter < 400){
                         cout << ptSysRelPi0[i][counter]<< "\t found it" << endl;
                         Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelPi0[i][counter]/100*graphsCorrectedYieldSysRemoved0Pi0[i]->GetY()[j]);
                         Double_t yErrorSysHighDummy = yErrorSysHighRelPi0[i][counter]/100*graphsCorrectedYieldSysRemoved0Pi0[i]->GetY()[j];
@@ -2542,9 +2557,10 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         // remove points at the end according to ranges set for individual triggers
         while (graphsCorrectedYieldShrunkPi0[i]->GetX()[graphsCorrectedYieldShrunkPi0[i]->GetN()-1] > ptFromSpecPi0[i][1])
             graphsCorrectedYieldShrunkPi0[i]->RemovePoint(graphsCorrectedYieldShrunkPi0[i]->GetN()-1);
-//         graphsCorrectedYieldShrunkPi0[i]->Print();
+        graphsCorrectedYieldShrunkPi0[i]->Print();
         while (graphsCorrectedYieldSysShrunkPi0[i]->GetX()[graphsCorrectedYieldSysShrunkPi0[i]->GetN()-1] > ptFromSpecPi0[i][1])
             graphsCorrectedYieldSysShrunkPi0[i]->RemovePoint(graphsCorrectedYieldSysShrunkPi0[i]->GetN()-1);
+
 
         // put systematics on shrunk graphs
         for (Int_t j = 0; j< graphsCorrectedYieldShrunkPi0[i]->GetN(); j++){
@@ -2556,8 +2572,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             yErrorLowFinalPi0[nPointFinalPi0]   = graphsCorrectedYieldShrunkPi0[i]->GetEYlow()[j];
             if (sysAvailPi0[i]){
                 Int_t counter = 0;
-                while(counter < 100 && TMath::Abs(xValueFinalPi0[nPointFinalPi0] - ptSysRelPi0[i][counter])> 0.001) counter++;
-                if (counter < 100){
+                while(counter < 400 && TMath::Abs(xValueFinalPi0[nPointFinalPi0] - ptSysRelPi0[i][counter])> 0.001) counter++;
+                if (counter < 400){
                     cout << ptSysRelPi0[i][counter]<< "\t found it" << endl;
                     yErrorSysLowFinalPi0[nPointFinalPi0] = TMath::Abs(yErrorSysLowRelPi0[i][counter]/100*graphsCorrectedYieldShrunkPi0[i]->GetY()[j]);
                     yErrorSysHighFinalPi0[nPointFinalPi0] = yErrorSysHighRelPi0[i][counter]/100*graphsCorrectedYieldShrunkPi0[i]->GetY()[j];
@@ -2660,8 +2676,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                );
 
         // preparations for weight readout
-        Double_t xValuesReadPi0[100];
-        Double_t weightsReadPi0[12][100];
+        Double_t xValuesReadPi0[400];
+        Double_t weightsReadPi0[12][400];
         Int_t availableMeasPi0[12]       = {-1, -1, -1, -1, -1, -1,
                                             -1, -1, -1, -1, -1, -1};
         Int_t nMeasSetPi0               = nrOfTrigToBeCombPi0Red;
@@ -2702,7 +2718,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         fileWeightsPi0.open(nameWeightsLogFilePi0,ios_base::in);
         cout << "reading" << nameWeightsLogFilePi0 << endl;
 
-        while(!fileWeightsPi0.eof() && nPtBinsReadPi0 < 100){
+        while(!fileWeightsPi0.eof() && nPtBinsReadPi0 < 400){
             TString garbage = "";
             if (nPtBinsReadPi0 == 0){
                 fileWeightsPi0 >> garbage ;//>> availableMeas[0] >> availableMeas[1] >> availableMeas[2] >> availableMeas[3];
@@ -4908,20 +4924,20 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
         }
 
         // prepare arrays for systematics
-        Double_t xValueFinalEta                                 [100];
-        Double_t xErrorLowFinalEta                              [100];
-        Double_t xErrorHighFinalEta                             [100];
-        Double_t yValueFinalEta                                 [100];
-        Double_t yErrorLowFinalEta                              [100];
-        Double_t yErrorHighFinalEta                             [100];
+        Double_t xValueFinalEta                                 [400];
+        Double_t xErrorLowFinalEta                              [400];
+        Double_t xErrorHighFinalEta                             [400];
+        Double_t yValueFinalEta                                 [400];
+        Double_t yErrorLowFinalEta                              [400];
+        Double_t yErrorHighFinalEta                             [400];
         Int_t nPointFinalEta                                         = 0;
 
-        Double_t yErrorSysLowFinalEta                           [100];
-        Double_t yErrorSysHighFinalEta                          [100];
+        Double_t yErrorSysLowFinalEta                           [400];
+        Double_t yErrorSysHighFinalEta                          [400];
 
-        Double_t ptSysRelEta                                    [MaxNumberOfFiles][100];
-        Double_t yErrorSysLowRelEta                             [MaxNumberOfFiles][100];
-        Double_t yErrorSysHighRelEta                            [MaxNumberOfFiles][100];
+        Double_t ptSysRelEta                                    [MaxNumberOfFiles][400];
+        Double_t yErrorSysLowRelEta                             [MaxNumberOfFiles][400];
+        Double_t yErrorSysHighRelEta                            [MaxNumberOfFiles][400];
         Bool_t     sysAvailEta                                  [MaxNumberOfFiles];
 
         Int_t numberBinsSysAvailSingleEta                       [MaxNumberOfFiles];
@@ -4977,7 +4993,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 fileSysErrEta.open(sysFileEta[i].Data(),ios_base::in);
                 cout << sysFileEta[i].Data() << endl;
                 Int_t counter = 0;
-                while(!fileSysErrEta.eof() && counter < 100){
+                while(!fileSysErrEta.eof() && counter < 400){
                     Double_t garbage = 0;
                     fileSysErrEta >>ptSysRelEta[i][counter] >> yErrorSysLowRelEta[i][counter] >> yErrorSysHighRelEta[i][counter]>>    garbage >> garbage;
                     cout << counter << "\t"<< ptSysRelEta[i][counter]<< "\t"  << yErrorSysLowRelEta[i][counter] << "\t"  <<yErrorSysHighRelEta[i][counter] << "\t"  << endl;;
@@ -5005,11 +5021,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                       counter = 0;
                       string line;
                       Int_t counterColumn = 0;
-                      while (getline(fileSysErrDetailedEta, line) && counter < 100) {
+                      while (getline(fileSysErrDetailedEta, line) && counter < 400) {
                           istringstream ss(line);
                           TString temp="";
                           counterColumn = 0;
-                          while(ss && counterColumn < 100){
+                          while(ss && counterColumn < 400){
                               ss >> temp;
                               if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
                               ptSysDetail[i][counter].push_back(temp);
@@ -5151,8 +5167,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             for (Int_t j = 0; j< graphsCorrectedYieldSysRemoved0Eta[i]->GetN(); j++){
                 if (sysAvailEta[i]){
                     Int_t counter2 = 0;
-                    while(counter2 < 100 && TMath::Abs(graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] - ptSysRelEta[i][counter2])> 0.001) counter2++;
-                    if (counter2 < 100){
+                    while(counter2 < 400 && TMath::Abs(graphsCorrectedYieldSysRemoved0Eta[i]->GetX()[j] - ptSysRelEta[i][counter2])> 0.001) counter2++;
+                    if (counter2 < 400){
                         cout << ptSysRelEta[i][counter2]<< "\t found it" << endl;
                         Double_t yErrorSysLowDummy = TMath::Abs(yErrorSysLowRelEta[i][counter2]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j]);
                         Double_t yErrorSysHighDummy = yErrorSysHighRelEta[i][counter2]/100*graphsCorrectedYieldSysRemoved0Eta[i]->GetY()[j];
@@ -5212,8 +5228,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 yErrorLowFinalEta[nPointFinalEta] = graphsCorrectedYieldShrunkEta[i]->GetEYlow()[j];
                 if (sysAvailEta[i]){
                     Int_t counter2 = 0;
-                    while(counter2 < 100 && TMath::Abs(xValueFinalEta[nPointFinalEta] - ptSysRelEta[i][counter2])> 0.001) counter2++;
-                    if (counter2 < 100){
+                    while(counter2 < 400 && TMath::Abs(xValueFinalEta[nPointFinalEta] - ptSysRelEta[i][counter2])> 0.001) counter2++;
+                    if (counter2 < 400){
                         cout << ptSysRelEta[i][counter2]<< "\t found it" << endl;
                         yErrorSysLowFinalEta[nPointFinalEta] = TMath::Abs(yErrorSysLowRelEta[i][counter2]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j]);
                         yErrorSysHighFinalEta[nPointFinalEta] = yErrorSysHighRelEta[i][counter2]/100*graphsCorrectedYieldShrunkEta[i]->GetY()[j];
@@ -5287,8 +5303,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                                                                   );
 
             // Prepare arrays for reading weighting numbers
-            Double_t xValuesReadEta[100];
-            Double_t weightsReadEta[12][100];
+            Double_t xValuesReadEta[400];
+            Double_t weightsReadEta[12][400];
             Int_t availableMeasEta[12]  = { -1, -1, -1, -1, -1, -1,
                                             -1, -1, -1, -1, -1, -1};
             Int_t nMeasSetEta           = nrOfTrigToBeCombEtaRed;
@@ -5329,7 +5345,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             fileWeightsEta.open(nameWeightsLogFileEta,ios_base::in);
             cout << "reading" << nameWeightsLogFileEta << endl;
 
-            while(!fileWeightsEta.eof() && nPtBinsReadEta < 100){
+            while(!fileWeightsEta.eof() && nPtBinsReadEta < 400){
                 TString garbage = "";
                 if (nPtBinsReadEta == 0){
                     fileWeightsEta >> garbage ;
@@ -6284,21 +6300,21 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             cout << "**************************************************************************************************" << endl;
 
             // prepare systematics arrays
-            Double_t xValueFinalEtaToPi0                    [100];
-            Double_t xErrorLowFinalEtaToPi0                 [100];
-            Double_t xErrorHighFinalEtaToPi0                [100];
-            Double_t yValueFinalEtaToPi0                    [100];
-            Double_t yErrorLowFinalEtaToPi0                 [100];
-            Double_t yErrorHighFinalEtaToPi0                [100];
+            Double_t xValueFinalEtaToPi0                    [400];
+            Double_t xErrorLowFinalEtaToPi0                 [400];
+            Double_t xErrorHighFinalEtaToPi0                [400];
+            Double_t yValueFinalEtaToPi0                    [400];
+            Double_t yErrorLowFinalEtaToPi0                 [400];
+            Double_t yErrorHighFinalEtaToPi0                [400];
             Int_t nPointFinalEtaToPi0                                         = 0;
 
-            Double_t yErrorSysLowFinalEtaToPi0              [100];
-            Double_t yErrorSysHighFinalEtaToPi0             [100];
+            Double_t yErrorSysLowFinalEtaToPi0              [400];
+            Double_t yErrorSysHighFinalEtaToPi0             [400];
 
-            Double_t ptSysRelEtaToPi0                       [MaxNumberOfFiles][100];
+            Double_t ptSysRelEtaToPi0                       [MaxNumberOfFiles][400];
             Int_t ptSysRelEtaToPi0NBins                     = 0;
-            Double_t yErrorSysLowRelEtaToPi0                [MaxNumberOfFiles][100];
-            Double_t yErrorSysHighRelEtaToPi0               [MaxNumberOfFiles][100];
+            Double_t yErrorSysLowRelEtaToPi0                [MaxNumberOfFiles][400];
+            Double_t yErrorSysHighRelEtaToPi0               [MaxNumberOfFiles][400];
             Bool_t   sysAvailEtaToPi0                       [MaxNumberOfFiles];
 
             Int_t numberBinsSysAvailSingleEtaToPi0          [MaxNumberOfFiles];
@@ -6353,7 +6369,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     fileSysErrEtaToPi0.open(sysFileEtaToPi0[i].Data(),ios_base::in);
                     cout << sysFileEtaToPi0[i].Data() << endl;
                     Int_t counter = 0;
-                    while(!fileSysErrEtaToPi0.eof() && counter < 100){
+                    while(!fileSysErrEtaToPi0.eof() && counter < 400){
                         Double_t garbage = 0;
                         fileSysErrEtaToPi0 >>ptSysRelEtaToPi0[i][counter] >> yErrorSysLowRelEtaToPi0[i][counter] >> yErrorSysHighRelEtaToPi0[i][counter]>>    garbage >> garbage;
                         cout << counter << "\t"<< ptSysRelEtaToPi0[i][counter]<< "\t"  << yErrorSysLowRelEtaToPi0[i][counter] << "\t"  <<yErrorSysHighRelEtaToPi0[i][counter] << "\t"  << endl;;
@@ -6382,11 +6398,11 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                           counter = 0;
                           string line;
                           Int_t counterColumn = 0;
-                          while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 100) {
+                          while (getline(fileSysErrDetailedEtaToPi0, line) && counter < 400) {
                               istringstream ss(line);
                               TString temp="";
                               counterColumn = 0;
-                              while(ss && counterColumn < 100){
+                              while(ss && counterColumn < 400){
                                   ss >> temp;
                                   if( !(counter==0 && temp.CompareTo("bin")==0) && !temp.IsNull()){
                                   ptSysDetail[i][counter].push_back(temp);
@@ -6473,9 +6489,9 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 for (Int_t j = 0; j< graphsEtaToPi0SysRemoved0[i]->GetN(); j++){
                     if (sysAvailEtaToPi0[i]){
                         Int_t counter2 = 0;
-                        while(counter2 < 100 && TMath::Abs(graphsEtaToPi0SysRemoved0[i]->GetX()[j] - ptSysRelEtaToPi0[i][counter2])> 0.001) counter2++;
+                        while(counter2 < 400 && TMath::Abs(graphsEtaToPi0SysRemoved0[i]->GetX()[j] - ptSysRelEtaToPi0[i][counter2])> 0.001) counter2++;
                         cout << "counter: " << counter2 << ", NBins read: " << ptSysRelEtaToPi0NBins << endl;
-                        if (counter2 < 100 && counter2 < ptSysRelEtaToPi0NBins){
+                        if (counter2 < 400 && counter2 < ptSysRelEtaToPi0NBins){
                             cout << "counter: " << counter2 << ", " << ptSysRelEtaToPi0[i][counter2]<< "\t found it" << endl;
                             Double_t yErrorSysLowDummy  = TMath::Abs(yErrorSysLowRelEtaToPi0[i][counter2]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j]);
                             Double_t yErrorSysHighDummy = yErrorSysHighRelEtaToPi0[i][counter2]/100*graphsEtaToPi0SysRemoved0[i]->GetY()[j];
@@ -6539,8 +6555,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                     yErrorLowFinalEtaToPi0[nPointFinalEtaToPi0]     = graphsEtaToPi0Shrunk[i]->GetEYlow()[j];
                     if (sysAvailEtaToPi0[i]){
                         Int_t counter = 0;
-                        while(counter < 100 && TMath::Abs(xValueFinalEtaToPi0[nPointFinalEtaToPi0] - ptSysRelEtaToPi0[i][counter])> 0.001) counter++;
-                        if (counter < 100){
+                        while(counter < 400 && TMath::Abs(xValueFinalEtaToPi0[nPointFinalEtaToPi0] - ptSysRelEtaToPi0[i][counter])> 0.001) counter++;
+                        if (counter < 400){
                             cout << ptSysRelEtaToPi0[i][counter]<< "\t found it" << endl;
                             yErrorSysLowFinalEtaToPi0[nPointFinalEtaToPi0] = TMath::Abs(yErrorSysLowRelEtaToPi0[i][counter]/100*graphsEtaToPi0Shrunk[i]->GetY()[j]);
                             yErrorSysHighFinalEtaToPi0[nPointFinalEtaToPi0] = yErrorSysHighRelEtaToPi0[i][counter]/100*graphsEtaToPi0Shrunk[i]->GetY()[j];
@@ -6606,8 +6622,8 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                 ifstream fileWeightsEtaToPi0;
                 fileWeightsEtaToPi0.open(nameWeightsLogFileEtaToPi0,ios_base::in);
                 cout << "reading" << nameWeightsLogFileEtaToPi0 << endl;
-                Double_t xValuesReadEtaToPi0[100];
-                Double_t weightsReadEtaToPi0[12][100];
+                Double_t xValuesReadEtaToPi0[400];
+                Double_t weightsReadEtaToPi0[12][400];
                 Int_t availableMeasEtaToPi0[12]     = { -1, -1, -1, -1, -1, -1,
                                                         -1, -1, -1, -1, -1, -1};
                 Int_t nMeasSetEtaToPi0              = numberOfTrigg;
@@ -6642,7 +6658,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
                                                 GetDefaultTriggerMarkerStyleName(nameTriggerWeighted[11], 0)
                                                 };
 
-                while(!fileWeightsEtaToPi0.eof() && nPtBinsReadEtaToPi0 < 100){
+                while(!fileWeightsEtaToPi0.eof() && nPtBinsReadEtaToPi0 < 400){
                     TString garbage = "";
                     if (nPtBinsReadEtaToPi0 == 0){
                         fileWeightsEtaToPi0 >> garbage ;//>> availableMeas[0] >> availableMeas[1] >> availableMeas[2] >> availableMeas[3];

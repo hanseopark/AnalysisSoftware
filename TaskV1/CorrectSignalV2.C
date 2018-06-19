@@ -42,7 +42,6 @@
 #include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 #include "../CommonHeaders/FittingGammaConversion.h"
 #include "../CommonHeaders/ExtractSignalBinning.h"
-// #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 
 Bool_t kIsMC = kFALSE;
@@ -242,6 +241,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     } else {
         fDalitz         = "";
     }
+    TString date                = ReturnDateString();
+    TString prefix2             = "";
 
     // *******************************************************************************************
     // *********************** setting global variables ******************************************
@@ -249,8 +250,6 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TString outputDir           = Form("%s/%s/%s/%s/CorrectSignalV2%s",fCutSelection.Data(),optionEnergy.Data(),optionPeriod.Data(),suffix.Data(), fDalitz.Data());
     gSystem->Exec("mkdir -p "+outputDir);
 
-    TString date                = ReturnDateString();
-    TString prefix2             = "";
 
     // plot labeling
     TString textProcess         = ReturnMesonString (nameMeson);
@@ -588,6 +587,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     TH1D* histoRatioSecEffDivTrueEff[3][4]          = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
     TF1*  fithistoRatioSecEffDivTrueEff[3][4]       = {{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL},{NULL, NULL, NULL, NULL}};
 
+    cout << fCutSelection.Data() << "\t 1" << endl;
     Bool_t modifiedSecTrueEffi[3][4]                = {{kFALSE, kFALSE, kFALSE, kFALSE}, {kFALSE, kFALSE, kFALSE, kFALSE}, {kFALSE, kFALSE, kFALSE, kFALSE}};
     Int_t nEffHistSec                               = 0;
     for (Int_t j = 0; j< 4; j++){
@@ -3179,6 +3179,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     canvasCorrectedYield->Update();
     canvasCorrectedYield->SaveAs(Form("%s/%s_%s_CorrectedYieldNormalEff_%s.%s",outputDir.Data(), nameMeson.Data(), prefix2.Data(),  fCutSelection.Data(), suffix.Data()));
 
+    cout << fCutSelection.Data() << endl;
     //***********************************************************************************************
     //*************** Plot comparison to resonance feed down corrected yield ************************
     //***********************************************************************************************
@@ -3302,6 +3303,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     delete canvasCorrectedYield;
     delete legendYield3;
 
+    cout << fCutSelection.Data() << endl;
     //***********************************************************************************************
     //***************************  Secondary RAW Yield  *********************************************
     //***********************************************************************************************
@@ -3588,6 +3590,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         }
     }
 
+    cout << fCutSelection.Data() << endl;
     //***********************************************************************************************
     //***************************  correction for yield in mt bins **********************************
     //***********************************************************************************************
@@ -3596,8 +3599,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     //*************************************************************************************************
     //******************** Output of the systematic Error due to Signal extraction ********************
     //*************************************************************************************************
-    Double_t  binsXCenter[100];
-    Double_t  binsXWidth[100];
+    Double_t  binsXCenter[400];
+    Double_t  binsXWidth[400];
     binsXWidth[0]=       0.;
     for (Int_t i = 1; i < nBinsPt +1; i++){
         binsXCenter[i]  = histoCorrectedYieldTrue[0]->GetBinCenter(i);
@@ -3605,7 +3608,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     }
 
 
-    SysErrorConversion sysErr[6][100];
+    SysErrorConversion sysErr[6][400];
     for (Int_t k = 0; k < 6; k++){
         for (Int_t i = 1; i < nBinsPt +1; i++){
             if ( (mode == 9 || mode == 0 || mode == 1 || mode == 2) || (mode == 4 && nameMeson.CompareTo("Eta") && !optionEnergy.Contains("pPb_5.023TeV") ) ){
@@ -3618,19 +3621,19 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             }
         }
     }
-    Double_t differencesToStandard[6][100];
-    Double_t differencesToStandardErr[6][100];
-    Double_t relDifferencesToStandard[6][100];
-    Double_t relDifferencesToStandardErr[6][100];
+    Double_t differencesToStandard[6][400];
+    Double_t differencesToStandardErr[6][400];
+    Double_t relDifferencesToStandard[6][400];
+    Double_t relDifferencesToStandardErr[6][400];
 
-    Double_t largestDifferenceNeg[100];
-    Double_t largestDifferencePos[100];
-    Double_t largestDifferenceNegError[100];
-    Double_t largestDifferencePosError[100];
-    Double_t relLargestDifferenceNeg[100];
-    Double_t relLargestDifferencePos[100];
-    Double_t relLargestDifferenceNegError[100];
-    Double_t relLargestDifferencePosError[100];
+    Double_t largestDifferenceNeg[400];
+    Double_t largestDifferencePos[400];
+    Double_t largestDifferenceNegError[400];
+    Double_t largestDifferencePosError[400];
+    Double_t relLargestDifferenceNeg[400];
+    Double_t relLargestDifferencePos[400];
+    Double_t relLargestDifferenceNegError[400];
+    Double_t relLargestDifferencePosError[400];
 
     for (Int_t i = 1; i < nBinsPt +1; i++){
         largestDifferenceNeg[i]         = 0;
@@ -3762,42 +3765,52 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // Systematics from different show-bg option for DCA bg
     Double_t relBGEstimate[100];
     Double_t relBGEstimateError[100];
-    for (Int_t i = 1; i < nBinsPt +1; i++){
-        relBGEstimateError[i] = 0.;
-        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) >
-             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) &&
-             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) >
-             TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
-                    relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[1]->GetBinContent(i)) *100;
-        } else if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) >
-                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) &&
-                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) >
-                    TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
-                        relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[2]->GetBinContent(i)) *100;
-        } else {
-            relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
+    TGraphAsymmErrors* SystErrGraphBGEstimateOptions    = NULL;
+    TGraphAsymmErrors* SystErrGraphBGEstimateIterations = NULL;
+    if (kDCAFileDataExists){
+        // Systematics from different show-bg option for DCA bg
+        Double_t relBGEstimate[400];
+        Double_t relBGEstimateError[400];
+        for (Int_t i = 1; i < nBinsPt +1; i++){
+            relBGEstimateError[i] = 0.;
+            if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) >
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) &&
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) >
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))){
+                relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[1]->GetBinContent(i)) *100;
+            } else if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) >
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[1]->GetBinContent(i)) &&
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[2]->GetBinContent(i)) >
+                TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateA->GetBinContent(i))) {
+                relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[2]->GetBinContent(i)) *100;
+            } else {
+                relBGEstimate[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateA->GetBinContent(i)) *100;
+            }
         }
-    }
-    TGraphAsymmErrors* SystErrGraphBGEstimateOptions = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate, binsXWidth, binsXWidth, relBGEstimateError, relBGEstimateError);
+        SystErrGraphBGEstimateOptions = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate, binsXWidth, binsXWidth, relBGEstimateError, relBGEstimateError);
 
-    // Systematics from different iterations for DCA bg
-    Double_t relBGEstimate2[100];
-    Double_t relBGEstimateError2[100];
-    for (Int_t i = 1; i < nBinsPt +1; i++){
-        relBGEstimateError2[i] = 0.;
-        if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) ){
-            relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[3]->GetBinContent(i)) *100;
-        } else {
-            relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[4]->GetBinContent(i)) *100;
+        // Systematics from different iterations for DCA bg
+        Double_t relBGEstimate2[400];
+        Double_t relBGEstimateError2[400];
+        for (Int_t i = 1; i < nBinsPt +1; i++){
+            relBGEstimateError2[i] = 0.;
+            if ( TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[3]->GetBinContent(i)) > TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)-histoBGEstimateCat[4]->GetBinContent(i)) ){
+                relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[3]->GetBinContent(i)) *100;
+            } else {
+                relBGEstimate2[i] = TMath::Abs(histoBGEstimateCat[0]->GetBinContent(i)- histoBGEstimateCat[4]->GetBinContent(i)) *100;
+            }
         }
+        SystErrGraphBGEstimateIterations = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate2, binsXWidth, binsXWidth, relBGEstimateError2, relBGEstimateError2);
     }
-    TGraphAsymmErrors* SystErrGraphBGEstimateIterations = new TGraphAsymmErrors(nBinsPt+1, binsXCenter, relBGEstimate2, binsXWidth, binsXWidth, relBGEstimateError2, relBGEstimateError2);
-
     // ********************************************************************************************************************************
     // ****************************** Write file with corrections only ****************************************************************
     // ********************************************************************************************************************************
-    const char* nameOutput2 = Form("%s/%s/%s_%s_GammaConv_OnlyCorrectionFactor%s_%s.root",fCutSelection.Data(),optionEnergy.Data(),nameMeson.Data(),prefix2.Data(),optionPeriod.Data(),fCutSelection.Data());
-    TFile* correctedOutput2 = new TFile(nameOutput2,"RECREATE");
+    TString nameOutput2         = Form("%s/%s/%s_%s_GammaConv_OnlyCorrectionFactor%s_%s.root", fCutSelection.Data(), optionEnergy.Data(), nameMeson.Data(), prefix2.Data(), optionPeriod.Data(),
+                                       fCutSelection.Data());
+    TString nameOutput          = Form("%s/%s/%s_%s_GammaConvV1%sCorrection%s_%s.root", fCutSelection.Data(), optionEnergy.Data(), nameMeson.Data(), prefix2.Data(), fDalitz.Data(), optionPeriod.Data(),
+                                       fCutSelection.Data());
+    cout << fCutSelection.Data() << "\t"<<  nameOutput2.Data() << endl;
+    TFile* correctedOutput2 = new TFile(nameOutput2.Data(),"RECREATE");
         if (histoAcceptance)                histoAcceptance->Write();
         if (histoTrueEffiPt[0])             histoTrueEffiPt[0]->Write("TrueMesonEffiPt");
         if (histoCompleteCorr)              histoCompleteCorr->Write("EffiTimesAcceptanceTimesDeltaY");
@@ -3807,8 +3820,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     // ********************************************************************************************************************************
     // ****************************** Write file with all further needed histograms ***************************************************
     // ********************************************************************************************************************************
-    const char* nameOutput = Form("%s/%s/%s_%s_GammaConvV1%sCorrection%s_%s.root",fCutSelection.Data(),optionEnergy.Data(),nameMeson.Data(),prefix2.Data(),fDalitz.Data(),optionPeriod.Data(),fCutSelection.Data());
-    TFile* correctedOutput = new TFile(nameOutput,"RECREATE");
+    cout << nameOutput.Data() << endl;
+    TFile* correctedOutput = new TFile(nameOutput.Data(),"RECREATE");
 
         if (SystErrGraphPos)                    SystErrGraphPos->Write(Form("%s_SystErrorRelPos_YieldExtraction_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);
         if (SystErrGraphNeg)                    SystErrGraphNeg->Write(Form("%s_SystErrorRelNeg_YieldExtraction_%s",nameMeson.Data(),centralityString2.Data()),TObject::kOverwrite);

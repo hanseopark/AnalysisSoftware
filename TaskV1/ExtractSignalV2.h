@@ -766,11 +766,21 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
             fBGFitRangeLeft[0]          = 0.05;
             fBGFitRangeLeft[1]          = 0.08;
             if ( fEnergyFlag.CompareTo("8TeV") == 0 ){
-              if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
-                fBGFitRange[0] = 0.25;
-              } else if ( trigger.CompareTo("81")==0 || triggerSet == 2 ){
-                fBGFitRange[0] = 0.26;
-              }
+                if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
+                    fBGFitRange[0] = 0.25;
+                } else if ( trigger.CompareTo("81")==0 || triggerSet == 2 ){
+                    fBGFitRange[0] = 0.26;
+                }
+            } if ( fEnergyFlag.CompareTo("13TeV") == 0 ){
+                if( trigger.CompareTo("52") == 0 || triggerSet == 1 ){
+                    fBGFitRange[0] = 0.25;
+                } else if ( trigger.CompareTo("85")==0 || triggerSet == 3 ){
+                    fBGFitRange[0] = 0.26;
+                    fBGFitRange[1] = 0.31;
+                } else if ( trigger.CompareTo("83")==0 || triggerSet == 2 ){
+                    fBGFitRange[0] = 0.28;
+                    fBGFitRange[1] = 0.34;
+                }
             }
         } else if ( mode == 5) {                                // PHOS
             fBGFitRange[0]              = 0.19;

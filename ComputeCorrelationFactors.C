@@ -57,7 +57,9 @@ void ComputeCorrelationFactors(
                                     TString energy      = "",
                                     Int_t mode          = -1,
                                     TString suffix      = "eps",
-                                    Bool_t isStatCorr   = kFALSE
+                                    Bool_t isStatCorr   = kFALSE,
+                                    TString centrality  = "",
+                                    TString eventCut    = ""
                                    ){
 
     //---------------------------------------------------------------------------------------------------------------
@@ -92,16 +94,22 @@ void ComputeCorrelationFactors(
     else mesonPlot       = "sys. corr "+mesonPlot;
 
     TString dateForOutput           = ReturnDateStringForOutput();
-    TString fCollisionSystenWrite   = ReturnCollisionEnergyOutputString(energy);
+    TString fCollisionSystemWrite   = ReturnCollisionEnergyOutputString(energy);
+    TString fCollisionSystemAndCent = fCollisionSystemWrite;
+    TString centralityForOutput     = GetCentralityStringOutput(eventCut);
     TString collisionSystem         = ReturnFullCollisionsSystem(energy);
-    TString outputDir               = Form("%s/%s/ComputeCorrelationFactors_%s",suffix.Data(),dateForOutput.Data(), fCollisionSystenWrite.Data());
+    if (centrality.CompareTo("") != 0){
+        collisionSystem             = centrality+" "+collisionSystem;
+        fCollisionSystemAndCent       = centralityForOutput+"_"+fCollisionSystemWrite;
+    }
+    TString outputDir               = Form("%s/%s/ComputeCorrelationFactors_%s",suffix.Data(),dateForOutput.Data(), fCollisionSystemWrite.Data());
     TString detectionProcess        = ReturnFullTextReconstructionProcess(mode);
 
     fstream fLog;
-    fLog.open(Form("%s/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
+    fLog.open(Form("%s/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystemAndCent.Data(),modeOutput.Data()), ios::out);
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-    fLog << "Energy: " << fCollisionSystenWrite.Data() << endl;
-    fLog << collisionSystem.Data() << endl;
+    fLog << "Energy: " << fCollisionSystemAndCent.Data() << endl;
+    fLog <<  collisionSystem.Data() << endl;
     fLog << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
     cout << "creating outpur dir: " << outputDir.Data() << endl;
@@ -109,7 +117,7 @@ void ComputeCorrelationFactors(
     gSystem->Exec("mkdir -p "+outputDir+"/sys");
     gSystem->Exec("mkdir -p "+outputDir+"/corrFactors");
     gSystem->Exec("mkdir -p "+outputDir+"/corrPlotting");
-    gSystem->Exec(Form("cp %s %s/%s_%s_%s_mode%s.config", fileInput.Data(), outputDir.Data(), meson.Data(), combMode.Data(), fCollisionSystenWrite.Data(), modeOutput.Data()));
+    gSystem->Exec(Form("cp %s %s/%s_%s_%s_mode%s.config", fileInput.Data(), outputDir.Data(), meson.Data(), combMode.Data(), fCollisionSystemAndCent.Data(), modeOutput.Data()));
 
     cout << "running combination mode: " << combMode.Data() << endl;
     fLog << "running combination mode: " << combMode.Data() << endl;
@@ -267,13 +275,13 @@ void ComputeCorrelationFactors(
     TH2F * histo2DPi0Weights    = NULL;
     Double_t minCorrYaxis       = 0.45;
     Double_t maxCorrYaxis       = 1.05;
-    if(combMode.CompareTo("systems") == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !meson.Contains("Gamma")){
+    if(combMode.CompareTo("systems") == 0 && energy.Contains("pPb_5.023TeV")  && !meson.Contains("Gamma")){
         minCorrYaxis            = 0.0;
-    } else if(combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&  meson.Contains("Gamma") && !isStatCorr){
+    } else if(combMode.CompareTo("systems") == 0 && (energy.Contains("pPb_5.023TeV")  || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&  meson.Contains("Gamma") && !isStatCorr){
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.5;
         canvasWeights->SetLogy();
-    } else if(  combMode.CompareTo("systems") == 0 && (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&
+    } else if(  combMode.CompareTo("systems") == 0 && (energy.Contains("pPb_5.023TeV")  || energy.CompareTo("2.76TeV") == 0 || energy.CompareTo("8TeV") == 0) &&
                 ( meson.Contains("RGamma") ||  meson.Contains("IncGammaToPi0") && isStatCorr ) ){
         minCorrYaxis            = 0.005;
         maxCorrYaxis            = 1.05;
@@ -356,11 +364,20 @@ void ComputeCorrelationFactors(
 
     fstream fCorr;
     if (!isStatCorr)
-        fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
+        fCorr.open(Form("%s/corrFactors/%s_%s_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystemAndCent.Data(),modeOutput.Data()), ios::out);
     else
-        fCorr.open(Form("%s/corrFactors/%s_%s_Stat_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystenWrite.Data(),modeOutput.Data()), ios::out);
-    TFile *fOutput              = new TFile(Form("%s/%s.root",outputDir.Data(),fCollisionSystenWrite.Data()),"UPDATE");
+        fCorr.open(Form("%s/corrFactors/%s_%s_Stat_%s_mode%s.log",outputDir.Data(),meson.Data(),combMode.Data(),fCollisionSystemAndCent.Data(),modeOutput.Data()), ios::out);
+    TFile *fOutput              = new TFile(Form("%s/%s.root",outputDir.Data(),fCollisionSystemWrite.Data()),"UPDATE");
+    if (centrality.CompareTo("") != 0){
+        TDirectoryFile* directoryCentOut  = NULL;
+        directoryCentOut                  = (TDirectoryFile*)fOutput->Get(centralityForOutput.Data());
 
+        if (!directoryCentOut){
+            fOutput->mkdir(centralityForOutput.Data());
+            directoryCentOut              = (TDirectoryFile*)fOutput->Get(centralityForOutput.Data());
+        }
+        fOutput->cd(centralityForOutput.Data());
+    }
     // Calculate rho_AB for A = iMeasA and B = iMeasB
     for(Int_t iMeasA=0; iMeasA<nMeasTot; iMeasA++){
         for(Int_t iMeasB=0; iMeasB<nMeasTot; iMeasB++){
@@ -401,7 +418,7 @@ void ComputeCorrelationFactors(
             fCorr << tempCorr.Data() << endl;
 
             // create correlations histogram
-            TH1D* histoCorr         = new TH1D(Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),10000,0,100);
+            TH1F* histoCorr         = new TH1F(Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),Form("%s_%s_%s",modeOutput.Data(),meson.Data(),tempCorr.Data()),2000,-0.025,100-0.025);
             // set all bin 0 for correlations histogram
             for(Int_t iBin=1; iBin<histoCorr->GetNbinsX()+1; iBin++)
                 histoCorr->SetBinContent(iBin,0.);
@@ -533,9 +550,9 @@ void ComputeCorrelationFactors(
     DrawGammaLines(minPt,maxPt, 0.7, 0.7,0.1, kGray, 7);
 
     if (!isStatCorr)
-        canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),fCollisionSystenWrite.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
+        canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_%s_corrFactors.%s",outputDir.Data(),fCollisionSystemAndCent.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
     else
-        canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_Stat_%s_corrFactors.%s",outputDir.Data(),fCollisionSystenWrite.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
+        canvasWeights->SaveAs(Form("%s/corrPlotting/%s_%s_Stat_%s_corrFactors.%s",outputDir.Data(),fCollisionSystemAndCent.Data(),modeOutput.Data(),meson.Data(),suffix.Data()));
 
     if(plotErr>0){
         cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
