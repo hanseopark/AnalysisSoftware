@@ -1334,6 +1334,31 @@ elif [[ "$1" == *-mAddSig8TeVB* ]] ; then
         PARTLY=1
         MCFILE=0
     fi
+elif [[ "$1" == *-mJJ5TeVA* ]] ; then
+    MERGINGMC=1
+    DIRECTORY=$2
+    Suffix=$3
+    DataRootFile=$DIRECTORY/mergedMinBias/GammaConv_Data_A.root
+    MCRootFile=$DIRECTORY/mergedMinBias/GammaConv_MC_A.root
+    MCRootFileAddSig=$DIRECTORY/mergedAddSignal/GammaConv_MC_A.root
+    MCRootFileAddSigEta=$DIRECTORY/mergedAddSignal/GammaConv_MC_A.root
+    minPtMergePi0=7
+    minPtMergeEta=8
+    addedSig=2
+    if [ -f $DataRootFile ]; then
+        echo "The data file specified is $DataRootFile"
+        dataFileOK=1
+    else
+        echo "No data file specified, analysis can not be fullfiled."
+#    exit
+    fi
+    if [ -f $MCRootFile ]; then
+        echo "The MC file specified is $MCRootFile"
+    else
+        echo "No MC file specified, analysis will only made paritally, please be careful with the results."
+        PARTLY=1
+        MCFILE=0
+    fi
 elif [[ "$1" == *-mAddSigPbPbLHC13d2A* ]] ; then
     MERGINGMC=1
     DIRECTORY=$2

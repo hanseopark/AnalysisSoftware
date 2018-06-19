@@ -4276,6 +4276,8 @@ void FitSubtractedInvMassInPtBins(TH1D* fHistoMappingSignalInvMassPtBinSingle, D
                         mesonAmplitudeMin = mesonAmplitude*60./100.;
                         mesonAmplitudeMax = mesonAmplitude*105./100.;
                     }
+                    fMesonWidthRange[0]         = 0.001;
+                    fMesonWidthRange[1]         = 0.009;
                 }
             } else if (fMode == 2 || fMode == 13 ) {                // PCM-EMC, PCM-DMC
                 if( fEnergyFlag.CompareTo("8TeV") == 0 ){
