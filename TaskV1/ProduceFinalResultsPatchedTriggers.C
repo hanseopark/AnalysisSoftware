@@ -159,19 +159,19 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
       } else if (mode == 10){
-        maxPtGlobalCluster          = 70;
+        maxPtGlobalCluster          = 200;
       }
     } else if (optionEnergy.CompareTo("13TeV")==0){
         if(mode==2 || mode==4 || mode==0){
             maxPtGlobalCluster          = 100;
         } else if (mode == 10){
-            maxPtGlobalCluster          = 70;
+            maxPtGlobalCluster          = 200;
         }
     } else if (optionEnergy.CompareTo("pPb_8TeV")==0){
       if(mode==2 || mode==4){
         maxPtGlobalCluster          = 50;
       } else if (mode == 10){
-        maxPtGlobalCluster          = 70;
+        maxPtGlobalCluster          = 200;
       }
     }
 
@@ -1471,7 +1471,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     if (mode == 4){
         maxEffiPi0      = 8e-1;
     } else if (mode == 10){
-        maxEffiPi0      = 8e-1;
+        maxEffiPi0      = 20e-1;
         minEffiPi0      = 1e-2;
     } else if (mode == 2){
         if(optionEnergy.CompareTo("8TeV")==0)
@@ -3812,7 +3812,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
     Double_t minCorrYield       = 2e-10;
     Double_t maxCorrYield       = 1e0;
     if (mode == 10) {
-        minCorrYield            = 2e-12;
+        minCorrYield            = 2e-15;
         maxCorrYield            = 1e-3;
     } else if (mode == 0){
         minCorrYield            = 2e-9;
