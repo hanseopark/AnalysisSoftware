@@ -707,8 +707,8 @@
                                                         9.0,  9.5,  10,   10.5, 11,   11.5, 12.,  13.,  14.,  15.,
                                                         16.,  17.,  18.,  19.,  20.,  22.,  24.,  26.,  28.,  30.,
                                                         35,   40,   45,   50};
-    Int_t fNBinsCluster8TeVmEMCPt                   =  83;
-    Double_t fBinsCluster8TeVmEMCPt[84]             = { 0.0,  0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9,
+    Int_t fNBinsCluster8TeVmEMCPt                   =  93;
+    Double_t fBinsCluster8TeVmEMCPt[94]             = { 0.0,  0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9,
                                                         1.0,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9,
                                                         2.0,  2.2,  2.4,  2.6,  2.8,  3.0,  3.2,  3.4,  3.6,  3.8,
                                                         4.0,  4.2,  4.4,  4.6,  4.8,  5.0,  5.2,  5.4,  5.6,  5.8,
@@ -716,7 +716,8 @@
                                                         9.0,  9.5,  10,   10.5, 11,   11.5, 12.,  13.,  14.,  15.,
                                                         16.,  17.,  18.,  19.,  20.,  22.,  24.,  26.,  28.,  30.,
                                                         35,   40,   45,   50,   55,   60,   65,   70,   75,   80,
-                                                        85,   90,   95,   100 };
+                                                        85,   90,   95,   100,  110,  120,  130,  140,  150,  160,
+                                                        170,  180,  190,  200};
     Double_t fBinsDirGamma8TeVPt[25]                = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,
                                                         4.5, 5.0, 6.0, 7.0, 9.0, 12., 16., 20.};
@@ -3696,7 +3697,7 @@
                         binning[i] = fBinsPi08TeVPt[i];
                     }
                 } else if ( mode == 10 ){
-                    maxNBins = 55;
+                    maxNBins = 59;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi08TeVPtmEMC[i];
                     }
@@ -5489,9 +5490,9 @@
                         cout << "You have chosen to have more than 31 bins, this is not possible, it will be reduced to 31" << endl;
                         fNBinsPt        = 29;
                         }
-                    } else if (fNBinsPt > 57 && (modi == 10)){
-                        cout << "You have chosen to have more than 57 bins, this is not possible, it will be reduced to 57" << endl;
-                        fNBinsPt        = 57;
+                    } else if (fNBinsPt > 59 && (modi == 10)){
+                        cout << "You have chosen to have more than 59 bins, this is not possible, it will be reduced to 59" << endl;
+                        fNBinsPt        = 59;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
