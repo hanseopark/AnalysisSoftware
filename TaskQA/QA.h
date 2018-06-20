@@ -1847,18 +1847,18 @@ void PlotCutHistoReasons(TCanvas *canvas, Double_t leftMargin, Double_t rightMar
   }
 
   canvas->cd();
-  canvas->SetLeftMargin(leftMargin);
+  canvas->SetLeftMargin(leftMargin*1.4);
   canvas->SetRightMargin(rightMargin);
   canvas->SetTopMargin(topMargin);
   if(topMargin<0.06) canvas->SetTopMargin(0.06);
-  canvas->SetBottomMargin(bottomMargin);
+  canvas->SetBottomMargin(bottomMargin*1.4);
 
   Int_t nColumns=0;
   for(Int_t i=1; i<=src->GetNbinsX(); i++)
   {
     TString tempStr = src->GetXaxis()->GetBinLabel(i);
     TH1D* hist = (TH1D*) src->ProjectionY(Form("projectSrc_%i",i),i,i);
-    if(tempStr.CompareTo("") && tempStr.CompareTo("out") && hist->GetEntries()>0) nColumns++;
+    if(tempStr.CompareTo("") && hist->GetEntries()>0) nColumns++;
     delete hist;
   }
 
@@ -1873,7 +1873,7 @@ void PlotCutHistoReasons(TCanvas *canvas, Double_t leftMargin, Double_t rightMar
   for(Int_t i=1; i<=src->GetNbinsX(); i++)
   {
     TString tempStr = src->GetXaxis()->GetBinLabel(i);
-    if(tempStr.CompareTo("") && tempStr.CompareTo("out")){
+    if(tempStr.CompareTo("")){
       TH1D* hist = (TH1D*) src->ProjectionY(Form("projectSrc_%i",i),i,i);
       if(hist->GetEntries()<1.){
         delete hist;
@@ -2464,7 +2464,7 @@ void PlotHotCells(  CellQAObj* obj,
         return;
     // 2D - cell frequency based on 2D energy distribution with cut offs
     }else if(iSw==1){
-        TH2D* outHist2D = new TH2D("CellHotCells2D","", 100,0.00009,110, 9,0.2,1.1);
+        TH2D* outHist2D = new TH2D("CellHotCells2D","", 100,1e-6,110, 9,0.2,1.1);
         SetLogBinningXTH(outHist2D);
         if(XRange) outHist2D->GetXaxis()->SetRangeUser(XMin, XMax);
         if(YRange) outHist2D->GetYaxis()->SetRangeUser(YMin, YMax);

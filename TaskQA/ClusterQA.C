@@ -2099,11 +2099,19 @@ void ClusterQA(
                 SaveCanvas(canvas, Form("%s/CellEnergyVsSigma_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kFALSE, kFALSE, kTRUE);
 
                 // estimate hot cells from energy distribution
-                PlotHotCells(cellQA,1,nCaloCells,fHistCellEnergyVsCellID,
+                if(mode == 3){
+                  PlotHotCells(cellQA,1,nCaloCells,fHistCellEnergyVsCellID,
+                            "N_{Cell fired with Energy L to 30 GeV} / N_{Cell fired with Energy 0 to L GeV}",
+                            "Integration Limit 'L' (GeV)",
+                            1,1E-8,1,
+                            0,0,0,isMC,0.95);
+                }else{
+                  PlotHotCells(cellQA,1,nCaloCells,fHistCellEnergyVsCellID,
                             "N_{Cell fired with Energy L to 30 GeV} / N_{Cell fired with Energy 0 to L GeV}",
                             "Integration Limit 'L' (GeV)",
                             0,0,0,
                             0,0,0,isMC,0.95);
+                }
                 if(!isMC && doCellQA){
                     const Int_t dim2D= 9;
                     for(Int_t ii=0; ii<dim2D; ii++){
@@ -2115,7 +2123,7 @@ void ClusterQA(
                 PutProcessLabelAndEnergyOnPlot(0.87, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(), 42, 0.03, "", 1, 1.25, 31);
                 SaveCanvas(canvas, Form("%s/CellHotCells2D_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()), kTRUE, kFALSE, kTRUE);
 
-                if (mode==5 || mode == 3) canvas->SetRightMargin(rightMargin*3.);
+                if (mode==5 || mode == 4 || mode == 3) canvas->SetRightMargin(rightMargin*3.);
                 else canvas->SetRightMargin(rightMargin);
                 PlotHotCells(cellQA,0,nCaloCells,fHistCellTimeVsCellID,
                             "N_{Cell fired} / N_{Events}",
@@ -2187,7 +2195,7 @@ void ClusterQA(
                             0,0,0,
                             0,0,0,isMC,0.95);
                 if(!isMC && doCellQA){
-                    //line->DrawLine(cellQA->HotCellsTime1D[0],0,cellQA->HotCellsTime1D[0],10);
+                    line->DrawLine(cellQA->HotCellsTime1D[0],0,cellQA->HotCellsTime1D[0],10);
                     line->DrawLine(cellQA->HotCellsTime1D[1],0,cellQA->HotCellsTime1D[1],10);
                 }
                 PutProcessLabelAndEnergyOnPlot(0.95, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger[i].Data(),42, 0.03, "", 1, 1.25, 31);

@@ -376,8 +376,8 @@
                                                         8, 8, 8, 8, 8, 8, 10, 10, 8, 8, 8, 8};
     Double_t fBinsEta5TeV2017EMCPt[30]             = { 0., 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0,    3.2, 3.4, 3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 7.0,
                                                         8.0, 9.0, 10.0, 12.0, 14.0, 16.0, 20.0, 25.0, 30.0, 40.0};
-    Int_t fBinsEta5TeV2017EMCPtRebin[29]           = { 10, 10, 10, 8, 8, 5, 4, 4, 4, 4,        4, 4, 4, 4, 4, 4, 4, 8, 8, 8,
-                                                        8, 8, 8, 10, 16, 16, 16, 20, 20};
+    Int_t fBinsEta5TeV2017EMCPtRebin[29]           = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,        10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                                                        10, 10, 10, 10, 16, 16, 16, 20, 20};
     Double_t fBinsEta5TeVEMCPtTrigger1[30]          = { 0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 5.0, 6.0, 7.0, 8., 9., 10., 11., 12., 13.,
                                                         14., 15., 16., 17., 18., 20., 25., 30., 35.,40.};
@@ -2179,7 +2179,7 @@
                 if ( mode == 2 )
                     return 9;
                 if ( mode == 4 )
-                    return 24;
+                    return 55;
                 if ( mode == 12 )
                     return 12;
                 if ( mode == 13 )
@@ -2650,7 +2650,7 @@
                 if (mode == 2 )
                     return 8;
                 else if (mode == 4 || mode == 12 )
-                    return 9;
+                    return 22;
                 else
                     return 8;
             } else if (energy.CompareTo("7TeV") == 0) {
@@ -2975,8 +2975,11 @@
                         else            startPtBin = 2;
                     } else if ( mode == 2 || mode == 13 ){
                         startPtBin = 3;
+                    } else if ( mode == 3){
+                        startPtBin = 1;
                     } else if ( mode == 4){
-                        startPtBin = 3;
+                      if (specialTrigg == 2) startPtBin = 49;
+                      else startPtBin = 7;
                     } else if ( mode == 10){
                         startPtBin = 27;
                     } else if ( mode == 12){
@@ -3246,7 +3249,8 @@
                   } else if ( mode == 2 ){
                       startPtBin = 1;
                   } else if ( mode == 4 ){
-                      startPtBin = 1;
+                    if (specialTrigg == 2) startPtBin = 16;
+                    else startPtBin = 6;
                   } else if ( mode == 13 ){
                       startPtBin = 1;
                   } else
@@ -6280,8 +6284,12 @@
                                 fNRebin[i] = fBinsPi0EtaBinning5TeVPCMEMCPtRebin[i];
                             } else if( modi == 13 && energy.Contains("2017")){
                                 fNRebin[i] = fBinsEta5TeV2017PCMDCalPtRebin[i];
-                            } else if ( modi == 4 && (specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3) ){
-                              fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebinEMCTrigger1[i];
+                            } else if ( modi == 4 ){
+                              if (specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3){
+                                fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebinEMCTrigger1[i];
+                              }else{
+                                fNRebin[i]  = fBinsEta5TeV2017EMCPtRebin[i];
+                              }
                             } else {
                               fNRebin[i]  = fBinsPi0EtaBinning5TeVPtRebin[i];
                             }

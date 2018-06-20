@@ -831,11 +831,19 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 DrawGammaSetMarker(histoWidthMeson[i], 20, 1., color[0], color[0]);
-                DrawAutoGammaMesonHistos( histoWidthMeson[i],
+                if(mode == 4){
+                  DrawAutoGammaMesonHistos( histoWidthMeson[i],
+                                        "", "#it{p}_{T} (GeV/#it{c})", Form("%s width",textMeson.Data()),
+                                        kFALSE, 0., 1e-4, kTRUE,
+                                        kTRUE, 0.0, 0.20,
+                                        kFALSE, 0., 10.);
+                }else{
+                  DrawAutoGammaMesonHistos( histoWidthMeson[i],
                                         "", "#it{p}_{T} (GeV/#it{c})", Form("%s width",textMeson.Data()),
                                         kFALSE, 0., 1e-4, kTRUE,
                                         kTRUE, 0.0, 0.050,
                                         kFALSE, 0., 10.);
+                }
                 legendWidth->AddEntry(histoWidthMeson[i],Form("standard: %s",cutStringsName[i].Data()));
             }
             else {
