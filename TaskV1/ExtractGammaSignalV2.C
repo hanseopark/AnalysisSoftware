@@ -536,7 +536,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             fHistoGammaMCConvPt                                                 = (TH1D*)MCContainer->FindObject("MC_ConvGamma_Pt");
             fHistoGammaMCConvPt->Sumw2();
             fHistoGammaMCConvPtOrBin                                            = (TH1D*)fHistoGammaMCConvPt->Clone("MC_ConvGamma_Pt_OriginalBinning");
-            fHistoGammaMCConvPtOrBin->Scale(1./fHistoGammaMCConvPtOrBin->GetBinWidth(5));
+            DivideTH1ByBinWidth(fHistoGammaMCConvPtOrBin);
             RebinSpectrum(fHistoGammaMCConvPt);
 
             // generated secondary MC conv. gammas from K0s, K0l, Lambda and rest (mainly material interactions)
@@ -558,7 +558,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
             fHistoGammaMCAllInEMCAccPt                                          = (TH1D*)MCContainer->FindObject("MC_AllGammaEMCALAcc_Pt");
             fHistoGammaMCAllInEMCAccPt->Sumw2();
             fHistoGammaMCAllInEMCAccPtOrBin                                     = (TH1D*)fHistoGammaMCAllInEMCAccPt->Clone("MC_AllGammaEMCALAcc_OriginalBinning_MCPt");
-            fHistoGammaMCAllInEMCAccPtOrBin->Scale(1./fHistoGammaMCAllInEMCAccPtOrBin->GetBinWidth(5));
+            DivideTH1ByBinWidth(fHistoGammaMCAllInEMCAccPtOrBin);
             fHistoGammaMCAllInEMCAccPtOrBin->GetXaxis()->SetRangeUser(0.,25.);
             RebinSpectrum(fHistoGammaMCAllInEMCAccPt);
         }
@@ -567,7 +567,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         fHistoGammaMCAllPt                                                      = (TH1D*)MCContainer->FindObject("MC_AllGamma_Pt");
         fHistoGammaMCAllPt->Sumw2();
         fHistoGammaMCAllPtOrBin                                                 = (TH1D*)fHistoGammaMCAllPt->Clone("MC_AllGamma_OriginalBinning_MCPt");
-        fHistoGammaMCAllPtOrBin->Scale(1./fHistoGammaMCAllPtOrBin->GetBinWidth(5));
+        DivideTH1ByBinWidth(fHistoGammaMCAllPtOrBin);
         RebinSpectrum(fHistoGammaMCAllPt);
 
         // all generated secondary MC gammas from K0s, K0l, Lambda and rest (mainly material interactions)
@@ -615,7 +615,7 @@ void ExtractGammaSignalV2(      TString meson               = "",
         for(Int_t i = 0; i<7; i++){
             fHistoGammaMCDecayPt[i]                                             = (TH1D*)MCContainer->FindObject(Form("MC_DecayGamma%s_Pt",fDecays[i].Data()));
             fHistoGammaMCDecayPt[i]->Sumw2();
-            fHistoGammaMCDecayPt[i]->Scale(1./fHistoGammaMCDecayPt[i]->GetBinWidth(5));
+            DivideTH1ByBinWidth(fHistoGammaMCDecayPt[i]);
         }
 
         // container with histos for validated reconstructed photons
@@ -2582,7 +2582,7 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEff->Divide(fHistoGammaTruePrimaryConvPt,fHistoGammaMCConvPt,1,1,"B");
 
         TH1D* fHistoGammaTruePrimaryConvPtOrBinTemp                 = (TH1D*)fHistoGammaTruePrimaryConvPtOrBin->Clone("fHistoGammaTruePrimaryConvPtOrBinTemp");
-        fHistoGammaTruePrimaryConvPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryConvPtOrBinTemp->GetBinWidth(5));
+        DivideTH1ByBinWidth(fHistoGammaTruePrimaryConvPtOrBinTemp);
         fHistoGammaMCPrimaryRecoEffOrBin                            = (TH1D*)fHistoGammaTruePrimaryConvPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffOrBin->Divide(fHistoGammaMCPrimaryRecoEffOrBin,fHistoGammaMCConvPtOrBin,1,1,"B");
@@ -2592,7 +2592,7 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryConvMCPt,fHistoGammaMCConvPt,1,1,"B");
 
         TH1D* fHistoGammaTruePrimaryConvMCPtOrBinTemp               = (TH1D*)fHistoGammaTruePrimaryConvMCPtOrBin->Clone("fHistoGammaTruePrimaryConvMCPtOrBinTemp");
-        fHistoGammaTruePrimaryConvMCPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryConvMCPtOrBinTemp->GetBinWidth(5));
+        DivideTH1ByBinWidth(fHistoGammaTruePrimaryConvMCPtOrBinTemp);
         fHistoGammaMCPrimaryRecoEffMCPtOrBin                        = (TH1D*)fHistoGammaTruePrimaryConvMCPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Divide(fHistoGammaMCPrimaryRecoEffMCPtOrBin,fHistoGammaMCConvPtOrBin,1,1,"B");
@@ -2806,7 +2806,7 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEff->Divide(fHistoGammaTruePrimaryCaloPt,fHistoGammaMCAllPt,1,1,"B");
 
         TH1D* fHistoGammaTruePrimaryCaloPtOrBinTemp                 = (TH1D*)fHistoGammaTruePrimaryCaloPtOrBin->Clone("fHistoGammaTruePrimaryCaloPtOrBinTemp");
-        fHistoGammaTruePrimaryCaloPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryCaloPtOrBinTemp->GetBinWidth(5));
+        DivideTH1ByBinWidth(fHistoGammaTruePrimaryCaloPtOrBinTemp);
         fHistoGammaMCPrimaryRecoEffOrBin                            = (TH1D*)fHistoGammaTruePrimaryCaloPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffOrBin->Divide(fHistoGammaMCPrimaryRecoEffOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");
@@ -2816,7 +2816,7 @@ void CalculateGammaCorrection(){
         fHistoGammaMCPrimaryRecoEffMCPt->Divide(fHistoGammaTruePrimaryCaloMCPt,fHistoGammaMCAllPt,1,1,"B");
 
         TH1D* fHistoGammaTruePrimaryCaloMCPtOrBinTemp               = (TH1D*)fHistoGammaTruePrimaryCaloMCPtOrBin->Clone("fHistoGammaTruePrimaryCaloMCPtOrBinTemp");
-        fHistoGammaTruePrimaryCaloMCPtOrBinTemp->Scale(1./fHistoGammaTruePrimaryCaloMCPtOrBinTemp->GetBinWidth(5));
+        DivideTH1ByBinWidth(fHistoGammaTruePrimaryCaloMCPtOrBinTemp);
         fHistoGammaMCPrimaryRecoEffMCPtOrBin                        = (TH1D*)fHistoGammaTruePrimaryCaloMCPtOrBinTemp->Clone("GammaPrimaryRecoEff_Pt_OriginalBinning");
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Sumw2();
         fHistoGammaMCPrimaryRecoEffMCPtOrBin->Divide(fHistoGammaMCPrimaryRecoEffMCPtOrBin,fHistoGammaMCAllPtOrBin,1,1,"B");

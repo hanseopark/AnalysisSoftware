@@ -852,7 +852,7 @@ void  ProduceFinalResultsPatchedTriggers(   TString fileListNamePi0     = "trigg
             isV0AND         = 1;
         }
     }
-    if (optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("8TeV") == 0 ){
+    if (optionEnergy.CompareTo("5TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0 || optionEnergy.CompareTo("8TeV") == 0 ){
         isV0AND             = 1;
     }
     Double_t xSection       = ReturnCorrectXSection( optionEnergy, isV0AND);

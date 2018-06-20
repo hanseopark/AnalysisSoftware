@@ -334,6 +334,24 @@
     }
 
     //__________________________________________________________________________________________________________
+    void DivideTH1ByBinWidth(TH1 *histo){
+        histo->Sumw2();
+        for (Int_t i = 1; i < histo->GetNbinsX()+1; i++){
+            histo->SetBinContent(i,histo->GetBinContent(i)/histo->GetXaxis()->GetBinWidth(i));
+            histo->SetBinError(i,histo->GetBinError(i)/histo->GetXaxis()->GetBinWidth(i));
+        }
+    }
+    //__________________________________________________________________________________________________________
+    void DivideTH2ByBinWidth(TH2 *histo){
+        histo->Sumw2();
+        for (Int_t i = 1; i < histo->GetNbinsX()+1; i++){
+          for (Int_t j = 1; j < histo->GetNbinsY()+1; j++){
+              histo->SetBinContent(i,j,histo->GetBinContent(i,j)/histo->GetXaxis()->GetBinWidth(i)/histo->GetXaxis()->GetBinWidth(i));
+              histo->SetBinError(i,j,histo->GetBinError(i,j)/histo->GetXaxis()->GetBinWidth(i)/histo->GetXaxis()->GetBinWidth(i));
+          }
+        }
+    }
+    //__________________________________________________________________________________________________________
     void ConvGammaRebinWithBinCorrection(TH1 *histo, Int_t rebinFactor, Int_t bin = 3){
         histo->Sumw2();
         histo->Rebin(rebinFactor);
