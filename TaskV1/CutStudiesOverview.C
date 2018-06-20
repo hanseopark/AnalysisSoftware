@@ -828,22 +828,16 @@ void CutStudiesOverview(TString CombineCutsName                 = "CombineCuts.d
         padWidth->cd();
 
         TLegend* legendWidth = GetAndSetLegend2(0.27,0.02,0.35,0.02+1.15*0.032*NumberOfCuts, 1500*0.75*0.032);
+        Double_t maxWidthMesonPlot = 0.050;
+        if(mode == 4) maxWidthMesonPlot = 0.20;
         for(Int_t i = 0; i< NumberOfCuts; i++){
             if(i == 0){
                 DrawGammaSetMarker(histoWidthMeson[i], 20, 1., color[0], color[0]);
-                if(mode == 4){
-                  DrawAutoGammaMesonHistos( histoWidthMeson[i],
-                                        "", "#it{p}_{T} (GeV/#it{c})", Form("%s width",textMeson.Data()),
-                                        kFALSE, 0., 1e-4, kTRUE,
-                                        kTRUE, 0.0, 0.20,
-                                        kFALSE, 0., 10.);
-                }else{
-                  DrawAutoGammaMesonHistos( histoWidthMeson[i],
-                                        "", "#it{p}_{T} (GeV/#it{c})", Form("%s width",textMeson.Data()),
-                                        kFALSE, 0., 1e-4, kTRUE,
-                                        kTRUE, 0.0, 0.050,
-                                        kFALSE, 0., 10.);
-                }
+                DrawAutoGammaMesonHistos( histoWidthMeson[i],
+                                      "", "#it{p}_{T} (GeV/#it{c})", Form("%s width",textMeson.Data()),
+                                      kFALSE, 0., 1e-4, kTRUE,
+                                      kTRUE, 0.0, maxWidthMesonPlot,
+                                      kFALSE, 0., 10.);
                 legendWidth->AddEntry(histoWidthMeson[i],Form("standard: %s",cutStringsName[i].Data()));
             }
             else {
