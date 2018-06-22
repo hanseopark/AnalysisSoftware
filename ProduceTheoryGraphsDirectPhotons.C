@@ -898,7 +898,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         graphRatioNLOFragGammaDivTot8TeV->Fit(fitFragDivGammaDir8TeV,"QNRMEX0+");
         graphRatioNLOPromptGammaDivTot8TeV->Fit(fitPromptDivGammaDir8TeV,"QNRMEX0+");
         graphRatioNLOPromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV,"QNRMEX0+");
-        fitPromptDivFragGamma8TeV->SetRange(2,100);
+        fitPromptDivFragGamma8TeV->SetRange(15.,200.);
 
         // fitting prompt/frag ratio from pythia8
         graphpp8TeVPythia8_prompt->RemovePoint(0);
@@ -908,7 +908,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TF1* fitGammaFrag8TeV_Pythia8                   = FitObject("powPure","fitPythiacalcFragGamma8TeV","Gamma",graphpp8TeVPythia8_frag_onlyJJ,15.,100.,NULL,"QNRMEX0+");
         TF1* fitPromptDivFragGamma8TeV_Pythia8          = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV_Pythia8, fitGammaFrag8TeV_Pythia8, "ratioFitPythia8PromptDivFragGamma8TeV");
         graphRatioPythia8PromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV_Pythia8,"QNRMEX0+");
-        fitPromptDivFragGamma8TeV_Pythia8->SetRange(15.,100.);
+        fitPromptDivFragGamma8TeV_Pythia8->SetRange(15.,200.);
 
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
