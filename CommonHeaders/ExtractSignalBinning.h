@@ -944,6 +944,17 @@
                                                         17.5, 17.6, 17.7, 17.8, 17.9, 18.0, 18.2, 18.4, 18.6, 18.8, 19.0, 19.2, 19.4, 19.6, 19.8, 20.0, 20.5, 21.0, 22.5, 23.0,
                                                         24.0, 25.0};
 
+   // ---------------------------------------------------------
+   // mEMC 13 TeV - pi0
+   // ---------------------------------------------------------
+
+   Double_t fBinsPi013TeVPtmEMC[60]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
+                                                       2.2, 2.4, 2.6, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0,
+                                                       6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 11.0, 12.0,
+                                                       13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 22.0, 24.0,
+                                                       26.0, 28.0, 30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 45.0, 50.0,
+                                                       55.0, 60.0, 65.0, 70.0, 80.0, 100.0, 125.0, 150.0, 175.0, 200.0};
+
     // ---------------------------------------------------------
     // minimum bias trigger (INT7) - eta
     // ---------------------------------------------------------
@@ -3038,7 +3049,7 @@
                 } else if ( mode == 5){
                     startPtBin     = 1;
                 } else if ( mode == 10){
-                    startPtBin     = 1;
+                    startPtBin     = 28;
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
@@ -3761,6 +3772,9 @@
                         binningMax  = (Int_t) (sizeof(fBinsPi013TeVEMCTrigCombPt)/sizeof(fBinsPi013TeVEMCTrigCombPt[0])) - 1;
                         maxNBins    = 201;
                     }
+                } else if ( mode == 10 ){
+                    maxNBins = 59;
+                    binningMax = maxNBins;
                 } else {
                     if (SpecialTrigger == 0){
                         maxNBins= 99;   //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
@@ -3804,6 +3818,8 @@
                         } else {
                             binning[i]      = fBinsPi013TeVEMCTrigCombPt[i];
                         }
+                    } else if (mode==10){
+                        binning[i] = fBinsPi013TeVPtmEMC[i];
                     } else {
                         binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
                     }
@@ -5552,7 +5568,6 @@
                             }
                         }
                     }
-
                     nIterBGFit                  = 7;
                     fMaxYFracBGOverIntHist      = 60;
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
