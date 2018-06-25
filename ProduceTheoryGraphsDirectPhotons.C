@@ -726,6 +726,25 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         TFile *file8TeVPythia8_onlyJJ = new TFile("ExternalInput/Theory/Pythia/pythia8_8TeV_compilation_poppenborg_onlyJJ.root"); // uses only JJ processes
         TGraphAsymmErrors* graphpp8TeVPythia8_prompt      = (TGraphAsymmErrors*)file8TeVPythia8->Get("gae_222_photons_etaEMCal");
         TGraphAsymmErrors* graphpp8TeVPythia8_frag_onlyJJ = (TGraphAsymmErrors*)file8TeVPythia8_onlyJJ->Get("gae_shower_photons_etaEMCal");
+        // adding tgraphs to get direct = frag + prompt
+        TGraphAsymmErrors* graphpp8TeVPythia8_direct = 0x0;
+        if(graphpp8TeVPythia8_prompt->GetN() == graphpp8TeVPythia8_frag_onlyJJ->GetN()){ // make sure both graphs are compatible for adding
+            Int_t nPoints_temp = graphpp8TeVPythia8_prompt->GetN();
+            Double_t xVal_prompt[500];
+            Double_t yVal_prompt[500];
+            Double_t xVal_frag[500];
+            Double_t yVal_frag[500];
+            Double_t yVal_dir[500];
+            for(Int_t i=0; i < nPoints_temp; i++){
+                graphpp8TeVPythia8_prompt->GetPoint(i,xVal_prompt[i],yVal_prompt[i]);
+                graphpp8TeVPythia8_frag_onlyJJ->GetPoint(i,xVal_frag[i],yVal_frag[i]);
+                yVal_dir[i] = yVal_prompt[i] + yVal_frag[i];
+            }
+            graphpp8TeVPythia8_direct = new TGraphAsymmErrors(nPoints_temp, xVal_prompt, yVal_dir);
+        } else {
+            printf("Skipping the generation of 8 TeV direct photon plot, because numbers of data points of prompt and frag graph do not match...\n");
+            delete graphpp8TeVPythia8_direct;
+        }
 
         Int_t nlinesNLOTwo8TeV              = 0;
         Int_t nlinesNLOOne8TeV              = 0;
@@ -898,22 +917,36 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
         graphRatioNLOFragGammaDivTot8TeV->Fit(fitFragDivGammaDir8TeV,"QNRMEX0+");
         graphRatioNLOPromptGammaDivTot8TeV->Fit(fitPromptDivGammaDir8TeV,"QNRMEX0+");
         graphRatioNLOPromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV,"QNRMEX0+");
-        fitPromptDivFragGamma8TeV->SetRange(15.,200.);
+        fitPromptDivFragGamma8TeV->SetRange(2.,100.);
 
         // fitting prompt/frag ratio from pythia8
         graphpp8TeVPythia8_prompt->RemovePoint(0);
         graphpp8TeVPythia8_frag_onlyJJ->RemovePoint(0);
-        TGraphAsymmErrors* graphRatioPythia8PromptGammaDivFrag8TeV   = CalculateAsymGraphRatioToGraph(graphpp8TeVPythia8_prompt, graphpp8TeVPythia8_frag_onlyJJ);
+        graphpp8TeVPythia8_direct->RemovePoint(0);
+        TGraphAsymmErrors* graphRatioPythia8FragGammaDivTot8TeV    = CalculateAsymGraphRatioToGraph(graphpp8TeVPythia8_frag_onlyJJ, graphpp8TeVPythia8_direct);
+        TGraphAsymmErrors* graphRatioPythia8PromptGammaDivTot8TeV  = CalculateAsymGraphRatioToGraph(graphpp8TeVPythia8_prompt, graphpp8TeVPythia8_direct);
+        TGraphAsymmErrors* graphRatioPythia8PromptGammaDivFrag8TeV = CalculateAsymGraphRatioToGraph(graphpp8TeVPythia8_prompt, graphpp8TeVPythia8_frag_onlyJJ);
         TF1* fitGammaPrompt8TeV_Pythia8                 = FitObject("powPure","fitPythiacalcPromptGamma8TeV","Gamma",graphpp8TeVPythia8_prompt,15.,100.,NULL,"QNRMEX0+");
         TF1* fitGammaFrag8TeV_Pythia8                   = FitObject("powPure","fitPythiacalcFragGamma8TeV","Gamma",graphpp8TeVPythia8_frag_onlyJJ,15.,100.,NULL,"QNRMEX0+");
-        TF1* fitPromptDivFragGamma8TeV_Pythia8          = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV_Pythia8, fitGammaFrag8TeV_Pythia8, "ratioFitPythia8PromptDivFragGamma8TeV");
+        TF1* fitGammaDirect8TeV_Pythia8                 = FitObject("powPure","fitPythiacalcDirectGamma8TeV","Gamma",graphpp8TeVPythia8_direct,15.,100.,NULL,"QNRMEX0+");
+        TF1* fitFragDivGammaDir8TeV_Pythia8     = CalculateRatioOfTwoFunctions (fitGammaFrag8TeV_Pythia8, fitGammaDirect8TeV_Pythia8, "ratioFitPythia8FragDivDirGamma8TeV");
+        TF1* fitPromptDivGammaDir8TeV_Pythia8   = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV_Pythia8, fitGammaDirect8TeV_Pythia8, "ratioFitPythia8PromptDivDirGamma8TeV");
+        TF1* fitPromptDivFragGamma8TeV_Pythia8  = CalculateRatioOfTwoFunctions (fitGammaPrompt8TeV_Pythia8, fitGammaFrag8TeV_Pythia8, "ratioFitPythia8PromptDivFragGamma8TeV");
+
+        graphRatioPythia8FragGammaDivTot8TeV->Draw();
+
+        graphRatioPythia8FragGammaDivTot8TeV->Fit(fitFragDivGammaDir8TeV_Pythia8,"QNRMEX0+");
+        graphRatioPythia8PromptGammaDivTot8TeV->Fit(fitPromptDivGammaDir8TeV_Pythia8,"QNRMEX0+");
         graphRatioPythia8PromptGammaDivFrag8TeV->Fit(fitPromptDivFragGamma8TeV_Pythia8,"QNRMEX0+");
+        fitFragDivGammaDir8TeV_Pythia8->SetRange(15.,200.);
+        fitPromptDivGammaDir8TeV_Pythia8->SetRange(15.,200.);
         fitPromptDivFragGamma8TeV_Pythia8->SetRange(15.,200.);
 
         // -----------------------------------------------------------------------------------------------------------------------
         // ----------------------------- plotting fragmentation and prompt to total direct ---------------------------------------
         // -----------------------------------------------------------------------------------------------------------------------
 
+        // NLO
         canvasRatioDirGammaCalc->cd();
         histo2DRatioGammaCalc->Draw("copy");
 
@@ -936,7 +969,28 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
 
         canvasRatioDirGammaCalc->SaveAs(Form("%s/GammaNLOCalc_Separation_PP8TeV.%s",outputDir.Data(),suffix.Data()));
 
+        // do the same for the Pythia8 calculation
+        canvasRatioDirGammaCalc->Clear();
+        canvasRatioDirGammaCalc->cd();
+        canvasRatioDirGammaCalc->SetLogx(0);
+        TH2F *histo2DRatioGammaCalc_2 = new TH2F("histo2DRatioGammaCalc_2","histo2DRatioGammaCalc_2",11000,10.01,199.99,1000,0.,1.25);
+        SetStyleHistoTH2ForGraphs(histo2DRatioGammaCalc_2, "#it{p}_{T} (GeV/#it{c})","#frac{#gamma_{source}}{#gamma_{dir}}",0.035,0.04, 0.035,0.04, 1.,1.,510,505);
+        histo2DRatioGammaCalc_2->Draw("copy");
 
+            DrawGammaSetMarkerTGraphAsym(graphRatioPythia8FragGammaDivTot8TeV, 0, 0, colorFrag, colorFrag, 1, kTRUE, colorFrag);
+            graphRatioPythia8FragGammaDivTot8TeV->Draw("3,same");
+
+            DrawGammaSetMarkerTGraphAsym(graphRatioPythia8PromptGammaDivTot8TeV, 0, 0, colorPrompt, colorPrompt, 1, kTRUE, colorPrompt);
+            graphRatioPythia8PromptGammaDivTot8TeV->Draw("3,same");
+
+            DrawGammaLines(10., 200. , 1., 1.,0.1, kGray+2);
+
+            legendRatioGammaCalc->Draw();
+
+            labelRatioGammaCalc8TeV->Draw();
+            labelRatioGamma->Draw();
+
+            canvasRatioDirGammaCalc->SaveAs(Form("%s/GammaPythia8Calc_Separation_PP8TeV.%s",outputDir.Data(),suffix.Data()));
 
         // **********************************************************************************************************************
         // *********************************** direct photon calculations for 13TeV *********************************************
