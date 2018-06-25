@@ -829,6 +829,7 @@ void ProduceTheoryGraphsDirectPhotons(  Bool_t runPP    = kTRUE,
             cout << ptNLOPhotonHalf8TeV[i] << "\t" << muHalfDF8TeV[i] << "\t" << muOneDF8TeV[i] << "\t" << muTwoDF8TeV[i] << endl;
             gammaValue8TeV[i]               = muOneDF8TeV[i];
             if (muHalfDF8TeV[i] > muOneDF8TeV[i]){
+//            if (muHalfDF8TeV[i] > muOneDF8TGraph* TeV[i]){
                 gammaErrUp8TeV[i]           = muHalfDF8TeV[i]-muOneDF8TeV[i];
                 if (muOneDF8TeV[i]-muTwoDF8TeV[i] < 0){
                     gammaErrDown8TeV[i]     = 0;
