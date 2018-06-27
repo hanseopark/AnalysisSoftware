@@ -3053,6 +3053,10 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
+            } else if (energy.CompareTo("13TeVLowB") == 0){
+                if ( mode == 0 ){
+                    startPtBin = 1;
+                }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
@@ -3332,6 +3336,10 @@
                     startPtBin     = 9;
                 } else if (mode == 45){
                     startPtBin     = 7;
+                }
+            } else if (energy.CompareTo("13TeVLowB") == 0){
+                if (mode == 0){
+                    startPtBin = 1;
                 }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if ( mode == 0 ){
@@ -3828,6 +3836,13 @@
                     cout << binning[i] << ", ";
                 }
                 cout << endl;
+            } else if (energy.CompareTo("13TeVLowB") == 0){
+                if ( mode == 0 ){
+                    maxNBins = 17;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsPi013TeVLowBPt[i];
+                    }
+                }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if (mode == 0 ){ // PCM
                     maxNBins    = 31;
@@ -4475,6 +4490,13 @@
                     maxNBins    = 17;
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero13TevPtPCM[i];
+                    }
+                }
+            } else if (energy.CompareTo("13TeVLowB") == 0){
+                if ( mode == 0 ){
+                    maxNBins = 4;
+                    for(Int_t i = 0; i < maxNBins+1; i++){
+                        binning[i] = fBinsEta13TeVLowBPt[i];
                     }
                 }
             } else if (energy.CompareTo("8TeV") == 0){
@@ -5658,19 +5680,27 @@
                         fBinsPtDCAzDist[i] = fBinsDirGamma13TeVLowBPtDCAzDist[i];
                     }
                 } else {
-                    fStartPtBin         = 1;
-                    if (fNBinsPt < 17)
-                        fColumn         = 4;
-                    if (fNBinsPt > 17) {
-                        cout << "You have chosen to have more than 17 bins, this is not possible, it will be reduced to 17" << endl;
-                        fNBinsPt        = 17;
-                    }
-                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-                    for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                        fBinsPt[i]      = fBinsPi013TeVLowBPt[i];
-                        if (i < fNBinsPt+1)
-                            fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
-                    }
+                  fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
+                  Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                  if (fNBinsPt > maxPtBinTheo) {
+                      cout << "**************************************************************************************************************************************" << endl;
+                      cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                      cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
+                      cout << "**************************************************************************************************************************************" << endl;
+                      fNBinsPt    = maxPtBinTheo;
+                  }
+                  GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+
+                    for (Int_t i = 0; i < fNBinsPt; i++) {
+                        if ( modi == 0 ) {
+                                fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
+                            }
+                        }
+                    nIterBGFit                  = 8;
+                    fMaxYFracBGOverIntHist      = 70;
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
                 }
             //*********************************************************************************************
             //********************************** Pi0 for pPb 5.023TeV**************************************
@@ -6626,21 +6656,27 @@
             // ********************************* Eta for 13TeV low B field ********************************
             //*********************************************************************************************
             } else if (energy.CompareTo("13TeVLowB") == 0) {
-                fStartPtBin         = 1;
-                if (fNBinsPt > 4) {
-                    cout << "You have chosen to have more than 4 bins for Eta, this is not possible, it will be reduced to 4" << endl;
-                    fNBinsPt        = 4;
+                fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
+                Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
+                if (fNBinsPt > maxPtBinTheo) {
+                    cout << "**************************************************************************************************************************************" << endl;
+                    cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                    cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
+                    cout << "**************************************************************************************************************************************" << endl;
+                    fNBinsPt    = maxPtBinTheo;
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
-                for (Int_t i = 0; i < fNBinsPt+1; i++) {
-                    fBinsPt[i]      = fBinsEta13TeVLowBPt[i];
-                    if (setPi0.CompareTo("Eta") == 0){
-                        if (i < fNBinsPt+1) fNRebin[i]  = fBinsEta13TeVLowBPtRebin[i];
-                    } else {
-                        if (i < fNBinsPt+1) fNRebin[i]  = fBinsPi0Eta13TeVLowBPtRebin[i];
+                for (Int_t i = 0; i < fNBinsPt; i++) {
+                    if ( modi == 0 ) {
+                        fNRebin[i]  = fBinsEta13TeVLowBPtRebin[i];
                     }
                 }
+                nIterBGFit                  = 8;
+                fMaxYFracBGOverIntHist      = 70;
+                optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
+                optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
             //*********************************************************************************************
             //********************************** Eta for pPb 5.023TeV**************************************
             //*********************************************************************************************
