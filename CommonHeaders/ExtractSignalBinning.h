@@ -3055,8 +3055,9 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
-                    startPtBin = 1;
+                    startPtBin     = 1;
                 }
+                                
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
@@ -3338,9 +3339,9 @@
                     startPtBin     = 7;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0){
-                if (mode == 0){
-                    startPtBin = 1;
-                }
+                if ( mode == 0 ){
+                    startPtBin     = 1;
+                }                
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if ( mode == 0 ){
                     startPtBin      = 3;
@@ -3838,11 +3839,13 @@
                 cout << endl;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
+
                     maxNBins = 17;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsPi013TeVLowBPt[i];
                     }
                 }
+
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if (mode == 0 ){ // PCM
                     maxNBins    = 31;
@@ -5693,15 +5696,18 @@
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
                         if ( modi == 0 ) {
-                                fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
-                            }
+                            fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
                         }
-                    nIterBGFit                  = 8;
-                    fMaxYFracBGOverIntHist      = 70;
-                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing5";
-                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing7";
-                }
+                    }
+
+                    
+                    nIterBGFit                  = 10;
+                    fMaxYFracBGOverIntHist      = 60;
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+                    }
+
             //*********************************************************************************************
             //********************************** Pi0 for pPb 5.023TeV**************************************
             //*********************************************************************************************
