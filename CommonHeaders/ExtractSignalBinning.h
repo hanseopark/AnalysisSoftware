@@ -1154,11 +1154,15 @@
                                                         4, 4, 4, 4, 4, 4, 4};
     Double_t fBinsPi013TeVLowBPtDCA[10]             = { 0.0, 0.1, 0.4, 0.7, 1.0,1.3, 1.7, 2.5, 4.0, 8.0};
 
-    Double_t fBinsEta13TeVLowBPt[5]                 = { 0., 0.4, 2., 3., 6.};
-    Int_t fBinsEta13TeVLowBPtRebin[6]               = { 15, 15, 10, 10, 10, 10};
+    Double_t fBinsEta13TeVLowBPt[22]                = { 0.00, 0.10, 0.20, 0.40, 0.60, 0.80, 0.90, 1.00, 1.10, 1.20,
+                                                        1.30, 1.40, 1.60, 1.80, 2.00, 2.20, 2.40, 2.60, 2.80, 3.00,
+                                                        6.00, 15.0 };
+    Int_t fBinsEta13TeVLowBPtRebin[21]              = { 16, 16, 16, 16, 16, 10, 10, 10, 10, 10,
+                                                        10, 10, 10, 10, 12, 15, 16, 16, 16, 16,
+                                                        16 };
     Double_t fBinsEta13TeVLowBPtDCA[5]              = { 0., 0.4, 2., 3., 6.};
 
-    Int_t fBinsPi0Eta13TeVLowBPtRebin[6]     = { 4, 4, 2, 4, 4, 4};
+    Int_t fBinsPi0Eta13TeVLowBPtRebin[6]            = { 4, 4, 2, 4, 4, 4 };
 
     Double_t fBinsDirGamma13TeVLowBPt[25]           = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 3.8, 4.2, 4.8, 5.8,
@@ -3350,8 +3354,8 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
-                    startPtBin     = 1;
-                }                
+                    startPtBin     = 3;
+                }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if ( mode == 0 ){
                     startPtBin      = 3;
@@ -4506,7 +4510,7 @@
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
-                    maxNBins = 4;
+                    maxNBins = 21;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta13TeVLowBPt[i];
                     }
