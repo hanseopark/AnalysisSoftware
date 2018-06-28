@@ -640,7 +640,7 @@ void CorrectCaloNonLinearityV4(
             //*******************************************************************************
             Double_t minMax[2]={0.04,0.3};
             // special setting for PCM-EMC
-            if( mode == 2 ){
+            if( mode == 2 || mode == 13 ){
                 if (optionEnergy.Contains("PbPb") || optionEnergy.Contains("XeXe")){
                     minMax[1]   = 0.3;
                 } else if (optionEnergy.Contains("pPb_5.023TeVRun2") ){
@@ -1160,7 +1160,7 @@ TF1* FitDataMC(TH1* fHisto, Double_t minFit, Double_t maxFit, TString selection,
       fFitReco->SetParameter(1,-1.);
     }
 
-    if(constPar!=-1 && (mode != 3 || mode != 5)) fFitReco->FixParameter(0,constPar);
+    if(constPar!=-1 && (mode != 3 || mode != 5 || mode != 13)) fFitReco->FixParameter(0,constPar);
     fHisto->Fit(fFitReco,"QRME0");
 
     fFitReco->SetLineColor(kRed);
