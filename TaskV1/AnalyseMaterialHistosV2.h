@@ -123,6 +123,8 @@ TH1F*	histoMidPtDataMCRatioR;
 TH1F*	histoPurityR;
 TH1F*	histoPurityPt;
 TH1F*	histoPurityPt5cm;
+TH1F*	histoEffiR;
+TH1F*	histoEffiPt;
 
 TH1D*   histoPhiInRData[nBinsR];
 TH1D*   histoPhiInRMC[nBinsR];
