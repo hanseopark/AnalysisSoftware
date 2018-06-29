@@ -1361,7 +1361,7 @@
                   if ( mode == 0){
                       startPtBin = 1;
                   } else if ( mode == 2 ){
-                      startPtBin = 1;
+                      startPtBin = 2;
                   } else if ( mode == 3 ){
                       startPtBin = 1;
                   } else if ( mode == 4 ){
@@ -1377,7 +1377,7 @@
                 if ( mode == 0 )
                     startPtBin     = 1;
                 else if ( mode == 2 ){
-                    startPtBin = 1;
+                    startPtBin = 5;
                 } else if ( mode == 4 ){
                     if (specialTrigg == 1) startPtBin = 11;
                     else if (specialTrigg == 2) startPtBin = 11;
@@ -1722,7 +1722,7 @@
                       }
                   } else if ( mode == 2 || mode == 20){
                       if(energy.Contains("2017")){
-                          maxNBins = 84;
+                          maxNBins = 34;
                           for(Int_t i = 0; i < maxNBins+1; i++){
                               binning[i] = fBinsPi05TeV2017PCMEMCPt[i];
                           }
@@ -2429,7 +2429,7 @@
                     }
                 } else if ( mode == 2 ){
                   if(energy.Contains("2017")){
-                    maxNBins = 31;
+                    maxNBins = 17;
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         binning[i] = fBinsEta5TeV2017PCMEMCPt[i];
                     }

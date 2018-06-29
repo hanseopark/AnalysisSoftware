@@ -3200,7 +3200,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
     // Style_t     cocktailColorPartialSums[14]        = {kRed+2,kBlue+1,kYellow+2,kOrange+1,kAzure-2,kRed-2,kViolet,kGreen-3,kOrange+6, kTeal+9,kMagenta-3,kCyan+4,kViolet+4,kAzure-4};
-    Style_t     cocktailColorPartialSums[14]                   = {kBlue+1,  kRed+1,   kOrange-2,  kGreen-2,   kPink-2,
+    Style_t     cocktailColorPartialSums[14]                   = {kBlue+1,  kRed+1,   kOrange-3,  kGreen-2,   kPink-2,
                                                                   kOrange+2,  kAzure,   kGreen+3,   kAzure+2,   24,
                                                                   kGray+1,      kPink+9,  kPink+5,        kViolet+1};
     Style_t     cocktailLineStylePartSums[14]                  = {1,  2,   3,  4,   5,
