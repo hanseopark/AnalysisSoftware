@@ -706,7 +706,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
         //********************************** Defintion of the Legend **************************************************
         Double_t columnsLegendEtaEta2[3]      = {0.,0.57,0.84};
         //   Double_t rowsLegendMass2[5] = {0.8,0.6,0.4,0.2,0.01};
-        Double_t rowsLegendEtaEta2[6] = {0.82,0.61,0.55,0.4,0.1,0.19};
+        Double_t rowsLegendEtaEta2[6] = {0.82,0.61,0.50,0.4,0.16,0.19};
         //           Double_t  rowsLegendMass2[7]= {0.84,0.66,0.50,0.33,0.01,0.16};
         //Double_t  rowsLegendMass2[9]= {0.84,0.66,0.51,0.50,0.331,0.33,0.01,0.16}; //setting for use without PHOS and PCM-PHOS peak positions
         //******************* Offsets ***********************
@@ -1388,7 +1388,7 @@ void CombineMesonMeasurementsPiPlPiMiPiZero(      TString fileNamePCM     = "",
     drawLatexAdd(collisionSystem5TeV.Data(),0.15,0.87,textSizeLabelsRel,kFALSE);
     drawLatexAdd("#eta",0.15,0.82,textSizeLabelsRel,kFALSE);
 
-    padAccEffLegend1            = new TPad("padAccEffLegend1", "", 0.53, 0.12, 0.93, 0.40,-1, -1, -2);
+    padAccEffLegend1            = new TPad("padAccEffLegend1", "", 0.53, 0.12, 0.93, 0.34,-1, -1, -2);
     DrawGammaPadSettings( padAccEffLegend1, 0., 0., 0., 0.);
     padAccEffLegend1->SetFillStyle(0);
     padAccEffLegend1->Draw();

@@ -2937,7 +2937,7 @@
             } else {
                 if(mode == 40){
                     scaleFac        = 1.;
-                    return 9;
+                    return 8;
                 } else if(mode == 41){
                     scaleFac        = 3.;
                     return 7;
@@ -3308,7 +3308,7 @@
               }
             } else if (energy.CompareTo("7TeV") == 0){
                 if (mode == 40){
-                    startPtBin     = 7;
+                    startPtBin     = 4;
                 } else if (mode == 41){
                     startPtBin     = 6;
                 } else if (mode == 42){

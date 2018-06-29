@@ -225,7 +225,7 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 	Double_t scaling = 1./(2.*TMath::Pi());
 
     // Variable to quickly change which type of yield is used
-    TString InvMassTypeEnding = "_FixedPzPiZero";
+    TString InvMassTypeEnding = "_SubPiZero";
     //TString InvMassTypeEnding = "";
 	
 	// File definitions

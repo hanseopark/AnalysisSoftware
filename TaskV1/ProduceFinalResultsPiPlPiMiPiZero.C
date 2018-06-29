@@ -1310,8 +1310,8 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     //************************************Plotting efficiencies Omega *************************************************
     //***************************************************************************************************************
     TCanvas* canvasEffi = new TCanvas("canvasEffi","",0,0,1000,900);// gives the page size
-    DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.015, 0.08);
-    canvasEffi->SetLogy(1);
+    DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.037, 0.08);
+    canvasEffi->SetLogy(0);
 
     Double_t minEffiOmega = 1e-4;
     Double_t maxEffiOmega = 1e-1;
@@ -1323,13 +1323,16 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     } else if (mode == 0){
         maxEffiOmega      = 8e-3;
         minEffiOmega      = 5e-5;
+    } else if (mode == 40){
+        minEffiOmega = 0.8e-4;
+        maxEffiOmega = 1.5e-3;
     } else{
         minEffiOmega = 1e-4;
         maxEffiOmega = 1e-2;
     }
 
     TH2F * histo2DEffiOmega;
-    histo2DEffiOmega = new TH2F("histo2DEffiOmega","histo2DEffiOmega",1000,0., maxPtGlobalOmega,10000,minEffiOmega, maxEffiOmega);
+    histo2DEffiOmega = new TH2F("histo2DEffiOmega","histo2DEffiOmega",1000,0., maxPtGlobalOmega*1.1,10000,minEffiOmega, maxEffiOmega);
     SetStyleHistoTH2ForGraphs(histo2DEffiOmega, "#it{p}_{T} (GeV/#it{c})","#it{#varepsilon}_{#omega}#upoint#it{#kappa}_{trigg}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.05);
     histo2DEffiOmega->DrawCopy();
@@ -1543,7 +1546,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
         minAccOmega       = 0.7;
     }else if(mode == 40 || mode == 41 || mode == 42 || mode == 44 || mode ==45){
       maxAccOmega= 1.0;
-      minAccOmega= 0.6;
+      minAccOmega= 0.5;
     }
 
     if(optionEnergy.CompareTo("8TeV")==0){
@@ -1555,7 +1558,7 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     }
 
     TH2F * histo2DAccOmega;
-    histo2DAccOmega = new TH2F("histo2DAccOmega","histo2DAccOmega",1000,0., maxPtGlobalOmega,10000,minAccOmega, maxAccOmega);
+    histo2DAccOmega = new TH2F("histo2DAccOmega","histo2DAccOmega",1000,0., maxPtGlobalOmega*1.1,10000,minAccOmega, maxAccOmega);
     SetStyleHistoTH2ForGraphs(histo2DAccOmega, "#it{p}_{T} (GeV/#it{c})","A_{#omega}",
                                 0.85*textSizeSpectra,textSizeSpectra, 0.85*textSizeSpectra,textSizeSpectra, 0.85,1.25);
     histo2DAccOmega->DrawCopy();
@@ -3268,12 +3271,12 @@ void  ProduceFinalResultsPiPlPiMiPiZero(   TString fileListNameOmega     = "trig
     //************************************* Efficiency weighted *****************************************************
     //***************************************************************************************************************
     if (graphEfficiencyOmegaWeighted){
-        DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.015, 0.08);
-        canvasEffi->SetLogy(1);
+        DrawGammaCanvasSettings( canvasEffi, 0.09, 0.017, 0.037, 0.08);
+        canvasEffi->SetLogy(0);
         canvasEffi->cd();
         histo2DEffiOmega->DrawCopy();
 
-        DrawGammaSetMarkerTGraphAsym(graphEfficiencyOmegaWeighted, 20, 1, kGray+2, kGray+2);
+        DrawGammaSetMarkerTGraphAsym(graphEfficiencyOmegaWeighted, 20, 1, kBlack, kBlack);
         graphEfficiencyOmegaWeighted->Draw("p,e1,same");
 
         TLatex *labelEnergyEffiWOTrigg = new TLatex(0.62, 0.15+(1.02*2*textSizeSpectra*0.85),collisionSystem.Data());
