@@ -84,7 +84,7 @@ function GiveBinning5TeV2017()
          echo $answer "bins --> Max p_T = 16 GeV/c ...";
          correctPi0=1
          BinsPtPi0=$answer
-     elif [ $answer -gt 30 ] && [ $answer -lt 60 ]; then
+     elif [ $answer -gt 28 ] && [ $answer -lt 60 ]; then
          echo $answer "bins --> Max p_T = 16 GeV/c ...";
          correctPi0=1
          BinsPtPi0=$answer
