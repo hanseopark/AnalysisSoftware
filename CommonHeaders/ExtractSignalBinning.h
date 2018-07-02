@@ -4938,14 +4938,14 @@
             fNBinsClusterPt            = fNBinsCluster13TeVPt;
 
             for(Int_t i=0; i<fNBinsCluster13TeVPt+1;i++){
-              if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
-              else if(i<55) fBinsCluster13TeVPt[i]       = 0.3+0.05*(i-1);
-              else if(i<125) fBinsCluster13TeVPt[i]      = 3.+0.1*(i-55);
-              else if(i<155) fBinsCluster13TeVPt[i]      = 10.+0.2*(i-125);
-              else if(i<211) fBinsCluster13TeVPt[i]      = 16.+0.25*(i-155);
-              else if(i<251) fBinsCluster13TeVPt[i]      = 30.+0.5*(i-211);
-              else if(i<301) fBinsCluster13TeVPt[i]      = 50.+1.0*(i-251);
-              else fBinsCluster13TeVPt[i]                = 100;
+                if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
+                else if(i<55) fBinsCluster13TeVPt[i]       = 0.3+0.05*(i-1);
+                else if(i<225) fBinsCluster13TeVPt[i]      = 3.+0.1*(i-55);
+                else if(i<265) fBinsCluster13TeVPt[i]      = 20.+0.25*(i-225);
+                else if(i<305) fBinsCluster13TeVPt[i]      = 30.+0.5*(i-265);
+                else if(i<325) fBinsCluster13TeVPt[i]      = 50.+1.0*(i-305);
+                else if(i<335) fBinsCluster13TeVPt[i]      = 70.+2.5*(i-325);
+                else fBinsCluster13TeVPt[i]                = 100;
             }
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster13TeVPt[iPt];
