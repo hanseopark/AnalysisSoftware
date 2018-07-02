@@ -633,7 +633,9 @@ void EventQA(
                                     fHistSPDtracklets_clusters_before,"",
                                     "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
                                     processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-                TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+		TF1 *cut;
+		if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+                else cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_before->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_before->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
                 cut->SetLineColor(kRed);
                 cut->SetLineStyle(2);
                 cut->SetLineWidth(4);
@@ -653,7 +655,9 @@ void EventQA(
                                 fHistSPDtracklets_clusters_beforePileUp,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
                                 processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+	    TF1 *cut;
+	    if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+            else cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters_beforePileUp->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
             cut->SetLineWidth(4);
@@ -672,7 +676,9 @@ void EventQA(
                                 fHistSPDtracklets_clusters,"",
                                 "N_{SPD tracklets}","N_{SPD clusters}",1,1.4,
                                 processLabelOffsetX1,0.25,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
-            TF1 *cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+	    TF1 *cut;
+            if(fIsPbPb) cut = new TF1("cut","200. + 7 * x",fHistSPDtracklets_clusters->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
+	    else cut = new TF1("cut","65. + 4 * x",fHistSPDtracklets_clusters->GetXaxis()->GetBinLowEdge(1),fHistSPDtracklets_clusters->GetXaxis()->GetBinUpEdge(maxB_SPD+5));
             cut->SetLineColor(kRed);
             cut->SetLineStyle(2);
             cut->SetLineWidth(4);
@@ -718,10 +724,17 @@ void EventQA(
             GetMinMaxBinY(fHistV0MultVsTracks,minYB,maxYB);
             SetYRange(fHistV0MultVsTracks,1,maxYB+1);
             SetZMinMaxTH2(fHistV0MultVsTracks,1,maxB+1,1,maxYB+1);
-            DrawPeriodQAHistoTH2(   cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+            DrawPeriodQAHistoTH2(   cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad+0.024,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
                                     fHistV0MultVsTracks,"",
                                     "TPC out tracks","V0 Multiplicity",1,1.4,
                                     processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+	    if(fIsPbPb){
+	      TF1 *cut = new TF1("fFPileUpRejectV0MTPCout","-2500. + 5.0*x",fHistV0MultVsTracks->GetXaxis()->GetBinLowEdge(1),fHistV0MultVsTracks->GetXaxis()->GetBinUpEdge(maxB));
+	      cut->SetLineColor(kRed);
+	      cut->SetLineStyle(2);
+	      cut->SetLineWidth(4);
+	      cut->Draw("SAME");
+	    }
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0MultVsTracks, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |V0Mult vs TPCout Tracks| could not be found! Skipping Draw..." << endl;
         // VZERO multiplicity vs TPC out Tracks
