@@ -15,6 +15,7 @@ void EventQA(
                 TString* DataSets,                      // technical names of data sets for output
                 TString* plotDataSets,                  // labels of data sets in plots
                 TString* pathDataSets,                  // path for data sets
+                TString* fixedCutSelections,            // fixedCutSelections
                 Int_t mode              = 2,            // standard mode for analysis
                 Int_t cutNr             = -1,           // if -1: you have to choose number at runtime
                 TString suffix          = "eps",        // output format of plots
@@ -148,20 +149,36 @@ void EventQA(
     }
     if(nCuts==0){ cout << "ERROR: No cut is available in all given data/MC sets! Returning..." << endl; return;}
 
-    if(cutNr == -1){
-        do{ cin >> cutNr;}
-        while( (cutNr < 0) || (cutNr > (Int_t) cuts.size()) );
+    Bool_t hasFixedCuts = kFALSE;
+    Int_t countCutsSet  = 0;
+    for (Int_t i=0; i<nSets; i++){
+        if (fixedCutSelections[i].CompareTo("") != 0 ) countCutsSet++;
+    }
+    if (countCutsSet == nSets){
+        hasFixedCuts = kTRUE;
+        cutNr        = 0;
     }
 
-    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-    cout << "Processing Cut Number: " << cutNr << endl;
-    cout << cuts.at(cutNr) << endl;
+    if (!hasFixedCuts){
+        if(cutNr == -1){
+            do{ cin >> cutNr;}
+            while( (cutNr < 0) || (cutNr > (Int_t) cuts.size()) );
+        }
+
+        cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+        cout << "Processing Cut Number: " << cutNr << endl;
+        cout << cuts.at(cutNr) << endl;
+    }
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Pictures are saved as " << suffix.Data() << "!" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
+
     for(Int_t i=0; i<nSets; i++){
-        fCutSelection[i]            = cuts.at(cutNr);
+        if (hasFixedCuts)
+            fCutSelection[i]        = fixedCutSelections[i];
+        else
+            fCutSelection[i]        = cuts.at(cutNr);
         fEventCutSelection[i]       = "";
         fGammaCutSelection[i]       = "";
         fClusterCutSelection[i]     = "";
@@ -219,13 +236,21 @@ void EventQA(
     //*****************************************************************************************************
     //************************** Define output directories*************************************************
     //*****************************************************************************************************
-    TString outputDir                   = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
-    TString outputDirRootFile           = Form("%s/%s/EventQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
-    if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
+    TString outputDir                   = "";
+    TString outputDirRootFile           = "";
+    if (hasFixedCuts){
+        outputDir                       = Form("%s/%s/EventQA/%s","DiffCuts",fEnergyFlag.Data(),suffix.Data());
+        outputDirRootFile               = Form("%s/%s/EventQA","DiffCuts",fEnergyFlag.Data());
+    } else{
+        outputDir                       = Form("%s/%s/EventQA/%s",cuts.at(cutNr).Data(),fEnergyFlag.Data(),suffix.Data());
+        outputDirRootFile               = Form("%s/%s/EventQA",cuts.at(cutNr).Data(),fEnergyFlag.Data());
+    }
 
+    if(addSubfolder) outputDir          +=Form("/%s",DataSets[0].Data());
     gSystem->Exec("mkdir -p "+outputDir);
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison");
     gSystem->Exec("mkdir -p "+outputDir+"/Comparison/Ratios");
+
 
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
@@ -275,6 +300,7 @@ void EventQA(
     std::vector<TH1D*> vecGammaCandidatesPerTrack;
     std::vector<TH1D*> vecMergedCandidates;
     std::vector<TH1D*> vecV0Mult;
+    std::vector<TH1D*> vecV0Trigg;
     std::vector<TH1D*> vecCentrality;
     std::vector<TH1D*> vecCentrality2;
     Bool_t hasCentHist = kFALSE;
@@ -510,7 +536,7 @@ void EventQA(
                                  0.95,0.24,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(canvas, fHistCentMain, Form("%s/CentralityMain_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             WriteHistogram(fHistCentMain);
-            vecVertexX.push_back(new TH1D(*fHistCentMain));
+            vecCentrality.push_back(new TH1D(*fHistCentMain));
         }
         //-------------------------------------------------------------------------------------------------------------------------------
         // vertex Y distribution, if available
@@ -550,6 +576,17 @@ void EventQA(
             WriteHistogram(fHistV0Mult);
             vecV0Mult.push_back(new TH1D(*fHistV0Mult));
         } else cout << "INFO: Object |V0 Multiplicity| could not be found! Skipping Draw..." << endl;
+        TH1D* fHistV0Trigger = (TH1D*)ESDContainer->FindObject("V0 Trigger");
+        if(fHistV0Trigger){
+            GetMinMaxBin(fHistV0Trigger,minB,maxB);
+            SetXRange(fHistV0Trigger,minB,maxB);
+            DrawPeriodQAHistoTH1(canvas2,leftMargin2,rightMargin,topMargin,bottomMargin,kFALSE,kTRUE,kFALSE,
+                                 fHistV0Trigger,"","V0 Trigger Amplitude","#frac{dN}{dV0Trig}",1,1,
+                                 processLabelOffsetX1,0.94,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(canvas2, fHistV0Trigger, Form("%s/V0Trigger_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            WriteHistogram(fHistV0Trigger);
+            vecV0Trigg.push_back(new TH1D(*fHistV0Trigger));
+        } else cout << "INFO: Object |V0 Trigg| could not be found! Skipping Draw..." << endl;
         TGaxis::SetExponentOffset(0, 0, "x");
         //-------------------------------------------------------------------------------------------------------------------------------
         // number of gamma candidates
@@ -687,6 +724,20 @@ void EventQA(
                                     processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0MultVsTracks, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
         } else cout << "INFO: Object |V0Mult vs TPCout Tracks| could not be found! Skipping Draw..." << endl;
+        // VZERO multiplicity vs TPC out Tracks
+        TH2D* fHistV0TriggVsMult = (TH2D*)ESDContainer->FindObject("V0 Trigger vs Mult");
+        if(fHistV0TriggVsMult){
+            GetMinMaxBin(fHistV0TriggVsMult,minB,maxB);
+            SetXRange(fHistV0TriggVsMult,1,maxB+1);
+            GetMinMaxBinY(fHistV0TriggVsMult,minYB,maxYB);
+            SetYRange(fHistV0TriggVsMult,1,maxYB+1);
+            SetZMinMaxTH2(fHistV0TriggVsMult,1,maxB+1,1,maxYB+1);
+            DrawPeriodQAHistoTH2(   cvsQuadratic,leftMarginQuad,rightMarginQuad,topMarginQuad,bottomMarginQuad,kFALSE,kFALSE,kTRUE,
+                                    fHistV0TriggVsMult,"",
+                                    "V0 Trigger ampl","V0 Multiplicity",1,1.4,
+                                    processLabelOffsetX1,0.95,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
+            SaveCanvasAndWriteHistogram(cvsQuadratic, fHistV0TriggVsMult, Form("%s/V0MultVsTracks_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+        } else cout << "INFO: Object |V0 Trigger vs Mult| could not be found! Skipping Draw..." << endl;
         //-------------------------------------------------------------------------------------------------------------------------------
         // centrality
         if(fIsPbPb && fMode != 200){
@@ -723,7 +774,7 @@ void EventQA(
                                     fHistCentrality2,"","Centrality (%)","",1,1,
                                     0.95,0.24,0.03,fCollisionSystem,plotDataSets[i],fTrigger[i]);
             WriteHistogram(fHistCentrality2);
-            SaveCanvasAndWriteHistogram(canvas, fHistCentMain, Form("%s/CentralityEventCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
+            SaveCanvasAndWriteHistogram(canvas, fHistCentrality2, Form("%s/CentralityEventCuts_%s.%s", outputDir.Data(), DataSets[i].Data(), suffix.Data()));
             vecCentrality2.push_back(new TH1D(*fHistCentrality2));
             hasCentHist             = kTRUE;
         } else cout << "INFO: Object |fHistCentrality2| could not be found! Skipping Draw..." << endl;
@@ -1146,7 +1197,7 @@ void EventQA(
 
         //-------------------------------------------------------------------------------------------------------------------------------
         // Eta properties
-        if ( !isMergedCalo ){
+        if ( !isMergedCalo && mode != 200 ){
             //-------------------------------------------------------------------------------------------------------------------------------
             // eta meson pt vs rapidity
             TH2D* EtaPtY = (TH2D*) ESDContainer->FindObject("ESD_MotherEta_Pt_Y");
@@ -1202,11 +1253,13 @@ void EventQA(
         if(ESDMother){
             WriteHistogram(ESDMother);
             vecESDMother.push_back(new TH2D(*ESDMother));
-        }else {cout << "ERROR: Object |ESD_Mother_InvMass_Pt| could not be found! Skipping Draw & return..." << endl; return;}
+        } else if (mode == 200) {
+            cout << "ERROR: Object |ESD_Mother_InvMass_Pt| could not be found! Skipping Draw " << endl;
+        } else {cout << "ERROR: Object |ESD_Mother_InvMass_Pt| could not be found! Skipping Draw & return..." << endl; return;}
         //-------------------------------------------------------------------------------------------------------------------------------
         // Invariant mass of BG candidates
         TH2D* ESDBackground = NULL;
-        if (mode != 10 && mode != 11){
+        if (mode != 10 && mode != 11 && mode != 200){
             ESDBackground = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
             if(ESDBackground){
                 WriteHistogram(ESDBackground);
@@ -1217,7 +1270,7 @@ void EventQA(
         //-------------------------------------------------------------------------------------------------------------------------------
         //--------------------------------- statistics for meson properties -------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------
-        if ( !isMergedCalo ){
+        if ( !isMergedCalo && mode != 200){
             cout << "started fitting" << endl;
             Bool_t kScs = fitter.DoFitting((TH2D*)vecESDMother.at(i), (TH2D*)vecESDBackground.at(i), nEventsBin1, fMode, outputDir.Data(), DataSets[i],kFALSE,kTRUE,fLog, fCollisionSystem);
 
@@ -1363,8 +1416,8 @@ void EventQA(
     for(Int_t iVec=0; iVec<(Int_t)vecNGoodTracks.size(); iVec++){
         TH1D* temp = vecNGoodTracks.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
+        if (!hasFixedCuts)
+            temp->Scale(1./temp->Integral());
         SetXRange(temp,1,maxB);
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.05, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
@@ -1384,8 +1437,8 @@ void EventQA(
     for(Int_t iVec=0; iVec<(Int_t)vecV0Mult.size(); iVec++){
         TH1D* temp = vecV0Mult.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
+        if (!hasFixedCuts)
+            temp->Scale(1./temp->Integral());
         SetXRange(temp,1,maxB);
     }
     TGaxis::SetExponentOffset(-0.03, -0.04, "x");
@@ -1402,13 +1455,37 @@ void EventQA(
                                 0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
     SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_V0Mult.%s", outputDir.Data(), suffix.Data()));
     //-------------------------------------------------------------------------------------------------------------------------------
+    // VZERO trigger
+    GetMinMaxBin(vecV0Trigg,minB,maxB);
+    for(Int_t iVec=0; iVec<(Int_t)vecV0Trigg.size(); iVec++){
+        TH1D* temp = vecV0Trigg.at(iVec);
+        temp->Sumw2();
+        if (!hasFixedCuts)
+            temp->Scale(1./temp->Integral());
+        SetXRange(temp,1,maxB);
+    }
+    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                vecV0Trigg,"","V0 Trigger Amplitude","#frac{1}{N} #frac{dN}{dV0Trigg}",1,1.1,
+                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
+                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+    SaveCanvas(canvas, Form("%s/Comparison/V0Trigg.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+    TGaxis::SetExponentOffset(0, 0, "x");
+
+    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                     vecV0Trigg,"","V0 Trigger Amplitude","#frac{1}{N} #frac{dN}{dV0Trigg}",1,1.1,
+                                     labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_V0Trigg.%s", outputDir.Data(), suffix.Data()));
+
+    //-------------------------------------------------------------------------------------------------------------------------------
     // Gamma candidates per event
     GetMinMaxBin(vecGammaCandidates,minB,maxB);
     for(Int_t iVec=0; iVec<(Int_t)vecGammaCandidates.size(); iVec++){
         TH1D* temp = vecGammaCandidates.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
+        if (!hasFixedCuts)
+            temp->Scale(1./temp->Integral());
         SetXRange(temp,minB,maxB);
     }
     DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
@@ -1429,7 +1506,8 @@ void EventQA(
     for(Int_t iVec=0; iVec<(Int_t)vecGammaCandidatesPerTrack.size(); iVec++){
       TH1D* temp = vecGammaCandidatesPerTrack.at(iVec);
       temp->Sumw2();
-      temp->Scale(1./temp->Integral());
+      if (!hasFixedCuts)
+          temp->Scale(1./temp->Integral());
       SetXRange(temp,minB,maxB);
     }
     DrawPeriodQACompareHistoTH1(canvas, 0.11, 0.02, 0.05, 0.11,kTRUE,kFALSE,kFALSE,
@@ -1474,7 +1552,8 @@ void EventQA(
       for(Int_t iVec=0; iVec<(Int_t)vecCentrality.size(); iVec++){
         TH1D* temp = vecCentrality.at(iVec);
         temp->Sumw2();
-        temp->Scale(1./temp->Integral());
+        if (!hasFixedCuts)
+            temp->Scale(1./temp->Integral());
         SetXRange(temp,minB,maxB);
       }
       DrawPeriodQACompareHistoTH1(  canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
@@ -1513,7 +1592,8 @@ void EventQA(
         for(Int_t iVec=0; iVec<(Int_t)vecCentrality2.size(); iVec++){
             TH1D* temp = vecCentrality2.at(iVec);
             temp->Sumw2();
-            temp->Scale(1./temp->Integral());
+            if (!hasFixedCuts)
+                temp->Scale(1./temp->Integral());
             SetXRange(temp,0,100);
         }
         DrawPeriodQACompareHistoTH1(  canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
@@ -1531,7 +1611,7 @@ void EventQA(
     //-------------------------------------------------------------------------------------------------------------------------------
     //---------------------------------------- Meson histogram comparisons ----------------------------------------------------------
     //-------------------------------------------------------------------------------------------------------------------------------
-    if ( !isMergedCalo ){
+    if ( !isMergedCalo && mode != 200){
         //-------------------------------------------------------------------------------------------------------------------------------
         // subtracted signal pi0
         for(Int_t iVec=0; iVec<(Int_t)signalPi0.size(); iVec++){
@@ -1572,100 +1652,102 @@ void EventQA(
         SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Eta.%s", outputDir.Data(), suffix.Data()));
     }
 
-    //-------------------------------------------------------------------------------------------------------------------------------
-    // pt distribution pi0
-    GetMinMaxBin(vecPi0Pt,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPi0Pt.size(); iVec++){
-        TH1D* temp = vecPi0Pt.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
-    }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
-                                vecPi0Pt,"","#it{p}_{T}^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#it{p}_{T}}",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pi0_Pt.%s", outputDir.Data(), suffix.Data()), kTRUE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
-
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+    if (mode != 200){
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // pt distribution pi0
+        GetMinMaxBin(vecPi0Pt,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPi0Pt.size(); iVec++){
+            TH1D* temp = vecPi0Pt.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kTRUE,kTRUE,kFALSE,
                                     vecPi0Pt,"","#it{p}_{T}^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#it{p}_{T}}",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Pt.%s", outputDir.Data(), suffix.Data()));
-    //-------------------------------------------------------------------------------------------------------------------------------
-    // alpha distribution Pi0
-    GetMinMaxBin(vecPi0Alpha,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPi0Alpha.size(); iVec++){
-        TH1D* temp = vecPi0Alpha.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
-    }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPi0Alpha,"","#alpha^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#alpha}",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pi0_Alpha.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
+        SaveCanvas(canvas, Form("%s/Comparison/Pi0_Pt.%s", outputDir.Data(), suffix.Data()), kTRUE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
 
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                        vecPi0Pt,"","#it{p}_{T}^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#it{p}_{T}}",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Pt.%s", outputDir.Data(), suffix.Data()));
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // alpha distribution Pi0
+        GetMinMaxBin(vecPi0Alpha,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPi0Alpha.size(); iVec++){
+            TH1D* temp = vecPi0Alpha.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecPi0Alpha,"","#alpha^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#alpha}",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Alpha.%s", outputDir.Data(), suffix.Data()));
-    //-------------------------------------------------------------------------------------------------------------------------------
-    // y distribution Pi0
-    GetMinMaxBin(vecPi0Y,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPi0Y.size(); iVec++){
-        TH1D* temp = vecPi0Y.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
-    }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPi0Y,"","Y^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{dY}",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pi0_Y.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
+        SaveCanvas(canvas, Form("%s/Comparison/Pi0_Alpha.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
 
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
+                                        vecPi0Alpha,"","#alpha^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#alpha}",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Alpha.%s", outputDir.Data(), suffix.Data()));
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // y distribution Pi0
+        GetMinMaxBin(vecPi0Y,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPi0Y.size(); iVec++){
+            TH1D* temp = vecPi0Y.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecPi0Y,"","Y^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{dY}",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Y.%s", outputDir.Data(), suffix.Data()));
-    //-------------------------------------------------------------------------------------------------------------------------------
-    // opening angle Pi0
-    GetMinMaxBin(vecPi0OpenAngle,minB,maxB);
-    for(Int_t iVec=0; iVec<(Int_t)vecPi0OpenAngle.size(); iVec++){
-        TH1D* temp = vecPi0OpenAngle.at(iVec);
-        temp->Sumw2();
-        temp->Scale(1./temp->Integral());
-        //temp->Scale(1./nEvents[iVec]);
-        SetXRange(temp,minB,maxB);
-    }
-    TGaxis::SetExponentOffset(-0.03, -0.04, "x");
-    DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
-                                vecPi0OpenAngle,"","#theta_{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#theta}",1,1.1,
-                                labelData, colorCompare, kTRUE, 5, 5, kFALSE,
-                                0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
-    TGaxis::SetExponentOffset(0, 0, "x");
+        SaveCanvas(canvas, Form("%s/Comparison/Pi0_Y.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
 
-    DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                        vecPi0Y,"","Y^{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{dY}",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_Y.%s", outputDir.Data(), suffix.Data()));
+        //-------------------------------------------------------------------------------------------------------------------------------
+        // opening angle Pi0
+        GetMinMaxBin(vecPi0OpenAngle,minB,maxB);
+        for(Int_t iVec=0; iVec<(Int_t)vecPi0OpenAngle.size(); iVec++){
+            TH1D* temp = vecPi0OpenAngle.at(iVec);
+            temp->Sumw2();
+            temp->Scale(1./temp->Integral());
+            //temp->Scale(1./nEvents[iVec]);
+            SetXRange(temp,minB,maxB);
+        }
+        TGaxis::SetExponentOffset(-0.03, -0.04, "x");
+        DrawPeriodQACompareHistoTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kTRUE,kFALSE,
                                     vecPi0OpenAngle,"","#theta_{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#theta}",1,1.1,
-                                    labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                    labelData, colorCompare, kTRUE, 5, 5, kFALSE,
                                     0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
-    SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()));
+        SaveCanvas(canvas, Form("%s/Comparison/Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()), kFALSE, kTRUE);
+        TGaxis::SetExponentOffset(0, 0, "x");
 
-    if (!isMergedCalo){
+        DrawPeriodQACompareHistoRatioTH1(canvas,0.11, 0.02, 0.05, 0.11,kFALSE,kFALSE,kFALSE,
+                                        vecPi0OpenAngle,"","#theta_{#pi^{0}}","#frac{1}{N} #frac{dN^{#pi^{0}}}{d#theta}",1,1.1,
+                                        labelData, colorCompare, kTRUE, 5, 5, kTRUE,
+                                        0.95,0.92,0.03,fCollisionSystem,plotDataSets,fTrigger[0],31);
+        SaveCanvas(canvas, Form("%s/Comparison/Ratios/ratio_Pi0_OpenAngle.%s", outputDir.Data(), suffix.Data()));
+    }
+
+    if (!isMergedCalo && mode != 200){
         //-------------------------------------------------------------------------------------------------------------------------------
         // pt distribution eta
         GetMinMaxBin(vecEtaPt,minB,maxB);
@@ -1822,6 +1904,7 @@ void EventQA(
     DeleteVecTH1D(vecGammaCandidatesPerTrack);
     DeleteVecTH1D(vecMergedCandidates);
     DeleteVecTH1D(vecV0Mult);
+    DeleteVecTH1D(vecV0Trigg);
 
     DeleteVecTH1D(signalPi0);
     DeleteVecTH1D(signalEta);

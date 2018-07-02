@@ -71,8 +71,6 @@ using namespace std;
 #include "../CommonHeaders/ConversionFunctionsBasicsAndLabeling.h"
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/AdjustHistRange.h"
-// #include "../CommonHeaders/ExtractSignalBinning.h"
-// #include "../CommonHeaders/ExtractSignalPlotting.h"
 
 TRandom3 randy1;
 
@@ -1592,11 +1590,13 @@ void DrawVectorRunwiseTH1D( TCanvas *canvas, TLegend *legendRuns, std::vector<TH
     if(vec.size()!=vecRuns.size()) { cout << "WARNING: in DrawVectorRunwiseTH1D - vec.size()!=vecRuns.size()" << endl; return;}
     Int_t min = 0;
     Int_t max = 0;
+    cout << "hier x adjust" << endl;
     if(doXRange) GetMinMaxBin(vec,min,max);
+    cout << "hier y adjust" << endl;
 
     if(doYRange) AdjustHistRange(vec,lowerAdjust,higherAdjust,adjustIncludeError);
-    for(Int_t h=0; h<(Int_t) vec.size(); h++)
-    {
+    cout << "hier before hist loop" << endl;
+    for(Int_t h=0; h<(Int_t) vec.size(); h++){
         TString draw = (h==0)?"p":"p, same";
         EditRunwiseHists(((TH1D*) vec.at(h)), h, "");
         if(doXaxisExp) ((TH1D*) vec.at(h))->GetXaxis()->SetNoExponent(kFALSE);
@@ -1604,18 +1604,20 @@ void DrawVectorRunwiseTH1D( TCanvas *canvas, TLegend *legendRuns, std::vector<TH
         ((TH1D*) vec.at(h))->Draw(draw.Data());
         legendRuns->AddEntry(((TH1D*) vec.at(h)),Form("%s",vecRuns.at(h).Data()),"p");
     }
+    cout << "hier after hist loop" << endl;
     legendRuns->Draw();
 
     //if(calo.IsNull()) putLabel5+=0.04;
     if(doTrigger && data){
-    PutProcessLabelAndEnergyOnPlot(putLabel1-addRight, putLabel2, putLabel3, fCollisionSystem.Data(), plotDataSets.Data(), fTrigger.Data());
-    PutProcessLabelAndEnergyOnPlot(putLabel4-addRight, putLabel5, putLabel6, calo.Data(), "", "");
+        PutProcessLabelAndEnergyOnPlot(putLabel1-addRight, putLabel2, putLabel3, fCollisionSystem.Data(), plotDataSets.Data(), fTrigger.Data());
+        PutProcessLabelAndEnergyOnPlot(putLabel4-addRight, putLabel5, putLabel6, calo.Data(), "", "");
     }else{
-    PutProcessLabelAndEnergyOnPlot(putLabel1-addRight, putLabel2, putLabel3, fCollisionSystem.Data(), plotDataSets.Data(), calo.Data());
+        PutProcessLabelAndEnergyOnPlot(putLabel1-addRight, putLabel2, putLabel3, fCollisionSystem.Data(), plotDataSets.Data(), calo.Data());
     }
+    cout << "hier out" << endl;
     SaveCanvas(canvas, Form("%s/%s_%s.%s", outputDirDataSet.Data(), saveString.Data(), plotDataSets.Data(),suffix.Data()),logX,logY,logZ);
     legendRuns->Clear();
-
+    cout << "hier clear" << endl;
     return;
 }
 

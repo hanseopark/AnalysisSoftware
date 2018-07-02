@@ -33,7 +33,8 @@ void EventQA_Runwise(
                         TString suffix                  = "eps",            // output format of plots
                         TString folderRunlists          = "",               // path to the runlists
                         Int_t *nSigmasBadRun            = NULL,             // array of 8 integers
-                        TString addLabelRunList         = ""                // additional name for runlist
+                        TString addLabelRunList         = "",               // additional name for runlist
+                        TString fixedTopDir             = ""
                     )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -93,6 +94,7 @@ void EventQA_Runwise(
         else if(plotDataSets[i].Contains("10-20%")) fCentrality[i] = "10-20%";
         else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
         else if(plotDataSets[i].Contains("50-90%")) fCentrality[i] = "50-90%";
+        else if(plotDataSets[i].Contains("0-90%")) fCentrality[i] = "0-90%";
         else fCentrality[i] = "";
       } else {
         fCentrality[i] = "";
@@ -174,16 +176,26 @@ void EventQA_Runwise(
     if(fCutFile->IsZombie()) {cout << "ERROR: ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(0)).Data(), ((TString)vecRuns.at(0)).Data(), fileName.Data()) << "' could not be openend, return!" << endl; return;}
 
     TKey *key;
-    TIter next(fCutFile->GetListOfKeys());
-    while ((key=(TKey*)next())){
-        cout << Form("Found TopDir: '%s' ",key->GetName());
-        nameMainDir             = key->GetName();
+    if (fixedTopDir.CompareTo("") == 0){
+        TIter next(fCutFile->GetListOfKeys());
+        while ((key=(TKey*)next())){
+            cout << Form("Found TopDir: '%s' ",key->GetName());
+            nameMainDir             = key->GetName();
+        }
+    } else {
+        nameMainDir = fixedTopDir;
     }
     cout << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     if(nameMainDir.IsNull() || !nameMainDir.BeginsWith("Gamma")){cout << "ERROR, Unable to obtain valid name of MainDir:|" << nameMainDir.Data() << "|, running in mode: " << fMode << endl; return;}
 
-    TList *listInput            = (TList*)fCutFile->Get(nameMainDir.Data());
+    TDirectoryFile* directoryOrg    = (TDirectoryFile*)fCutFile->Get(nameMainDir.Data());
+    TList *listInput                = NULL;
+    if (directoryOrg){
+        listInput                   = (TList*)directoryOrg->Get(nameMainDir.Data());
+    } else {
+        listInput                   = (TList*)fCutFile->Get(nameMainDir.Data());
+    }
     if(!listInput) {cout << "ERROR: Could not find main dir: " << nameMainDir.Data() << " in file! Returning..." << endl; return;}
         listInput->SetOwner(kTRUE);
     vector <TString> cuts;
@@ -317,10 +329,18 @@ void EventQA_Runwise(
 
     TH1D* hTracksMeanGood[nSets];
     TH1D* hTracksRMSGood[nSets];
+    TH1D* hV0TriggMean[nSets];
+    TH1D* hV0TriggMin[nSets];
+    TH1D* hV0TriggRMS[nSets];
+    TH1D* hV0MultMean[nSets];
+    TH1D* hV0MultMin[nSets];
+    TH1D* hV0MultRMS[nSets];
 
     TH1D* hVertexZMean[nSets];
     TH1D* hVertexZRMS[nSets];
     TH1D* hCentralityMean[nSets];
+    TH1D* hCentralityMin[nSets];
+    TH1D* hCentralityMax[nSets];
     TH1D* hEventPlaneAngleMean[nSets];
     TH1D* hFracWVtxOutside10cm[nSets];
     TH1D* hFracWOVtx[nSets];
@@ -367,14 +387,28 @@ void EventQA_Runwise(
     //*****************************************************************************************************
 
     std::vector<TH1D*>* vecVertexZ      = new std::vector<TH1D*>[nSets];
+    std::vector<TH1D*>* vecCent         = new std::vector<TH1D*>[nSets];
+    std::vector<TH1D*>* vecV0Trigg      = new std::vector<TH1D*>[nSets];
+    std::vector<TH1D*>* vecV0Mult       = new std::vector<TH1D*>[nSets];
+    std::vector<TH1D*>* vecTrackMult    = new std::vector<TH1D*>[nSets];
+
+
     std::vector<TH1D*>* vecPi0Signal    = new std::vector<TH1D*>[nSets];
     std::vector<TH1D*>* vecEtaSignal    = new std::vector<TH1D*>[nSets];
     std::vector<TF1*>* vecPi0Fit        = new std::vector<TF1*>[nSets];
     std::vector<TF1*>* vecEtaFit        = new std::vector<TF1*>[nSets];
 
-    std::vector<TH1D*>* vecVertexZRatio = new std::vector<TH1D*>[nSets-1];
+    std::vector<TH1D*>* vecVertexZRatio     = new std::vector<TH1D*>[nSets-1];
     std::map<Int_t,Int_t> mapVertexRatio;
-    std::vector<TH1D*>* vecHistos       = new std::vector<TH1D*>[nSets];
+    std::vector<TH1D*>* vecCentRatio        = new std::vector<TH1D*>[nSets-1];
+    std::map<Int_t,Int_t> mapCentRatio;
+    std::vector<TH1D*>* vecV0TriggRatio     = new std::vector<TH1D*>[nSets-1];
+    std::map<Int_t,Int_t> mapV0TriggRatio;
+    std::vector<TH1D*>* vecV0MultRatio      = new std::vector<TH1D*>[nSets-1];
+    std::map<Int_t,Int_t> mapV0MultRatio;
+    std::vector<TH1D*>* vecTrackMultRatio   = new std::vector<TH1D*>[nSets-1];
+    std::map<Int_t,Int_t> mapTrackMultRatio;
+    std::vector<TH1D*>* vecHistos           = new std::vector<TH1D*>[nSets];
     std::vector<TString> vecHistosName;
     TString histoName;
 
@@ -449,6 +483,42 @@ void EventQA_Runwise(
         EditTH1(globalRuns, doEquidistantXaxis, hTracksRMSGood[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hTracksRMSGood[i]);
 
+        histoName                   = "hV0Mult-Min";
+        if(i==0) vecHistosName.push_back(histoName);
+        hV0MultMin[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hV0MultMin; Run Number ; min V0 mult",hNBin,hFBin,hLBin);
+        EditTH1(globalRuns, doEquidistantXaxis, hV0MultMin[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+        vecHistos[i].push_back(hV0MultMin[i]);
+
+        histoName                   = "hV0Mult-Mean";
+        if(i==0) vecHistosName.push_back(histoName);
+        hV0MultMean[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hV0MultMean; Run Number ; #bar{#lower[0.1]{N}}_{V0 mult}",hNBin,hFBin,hLBin);
+        EditTH1(globalRuns, doEquidistantXaxis, hV0MultMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+        vecHistos[i].push_back(hV0MultMean[i]);
+
+        histoName                   = "hV0Mult-RMS";
+        if(i==0) vecHistosName.push_back(histoName);
+        hV0MultRMS[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hV0MultRMS; Run Number ; #sigma_{N_{V0 mult}}",hNBin,hFBin,hLBin);
+        EditTH1(globalRuns, doEquidistantXaxis, hV0MultRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+        vecHistos[i].push_back(hV0MultRMS[i]);
+
+        histoName                   = "hV0Trigg-Min";
+        if(i==0) vecHistosName.push_back(histoName);
+        hV0TriggMin[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hV0TriggMin; Run Number ; min V0 trigg ampl",hNBin,hFBin,hLBin);
+        EditTH1(globalRuns, doEquidistantXaxis, hV0TriggMin[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+        vecHistos[i].push_back(hV0TriggMin[i]);
+
+        histoName                   = "hV0Trigg-Mean";
+        if(i==0) vecHistosName.push_back(histoName);
+        hV0TriggMean[i]          = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hV0TriggMean; Run Number ; #bar{#lower[0.1]{N}}_{V0 trigg ampl}",hNBin,hFBin,hLBin);
+        EditTH1(globalRuns, doEquidistantXaxis, hV0TriggMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+        vecHistos[i].push_back(hV0TriggMean[i]);
+
+        histoName                   = "hV0Trigg-RMS";
+        if(i==0) vecHistosName.push_back(histoName);
+        hV0TriggRMS[i]           = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hV0TriggRMS; Run Number ; #sigma_{V0 trigg ampl}",hNBin,hFBin,hLBin);
+        EditTH1(globalRuns, doEquidistantXaxis, hV0TriggRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+        vecHistos[i].push_back(hV0TriggRMS[i]);
+
         histoName                   = "hVertexZ-Mean";
         if(i==0) vecHistosName.push_back(histoName);
         hVertexZMean[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hVertexZ-Mean; Run Number ; #bar{#lower[0.1]{z}}_{Vertex} (cm)",hNBin,hFBin,hLBin);
@@ -461,19 +531,31 @@ void EventQA_Runwise(
         EditTH1(globalRuns, doEquidistantXaxis, hVertexZRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
         vecHistos[i].push_back(hVertexZRMS[i]);
 
-	if(fEnergyFlag.Contains("PbPb")){
-	  histoName                   = "hCentrality-Mean";
-	  if(i==0) vecHistosName.push_back(histoName);
-	  hCentralityMean[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCentrality-Mean; Run Number ; #bar{cent} (%)",hNBin,hFBin,hLBin);
-	  EditTH1(globalRuns, doEquidistantXaxis, hCentralityMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-	  vecHistos[i].push_back(hCentralityMean[i]);
+        if(fEnergyFlag.Contains("PbPb")){
+            histoName                   = "hCentrality-Mean";
+            if(i==0) vecHistosName.push_back(histoName);
+            hCentralityMean[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCentrality-Mean; Run Number ; #bar{cent} (%)",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hCentralityMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hCentralityMean[i]);
 
-	  histoName                   = "hEventPlaneAngle-Mean";
-	  if(i==0) vecHistosName.push_back(histoName);
-	  hEventPlaneAngleMean[i]     = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEventPlaneAngle-Mean; Run Number ; #bar{e.p.a.} (rad)",hNBin,hFBin,hLBin);
-	  EditTH1(globalRuns, doEquidistantXaxis, hEventPlaneAngleMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-	  vecHistos[i].push_back(hEventPlaneAngleMean[i]);
-	}
+            histoName                   = "hCentrality-Min";
+            if(i==0) vecHistosName.push_back(histoName);
+            hCentralityMin[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCentrality-Min; Run Number ; min cent (%)",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hCentralityMin[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hCentralityMin[i]);
+
+            histoName                   = "hCentrality-Max";
+            if(i==0) vecHistosName.push_back(histoName);
+            hCentralityMax[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hCentrality-Max; Run Number ; max cent (%)",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hCentralityMax[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hCentralityMax[i]);
+
+            histoName                   = "hEventPlaneAngle-Mean";
+            if(i==0) vecHistosName.push_back(histoName);
+            hEventPlaneAngleMean[i]     = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEventPlaneAngle-Mean; Run Number ; #bar{e.p.a.} (rad)",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hEventPlaneAngleMean[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hEventPlaneAngleMean[i]);
+        }
 
         histoName                   = "hFracWVtxOutside10cm";
         if(i==0) vecHistosName.push_back(histoName);
@@ -539,7 +621,7 @@ void EventQA_Runwise(
             vecHistos[i].push_back(hCaloMergedNClustersQA[i]);
         }
 
-        if (!isMerged){
+        if (!isMerged && fMode != 200){
             histoName               = "hPi0Frac";
             if(i==0) vecHistosName.push_back(histoName);
             hPi0Frac[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Frac; Run Number ; N^{#pi^{0}}/N^{Evt}",hNBin,hFBin,hLBin);
@@ -559,55 +641,58 @@ void EventQA_Runwise(
             vecHistos[i].push_back(hPi0Width[i]);
 
         }
-        histoName               = "hPi0Pt";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0Pt[i]               = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Pt; Run Number ; Mean #it{p}_{T}^{#pi^{0}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0Pt[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0Pt[i]);
 
-        histoName               = "hPi0PtRMS";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0PtRMS[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0PtRMS; Run Number ; #sigma_{#it{p}_{T}^{#pi^{0}}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0PtRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0PtRMS[i]);
+        if (fMode != 200){
+            histoName               = "hPi0Pt";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0Pt[i]               = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Pt; Run Number ; Mean #it{p}_{T}^{#pi^{0}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0Pt[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0Pt[i]);
 
-        histoName                   = "hPi0Alpha";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0Alpha[i]                = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Alpha; Run Number ; Mean #alpha_{#pi^{0}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0Alpha[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0Alpha[i]);
+            histoName               = "hPi0PtRMS";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0PtRMS[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0PtRMS; Run Number ; #sigma_{#it{p}_{T}^{#pi^{0}}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0PtRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0PtRMS[i]);
 
-        histoName                   = "hPi0AlphaRMS";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0AlphaRMS[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0AlphaRMS; Run Number ; #sigma_{#alpha_{#pi^{0}}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0AlphaRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0AlphaRMS[i]);
+            histoName                   = "hPi0Alpha";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0Alpha[i]                = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Alpha; Run Number ; Mean #alpha_{#pi^{0}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0Alpha[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0Alpha[i]);
 
-        histoName                   = "hPi0Y";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0Y[i]                    = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Y; Run Number ; Mean Y_{#pi^{0}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0Y[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0Y[i]);
+            histoName                   = "hPi0AlphaRMS";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0AlphaRMS[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0AlphaRMS; Run Number ; #sigma_{#alpha_{#pi^{0}}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0AlphaRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0AlphaRMS[i]);
 
-        histoName                   = "hPi0YRMS";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0YRMS[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0YRMS; Run Number ; #sigma_{Y_{#pi^{0}}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0YRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0YRMS[i]);
+            histoName                   = "hPi0Y";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0Y[i]                    = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0Y; Run Number ; Mean Y_{#pi^{0}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0Y[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0Y[i]);
 
-        histoName                   = "hPi0OpenAngle";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0OpenAngle[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0OpenAngle; Run Number ; Mean #theta_{#pi^{0}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0OpenAngle[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0OpenAngle[i]);
+            histoName                   = "hPi0YRMS";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0YRMS[i]                 = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0YRMS; Run Number ; #sigma_{Y_{#pi^{0}}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0YRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0YRMS[i]);
 
-        histoName                   = "hPi0OpenAngleRMS";
-        if(i==0) vecHistosName.push_back(histoName);
-        hPi0OpenAngleRMS[i]         = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0OpenAngleRMS; Run Number ; #sigma_{#theta_{#pi^{0}}}",hNBin,hFBin,hLBin);
-        EditTH1(globalRuns, doEquidistantXaxis, hPi0OpenAngleRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-        vecHistos[i].push_back(hPi0OpenAngleRMS[i]);
+            histoName                   = "hPi0OpenAngle";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0OpenAngle[i]            = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0OpenAngle; Run Number ; Mean #theta_{#pi^{0}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0OpenAngle[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0OpenAngle[i]);
 
-        if (!isMerged){
+            histoName                   = "hPi0OpenAngleRMS";
+            if(i==0) vecHistosName.push_back(histoName);
+            hPi0OpenAngleRMS[i]         = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hPi0OpenAngleRMS; Run Number ; #sigma_{#theta_{#pi^{0}}}",hNBin,hFBin,hLBin);
+            EditTH1(globalRuns, doEquidistantXaxis, hPi0OpenAngleRMS[i], hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            vecHistos[i].push_back(hPi0OpenAngleRMS[i]);
+        }
+
+        if (!isMerged && fMode != 200){
             histoName               = "hEtaFrac";
             if(i==0) vecHistosName.push_back(histoName);
             hEtaFrac[i]             = new TH1D(Form("%s_%s", histoName.Data(), DataSets[i].Data()),"hEtaFrac; Run Number ; N^{#eta}/N^{Evt}",hNBin,hFBin,hLBin);
@@ -734,6 +819,8 @@ void EventQA_Runwise(
         badRunCalc sCentralityMean    = {nSigmasBadRun[1],0,0.,0.,0.,hCentralityMean[i]};
         badRunCalc sFracWOVtx         = {nSigmasBadRun[2],0,0.,0.,0.,hFracWOVtx[i]};
         badRunCalc sTracksMeanGood    = {nSigmasBadRun[3],0,0.,0.,0.,hTracksMeanGood[i]};
+        badRunCalc sV0MultMean        = {nSigmasBadRun[3],0,0.,0.,0.,hV0MultMean[i]};
+        badRunCalc sV0TriggMean       = {nSigmasBadRun[3],0,0.,0.,0.,hV0TriggMean[i]};
         badRunCalc sConvNCandidatesQA = {nSigmasBadRun[4],0,0.,0.,0.,hConvNCandidatesQA[i]};
         badRunCalc sPi0Frac           = {nSigmasBadRun[5],0,0.,0.,0.,hPi0Frac[i]};
         badRunCalc sPi0Mass           = {nSigmasBadRun[6],0,0.,0.,0.,hPi0Mass[i]};
@@ -770,27 +857,33 @@ void EventQA_Runwise(
             cout << "\t\t----------------------------------------------------------------------------" << endl;
             cout << endl;
 
-            TList* TopDir               = (TList*) RootFile->Get(nameMainDir.Data());
-                if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
-                else TopDir->SetOwner(kTRUE);
+            TDirectoryFile* directoryOrg2   = (TDirectoryFile*)RootFile->Get(nameMainDir.Data());
+            TList *TopDir                   = NULL;
+            if (directoryOrg2){
+                TopDir                      = (TList*)directoryOrg2->Get(nameMainDir.Data());
+            } else {
+                TopDir                      = (TList*)RootFile->Get(nameMainDir.Data());
+            }
+            if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
+            else TopDir->SetOwner(kTRUE);
             TList* TopContainer         = (TList*) TopDir->FindObject(Form("Cut Number %s",fCutSelection.Data()));
-                if(TopContainer == NULL) {cout << "ERROR: " << Form("Cut Number %s",fCutSelection.Data()) << " not found in File" << endl; return;}
-                else TopContainer->SetOwner(kTRUE);
+            if(TopContainer == NULL) {cout << "ERROR: " << Form("Cut Number %s",fCutSelection.Data()) << " not found in File" << endl; return;}
+            else TopContainer->SetOwner(kTRUE);
             TList* ESDContainer         = (TList*) TopContainer->FindObject(Form("%s ESD histograms",fCutSelection.Data()));
-                if(ESDContainer == NULL) {cout << "ERROR: " << Form("%s ESD histograms",fCutSelection.Data()) << " not found in File" << endl; return;}
-                else ESDContainer->SetOwner(kTRUE);
+            if(ESDContainer == NULL) {cout << "ERROR: " << Form("%s ESD histograms",fCutSelection.Data()) << " not found in File" << endl; return;}
+            else ESDContainer->SetOwner(kTRUE);
             TList* CaloCutsContainer    = (TList*) TopContainer->FindObject(Form("CaloCuts_%s",fClusterCutSelection.Data()));
-                if(isCalo && CaloCutsContainer == NULL) {cout << "ERROR: " << Form("CaloCuts_%s",fClusterCutSelection.Data()) << " not found in File" << endl; return;}
-                else if(CaloCutsContainer) CaloCutsContainer->SetOwner(kTRUE);
+            if(isCalo && CaloCutsContainer == NULL) {cout << "ERROR: " << Form("CaloCuts_%s",fClusterCutSelection.Data()) << " not found in File" << endl; return;}
+            else if(CaloCutsContainer) CaloCutsContainer->SetOwner(kTRUE);
             TList* CaloMergedCutsContainer = (TList*) TopContainer->FindObject(Form("CaloCuts_%s",fMClusterCutSelection.Data()));
-                if(isMerged && CaloMergedCutsContainer == NULL) {cout << "ERROR: " << Form("CaloCuts_%s",fMClusterCutSelection.Data()) << " not found in File" << endl; return;}
-                else if(CaloMergedCutsContainer) CaloMergedCutsContainer->SetOwner(kTRUE);
+            if(isMerged && CaloMergedCutsContainer == NULL) {cout << "ERROR: " << Form("CaloCuts_%s",fMClusterCutSelection.Data()) << " not found in File" << endl; return;}
+            else if(CaloMergedCutsContainer) CaloMergedCutsContainer->SetOwner(kTRUE);
             TList* ConvCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvCuts_%s",fGammaCutSelection.Data()));
-                if(isConv && ConvCutsContainer == NULL) {cout << "ERROR: " << Form("ConvCuts_%s",fGammaCutSelection.Data()) << " not found in File" << endl; return;}
-                else if(ConvCutsContainer) ConvCutsContainer->SetOwner(kTRUE);
+            if(isConv && ConvCutsContainer == NULL) {cout << "ERROR: " << Form("ConvCuts_%s",fGammaCutSelection.Data()) << " not found in File" << endl; return;}
+            else if(ConvCutsContainer) ConvCutsContainer->SetOwner(kTRUE);
             TList* ConvEventCutsContainer    = (TList*) TopContainer->FindObject(Form("ConvEventCuts_%s",fEventCutSelection.Data()));
-                if(ConvEventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection.Data()) << " not found in File" << endl; return;}
-                else ConvEventCutsContainer->SetOwner(kTRUE);
+            if(ConvEventCutsContainer == NULL) {cout << "ERROR: " << Form("ConvEventCuts_%s",fEventCutSelection.Data()) << " not found in File" << endl; return;}
+            else ConvEventCutsContainer->SetOwner(kTRUE);
             //--------------------------------------------------------------------------------------------------------
             if(doEquidistantXaxis) bin  = mapBin[fRunNumber];
             else bin = fRunNumber.Atoi() - hFBin;
@@ -895,13 +988,31 @@ void EventQA_Runwise(
             //--------------------------------------------------------------------------------------------------------
             //----------------------- number of reference tracks in the TPC (|eta| < 0.8) ----------------------------
             //--------------------------------------------------------------------------------------------------------
-            TH1F* GOODESD               = (TH1F*) ESDContainer->FindObject("GoodESDTracks");
+            TH1D* GOODESD               = (TH1D*) ESDContainer->FindObject("GoodESDTracks");
             if(GOODESD){
                 hTracksMeanGood[i]->SetBinContent(bin, GOODESD->GetMean());
                 hTracksMeanGood[i]->SetBinError(bin, GOODESD->GetMeanError());
                 sTracksMeanGood.mean += GOODESD->GetMean();
                 hTracksRMSGood[i]->SetBinContent(bin, GOODESD->GetRMS());
                 hTracksRMSGood[i]->SetBinError(bin, GOODESD->GetRMSError());
+                TH1D* tempTrackMult       = new TH1D(*GOODESD);
+                tempTrackMult->GetXaxis()->SetTitle("#tracks");
+                tempTrackMult->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dtracks}");
+                tempTrackMult->SetTitle(Form("%s",fRunNumber.Data()));
+                tempTrackMult->Sumw2();
+                tempTrackMult->Scale(1 / tempTrackMult->GetEntries());
+                tempTrackMult->SetDirectory(0);
+                vecTrackMult[i].push_back(tempTrackMult);
+                if(i==0) mapTrackMultRatio[j]=bin;
+                else if( (mapTrackMultRatio.find(j) != mapTrackMultRatio.end()) && mapTrackMultRatio[j]>=0 && mapTrackMultRatio[j]<(Int_t)vecTrackMult[0].size() ){
+                    TH1D* tempTrackMultRatio   = new TH1D(*tempTrackMult);
+                    tempTrackMultRatio->Divide(tempTrackMultRatio,vecTrackMult[0].at(mapTrackMultRatio[j]),1,1,"B");
+                    tempTrackMultRatio->SetName(Form("%s_-TrackMultRatio_%s",fRunNumber.Data(),fDataSet.Data()));
+                    tempTrackMultRatio->GetXaxis()->SetRangeUser(-10,10);
+                    tempTrackMultRatio->GetYaxis()->SetTitle("ratio");
+                    tempTrackMultRatio->GetYaxis()->SetRangeUser(0,2);
+                    vecTrackMultRatio[i-1].push_back(tempTrackMultRatio);
+                }
             }else cout << "INFO: Object |GoodESDTracks| could not be found! Skipping Fill..." << endl;
 
             //--------------------------------------------------------------------------------------------------------
@@ -935,26 +1046,113 @@ void EventQA_Runwise(
             }else cout << "INFO: Object |VertexZ| could not be found! Skipping Fill..." << endl;
 
             if(fEnergyFlag.Contains("PbPb")){
-            //--------------------------------------------------------------------------------------------------------
-            //--------------------------------------- centrality -----------------------------------------------------
-            //--------------------------------------------------------------------------------------------------------
-            TH1D* Centrality               = (TH1D*) ESDContainer->FindObject("Centrality");
-            if(Centrality){
-                hCentralityMean[i]->SetBinContent(bin, Centrality->GetMean());
-                hCentralityMean[i]->SetBinError(bin, Centrality->GetMeanError());
-                sCentralityMean.mean += Centrality->GetMean();
-            }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
+                //--------------------------------------------------------------------------------------------------------
+                //--------------------------------------- centrality -----------------------------------------------------
+                //--------------------------------------------------------------------------------------------------------
+                TH1D* Centrality               = (TH1D*) ESDContainer->FindObject("Centrality");
+                if(Centrality){
+                    Int_t binT  = 1;
+                    while (!(Centrality->GetBinContent(binT) > 0) && binT < Centrality->GetNbinsX()) binT++;
+                    hCentralityMin[i]->SetBinContent(bin, Centrality->GetBinCenter(binT)-0.5);
+                    hCentralityMin[i]->SetBinError(bin, 0);
+                    binT  = Centrality->GetNbinsX();
+                    while (!(Centrality->GetBinContent(binT) > 0) && binT > 0 ) binT--;
+                    hCentralityMax[i]->SetBinContent(bin, Centrality->GetBinCenter(binT)+0.5);
+                    hCentralityMax[i]->SetBinError(bin, 0);
 
-            //--------------------------------------------------------------------------------------------------------
-            //--------------------------------------- event plane angle ----------------------------------------------
-            //--------------------------------------------------------------------------------------------------------
-            TH1D* EventPlaneAngle          = (TH1D*) ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
-            if(EventPlaneAngle){
-                hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
-                hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
-            } else cout << "INFO: Object |EventPlaneAngle| could not be found! Skipping Fill..." << endl;
+                    hCentralityMean[i]->SetBinContent(bin, Centrality->GetMean());
+                    hCentralityMean[i]->SetBinError(bin, Centrality->GetMeanError());
+                    sCentralityMean.mean += Centrality->GetMean();
+                    TH1D* tempCent       = new TH1D(*Centrality);
+                    tempCent->GetXaxis()->SetTitle("Centrality (%)");
+                    tempCent->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dcent}");
+                    tempCent->SetTitle(Form("%s",fRunNumber.Data()));
+                    tempCent->Sumw2();
+                    tempCent->Scale(1 / tempCent->GetEntries());
+                    tempCent->SetDirectory(0);
+                    vecCent[i].push_back(tempCent);
+                    if(i==0) mapCentRatio[j]=bin;
+                    else if( (mapCentRatio.find(j) != mapCentRatio.end()) && mapCentRatio[j]>=0 && mapCentRatio[j]<(Int_t)vecCent[0].size() ){
+                        TH1D* tempCentRatio   = new TH1D(*tempCent);
+                        tempCentRatio->Divide(tempCentRatio,vecCent[0].at(mapCentRatio[j]),1,1,"B");
+                        tempCentRatio->SetName(Form("%s_-CentRatio_%s",fRunNumber.Data(),fDataSet.Data()));
+                        tempCentRatio->GetXaxis()->SetRangeUser(-10,10);
+                        tempCentRatio->GetYaxis()->SetTitle("ratio");
+                        tempCentRatio->GetYaxis()->SetRangeUser(0,2);
+                        vecCentRatio[i-1].push_back(tempCentRatio);
+                    }
+                }else cout << "INFO: Object |Centrality| could not be found! Skipping Fill..." << endl;
+
+                //--------------------------------------------------------------------------------------------------------
+                //--------------------------------------- event plane angle ----------------------------------------------
+                //--------------------------------------------------------------------------------------------------------
+                TH1D* EventPlaneAngle          = (TH1D*) ConvEventCutsContainer->FindObject(Form("EventPlaneAngle %s",fEventCutSelection.Data()));
+                if(EventPlaneAngle){
+                    hEventPlaneAngleMean[i]->SetBinContent(bin, EventPlaneAngle->GetMean());
+                    hEventPlaneAngleMean[i]->SetBinError(bin, EventPlaneAngle->GetMeanError());
+                } else cout << "INFO: Object |EventPlaneAngle| could not be found! Skipping Fill..." << endl;
             }
 
+            TH1D* V0Mult                        = (TH1D*) ESDContainer->FindObject("V0 Multiplicity");
+            if (V0Mult){
+                Int_t binT       = 1;
+                while (!(V0Mult->GetBinContent(binT) > 0) && binT < V0Mult->GetNbinsX()) binT++;
+                hV0MultMin[i]->SetBinContent(bin, V0Mult->GetBinCenter(binT));
+                hV0MultMin[i]->SetBinError(bin, 0);
+                hV0MultMean[i]->SetBinContent(bin, V0Mult->GetMean());
+                hV0MultMean[i]->SetBinError(bin, V0Mult->GetMeanError());
+                sV0MultMean.mean += V0Mult->GetMean();
+                hV0MultRMS[i]->SetBinContent(bin, V0Mult->GetRMS());
+                hV0MultRMS[i]->SetBinError(bin, V0Mult->GetRMSError());
+                TH1D* tempV0Mult       = new TH1D(*V0Mult);
+                tempV0Mult->GetXaxis()->SetTitle("V0 Multiplicity");
+                tempV0Mult->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dV0mult}");
+                tempV0Mult->SetTitle(Form("%s",fRunNumber.Data()));
+                tempV0Mult->Sumw2();
+                tempV0Mult->Scale(1 / tempV0Mult->GetEntries());
+                tempV0Mult->SetDirectory(0);
+                vecV0Mult[i].push_back(tempV0Mult);
+                if(i==0) mapV0MultRatio[j]=bin;
+                else if( (mapV0MultRatio.find(j) != mapV0MultRatio.end()) && mapV0MultRatio[j]>=0 && mapV0MultRatio[j]<(Int_t)vecV0Mult[0].size() ){
+                    TH1D* tempV0MultRatio   = new TH1D(*tempV0Mult);
+                    tempV0MultRatio->Divide(tempV0MultRatio,vecV0Mult[0].at(mapV0MultRatio[j]),1,1,"B");
+                    tempV0MultRatio->SetName(Form("%s_-V0MultRatio_%s",fRunNumber.Data(),fDataSet.Data()));
+                    tempV0MultRatio->GetXaxis()->SetRangeUser(-10,10);
+                    tempV0MultRatio->GetYaxis()->SetTitle("ratio");
+                    tempV0MultRatio->GetYaxis()->SetRangeUser(0,2);
+                    vecV0MultRatio[i-1].push_back(tempV0MultRatio);
+                }
+            }
+            TH1D* V0Trigg                        = (TH1D*) ESDContainer->FindObject("V0 Trigger");
+            if (V0Trigg){
+                Int_t binT       = 1;
+                while (!(V0Trigg->GetBinContent(binT) > 0) && binT < V0Trigg->GetNbinsX()) binT++;
+                hV0TriggMin[i]->SetBinContent(bin, V0Trigg->GetBinCenter(binT));
+                hV0TriggMin[i]->SetBinError(bin, 0);
+                hV0TriggMean[i]->SetBinContent(bin, V0Trigg->GetMean());
+                hV0TriggMean[i]->SetBinError(bin, V0Trigg->GetMeanError());
+                sV0TriggMean.mean += V0Trigg->GetMean();
+                hV0TriggRMS[i]->SetBinContent(bin, V0Trigg->GetRMS());
+                hV0TriggRMS[i]->SetBinError(bin, V0Trigg->GetRMSError());
+                TH1D* tempV0Trigg       = new TH1D(*V0Trigg);
+                tempV0Trigg->GetXaxis()->SetTitle("V0 Trigger amplitude");
+                tempV0Trigg->GetYaxis()->SetTitle("#frac{1}{N_{Events}} #frac{dN}{dV0trig}");
+                tempV0Trigg->SetTitle(Form("%s",fRunNumber.Data()));
+                tempV0Trigg->Sumw2();
+                tempV0Trigg->Scale(1 / tempV0Trigg->GetEntries());
+                tempV0Trigg->SetDirectory(0);
+                vecV0Trigg[i].push_back(tempV0Trigg);
+                if(i==0) mapV0TriggRatio[j]=bin;
+                else if( (mapV0TriggRatio.find(j) != mapV0TriggRatio.end()) && mapV0TriggRatio[j]>=0 && mapV0TriggRatio[j]<(Int_t)vecV0Trigg[0].size() ){
+                    TH1D* tempV0TriggRatio   = new TH1D(*tempV0Trigg);
+                    tempV0TriggRatio->Divide(tempV0TriggRatio,vecV0Trigg[0].at(mapV0TriggRatio[j]),1,1,"B");
+                    tempV0TriggRatio->SetName(Form("%s_-V0TriggRatio_%s",fRunNumber.Data(),fDataSet.Data()));
+                    tempV0TriggRatio->GetXaxis()->SetRangeUser(-10,10);
+                    tempV0TriggRatio->GetYaxis()->SetTitle("ratio");
+                    tempV0TriggRatio->GetYaxis()->SetRangeUser(0,2);
+                    vecV0TriggRatio[i-1].push_back(tempV0TriggRatio);
+                }
+            }
             //--------------------------------------------------------------------------------------------------------
             //------------------------- Calorimeter selection histograms ---------------------------------------------
             //--------------------------------------------------------------------------------------------------------
@@ -1009,13 +1207,13 @@ void EventQA_Runwise(
                     hConvNCandidates[i]->SetBinError(bin, sqrt(ConvNCandidates) / nEvents);
                     hConvNCandidatesQA[i]->SetBinContent(bin, ConvNCandidatesQA / nEvents);
                     hConvNCandidatesQA[i]->SetBinError(bin, sqrt(ConvNCandidatesQA) / nEvents);
-		    sConvNCandidatesQA.mean += ConvNCandidatesQA / nEvents;
+                    sConvNCandidatesQA.mean += ConvNCandidatesQA / nEvents;
                 }else cout << "INFO: Object |IsPhotonSelected| could not be found! Skipping Fill..." << endl;
             }
             //--------------------------------------------------------------------------------------------------------
             //---------------------------- Neutral meson properties --------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
-            if (!isMerged){
+            if (!isMerged && fMode != 200){
                 TH2D* ESD_Mother        = (TH2D*) ESDContainer->FindObject("ESD_Mother_InvMass_Pt");
                 TH2D* ESD_Background    = (TH2D*) ESDContainer->FindObject("ESD_Background_InvMass_Pt");
                 if( ESD_Mother && ESD_Background ){
@@ -1110,47 +1308,48 @@ void EventQA_Runwise(
                 namePi0MesonOpen        = "ESD_Mother_Pt_OpenAngle";
             }
 
-            TH2D* Pi0PtY                = (TH2D*) ESDContainer->FindObject(namePi0MesonY.Data());
-            if(Pi0PtY){
-                TH1D* Pi0Pt             = (TH1D*) Pi0PtY->ProjectionX("Pi0_Pt");
-                TH1D* Pi0Y              = (TH1D*) Pi0PtY->ProjectionY("Pi0_Y");
-                hPi0Pt[i]->SetBinContent(bin, Pi0Pt->GetMean());
-                hPi0Pt[i]->SetBinError(bin, Pi0Pt->GetMeanError());
-                hPi0PtRMS[i]->SetBinContent(bin, Pi0Pt->GetRMS());
-                hPi0PtRMS[i]->SetBinError(bin, Pi0Pt->GetRMSError());
-                hPi0Y[i]->SetBinContent(bin, Pi0Y->GetMean());
-                hPi0Y[i]->SetBinError(bin, Pi0Y->GetMeanError());
-                hPi0YRMS[i]->SetBinContent(bin, Pi0Y->GetRMS());
-                hPi0YRMS[i]->SetBinError(bin, Pi0Y->GetRMSError());
-                delete Pi0Y;
-                delete Pi0Pt;
-            }else cout << "INFO: Object |ESD_MotherPi0_Pt_Y| could not be found! Skipping Fill..." << endl;
+            if (fMode != 200){
+                TH2D* Pi0PtY                = (TH2D*) ESDContainer->FindObject(namePi0MesonY.Data());
+                if(Pi0PtY){
+                    TH1D* Pi0Pt             = (TH1D*) Pi0PtY->ProjectionX("Pi0_Pt");
+                    TH1D* Pi0Y              = (TH1D*) Pi0PtY->ProjectionY("Pi0_Y");
+                    hPi0Pt[i]->SetBinContent(bin, Pi0Pt->GetMean());
+                    hPi0Pt[i]->SetBinError(bin, Pi0Pt->GetMeanError());
+                    hPi0PtRMS[i]->SetBinContent(bin, Pi0Pt->GetRMS());
+                    hPi0PtRMS[i]->SetBinError(bin, Pi0Pt->GetRMSError());
+                    hPi0Y[i]->SetBinContent(bin, Pi0Y->GetMean());
+                    hPi0Y[i]->SetBinError(bin, Pi0Y->GetMeanError());
+                    hPi0YRMS[i]->SetBinContent(bin, Pi0Y->GetRMS());
+                    hPi0YRMS[i]->SetBinError(bin, Pi0Y->GetRMSError());
+                    delete Pi0Y;
+                    delete Pi0Pt;
+                }else cout << "INFO: Object |ESD_MotherPi0_Pt_Y| could not be found! Skipping Fill..." << endl;
 
-            TH2D* Pi0PtAlpha            = (TH2D*) ESDContainer->FindObject(namePi0MesonAlpha.Data());
-            if(Pi0PtAlpha){
-                TH1D* Pi0Alpha          = (TH1D*) Pi0PtAlpha->ProjectionY("Pi0_Alpha");
-                hPi0Alpha[i]->SetBinContent(bin, Pi0Alpha->GetMean());
-                hPi0Alpha[i]->SetBinError(bin, Pi0Alpha->GetMeanError());
-                hPi0AlphaRMS[i]->SetBinContent(bin, Pi0Alpha->GetRMS());
-                hPi0AlphaRMS[i]->SetBinError(bin, Pi0Alpha->GetRMSError());
-                delete Pi0Alpha;
-            }else cout << "INFO: Object |ESD_MotherPi0_Pt_Alpha| could not be found! Skipping Fill..." << endl;
+                TH2D* Pi0PtAlpha            = (TH2D*) ESDContainer->FindObject(namePi0MesonAlpha.Data());
+                if(Pi0PtAlpha){
+                    TH1D* Pi0Alpha          = (TH1D*) Pi0PtAlpha->ProjectionY("Pi0_Alpha");
+                    hPi0Alpha[i]->SetBinContent(bin, Pi0Alpha->GetMean());
+                    hPi0Alpha[i]->SetBinError(bin, Pi0Alpha->GetMeanError());
+                    hPi0AlphaRMS[i]->SetBinContent(bin, Pi0Alpha->GetRMS());
+                    hPi0AlphaRMS[i]->SetBinError(bin, Pi0Alpha->GetRMSError());
+                    delete Pi0Alpha;
+                }else cout << "INFO: Object |ESD_MotherPi0_Pt_Alpha| could not be found! Skipping Fill..." << endl;
 
-            TH2D* Pi0PtOpenAngle        = (TH2D*) ESDContainer->FindObject(namePi0MesonOpen.Data());
-            if(Pi0PtOpenAngle){
-                TH1D* Pi0OpenAngle      = (TH1D*) Pi0PtOpenAngle->ProjectionY("Pi0_OpenAngle");
-                hPi0OpenAngle[i]->SetBinContent(bin, Pi0OpenAngle->GetMean());
-                hPi0OpenAngle[i]->SetBinError(bin, Pi0OpenAngle->GetMeanError());
-                hPi0OpenAngleRMS[i]->SetBinContent(bin, Pi0OpenAngle->GetRMS());
-                hPi0OpenAngleRMS[i]->SetBinError(bin, Pi0OpenAngle->GetRMSError());
-                delete Pi0OpenAngle;
-            }else cout << "INFO: Object |ESD_MotherPi0_Pt_OpenAngle| could not be found! Skipping Fill..." << endl;
-
+                TH2D* Pi0PtOpenAngle        = (TH2D*) ESDContainer->FindObject(namePi0MesonOpen.Data());
+                if(Pi0PtOpenAngle){
+                    TH1D* Pi0OpenAngle      = (TH1D*) Pi0PtOpenAngle->ProjectionY("Pi0_OpenAngle");
+                    hPi0OpenAngle[i]->SetBinContent(bin, Pi0OpenAngle->GetMean());
+                    hPi0OpenAngle[i]->SetBinError(bin, Pi0OpenAngle->GetMeanError());
+                    hPi0OpenAngleRMS[i]->SetBinContent(bin, Pi0OpenAngle->GetRMS());
+                    hPi0OpenAngleRMS[i]->SetBinError(bin, Pi0OpenAngle->GetRMSError());
+                    delete Pi0OpenAngle;
+                }else cout << "INFO: Object |ESD_MotherPi0_Pt_OpenAngle| could not be found! Skipping Fill..." << endl;
+            }
 
             //--------------------------------------------------------------------------------------------------------
             //---------------------------- Eta properties ------------------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
-            if (!isMerged){
+            if (!isMerged && fMode != 200){
                 TH2D* EtaPtY            = (TH2D*) ESDContainer->FindObject("ESD_MotherEta_Pt_Y");
                 if(EtaPtY){
                     TH1D* EtaPt         = (TH1D*) EtaPtY->ProjectionX("Eta_Pt");
@@ -1227,6 +1426,8 @@ void EventQA_Runwise(
             cout << "INFO: hCentralityMean: "    << sCentralityMean.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sCentralityMean.nSigmaBad    << " error bars from the mean over all runs" << endl;
             cout << "INFO: hFracWOVtx: "         << sFracWOVtx.nRunsBad         << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sFracWOVtx.nSigmaBad         << " error bars from the mean over all runs" << endl;
             cout << "INFO: hTracksMeanGood: "    << sTracksMeanGood.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sTracksMeanGood.nSigmaBad    << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hV0MultMean: "        << sV0MultMean.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sV0MultMean.nSigmaBad    << " error bars from the mean over all runs" << endl;
+            cout << "INFO: hV0TriggMean: "        << sV0TriggMean.nRunsBad    << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sV0TriggMean.nSigmaBad    << " error bars from the mean over all runs" << endl;
             cout << "INFO: hConvNCandidatesQA: " << sConvNCandidatesQA.nRunsBad << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sConvNCandidatesQA.nSigmaBad << " error bars from the mean over all runs" << endl;
             cout << "INFO: hPi0Frac: "           << sPi0Frac.nRunsBad           << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Frac.nSigmaBad           << " error bars from the mean over all runs" << endl;
             cout << "INFO: hPi0Mass: "           << sPi0Mass.nRunsBad           << " runs of " <<  vecRuns.size() << " runs deviate by more than " << sPi0Mass.nSigmaBad << " error bars from the mean over all runs" << endl;
@@ -1295,6 +1496,17 @@ void EventQA_Runwise(
 
             if(i>0){
                 DrawVectorOverviewTH1D( canvas, vecVertexZRatio[i-1], "hRatioVertexZ", outputDirDataSet, suffix,
+                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                DrawVectorOverviewTH1D( canvas, vecCentRatio[i-1], "hRatioCentZ", outputDirDataSet, suffix,
+                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                cout << "plotting V0 Mult ratio" << endl;
+                DrawVectorOverviewTH1D( canvas, vecV0MultRatio[i-1], "hRatioV0Mult", outputDirDataSet, suffix,
+                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                cout << "plotting V0 Trigg ratio" << endl;
+                DrawVectorOverviewTH1D( canvas, vecV0TriggRatio[i-1], "hRatioV0Trigg", outputDirDataSet, suffix,
+                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                cout << "plotting Track Mult ratio" << endl;
+                DrawVectorOverviewTH1D( canvas, vecTrackMultRatio[i-1], "hRatioTrackMult", outputDirDataSet, suffix,
                                         0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
             }
 
@@ -1387,6 +1599,21 @@ void EventQA_Runwise(
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecVertexZ[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "VertexZ_Runwise", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+            DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecCent[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+                                    doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "Cent_Runwise", plotDataSets[i], kFALSE,
+                                    fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+//             cout << "plotting V0 Mult" << endl;
+//             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecV0Mult[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+//                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "V0Mult_Runwise", plotDataSets[i], kFALSE,
+//                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+//             cout << "plotting V0 Trigg" << endl;
+//             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecV0Trigg[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+//                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "V0Trigg_Runwise", plotDataSets[i], kFALSE,
+//                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+//             cout << "plotting Track Mult" << endl;
+//             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecTrackMult[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+//                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "TrackMult_Runwise", plotDataSets[i], kFALSE,
+//                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
             if (!isMerged){
                 //--------------------------------------------------------------------------------------------------------
                 DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecPi0Signal[i], vecRuns, 1, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
@@ -1481,11 +1708,11 @@ void EventQA_Runwise(
                 else SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(),suffix.Data()));
             }
             legend->Clear();
-	    if(drawVerticalLines){
-	      for(Int_t lineBin=0; lineBin<nLines; lineBin++){
-		delete verticalLines[lineBin];
-	      }
-	    }
+            if(drawVerticalLines){
+                for(Int_t lineBin=0; lineBin<nLines; lineBin++){
+                    delete verticalLines[lineBin];
+                }
+            }
         }
     }
 
@@ -1517,7 +1744,7 @@ void EventQA_Runwise(
 
                     for(Int_t b=1; b<hNBin+1; b++){
                         Double_t hData = ((TH1D*) vecHistos[i].at(h))->GetBinContent(b);
-			Double_t hErrData = ((TH1D*) vecHistos[i].at(h))->GetBinError(b);
+                        Double_t hErrData = ((TH1D*) vecHistos[i].at(h))->GetBinError(b);
                         for(Int_t j=0; j<nSets-nData; j++){
                             Double_t hMC = ((TH1D*) vecHistos[j+nData].at(h))->GetBinContent(b);
                             Double_t hErrMC = ((TH1D*) vecHistos[j+nData].at(h))->GetBinError(b);
@@ -1525,10 +1752,10 @@ void EventQA_Runwise(
                                 if(hData/hMC>1.98) ratio[j]->SetBinContent(b,1.98);
                                 else if(hData/hMC<0.02) ratio[j]->SetBinContent(b,0.02);
                                 else {
-				  ratio[j]->SetBinContent(b,hData/hMC);
-				  Double_t hErrRatio = hData*sqrt((hErrData/hData)*(hErrData/hData)+(hErrMC/hMC)*(hErrMC/hMC))/hMC;
-				  ratio[j]->SetBinError(b,hErrRatio);
-				}
+                                    ratio[j]->SetBinContent(b,hData/hMC);
+                                    Double_t hErrRatio = hData*sqrt((hErrData/hData)*(hErrData/hData)+(hErrMC/hMC)*(hErrMC/hMC))/hMC;
+                                    ratio[j]->SetBinError(b,hErrRatio);
+                                }
                             }else ratio[j]->SetBinContent(b,1.98);
                         }
                     }
@@ -1619,8 +1846,16 @@ void EventQA_Runwise(
         for(Int_t h=0; h<(Int_t) vecHistos[i].size(); h++) WriteHistogram(((TH1D*) vecHistos[i].at(h)));
 
         WriteHistogramTH1DVec(fOutput,vecVertexZ[i],"VertexZ");
+        WriteHistogramTH1DVec(fOutput,vecCent[i],"Cent");
+        WriteHistogramTH1DVec(fOutput,vecV0Mult[i],"V0Mult");
+        WriteHistogramTH1DVec(fOutput,vecV0Trigg[i],"V0Trigg");
+        WriteHistogramTH1DVec(fOutput,vecTrackMult[i],"TrackMult");
 
         if(i>0) WriteHistogramTH1DVec(fOutput,vecVertexZRatio[i-1],"VertexZ-Ratios");
+        if(i>0) WriteHistogramTH1DVec(fOutput,vecCentRatio[i-1],"Cent-Ratios");
+        if(i>0) WriteHistogramTH1DVec(fOutput,vecV0MultRatio[i-1],"V0Mult-Ratios");
+        if(i>0) WriteHistogramTH1DVec(fOutput,vecV0TriggRatio[i-1],"V0Trigg-Ratios");
+        if(i>0) WriteHistogramTH1DVec(fOutput,vecTrackMultRatio[i-1],"TrackMult-Ratios");
 
         WriteHistogramTH1DVec(fOutput,vecPi0Signal[i],"Pi0Signal");
         WriteHistogramTH1DVec(fOutput,vecEtaSignal[i],"EtaSignal");
@@ -1647,6 +1882,8 @@ void EventQA_Runwise(
     delete[] vecHistos;
     delete[] vecVertexZ;
     delete[] vecVertexZRatio;
+    delete[] vecCent;
+    delete[] vecCentRatio;
     delete[] vecPi0Signal;
     delete[] vecEtaSignal;
     delete[] vecPi0Fit;

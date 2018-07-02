@@ -1,12 +1,12 @@
 /*******************************************************************************
  ******  provided by Gamma Conversion Group, PWGGA,                        *****
- ******     Daniel Muehlheim, d.muehlheim@cern.ch                          ***** 
- ******     Friederike Bock, fbock@cern.ch                                 ***** 
+ ******     Daniel Muehlheim, d.muehlheim@cern.ch                          *****
+ ******     Friederike Bock, fbock@cern.ch                                 *****
  *******************************************************************************/
 
 #include "QA.h"
 
-void EventQA_CompareCentralities( TString suffix  = "eps", 
+void EventQA_CompareCentralities( TString suffix  = "eps",
                                   Int_t mode      = 0
                       ){
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -24,16 +24,16 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     const Int_t nSets           = 4;
     Size_t constMarkerSize      = 1;
     TString fEnergyFlag         = "PbPb_5.02TeV";
-    TString dataSet             = "LHC15o";                                 // used for filename, GetDefaultMarkerStyle 
+    TString dataSet             = "LHC15o";                                 // used for filename, GetDefaultMarkerStyle
     TString MCSet               = "LHC16g1";
     TString centralities[nSets] = {"0-10%","10-20%","20-50%","50-90%"};     // used for plot and marker style and color
     TString cutsDataSets[nSets] = {
       "10110013_00200009247602008250404000_0652501500000000",
       "11210013_00200009247602008250404000_0652501500000000",
       "12510013_00200009247602008250404000_0652501500000000",
-      "15910013_00200009247602008250404000_0652501500000000"  
+      "15910013_00200009247602008250404000_0652501500000000"
     };
-                     
+
 //**************************************************************************************************************
     Style_t hMarkerStyle[nSets];
     Style_t hMarkerStyleMC[nSets];
@@ -53,16 +53,16 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     for(Int_t i=0; i<nSets; i++)
     {
         pathDataSets[i] = Form("%s/%s/EventQA", cutsDataSets[i].Data(),fEnergyFlag.Data());
-	hMarkerStyle[i] = GetDefaultMarkerStyle(fEnergyFlag, dataSet.Data() , centralities[i].Data());
-	hMarkerStyleMC[i] = GetDefaultMarkerStyle(fEnergyFlag, MCSet.Data() , centralities[i].Data());
-	hMarkerSize[i]  = constMarkerSize;
-	hMarkerColor[i] = GetColorDefaultColor(fEnergyFlag, dataSet.Data() , centralities[i].Data());
-	hMarkerColorMC[i] = GetColorDefaultColor(fEnergyFlag, MCSet.Data() , centralities[i].Data());
-	hLineColor[i]   = GetColorDefaultColor(fEnergyFlag, dataSet.Data() , centralities[i].Data());
-	hLineColorMC[i]   = GetColorDefaultColor(fEnergyFlag, MCSet.Data() , centralities[i].Data());
+        hMarkerStyle[i] = GetDefaultMarkerStyle(fEnergyFlag, dataSet.Data() , centralities[i].Data());
+        hMarkerStyleMC[i] = GetDefaultMarkerStyle(fEnergyFlag, MCSet.Data() , centralities[i].Data());
+        hMarkerSize[i]  = constMarkerSize;
+        hMarkerColor[i] = GetColorDefaultColor(fEnergyFlag, dataSet.Data() , centralities[i].Data());
+        hMarkerColorMC[i] = GetColorDefaultColor(fEnergyFlag, MCSet.Data() , centralities[i].Data());
+        hLineColor[i]   = GetColorDefaultColor(fEnergyFlag, dataSet.Data() , centralities[i].Data());
+        hLineColorMC[i]   = GetColorDefaultColor(fEnergyFlag, MCSet.Data() , centralities[i].Data());
 
-	ReturnSeparatedCutNumberAdvanced(cutsDataSets[i], fEventCutSelection[i], fGammaCutSelection[i], dummyCutSelection[i],dummyCutSelection[i], fMesonCutSelection[i], mode);
-	cout << "set " << i << ": " << fEventCutSelection[i].Data() << ", " << fGammaCutSelection[i].Data() << ", " << fMesonCutSelection[i].Data() << endl;
+        ReturnSeparatedCutNumberAdvanced(cutsDataSets[i], fEventCutSelection[i], fGammaCutSelection[i], dummyCutSelection[i],dummyCutSelection[i], fMesonCutSelection[i], mode);
+        cout << "set " << i << ": " << fEventCutSelection[i].Data() << ", " << fGammaCutSelection[i].Data() << ", " << fMesonCutSelection[i].Data() << endl;
   }
 
 
@@ -98,26 +98,26 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
     Int_t nRange = 0;
 
     for(Int_t i=0; i<nSets; i++){
-        
+
         vecHistos[i].push_back(hcVertexZ[i]);
-	vecHistosMC[i].push_back(hcVertexZMC[i]);
+        vecHistosMC[i].push_back(hcVertexZMC[i]);
         vecHistosName[i].push_back("VertexZ");
         vecHistosNameForSaving[i].push_back("hVertex_Z");
         if(i==0)nRange++;
 
         vecHistos[i].push_back(hcGoodESDTracks[i]);
-	vecHistosMC[i].push_back(hcGoodESDTracksMC[i]);
+        vecHistosMC[i].push_back(hcGoodESDTracksMC[i]);
         vecHistosName[i].push_back("GoodESDTracks");
         vecHistosNameForSaving[i].push_back("hNGoodTracks");
         if(i==0)nRange++;
 
-        
+
         vecHistos[i].push_back(hcV0Mult[i]);
-	vecHistosMC[i].push_back(hcV0MultMC[i]);
+        vecHistosMC[i].push_back(hcV0MultMC[i]);
         vecHistosName[i].push_back("V0 Multiplicity");
         vecHistosNameForSaving[i].push_back("hV0Mult");
         if(i==0)nRange++;
-    
+
         vecHistos[i].push_back(hcGammaCandidates[i]);
         vecHistosMC[i].push_back(hcGammaCandidatesMC[i]);
         vecHistosName[i].push_back("GammaCandidates");
@@ -129,9 +129,9 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
         vecHistosName[i].push_back(Form("EventPlaneAngle %s",fEventCutSelection[i].Data()));
         vecHistosNameForSaving[i].push_back("hEventPlaneAngle");
         if(i==0)nRange++;
-       
+
         vecHistos[i].push_back(hcNEvents[i]);
-	vecHistosMC[i].push_back(hcNEventsMC[i]);
+        vecHistosMC[i].push_back(hcNEventsMC[i]);
         vecHistosName[i].push_back("NEvents");
         vecHistosNameForSaving[i].push_back("hNoEvents");
         if(i==0)nRange++;
@@ -168,17 +168,17 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
             cout << ", ";
             temp->Sumw2();
             tempMC->Sumw2();
-	    if(j!=5){ // not for NoEvents histo
-	      // scale histograms with number of entries:
-	      Double_t tempEntries = temp->GetEntries();
-	      Double_t tempEntriesMC = tempMC->GetEntries();
-	      temp->Scale(1./tempEntries);
-	      tempMC->Scale(1./tempEntriesMC);
-	      temp->GetYaxis()->SetTitle(Form("#frac{1}{N} %s",temp->GetYaxis()->GetTitle()));
-	      tempMC->GetYaxis()->SetTitle(Form("#frac{1}{N} %s",tempMC->GetYaxis()->GetTitle()));
-	    }
-	    OnlyEditTH1(temp, hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
-	    OnlyEditTH1(tempMC, hMarkerStyleMC[i], hMarkerSize[i], hMarkerColorMC[i], hLineColorMC[i]);
+            if(j!=5){ // not for NoEvents histo
+                // scale histograms with number of entries:
+                Double_t tempEntries = temp->GetEntries();
+                Double_t tempEntriesMC = tempMC->GetEntries();
+                temp->Scale(1./tempEntries);
+                tempMC->Scale(1./tempEntriesMC);
+                temp->GetYaxis()->SetTitle(Form("#frac{1}{N} %s",temp->GetYaxis()->GetTitle()));
+                tempMC->GetYaxis()->SetTitle(Form("#frac{1}{N} %s",tempMC->GetYaxis()->GetTitle()));
+            }
+            OnlyEditTH1(temp, hMarkerStyle[i], hMarkerSize[i], hMarkerColor[i], hLineColor[i]);
+            OnlyEditTH1(tempMC, hMarkerStyleMC[i], hMarkerSize[i], hMarkerColorMC[i], hLineColorMC[i]);
             temp->GetXaxis()->SetTitleOffset(1);
             tempMC->GetXaxis()->SetTitleOffset(1);
             temp->GetYaxis()->SetTitleOffset(1.1);
@@ -232,9 +232,9 @@ void EventQA_CompareCentralities( TString suffix  = "eps",
             else legend->AddEntry(((TH1D*) vecHistos[i].at(h)),centralities[i],"p");
         }
         legend->Draw();
-        if ( vecHistosNameForSaving[0].at(h).Contains("Candidates") ) 
+        if ( vecHistosNameForSaving[0].at(h).Contains("Candidates") )
             PutProcessLabelAndEnergyOnPlot(0.75, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(),"","");
-        else 
+        else
             PutProcessLabelAndEnergyOnPlot(0.75, 0.97-nTopRows*0.06, 0.03, fCollisionSystem.Data(), "", "");
 	if ( vecHistosNameForSaving[0].at(h).Contains("VertexZ") || vecHistosNameForSaving[0].at(h).Contains("EventPlaneAngle")) SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Periodwise/%s.%s", dataSet.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()));
         else SaveWriteCanvas(canvas, Form("EventQA_CompareCentralities/%s/Periodwise/%s.%s", dataSet.Data(), vecHistosNameForSaving[0].at(h).Data(),suffix.Data()), kFALSE, kTRUE);

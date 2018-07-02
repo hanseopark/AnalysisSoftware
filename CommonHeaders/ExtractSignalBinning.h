@@ -1132,6 +1132,8 @@
     // ---------------------------------------------------------
     Int_t fNBinsCluster13TeVPt                      =  335;
     Double_t fBinsCluster13TeVPt[336];
+    Int_t fNBinsCluster13TeVPCMPt                   =  301;
+    Double_t fBinsCluster13TeVPCMPt[302];
 
     //****************************************************************************************************
     //******************** Pt binning for pp, 13TeV low B ( 0.2T ) **************************************
@@ -4931,7 +4933,7 @@
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
             }
-        } else if( energy.CompareTo("13TeV") == 0){
+        } else if( energy.CompareTo("13TeV") == 0 && modi != 0){
             fNBinsClusterPt       = fNBinsCluster13TeVPt;
             for(Int_t i=0; i<fNBinsCluster13TeVPt+1;i++){
                 if (i < 1) fBinsCluster13TeVPt[i]          = 0.3*i;
@@ -4945,6 +4947,21 @@
             }
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster13TeVPt[iPt];
+            }
+        } else if( energy.CompareTo("13TeV") == 0 && modi == 0){
+            fNBinsClusterPt        = fNBinsCluster13TeVPCMPt;
+            for(Int_t i=0; i<fNBinsCluster13TeVPCMPt+1;i++){
+                if (i < 1) fBinsCluster13TeVPCMPt[i]          = 0.3*i;
+                else if(i<55) fBinsCluster13TeVPCMPt[i]       = 0.3+0.05*(i-1);
+                else if(i<125) fBinsCluster13TeVPCMPt[i]      = 3.+0.1*(i-55);
+                else if(i<155) fBinsCluster13TeVPCMPt[i]      = 10.+0.2*(i-125);
+                else if(i<211) fBinsCluster13TeVPCMPt[i]      = 16.+0.25*(i-155);
+                else if(i<251) fBinsCluster13TeVPCMPt[i]      = 30.+0.5*(i-211);
+                else if(i<301) fBinsCluster13TeVPCMPt[i]      = 50.+1.0*(i-251);
+                else fBinsCluster13TeVPCMPt[i]                = 100;
+            }
+            for(Int_t iPt=0;iPt<=fNBinsCluster13TeVPCMPt;iPt++){
+                fBinsClusterPt[iPt] = fBinsCluster13TeVPCMPt[iPt];
             }
         } else if(  energy.CompareTo("XeXe_5.44TeV") == 0 ){
             fNBinsClusterPt       = fNBinsClusterXeXe5440GeVPt;

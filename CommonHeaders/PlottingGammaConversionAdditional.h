@@ -2808,6 +2808,7 @@
                                 TString centrality,
                                 Bool_t kBox = kFALSE){
 
+        cout << energy.Data() << "\t" << generator.Data() << "\t" << centrality.Data() << "\t" << kBox << endl;
         if (!energy.CompareTo("900GeV")){
             if (!kBox){
                 if (!generator.CompareTo("")||!generator.CompareTo("LHC10c_900GeV_pass4")){
@@ -3256,7 +3257,7 @@
             }
         }
         if (!energy.CompareTo("PbPb_5.02TeV")){
-            if (!generator.CompareTo("LHC15o")){
+            if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
                 if (!centrality.CompareTo("0-10%")){
                     return kRed+1;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3265,6 +3266,8 @@
                     return kOrange+7;
                 } else if (!centrality.CompareTo("50-90%")){
                     return kGreen+2;
+                } else if (!centrality.CompareTo("0-90%")){
+                    return kRed+2;
                 } else return kGray+2;
             } else if (!generator.CompareTo("LHC16g1")){
                 if (!centrality.CompareTo("0-10%")){
@@ -3622,7 +3625,7 @@
             }
         }
         if (!energy.CompareTo("PbPb_5.02TeV")){
-            if (!generator.CompareTo("LHC15o")){
+            if (!generator.CompareTo("LHC15o") || !generator.CompareTo("LHC15o_red")){
                 if (!centrality.CompareTo("0-10%")){
                     return 24;
                 } else if (!centrality.CompareTo("10-20%")){
@@ -3631,6 +3634,8 @@
                     return 27;
                 } else if (!centrality.CompareTo("50-90%")){
                     return 28;
+                } else if (!centrality.CompareTo("0-90%")){
+                    return 24;
                 } else return 25;
             } else if (!generator.CompareTo("LHC16g1")){
                 if (!centrality.CompareTo("0-10%")){

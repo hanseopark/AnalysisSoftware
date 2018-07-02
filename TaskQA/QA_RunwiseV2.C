@@ -52,6 +52,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     Bool_t      useDataRunListForMC     = kFALSE;
     Bool_t      addSubFolder            = kFALSE;
     Int_t       nSigmasBadRun[8]        = {2,2,2,2,2,2,2,2};
+    TString     fixedTopDir             = "";
 
     //**************************************************************************************************************
     //******************************* Read config file for detailed settings ***************************************
@@ -135,6 +136,8 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             doHistsForEverySet  = kTRUE;
         } else if (tempValue.BeginsWith("useDataRunListForMC",TString::kIgnoreCase)){
             useDataRunListForMC = kTRUE;
+        } else if (tempValue.BeginsWith("fixedTopDir",TString::kIgnoreCase)){
+            fixedTopDir     = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("DataSets",TString::kIgnoreCase)){
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
@@ -208,7 +211,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     //**************************************************************************************************************
     if (doEventQA)      EventQA_Runwise(    nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
                                             doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, nSigmasBadRun,
-                                            addLabelRunlist );
+                                            addLabelRunlist, fixedTopDir );
     if (doPhotonQA) {
         TString                         path = filePath;
         if(!filePathPhoton.IsNull())    path = filePathPhoton;

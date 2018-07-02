@@ -38,10 +38,11 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     Bool_t addSubfolder             = kFALSE;
     TString select                  = "";
     TString addPhotonCutNr          = "";
-    TString DataSets        [maxSets];
-    TString plotDataSets    [maxSets];
-    TString pathDataSets    [maxSets];
-    TString pathPhotonQA    [maxSets];
+    TString DataSets            [maxSets];
+    TString plotDataSets        [maxSets];
+    TString pathDataSets        [maxSets];
+    TString pathPhotonQA        [maxSets];
+    TString fixedCutSelections  [maxSets];
     Bool_t diffPhotonQAPath         = kFALSE;
     Int_t fuseClusterQAValues       = 0;
     Double_t arrQAEnergy[4];
@@ -56,6 +57,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
         plotDataSets[i]             = "";
         pathDataSets[i]             = "";
         pathPhotonQA[i]             = "";
+        fixedCutSelections[i]       = "";
     }
 
     // basic dead cell settings
@@ -160,6 +162,13 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
             for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
                 if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
                     DataSets[i-1]       = ((TString)((TObjString*)tempArr->At(i))->GetString());
+                else
+                    i                   = tempArr->GetEntries();
+            }
+        } else if (tempValue.BeginsWith("fixedCutSelections",TString::kIgnoreCase)){
+            for(Int_t i = 1; i<tempArr->GetEntries() && i < maxSets ; i++){
+                if (((TString)((TObjString*)tempArr->At(i))->GetString()).CompareTo("stop",TString::kIgnoreCase))
+                    fixedCutSelections[i-1]       = ((TString)((TObjString*)tempArr->At(i))->GetString());
                 else
                     i                   = tempArr->GetEntries();
             }
@@ -295,7 +304,7 @@ void QAV2(      TString configFileName  = "config.txt",     // set selected
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
-    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, mode, cutNr, suffix, labelData, addSubfolder);
+    if ( doEventQA )    EventQA     (nSets, fEnergyFlag, DataSets, plotDataSets, pathDataSets, fixedCutSelections, mode, cutNr, suffix, labelData, addSubfolder);
     if ( doPhotonQA )   PhotonQA    (nSets, fEnergyFlag, DataSets, plotDataSets, pathPhotonQA, mode, cutNr, suffix, labelData, addSubfolder, addPhotonCutNr);
     if ( doClusterQA){
         if(fuseClusterQAValues==1)
