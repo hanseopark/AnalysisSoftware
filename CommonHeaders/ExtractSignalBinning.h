@@ -770,6 +770,13 @@
                                                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
                                                         2, 2, 2, 2, 4, 4, 4, 4, 4, 4,     8, 5, 5, 5, 5, 5, 5, 5, 5, 5,
                                                         5, 5, 5};
+
+    // PCM binning fir Pi0 in RBins
+    Double_t fBinsPi013TeVPCMTrigINT7RBinsPt[15]    = { 0.0, 0.2, 0.4, 0.6, 0.8, 1., 1.5,  2.0, 3., 4.0,
+ 							6.0, 8., 10., 12., 16.};
+
+    Int_t fBinsPi013TeVPCMTrigINT7RBinsPtRebin[14]  = { 5, 5, 4,4,4,4, 4, 4, 4, 4, 5, 5, 5, 5};
+
     // PCM dca binning for pi0
     Double_t fBinsPi013TeVPCMTrigINT7PtDCA[28]      = { 0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1,           1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.4, 2.8, 3.2, 3.6,
                                                         4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 20.0, 25.0};
@@ -2350,7 +2357,7 @@
                 } else {                    // other modes
                     return 3;
                 }
-            } else if (energy.CompareTo("13TeV") == 0) {
+            } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0  ) {
                 if (mode == 0){
                     return 5;
                 } else if ( mode == 1 ){
@@ -3064,7 +3071,7 @@
                 } else if (mode == 20){
                     startPtBin     = 1;
                 }
-            } else if (energy.CompareTo("13TeV") == 0){
+            } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
                     if (specialTrigg == 1)  startPtBin = 7;
@@ -3757,7 +3764,7 @@
                         binning[i] = fBinsPi08TeVPtmEMCComb[i];
                     }
                 }
-            } else if (energy.CompareTo("13TeV") == 0){
+            } else if (energy.CompareTo("13TeV") == 0  || energy.CompareTo("13TeVRBins") == 0 ){
                 binningMax=103;
                 //Get Actual maximal Sizes of Binning Arrays
                 if (DCAcase==kTRUE){
@@ -3765,11 +3772,16 @@
                     binningMax=maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7PtDCA)/sizeof(fBinsPi013TeVPCMTrigINT7PtDCA[0])))-1;
                 }else if (mode==0){
                     if (SpecialTrigger==-1){
-                        maxNBins= 103;
+		      maxNBins= 103;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigCombPt)/sizeof(fBinsPi013TeVPCMTrigCombPt[0])))-1;
                     } else if (SpecialTrigger==0) {
+		      if (energy.Contains("RBins") ){
+ 			maxNBins= 14;
+			binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt)/sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt[0])))-1;
+ 		      } else{
                         maxNBins= 83;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7Pt)/sizeof(fBinsPi013TeVPCMTrigINT7Pt[0])))-1;
+		      }	
                     } else if (SpecialTrigger==1) {
                         maxNBins= 64;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEMC7Pt)/sizeof(fBinsPi013TeVPCMTrigEMC7Pt[0])))-1;
@@ -3829,7 +3841,11 @@
                         if (SpecialTrigger == -1) {
                             binning[i]      = fBinsPi013TeVPCMTrigCombPt[i];
                         } else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
-                            binning[i]      = fBinsPi013TeVPCMTrigINT7Pt[i];
+			  if( energy.Contains("RBins")) {
+ 			    binning[i]      = fBinsPi013TeVPCMTrigINT7RBinsPt[i];
+			  } else {
+ 			    binning[i]      = fBinsPi013TeVPCMTrigINT7Pt[i];
+ 			  }
                         } else if (SpecialTrigger==1){
                             binning[i]      = fBinsPi013TeVPCMTrigEMC7Pt[i];
                         } else if (SpecialTrigger==2){
@@ -5023,7 +5039,7 @@
             } else if ( trigger.CompareTo("82") == 0 ) {
                 triggerSetTemp = 4; // L1 INT8 EGA
             }
-        } else if (energy.CompareTo("13TeV") == 0) {
+        } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0) {
             if (trigger.CompareTo("10") == 0){
                 triggerSetTemp = 0; // MinBias
             } else if (trigger.CompareTo("52")==0){
@@ -5649,7 +5665,7 @@
             //*********************************************************************************************
             //********************************** Pi0 for pp 13TeV******************************************
             //*********************************************************************************************
-            } else if (energy.CompareTo("13TeV") == 0) {
+            } else if (energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVRBins") == 0) {
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
                     if (fNBinsPt > 24) {
@@ -5676,7 +5692,11 @@
                         for (Int_t i = 0; i < fNBinsPt; i++) {
                             if (modi==0){
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
+				  if (energy.Contains("RBins")){
+				    fNRebin[i]      = fBinsPi013TeVPCMTrigINT7RBinsPtRebin[i];
+				  }else {
                                     fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
+				  }
                                 } else if (specialTrigg==1){
                                     fNRebin[i]      = fBinsPi013TeVPCMTrigEMC7PtRebin[i];
                                 } else if (specialTrigg==2){
@@ -5707,6 +5727,12 @@
                             }
                         }
                     }
+ 		    nIterBGFit                  = 7;
+		    fMaxYFracBGOverIntHist      = 60;
+		    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+		    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+		    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+		    
                 }
             //*********************************************************************************************
             //**************************************** Pi0 for 13TeV low B field **************************
@@ -6707,6 +6733,14 @@
                 }
                 if (!setPi0.CompareTo("Pi0EtaBinning"))
                     nIterBGFit          = 12;
+
+		nIterBGFit                  = 7;
+		fMaxYFracBGOverIntHist      = 60;
+		optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+		optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+		optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+
+
             //*********************************************************************************************
             // ********************************* Eta for 13TeV low B field ********************************
             //*********************************************************************************************
