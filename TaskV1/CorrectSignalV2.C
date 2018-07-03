@@ -1408,6 +1408,8 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
         maxFracBG       = 20;
     if (optionEnergy.CompareTo("8TeV") == 0 || optionEnergy.CompareTo("5TeV2017") == 0)
         maxFracBG       = 40;
+    if (optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVRBins") == 0)
+        maxFracBG       = 80;
     if (optionEnergy.Contains("pPb") )
         maxFracBG       = 16;
     if (kDCAFileDataExists){
