@@ -1397,6 +1397,16 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fMesonLambdaTailMC          = 0.033;
                 fMesonLambdaTailRangeMC[0]  = 0.010;
                 fMesonLambdaTailRangeMC[1]  = 0.080;
+            } else if (mode == 12 && fEnergyFlag.CompareTo("5TeV2017") == 0){
+                fMesonWidthExpect           = 0.025;
+                fMesonWidthRange[0]         = 0.018;
+                fMesonWidthRange[1]         = 0.050;
+                fMesonLambdaTail            = 0.02;
+                fMesonLambdaTailRange[0]    = 0.001;
+                fMesonLambdaTailRange[1]    = 0.1;
+                fMesonLambdaTailMC          = 0.02;
+                fMesonLambdaTailRangeMC[0]  = 0.001;
+                fMesonLambdaTailRangeMC[1]  = 0.1;
             } else {
                 fMesonWidthExpect           = 0.025;
                 fMesonLambdaTail            = 0.012;
