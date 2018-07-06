@@ -737,6 +737,9 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
         } else if ( mode == 5) {                                // PHOS
             fPeakRange[0]               = 0.05;
             fPeakRange[1]               = 0.145;
+        } else if ( fMode == 0 && fEnergyFlag.CompareTo("13TeVLowB") == 0) {
+            fPeakRange[0]               = 0.05;
+            fPeakRange[1]               = 0.145;
         } else {                                                // defaults
             fPeakRange[0]               = 0.1;
             fPeakRange[1]               = 0.145;

@@ -1917,29 +1917,32 @@ void ExtractSignalV2(   TString meson                   = "",
     canvasMesonMass->SetTickx();
     canvasMesonMass->SetTicky();
 
-    DrawGammaSetMarker(fHistoMassMeson, 20, 1., kBlack, kBlack);
+    Double_t maxMesonMassRange = 0.140;
+    Double_t minMesonMassRange = 0.132;
     if (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0){
         if (fEnergyFlag.Contains("PbPb")){
-            DrawAutoGammaMesonHistos( fHistoMassMeson,
-                                      "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
-                                      kFALSE, 3.,0.,  kFALSE,
-                                      kTRUE, 0.130,0.160,
-                                      kFALSE, 0., 10.);
+            maxMesonMassRange = 0.160;
+            minMesonMassRange = 0.130;
+        } else if (fEnergyFlag.CompareTo("13TeVLowB") == 0 && fMode == 0 ) {
+            maxMesonMassRange = 0.150;
+            minMesonMassRange = 0.132;
         } else {
-          DrawAutoGammaMesonHistos( fHistoMassMeson,
-                                    "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
-                                    kFALSE, 3.,0.,  kFALSE,
-                                    kTRUE, 0.132,0.140,
-                                    kFALSE, 0., 10.);
-
+            maxMesonMassRange = 0.140;
+            minMesonMassRange = 0.132;
         }
     } else {
-        DrawAutoGammaMesonHistos( fHistoMassMeson,
+        maxMesonMassRange = 0.64;
+        minMesonMassRange = 0.46;
+    }    
+    
+
+    DrawGammaSetMarker(fHistoMassMeson, 20, 1., kBlack, kBlack);
+    DrawAutoGammaMesonHistos(   fHistoMassMeson,
                                 "", "p_{T} (GeV/c)", Form("Mass (GeV/c^{2})"),
-                                kFALSE, 3.,0.,  kFALSE,
-                                kTRUE, 0.46,0.64,
+                                kFALSE, 3.,0., kFALSE,
+                                kTRUE, minMesonMassRange, maxMesonMassRange,
                                 kFALSE, 0., 10.);
-    }
+
     if (fIsMC > 0){
         DrawGammaSetMarker(fHistoTrueMassMeson, 24, 1., kRed+2, kRed+2);
         fHistoTrueMassMeson->Draw("same,pe");
@@ -4383,6 +4386,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
 
     // set mass start value
     fFitReco->SetParameter(1,fMesonMassExpect);
+    if (fEnergyFlag.CompareTo("13TeVLowB") == 0 && fMode == 0 && ptBin < 2 )
+        fFitReco->SetParameter(1,fMesonMassExpect*0.7);
     // set ranges for mass fitting
     fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.15);
     if( (fPrefix.CompareTo("Pi0") ==0 || fPrefix.CompareTo("Pi0EtaBinning")==0)){
@@ -4398,6 +4403,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
         } else if (fEnergyFlag.CompareTo("8TeV") == 0 ){
             if (fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.3);
+         } else if (fEnergyFlag.CompareTo("13TeVLowB") == 0 && fMode == 0 && ptBin < 2 ){
+                 fFitReco->SetParLimits(1,fMesonMassExpect*0.5,fMesonMassExpect*1);
         } else if ( fEnergyFlag.Contains("PbPb") || fEnergyFlag.Contains("XeXe") ){
             if (fMode == 4 || fMode == 12 )
                 fFitReco->SetParLimits(1,fMesonMassExpect*0.9,fMesonMassExpect*1.5);
