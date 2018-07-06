@@ -4490,7 +4490,7 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     fFitLinearBck->SetParError(0,fFitReco->GetParError(4));
     fFitLinearBck->SetParError(1,fFitReco->GetParError(5));
 
-    Int_t binCenterStart = 0; // needs to be initialised
+    Int_t binCenterStart;
     Double_t startBinEdge;
     Int_t binCenterEnd;
     Double_t endBinEdge;
@@ -4502,8 +4502,8 @@ void FitSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle, Do
     fIntLinearBck           = 0;
     fIntLinearBckError      = 0;
     if(TString(gMinuit->fCstatu.Data()).Contains("CONVERGED") == 1 || TString(gMinuit->fCstatu.Data()).Contains("SUCCESSFUL") == 1 || TString(gMinuit->fCstatu.Data()).Contains("PROBLEMS") == 1){
-        startBinEdge            = histoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*histoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         binCenterStart          = histoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+mesonIntDeltaRangeFit[0]);
+        startBinEdge            = histoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterStart)- 0.5*histoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
         binCenterEnd            = histoMappingSignalInvMassPtBinSingle->GetXaxis()->FindBin(fFitReco->GetParameter(1)+mesonIntDeltaRangeFit[1]);
         endBinEdge              = histoMappingSignalInvMassPtBinSingle->GetBinCenter(binCenterEnd)+ 0.5*histoMappingSignalInvMassPtBinSingle->GetBinWidth(10);
 
