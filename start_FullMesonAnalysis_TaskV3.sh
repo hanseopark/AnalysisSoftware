@@ -1896,7 +1896,7 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-  echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged), 12 (DCal-DCal), 13 (PCM-DCal), 100 (PCM heavy), 101 (PCM-Dalitz heavy), 102 (PCM-EMCAL heavy)"
+  echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged), 12 (DCal-DCal), 13 (PCM-DCal), and add 100 for heavy mesons (e.g. 102 for PCM-EMCAL)"
     read answer
     if [ $answer = "0" ] || [ $answer = "100" ]; then
         echo "You are analysing PCM-PCM output";
