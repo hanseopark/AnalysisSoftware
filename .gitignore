@@ -11,5 +11,7 @@ DirectPhotonPlots/
 *.patch
 *.diff
 *.ods
+*.pcm
 *.kate-swp
 *.eps
+.vscode/*
