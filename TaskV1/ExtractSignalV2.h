@@ -239,6 +239,7 @@ Bool_t LoadSecondaryPionsFromCocktailFile(TString, TString);                    
 
 Double_t fitGaussianPileUp(Double_t *x, Double_t *par);
 Double_t fitGaussianPileUp2(Double_t *x, Double_t *par);
+Int_t GetHeavyMesonDigit(TString);
 
 //****************************************************************************
 //************************** input histograms ********************************
@@ -676,6 +677,9 @@ TH1F*       fHistoPileUpVertexDistance_TrackletHits                     = NULL;
 //*************** Function to initalize different fitting, plotting and integration windows***********
 //****************************************************************************************************
 void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t triggerSet = -1){
+
+    // Heavy meson analysis
+    if(mode>=100) mode -= 100;
 
     fPeakRange                  = new Double_t[2];
     fIntFixedRange              = new Double_t[2];
@@ -1397,7 +1401,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
                 fMesonLambdaTailMC          = 0.033;
                 fMesonLambdaTailRangeMC[0]  = 0.010;
                 fMesonLambdaTailRangeMC[1]  = 0.080;
-            } else if (mode == 12 && fEnergyFlag.CompareTo("5TeV2017") == 0){
+        } else if (mode == 12 && fEnergyFlag.CompareTo("5TeV2017") == 0){
                 fMesonWidthExpect           = 0.025;
                 fMesonWidthRange[0]         = 0.018;
                 fMesonWidthRange[1]         = 0.050;

@@ -184,49 +184,56 @@
         TObjString* objstrElectron;
         TObjString* objstrMeson;
 
+        // Switch for heavy meson modes
+        Int_t pos = 0;
+        if(type>=100) {
+            ++pos;
+            type -= 100;
+        }
+        // Read cut numbers based on given mode/type
         if (type == 0){ // PCM-PCM
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrMeson         = (TObjString*)arr->At(2);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrMeson         = (TObjString*)arr->At(2+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             mesonCutNumber      = objstrMeson->GetString();
 
         } else if (type == 1){ //PCM dalitz
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrElectron      = (TObjString*)arr->At(2);
-            objstrMeson         = (TObjString*)arr->At(3);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrElectron      = (TObjString*)arr->At(2+pos);
+            objstrMeson         = (TObjString*)arr->At(3+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             electronCutNumber   = objstrElectron->GetString();
             mesonCutNumber      = objstrMeson->GetString();
         } else if (type == 2 || type == 13){ //PCM-EMCal (PCM-DCal)
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrCluster       = (TObjString*)arr->At(2);
-            objstrMeson         = (TObjString*)arr->At(3);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrCluster       = (TObjString*)arr->At(2+pos);
+            objstrMeson         = (TObjString*)arr->At(3+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
         } else if (type == 3){ //PCM-PHOS
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrCluster       = (TObjString*)arr->At(2);
-            objstrMeson         = (TObjString*)arr->At(3);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrCluster       = (TObjString*)arr->At(2+pos);
+            objstrMeson         = (TObjString*)arr->At(3+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
-        }  else if (type == 4 || type == 12 || type == 200){ //EMCal-EMCal (DCal-DCal), TriggerQA
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrCluster       = (TObjString*)arr->At(1);
-            objstrMeson         = (TObjString*)arr->At(2);
+        } else if (type == 4 || type == 12 || type == 200){ //EMCal-EMCal (DCal-DCal), TriggerQA
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrCluster       = (TObjString*)arr->At(1+pos);
+            objstrMeson         = (TObjString*)arr->At(2+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             clusterCutNumber    = objstrCluster->GetString();
@@ -241,20 +248,20 @@
               char tmpChar = tmpIntMesonCutNumber+39+'0';
               mesonCutNumber.Replace(14,2,tmpChar);
             }
-        }  else if (type == 5){ //PHOS-PHOS
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrCluster       = (TObjString*)arr->At(1);
-            objstrMeson         = (TObjString*)arr->At(2);
+        } else if (type == 5){ //PHOS-PHOS
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrCluster       = (TObjString*)arr->At(1+pos);
+            objstrMeson         = (TObjString*)arr->At(2+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
         } else if (type == 6 ){ //Dalitz-EMCal
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrElectron      = (TObjString*)arr->At(2);
-            objstrCluster       = (TObjString*)arr->At(3);
-            objstrMeson         = (TObjString*)arr->At(4);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrElectron      = (TObjString*)arr->At(2+pos);
+            objstrCluster       = (TObjString*)arr->At(3+pos);
+            objstrMeson         = (TObjString*)arr->At(4+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
@@ -262,11 +269,11 @@
             electronCutNumber   = objstrElectron->GetString();
             mesonCutNumber      = objstrMeson->GetString();
         } else if ( type == 7 ){ //Dalitz-PHOS
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrElectron      = (TObjString*)arr->At(2);
-            objstrCluster       = (TObjString*)arr->At(3);
-            objstrMeson         = (TObjString*)arr->At(4);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrElectron      = (TObjString*)arr->At(2+pos);
+            objstrCluster       = (TObjString*)arr->At(3+pos);
+            objstrMeson         = (TObjString*)arr->At(4+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
@@ -274,20 +281,20 @@
             electronCutNumber   = objstrElectron->GetString();
             mesonCutNumber      = objstrMeson->GetString();
         } else if ( type == 10 ){ // EMCal merged
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrCluster       = (TObjString*)arr->At(2);
-            objstrMeson         = (TObjString*)arr->At(3);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrCluster       = (TObjString*)arr->At(2+pos);
+            objstrMeson         = (TObjString*)arr->At(3+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
             clusterCutNumber    = objstrCluster->GetString();
             mesonCutNumber      = objstrMeson->GetString();
         } else if ( type == 11 ){ // PHOS merged
-            objstrEvent         = (TObjString*)arr->At(0);
-            objstrGamma         = (TObjString*)arr->At(1);
-            objstrCluster       = (TObjString*)arr->At(2);
-            objstrMeson         = (TObjString*)arr->At(3);
+            objstrEvent         = (TObjString*)arr->At(pos);
+            objstrGamma         = (TObjString*)arr->At(1+pos);
+            objstrCluster       = (TObjString*)arr->At(2+pos);
+            objstrMeson         = (TObjString*)arr->At(3+pos);
 
             eventCutNumber      = objstrEvent->GetString();
             gammaCutNumber      = objstrGamma->GetString();
@@ -299,7 +306,6 @@
         //
         //     eventCutNumber      = objstrEvent->GetString();
         //     gammaCutNumber      = objstrGamma->GetString();
-
         }
 
         cout << cutSel.Data() << "\t" << eventCutNumber.Data() << "\t" << gammaCutNumber.Data() << "\t" <<  clusterCutNumber.Data() << "\t" <<electronCutNumber.Data() << "\t" << mesonCutNumber.Data() << endl;
@@ -612,6 +618,16 @@
                 return "#pi^{0} rec w/ PHOS, DALITZ";
             case 50:
                 return "#pi^{0} rec w/ DCAL, DALITZ";
+            case 100:
+                return "PCM heavy meson";
+            case 101:
+                return "PCM-#gamma^{*}#gamma heavy meson";
+            case 102:
+                return "PCM-EMC heavy meson";
+            case 103:
+                return "PCM-PHOS heavy meson";
+            case 104:
+                return "EMC heavy meson";
             default:
                 return "not known";
         }
@@ -788,9 +804,9 @@
         } else if( fEnergyFlagOpt.CompareTo("13TeV") == 0) {
             return  "pp, #sqrt{#it{s}} = 13TeV";
         } else if( fEnergyFlagOpt.CompareTo("13TeVLowB") == 0) {
-            return  "pp, #sqrt{#it{s}} = 13TeV (low B)";           
+            return  "pp, #sqrt{#it{s}} = 13TeV (low B)";
         } else if( fEnergyFlagOpt.CompareTo("13TeVRBins") == 0) {
-            return  "pp, #sqrt{#it{s}} = 13TeV (RBins)";            
+            return  "pp, #sqrt{#it{s}} = 13TeV (RBins)";
         } else if( fEnergyFlagOpt.CompareTo("5TeV") == 0 || fEnergyFlagOpt.CompareTo("5.023TeV") == 0 || fEnergyFlagOpt.CompareTo("5.02TeV") == 0 ) {
             return  "pp, #sqrt{#it{s}} = 5.02TeV";
         } else if( fEnergyFlagOpt.CompareTo("5TeV2017") == 0) {
@@ -3248,6 +3264,7 @@
             case 12:
                 if (periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_wSDD")==0)
                     return "V0AND";
+                return ""; // To prevent fall through
             case 13:
                 if (periodName.CompareTo("LHC11a")==0||periodName.CompareTo("LHC11a_p4_wSDD")==0)
                     return "with SDD, V0AND";

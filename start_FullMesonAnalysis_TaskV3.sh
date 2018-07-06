@@ -1896,85 +1896,85 @@ fi
 correct=0
 while [ $correct -eq 0 ]
 do
-  echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged), 12 (DCal-DCal), 13 (PCM-DCal)"
+  echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged), 12 (DCal-DCal), 13 (PCM-DCal), 100 (PCM heavy), 101 (PCM-Dalitz heavy), 102 (PCM-EMCAL heavy)"
     read answer
-    if [ $answer = "0" ]; then
+    if [ $answer = "0" ] || [ $answer = "100" ]; then
         echo "You are analysing PCM-PCM output";
-        mode=0
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         correct=1
-    elif [ $answer = "1" ]; then
+    elif [ $answer = "1" ] || [ $answer = "101" ]; then
         echo "You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
-        mode=1
+        mode=$answer
 #        AdvMesonQA="AdvancedMesonQA"
         correct=0
-    elif [ $answer = "2" ]; then
+    elif [ $answer = "2" ] || [ $answer = "102" ]; then
         echo "You are analysing PCM-EMCAL output";
-        mode=2
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
 #        AdvMesonQA="AdvancedMesonQA"
         correct=1
-    elif [ $answer = "3" ]; then
+    elif [ $answer = "3" ] || [ $answer = "103" ]; then
         echo "You are analysing PCM-PHOS output";
-        mode=3
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         AdvMesonQA="AdvancedMesonQA"
         correct=1
-    elif [ $answer = "4" ]; then
+    elif [ $answer = "4" ] || [ $answer = "104" ]; then
         echo "You are analysing EMCAL-EMCAL output";
-        mode=4
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         AdvMesonQA="AdvancedMesonQA"
         correct=1
-    elif [ $answer = "5" ]; then
+    elif [ $answer = "5" ] || [ $answer = "105" ]; then
         echo "You are analysing PHOS-PHOS output";
-        mode=5
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         AdvMesonQA="AdvancedMesonQA"
         correct=1
-    elif [ $answer = "10" ]; then
+    elif [ $answer = "10" ] || [ $answer = "110" ]; then
         echo "You are analysing EMC-merged output";
-        mode=10
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         correct=1
         DoEta=0;
         DoPi0InEtaBinning=0;
-    elif [ $answer = "11" ]; then
+    elif [ $answer = "11" ] || [ $answer = "111" ]; then
         echo "You are analysing PHOS-merged output";
-        mode=11
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         correct=1
         DoEta=0;
         DoPi0InEtaBinning=0;
-    elif [ $answer = "9" ]; then
+    elif [ $answer = "9" ] || [ $answer = "109" ]; then
         echo "You are analysing the old output of PCM-PCM";
-        mode=9
+        mode=$answer
         correct=1
-    elif [ $answer = "12" ]; then
+    elif [ $answer = "12" ] || [ $answer = "112" ]; then
         echo "You are analysing DCAL-DCAL output";
-        mode=12
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         AdvMesonQA=""#"AdvancedMesonQA"
         correct=1
-    elif [ $answer = "13" ]; then
+    elif [ $answer = "13" ] || [ $answer = "113" ]; then
         echo "You are analysing PCM-DCAL output";
-        mode=13
+        mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70

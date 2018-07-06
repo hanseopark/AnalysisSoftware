@@ -79,6 +79,7 @@
     Double_t            GetUpperLimit( Double_t, Double_t, Double_t, Double_t, Double_t&, Double_t, Int_t );
     void                FillChi2HistForNullHypoPValue(  ULong64_t, TGraphAsymmErrors*, TH1D*&, TGraph*& ,Bool_t ,TString);
     Double_t            Chi2ForNullHypoPValue(TGraphErrors*, TGraphAsymmErrors* ,  Bool_t , TString );
+    Int_t               ModeMapping(Int_t);
 
     // ****************************************************************************************************************
     // ********************** definition of functions defined in this header ******************************************
@@ -4660,15 +4661,8 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
-    TString AutoDetectMainTList(Int_t mode , TFile* fFile){
-        TKey *key;
-        TIter next(fFile->GetListOfKeys());
-        TString mainDir = "";
-        while ((key=(TKey*)next())){
-            cout << Form("-> found TopDir: %s",key->GetName());
-            mainDir = key->GetName();
-        }
-        cout << endl;
+    TString AutoDetectMainTList(Int_t mode , TFile* file, TString mesonName = ""){
+        // Generate identifier string based on mode number
         TString nominalMainDir     = "";
         if (mode == 9 || mode == 0)
             nominalMainDir         = "GammaConvV1";
@@ -4687,13 +4681,27 @@
         else if (mode == 40 || mode == 41 || mode == 42 || mode == 43|| mode == 44 || mode == 45 ||
                  mode == 46 || mode == 47 || mode == 48 || mode == 49|| mode == 50)
             nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
-        TObjArray *arr;
-        arr             = mainDir.Tokenize("_");
-        TString start   = ((TObjString*)arr->At(0))->GetString();;
-        if (start.CompareTo(nominalMainDir.Data()) == 0)
-            return mainDir;
-        else
-            return "";
+        else if (mode>=100) // for heavy meson analysis
+            nominalMainDir = "HeavyNeutralMesonToGG";
+        // Go through main directories in ROOT file and see which one complies with identifier
+        TString mainDir;
+        TKey *key;
+        TObjArray* arr;
+        TIter next(file->GetListOfKeys());
+        while ( (key=(TKey*)next()) ){
+            // cout << Form("-> found TopDir: %s",key->GetName());
+            mainDir = key->GetName();
+            arr = mainDir.Tokenize("_");
+            if( mesonName.Length() && mainDir.BeginsWith(nominalMainDir) ) { // if heavy meson analysis
+                TString mesonId = ((TObjString*)arr->At(2))->GetString();
+                if(mesonId.EqualTo("0") && mesonName.EqualTo("Pi0"))      return mainDir;
+                if(mesonId.EqualTo("1") && mesonName.EqualTo("Eta"))      return mainDir;
+                if(mesonId.EqualTo("2") && mesonName.EqualTo("EtaPrime")) return mainDir;
+            }
+            TString start   = ((TObjString*)arr->At(0))->GetString();
+            if (start.EqualTo(nominalMainDir)) return mainDir;
+        }
+        return "";
     }
 
     // ****************************************************************************************************************
@@ -4979,6 +4987,28 @@
             }
         }
         return smallesContent;
+    }
+
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    //*****************************************************************************************************
+    Int_t ModeMapping(Int_t mode) {
+        // heavy meson mode correction
+        mode -= 100;
+        // mode mapping
+        if(mode==0)  return 0; // 0  PCM-PCM
+        if(mode==1)  return 3; // 1  PCM-Dalitz (not yet implemented)
+        if(mode==2)  return 1; // 2  PCM-EMC
+        if(mode==3)  return 1; // 3  PCM-PHOS
+        if(mode==4)  return 2; // 4  EMC-EMC
+        if(mode==5)  return 2; // 5  PHOS-PHOS
+        if(mode==6)  return 3; // 6  EMC-Dalitz (not yet implemented)
+        if(mode==7)  return 3; // 7  PHOS-Dalitz (not yet implemented)
+        if(mode==9)  return 0; // 9  old output PCM-PCM
+        if(mode==10) return 4; // 10 mEMC
+        if(mode==11) return 4; // 11 mPHOS
+        if(mode==12) return 2; // 12 DMC-DMC
+        if(mode==13) return 1; // 13 PCM-DMC
     }
 
 
