@@ -430,6 +430,9 @@
                 } else {
                 return 2;
                 }
+            } else if( energy.CompareTo("pPb_5.023TeVMB") == 0 ) {
+                if (mode == 0)
+                    return 7;
             } else if( energy.CompareTo("pPb_5.023TeV") == 0 ) {
                 if (mode == 0){
                     return 7;
@@ -871,7 +874,7 @@
                 } else {
                     return 2;
                 }
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0  ) {
+            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVMB") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0  ) {
                 if (mode == 0){
                     // scaleFac    = 2;
                     return 6;
@@ -1152,7 +1155,10 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 }
-
+                                
+            } else if (energy.CompareTo("pPb_5.023TeVMB") == 0 ){
+                if ( mode == 0 )
+                    startPtBin     = 1;
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if ( mode == 0 ){
                     startPtBin     = 1;
@@ -1439,6 +1445,9 @@
                 if ( mode == 0 ){
                     startPtBin     = 3;
                 }
+            } else if (energy.CompareTo("pPb_5.023TeVMB") == 0){
+                if ( mode == 0 )
+                    startPtBin      = 3;
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if ( mode == 0 ){
                     startPtBin      = 3;
@@ -1571,7 +1580,7 @@
         //******************** Determine startbin for direct Photon ***************************************
         //*************************************************************************************************
         } else if (meson.Contains("directPhoton") ) {
-            if (energy.CompareTo("pPb_5.023TeV")==0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
+            if (energy.CompareTo("pPb_5.023TeV")==0 || energy.CompareTo("pPb_5.023TeVMB") == 0  || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0)
                     startPtBin      = 1;
                 else if (mode == 2 && meson.CompareTo("directPhotonA") == 0 )
@@ -1963,6 +1972,18 @@
                     }
                 }
 
+            } else if (energy.CompareTo("pPb_5.023TeVMB") == 0 ){
+              if (mode == 0 ){ // PCM
+                maxNBins    = 31;
+                binningMax  = 39;
+                if (DCAcase) binningMax  = 16;
+                for(Int_t i = 0; i < binningMax+1; i++){
+                  if (DCAcase)
+                    binning[i] = fBinsPi0pPb5TeVPtDCA[i];
+                  else
+                    binning[i] = fBinsPi0pPb5TeVPt[i];
+                }
+              }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0 ){
                 if (mode == 0 ){ // PCM
                     maxNBins    = 31;
@@ -2633,6 +2654,18 @@
                         binning[i] = fBinsEta8TeVPt[i];
                     }
                 }
+            } else if (energy.CompareTo("pPb_5.023TeVMB") == 0){
+              if (mode == 0){ // PCM
+                  maxNBins    = 16;
+                  binningMax  = 22;
+                  if (DCAcase) binningMax  = 16;
+                  for(Int_t i = 0; i < binningMax+1; i++){
+                      if (DCAcase)
+                          binning[i] = fBinsEtapPb5TeVPtDCA[i];
+                      else
+                          binning[i] = fBinsEtapPb5TeVPt[i];
+                  }
+              }
             } else if (energy.CompareTo("pPb_5.023TeV") == 0){
                 if (mode == 0){ // PCM
                     maxNBins    = 16;
@@ -2934,7 +2967,7 @@
                         binning[i]  = fBinsDirGamma8TeVPt[i];
                     }
                 }
-            } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
+            } else if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVMB") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
                 if (mode == 0){
                     maxNBins    = 30;
                     binningMax  = 30;
@@ -3027,7 +3060,7 @@
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster2760GeVPt[iPt];
             }
-        } else if( energy.CompareTo("pPb_5.023TeV") == 0  || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
+        } else if( energy.CompareTo("pPb_5.023TeV") == 0  || energy.CompareTo("pPb_5.023TeVMB") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0 ){
             fNBinsClusterPt       = fNBinsClusterpPb5TeVPt;
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsClusterpPb5TeVPt[iPt];
@@ -3900,7 +3933,7 @@
             //*********************************************************************************************
             //********************************** Pi0 for pPb 5.023TeV**************************************
             //*********************************************************************************************
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0) {
+          } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVMB") == 0|| energy.CompareTo("pPb_5.023TeVRun2") == 0) {
                 if (directPhoton.Contains("directPhoton") ){
                     fStartPtBin                 = GetStartBin(directPhoton, energy, modi, specialTrigg, centrality);
                     Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Gamma", energy, modi, specialTrigg, isDCA, centrality );
@@ -3943,7 +3976,9 @@
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
                         if (modi == 0 ){
-                          if (!energy.CompareTo("pPb_5.023TeV")){
+                          if (!energy.CompareTo("pPb_5.023TeVMB")){
+                              fNRebin[i]          = fBinsPi0pPb5TeVPtRebin[i];
+                          } else if (!energy.CompareTo("pPb_5.023TeV")){
                             if(centrality.CompareTo("0-100%"))                                                       // MB pi0 for PCM run 1
                               fNRebin[i]          = fBinsPi0pPb5TeVPtRebin[i];
                             else
@@ -4886,7 +4921,7 @@
             //*********************************************************************************************
             //********************************** Eta for pPb 5.023TeV**************************************
             //*********************************************************************************************
-            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0) {
+            } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVMB") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0) {
                 fStartPtBin                 = GetStartBin("Eta", energy, modi, specialTrigg, centrality);
                 Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Eta", energy, modi, specialTrigg, isDCA, centrality );
                 if (fNBinsPt > maxPtBinAvail) {
@@ -4901,6 +4936,8 @@
                 for (Int_t i = 0; i < fNBinsPt; i++) {
                     if (!setPi0.CompareTo("Eta")){
                         if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0 && !centrality.CompareTo("0-100%"))                                       // MB eta for PCM run 1
+                            fNRebin[i]  = fBinsEtapPb5TeVPtRebin[i];
+                        else if (modi == 0 && energy.CompareTo("pPb_5.023TeVMB") == 0)                                                                     // cent dependent eta for PCM run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPtRebin[i];
                         else if (modi == 0 && energy.CompareTo("pPb_5.023TeV") == 0)                                                                     // cent dependent eta for PCM run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMCentPtRebin[i];
@@ -5029,7 +5066,9 @@
                     optionBGSmoothingVar2       = "noSmoothing";
                     nIterBGFit                  = 11;
                     if (modi == 0){
-                      if( !energy.CompareTo("pPb_5.023TeVRun2") )
+                      if( !energy.CompareTo("pPb_5.023TeVMB") )
+                        nIterBGFit                  = 8;
+                      else if( !energy.CompareTo("pPb_5.023TeVRun2") )
                         nIterBGFit                  = 8;
                       else if( !energy.CompareTo("pPb_5.023TeV") ){
                         if(centrality.Contains("0-20%"))

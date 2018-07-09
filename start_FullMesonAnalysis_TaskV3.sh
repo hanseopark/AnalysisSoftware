@@ -2150,6 +2150,9 @@ do
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
         ExtInputFile="";
+    elif [ $answer = "pPb_5.023TeVMB" ] || [ $answer = "pPb_5.023MB" ] || [ $answer = "pPb5MB" ];  then
+        energy="pPb_5.023TeVMB";
+        ExtInputFile="";
     elif [ $answer = "pPb_5.023TeVRun2" ] || [ $answer = "pPb_5.023R2" ] || [ $answer = "pPb5R2" ];  then
         energy="pPb_5.023TeVRun2";
         ExtInputFile="";
@@ -2573,7 +2576,7 @@ do
             fi
         fi
 
-    elif [ $energy = "pPb_5.023TeV" ] || [ $energy = "pPb_5.023TeVRun2" ]  ; then
+    elif [ $energy = "pPb_5.023TeV" ] || [ $energy = "pPb_5.023TeVMB" ] || [ $energy = "pPb_5.023TeVRun2" ]  ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
