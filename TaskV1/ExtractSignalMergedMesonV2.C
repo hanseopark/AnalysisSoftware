@@ -175,7 +175,17 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
         cout<<"ERROR: First argument in the ExtractSignalMergedMeson(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrime"<<endl;
         return;
     }
-
+    TString fEventCutSelectionRead          = fEventCutSelection.Data();
+    TString fClusterCutSelectionRead        = fClusterCutSelection.Data();
+    TString fClusterMergedCutSelectionRead  = fClusterMergedCutSelection.Data();
+    TString fMesonCutSelectionRead          = fMesonCutSelection.Data();
+    if (!fIsMC && mode==10 && fEnergyFlag.Contains("pPb_8TeV")  ) {
+            cout << "changing data cut for pPb 8 TeV" << endl;
+            cout << fEventCutSelectionRead.Data() << endl;
+            fEventCutSelectionRead.Replace(GetEventRejectExtraSignalsCutPosition(),1,"1");
+            cout << fEventCutSelectionRead.Data() << endl;
+                fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelectionRead.Data(), fClusterMergedCutSelectionRead.Data(), fMesonCutSelectionRead.Data());
+    }
     //************************* Start of Main routine ***************************************************************
     const char* fFileErrLogDatname  = Form("%s/%s/%s_%s_FileErrLog%s_%s.dat", cutSelection.Data(), fEnergyFlag.Data(), fPrefix.Data(), fPrefix2.Data(),
                                            fPeriodFlag.Data(), fCutSelectionRead.Data());

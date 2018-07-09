@@ -2097,7 +2097,7 @@
                             binning[i] = fBinsPi0pPb5TeVPtDCA[i];
                         else if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%") )
                             binning[i]  = fBinsPi0pPb5TeVPCMR2CentPt[i];
-                        else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%"))
+                        else if ( !centrality.CompareTo("0-1%") || !centrality.CompareTo("0-2%") || !centrality.CompareTo("0-20%"))
                             binning[i]  = fBinsPi0pPb5TeVPCMR2Cent2Pt[i];
                         else
                             binning[i] = fBinsPi0pPb5TeVPCMR2Pt[i];
