@@ -150,8 +150,7 @@
             gammaCutNumber= objstrGamma->GetString();
             electronCutNumber = objstrElectron->GetString();
             mesonCutNumber = objstrMeson->GetString();
-        }
-        else {
+        } else {
             objstrGamma = (TObjString*)arr->At(0);
             objstrMeson = (TObjString*)arr->At(1);
 

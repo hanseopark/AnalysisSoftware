@@ -27,14 +27,15 @@ void Grid_CopyFiles_Runwise(TString folder = "/home/daniel/Desktop/AnalysisSoftw
 //     //CALO + CONVCALO DATA + MC
 //
     const Int_t nFiles = 1;
-    TString Tag = "20180618";
+    TString Tag = "20180701";
     TString DataSetsFile[nFiles] = {"GammaTriggerQA.root"};
 
     const Int_t nSets = 3;
     TString DataSets[nSets]={"LHC15o","LHC15o","LHC15o"};
     TString DataSetsFolder[nSets]={"LHC15","LHC15","LHC15"};
     TString PrefixDataSets[nSets]={"/alice/data/2015/LHC15o/000","/alice/data/2015/LHC15o/000","/alice/data/2015/LHC15o/000"};
-    TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_PbPb/420_20180618-1214_child_1/","/pass1_pidfix/PWGGA/GA_PbPb/420_20180618-1214_child_2/","/pass3_lowIR_pidfix/PWGGA/GA_PbPb/420_20180618-1214_child_3/"};
+//     TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_PbPb/420_20180618-1214_child_1/","/pass1_pidfix/PWGGA/GA_PbPb/420_20180618-1214_child_2/","/pass3_lowIR_pidfix/PWGGA/GA_PbPb/420_20180618-1214_child_3/"};
+    TString SuffixDataSets[nSets]={"/pass1/PWGGA/GA_PbPb/423_20180701-2107_child_1/","/pass1_pidfix/PWGGA/GA_PbPb/423_20180701-2107_child_2/","/pass3_lowIR_pidfix/PWGGA/GA_PbPb/423_20180701-2107_child_3/"};
 
 //     //CONVCALO MC
 //

@@ -195,7 +195,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                                                      0.3931 };
 
     Double_t minPtPi0Plotting                   = 0.23;
-    Double_t maxPtPi0Plotting                   = 41.;
+    Double_t maxPtPi0Plotting                   = 51.;
     Double_t minPtEtaPlotting                   = 0.43;
     Double_t maxPtEtaPlotting                   = 31.;
 
@@ -482,7 +482,8 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                     cout << "file " << fileNamesMethod[meth].Data() << " not found! Skipping " << nameMeasGlobalLabel[meth].Data()  << endl;
                     continue;
                 }
-                directoryPi0[cent][meth]                             = (TDirectory*)fileMethod[meth]->Get(Form("Pi0%spPb_5.023TeV%s",centArray[cent].Data(), runArray[cent].Data()));
+                directoryPi0[cent][meth]                                = (TDirectory*)fileMethod[meth]->Get(Form("Pi0%spPb_5.023TeV%s",centArray[cent].Data(), runArray[cent].Data()));
+//                 if (!directoryPi0[cent][meth]) directoryPi0[cent][meth] = (TDirectory*)fileMethod[meth]->Get(Form("Pi0%spPb_5.023TeV%s e",centArray[cent].Data(), runArray[cent].Data()));
                 if (!directoryPi0[cent][meth]) {
                     cout << "File doesn't contain directory " << Form("Pi0%spPb_5.023TeV%s",centArray[cent].Data(), runArray[cent].Data()) << "! Skipping " << nameMeasGlobalLabel[meth].Data()  << endl;
                     continue;
@@ -986,7 +987,7 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                                             { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 20-40
                                             { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 40-60
                                             { 23, 10, 22, 20,  22, 0,  0,  0,  0,  0, 0 },  // 60-100
-                                            { 30, 28, 30-6-7, 20-3,  31, 17,  0,  0,  0,  0, 0 },  // MB R1
+                                            { 30, 10, 30-6-7, 20-3,  31, 17,  0,  0,  0,  0, 0 },  // MB R1
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 0-5
                                             { 30, 31, 30, 0,  31, 17,  0,  0,  0,  0, 0 },  // 0-20
                                             { 0, 0, 0, 0,  0, 0,  0,  0,  0,  0, 0 },  // MB R2

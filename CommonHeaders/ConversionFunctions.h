@@ -4707,12 +4707,15 @@
     // ****************************************************************************************************************
     // ****************************************************************************************************************
     // ****************************************************************************************************************
-    TString AutoDetectTreeList(TList* fList){
+    TString AutoDetectTreeList(TList* fList, Int_t mode = 0){
         TString listName = "";
         TString nominalListName = "TreeList";
+        if (mode != 0){
+            nominalListName = "TriggerQA tree";
+        }
         TList *readList = (TList*)fList->Last();
         listName = readList->GetName();
-        if (listName.Contains(nominalListName)) {
+        if (listName.Contains(nominalListName) ) {
             cout << Form("-> found : %s",listName.Data()) << endl;
             return listName;
         } else {
