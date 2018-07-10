@@ -253,33 +253,34 @@ void PlotExampleInvMass(  TH1D* histoInvMassSignalWithBG,
         histoPi0InvMassSigRemBGSub->Draw("same");
     }
 
-    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+    TString sublabel = "(a)";
+    if(fMesonType.CompareTo("Pi0") == 0) sublabel = "(a)";
+    else sublabel = "(b)";
+    TLatex *labelSubLabel  = new TLatex(0.135,0.9, sublabel.Data());
+    SetStyleTLatex( labelSubLabel, 0.89*textSizeLabelsPixel,4);
+    labelSubLabel->SetTextFont(43);
+    labelSubLabel->Draw();
+
+    TLatex *labelALICE      = new TLatex(0.135,0.9-1.5*0.9*textsizeLabelsPP,"ALICE");
     SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
     labelALICE->SetTextFont(43);
     labelALICE->Draw();
 
-    TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
+    TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-2.5*0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
     SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
     labelInvMassEnergy->SetTextFont(43);
     labelInvMassEnergy->Draw();
 
-    TLatex *labelTrigger  = new TLatex(0.135,0.9-2*0.9*textsizeLabelsPP,triggerStr.Data());
+    TLatex *labelTrigger  = new TLatex(0.135,0.9-3.5*0.9*textsizeLabelsPP,triggerStr.Data());
     SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4);
     labelTrigger->SetTextFont(43);
     labelTrigger->Draw();
 
-    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, detectionChannel.Data());
+    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-4.5*0.9*textsizeLabelsPP, detectionChannel.Data());
     SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
     labelInvMassReco->SetTextFont(43);
     labelInvMassReco->Draw();
 
-    TString sublabel = "(a)";
-    if(fMesonType.CompareTo("Pi0") == 0) sublabel = "(a)";
-    else sublabel = "(b)";
-    TLatex *labelSubLabel  = new TLatex(0.135,0.9-4*0.9*textsizeLabelsPP, sublabel.Data());
-    SetStyleTLatex( labelSubLabel, 0.85*textSizeLabelsPixel,4);
-    labelSubLabel->SetTextFont(43);
-    labelSubLabel->Draw();
 
     SetStyleTLatex( labelInvMassPtRange, 0.85*textSizeLabelsPixel,4);
     labelInvMassPtRange->SetTextAlign(31);
@@ -452,33 +453,33 @@ void PlotExampleInvMassEMCal(  TH1D* histoInvMassSignalWithBG,
         nLegendLines++;
     }
 
-    TLatex *labelALICE      = new TLatex(0.135,0.9,"ALICE");
+    TString sublabel = "(c)";
+    if(fMesonType.CompareTo("Pi0") == 0) sublabel = "(c)";
+    else sublabel = "(d)";
+    TLatex *labelSubLabel  = new TLatex(0.135,0.9, sublabel.Data());
+    SetStyleTLatex( labelSubLabel, 0.89*textSizeLabelsPixel,4);
+    labelSubLabel->SetTextFont(43);
+    labelSubLabel->Draw();
+
+    TLatex *labelALICE      = new TLatex(0.135,0.9-1.5*0.9*textsizeLabelsPP,"ALICE");
     SetStyleTLatex( labelALICE, 0.85*textSizeLabelsPixel,4);
     labelALICE->SetTextFont(43);
     labelALICE->Draw();
 
-    TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
+    TLatex *labelInvMassEnergy      = new TLatex(0.135,0.9-2.5*0.9*textsizeLabelsPP,fCollisionSystemDummy.Data());
     SetStyleTLatex( labelInvMassEnergy, 0.85*textSizeLabelsPixel,4);
     labelInvMassEnergy->SetTextFont(43);
     labelInvMassEnergy->Draw();
 
-    TLatex *labelTrigger  = new TLatex(0.135,0.9-2*0.9*textsizeLabelsPP,triggerStr.Data());
+    TLatex *labelTrigger  = new TLatex(0.135,0.9-3.5*0.9*textsizeLabelsPP,triggerStr.Data());
     SetStyleTLatex( labelTrigger, 0.85*textSizeLabelsPixel,4);
     labelTrigger->SetTextFont(43);
     labelTrigger->Draw();
 
-    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-3*0.9*textsizeLabelsPP, detectionChannel.Data());
+    TLatex *labelInvMassReco  = new TLatex(0.135,0.9-4.5*0.9*textsizeLabelsPP, detectionChannel.Data());
     SetStyleTLatex( labelInvMassReco, 0.85*textSizeLabelsPixel,4);
     labelInvMassReco->SetTextFont(43);
     labelInvMassReco->Draw();
-
-    TString sublabel = "(c)";
-    if(fMesonType.CompareTo("Pi0") == 0) sublabel = "(c)";
-    else sublabel = "(d)";
-    TLatex *labelSubLabel  = new TLatex(0.135,0.9-4*0.9*textsizeLabelsPP, sublabel.Data());
-    SetStyleTLatex( labelSubLabel, 0.85*textSizeLabelsPixel,4);
-    labelSubLabel->SetTextFont(43);
-    labelSubLabel->Draw();
 
     SetStyleTLatex( labelInvMassPtRange, 0.85*textSizeLabelsPixel,4);
     labelInvMassPtRange->SetTextAlign(31);

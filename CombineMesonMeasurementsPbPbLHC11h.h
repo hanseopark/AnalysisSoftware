@@ -440,16 +440,16 @@ Style_t  styleKopeliovichELoss   = 7;
 Style_t  styleKopeliovichComb    = 4;
 
 Color_t colorVitevBas0005               = kRed-6;
-Color_t colorVitevBas0510               = kOrange+1;
+Color_t colorVitevBas0510               = kRed+2;
 Color_t colorVitevBas1020               = kOrange-5;
 Color_t colorVitevBas2040               = kGreen-6;
-Color_t colorVitevBas4060               = kCyan-6;
+Color_t colorVitevBas4060               = kCyan-3;
 Color_t colorVitevBas6080               = kBlue-6;
 
 Style_t fillStyleVitev = 3766;
 Style_t fillStyleEPOS = 0;//3454;
 Style_t fillStyleEPOSRatio = 1001;//3454;
-Style_t fillStyleXiao = 3002;
+Style_t fillStyleXiao = 3002; //3002;
 Style_t fillStyleWHDG = 3545;
 
 Color_t colorComb0005Box                = kRed-6;

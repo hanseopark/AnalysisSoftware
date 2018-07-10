@@ -544,7 +544,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         else if (!energy.CompareTo("2.76TeV"))
                             errorReset          = 0.95+pow(ptBins[k],2)*0.046;
                         else if (!energy.CompareTo("5TeV2017"))
-                            errorReset          = 1.2*(1.78039+-0.35*ptBins[k]+0.048*pow(ptBins[k],2));
+                            errorReset      = (0.82+-0.2*ptBins[k]+0.048*pow(ptBins[k],2));
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -581,7 +581,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         else if (!energy.CompareTo("2.76TeV"))
                             errorReset          = 2*(0.8+pow(ptBins[k],2)*0.03);
                         else if (!energy.CompareTo("5TeV2017"))
-                            errorReset          = 0.8+pow(ptBins[k],2)*0.035;
+                            errorReset          = 1.5*(0.8+pow(ptBins[k],2)*0.035);
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -603,7 +603,10 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         else if (!energy.CompareTo("900GeV"))
                             errorReset          = 6.-5.4*ptBins[k]+1.85*pow(ptBins[k],2);
                         else if (!energy.CompareTo("5TeV2017"))
-                            errorReset          = 1.8+8.52726/pow(14.8707,ptBins[k]);
+                            if(ptBins[k] < 2.)
+                                errorReset          = 1.22828+7.02181/pow(11.631,ptBins[k]);
+                            else
+                                errorReset          = 1.23624+0.0322029*ptBins[k];//1.8+8.52726/pow(14.8707,ptBins[k]);
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -621,7 +624,10 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         } else if (!energy.CompareTo("2.76TeV")){
                             errorReset          = 3.2+pow(ptBins[k]-3,2)*0.09;
                         } else if (!energy.CompareTo("5TeV2017")){
-                            errorReset          = 3.2+pow(ptBins[k]-3,2)*0.05;
+                            if(ptBins[k] < 2.)
+                                errorReset          = 3.3908+-1.69052*ptBins[k]+0.297568*pow(ptBins[k],2);
+                            else
+                                errorReset          = 0.956812+0.155192*ptBins[k];//3.2+pow(ptBins[k]-3,2)*0.05;
                         }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -650,7 +656,10 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         } else if (!energy.CompareTo("900GeV")){
                             errorReset          = 1.8-1.4*ptBins[k]+0.46*pow(ptBins[k],2);
                         } else if (!energy.CompareTo("5TeV2017")){
-                            errorReset          = 0.35+-0.065*ptBins[k]+0.0141391*pow(ptBins[k],2);
+                            if(ptBins[k] < 6)
+                                errorReset          = 0.3+-0.065*ptBins[k]+0.0141391*pow(ptBins[k],2);
+                            else
+                                errorReset          = 0.0413068+0.0135407*ptBins[k]+0.00443087*pow(ptBins[k],2);
                         }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -722,7 +731,7 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         else if (!energy.CompareTo("2.76TeV"))
                             errorReset          = 0.4+pow(ptBins[k],2)*0.015;
                         else if (!energy.CompareTo("5TeV2017"))
-                            errorReset          = 1.8*(0.926229+-0.241193*ptBins[k]+0.0278201*pow(ptBins[k],2));
+                            errorReset          = 2.2*(1.2+-0.241193*ptBins[k]+0.0278201*pow(ptBins[k],2));
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
                         errorsMeanCorr[i][k]    = errorReset;
@@ -768,7 +777,12 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                         } else if (!energy.CompareTo("900GeV")){
                             errorReset          = 14.;
                         } else if (!energy.CompareTo("5TeV2017")){
-                            errorReset      = 6.88139+-2.50537*ptBins[k]+0.275235*pow(ptBins[k],1.9);
+                            if (ptBins[k] < 3.5)
+                                errorReset      = 5.51223+-1.40971*ptBins[k]+0.0614792*pow(ptBins[k],2)+0.000837872*pow(ptBins[k],4);
+                            else if (ptBins[k] >= 3.5 && ptBins[k] < 8)
+                                errorReset      = 1.5;
+                            else
+                                errorReset      = 6.74918+-2.24223*ptBins[k]+0.197927*pow(ptBins[k],2);
                         }
                         errorsMean[i][k]        = errorReset;
                         errorsMeanErr[i][k]     = errorReset*0.01;
@@ -818,6 +832,14 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                             errorsMeanErr[i][k]     = errorReset*0.01;
                             errorsMeanCorr[i][k]    = errorReset;
                             errorsMeanErrCorr[i][k] = errorReset*0.01;
+                        } else if (!energy.CompareTo("5TeV2017")){
+                            if (ptBins[k] > 9.){
+                                errorReset      = 2.30547+-0.433328*ptBins[k]+0.0478486*pow(ptBins[k],2);
+                                errorsMean[i][k]        = errorReset;
+                                errorsMeanErr[i][k]     = errorReset*0.01;
+                                errorsMeanCorr[i][k]    = errorReset;
+                                errorsMeanErrCorr[i][k] = errorReset*0.01;
+                            }
                         }
                     }
                 }

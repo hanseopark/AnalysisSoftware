@@ -6994,9 +6994,9 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphPi0Djordjevic_0010->SetFillColor(colorVitevBas0005);
             graphPi0Djordjevic_0010->Draw("3 same");
 
-            DrawGammaSetMarkerTGraphAsym(graphPi0VitevNew_0010, markerStyleCommmonSpectrum0010,markerSizeSpectrum, colorVitevBas0005,colorVitevBas0005,widthLinesBoxes, kTRUE);
-            graphPi0VitevNew_0010->SetFillStyle(/*fillStyleXiao*/0);
-            graphPi0VitevNew_0010->SetFillColor(colorVitevBas0005);
+            DrawGammaSetMarkerTGraphAsym(graphPi0VitevNew_0010, markerStyleCommmonSpectrum0010,markerSizeSpectrum, colorVitevBas0510,colorVitevBas0510,widthLinesBoxes, kTRUE);
+            graphPi0VitevNew_0010->SetFillStyle(fillStyleXiao);
+            graphPi0VitevNew_0010->SetFillColor(colorVitevBas0510);
             graphPi0VitevNew_0010->Draw("3 same");
 
             TGraphAsymmErrors *copyWHDG = (TGraphAsymmErrors*) gWHDG_Pi0_Raa_0010->Clone();
@@ -7011,7 +7011,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 
             TGraphAsymmErrors *copyViteV = (TGraphAsymmErrors*) graphPi0VitevNew_0010->Clone();
             DrawGammaSetMarkerTGraphAsym(copyViteV, markerStyleCommmonSpectrum0010,markerSizeSpectrum, kBlack, kBlack,widthLinesBoxes, kTRUE);
-            copyViteV->SetFillStyle(/*fillStyleXiao*/0);
+            copyViteV->SetFillStyle(fillStyleXiao);
             copyViteV->SetFillColor(kBlack);
 
             DrawGammaSetMarkerTGraphAsym(graphRAAPi0SysBothMeson_0010, markerStyle0010, markerSizeComb, colorCombo0010, colorCombo0010, widthLinesBoxes, kTRUE);
@@ -7117,7 +7117,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphPi0Djordjevic_2050->Draw("3 same");
 
             DrawGammaSetMarkerTGraphAsym(graphPi0VitevNew_2050, markerStyleCommmonSpectrum0010,markerSizeSpectrum, colorVitevBas4060,colorVitevBas4060,widthLinesBoxes, kTRUE);
-            graphPi0VitevNew_2050->SetFillStyle(/*fillStyleXiao*/0);
+            graphPi0VitevNew_2050->SetFillStyle(fillStyleXiao);
             graphPi0VitevNew_2050->SetFillColor(colorVitevBas4060);
             graphPi0VitevNew_2050->Draw("3 same");
 

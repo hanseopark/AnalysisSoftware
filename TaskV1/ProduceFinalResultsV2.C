@@ -154,12 +154,12 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         minPtForFitsEta=0.4;
 
         if (useSameBinningPi0Eta.CompareTo("")==0){
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveragedPCM_Pi0_5TeV2017_2018_06_08.dat";
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveragedPCM_Pi0_5TeV2017_2018_07_04.dat";
         } else {
-            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_5TeV2017_fake.dat";
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveragedPCM_EtaToPi0_5TeV2017_2018_07_04.dat";
             minPtForFits=0.4;
         }
-        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveragedPCM_Eta_5TeV2017_2018_06_08.dat";
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveragedPCM_Eta_5TeV2017_2018_07_04.dat";
         cout << "You have chosen 5TeV2017. The systematic errors loaded are still sperimental." << endl;
 
     } else if( optionEnergy.CompareTo("2.76TeV") == 0) {
@@ -569,8 +569,10 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 		if (!isMC.CompareTo("kFALSE")){
 			PlotFinalOutput("EtaToPi0Ratio",histoCorrectedYieldPi0,NULL,histoCorrectedYieldEta,NULL,0.01,1.05,"#eta/#pi^{0}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kFALSE,graphSystErrRatio);
 			//******************************* Ratio + Pythia ********************************************
-			plotPythiaPhojetInRatio=kTRUE;
-			PlotFinalOutput("EtaToPi0RatioPythiaPhojet",histoCorrectedYieldPi0,NULL,histoCorrectedYieldEta,NULL,0.01,1.05,"#eta/#pi^{0}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kFALSE,graphSystErrRatio);
+            if(histoEtaToPi0Phojet){
+                plotPythiaPhojetInRatio=kTRUE;
+                PlotFinalOutput("EtaToPi0RatioPythiaPhojet",histoCorrectedYieldPi0,NULL,histoCorrectedYieldEta,NULL,0.01,1.05,"#eta/#pi^{0}","#pi^{0}/#eta",optionEnergy,mode,outputDir,prefix2,useSameBinningPi0Eta,cutSelection,suffix,"",kFALSE,graphSystErrRatio);
+            }
 		}
 	}
 
