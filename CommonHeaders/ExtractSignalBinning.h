@@ -2401,7 +2401,7 @@
                       if(fNBinsPt<15){
                         maxNBins = 12;
                         for(Int_t i = 0; i < maxNBins+1; i++){
-                            binning[i] = binning[i] = fBinsEta5TeV2017CombinationPt[i]; //fBinsEta5TeVPt[i];
+                            binning[i] = fBinsEta5TeV2017CombinationPt[i]; //fBinsEta5TeVPt[i];
                         }
                       }else{
                         maxNBins = 21;
