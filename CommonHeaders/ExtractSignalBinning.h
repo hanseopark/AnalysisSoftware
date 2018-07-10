@@ -1686,6 +1686,11 @@
                               for(Int_t i = 0; i < maxNBins+1; i++){
                                   binning[i] = fBinsPi05TeV2017ExtraFineforMCPt[i];
                               }
+                          } else if(fNBinsPt>30 && fNBinsPt<60){
+                              maxNBins = 35;
+                              for(Int_t i = 0; i < maxNBins+1; i++){
+                                  binning[i] = fBinsPi05TeV2017CombinationPt[i];
+                              }
                           } else if(fNBinsPt<30){
                               maxNBins = 26;
                               for(Int_t i = 0; i < maxNBins+1; i++){
@@ -2394,9 +2399,9 @@
                  if ( mode == 0 ){
                     if(energy.Contains("2017")){
                       if(fNBinsPt<15){
-                        maxNBins = 13;
+                        maxNBins = 12;
                         for(Int_t i = 0; i < maxNBins+1; i++){
-                            binning[i] = fBinsEta5TeVPt[i];
+                            binning[i] = binning[i] = fBinsEta5TeV2017CombinationPt[i]; //fBinsEta5TeVPt[i];
                         }
                       }else{
                         maxNBins = 21;
@@ -3392,6 +3397,8 @@
                                 fNRebin[i]      = fBinsPi05TeV2017ExtraFinePtRebin[i];
                               else if(fNBinsPt>60&&fNBinsPt<75)
                                 fNRebin[i]      = fBinsPi05TeV2017ExtraFineforMCPtRebin[i];
+                              else if(fNBinsPt>30&&fNBinsPt<60)
+                                fNRebin[i]      = fBinsPi05TeV2017CombinationPtRebin[i];
                               else if(fNBinsPt<30)
                                 fNRebin[i]      = fBinsPi05TeVPtRebin[i];
                               else
@@ -4454,7 +4461,7 @@
                         if (i < fNBinsPt+1){
                             if ( modi == 0 ) {
                                 if(energy.Contains("2017")){
-                                    if(fNBinsPt<15) fNRebin[i]  = fBinsEta5TeVPtRebin[i];
+                                    if(fNBinsPt<15) fNRebin[i]  = fBinsEta5TeV2017CombinationPtRebin[i]; //fBinsEta5TeVPtRebin[i];
                                     else            fNRebin[i]  = fBinsEta5TeV2017PtRebin[i];
                                 } else {
                                     fNRebin[i]  = fBinsEta5TeVPtRebin[i];
