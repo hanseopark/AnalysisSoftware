@@ -320,12 +320,14 @@ if [ $CLEANUPMAYOR == 0 ]; then
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_3" DPGTracksIncAcc $NSlashes3 "" kFALSE
             CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC17d18 "$AliTrainDirMC/$LHC17d18MC/merge_runlist_4" DPGTracksAndCalo $NSlashes3 "" kFALSE
         fi
+    echo "--> All downloads done!"
 #
 
 # Copy files with proper name
-echo "Change Structure If Needed"
+    echo ""
+    echo "--> Changing structure if needed..."
     # LHC data files
-        if [ -n "$LHC16dData" ]; then
+        if [ -n "$LHC16dData" ]; then # child 1
             for fileName in `ls $OUTPUTDIR_LHC16d/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16d $NSlashes "LHC16d-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -337,7 +339,7 @@ echo "Change Structure If Needed"
             done;
             echo "16d done"
         fi
-        if [ -n "$LHC16gData" ]; then
+        if [ -n "$LHC16gData" ]; then # child 2
             for fileName in `ls $OUTPUTDIR_LHC16g/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16g $NSlashes "LHC16g-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -348,7 +350,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16g $NSlashes "LHC16g-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16hData" ]; then
+        if [ -n "$LHC16hData" ]; then # child 3
             for fileName in `ls $OUTPUTDIR_LHC16h/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -359,7 +361,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16h $NSlashes "LHC16h-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16iData" ]; then
+        if [ -n "$LHC16iData" ]; then # child 4
             for fileName in `ls $OUTPUTDIR_LHC16i/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -370,7 +372,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16i $NSlashes "LHC16i-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16jData" ]; then
+        if [ -n "$LHC16jData" ]; then # child 5
             for fileName in `ls $OUTPUTDIR_LHC16j/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -381,7 +383,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16j $NSlashes "LHC16j-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16kData" ]; then
+        if [ -n "$LHC16kData" ]; then # child 6
             for fileName in `ls $OUTPUTDIR_LHC16k/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16k $NSlashes "LHC16k-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -392,7 +394,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16k $NSlashes "LHC16k-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16lData" ]; then
+        if [ -n "$LHC16lData" ]; then # child 7
             for fileName in `ls $OUTPUTDIR_LHC16l/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16l $NSlashes "LHC16l-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -403,7 +405,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16l $NSlashes "LHC16l-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16oData" ]; then
+        if [ -n "$LHC16oData" ]; then # child 8
             for fileName in `ls $OUTPUTDIR_LHC16o/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16o $NSlashes "LHC16o-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -414,7 +416,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16o $NSlashes "LHC16o-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16pData" ]; then
+        if [ -n "$LHC16pData" ]; then # child 9
             for fileName in `ls $OUTPUTDIR_LHC16p/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -425,7 +427,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16p $NSlashes "LHC16p-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC16eData" ]; then
+        if [ -n "$LHC16eData" ]; then # child 10
             for fileName in `ls $OUTPUTDIR_LHC16e/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16e $NSlashes "LHC16e-pass$passNr-IncAcc" "-IncAcc"
             done;
@@ -436,7 +438,8 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC16e $NSlashes "LHC16e-pass$passNr-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17f6Data" ]; then
+    # Monte Carlo files
+        if [ -n "$LHC17f6Data" ]; then    # child 1
             for fileName in `ls $OUTPUTDIR_LHC17f6/HeavyNeutralMesonToGG-IncAcc_*.root` $fileNumbers; do
             ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6 $NSlashes "MC_LHC17f6-anchor16d-IncAcc" "-IncAcc"
             done;
@@ -447,8 +450,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6 $NSlashes "MC_LHC17f6-anchor16d-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-    # Monte Carlo files
-        if [ -n "$LHC17f9Data" ]; then
+        if [ -n "$LHC17f9Data" ]; then    # child 2
             echo "Testen"
             for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 echo fileName $fileName
@@ -463,7 +465,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17d17Data" ]; then
+        if [ -n "$LHC17d17Data" ]; then   # child 3
             for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-IncAcc" "-IncAcc"
             done;
@@ -474,7 +476,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17f5Data" ]; then
+        if [ -n "$LHC17f5Data" ]; then    # child 4
             for fileName in `ls $OUTPUTDIR_LHC17f5/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5-anchor16h-IncAcc" "-IncAcc"
             done;
@@ -485,7 +487,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5-anchor16h-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17d3Data" ]; then
+        if [ -n "$LHC17d3Data" ]; then    # child 5
             for fileName in `ls $OUTPUTDIR_LHC17d3/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3 $NSlashes "MC_LHC17d3-anchor16i-IncAcc" "-IncAcc"
             done;
@@ -496,7 +498,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3 $NSlashes "MC_LHC17d3-anchor16i-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17e5Data" ]; then
+        if [ -n "$LHC17e5Data" ]; then    # child 6
             for fileName in `ls $OUTPUTDIR_LHC17e5/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5 $NSlashes "MC_LHC17e5-anchor16j-IncAcc" "-IncAcc"
             done;
@@ -507,73 +509,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5 $NSlashes "MC_LHC17e5-anchor16j-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17f6Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17f6/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6 $NSlashes "MC_LHC17f6-anchor16d-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17f6/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6 $NSlashes "MC_LHC17f6-anchor16d-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17f6/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f6 $NSlashes "MC_LHC17f6-anchor16d-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17f9Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17f9/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f9 $NSlashes "MC_LHC17f9-anchor16e-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17d17Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d17/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d17 $NSlashes "MC_LHC17d17-anchor16g-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17f5Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17f5/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5-anchor16h-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17f5/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5-anchor16h-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17f5/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17f5 $NSlashes "MC_LHC17f5-anchor16h-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17d3Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17d3/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3 $NSlashes "MC_LHC17d3-anchor16i-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d3/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3 $NSlashes "MC_LHC17d3-anchor16i-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d3/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d3 $NSlashes "MC_LHC17d3-anchor16i-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17e5Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17e5/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5 $NSlashes "MC_LHC17e5-anchor16j-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17e5/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5 $NSlashes "MC_LHC17d3-anchor16j-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17e5/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17e5 $NSlashes "MC_LHC17e5-anchor16j-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17d20a1Data" ]; then
+        if [ -n "$LHC17d20a1Data" ]; then # child 7
             echo $OUTPUTDIR_LHC17d20a1
             for fileName in `ls $OUTPUTDIR_LHC17d20a1/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1 $NSlashes "MC_LHC17d20a1-anchor16k-IncAcc" "-IncAcc"
@@ -585,18 +521,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1 $NSlashes "MC_LHC17d20a1-anchor16k-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17d20a1ExData" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17d20a1Ex/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1Ex $NSlashes "MC_LHC17d20a1_extra-anchor16k-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d20a1Ex/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1Ex $NSlashes "MC_LHC17d20a1_extra-anchor16k-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d20a1Ex/HeavyNeutralMesonToGG-DPGTrackAndCalo*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a1Ex $NSlashes "MC_LHC17d20a1_extra-anchor16k-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-        if [ -n "$LHC17d20a2Data" ]; then
+        if [ -n "$LHC17d20a2Data" ]; then # child 8
             for fileName in `ls $OUTPUTDIR_LHC17d20a2/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a2 $NSlashes "MC_LHC17d20a2-anchor16l-IncAcc" "-IncAcc"
             done;
@@ -607,7 +532,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d20a2 $NSlashes "MC_LHC17d20a2-anchor16l-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17d16Data" ]; then
+        if [ -n "$LHC17d16Data" ]; then   # child 9
             for fileName in `ls $OUTPUTDIR_LHC17d16/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16 $NSlashes "MC_LHC17d16-anchor16o-IncAcc" "-IncAcc"
             done;
@@ -618,7 +543,7 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16 $NSlashes "MC_LHC17d16-anchor16o-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
-        if [ -n "$LHC17d18Data" ]; then
+        if [ -n "$LHC17d18Data" ]; then   # child 10
             for fileName in `ls $OUTPUTDIR_LHC17d18/HeavyNeutralMesonToGG-IncAcc_*.root`; do
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-IncAcc" "-IncAcc"
             done;
@@ -629,33 +554,9 @@ echo "Change Structure If Needed"
                 ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-DPGTrackAndCalo" "-DPGTrackAndCalo"
             done;
         fi
+    echo "--> Chance structure if needed done!"
+#
 
-        if [ -n "$LHC17d16Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17d16/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16 $NSlashes "MC_LHC17d16-anchor16o-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d16/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16 $NSlashes "MC_LHC17d16-anchor16o-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d16/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d16 $NSlashes "MC_LHC17d16-anchor16o-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-
-        if [ -n "$LHC17d18Data" ]; then
-            for fileName in `ls $OUTPUTDIR_LHC17d18/HeavyNeutralMesonToGG-IncAcc_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-IncAcc" "-IncAcc"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d18/HeavyNeutralMesonToGG-DPGTrack_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-DPGTrack" "-DPGTrack"
-            done;
-            for fileName in `ls $OUTPUTDIR_LHC17d18/HeavyNeutralMesonToGG-DPGTrackAndCalo_*.root`; do
-                ChangeStructureIfNeededHeavy $fileName $OUTPUTDIR_LHC17d18 $NSlashes "MC_LHC17d18-anchor16p-DPGTrackAndCalo" "-DPGTrackAndCalo"
-            done;
-        fi
-
-    echo "--> All downloads done!"
-    echo ""
 # Merge ROOT files
     if [ $MERGEON == 1 ]; then
         echo ""
@@ -694,7 +595,6 @@ echo "Change Structure If Needed"
             fi
         done
 
-
     echo "--> Merging done"
     fi
 else
@@ -702,88 +602,88 @@ else
     echo "--> Cleaning up ROOT files"
     # LHC data files
         if [ -n "$LHC16dData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16d";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16d";
             rm $OUTPUTDIR_LHC16d/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16d/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16gData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16g";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16g";
             rm $OUTPUTDIR_LHC16g/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16g/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16hData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16h";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16h";
             rm $OUTPUTDIR_LHC16h/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16h/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16iData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16i";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16i";
             rm $OUTPUTDIR_LHC16i/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16i/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16jData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16j";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16j";
             rm $OUTPUTDIR_LHC16j/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16j/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16kData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16k";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16k";
             rm $OUTPUTDIR_LHC16k/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16k/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16lData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16l";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16l";
             rm $OUTPUTDIR_LHC16l/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16l/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16oData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16o";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16o";
             rm $OUTPUTDIR_LHC16o/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16o/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16pData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16p";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16p";
             rm $OUTPUTDIR_LHC16p/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16p/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16eData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16e";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e";
             rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMeson_*.root
         fi
     # Monte Carlo files
         if [ -n "$LHC16eData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16e";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e";
             rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16eData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16e";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e";
             rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16eData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16e";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e";
             rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16eData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16e";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e";
             rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC16eData" ]; then
-            echo "removing all GammaConv files in runFolders for LHC16e";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC16e";
             rm $OUTPUTDIR_LHC16e/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC16e/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC17d20a1Data" ]; then
-            echo "removing all GammaConv files in runFolders for LHC17d20a1";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a1";
             rm $OUTPUTDIR_LHC17d20a1/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC17d20a1/*/*/*HeavyNeutralMeson_*.root
         fi
         if [ -n "$LHC17d20a2Data" ]; then
-            echo "removing all GammaConv files in runFolders for LHC17d20a2";
+            echo "removing all HeavyNeutralMesonToGG files in runFolders for LHC17d20a2";
             rm $OUTPUTDIR_LHC17d20a2/*/HeavyNeutralMeson_*.root
             rm $OUTPUTDIR_LHC17d20a2/*/*/*HeavyNeutralMeson_*.root
         fi
