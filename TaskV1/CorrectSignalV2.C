@@ -2315,7 +2315,9 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
     if (    optionEnergy.CompareTo("PbPb_5.02TeV") == 0                     ||
             (mode == 0 && optionEnergy.CompareTo("PbPb_2.76TeV") == 0 )     ||
             optionEnergy.CompareTo("2.76TeV") == 0     ||
-            optionEnergy.CompareTo("5TeV2017") == 0
+            optionEnergy.CompareTo("5TeV2017") == 0    ||
+            optionEnergy.CompareTo("13TeV") == 0       ||
+            optionEnergy.CompareTo("13TeVRBins") == 0  
         )
         scaleTrueEffiWithFit        = kFALSE;
 
@@ -2364,8 +2366,10 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("13TeVLowB") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.7,maxPtMeson    );
+	    }else if(mode == 0 && (optionEnergy.Contains("13TeV")  || optionEnergy.Contains("13TeVRBins")) ){
+	        histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("pPb_5.023TeV") && ( centralityString.Contains("0-20%") || centralityString.Contains("20-40%") || centralityString.Contains("40-60%") || centralityString.Contains("60-100%"))) {
-                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
+	        histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
             }else{
@@ -3383,6 +3387,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
             if (mode == 0){
                 if(kCollisionSystem==1) rangeSecRatio[1]        = 0.07;
                 else if(optionEnergy.CompareTo("5TeV2017") == 0) rangeSecRatio[1]        = 0.06;
+                else if( (optionEnergy.CompareTo("13TeV") == 0 || optionEnergy.CompareTo("13TeVRBins") == 0) ) rangeSecRatio[1]        = 0.06;
                 else rangeSecRatio[1]        = 0.05;
             } else if (mode == 2 || mode == 13){
                 rangeSecRatio[1]        = 0.05;
