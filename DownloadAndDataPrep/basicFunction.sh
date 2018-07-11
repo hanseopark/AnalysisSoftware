@@ -56,6 +56,19 @@ function GetFileNumberListPCMCalo()
     cat $3
 }
 
+function GetFileNumberListHeavy()
+{
+    ls $1/HeavyNeutralMeson*.root > filesTemp.txt
+    fileNumbers=`cat filesTemp.txt`
+    rm fileNumbers.txt
+    for fileName in $fileNumbers; do
+        number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number >> fileNumbers.txt
+    done
+    sort -u fileNumbers.txt > $3
+    cat $3
+}
+
 
 
 function GetFileNumberListCalo()
@@ -202,7 +215,7 @@ function CopyFileIfNonExisitentDiffList()
         if [ -f $1/$3/root_archive.zip ] && [ -s $1/$3/root_archive.zip ]; then
             echo "$1/$3/root_archive.zip exists";
         else
-            echo "couldn't find $1/$3/root_archive.zip copying"
+            echo "Couldn't find \"$1/$3/root_archive.zip\". Copying..."
             mkdir -p $1/$3
             alien_ls $2/root_archive.zip > templog.txt
             if  grep -q "no such file" templog.txt ;
@@ -396,6 +409,29 @@ function ChangeStructureIfNeededCaloMerged()
             echo "nothing to be done";
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaCaloMerged_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_GammaCaloMerged_$4_$number.log\"\,10\)
+        fi
+   fi
+}
+
+function ChangeStructureIfNeededHeavy()
+{
+    if [[ $1 == *"Basic.root"* ]]; then
+        echo "Nothing to be done"
+    else
+        number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
+        number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
+        if [ -z "$number2" ]; then
+            number=$number1
+        else
+            echo $number2
+            number=$number1\_$number2
+        fi
+        echo $number
+        cp $2/HeavyNeutralMeson$5_$number.root $OUTPUTDIR/HeavyNeutralMeson_$4\_$number.root
+        if [ -f $OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMeson_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMeson_$4_$number.log ]; then
+            echo "nothing to be done";
+        else
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/HeavyNeutralMeson$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMeson_$4_$number.log\"\,2\)
         fi
    fi
 }
