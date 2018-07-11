@@ -197,10 +197,14 @@
     Double_t fBinsEta5TeV2017Pt[22]                 = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0,
                                                         2.2, 2.4, 2.6, 2.8, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0,
                                                         12.0, 18.0};
-    Double_t fBinsEta5TeV2017CombinationPt[13]       = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0,
+    Double_t fBinsEta5TeV2017PCMCombinationPt[13]       = { 0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0,
                                                         12.0,16.0, 20.0};
-    Int_t fBinsEta5TeV2017CombinationPtRebin[12]    = { 4, 4, 2, 2, 2, 2, 2, 4, 8, 8,
+    Int_t fBinsEta5TeV2017PCMCombinationPtRebin[12]    = { 4, 4, 2, 2, 2, 2, 2, 4, 8, 8,
                                                         8, 8};
+    Double_t fBinsEta5TeV2017PtCombination[16]      = { 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0,
+                                                        16.0, 20.0, 25.0, 30.0, 35.0, 40.0};
+    Int_t fBinsEta5TeV2017PtCombinationRebin[15]    = { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                                                        8, 8, 8, 8, 8};
     Int_t fBinsEta5TeV2017PtRebin[21]               = { 4, 8, 5, 5, 4, 4, 4, 4, 4, 4,
                                                         4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
                                                         5};
