@@ -527,6 +527,15 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                             }
                         }
                     }
+
+                    if (graphPi0Width[cent][meth]->GetY()[0] == 0){
+                        graphPi0Width[cent][meth]->RemovePoint(0);
+                        graphPi0Mass[cent][meth]->RemovePoint(0);
+                        graphPi0MassMC[cent][meth]->RemovePoint(0);
+                        graphPi0WidthMC[cent][meth]->RemovePoint(0);
+                        graphPi0EffTimesAcc[cent][meth]->RemovePoint(0);
+                    }
+
                     // reading yields
                     graphPi0InvYieldStat[cent][meth]                     = (TGraphAsymmErrors*)directoryPi0[cent][meth]->Get("graphCorrectedYieldPi0");
                     histoPi0InvYieldStat[cent][meth]                     = (TH1D*)directoryPi0[cent][meth]->Get("CorrectedYieldPi0");
@@ -579,6 +588,14 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                             ptBin++;
                         }
                     }
+                    if (graphEtaWidth[cent][meth]->GetY()[0] == 0){
+                        graphEtaWidth[cent][meth]->RemovePoint(0);
+                        graphEtaMass[cent][meth]->RemovePoint(0);
+                        graphEtaMassMC[cent][meth]->RemovePoint(0);
+                        graphEtaWidthMC[cent][meth]->RemovePoint(0);
+                        graphEtaEffTimesAcc[cent][meth]->RemovePoint(0);
+                    }
+
                     cout << "Eta sys error" << endl;
                     if (graphEtaInvYieldSys[cent][meth]) graphEtaInvYieldSys[cent][meth]->Print();
                     histoEtaToPi0Stat[cent][meth]                        = (TH1D*)directoryEta[cent][meth]->Get("EtaToPi0StatError");
@@ -591,13 +608,6 @@ void CombineMesonMeasurementspPb5TeVCent(   TString fileNamePCM             = ""
                     if (!graphEtaToPi0Sys[cent][meth])
                         graphEtaToPi0Sys[cent][meth]                     = (TGraphAsymmErrors*)directoryEta[cent][meth]->Get("EtaToPi0YShiftedSystError");
                     if (meth == 1){
-                        Int_t ptBin = 1;
-                        if (histoEtaInvYieldStat[cent][meth]){
-                            while (histoEtaInvYieldStat[cent][meth]->GetBinCenter(ptBin) < 4 && ptBin < histoEtaInvYieldStat[cent][meth]->GetNbinsX()){
-                                histoEtaInvYieldStat[cent][meth]->SetBinContent(ptBin, 0);
-                                ptBin++;
-                            }
-                        }
                         ptBin = 1;
                         if (histoEtaToPi0Stat[cent][meth]){
                             while (histoEtaToPi0Stat[cent][meth]->GetBinCenter(ptBin) < 4 && ptBin < histoEtaToPi0Stat[cent][meth]->GetNbinsX()){
