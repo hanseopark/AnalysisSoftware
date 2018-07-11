@@ -63,6 +63,7 @@ function GetFileNumberListHeavy()
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
         number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        number+=\_`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 3 | cut -d "." -f1`
         echo $number >> fileNumbers.txt
     done
     sort -u fileNumbers.txt > $3
@@ -120,11 +121,12 @@ function SeparateCutsIfNeeded()
 
 function CopyFileIfNonExisitent()
 {
-    echo "file path: "$1
-    echo "alien path: " $2
-    echo "number of subdirectories: " $3
-    echo "detailed path subdirs: " $4
-    echo "separate also the tree: " $5
+    echo "Arguments for CopyFileIfNonExisitent:"
+    echo "  file path: "$1
+    echo "  alien path: " $2
+    echo "  number of subdirectories: " $3
+    echo "  detailed path subdirs: " $4
+    echo "  separate also the tree: " $5
     if [ $DOWNLOADON == 1 ]; then
         if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
             echo "$1/root_archive.zip exists";
@@ -205,12 +207,13 @@ function CopyFileIfNonExisitent()
 
 function CopyFileIfNonExisitentDiffList()
 {
-    echo "file path: "$1
-    echo "alien path: " $2
-    echo "list: " $3
-    echo "number of subdirectories: " $4
-    echo "detailed path subdirs: " $5
-    echo "separate also the tree: " $6
+    echo "Arguments for CopyFileIfNonExisitentDiffList:"
+    echo "  file path: "$1
+    echo "  alien path: " $2
+    echo "  list: " $3
+    echo "  number of subdirectories: " $4
+    echo "  detailed path subdirs: " $5
+    echo "  separate also the tree: " $6
     if [ $DOWNLOADON == 1 ]; then
         if [ -f $1/$3/root_archive.zip ] && [ -s $1/$3/root_archive.zip ]; then
             echo "$1/$3/root_archive.zip exists";
@@ -292,6 +295,13 @@ function CopyFileIfNonExisitentDiffList()
         for fileNumber in $fileNumbers; do
             echo $fileNumber
             SeparateCutsIfNeeded $1/$3/GammaCalo_$fileNumber 4 $6
+        done;
+        rm -f fileNumbers2.txt
+        GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt
+        fileNumbers=`cat fileNumbers2.txt`
+        for fileNumber in $fileNumbers; do
+            echo $fileNumber
+            SeparateCutsIfNeeded $1/$3/HeavyNeutralMesonToGG_$fileNumber 0 $6
         done;
         rm -f fileNumbers2.txt
     fi
@@ -425,7 +435,6 @@ function ChangeStructureIfNeededHeavy()
     if [[ $1 == *"Basic.root"* ]]; then
         echo "Nothing to be done"
     else
-        echo $1
         number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
         number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
         if [ -z "$number2" ]; then
