@@ -3000,7 +3000,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
 
                         if [ $MERGINGMC -eq 1 ]; then
                             if [ $addedSig -eq 1 ]; then
-                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE
+                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kTRUE
                                 ExtractSignal $optionsEtaMC2
                                 EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
                                 EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosAddSig_*.root`

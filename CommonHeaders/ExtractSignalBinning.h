@@ -2718,9 +2718,13 @@
                     }
                 } else if (mode == 20 ){
                     maxNBins = 19;
-                    if (centrality.CompareTo("0-100%")){
-                        maxNBins    = 13;
-                    }
+                    if (!centrality.CompareTo("20-40%") || !centrality.CompareTo("40-60%") )
+                        maxNBins    = 15;
+                    else if (!centrality.CompareTo("60-100%") )
+                        maxNBins    = 14;
+                    else if (centrality.CompareTo("0-100%"))
+                        maxNBins    = 16;
+
                     for(Int_t i = 0; i < maxNBins+1; i++){
                         if (!centrality.CompareTo("0-100%"))
                             binning[i] = fBinsEtapPb5TeVEMCPt[i];

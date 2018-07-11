@@ -4480,6 +4480,10 @@
             return "DPMJet";
         } else if (MCname.CompareTo("LHC13e7") == 0 ){
             return "HIJING";
+        } else if (MCname.CompareTo("LHC17f2a") == 0 ){
+            return "EPOSLHC";
+        } else if (MCname.CompareTo("LHC17f2b") == 0 || MCname.CompareTo("LHC18f3") == 0 ){
+            return "DPMJet";
         } else {
             return "undefined";
         }
