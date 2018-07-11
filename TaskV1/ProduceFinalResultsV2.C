@@ -135,6 +135,18 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         }
         fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat";
         cout << "You have choosen 13TeV. Note that you will use Dummy systematic errors." << endl;
+   } else if( optionEnergy.CompareTo("13TeVRBins") == 0) {
+        minPtForFits=0.4;
+        minPtForFitsEta=0.4;
+
+        if (useSameBinningPi0Eta.CompareTo("")==0){
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0_Dummy_pp13TeV.dat";
+        } else {
+            fileNameSysErrPi0 = "SystematicErrorsNew/SystematicErrorAveraged_Pi0EtaBinning_Dummy_pp13TeV.dat";
+            minPtForFits=0.4;
+        }
+        fileNameSysErrEta = "SystematicErrorsNew/SystematicErrorAveraged_Eta_Dummy_pp13TeV.dat";
+        cout << "You have choosen 13TeV. Note that you will use Dummy systematic errors." << endl;
 
     } else if( optionEnergy.CompareTo("5TeV") == 0 ) {
         minPtForFits=0.4;
@@ -374,7 +386,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
 
 
     TFile* fileMCGenerated =     new TFile("ExternalInput/PCM/MCGeneratedSpectra.root");
-    if(!optionEnergy.CompareTo("8TeV")||!optionEnergy.CompareTo("13TeV")||!optionEnergy.CompareTo("5TeV")){
+    if(!optionEnergy.CompareTo("8TeV")||!optionEnergy.CompareTo("13TeV")||!optionEnergy.CompareTo("13TeVRBins")||!optionEnergy.CompareTo("5TeV")){
 		cout << "Caution!!! using 7TeV MC generated EtaToPi0 spectra" << endl;
 		use7TeVPytPho = kTRUE;
         histoEtaToPi0Phojet = (TH1D*)fileMCGenerated->Get(Form("EtaToPi0_generatedSpectrum_%s_Phojet","7TeV"));
@@ -404,6 +416,9 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
         isV0AND             = 1;
     }
     if (optionEnergy.CompareTo("13TeV") == 0){
+        isV0AND             = 1;
+    }
+    if (optionEnergy.CompareTo("13TeVRBins") == 0){
         isV0AND             = 1;
     }
     if (optionEnergy.CompareTo("5TeV2017") == 0){
@@ -489,7 +504,7 @@ void  ProduceFinalResultsV2( const char *fileNamePi0 = "myOutput",
     Double_t minCorrYieldEta = 0.2*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX());
     Double_t maxCorrYieldEta = 5.0*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetMaximumBin());
 
-   if( optionEnergy.CompareTo("13TeV") == 0) {
+   if( optionEnergy.CompareTo("13TeV") == 0  || optionEnergy.CompareTo("13TeVRBins") == 0 ) {
       minCorrYieldPi0 = 0.02*histoCorrectedYieldPi0->GetBinContent(histoCorrectedYieldPi0->GetNbinsX()-2);
       minCorrYieldEta = 0.02*histoCorrectedYieldEta->GetBinContent(histoCorrectedYieldEta->GetNbinsX()-2);
     }
