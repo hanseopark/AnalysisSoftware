@@ -70,8 +70,6 @@ function GetFileNumberListHeavy()
     cat $3
 }
 
-
-
 function GetFileNumberListCalo()
 {
     ls $1/GammaCalo_*.root > filesTemp.txt
@@ -105,14 +103,14 @@ function SeparateCutsIfNeeded()
         echo "separated file $1.root already"
         if [ $CLEANUP == 1 ]; then
             echo "removing $1.root as already separated"
-            rm $1.root
+            rm -f $1.root
         fi
     else
         root -b -x -q -l SeparateDifferentCutnumbers.C\+\(\"$1.root\"\,\"$1\"\,$2\,kTRUE\,$3\)
         if [ $CLEANUP == 1 ]; then
             if [ -f $1\_A.root ] || [ -f $1\_AWOTree.root ] ; then
                 echo "removing $1.root after successful separation"
-                rm $1.root
+                rm -f $1.root
             fi
         fi
     fi
@@ -136,7 +134,7 @@ function CopyFileIfNonExisitent()
             if [ -f $1/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
                 echo "copied correctly"
             else
-                rm locallog.txt
+                rm -f locallog.txt
                 if [ $4 != "none" ]; then
                     if [ $4 == "*Stage*" ]; then
                         alien_ls -F $4/ | grep "/" > locallog.txt
@@ -156,7 +154,7 @@ function CopyFileIfNonExisitent()
                             unzip -u $1/Stage1/$dirName/root_archive.zip -d $1/Stage1/$dirName/
                         fi
                     done
-                    rm locallog.txt
+                    rm -f locallog.txt
                     BASEDIR=$PWD
                     cd $1/Stage1/$firstDir/
                     ls G*.root > $BASEDIR/locallog.txt
@@ -218,7 +216,7 @@ function CopyFileIfNonExisitentDiffList()
         if [ -f $1/$3/root_archive.zip ] && [ -s $1/$3/root_archive.zip ]; then
             echo "$1/$3/root_archive.zip exists";
         else
-            echo "Couldn't find \"$1/$3/root_archive.zip\". Copying..."
+            echo "Couldn't find \"$1/$3/root_archive.zip\". Copying from the GRID..."
             mkdir -p $1/$3
             alien_ls $2/root_archive.zip > templog.txt
             if  grep -q "no such file" templog.txt ;
@@ -234,7 +232,7 @@ function CopyFileIfNonExisitentDiffList()
             if [ -f $1/$3/root_archive.zip ] && [ -s $1/root_archive.zip ]; then
                 echo "copied correctly"
             else
-                rm locallog.txt
+                rm -f locallog.txt
                 if [ $5 != "none" ]; then
                     if [ $5 == "*Stage*" ]; then
                         alien_ls -F $5/ | grep "/" > locallog.txt
@@ -254,7 +252,7 @@ function CopyFileIfNonExisitentDiffList()
                             unzip -u $1/$3/Stage1/$dirName/root_archive.zip -d $1/$3/Stage1/$dirName/
                         fi
                     done
-                    rm locallog.txt
+                    rm -f locallog.txt
                     BASEDIR=$PWD
                     cd $1/$3/Stage1/$firstDir/
                     ls G*.root > $BASEDIR/locallog.txt
@@ -270,8 +268,8 @@ function CopyFileIfNonExisitentDiffList()
                     cd -
                 fi
             fi
-        fi
-        unzip -u $1/$3/root_archive.zip -d $1/$3/
+      fi
+      unzip -u $1/$3/root_archive.zip -d $1/$3/
     fi
 
     if [ $SEPARATEON == 1 ]; then
@@ -300,7 +298,6 @@ function CopyFileIfNonExisitentDiffList()
         GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
-            echo $fileNumber
             SeparateCutsIfNeeded $1/$3/HeavyNeutralMesonToGG_$fileNumber 0 $6
         done;
         rm -f fileNumbers2.txt
@@ -331,8 +328,7 @@ function CopyFileIfNonExisitentDiffList()
     GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt
     fileNumbers=`cat fileNumbers2.txt`
     for fileNumber in $fileNumbers; do
-        echo $fileNumber
-        cp $1/$3/HeavyNeutralMesonToGG_$fileNumber.root $1/GammaConvV1-$3\_$fileNumber.root
+        cp $1/$3/HeavyNeutralMesonToGG_$fileNumber.root $1/HeavyNeutralMesonToGG-$3\_$fileNumber.root
     done
     rm -f fileNumbers2.txt
 }
@@ -440,19 +436,18 @@ function ChangeStructureIfNeededHeavy()
         if [ -z "$number2" ]; then
             number=$number1
         else
-            echo $number2
+            # echo $number2
             number=$number1\_$number2
         fi
-        echo $number
+        # echo $number
         cp $2/HeavyNeutralMesonToGG$5_$number.root $OUTPUTDIR/HeavyNeutralMesonToGG_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log ]; then
             echo "nothing to be done";
         else
-            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/HeavyNeutralMesonToGG$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log\"\,2\)
+            root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/HeavyNeutralMesonToGG_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log\"\,100\)
         fi
    fi
 }
-
 
 function GetFileNumberMerging()
 {
@@ -584,4 +579,3 @@ function MergeAccordingToList()
         cp $TOMERGE $2
     fi
 }
-
