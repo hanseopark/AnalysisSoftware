@@ -268,8 +268,8 @@ function CopyFileIfNonExisitentDiffList()
                     cd -
                 fi
             fi
-      fi
-      unzip -u $1/$3/root_archive.zip -d $1/$3/
+        fi
+        unzip -u $1/$3/root_archive.zip -d $1/$3/
     fi
 
     if [ $SEPARATEON == 1 ]; then
@@ -446,7 +446,7 @@ function ChangeStructureIfNeededHeavy()
         else
             root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/HeavyNeutralMesonToGG_$4\_$number.root\"\,\"$OUTPUTDIR/CutSelections/CutSelection_HeavyNeutralMesonToGG_$4_$number.log\"\,100\)
         fi
-   fi
+    fi
 }
 
 function GetFileNumberMerging()
