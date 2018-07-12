@@ -268,22 +268,31 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 
     // Read True histos
     if(isMC){
-      histoYieldsMappingGGInvMass                                   = (TH1D*)fileUncorrected.Get("histoYieldsMappingGGInvMass");
-      histoYieldsMappingGGInvMassFraction                           = (TH1D*)histoYieldsMappingGGInvMass->Clone("histoYieldsMappingGGInvMassFraction");
-      histoYieldsMappingGGInvMassFraction->Sumw2();
-      histoYieldsMappingGGInvMassFraction->Divide(histoYieldsMappingGGInvMass);
-      histoYieldsMappingTrueMeson                                   = (TH1D*)fileUncorrected.Get("histoYieldsMappingTrueMeson");
-      histoYieldsMappingTrueMesonFraction                           = (TH1D*)histoYieldsMappingTrueMeson ->Clone("histoYieldsMappingTrueMesonFraction");
-      histoYieldsMappingTrueMesonFraction->Sumw2();
-      histoYieldsMappingTrueMesonFraction->Divide(histoYieldsMappingGGInvMass);
-      histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical            = (TH1D*)fileUncorrected.Get("histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical");
-      histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction    = (TH1D*)histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->Clone("histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction");
-      histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction->Sumw2();
-      histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction->Divide(histoYieldsMappingGGInvMass);
-      histoYieldsMappingTruePiPlPiMiPiZeroContamination             = (TH1D*)fileUncorrected.Get("histoYieldsMappingTruePiPlPiMiPiZeroContamination");
-      histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction     = (TH1D*)histoYieldsMappingTruePiPlPiMiPiZeroContamination->Clone("histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction");
-      histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction->Sumw2();
-      histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction->Divide(histoYieldsMappingGGInvMass);
+        histoYieldsMappingGGInvMass                                   = (TH1D*)fileUncorrected.Get("histoYieldsMappingGGInvMass");
+        if (histoYieldsMappingGGInvMass){
+            histoYieldsMappingGGInvMassFraction                           = (TH1D*)histoYieldsMappingGGInvMass->Clone("histoYieldsMappingGGInvMassFraction");
+            histoYieldsMappingGGInvMassFraction->Sumw2();
+            histoYieldsMappingGGInvMassFraction->Divide(histoYieldsMappingGGInvMass);
+        }
+        histoYieldsMappingTrueMeson                                   = (TH1D*)fileUncorrected.Get("histoYieldsMappingTrueMeson");
+        if(histoYieldsMappingTrueMeson){
+            histoYieldsMappingTrueMesonFraction                           = (TH1D*)histoYieldsMappingTrueMeson ->Clone("histoYieldsMappingTrueMesonFraction");
+            histoYieldsMappingTrueMesonFraction->Sumw2();
+            histoYieldsMappingTrueMesonFraction->Divide(histoYieldsMappingGGInvMass);
+        }
+        histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical            = (TH1D*)fileUncorrected.Get("histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical");
+        if(histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical){
+            histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction    = (TH1D*)histoYieldsMappingTruePiPlPiMiPiZeroCombinatorical->Clone("histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction");
+            histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction->Sumw2();
+            histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction->Divide(histoYieldsMappingGGInvMass);
+        }
+
+        histoYieldsMappingTruePiPlPiMiPiZeroContamination             = (TH1D*)fileUncorrected.Get("histoYieldsMappingTruePiPlPiMiPiZeroContamination");
+        if(histoYieldsMappingTruePiPlPiMiPiZeroContamination){
+            histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction     = (TH1D*)histoYieldsMappingTruePiPlPiMiPiZeroContamination->Clone("histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction");
+            histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction->Sumw2();
+            histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction->Divide(histoYieldsMappingGGInvMass);
+        }
 
       TString fNamesYieldsMappingTruePiPlPiMiSameMother[7]   = {"histoYieldsMappingTruePiPlPiMiSameMother","histoYieldsMappingTruePiPlPiMiSameMotherFromEta","histoYieldsMappingTruePiPlPiMiSameMotherFromOmega","histoYieldsMappingTruePiPlPiMiSameMotherFromRho",
                                                                 "histoYieldsMappingTruePiPlPiMiSameMotherFromEtaPrime","histoYieldsMappingTruePiPlPiMiSameMotherFromK0s","histoYieldsMappingTruePiPlPiMiSameMotherFromK0l"};
@@ -294,19 +303,25 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
 
       for(Int_t k = 0; k < 7; k++){
          histoYieldsMappingTruePiPlPiMiSameMother[k]              = (TH1D*)fileUncorrected.Get(fNamesYieldsMappingTruePiPlPiMiSameMother[k].Data());
-         histoYieldsMappingTruePiPlPiMiSameMotherFraction[k]      = (TH1D*)histoYieldsMappingTruePiPlPiMiSameMother[k]->Clone(Form("%sFraction",fNamesYieldsMappingTruePiPlPiMiSameMother[k].Data()));
-         histoYieldsMappingTruePiPlPiMiSameMotherFraction[k]->Sumw2();
-         histoYieldsMappingTruePiPlPiMiSameMotherFraction[k]->Divide(histoYieldsMappingGGInvMass);
+         if(histoYieldsMappingTruePiPlPiMiSameMother[k]){
+           histoYieldsMappingTruePiPlPiMiSameMotherFraction[k]      = (TH1D*)histoYieldsMappingTruePiPlPiMiSameMother[k]->Clone(Form("%sFraction",fNamesYieldsMappingTruePiPlPiMiSameMother[k].Data()));
+           histoYieldsMappingTruePiPlPiMiSameMotherFraction[k]->Sumw2();
+           histoYieldsMappingTruePiPlPiMiSameMotherFraction[k]->Divide(histoYieldsMappingGGInvMass);
+         }
          if(k<5){
            histoYieldsMappingTruePiMiPiZeroSameMother[k]          = (TH1D*)fileUncorrected.Get(fNamesYieldsMappingTruePiMiPiZeroSameMother[k].Data());
-           histoYieldsMappingTruePiMiPiZeroSameMotherFraction[k]  = (TH1D*)histoYieldsMappingTruePiMiPiZeroSameMother[k]->Clone(Form("%sFraction",fNamesYieldsMappingTruePiMiPiZeroSameMother[k].Data()));
-           histoYieldsMappingTruePiMiPiZeroSameMotherFraction[k]->Sumw2();
-           histoYieldsMappingTruePiMiPiZeroSameMotherFraction[k]->Divide(histoYieldsMappingGGInvMass);
+           if(histoYieldsMappingTruePiMiPiZeroSameMother[k]){
+             histoYieldsMappingTruePiMiPiZeroSameMotherFraction[k]  = (TH1D*)histoYieldsMappingTruePiMiPiZeroSameMother[k]->Clone(Form("%sFraction",fNamesYieldsMappingTruePiMiPiZeroSameMother[k].Data()));
+             histoYieldsMappingTruePiMiPiZeroSameMotherFraction[k]->Sumw2();
+             histoYieldsMappingTruePiMiPiZeroSameMotherFraction[k]->Divide(histoYieldsMappingGGInvMass);
+           }
 
            histoYieldsMappingTruePiPlPiZeroSameMother[k]          = (TH1D*)fileUncorrected.Get(fNamesYieldsMappingTruePiPlPiZeroSameMother[k].Data());
-           histoYieldsMappingTruePiPlPiZeroSameMotherFraction[k]  = (TH1D*)histoYieldsMappingTruePiPlPiZeroSameMother[k]->Clone(Form("%sFraction",fNamesYieldsMappingTruePiPlPiZeroSameMother[k].Data()));
-           histoYieldsMappingTruePiPlPiZeroSameMotherFraction[k]->Sumw2();
-           histoYieldsMappingTruePiPlPiZeroSameMotherFraction[k]->Divide(histoYieldsMappingGGInvMass);
+           if(histoYieldsMappingTruePiPlPiZeroSameMother[k]){
+             histoYieldsMappingTruePiPlPiZeroSameMotherFraction[k]  = (TH1D*)histoYieldsMappingTruePiPlPiZeroSameMother[k]->Clone(Form("%sFraction",fNamesYieldsMappingTruePiPlPiZeroSameMother[k].Data()));
+             histoYieldsMappingTruePiPlPiZeroSameMotherFraction[k]->Sumw2();
+             histoYieldsMappingTruePiPlPiZeroSameMotherFraction[k]->Divide(histoYieldsMappingGGInvMass);
+           }
          }
       }
     }
@@ -683,7 +698,8 @@ void  CorrectSignalPiPlPiMiPiZero(TString fileNameUnCorrectedFile = "myOutput",
     //**********************************************************************************
     //******************** Background contribution plot*********************************
     //**********************************************************************************
-    if(isMC){
+    if(isMC && histoYieldsMappingTruePiPlPiMiPiZeroContaminationFraction && histoYieldsMappingTrueMesonFraction && histoYieldsMappingTruePiPlPiMiSameMotherFraction[0]
+            && histoYieldsMappingTruePiMiPiZeroSameMotherFraction[0] && histoYieldsMappingTruePiPlPiZeroSameMotherFraction[0] && histoYieldsMappingTruePiPlPiMiPiZeroCombinatoricalFraction){
       TCanvas* canvasContributions = new TCanvas("canvasContributions","",200,10,1350,900);  // gives the page size
       DrawGammaCanvasSettings( canvasContributions, 0.13, 0.02, 0.02, 0.12);
 
