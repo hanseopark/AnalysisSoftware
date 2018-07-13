@@ -53,7 +53,7 @@
     Double_t    fYieldsError                                                = 0.;
     TString     labelsBG[10]                                                = { "PiCh", "P", "KCh", "N", "K0s", 
                                                                                 "Lambda", "Mu", "K0l", "Rest", "AllNonEM"};
-    TString     labelsGamma[8]                                              = { "DirGamma", "PiN", "Eta", "EtaPrime", "Omega", 
+    TString     labelsGamma[8]                                              = { "DirGamma", "PiN", "Eta", "EtaPrim", "Omega", 
                                                                                 "Phi", "Lambda", "Rest"};
     TString     labelsElectron[9]                                           = { "DirE", "Gamma", "PiN", "Eta", "C", 
                                                                                 "B", "WOrZ", "Tau", "Rest"};
