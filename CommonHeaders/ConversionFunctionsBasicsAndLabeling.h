@@ -696,7 +696,7 @@
             return "#pi^{0}";
         } else if(mesonName.CompareTo("Eta") == 0)  {
             return "#eta";
-        } else if(mesonName.CompareTo("EtaPrime") == 0)  {
+        } else if(mesonName.CompareTo("EtaPrime") == 0 || mesonName.CompareTo("EtaPrim") == 0)  {
             return "#eta'";
         } else if(mesonName.CompareTo("Omega") == 0)  {
             return "#omega";
