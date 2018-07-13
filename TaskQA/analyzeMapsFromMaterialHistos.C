@@ -29,7 +29,7 @@
 #include "TLegend.h"
 #include "TDatabasePDG.h"
 #include "TMinuit.h"
-#include "CommonHeaders/PlottingMeson.h"
+#include "../CommonHeaders/PlottingMeson.h"
 #include "TASImage.h"
 #include "TMath.h"
 #include "TPostScript.h"
@@ -40,8 +40,8 @@
 #include "TMarker.h"
 #include "TFitResultPtr.h"
 #include "TFitResult.h"
-#include "CommonHeaders/PlottingGammaConversionHistos.h"
-#include "CommonHeaders/PlottingGammaConversionAdditional.h"
+#include "../CommonHeaders/PlottingGammaConversionHistos.h"
+#include "../CommonHeaders/PlottingGammaConversionAdditional.h"
 
 TF1*     fGaus       = NULL;
 Double_t Mean=0.0;
@@ -124,30 +124,34 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
       }
       //cout<< "pbins::"<< i << " " <<  arrPBinning[i]<< endl;
     }
-    Double_t *arrEtaBinning      = new Double_t[21]; 
-    for( Int_t i=0;i<nEtaBins+1;i++){
-      arrEtaBinning[i]= -1.+0.1*i;
+
+    Double_t *arrEtaBinningOut      = new Double_t[19]; 
+    Int_t nEtaBinsOut=18;
+    for( Int_t i=0;i<nEtaBinsOut+1;i++){
+      arrEtaBinningOut[i]= -0.9+0.1*i;
       //cout<< "Etabins::"<< i << " " <<  arrEtaBinning[i]<< endl;
     }
-    TH2F* fhistoMeanPositronR0 = new TH2F("MeanPosiR0","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoMeanPositronR1 = new TH2F("MeanPosiR1","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoMeanPositronR2 = new TH2F("MeanPosiR2","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoMeanPositronR3 = new TH2F("MeanPosiR3","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
+    
 
-    TH2F* fhistoMeanElectronR0 = new TH2F("MeanElecR0","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoMeanElectronR1 = new TH2F("MeanElecR1","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoMeanElectronR2 = new TH2F("MeanElecR2","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoMeanElectronR3 = new TH2F("MeanElecR3","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
+    TH2F* fhistoMeanPositronR0 = new TH2F("MeanPosiR0","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoMeanPositronR1 = new TH2F("MeanPosiR1","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoMeanPositronR2 = new TH2F("MeanPosiR2","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoMeanPositronR3 = new TH2F("MeanPosiR3","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
 
-    TH2F* fhistoWidthPositronR0 = new TH2F("WidthPosiR0","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoWidthPositronR1 = new TH2F("WidthPosiR1","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoWidthPositronR2 = new TH2F("WidthPosiR2","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoWidthPositronR3 = new TH2F("WidthPosiR3","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
+    TH2F* fhistoMeanElectronR0 = new TH2F("MeanElecR0","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoMeanElectronR1 = new TH2F("MeanElecR1","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoMeanElectronR2 = new TH2F("MeanElecR2","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoMeanElectronR3 = new TH2F("MeanElecR3","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
 
-    TH2F* fhistoWidthElectronR0 = new TH2F("WidthElecR0","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoWidthElectronR1 = new TH2F("WidthElecR1","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoWidthElectronR2 = new TH2F("WidthElecR2","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
-    TH2F* fhistoWidthElectronR3 = new TH2F("WidthElecR3","",nPBins,arrPBinning,nEtaBins,arrEtaBinning);
+    TH2F* fhistoWidthPositronR0 = new TH2F("WidthPosiR0","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoWidthPositronR1 = new TH2F("WidthPosiR1","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoWidthPositronR2 = new TH2F("WidthPosiR2","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoWidthPositronR3 = new TH2F("WidthPosiR3","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+
+    TH2F* fhistoWidthElectronR0 = new TH2F("WidthElecR0","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoWidthElectronR1 = new TH2F("WidthElecR1","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoWidthElectronR2 = new TH2F("WidthElecR2","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
+    TH2F* fhistoWidthElectronR3 = new TH2F("WidthElecR3","",nPBins,arrPBinning,nEtaBinsOut,arrEtaBinningOut);
 
 
     //  fhistomean->SetTitle("Mean;#it{p} (GeV/c);#eta ");
@@ -164,7 +168,7 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
     TH1D*histoElectronR2DeDx[12][20];
     TH1D*histoElectronR3DeDx[12][20];
 
-
+    Int_t etaOff=1;
 
     //    cout<< histoPositronDeDxPEtaR0->GetNbinsY()<< " " << histoPositronDeDxPEtaR0->GetNbinsZ() << endl;
     for(Int_t i=0;i<nPBins;i++){
@@ -176,9 +180,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoPositronR0DeDx[i][j],kBlack);
 	meanPositronR0[i][j]=Mean;
 	widthPositronR0[i][j]=Width;
-	fhistoMeanPositronR0->SetBinContent(i+1,j+1, meanPositronR0[i][j]);	
-	fhistoWidthPositronR0->SetBinContent(i+1,j+1, widthPositronR0[i][j]);	
-
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanPositronR0->SetBinContent(i+1,j+1-etaOff, meanPositronR0[i][j]);	
+	  fhistoWidthPositronR0->SetBinContent(i+1,j+1-etaOff, widthPositronR0[i][j]);	
+	}
 
 	//	cout<< " i,j,R1::" << i << " "<< j<<endl;
 	histoPositronR1DeDx[i][j] = new TH1D(Form("R1PosiSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -187,8 +192,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoPositronR1DeDx[i][j],kBlack);
 	meanPositronR1[i][j]=Mean;
 	widthPositronR1[i][j]=Width;
-	fhistoMeanPositronR1->SetBinContent(i+1,j+1, meanPositronR1[i][j]);	
-	fhistoWidthPositronR1->SetBinContent(i+1,j+1, widthPositronR1[i][j]);	
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanPositronR1->SetBinContent(i+1,j+1-etaOff, meanPositronR1[i][j]);	
+	  fhistoWidthPositronR1->SetBinContent(i+1,j+1-etaOff, widthPositronR1[i][j]);	
+	}
 
 	//	cout<< " i,j,R2::" << i << " "<< j<<endl;
 	histoPositronR2DeDx[i][j] = new TH1D(Form("R2PosiSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -197,8 +204,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoPositronR2DeDx[i][j],kBlack);
 	meanPositronR2[i][j]=Mean;
 	widthPositronR2[i][j]=Width;
-	fhistoMeanPositronR2->SetBinContent(i+1,j+1, meanPositronR2[i][j]);	
-	fhistoWidthPositronR2->SetBinContent(i+1,j+1, widthPositronR2[i][j]);	
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanPositronR2->SetBinContent(i+1,j+1-etaOff, meanPositronR2[i][j]);	
+	  fhistoWidthPositronR2->SetBinContent(i+1,j+1-etaOff, widthPositronR2[i][j]);	
+	}
 
 	//	cout<< " i,j,R3::" << i << " "<< j<<endl;
 	histoPositronR3DeDx[i][j] = new TH1D(Form("R3PosiSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -207,9 +216,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoPositronR3DeDx[i][j],kBlack);
 	meanPositronR3[i][j]=Mean;
 	widthPositronR3[i][j]=Width;
-	fhistoMeanPositronR3->SetBinContent(i+1,j+1, meanPositronR3[i][j]);	
-	fhistoWidthPositronR3->SetBinContent(i+1,j+1, widthPositronR3[i][j]);	
-
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanPositronR3->SetBinContent(i+1,j+1-etaOff, meanPositronR3[i][j]);	
+	  fhistoWidthPositronR3->SetBinContent(i+1,j+1-etaOff, widthPositronR3[i][j]);	
+	}
 
 	//	cout<< " i,j,R0::" << i << " "<< j<<endl;
 	histoElectronR0DeDx[i][j] = new TH1D(Form("R0ElecSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -218,8 +228,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoElectronR0DeDx[i][j],kBlack);
 	meanElectronR0[i][j]=Mean;
 	widthElectronR0[i][j]=Width;
-	fhistoMeanElectronR0->SetBinContent(i+1,j+1, meanElectronR0[i][j]);	
-	fhistoWidthElectronR0->SetBinContent(i+1,j+1, widthElectronR0[i][j]);	
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanElectronR0->SetBinContent(i+1,j+1-etaOff, meanElectronR0[i][j]);	
+	  fhistoWidthElectronR0->SetBinContent(i+1,j+1-etaOff, widthElectronR0[i][j]);	
+	}
 
 	//	cout<< " i,j,R1::" << i << " "<< j<<endl;
 	histoElectronR1DeDx[i][j] = new TH1D(Form("R1ElecSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -228,8 +240,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoElectronR1DeDx[i][j],kBlack);
 	meanElectronR1[i][j] = Mean;
 	widthElectronR1[i][j] = Width;
-	fhistoMeanElectronR1->SetBinContent(i+1,j+1, meanElectronR1[i][j]);	
-	fhistoWidthElectronR1->SetBinContent(i+1,j+1, widthElectronR1[i][j]);	
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanElectronR1->SetBinContent(i+1,j+1-etaOff, meanElectronR1[i][j]);	
+	  fhistoWidthElectronR1->SetBinContent(i+1,j+1-etaOff, widthElectronR1[i][j]);	
+	}
 
 	//	cout<< " i,j,R2::" << i << " "<< j<<endl;
 	histoElectronR2DeDx[i][j] = new TH1D(Form("R2ElecSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -238,8 +252,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoElectronR2DeDx[i][j],kBlack);
 	meanElectronR2[i][j]=Mean;
 	widthElectronR2[i][j]=Width;
-	fhistoMeanElectronR2->SetBinContent(i+1,j+1, meanElectronR2[i][j]);	
-	fhistoWidthElectronR2->SetBinContent(i+1,j+1, widthElectronR2[i][j]);	
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanElectronR2->SetBinContent(i+1,j+1-etaOff, meanElectronR2[i][j]);	
+	  fhistoWidthElectronR2->SetBinContent(i+1,j+1-etaOff, widthElectronR2[i][j]);	
+	}
 
 	//	cout<< " i,j,R3::" << i << " "<< j<<endl;
 	histoElectronR3DeDx[i][j] = new TH1D(Form("R3ElecSigdEdxP%dEta%d",i,j),"",100,-5.,5.);
@@ -248,8 +264,10 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
 	FitSignal(histoElectronR3DeDx[i][j],kBlack);
 	meanElectronR3[i][j]=Mean;
 	widthElectronR3[i][j]=Width;
-	fhistoMeanElectronR3->SetBinContent(i+1,j+1, meanElectronR3[i][j]);	
-	fhistoWidthElectronR3->SetBinContent(i+1,j+1, widthElectronR3[i][j]);	
+	if( (j-etaOff) >= 0 && (j-etaOff) < nEtaBinsOut ){
+	  fhistoMeanElectronR3->SetBinContent(i+1,j+1-etaOff, meanElectronR3[i][j]);	
+	  fhistoWidthElectronR3->SetBinContent(i+1,j+1-etaOff, widthElectronR3[i][j]);	
+	}
       }
     }
 
@@ -452,27 +470,26 @@ void analyzeMapsFromMaterialHistos(TString fileNameWithMaps="" , TString cutSele
     outFileMonitoring.Close();
     TFile outFileMaps(Form("./DeDxMaps%s/DeDxMaps_%s.root",optionMC.Data(),fCutSelectionRead.Data()) ,"RECREATE");
  
-    fhistoMeanPositronR0->Write();
-    fhistoMeanPositronR1->Write();
-    fhistoMeanPositronR2->Write();
-    fhistoMeanPositronR3->Write();
+    fhistoMeanPositronR0->Write("Pos_R0_mean");
+    fhistoMeanPositronR1->Write("Pos_R1_mean");
+    fhistoMeanPositronR2->Write("Pos_R2_mean");
+    fhistoMeanPositronR3->Write("Pos_R3_mean");
 
 
-    fhistoMeanElectronR0->Write();
-    fhistoMeanElectronR1->Write();
-    fhistoMeanElectronR2->Write();
-    fhistoMeanElectronR3->Write();
+    fhistoMeanElectronR0->Write("Ele_R0_mean");
+    fhistoMeanElectronR1->Write("Ele_R1_mean");
+    fhistoMeanElectronR2->Write("Ele_R2_mean");
+    fhistoMeanElectronR3->Write("Ele_R3_mean");
 
-    fhistoWidthPositronR0->Write();
-    fhistoWidthPositronR1->Write();
-    fhistoWidthPositronR2->Write();
-    fhistoWidthPositronR3->Write();
+    fhistoWidthPositronR0->Write("Pos_R0_width");
+    fhistoWidthPositronR1->Write("Pos_R1_width");
+    fhistoWidthPositronR2->Write("Pos_R2_width");
+    fhistoWidthPositronR3->Write("Pos_R3_width");
 
-
-    fhistoWidthElectronR0->Write();
-    fhistoWidthElectronR1->Write();
-    fhistoWidthElectronR2->Write();
-    fhistoWidthElectronR3->Write();
+    fhistoWidthElectronR0->Write("Ele_R0_width");
+    fhistoWidthElectronR1->Write("Ele_R1_width");
+    fhistoWidthElectronR2->Write("Ele_R2_width");
+    fhistoWidthElectronR3->Write("Ele_R3_width");
 
     outFileMaps.Close();
  }
