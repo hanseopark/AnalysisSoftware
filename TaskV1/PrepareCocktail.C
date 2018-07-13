@@ -1967,7 +1967,7 @@ Double_t GetMass(TString particleName) {
     } else if (particleName.CompareTo("Eta") == 0) {
         particle                            = pdg->GetParticle(221);
         mass                                = particle->Mass();
-    } else if (particleName.CompareTo("EtaPrime") == 0) {
+    } else if (particleName.CompareTo("EtaPrime") == 0 || particleName.CompareTo("EtaPrim") == 0) {
         particle                            = pdg->GetParticle(331);
         mass                                = particle->Mass();
     } else if (particleName.CompareTo("omega") == 0) {
@@ -2398,7 +2398,7 @@ void MakeSpectrumAndParamPlot(  TList* list,TList* cocktailParamList,
                                               Double_t xMin,
                                               Double_t xMax) {
   const Int_t nParticles                  = 29;
-  TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrime", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
+  TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrim", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
                                              "NRho", "CRho", "NDelta", "CDelta", "NKaonSubS", "Lambda", "NSigma", "CSigma", "COmega", "CXi", "JPsi",
                                              "DZero", "DPlus", "DStarPlus", "DSPlus", "CSigmaStar", "NXiStar", "NKaonSubL"};
   Style_t fParticleLineStyle[nParticles]  = {1, 2, 3, 4, 1, 2, 1, 1, 1, 8, 1,
@@ -2769,7 +2769,7 @@ Double_t GetYRangeExtremaFromList(TList* list, Bool_t doParticleSpectra, Bool_t 
     Int_t numberOfObjects                       = list->GetEntries();
 
     const Int_t nParticles                  = 29;
-    TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrime", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
+    TString fParticle[nParticles]           = {"NPion", "Eta", "Omega", "EtaPrim", "GammaDir", "CPion", "CKaon", "Proton", "CHadron", "Phi", "NKaonStar",
                                                "NRho", "CRho", "NDelta", "CDelta", "NKaonSubS", "Lambda", "NSigma", "CSigma", "COmega", "CXi", "JPsi",
                                                "DZero", "DPlus", "DStarPlus", "DSPlus", "CSigmaStar", "NXiStar", "NKaonSubL"};
 
