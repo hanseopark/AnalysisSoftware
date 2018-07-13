@@ -23,7 +23,7 @@ Int_t       fMode                                           = 0;
 Float_t     nEvents                                         = 0;
 
 const Int_t nMotherParticles                                = 17;
-TString     motherParticles[nMotherParticles]               = {"Pi0","Eta","EtaPrime","omega","rho0","rho+","rho-","phi","J/psi","Delta-","Delta0","Delta+","Delta++","Sigma0","K0s","K0l","Lambda"};
+TString     motherParticles[nMotherParticles]               = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","J/psi","Delta-","Delta0","Delta+","Delta++","Sigma0","K0s","K0l","Lambda"};
 TString     motherParticlesPDG[nMotherParticles]            = {"111","221","331","223","113","213","-213","333","443","1114","2114","2214","2224","3212","310","130","3122"};
 TString     motherParticlesLatex[nMotherParticles]          = {"#pi^{0}","#eta","#eta'","#omega","#rho^{0}","#rho^{+}","#rho^{-}","#phi","J/#psi","#Delta^{-}","#Delta^{0}","#Delta^{+}",
                                                                 "#Delta^{++}","#Sigma^{0}","K^{0}_{S}","K^{0}_{L}","#Lambda"};
