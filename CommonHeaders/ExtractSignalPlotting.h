@@ -522,6 +522,21 @@
                 histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
                 histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
             }
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            Double_t lowBin  = 0.70;
+            Double_t highBin = 1.20;
+            for (Int_t j = histoPi0InvMassSig->GetXaxis()->FindBin(lowBin); j < histoPi0InvMassSig->GetXaxis()->FindBin(highBin)+1; j++){
+                Double_t startBinEdge                                   = histoPi0InvMassSig->GetXaxis()->GetBinLowEdge(j);
+                Double_t endBinEdge                                     = histoPi0InvMassSig->GetXaxis()->GetBinUpEdge(j);
+                Double_t intLinearBack                                  = fitPi0InvMassBG->Integral(startBinEdge, endBinEdge)/(endBinEdge-startBinEdge) ;
+
+                Double_t errorLinearBck                                 = pow(( pow( (endBinEdge-startBinEdge)*fitPi0InvMassSig->GetParError(4),2) +
+                pow(0.5*(endBinEdge*endBinEdge-startBinEdge*startBinEdge)*fitPi0InvMassSig->GetParError(5),2)
+                +2*covMatrix[nFreePar*nFreePar-2]*(endBinEdge-startBinEdge)*0.5*
+                (endBinEdge*endBinEdge-startBinEdge*startBinEdge)),0.5)/(endBinEdge-startBinEdge);
+                histoPi0InvMassRemBG->SetBinContent(j,intLinearBack);
+                histoPi0InvMassRemBG->SetBinError(j,errorLinearBck);
+            }
         } else { //omega
           Double_t lowBin = 0.645;
           Double_t highBin = 0.9;
@@ -621,6 +636,15 @@
 
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            Double_t lowBin  = 0.7;
+            Double_t highBin = 1.2;
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, xlabel.Data(),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                        0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
           if(titleInvMassSignalWithBG.Contains("SubPiZero")){
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
@@ -662,6 +686,12 @@
               fitPi0InvMassSig->SetRange(lowBin,highBin);
               fitPi0InvMassSigRemBG->SetRange(lowBin,highBin);
             }
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+            Double_t lowBin  = 0.7;
+            Double_t highBin = 1.2;
+            fitPi0InvMassSig->SetRange(lowBin,highBin);
+            fitPi0InvMassSigRemBG->SetRange(lowBin,highBin);
         } else { // omega
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
            if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
@@ -1072,6 +1102,14 @@
           }
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            Double_t lowBin  = 0.7;
+            Double_t highBin = 1.2;
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                        0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
 
           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
@@ -1098,6 +1136,8 @@
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         } else if(fMesonType.CompareTo("Eta") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         } else { // omega
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         }
@@ -1289,6 +1329,13 @@
 
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,xAxisMin,xAxisMax);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
 
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,xAxisMin,xAxisMax);
@@ -1309,6 +1356,8 @@
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         } else if(fMesonType.CompareTo("Eta") == 0){
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         } else { // omega
             labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
         }
@@ -1500,6 +1549,14 @@
           }
             histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
             histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            Double_t lowBin   = 0.7;
+            Double_t highBin  = 1.2;
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,lowBin,highBin);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                        0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+            histo1DInvMassDummy->GetYaxis()->SetLabelOffset(0.008);
+            histo1DInvMassDummy->GetXaxis()->SetLabelOffset(0.005);
         } else { // omega
           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.645-0.134,0.89-0.134);
@@ -1536,6 +1593,11 @@
               }
             fitPi0InvMassSig->SetRange(lowBin,highBin);
           }
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+            Double_t lowBin   = 0.7;
+            Double_t highBin  = 1.2;
+            fitPi0InvMassSig->SetRange(lowBin,highBin);
         } else { // omega
           labelInvMassPtRange = new TLatex(0.95,0.9, Form("#omega: %3.1f GeV/#it{c} < %s< %3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
           if(titleInvMassSignalWithBG.Contains("SubPiZero")==kTRUE){
@@ -1736,11 +1798,20 @@
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.02,0.255);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
-        } else {
+        } else if(fMesonType.CompareTo("Eta") == 0){
             histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.35,0.695);
             SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
                                     0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+        } else if(fMesonType.CompareTo("EtaPrime") == 0){
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.7,1.2);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
+        } else {
+            histo1DInvMassDummy             = new TH1F("histo1DInvMass2","histo1DInvMass2",11000,0.7,1.2);
+            SetStyleHistoTH1ForGraphs(histo1DInvMassDummy, Form("#it{M}_{%s} (GeV/#it{c}^{2})",decayChannel.Data()),"Counts",0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,
+                                      0.85*textsizeLabelsInvMass, textsizeLabelsInvMass,0.88, 0.115/(textsizeFacInvMass*marginInvMass));
         }
+
         canvasInvMassSamplePlot->cd();
         histo1DInvMassDummy->GetYaxis()->SetRangeUser(-5, 1.15*fHistoTrueSignal->GetMaximum());
         histo1DInvMassDummy->Draw();
@@ -1752,8 +1823,10 @@
             TLatex *labelInvMassPtRange;
             if(fMesonType.CompareTo("Pi0") == 0 || fMesonType.CompareTo("Pi0EtaBinning") == 0){
                 labelInvMassPtRange = new TLatex(0.95,0.9, Form("#pi^{0}: %3.1f GeV/#it{c} < %s <%3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
-            } else {
+            } else if (fMesonType.CompareTo("Eta") == 0){
                 labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta: %3.1f GeV/#it{c} < %s <%3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
+            } else {
+                labelInvMassPtRange = new TLatex(0.95,0.9, Form("#eta': %3.1f GeV/#it{c} < %s <%3.1f GeV/#it{c}",startPt,ptLabel.Data(),endPt));
             }
 
 

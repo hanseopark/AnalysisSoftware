@@ -5301,7 +5301,20 @@
                     if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEtaPrim7TeVPtRebin[i];
                 }
+            } else if (energy.CompareTo("13TeV") == 0) {
+                fStartPtBin         = 1;
+                if (fNBinsPt > 7) {
+                    cout << "You have chosen directphoton Plots and more than 7 bins for Eta, this is not possible, it will be reduced to 7 bins." << endl;
+                    fNBinsPt        = 7;
+                }
+                GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+                for (Int_t i = 0; i < fNBinsPt+2; i++) {
+                    fBinsPt[i]      = fBinsEtaPrime13TeVPt[i];
+                    if (i < fNBinsPt+1)
+                        fNRebin[i]  = fBinsEtaPrime13TeVPtRebin[i];
+                }
             }
+
         //*************************************************************************************************
         //********************************** Binning for Omega ********************************************
         //*************************************************************************************************

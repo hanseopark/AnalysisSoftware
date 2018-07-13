@@ -71,7 +71,7 @@ void ExtractSignalV2(   TString meson                   = "",
     gROOT->Reset();
 
     fMode = mode;
-    // modes: 
+    // modes:
     // 0    new output PCM-PCM
     // 1    new output PCM dalitz
     // 2    new output PCM-Calo
@@ -1930,11 +1930,14 @@ void ExtractSignalV2(   TString meson                   = "",
             maxMesonMassRange = 0.140;
             minMesonMassRange = 0.132;
         }
-    } else {
+    } else if (fPrefix.CompareTo("Eta") ==0) {
         maxMesonMassRange = 0.64;
         minMesonMassRange = 0.46;
-    }    
-    
+    } else if (fPrefix.CompareTo("EtaPrime") ==0) {
+        maxMesonMassRange = 0.8;
+        minMesonMassRange = 1.1;
+    }
+
 
     DrawGammaSetMarker(fHistoMassMeson, 20, 1., kBlack, kBlack);
     DrawAutoGammaMesonHistos(   fHistoMassMeson,

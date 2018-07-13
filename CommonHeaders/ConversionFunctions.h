@@ -4693,12 +4693,14 @@
             arr = mainDir.Tokenize("_");
             if( mesonName.Length() && mainDir.BeginsWith(nominalMainDir) ) { // if heavy meson analysis
                 TString mesonId = ((TObjString*)arr->At(2))->GetString();
-                if(mesonId.EqualTo("0") && mesonName.EqualTo("Pi0"))      return mainDir;
-                if(mesonId.EqualTo("1") && mesonName.EqualTo("Eta"))      return mainDir;
-                if(mesonId.EqualTo("2") && mesonName.EqualTo("EtaPrime")) return mainDir;
+                cout << mesonId.Data() << "\t" << mesonName.Data() << "\t" << mainDir.Data() << endl;
+                if(mesonId.CompareTo("0") == 0 && (mesonName.CompareTo("Pi0") == 0 || mesonName.CompareTo("Pi0EtaBinning") == 0))      return mainDir;
+                if(mesonId.CompareTo("1") == 0 && mesonName.CompareTo("Eta") == 0)      return mainDir;
+                if(mesonId.CompareTo("2") == 0 && mesonName.CompareTo("EtaPrime") == 0) return mainDir;
+            } else {
+                TString start   = ((TObjString*)arr->At(0))->GetString();
+                if (start.EqualTo(nominalMainDir)) return mainDir;
             }
-            TString start   = ((TObjString*)arr->At(0))->GetString();
-            if (start.EqualTo(nominalMainDir)) return mainDir;
         }
         return "";
     }
