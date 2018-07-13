@@ -536,7 +536,7 @@ void ProduceFinalGammaResultsV2(    TString configurationFileName   = "configura
         TDirectoryFile* directoryCocktail = (TDirectoryFile*)directoryGamma->Get("Cocktail");
         directoryGamma->cd("Cocktail");
         if(histococktailAllGamma) histococktailAllGamma->Write(histococktailAllGamma->GetName(),TObject::kOverwrite);
-        TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrime","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
+        TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
         TH1D* dummyCocktailHist;
         TH1D* dummyGammaCocktailHist;
         TH1D* dummyGammaRatioCocktailHist;
