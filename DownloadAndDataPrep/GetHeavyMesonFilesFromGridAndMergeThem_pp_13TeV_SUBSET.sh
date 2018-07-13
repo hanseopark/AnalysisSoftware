@@ -1,3 +1,5 @@
+# This is a temporary script that downloads and merges only periods LHC16jkl, including the corresponding Monte Carlo files.
+
 # WARNING: this script uses regular expressions (e.g. ^...$). Checkout if your terminal uses the same regex version!
 
 # Run as:
@@ -13,7 +15,7 @@
 #! /bin/bash
 source basicFunction.sh
 
-DOWNLOADON=0
+DOWNLOADON=1
 MERGEON=1
 SEPARATEON=0 # used in basisFunctions.sh?
 CLEANUP=1 # used in basisFunctions.sh?
@@ -77,28 +79,28 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         LHC17d18MC=""
     # LHC data files
         LHC16Data="2374" # comment: "eta' test"
-        LHC16dData="child_1"
-        LHC16gData="child_2"
-        LHC16hData="child_3"
-        LHC16iData="child_4"
+        # LHC16dData="child_1"
+        # LHC16gData="child_2"
+        # LHC16hData="child_3"
+        # LHC16iData="child_4"
         LHC16jData="child_5"
         LHC16kData="child_6"
         LHC16lData="child_7"
-        LHC16oData="child_8"
-        LHC16pData="child_9"
-        LHC16eData="child_10"
+        # LHC16oData="child_8"
+        # LHC16pData="child_9"
+        # LHC16eData="child_10"
     # Monte Carlo data files
         LHC17MC="3341" # comment: "omega + eta'"
-        LHC17f6MC="child_1"
-        LHC17f9MC="child_2"
-        LHC17d17MC="child_3"
-        LHC17f5MC="child_4"
-        LHC17d3MC="child_5"
-        LHC17e5MC="child_6"
-        LHC17d20a1MC="child_7"
-        LHC17d20a2MC="child_8"
-        LHC17d16MC="child_9"
-        LHC17d18MC="child_10"
+        # LHC17f6MC="child_1"    # anch LHC16d
+        # LHC17f9MC="child_2"    # anch LHC16e
+        # LHC17d17MC="child_3"   # anch LHC16g
+        # LHC17f5MC="child_4"    # anch LHC16h
+        # LHC17d3MC="child_5"    # anch LHC16i
+        LHC17e5MC="child_6"    # anch LHC16j
+        LHC17d20a1MC="child_7" # anch LHC16k
+        LHC17d20a2MC="child_8" # anch LHC16l
+        # LHC17d16MC="child_9"   # anch LHC16o
+        # LHC17d18MC="child_10"  # anch LHC16p
 #
 
 #Set output directory
@@ -588,21 +590,21 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
         echo ""
         echo ""
         echo "--> Merging ROOT files"
-        filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16d-pass$passNr-DPGTracks\_*.root` # will be used to get the number, so period doesn't matter
+        filesForMerging=`ls $OUTPUTDIR/HeavyNeutralMesonToGG_LHC16j-pass$passNr-DPGTracks\_*.root` # will be used to get the number, so period doesn't matter
         # LHC data files
             echo ""
             echo "--> Merging LHC data files"
             periodList=(
-                d # child 1
-                e # child 10
-                g # child 2
-                h # child 3
-                i # child 4
+                # d # child 1
+                # e # child 10
+                # g # child 2
+                # h # child 3
+                # i # child 4
                 j # child 5
                 k # child 6
                 l # child 7
-                o # child 8
-                p # child 9
+                # o # child 8
+                # p # child 9
             )
             rm -f runlistsToMerge.txt
             echo -e "DPGTracks" >> runlistsToMerge.txt
@@ -629,16 +631,16 @@ AliTrainDirMC="/alice/cern.ch/user/a/alitrain/PWGGA/GA_pp_MC" # MC train path on
             echo ""
             echo "--> Merging Monte Carlo files"
             periodListMC=(
-                f6    # child 1  --> anchored to LHC16d
-                f9    # child 2  --> anchored to LHC16e
-                d17   # child 3  --> anchored to LHC16g
-                f5    # child 4  --> anchored to LHC16h
-                d3    # child 5  --> anchored to LHC16i
+                # f6    # child 1  --> anchored to LHC16d
+                # f9    # child 2  --> anchored to LHC16e
+                # d17   # child 3  --> anchored to LHC16g
+                # f5    # child 4  --> anchored to LHC16h
+                # d3    # child 5  --> anchored to LHC16i
                 e5    # child 6  --> anchored to LHC16j
                 d20a1 # child 7  --> anchored to LHC16k
                 d20a2 # child 8  --> anchored to LHC16l
-                d16   # child 9  --> anchored to LHC16o
-                d18   # child 10 --> anchored to LHC16p
+                # d16   # child 9  --> anchored to LHC16o
+                # d18   # child 10 --> anchored to LHC16p
             )
             rm -f runlistsToMerge.txt
             echo -e "DPGTracks" >> runlistsToMerge.txt
