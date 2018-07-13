@@ -179,7 +179,7 @@ void AnalysePythiaMB(   TString fileName    = "Legotrain_vAN-20150825-Pythia8/Py
 
   
   //fDetectionProcess 			= ReturnFullTextReconstructionProcess(mode);
-  TString particle[6]           = {"Pi0", "Eta", "EtaPrime", "Omega", "PiPl", "PiMi"};  
+  TString particle[6]           = {"Pi0", "Eta", "EtaPrim", "Omega", "PiPl", "PiMi"};  
   TString particlelegend[6]     = {"#pi^{0}", "#eta", "#eta^{l}", "#omega", "#pi^{+}", "#pi^{-}"}; 
   // translate particle string to plotting string
   
