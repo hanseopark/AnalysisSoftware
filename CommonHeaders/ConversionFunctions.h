@@ -5015,5 +5015,11 @@
         if(mode==13) return 1; // 13 PCM-DMC
     }
 
-
+    void RemoveZerosAtBeginningAndEndFromGraph (TGraph* graph){
+        while(graph->GetY()[0] == 0 && graph->GetN()>0)
+            graph->RemovePoint(0);
+        while(graph->GetY()[graph->GetN()-1] == 0 && graph->GetN()>0)
+            graph->RemovePoint(graph->GetN()-1);
+        return;
+    }
 #endif
