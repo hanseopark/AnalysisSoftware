@@ -67,7 +67,7 @@ TString     nameSecondaries[4]                                          = {"K0S"
 TString     nameSecondariesCocktail[4]                                  = {"K0s", "Lambda", "K0l", "Rest"};
 TString     nameResonanceFeedDownContributions[15]                      = {"Eta", "Rho0", "EtaPrime", "Omega", "Rho+", "Rho-", "Phi", "JPsi", "Delta0",
                                                                             "Delta+", "K+", "K-", "Omega+", "Omega-", "K*(892)0"};
-TString     nameResonanceFeedDownContributionsCocktail[15]              = {"Eta", "rho0", "EtaPrim", "omega", "rho+", "rho-", "phi", "J/psi", "Delta0",
+TString     nameResonanceFeedDownContributionsCocktail[15]              = {"Eta", "rho0", "EtaPrime", "omega", "rho+", "rho-", "phi", "J/psi", "Delta0",
                                                                             "Delta+", "K+", "K-", "Omega+", "Omega-", "K*(892)0"};
 TString     nameIntRange[6]                                             = {"", "Wide", "Narrow", "Left", "LeftWide", "LeftNarrow"};
 TString     nameIntBck[6]                                               = {"Minpol2","Pluspol2","Minexp","Plusexp","Minexp2","Plusexp2"};
@@ -1434,7 +1434,7 @@ void InitializeWindows(TString setPi0, Int_t mode, TString trigger, Int_t trigge
     //****************************************************************************************************
     // Initialization for eta' meson
     //****************************************************************************************************
-    } else if (setPi0.CompareTo("EtaPrim") == 0){
+    } else if (setPi0.CompareTo("EtaPrime") == 0){
         fPeakRange[0]                   = 0.1;
         fPeakRange[1]                   = 0.145;
         fIntFixedRange[0]               = 0.08;

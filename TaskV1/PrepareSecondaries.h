@@ -24,7 +24,7 @@ Float_t     nEvents                                     = 0;
 
 Int_t       nMotherParticleToAnalyse                    = 21;
 const Int_t nMotherParticles                            = 21;
-TString     motherParticles[nMotherParticles]           = {"Eta","K0s","K0l","Lambda","rho0","EtaPrim","omega","rho+","rho-","phi","J/psi","Delta-","Delta0","Delta+","Delta++","Sigma0","K+","K-","Omega+","Omega-","K*(892)0"};
+TString     motherParticles[nMotherParticles]           = {"Eta","K0s","K0l","Lambda","rho0","EtaPrime","omega","rho+","rho-","phi","J/psi","Delta-","Delta0","Delta+","Delta++","Sigma0","K+","K-","Omega+","Omega-","K*(892)0"};
 TString     motherParticlesPDG[nMotherParticles]        = {"221","310","130","3122","113","331","223","213","-213","333","443","1114","2114","2214","2224","3212","321","-321","-3334","3334","313"};
 TString     motherParticlesLatex[nMotherParticles]      = { "#eta","K^{0}_{S}","K^{0}_{L}","#Lambda","#rho^{0}","#eta'","#omega","#rho^{+}","#rho^{-}","#phi","J/#psi","#Delta^{-}",
                                                             "#Delta^{0}","#Delta^{+}","#Delta^{++}","#Sigma^{0}","K^{+}","K^{-}","#Omega^{+}","#Omega^{-}","K^{*}(892)^{0}"};

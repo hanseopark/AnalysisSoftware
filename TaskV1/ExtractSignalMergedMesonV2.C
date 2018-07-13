@@ -172,7 +172,7 @@ void ExtractSignalMergedMesonV2(    TString meson                   = "",
     } else if(meson.CompareTo("Pi0EtaBinning") == 0) {
         Initialize("Pi0EtaBinning", numberOfBins, triggerSet);
     } else   {
-        cout<<"ERROR: First argument in the ExtractSignalMergedMeson(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrim"<<endl;
+        cout<<"ERROR: First argument in the ExtractSignalMergedMeson(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrime"<<endl;
         return;
     }
 

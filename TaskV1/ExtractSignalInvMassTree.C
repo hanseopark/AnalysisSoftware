@@ -229,12 +229,12 @@ void ExtractSignalInvMassTree(
         Initialize("Pi0",numberOfBins, triggerSet);
     } else if (meson.CompareTo("Eta") == 0) {
         Initialize("Eta",numberOfBins, triggerSet);
-    } else if (meson.CompareTo("EtaPrim") == 0) {
-        Initialize("EtaPrim",numberOfBins, triggerSet);
+    } else if (meson.CompareTo("EtaPrime") == 0) {
+        Initialize("EtaPrime",numberOfBins, triggerSet);
     } else if(meson.CompareTo("Pi0EtaBinning") == 0) {
         Initialize("Pi0EtaBinning",numberOfBins, triggerSet);
     } else   {
-        cout<<"ERROR: First argument in the ExtractSignalInvMassTree(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrim"<<endl;
+        cout<<"ERROR: First argument in the ExtractSignalInvMassTree(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrime"<<endl;
         return;
     }
 
@@ -2895,7 +2895,7 @@ void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
             fMesonIntDeltaRangeNarrow[0]    = -0.060;
             fMesonIntDeltaRangeNarrow[1]    = 0.060;
         }
-    } else if (setPi0.CompareTo("EtaPrim") == 0){
+    } else if (setPi0.CompareTo("EtaPrime") == 0){
         fPeakRange                      = new Double_t[2]; 
         fPeakRange[0]                   = 0.1;
         fPeakRange[1]                   = 0.145; 

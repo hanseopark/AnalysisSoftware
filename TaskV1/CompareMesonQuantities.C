@@ -155,7 +155,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         fMesonRange[1]      = 0.79;
         peakRange[0]        = 0.50;
         peakRange[0]        = 0.60;
-    } else if (mesonType.CompareTo("EtaPrim") == 0){
+    } else if (mesonType.CompareTo("EtaPrime") == 0){
         fMesonRange         = new Double_t[2];
         fMesonRange[0]      = 0.9;
         fMesonRange[1]      = 1.;;

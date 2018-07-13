@@ -1007,7 +1007,7 @@
                 else
                     return 6;
             }
-        } else if (meson.CompareTo("EtaPrim") == 0){
+        } else if (meson.CompareTo("EtaPrime") == 0){
             return 3;
         } else if (meson.Contains("Omega")) {
             if(energy.CompareTo("13TeV") == 0) {
@@ -5282,7 +5282,7 @@
         //*************************************************************************************************
         //********************************** Binning for Eta' *********************************************
         //*************************************************************************************************
-        } else if (setPi0.CompareTo("EtaPrim") == 0){
+        } else if (setPi0.CompareTo("EtaPrime") == 0){
             fNBinsPt                = numberOfBins;
             fBinsPt                 = new Double_t[20];
             fNRebin                 = new Int_t[19];

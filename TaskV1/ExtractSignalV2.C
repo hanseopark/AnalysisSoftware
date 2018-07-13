@@ -298,12 +298,12 @@ void ExtractSignalV2(   TString meson                   = "",
         Initialize("Pi0",numberOfBins, triggerSet);
     } else if (meson.CompareTo("Eta") == 0) {
         Initialize("Eta",numberOfBins, triggerSet);
-    } else if (meson.CompareTo("EtaPrim") == 0) {
-        Initialize("EtaPrim",numberOfBins, triggerSet);
+    } else if (meson.CompareTo("EtaPrime") == 0) {
+        Initialize("EtaPrime",numberOfBins, triggerSet);
     } else if(meson.CompareTo("Pi0EtaBinning") == 0) {
         Initialize("Pi0EtaBinning",numberOfBins, triggerSet);
     } else   {
-        cout<<"ERROR: First argument in the ExtractSignal(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrim"<<endl;
+        cout<<"ERROR: First argument in the ExtractSignal(....) has to be either Pi0 or Eta or Pi0EtaBinning  or EtaPrime"<<endl;
         return;
     }
 
@@ -468,10 +468,10 @@ void ExtractSignalV2(   TString meson                   = "",
 
             // histos with gamma's in acceptance
             fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0Acc.Data());
-//             if ( fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5 ){
+            // if ( fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5 ){
                 fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOWeights.Data());
                 fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCPi0AccWOEvtWeights.Data());
-//             }
+            // }
 
             // secondary neutral pions histograms
             fHistoMCSecPi0SourcePt              = (TH2D*)MCContainer->FindObject(ObjectNameMCSecPi0.Data());
@@ -581,16 +581,16 @@ void ExtractSignalV2(   TString meson                   = "",
                 fHistoTrueMesonMergedClusterPartConvInvMassVSPt     = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloMergedPartConv.Data());
                 FillMassMCTrueMesonCaloMergedClusterPartConvHistosArray(fHistoTrueMesonMergedClusterPartConvInvMassVSPt);
             }
-//            else {
-//                fHistoTrueContBckInvMassVSPt                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueContBck.Data());
-//                FillMassMCTrueContBckHistosArray(fHistoTrueContBckInvMassVSPt);
-//                fHistoTrueGGBckInvMassVSPt                          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueGGBck.Data());
-//                FillMassMCTrueGGBckHistosArray(fHistoTrueGGBckInvMassVSPt);
-//                fHistoTrueAllBckInvMassVSPt                         = (TH2D*)fHistoTrueGGBckInvMassVSPt->Clone(ObjectNameTrueAllBck.Data());
-//                fHistoTrueAllBckInvMassVSPt->Sumw2();
-//                fHistoTrueAllBckInvMassVSPt->Add(fHistoTrueContBckInvMassVSPt);
-//                FillMassMCTrueAllBckHistosArray(fHistoTrueAllBckInvMassVSPt);
-//            }
+        //    else {
+        //        fHistoTrueContBckInvMassVSPt                        = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueContBck.Data());
+        //        FillMassMCTrueContBckHistosArray(fHistoTrueContBckInvMassVSPt);
+        //        fHistoTrueGGBckInvMassVSPt                          = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueGGBck.Data());
+        //        FillMassMCTrueGGBckHistosArray(fHistoTrueGGBckInvMassVSPt);
+        //        fHistoTrueAllBckInvMassVSPt                         = (TH2D*)fHistoTrueGGBckInvMassVSPt->Clone(ObjectNameTrueAllBck.Data());
+        //        fHistoTrueAllBckInvMassVSPt->Sumw2();
+        //        fHistoTrueAllBckInvMassVSPt->Add(fHistoTrueContBckInvMassVSPt);
+        //        FillMassMCTrueAllBckHistosArray(fHistoTrueAllBckInvMassVSPt);
+        //    }
             fHistoYieldK0sWithPi0DaughterRec                        = (TH1D*)TrueConversionContainer->FindObject(ObjectNameK0sRecPi0.Data());
             if(fHistoYieldK0sWithPi0DaughterRec) fHistoYieldK0sWithPi0DaughterRec->Sumw2();
             fHistoYieldLambdaWithPi0DaughterRec                     = (TH1D*)TrueConversionContainer->FindObject(ObjectNameLambdaRecPi0.Data());
@@ -6456,7 +6456,7 @@ Double_t fitGaussianPileUp2(Double_t *x, Double_t *par)
 Int_t GetHeavyMesonDigit(TString mesonString) {
     if(mesonString.CompareTo("Pi0"))     return 0;
     if(mesonString.CompareTo("Eta"))     return 1;
-    if(mesonString.CompareTo("EtaPrim")) return 2;
+    if(mesonString.CompareTo("EtaPrime")) return 2;
 }
 
 //****************************************************************************

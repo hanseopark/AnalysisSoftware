@@ -1106,7 +1106,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         // cocktail
         cocktailAllGamma->Write(cocktailAllGamma->GetName(),    TObject::kOverwrite);
 
-        TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrim","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
+        TString particlesInCocktail[14]   = {"Pi0","Eta","EtaPrime","omega","rho0","rho+","rho-","phi","Delta0","Delta+","Sigma0","K0s","K0l","Lambda"};
         TH1D* dummyCocktailHist;
         TH1D* dummyGammaCocktailHist;
         for(Int_t i=0; i<14;i++){

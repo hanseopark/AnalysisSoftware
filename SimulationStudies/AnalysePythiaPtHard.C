@@ -239,7 +239,7 @@ void AnalysePythiaPtHard(TString filemask="",  // should read something like "$P
   else if(particle.CompareTo("PiMi") == 0){
     particlelegend = "#pi^{-}";
   }
-  else if(particle.CompareTo("EtaPrim") == 0){
+  else if(particle.CompareTo("EtaPrime") == 0){
     particlelegend = "#eta^{l}";
   }
   else if(particle.CompareTo("Omega") == 0){

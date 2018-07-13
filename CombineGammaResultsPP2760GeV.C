@@ -148,7 +148,7 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
 
     // Cocktail names and labels
     Int_t nParticles                                = 14;
-    TString fParticle[14]                           = { "Pi0", "Eta", "omega", "EtaPrim", "rho0", "rho+", "rho-", "phi", "Delta0", "Delta+", "Sigma0","K0s", "K0l", "Lambda"};
+    TString fParticle[14]                           = { "Pi0", "Eta", "omega", "EtaPrime", "rho0", "rho+", "rho-", "phi", "Delta0", "Delta+", "Sigma0","K0s", "K0l", "Lambda"};
     TString fParticleLatex[14]                      = { "#pi^{0}", "#eta", "#omega", "#eta'", "#rho^{0}", "#rho^{+}", "#rho^{-}", "#phi", "#Delta^{0}", "#Delta^{+}", "#Sigma^{0}", "K^{0}_{S}","K^{0}_{L}", "#Lambda"};
     TString fParticleLatexPartialSums[14]           = { "#pi^{0}", "#eta", "#omega", "#eta'", "#rho^{0}", "#rho^{#pm}", "", "#phi", "#Delta^{0/+}", "", "#Sigma^{0}", "K^{0}_{S}","K^{0}_{L}", "#Lambda"};
     Style_t     cocktailColor[14]                   = {kBlue+1,    kRed+1, kOrange-2, kOrange-2,  kPink-2,      kSpring+2,  kGreen+3,    kAzure,kAzure+2, 24,      kPink+8,kPink+9,      kViolet+1  };

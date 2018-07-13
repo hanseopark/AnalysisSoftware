@@ -1071,7 +1071,7 @@ Double_t GetMass(TString particleName) {
     } else if (particleName.CompareTo("Eta") == 0) {
         particle                            = pdg->GetParticle(221);
         mass                                = particle->Mass();
-    } else if (particleName.CompareTo("EtaPrim") == 0) {
+    } else if (particleName.CompareTo("EtaPrime") == 0) {
         particle                            = pdg->GetParticle(331);
         mass                                = particle->Mass();
     } else if (particleName.CompareTo("omega") == 0) {
