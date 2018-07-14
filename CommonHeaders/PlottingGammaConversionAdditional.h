@@ -3421,7 +3421,7 @@
         if (!energy.CompareTo("7TeV")){
             if (!generator.CompareTo("")){
                 return 20;
-            } else if(generator.Contains("LHC10") && generator.Contains("_pass4") || generator.Contains("LHC11")){
+            } else if( ( generator.Contains("LHC10") && generator.Contains("_pass4") ) || generator.Contains("LHC11")){
                 return 29;
             } else if(generator.Contains("LHC14j4") || !generator.CompareTo("LHC14b7")){
                 return 30;

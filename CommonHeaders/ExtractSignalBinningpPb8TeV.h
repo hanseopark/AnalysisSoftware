@@ -1,5 +1,5 @@
 #ifndef GAMMACONV_ExtractSignalBinningpPb8TeV
-#define GAMMACONV_ExtractSignalBinningpPb8TGeV
+#define GAMMACONV_ExtractSignalBinningpPb8TeV
 
     //****************************************************************************************************
     //****************** Pt binning for pPb, 8 TeV *******************************************************

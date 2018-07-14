@@ -31,6 +31,9 @@ DoGamma=1
 DoPi0=1
 DoEta=1
 DoPi0InEtaBinning=1
+DoEtaPrime=0
+    # Heavy meson configuration set based on mode>100,
+    # search for "Set heavy meson configuration" in this script
 PERIOD=""
 NORMALCUTS=0
 dataFileOK=0
@@ -50,7 +53,7 @@ IsROOT6=0
 
 function GiveBinning5TeV()
 {
-     echo "how many p_t bins do you want to use for the pi0? 12+13+14 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
+     echo "How many p_T bins do you want to use for the Pi0? 12+13+14 & 19 (XX GeV/c) - 24 (XX GeV/c).. 32,33,34 (XX GeV/c), 42 (16 GeV/c)";
 
      read answer
      if [ $answer -lt 90 ]; then
@@ -58,18 +61,18 @@ function GiveBinning5TeV()
        correctPi0=1
        BinsPtPi0=$answer
      else
-         echo "pi0 binning was not set correctly. please try again.";
+         echo "Pi0 binning was not set correctly. please try again.";
          correctPi0=0
      fi
 
-     echo "how many p_t bins do you want to use for the eta? 7(XX GeV/c) - 13(XX GeV/c).. 19,20,21,22 (XX GeV/c)";
+     echo "How many p_T bins do you want to use for the Eta? 7(XX GeV/c) - 13(XX GeV/c).. 19,20,21,22 (XX GeV/c)";
      read answer
      if [ $answer -lt 40 ]; then
         echo "$answer bins --> max p_t = XX GeV/c ...";
         correctEta=1
         BinsPtEta=$answer
      else
-        echo "eta binning was not set correctly. please try again.";
+        echo "Eta binning was not set correctly. please try again.";
         correctEta=0
      fi
      BinsPtGamma=$BinsPtPi0
@@ -97,7 +100,7 @@ function GiveBinning5TeV2017()
          correctPi0=0
      fi
 
-     echo "How many p_T bins do you want to use for the eta? 8 (as Hikari 12 GeV/c), 20 (12 GeV/c)";
+     echo "How many p_T bins do you want to use for the Eta? 8 (as Hikari 12 GeV/c), 20 (12 GeV/c)";
      read answer
      if [ $answer -gt 4 ] && [ $answer -lt 34 ]; then
         echo $answer "bins --> Max p_t = XX GeV/c ...";
@@ -139,19 +142,28 @@ function GiveBinningDirectPhoton5TeV()
 function GiveBinning13TeV()
 {
     echo "How many p_T bins do you want to use for the Pi0?"
-    echo "For PCM: Max. 17 for 15f, 20 for 15fhi, 17 for low B 15g ";
-    echo "For other modes: max 37";
+    echo "  for PCM: Max. 17 for 15f, 20 for 15fhi, 17 for low B 15g ";
+    echo "  for other modes: max 37";
     read BinsPtPi0
     correctPi0=1
-    echo "You have chosen $BinsPtPi0 bins";
+    echo "--> You have chosen $BinsPtPi0 bins";
 
-    echo "How many p_T bins do you want to use for the eta meson?"
-    echo "For PCM: Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
-    echo "For other modes: max 24";
+    echo "How many p_T bins do you want to use for the Eta meson?"
+    echo "  for PCM: Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
+    echo "  for other modes: max 24";
     read BinsPtEta
     correctEta=1
-    echo "You have chosen $BinsPtEta bins";
+    echo "--> You have chosen $BinsPtEta bins";
     BinsPtGamma=$BinsPtPi0
+
+    if [ $mode -ge 100 ]; then
+        echo "How many p_T bins do you want to use for the EtaPrime meson?"
+        echo "  for PCM: Max. 7 for 15f, 13 for 15fhi, 4 for low B 15g";
+        echo "  fFor other modes: max 24";
+        read BinsPtEtaPrime
+        correctEtaPrime=1
+        echo "--> You have chosen $BinsPtEtaPrime bins";
+    fi
 }
 
 function GiveBinningDirectPhoton13TeV()
@@ -363,7 +375,7 @@ function GiveBinningDirectPhoton7TeV()
 
 function GiveBinning7TeV()
 {
-     echo "how many p_t bins do you want to use for the pi0? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
+     echo "How many p_T bins do you want to use for the Pi0? 36(7gev), 37(8gev), 38(10gev), 39(12gev), 40 (16gev), 41 (20gev), 42 (25gev)";
 
      read answer
 	  if [ $answer = 9 ]; then
@@ -447,11 +459,11 @@ function GiveBinning7TeV()
          correctPi0=1
          BinsPtPi0=44
      else
-         echo "pi0 binning was not set correctly. please try again.";
+         echo "Pi0 binning was not set correctly. please try again.";
          correctPi0=0
      fi
 
-     echo "how many p_t bins do you want to use for the eta? 9(3gev), 11(4gev), 12(5gev), 13(6gev), 14(8gev) 15(10gev)";
+     echo "How many p_T bins do you want to use for the Eta? 9(3gev), 11(4gev), 12(5gev), 13(6gev), 14(8gev) 15(10gev)";
      read answer
      if [ $answer = 10 ]; then
          echo "10 bins --> max p_t = 3.5 gev ...";
@@ -490,7 +502,7 @@ function GiveBinning7TeV()
          correctEta=1
          BinsPtEta=18
      else
-        echo "eta binning was not set correctly. please try again.";
+        echo "Eta binning was not set correctly. please try again.";
         correctEta=0
      fi
      BinsPtGamma=$BinsPtPi0
@@ -583,6 +595,79 @@ function GiveBinning8TeV()
        fi
        BinsPtGamma=$BinsPtPi0
     fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for the EtaPrime? 10(4GeV), 12(6GeV), 13(8GeV), 14(10GeV), 15(12GeV)";
+        read answer
+        if [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 4 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=10
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 6 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 8 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=13
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 10 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=14
+        elif [ $answer = 15 ]; then
+            echo "15 Bins --> Max p_T = 12 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=15
+        elif [ $answer = 16 ]; then
+            echo "16 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=16
+        elif [ $answer = 17 ]; then
+            echo "17 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=17
+        elif [ $answer = 18 ]; then
+            echo "18 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=18
+        elif [ $answer = 19 ]; then
+            echo "19 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=19
+       elif [ $answer = 20 ]; then
+            echo "20 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=20
+       elif [ $answer = 21 ]; then
+            echo "21 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=21
+       elif [ $answer = 22 ]; then
+            echo "22 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=22
+       elif [ $answer = 23 ]; then
+            echo "23 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=23
+       elif [ $answer = 24 ]; then
+            echo "24 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=24
+       elif [ $answer = 25 ]; then
+            echo "25 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=25
+       elif [ $answer = 26 ]; then
+            echo "26 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=26
+       else
+            echo "EtaPrime Binning was not set correctly. Please try again.";
+            correctEtaPrime=0
+       fi
+       BinsPtGamma=$BinsPtPi0
+    fi
 }
 
 function GiveBinning900GeV()
@@ -609,7 +694,7 @@ function GiveBinning900GeV()
         echo "Pi0 Binniing was not set correctly. Please try again.";
     fi
 
-    echo "How many p_t bins do you want to use for the eta meson? 2 (1.8 GeV), 3 (3 GeV), only EMC related: 4 (5 GeV)"
+    echo "How many p_T bins do you want to use for the Eta meson? 2 (1.8 GeV), 3 (3 GeV), only EMC related: 4 (5 GeV)"
     read answer
     if [ $answer = 2 ]; then
         echo "2 Bins --> Max p_T = 1.8 GeV ...";
@@ -729,7 +814,7 @@ function GiveBinning2760GeV()
     fi
 
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
-        echo "How many p_t bins do you want to use for the eta meson? 6 (4. GeV), 7 (6 GeV), for conv calo: 8 (8 GeV), 9 (10 GeV), 10 (12 GeV), 11 (16 GeV), 12 (20 GeV), 13 (25 GeV)"
+        echo "How many p_T bins do you want to use for the Eta meson? 6 (4. GeV), 7 (6 GeV), for conv calo: 8 (8 GeV), 9 (10 GeV), 10 (12 GeV), 11 (16 GeV), 12 (20 GeV), 13 (25 GeV)"
         read answer
         if [ $answer = 6 ]; then
             echo "6 Bins --> Max p_T = 4. GeV ...";
@@ -767,6 +852,45 @@ function GiveBinning2760GeV()
         else
             echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0
+        fi
+    elif [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for the EtaPrime meson? 6 (4. GeV), 7 (6 GeV), for conv calo: 8 (8 GeV), 9 (10 GeV), 10 (12 GeV), 11 (16 GeV), 12 (20 GeV), 13 (25 GeV)"
+        read answer
+        if [ $answer = 6 ]; then
+            echo "6 Bins --> Max p_T = 4. GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=6
+        elif [ $answer = 7 ]; then
+            echo "7 Bins --> Max p_T = 6 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=7
+        elif [ $answer = 8 ]; then
+            echo "8 Bins --> Max p_T = 8 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=8
+        elif [ $answer = 9 ]; then
+            echo "9 Bins --> Max p_T = 10 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=9
+        elif [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 12 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=10
+        elif [ $answer = 11 ]; then
+            echo "11 Bins --> Max p_T = 16 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=11
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 20 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 25 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=13
+        else
+            echo "EtaPrime Binning was not set correctly. Please try again.";
+            correctEtaPrime=0
         fi
     else
         correctEta=1
@@ -904,8 +1028,45 @@ function GiveBinningHI()
             correctEta=0
         fi
     fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for EtaPrime? 8(8GeV), 9(10GeV), 10(12GeV), 11(15GeV), 12(20GeV), 13(25GeV), 14(30GeV)";
+        read answer
+        if [ $answer = 8 ]; then
+            echo "8 Bins --> Max p_T = 8 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=8
+        elif [ $answer = 9 ]; then
+            echo "9 Bins --> Max p_T = 10 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=9
+        elif [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 12 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=10
+        elif [ $answer = 11 ]; then
+            echo "11 Bins --> Max p_T = 15 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=11
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 20 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 25 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=13
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 30 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=14
+        else
+            echo "EtaPrime Binning was not set correctly. Please try again.";
+            correctEtaPrime=0
+        fi
+    fi
     BinsPtGamma=$BinsPtPi0
 #    DoEta=1
+#    DoEtaPrime=1
 #    DoPi0InEtaBinning=1
 }
 
@@ -931,6 +1092,17 @@ function GiveBinningPbPb5TeV()
         else
             echo "Eta Binning was not set correctly. Please try again.";
             correctEta=0
+        fi
+    fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for EtaPrime? up to 22 (30GeV)";
+        read answer
+        if [ "$answer" -le "22" ]; then
+            correctEtaPrime=1
+            BinsPtEtaPrime=$answer
+        else
+            echo "EtaPrime Binning was not set correctly. Please try again.";
+            correctEtaPrime=0
         fi
     fi
     BinsPtGamma=$BinsPtPi0
@@ -960,6 +1132,17 @@ function GiveBinningXeXe5440GeV()
             correctEta=0
         fi
     fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for EtaPrime? up to 9";
+        read answer
+        if [ "$answer" -le "9" ]; then
+            correctEtaPrime=1
+            BinsPtEtaPrime=$answer
+        else
+            echo "Pi0 Binning was not set correctly. Please try again.";
+            correctEtaPrime=0
+        fi
+    fi
     BinsPtGamma=$BinsPtPi0
 }
 
@@ -972,25 +1155,33 @@ function GiveBinningpPb()
         read answer
         BinsPtPi0=$answer
         correctPi0=1
-        echo "You have chosen " $answer " pt bins for pi0";
+        echo "--> You have chosen " $answer " pt bins for Pi0";
         BinsPtGamma=$BinsPtPi0
     else
         correctPi0=1
     fi
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
-        echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
+        echo "How many p_T bins do you want to use for the Eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
         echo "for calo triggers bins reach to 30."
         read answer
         BinsPtEta=$answer
         correctEta=1
-        echo "You have chosen " $answer " pt bins for eta";
+        echo "--> You have chosen " $answer " pt bins for Eta";
+    fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for the Eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
+        echo "for calo triggers bins reach to 30."
+        read answer
+        BinsPtEtaPrime=$answer
+        correctEtaPrime=1
+        echo "--> You have chosen " $answer " pt bins for Eta";
     fi
     if [ [ $mode == 2 ] || [ $mode == 13 ] ] && [ $DoGamma -eq 1 ]; then
         echo "How many p_T bins do you want to use for direct photon?  ";
         read answer
         BinsPtGamma=$answer
         correctPi0=1
-        echo "You have chosen " $answer " pt bins for dir gamma";
+        echo "--> You have chosen " $answer " pt bins for dir gamma";
         directphoton="Gamma"
     fi
 }
@@ -1002,16 +1193,23 @@ function GiveBinningpPbDirGamma()
         read answer
         BinsPtPi0=$answer
         correctPi0=1
-        echo "You have chosen " $answer " pt bins for pi0 in direct photon binning";
+        echo "--> You have chosen " $answer " pt bins for Pi0 in direct photon binning";
     else
         correctPi0=1
     fi
     if [ $DoEta -eq 1 ] || [ $DoPi0InEtaBinning -eq 1 ]; then
-        echo "How many p_t bins do you want to use for the eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
+        echo "How many p_T bins do you want to use for the Eta meson? 12 (4 GeV), 14 (6 GeV), 15 (8 GeV), 16 (10 GeV), for calorimeters 17 (12 GeV), 18 (14 GeV), 19 (16 GeV), 20 (20 GeV), 21 (25 GeV), 22 (30 GeV)";
         read answer
         BinsPtEta=$answer
         correctEta=1
-        echo "You have chosen " $answer " pt bins for eta";
+        echo "--> You have chosen " $answer " pt bins for Eta";
+    fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        echo "How many p_T bins do you want to use for the Eta Prime meson? WHAT TO FILL IN HERE ??";
+        read answer
+        BinsPtEtaPrime=$answer
+        correctEtaPrime=1
+        echo "--> You have chosen " $answer " pt bins for Eta";
     fi
     BinsPtGamma=$BinsPtPi0
 }
@@ -1169,28 +1367,28 @@ if [[ "$1" == *-*etaOff* ]]; then
     DoPi0=1
     DoEta=0
     DoPi0InEtaBinning=0
-    echo "eta calculation switched off"
+    echo "Eta calculation switched off"
 fi
 
 if [[ "$1" == *-*etaOnly* ]]; then
     DoPi0=0
     DoEta=1
     DoPi0InEtaBinning=0
-    echo "eta calculation only"
+    echo "Eta calculation only"
 fi
 
 if [[ "$1" == *-*pi0etaOnly* ]]; then
     DoPi0=0
     DoEta=0
     DoPi0InEtaBinning=1
-    echo "pi0 in eta binning calculation only"
+    echo "Pi0 in Eta binning calculation only"
 fi
 
 if [[ "$1" == *-*pi0Only* ]]; then
     DoPi0=1
     DoEta=0
     DoPi0InEtaBinning=0
-    echo "pi0 calculation only"
+    echo "Pi0 calculation only"
 fi
 
 if [[ "$1" == *-*gammaOnly* ]]; then
@@ -1222,6 +1420,7 @@ elif [[ "$1" == *-mAddSig2760GeV* ]] ; then
     MCRootFileAddSigEta=$3
     Suffix=$4
     addedSig=1
+    echo ""
     if [ -f $DataRootFile ]; then
         dataFileOK=1
         echo "The data file specified is $DataRootFile"
@@ -1873,7 +2072,7 @@ if [ $ONLYCUTS -eq 1 ]; then
         correct=1
     else
         NAMECUTSTUDIES=$answer
-        echo "You have selcted the name: " $NAMECUTSTUDIES;
+        echo "--> You have selcted the name: " $NAMECUTSTUDIES;
         correct=1
     fi
     done
@@ -1894,24 +2093,36 @@ if [ $ONLYCUTS -eq 1 ]; then
 fi
 
 correct=0
+echo "" # break line for questions
+echo "READING ANSWERS TO QUESTIONS FROM fullTaskFile"
 while [ $correct -eq 0 ]
 do
   echo "Which mode are you running? 0 (PCM-PCM), 1 (PCM-Dalitz), 2 (PCM-EMCAL), 3 (PCM-PHOS), 4 (EMCAL-EMCAL), 5 (PHOS-PHOS), 9 (old files), 10 (EMC-merged), 11 (PHOS-merged), 12 (DCal-DCal), 13 (PCM-DCal), and add 100 for heavy mesons (e.g. 102 for PCM-EMCAL)"
     read answer
+    # Set heavy meson configuration
+    if [ $answer -ge 100 ]; then
+        DoPi0=0
+        DoEta=0
+        DoEtaPrime=1
+        DoPi0InEtaBinning=0
+        echo "DoPi0=$DoPi0"
+        echo "DoEta=$DoEta"
+        echo "DoEtaPrime=$DoEtaPrime"
+    fi
     if [ $answer = "0" ] || [ $answer = "100" ]; then
-        echo "You are analysing PCM-PCM output";
+        echo "--> You are analysing PCM-PCM output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
         MaxPtToy=70
         correct=1
     elif [ $answer = "1" ] || [ $answer = "101" ]; then
-        echo "You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
+        echo "--> You are trying to analyse PCM-Dalitz output, this is the wrong script, please use another one.";
         mode=$answer
 #        AdvMesonQA="AdvancedMesonQA"
         correct=0
     elif [ $answer = "2" ] || [ $answer = "102" ]; then
-        echo "You are analysing PCM-EMCAL output";
+        echo "--> You are analysing PCM-EMCAL output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1919,7 +2130,7 @@ do
 #        AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "3" ] || [ $answer = "103" ]; then
-        echo "You are analysing PCM-PHOS output";
+        echo "--> You are analysing PCM-PHOS output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1927,7 +2138,7 @@ do
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "4" ] || [ $answer = "104" ]; then
-        echo "You are analysing EMCAL-EMCAL output";
+        echo "--> You are analysing EMCAL-EMCAL output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1935,7 +2146,7 @@ do
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "5" ] || [ $answer = "105" ]; then
-        echo "You are analysing PHOS-PHOS output";
+        echo "--> You are analysing PHOS-PHOS output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1943,7 +2154,7 @@ do
         AdvMesonQA="AdvancedMesonQA"
         correct=1
     elif [ $answer = "10" ] || [ $answer = "110" ]; then
-        echo "You are analysing EMC-merged output";
+        echo "--> You are analysing EMC-merged output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1952,7 +2163,7 @@ do
         DoEta=0;
         DoPi0InEtaBinning=0;
     elif [ $answer = "11" ] || [ $answer = "111" ]; then
-        echo "You are analysing PHOS-merged output";
+        echo "--> You are analysing PHOS-merged output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1961,11 +2172,11 @@ do
         DoEta=0;
         DoPi0InEtaBinning=0;
     elif [ $answer = "9" ] || [ $answer = "109" ]; then
-        echo "You are analysing the old output of PCM-PCM";
+        echo "--> You are analysing the old output of PCM-PCM";
         mode=$answer
         correct=1
     elif [ $answer = "12" ] || [ $answer = "112" ]; then
-        echo "You are analysing DCAL-DCAL output";
+        echo "--> You are analysing DCAL-DCAL output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1973,7 +2184,7 @@ do
         AdvMesonQA=""#"AdvancedMesonQA"
         correct=1
     elif [ $answer = "13" ] || [ $answer = "113" ]; then
-        echo "You are analysing PCM-DCAL output";
+        echo "--> You are analysing PCM-DCAL output";
         mode=$answer
         NEvtsToy=1e7
         MinPtToy=0
@@ -1981,7 +2192,7 @@ do
         AdvMesonQA=""#"AdvancedMesonQA"
         correct=1
     else
-        echo "Command not found. Please try again.";
+        echo "--> Command \"$answer\" not found. Please try again."
     fi
 done
 
@@ -1992,7 +2203,7 @@ do
     echo "Do you want to take an already exitsting CutSelection.log-file. Yes/No"
     read answer
     if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-        echo "Chosen already existing logfile ...";
+        echo "--> Chosen already existing logfile ..."
         cat CutSelection.log
         correct=1
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
@@ -2004,7 +2215,7 @@ do
             correct=1
         fi
     else
-        echo "Command not found. Please try again.";
+        echo "--> Command \"$answer\" not found. Please try again."
     fi
 done
 
@@ -2059,7 +2270,7 @@ do
         energy="pPb_8TeV";
         ExtInputFile="";
     fi
-    echo "The collision system has been selected to be $energy."
+    echo "--> The collision system has been selected to be $energy."
 
     echo "Is a cocktail file available? Yes/No?"
     read answer
@@ -2071,13 +2282,13 @@ do
                 useCocktail=1
                     echo "Please enter the rapidity used in the cocktail, e.g. 0.80"
                     read cocktailRapidity
-                    echo "Rapidity of $cocktailRapidity has been chosen."
+                    echo "--> Rapidity of $cocktailRapidity has been chosen."
             else
-                echo "No cocktail file specified, it will not be used."
+                echo "--> No cocktail file specified, it will not be used."
                 useCocktail=0
             fi
     elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-        echo "Will not use cocktail input for secondary correction or double ratio."
+        echo "--> Will not use cocktail input for secondary correction or double ratio."
         useCocktail=0
     fi
 
@@ -2085,7 +2296,7 @@ do
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton900GeV
@@ -2105,7 +2316,7 @@ do
                 AdvMesonQA="AdvancedMesonQA"
             fi
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "No Direct Photon plots will be produced ...";
+            echo "--> No Direct Photon plots will be produced ...";
             directphoton="No"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinning900GeV
@@ -2125,11 +2336,11 @@ do
                 AdvMesonQA="AdvancedMesonQA"
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
 
         if [ $mode = 2 ] || [ $mode = 3 ]; then
-            echo "Do you want to run pi0-tagging instead of DR? Yes/No?";
+            echo "Do you want to run Pi0-tagging instead of DR? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
                 echo "Running pi0-tagging ...";
@@ -2143,7 +2354,7 @@ do
                 echo "Running standard DR ...";
                 DoPi0Tagging=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $energy = "2.76TeV" ]; then
@@ -2182,13 +2393,13 @@ do
                 echo "Do you want to use THnSparse for the background? Yes/No?";
                 read answer
                 if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                    echo "Will use THnSparse for the background ...";
+                    echo "--> Will use THnSparse for the background ...";
                     useTHnSparse=1
                 elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                    echo "Will NOT use THnSparse for the background ...";
+                    echo "--> Will NOT use THnSparse for the background ...";
                     useTHnSparse=0
                 else
-                    echo "Command not found. Please try again.";
+                    echo "--> Command \"$answer\" not found. Please try again."
                 fi
             fi
 
@@ -2197,7 +2408,7 @@ do
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton5TeV
@@ -2227,19 +2438,19 @@ do
                 correct=1
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
 
@@ -2247,7 +2458,7 @@ do
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton5TeV
@@ -2277,19 +2488,19 @@ do
                 correct=1
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
 
@@ -2297,7 +2508,7 @@ do
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton7TeV
@@ -2337,7 +2548,7 @@ do
                 AdvMesonQA="AdvancedMesonQA"
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
 
         if [ $mode = 2 ] || [ $mode = 3 ]; then
@@ -2355,14 +2566,14 @@ do
                 echo "Running standard DR ...";
                 DoPi0Tagging=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $energy = "8TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton7TeV
@@ -2402,7 +2613,7 @@ do
                 AdvMesonQA="AdvancedMesonQA"
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
 
         if [ $mode = 2 ] || [ $mode = 3 ]; then
@@ -2420,19 +2631,20 @@ do
                 echo "Running standard DR ...";
                 DoPi0Tagging=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $energy = "13TeV" ] || [ $energy = "13TeVLowB" ]|| [ $energy = "13TeVRBins" ] ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhoton13TeV
                 correctPi0=1
                 correctEta=1
+                correctEtaPrime=1
             fi
             if [ $correctPi0 -eq 0 ]; then
                 correct=0
@@ -2458,19 +2670,19 @@ do
                 correct=1
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
 
@@ -2478,7 +2690,7 @@ do
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningpPbDirGamma
@@ -2493,7 +2705,7 @@ do
                 correct=1
             fi
         elif [ $answer = "YesPCMEMC" ] || [ $answer = "YPCMEMC" ] || [ $answer = "yPCMEMC" ] || [ $answer = "yesPCMEMC" ]; then
-            echo "Will produce Direct Photon plots with special PCMEMC binning...";
+            echo "--> Will produce Direct Photon plots with special PCMEMC binning...";
             directphoton="directPhotonA"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningpPbDirGamma
@@ -2542,27 +2754,27 @@ do
                 echo "Nothing to be done ...";
                 correct=1
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         done
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $energy = "pPb_8TeV" ]  ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningpPbDirGamma
@@ -2611,27 +2823,27 @@ do
                 echo "Nothing to be done ...";
                 correct=1
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         done
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $energy = "PbPb_2.76TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhotonHI
@@ -2665,27 +2877,27 @@ do
                 correct=1
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
 
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
    elif [ $energy = "PbPb_5.02TeV" ]; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Will produce Direct Photon plots ...";
+            echo "--> Will produce Direct Photon plots ...";
             directphoton="directPhoton"
             if [ $ONLYCORRECTION -eq 0 ]; then
                 GiveBinningDirectPhotonHI
@@ -2719,20 +2931,20 @@ do
                 correct=1
             fi
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
 
         if [ $ONLYCORRECTION -eq 0 ];  then
             echo "Do you want to use THnSparse for the background? Yes/No?";
             read answer
             if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-                echo "Will use THnSparse for the background ...";
+                echo "--> Will use THnSparse for the background ...";
                 useTHnSparse=1
             elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-                echo "Will NOT use THnSparse for the background ...";
+                echo "--> Will NOT use THnSparse for the background ...";
                 useTHnSparse=0
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         fi
     elif [ $energy = "XeXe_5.44TeV" ]; then
@@ -2770,25 +2982,26 @@ if [ $mode -eq 0 ] || [ $mode -eq 9 ] ; then
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
             ESTIMATEPILEUP="EstimateTrainPileUp"
-            echo "Running with additional histos ...";
+            echo "--> Running with additional histos ...";
             correct=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
             ESTIMATEPILEUP=""
-            echo "Running in Normal mode ...";
+            echo "--> Running in Normal mode ...";
             correct=1
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
     done
 fi
 
-echo "mode has been chosen: $mode "
+echo "--> Chosen mode: $mode"
 
-if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
-    echo "I went into standard modes";
+echo "Checking if mode $mode is standard mode...";
+if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ] || [ $mode -ge 100 ]; then
+    echo "--> I went into standard modes";
     if [ $ONLYCORRECTION -eq 0 ];  then
-#        echo "Extraction will be done using modified Gaussian.";
-#        crystal=Gaussian
+        # echo "Extraction will be done using modified Gaussian.";
+        # crystal=Gaussian
 
         correct=0
         while [ $correct -eq 0 ]
@@ -2796,39 +3009,40 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
             echo "Which fit do you want to do? CrystalBall or gaussian convoluted with an exponential function? CrystalBall/Gaussian?";
             read answer
             if [ $answer = "CrystalBall" ] || [ $answer = "C" ] || [ $answer = "c" ]; then
-                echo "CrystalBall chosen ...";
+                echo "--> CrystalBall chosen ...";
                 correct=1
                 crystal=CrystalBall
             elif [ $answer = "Gaussian" ] || [ $answer = "G" ] || [ $answer = "g" ]; then
-                echo "Gaussian chosen ...";
+                echo "--> Gaussian chosen ...";
                 correct=1
                 crystal=Gaussian
             else
-                echo "Command not found. Please try again.";
+                echo "--> Command \"$answer\" not found. Please try again."
             fi
         done
     fi
 
-#    echo "Hauptroutine stimmt"
+    # echo "Hauptroutine stimmt"
     correct=0
     while [ $correct -eq 0 ]
     do
         echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Remember at first all gamma cutstudies will be carried out. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Continuing ...";
+            echo "--> Continuing ...";
             correct=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "Aborting ...";
+            echo "--> Aborting ...";
             exit
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
     done
 
-    echo $DoPi0
-    echo $DoPi0InEtaBinning
-    echo $DoEta
+    echo "DoPi0=$DoPi0"
+    echo "DoPi0InEtaBinning=$DoPi0InEtaBinning"
+    echo "DoEta=$DoEta"
+    echo "DoEtaPrime=$DoEtaPrime"
 #Read the different cuts form the Cut selection log file
     CutSelections=`cat CutSelection.log`
     for cutSelection in $CutSelections; do
@@ -3037,6 +3251,57 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                         fi
                     fi
                 fi
+                if [ $DoEtaPrime -eq 1 ]; then
+                    if [ -f $DataRootFile ]; then
+                        optionsEtaPrimeData=\"EtaPrime\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,kFALSE
+                        ExtractSignal $optionsEtaPrimeData
+                    fi
+                    EtaPrimedataRAWFILE=`ls $cutSelection/$energy/EtaPrime_data_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        optionsEtaPrimeMC=\"EtaPrime\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,kFALSE
+                        ExtractSignal $optionsEtaPrimeMC
+                        EtaPrimeMCRAWFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1WithoutCorrection_*$cutSelection.root`
+                        EtaPrimeMCcorrectionFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistos_*$cutSelection.root`
+
+                        if [ $MERGINGMC -eq 1 ]; then
+                            if [ $addedSig -eq 1 ]; then
+                                optionsEtaPrimeMC2=\"EtaPrime\"\,\"$MCRootFileAddSigEtaPrime\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"AddSig\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,kTRUE
+                                ExtractSignal $optionsEtaPrimeMC2
+                                EtaPrimeMCcorrection=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistos_*.root`
+                                EtaPrimeMCcorrectionAddSig=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosAddSig_*.root`
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\+\(\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaPrimeMCcorrection\"\,\"$cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaPrimeMCcorrectionAddSig\"\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaPrimeMCcorrection\"\,\"$cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaPrimeMCcorrectionAddSig\"\)
+                                fi
+                            elif [ $addedSig -eq 2 ]; then
+                                optionsEtaPrimeMC2=\"EtaPrime\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,kFALSE
+                                ExtractSignal $optionsEtaPrimeMC2
+                                EtaPrimeMCcorrection=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistos_*.root`
+                                EtaPrimeMCcorrectionAddSig=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
+                                if [ $IsROOT6 -eq 0 ]; then
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\+\(\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaPrimeMCcorrection\"\,\"$cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaPrimeMCcorrectionAddSig\"\,$minPtMergeEtaPrime\)
+                                else
+                                    root -b -x -q -l TaskV1/MergeEffiJetJetMC.C\(\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaPrimeMCcorrection\"\,\"$cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaPrimeMCcorrectionAddSig\"\,$minPtMergeEtaPrime\)
+                                fi
+                            else
+                                optionsEtaPrimeMCBC=\"EtaPrime\"\,\"$MCRootFileBC\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"BC\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,kFALSE
+                                ExtractSignal $optionsEtaPrimeMCBC
+                                optionsEtaPrimeMCDE=\"EtaPrime\"\,\"$MCRootFileD\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"D\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,kFALSE
+                                ExtractSignal $optionsEtaPrimeMCDE
+                                EtaPrimeMCcorrectionBCFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosBC_*.root`
+                                EtaPrimeMCcorrectionDFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistosD_*.root`
+
+                                root -x -q -l -b  TaskV1/MergeEffiWithProperWeighting.C\(\"$DIRECTORY\"\,\"$cutSelection\"\,\"EtaPrime\",\"$Suffix\"\,\"$energy\"\,\"$EtaPrimeMCcorrectionFILE\"\,\"$EtaPrimeMCcorrectionBCFILE\",\"$EtaPrimeMCcorrectionDFILE\"\)
+                            fi
+                        fi
+                        if [ $IsROOT6 -eq 0 ]; then
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\+\(\"$EtaPrimedataRAWFILE\"\,\"$EtaPrimeMCRAWFILE\"\,\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEtaPrime\,$mode\)
+                        else
+                            root -x -l -b -q TaskV1/CompareMesonQuantities.C\(\"$EtaPrimedataRAWFILE\"\,\"$EtaPrimeMCRAWFILE\"\,\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,\"$directphoton\"\,$BinsPtEtaPrime\,$mode\)
+                        fi
+                    fi
+                fi
                 if [ "$Suffix" == "pdf" ]; then
                     rm -f $cutSelection/$energy/$Suffix/ExtractSignal/ExtractSignal_all.pdf
                     pdfunite $cutSelection/$energy/$Suffix/ExtractSignal/*.pdf $cutSelection/$energy/$Suffix/ExtractSignal/*/*.pdf $cutSelection/$energy/$Suffix/ExtractSignal/ExtractSignal_all.pdf
@@ -3052,6 +3317,9 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
             EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
             EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
             EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
+            EtaPrimedataRAWFILE=`ls $cutSelection/$energy/EtaPrime_data_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            EtaPrimeMCRAWFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1WithoutCorrection_*$cutSelection*.root`
+            EtaPrimeMCcorrectionFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaConvV1CorrectionHistos_*$cutSelection*.root`
 
             if [ $DoPi0 -eq 1 ]; then
                 if [ -f $Pi0dataRAWFILE ] && [ -f $Pi0MCcorrectionFILE ]; then
@@ -3132,6 +3400,18 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
                 fi
 
             fi
+            if [ $DoEtaPrime -eq 1 ]; then
+                if [ -f $EtaPrimedataRAWFILE ] && [ -f $EtaPrimeMCcorrectionFILE ]; then
+                    CorrectSignal $EtaPrimedataRAWFILE $EtaPrimeMCcorrectionFILE $cutSelection $Suffix EtaPrime kFALSE $ESTIMATEPILEUP $directphoton
+                else
+                        PARTLY=1
+                fi
+                if [ -f $EtaPrimeMCRAWFILE ] && [ -f $EtaPrimeMCcorrectionFILE ]; then
+                        CorrectSignal $EtaPrimeMCRAWFILE $EtaPrimeMCcorrectionFILE $cutSelection $Suffix EtaPrime kTRUE $ESTIMATEPILEUP $directphoton
+                else
+                        PARTLY=1
+                fi
+            fi
             if [ "$Suffix" == "pdf" ]; then
                 rm -f $cutSelection/$energy/$Suffix/CorrectSignalV2/CorrectSignal_all.pdf
                 pdfunite $cutSelection/$energy/$Suffix/CorrectSignalV2/*.pdf $cutSelection/$energy/$Suffix/CorrectSignalV2/CorrectSignal_all.pdf
@@ -3160,6 +3440,10 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ]; then
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
         root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
     fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"EtaPrime\"\,\"kFALSE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+        root -x -q -l -b TaskV1/CutStudiesOverview.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"EtaPrime\"\,\"kTRUE\"\,\"$OPTMINBIASEFF\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,0\,\"\"\,\"$PERIODNAME\"\,$mode\)
+    fi
 else
     correct=0
     while [ $correct -eq 0 ]
@@ -3167,18 +3451,19 @@ else
         echo "Please check that you really want to process all cuts, otherwise change the CutSelection.log. Make sure that the standard cut is the first in the file. Continue? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
-            echo "Continuing ...";
+            echo "--> Continuing ...";
             correct=1
         elif [ $answer = "No" ] || [ $answer = "N" ] || [ $answer = "no" ] || [ $answer = "n" ]; then
-            echo "Aborting ...";
+            echo "--> Aborting ...";
             exit
         else
-            echo "Command not found. Please try again.";
+            echo "--> Command \"$answer\" not found. Please try again."
         fi
     done
 
-    echo $DoPi0
-    echo $DoEta
+    echo "DoPi0=$DoPi0"
+    echo "DoEta=$DoEta"
+    echo "DoEtaPrime=$DoEtaPrime"
     #Read the different cuts form the Cut selection log file
     CutSelections=`cat CutSelection.log`
     for cutSelection in $CutSelections; do
@@ -3246,6 +3531,21 @@ else
                         root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$EtadataRAWFILE\"\,\"$EtaMCRAWFILE\"\,\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEta\,$mode\)
                     fi
                 fi
+                if [ $DoEtaPrime -eq 1 ]; then
+                    if [ -f $DataRootFile ]; then
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"EtaPrime\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kFALSE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,$mode\)
+            fi
+                    EtaPrimedataRAWFILE=`ls $cutSelection/$energy/EtaPrime_data_GammaMergedWithoutCorrection_*.root`
+                    if [ $MCFILE -eq 1 ]; then
+                        root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"EtaPrime\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,$mode\)
+                        EtaPrimeMCRAWFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaMergedWithoutCorrection_*$cutSelection*.root`
+                        EtaPrimeMCcorrectionFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaMergedCorrectionHistos_*$cutSelection*.root`
+                        if [ $MERGINGMC -eq 1 ]; then
+                            root -b -x -q -l TaskV1/ExtractSignalMergedMesonV2.C\+\(\"EtaPrime\"\,\"$MCRootFileGJ\"\,\"$cutSelection\"\,\"$Suffix\"\,kTRUE\,\"$energy\"\,\"\"\,\"$AdvMesonQA\"\,$BinsPtEtaPrime\,$mode\,1\)
+                        fi
+                        root -b -x -q -l TaskV1/CompareShapeMergedClusterQuantities.C\+\(\"$EtaPrimedataRAWFILE\"\,\"$EtaPrimeMCRAWFILE\"\,\"$cutSelection\"\,\"EtaPrime\"\,\"$Suffix\"\,\"$energy\"\,$BinsPtEtaPrime\,$mode\)
+                    fi
+                fi
             fi
 
             if [ $DoPi0 -eq 1 ]; then
@@ -3257,6 +3557,11 @@ else
                 EtadataRAWFILE=`ls $cutSelection/$energy/Eta_data_GammaMergedWithoutCorrection_$cutSelection*.root`
                 EtaMCRAWFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
                 EtaMCcorrectionFILE=`ls $cutSelection/$energy/Eta_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
+            fi
+            if [ $DoEtaPrime -eq 1 ]; then
+                EtaPrimedataRAWFILE=`ls $cutSelection/$energy/EtaPrime_data_GammaMergedWithoutCorrection_$cutSelection*.root`
+                EtaPrimeMCRAWFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaMergedWithoutCorrection_$cutSelection*.root`
+                EtaPrimeMCcorrectionFILE=`ls $cutSelection/$energy/EtaPrime_MC_GammaMergedCorrectionHistos_$cutSelection*.root`
             fi
 
             if [ $DoPi0 -eq 1 ]; then
@@ -3283,6 +3588,18 @@ else
                         PARTLY=1
                 fi
             fi
+            if [ $DoEtaPrime -eq 1 ]; then
+                if [ -f $EtaPrimedataRAWFILE ] && [ -f $EtaPrimeMCcorrectionFILE ]; then
+                    root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtaPrimedataRAWFILE\"\,\"$EtaPrimeMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"EtaPrime\"\,kFALSE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                else
+                        PARTLY=1
+        fi
+                if [ -f $EtaPrimeMCRAWFILE ] && [ -f $EtaPrimeMCcorrectionFILE ]; then
+                    root -b -x -q -l TaskV1/CorrectSignalMergedV2.C\+\(\"$EtaPrimeMCRAWFILE\"\,\"$EtaPrimeMCcorrectionFILE\"\,\"$cutSelection\"\,\"$Suffix\"\,\"EtaPrime\"\,kTRUE\,\"$energy\"\,\"$PERIODNAME\"\,10\)
+                else
+                        PARTLY=1
+                fi
+            fi
         fi
         NORMALCUTS=`expr $NORMALCUTS + 1`
     done
@@ -3294,6 +3611,10 @@ else
     if [ $DoEta -eq 1 ]; then
         root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
         root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"Eta\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+    fi
+    if [ $DoEtaPrime -eq 1 ]; then
+        root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"EtaPrime\"\,\"kFALSE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
+        root -l -b -x -q TaskV1/CutStudiesOverviewMerged.C\+\(\"CutSelection.log\"\,\"$Suffix\"\,\"EtaPrime\"\,\"kTRUE\"\,\"$energy\"\,\"$NAMECUTSTUDIES\"\,$NORMALCUTS\,\"$PERIODNAME\"\,$mode\)
     fi
 fi
 

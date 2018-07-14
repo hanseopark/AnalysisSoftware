@@ -6457,9 +6457,12 @@ Double_t fitGaussianPileUp2(Double_t *x, Double_t *par)
 //****** Convert heavy meson string to identification digit ******************
 //****************************************************************************
 Int_t GetHeavyMesonDigit(TString mesonString) {
-    if(mesonString.CompareTo("Pi0"))     return 0;
-    if(mesonString.CompareTo("Eta"))     return 1;
+    if(mesonString.CompareTo("Pi0"))      return 0;
+    if(mesonString.CompareTo("Eta"))      return 1;
     if(mesonString.CompareTo("EtaPrime")) return 2;
+    // If invalid mode was chosen
+    std::cout << "Not chosen a valid particle name (\"" << mesonString << "\")" << std::endl;
+    return -1;
 }
 
 //****************************************************************************

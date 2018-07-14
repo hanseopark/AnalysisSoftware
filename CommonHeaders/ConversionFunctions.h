@@ -4662,26 +4662,7 @@
     // ****************************************************************************************************************
     TString AutoDetectMainTList(Int_t mode , TFile* file, TString mesonName = ""){
         // Generate identifier string based on mode number
-        TString nominalMainDir     = "";
-        if (mode == 9 || mode == 0)
-            nominalMainDir         = "GammaConvV1";
-        else if( mode == 1 )
-            nominalMainDir         = "GammaConvDalitzV1";
-        else if (mode == 2 || mode == 3 || mode == 13)
-            nominalMainDir         = "GammaConvCalo";
-        else if (mode == 4 || mode == 12 || mode == 5)
-            nominalMainDir         = "GammaCalo";
-        else if( mode == 6 || mode == 7 )
-            nominalMainDir         = "GammaConvDalitzCalo";
-        else if (mode == 10 || mode == 11 )
-            nominalMainDir         = "GammaCaloMerged";
-        else if (mode == 30 )
-            nominalMainDir         = "GammaConvV1";
-        else if (mode == 40 || mode == 41 || mode == 42 || mode == 43|| mode == 44 || mode == 45 ||
-                 mode == 46 || mode == 47 || mode == 48 || mode == 49|| mode == 50)
-            nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
-        else if (mode>=100) // for heavy meson analysis
-            nominalMainDir = "HeavyNeutralMesonToGG";
+        TString nominalMainDir = GetDefaultMainTListName(mode;)
         // Go through main directories in ROOT file and see which one complies with identifier
         TString mainDir;
         TKey *key;
@@ -4693,10 +4674,16 @@
             arr = mainDir.Tokenize("_");
             if( mesonName.Length() && mainDir.BeginsWith(nominalMainDir) ) { // if heavy meson analysis
                 TString mesonId = ((TObjString*)arr->At(2))->GetString();
+<<<<<<< HEAD
                 cout << mesonId.Data() << "\t" << mesonName.Data() << "\t" << mainDir.Data() << endl;
                 if(mesonId.CompareTo("0") == 0 && (mesonName.CompareTo("Pi0") == 0 || mesonName.CompareTo("Pi0EtaBinning") == 0))      return mainDir;
                 if(mesonId.CompareTo("1") == 0 && mesonName.CompareTo("Eta") == 0)      return mainDir;
                 if(mesonId.CompareTo("2") == 0 && mesonName.CompareTo("EtaPrime") == 0) return mainDir;
+=======
+                if(mesonId.EqualTo("0") && mesonName.EqualTo("Pi0"))      return mainDir;
+                if(mesonId.EqualTo("1") && mesonName.EqualTo("Eta"))      return mainDir;
+                if(mesonId.EqualTo("2") && mesonName.EqualTo("EtaPrime")) return mainDir;
+>>>>>>> working on eta prime with MC
             } else {
                 TString start   = ((TObjString*)arr->At(0))->GetString();
                 if (start.EqualTo(nominalMainDir)) return mainDir;
@@ -4747,6 +4734,8 @@
         else if (mode == 40 || mode == 41 || mode == 42 || mode == 43|| mode == 44 || mode == 45 ||
                  mode == 46 || mode == 47 || mode == 48 || mode == 49|| mode == 50)
             nominalMainDir         = "GammaConvNeutralMesonPiPlPiMiPiZero";
+        else if (mode>=100) // for heavy meson analysis
+            nominalMainDir = "HeavyNeutralMesonToGG";
         return nominalMainDir;
     }
 
@@ -5013,6 +5002,9 @@
         if(mode==11) return 4; // 11 mPHOS
         if(mode==12) return 2; // 12 DMC-DMC
         if(mode==13) return 1; // 13 PCM-DMC
+        // If invalid mode was chosen
+        std::cout << "Not chosen a valid mode (mode=" << mode << ")" << std::endl;
+        return -1;
     }
 
     void RemoveZerosAtBeginningAndEndFromGraph (TGraph* graph){
