@@ -598,9 +598,76 @@ function GiveBinning8TeV()
     if [ $DoEtaPrime -eq 1 ]; then
         echo "How many p_T bins do you want to use for the EtaPrime? 10(4GeV), 12(6GeV), 13(8GeV), 14(10GeV), 15(12GeV)";
         read answer
+<<<<<<< HEAD
         if [ $answer -ge 10 -a $answer -le 26 ]
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
+=======
+        if [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 4 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=10
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 6 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 8 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=13
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 10 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=14
+        elif [ $answer = 15 ]; then
+            echo "15 Bins --> Max p_T = 12 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=15
+        elif [ $answer = 16 ]; then
+            echo "16 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=16
+        elif [ $answer = 17 ]; then
+            echo "17 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=17
+        elif [ $answer = 18 ]; then
+            echo "18 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=18
+        elif [ $answer = 19 ]; then
+            echo "19 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=19
+       elif [ $answer = 20 ]; then
+            echo "20 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=20
+       elif [ $answer = 21 ]; then
+            echo "21 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=21
+       elif [ $answer = 22 ]; then
+            echo "22 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=22
+       elif [ $answer = 23 ]; then
+            echo "23 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=23
+       elif [ $answer = 24 ]; then
+            echo "24 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=24
+       elif [ $answer = 25 ]; then
+            echo "25 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=25
+       elif [ $answer = 26 ]; then
+            echo "26 Bins --> Max p_T = 14 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=26
+>>>>>>> working on eta prime with MC
        else
             echo "EtaPrime Binning was not set correctly. Please try again.";
             correctEtaPrime=0
@@ -795,9 +862,44 @@ function GiveBinning2760GeV()
     elif [ $DoEtaPrime -eq 1 ]; then
         echo "How many p_T bins do you want to use for the EtaPrime meson? 6 (4. GeV), 7 (6 GeV), for conv calo: 8 (8 GeV), 9 (10 GeV), 10 (12 GeV), 11 (16 GeV), 12 (20 GeV), 13 (25 GeV)"
         read answer
+<<<<<<< HEAD
         if [ $answer -ge 6 -a $answer -le 13 ]
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
+=======
+        if [ $answer = 6 ]; then
+            echo "6 Bins --> Max p_T = 4. GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=6
+        elif [ $answer = 7 ]; then
+            echo "7 Bins --> Max p_T = 6 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=7
+        elif [ $answer = 8 ]; then
+            echo "8 Bins --> Max p_T = 8 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=8
+        elif [ $answer = 9 ]; then
+            echo "9 Bins --> Max p_T = 10 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=9
+        elif [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 12 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=10
+        elif [ $answer = 11 ]; then
+            echo "11 Bins --> Max p_T = 16 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=11
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 20 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 25 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=13
+>>>>>>> working on eta prime with MC
         else
             echo "EtaPrime Binning was not set correctly. Please try again.";
             correctEtaPrime=0
@@ -941,9 +1043,40 @@ function GiveBinningHI()
     if [ $DoEtaPrime -eq 1 ]; then
         echo "How many p_T bins do you want to use for EtaPrime? 8(8GeV), 9(10GeV), 10(12GeV), 11(15GeV), 12(20GeV), 13(25GeV), 14(30GeV)";
         read answer
+<<<<<<< HEAD
         if [ $answer -ge 8 -a $answer -le 14 ]
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
+=======
+        if [ $answer = 8 ]; then
+            echo "8 Bins --> Max p_T = 8 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=8
+        elif [ $answer = 9 ]; then
+            echo "9 Bins --> Max p_T = 10 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=9
+        elif [ $answer = 10 ]; then
+            echo "10 Bins --> Max p_T = 12 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=10
+        elif [ $answer = 11 ]; then
+            echo "11 Bins --> Max p_T = 15 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=11
+        elif [ $answer = 12 ]; then
+            echo "12 Bins --> Max p_T = 20 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=12
+        elif [ $answer = 13 ]; then
+            echo "13 Bins --> Max p_T = 25 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=13
+        elif [ $answer = 14 ]; then
+            echo "14 Bins --> Max p_T = 30 GeV ...";
+            correctEtaPrime=1
+            BinsPtEtaPrime=14
+>>>>>>> working on eta prime with MC
         else
             echo "EtaPrime Binning was not set correctly. Please try again.";
             correctEtaPrime=0
@@ -1024,7 +1157,11 @@ function GiveBinningXeXe5440GeV()
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
         else
+<<<<<<< HEAD
             echo "EtaPrime Binning was not set correctly. Please try again.";
+=======
+            echo "Pi0 Binning was not set correctly. Please try again.";
+>>>>>>> working on eta prime with MC
             correctEtaPrime=0
         fi
     fi
@@ -1990,8 +2127,11 @@ do
         DoEta=0
         DoEtaPrime=1
         DoPi0InEtaBinning=0
+<<<<<<< HEAD
         echo ""
         echo "Set options for EtaPrime mode (mode >100)"
+=======
+>>>>>>> working on eta prime with MC
         echo "DoPi0=$DoPi0"
         echo "DoEta=$DoEta"
         echo "DoEtaPrime=$DoEtaPrime"
