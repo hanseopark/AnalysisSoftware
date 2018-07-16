@@ -191,11 +191,13 @@ void EventQA_Runwise(
 
     TDirectoryFile* directoryOrg    = (TDirectoryFile*)fCutFile->Get(nameMainDir.Data());
     TList *listInput                = NULL;
-    if (directoryOrg){
-        listInput                   = (TList*)directoryOrg->Get(nameMainDir.Data());
-    } else {
+    // if (directoryOrg){
+        // cout << __LINE__ << endl;
+        // listInput                   = (TList*)directoryOrg->Get(nameMainDir.Data());
+    // } else {
+
         listInput                   = (TList*)fCutFile->Get(nameMainDir.Data());
-    }
+    // }
     if(!listInput) {cout << "ERROR: Could not find main dir: " << nameMainDir.Data() << " in file! Returning..." << endl; return;}
         listInput->SetOwner(kTRUE);
     vector <TString> cuts;
@@ -859,11 +861,11 @@ void EventQA_Runwise(
 
             TDirectoryFile* directoryOrg2   = (TDirectoryFile*)RootFile->Get(nameMainDir.Data());
             TList *TopDir                   = NULL;
-            if (directoryOrg2){
-                TopDir                      = (TList*)directoryOrg2->Get(nameMainDir.Data());
-            } else {
+            // if (directoryOrg2){
+            //     TopDir                      = (TList*)directoryOrg2->Get(nameMainDir.Data());
+            // } else {
                 TopDir                      = (TList*)RootFile->Get(nameMainDir.Data());
-            }
+            // }
             if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
             else TopDir->SetOwner(kTRUE);
             TList* TopContainer         = (TList*) TopDir->FindObject(Form("Cut Number %s",fCutSelection.Data()));

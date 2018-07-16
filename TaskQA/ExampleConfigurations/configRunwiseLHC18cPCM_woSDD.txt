@@ -1,0 +1,17 @@
+#example config LHC18c - PCM - runwise
+select  LHC18c
+mode    0
+cutNr   0
+nSets   2
+nData   2
+energy  13TeVLowB
+filePath    /home/jaklie/Gridoutput/Legotrain-vAN-20170612-LowBtest
+filePathPhoton  /home/jaklie/Gridoutput/Legotrain-vAN-20170612-LowBtest
+fileName    GammaConvV1_301.root
+fileNamePhoton    AnalysisResults.root
+DataSets  LHC18c_woSDD  LHC18c_wSDD  STOP
+plotDataSets  LHC18c_woSDD  LHC18c_wSDD  STOP
+doEquidistantXaxis  kTRUE
+addPhotonCutNr   0005314140
+addLabelRunlist _all
+doHistsForEverySet  kTRUE

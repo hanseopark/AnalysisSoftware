@@ -3015,11 +3015,11 @@
                 return kOrange+7;
             } else if (!generator.CompareTo("LHC15g3a3") || !generator.CompareTo("LHC15g3a3_ESD") ) {
                 return kBlue;
-            } else if (!generator.CompareTo("LHC15g3a3_AOD")) {
+            } else if (!generator.CompareTo("LHC15g3a3_AOD") || generator.Contains("LHC18c_woSDD")) {
                 return kMagenta+2;
             } else if (!generator.CompareTo("LHC15g3c3") || !generator.CompareTo("LHC15g3c3_ESD")) {
                 return kRed;
-            } else if (!generator.CompareTo("LHC15g3c3_AOD")) {
+            } else if (!generator.CompareTo("LHC15g3c3_AOD") || generator.Contains("LHC18c_wSDD")) {
                 return kGreen+2;
             } else if (generator.Contains("Phytia")) {
                 return kGreen+4;
@@ -3476,6 +3476,22 @@
             }
         }
 
+        if (!energy.CompareTo("13TeVLowB")){
+            if (!generator.CompareTo("")) {
+                return 33;
+            } else if (generator.Contains("LHC18c")) {
+                return 24;
+            } else if (generator.Contains("Phytia")) {
+                return 30;
+            } else if (generator.Contains("Phojet")) {
+                return 27;
+            } else if ((generator.Contains("LHC16d")) || (generator.Contains("LHC16e")) || (generator.Contains("LHC16g")) || (generator.Contains("LHC16h")) || (generator.Contains("LHC16i")) || (generator.Contains("LHC16j")) || (generator.Contains("LHC16k")) || (generator.Contains("LHC16l")) || (generator.Contains("LHC16o")) || (generator.Contains("LHC16p"))) {
+                return 29;
+            } else {
+                return 34;
+            }
+        }
+
         if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
                 if (!centrality.CompareTo("0-10%")){
@@ -3754,7 +3770,7 @@
             }
         }
 
-        if (!energy.CompareTo("13TeV")){
+        if (energy.Contains("13TeV")){
             return 2.2;
         }
 

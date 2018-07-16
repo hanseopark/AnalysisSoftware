@@ -31,7 +31,12 @@ function GetFileNumberListSpecial()
 
 function GetFileNumberListPCM()
 {
+    echo "GetPCMfilelist"
+    echo $1
     ls $1/GammaConvV1_*.root > filesTemp.txt
+
+
+    cat filesTemp.txt
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do

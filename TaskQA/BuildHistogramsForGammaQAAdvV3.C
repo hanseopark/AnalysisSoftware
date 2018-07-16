@@ -291,7 +291,7 @@ void BuildHistogramsForGammaQAAdvV3( TString fileName               = "GammaConv
     }
     if (!mainList) cout << "main List not found" << endl;
 
-    TString autoDetectedTreeList    = AutoDetectTreeList(mainList);
+    TString autoDetectedTreeList    = AutoDetectTreeList(mainList, 0);
     TList* treeList                 = (TList*)mainList->FindObject(autoDetectedTreeList.Data());
     if (!treeList) cout << "Tree List not found" << endl;
 
