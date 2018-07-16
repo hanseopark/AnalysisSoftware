@@ -3161,7 +3161,7 @@
                             TString energy,
                             TString directPhoton,
                             Int_t modi,
-                            TString eventCutSelection, TString clusterCutSelection, Int_t triggerSet = -1, Bool_t isDCA = kFALSE, TString centDCA = "", TString periodDCA = ""){
+                            TString eventCutSelection, TString clusterCutSelection, Int_t triggerSet = -1, Bool_t isDCA = kFALSE, TString centDCA = "", TString periodDCA = "", TString photonCutSelection = ""){
         //*************************************************************************************************
         //************************************ Binning for Cluster ****************************************
         //*************************************************************************************************
@@ -3829,15 +3829,21 @@
                         fBinsPtDCAzDist[i] = fBinsDirGamma13TeVLowBPtDCAzDist[i];
                     }
                 } else {
-                  fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
-                  Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
-                  if (fNBinsPt > maxPtBinTheo) {
-                      cout << "**************************************************************************************************************************************" << endl;
-                      cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
-                      cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
-                      cout << "**************************************************************************************************************************************" << endl;
-                      fNBinsPt    = maxPtBinTheo;
-                  }
+                    fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
+                    if (photonCutSelection.CompareTo("")) {
+                        if (!((TString)photonCutSelection(GetPhotonSinglePtCutPosition(photonCutSelection),1)).CompareTo("0")){
+                            cout << "Increase starting pT for higher minimum track pT cut (50 MeV)" << endl;
+                            fStartPtBin += 4;
+                        }
+                    }
+                    Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
+                    if (fNBinsPt > maxPtBinTheo) {
+                        cout << "**************************************************************************************************************************************" << endl;
+                        cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
+                        cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
+                        cout << "**************************************************************************************************************************************" << endl;
+                        fNBinsPt    = maxPtBinTheo;
+                    }
                   GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
