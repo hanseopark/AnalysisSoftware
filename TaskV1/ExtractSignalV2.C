@@ -46,6 +46,7 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "THnSparse.h"
+using namespace std;
 
 
 //****************************************************************************
@@ -389,6 +390,8 @@ void ExtractSignalV2(   TString meson                   = "",
         SetCorrectMCHistogrammNames("Pi0");
     } else if (meson.CompareTo("Eta") == 0 ){
         SetCorrectMCHistogrammNames("Eta");
+    } else if (meson.CompareTo("EtaPrime") == 0 ){
+        SetCorrectMCHistogrammNames("EtaPrime");
     }
 
     TList *ESDContainer                 = (TList*) HistosGammaConversion->FindObject(Form("%s ESD histograms",fCutSelectionRead.Data()));
@@ -499,6 +502,20 @@ void ExtractSignalV2(   TString meson                   = "",
 
         }
 
+        // loading histograms for EtaPrime
+        if( fMesonId == 331){
+            // histos without acceptance requirement
+            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrime.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOWeights.Data());
+            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOEvtWeights.Data());
+
+            // histos with gamma's in acceptance
+            fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAcc.Data());
+            fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOWeights.Data());
+            fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOEvtWeights.Data());
+
+        }
+
         // prepare histos for correct error calculation
         fHistoMCMesonPt->Sumw2();
         fHistoMCMesonPtWithinAcceptance->Sumw2();
@@ -526,17 +543,24 @@ void ExtractSignalV2(   TString meson                   = "",
         }
 
         // load reconstructed meson histograms
+cout << "line " << __LINE__ << endl;
         fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
-        fHistoTrueMesonInvMassVSPt->Sumw2();
+cout << fHistoTrueMesonInvMassVSPt << endl;
         fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueFull.Data());
-        fHistoTrueFullMesonInvMassVSPt->Sumw2();
+cout << fHistoTrueFullMesonInvMassVSPt << endl;
         fHistoTrueMesonInvMassVSPtWOWeights         = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueWOWeights.Data());
-        fHistoTrueMesonInvMassVSPtWOWeights->Sumw2();
+cout << fHistoTrueMesonInvMassVSPtWOWeights << endl;
         fProfileTrueMesonInvMassVSPtWeights         = (TProfile2D*)TrueConversionContainer->FindObject(ObjectNameProfileWeights.Data());
-        fProfileTrueMesonInvMassVSPtWeights->Sumw2();
+cout << fProfileTrueMesonInvMassVSPtWeights << endl;
         fHistoTrueMesonInvMassVSPtReweighted        = (TH2D*)fHistoTrueMesonInvMassVSPtWOWeights->Clone("Reweighted");
+cout << fHistoTrueMesonInvMassVSPtReweighted << endl;
+        fHistoTrueMesonInvMassVSPt->Sumw2();
+        fHistoTrueFullMesonInvMassVSPt->Sumw2();
+        fHistoTrueMesonInvMassVSPtWOWeights->Sumw2();
+        fProfileTrueMesonInvMassVSPtWeights->Sumw2();
         fHistoTrueMesonInvMassVSPtReweighted->Sumw2();
         fHistoTrueMesonInvMassVSPtReweighted->Multiply(fProfileTrueMesonInvMassVSPtWeights);
+cout << "line" << __LINE__ << endl;
 
         cout << ObjectNameTrue.Data() << endl;
         FillMassMCTrueMesonHistosArray(fHistoTrueMesonInvMassVSPt);
@@ -3135,26 +3159,41 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     cout << "standard MC chosen" << endl;
 
     // MC histograms primaries
-    ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
-    ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
-    if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) ) ObjectNameMCPi0AccWOWeights = "MC_Pi0InAcc_Pt";
-    if(fMode == 4 || fMode == 12 || fMode == 5)
-      ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0WOEvtWeightInAcc_Pt";
-    else
-      ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0_WOEventWeightsInAcc_Pt";
-    ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
-    ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
-    if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) )  ObjectNameMCEtaAccWOWeights = "MC_EtaInAcc_Pt";
-    if(fMode == 4 || fMode == 12 || fMode == 5)
-      ObjectNameMCEtaAccWOEvtWeights    = "MC_EtaWOEvtWeightInAcc_Pt";
-    else
-      ObjectNameMCEtaAccWOEvtWeights    = "MC_Eta_WOEventWeightsInAcc_Pt";
-    ObjectNameMCPi0                     = "MC_Pi0_Pt";
-    ObjectNameMCPi0WOWeights            = "MC_Pi0_WOWeights_Pt";
-    ObjectNameMCPi0WOEvtWeights         = "MC_Pi0_WOEventWeights_Pt";
-    ObjectNameMCEta                     = "MC_Eta_Pt";
-    ObjectNameMCEtaWOWeights            = "MC_Eta_WOWeights_Pt";
-    ObjectNameMCEtaWOEvtWeights         = "MC_Eta_WOEventWeights_Pt";
+    // Pi0
+        ObjectNameMCPi0Acc                  = "MC_Pi0InAcc_Pt";
+        ObjectNameMCPi0AccWOWeights         = "MC_Pi0WOWeightInAcc_Pt";
+        if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) ) ObjectNameMCPi0AccWOWeights = "MC_Pi0InAcc_Pt";
+        if(fMode == 4 || fMode == 12 || fMode == 5)
+            ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0WOEvtWeightInAcc_Pt";
+        else
+            ObjectNameMCPi0AccWOEvtWeights    = "MC_Pi0_WOEventWeightsInAcc_Pt";
+        ObjectNameMCPi0                     = "MC_Pi0_Pt";
+        ObjectNameMCPi0WOWeights            = "MC_Pi0_WOWeights_Pt";
+        ObjectNameMCPi0WOEvtWeights         = "MC_Pi0_WOEventWeights_Pt";
+    // Eta
+        ObjectNameMCEtaAcc                  = "MC_EtaInAcc_Pt";
+        ObjectNameMCEtaAccWOWeights         = "MC_EtaWOWeightInAcc_Pt";
+        if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) )
+            ObjectNameMCEtaAccWOWeights = "MC_EtaInAcc_Pt";
+        if(fMode == 4 || fMode == 12 || fMode == 5)
+            ObjectNameMCEtaAccWOEvtWeights    = "MC_EtaWOEvtWeightInAcc_Pt";
+        else
+            ObjectNameMCEtaAccWOEvtWeights    = "MC_Eta_WOEventWeightsInAcc_Pt";
+        ObjectNameMCEta                     = "MC_Eta_Pt";
+        ObjectNameMCEtaWOWeights            = "MC_Eta_WOWeights_Pt";
+        ObjectNameMCEtaWOEvtWeights         = "MC_Eta_WOEventWeights_Pt";
+    // EtaPrime
+        ObjectNameMCEtaPrimeAcc                  = "MC_MesonInAcc_Pt";
+        ObjectNameMCEtaPrimeAccWOWeights         = "MC_MesonWOWeightInAcc_Pt";
+        if(fMode == 4 && (fEnergyFlag.CompareTo("pPb_5.023TeV") == 0|| fEnergyFlag.CompareTo("pPb_5.023TeVRun2") == 0) )
+            ObjectNameMCEtaPrimeAccWOWeights = "MC_MesonInAcc_Pt";
+        if(fMode == 4 || fMode == 12 || fMode == 5)
+            ObjectNameMCEtaPrimeAccWOEvtWeights    = "MC_MesonWOEvtWeightInAcc_Pt";
+        else
+            ObjectNameMCEtaPrimeAccWOEvtWeights    = "MC_Meson_WOEventWeightsInAcc_Pt";
+        ObjectNameMCEtaPrime                = "MC_Meson_Pt";
+        ObjectNameMCEtaPrimeWOWeights       = "MC_Meson_WOWeights_Pt";
+        ObjectNameMCEtaPrimeWOEvtWeights    = "MC_Meson_WOEventWeights_Pt";
 
     // MC histograms secondaries
     if (mesonType.Contains("Pi0")){
@@ -3204,9 +3243,15 @@ void SetCorrectMCHistogrammNames(TString mesonType){
         ObjectNameTrueWOWeights             = Form("ESD_TruePrimary%sW0Weights_InvMass_Pt", mesonType.Data());
         ObjectNameProfileWeights            = Form("ESD_TruePrimary%sWeights_InvMass_Pt", mesonType.Data());
         ObjectNameTrueSec                   = Form("ESD_TrueSecondary%s_InvMass_Pt", mesonType.Data());
-        ObjectNameTrueSecFromK0S            = Form("ESD_TrueSecondary%sFromK0s_InvMass_Pt", mesonType.Data());
-        ObjectNameTrueSecFromK0L            = Form("ESD_TrueSecondary%sFromK0l_InvMass_Pt", mesonType.Data());
         ObjectNameTrueSecFromLambda         = Form("ESD_TrueSecondary%sFromLambda_InvMass_Pt", mesonType.Data());
+    }
+
+    // Correction for MC histograms in EtaPrime
+    if (mesonType.Contains("EtaPrime")){
+        ObjectNameTrue                      = "ESD_TruePrimaryMeson_InvMass_Pt";
+        ObjectNameTrueFull                  = "ESD_TrueMeson_InvMass_Pt";
+        ObjectNameTrueWOWeights             = "ESD_TruePrimaryMesonW0Weights_InvMass_Pt";
+        ObjectNameProfileWeights            = "ESD_TruePrimaryMesonWeights_InvMass_Pt";
     }
 
     // input spectra for secondary particles

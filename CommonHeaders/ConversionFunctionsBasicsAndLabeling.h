@@ -715,7 +715,7 @@
         } else if(mesonName.CompareTo("Proton") == 0)  { // not a meson, but its easier having it in this function
             return "p#overline{p}";
         } else {
-            cout << "No correct meson has been selected" << endl;
+            cout << "No correct meson has been selected (" << mesonName << ")" << endl;
             return "";
         }
     }

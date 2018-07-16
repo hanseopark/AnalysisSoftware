@@ -8,8 +8,8 @@
 //******************** Global variable for setup of macro ********************
 //****************************************************************************
 TDatime     now;
-fstream     fFileErrLog;
-fstream     fFileDataLog;
+std::fstream fFileErrLog;
+std::fstream fFileDataLog;
 TString     fTextCent                                                   = "";
 TString     fEnergyFlag                                                 = "";
 TString     fPrefix                                                     = "";
@@ -98,12 +98,18 @@ TString     ObjectNameMCPi0AccWOEvtWeights                              = "";
 TString     ObjectNameMCEtaAcc                                          = "";
 TString     ObjectNameMCEtaAccWOWeights                                 = "";
 TString     ObjectNameMCEtaAccWOEvtWeights                              = "";
+TString     ObjectNameMCEtaPrimeAcc                                     = "";
+TString     ObjectNameMCEtaPrimeAccWOWeights                            = "";
+TString     ObjectNameMCEtaPrimeAccWOEvtWeights                         = "";
 TString     ObjectNameMCPi0                                             = "";
 TString     ObjectNameMCPi0WOWeights                                    = "";
 TString     ObjectNameMCPi0WOEvtWeights                                 = "";
 TString     ObjectNameMCEta                                             = "";
 TString     ObjectNameMCEtaWOWeights                                    = "";
 TString     ObjectNameMCEtaWOEvtWeights                                 = "";
+TString     ObjectNameMCEtaPrime                                        = "";
+TString     ObjectNameMCEtaPrimeWOWeights                               = "";
+TString     ObjectNameMCEtaPrimeWOEvtWeights                            = "";
 TString     ObjectNameTrueGGBck                                         = "";
 TString     ObjectNameTrueContBck                                       = "";
 TString     ObjectNameTrueBckFullMesonContained                         = "";

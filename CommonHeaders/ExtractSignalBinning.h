@@ -1339,7 +1339,7 @@
         //*************************************************************************************************
         //******************** Determine startbin for Eta  ************************************************
         //*************************************************************************************************
-        } else if (meson.Contains("Eta")){
+        } else if (meson.Contains("Eta")){ // Contains instead of CompareTo because of EtaPrime
             if (energy.CompareTo("2.76TeV") == 0){
                 if ( mode == 0 ){
                     startPtBin     = 1;
@@ -2376,7 +2376,7 @@
                     }
                 }
             }
-        } else if (meson.Contains("Eta")){
+        } else if (meson.CompareTo("Eta") == 0){
             if (energy.CompareTo("2.76TeV") == 0){
                 maxNBins = 12;
                 for(Int_t i = 0; i < maxNBins+1; i++){
@@ -2863,6 +2863,18 @@
                 maxNBins    = 7;
                 for(Int_t i = 0; i < binningMax+1; i++){
                     binning[i] = fBinsEtaXeXe5440GeVPt[i];
+                }
+            }
+        } else if ( meson.CompareTo("EtaPrime") == 0) {
+            if (energy.CompareTo("7TeV") == 0){
+                binningMax = 7;
+                for (Int_t i = 0; i < binningMax+1; i++) {
+                    binning[i]=fBinsEtaPrime13TeVPt[i];
+                }
+            } else if (energy.CompareTo("13TeV") == 0){
+                binningMax = 7;
+                for (Int_t i = 0; i < binningMax+1; i++) {
+                    binning[i]=fBinsEtaPrime13TeVPt[i];
                 }
             }
         } else if (meson.Contains("Omega")){
@@ -4814,11 +4826,11 @@
                 if (!setPi0.CompareTo("Pi0EtaBinning"))
                     nIterBGFit          = 12;
 
-		nIterBGFit                  = 7;
-		fMaxYFracBGOverIntHist      = 60;
-		optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-		optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
-		optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+            nIterBGFit                  = 7;
+            fMaxYFracBGOverIntHist      = 60;
+            optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+            optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+            optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
 
 
             //*********************************************************************************************
@@ -5307,6 +5319,9 @@
                     if (i < fNBinsPt+1)
                         fNRebin[i]  = fBinsEtaPrim7TeVPtRebin[i];
                 }
+            //*********************************************************************************************
+            //********************************** Eta' for pp 13TeV *****************************************
+            //*********************************************************************************************
             } else if (energy.CompareTo("13TeV") == 0) {
                 fStartPtBin         = 1;
                 if (fNBinsPt > 7) {

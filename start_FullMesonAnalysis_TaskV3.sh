@@ -2105,6 +2105,8 @@ do
         DoEta=0
         DoEtaPrime=1
         DoPi0InEtaBinning=0
+        echo ""
+        echo "Set options for EtaPrime mode (mode >100)"
         echo "DoPi0=$DoPi0"
         echo "DoEta=$DoEta"
         echo "DoEtaPrime=$DoEtaPrime"

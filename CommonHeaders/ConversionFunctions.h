@@ -73,6 +73,7 @@
     TGraphAsymmErrors*  ApplyYshiftIndividualSpectra(TGraphAsymmErrors * , TF1 *);
     Double_t            bin_shift_x(TF1 *, Double_t , Double_t , Double_t );
     Int_t               GetBinning(TObject *, Double_t* );
+    TString             GetDefaultMainTListName(Int_t);
     TString             AutoDetectMainTList(Int_t);
     TH1D*               GetUpperLimitsHisto(  TH1D*, TGraphAsymmErrors*, Double_t, Double_t, Int_t );
     Double_t            GetUpperLimit( Double_t, Double_t, Double_t, Double_t, Double_t&, Double_t, Int_t );
@@ -4662,7 +4663,7 @@
     // ****************************************************************************************************************
     TString AutoDetectMainTList(Int_t mode , TFile* file, TString mesonName = ""){
         // Generate identifier string based on mode number
-        TString nominalMainDir = GetDefaultMainTListName(mode;)
+        TString nominalMainDir = GetDefaultMainTListName(mode);
         // Go through main directories in ROOT file and see which one complies with identifier
         TString mainDir;
         TKey *key;
@@ -4674,16 +4675,10 @@
             arr = mainDir.Tokenize("_");
             if( mesonName.Length() && mainDir.BeginsWith(nominalMainDir) ) { // if heavy meson analysis
                 TString mesonId = ((TObjString*)arr->At(2))->GetString();
-<<<<<<< HEAD
                 cout << mesonId.Data() << "\t" << mesonName.Data() << "\t" << mainDir.Data() << endl;
                 if(mesonId.CompareTo("0") == 0 && (mesonName.CompareTo("Pi0") == 0 || mesonName.CompareTo("Pi0EtaBinning") == 0))      return mainDir;
                 if(mesonId.CompareTo("1") == 0 && mesonName.CompareTo("Eta") == 0)      return mainDir;
                 if(mesonId.CompareTo("2") == 0 && mesonName.CompareTo("EtaPrime") == 0) return mainDir;
-=======
-                if(mesonId.EqualTo("0") && mesonName.EqualTo("Pi0"))      return mainDir;
-                if(mesonId.EqualTo("1") && mesonName.EqualTo("Eta"))      return mainDir;
-                if(mesonId.EqualTo("2") && mesonName.EqualTo("EtaPrime")) return mainDir;
->>>>>>> working on eta prime with MC
             } else {
                 TString start   = ((TObjString*)arr->At(0))->GetString();
                 if (start.EqualTo(nominalMainDir)) return mainDir;
