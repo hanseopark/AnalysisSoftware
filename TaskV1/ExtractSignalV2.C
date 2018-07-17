@@ -543,24 +543,17 @@ void ExtractSignalV2(   TString meson                   = "",
         }
 
         // load reconstructed meson histograms
-cout << "line " << __LINE__ << endl;
         fHistoTrueMesonInvMassVSPt                  = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrue.Data());
-cout << fHistoTrueMesonInvMassVSPt << endl;
         fHistoTrueFullMesonInvMassVSPt              = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueFull.Data());
-cout << fHistoTrueFullMesonInvMassVSPt << endl;
         fHistoTrueMesonInvMassVSPtWOWeights         = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueWOWeights.Data());
-cout << fHistoTrueMesonInvMassVSPtWOWeights << endl;
         fProfileTrueMesonInvMassVSPtWeights         = (TProfile2D*)TrueConversionContainer->FindObject(ObjectNameProfileWeights.Data());
-cout << fProfileTrueMesonInvMassVSPtWeights << endl;
         fHistoTrueMesonInvMassVSPtReweighted        = (TH2D*)fHistoTrueMesonInvMassVSPtWOWeights->Clone("Reweighted");
-cout << fHistoTrueMesonInvMassVSPtReweighted << endl;
         fHistoTrueMesonInvMassVSPt->Sumw2();
         fHistoTrueFullMesonInvMassVSPt->Sumw2();
         fHistoTrueMesonInvMassVSPtWOWeights->Sumw2();
         fProfileTrueMesonInvMassVSPtWeights->Sumw2();
         fHistoTrueMesonInvMassVSPtReweighted->Sumw2();
         fHistoTrueMesonInvMassVSPtReweighted->Multiply(fProfileTrueMesonInvMassVSPtWeights);
-cout << "line" << __LINE__ << endl;
 
         cout << ObjectNameTrue.Data() << endl;
         FillMassMCTrueMesonHistosArray(fHistoTrueMesonInvMassVSPt);
