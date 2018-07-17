@@ -3473,6 +3473,8 @@
                 return 27;
             } else if ((generator.Contains("LHC16d")) || (generator.Contains("LHC16e")) || (generator.Contains("LHC16g")) || (generator.Contains("LHC16h")) || (generator.Contains("LHC16i")) || (generator.Contains("LHC16j")) || (generator.Contains("LHC16k")) || (generator.Contains("LHC16l")) || (generator.Contains("LHC16o")) || (generator.Contains("LHC16p"))) {
                 return 29;
+            } else if ((generator.Contains("LHC17c")) || (generator.Contains("LHC17e")) || (generator.Contains("LHC17f")) || (generator.Contains("LHC17h")) || (generator.Contains("LHC16i")) || (generator.Contains("LHC17j")) || (generator.Contains("LHC17k")) || (generator.Contains("LHC17l")) || (generator.Contains("LHC17m")) || (generator.Contains("LHC17o")) || (generator.Contains("LHC17r"))) {
+                return 29;
             } else {
                 return 34;
             }
