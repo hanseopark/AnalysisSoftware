@@ -15,6 +15,7 @@ void EventQA_Runwise(
                         TString fEnergyFlag,                                // energy flag
                         TString filePath,                                   // path to the data
                         TString fileName,                                   // file name of the data
+                        TString fileNameMC,                                 // file name of the MC
                         TString* DataSets,                                  // technical names of data sets for output
                         TString* plotDataSets,                              // labels of data sets in plots
                         Int_t mode                      = 2,                // standard mode for analysis
@@ -49,6 +50,7 @@ void EventQA_Runwise(
     TH1::AddDirectory(kFALSE);
     StyleSettingsThesis();
     SetPlotStyle();
+    TString fileNameData=fileName;
 
     //**************************************************************************************************************
     //****************************** Setting common variables ******************************************************
@@ -107,7 +109,7 @@ void EventQA_Runwise(
     }
 
     TString fDetectionProcess   = ReturnFullTextReconstructionProcess(fMode);
-    TString nameMainDir;
+    TString nameMainDir, nameMainDirData, nameMainDirMC;
 
     //**************************************************************************************************************
     //****************************** Define plotting settings ******************************************************
@@ -184,6 +186,13 @@ void EventQA_Runwise(
         }
     } else {
         nameMainDir = fixedTopDir;
+    }
+    nameMainDirData=nameMainDir;
+    if (fileNameData.CompareTo(fileNameMC.Data())==0){
+        nameMainDirMC=nameMainDirData;
+    }
+    else {
+        nameMainDirMC=nameMainDirData;
     }
     cout << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -848,6 +857,12 @@ void EventQA_Runwise(
             //------------------------- Read in individual files -----------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
             fRunNumber                  = vecRuns.at(j);
+            if (i>=nData){
+                fileName=fileNameMC;
+            }
+            else{
+                fileName=fileNameData;
+            }
             fRootFile                   = Form("%s/%s/%s/%s", filePath.Data(), fDataSet.Data(), fRunNumber.Data(), fileName.Data());
             TFile* RootFile             = new TFile(fRootFile.Data(),"READ");
             if(RootFile->IsZombie()) {vecMissingRuns[i].push_back(fRunNumber); cout << "INFO: ROOT file '" << fRootFile.Data() << "' could not be openend, continue!" << endl; continue;}

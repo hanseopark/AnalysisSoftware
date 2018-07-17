@@ -31,6 +31,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     TString     fEnergyFlag             = "";
     TString     filePath                = "";
     TString     fileName                = "";
+    TString     fileNameMC              = "";
     TString     fileNamePhoton          = "";
     TString     filePathPhoton          = "";
     TString     select                  = "";
@@ -114,8 +115,10 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
             filePath            = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("fileNamePhoton",TString::kIgnoreCase)){
             fileNamePhoton      = (TString)((TObjString*)tempArr->At(1))->GetString();
-        } else if (tempValue.BeginsWith("fileName",TString::kIgnoreCase)){
+        } else if ((tempValue.BeginsWith("fileName",TString::kIgnoreCase))&&!(tempValue.BeginsWith("fileNameMC",TString::kIgnoreCase))){
             fileName            = (TString)((TObjString*)tempArr->At(1))->GetString();
+        } else if (tempValue.BeginsWith("fileNameMC",TString::kIgnoreCase)){
+            fileNameMC            = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("addPhotonCutNr",TString::kIgnoreCase)){
             addPhotonCutNr      = (TString)((TObjString*)tempArr->At(1))->GetString();
         } else if (tempValue.BeginsWith("addLabelRunlist",TString::kIgnoreCase)){
@@ -158,6 +161,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     }
 
     if (fileNamePhoton.CompareTo("") == 0) fileNamePhoton = fileName;
+    if (fileNameMC.CompareTo("") == 0) fileNameMC = fileName;
 
     //**************************************************************************************************************
     //******************************* Check wether settings were valid *********************************************
@@ -171,6 +175,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     cout << endl;
     cout << "folderRunlists:        " << folderRunlists.Data()      << endl;
     cout << "fileName:              " << fileName.Data()            << endl;
+    cout << "fileNameMC:              " << fileNameMC.Data()            << endl;
     cout << "filePath:              " << filePath.Data()            << endl;
     cout << "filePathPhoton:        " << filePathPhoton.Data()      << endl;
     cout << "fileNamePhoton:        " << fileNamePhoton.Data()            << endl;
@@ -209,7 +214,7 @@ void QA_RunwiseV2(  TString configFileName  = "configRunwise.txt",  // set selec
     //**************************************************************************************************************
     //******************************  Starting individual QA macros ***********************************************
     //**************************************************************************************************************
-    if (doEventQA)      EventQA_Runwise(    nSets, nData, fEnergyFlag, filePath, fileName, DataSets, plotDataSets, mode, cutNr,
+    if (doEventQA)      EventQA_Runwise(    nSets, nData, fEnergyFlag, filePath, fileName, fileNameMC, DataSets, plotDataSets, mode, cutNr,
                                             doExtQA,doEquidistantXaxis, doTrigger, doHistsForEverySet, addSubFolder, useDataRunListForMC, markerSize, suffix, folderRunlists, nSigmasBadRun,
                                             addLabelRunlist, fixedTopDir );
     if (doPhotonQA) {
