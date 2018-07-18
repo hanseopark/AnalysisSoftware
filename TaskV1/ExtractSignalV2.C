@@ -46,7 +46,6 @@
 #include "../CommonHeaders/ExtractSignalBinning.h"
 #include "../CommonHeaders/ExtractSignalPlotting.h"
 #include "THnSparse.h"
-using namespace std;
 
 
 //****************************************************************************
