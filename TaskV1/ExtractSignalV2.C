@@ -3235,6 +3235,9 @@ void SetCorrectMCHistogrammNames(TString mesonType){
         ObjectNameTrueWOWeights             = Form("ESD_TruePrimary%sW0Weights_InvMass_Pt", mesonType.Data());
         ObjectNameProfileWeights            = Form("ESD_TruePrimary%sWeights_InvMass_Pt", mesonType.Data());
         ObjectNameTrueSec                   = Form("ESD_TrueSecondary%s_InvMass_Pt", mesonType.Data());
+        ObjectNameTrueSecFromK0S            = Form("ESD_TrueSecondary%sFromK0s_InvMass_Pt", mesonType.Data());
+        ObjectNameTrueSecFromK0L            = Form("ESD_TrueSecondary%sFromK0l_InvMass_Pt", mesonType.Data());
+
         ObjectNameTrueSecFromLambda         = Form("ESD_TrueSecondary%sFromLambda_InvMass_Pt", mesonType.Data());
     }
 
