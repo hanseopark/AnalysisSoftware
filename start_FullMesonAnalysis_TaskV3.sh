@@ -598,14 +598,14 @@ function GiveBinning8TeV()
     if [ $DoEtaPrime -eq 1 ]; then
         echo "How many p_T bins do you want to use for the EtaPrime? 10(4GeV), 12(6GeV), 13(8GeV), 14(10GeV), 15(12GeV)";
         read answer
-        if [ $answer -ge 10 -a $answer -le 26 ]
+        if [ $answer -ge 10 -a $answer -le 26 ]; then
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
-       else
+        else
             echo "EtaPrime Binning was not set correctly. Please try again.";
             correctEtaPrime=0
-       fi
-       BinsPtGamma=$BinsPtPi0
+        fi
+        BinsPtGamma=$BinsPtPi0
     fi
 }
 
@@ -795,7 +795,7 @@ function GiveBinning2760GeV()
     elif [ $DoEtaPrime -eq 1 ]; then
         echo "How many p_T bins do you want to use for the EtaPrime meson? 6 (4. GeV), 7 (6 GeV), for conv calo: 8 (8 GeV), 9 (10 GeV), 10 (12 GeV), 11 (16 GeV), 12 (20 GeV), 13 (25 GeV)"
         read answer
-        if [ $answer -ge 6 -a $answer -le 13 ]
+        if [ $answer -ge 6 -a $answer -le 13 ]; then
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
         else
@@ -941,7 +941,7 @@ function GiveBinningHI()
     if [ $DoEtaPrime -eq 1 ]; then
         echo "How many p_T bins do you want to use for EtaPrime? 8(8GeV), 9(10GeV), 10(12GeV), 11(15GeV), 12(20GeV), 13(25GeV), 14(30GeV)";
         read answer
-        if [ $answer -ge 8 -a $answer -le 14 ]
+        if [ $answer -ge 8 -a $answer -le 14 ]; then
             correctEtaPrime=1
             BinsPtEtaPrime=$answer
         else
