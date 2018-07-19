@@ -3114,7 +3114,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ] || [ $mode -ge 100 ]; 
                                     root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
                                 fi
                             elif [ $addedSig -eq 2 ]; then
-                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
                                 ExtractSignal $optionsEtaMC2
                                 EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
                                 EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`
