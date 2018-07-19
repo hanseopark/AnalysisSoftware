@@ -681,7 +681,7 @@
                     return 10;
                 }
             }
-        } else if (meson.CompareTo("Eta") == 0) {
+        } else if( meson.Contains("Eta") && !meson.EqualTo("EtaPrime") ) {
             if (energy.CompareTo("900GeV") == 0) {
                 if (mode == 2 || mode == 13)
                     return 2;
