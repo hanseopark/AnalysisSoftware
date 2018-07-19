@@ -458,9 +458,9 @@ void FinaliseSystematicErrorsConv_ppV2( TString nameDataFileErrors      = "",
                     }
                     if (!energy.CompareTo("5TeV2017")){
                         if (!meson.CompareTo("Pi0"))
-                            errorReset  = 0.05;
+                            errorReset  = 0.1;
                         else if (!meson.CompareTo("Eta")||!meson.CompareTo("EtaToPi0")){
-                            errorReset      = 0.05;
+                            errorReset      = 0.1;
                         }
                     }
                     errorsMean[i][k]        = errorReset;

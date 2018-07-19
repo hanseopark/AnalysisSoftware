@@ -197,6 +197,10 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     Double_t normErr2040 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2040/tAA2040),2)+pow((commonCentralityErr2040/100),2),0.5);
     Double_t normErr2050 = pow(pow(xSection2760GeVErrpp/(xSection2760GeVpp*1e3),2)+pow((tAAErr2050/tAA2050),2)+pow((commonCentralityErr2040/100),2),0.5);
 
+    cout << "0010 taa: " << tAA0010 << " norm error " << normErr0010 << endl;
+    cout << "2040 taa: " << tAA2040 << " norm error " << normErr2040 << endl;
+    cout << "2050 taa: " << tAA2050 << " norm error " << normErr2050 << endl;
+//     return;
     TBox* boxErrorNorm0010          = CreateBoxConv(kRed-7, 0.25, 1.-normErr0010 , 0.5, 1.+normErr0010);
     TBox* boxErrorNorm2050          = CreateBoxConv(kAzure-4, 0.5, 1.-normErr2050 , 0.75, 1.+normErr2050);
     TBox* boxErrorNorm0010_Single   = CreateBoxConv(colorComb0005Box, 0.2, 1.-normErr0010 , 0.5, 1.+normErr0010);
@@ -6450,7 +6454,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //         legendRAAcomboPi0andEta0010->AddEntry((TObject*)0,"","");
 //         legendRAAcomboPi0andEta0010->AddEntry(graphRAAEtaSysBothMeson_0010,"#eta","fp");
 // //         legendRAAcomboPi0andEta0010->AddEntry((TObject*)0,"","");
-//         legendRAAcomboPi0andEta0010->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+//         legendRAAcomboPi0andEta0010->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 //         legendRAAcomboPi0andEta0010->Draw();
 
           TLegend* legendRAAcomboPi0andEta0010 = new TLegend(0.5,0.65,0.82,0.85);
@@ -6468,7 +6472,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaon0010->SetTextFont(42);
           legendRAAKaon0010->SetTextSize(0.037);
           legendRAAKaon0010->AddEntry(graphChargedKaonRAA0010,"K^{#pm}","fp");
-          legendRAAKaon0010->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+          legendRAAKaon0010->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 //           legendRAAKaon0010->Draw();
 
         TLatex *labelEnergyRAAcomboPi0andEta0010 = new TLatex(0.54,0.9,collisionSystemPbPb0010.Data());
@@ -6625,7 +6629,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAcomboPi0andEta2050->AddEntry(graphRAAPi0SysBothMeson_2050,"#pi^{0}","pf");
 //           legendRAAcomboPi0andEta2050->AddEntry(graphChargedKaonRAA2040,"K^{#pm}","fp");
           legendRAAcomboPi0andEta2050->AddEntry(graphRAAEtaSysBothMeson_2050,"#eta","fp");
-//           legendRAAcomboPi0andEta2050->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+//           legendRAAcomboPi0andEta2050->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
           legendRAAcomboPi0andEta2050->Draw();
           TLegend* legendRAAKaon2040 = new TLegend(0.7,0.75,0.9,0.88);
           legendRAAKaon2040->SetFillColor(0);
@@ -6636,7 +6640,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaon2040->SetHeader("20#font[122]{-}40%");
           legendRAAKaon2040->AddEntry(graphChargedKaonRAA2040,"K^{#pm}","fp");
 //           legendRAAKaon2040->AddEntry((TObject*)0,"","");
-          legendRAAKaon2040->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+          legendRAAKaon2040->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 //           legendRAAKaon2040->Draw();
 
           TLatex *labelEnergyRAAcomboPi0andEta = new TLatex(0.57,0.9,collisionSystem2760GeV.Data());
@@ -6753,7 +6757,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaonPion0010->SetMargin(0.3);
           legendRAAKaonPion0010->SetTextSize(0.037);
           legendRAAKaonPion0010->SetNColumns(2);
-          legendRAAKaonPion0010->SetHeader("PLB 736 (2014) 196");
+          legendRAAKaonPion0010->SetHeader("PRC 93 (2016) 034913");
 //           legendRAAKaonPion0010->AddEntry((TObject*)0,"","");
 //           legendRAAKaonPion0010->AddEntry(graphChargedPionRAATotErr0010,"#pi^{#pm}","lp");
 //           legendRAAKaonPion0010->AddEntry(graphChargedKaonRAATotErr0010,"K^{#pm}","lp");
@@ -6781,7 +6785,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //           legendRAAKaonPion0010->SetTextFont(42);
 //           legendRAAKaonPion0010->SetTextSize(0.037);
 //           legendRAAKaonPion0010->SetNColumns(2);
-//           legendRAAKaonPion0010->SetHeader("PLB 736 (2014) 196");
+//           legendRAAKaonPion0010->SetHeader("PRC 93 (2016) 034913");
 // //           legendRAAKaonPion0010->AddEntry((TObject*)0,"","");
 //           legendRAAKaonPion0010->AddEntry(graphChargedPionRAASys0010,"#pi^{#pm}","fp");
 //           legendRAAKaonPion0010->AddEntry(graphChargedKaonRAASys0010,"K^{#pm}","fp");
@@ -6843,7 +6847,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
 //           graphPi0RAATotErr2050->Draw("p,same");
 //           graphEtaRAATotErr2050->Draw("p,same");
 
-          TLegend* legendRAAKaonPion20501 = new TLegend(0.55,0.87-(0.037*2.7),0.81,0.87);
+          TLegend* legendRAAKaonPion20501 = new TLegend(0.5,0.87-(0.037*2.7),0.81,0.87);
           legendRAAKaonPion20501->SetFillColor(0);
           legendRAAKaonPion20501->SetLineColor(0);
           legendRAAKaonPion20501->SetTextFont(42);
@@ -6856,20 +6860,20 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
           legendRAAKaonPion20501->AddEntry(graphRAAPi0SysBothMeson_2050,"#pi^{0}","pf");
           legendRAAKaonPion20501->AddEntry(graphRAAEtaSysBothMeson_2050,"#eta","fp");
           legendRAAKaonPion20501->Draw();
-          TLegend* legendRAAKaonPion2050 = new TLegend(0.55,0.77-(0.037*2.7),0.86,0.77);
+          TLegend* legendRAAKaonPion2050 = new TLegend(0.5,0.77-(0.037*2.7),0.86,0.77);
           legendRAAKaonPion2050->SetFillColor(0);
           legendRAAKaonPion2050->SetLineColor(0);
           legendRAAKaonPion2050->SetTextFont(42);
           legendRAAKaonPion2050->SetTextSize(0.037);
           legendRAAKaonPion2050->SetNColumns(2);
           legendRAAKaonPion2050->SetMargin(0.3);
-          legendRAAKaonPion2050->SetHeader("20#font[122]{-}40%, PLB 736 (2014) 196");
+          legendRAAKaonPion2050->SetHeader("20#font[122]{-}40%, PRC 93 (2016) 034913");
           legendRAAKaonPion2050->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm}","fp");
           legendRAAKaonPion2050->AddEntry(graphChargedKaonRAASys2040,"K^{#pm}","fp");
 //           legendRAAKaonPion2050->AddEntry(graphChargedPionRAATotErr2040,"#pi^{#pm}","lp");
 //           legendRAAKaonPion2050->AddEntry(graphChargedKaonRAATotErr2040,"K^{#pm}","lp");
           legendRAAKaonPion2050->Draw();
-          TLatex *labelEnergyRAAcomboPi0andEtaanfCharged = new TLatex(0.55,0.88,collisionSystem2760GeV.Data());
+          TLatex *labelEnergyRAAcomboPi0andEtaanfCharged = new TLatex(0.5,0.88,collisionSystem2760GeV.Data());
           SetStyleTLatex( labelEnergyRAAcomboPi0andEtaanfCharged, 0.037,4);
           labelEnergyRAAcomboPi0andEtaanfCharged->Draw();
           DrawGammaLines(0., 20.5 , 1, 1 ,1,kGray, 2);
@@ -7215,7 +7219,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRAAwithCharged_eta0010->SetTextSize(0.85*textsizeLabelsRatioDown);
             legendRAAwithCharged_eta0010->SetHeader(collisionSystem2760GeV.Data());
             legendRAAwithCharged_eta0010->AddEntry(graphRAAEtaSysBothMeson_0010,"#eta,  0#font[122]{-}10%","fp");
-            legendRAAwithCharged_eta0010->AddEntry(graphChargedKaonRAASys0010,"K^{#pm}, 0#font[122]{-}10% (PLB 736 (2014) 196)","fp");
+            legendRAAwithCharged_eta0010->AddEntry(graphChargedKaonRAASys0010,"K^{#pm}, 0#font[122]{-}10% (PRC 93 (2016) 034913)","fp");
             legendRAAwithCharged_eta0010->Draw();
 
             if(thesisPlotting){
@@ -7254,7 +7258,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRAAwithCharged_pi00010->SetTextSize(0.85*textsizeLabelsRatioUp);
             legendRAAwithCharged_pi00010->SetHeader(collisionSystem2760GeV.Data());
             legendRAAwithCharged_pi00010->AddEntry(graphRAAPi0SysBothMeson_0010,"#pi^{0},  0#font[122]{-}10%","fp");
-            legendRAAwithCharged_pi00010->AddEntry(graphChargedPionRAASys0010,"#pi^{#pm}, 0#font[122]{-}10% (PLB 736 (2014) 196)","fp");
+            legendRAAwithCharged_pi00010->AddEntry(graphChargedPionRAASys0010,"#pi^{#pm}, 0#font[122]{-}10% (PRC 93 (2016) 034913)","fp");
             legendRAAwithCharged_pi00010->Draw();
 
             sublabelA = new TLatex(19,1.15,"(a)");
@@ -7291,7 +7295,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRAAwithCharged_eta2050->SetTextSize(0.85*textsizeLabelsRatioDown);
             legendRAAwithCharged_eta2050->SetHeader(collisionSystem2760GeV.Data());
             legendRAAwithCharged_eta2050->AddEntry(graphRAAEtaSysBothMeson_2050,"#eta, 20#font[122]{-}50%","fp");
-            legendRAAwithCharged_eta2050->AddEntry(graphChargedKaonRAASys2040,"K^{#pm}, 20#font[122]{-}40% (PLB 736 (2014) 196)","fp");
+            legendRAAwithCharged_eta2050->AddEntry(graphChargedKaonRAASys2040,"K^{#pm}, 20#font[122]{-}40% (PRC 93 (2016) 034913)","fp");
             legendRAAwithCharged_eta2050->Draw();
 
             sublabelD->Draw();
@@ -7325,7 +7329,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendRAAwithCharged_pi02050->SetTextSize(0.85*textsizeLabelsRatioUp);
             legendRAAwithCharged_pi02050->SetHeader(collisionSystem2760GeV.Data());
             legendRAAwithCharged_pi02050->AddEntry(graphRAAPi0SysBothMeson_2050,"#pi^{0}, 20#font[122]{-}50%","fp");
-            legendRAAwithCharged_pi02050->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm}, 20#font[122]{-}40% (PLB 736 (2014) 196)","fp");
+            legendRAAwithCharged_pi02050->AddEntry(graphChargedPionRAASys2040,"#pi^{#pm}, 20#font[122]{-}40% (PRC 93 (2016) 034913)","fp");
             legendRAAwithCharged_pi02050->Draw();
 
             if(thesisPlotting){
@@ -7494,7 +7498,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphChargedPionRAASys0010->Draw("2same");
             graphChargedPionRAA0010->Draw("p,same");
             legendRAAcomboCharged->AddEntry(graphChargedPionRAA0010,Form("#pi^{#pm} - %s ",cent0010.Data()),"fp");
-            legendRAAcomboCharged->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendRAAcomboCharged->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 
         } else if(meson.CompareTo("Eta")==0){
 
@@ -7505,7 +7509,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphChargedKaonRAASys0010->Draw("2same");
             graphChargedKaonRAA0010->Draw("p,same");
             legendRAAcomboCharged->AddEntry(graphChargedKaonRAA0010,Form("K^{#pm} - %s ",cent0010.Data()),"fp");
-            legendRAAcomboCharged->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendRAAcomboCharged->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 
         }
 
@@ -7546,7 +7550,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphChargedPionRAASys2040->Draw("2same");
             graphChargedPionRAA2040->Draw("p,same");
             legendRAAcomboCharged2050->AddEntry(graphChargedPionRAA2040,"#pi^{#pm} - 20-40%","fp");
-            legendRAAcomboCharged2050->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendRAAcomboCharged2050->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 
         } else if(meson.CompareTo("Eta")==0){
 
@@ -7557,7 +7561,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             graphChargedKaonRAASys2040->Draw("2same");
             graphChargedKaonRAA2040->Draw("p,same");
             legendRAAcomboCharged2050->AddEntry(graphChargedKaonRAA2040,"K^{#pm} - 20-40%","fp");
-            legendRAAcomboCharged2050->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendRAAcomboCharged2050->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
 
         }
 
@@ -8358,7 +8362,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legendChargedRatio3->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_0010,"#eta/#pi^{0}","fp");
                 legendChargedRatio3->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_0010,"#eta from #it{m}_{T} scaled #pi^{0}","l");
                 legendChargedRatio3->AddEntry(graphChargedRatioKaonToPionSys0010,"K^{#pm}/#pi^{#pm}","fp");
-                legendChargedRatio3->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+                legendChargedRatio3->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
                 legendChargedRatio3->Draw();
 
                 TLegend* legendEtatoPi0combo_withPP2760GeVmt = new TLegend(0.52,0.15,0.95,0.15+(0.037*2.6)/*26*/);
@@ -8406,7 +8410,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
                 legendChargedRatio3SC->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_2050,Form("%s #eta/#pi^{0}",cent2050.Data()),"fp");
                 legendChargedRatio3SC->AddEntry(etapi0RatioFromMtScalingCombPbPb2760GeV_2050,"#eta from #it{m}_{T} scaled #pi^{0}","l");
                 legendChargedRatio3SC->AddEntry(graphChargedRatioKaonToPionSys2040,Form("%s #eta/#pi^{0}",cent2040.Data()),"fp");
-                legendChargedRatio3SC->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+                legendChargedRatio3SC->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
                 legendChargedRatio3SC->Draw();
 
                 legendEtatoPi0combo_withPP2760GeVmt->Draw();
@@ -8870,7 +8874,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendChargedRatio->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_0010,Form("#eta/#pi^{0},   %s",cent0010.Data()),"fp");
             legendChargedRatio->AddEntry(graphChargedRatioKaonToPionSys0010,Form("K^{#pm}/#pi^{#pm}, %s",cent0010.Data()),"fp");
             legendChargedRatio->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_2050,Form("#eta/#pi^{0}, %s",cent2050.Data()),"fp");
-            legendChargedRatio->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendChargedRatio->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
             legendChargedRatio->Draw();
 
             graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
@@ -8904,7 +8908,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     //           legendChargedRatio0010->SetNColumns(2);
             legendChargedRatio0010->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_0010,Form("#eta/#pi^{0},   %s",cent0010.Data()),"fp");
             legendChargedRatio0010->AddEntry(graphChargedRatioKaonToPionSys0010,Form("K^{#pm}/#pi^{#pm}, %s",cent0010.Data()),"fp");
-            legendChargedRatio0010->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendChargedRatio0010->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
             legendChargedRatio0010->Draw();
 
             graphCombEtatoPi0SysPbPb2760GeV_0010->Draw("E2same");
@@ -8935,7 +8939,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
     //           legendChargedRatio2050->SetNColumns(2);
             legendChargedRatio2050->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_2050,Form("#eta/#pi^{0},   %s",cent2050.Data()),"fp");
             legendChargedRatio2050->AddEntry(graphChargedRatioKaonToPionSys2040,Form("K^{#pm}/#pi^{#pm}, %s",cent2040.Data()),"fp");
-            legendChargedRatio2050->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendChargedRatio2050->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
             legendChargedRatio2050->Draw();
 
             if(thesisPlotting)          thesisLabelHighLeft2->Draw();
@@ -8966,7 +8970,7 @@ void CombineMesonMeasurementsPbPbLHC11h(TString meson = "Pi0",
             legendChargedRatio2->AddEntry(graphCombEtatoPi0SysPbPb2760GeV_0010,"#eta/#pi^{0}","fp");
     //             legendChargedRatio2->AddEntry((TObject*)0,"","");
             legendChargedRatio2->AddEntry(graphChargedRatioKaonToPionSys0010,"K^{#pm}/#pi^{#pm}","fp");
-            legendChargedRatio2->AddEntry((TObject*)0,"PLB 736 (2014) 196","");
+            legendChargedRatio2->AddEntry((TObject*)0,"PRC 93 (2016) 034913","");
             legendChargedRatio2->Draw();
 
             TLegend* legendEtatoPi0combo_withPP2760GeV = GetAndSetLegend(0.57,0.14,3.);// new TLegend(0.55,0.15,0.95,0.3/*26*/);
