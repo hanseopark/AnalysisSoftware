@@ -60,7 +60,8 @@ void ExtractGammaSignalV2(      TString meson               = "",
                                 Bool_t addSig               = 0,
                                 Int_t mode                  = 0,
                                 Int_t nPileupMethod         = 0,
-                                TString purityFileName      = ""
+                                TString purityFileName      = "",
+                                TString optionUseMinBiasEff = ""
                             ) {
 
     //********************************* Catch modes which are not supported ****************************
@@ -150,7 +151,23 @@ void ExtractGammaSignalV2(      TString meson               = "",
           fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
       cout << fCutSelectionRead.Data() << endl;
     }
-
+    
+    if(optionUseMinBiasEff.CompareTo("MinBiasEffOnly")==0 && optionMC.CompareTo("kTRUE") == 0){
+        cout << "calculating MinBias Eff" << endl;
+        // take out the cent numbers
+        fEventCutSelectionRead.Replace(GetEventCentralityMinCutPosition(),2,"00");
+        // set to full MB cut in pPb
+        if (fEventCutSelectionRead.BeginsWith("a")) fEventCutSelectionRead.Replace(0,1,"8");
+        if (fEventCutSelectionRead.BeginsWith("c")) fEventCutSelectionRead.Replace(0,1,"8");
+        cout << fEventCutSelectionRead.Data() << endl;
+        if (mode==0)
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==2 || mode==3)
+            fCutSelectionRead       = Form("%s_%s_%s_%s",fEventCutSelectionRead.Data(), fGammaCutSelection.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        if (mode==4 || mode==5)
+            fCutSelectionRead       = Form("%s_%s_%s",fEventCutSelectionRead.Data(), fClusterCutSelection.Data(), fMesonCutSelection.Data());
+        cout << fCutSelectionRead.Data() << endl;
+    }
     // set global variables for rapidity and BG number
     TString rapidityRange;
     fYMaxMeson                                                                  = ReturnRapidityStringAndDouble(fMesonCutSelectionRead, rapidityRange);
@@ -2864,7 +2881,7 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         fDeltaPt->SetBinContent(iPt,fBinsPt[iPt]-fBinsPt[iPt-1]);
         fDeltaPt->SetBinError(iPt,0);
     }
-
+    TString centrality      = GetCentralityString(fEventCutSelection);
     // initializing binning used for the DCAz distributions
     if(!addSig && !(mode == 4 || mode == 5)){
         if (fBinsPtDCAzDist && fNBinsPtDCAzDist) {
@@ -2928,6 +2945,10 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
         nIterationsShowBackground[1]                    = 12;
         nIterationsShowBackground[2]                    = 10;
         nIterationsShowBackground[3]                    = 13;
+        if(centrality.Contains("0-20%") || centrality.Contains("20-40%"))
+          nIterationsShowBackground[1]                  = 11;
+        if(centrality.Contains("40-60%") || centrality.Contains("60-100%"))
+          nIterationsShowBackground[1]                  = 9;
         optionShowBackground[0]                         = "BackDecreasingWindow";   // standard
         optionShowBackground[1]                         = "nosmoothing";
         optionShowBackground[2]                         = "BackDecreasingWindow, BackSmoothing5";

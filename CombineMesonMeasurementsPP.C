@@ -1910,7 +1910,7 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     //__________________________________________ Draw combined spectra in first pad
     padXSec[0]->cd();
 
-    histoXSecDummyEta[0]                           = new TH2F("histoXSecDummyEta_0","histoXSecDummyEta_0",11000,xRangeMinXSec,xRangeMaxXSec,1000,1e2,2e13);
+    histoXSecDummyEta[0]                           = new TH2F("histoXSecDummyEta_0","histoXSecDummyEta_0",11000,xRangeMinXSec,xRangeMaxXSec,1000,1e2,2e14);
     SetStyleHistoTH2ForGraphs(histoXSecDummyEta[0], "#it{p}_{T} (GeV/#it{c})","#it{E} #frac{d^{3}#sigma}{d#it{p}^{3}} (pb GeV^{-2} #it{c}^{3})",
                             0.85*textsizeLabelsXSec[0],textsizeLabelsXSec[0], 0.85*textsizeLabelsXSec[0], textsizeLabelsXSec[0], 1,0.2/(textsizeFacXSec[0]*marginXSec));
     histoXSecDummyEta[0]->GetXaxis()->SetMoreLogLabels();
@@ -2263,21 +2263,27 @@ void CombineMesonMeasurementsPP(Bool_t useNewMeasurements = kFALSE)
     drawLatexAdd("ALICE",rightalignDouble,0.92,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
     drawLatexAdd("#eta #rightarrow #gamma#gamma",rightalignDouble,0.88,textsizeLabelsXSec[0],kFALSE,kFALSE,kTRUE);
 
-    TLegend* legendInvariantCrossSectionEta3    = GetAndSetLegend2(0.17, 0.10, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+2)+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    TLegend* legendInvariantCrossSectionEta3    = GetAndSetLegend2(0.17, 0.10+textsizeLabelsXSec[0]*2, 0.5, 0.10+textsizeLabelsXSec[0]*(numActiveMeas+2), textSizeLabelsPixel);
     legendInvariantCrossSectionEta3->SetNColumns(1);
     legendInvariantCrossSectionEta3->SetMargin(0.2);
     legendRunningIndex = numActiveMeas-1;
     for (Int_t i = 5; i > -1; i--){
         if(includeEnergy[i]){
-          if(i==0 && !useNewMeasurements) legendInvariantCrossSectionEta3->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s (Prelim.)",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
-          else legendInvariantCrossSectionEta3->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
-          legendRunningIndex-=1;
+            legendInvariantCrossSectionEta3->AddEntry(graphEtaInvariantCrossSectionSys[i][10],Form("pp, %s%s",energyLatex[i].Data(),legendScalingString[legendRunningIndex].Data()),"pf");
+            legendRunningIndex-=1;
         }
     }
-    legendInvariantCrossSectionEta3->AddEntry(fitTCMInvCrossSectionEtaCombPlot[exampleActiveMeas],"TCM fit","l");
-    legendInvariantCrossSectionEta3->AddEntry(fitTsallisInvCrossSectionEtaComb[exampleActiveMeas],"Tsallis fit","l");
-    legendInvariantCrossSectionEta3->AddEntry(histoRatioPythiaToCombFitEta[exampleActiveMeas],"PYTHIA 8.2, Monash 2013","l");
     legendInvariantCrossSectionEta3->Draw();
+    TLegend* legendInvariantCrossSectionEta3Fit    = GetAndSetLegend2(0.17, 0.10+textsizeLabelsXSec[0], 0.7, 0.10+textsizeLabelsXSec[0]*2, textSizeLabelsPixel);
+    legendInvariantCrossSectionEta3Fit->SetNColumns(2);
+    legendInvariantCrossSectionEta3Fit->AddEntry(fitTCMInvCrossSectionEtaCombPlot[exampleActiveMeas],"TCM fit","l");
+    legendInvariantCrossSectionEta3Fit->AddEntry(fitTsallisInvCrossSectionEtaComb[exampleActiveMeas],"Tsallis fit","l");
+    legendInvariantCrossSectionEta3Fit->Draw();
+    TLegend* legendInvariantCrossSectionEta3Pyt    = GetAndSetLegend2(0.17, 0.10, 0.5, 0.10+textsizeLabelsXSec[0], textSizeLabelsPixel);
+    legendInvariantCrossSectionEta3Pyt->SetMargin(0.2);
+    legendInvariantCrossSectionEta3Pyt->SetNColumns(1);
+    legendInvariantCrossSectionEta3Pyt->AddEntry(histoRatioPythiaToCombFitEta[exampleActiveMeas],"PYTHIA 8.2, Monash 2013","l");
+    legendInvariantCrossSectionEta3Pyt->Draw();
 
     canvasXSectionEta->Print(Form("%s/Eta_XSec_Pythia.%s",outputDir.Data(),suffix.Data()));
 

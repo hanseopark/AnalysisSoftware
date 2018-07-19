@@ -2369,7 +2369,7 @@ void  CorrectSignalV2(  TString fileNameUnCorrectedFile = "myOutput",
 	    }else if(mode == 0 && (optionEnergy.Contains("13TeV")  || optionEnergy.Contains("13TeVRBins")) ){
 	        histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
             }else if(mode == 0 && optionEnergy.Contains("pPb_5.023TeV") && ( centralityString.Contains("0-20%") || centralityString.Contains("20-40%") || centralityString.Contains("40-60%") || centralityString.Contains("60-100%"))) {
-	        histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.8,maxPtMeson    );
+                histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",0.5,maxPtMeson    );
             }else if(mode == 4 && optionEnergy.Contains("pPb_5.023TeV") ){
                 histoRatioEffWOWeightingEff[k]->Fit(fitEffiBiasWOWeightsPol1[k],"NRME+","",2.2,12.0    );
             }else{

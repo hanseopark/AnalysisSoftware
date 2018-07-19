@@ -1117,9 +1117,9 @@ function ExtractSignalGamma()
 function ExtractSignalGammaV2()
 {
     if [ $IsROOT6 -eq 0 ]; then
-        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\)
+        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\+\($1\,0\,\"\"\,\"$2\"\)
     else
-        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\($1\,0\)
+        root -x -l -b -q TaskV1/ExtractGammaSignalV2.C\($1\,0\,\"\"\,\"$2\"\)
     fi
 }
 
@@ -2150,8 +2150,8 @@ do
     elif [ $answer = "pPb_5.023TeV" ] || [ $answer = "pPb_5.023" ] || [ $answer = "pPb5" ];  then
         energy="pPb_5.023TeV";
         ExtInputFile="";
-    elif [ $answer = "pPb_5.023TeVMB" ] || [ $answer = "pPb_5.023MB" ] || [ $answer = "pPb5MB" ];  then
-        energy="pPb_5.023TeVMB";
+    elif [ $answer = "pPb_5.023TeVCent" ] || [ $answer = "pPb_5.023TeVCent" ] || [ $answer = "pPb5MB" ];  then
+        energy="pPb_5.023TeVCent";
         ExtInputFile="";
     elif [ $answer = "pPb_5.023TeVRun2" ] || [ $answer = "pPb_5.023R2" ] || [ $answer = "pPb5R2" ];  then
         energy="pPb_5.023TeVRun2";
@@ -2576,7 +2576,7 @@ do
             fi
         fi
 
-    elif [ $energy = "pPb_5.023TeV" ] || [ $energy = "pPb_5.023TeVMB" ] || [ $energy = "pPb_5.023TeVRun2" ]  ; then
+    elif [ $energy = "pPb_5.023TeV" ] || [ $energy = "pPb_5.023TeVCent" ] || [ $energy = "pPb_5.023TeVRun2" ]  ; then
         echo "Do you want to produce Direct Photon plots? Yes/No?";
         read answer
         if [ $answer = "Yes" ] || [ $answer = "Y" ] || [ $answer = "y" ] || [ $answer = "yes" ]; then
@@ -3028,7 +3028,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ] || [ $mode -ge 100 ]; 
                         ExtractSignalGamma $optionsPi0Data
                     else
                         optionsGammaData=\"Pi0\"\,\"$DataRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kFALSE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
-                        ExtractSignalGammaV2 $optionsGammaData
+                        ExtractSignalGammaV2 $optionsGammaData $OPTMINBIASEFF
                     fi
                     if [ $MCFILE -eq 1 ]; then
                         optionsPi0MC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"\"\,\"$ESTIMATEPILEUP\"\,$BinsPtPi0
@@ -3036,7 +3036,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ] || [ $mode -ge 100 ]; 
                             ExtractSignalGamma $optionsPi0MC
                         else
                             optionsGammaMC=\"Pi0\"\,\"$MCRootFile\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$directphoton\"\,\"\"\,$BinsPtGamma\,kFALSE\,$mode
-                            ExtractSignalGammaV2 $optionsGammaMC
+                            ExtractSignalGammaV2 $optionsGammaMC $OPTMINBIASEFF
                         fi
                     fi
                 fi
@@ -3114,7 +3114,7 @@ if [ $mode -lt 10 ]  || [ $mode = 12 ] ||  [ $mode = 13 ] || [ $mode -ge 100 ]; 
                                     root -b -x -q -l TaskV1/MergeEffiWithProperWeighting2760GeV.C\(\"$cutSelection\"\,\"Eta\"\,\"$Suffix\"\,\"$energy\"\,\"$EtaMCcorrection\"\,\"$cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosMinBias_$cutSelection.root\"\,\"$EtaMCcorrectionAddSig\"\)
                                 fi
                             elif [ $addedSig -eq 2 ]; then
-                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSig\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
+                                optionsEtaMC2=\"Eta\"\,\"$MCRootFileAddSigEta\"\,\"$cutSelection\"\,\"$Suffix\"\,\"kTRUE\"\,\"$energy\"\,\"$crystal\"\,\"$directphoton\"\,\"$OPTMINBIASEFF\"\,\"JetJetMC\"\,\"$AdvMesonQA\"\,$BinsPtEta\,kFALSE
                                 ExtractSignal $optionsEtaMC2
                                 EtaMCcorrection=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistos_*.root`
                                 EtaMCcorrectionAddSig=`ls $cutSelection/$energy/Eta_MC_GammaConvV1CorrectionHistosJetJetMC_*.root`

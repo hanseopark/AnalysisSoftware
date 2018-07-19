@@ -31,8 +31,8 @@
 
     Double_t fBinsPi0pPb5TeVCombCentPt[28]          = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
                                                         6.0, 8.0, 10.0, 12.0, 16.0, 24.0, 32.0, 40.0};
-    Double_t fBinsPi0pPb5TeVPCMCentPt[25]           = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
-                                                        6.0, 8.0, 10.0, 12.0, 16.0};
+    Double_t fBinsPi0pPb5TeVPCMCentPt[26]           = { 0.0, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0,
+                                                        6.0, 8.0, 10.0, 12.0, 16.0, 20.0};
     Double_t fBinsPi0pPb5TeVEMCCentPt[25]           = { 0.0, 0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,   2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.4, 4.0, 5.0, 6.0,
                                                         8.0, 10.0, 12.0, 16.0, 20.0};
 
@@ -59,8 +59,8 @@
     Int_t fBinsPi0pPb5TeVPHOSPtRebin[36]            = { 5, 4 , 3 , 3 , 3, 3, 3, 3, 3, 3,    3, 3 , 3 , 3 , 3, 3, 3, 3, 3, 3,
                                                         3, 3 , 3 , 3 , 3, 3, 3, 3, 3, 3,    7, 11, 11, 11, 10, 10};
 
-    Int_t fBinsPi0pPb5TeVCentPCMPtRebin[24]         = { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,      2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
-                                                        4, 5, 10, 10};
+    Int_t fBinsPi0pPb5TeVCentPCMPtRebin[25]         = { 10, 4, 2, 2, 2, 2, 2, 2, 2, 2,      2, 2, 2, 2, 2, 4, 4, 4, 4, 4,
+                                                        4, 5, 10, 10, 10};
     Int_t fBinsPi0pPb5TeVCentEMCPtRebin[24]         = { 5, 4, 4, 4, 4, 4, 4, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
                                                         8, 8, 10, 10};
     Int_t fBinsPi0pPb5TeVCentPCMEMCPtRebin[24]      = { 8, 8, 8, 4, 4, 2, 2, 2, 2, 2,       2, 2, 2, 2, 2, 2, 2, 2, 4, 4,
@@ -276,7 +276,8 @@
     Int_t fBinsEtapPb5TeVEMCTrigEG1PtRebin[20]      = { 10, 8, 8, 8, 8, 8, 8, 5, 5, 5,          5, 5, 5, 5, 5, 10, 10, 10, 10, 10 };
     Int_t fBinsEtapPb5TeVPHOSPtRebin[19]            = { 19, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 20, 25, 25, 25, 24, 19, 19};
     Int_t fBinsEtapPb5TeVDalitzPtRebin[9]           = { 10, 10, 10, 10, 10, 10, 10, 10, 10};
-    Int_t fBinsEtapPb5TeVPCMCentPtRebin[14]         = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
+    Int_t fBinsEtapPb5TeVPCMCentPtRebin[14]         = { 10, 10, 10, 8, 5, 5, 5, 4, 5, 5,         8,  8,  8,  10};
+
     Int_t fBinsEtapPb5TeVPCMEMCCentPtRebin[14]      = { 10, 10, 8, 8, 8, 5, 5, 4, 4, 4,         4,  5,  8,  10};
     Int_t fBinsEtapPb5TeVEMCCentPtRebin[14]         = { 10, 10, 8, 8, 8, 8, 8, 8, 8, 8,         8, 10,  20, 20};
     Int_t fBinsEtapPb5TeVPCMPHOSCentPtRebin[14]     = { 20, 20, 15, 12, 12, 12, 12, 12, 12, 15, 15, 20, 20, 20};

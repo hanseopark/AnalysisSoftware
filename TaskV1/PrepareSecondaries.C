@@ -574,6 +574,8 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPtGen);
+                if(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1) < 0.1)
+                  histoGammaFromXFromMotherPtOrBin[i]->Scale(0.5);
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaRapGen);
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaRap);
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPhi);
@@ -586,6 +588,8 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaPtGen);
+                if(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1) < 0.1)
+                  histoGammaFromXFromMotherYOrBin[i]->Scale(0.5);
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaRapGen);
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaPhi);
                 SetHistogramTitles(histoGammaFromXFromMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -601,6 +605,8 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtPhi[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtPhi[i]->GetYaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaPtGen);
+                if(histoGammaFromXFromMotherPtPhi[i]->GetXaxis()->GetBinWidth(1) < 0.1)
+                  histoGammaFromXFromMotherPhiOrBin[i]->Scale(0.5);
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaRapGen);
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaPhi);
                 SetHistogramTitles(histoGammaFromXFromMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");

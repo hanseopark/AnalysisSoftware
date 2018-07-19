@@ -3054,7 +3054,7 @@
             }
         }
 
-        if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
+        if (!energy.CompareTo("pPb_5.023TeV") || energy.CompareTo("pPb_5.023TeVCent") == 0 || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!kBox){
                 if (!generator.CompareTo("")){
                     if (!centrality.CompareTo("0-10%")){
@@ -3492,7 +3492,7 @@
             }
         }
 
-        if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
+        if (!energy.CompareTo("pPb_5.023TeV") || energy.CompareTo("pPb_5.023TeVCent") == 0 || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
                 if (!centrality.CompareTo("0-10%")){
                   return 20;
@@ -3774,7 +3774,7 @@
             return 2.2;
         }
 
-        if (!energy.CompareTo("pPb_5.023TeV") || !energy.CompareTo("pPb_5.023TeVRun2")){
+        if (!energy.CompareTo("pPb_5.023TeV") || energy.CompareTo("pPb_5.023TeVCent") == 0 || !energy.CompareTo("pPb_5.023TeVRun2")){
             if (!generator.CompareTo("")){
               if (!centrality.CompareTo("0-10%")){
                 return 2;
