@@ -1,3 +1,5 @@
+#include <vector>
+
 #ifndef GAMMACONV_ExtractSignalBinningpp7TeV
 #define GAMMACONV_ExtractSignalBinningpp7TeV
 
@@ -84,8 +86,8 @@
 
     Int_t fBinsPi0EtaBinning7TeVDalitzPtRebin[9]    = { 8, 2, 2, 2, 2, 2, 4, 4, 4};
 
-    Double_t fBinsEtaPrim7TeVPt[8]                  = { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
-    Int_t fBinsEtaPrim7TeVPtRebin[7]                = { 8, 2, 2, 2, 2, 2, 2};
+    std::vector<Double_t> fBinsEtaPrime7TeVPt   { 0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0};
+    std::vector<Int_t> fBinsEtaPrime7TeVPtRebin { 8, 2, 2, 2, 2, 2, 2};
 
     Double_t fBinsDirGamma7TeVPt[25]                = { 0.0, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,
                                                         1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.5, 4.0,

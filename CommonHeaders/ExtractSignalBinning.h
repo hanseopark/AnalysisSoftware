@@ -681,7 +681,7 @@
                     return 10;
                 }
             }
-        } else if (meson.Contains("Eta")) {
+        } else if (meson.CompareTo("Eta") == 0) {
             if (energy.CompareTo("900GeV") == 0) {
                 if (mode == 2 || mode == 13)
                     return 2;
@@ -873,7 +873,7 @@
                 }
             } else if( energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVRun2") == 0  ) {
                 if (mode == 0){
-    //                 scaleFac    = 2;
+                    // scaleFac    = 2;
                     return 6;
                 } else if (mode == 1){
                     return 4;
@@ -941,7 +941,7 @@
                 }
             } else if( energy.CompareTo("pPb_8TeV") == 0  ) {
                 if (mode == 0){
-    //                 scaleFac    = 2;
+                    // scaleFac    = 2;
                     return 6;
                 } else if (mode == 1){
                     return 4;
@@ -1008,7 +1008,7 @@
                     return 6;
             }
         } else if (meson.CompareTo("EtaPrime") == 0){
-            return 3;
+            return 1;
         } else if (meson.Contains("Omega")) {
             if(energy.CompareTo("13TeV") == 0) {
                 if(mode == 40){
@@ -1046,7 +1046,7 @@
     }
 
     //*************************************************************************************************
-    //******************** GetStartBin for general combination *****************************************
+    //******************** GetStartBin for general combination ****************************************
     //*************************************************************************************************
     Int_t GetStartBin(  TString   meson,
                         TString   energy,
@@ -1599,6 +1599,13 @@
         return startPtBin;
     }
 
+    //*************************************************************************************************
+    //******************** CopyArrayAndSize as helper function for GetBinning *************************
+    //*************************************************************************************************
+    void CopyArrayAndSize( std::vector<Double_t> arrayFrom, Double_t* arrayTo, Int_t& n ) {
+        n = arrayFrom.size() - 1;
+        for( Int_t i=0; i<=n; i++ ) arrayTo[i] = arrayFrom[i];
+    }
 
     //*************************************************************************************************
     //******************** GetBinning for general combination *****************************************
@@ -1837,117 +1844,117 @@
                     binningMax=maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7PtDCA)/sizeof(fBinsPi013TeVPCMTrigINT7PtDCA[0])))-1;
                 }else if (mode==0){
                     if (SpecialTrigger==-1){
-		      maxNBins= 103;
+                        maxNBins= 103;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigCombPt)/sizeof(fBinsPi013TeVPCMTrigCombPt[0])))-1;
                     } else if (SpecialTrigger==0) {
-		      if (energy.Contains("RBins") ){
- 			maxNBins= 14;
-			binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt)/sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt[0])))-1;
- 		      } else{
-                        maxNBins= 83;
-                        binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7Pt)/sizeof(fBinsPi013TeVPCMTrigINT7Pt[0])))-1;
-		      }
-                    } else if (SpecialTrigger==1) {
-                        maxNBins= 64;
-                        binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEMC7Pt)/sizeof(fBinsPi013TeVPCMTrigEMC7Pt[0])))-1;
-                    } else if (SpecialTrigger==2) {
-                        maxNBins= 103;
-                        binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEG1Pt)/sizeof(fBinsPi013TeVPCMTrigEG1Pt[0])))-1;
-                    } else if (SpecialTrigger==3) {
-                        maxNBins= 94;
-                        binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEG2Pt)/sizeof(fBinsPi013TeVPCMTrigEG2Pt[0])))-1;
+                if (energy.Contains("RBins") ){
+                    maxNBins= 14;
+                    binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt)/sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt[0])))-1;
+                    } else{
+                                maxNBins= 83;
+                                binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7Pt)/sizeof(fBinsPi013TeVPCMTrigINT7Pt[0])))-1;
                     }
-                } else if(mode==2){
-                    if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
-                        maxNBins = 123;    //
-                        binningMax = ((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;;
-                    } else if (SpecialTrigger == 3){
-                        maxNBins = 112;     //
-                        binningMax = (Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigEG2Pt)/sizeof(fBinsPi013TeVPCMEMCTrigEG2Pt[0])) - 1;;
-                    } else if (SpecialTrigger == 2){
-                        maxNBins = 117;     //
-                        binningMax = (Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigEG1Pt)/sizeof(fBinsPi013TeVPCMEMCTrigEG1Pt[0])) - 1;;
-                    } else {
-                        maxNBins = 99;   //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
-                        binningMax = maxNBins;
-                    }
-                } else if(mode==4){
-                    if (SpecialTrigger == 0){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigINT7Pt)/sizeof(fBinsPi013TeVEMCTrigINT7Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    } else if (SpecialTrigger == 1){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEMC7Pt)/sizeof(fBinsPi013TeVEMCTrigEMC7Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    } else if (SpecialTrigger == 3){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG2Pt)/sizeof(fBinsPi013TeVEMCTrigEG2Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    } else if (SpecialTrigger == 2){
-                        maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG1Pt)/sizeof(fBinsPi013TeVEMCTrigEG1Pt[0])) - 1;
-                        binningMax = maxNBins;
-                    } else {
-                        binningMax  = (Int_t) (sizeof(fBinsPi013TeVEMCTrigCombPt)/sizeof(fBinsPi013TeVEMCTrigCombPt[0])) - 1;
-                        maxNBins    = 201;
-                    }
-                } else if ( mode == 10 ){
-                    maxNBins = 59;
-                    binningMax = maxNBins;
-                } else {
-                    if (SpecialTrigger == 0){
-                        maxNBins= 99;   //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
-                        binningMax = maxNBins;
-                    }
-                }
-                CheckBinSize(maxNBins,binningMax,kFALSE);
-                cout<<"Get Binning(), Pi0 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<endl;
-                for (Int_t i = 0; i < binningMax+1; i++) {
-                    if (DCAcase==kTRUE) {
-                        binning[i]      = fBinsPi013TeVPCMTrigINT7PtDCA[i];
-                    } else if (mode==0){
-                        if (SpecialTrigger == -1) {
-                            binning[i]      = fBinsPi013TeVPCMTrigCombPt[i];
-                        } else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
-			  if( energy.Contains("RBins")) {
- 			    binning[i]      = fBinsPi013TeVPCMTrigINT7RBinsPt[i];
-			  } else {
- 			    binning[i]      = fBinsPi013TeVPCMTrigINT7Pt[i];
- 			  }
-                        } else if (SpecialTrigger==1){
-                            binning[i]      = fBinsPi013TeVPCMTrigEMC7Pt[i];
-                        } else if (SpecialTrigger==2){
-                            binning[i]      = fBinsPi013TeVPCMTrigEG1Pt[i];
-                        } else if (SpecialTrigger==3){
-                            binning[i]      = fBinsPi013TeVPCMTrigEG2Pt[i];
-                        }
-                    } else if (mode==2){
-                        if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
-                            binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
-                        } else if (SpecialTrigger == 3) {
-                            binning[i]      = fBinsPi013TeVPCMEMCTrigEG2Pt[i];
-                        } else if (SpecialTrigger == 2) {
-                            binning[i]      = fBinsPi013TeVPCMEMCTrigEG1Pt[i];
-                        }
-                    } else if (mode==4){
-                        if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
-                            binning[i]      = fBinsPi013TeVEMCTrigINT7Pt[i];
-                        } else if (SpecialTrigger == 1) {
-                            binning[i]      = fBinsPi013TeVEMCTrigEMC7Pt[i];
-                        } else if (SpecialTrigger == 3) {
-                            binning[i]      = fBinsPi013TeVEMCTrigEG2Pt[i];
-                        } else if (SpecialTrigger == 2) {
-                            binning[i]      = fBinsPi013TeVEMCTrigEG1Pt[i];
+                            } else if (SpecialTrigger==1) {
+                                maxNBins= 64;
+                                binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEMC7Pt)/sizeof(fBinsPi013TeVPCMTrigEMC7Pt[0])))-1;
+                            } else if (SpecialTrigger==2) {
+                                maxNBins= 103;
+                                binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEG1Pt)/sizeof(fBinsPi013TeVPCMTrigEG1Pt[0])))-1;
+                            } else if (SpecialTrigger==3) {
+                                maxNBins= 94;
+                                binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigEG2Pt)/sizeof(fBinsPi013TeVPCMTrigEG2Pt[0])))-1;
+                            }
+                        } else if(mode==2){
+                            if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
+                                maxNBins = 123;    //
+                                binningMax = ((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;;
+                            } else if (SpecialTrigger == 3){
+                                maxNBins = 112;     //
+                                binningMax = (Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigEG2Pt)/sizeof(fBinsPi013TeVPCMEMCTrigEG2Pt[0])) - 1;;
+                            } else if (SpecialTrigger == 2){
+                                maxNBins = 117;     //
+                                binningMax = (Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigEG1Pt)/sizeof(fBinsPi013TeVPCMEMCTrigEG1Pt[0])) - 1;;
+                            } else {
+                                maxNBins = 99;   //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
+                                binningMax = maxNBins;
+                            }
+                        } else if(mode==4){
+                            if (SpecialTrigger == 0){
+                                maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigINT7Pt)/sizeof(fBinsPi013TeVEMCTrigINT7Pt[0])) - 1;
+                                binningMax = maxNBins;
+                            } else if (SpecialTrigger == 1){
+                                maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEMC7Pt)/sizeof(fBinsPi013TeVEMCTrigEMC7Pt[0])) - 1;
+                                binningMax = maxNBins;
+                            } else if (SpecialTrigger == 3){
+                                maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG2Pt)/sizeof(fBinsPi013TeVEMCTrigEG2Pt[0])) - 1;
+                                binningMax = maxNBins;
+                            } else if (SpecialTrigger == 2){
+                                maxNBins = (Int_t) (sizeof(fBinsPi013TeVEMCTrigEG1Pt)/sizeof(fBinsPi013TeVEMCTrigEG1Pt[0])) - 1;
+                                binningMax = maxNBins;
+                            } else {
+                                binningMax  = (Int_t) (sizeof(fBinsPi013TeVEMCTrigCombPt)/sizeof(fBinsPi013TeVEMCTrigCombPt[0])) - 1;
+                                maxNBins    = 201;
+                            }
+                        } else if ( mode == 10 ){
+                            maxNBins = 59;
+                            binningMax = maxNBins;
                         } else {
-                            binning[i]      = fBinsPi013TeVEMCTrigCombPt[i];
+                            if (SpecialTrigger == 0){
+                                maxNBins= 99;   //((Int_t) (sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt)/sizeof(fBinsPi013TeVPCMEMCTrigINT7Pt[0])))-1;
+                                binningMax = maxNBins;
+                            }
                         }
-                    } else if (mode==10){
-                        binning[i] = fBinsPi013TeVPtmEMC[i];
+                        CheckBinSize(maxNBins,binningMax,kFALSE);
+                        cout<<"Get Binning(), Pi0 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<endl;
+                        for (Int_t i = 0; i < binningMax+1; i++) {
+                            if (DCAcase==kTRUE) {
+                                binning[i]      = fBinsPi013TeVPCMTrigINT7PtDCA[i];
+                            } else if (mode==0){
+                                if (SpecialTrigger == -1) {
+                                    binning[i]      = fBinsPi013TeVPCMTrigCombPt[i];
+                                } else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
+                    if( energy.Contains("RBins")) {
+                        binning[i]      = fBinsPi013TeVPCMTrigINT7RBinsPt[i];
                     } else {
-                        binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
+                        binning[i]      = fBinsPi013TeVPCMTrigINT7Pt[i];
                     }
-                }
-                for (Int_t i = 0; i < binningMax+1; i++) {
-                    cout << binning[i] << ", ";
-                }
-                cout << endl;
+                            } else if (SpecialTrigger==1){
+                                binning[i]      = fBinsPi013TeVPCMTrigEMC7Pt[i];
+                            } else if (SpecialTrigger==2){
+                                binning[i]      = fBinsPi013TeVPCMTrigEG1Pt[i];
+                            } else if (SpecialTrigger==3){
+                                binning[i]      = fBinsPi013TeVPCMTrigEG2Pt[i];
+                            }
+                        } else if (mode==2){
+                            if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
+                                binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
+                            } else if (SpecialTrigger == 3) {
+                                binning[i]      = fBinsPi013TeVPCMEMCTrigEG2Pt[i];
+                            } else if (SpecialTrigger == 2) {
+                                binning[i]      = fBinsPi013TeVPCMEMCTrigEG1Pt[i];
+                            }
+                        } else if (mode==4){
+                            if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
+                                binning[i]      = fBinsPi013TeVEMCTrigINT7Pt[i];
+                            } else if (SpecialTrigger == 1) {
+                                binning[i]      = fBinsPi013TeVEMCTrigEMC7Pt[i];
+                            } else if (SpecialTrigger == 3) {
+                                binning[i]      = fBinsPi013TeVEMCTrigEG2Pt[i];
+                            } else if (SpecialTrigger == 2) {
+                                binning[i]      = fBinsPi013TeVEMCTrigEG1Pt[i];
+                            } else {
+                                binning[i]      = fBinsPi013TeVEMCTrigCombPt[i];
+                            }
+                        } else if (mode==10){
+                            binning[i] = fBinsPi013TeVPtmEMC[i];
+                        } else {
+                            binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
+                        }
+                    }
+                    for (Int_t i = 0; i < binningMax+1; i++) {
+                        cout << binning[i] << ", ";
+                    }
+                    cout << endl;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
                     maxNBins = 68;
@@ -2866,17 +2873,8 @@
                 }
             }
         } else if ( meson.CompareTo("EtaPrime") == 0) {
-            if (energy.CompareTo("7TeV") == 0){
-                binningMax = 7;
-                for (Int_t i = 0; i < binningMax+1; i++) {
-                    binning[i]=fBinsEtaPrime13TeVPt[i];
-                }
-            } else if (energy.CompareTo("13TeV") == 0){
-                binningMax = 7;
-                for (Int_t i = 0; i < binningMax+1; i++) {
-                    binning[i]=fBinsEtaPrime13TeVPt[i];
-                }
-            }
+            if     (energy.EqualTo("7TeV"))  CopyArrayAndSize(fBinsEtaPrime7TeVPt, binning,binningMax);
+            else if(energy.EqualTo("13TeV")) CopyArrayAndSize(fBinsEtaPrime13TeVPt,binning,binningMax);
         } else if (meson.Contains("Omega")){
             if (energy.CompareTo("7TeV") == 0){
                 if(mode == 40){
@@ -3163,6 +3161,33 @@
             }
         }
         return  triggerSetTemp;
+    }
+
+    //*************************************************************************************************
+    //******************** SetReBinning as helper function for InitializeBinning **********************
+    //*************************************************************************************************
+    // C array version
+    // template <ptrdiff_t ArrayLenBins, ptrdiff_t ArrayLenRebins>
+    // void SetReBinning( Int_t startBin, Double_t (&binArray)[ArrayLenBins], Int_t (&rebinArray)[ArrayLenRebins] ) {
+    // StdLibrary version
+    void SetReBinning( Int_t startBin, std::vector<Double_t> binArray, std::vector<Int_t> rebinArray ) {
+        // Set start p_T bin
+        fStartPtBin = startBin;
+        // Check number of bins and reset if needed
+        const Int_t maxNBins = binArray.size() - 1;
+        if (fNBinsPt > maxNBins) {
+            cout << "You have chosen directphoton Plots and more than " << maxNBins <<
+                " bins for Eta (namely " << fNBinsPt << "). This is not possible, so it will be reduced to " <<
+                maxNBins << " bins." << endl;
+            fNBinsPt = maxNBins;
+        }
+        // Copy bin and rebin arrays
+        for( Int_t i=0; i<=fNBinsPt; i++ ) {
+            fBinsPt[i] = binArray[i];
+            if(i<=fNBinsPt) fNRebin[i] = rebinArray[i];
+        }
+        // Set number of columns and rows
+        GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
     }
 
     //*************************************************************************************************
@@ -5304,38 +5329,8 @@
             fNBinsPt                = numberOfBins;
             fBinsPt                 = new Double_t[20];
             fNRebin                 = new Int_t[19];
-            //*********************************************************************************************
-            //********************************** Eta' for pp 7TeV *****************************************
-            //*********************************************************************************************
-            if (energy.CompareTo("7TeV") == 0) {
-                fStartPtBin         = 1;
-                if (fNBinsPt > 7) {
-                    cout << "You have chosen directphoton Plots and more than 7 bins for Eta, this is not possible, it will be reduced to 7 bins." << endl;
-                    fNBinsPt        = 7;
-                }
-                GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-                for (Int_t i = 0; i < fNBinsPt+2; i++) {
-                    fBinsPt[i]      = fBinsEtaPrim7TeVPt[i];
-                    if (i < fNBinsPt+1)
-                        fNRebin[i]  = fBinsEtaPrim7TeVPtRebin[i];
-                }
-            //*********************************************************************************************
-            //********************************** Eta' for pp 13TeV *****************************************
-            //*********************************************************************************************
-            } else if (energy.CompareTo("13TeV") == 0) {
-                fStartPtBin         = 1;
-                if (fNBinsPt > 7) {
-                    cout << "You have chosen directphoton Plots and more than 7 bins for Eta, this is not possible, it will be reduced to 7 bins." << endl;
-                    fNBinsPt        = 7;
-                }
-                GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-                for (Int_t i = 0; i < fNBinsPt+2; i++) {
-                    fBinsPt[i]      = fBinsEtaPrime13TeVPt[i];
-                    if (i < fNBinsPt+1)
-                        fNRebin[i]  = fBinsEtaPrime13TeVPtRebin[i];
-                }
-            }
-
+            if     (energy.EqualTo("7TeV"))  SetReBinning(1,fBinsEtaPrime7TeVPt, fBinsEtaPrime7TeVPtRebin);
+            else if(energy.EqualTo("13TeV")) SetReBinning(1,fBinsEtaPrime13TeVPt,fBinsEtaPrime13TeVPtRebin);
         //*************************************************************************************************
         //********************************** Binning for Omega ********************************************
         //*************************************************************************************************

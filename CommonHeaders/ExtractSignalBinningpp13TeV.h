@@ -1,3 +1,5 @@
+#include <vector>
+
 #ifndef GAMMACONV_ExtractSignalBinningpp13TeV
 #define GAMMACONV_ExtractSignalBinningpp13TeV
 
@@ -445,8 +447,9 @@
     //******************** EtaPrime Pt binning for pp, 13TeV  ********************************************
     //****************************************************************************************************
 
-    Double_t fBinsEtaPrime13TeVPt[8]                = { 0.0, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0, 20.0};
-    Int_t fBinsEtaPrime13TeVPtRebin[7]              = { 4, 4, 4, 4, 4, 4, 4};
-
+    // std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 1.0, 2.0, 3.0, 4.0, 6.0, 10.0, 20.0};
+    // std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 4, 4, 4, 4, 4, 4, 4};
+    std::vector<Double_t> fBinsEtaPrime13TeVPt   { 0.0, 0.4, 0.8, 1.5, 2.2, 3.0, 5.0, 20.0 };
+    std::vector<Int_t> fBinsEtaPrime13TeVPtRebin { 12, 12, 12, 12, 12, 12, 12 };
 
 #endif
