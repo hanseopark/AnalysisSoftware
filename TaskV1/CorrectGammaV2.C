@@ -142,7 +142,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
         detectionProcess            = detectionProcess1;
         detectionProcess2           = ReturnFullTextReconstructionProcess(mode,2);
     }
-    if(energy.Contains("PbPb")){
+    if(energy.Contains("PbPb") || (energy.Contains("pPb") && centrality.CompareTo("0-100%") != 0)){
         cent                        = Form("%s %s", centrality.Data(), collisionSystem.Data());
     } else {
         cent                        = collisionSystem;
@@ -1596,7 +1596,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             if (doPileUpCorr) legendPurity->AddEntry(histoGammaTruePurity_PileUp_Pt,"rescaled purity, secondaries removed, pileup");
             legendPurity->Draw();
 
-            PutProcessLabelAndEnergyOnPlot( 0.18, 0.4, 0.035, cent, detectionProcess, "", 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot( 0.18, 0.32, 0.035, cent, detectionProcess, "", 42, 0.03);
 
             canvasPurity->SaveAs(Form("%s/%s_Purity_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }
@@ -1613,7 +1613,7 @@ void  CorrectGammaV2(   const char *nameUnCorrectedFile     = "myOutput",
             legendPurity->AddEntry(histoGammaTruePurity_Pt,"rescaled purity, secondaries removed");
             legendPurity->Draw();
 
-            PutProcessLabelAndEnergyOnPlot( 0.7, 0.4, 0.035, cent, textMeasurement, detectionProcess2, 42, 0.03);
+            PutProcessLabelAndEnergyOnPlot( 0.95, 0.32, 0.035, cent, detectionProcess2, "", 42, 0.03,"", 1, 1.25,31);
 
             canvasPurity->SaveAs(Form("%s/%s_PurityCalo_%s.%s",outputDir.Data(),textPi0New.Data(),cutSelection.Data(),suffix.Data()));
         }

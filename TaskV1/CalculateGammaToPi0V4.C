@@ -1074,8 +1074,8 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
         }
         if(doBinShiftForDR && histoCorrectedPi0YieldBinShift)histoCorrectedPi0YieldBinShift->Write( histoCorrectedPi0YieldBinShift->GetName(),  TObject::kOverwrite);
         // pi0 syst related to OOB pileup
-        graphSysPi0PileUpOptions->Write("Pi0_SystErrorRel_OOBPileup_Options",  TObject::kOverwrite);
-        graphSysPi0PileUpIterations->Write("Pi0_SystErrorRel_OOBPileup_Iterations",  TObject::kOverwrite);
+        if (graphSysPi0PileUpOptions) graphSysPi0PileUpOptions->Write("Pi0_SystErrorRel_OOBPileup_Options",  TObject::kOverwrite);
+        if (graphSysPi0PileUpIterations) graphSysPi0PileUpIterations->Write("Pi0_SystErrorRel_OOBPileup_Iterations",  TObject::kOverwrite);
 
         // gamma quantities
         if (fitGammaA)                  fitGammaA->Write(                   fitGammaA->GetName(),                   TObject::kOverwrite);

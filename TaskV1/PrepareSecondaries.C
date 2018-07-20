@@ -281,6 +281,7 @@ void PrepareSecondaries(    TString     meson                       = "",
     Double_t minPhiCalo                                         = 0;
     Double_t maxPhiCalo                                         = 0;
     Double_t etaCalo                                            = 0;
+    Double_t binWidthPt                                         = 0.1;
     if (isCalo){
         deltaEtaCalo                                            = ReturnDeltaEtaCalo(fClusterCutSelection);
         etaCalo                                                 = deltaEtaCalo*0.5;
@@ -363,6 +364,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtY[i]->SetName(Form("%s_Pt_Y_OrBin", motherParticles[i].Data()));
             histoMesonMotherPtY[i]->Sumw2();
             histoMesonMotherPtY[i]->Scale(eventNormScalingFactor);
+            if (i == 0) binWidthPt = histoMesonMotherPtY[i]->GetXaxis()->GetBinWidth(0);
 
             histoMesonMotherPtPhi[i]                            = (TH2F*)histoListCocktail->FindObject(Form("Pt_Phi_%s",motherParticles[i].Data()));
             histoMesonMotherPtPhi[i]->SetName(Form("%s_Pt_Phi_OrBin", motherParticles[i].Data()));
@@ -484,6 +486,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonDaughterPtOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
             histoMesonDaughterPtOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
             histoMesonDaughterPtOrBin[i]->Scale(1/deltaPtGen);
+            if (binWidthPt == 0.05) histoMesonDaughterPtOrBin[i]->Scale(0.5);
             histoMesonDaughterPtOrBin[i]->Scale(1/deltaRapGen);
             histoMesonDaughterPtOrBin[i]->Scale(1/deltaRap);
             histoMesonDaughterPtOrBin[i]->Scale(1/deltaPhi);
@@ -496,6 +499,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonDaughterYOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
             histoMesonDaughterYOrBin[i]->Scale(1/(histoMesonDaughterPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
             histoMesonDaughterYOrBin[i]->Scale(1/deltaPtGen);
+            if (binWidthPt == 0.05) histoMesonDaughterYOrBin[i]->Scale(0.5);
             histoMesonDaughterYOrBin[i]->Scale(1/deltaRapGen);
             histoMesonDaughterYOrBin[i]->Scale(1/deltaPhi);
             SetHistogramTitles(histoMesonDaughterYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -511,6 +515,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonDaughterPhiOrBin[i]->Scale(1/(histoMesonDaughterPtPhi[i]->GetXaxis()->GetBinWidth(1)));
             histoMesonDaughterPhiOrBin[i]->Scale(1/(histoMesonDaughterPtPhi[i]->GetYaxis()->GetBinWidth(1)));
             histoMesonDaughterPhiOrBin[i]->Scale(1/deltaPtGen);
+            if (binWidthPt == 0.05) histoMesonDaughterPhiOrBin[i]->Scale(0.5);
             histoMesonDaughterPhiOrBin[i]->Scale(1/deltaRapGen);
             histoMesonDaughterPhiOrBin[i]->Scale(1/deltaPhi);
             SetHistogramTitles(histoMesonDaughterPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -524,6 +529,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPtOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetYaxis()->GetBinWidth(1)));
             histoMesonMotherPtOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetXaxis()->GetBinWidth(1)));
             histoMesonMotherPtOrBin[i]->Scale(1/deltaPtGen);
+            if (binWidthPt == 0.05) histoMesonMotherPtOrBin[i]->Scale(0.5);
             histoMesonMotherPtOrBin[i]->Scale(1/deltaRapGen);
             histoMesonMotherPtOrBin[i]->Scale(1/deltaRap);
             histoMesonMotherPtOrBin[i]->GetXaxis()->SetRangeUser(ptMin, ptMax);
@@ -535,6 +541,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherYOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetXaxis()->GetBinWidth(1)));
             histoMesonMotherYOrBin[i]->Scale(1/(histoMesonMotherPtY[i]->GetYaxis()->GetBinWidth(1)));
             histoMesonMotherYOrBin[i]->Scale(1/deltaPtGen);
+            if (binWidthPt == 0.05) histoMesonMotherYOrBin[i]->Scale(0.5);
             histoMesonMotherYOrBin[i]->Scale(1/deltaRapGen);
             SetHistogramTitles(histoMesonMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else {
@@ -549,6 +556,7 @@ void PrepareSecondaries(    TString     meson                       = "",
             histoMesonMotherPhiOrBin[i]->Scale(1/(histoMesonMotherPtPhi[i]->GetXaxis()->GetBinWidth(1)));
             histoMesonMotherPhiOrBin[i]->Scale(1/(histoMesonMotherPtPhi[i]->GetYaxis()->GetBinWidth(1)));
             histoMesonMotherPhiOrBin[i]->Scale(1/deltaPtGen);
+            if (binWidthPt == 0.05) histoMesonMotherPhiOrBin[i]->Scale(0.5);
             histoMesonMotherPhiOrBin[i]->Scale(1/deltaRapGen);
             SetHistogramTitles(histoMesonMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
         } else
@@ -574,8 +582,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPtGen);
-                if(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1) < 0.1)
-                  histoGammaFromXFromMotherPtOrBin[i]->Scale(0.5);
+                if (binWidthPt == 0.05) histoGammaFromXFromMotherPtOrBin[i]->Scale(0.5);
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaRapGen);
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaRap);
                 histoGammaFromXFromMotherPtOrBin[i]->Scale(1/deltaPhi);
@@ -588,8 +595,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtYCorr[i]->GetYaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaPtGen);
-                if(histoGammaFromXFromMotherPtYCorr[i]->GetXaxis()->GetBinWidth(1) < 0.1)
-                  histoGammaFromXFromMotherYOrBin[i]->Scale(0.5);
+                if (binWidthPt == 0.05) histoGammaFromXFromMotherYOrBin[i]->Scale(0.5);
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaRapGen);
                 histoGammaFromXFromMotherYOrBin[i]->Scale(1/deltaPhi);
                 SetHistogramTitles(histoGammaFromXFromMotherYOrBin[i],"","y","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");
@@ -605,8 +611,7 @@ void PrepareSecondaries(    TString     meson                       = "",
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtPhi[i]->GetXaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/(histoGammaFromXFromMotherPtPhi[i]->GetYaxis()->GetBinWidth(1)));
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaPtGen);
-                if(histoGammaFromXFromMotherPtPhi[i]->GetXaxis()->GetBinWidth(1) < 0.1)
-                  histoGammaFromXFromMotherPhiOrBin[i]->Scale(0.5);
+                if (binWidthPt == 0.05) histoGammaFromXFromMotherPhiOrBin[i]->Scale(0.5);
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaRapGen);
                 histoGammaFromXFromMotherPhiOrBin[i]->Scale(1/deltaPhi);
                 SetHistogramTitles(histoGammaFromXFromMotherPhiOrBin[i],"","#phi","#frac{1}{N_{ev}} #frac{d#it{N}^{2}}{d#it{p}_{T}dy} ((GeV/#it{c})^{-1})");

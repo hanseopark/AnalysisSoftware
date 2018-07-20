@@ -350,9 +350,10 @@ void ExtractGammaSignalV2(      TString meson               = "",
                     HistosGammaConversionForPileUp                              = (TList*)TopDirForPileUp->FindObject(Form("Cut Number %s",stdcut.Data()));
                     DCAContainer                                                = (TList*)HistosGammaConversionForPileUp->FindObject(Form("%s Photon DCA tree",stdcut.Data()));
                 }
-            } else DCAContainer                                                    = (TList*)HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
+            } else DCAContainer                                                 = (TList*)HistosGammaConversion->FindObject(Form("%s Photon DCA tree",fCutSelectionRead.Data()));
             if(DCAContainer){
                 dcaTree                                                         = (TTree*)DCAContainer->FindObject("ESD_ConvGamma_Pt_Dcaz_R_Eta");
+                if (!dcaTree) dcaTree                                           = (TTree*)DCAContainer->FindObject("ESD_ConvGamma_Pt_Dcaz");
                 FillDCAHistogramsFromTree(dcaTree,kFALSE);
                 CalculatePileUpBackground(kFALSE);
                 pileUpCorrection                                                = kTRUE;
@@ -3105,12 +3106,23 @@ void Initialize(TString setPi0, TString energy , Int_t numberOfBins, Int_t mode,
 // *****************************************************************************************************
 void FillDCAHistogramsFromTree(TTree *dcaTree,Bool_t isMC){
 
-    Float_t dcaZPhoton, pt;
-    UChar_t cat, photonMCInfo;
-    dcaTree->SetBranchAddress("Pt",&pt);
-    dcaTree->SetBranchAddress("DcaZPhoton",&dcaZPhoton);
-    dcaTree->SetBranchAddress("cat",&cat);
-    if (isMC) dcaTree->SetBranchAddress("photonMCInfo",&photonMCInfo);
+    Float_t dcaZPhoton, pt, ptFill, dcaZPhotonFill;
+    UChar_t catRead, photonMCInfoRead;
+    Int_t cat, photonMCInfo;
+
+    UShort_t ptTemp;
+    Short_t dcaZPhotonTemp;
+
+    if (fMode == 0){
+        dcaTree->SetBranchAddress("Pt",&pt);
+        dcaTree->SetBranchAddress("DcaZPhoton",&dcaZPhoton);
+        if (isMC) dcaTree->SetBranchAddress("photonMCInfo",&photonMCInfoRead);
+    } else {
+        dcaTree->SetBranchAddress("Pt",&ptTemp);
+        dcaTree->SetBranchAddress("DcaZPhoton",&dcaZPhotonTemp);
+    }
+    dcaTree->SetBranchAddress("cat",&catRead);
+
 
     if(!isMC){
         fESDGammaPtDCAz     = new TH2F*[6];
@@ -3130,12 +3142,24 @@ void FillDCAHistogramsFromTree(TTree *dcaTree,Bool_t isMC){
         Long64_t nentries = dcaTree->GetEntries();
         for (Long64_t l=0;l<nentries;l++) {
             dcaTree->GetEntry(l);
-            if(cat == 0) fESDGammaPtDCAz[0]->Fill(pt,dcaZPhoton);
-            if(cat == 1) fESDGammaPtDCAz[1]->Fill(pt,dcaZPhoton);
-            if(cat == 2) fESDGammaPtDCAz[2]->Fill(pt,dcaZPhoton);
-            if(cat == 3) fESDGammaPtDCAz[3]->Fill(pt,dcaZPhoton);
-            if(cat == 2 || cat == 3) fESDGammaPtDCAz[4]->Fill(pt,dcaZPhoton);
-            if(cat != 0) fESDGammaPtDCAz[5]->Fill(pt,dcaZPhoton);
+            if (fMode == 0){
+                dcaZPhotonFill  = dcaZPhoton;
+                ptFill          = pt;
+                cat             = (Int_t)catRead;
+                photonMCInfo    = (Int_t)photonMCInfoRead;
+            } else {
+                dcaZPhotonFill      = (Float_t)dcaZPhotonTemp/1000;
+                ptFill              = (Float_t)ptTemp/1000;
+                photonMCInfo        = (Int_t)catRead/10;
+                cat                 = (Int_t)catRead-photonMCInfo*10;
+            }
+
+            if(cat == 0) fESDGammaPtDCAz[0]->Fill(ptFill,dcaZPhotonFill);
+            if(cat == 1) fESDGammaPtDCAz[1]->Fill(ptFill,dcaZPhotonFill);
+            if(cat == 2) fESDGammaPtDCAz[2]->Fill(ptFill,dcaZPhotonFill);
+            if(cat == 3) fESDGammaPtDCAz[3]->Fill(ptFill,dcaZPhotonFill);
+            if(cat == 2 || cat == 3) fESDGammaPtDCAz[4]->Fill(ptFill,dcaZPhotonFill);
+            if(cat != 0) fESDGammaPtDCAz[5]->Fill(ptFill,dcaZPhotonFill);
         }
     }
     if(isMC){
@@ -3202,68 +3226,80 @@ void FillDCAHistogramsFromTree(TTree *dcaTree,Bool_t isMC){
         }
 
         Long64_t nentries = dcaTree->GetEntries();
+        cout << "starting to write dca tree MC" << endl;
         for (Long64_t l=0;l<nentries;l++) {
             dcaTree->GetEntry(l);
-            fMCrecGammaPtDCAz->Fill(pt,dcaZPhoton);
+            if (fMode == 0){
+                dcaZPhotonFill  = dcaZPhoton;
+                ptFill          = pt;
+                cat             = (Int_t)catRead;
+                photonMCInfo    = (Int_t)photonMCInfoRead;
+            } else {
+                dcaZPhotonFill      = (Float_t)dcaZPhotonTemp/1000;
+                ptFill              = (Float_t)ptTemp/1000;
+                photonMCInfo        = (Int_t)catRead/10;
+                cat                 = (Int_t)catRead-photonMCInfo*10;
+            }
+            fMCrecGammaPtDCAz->Fill(ptFill,dcaZPhotonFill);
             if(cat == 0){
-                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[0]->Fill(pt,dcaZPhoton);
+                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[0]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3 || photonMCInfo == 4 || photonMCInfo == 5 || photonMCInfo == 7)
-                    fTrueSecondaryPhotonPtDCAz[0]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][0]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][0]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][0]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonPtDCAz[0]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][0]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][0]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][0]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3)
-                    fTrueSecondaryPhotonFromXPtDCAz[3][0]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonFromXPtDCAz[3][0]->Fill(ptFill,dcaZPhotonFill);
             }
             if(cat == 1){
-                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[1]->Fill(pt,dcaZPhoton);
+                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[1]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3 || photonMCInfo == 4 || photonMCInfo == 5 || photonMCInfo == 7)
-                fTrueSecondaryPhotonPtDCAz[1]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][1]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][1]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][1]->Fill(pt,dcaZPhoton);
+                fTrueSecondaryPhotonPtDCAz[1]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][1]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][1]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][1]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3)
-                    fTrueSecondaryPhotonFromXPtDCAz[3][1]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonFromXPtDCAz[3][1]->Fill(ptFill,dcaZPhotonFill);
             }
             if(cat == 2){
-                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[2]->Fill(pt,dcaZPhoton);
+                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[2]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3 || photonMCInfo == 4 || photonMCInfo == 5 || photonMCInfo == 7)
-                fTrueSecondaryPhotonPtDCAz[2]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][2]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][2]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][2]->Fill(pt,dcaZPhoton);
+                fTrueSecondaryPhotonPtDCAz[2]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][2]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][2]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][2]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3)
-                    fTrueSecondaryPhotonFromXPtDCAz[3][2]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonFromXPtDCAz[3][2]->Fill(ptFill,dcaZPhotonFill);
             }
             if(cat == 3){
-                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[3]->Fill(pt,dcaZPhoton);
+                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[3]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3 || photonMCInfo == 4 || photonMCInfo == 5 || photonMCInfo == 7)
-                fTrueSecondaryPhotonPtDCAz[3]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][3]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][3]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][3]->Fill(pt,dcaZPhoton);
+                fTrueSecondaryPhotonPtDCAz[3]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][3]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][3]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][3]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3)
-                    fTrueSecondaryPhotonFromXPtDCAz[3][3]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonFromXPtDCAz[3][3]->Fill(ptFill,dcaZPhotonFill);
             }
             if(cat == 2 || cat == 3){
-                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[4]->Fill(pt,dcaZPhoton);
+                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[4]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3 || photonMCInfo == 4 || photonMCInfo == 5 || photonMCInfo == 7)
-                fTrueSecondaryPhotonPtDCAz[4]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][4]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][4]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][4]->Fill(pt,dcaZPhoton);
+                fTrueSecondaryPhotonPtDCAz[4]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][4]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][4]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][4]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3)
-                    fTrueSecondaryPhotonFromXPtDCAz[3][4]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonFromXPtDCAz[3][4]->Fill(ptFill,dcaZPhotonFill);
             }
             if(cat != 0){
-                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[5]->Fill(pt,dcaZPhoton);
+                if(photonMCInfo == 6) fTruePrimaryPhotonPtDCAz[5]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3 || photonMCInfo == 4 || photonMCInfo == 5 || photonMCInfo == 7)
-                fTrueSecondaryPhotonPtDCAz[5]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][5]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][5]->Fill(pt,dcaZPhoton);
-                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][5]->Fill(pt,dcaZPhoton);
+                fTrueSecondaryPhotonPtDCAz[5]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 4) fTrueSecondaryPhotonFromXPtDCAz[0][5]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 5) fTrueSecondaryPhotonFromXPtDCAz[1][5]->Fill(ptFill,dcaZPhotonFill);
+                if(photonMCInfo == 7) fTrueSecondaryPhotonFromXPtDCAz[2][5]->Fill(ptFill,dcaZPhotonFill);
                 if(photonMCInfo == 2 || photonMCInfo == 3)
-                    fTrueSecondaryPhotonFromXPtDCAz[3][5]->Fill(pt,dcaZPhoton);
+                    fTrueSecondaryPhotonFromXPtDCAz[3][5]->Fill(ptFill,dcaZPhotonFill);
             }
         }
     }

@@ -15,13 +15,48 @@ number=""
 minFileSize=1000
 SEPARATEONLYConv=1
 
+function GetFileNumberMerging()
+{
+#     echo $1
+    NCurrSub=$3
+    number1=`echo $1  | cut -d "/" -f $2 | cut -d "_" -f $NCurrSub | cut -d "." -f1`
+    number2=`echo $1  | cut -d "/" -f $2 | cut -d "_" -f $((NCurrSub+1)) | cut -d "." -f1`
+    if [ -z "$number2" ]; then
+        number=$number1
+    else
+#         echo $number2
+        number=$number1\_$number2
+    fi
+}
+
+function GetFileNumberMerging2()
+{
+    echo $1
+    NCurrSub=$2
+    alpha=`echo $1  | cut -d "/" -f $NCurrSub | cut -d "_" -f3 | cut -d "." -f1`
+    number=`echo $1  | cut -d "/" -f $NCurrSub | cut -d "_" -f2 | cut -d "." -f1`
+    if [ -z "$alpha" ]; then
+        echo $number
+    else
+        number1=`echo $1  | cut -d "/" -f $NCurrSub | cut -d "_" -f2`
+        number=$number1\_$alpha
+        echo $number
+    fi
+    echo $number
+
+}
+
 function GetFileNumberListSpecial()
 {
     ls $1/$2_*.root > filesTemp.txt
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
-        number=`echo $fileName  | cut -d "/" -f $3 | cut -d "_" -f $4 | cut -d "." -f1`
+        if [ $4 -eq 0 ]; then
+            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        else
+            GetFileNumberMerging $fileName $2 2
+        fi
         echo $number >> fileNumbers.txt
     done
     sort -u fileNumbers.txt > $5
@@ -40,7 +75,11 @@ function GetFileNumberListPCM()
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
-        number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        if [ $4 -eq 0 ]; then
+            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        else
+            GetFileNumberMerging $fileName $2 2
+        fi
         echo $number >> fileNumbers.txt
     done
     sort -u fileNumbers.txt > $3
@@ -54,7 +93,11 @@ function GetFileNumberListPCMCalo()
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
-        number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        if [ $4 -eq 0 ]; then
+            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        else
+            GetFileNumberMerging $fileName $2 2
+        fi
         echo $number >> fileNumbers.txt
     done
     sort -u fileNumbers.txt > $3
@@ -77,11 +120,17 @@ function GetFileNumberListHeavy()
 
 function GetFileNumberListCalo()
 {
-    ls $1/GammaCalo_*.root > filesTemp.txt
+    echo "-> GetFileList Calo and separate"
+    ls $1/GammaCalo*.root > filesTemp.txt
+#     cat filesTemp.txt
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
-        number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        if [ $4 -eq 0 ]; then
+            number=`echo $fileName  | cut -d "/" -f $2 | cut -d "_" -f 2 | cut -d "." -f1`
+        else
+            GetFileNumberMerging $fileName $2 2
+        fi
         echo $number >> fileNumbers.txt
     done
     sort -u fileNumbers.txt > $3
@@ -90,7 +139,7 @@ function GetFileNumberListCalo()
 
 function GetFileNumberListCaloMerged()
 {
-    ls $1/GammaCaloMerged_*.root > filesTemp.txt
+    ls $1/GammaCaloMerged*.root > filesTemp.txt
     fileNumbers=`cat filesTemp.txt`
     rm -f fileNumbers.txt
     for fileName in $fileNumbers; do
@@ -181,7 +230,7 @@ function CopyFileIfNonExisitent()
 
     if [ $SEPARATEON == 1 ]; then
         rm -f fileNumbers2.txt
-        GetFileNumberListPCM $1 $3 fileNumbers2.txt
+        GetFileNumberListPCM $1 $3 fileNumbers2.txt 0
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             echo $fileNumber
@@ -189,20 +238,20 @@ function CopyFileIfNonExisitent()
         done;
         if [ $SEPARATEONLYConv == 0 ]; then
             rm -f fileNumbers2.txt
-            GetFileNumberListPCMCalo $1 $3 fileNumbers2.txt
+            GetFileNumberListPCMCalo $1 $3 fileNumbers2.txt 0
             fileNumbers=`cat fileNumbers2.txt`
             for fileNumber in $fileNumbers; do
                 echo $fileNumber
                 SeparateCutsIfNeeded $1/GammaConvCalo_$fileNumber 2 $5
             done;
             rm -f fileNumbers2.txt
-            GetFileNumberListCalo $1 $3 fileNumbers2.txt
-            fileNumbers=`cat fileNumbers2.txt`
-            for fileNumber in $fileNumbers; do
-                echo $fileNumber
-                SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
-            done;
-            rm -f fileNumbers2.txt
+#             GetFileNumberListCalo $1 $3 fileNumbers2.txt 0
+#             fileNumbers=`cat fileNumbers2.txt`
+#             for fileNumber in $fileNumbers; do
+#                 echo $fileNumber
+#                 SeparateCutsIfNeeded $1/GammaCalo_$fileNumber 4 $5
+#             done;
+#             rm -f fileNumbers2.txt
         fi
     fi
 }
@@ -279,28 +328,28 @@ function CopyFileIfNonExisitentDiffList()
 
     if [ $SEPARATEON == 1 ]; then
         rm -f fileNumbers2.txt
-        GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt
+        GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt 0
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             echo $fileNumber
             SeparateCutsIfNeeded $1/$3/GammaConvV1_$fileNumber 0 $6
         done;
         rm -f fileNumbers2.txt
-        GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt
+        GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt 0
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             echo $fileNumber
             SeparateCutsIfNeeded $1/$3/GammaConvCalo_$fileNumber 2 $6
         done;
+#         rm -f fileNumbers2.txt
+#         GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt 0
+#         fileNumbers=`cat fileNumbers2.txt`
+#         for fileNumber in $fileNumbers; do
+#             echo $fileNumber
+#             SeparateCutsIfNeeded $1/$3/GammaCalo_$fileNumber 4 $6
+#         done;
         rm -f fileNumbers2.txt
-        GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt
-        fileNumbers=`cat fileNumbers2.txt`
-        for fileNumber in $fileNumbers; do
-            echo $fileNumber
-            SeparateCutsIfNeeded $1/$3/GammaCalo_$fileNumber 4 $6
-        done;
-        rm -f fileNumbers2.txt
-        GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt
+        GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt 0
         fileNumbers=`cat fileNumbers2.txt`
         for fileNumber in $fileNumbers; do
             SeparateCutsIfNeeded $1/$3/HeavyNeutralMesonToGG_$fileNumber 0 $6
@@ -309,28 +358,28 @@ function CopyFileIfNonExisitentDiffList()
     fi
 
     rm -f fileNumbers2.txt
-    GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt
+    GetFileNumberListPCM $1/$3 $4 fileNumbers2.txt 1
     fileNumbers=`cat fileNumbers2.txt`
     for fileNumber in $fileNumbers; do
         echo $fileNumber
         cp $1/$3/GammaConvV1_$fileNumber.root $1/GammaConvV1-$3\_$fileNumber.root
     done;
     rm -f fileNumbers2.txt
-    GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt
+    GetFileNumberListPCMCalo $1/$3 $4 fileNumbers2.txt 1
     fileNumbers=`cat fileNumbers2.txt`
     for fileNumber in $fileNumbers; do
         echo $fileNumber
         cp $1/$3/GammaConvCalo_$fileNumber.root $1/GammaConvCalo-$3\_$fileNumber.root
     done;
-    rm -f fileNumbers2.txt
-    GetFileNumberListCalo $1/$3 $4 fileNumbers2.txt
-    fileNumbers=`cat fileNumbers2.txt`
+    rm -f fileNumbers2-Calo.txt
+    GetFileNumberListCalo $1/$3 $4 fileNumbers2-Calo.txt 1
+    fileNumbers=`cat fileNumbers2-Calo.txt`
     for fileNumber in $fileNumbers; do
         echo $fileNumber
         cp $1/$3/GammaCalo_$fileNumber.root $1/GammaCalo-$3\_$fileNumber.root
     done;
     rm -f fileNumbers2.txt
-    GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt
+    GetFileNumberListHeavy $1/$3 $4 fileNumbers2.txt 1
     fileNumbers=`cat fileNumbers2.txt`
     for fileNumber in $fileNumbers; do
         cp $1/$3/HeavyNeutralMesonToGG_$fileNumber.root $1/HeavyNeutralMesonToGG-$3\_$fileNumber.root
@@ -344,14 +393,8 @@ function ChangeStructureIfNeededPCM()
     if [[ $1 == *"Basic.root"* ]]; then
         echo "Nothing to be done"
     else
-        number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
-        number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
-        if [ -z "$number2" ]; then
-            number=$number1
-        else
-            echo $number2
-            number=$number1\_$number2
-        fi
+        echo $1
+        GetFileNumberMerging $1 $3 2
         echo $number
         cp $2/GammaConvV1$5_$number.root $OUTPUTDIR/GammaConvV1_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvV1_$4_$number.log ]; then
@@ -367,14 +410,8 @@ function ChangeStructureIfNeededPCMCalo()
     if [[ $1 == *"Basic.root"* ]]; then
         echo "Nothing to be done"
     else
-        number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
-        number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
-        if [ -z "$number2" ]; then
-            number=$number1
-        else
-            echo $number2
-            number=$number1\_$number2
-        fi
+        echo $1
+        GetFileNumberMerging $1 $3 2
         echo $number
         cp $2/GammaConvCalo$5_$number.root $OUTPUTDIR/GammaConvCalo_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaConvCalo_$4_$number.log ]; then
@@ -390,14 +427,8 @@ function ChangeStructureIfNeededCalo()
     if [[ $1 == *"Basic.root"* ]]; then
         echo "Nothing to be done"
     else
-        number1=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 2 | cut -d "." -f1`
-        number2=`echo $1  | cut -d "/" -f $3 | cut -d "_" -f 3 | cut -d "." -f1`
-        if [ -z "$number2" ]; then
-            number=$number1
-        else
-            echo $number2
-            number=$number1\_$number2
-        fi
+        echo $1
+        GetFileNumberMerging $1 $3 2
         echo $number
         cp $2/GammaCalo$5_$number.root $OUTPUTDIR/GammaCalo_$4\_$number.root
         if [ -f $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ] &&  [ -s $OUTPUTDIR/CutSelections/CutSelection_GammaCalo_$4_$number.log ]; then
@@ -454,36 +485,6 @@ function ChangeStructureIfNeededHeavy()
     fi
 }
 
-function GetFileNumberMerging()
-{
-    echo $1
-    NCurrSub=$3
-    number1=`echo $1  | cut -d "/" -f $2 | cut -d "_" -f $NCurrSub | cut -d "." -f1`
-    number2=`echo $1  | cut -d "/" -f $2 | cut -d "_" -f $((NCurrSub+1)) | cut -d "." -f1`
-    if [ -z "$number2" ]; then
-        number=$number1
-    else
-        echo $number2
-        number=$number1\_$number2
-    fi
-}
-
-function GetFileNumberMerging2()
-{
-    echo $1
-    NCurrSub=$2
-    alpha=`echo $1  | cut -d "/" -f $NCurrSub | cut -d "_" -f3 | cut -d "." -f1`
-    number=`echo $1  | cut -d "/" -f $NCurrSub | cut -d "_" -f2 | cut -d "." -f1`
-    if [ -z "$alpha" ]; then
-        echo $number
-    else
-        number1=`echo $1  | cut -d "/" -f $NCurrSub | cut -d "_" -f2`
-        number=$number1\_$alpha
-        echo $number
-    fi
-    echo $number
-
-}
 
 function MergeAccordingToSpecificRunlist()
 {

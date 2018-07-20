@@ -12,7 +12,7 @@ DOWNLOADON=1
 MERGEON=1
 MERGEONFASTAndWOSDD=1
 SINGLERUN=0
-SEPARATEON=0
+SEPARATEON=1
 MERGEONSINGLEData=1
 MERGEONSINGLEMC=0
 CLEANUP=1
@@ -291,7 +291,7 @@ if [ "$LHC17g8aMCMoth" != "" ]; then
 fi
 
 mkdir -p $OUTPUTDIR/CutSelections
-
+mkdir -p $OUTPUTDIR/SingleFiles
 
 if [ $HAVELHC16q == 1 ]; then
     if [ $HAVETOBUILDData == 1 ]; then
