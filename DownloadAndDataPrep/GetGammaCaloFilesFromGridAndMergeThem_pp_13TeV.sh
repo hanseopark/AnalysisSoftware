@@ -5,7 +5,6 @@
 # changes internal structure
 # merges files according to the pPb needs
 
-#! /bin/bash
 source basicFunction.sh
 
 DOWNLOADON=1

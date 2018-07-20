@@ -15,7 +15,7 @@ DOWNLOADON=1
 MERGEON=1
 MERGEONMC=1
 SINGLERUN=0
-SEPARATEON=1
+SEPARATEON=0
 MERGEONSINGLEData=0
 MERGEONSINGLEMC=0
 SPECIALMERGE=0
@@ -136,7 +136,7 @@ HAVETOBUILDLHC13bc=0
 HAVELHC13d=1
 HAVELHC13e=1
 HAVELHC13f=1
-HAVETOBUILDLHC13def=0
+HAVETOBUILDLHC13de=0
 HAVELHC13b2efixp1=1
 HAVELHC13b2efixp2=1
 HAVELHC13b2efixp3=1
@@ -148,7 +148,7 @@ HAVELHC13e7=1
 LHC13bcData="";
 LHC13bData="";
 LHC13cData=""; #ESD
-LHC13defData=""; #ESD
+LHC13deData=""; #ESD
 LHC13dData=""; #ESD
 LHC13eData=""; #ESD
 LHC13fData=""; #ESD
@@ -253,30 +253,33 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC13bData="660"; #pass 3
 # LHC13cData="661"; #pass 2
 
-# TRAINDIR=Legotrain-vAN20180607-trigg2
-# LHC13bcData="745"; #pass 3
-# LHC13bData="child_1"; #pass 3
-# LHC13cData="child_2"; #pass 2
-# LHC13defData="741"; #pass 3
-# LHC13dData="child_1"; #pass 3
-# LHC13eData="child_2"; #pass 2
-
-TRAINDIR=Legotrain-vAN20180618-dirGamma
-LHC13bcData="759"; #pass 3
+TRAINDIR=Legotrain-vAN20180607-trigg2
+LHC13bcData="745"; #pass 3
 LHC13bData="child_1"; #pass 3
 LHC13cData="child_2"; #pass 2
-# LHC13defData="741"; #pass 3
-# LHC13dData="child_1"; #pass 3
-# LHC13eData="child_2"; #pass 2
-LHC13b2_efix="1279"
-LHC13b2_efix_p1MC="child_1";
-LHC13b2_efix_p2MC="child_2";
-LHC13b2_efix_p3MC="child_3";
-LHC13b2_efix_p4MC="child_4";
+LHC13deData="741"; #pass 3
+LHC13dData="child_1"; #pass 3
+LHC13eData="child_2"; #pass 2
+LHC13fData="761"; #pass 2
+
+# TRAINDIR=Legotrain-vAN20180618-dirGamma
+# LHC13bcData="759"; #pass 3
+# LHC13bData="child_1"; #pass 3
+# LHC13cData="child_2"; #pass 2
+# # LHC13deData="741"; #pass 3
+# # LHC13dData="child_1"; #pass 3
+# # LHC13eData="child_2"; #pass 2
+#
+# LHC13b2_efix="1279"
+# LHC13b2_efix_p1MC="child_1";
+# LHC13b2_efix_p2MC="child_2";
+# LHC13b2_efix_p3MC="child_3";
+# LHC13b2_efix_p4MC="child_4";
 
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 mkdir -p $OUTPUTDIR/CutSelections
+mkdir -p $OUTPUTDIR/SingleFiles
 
 if [ "$LHC13bData" == "" ]; then
     HAVELHC13b=0;
@@ -298,8 +301,8 @@ fi
 if [ "$LHC13fData" = "" ]; then
     HAVELHC13f=0;
 fi
-if [ "$LHC13defData" != "" ]; then
-    HAVETOBUILDLHC13def=1;
+if [ "$LHC13deData" != "" ]; then
+    HAVETOBUILDLHC13de=1;
 fi
 
 if [ "$LHC13b2_efix" != "" ]; then
@@ -349,10 +352,10 @@ if [ $HAVELHC13c == 1 ]; then
     fi
     echo $OUTPUTDIR_LHC13c
 fi
-# parse grid directories for correct train output dir for LHC13def
+# parse grid directories for correct train output dir for LHC13de
 if [ $HAVELHC13d == 1 ]; then
-    if [ $HAVETOBUILDLHC13def == 1 ]; then
-        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13defData\_ | grep $LHC13dData`
+    if [ $HAVETOBUILDLHC13de == 1 ]; then
+        LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_ | grep $LHC13dData`
     else
         LHC13dData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13dData\_`
     fi
@@ -364,8 +367,8 @@ if [ $HAVELHC13d == 1 ]; then
     echo $OUTPUTDIR_LHC13d
 fi
 if [ $HAVELHC13e == 1 ]; then
-    if [ $HAVETOBUILDLHC13def == 1 ]; then
-        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13defData\_ | grep $LHC13eData`
+    if [ $HAVETOBUILDLHC13de == 1 ]; then
+        LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13deData\_ | grep $LHC13eData`
     else
         LHC13eData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13eData\_`
     fi
@@ -377,11 +380,7 @@ if [ $HAVELHC13e == 1 ]; then
     echo $OUTPUTDIR_LHC13e
 fi
 if [ $HAVELHC13f == 1 ]; then
-    if [ $HAVETOBUILDLHC13def == 1 ]; then
-        LHC13fData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13defData\_ | grep $LHC13fData`
-    else
-        LHC13fData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13fData\_`
-    fi
+    LHC13fData=`alien_ls /alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/ | grep $LHC13fData\_`
     if [ "$LHC13fData" == "" ]; then
         HAVELHC13f=0;
     else
@@ -532,9 +531,9 @@ if [ $CLEANUPMAYOR == 0 ]; then
     fi
     if [ $HAVELHC13f == 1 ]; then
         echo "downloading LHC13f"
-        CopyFileIfNonExisitent $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" $NSlashes
+        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" EMCandPCMGood $NSlashes3 "" kFALSE
+        CopyFileIfNonExisitentDiffList $OUTPUTDIR_LHC13f "/alice/cern.ch/user/a/alitrain/PWGGA/GA_pPb/$LHC13fData/merge" PHOSGood $NSlashes3 "" kFALSE
     fi
-
 
     if [ $HAVELHC13b2efixp1 == 1 ]; then
         echo "downloading LHC13b2_efix_p1"
@@ -840,61 +839,112 @@ if [ $CLEANUPMAYOR == 0 ]; then
                     fi
                 done
                 MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
+            done
+
+            if [ $HAVELHC13d == 1 ] && [ $HAVELHC13e == 1 ]; then
+                ls $OUTPUTDIR/GammaConvCalo_LHC13d-pass$passNr-$runListName\_*.root > filesForMerging.txt
+                filesForMerging=`cat filesForMerging.txt`
+                periodList=`echo -e "d\ne"`
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            nameOut+=$periodID
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
+                done
+                ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr-$runListName\_*.root > filesForMerging.txt
+                filesForMerging=`cat filesForMerging.txt`
+                periodList=`echo -e "b\n\nc\nd\ne"`
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            nameOut+=$periodID
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
+                done
+            fi
+
+            if [ $HAVELHC13d == 1 ] && [ $HAVELHC13e == 1 ] && [ $HAVELHC13f == 1 ]; then
+                periodList=`echo -e "d\ne\nf"`
+
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            nameOut+=$periodID
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
+                done
+
+                periodList=`echo -e "b\n\nc\nd\ne\nf"`
+                for fileName in $filesForMerging; do
+                    echo $fileName
+                    GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                    echo $number
+                    nameOut=""
+                    rm listCurrMerge.txt
+                    echo $fileName
+                    for periodID in $periodList; do
+                        echo $periodID
+                        currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
+                        if [ -f $currFile ]; then
+                            nameOut+=$periodID
+                            echo -e "$currFile\n" >> listCurrMerge.txt
+                        fi
+                    done
+                    MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
+                done
+            fi
+            ls $OUTPUTDIR/GammaConvCalo_LHC13b-pass$passNr-$runListName\_*.root > filesForMerging.txt
+            periodList=`echo -e "b\nc\nd\ne\nf"`
+            for fileName in $filesForMerging; do
+                echo $fileName
+                GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
+                echo $number
+                rm listCurrMerge.txt
+                echo $fileName
+                for periodID in $periodList; do
+                    echo $periodID
+                    currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
+                    if [ -f $currFile ]; then
+                        echo -e "$currFile\n" >> listCurrMerge.txt
+                    fi
+                done
                 fileList=`cat listCurrMerge.txt`
                 for currFile in $fileList; do
                     mv $currFile $OUTPUTDIR/SingleFiles/
                 done
             done
         done
-
-        if [ $HAVELHC13d == 1 ] && [ $HAVELHC13e == 1 ]; then
-            periodList=`echo -e "d\ne"`
-
-            for fileName in $filesForMerging; do
-                echo $fileName
-                GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
-                echo $number
-                nameOut=""
-                rm listCurrMerge.txt
-                echo $fileName
-                for periodID in $periodList; do
-                    echo $periodID
-                    currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
-                    if [ -f $currFile ]; then
-                        nameOut+=$periodID
-                        echo -e "$currFile\n" >> listCurrMerge.txt
-                    fi
-                done
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
-                fileList=`cat listCurrMerge.txt`
-                for currFile in $fileList; do
-                    mv $currFile $OUTPUTDIR/SingleFiles/
-                done
-            done
-
-            periodList=`echo -e "b\n\c\d\ne"`
-            for fileName in $filesForMerging; do
-                echo $fileName
-                GetFileNumberMerging $fileName $((NSlashes-1)) 3 "bla" 1
-                echo $number
-                nameOut=""
-                rm listCurrMerge.txt
-                echo $fileName
-                for periodID in $periodList; do
-                    echo $periodID
-                    currFile=$OUTPUTDIR/GammaConvCalo_LHC13$periodID-pass$passNr-$runListName\_$number.root
-                    if [ -f $currFile ]; then
-                        nameOut+=$periodID
-                        echo -e "$currFile\n" >> listCurrMerge.txt
-                    fi
-                done
-                MergeAccordingToList listCurrMerge.txt $OUTPUTDIR/GammaConvCalo_LHC13$nameOut-pass$passNr-$runListName\_$number.root
-                fileList=`cat listCurrMerge.txt`
-                for currFile in $fileList; do
-                    mv $currFile $OUTPUTDIR/SingleFiles/
-                done
-            done
-        fi
 
         if [ $MERGEONMC -eq 1 ]; then
             echo -e "EMCandPCMGood\nPHOSGood" > runlistsToMerge.txt
