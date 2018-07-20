@@ -10,33 +10,33 @@
 //***************************** Main routine *******************************************************************
 //**************************************************************************************************************
 void EventQA_Runwise(
-                        Int_t nSetsIn,                                      // number of sets to be analysed
-                        Int_t nDataIn,                                      // number of real data sets to be analysed
-                        TString fEnergyFlag,                                // energy flag
-                        TString filePath,                                   // path to the data
-                        TString fileName,                                   // file name of the data
-                        TString fileNameMC,                                 // file name of the MC
-                        TString* DataSets,                                  // technical names of data sets for output
-                        TString* plotDataSets,                              // labels of data sets in plots
-                        Int_t mode                      = 2,                // standard mode for analysis
-                        Int_t cutNr                     = -1,               // if -1: you have to choose number at runtime
-                        Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots, 3: with mean value calculations
-                        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram,
-                                                                            // kFALSE: histograms contain the complete specified run number range, where each run represents a bin - even if it is not specified
-                        Bool_t doTrigger                = kTRUE,            // enables trigger analysis
-                        Bool_t doHistsForEverySet       = kTRUE,            // kTRUE: output done for each set separately as well
-                                                                            // kFALSE: only full run range output is produced
-                        Bool_t addSubFolder             = kFALSE,           // kTRUE: adds another subfolder for QA output fo reach DataSet[i]
-                                                                            // kFALSE: stores the runwise output all together
-                        Bool_t useDataRunListForMC      = kFALSE,           // kTRUE: use the same run list for data and MC
-                                                                            // kFALSE: use specified
-                        Size_t markerSize               = 1,                // how large should the markers be?
-                        TString suffix                  = "eps",            // output format of plots
-                        TString folderRunlists          = "",               // path to the runlists
-                        Int_t *nSigmasBadRun            = NULL,             // array of 8 integers
-                        TString addLabelRunList         = "",               // additional name for runlist
-                        TString fixedTopDir             = ""
-                    )
+        Int_t nSetsIn,                                      // number of sets to be analysed
+        Int_t nDataIn,                                      // number of real data sets to be analysed
+        TString fEnergyFlag,                                // energy flag
+        TString filePath,                                   // path to the data
+        TString fileName,                                   // file name of the data
+        TString fileNameMC,                                 // file name of the MC
+        TString* DataSets,                                  // technical names of data sets for output
+        TString* plotDataSets,                              // labels of data sets in plots
+        Int_t mode                      = 2,                // standard mode for analysis
+        Int_t cutNr                     = -1,               // if -1: you have to choose number at runtime
+        Int_t doExtQA                   = 2,                // 0: switched off, 1: normal extQA, 2: with Cell level plots, 3: with mean value calculations
+        Bool_t doEquidistantXaxis       = kFALSE,           // kTRUE: each run in runlist corresponds to 1 bin in X in histogram,
+        // kFALSE: histograms contain the complete specified run number range, where each run represents a bin - even if it is not specified
+        Bool_t doTrigger                = kTRUE,            // enables trigger analysis
+        Bool_t doHistsForEverySet       = kTRUE,            // kTRUE: output done for each set separately as well
+        // kFALSE: only full run range output is produced
+        Bool_t addSubFolder             = kFALSE,           // kTRUE: adds another subfolder for QA output fo reach DataSet[i]
+        // kFALSE: stores the runwise output all together
+        Bool_t useDataRunListForMC      = kFALSE,           // kTRUE: use the same run list for data and MC
+        // kFALSE: use specified
+        Size_t markerSize               = 1,                // how large should the markers be?
+        TString suffix                  = "eps",            // output format of plots
+        TString folderRunlists          = "",               // path to the runlists
+        Int_t *nSigmasBadRun            = NULL,             // array of 8 integers
+        TString addLabelRunList         = "",               // additional name for runlist
+        TString fixedTopDir             = ""
+        )
 {
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "EventQA_Runwise" << endl;
@@ -91,16 +91,16 @@ void EventQA_Runwise(
     TString fTextMeasurement    = Form("#pi^{0} #rightarrow #gamma#gamma");
     TString fCentrality[30];
     for(Int_t i=0; i<nSets; i++) {
-      if(fEnergyFlag.Contains("PbPb")){
-        if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
-        else if(plotDataSets[i].Contains("10-20%")) fCentrality[i] = "10-20%";
-        else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
-        else if(plotDataSets[i].Contains("50-90%")) fCentrality[i] = "50-90%";
-        else if(plotDataSets[i].Contains("0-90%")) fCentrality[i] = "0-90%";
-        else fCentrality[i] = "";
-      } else {
-        fCentrality[i] = "";
-      }
+        if(fEnergyFlag.Contains("PbPb")){
+            if(plotDataSets[i].Contains("0-10%")) fCentrality[i] = "0-10%";
+            else if(plotDataSets[i].Contains("10-20%")) fCentrality[i] = "10-20%";
+            else if(plotDataSets[i].Contains("20-50%")) fCentrality[i] = "20-50%";
+            else if(plotDataSets[i].Contains("50-90%")) fCentrality[i] = "50-90%";
+            else if(plotDataSets[i].Contains("0-90%")) fCentrality[i] = "0-90%";
+            else fCentrality[i] = "";
+        } else {
+            fCentrality[i] = "";
+        }
     }
     TString fCollisionSystem    = ReturnFullCollisionsSystem(fEnergyFlag);
     if (fCollisionSystem.CompareTo("") == 0){
@@ -192,7 +192,24 @@ void EventQA_Runwise(
         nameMainDirMC=nameMainDirData;
     }
     else {
-        nameMainDirMC=nameMainDirData;
+        cout<<"fileNameData and fileNameMC differ => Changing corresponding name variable nameMainDirMC"<<endl;
+        TFile* fCutFileMC             = new TFile(Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(0)).Data(), fileNameMC.Data()));
+        if(fCutFileMC->IsZombie()) {cout << "ERROR: MC ROOT file '" << Form("%s/%s/%s/%s", filePath.Data(), ((TString)vecDataSet.at(nData)).Data(), ((TString)vecRuns.at(0)).Data(), fileNameMC.Data()) << "' could not be openend, return!" << endl; return;}
+
+        TKey *keyMC;
+        if (fixedTopDir.CompareTo("") == 0){
+            TIter nextMC(fCutFileMC->GetListOfKeys());
+            while ((keyMC=(TKey*)nextMC())){
+                cout << Form("Found TopDir for MC: '%s' ",keyMC->GetName());
+                nameMainDirMC             = keyMC->GetName();
+            }
+        } else {
+            nameMainDirMC = fixedTopDir;
+        }
+        cout<<"nameMainDirMC changed to: "<<nameMainDirMC.Data()<<endl;
+        delete keyMC;
+        fCutFileMC->Close();
+        delete fCutFileMC;
     }
     cout << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -201,14 +218,14 @@ void EventQA_Runwise(
     TDirectoryFile* directoryOrg    = (TDirectoryFile*)fCutFile->Get(nameMainDir.Data());
     TList *listInput                = NULL;
     // if (directoryOrg){
-        // cout << __LINE__ << endl;
-        // listInput                   = (TList*)directoryOrg->Get(nameMainDir.Data());
+    // cout << __LINE__ << endl;
+    // listInput                   = (TList*)directoryOrg->Get(nameMainDir.Data());
     // } else {
 
-        listInput                   = (TList*)fCutFile->Get(nameMainDir.Data());
+    listInput                   = (TList*)fCutFile->Get(nameMainDir.Data());
     // }
     if(!listInput) {cout << "ERROR: Could not find main dir: " << nameMainDir.Data() << " in file! Returning..." << endl; return;}
-        listInput->SetOwner(kTRUE);
+    listInput->SetOwner(kTRUE);
     vector <TString> cuts;
     for(Int_t i = 0; i<listInput->GetSize(); i++){
         TList *listCuts         = (TList*)listInput->At(i);
@@ -812,10 +829,10 @@ void EventQA_Runwise(
 
     Bool_t isNullNSigmas = kFALSE;
     if(nSigmasBadRun == NULL){
-      isNullNSigmas = kTRUE;
-      const Int_t nQuantities = 8;
-      nSigmasBadRun = (Int_t*)calloc(nQuantities,sizeof(Int_t));
-      for(Int_t i=0; i<nQuantities; i++) nSigmasBadRun[i] = 2;
+        isNullNSigmas = kTRUE;
+        const Int_t nQuantities = 8;
+        nSigmasBadRun = (Int_t*)calloc(nQuantities,sizeof(Int_t));
+        for(Int_t i=0; i<nQuantities; i++) nSigmasBadRun[i] = 2;
     }
 
 
@@ -857,11 +874,21 @@ void EventQA_Runwise(
             //------------------------- Read in individual files -----------------------------------------------------
             //--------------------------------------------------------------------------------------------------------
             fRunNumber                  = vecRuns.at(j);
-            if (i>=nData){
-                fileName=fileNameMC;
-            }
-            else{
-                fileName=fileNameData;
+            if ((fileNameData!=fileNameMC)&&(j==0)){
+                if (i>=nData){
+                    if (i==nData){
+                        cout<<"Switching File Name and nameMainDir to MC"<<endl;
+                        cout<<"fileNameData: "<<fileNameData.Data()<<"; nameMainDirData: "<<nameMainDirData<<endl;
+                        cout<<"fileNameMC: "<<fileNameMC.Data()<<"; nameMainDirMC: "<<nameMainDirMC<<endl;
+
+                    }
+                    fileName=fileNameMC;
+                    nameMainDir=nameMainDirMC;
+                }
+                else{
+                    fileName=fileNameData;
+                    nameMainDir=nameMainDirData;
+                }
             }
             fRootFile                   = Form("%s/%s/%s/%s", filePath.Data(), fDataSet.Data(), fRunNumber.Data(), fileName.Data());
             TFile* RootFile             = new TFile(fRootFile.Data(),"READ");
@@ -879,7 +906,7 @@ void EventQA_Runwise(
             // if (directoryOrg2){
             //     TopDir                      = (TList*)directoryOrg2->Get(nameMainDir.Data());
             // } else {
-                TopDir                      = (TList*)RootFile->Get(nameMainDir.Data());
+            TopDir                      = (TList*)RootFile->Get(nameMainDir.Data());
             // }
             if(TopDir == NULL) {cout << "ERROR: TopDir not Found"<<endl; return;}
             else TopDir->SetOwner(kTRUE);
@@ -1513,26 +1540,26 @@ void EventQA_Runwise(
 
             if(i>0){
                 DrawVectorOverviewTH1D( canvas, vecVertexZRatio[i-1], "hRatioVertexZ", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
                 DrawVectorOverviewTH1D( canvas, vecCentRatio[i-1], "hRatioCentZ", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
                 cout << "plotting V0 Mult ratio" << endl;
                 DrawVectorOverviewTH1D( canvas, vecV0MultRatio[i-1], "hRatioV0Mult", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
                 cout << "plotting V0 Trigg ratio" << endl;
                 DrawVectorOverviewTH1D( canvas, vecV0TriggRatio[i-1], "hRatioV0Trigg", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
                 cout << "plotting Track Mult ratio" << endl;
                 DrawVectorOverviewTH1D( canvas, vecTrackMultRatio[i-1], "hRatioTrackMult", outputDirDataSet, suffix,
-                                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
+                        0.13, 0.15, 0.1, 0.14, 0.8, 0.9, 0.12, 0.93, 0x0, kFALSE, kTRUE);
             }
 
             //--------------------------------------------------------------------------------------------------------
             for(Int_t h=0; h<(Int_t) vecHistos[i].size(); h++) {
                 ((TH1D*) vecHistos[i].at(h))->SetTitle("");
                 if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 ) {
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 ) {
                     AdjustHistRange(((TH1D*) vecHistos[i].at(h)),10,10,kTRUE);
                     ((TH1D*) vecHistos[i].at(h))->Draw("p");
                 } else {
@@ -1544,24 +1571,24 @@ void EventQA_Runwise(
                 if(doTrigger && i<nData){
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), fTrigger.Data());
                     if(((TString)vecHistosName.at(h)).CompareTo("hCaloNClusters")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloNClustersQA")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClusters")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 )
+                            ((TString)vecHistosName.at(h)).CompareTo("hCaloNClustersQA")==0 ||
+                            ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClusters")==0 ||
+                            ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 )
                         PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.81, 0.03, fClusters.Data(), "", "");
                 } else{
                     TString temp="";
                     if(((TString)vecHistosName.at(h)).CompareTo("hCaloNClusters")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloNClustersQA")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClusters")==0 ||
-                        ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 )
+                            ((TString)vecHistosName.at(h)).CompareTo("hCaloNClustersQA")==0 ||
+                            ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClusters")==0 ||
+                            ((TString)vecHistosName.at(h)).CompareTo("hCaloMergedNClustersQA")==0 )
                         temp = fClusters;
                     PutProcessLabelAndEnergyOnPlot(xPosLabel, 0.92, 0.03, fCollisionSystem.Data(), plotDataSets[i].Data(), temp.Data());
 
                 }
 
                 if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
                     SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()), kFALSE, kTRUE);
                 else SaveCanvas(canvas, Form("%s/%s.%s", outputDirDataSet.Data(), vecHistosName.at(h).Data(), suffix.Data()));
             }
@@ -1619,18 +1646,18 @@ void EventQA_Runwise(
             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecCent[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "Cent_Runwise", plotDataSets[i], kFALSE,
                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
-//             cout << "plotting V0 Mult" << endl;
-//             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecV0Mult[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
-//                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "V0Mult_Runwise", plotDataSets[i], kFALSE,
-//                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
-//             cout << "plotting V0 Trigg" << endl;
-//             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecV0Trigg[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
-//                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "V0Trigg_Runwise", plotDataSets[i], kFALSE,
-//                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
-//             cout << "plotting Track Mult" << endl;
-//             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecTrackMult[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
-//                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "TrackMult_Runwise", plotDataSets[i], kFALSE,
-//                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+            //             cout << "plotting V0 Mult" << endl;
+            //             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecV0Mult[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+            //                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "V0Mult_Runwise", plotDataSets[i], kFALSE,
+            //                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+            //             cout << "plotting V0 Trigg" << endl;
+            //             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecV0Trigg[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+            //                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "V0Trigg_Runwise", plotDataSets[i], kFALSE,
+            //                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
+            //             cout << "plotting Track Mult" << endl;
+            //             DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecTrackMult[i], vecRuns, 2, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
+            //                                     doTrigger, fTrigger, (Bool_t)(i<nData), outputDirDataSet, "TrackMult_Runwise", plotDataSets[i], kFALSE,
+            //                                     fCollisionSystem, "", suffix, kFALSE, kFALSE, kFALSE);
             if (!isMerged){
                 //--------------------------------------------------------------------------------------------------------
                 DrawVectorRunwiseTH1D(	canvasRunwise, legendRuns, vecPi0Signal[i], vecRuns, 1, 1.1, kTRUE, addRight, 0.8, 0.94, 0.03, 0.8, 0.83, 0.03,
@@ -1675,9 +1702,9 @@ void EventQA_Runwise(
                 legend->AddEntry(((TH1D*) vecHistos[i].at(h)),plotDataSets[i].Data(),"p");
             }
             if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
-                ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
-                ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
-	      adjustedRange = AdjustHistRange(vecHistos,10,10,h,nSets,kTRUE, &yMin, &yMax);
+                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
+                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
+                adjustedRange = AdjustHistRange(vecHistos,10,10,h,nSets,kTRUE, &yMin, &yMax);
             else adjustedRange = AdjustHistRange(vecHistos,1.1,1.1,h,nSets,kTRUE, &yMin, &yMax);
             for(Int_t i=nSets-1; i>=0; i--)            {
                 TString draw;
@@ -1713,15 +1740,15 @@ void EventQA_Runwise(
             if(canvas->GetTopMargin()!=0.06) canvas->SetTopMargin(0.06);
             if(useDataRunListForMC && !addSubFolder){
                 if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
-                        SaveCanvas(canvas, Form("%s/%s/%s.%s", outputDir.Data(), DataSets[0].Data(),vecHistosName.at(h).Data(),suffix.Data()), kFALSE, kTRUE);
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
+                    SaveCanvas(canvas, Form("%s/%s/%s.%s", outputDir.Data(), DataSets[0].Data(),vecHistosName.at(h).Data(),suffix.Data()), kFALSE, kTRUE);
                 else SaveCanvas(canvas, Form("%s/%s/%s.%s", outputDir.Data(), DataSets[0].Data(),vecHistosName.at(h).Data(),suffix.Data()));
             } else {
                 if( ((TString)vecHistosName.at(h)).CompareTo("hNEvents")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
-                    ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
-                     SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(),suffix.Data()), kFALSE, kTRUE);
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsMinBias")==0 ||
+                        ((TString)vecHistosName.at(h)).CompareTo("hNEventsAll")==0 )
+                    SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(),suffix.Data()), kFALSE, kTRUE);
                 else SaveCanvas(canvas, Form("%s/%s.%s", outputDir.Data(), vecHistosName.at(h).Data(),suffix.Data()));
             }
             legend->Clear();

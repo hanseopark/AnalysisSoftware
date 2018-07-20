@@ -3023,6 +3023,8 @@
                 return kGreen+2;
             } else if (generator.Contains("Phytia")) {
                 return kGreen+4;
+            } else if ((!generator.CompareTo("LHC17h11"))||(!generator.CompareTo("LHC17l5"))||(!generator.CompareTo("LHC17h1"))||(!generator.CompareTo("LHC17k4"))||(!generator.CompareTo("LHC18c13"))||(!generator.CompareTo("LHC18a8"))||(!generator.CompareTo("LHC18a9"))||(!generator.CompareTo("LHC18a1"))||(!generator.CompareTo("LHC18c12"))) {
+                return kRed;
             } else if (generator.Contains("Phojet")) {
                 return kGreen+3;
             } else if (generator.Contains("AOD")){
