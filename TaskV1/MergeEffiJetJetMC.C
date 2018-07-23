@@ -76,10 +76,10 @@ void MergeEffiJetJetMC(  TString fCutSelection,
 //     TH1D* histoTrueSecFrac                  = (TH1D*)file->Get("TrueSecFrac");
 //     TH1D* histoTrueSecFracWide              = (TH1D*)file->Get("TrueSecFracWide");
 //     TH1D* histoTrueSecFracNarrow            = (TH1D*)file->Get("TrueSecFracNarrow");
-    TH1D* histoTrueSecFracFromK0S           = (TH1D*)file->Get("TrueSecFracFromK0S");
-    TH1D* histoTrueSecFracFromLambda        = (TH1D*)file->Get("TrueSecFracFromLambda");
-    TH1D* histoTrueSecFracFromK0SWide       = (TH1D*)file->Get("TrueSecFracFromK0SWide");
-    TH1D* histoTrueSecFracFromK0SNarrow     = (TH1D*)file->Get("TrueSecFracFromK0SNarrow");
+    TH1D* histoTrueSecFracFromK0S           = (TH1D*)file->Get("TrueSecFromK0SFrac");
+    TH1D* histoTrueSecFracFromLambda        = (TH1D*)file->Get("TrueSecFromLambdaFrac");
+    TH1D* histoTrueSecFracFromK0SWide       = (TH1D*)file->Get("TrueSecFromK0SFracWide");
+    TH1D* histoTrueSecFracFromK0SNarrow     = (TH1D*)file->Get("TrueSecFromK0SFracNarrow");
 
 
     TFile* fileMinBias                      = new TFile (nameFileCorrectionFileMBMC);
@@ -105,10 +105,10 @@ void MergeEffiJetJetMC(  TString fCutSelection,
 //     TH1D* histoTrueSecFracMinBias              = (TH1D*)fileMinBias->Get("TrueSecFrac");
 //     TH1D* histoTrueSecFracWideMinBias          = (TH1D*)fileMinBias->Get("TrueSecFracWide");
 //     TH1D* histoTrueSecFracNarrowMinBias        = (TH1D*)fileMinBias->Get("TrueSecFracNarrow");
-    TH1D* histoTrueSecFracFromK0SMinBias       = (TH1D*)fileMinBias->Get("TrueSecFracFromK0S");
-    TH1D* histoTrueSecFracFromLambdaMinBias    = (TH1D*)fileMinBias->Get("TrueSecFracFromLambda");
-    TH1D* histoTrueSecFracFromK0SWideMinBias   = (TH1D*)fileMinBias->Get("TrueSecFracFromK0SWide");
-    TH1D* histoTrueSecFracFromK0SNarrowMinBias = (TH1D*)fileMinBias->Get("TrueSecFracFromK0SNarrow");
+    TH1D* histoTrueSecFracFromK0SMinBias       = (TH1D*)fileMinBias->Get("TrueSecFromK0SFrac");
+    TH1D* histoTrueSecFracFromLambdaMinBias    = (TH1D*)fileMinBias->Get("TrueSecFromLambdaFrac");
+    TH1D* histoTrueSecFracFromK0SWideMinBias   = (TH1D*)fileMinBias->Get("TrueSecFromK0SFracWide");
+    TH1D* histoTrueSecFracFromK0SNarrowMinBias = (TH1D*)fileMinBias->Get("TrueSecFromK0SFracNarrow");
 
     TFile* fileJetJetMC                     = new TFile (nameFileCorrectionFileJetJetMC);
     TH1F *histoEventQualityJetJetMC         = NULL;
@@ -141,10 +141,10 @@ void MergeEffiJetJetMC(  TString fCutSelection,
 //     TH1D* histoTrueSecFracJetJetMC              = (TH1D*)fileJetJetMC->Get("TrueSecFrac");
 //     TH1D* histoTrueSecFracWideJetJetMC          = (TH1D*)fileJetJetMC->Get("TrueSecFracWide");
 //     TH1D* histoTrueSecFracNarrowJetJetMC        = (TH1D*)fileJetJetMC->Get("TrueSecFracNarrow");
-    TH1D* histoTrueSecFracFromK0SJetJetMC       = (TH1D*)fileJetJetMC->Get("TrueSecFracFromK0S");
-    TH1D* histoTrueSecFracFromLambdaJetJetMC    = (TH1D*)fileJetJetMC->Get("TrueSecFracFromLambda");
-    TH1D* histoTrueSecFracFromK0SWideJetJetMC   = (TH1D*)fileJetJetMC->Get("TrueSecFracFromK0SWide");
-    TH1D* histoTrueSecFracFromK0SNarrowJetJetMC = (TH1D*)fileJetJetMC->Get("TrueSecFracFromK0SNarrow");
+    TH1D* histoTrueSecFracFromK0SJetJetMC       = (TH1D*)fileJetJetMC->Get("TrueSecFromK0SFrac");
+    TH1D* histoTrueSecFracFromLambdaJetJetMC    = (TH1D*)fileJetJetMC->Get("TrueSecFromLambdaFrac");
+    TH1D* histoTrueSecFracFromK0SWideJetJetMC   = (TH1D*)fileJetJetMC->Get("TrueSecFromK0SFracWide");
+    TH1D* histoTrueSecFracFromK0SNarrowJetJetMC = (TH1D*)fileJetJetMC->Get("TrueSecFromK0SFracNarrow");
 
     TH1D *histoTrueEffiPtWeighted           = (TH1D*)histoTrueEffiPtJetJetMC->Clone("histoTrueEffiPtWeighted");
 
@@ -566,10 +566,10 @@ void MergeEffiJetJetMC(  TString fCutSelection,
 //         histoTrueSecFrac->Write("TrueSecFrac",TObject::kOverwrite);
 //         histoTrueSecFracWide->Write("TrueSecFracWide",TObject::kOverwrite);
 //         histoTrueSecFracNarrow->Write("TrueSecFracNarrow",TObject::kOverwrite);
-        histoTrueSecFracFromK0S->Write("TrueSecFracFromK0S",TObject::kOverwrite);
-        histoTrueSecFracFromLambda->Write("TrueSecFracFromLambda",TObject::kOverwrite);
-        histoTrueSecFracFromK0SWide->Write("TrueSecFracFromK0SWide",TObject::kOverwrite);
-        histoTrueSecFracFromK0SNarrow->Write("TrueSecFracFromK0SNarrow",TObject::kOverwrite);
+        histoTrueSecFracFromK0S->Write("TrueSecFromK0SFrac",TObject::kOverwrite);
+        histoTrueSecFracFromLambda->Write("TrueSecFromLambdaFrac",TObject::kOverwrite);
+        histoTrueSecFracFromK0SWide->Write("TrueSecFromK0SFracWide",TObject::kOverwrite);
+        histoTrueSecFracFromK0SNarrow->Write("TrueSecFromK0SFracNarrow",TObject::kOverwrite);
       }
       histoEventQualityJetJetMC->Write("NEvents_JetJetMC",TObject::kOverwrite);
       histoMCInputJetJetMC->Write("MC_Meson_genPt_oldBin_JetJetMC",TObject::kOverwrite);

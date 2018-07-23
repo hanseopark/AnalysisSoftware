@@ -4,10 +4,10 @@ source basicFunction.sh
 # download script for pp 5TeV from 2017
 BASEDIR=/home/admin1/leardini/GridOutput/pp
 mkdir -p $BASEDIR
-TRAINDIR=Legotrain-vAN-20180701-1_NMandMB
+TRAINDIR=Legotrain-vAN-20180719-1_dEdxMapsandPhojet
 
 ### Data
-LHC17pqMETA=2400_20180711-1102
+LHC17pqMETA=2413_20180720-1304
 LHC17p_fast=$LHC17pqMETA\_child_1
 LHC17p_woSDD=$LHC17pqMETA\_child_2
 LHC17q_fast=$LHC17pqMETA\_child_3
@@ -23,7 +23,7 @@ LHC17q_wSDD=;
 # LHC17q_woSDD=$LHC17pqMETA\_child_6
 
 ### MC
-LHC17lMETA=3374_20180711-1104;
+LHC17lMETA=3386_20180720-1035;
 LHC17l3b_fast=$LHC17lMETA\_child_1
 LHC17l3b_woSDD=$LHC17lMETA\_child_2
 LHC17l4b_fast=$LHC17lMETA\_child_3
@@ -38,10 +38,10 @@ LHC17l4b_woSDD=$LHC17lMETA\_child_4
 # LHC17l4b_cent=$LHC17lMETA\_child_5
 # LHC17l4b_woSDD=$LHC17lMETA\_child_6
 
-LHC18d6bMETA=3307_20180525-1819;
+LHC18d6bMETA=/3385_20180720-1034;
 LHC18d6b_fast=$LHC18d6bMETA\_child_1;
 LHC18d6b_woSDD=$LHC18d6bMETA\_child_2;
-LHC18d6b_wSDD=3306_20180525-1819
+LHC18d6b_wSDD=;
 
 ### MC Jet Jet
 LHC18b8META=922_20180711-1111
@@ -51,17 +51,17 @@ LHC18b8_woSDD=$LHC18b8META\_child_3
 
 OUTPUTDIR=$BASEDIR/$TRAINDIR
 TRAINPATHData=GA_pp #_AOD
-TRAINPATHMC=GA_pp_MC_AOD
+TRAINPATHMC=GA_pp_MC #_AOD
 
-NSlashes=9
+NSlashes=10 #without mergelist = 9
 NSlashes2=10
 NSlashes3=11
 
 mergeFolder=merge_runlist_1;
 
 # fileToDownload=AnalysisResults.root;
-fileToDownload=GammaConvV1_406.root;
-fileName=GammaConvV1_406.root;
+# fileToDownload=GammaConvV1_406.root;
+# fileName=GammaConvV1_406.root;
 
 # fileToDownload=GammaConv_Material_121.root;
 
@@ -857,7 +857,7 @@ if [ $1 = "material" ]; then
         fileNumbers=`cat fileLHC17p_fast.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -870,7 +870,7 @@ if [ $1 = "material" ]; then
         fileNumbers=`cat fileLHC17p_woSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -883,7 +883,7 @@ if [ $1 = "material" ]; then
         fileNumbers=`cat fileLHC17p_wSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17p_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17p_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -1843,6 +1843,49 @@ elif [ $2 = "yes" ]; then
         done;
     fi
 
+
+    OUTPUTDIR_LHC18d6b_fast=$BASEDIR/$TRAINDIR/LHC18d6b_fast_LowInt
+    mkdir -p $OUTPUTDIR_LHC18d6b_fast
+    OUTPUTDIR_LHC18d6b_woSDD=$BASEDIR/$TRAINDIR/LHC18d6b_woSDD_LowInt
+    mkdir -p $OUTPUTDIR_LHC18d6b_woSDD
+    OUTPUTDIR_LHC18d6b_wSDD=$BASEDIR/$TRAINDIR/LHC18d6b_wSDD_LowInt
+    mkdir -p $OUTPUTDIR_LHC18d6b_wSDD
+
+    if [ $LHC18d6b_fast != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_fast/merge/GammaConv* file:$OUTPUTDIR_LHC18d6b_fast/
+        ls $OUTPUTDIR_LHC18d6b_fast/GammaConv*.root > fileLHC18d6b_fast.txt
+        fileNumbers=`cat fileLHC18d6b_fast.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_fast/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_fast_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
+        done;
+    fi
+
+    if [ $LHC18d6b_woSDD != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_woSDD/merge/GammaConv* file:$OUTPUTDIR_LHC18d6b_woSDD/
+        ls $OUTPUTDIR_LHC18d6b_woSDD/GammaConv*.root > fileLHC18d6b_woSDD.txt
+        fileNumbers=`cat fileLHC18d6b_woSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_woSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_woSDD_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
+        done;
+    fi
+
+    if [ $LHC18d6b_wSDD != "" ]; then
+        alien_cp alien:/alice/cern.ch/user/a/alitrain/PWGGA/$TRAINPATHMC/$LHC18d6b_wSDD/merge/GammaConv* file:$OUTPUTDIR_LHC18d6b_wSDD/
+        ls $OUTPUTDIR_LHC18d6b_wSDD/GammaConv*.root > fileLHC18d6b_wSDD.txt
+        fileNumbers=`cat fileLHC18d6b_wSDD.txt`
+        for fileName in $fileNumbers; do
+            echo $fileName
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+            echo $number
+            root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18d6b_wSDD/GammaConvV1_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18d6b_wSDD_LowInt_$number.root\"\,\"GammaConvV1_$number\"\)
+        done;
+    fi
 fi
 
 if [ $2 = "mergefills" ]; then
@@ -2011,7 +2054,7 @@ if [ $2 = "material" ]; then
         fileNumbers=`cat fileLHC17l3b_fast.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_fast/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_fast_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -2023,7 +2066,7 @@ if [ $2 = "material" ]; then
         fileNumbers=`cat fileLHC17l3b_woSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_woSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_woSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -2036,7 +2079,7 @@ if [ $2 = "material" ]; then
         fileNumbers=`cat fileLHC17l3b_wSDD.txt`
         for fileName in $fileNumbers; do
             echo $fileName
-            number=`echo $fileName  | cut -d "/" -f $NSlashes | cut -d "_" -f 3 | cut -d "." -f1`
+            number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 3 | cut -d "." -f1`
             echo $number
             root -l -b -q -x ChangeStructureToStandardMaterial.C\(\"$OUTPUTDIR_LHC17l3b_wSDD/GammaConv_Material_$number.root\"\,\"$OUTPUTDIR/MaterialBudget_LHC17l3b_wSDD_LowInt_$number.root\"\,\"GammaConvMaterial_$number\"\)
         done;
@@ -2375,12 +2418,34 @@ if [ $2 = "jetjet" ]; then
     fileNumbers=`cat fileJJmergeLHC18b8.txt`
     MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_fast $NSlashes3 GammaConvV1 fast runlists/runNumbersLHC18b8_fast.txt runlists/binsJetJetLHC18b8.txt
 
+    ls $OUTPUTDIR_LHC18b8_fast/GammaConv*.root > fileLHC18b8_fast.txt
+    fileNumbers=`cat fileLHC18b8_fast.txt`
+    for fileName in $fileNumbers; do
+        echo $fileName
+        number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number
+        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18b8_fast/GammaConvV1-fast_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18b8_fast_$number.root\"\,\"GammaConvV1_$number\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC18b8_fast_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC18b8_fast_$number.log\"\)
+    done;
+
+
     rm $OUTPUTDIR_LHC18b8_woSDD/GammaConv*.root
     firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_woSDD.txt`
     firstbinNumber=`head -n1 runlists/binsJetJetLHC18b8.txt`
     ls $OUTPUTDIR_LHC18b8_woSDD/$firstbinNumber/$firstrunNumber/GammaConvV1_*.root > fileJJmergeLHC18b8.txt
     fileNumbers=`cat fileJJmergeLHC18b8.txt`
     MergeAccordingToSpecificRunlist fileJJmergeLHC18b8.txt $OUTPUTDIR_LHC18b8_woSDD $NSlashes3 GammaConvV1 woSDD runlists/runNumbersLHC18b8_woSDD.txt runlists/binsJetJetLHC18b8.txt
+
+    ls $OUTPUTDIR_LHC18b8_woSDD/GammaConv*.root > fileLHC18b8_woSDD.txt
+    fileNumbers=`cat fileLHC18b8_woSDD.txt`
+    for fileName in $fileNumbers; do
+        echo $fileName
+        number=`echo $fileName  | cut -d "/" -f 9 | cut -d "_" -f 2 | cut -d "." -f1`
+        echo $number
+        root -l -b -q -x ChangeStructureToStandard.C\(\"$OUTPUTDIR_LHC18b8_woSDD/GammaConvV1-woSDD_$number.root\"\,\"$OUTPUTDIR/GammaConvV1_MC_LHC18b8_woSDD_$number.root\"\,\"GammaConvV1_$number\"\)
+        root -b -l -q -x ../TaskV1/MakeCutLog.C\(\"$OUTPUTDIR/GammaConvV1_MC_LHC18b8_woSDD_$number.root\"\,\"$OUTPUTDIR/CutSelection_MC_LHC18b8_woSDD_$number.log\"\)
+    done;
+
 
 #     rm $OUTPUTDIR_LHC18b8_cent/GammaConv*.root
 #     firstrunNumber=`head -n1 runlists/runNumbersLHC18b8_wSDD.txt`
