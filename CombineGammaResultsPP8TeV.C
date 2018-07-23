@@ -1381,6 +1381,17 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     cout << forOutput.Data() << endl;
 
 
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "Gamma - Tsallis" << endl;
+    fileFinalResults << WriteParameterToFile(fitTsallisGammaComb)<< endl;
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "Gamma - TCM" << endl;
+    fileFinalResults << WriteParameterToFile(fitTCMGammaComb) << endl;
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "Gamma - Hagedorn" << endl;
+    fileFinalResults << WriteParameterToFile(fitHagGammaComb) << endl;
+
+
     // Cloning spectra
 
     TGraphAsymmErrors* graphIndGammaIncStat[11]          = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
@@ -1401,6 +1412,10 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
     TGraphAsymmErrors* graphRatioGammaIndCombFitStat[11] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
     TGraphAsymmErrors* graphRatioGammaIndCombFitSys[11]  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphRatioGammaIndCombFitStatTsallis[11] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphRatioGammaIndCombFitSysTsallis[11]  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphRatioGammaIndCombFitStatHagedorn[11] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    TGraphAsymmErrors* graphRatioGammaIndCombFitSysHagedorn[11]  = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
     TGraphAsymmErrors* graphRatioGammaCombCombFitTot     = (TGraphAsymmErrors*)graphCombIncGammaTot->Clone();
     graphRatioGammaCombCombFitTot                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitTot, fitTCMGammaComb);
@@ -1408,6 +1423,20 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     graphRatioGammaCombCombFitStat                       = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitStat, fitTCMGammaComb);
     TGraphAsymmErrors* graphRatioGammaCombCombFitSys     = (TGraphAsymmErrors*)graphCombIncGammaSys->Clone();
     graphRatioGammaCombCombFitSys                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitSys, fitTCMGammaComb);
+
+    TGraphAsymmErrors* graphRatioGammaCombCombFitTsallisTot     = (TGraphAsymmErrors*)graphCombIncGammaTot->Clone();
+    graphRatioGammaCombCombFitTsallisTot                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitTsallisTot, fitTsallisGammaComb);
+    TGraphAsymmErrors* graphRatioGammaCombCombFitTsallisStat    = (TGraphAsymmErrors*)graphCombIncGammaStat->Clone();
+    graphRatioGammaCombCombFitTsallisStat                       = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitTsallisStat, fitTsallisGammaComb);
+    TGraphAsymmErrors* graphRatioGammaCombCombFitTsallisSys     = (TGraphAsymmErrors*)graphCombIncGammaSys->Clone();
+    graphRatioGammaCombCombFitTsallisSys                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitTsallisSys, fitTsallisGammaComb);
+
+    TGraphAsymmErrors* graphRatioGammaCombCombFitHagedornTot     = (TGraphAsymmErrors*)graphCombIncGammaTot->Clone();
+    graphRatioGammaCombCombFitHagedornTot                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitHagedornTot, fitHagGammaComb);
+    TGraphAsymmErrors* graphRatioGammaCombCombFitHagedornStat    = (TGraphAsymmErrors*)graphCombIncGammaStat->Clone();
+    graphRatioGammaCombCombFitHagedornStat                       = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitHagedornStat, fitHagGammaComb);
+    TGraphAsymmErrors* graphRatioGammaCombCombFitHagedornSys     = (TGraphAsymmErrors*)graphCombIncGammaSys->Clone();
+    graphRatioGammaCombCombFitHagedornSys                        = CalculateGraphErrRatioToFit(graphRatioGammaCombCombFitHagedornSys, fitHagGammaComb);
 
     TGraphAsymmErrors* graphRatioGammaPCMCombCombFitTot     = (TGraphAsymmErrors*)graphCombPCMIncGammaTot->Clone();
     graphRatioGammaPCMCombCombFitTot                        = CalculateGraphErrRatioToFit(graphRatioGammaPCMCombCombFitTot, fitTCMGammaComb);
@@ -1420,11 +1449,24 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         if (graphIndGammaIncStat[i]){
             graphRatioGammaIndCombFitStat[i]             = (TGraphAsymmErrors*)graphIndGammaIncStat[i]->Clone(Form("RatioGamma%sToCombFitStat", nameMeasGlobalLabel[i].Data()));
             graphRatioGammaIndCombFitStat[i]             = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitStat[i], fitTCMGammaComb);
+
+            graphRatioGammaIndCombFitStatTsallis[i]      = (TGraphAsymmErrors*)graphIndGammaIncStat[i]->Clone(Form("RatioGamma%sToCombFitStatTsallis", nameMeasGlobalLabel[i].Data()));
+            graphRatioGammaIndCombFitStatTsallis[i]      = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitStatTsallis[i], fitTsallisGammaComb);
+
+            graphRatioGammaIndCombFitStatHagedorn[i]     = (TGraphAsymmErrors*)graphIndGammaIncStat[i]->Clone(Form("RatioGamma%sToCombFitStatHagedorn", nameMeasGlobalLabel[i].Data()));
+            graphRatioGammaIndCombFitStatHagedorn[i]     = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitStatHagedorn[i], fitHagGammaComb);
         }
         if (graphIndGammaIncSys[i]){
             graphRatioGammaIndCombFitSys[i]              = (TGraphAsymmErrors*)graphIndGammaIncSys[i]->Clone(Form("RatioGamma%sToCombFitSyst", nameMeasGlobalLabel[i].Data()));
             graphRatioGammaIndCombFitSys[i]              = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitSys[i], fitTCMGammaComb);
+
+            graphRatioGammaIndCombFitSysTsallis[i]       = (TGraphAsymmErrors*)graphIndGammaIncSys[i]->Clone(Form("RatioGamma%sToCombFitSystTsallis", nameMeasGlobalLabel[i].Data()));
+            graphRatioGammaIndCombFitSysTsallis[i]       = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitSysTsallis[i], fitTsallisGammaComb);
+
+            graphRatioGammaIndCombFitSysHagedorn[i]      = (TGraphAsymmErrors*)graphIndGammaIncSys[i]->Clone(Form("RatioGamma%sToCombFitSystHagedorn", nameMeasGlobalLabel[i].Data()));
+            graphRatioGammaIndCombFitSysHagedorn[i]      = CalculateGraphErrRatioToFit(graphRatioGammaIndCombFitSysHagedorn[i], fitHagGammaComb);
         }
+
     }
 
     // **********************************************************************************************************************
@@ -1460,6 +1502,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitStat, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV);
     graphRatioGammaCombCombFitStat->Draw("p,same,z");
 
+
     DrawGammaLines(0.23, 25. , 1., 1.,0.1, kGray+2);
     DrawGammaLines(0.23, 25. , 1.05, 1.05,0.1, kGray, 7);
     DrawGammaLines(0.23, 25. , 0.95, 0.95,0.1, kGray, 7);
@@ -1473,6 +1516,47 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfCombToCombFit_8TeV.%s",outputDir.Data(),suffix.Data()));
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfCombToCombFit_8TeV.pdf",outputDir.Data()));
+
+    //---------------------------------------------------------------------------------------------------------------
+
+    histo2DGammaRatioToCombFit->Draw("copy");
+
+    ProduceGraphAsymmWithoutXErrors(graphRatioGammaCombCombFitStat);
+    ProduceGraphAsymmWithoutXErrors(graphRatioGammaCombCombFitTsallisStat);
+    ProduceGraphAsymmWithoutXErrors(graphRatioGammaCombCombFitHagedornStat);
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitSys, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV, widthLinesBoxes, kTRUE);
+    graphRatioGammaCombCombFitSys->Draw("E2same");
+    DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitStat, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV);
+    graphRatioGammaCombCombFitStat->Draw("p,same,z");
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitTsallisSys, 25, markerSizeCombpp8TeV, kGray+1 , kGray+1, widthLinesBoxes, kTRUE);
+    graphRatioGammaCombCombFitTsallisSys->Draw("E2same");
+    DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitTsallisStat, 25, markerSizeCombpp8TeV, kGray+1 , kGray+1);
+    graphRatioGammaCombCombFitTsallisStat->Draw("p,same,z");
+
+    DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitHagedornSys, 24, markerSizeCombpp8TeV, kRed+2 , kRed+2, widthLinesBoxes, kTRUE);
+    graphRatioGammaCombCombFitHagedornSys->Draw("E2same");
+    DrawGammaSetMarkerTGraphAsym(graphRatioGammaCombCombFitHagedornStat, 24, markerSizeCombpp8TeV, kRed+2 , kRed+2);
+    graphRatioGammaCombCombFitHagedornStat->Draw("p,same,z");
+
+    DrawGammaLines(0.23, 25. , 1., 1.,0.1, kGray+2);
+    DrawGammaLines(0.23, 25. , 1.05, 1.05,0.1, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.95, 0.95,0.1, kGray, 7);
+
+    labelRatioToFitEnergy->Draw();
+    TLatex *labelRatioToFitGamma2      = new TLatex(0.95, 0.86, "#gamma_{inc}");
+    SetStyleTLatex( labelRatioToFitGamma2, textSizeLabelsPixel, 4, 1, 43, kTRUE, 31);
+    labelRatioToFitGamma2->Draw();
+
+    TLegend* legendRatioFits = GetAndSetLegend2(0.20,0.95-4*1.05*textsizeLabelsPPb,0.37,0.95, textSizeLabelsPixel, 1, "", 43, 0.2);
+    legendRatioFits->AddEntry(graphRatioGammaCombCombFitSys,"TCM","p");
+    legendRatioFits->AddEntry(graphRatioGammaCombCombFitTsallisSys,"Tsallis","p");
+    legendRatioFits->AddEntry(graphRatioGammaCombCombFitHagedornSys,"mod. Hagedorn","p");
+    legendRatioFits->Draw();
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfCombToDifferentFits_8TeV.%s",outputDir.Data(),suffix.Data()));
+    canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfCombToDifferentFits_8TeV.pdf",outputDir.Data()));
 
     // **********************************************************************************************************************
     // *******************************************Plot Ratio of Individual meas to Fit ******************************************
@@ -1554,6 +1638,96 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit_8.%s",outputDir.Data(),suffix.Data()));
     canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFit_8.pdf",outputDir.Data()));
+
+    //--------------------------------------------------------------
+
+    histo2DGammaRatioToCombFit->Draw("copy");
+    for (Int_t i = 10; i > -1 ; i--){
+        if (graphRatioGammaIndCombFitSysTsallis[i]){
+            DrawGammaSetMarkerTGraphAsym(graphRatioGammaIndCombFitSysTsallis[i], markerStyleDet[i] ,markerSizeDet[i], colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
+            graphRatioGammaIndCombFitSysTsallis[i]->Draw("E2same");
+        }
+        if (graphRatioGammaIndCombFitStatTsallis[i]){
+            ProduceGraphAsymmWithoutXErrors(graphRatioGammaIndCombFitStatTsallis[i]);
+            DrawGammaSetMarkerTGraphAsym(graphRatioGammaIndCombFitStatTsallis[i], markerStyleDet[i] ,markerSizeDet[i], colorDet[i], colorDet[i]);
+            graphRatioGammaIndCombFitStatTsallis[i]->Draw("p,same,z");
+        }
+    }
+    graphRatioGammaIndCombFitStatTsallis[4]->Draw("p,same,z");
+
+    DrawGammaLines(0.23, 25. , 1., 1.,0.5, kGray+2);
+    DrawGammaLines(0.23, 25. , 1.05, 1.05,0.5, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.95, 0.95,0.5, kGray, 7);
+    DrawGammaLines(0.23, 25. , 1.1, 1.1,0.5, kGray, 9);
+    DrawGammaLines(0.23, 25. , 0.9, 0.9,0.5, kGray, 9);
+
+    labelRatioToFitEnergy->Draw();
+    labelRatioToFitGamma->Draw();
+    histo2DGammaRatioToCombFit->Draw("same,axis");
+
+    textPCMRatioGamma->Draw();
+    textEMCALRatioGamma->Draw();
+    textPCMEMCALRatioGamma->Draw();
+
+    textStatRatioGamma->Draw();
+    textSysRatioGamma->Draw();
+
+    markerPCMGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[0]);
+    markerEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[1]);
+    markerPCMEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[2]);
+
+    boxPCMGammaRatio->Draw("l");
+    boxEMCALGammaRatio->Draw("l");
+    boxPCMEMCALGammaRatio->Draw("l");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFitTsallis_8.%s",outputDir.Data(),suffix.Data()));
+    canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFitTsallis_8.pdf",outputDir.Data()));
+
+    //--------------------------------------------------------------
+
+    histo2DGammaRatioToCombFit->Draw("copy");
+    for (Int_t i = 10; i > -1 ; i--){
+        if (graphRatioGammaIndCombFitSysHagedorn[i]){
+            DrawGammaSetMarkerTGraphAsym(graphRatioGammaIndCombFitSysHagedorn[i], markerStyleDet[i] ,markerSizeDet[i], colorDet[i], colorDet[i], widthLinesBoxes, kTRUE);
+            graphRatioGammaIndCombFitSysHagedorn[i]->Draw("E2same");
+        }
+        if (graphRatioGammaIndCombFitStatHagedorn[i]){
+            ProduceGraphAsymmWithoutXErrors(graphRatioGammaIndCombFitStatHagedorn[i]);
+            DrawGammaSetMarkerTGraphAsym(graphRatioGammaIndCombFitStatHagedorn[i], markerStyleDet[i] ,markerSizeDet[i], colorDet[i], colorDet[i]);
+            graphRatioGammaIndCombFitStatHagedorn[i]->Draw("p,same,z");
+        }
+    }
+    graphRatioGammaIndCombFitStatHagedorn[4]->Draw("p,same,z");
+
+    DrawGammaLines(0.23, 25. , 1., 1.,0.5, kGray+2);
+    DrawGammaLines(0.23, 25. , 1.05, 1.05,0.5, kGray, 7);
+    DrawGammaLines(0.23, 25. , 0.95, 0.95,0.5, kGray, 7);
+    DrawGammaLines(0.23, 25. , 1.1, 1.1,0.5, kGray, 9);
+    DrawGammaLines(0.23, 25. , 0.9, 0.9,0.5, kGray, 9);
+
+    labelRatioToFitEnergy->Draw();
+    labelRatioToFitGamma->Draw();
+    histo2DGammaRatioToCombFit->Draw("same,axis");
+
+    textPCMRatioGamma->Draw();
+    textEMCALRatioGamma->Draw();
+    textPCMEMCALRatioGamma->Draw();
+
+    textStatRatioGamma->Draw();
+    textSysRatioGamma->Draw();
+
+    markerPCMGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[0]);
+    markerEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[1]);
+    markerPCMEMCALGammaRatio->DrawMarker(columnsLegendGammaRatioAbs[1] ,rowsLegendGammaRatioAbs[2]);
+
+    boxPCMGammaRatio->Draw("l");
+    boxEMCALGammaRatio->Draw("l");
+    boxPCMEMCALGammaRatio->Draw("l");
+
+    canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFitHagedorn_8.%s",outputDir.Data(),suffix.Data()));
+    canvasRatioToCombFit->SaveAs(Form("%s/Gamma_RatioOfIndividualMeasToCombFitHagedorn_8.pdf",outputDir.Data()));
+
+    //--------------------------------------------------------------
 
     histo2DGammaRatioToCombFit->GetYaxis()->SetRangeUser(0.73,1.27);
     histo2DGammaRatioToCombFit->Draw("copy");
@@ -2645,7 +2819,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     canvasTotalCorr->Update();
     canvasTotalCorr->Print(Form("%s/Gamma_TotalCorrFactor_8.%s",outputDir.Data(),suffix.Data()));
     canvasTotalCorr->Print(Form("%s/Gamma_TotalCorrFactor_8.pdf",outputDir.Data()));
-    
+
     // **********************************************************************************************************************
     // ******************************** EffectiveSecCorr for gamma individual measurements ****************************************
     // **********************************************************************************************************************
@@ -3208,6 +3382,41 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     histo2DYieldGamma->Draw("same,axis");
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_8.%s",outputDir.Data(),suffix.Data()));
     canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_DirGamma_IncGamma_NonFit_Theory_8.pdf",outputDir.Data()));
+
+    histo2DXSecGamma->GetYaxis()->SetRangeUser(2e2,7e11);
+    histo2DXSecGamma->Draw("copy");
+
+    graphXSecCombIncGammaSys->Draw("E2same");
+    graphXSecCombIncGammaStatPlot->Draw("Epsame");
+
+    TLegend* legendTCMfitXSec2      = GetAndSetLegend2(0.22, 0.38-(5*textSizeLabelsRel*0.85), 0.42, 0.38,textSizeLabelsPixel, 1, "", 43, 0.3);
+    legendTCMfitXSec2->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
+    legendTCMfitXSec2->AddEntry(fitXSecTCMGammaComb,"TCM fit","l");
+    fitXSecTCMGammaComb->SetRange(0.28, 17);
+    fitXSecTCMGammaComb->Draw("same");
+
+    TF1* fitXSecHagedornGammaComb = ScaleTF1(fitHagGammaComb,xSection8TeVV0AND*recalcBarn,"xsecHagedornfit");
+    DrawGammaSetMarkerTF1( fitXSecHagedornGammaComb, 7, 2, kRed+2);
+    legendTCMfitXSec2->AddEntry(fitXSecHagedornGammaComb,"mod. Hagedorn fit","l");
+    fitXSecHagedornGammaComb->SetRange(0.28, 17);
+    fitXSecHagedornGammaComb->Draw("same");
+
+    TF1* fitXSecTsallisGammaComb = ScaleTF1(fitTsallisGammaComb,xSection8TeVV0AND*recalcBarn,"xsecTsallisfit");
+    DrawGammaSetMarkerTF1( fitXSecTsallisGammaComb, 5, 2, kGray+1);
+    legendTCMfitXSec2->AddEntry(fitXSecTsallisGammaComb,"Tsallis fit","l");
+    fitXSecTsallisGammaComb->SetRange(0.28, 17);
+    fitXSecTsallisGammaComb->Draw("same");
+
+    legendTCMfitXSec2->Draw();
+
+    labelEnergyDGInvYieldPaperAll->Draw();
+    labelALICEDGNormUnPaperAll->Draw();
+
+    histo2DYieldGamma->Draw("same,axis");
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_IncGamma_NonFit_8.%s",outputDir.Data(),suffix.Data()));
+    canvasInvYieldGamma->SaveAs(Form("%s/InvXsection_IncGamma_NonFit_8.pdf",outputDir.Data()));
+
+
     //***************************** Plot cocktail gammas to all gammas ratio ****************************************
     Style_t     cocktailColorPartialSums[14]                   = {kBlue+1,  kRed+1,   kOrange-2,  kGreen-2,   kPink-2,
                                                                   kOrange+2,  kAzure,   kGreen+3,   kAzure+2,   24,
