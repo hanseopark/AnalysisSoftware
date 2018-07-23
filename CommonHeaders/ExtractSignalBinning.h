@@ -3089,12 +3089,19 @@
                 fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
             }
         } else if( energy.CompareTo("8TeV") == 0 || energy.CompareTo("pPb_8TeV") == 0){
+          if(modi == 2 || modi == 4){
+            fNBinsClusterPt       = fNBinsCluster8TeVPt;
+            for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
+                fBinsClusterPt[iPt] = fBinsCluster8TeVPt[iPt];
+            }
+          }else{
             fNBinsClusterPt       = fNBinsCluster8TeVmEMCPt;
             for(Int_t iPt=0;iPt<=fNBinsClusterPt;iPt++){
                 fBinsClusterPt[iPt] = fBinsCluster8TeVmEMCPt[iPt];
             }
+          }
 
-             } else if( ( energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVLowB") == 0 ) && modi != 0){
+        } else if( ( energy.CompareTo("13TeV") == 0 || energy.CompareTo("13TeVLowB") == 0 ) && modi != 0){
             fNBinsClusterPt            = fNBinsCluster13TeVPt;
 
             for(Int_t i=0; i<fNBinsCluster13TeVPt+1;i++){
@@ -3648,8 +3655,11 @@
                     if( modi == 2){
                       fStartPtBin = 4;
                     }else if(modi == 4){
-                      fStartPtBin = 15;
+                      fStartPtBin = 6;
                     }
+                    if (modi == 4 && specialTrigg == 1){ fStartPtBin = 22; }
+                    if (modi == 4 && specialTrigg == 2){ fStartPtBin = 33; }
+
                     if (fNBinsPt > 32 && (modi == 4 || modi == 2) ){
                       if( specialTrigg == 2 && fNBinsPt > 41){
                         cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
@@ -3671,7 +3681,7 @@
                         fBinsPt[i]         = fBinsDirGamma8TeVPt[i];
                         if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
 
-                        if (modi == 4 || modi == 2){
+                        if (modi == 4 ){
                             if( specialTrigg == 1 ){
                                 fBinsPt[i]                 = fBinsDirGamma8TeVEMCalTriggerPt[i];
                             } else if ( specialTrigg == 2 ){
@@ -3680,13 +3690,13 @@
                                 fBinsPt[i]                 = fBinsDirGamma8TeVPt[i];
                         }
 
-                        if(modi == 4 || modi == 2) {
+                        if(modi == 4 ) {
                             if( specialTrigg == 1 ){
                                 if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVEMCalTriggerPtRebin[i];
                             } else if( specialTrigg == 2 ){
                                 if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVEMCalTriggerPtRebin[i];
                             } else{
-                                if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVPtRebin[i];
+                                if (i < fNBinsPt+1) fNRebin[i] = fBinsDirGamma8TeVEMCalPtRebin[i];
                             }
                         }
                     }

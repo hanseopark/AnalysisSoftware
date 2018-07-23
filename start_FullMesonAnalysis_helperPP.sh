@@ -14,7 +14,7 @@ function GiveBinning900GeV()
     if [ $DOPI0 -eq 1 ] || [ $DOGAMMA -eq 1 ]; then
         echo "How many p_T bins do you want to use? 10(3GeV), 11(4GeV)";
         read answer
-        if [ $answer -ge 7 ] && [ $answer -lt 13 ] ; then
+        if [ $answer -ge 7 ] && [ $answer -lt 13 ]; then
             echo "--> $answer Bins ";
             CORRECTPI0=1
             BINSPTPI0=$answer
@@ -55,7 +55,7 @@ function GiveBinning2760GeV()
         echo "  mEMC: 25 (16 GeV), 26 (18 GeV), 27 (22 GeV), 28 (26 GeV), 29 (30 GeV), 30 (35 GeV), 31 (40 GeV), 32 (50 GeV)";
         read answer
         if [ $MODE -eq 10 ] || [ $MODE -eq 11 ]; then
-            if [ $answer -ge 25 ] && [ $answer -lt 33 ] ; then
+            if [ $answer -ge 25 ] && [ $answer -lt 33 ]; then
                 echo "--> $answer Bins";
                 CORRECTPI0=1
                 BINSPTPI0=$answer
@@ -66,7 +66,7 @@ function GiveBinning2760GeV()
             DOPI0INETABINS=0;
             CORRECTETA=1;
         else
-            if [ $answer -ge 17 ] && [ $answer -lt 30 ] ; then
+            if [ $answer -ge 17 ] && [ $answer -lt 30 ]; then
                 echo "--> $answer Bins";
                 CORRECTPI0=1
                 BINSPTPI0=$answer
@@ -236,6 +236,7 @@ function GiveBinning8TeV()
             echo "--> Pi0 binning was not set correctly. Please try again.";
             CORRECTPI0=0
         fi
+        BINSPTGAMMA=$BINSPTPI0
     fi
 
     if [ $DOETA -eq 1 ] || [ $DOPI0INETABINS -eq 1 ]; then

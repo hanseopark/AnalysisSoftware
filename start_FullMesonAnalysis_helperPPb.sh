@@ -97,7 +97,7 @@ function GiveBinningpPb8()
         echo "--> You have chosen " $answer " pt bins for Eta";
     fi
     if [ $DOGAMMA -eq 1 ]; then
-        if [ $MODE == 2 ] || [ $MODE == 13 ] ; then
+        if [ $MODE == 2 ] || [ $MODE == 13 ]; then
             echo "How many p_T bins do you want to use for direct photon?  ";
             read answer
             BINSPTGAMMA=$answer
