@@ -114,7 +114,7 @@ void FinaliseSystematicErrorsConv_pPbV2(    TString nameDataFileErrors          
                                                 1, 1, 0, 0, 0,  0 };
 
     for (Int_t i = 0; i < numberCutStudies; i++){
-        if (energy.CompareTo("pPb_5.023TeV") == 0){
+        if (energy.CompareTo("pPb_5.023TeV") == 0 || energy.CompareTo("pPb_5.023TeVCent") == 0 ){
             if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Pi0")==0){
                 bsmooth[i]                      = bsmoothMBPi05TeV[i];
             } else if (additionalNameOutput.CompareTo("") == 0 && meson.CompareTo("Eta")==0){

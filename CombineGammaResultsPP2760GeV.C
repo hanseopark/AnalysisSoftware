@@ -185,7 +185,8 @@ void CombineGammaResultsPP2760GeV(  TString inputFileNamePCM        = "",
         markerSizeDetMC[i]                          = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE);
     }
 
-    Color_t colorComb                               = GetColorDefaultColor("2.76TeV", "", "");
+    // Color_t colorComb                               = GetColorDefaultColor("2.76TeV", "", "");
+    Color_t colorComb                               = kBlack;
     Style_t markerStyleComb                         = GetDefaultMarkerStyle("2.76TeV", "", "");
     Size_t markerSizeComb                           = GetDefaultMarkerSize("2.76TeV", "", "");
     Color_t colorCombpp2760GeV                      = colorComb;//kBlack; // GetColorDefaultColor("2.76TeV", "", "");

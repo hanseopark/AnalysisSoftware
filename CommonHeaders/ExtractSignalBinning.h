@@ -1243,6 +1243,8 @@
                     startPtBin     = 1;
                 } else if (mode == 10){
                     startPtBin     = 28;
+                } else if (mode == 2){
+                    startPtBin     = 5;
                 } else {
                     startPtBin     = 1;
                 }

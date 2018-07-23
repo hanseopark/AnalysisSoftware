@@ -182,7 +182,8 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         markerSizeDetMC[i]                          = GetDefaultMarkerSizeDiffDetectors(nameMeasGlobal[i].Data(), kTRUE);
     }
 
-    Color_t colorComb                               = GetColorDefaultColor("8TeV", "", "");
+    // Color_t colorComb                               = GetColorDefaultColor("8TeV", "", "");
+    Color_t colorComb                               = kBlack;
     Style_t markerStyleComb                         = GetDefaultMarkerStyle("8TeV", "", "");
     Size_t markerSizeComb                           = GetDefaultMarkerSize("8TeV", "", "");
     Color_t colorCombpp8TeV                         = colorComb;//kBlack; // GetColorDefaultColor("8TeV", "", "");
@@ -2097,6 +2098,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
 
         TLegend* legendDRTheoryComb         = GetAndSetLegend2(0.12,0.96-textSizeSinglePad*1.2,0.5,0.96, textSizeSinglePad, 1, "", 42, 0.15);
         TLegend* legendDRTheoryComb2        = GetAndSetLegend2(0.12,0.94-textSizeSinglePad*5.8,0.5,0.94-textSizeSinglePad*1, textSizeSinglePad, 1, "", 42, 0.15);
+        TLegend* legendDRTheoryComb2Thermal        = GetAndSetLegend2(0.12,0.94-textSizeSinglePad*5.8,0.5,0.94-textSizeSinglePad*1, textSizeSinglePad, 1, "", 42, 0.15);
         legendDRTheoryComb2->SetTextAlign(12);
 
         DrawGammaSetMarkerTGraphAsym(graphCombDRSys, markerStyleCombpp8TeV, markerSizeCombpp8TeV, colorCombpp8TeV , colorCombpp8TeV,widthLinesBoxes, kTRUE);
@@ -2112,11 +2114,12 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
             DrawGammaNLOTGraph( graphTheoryNLODRpp8TeVCenter, 2, styleLineNLOWerner, colorNLOWerner);
             graphTheoryNLODRpp8TeVCenter->Draw("lc,same");
         }
-        if (graphTheoryNLODRpp7TeVPromptThermalLiuWerner){
-            DrawGammaNLOTGraph( graphTheoryNLODRpp7TeVPromptThermalLiuWerner, 2, styleLinePromptThermal, colorPromptThermal );
-            graphTheoryNLODRpp7TeVPromptThermalLiuWerner->Draw("lc,same");
-            legendDRTheoryComb2->AddEntry(graphTheoryNLODRpp7TeVPromptThermalLiuWerner,"NLO pQCD, #scale[0.75]{Prompt + Thermal}","l");
+        if (graphTheoryNLODRpp8TeVPaquett){
+            DrawGammaNLOTGraph( graphTheoryNLODRpp8TeVPaquett, 2, styleLineMcGill, colorNLOMcGill );
+            graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
+            legendDRTheoryComb2->AddEntry(graphTheoryNLODRpp8TeVPaquett,"NLO pQCD, #scale[0.75]{PDF: CTEQ6.1M, FF: BFG2}","l");
         }
+      
         if (graphTheoryJETPHOXDRpp8TeV) {
             DrawGammaSetMarkerTGraphAsym(graphTheoryJETPHOXDRpp8TeV, 0, 0, colorJETPHOX, colorJETPHOX, widthLinesBoxes, kTRUE, colorJETPHOX,kTRUE);
             graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
@@ -2172,8 +2175,8 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
             DrawGammaNLOTGraph( graphTheoryNLODRpp8TeVCenter, 2, styleLineNLOWerner, colorNLOWerner);
             graphTheoryNLODRpp8TeVCenter->Draw("lc,same");
         }
-        if (graphTheoryNLODRpp7TeVPromptThermalLiuWerner){
-            graphTheoryNLODRpp7TeVPromptThermalLiuWerner->Draw("lc,same");
+        if (graphTheoryNLODRpp8TeVPaquett){
+            graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
         }
         if (graphTheoryJETPHOXDRpp8TeV) {
             graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
@@ -2210,18 +2213,16 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         if (graphTheoryNLODRpp8TeV) {
             DrawGammaSetMarkerTGraphAsym(graphTheoryNLODRpp8TeV, 0, 0, colorNLOWernerBand, colorNLOWernerBand, 0.2, kTRUE, colorNLOWernerBand);
             graphTheoryNLODRpp8TeV->Draw("3,same");
-        }
+            legendDRTheoryComb2Thermal->AddEntry(dummyVogelsangforLegend,"NLO pQCD, #scale[0.75]{PDF: CT10, FF: GRV}","fl");
+  }
         if (graphTheoryNLODRpp8TeVCenter){
             DrawGammaNLOTGraph( graphTheoryNLODRpp8TeVCenter, 2, styleLineNLOWerner, colorNLOWerner);
             graphTheoryNLODRpp8TeVCenter->Draw("lc,same");
         }
-        if (graphTheoryNLODRpp8TeVPaquett){
-            graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
-        }
-        if (graphTheoryNLODRpp8TeVPaquett){
-            DrawGammaNLOTGraph( graphTheoryNLODRpp8TeVPaquett, 2, styleLineMcGill, colorNLOMcGill );
-            graphTheoryNLODRpp8TeVPaquett->Draw("lc,same");
-            // legendDRTheoryComb2->AddEntry(graphTheoryNLODRpp8TeVPaquett,"NLO pQCD, #scale[0.75]{PDF: CTEQ6.1M, FF: BFG2}","l");
+        if (graphTheoryNLODRpp7TeVPromptThermalLiuWerner){
+            DrawGammaNLOTGraph( graphTheoryNLODRpp7TeVPromptThermalLiuWerner, 2, styleLinePromptThermal, colorPromptThermal );
+            graphTheoryNLODRpp7TeVPromptThermalLiuWerner->Draw("lc,same");
+            legendDRTheoryComb2Thermal->AddEntry(graphTheoryNLODRpp7TeVPromptThermalLiuWerner,"NLO pQCD, #scale[0.75]{Prompt + Thermal}","l");
         }
         if (graphTheoryJETPHOXDRpp8TeV) {
             graphTheoryJETPHOXDRpp8TeV->Draw("3,same");
@@ -2235,12 +2236,20 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
         if (graphTheoryPOWHEGDRpp8TeVCenter){
             graphTheoryPOWHEGDRpp8TeVCenter->Draw("lc,same");
         }
+        
+        
+        if (graphTheoryJETPHOXDRpp8TeV) {
+            legendDRTheoryComb2Thermal->AddEntry(dummyJETPHOXforLegend,"JETPHOX, #scale[0.75]{PDF: NNPDF2.3QED, FF: BFG2}","fl");
+        }
+        if (graphTheoryPOWHEGDRpp8TeV) {
+            legendDRTheoryComb2Thermal->AddEntry(dummyPOWHEGforLegend,"POWHEG, #scale[0.75]{PDF: NNPDF2.3QED + PYTHIA8 PS}","fl");
+        }
         DrawGammaLines(doubleRatioXpp[0], doubleRatioXpp[1], 1., 1., 1.2, kGray+2, 7);
 
         graphCombDRNonFitSys->Draw("E2same");
         graphCombDRNonFitStatPlot->Draw("p,same,z");
         legendDRTheoryComb->Draw();
-        legendDRTheoryComb2->Draw();
+        legendDRTheoryComb2Thermal->Draw();
 
         // labelALICEDRSingle->Draw();
 
