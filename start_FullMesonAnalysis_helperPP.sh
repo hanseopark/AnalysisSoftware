@@ -66,7 +66,7 @@ function GiveBinning2760GeV()
             DOPI0INETABINS=0;
             CORRECTETA=1;
         else
-            if [ $answer -ge 17 ] && [ $answer -lt 30 ] &&  ; then
+            if [ $answer -ge 17 ] && [ $answer -lt 30 ] ; then
                 echo "--> $answer Bins";
                 CORRECTPI0=1
                 BINSPTPI0=$answer

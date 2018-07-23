@@ -63,7 +63,7 @@ void PlotM02PtDependentFunctions (){
     Color_t colors[16]      = {kBlack, kRed+1, kBlue+1, kOrange, kMagenta+1, kGreen+2, kViolet+1, kYellow+2, kCyan+2, kTeal+2, kPink+2, kRed-6, kGray+1, kGreen-6, kBlue-6, kMagenta-6};
     Style_t styles[16]      = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     Double_t maxPtPart1[16];
-	Int_t nParamsTot		= 0;
+    Int_t nParamsTot		= 0;
     for (Int_t i = 0; i < 16; i++){
         M02CutsPtDep[i]     =  new TF1(Form("M02Cut%i",i),"(x<=TMath::Sqrt(([0]-[1])/[2]))*([1]+[2]*TMath::Power(x,2)) + (x>TMath::Sqrt(([0]-[1])/[2])) * [0]");
         M02CutsPtDep[i]->SetParameter(0, param0[i]);
@@ -73,7 +73,7 @@ void PlotM02PtDependentFunctions (){
         M02CutsPtDep[i]->SetLineStyle(styles[i]);
         M02CutsPtDep[i]->SetRange(0,10);
         maxPtPart1[i]       = TMath::Sqrt((param0[i]-param1[i])/param2[i]);
-		if (enableM02[i])nParamsTot;
+        if (enableM02[i])nParamsTot;
     }
 
     TCanvas* canvasM02 = new TCanvas("canvasM02","",200,10,1350,900);  // gives the page size
@@ -89,10 +89,10 @@ void PlotM02PtDependentFunctions (){
 
         TLegend* legendM02   = GetAndSetLegend2(0.11, 0.97-(0.04*(nParamsTot)/2), 0.95, 0.97, 30, 2, "", 43, 0.08);
         for (Int_t i = 0; i < 16; i++){
-			if (enableM02[i]){
-	            M02CutsPtDep[i]->Draw("same");
-    	        legendM02->AddEntry(M02CutsPtDep[i],Form("#it{E} #leq %1.1f: %1.2f + %1.4f#it{E}^{2}, #it{E} > %1.1f: %1.2f", maxPtPart1[i],param1[i],param2[i],maxPtPart1[i],param0[i] ),"l");
-			}
+            if (enableM02[i]){
+                M02CutsPtDep[i]->Draw("same");
+                legendM02->AddEntry(M02CutsPtDep[i],Form("#it{E} #leq %1.1f: %1.2f + %1.4f#it{E}^{2}, #it{E} > %1.1f: %1.2f", maxPtPart1[i],param1[i],param2[i],maxPtPart1[i],param0[i] ),"l");
+            }
         }
         legendM02->Draw();
 
