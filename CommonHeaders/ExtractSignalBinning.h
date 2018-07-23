@@ -165,6 +165,9 @@
             }
         }
 
+        //***************************************************************************************
+        //********************** Start setting pi0 example bins *********************************
+        //***************************************************************************************
         if (meson.CompareTo("Pi0") == 0){
             if (energy.CompareTo("900GeV") == 0) {
                 if (directPhotonRunningOption.CompareTo("directPhoton") != 0){
@@ -454,15 +457,15 @@
                             case 51:
                             case 52:
                             case 53:
-                                return 20;      // EMC triggers
+                                return 10;      // EMC triggers
                                 break;
                             case 85:
-                                return 26;
+                                return 10;
                                 break;
                             case 81:
                             case 82:
                             case 83:
-                                return 32;      // EGA triggers
+                                return 28;      // EGA triggers
                                 break;
                             default:
                                 return 7;
@@ -684,6 +687,9 @@
                     return 10;
                 }
             }
+        //***************************************************************************************
+        //********************** Start setting eta example bins *********************************
+        //***************************************************************************************
         } else if( meson.Contains("Eta") && !meson.EqualTo("EtaPrime") ) {
             if (energy.CompareTo("900GeV") == 0) {
                 if (mode == 2 || mode == 13)
@@ -892,15 +898,15 @@
                         case 51:
                         case 52:
                         case 53:
-                            return 12;      // EMC triggers
+                            return 5;      // EMC triggers
                             break;
                         case 85:
-                            return 17;
+                            return 12;
                             break;
                         case 81:
                         case 82:
                         case 83:
-                            return 20;      // EGA triggers
+                            return 13;      // EGA triggers
                             break;
                         default:
                             return 6;
@@ -1155,7 +1161,7 @@
                 if ( mode == 0 ){
                     startPtBin     = 1;
                 }
-                                
+
             } else if (energy.CompareTo("pPb_5.023TeVCent") == 0 ){
                 if ( mode == 0 )
                     startPtBin     = 1;
@@ -1165,18 +1171,16 @@
                 } else if ( mode == 1 ){
                     startPtBin     = 1;
                 } else if ( mode == 2 || mode == 13 ){
-                    if (specialTrigg == 1){
-                        startPtBin     = 14;
-                    }else if (specialTrigg == 2){
-                        startPtBin     = 24;
-                    }else if (specialTrigg == 3){
-                        startPtBin     = 29;
-                    }else{
-                        if (!centrality.CompareTo("0-100%") )
-                            startPtBin     = 6;
-                        else
-                            startPtBin     = 4;
-                    }
+                    if (!centrality.CompareTo("0-100%") && !(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3))
+                        startPtBin     = 6;
+                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 1)
+                        startPtBin     = 1;
+                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 2)
+                        startPtBin     = 4;
+                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 3)
+                        startPtBin     = 5;
+                    else
+                        startPtBin     = 4;
                 } else if ( mode == 3 ){
                     if (!centrality.CompareTo("0-100%") && specialTrigg != 4)
                         startPtBin     = 3;
@@ -1453,18 +1457,16 @@
                 } else if ( mode == 1 ){
                     startPtBin      = 3;
                 } else if ( mode == 2 || mode == 13 ){
-                    if (specialTrigg == 1){
-                        startPtBin  = 11;
-                    }else if (specialTrigg == 2){
-                        startPtBin  = 16;
-                    }else if (specialTrigg == 3){
-                        startPtBin  = 19;
-                    }else{
-                        if (!centrality.CompareTo("0-100%") )
-                            startPtBin      = 5;
-                        else
-                            startPtBin      = 5;
-                    }
+                    if (!centrality.CompareTo("0-100%") && !(specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3))
+                        startPtBin     = 5;
+                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 1 )
+                        startPtBin     = 1;
+                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 2 )
+                        startPtBin     = 5;
+                    else if (!centrality.CompareTo("0-100%") && specialTrigg == 3 )
+                        startPtBin     = 3;
+                    else
+                        startPtBin     = 5;
                 } else if ( mode == 3 ){
                     if (!centrality.CompareTo("0-100%") && specialTrigg != 4)
                         startPtBin     = 4;
@@ -1629,6 +1631,9 @@
     ){
         Int_t maxNBins      = 0;
         binningMax          = 0;
+        //*************************************************************************************************
+        //*************************** Set binning for pi0 spectra *****************************************
+        //*************************************************************************************************
         if (meson.CompareTo("Pi0")==0){
             if (energy.CompareTo("900GeV") == 0){
                 if ( mode == 0 ){
@@ -2009,23 +2014,25 @@
                 } else if ( mode == 2 || mode == 13 ) {
                     maxNBins    = 32;
                     binningMax  = 36;
-                    if (SpecialTrigger == 1 || SpecialTrigger == 2  )
-                        binningMax  = 44;
-                    else if (SpecialTrigger == 3 )
+                    if (SpecialTrigger == 3 )
                         binningMax  = 36;
+                    else if ( SpecialTrigger == 1 )
+                        binningMax  = 17;
                     else if (SpecialTrigger == 2 )
-                        binningMax  = 44;
+                        binningMax  = 40;
                     else if ( centrality.CompareTo("0-100%")){
                         binningMax  = 23;
                         maxNBins    = 23;
                     }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        if ( SpecialTrigger == 3  )
-                            binning[i]  = fBinsPi0pPb5TeVPtEMCTrigEG1[i];
-                        else if ( SpecialTrigger == 2 || SpecialTrigger == 1  )
+                        if ( SpecialTrigger == 1 )
+                            binning[i]  = fBinsPi0pPb5TeVPtEMCTrigEMC7[i];
+                        else if ( SpecialTrigger == 2 )
                             binning[i]  = fBinsPi0pPb5TeVPtEMCTrigEG2[i];
+                        else if ( SpecialTrigger == 3  )
+                            binning[i]  = fBinsPi0pPb5TeVPtEMCTrigEG1[i];
                         else if ( !centrality.CompareTo("0-100%"))
-                            binning[i]  = fBinsPi0pPb5TeVEMCPt[i];
+                            binning[i] = fBinsPi0pPb5TeVEMCPt[i];
                         else
                             binning[i] = fBinsPi0pPb5TeVEMCCentPt[i];
                     }
@@ -2037,7 +2044,7 @@
                     else if ( SpecialTrigger == 1 )
                         binningMax  = 17;
                     else if (SpecialTrigger == 2 )
-                        binningMax  = 44;
+                        binningMax  = 40;
                     else if ( centrality.CompareTo("0-100%")){
                         binningMax  = 24;
                         maxNBins    = 24;
@@ -2403,6 +2410,9 @@
                     }
                 }
             }
+        //*************************************************************************************************
+        //*************************** Set binning for pi0 spectra *****************************************
+        //*************************************************************************************************
         } else if (meson.CompareTo("Eta") == 0){
             if (energy.CompareTo("2.76TeV") == 0){
                 maxNBins = 12;
@@ -2691,19 +2701,27 @@
                 } else if (mode == 2 || mode == 13 ){ // PCM-EMC, PCM-DMC
                     maxNBins    = 18;
                     binningMax  = 21;
-                    if (SpecialTrigger  > 0 ) binningMax  = 26;
+                    if (SpecialTrigger == 3)
+                        binningMax  = 20;
+                    else if (SpecialTrigger == 2)
+                        binningMax  = 22;
+                    else if (SpecialTrigger == 1)
+                        binningMax  = 11;
                     else if (centrality.CompareTo("0-100%")){
                         binningMax  = 14;
                         maxNBins    = 12;
                     }
                     for(Int_t i = 0; i < binningMax+1; i++){
-                        if (SpecialTrigger  > 0 )
-                            binning[i] = fBinsEtapPb5TeVPtEMCTrig[i];
+                        if (SpecialTrigger == 1)
+                            binning[i] = fBinsEtapPb5TeVPtEMCTrigEMC7[i];
+                        else if (SpecialTrigger == 2)
+                            binning[i] = fBinsEtapPb5TeVPtEMCTrigEG2[i];
+                        else if (SpecialTrigger == 3)
+                            binning[i] = fBinsEtapPb5TeVPtEMCTrigEG1[i];
                         else if (!centrality.CompareTo("0-100%"))
                             binning[i] = fBinsEtapPb5TeVEMCPt[i];
                         else
                             binning[i] = fBinsEtapPb5TeVCentPt[i];
-
                     }
                 } else if (mode == 3 ){ // PCM-PHOS
                     maxNBins    = 14;
@@ -3835,11 +3853,11 @@
                         for (Int_t i = 0; i < fNBinsPt; i++) {
                             if (modi==0){
                                 if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
-				  if (energy.Contains("RBins")){
-				    fNRebin[i]      = fBinsPi013TeVPCMTrigINT7RBinsPtRebin[i];
-				  }else {
-                                    fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
-				  }
+                                    if (energy.Contains("RBins")){
+                                        fNRebin[i]      = fBinsPi013TeVPCMTrigINT7RBinsPtRebin[i];
+                                    }else {
+                                        fNRebin[i]      = fBinsPi013TeVPCMTrigINT7PtRebin[i];
+                                    }
                                 } else if (specialTrigg==1){
                                     fNRebin[i]      = fBinsPi013TeVPCMTrigEMC7PtRebin[i];
                                 } else if (specialTrigg==2){
@@ -3870,11 +3888,11 @@
                             }
                         }
                     }
- 		    nIterBGFit                  = 7;
-		    fMaxYFracBGOverIntHist      = 60;
-		    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
-		    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
-		    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
+                    nIterBGFit                  = 7;
+                    fMaxYFracBGOverIntHist      = 60;
+                    optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
+                    optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
+                    optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
 
                 }
             //*********************************************************************************************
@@ -3913,21 +3931,19 @@
                         cout << "**************************************************************************************************************************************" << endl;
                         fNBinsPt    = maxPtBinTheo;
                     }
-                  GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
+                    GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
                     for (Int_t i = 0; i < fNBinsPt; i++) {
                         if ( modi == 0 ) {
                             fNRebin[i]  = fBinsPi013TeVLowBPtRebin[i];
                         }
                     }
-
-
                     nIterBGFit                  = 10;
                     fMaxYFracBGOverIntHist      = 60;
                     optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing5";
                     optionBGSmoothingVar1       = "BackDecreasingWindow,BackSmoothing7";
                     optionBGSmoothingVar2       = "BackDecreasingWindow,BackSmoothing3";
-                    }
+                }
 
             //*********************************************************************************************
             //********************************** Pi0 for pPb 5.023TeV**************************************
@@ -4005,8 +4021,10 @@
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2SCentPtRebin[i];
                         else if (modi == 2 && energy.CompareTo("pPb_5.023TeVRun2") == 0 && specialTrigg == 0)               // MB pi0 for PCM-EMC run 2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCR2PtRebin[i];
-                        else if (modi == 2 && (specialTrigg == 1 || specialTrigg == 2) )                                    // MB pi0 for PCM-EMC run 1 - triggered EMC7, EG2
-                            fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigPtRebin[i];
+                        else if (modi == 2 && specialTrigg == 1 )                                                           // MB pi0 for PCM-EMC run 1 - triggered EMC7
+                            fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigEMC7PtRebin[i];
+                        else if (modi == 2 && specialTrigg == 2 )                                                           // MB pi0 for PCM-EMC run 1 - triggered EG2
+                            fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigEG2PtRebin[i];
                         else if (modi == 2 && specialTrigg == 3 )                                                           // MB pi0 for PCM-EMC run 1 - triggered EMC7, EG2
                             fNRebin[i]          = fBinsPi0pPb5TeVPCMEMCTrigEG1PtRebin[i];
                         else if (modi == 3 && energy.CompareTo("pPb_5.023TeV") == 0 && centrality.Contains("0-100%"))       // MB pi0 for PCM-PHOS run 1
@@ -5031,7 +5049,7 @@
                                     (!centrality.CompareTo("5-10%") || !centrality.CompareTo("0-5%") ||  !centrality.CompareTo("60-100%")) )
                             fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCR2SCentPtRebin[i];
                         else if (modi == 2 && specialTrigg == 1)                                                                                        // EMC7 triggered MB pi0-eta for PCM-EMC run 1
-                            fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigEMC7PtRebin[i];
+                            fNRebin[i]  = fBinsPi0EtapPb5TeVPCMEMCTrigEMC7PtRebin[i];
                         else if (modi == 2 && specialTrigg == 2)                                                                                        // EG2 triggered MB pi0-eta for PCM-EMC run 1
                             fNRebin[i]  = fBinsEtapPb5TeVPCMEMCTrigEG2PtRebin[i];
                         else if (modi == 2 && specialTrigg == 3)                                                                                        // EG1 triggered MB pi0-eta for PCM-EMC run 1

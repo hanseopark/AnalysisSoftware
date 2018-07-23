@@ -5971,13 +5971,13 @@ void SaveHistos(Int_t optionMC, TString cutID, TString prefix3, Bool_t UseTHnSpa
         cout << "writing ClusterPt" << endl;
         fHistoClustersPt->Write("ClusterPt");
         TGraphErrors* graphClusterPt        = new TGraphErrors(fHistoClustersPt);
-        graphClusterPt->Print();
+//         graphClusterPt->Print();
         TH1D*   fHistoClustersPtPerEvent   = (TH1D*)fHistoClustersPt->Rebin(fNBinsClusterPt,"fHistoClustersPtPerEvent",fBinsClusterPt);
         fHistoClustersPtPerEvent->Divide(deltaPtCluster);
         fHistoClustersPtPerEvent->Scale(1./fNEvents);
         fHistoClustersPtPerEvent->Write("ClusterPtPerEvent");
         TGraphErrors* graphClusterPtReb        = new TGraphErrors(fHistoClustersPtPerEvent);
-        graphClusterPtReb->Print();
+//         graphClusterPtReb->Print();
     }
     if (fHistoClustersE){
         cout << "writing ClusterE" << endl;

@@ -254,10 +254,10 @@ echo "$NSlashesBASE $NSlashes $NSlashes2 $NSlashes3 $NSlashes4"
 # LHC13cData="661"; #pass 2
 
 TRAINDIR=Legotrain-vAN20180607-trigg2
-LHC13bcData="745"; #pass 3
+LHC13bcData="765"; #pass 3
 LHC13bData="child_1"; #pass 3
 LHC13cData="child_2"; #pass 2
-LHC13deData="741"; #pass 3
+LHC13deData="766"; #pass 3
 LHC13dData="child_1"; #pass 3
 LHC13eData="child_2"; #pass 2
 LHC13fData="761"; #pass 2
