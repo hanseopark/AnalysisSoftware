@@ -244,6 +244,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
       canvasBinShifting->cd();
       histoGammaSpecCorrPurityBinShiftCorr = (TH1D*)histoGammaSpecCorrPurityBinShift->Clone("InclusiveRatioBinShiftCorrection");
       histoGammaSpecCorrPurityBinShiftCorr->Divide(histoGammaSpecCorrPurityBinShiftCorr,histoGammaSpecCorrPurity,1,1,"");
+      for(Int_t i=1; i<=histoGammaSpecCorrPurityBinShiftCorr->GetNbinsX(); i++) histoGammaSpecCorrPurityBinShiftCorr->SetBinError(i,histoGammaSpecCorrPurityBinShiftCorr->GetBinContent(i)*0.001);
       SetHistogramm(histoGammaSpecCorrPurityBinShiftCorr, "#it{p}_{T} (GeV/#it{c})", "Shifted / Standard",0.8,1.2);
       DrawGammaSetMarker(histoGammaSpecCorrPurityBinShiftCorr, 20, 2.0, kGreen+2, kGreen+2);
       histoGammaSpecCorrPurityBinShiftCorr->Draw();
@@ -253,6 +254,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
       canvasBinShifting->cd();
       histoCorrectedPi0YieldBinShiftCorr = (TH1D*)histoCorrectedPi0YieldBinShift->Clone("InclusiveRatioBinShiftCorrection");
       histoCorrectedPi0YieldBinShiftCorr->Divide(histoCorrectedPi0YieldBinShiftCorr,histoCorrectedPi0Yield[0],1,1,"");
+      for(Int_t i=1; i<=histoCorrectedPi0YieldBinShiftCorr->GetNbinsX(); i++) histoCorrectedPi0YieldBinShiftCorr->SetBinError(i,histoCorrectedPi0YieldBinShiftCorr->GetBinContent(i)*0.001);
       SetHistogramm(histoCorrectedPi0YieldBinShiftCorr, "#it{p}_{T} (GeV/#it{c})", "Shifted / Standard",0.8,1.2);
       DrawGammaSetMarker(histoCorrectedPi0YieldBinShiftCorr, 20, 2.0, kGreen+2, kGreen+2);
       histoCorrectedPi0YieldBinShiftCorr->Draw();
@@ -318,6 +320,7 @@ void  CalculateGammaToPi0V4(    TString nameFileGamma       = "",
           canvasIncRatio->cd();
           histoIncRatioPurityTrueEffBinShiftCorr = (TH1D*)histoIncRatioPurityTrueEffBinShift->Clone("InclusiveRatioBinShiftCorrection");
           histoIncRatioPurityTrueEffBinShiftCorr->Divide(histoIncRatioPurityTrueEffBinShiftCorr,histoIncRatioPurityTrueEff[0],1,1,"");
+          for(Int_t i=1; i<=histoIncRatioPurityTrueEffBinShiftCorr->GetNbinsX(); i++) histoIncRatioPurityTrueEffBinShiftCorr->SetBinError(i,histoIncRatioPurityTrueEffBinShiftCorr->GetBinContent(i)*0.001);
           SetHistogramm(histoIncRatioPurityTrueEffBinShiftCorr, "#it{p}_{T} (GeV/#it{c})", "Shifted / Standard",0.8,1.2);
           DrawGammaSetMarker(histoIncRatioPurityTrueEffBinShiftCorr, 20, 2.0, kGreen+2, kGreen+2);
           histoIncRatioPurityTrueEffBinShiftCorr->Draw();
