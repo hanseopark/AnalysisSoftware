@@ -3,6 +3,9 @@
 #ifndef GAMMACONV_ExtractSignalBinning
 #define GAMMACONV_ExtractSignalBinning
 
+    #include <iostream>
+    using namespace std;
+
     #include "ConversionFunctionsBasicsAndLabeling.h"
     #include "ExtractSignalBinningpp900GeV.h"
     #include "ExtractSignalBinningpp2760GeV.h"
@@ -52,6 +55,29 @@
                                                          3.6, 3.8, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0,
                                                          9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,18.0,20.0,
                                                         25.0,30.0};
+
+    //*************************************************************************************************
+    //******************** CopyArrayAndSize as helper function for GetBinning *************************
+    //*************************************************************************************************
+    template<class TYPE_t>
+    void CopyVectorToArray( std::vector<TYPE_t> arrayFrom, TYPE_t* arrayTo ) {
+        for( size_t i=0; i<arrayFrom.size(); ++i ) arrayTo[i] = arrayFrom[i];
+    }
+    template<class TYPE_t>
+    void CopyVectorToArrayMax( std::vector<TYPE_t> arrayFrom, TYPE_t* arrayTo, size_t maxBin ) {
+        if( maxBin>arrayFrom.size() ) {
+            std::cout << "Max bin too large (" << maxBin <<
+            "), so set to vector size (" << arrayFrom.size() << ")" << std::endl;
+            maxBin = arrayFrom.size();
+        }
+        for( size_t i=0; i<maxBin; ++i ) arrayTo[i] = arrayFrom[i];
+    }
+    template<class TYPE_t>
+    void CopyArrayAndSize( std::vector<TYPE_t> arrayFrom, TYPE_t* arrayTo, Int_t& n ) {
+        n = arrayFrom.size() - 1;
+        CopyVectorToArray(arrayFrom,arrayTo);
+    }
+
     //*************************************************************************************************
     //*********************  determine optimum number of rows and columns *****************************
     //*************************************************************************************************
@@ -128,6 +154,7 @@
         }
         cout << "nColumns: " << columns << "\t nRows: "  << rows << "\t nTotbins: " << (totBins+1-startBin) << endl;
     }
+
     //*************************************************************************************************
     //******************** Initialize Single bin for invariant mass plot ******************************
     //*************************************************************************************************
@@ -871,7 +898,9 @@
                 } else if(mode == 40){
                     scaleFac        = 4.;
                     return 2;
-                }else{
+                // } else if(mode >= 100){ // heavy meson modes
+                    // return 3;
+                } else{
                     return 7;
                 }
             } else if (energy.CompareTo("13TeVLowB") == 0) {
@@ -1050,7 +1079,7 @@
             cout << "single bin for meson not defined" << endl;
             return 1;
         }
-        cout << "meson not defined" << endl;
+        std::cout << "meson not defined" << std::endl;
         return 0;
     }
 
@@ -1284,7 +1313,7 @@
                 } else if ( mode == 3 ){
                     startPtBin      = 3;
                 } else if ( mode == 4 || mode == 12 ){
-                    cout << minECut << endl;
+                    std::cout << minECut << std::endl;
                     if (minECut.Atoi() != 3)
                         startPtBin      = 6;
                     else
@@ -1428,25 +1457,19 @@
                     startPtBin     = 1;
                 }
             } else if (energy.CompareTo("13TeV") == 0){
-                if (mode == 0){
-                    startPtBin     = 1;
-                } else if (mode == 2 || mode == 13){
-                    startPtBin     = 1;
-                    if (specialTrigg == 2 ) startPtBin = 11;
-                    else if (specialTrigg == 4 || specialTrigg == 5 ) startPtBin = 3;
-                } else if (mode == 4 || mode == 12){
-                    startPtBin     = 1;
-                } else if (mode == 40){
-                    startPtBin     = 2;
-                } else if (mode == 41){
-                    startPtBin     = 6;
-                } else if (mode == 42){
-                    startPtBin     = 4;
-                } else if (mode == 44){
-                    startPtBin     = 9;
-                } else if (mode == 45){
-                    startPtBin     = 7;
-                }
+                if( mode==0)        startPtBin = 1;
+                else if(mode == 2 || mode == 13)
+                    if(specialTrigg == 2 )                        startPtBin = 11;
+                    else if( specialTrigg==4 || specialTrigg==5 ) startPtBin = 3;
+                    else                                          startPtBin = 1;
+                else if( mode==4 ||
+                         mode==12 ) startPtBin = 1;
+                else if( mode==40 ) startPtBin = 2;
+                else if( mode==41 ) startPtBin = 6;
+                else if( mode==42 ) startPtBin = 4;
+                else if( mode==44 ) startPtBin = 9;
+                else if( mode==45 ) startPtBin = 7;
+                else if( mode>=100) startPtBin = 3;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
                     startPtBin     = 3;
@@ -1607,14 +1630,6 @@
             startPtBin     = 7;
         }
         return startPtBin;
-    }
-
-    //*************************************************************************************************
-    //******************** CopyArrayAndSize as helper function for GetBinning *************************
-    //*************************************************************************************************
-    void CopyArrayAndSize( std::vector<Double_t> arrayFrom, Double_t* arrayTo, Int_t& n ) {
-        n = arrayFrom.size() - 1;
-        for( Int_t i=0; i<=n; i++ ) arrayTo[i] = arrayFrom[i];
     }
 
     //*************************************************************************************************
@@ -1855,7 +1870,7 @@
                 if (DCAcase==kTRUE){
                     maxNBins= 27;
                     binningMax=maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7PtDCA)/sizeof(fBinsPi013TeVPCMTrigINT7PtDCA[0])))-1;
-                }else if (mode==0){
+                } else if(mode==0){
                     if (SpecialTrigger==-1){
                         maxNBins= 103;
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigCombPt)/sizeof(fBinsPi013TeVPCMTrigCombPt[0])))-1;
@@ -1863,7 +1878,7 @@
                 if (energy.Contains("RBins") ){
                     maxNBins= 14;
                     binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt)/sizeof(fBinsPi013TeVPCMTrigINT7RBinsPt[0])))-1;
-                    } else{
+                        } else {
                                 maxNBins= 83;
                                 binningMax = maxNBins;// ((Int_t) (sizeof(fBinsPi013TeVPCMTrigINT7Pt)/sizeof(fBinsPi013TeVPCMTrigINT7Pt[0])))-1;
                     }
@@ -1908,7 +1923,7 @@
                                 binningMax  = (Int_t) (sizeof(fBinsPi013TeVEMCTrigCombPt)/sizeof(fBinsPi013TeVEMCTrigCombPt[0])) - 1;
                                 maxNBins    = 201;
                             }
-                        } else if ( mode == 10 ){
+                } else if( mode == 10 ){
                             maxNBins = 59;
                             binningMax = maxNBins;
                         } else {
@@ -1918,56 +1933,35 @@
                             }
                         }
                         CheckBinSize(maxNBins,binningMax,kFALSE);
-                        cout<<"Get Binning(), Pi0 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<endl;
-                        for (Int_t i = 0; i < binningMax+1; i++) {
-                            if (DCAcase==kTRUE) {
-                                binning[i]      = fBinsPi013TeVPCMTrigINT7PtDCA[i];
-                            } else if (mode==0){
-                                if (SpecialTrigger == -1) {
-                                    binning[i]      = fBinsPi013TeVPCMTrigCombPt[i];
-                                } else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5){
-                    if( energy.Contains("RBins")) {
-                        binning[i]      = fBinsPi013TeVPCMTrigINT7RBinsPt[i];
-                    } else {
-                        binning[i]      = fBinsPi013TeVPCMTrigINT7Pt[i];
+                std::cout<<"Get Binning(), Pi0 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<std::endl;
+                if (DCAcase==kTRUE) CopyVectorToArray(fBinsPi013TeVPCMTrigINT7PtDCA,binning);
+                else if( mode==0 ) {
+                    if (SpecialTrigger == -1) CopyVectorToArray(fBinsPi013TeVPCMTrigCombPt,binning);
+                    else if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
+                        if( energy.Contains("RBins")) CopyVectorToArray(fBinsPi013TeVPCMTrigINT7RBinsPt,binning);
+                        else CopyVectorToArray(fBinsPi013TeVPCMTrigINT7Pt,binning);
                     }
-                            } else if (SpecialTrigger==1){
-                                binning[i]      = fBinsPi013TeVPCMTrigEMC7Pt[i];
-                            } else if (SpecialTrigger==2){
-                                binning[i]      = fBinsPi013TeVPCMTrigEG1Pt[i];
-                            } else if (SpecialTrigger==3){
-                                binning[i]      = fBinsPi013TeVPCMTrigEG2Pt[i];
-                            }
+                    else if (SpecialTrigger==1) CopyVectorToArray(fBinsPi013TeVPCMTrigEMC7Pt,binning);
+                    else if (SpecialTrigger==2) CopyVectorToArray(fBinsPi013TeVPCMTrigEG1Pt, binning);
+                    else if (SpecialTrigger==3) CopyVectorToArray(fBinsPi013TeVPCMTrigEG2Pt, binning);
                         } else if (mode==2){
-                            if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
-                                binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
-                            } else if (SpecialTrigger == 3) {
-                                binning[i]      = fBinsPi013TeVPCMEMCTrigEG2Pt[i];
-                            } else if (SpecialTrigger == 2) {
-                                binning[i]      = fBinsPi013TeVPCMEMCTrigEG1Pt[i];
-                            }
-                        } else if (mode==4){
-                            if (SpecialTrigger == 0 || SpecialTrigger == 4 || SpecialTrigger == 5) {
-                                binning[i]      = fBinsPi013TeVEMCTrigINT7Pt[i];
-                            } else if (SpecialTrigger == 1) {
-                                binning[i]      = fBinsPi013TeVEMCTrigEMC7Pt[i];
-                            } else if (SpecialTrigger == 3) {
-                                binning[i]      = fBinsPi013TeVEMCTrigEG2Pt[i];
-                            } else if (SpecialTrigger == 2) {
-                                binning[i]      = fBinsPi013TeVEMCTrigEG1Pt[i];
-                            } else {
-                                binning[i]      = fBinsPi013TeVEMCTrigCombPt[i];
-                            }
-                        } else if (mode==10){
-                            binning[i] = fBinsPi013TeVPtmEMC[i];
-                        } else {
-                            binning[i]      = fBinsPi013TeVPCMEMCTrigINT7Pt[i];
-                        }
-                    }
-                    for (Int_t i = 0; i < binningMax+1; i++) {
-                        cout << binning[i] << ", ";
-                    }
-                    cout << endl;
+                    if( SpecialTrigger == 0 ||
+                        SpecialTrigger == 4 ||
+                        SpecialTrigger == 5 )     CopyVectorToArray(fBinsPi013TeVPCMEMCTrigINT7Pt,binning);
+                    else if (SpecialTrigger == 3) CopyVectorToArray(fBinsPi013TeVPCMEMCTrigEG2Pt, binning);
+                    else if (SpecialTrigger == 2) CopyVectorToArray(fBinsPi013TeVPCMEMCTrigEG1Pt, binning);
+                } else if( mode==4 ) {
+                    if( SpecialTrigger == 0 ||
+                        SpecialTrigger == 4 ||
+                        SpecialTrigger == 5 )     CopyVectorToArray(fBinsPi013TeVEMCTrigINT7Pt,binning);
+                    else if (SpecialTrigger == 1) CopyVectorToArray(fBinsPi013TeVEMCTrigEMC7Pt,binning);
+                    else if (SpecialTrigger == 3) CopyVectorToArray(fBinsPi013TeVEMCTrigEG2Pt, binning);
+                    else if (SpecialTrigger == 2) CopyVectorToArray(fBinsPi013TeVEMCTrigEG1Pt, binning);
+                    else                          CopyVectorToArray(fBinsPi013TeVEMCTrigCombPt,binning);
+                } else if (mode==10) CopyVectorToArray(fBinsPi013TeVPtmEMC,binning);
+                else CopyVectorToArray(fBinsPi013TeVPCMEMCTrigINT7Pt,binning);
+                for( Int_t i=0; i<binningMax+1; i++ ) std::cout << binning[i] << ", ";
+                std::cout << std::endl;
             } else if (energy.CompareTo("13TeVLowB") == 0){
                 if ( mode == 0 ){
                     maxNBins = 68;
@@ -2078,9 +2072,9 @@
                             binning[i] = fBinsPi0pPb5TeVPHOSPt[i];
                         else
                             binning[i] = fBinsPi0pPb5TeVEMCCentPt[i];
-                        cout << binning[i] << "," << endl;
+                        std::cout << binning[i] << "," << std::endl;
                     }
-                    cout << endl;
+                    std::cout << std::endl;
                 } else if ( mode == 6 ) {
                   maxNBins    = 22;
                   binningMax  = 22;
@@ -2105,7 +2099,6 @@
                             binning[i] = fBinsPi0pPb5TeVCombCentPt[i];
                     }
                 }
-
             } else if ( energy.CompareTo("pPb_5.023TeVRun2") == 0){
                 if (mode == 0 ){ // PCM
                     if ( !centrality.CompareTo("0-5%") || !centrality.CompareTo("5-10%") || !centrality.CompareTo("60-100%")){
@@ -2301,7 +2294,7 @@
                 }
             } else if (energy.CompareTo("XeXe_5.44TeV") == 0 ){
                 binningMax = 25;
-                if (mode == 0 ){ // PCM
+                if (mode == 0 ) { // PCM
                     maxNBins = 22;
                     if ( !centrality.CompareTo("0-80%") || !centrality.CompareTo("0-90%") ){
                         maxNBins = 22;
@@ -2576,7 +2569,7 @@
                         binningMax = maxNBins;// ((Int_t) (sizeof(fBinsEta13TeVPCMTrigEG2Pt)/sizeof(fBinsEta13TeVPCMTrigEG2Pt[0])))-1;
                     }
                     CheckBinSize(maxNBins,binningMax,kFALSE);
-                    cout<<"Get Binning(), Eta 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins<<endl;
+                    std::cout<<"Get Binning(), Eta 13TeV, binningMax: "<<binningMax<<"; maxNBins: "<<maxNBins << std::endl;
                     for (Int_t i = 0; i < binningMax+1; i++) {
                         if (DCAcase==kTRUE){
                             binning[i]=fBinsEta13TeVPCMTrigINT7PtDCA[i];
@@ -2643,14 +2636,11 @@
                     for(Int_t i = 0; i < binningMax+1; i++){
                         binning[i] = fBinsEtaPiPlPiMiPiZero13TevPtPCM[i];
                     }
+                } else if(mode >= 100) { // heavy meson modes
+                    CopyArrayAndSize(fBinsEta13TeVHeavyMesonPt,binning,binningMax);
                 }
-            } else if (energy.CompareTo("13TeVLowB") == 0){
-                if ( mode == 0 ){
-                    maxNBins = 21;
-                    for(Int_t i = 0; i < maxNBins+1; i++){
-                        binning[i] = fBinsEta13TeVLowBPt[i];
-                    }
-                }
+            } else if (energy.CompareTo("13TeVLowB") == 0) {
+                if( mode==0 ) CopyVectorToArray(fBinsEta13TeVLowBPt,binning);
             } else if (energy.CompareTo("8TeV") == 0){
                 if ( mode == 2 || mode == 13 || mode == 4 || mode == 12  ){
                     maxNBins = 26;
@@ -3064,7 +3054,7 @@
                 binning[i]  = fBinsInterAndExtrapolation[i];
             }
         }
-        cout << "maximum " << maxNBins << " pt bins for " << meson.Data() << endl;
+        std::cout << "maximum " << maxNBins << " pt bins for " << meson.Data() << std::endl;
         return maxNBins;
     }
 
@@ -3227,15 +3217,21 @@
     // template <ptrdiff_t ArrayLenBins, ptrdiff_t ArrayLenRebins>
     // void SetReBinning( Int_t startBin, Double_t (&binArray)[ArrayLenBins], Int_t (&rebinArray)[ArrayLenRebins] ) {
     // StdLibrary version
-    void SetReBinning( Int_t startBin, std::vector<Double_t> binArray, std::vector<Int_t> rebinArray ) {
+    void SetReBinning( Int_t startBin, std::vector<Double_t> binArray, std::vector<Int_t> rebinArray, TString directPhoton ) {
         // Set start p_T bin
         fStartPtBin = startBin;
         // Check number of bins and reset if needed
         const Int_t maxNBins = binArray.size() - 1;
         if (fNBinsPt > maxNBins) {
-            cout << "You have chosen directphoton Plots and more than " << maxNBins <<
-                " bins for Eta (namely " << fNBinsPt << "). This is not possible, so it will be reduced to " <<
-                maxNBins << " bins." << endl;
+            if (directPhoton) {
+                std::cout << "You have chosen directphoton Plots and more than " << maxNBins <<
+                    " bins (namely " << fNBinsPt << "). This is not possible, so it will be reduced to " <<
+                    maxNBins << " bins." << std::endl;
+            } else {
+                std::cout << "You have chosen more than " << maxNBins <<
+                    " bins (namely " << fNBinsPt << "). This is not possible, so it will be reduced to " <<
+                    maxNBins << " bins." << std::endl;
+            }
             fNBinsPt = maxNBins;
         }
         // Copy bin and rebin arrays
@@ -3270,7 +3266,7 @@
 
         // Initialize bin for single invariant mass plot
         fExampleBin             = ReturnSingleInvariantMassBinPlotting (setPi0, energy, modi, trigger.Atoi(), fExampleBinScaleFac, triggerSet, directPhoton, centrality);
-        cout << "Example pt bin: " <<  fExampleBin << endl;
+        std::cout << "Example pt bin: " <<  fExampleBin << std::endl;
 
         if (triggerSet == -1){
             specialTrigg        = GetSpecialTriggerInt(energy, trigger);
@@ -3298,7 +3294,7 @@
                     }
 
                     if (fNBinsPt > 13) {
-                        cout << "You have chosen Direct Photon Plots and more than 13 bins, this is not possible, it will be reduced to 14 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 13 bins, this is not possible, it will be reduced to 14 bins." << std::endl;
                         fNBinsPt    = 13;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3310,7 +3306,7 @@
                 } else {
                     fStartPtBin     = 1;
                     if (fNBinsPt > 11) {
-                        cout << "You have chosen to have more than 11 bins, this is not possible, it will be reduced to 11" << endl;
+                        std::cout << "You have chosen to have more than 11 bins, this is not possible, it will be reduced to 11" << std::endl;
                         fNBinsPt    = 11;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3341,16 +3337,16 @@
                         fStartPtBin = 3;
 
                     if (fNBinsPt > 14 && isDCA) {
-                        cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
+                        std::cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << std::endl;
                         fNBinsPt    = 14;
                     } else if (fNBinsPt > 21 && specialTrigg == 5 && modi!=0) {
-                        cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << std::endl;
                         fNBinsPt    = 21;
                     } else if (fNBinsPt > 21 && modi ==0) {
-                        cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 21 bins, this is not possible, it will be reduced to 21 bins." << std::endl;
                         fNBinsPt    = 21;
                     } else if (fNBinsPt > 24 && modi!=0) {
-                        cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 24 bins, this is not possible, it will be reduced to 24 bins." << std::endl;
                         fNBinsPt    = 24;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3392,28 +3388,28 @@
                         fStartPtBin = 3;
 
                     if (fNBinsPt > 14 && isDCA) {
-                        cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << endl;
+                        std::cout << "You have chosen to have more than 14 bins, this is not possible, it will be reduced to 14" << std::endl;
                         fNBinsPt    = 14;
                     } else if (fNBinsPt > 19 && ( modi == 0 || modi == 1) && specialTrigg < 1) {
-                        cout << "You have chosen to have more than 19 bins, this is not possible, it will be reduced to 19" << endl;
+                        std::cout << "You have chosen to have more than 19 bins, this is not possible, it will be reduced to 19" << std::endl;
                         fNBinsPt    = 19;
                     } else if (fNBinsPt > 24 &&  modi == 0  && specialTrigg > 0) {
-                        cout << "You have chosen to have more than 19 bins, this is not possible, it will be reduced to 19" << endl;
+                        std::cout << "You have chosen to have more than 19 bins, this is not possible, it will be reduced to 19" << std::endl;
                         fNBinsPt    = 24;
                     } else if (fNBinsPt > 24 && (modi == 2 || modi == 3) && specialTrigg == 0){
-                        cout << "You have chosen to have more than 24 bins, this is not possible, it will be reduced to 24" << endl;
+                        std::cout << "You have chosen to have more than 24 bins, this is not possible, it will be reduced to 24" << std::endl;
                         fNBinsPt    = 24;
                     } else if (fNBinsPt > 29 && ( (modi == 2 && (specialTrigg == 1 || specialTrigg == 2 || specialTrigg == 3)) || modi ==4)){
-                        cout << "You have chosen to have more than 29 bins, this is not possible, it will be reduced to 29" << endl;
+                        std::cout << "You have chosen to have more than 29 bins, this is not possible, it will be reduced to 29" << std::endl;
                         fNBinsPt    = 29;
                     } else if (fNBinsPt > 28 &&  modi == 2 && specialTrigg == 3){
-                        cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << endl;
+                        std::cout << "You have chosen to have more than 28 bins, this is not possible, it will be reduced to 28" << std::endl;
                         fNBinsPt    = 28;
                     } else if (fNBinsPt > 25 && ( (modi == 2  && (specialTrigg == 4 || specialTrigg == 1 || specialTrigg == 2 )) || (modi == 3 && specialTrigg == 4) )){
-                        cout << "You have chosen to have more than 25 bins, this is not possible, it will be reduced to 25" << endl;
+                        std::cout << "You have chosen to have more than 25 bins, this is not possible, it will be reduced to 25" << std::endl;
                         fNBinsPt    = 25;
                     } else if (fNBinsPt > 32 && (modi == 10)){
-                        cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << endl;
+                        std::cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << std::endl;
                         fNBinsPt    = 32;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3468,7 +3464,7 @@
                 if (directPhoton.CompareTo("directPhoton") == 0){
                     fStartPtBin     = 1;
                     if (fNBinsPt > 17) {
-                        cout << "You have chosen Direct Photon Plots and more than 17 bins, this is not possible, it will be reduced to 17 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 17 bins, this is not possible, it will be reduced to 17 bins." << std::endl;
                         fNBinsPt    = 17;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3480,10 +3476,10 @@
                   fStartPtBin                 = GetStartBin("Pi0", energy, modi, specialTrigg, centrality);
                   Int_t maxPtBinTheo          = GetBinning( fBinsPt, maxPtBinAvail, "Pi0", energy, modi, specialTrigg, isDCA, centrality );
                   if (fNBinsPt > maxPtBinTheo) {
-                      cout << "**************************************************************************************************************************************" << endl;
-                      cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << endl;
-                      cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << endl;
-                      cout << "**************************************************************************************************************************************" << endl;
+                      std::cout << "**************************************************************************************************************************************" << std::endl;
+                      std::cout << "********************** ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, ATTENTION, **********************************" << std::endl;
+                      std::cout << "You have chosen "<< fNBinsPt << " bins, which is more than the maximal " << maxPtBinTheo << " bins, this is not possible, it will be reduced to " << maxPtBinTheo << std::endl;
+                      std::cout << "**************************************************************************************************************************************" << std::endl;
                       fNBinsPt    = maxPtBinTheo;
                   }
                   GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3566,7 +3562,7 @@
                     else if(modi == 1)
                         fStartPtBin = 6;
                     if (fNBinsPt > 23) {
-                        cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << std::endl;
                         fNBinsPt    = 23;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3582,7 +3578,7 @@
                 }else if (directPhoton.CompareTo("directPhotonTagging") == 0){
                     fStartPtBin     = 1;
                     if (fNBinsPt > 23) {
-                        cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << std::endl;
                         fNBinsPt    = 23;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3602,10 +3598,10 @@
                         fStartPtBin = 2;
 
                     if (fNBinsPt > 27 && isDCA) {
-                        cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << endl;
+                        std::cout << "You have chosen to have more than 27 bins, this is not possible, it will be reduced to 27" << std::endl;
                         fNBinsPt    = 27;
                     } else if (fNBinsPt > 40) {
-                        cout << "You have chosen to have more than 40 bins, this is not possible, it will be reduced to 40" << endl;
+                        std::cout << "You have chosen to have more than 40 bins, this is not possible, it will be reduced to 40" << std::endl;
                         fNBinsPt    = 40;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3662,17 +3658,17 @@
 
                     if (fNBinsPt > 32 && (modi == 4 || modi == 2) ){
                       if( specialTrigg == 2 && fNBinsPt > 41){
-                        cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                        std::cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << std::endl;
                         fNBinsPt                        = 41;
                       } else if ( specialTrigg == 1 && fNBinsPt > 41){
-                        cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                        std::cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << std::endl;
                         fNBinsPt                        = 41;
                       } else if (specialTrigg!=1 && specialTrigg!=2){
-                        cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << endl;
+                        std::cout << "You have chosen to have more than 23 bins, this is not possible, it will be reduced to 23" << std::endl;
                         fNBinsPt                        = 23;
                       }
                     } else if (fNBinsPt > 23 && (modi !=4 && modi !=2) ) {
-                        cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 23 bins, this is not possible, it will be reduced to 23 bins." << std::endl;
                         fNBinsPt    = 23;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3706,7 +3702,7 @@
                         fStartPtBin = 1;
                     }
                     if (fNBinsPt > 29 ) {
-                        cout << "You have chosen Direct Photon Plots and more than 29 bins, this is not possible, it will be reduced to 29 bins." << endl;
+                        std::cout << "You have chosen Direct Photon Plots and more than 29 bins, this is not possible, it will be reduced to 29 bins." << std::endl;
                         fNBinsPt    = 29;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -3729,43 +3725,43 @@
                     if (modi == 10 && specialTrigg == 2) fStartPtBin = 28;
 
                     if (fNBinsPt > 21 && isDCA) {
-                        cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << endl;
+                        std::cout << "You have chosen to have more than 21 bins, this is not possible, it will be reduced to 21" << std::endl;
                         fNBinsPt                        = 21;
                     } else if (fNBinsPt > 33 && modi != 2 && modi != 3 && modi != 4 && modi != 10) {
                         if ( specialTrigg == 1 && fNBinsPt > 42){
-                            cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                            std::cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << std::endl;
                             fNBinsPt                    = 42;
                         } else if ( specialTrigg == 2 && fNBinsPt > 41){
-                            cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << endl;
+                            std::cout << "You have chosen to have more than 41 bins, this is not possible, it will be reduced to 41" << std::endl;
                             fNBinsPt                    = 41;
                         } else if (specialTrigg!=1 && specialTrigg!=2){
-                            cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 32" << endl;
+                            std::cout << "You have chosen to have more than 33 bins, this is not possible, it will be reduced to 32" << std::endl;
                             fNBinsPt                    = 33;
                         }
                     } else if (fNBinsPt > 32 && (modi ==4)){
                         if( specialTrigg == 2 && fNBinsPt > 42){
-                            cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                            std::cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << std::endl;
                             fNBinsPt                        = 42;
                         } else if ( specialTrigg == 1 && fNBinsPt > 42){
-                            cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                            std::cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << std::endl;
                             fNBinsPt                        = 42;
                         } else if (specialTrigg!=1 && specialTrigg!=2){
-                            cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << endl;
+                            std::cout << "You have chosen to have more than 32 bins, this is not possible, it will be reduced to 32" << std::endl;
                             fNBinsPt                        = 32;
                         }
                     } else if (fNBinsPt > 29 && (modi == 2 || modi == 3)){
                         if( specialTrigg == 2 && fNBinsPt > 42){
-                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        std::cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << std::endl;
                         fNBinsPt        = 42;
                         } else if ( specialTrigg == 1 && fNBinsPt > 42){
-                        cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << endl;
+                        std::cout << "You have chosen to have more than 42 bins, this is not possible, it will be reduced to 42" << std::endl;
                         fNBinsPt = 42;
                         } else if(specialTrigg!=1 && specialTrigg!=2) {
-                        cout << "You have chosen to have more than 31 bins, this is not possible, it will be reduced to 31" << endl;
+                        std::cout << "You have chosen to have more than 31 bins, this is not possible, it will be reduced to 31" << std::endl;
                         fNBinsPt        = 29;
                         }
                     } else if (fNBinsPt > 59 && (modi == 10)){
-                        cout << "You have chosen to have more than 59 bins, this is not possible, it will be reduced to 59" << endl;
+                        std::cout << "You have chosen to have more than 59 bins, this is not possible, it will be reduced to 59" << std::endl;
                         fNBinsPt        = 59;
                     }
                     GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
@@ -4853,65 +4849,47 @@
                 }
 
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
-                for (Int_t i = 0; i < fNBinsPt; i++) {
-                    if (setPi0.CompareTo("Eta") == 0){
-                        if (modi == 0){
-                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
-                                fNRebin[i]      = fBinsEta13TeVPCMTrigINT7PtRebin[i];
-                            } else if (specialTrigg==1){
-                                fNRebin[i]      = fBinsEta13TeVPCMTrigEMC7PtRebin[i];
-                            } else if (specialTrigg==2){
-                                fNRebin[i]      = fBinsEta13TeVPCMTrigEG1PtRebin[i];
-                            } else if (specialTrigg==3){
-                                fNRebin[i]      = fBinsEta13TeVPCMTrigEG2PtRebin[i];
-                            }
+                if( setPi0.EqualTo("Eta") ) {
+                    if (modi == 0) {
+                        if( specialTrigg == 0 ||
+                            specialTrigg == 4 ||
+                            specialTrigg == 5 )  CopyVectorToArray(fBinsEta13TeVPCMTrigINT7PtRebin,fNRebin);
+                        else if(specialTrigg==1) CopyVectorToArray(fBinsEta13TeVPCMTrigEMC7PtRebin,fNRebin);
+                        else if(specialTrigg==2) CopyVectorToArray(fBinsEta13TeVPCMTrigEG1PtRebin, fNRebin);
+                        else if(specialTrigg==3) CopyVectorToArray(fBinsEta13TeVPCMTrigEG2PtRebin, fNRebin);
                         } else if(modi==2){
-                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5 ){
-                                fNRebin[i]      = fBinsEta13TeVPCMEMCTrigINT7PtRebin[i];
-                            } else if (specialTrigg==3){
-                                fNRebin[i]      = fBinsEta13TeVPCMEMCTrigEG2PtRebin[i];
-                            } else if (specialTrigg==2){
-                                fNRebin[i]      = fBinsEta13TeVPCMEMCTrigEG1PtRebin[i];
-                            }
-                        } else if(modi==4){
-                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5){
-                                fNRebin[i]      = fBinsEta13TeVEMCTrigINT7PtRebin[i];
-                            } else if (specialTrigg==2){
-                                fNRebin[i]      = fBinsEta13TeVEMCTrigEG1PtRebin[i];
-                            } else if (specialTrigg==3){
-                                fNRebin[i]      = fBinsEta13TeVEMCTrigEG2PtRebin[i];
-                            }
-                        } else if(modi == 40){
-                            fNRebin[i] = fBinsEtaPiPlPiMiPiZero13TevPtRebinPCM[i];
-                        } else {
-                            fNRebin[i]  = fBinsEta13TeVPCMEMCTrigINT7PtRebin[i];
-                        }
-                    } else {
-                        if (modi == 0){
-                            fNRebin[i]  = fBinsPi0Eta13TeVPtPCMTrigINT7Rebin[i];
-                        } else if(modi==2){
-                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5 ){
-                                fNRebin[i]      = fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin[i];
-                            } else if (specialTrigg==3){
-                                fNRebin[i]      = fBinsPi0Eta13TeVPCMEMCTrigEG2PtRebin[i];
-                            } else if (specialTrigg==2){
-                                fNRebin[i]      = fBinsPi0Eta13TeVPCMEMCTrigEG1PtRebin[i];
-                            }
-                        } else if(modi==4){
-                            if (specialTrigg == 0 || specialTrigg == 4 || specialTrigg == 5 ){
-                                fNRebin[i]      = fBinsPi0Eta13TeVPtEMCTrigINT7Rebin[i];
-                            } else if (specialTrigg==3){
-                                fNRebin[i]      = fBinsPi0Eta13TeVEMCTrigEG2PtRebin[i];
-                            } else if (specialTrigg==2){
-                                fNRebin[i]      = fBinsPi0Eta13TeVEMCTrigEG1PtRebin[i];
-                            }
-                        } else{
-                            fNRebin[i]  = fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin[i];
-                        }
-                    }
+                        if( specialTrigg == 0 ||
+                            specialTrigg == 4 ||
+                            specialTrigg == 5 )  CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,fNRebin);
+                        else if(specialTrigg==3) CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG2PtRebin, fNRebin);
+                        else if(specialTrigg==2) CopyVectorToArray(fBinsEta13TeVPCMEMCTrigEG1PtRebin, fNRebin);
+                    } else if(modi==4) {
+                        if (specialTrigg == 0 ||
+                            specialTrigg == 4 ||
+                            specialTrigg == 5 )   CopyVectorToArray(fBinsEta13TeVEMCTrigINT7PtRebin,fNRebin);
+                        else if (specialTrigg==2) CopyVectorToArray(fBinsEta13TeVEMCTrigEG1PtRebin, fNRebin);
+                        else if (specialTrigg==3) CopyVectorToArray(fBinsEta13TeVEMCTrigEG2PtRebin, fNRebin);
+                    } else if( modi==40 ) CopyVectorToArray(fBinsEtaPiPlPiMiPiZero13TevPtRebinPCM,fNRebin);
+                    else if( modi>=100 )  CopyVectorToArray(fBinsEta13TeVHeavyMesonPtRebin,       fNRebin);
+                    else                  CopyVectorToArray(fBinsEta13TeVPCMEMCTrigINT7PtRebin,   fNRebin);
+                } else { // 
+                    if( modi==0 ) CopyVectorToArray(fBinsPi0Eta13TeVPtPCMTrigINT7Rebin,fNRebin);
+                    else if( modi==2 ) {
+                        if( specialTrigg == 0 ||
+                            specialTrigg == 4 ||
+                            specialTrigg == 5 )  CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin,fNRebin);
+                        else if(specialTrigg==3) CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigEG2PtRebin, fNRebin);
+                        else if(specialTrigg==2) CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigEG1PtRebin, fNRebin);
+                    } else if( modi==4 ) {
+                        if (specialTrigg == 0 ||
+                            specialTrigg == 4 ||
+                            specialTrigg == 5 )  CopyVectorToArray(fBinsPi0Eta13TeVPtEMCTrigINT7Rebin,fNRebin);
+                        else if(specialTrigg==3) CopyVectorToArray(fBinsPi0Eta13TeVEMCTrigEG2PtRebin, fNRebin);
+                        else if(specialTrigg==2) CopyVectorToArray(fBinsPi0Eta13TeVEMCTrigEG1PtRebin, fNRebin);
+                    } else if( modi>=100 ) CopyVectorToArray(fBinsEta13TeVLowBPtRebin,fNRebin);
+                    else CopyVectorToArray(fBinsPi0Eta13TeVPCMEMCTrigINT7PtRebin,fNRebin);
                 }
-                if (!setPi0.CompareTo("Pi0EtaBinning"))
-                    nIterBGFit          = 12;
+                if ( setPi0.EqualTo("Pi0EtaBinning") ) nIterBGFit = 12;
 
             nIterBGFit                  = 7;
             fMaxYFracBGOverIntHist      = 60;
@@ -4935,11 +4913,7 @@
                 }
                 GetOptimumNColumnsAndRows(fNBinsPt, fStartPtBin, fColumn, fRow);
 
-                for (Int_t i = 0; i < fNBinsPt; i++) {
-                    if ( modi == 0 ) {
-                        fNRebin[i]  = fBinsEta13TeVLowBPtRebin[i];
-                    }
-                }
+                if( modi==0 ) CopyVectorToArray(fBinsEta13TeVLowBPtRebin,fNRebin);
                 nIterBGFit                  = 8;
                 fMaxYFracBGOverIntHist      = 70;
                 optionBGSmoothingStandard   = "BackDecreasingWindow,BackSmoothing3";
@@ -5393,8 +5367,8 @@
             fNBinsPt                = numberOfBins;
             fBinsPt                 = new Double_t[20];
             fNRebin                 = new Int_t[19];
-            if     (energy.EqualTo("7TeV"))  SetReBinning(1,fBinsEtaPrime7TeVPt, fBinsEtaPrime7TeVPtRebin);
-            else if(energy.EqualTo("13TeV")) SetReBinning(1,fBinsEtaPrime13TeVPt,fBinsEtaPrime13TeVPtRebin);
+            if     (energy.EqualTo("7TeV"))  SetReBinning(1,fBinsEtaPrime7TeVPt, fBinsEtaPrime7TeVPtRebin,directPhoton);
+            else if(energy.EqualTo("13TeV")) SetReBinning(1,fBinsEtaPrime13TeVPt,fBinsEtaPrime13TeVPtRebin,directPhoton);
         //*************************************************************************************************
         //********************************** Binning for Omega ********************************************
         //*************************************************************************************************

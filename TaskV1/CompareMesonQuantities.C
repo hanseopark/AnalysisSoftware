@@ -44,6 +44,8 @@
 #include "../CommonHeaders/ConversionFunctions.h"
 #include "../CommonHeaders/PlottingMeson.h"
 
+using namespace std;
+
 //**********************************************************************************
 //******************* return minimum for 1D histo  *********************************
 //**********************************************************************************
@@ -158,12 +160,12 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
     } else if (mesonType.CompareTo("EtaPrime") == 0){
         fMesonRange         = new Double_t[2];
         fMesonRange[0]      = 0.9;
-        fMesonRange[1]      = 1.;;
+        fMesonRange[1]      = 1.0;
         peakRange[0]        = 0.90;
         peakRange[0]        = 1.00;
     }
 
-    cout << fStartPtBin << endl;
+    cout << "Start bin for " << mesonType << " (mode " << mode << "): " << fStartPtBin << endl;
 
     //******************************* Reading histograms **************************************************************
     TH1D *  histoSignalDataInvMassPtBin[100];
@@ -201,15 +203,19 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 histoSignalDataInvMassPtBin[iPt]->Rebin(4);
                 histoSignalMCInvMassPtBin[iPt]->Rebin(4);
             }
-            Double_t integralData               = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
-                                                                                             histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001));
-            Double_t integralMC                 = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
-                                                                                           histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001));
+            Double_t integralData = histoSignalDataInvMassPtBin[iPt]->Integral(
+                histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
+                histoSignalDataInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
+            Double_t integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(
+                histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[0]+0.0001),
+                histoSignalMCInvMassPtBin[iPt]->FindBin(fMesonRange[1]-0.0001) );
             if (j == 2){
-                integralData                    = histoSignalDataInvMassPtBin[iPt]->Integral(histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),
-                                                                                             histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001));
-                integralMC                      = histoSignalMCInvMassPtBin[iPt]->Integral(histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),
-                                                                                           histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001));
+                integralData = histoSignalDataInvMassPtBin[iPt]->Integral(
+                    histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),
+                    histoSignalDataInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
+                integralMC   = histoSignalMCInvMassPtBin[iPt]->Integral(
+                    histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[0]+0.0001),
+                    histoSignalMCInvMassPtBin[iPt]->FindBin(peakRange[1]-0.0001) );
             }
 
             if (integralData < 0 || integralMC < 0 || j == 1){
@@ -271,7 +277,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
         padLineShape->Divide(fColumn,fRow,0.0,0.0);
         padLineShape->Draw();
 
-//         cout<<"fColumn: "<<fColumn<<" fRow: "<<fRow<<endl;
+        // cout<<"fColumn: "<<fColumn<<" fRow: "<<fRow<<endl;
 
         Double_t relWidthLogo;
         if (mesonType.CompareTo("Pi0") == 0){
@@ -285,13 +291,13 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
 
         Int_t place = 0;
         for(Int_t iPt=fStartPtBin;iPt<fNBinsPt;iPt++){
-//             cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
+            // cout<<"Pt: "<<iPt<<" of "<<fNBinsPt<<endl;
             Double_t startPt = fBinsPt[iPt];
             Double_t endPt = fBinsPt[iPt+1];
 
-//             cout << startPt << "\t" << endPt << endl;
+            // cout << startPt << "\t" << endPt << endl;
 
-            place = place + 1;						//give the right place in the page
+            place = place + 1; //give the right place in the page
             if(place == fColumn) {
 
                 iPt--;
@@ -398,7 +404,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
                 }
             }
         }
-//         cout << "saving" << endl;
+        // cout << "saving" << endl;
         cout << nameLineShapePlot.Data() << endl;
         if(j==0) {
             canvasLineShape->SaveAs(nameLineShapePlot.Data());
@@ -408,7 +414,7 @@ void CompareMesonQuantities(    const char *dataFilename        = "rawSignalData
             canvasLineShape->SaveAs(nameLineShapePlotFull.Data());
         }
 
-//         cout << "deleting" << endl;
+        // cout << "deleting" << endl;
         delete padLineShape;
         delete canvasLineShape;
     }

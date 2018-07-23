@@ -70,7 +70,8 @@ void ExtractSignalV2(   TString meson                   = "",
                     ) {
     gROOT->Reset();
 
-    fMode = mode;
+    fMode      = mode;
+    fModeHeavy = mode; // added to store mode >100 info
     // modes:
     // 0    new output PCM-PCM
     // 1    new output PCM dalitz
@@ -83,7 +84,7 @@ void ExtractSignalV2(   TString meson                   = "",
     // 13   new output PCM-DCal
 
     // Heavy meson fix
-    if(mode>=100) fMode-=100;
+    if(mode>=100) fMode -= 100;
 
 
     //******************************************************************************************************
@@ -490,21 +491,33 @@ void ExtractSignalV2(   TString meson                   = "",
 
         // loading histograms for eta
         if( fMesonId == 221){
-            // histos without acceptance requirement
-            fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
-            fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
-            fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
+            // if( fModeHeavy<100 ) {
+                // histos without acceptance requirement
+                fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEta.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+                fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOWeights.Data());
+                fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaWOEvtWeights.Data());
 
-            // histos with gamma's in acceptance
-            fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
-            fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
-            fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
-            cout << "line " << __LINE__ << endl;
+                // histos with gamma's in acceptance
+                fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAcc.Data());
+                fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOWeights.Data());
+                fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaAccWOEvtWeights.Data());
+                cout << "line " << __LINE__ << endl;
+            // } else {
+            //     // histos without acceptance requirement
+            //     fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrime.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
+            //     fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOWeights.Data());
+            //     fHistoMCMesonPtWOEvtWeights         = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOEvtWeights.Data());
 
+            //     // histos with gamma's in acceptance
+            //     fHistoMCMesonPtWithinAcceptance     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAcc.Data());
+            //     fHistoMCMesonPtWithinAcceptanceWOWeights    = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOWeights.Data());
+            //     fHistoMCMesonPtWithinAcceptanceWOEvtWeights = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeAccWOEvtWeights.Data());
+            //     cout << "line " << __LINE__ << endl;
+            // }
         }
 
         // loading histograms for EtaPrime
-        if( fMesonId == 331){
+        else if( fMesonId == 331 ){
             // histos without acceptance requirement
             fHistoMCMesonPt                     = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrime.Data());   // Not the best; better having a 2D Pt_vs_Rapid in case we change limits
             fHistoMCMesonPtWOWeights            = (TH1D*)MCContainer->FindObject(ObjectNameMCEtaPrimeWOWeights.Data());
@@ -563,7 +576,7 @@ void ExtractSignalV2(   TString meson                   = "",
         FillMassMCTrueUnweightedMesonHistosArray(fHistoTrueMesonInvMassVSPtWOWeights);
 
         cout << "line " << __LINE__ << endl;
-        cout << fMode << endl;
+        cout << "Mode: " << fMode << endl;
 
         if (fMode == 2 || fMode == 13 || fMode == 3 || fMode == 4 || fMode == 12 || fMode == 5){
             fHistoTrueMesonCaloPhotonInvMassVSPt                = (TH2D*)TrueConversionContainer->FindObject(ObjectNameTrueCaloPhoton.Data());
@@ -1605,7 +1618,7 @@ void ExtractSignalV2(   TString meson                   = "",
                                             fMesonMassPlotRange, fdate, fPrefix, fRow, fColumn, fStartPtBin, fNBinsPt, fBinsPt, fTextMeasurement, fIsMC, fDecayChannel, fDetectionProcess,
                                             fCollisionSystem, "MC validated");
 
-        cout << "Example bin: "<< fExampleBin << endl;
+        cout << "Example bin: " << fExampleBin << endl;
         TString triggerInt         = fEventCutSelectionRead(GetEventSelectSpecialTriggerCutPosition(),2);
         PlotExampleInvMassBinsV2(fHistoMappingGGInvMassPtBin[fExampleBin], fHistoMappingSignalInvMassPtBin[fExampleBin], fHistoMappingBackNormInvMassPtBin[fExampleBin],
                             fFitSignalInvMassPtBin[fExampleBin], fExampleBin, outputDir.Data(),Suffix.Data(), fMesonMassPlotRange, pictDrawingCoordinatesFWHM, fNEvents, fdate, fPrefix, fPrefix2,
@@ -2146,8 +2159,8 @@ void ExtractSignalV2(   TString meson                   = "",
                                    kFALSE, 0., 10.);
        fHistoPileUpVertexDistance_SPDPileup->SetLineWidth(2);
        fHistoPileUpVertexDistance_SPDPileup->Draw("same");
-//       fFitGausPileUp->SetLineColor(kGreen+2);
-//       fFitGausPileUp->Draw("same");
+    //   fFitGausPileUp->SetLineColor(kGreen+2);
+    //   fFitGausPileUp->Draw("same");
        canvasSPDPileUp->Update();
 
        TF1* fFitGausPileUpFull = new TF1("gausFitPileUpFull","gaus",-15,15);
@@ -2847,7 +2860,7 @@ void ProduceBckProperWeighting(TList* backgroundContainer,TList* motherContainer
 void Initialize(TString setPi0, Int_t numberOfBins, Int_t triggerSet){
 
     cout << "meson in intialize function" <<  setPi0.Data() << endl;
-    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fMode, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "", fGammaCutSelection);
+    InitializeBinning(setPi0, numberOfBins, fEnergyFlag, fdirectphoton, fModeHeavy, fEventCutSelection, fClusterCutSelection, triggerSet, kFALSE, "", "", fGammaCutSelection);
 
     TString trigger         = fEventCutSelection(GetEventSelectSpecialTriggerCutPosition(),2);
     InitializeWindows(setPi0, fMode, trigger, triggerSet);
@@ -3244,7 +3257,7 @@ void SetCorrectMCHistogrammNames(TString mesonType){
     }
 
     // Correction for MC histograms in EtaPrime
-    if (mesonType.Contains("EtaPrime")){
+    if( mesonType.EqualTo("EtaPrime") || fModeHeavy>=100 ){
         ObjectNameTrue                      = "ESD_TruePrimaryMeson_InvMass_Pt";
         ObjectNameTrueFull                  = "ESD_TrueMeson_InvMass_Pt";
         ObjectNameTrueWOWeights             = "ESD_TruePrimaryMesonW0Weights_InvMass_Pt";
@@ -3325,7 +3338,7 @@ Bool_t LoadSecondaryPionsFromExternalFile(){
            cout << "could not find correct input file" << endl;
         }
     }
-//     cout << nSecInputHistsFound << endl;
+    // cout << nSecInputHistsFound << endl;
     if (nSecInputHistsFound == 0)
         return kFALSE;
 
@@ -5636,7 +5649,7 @@ void FitCBSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle,D
 
     fFitReco = NULL;
 //    if (!kMC) {
-//       fFitReco = new TF1(functionname,CrystalBallBck,fMesonFitRange[0],fMesonFitRange[1],7);
+    //   fFitReco = new TF1(functionname,CrystalBallBck,fMesonFitRange[0],fMesonFitRange[1],7);
 //    } else {
         fFitReco = new TF1(functionname,CrystalBall,fMesonFitRange[0],fMesonFitRange[1],5);
 //    }
@@ -5680,7 +5693,7 @@ void FitCBSubtractedInvMassInPtBins(TH1D* histoMappingSignalInvMassPtBinSingle,D
             fCopyOnlyBG->SetBinError(i,errorLinearBck);
             fCopySignal->SetBinContent(i,fCopySignal->GetBinContent(i)-intLinearBack);
             fCopySignal->SetBinError(i,TMath::Sqrt(errorLinearBck*errorLinearBck+ fCopySignal->GetBinError(i)*fCopySignal->GetBinError(i)));
-//          cout << fFitLinearBck->Eval(startBinEdge) << "\t" <<fFitLinearBck->Eval(endBinEdge) << "\t" <<fCopySignal->GetBinContent(i) << "\t" <<fCopySignal->GetBinContent(i) << endl;
+        //  cout << fFitLinearBck->Eval(startBinEdge) << "\t" <<fFitLinearBck->Eval(endBinEdge) << "\t" <<fCopySignal->GetBinContent(i) << "\t" <<fCopySignal->GetBinContent(i) << endl;
         }
         fCopySignal->Fit(fFitReco,"QRME0");
     } else {

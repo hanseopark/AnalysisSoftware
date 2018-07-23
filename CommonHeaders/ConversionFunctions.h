@@ -3037,7 +3037,7 @@
         DrawGammaSetMarkerTGraphAsym(graphPPCombinedSpectrum, 24,2.5, kRed, kRed);
         graphPPCombinedSpectrum->Draw("p,same");
         DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtendedSys, 20,2, kBlack, kBlack,0,kTRUE, kGray);
-//         graphPPSpectrumExtendedSys->Draw("E2same");
+        // graphPPSpectrumExtendedSys->Draw("E2same");
         DrawGammaSetMarkerTGraphAsym(graphPPSpectrumExtended, 20,2, kBlack, kBlack);
         graphPPSpectrumExtended->Draw("p,same");
 
@@ -3990,10 +3990,10 @@
 
             cout << line.Data() << endl;
 
-//         for (Int_t i=0; i<statErrors->GetN(); i++){
-//             cout << currentX[i] << " (BIN="<<currentX[i]-currentXErrDown[i] << " TO " << currentX[i]+currentXErrUp[i] << "); \t"
-//                 << currentY[i] << " +- " <<currentYErrStatDown[i] << "\t (DSYS=" <<currentYErrSystDown[i] << ");" << endl;
-//         }
+        // for (Int_t i=0; i<statErrors->GetN(); i++){
+            // cout << currentX[i] << " (BIN="<<currentX[i]-currentXErrDown[i] << " TO " << currentX[i]+currentXErrUp[i] << "); \t"
+                // << currentY[i] << " +- " <<currentYErrStatDown[i] << "\t (DSYS=" <<currentYErrSystDown[i] << ");" << endl;
+        // }
         }
         cout << "*dataend:" << endl;
 
@@ -4612,7 +4612,7 @@
                 } else {
                     R_mod                   = R_true * (1. + eps_b * rel_type_b_error) * (1. + eps_c * rel_type_c_error);
                 }
-//                 cout << R_true << "\t mod: \t"<< R_mod << "  " << ip << " " << endl;
+                // cout << R_true << "\t mod: \t"<< R_mod << "  " << ip << " " << endl;
 
                 Double_t rel_stat_plus_type_a_err           = g_rel_stat_plus_type_a_error->GetY()[ip];
                 Double_t abs_stat_plus_type_a_err_scaled    = R_mod * rel_stat_plus_type_a_err;

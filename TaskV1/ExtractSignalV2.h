@@ -23,6 +23,7 @@ TString     fDetectionProcess                                           = "";
 TString     fCutSelection                                               = "";
 TString     fBackgroundMultCutNumber                                    = "";
 Int_t       fMode                                                       = -1;
+Int_t       fModeHeavy                                                  = -1; // used to retain mode >100 info
 TString     fdirectphoton                                               = "";
 TString     fThesis                                                     = "";
 Bool_t      fAdvancedMesonQA                                            = kFALSE;
