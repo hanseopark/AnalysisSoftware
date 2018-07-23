@@ -168,7 +168,7 @@ void EventQA_Runwise(
             cout << "Switch useDataRunListForMC is true, reading runs from: " << fileRuns[i].Data() << endl;
         }
         cout << "trying to read: " << fileRuns[i].Data() << endl;
-        if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found! Returning..." << endl; return;}
+        if(!readin(fileRuns[i], vecRuns, kFALSE)) {cout << "ERROR, no Run Numbers could be found in "<<fileRuns[i]<<"! Returning..." << endl; return;}
     }
 
     //*************************************************************************************************************
