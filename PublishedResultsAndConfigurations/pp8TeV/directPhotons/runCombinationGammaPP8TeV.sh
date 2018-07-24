@@ -1,0 +1,2 @@
+cd ../../..
+root -x -l -b -q 'CombineGammaResultsPP8TeV.C+("PublishedResultsAndConfigurations/pp8TeV/directPhotons/data_PCMResultsFullCorrection_PP_BinShifted.root", kFALSE, "", kTRUE, "PublishedResultsAndConfigurations/pp8TeV/directPhotons/data_EMCResultsFullCorrection_PP_BinShifted.root", kTRUE, "PublishedResultsAndConfigurations/pp8TeV/directPhotons/data_PCM-EMCResultsFullCorrection_PP_BinShifted.root", "CombinationInputGammaPP/GammaCocktailRatios.root", "eps", "CombinationInputGammaPP/pp8TeV.root",kFALSE,1.28,kTRUE,"")'
