@@ -986,4 +986,36 @@ void CompareGammaResultsDiffSystems(    TString inputFileNamePP2760GeV      = ""
 
     canvasDoubleRatio->Print(Form("%s/DR_PP.%s", outputDir.Data(), suffix.Data()));
     canvasDoubleRatio->Print(Form("%s/DR_PP.pdf", outputDir.Data()));
+
+
+    TFile* fileTheory                               = new TFile("ExternalInput/Theory/TheoryCompilationPP.root");
+    TGraph* graphTheoryNLODRpp7TeVPromptThermalLiuWerner  = (TGraph*) fileTheory->Get("DirectPhoton/graphRGammaThermalAndPromptDirectPhotonLiuWerner_pp7TeV_ALICECocktail");
+    while(graphTheoryNLODRpp7TeVPromptThermalLiuWerner->GetX()[graphTheoryNLODRpp7TeVPromptThermalLiuWerner->GetN()-1] > 20.) graphTheoryNLODRpp7TeVPromptThermalLiuWerner->RemovePoint(graphTheoryNLODRpp7TeVPromptThermalLiuWerner->GetN()-1);
+
+    hist2DDRDummySingle->DrawCopy();
+
+          TLegend* legendDRSingle2 = GetAndSetLegend2(0.12,0.953-textSizeSinglePad*5.3,0.43,0.953, textSizeSinglePad, 1, "ALICE", 42, 0.3);
+          DrawGammaLines(doubleRatioX[0], doubleRatioX[1], 1., 1., 1.2, kGray+2, 7);
+
+          graphDRSyspp2760GeV->Draw("E2same");
+          legendDRSingle2->AddEntry(graphDRSyspp2760GeV,collisionSystempp2760GeV.Data(),"pf");
+
+          graphDRSyspp8TeV->Draw("E2same");
+          legendDRSingle2->AddEntry(graphDRSyspp8TeV,collisionSystempp8TeV.Data(),"pf");
+
+          graphDRStatpp2760GeVPlot->Draw("p,E1Z,same");
+          graphDRStatpp8TeVPlot->Draw("pp,E1Z,same");
+
+          if (graphTheoryNLODRpp7TeVPromptThermalLiuWerner){
+              DrawGammaNLOTGraph( graphTheoryNLODRpp7TeVPromptThermalLiuWerner, 2, 5, kPink+2 );
+              graphTheoryNLODRpp7TeVPromptThermalLiuWerner->Draw("lc,same");
+              legendDRSingle2->AddEntry(graphTheoryNLODRpp7TeVPromptThermalLiuWerner,"NLO pQCD, #scale[0.75]{Prompt + Thermal}","l");
+              legendDRSingle2->AddEntry((TObject*)0,"for pp, #sqrt{#it{s}} = 7 TeV","");
+          }
+
+          legendDRSingle2->Draw();
+          hist2DDRDummySingle->Draw("same,axis");
+
+        canvasDoubleRatio->Print(Form("%s/DR_PP_wThermal.%s", outputDir.Data(), suffix.Data()));
+        canvasDoubleRatio->Print(Form("%s/DR_PP_wThermal.pdf", outputDir.Data()));
 }

@@ -1368,7 +1368,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     // TF1* fitHagGammaComb            = FitObject("h","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
                                                     // graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],NULL,"QNRME+");
     Double_t paramGraphoHag[5]                      = {82,-0.22,-0.01,0.57,6.28};
-    TF1* fitHagGammaComb            = FitObject("oHag","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[2],
+    TF1* fitHagGammaComb            = FitObject("oHag","fitHagGammaComb","Gamma",graphCombIncGammaTot,graphCombIncGammaTot->GetX()[0],
                                                      graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()],paramGraphoHag,"QNRME+");
     Double_t paramTCM[5] = {graphCombIncGammaTot->GetY()[1],0.1,graphCombIncGammaTot->GetY()[4],0.6,3};
     TF1* fitTCMGammaComb            = FitObject("tcm", "fitTCMGammaComb","Gamma", graphCombIncGammaTot, graphCombIncGammaTot->GetX()[0], graphCombIncGammaTot->GetX()[graphCombIncGammaTot->GetN()], paramTCM,"QNRME+");
@@ -1380,7 +1380,6 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     forOutput                       = WriteParameterToFile(fitTsallisGammaComb);
     cout << forOutput.Data() << endl;
 
-
     fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fileFinalResults << "Gamma - Tsallis" << endl;
     fileFinalResults << WriteParameterToFile(fitTsallisGammaComb)<< endl;
@@ -1390,7 +1389,6 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     fileFinalResults << "Gamma - Hagedorn" << endl;
     fileFinalResults << WriteParameterToFile(fitHagGammaComb) << endl;
-
 
     // Cloning spectra
 
@@ -3315,7 +3313,7 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     legendTCMfitXSec->AddEntry(graphCombIncGammaSys, "#gamma_{inc} data","pf");
 
     TF1* fitXSecTCMGammaComb = ScaleTF1(fitTCMGammaComb,xSection8TeVV0AND*recalcBarn,"xsecTCMfit");
-    DrawGammaSetMarkerTF1( fitXSecTCMGammaComb, 4, 2, kBlue+2);
+    DrawGammaSetMarkerTF1( fitXSecTCMGammaComb, 4, 2, kBlack);
     legendTCMfitXSec->AddEntry(fitXSecTCMGammaComb,"#gamma_{inc} TCM fit","l");
     fitXSecTCMGammaComb->SetRange(0.28, 17);
     fitXSecTCMGammaComb->Draw("same");
@@ -3751,6 +3749,33 @@ void CombineGammaResultsPP8TeV(     TString inputFileNamePCM        = "Combinati
     dummyHist->Draw("same,axis");
 
     canvasGammasRatio2->SaveAs(Form("%s/CocktailGammasRatioToAllPartialSums_zoomed_8.%s",outputDir.Data(),suffix.Data()));
+
+    // ****************************************************************************************************************
+    // ************************** Store final results including corr factors in 1 file ********************************
+    // ****************************************************************************************************************
+    Double_t paramGraphoHagXSec[5]      = {5e11,0.3,-0.01,0.57,6.};
+    TF1* fitHagGammaCombXSec            = FitObject("oHag","fitHagGammaCombXSec","Gamma",graphXSecCombIncGammaTot,graphXSecCombIncGammaTot->GetX()[0],
+                                                     graphXSecCombIncGammaTot->GetX()[graphXSecCombIncGammaTot->GetN()],paramGraphoHagXSec,"QNRME+");
+    Double_t paramTCMXSec[5]            = {graphXSecCombIncGammaTot->GetY()[1],0.1,graphXSecCombIncGammaTot->GetY()[4],0.6,3};
+    TF1* fitTCMGammaCombXSec            = FitObject("tcm", "fitTCMGammaCombXSec","Gamma", graphXSecCombIncGammaTot, graphXSecCombIncGammaTot->GetX()[0], graphXSecCombIncGammaTot->GetX()[graphXSecCombIncGammaTot->GetN()], paramTCMXSec,"QNRME+");
+
+    Double_t paramTsallisXSec[3]            = {5e11, 6., 0.13};
+    TF1* fitTsallisGammaCombXSec        = FitObject("l","fitTsallisGammaCombXSec","Gamma",graphXSecCombIncGammaTot,graphXSecCombIncGammaTot->GetX()[0],
+                                                     graphXSecCombIncGammaTot->GetX()[graphXSecCombIncGammaTot->GetN()],paramTsallisXSec,"QNRME+");
+
+
+    fileFinalResults << endl;
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "XSEC" << endl;
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "Gamma - Tsallis" << endl;
+    fileFinalResults << WriteParameterToFile(fitTsallisGammaCombXSec)<< endl;
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "Gamma - TCM" << endl;
+    fileFinalResults << WriteParameterToFile(fitTCMGammaCombXSec) << endl;
+    fileFinalResults << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    fileFinalResults << "Gamma - Hagedorn" << endl;
+    fileFinalResults << WriteParameterToFile(fitHagGammaCombXSec) << endl;
 
     // ****************************************************************************************************************
     // ************************** Store final results including corr factors in 1 file ********************************
